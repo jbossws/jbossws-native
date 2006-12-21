@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2006
  */
-public abstract class ServiceEndpointPublisher
+public abstract class AbstractServiceEndpointPublisher
 {
    // default bean name
    public static final String BEAN_NAME = "ServiceEndpointPublisher";
@@ -55,7 +55,7 @@ public abstract class ServiceEndpointPublisher
    public static final String INIT_PARAM_SERVICE_ENDPOINT_IMPL = "ServiceEndpointImpl";
 
    // logging support
-   private static Logger log = Logger.getLogger(ServiceEndpointPublisher.class);
+   private static Logger log = Logger.getLogger(AbstractServiceEndpointPublisher.class);
 
    // The configured service endpoint servlet
    protected String servletName;
