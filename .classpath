@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jboss-5.0.x"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/build"/>
+	<classpathentry kind="lib" path="/build/thirdparty/activation.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/ant.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/concurrent.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/hibernate3.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/javassist.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jaxb-xjc.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-common-core.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-container.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-dependency.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-deployers.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-spi.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-microcontainer.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-remoting.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-xml-binding.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/junit.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/log4j.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/mailapi.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/policy-1.0.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/qdox.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/resolver.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/serializer.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/servlet-api.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/stax-api-1.0.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/wsdl4j.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/wstx-lgpl-2.0.6.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/xalan.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/xml-apis.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/xmlsec.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/xmlunit1.0.jar"/>
+	<classpathentry kind="output" path="output-eclipse"/>
+</classpath>

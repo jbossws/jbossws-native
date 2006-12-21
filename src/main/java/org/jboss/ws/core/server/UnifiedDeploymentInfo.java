@@ -32,8 +32,6 @@ import java.util.Map;
 
 import javax.management.ObjectName;
 
-import org.jboss.mx.loading.RepositoryClassLoader;
-
 /**
  * The container independent deployment info.
  *
@@ -75,7 +73,7 @@ public class UnifiedDeploymentInfo
    public URL localUrl;
    public URLClassLoader annotationsCl;
    public URLClassLoader localCl;
-   public RepositoryClassLoader ucl;
+   public URLClassLoader ucl;
    public ObjectName deployedObject;
    
    /** The sortName concatenated with the canonical names of all parents. */
