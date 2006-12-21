@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webservices xmlns="http://java.sun.com/xml/ns/j2ee"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:wsdl="http://tempuri.org/"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+             http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
+             version="1.1">
+
+   <webservice-description>
+
+      <webservice-description-name>wsaTestService</webservice-description-name>
+      <wsdl-file>WEB-INF/wsdl/service.wsdl</wsdl-file>
+      <jaxrpc-mapping-file>WEB-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
+
+      <port-component>
+         <port-component-name>echo</port-component-name>
+         <wsdl-port>wsdl:CustomBinding_Echo</wsdl-port>
+         <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.Echo</service-endpoint-interface>
+         <service-impl-bean>
+            <servlet-link>EchoServlet</servlet-link>
+         </service-impl-bean>
+
+         <handler>
+            <handler-name>addressing handler</handler-name>
+            <handler-class>org.jboss.ws.extensions.addressing.jaxrpc.WSAddressingServerHandler</handler-class>
+            <init-param>
+               <param-name>validate</param-name>
+               <param-value>false</param-value>
+            </init-param>
+         </handler>
+
+         <handler>
+            <handler-name>constraint handler</handler-name>
+            <handler-class>org.jboss.test.ws.interop.microsoft.addressing.wsaTestService.ConstraintHandler</handler-class>
+         </handler>
+      </port-component>
+
+       <port-component>
+         <port-component-name>notify</port-component-name>
+         <wsdl-port>wsdl:CustomBinding_Notify</wsdl-port>
+         <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.Notify</service-endpoint-interface>
+         <service-impl-bean>
+            <servlet-link>NotifyServlet</servlet-link>
+         </service-impl-bean>
+
+         <handler>
+            <handler-name>addressing handler</handler-name>
+            <handler-class>org.jboss.ws.extensions.addressing.jaxrpc.WSAddressingServerHandler</handler-class>
+            <init-param>
+               <param-name>validate</param-name>
+               <param-value>false</param-value>
+            </init-param>
+         </handler>
+
+         <handler>
+            <handler-name>constraint handler</handler-name>
+            <handler-class>org.jboss.test.ws.interop.microsoft.addressing.wsaTestService.ConstraintHandler</handler-class>
+         </handler>
+      </port-component>
+   </webservice-description>
+</webservices>

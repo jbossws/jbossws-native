@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+
+<project default="main" basedir="../.." name="JBossWS Examples">
+
+  <property name="chapter" value="jaxrpc/wssecurity"/>
+  <property name="sample.path" value="jaxrpc/samples/wssecurity"/>
+  <property name="java.dir" value="${basedir}/${chapter}/java"/>
+  <property name="resources.dir" value="${basedir}/${chapter}/resources"/>
+
+  <import file="${basedir}/common/imported-build.xml"/>
+
+  <target name="generate-sources" depends="compile" description="Generate the deployment resources.">
+    
+    <!-- Define a taskdef for the wstools ant task -->
+    <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
+        <classpath refid="compile.classpath"/>
+        <classpath path="${build.tests.dir}/classes"/>
+    </taskdef>
+    
+    <!-- samples/wssecurity -->
+    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" 
+      config="${resources.dir}/wstools-config.xml"/>
+    
+  </target>
+  
+  <!--
+  Build the test deployments
+  -->
+  <target name="jars" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" description="build the deployments">
+    
+    <!-- jaxrpc-samples-wssecurity-sign -->
+    <war warfile="${build.tests.dir}/libs/jaxrpc-samples-wssecurity-sign.war" webxml="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/WEB-INF/web.xml">
+      <classes dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/HelloJavaBean.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
+      </classes>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/WEB-INF">
+        <include name="jboss-web.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="webservices.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/simple-sign">
+        <include name="jboss-wsse-server.xml"/>
+      </webinf>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity">
+        <include name="wsse.keystore"/>
+        <include name="wsse.truststore"/>
+      </webinf>
+    </war>
+    <jar jarfile="${build.tests.dir}/libs/jaxrpc-samples-wssecurity-sign-client.jar">
+      <fileset dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
+      </fileset>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/simple-sign/META-INF">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+        <include name="jboss-wsse-client.xml"/>
+      </metainf>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+    </jar>
+    
+    <!-- jaxrpc-samples-wssecurity-encrypt -->
+    <war warfile="${build.tests.dir}/libs/jaxrpc-samples-wssecurity-encrypt.war" webxml="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/WEB-INF/web.xml">
+      <classes dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/HelloJavaBean.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
+      </classes>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/WEB-INF">
+        <include name="jboss-web.xml"/>
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/simple-encrypt">
+        <include name="jboss-wsse-server.xml"/>
+      </webinf>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity">
+        <include name="wsse.keystore"/>
+        <include name="wsse.truststore"/>
+      </webinf>
+    </war>
+    <jar jarfile="${build.tests.dir}/libs/jaxrpc-samples-wssecurity-encrypt-client.jar">
+      <fileset dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
+      </fileset>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/simple-encrypt/META-INF">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+        <include name="jboss-wsse-client.xml"/>
+      </metainf>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+    </jar>
+    
+  </target>
+
+  <!--
+  Run the testsuite
+  -->
+  <target name="tests" depends="jars" description="run the testsuite">
+    <antcall target="test">
+      <param name="test" value="${sample.path}"/>
+    </antcall>
+  </target>
+
+</project>  

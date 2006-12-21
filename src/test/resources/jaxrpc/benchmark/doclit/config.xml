@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration
+xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+
+	<service name="BenchmarkWebService"
+		targetNamespace="http://org.jboss.ws/benchmark"
+		typeNamespace="http://org.jboss.ws/benchmark/types"
+		packageName="org.jboss.test.ws.jaxrpc.benchmark">
+
+			<interface name="org.jboss.test.ws.jaxrpc.benchmark.BenchmarkService"
+				servantName="org.jboss.test.ws.jaxrpc.benchmark.BenchmarkJSEEndpoint"/>
+	</service> 
+	
+</configuration> 

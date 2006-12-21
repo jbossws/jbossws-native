@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   wscompile -cp ../../../../output/classes -gen:server -f:rpcliteral -mapping jaxrpc-mapping.xml config.xml
+-->
+
+<configuration
+  xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+
+  <service name="ActionRpcService"
+    targetNamespace="http://org.jboss.ws/addressing/action"
+    typeNamespace="http://org.jboss.ws/addressing/action"
+    packageName="org.jboss.test.ws.jaxws.wsaddressing.action">
+    <interface name="org.jboss.test.ws.jaxws.wsaddressing.action.ActionEndpoint"/>
+  </service>
+
+</configuration>
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handler-config>
+   <handler-chain>
+      <handler-chain-name>SecureHandlerChain</handler-chain-name>
+      <handler>
+         <handler-name>WSSecurityHandlerInbound</handler-name>
+         <handler-class>org.jboss.ws.extensions.security.WSSecurityHandlerInbound</handler-class>         
+      </handler>
+   </handler-chain>
+</handler-config>

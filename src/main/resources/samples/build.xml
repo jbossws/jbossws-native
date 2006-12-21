@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id$ -->
+
+<project default="main" name="JBossWS Examples">
+
+  <import file="${basedir}/common/imported-build.xml"/>
+
+  <!--
+  Build the test deployments
+  -->
+  <target name="jars" description="build the deployments">
+
+    <ant antfile="${basedir}/jaxrpc/docstyle/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/dynamichandler/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/exception/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/handler/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/holder/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/jmstransport/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/jsr109ejb/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/jsr109pojo/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/message/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/mtom/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/oneway/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/rpcstyle/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/secureejb/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/swa/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/wsbpel/build.xml" target="jars"/>    
+    <ant antfile="${basedir}/jaxrpc/wseventing/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxrpc/wssecurity/build.xml" target="jars"/>
+
+    <ant antfile="${basedir}/jaxws/jsr181ejb/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxws/jsr181pojo/build.xml" target="jars"/>
+    <ant antfile="${basedir}/jaxws/wsaddressing/build.xml" target="jars"/>
+  </target>
+
+  <!--
+  Run the testsuite
+  -->
+  <target name="tests" depends="init" description="run the testsuite">
+
+    <ant antfile="${basedir}/jaxrpc/docstyle/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/dynamichandler/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/exception/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/handler/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/holder/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/jmstransport/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/jsr109ejb/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/jsr109pojo/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/message/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/mtom/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/oneway/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/rpcstyle/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/secureejb/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/swa/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/wseventing/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxrpc/wssecurity/build.xml" target="tests"/>
+    
+    <ant antfile="${basedir}/jaxws/jsr181ejb/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxws/jsr181pojo/build.xml" target="tests"/>
+    <ant antfile="${basedir}/jaxws/wsaddressing/build.xml" target="tests"/>
+
+    <antcall target="tests-report"/>
+
+  </target>
+
+</project>

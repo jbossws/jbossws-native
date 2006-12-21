@@ -1,0 +1,5 @@
+This actually implements the W3C test suite endpoint.
+See http://www.w3.org/2002/ws/addr/testsuite/ for details.
+
+--
+Heiko

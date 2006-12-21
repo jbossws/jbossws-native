@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java-wsdl-mapping xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee    http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd">
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10</package-type>
+<namespaceURI>http://tempuri.org/</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10.echo</package-type>
+<namespaceURI>http://example.org/echo/Imports</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10.echo</package-type>
+<namespaceURI>http://example.org/echo</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10.notify</package-type>
+<namespaceURI>http://example.org/notify/Imports</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10</package-type>
+<namespaceURI>http://example.org/</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10.notify</package-type>
+<namespaceURI>http://example.org/notify</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10</package-type>
+<namespaceURI>http://example.org/echo</namespaceURI>
+</package-mapping>
+<package-mapping>
+<package-type>org.jboss.test.ws.interop.microsoft.addressing.wsa10</package-type>
+<namespaceURI>http://example.org/notify</namespaceURI>
+</package-mapping>
+<service-interface-mapping>
+<service-interface>org.jboss.test.ws.interop.microsoft.addressing.wsa10.WSAddressingCR</service-interface>
+<wsdl-service-name xmlns:serviceNS="http://tempuri.org/">serviceNS:WSAddressingCR</wsdl-service-name>
+<port-mapping>
+<port-name>CustomBinding_Notify</port-name>
+<java-port-name>CustomBinding_Notify</java-port-name>
+</port-mapping>
+<port-mapping>
+<port-name>CustomBinding_Echo</port-name>
+<java-port-name>CustomBinding_Echo</java-port-name>
+</port-mapping>
+<port-mapping>
+<port-name>CustomBinding_Echo2</port-name>
+<java-port-name>CustomBinding_Echo2</java-port-name>
+</port-mapping>
+<port-mapping>
+<port-name>CustomBinding_Echo4</port-name>
+<java-port-name>CustomBinding_Echo4</java-port-name>
+</port-mapping>
+</service-interface-mapping>
+<service-endpoint-interface-mapping>
+<service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.wsa10.Notify</service-endpoint-interface>
+<wsdl-port-type xmlns:portTypeNS="http://example.org/notify">portTypeNS:Notify</wsdl-port-type>
+<wsdl-binding xmlns:bindingNS="http://example.org/">bindingNS:CustomBinding_Notify</wsdl-binding>
+<service-endpoint-method-mapping>
+<java-method-name>notify</java-method-name>
+<wsdl-operation>Notify</wsdl-operation>
+<method-param-parts-mapping>
+<param-position>0</param-position>
+<param-type>java.lang.String</param-type>
+<wsdl-message-mapping>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/notify">wsdlMsgNS:NotifyMessage</wsdl-message>
+<wsdl-message-part-name>notify</wsdl-message-part-name>
+<parameter-mode>IN</parameter-mode>
+</wsdl-message-mapping>
+</method-param-parts-mapping>
+</service-endpoint-method-mapping>
+</service-endpoint-interface-mapping>
+<service-endpoint-interface-mapping>
+<service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.wsa10.Echo</service-endpoint-interface>
+<wsdl-port-type xmlns:portTypeNS="http://example.org/echo">portTypeNS:Echo</wsdl-port-type>
+<wsdl-binding xmlns:bindingNS="http://example.org/">bindingNS:CustomBinding_Echo</wsdl-binding>
+<service-endpoint-method-mapping>
+<java-method-name>echo</java-method-name>
+<wsdl-operation>Echo</wsdl-operation>
+<method-param-parts-mapping>
+<param-position>0</param-position>
+<param-type>java.lang.String</param-type>
+<wsdl-message-mapping>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/echo">wsdlMsgNS:EchoInMessage</wsdl-message>
+<wsdl-message-part-name>echoIn</wsdl-message-part-name>
+<parameter-mode>IN</parameter-mode>
+</wsdl-message-mapping>
+</method-param-parts-mapping>
+<wsdl-return-value-mapping>
+<method-return-value>java.lang.String</method-return-value>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/echo">wsdlMsgNS:EchoOutMessage</wsdl-message>
+<wsdl-message-part-name>echoOut</wsdl-message-part-name>
+</wsdl-return-value-mapping>
+</service-endpoint-method-mapping>
+</service-endpoint-interface-mapping>
+<service-endpoint-interface-mapping>
+<service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.wsa10.Echo2</service-endpoint-interface>
+<wsdl-port-type xmlns:portTypeNS="http://example.org/echo">portTypeNS:Echo2</wsdl-port-type>
+<wsdl-binding xmlns:bindingNS="http://example.org/">bindingNS:CustomBinding_Echo2</wsdl-binding>
+<service-endpoint-method-mapping>
+<java-method-name>echo</java-method-name>
+<wsdl-operation>Echo</wsdl-operation>
+<method-param-parts-mapping>
+<param-position>0</param-position>
+<param-type>java.lang.String</param-type>
+<wsdl-message-mapping>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/echo">wsdlMsgNS:EchoInMessage</wsdl-message>
+<wsdl-message-part-name>echoIn</wsdl-message-part-name>
+<parameter-mode>IN</parameter-mode>
+</wsdl-message-mapping>
+</method-param-parts-mapping>
+<wsdl-return-value-mapping>
+<method-return-value>java.lang.String</method-return-value>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/echo">wsdlMsgNS:EchoOutMessage</wsdl-message>
+<wsdl-message-part-name>echoOut</wsdl-message-part-name>
+</wsdl-return-value-mapping>
+</service-endpoint-method-mapping>
+</service-endpoint-interface-mapping>
+<service-endpoint-interface-mapping>
+<service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.wsa10.Echo4</service-endpoint-interface>
+<wsdl-port-type xmlns:portTypeNS="http://example.org/echo">portTypeNS:Echo4</wsdl-port-type>
+<wsdl-binding xmlns:bindingNS="http://example.org/">bindingNS:CustomBinding_Echo4</wsdl-binding>
+<service-endpoint-method-mapping>
+<java-method-name>echo</java-method-name>
+<wsdl-operation>Echo</wsdl-operation>
+<method-param-parts-mapping>
+<param-position>0</param-position>
+<param-type>java.lang.String</param-type>
+<wsdl-message-mapping>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/echo">wsdlMsgNS:EchoInMessage</wsdl-message>
+<wsdl-message-part-name>echoIn</wsdl-message-part-name>
+<parameter-mode>IN</parameter-mode>
+</wsdl-message-mapping>
+</method-param-parts-mapping>
+<wsdl-return-value-mapping>
+<method-return-value>java.lang.String</method-return-value>
+<wsdl-message xmlns:wsdlMsgNS="http://example.org/echo">wsdlMsgNS:EchoOutMessage</wsdl-message>
+<wsdl-message-part-name>echoOut</wsdl-message-part-name>
+</wsdl-return-value-mapping>
+</service-endpoint-method-mapping>
+</service-endpoint-interface-mapping>
+</java-wsdl-mapping>

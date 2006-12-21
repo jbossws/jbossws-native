@@ -1,0 +1,45 @@
+<!--
+  This wsdl is used for client artifact generation
+  
+  wsimport -keep -verbose -d ../../../java ./META-INF/wsdl/TestEndpoint.wsdl
+  
+  $Id$
+-->
+<definitions name="TestEndpointService" targetNamespace="http://eardeployment.jaxws.ws.test.jboss.org/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://eardeployment.jaxws.ws.test.jboss.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Test a schema import -->  
+  <types>
+    <xsd:import namespace="http://org.jboss.ws/jaxrpc/types" schemaLocation="TestService.xsd"/>
+  </types>
+  
+  <message name="TestEndpoint_echoResponse">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="TestEndpoint_echo">
+    <part name="arg0" type="xsd:string"/>
+  </message>
+  <portType name="TestEndpoint">
+    <operation name="echo" parameterOrder="arg0">
+      <input message="tns:TestEndpoint_echo"/>
+      <output message="tns:TestEndpoint_echoResponse"/>
+    </operation>
+  </portType>
+  <binding name="TestEndpointBinding" type="tns:TestEndpoint">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="echo">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body namespace="http://eardeployment.jaxws.ws.test.jboss.org/" use="literal"/>
+      </input>
+      <output>
+        <soap:body namespace="http://eardeployment.jaxws.ws.test.jboss.org/" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="TestEndpointService">
+    <port binding="tns:TestEndpointBinding" name="TestEndpointPort">
+      <soap:address location="http://localhost.localdomain:8080/earejb3/EJB3Bean"/>
+    </port>
+  </service>
+</definitions>

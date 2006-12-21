@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+wscompile -import -keep -mapping jaxrpc-mapping.xml config.xml
+Modify wrapper types to be DocWrappedService_(wrapper type name)_Request|ResponseStruct.
+-->
+
+<configuration xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config"> 
+<wsdl location="http://@jbosstest.host.name@:8080/jaxws-jsr181-complex/RegistrationService?wsdl" packageName="org.jboss.test.ws.jaxws.jsr181.complex.client"/>    
+</configuration>

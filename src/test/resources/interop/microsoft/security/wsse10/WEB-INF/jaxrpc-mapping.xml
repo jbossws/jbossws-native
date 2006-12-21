@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java-wsdl-mapping xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee    http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd">
+   <package-mapping>
+      <package-type>org.jboss.test.ws.interop.microsoft.security.wsse10</package-type>
+      <namespaceURI>http://tempuri.org/</namespaceURI>
+   </package-mapping>
+   <package-mapping>
+      <package-type>org.jboss.test.ws.interop.microsoft.security.wsse10</package-type>
+      <namespaceURI>http://xmlsoap.org/Ping</namespaceURI>
+   </package-mapping>
+   <package-mapping>
+      <package-type>org.jboss.test.ws.interop.microsoft.security.wsse10</package-type>
+      <namespaceURI>http://InteropBaseAddress/interop</namespaceURI>
+   </package-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.security.wsse10.Echo</java-type>
+      <anonymous-type-qname>http://InteropBaseAddress/interop:&gt;echo</anonymous-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>request</java-variable-name>
+         <xml-element-name>request</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.security.wsse10.PingResponseBody</java-type>
+      <root-type-qname xmlns:typeNS="http://xmlsoap.org/Ping">typeNS:PingResponseBody</root-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>scenario</java-variable-name>
+         <xml-element-name>scenario</xml-element-name>
+      </variable-mapping>
+      <variable-mapping>
+         <java-variable-name>origin</java-variable-name>
+         <xml-element-name>origin</xml-element-name>
+      </variable-mapping>
+      <variable-mapping>
+         <java-variable-name>text</java-variable-name>
+         <xml-element-name>text</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.security.wsse10.EchoResponse</java-type>
+      <anonymous-type-qname>http://InteropBaseAddress/interop:&gt;echoResponse</anonymous-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>echoResult</java-variable-name>
+         <xml-element-name>echoResult</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.security.wsse10.Ping</java-type>
+      <root-type-qname xmlns:typeNS="http://xmlsoap.org/Ping">typeNS:ping</root-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>scenario</java-variable-name>
+         <xml-element-name>scenario</xml-element-name>
+      </variable-mapping>
+      <variable-mapping>
+         <java-variable-name>origin</java-variable-name>
+         <xml-element-name>origin</xml-element-name>
+      </variable-mapping>
+      <variable-mapping>
+         <java-variable-name>text</java-variable-name>
+         <xml-element-name>text</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <service-interface-mapping>
+      <service-interface>org.jboss.test.ws.interop.microsoft.security.wsse10.PingService10Sign</service-interface>
+      <wsdl-service-name xmlns:serviceNS="http://tempuri.org/">serviceNS:PingService10Sign</wsdl-service-name>
+      <port-mapping>
+         <port-name>MutualCertificate10Sign_IPingServiceSign</port-name>
+         <java-port-name>MutualCertificate10Sign_IPingServiceSign</java-port-name>
+      </port-mapping>
+   </service-interface-mapping>
+   <service-endpoint-interface-mapping>
+      <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.security.wsse10.IPingServiceSign</service-endpoint-interface>
+      <wsdl-port-type xmlns:portTypeNS="http://InteropBaseAddress/interop">portTypeNS:IPingServiceSign</wsdl-port-type>
+      <wsdl-binding xmlns:bindingNS="http://tempuri.org/">bindingNS:MutualCertificate10Sign_IPingServiceSign</wsdl-binding>
+      <service-endpoint-method-mapping>
+         <java-method-name>ping</java-method-name>
+         <wsdl-operation>Ping</wsdl-operation>
+         <method-param-parts-mapping>
+            <param-position>0</param-position>
+            <param-type>org.jboss.test.ws.interop.microsoft.security.wsse10.Ping</param-type>
+            <wsdl-message-mapping>
+               <wsdl-message xmlns:wsdlMsgNS="http://InteropBaseAddress/interop">wsdlMsgNS:PingRequest</wsdl-message>
+               <wsdl-message-part-name>Ping</wsdl-message-part-name>
+               <parameter-mode>IN</parameter-mode>
+            </wsdl-message-mapping>
+         </method-param-parts-mapping>
+         <wsdl-return-value-mapping>
+            <method-return-value>org.jboss.test.ws.interop.microsoft.security.wsse10.PingResponseBody</method-return-value>
+            <wsdl-message xmlns:wsdlMsgNS="http://InteropBaseAddress/interop">wsdlMsgNS:PingResponse</wsdl-message>
+            <wsdl-message-part-name>PingResponse</wsdl-message-part-name>
+         </wsdl-return-value-mapping>
+      </service-endpoint-method-mapping>
+      <service-endpoint-method-mapping>
+         <java-method-name>echo</java-method-name>
+         <wsdl-operation>echo</wsdl-operation>
+         <method-param-parts-mapping>
+            <param-position>0</param-position>
+            <param-type>org.jboss.test.ws.interop.microsoft.security.wsse10.Echo</param-type>
+            <wsdl-message-mapping>
+               <wsdl-message xmlns:wsdlMsgNS="http://InteropBaseAddress/interop">wsdlMsgNS:IPingServiceSign_echo_InputMessage</wsdl-message>
+               <wsdl-message-part-name>parameters</wsdl-message-part-name>
+               <parameter-mode>IN</parameter-mode>
+            </wsdl-message-mapping>
+         </method-param-parts-mapping>
+         <wsdl-return-value-mapping>
+            <method-return-value>org.jboss.test.ws.interop.microsoft.security.wsse10.EchoResponse</method-return-value>
+            <wsdl-message xmlns:wsdlMsgNS="http://InteropBaseAddress/interop">wsdlMsgNS:IPingServiceSign_echo_OutputMessage</wsdl-message>
+            <wsdl-message-part-name>parameters</wsdl-message-part-name>
+         </wsdl-return-value-mapping>
+      </service-endpoint-method-mapping>
+   </service-endpoint-interface-mapping>
+</java-wsdl-mapping>

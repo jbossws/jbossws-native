@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+
+<project default="main" basedir="../.." name="JBossWS Examples">
+
+  <property name="chapter" value="jaxrpc/jsr109pojo"/>
+  <property name="sample.path" value="jaxrpc/samples/jsr109pojo"/>
+  <property name="java.dir" value="${basedir}/${chapter}/java"/>
+  <property name="resources.dir" value="${basedir}/${chapter}/resources"/>
+
+  <import file="${basedir}/common/imported-build.xml"/>
+
+  <target name="generate-sources" depends="compile" description="Generate the deployment resources.">
+    
+    <!-- Define a taskdef for the wstools ant task -->
+    <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
+        <classpath refid="compile.classpath"/>
+        <classpath path="${build.tests.dir}/classes"/>
+    </taskdef>
+    
+    <!-- samples/jsr109pojo/doclit -->
+    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF" 
+      config="${resources.dir}/doclit/wstools-config.xml"/>
+    
+    <!-- samples/jsr109pojo/rpclit -->
+    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF" 
+      config="${resources.dir}/rpclit/wstools-config.xml"/>
+
+  </target>
+  
+  <!--
+  Build the test deployments
+  -->
+  <target name="jars" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" description="build the deployments">
+    
+    <!-- jaxrpc-samples-jsr109pojo-rpc -->
+    <war warfile="${build.tests.dir}/libs/jaxrpc-samples-jsr109pojo-rpc.war" webxml="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/web.xml">
+      <classes dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Type.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Service.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*JSEEndpoint.class"/>
+      </classes>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="webservices.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
+    <jar jarfile="${build.tests.dir}/libs/jaxrpc-samples-jsr109pojo-rpc-client.jar">
+      <fileset dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Type.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Service.class"/>
+      </fileset>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/rpclit/META-INF">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+      </metainf>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+    </jar>
+    
+    <!-- jaxrpc-samples-jsr109pojo-doc -->
+    <war warfile="${build.tests.dir}/libs/jaxrpc-samples-jsr109pojo-doc.war" webxml="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF/web.xml">
+      <classes dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Type.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Struct.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Service.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*JSEEndpoint.class"/>
+      </classes>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="webservices.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
+    <jar jarfile="${build.tests.dir}/libs/jaxrpc-samples-jsr109pojo-doc-client.jar">
+      <fileset dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Type.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Struct.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jsr109pojo/*Service.class"/>
+      </fileset>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/doclit/META-INF">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+      </metainf>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+    </jar>
+    
+  </target>
+
+  <!--
+  Run the testsuite
+  -->
+  <target name="tests" depends="jars" description="run the testsuite">
+    <antcall target="test">
+      <param name="test" value="${sample.path}"/>
+    </antcall>
+  </target>
+
+</project>

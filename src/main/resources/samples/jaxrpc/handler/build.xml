@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+
+<project default="main" basedir="../.." name="JBossWS Examples">
+
+  <property name="chapter" value="jaxrpc/handler"/>
+  <property name="sample.path" value="jaxrpc/samples/handler"/>
+  <property name="java.dir" value="${basedir}/${chapter}/java"/>
+  <property name="resources.dir" value="${basedir}/${chapter}/resources"/>
+
+  <import file="${basedir}/common/imported-build.xml"/>
+
+  <target name="generate-sources" depends="compile" description="Generate the deployment resources.">
+    
+    <!-- Define a taskdef for the wstools ant task -->
+    <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
+        <classpath refid="compile.classpath"/>
+        <classpath path="${build.tests.dir}/classes"/>
+    </taskdef>
+    
+    <!-- samples/handler -->
+    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/handler/WEB-INF" 
+      config="${resources.dir}/wstools-config.xml"/>
+    
+  </target>
+  
+  <!--
+  Build the test deployments
+  -->
+  <target name="jars" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" description="build the deployments">
+    
+    <!-- jaxrpc-samples-handler -->
+    <war warfile="${build.tests.dir}/libs/jaxrpc-samples-handler.war" webxml="${build.tests.dir}/resources/jaxrpc/samples/handler/WEB-INF/web.xml">
+      <classes dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/handler/*Service.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/handler/*ServiceBean.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/handler/ServerSideHandler.class"/>
+      </classes>
+      <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/handler/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="webservices.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
+    <jar jarfile="${build.tests.dir}/libs/jaxrpc-samples-handler-client.jar">
+      <fileset dir="${build.tests.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/handler/*Service.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/handler/ClientSideHandler.class"/>
+      </fileset>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/handler/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+      <metainf dir="${build.tests.dir}/resources/jaxrpc/samples/handler/META-INF">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+      </metainf>
+    </jar>
+    
+  </target>
+
+  <!--
+  Run the testsuite
+  -->
+  <target name="tests" depends="jars" description="run the testsuite">
+    <antcall target="test">
+      <param name="test" value="${sample.path}"/>
+    </antcall>
+  </target>
+
+</project>

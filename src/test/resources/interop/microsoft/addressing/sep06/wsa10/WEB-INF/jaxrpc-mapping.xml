@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8'?><java-wsdl-mapping version='1.1' xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd'>
+   <package-mapping>
+      <package-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10</package-type>
+      <namespaceURI>http://tempuri.org/</namespaceURI>
+   </package-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoInMessage</java-type>
+      <anonymous-type-qname xmlns:typeNS='http://example.org/echo'>typeNS:&gt;EchoInMessage</anonymous-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>echoIn</java-variable-name>
+         <xml-element-name>echoIn</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoOutMessage</java-type>
+      <anonymous-type-qname xmlns:typeNS='http://example.org/echo'>typeNS:&gt;EchoOutMessage</anonymous-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>echoOut</java-variable-name>
+         <xml-element-name>echoOut</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <java-xml-type-mapping>
+      <java-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.NotifyMessage</java-type>
+      <anonymous-type-qname xmlns:typeNS='http://example.org/notify'>typeNS:&gt;NotifyMessage</anonymous-type-qname>
+      <qname-scope>complexType</qname-scope>
+      <variable-mapping>
+         <java-variable-name>notify</java-variable-name>
+         <xml-element-name>notify</xml-element-name>
+      </variable-mapping>
+   </java-xml-type-mapping>
+   <service-interface-mapping>
+      <service-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.WSAddressingCR</service-interface>
+      <wsdl-service-name xmlns:serviceNS='http://tempuri.org/'>serviceNS:WSAddressingCR</wsdl-service-name>
+      <port-mapping>
+         <port-name>CustomBinding_Echo</port-name>
+         <java-port-name>CustomBinding_Echo</java-port-name>
+      </port-mapping>
+      <port-mapping>
+         <port-name>CustomBinding_Notify</port-name>
+         <java-port-name>CustomBinding_Notify</java-port-name>
+      </port-mapping>
+      <port-mapping>
+         <port-name>CustomBinding_Echo4</port-name>
+         <java-port-name>CustomBinding_Echo4</java-port-name>
+      </port-mapping>
+      <port-mapping>
+         <port-name>CustomBinding_Echo2</port-name>
+         <java-port-name>CustomBinding_Echo2</java-port-name>
+      </port-mapping>
+   </service-interface-mapping>
+   <service-endpoint-interface-mapping>
+      <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.Echo</service-endpoint-interface>
+      <wsdl-port-type xmlns:portTypeNS='http://tempuri.org/'>portTypeNS:EchoPortType</wsdl-port-type>
+      <wsdl-binding xmlns:bindingNS='http://tempuri.org/'>bindingNS:CustomBinding_Echo</wsdl-binding>
+      <service-endpoint-method-mapping>
+         <java-method-name>echoOp</java-method-name>
+         <wsdl-operation>EchoOp</wsdl-operation>
+         <method-param-parts-mapping>
+            <param-position>0</param-position>
+            <param-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoInMessage</param-type>
+            <wsdl-message-mapping>
+               <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:EchoInMessage</wsdl-message>
+               <wsdl-message-part-name>parameters</wsdl-message-part-name>
+               <parameter-mode>INOUT</parameter-mode>
+            </wsdl-message-mapping>
+         </method-param-parts-mapping>
+         <wsdl-return-value-mapping>
+            <method-return-value>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoOutMessage</method-return-value>
+            <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:EchoOutMessage</wsdl-message>
+            <wsdl-message-part-name>parameters</wsdl-message-part-name>
+         </wsdl-return-value-mapping>
+      </service-endpoint-method-mapping>
+   </service-endpoint-interface-mapping>
+   <service-endpoint-interface-mapping>
+      <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.Notify</service-endpoint-interface>
+      <wsdl-port-type xmlns:portTypeNS='http://tempuri.org/'>portTypeNS:Notify</wsdl-port-type>
+      <wsdl-binding xmlns:bindingNS='http://tempuri.org/'>bindingNS:CustomBinding_Notify</wsdl-binding>
+      <service-endpoint-method-mapping>
+         <java-method-name>notify</java-method-name>
+         <wsdl-operation>Notify</wsdl-operation>
+         <method-param-parts-mapping>
+            <param-position>0</param-position>
+            <param-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.NotifyMessage</param-type>
+            <wsdl-message-mapping>
+               <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:NotifyMessage</wsdl-message>
+               <wsdl-message-part-name>parameters</wsdl-message-part-name>
+               <parameter-mode>IN</parameter-mode>
+            </wsdl-message-mapping>
+         </method-param-parts-mapping>
+      </service-endpoint-method-mapping>
+   </service-endpoint-interface-mapping>
+   <service-endpoint-interface-mapping>
+      <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.Echo</service-endpoint-interface>
+      <wsdl-port-type xmlns:portTypeNS='http://tempuri.org/'>portTypeNS:EchoPortType</wsdl-port-type>
+      <wsdl-binding xmlns:bindingNS='http://tempuri.org/'>bindingNS:CustomBinding_Echo4</wsdl-binding>
+      <service-endpoint-method-mapping>
+         <java-method-name>echoOp</java-method-name>
+         <wsdl-operation>EchoOp</wsdl-operation>
+         <method-param-parts-mapping>
+            <param-position>0</param-position>
+            <param-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoInMessage</param-type>
+            <wsdl-message-mapping>
+               <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:EchoInMessage</wsdl-message>
+               <wsdl-message-part-name>parameters</wsdl-message-part-name>
+               <parameter-mode>INOUT</parameter-mode>
+            </wsdl-message-mapping>
+         </method-param-parts-mapping>
+         <wsdl-return-value-mapping>
+            <method-return-value>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoOutMessage</method-return-value>
+            <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:EchoOutMessage</wsdl-message>
+            <wsdl-message-part-name>parameters</wsdl-message-part-name>
+         </wsdl-return-value-mapping>
+      </service-endpoint-method-mapping>
+   </service-endpoint-interface-mapping>
+   <service-endpoint-interface-mapping>
+      <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.Echo</service-endpoint-interface>
+      <wsdl-port-type xmlns:portTypeNS='http://tempuri.org/'>portTypeNS:EchoPortType</wsdl-port-type>
+      <wsdl-binding xmlns:bindingNS='http://tempuri.org/'>bindingNS:CustomBinding_Echo2</wsdl-binding>
+      <service-endpoint-method-mapping>
+         <java-method-name>echoOp</java-method-name>
+         <wsdl-operation>EchoOp</wsdl-operation>
+         <method-param-parts-mapping>
+            <param-position>0</param-position>
+            <param-type>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoInMessage</param-type>
+            <wsdl-message-mapping>
+               <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:EchoInMessage</wsdl-message>
+               <wsdl-message-part-name>parameters</wsdl-message-part-name>
+               <parameter-mode>INOUT</parameter-mode>
+            </wsdl-message-mapping>
+         </method-param-parts-mapping>
+         <wsdl-return-value-mapping>
+            <method-return-value>org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.EchoOutMessage</method-return-value>
+            <wsdl-message xmlns:wsdlMsgNS='http://tempuri.org/'>wsdlMsgNS:EchoOutMessage</wsdl-message>
+            <wsdl-message-part-name>parameters</wsdl-message-part-name>
+         </wsdl-return-value-mapping>
+      </service-endpoint-method-mapping>
+   </service-endpoint-interface-mapping>
+</java-wsdl-mapping>

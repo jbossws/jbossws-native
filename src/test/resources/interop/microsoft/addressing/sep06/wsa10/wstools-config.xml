@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<configuration xmlns="http://www.jboss.org/jbossws-tools">
+  <global>
+    <package-namespace package="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10"
+                       namespace="http://example.org/notify" />
+     <package-namespace package="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10"
+                        namespace="http://example.org/echo"/>
+     <package-namespace package="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10"
+                        namespace="http://tempuri.org/"/>
+  </global>
+  <wsdl-java file="resources/interop/microsoft/addressing/sep06/wsa10/WEB-INF/wsdl/service.wsdl">
+    <mapping file="jaxrpc-mapping.xml" />
+  </wsdl-java>
+</configuration>

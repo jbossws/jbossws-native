@@ -1,0 +1,437 @@
+/*
+  * JBoss, Home of Professional Open Source
+  * Copyright 2005, JBoss Inc., and individual contributors as indicated
+  * by the @authors tag. See the copyright.txt in the distribution for a
+  * full listing of individual contributors.
+  *
+  * This is free software; you can redistribute it and/or modify it
+  * under the terms of the GNU Lesser General Public License as
+  * published by the Free Software Foundation; either version 2.1 of
+  * the License, or (at your option) any later version.
+  *
+  * This software is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  * Lesser General Public License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this software; if not, write to the Free
+  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  */
+package org.jboss.test.ws.tools.validation;
+
+import java.util.Iterator;
+
+import javax.xml.namespace.QName;
+
+import org.jboss.ws.metadata.wsdl.NCName;
+import org.jboss.ws.metadata.wsdl.WSDLBinding;
+import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
+import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
+import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
+import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
+import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
+import org.jboss.ws.metadata.wsdl.WSDLInterface;
+import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
+import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInfault;
+import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInput;
+import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
+import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
+import org.jboss.ws.metadata.wsdl.WSDLService;
+import org.jboss.ws.tools.exceptions.JBossWSToolsException;
+
+/**
+ *  WSDL Validator Helper class
+ *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
+ *  @since  August 1, 2005 
+ */ 
+public class WSDLValidationHelper
+{
+   /**
+    * Validate the WSDLBinding objects
+    * @param w1 WSDLDefinitions object for the first wsdl
+    * @param w2 WSDLDefinition object for the second wsdl
+    * @return true - if match, false - otherwise
+    * @throws JBossWSToolsException
+    */
+   public static boolean validateBindings(WSDLDefinitions w1, WSDLDefinitions w2) 
+   throws JBossWSToolsException
+   {  boolean bool = false;
+      WSDLBinding[] bindings1 = w1.getBindings();
+      WSDLBinding[] bindings2 = w2.getBindings();
+      if (bindings1 == null || bindings1.length == 0)
+      {
+         throw new JBossWSToolsException("bindings in first wsdl cannot be null"); 
+      }
+      if(bindings2 == null || bindings2.length == 0)
+      {
+         throw new JBossWSToolsException("bindings in second wsdl cannot be null"); 
+      }
+      if(bindings1.length != bindings2.length)
+         throw new JBossWSToolsException("Mismatch in the number of bindings"); 
+      
+      for (int i = 0; i < bindings1.length; i++)
+      {
+         WSDLBinding binding1 = bindings1[i];
+         WSDLBinding binding2 = bindings2[i];
+         bool = validateBindingOperations(binding1.getOperations(),binding2.getOperations());
+      }
+      return bool;
+   }
+   
+   
+   /**
+    * Validates the namespace definitions in the wsdl
+    * @param w1 WSDL Definitions for the first wsdl
+    * @param w2 WSDL Definitions for the second wsdl
+    * @return true if the namespace definitions match
+    * @throws JBossWSToolsException any inconsistencies
+    */
+   public static boolean validateInterfaces(WSDLDefinitions w1, WSDLDefinitions w2) 
+   throws JBossWSToolsException
+   {
+      boolean bool = false;
+      
+      WSDLInterface[] wiarr1 = w1.getInterfaces(); 
+      WSDLInterface[] wiarr2 = w2.getInterfaces();
+      
+      if(wiarr1.length != wiarr2.length)
+         throw new JBossWSToolsException("Number of interfaces mismatch");
+      
+      int len = wiarr1.length;
+      
+      for(int i = 0; i < len; i++)
+      {
+         WSDLInterface wi1 = wiarr1[i];
+         WSDLInterface wi2 = wiarr2[i];
+         if(checkNCNameEquality(wi1.getName(),wi2.getName()) == false) 
+            throw new JBossWSToolsException("Interface mismatch");
+         WSDLInterfaceOperation[] wioparr1 = wi1.getOperations();
+         WSDLInterfaceOperation[] wioparr2 = wi2.getOperations();
+         
+         if(wioparr1.length != wioparr2.length)
+            throw new JBossWSToolsException("Number of Interface Operations mismatch");
+         int innerlen = wioparr1.length;
+         for(int j = 0 ; j< innerlen; j++)
+         {
+            bool = validateInterfaceOperation(wioparr1[j],wioparr2[j]);
+            if(bool == false) 
+               throw new JBossWSToolsException("validation Interface Operations failed");
+         }
+      }
+      return bool;
+   }
+   
+   /**
+    * Validates the namespace definitions in the wsdl
+    * @param w1 WSDL Definitions for the first wsdl
+    * @param w2 WSDL Definitions for the second wsdl
+    * @return true if the namespace definitions match
+    * @throws JBossWSToolsException any inconsistencies
+    */
+   public static boolean validateNSDefinitions(WSDLDefinitions w1, WSDLDefinitions w2) 
+   throws JBossWSToolsException
+   {
+      String ts1 = w1.getTargetNamespace();
+      String ts2 = w2.getTargetNamespace();
+      if(ts1 == null || ts1.equals(""))
+         throw new JBossWSToolsException("Target Namespaces 1 is null");
+      if(ts2 == null || ts2.equals(""))
+         throw new JBossWSToolsException("Target Namespaces 2 is null");
+      if(ts1.equals(ts2) == false)
+         throw new JBossWSToolsException("Target Namespaces do not match");
+      
+      Iterator iter1 = w1.getRegisteredPrefix();
+      
+      /**
+       * IDEA: We get a namespace from the first wsdl and check that it is defined
+       * in the other wsdl, irrespective of the prefix match
+       */
+      while(iter1.hasNext())
+      {
+         String prefix1 = (String)iter1.next(); 
+         
+         String ns = w1.getNamespaceURI(prefix1); 
+         
+         //Ignore the namespaces that are generated by wscompile for arrays
+         if(ns.indexOf("arrays") > -1 )
+            continue;
+         
+         String prefix2 = w2.getPrefix(ns);
+         
+         if(prefix2 == null)
+            throw new JBossWSToolsException("Namespace " + ns + " not defined in the second wsdl");    
+      }
+      
+      //Lets check the prefixes and namespaces
+      /*while(iter1.hasNext() && iter2.hasNext())
+      {
+         String prefix1 = iter1.next();
+         String prefix2 = iter2.next();
+         
+         String ns1 = w1.getNamespaceURI(prefix1);
+         String ns2 = w2.getNamespaceURI(prefix2);
+         
+         if(prefix1.equals(prefix2)==false)
+            throw new JBossWSToolsException("Prefixes mismatch:"+prefix1 +" and " +prefix2 );
+         if(ns1.equals(ns2) == false)
+         {
+            StringBuffer sb = new StringBuffer("Prefixes:"+prefix1+" and "+prefix2+" have");
+            sb.append("Namespaces mismatch:"+ns1 +" and"+ns2);
+            throw new JBossWSToolsException(sb.toString());
+         }   
+      }*/
+      return true;
+   }
+   
+   /**
+    * Validate the WSDLServices for the two wsdl
+    * @param w1 WSDLDefinitions object of the first wsdl
+    * @param w2 WSDLDefinitions object of the second wsdl
+    * @return true-if match, false - otherwise
+    * @throws JBossWSToolsException
+    */
+   public static boolean validateServices(WSDLDefinitions w1, WSDLDefinitions w2) 
+   throws JBossWSToolsException
+   {  
+      boolean bool = false;
+      WSDLService[] services1 = w1.getServices();
+      WSDLService[] services2 = w2.getServices();
+      if (services1 == null || services1.length == 0)
+      {
+         throw new JBossWSToolsException("services in first wsdl cannot be null"); 
+      }
+      if(services2 == null || services2.length == 0)
+      {
+         throw new JBossWSToolsException("services in second wsdl cannot be null"); 
+      }
+      if(services1.length != services2.length)
+         throw new JBossWSToolsException("Mismatch in the number of services"); 
+      
+      for (int i = 0; i < services1.length; i++)
+      {
+         WSDLService s1 = services1[i];
+         WSDLService s2 = services2[i];
+         bool = checkNCNameEquality(s1.getName(),s2.getName());
+         if(bool)
+         {
+            WSDLEndpoint[] we1 = s1.getEndpoints();
+            WSDLEndpoint[] we2 = s2.getEndpoints();
+            bool = validateWSDLEndpoints(we1, we2);
+         }
+      }
+      return bool;
+   }
+   
+   
+   
+   //***************************************************************************
+   //
+   //                   PRIVATE METHODS
+   //
+   //***************************************************************************
+   /**
+    * Compare two NCName (s)  for equality
+    * @param name1
+    * @param name2
+    * @return
+    */
+   private static boolean checkNCNameEquality(NCName name1, NCName name2)
+   {
+      if(name1 == null && name2 == null) return true;
+     String str1 = name1.toString();
+     String str2 = name2.toString();
+     if(str1.equals(str2) == false) return false;
+     return true;
+   }
+   
+   /**
+    * Compare two NQName (s)  for equality
+    * @param name1
+    * @param name2
+    * @return
+    */
+   private static boolean checkQNameEquality(QName name1, QName name2)
+   {
+     String str1 = name1.getLocalPart();
+     String str2 = name2.getLocalPart();
+     if(str1.equals(str2) == false) return false;
+     if(name1.getNamespaceURI().equals(name2.getNamespaceURI()) == false) return false;
+     return true;
+   }
+   
+   private static boolean validateInterfaceOperation(WSDLInterfaceOperation w1,
+                                 WSDLInterfaceOperation w2) throws JBossWSToolsException
+   
+   {
+      boolean bool = checkNCNameEquality(w1.getName(),w2.getName());
+      if(bool)
+      {
+            //validate the inputs
+            WSDLInterfaceOperationInput wiarr1[] = w1.getInputs();
+            WSDLInterfaceOperationInput wiarr2[] = w2.getInputs();
+            if(wiarr1.length != wiarr2.length)
+               throw new JBossWSToolsException("Number of WSDLInterfaceOperationInput mismatch");
+            int len = wiarr1.length;
+            for(int i = 0 ; i < len; i ++)
+            {
+               bool = validateInterfaceOperationInput(wiarr1[i],wiarr2[i]);
+               if(!bool) return bool;
+            }
+            //validate the outputs
+            WSDLInterfaceOperationOutput woarr1[] = w1.getOutputs();
+            WSDLInterfaceOperationOutput woarr2[] = w2.getOutputs();
+            if(woarr1.length != woarr2.length)
+               throw new JBossWSToolsException("Number of WSDLInterfaceOperationInput mismatch");
+            len = woarr1.length;
+            for(int i = 0 ; i < len; i ++)
+            {
+               bool = validateInterfaceOperationOutput(woarr1[i],woarr2[i]);
+               if(!bool) return bool;
+            }
+            //validate the faults
+            WSDLInterfaceOperationInfault[] inf1 = w1.getInfaults();
+            WSDLInterfaceOperationInfault[] inf2 = w2.getInfaults();
+            if( (inf1 != null && inf2 == null) ||
+                 (inf1 == null && inf2 != null) )
+                 throw new JBossWSToolsException("Infaults mismatch for operation:"+w1.getName());
+            if(inf1.length != inf2.length)
+                 throw new JBossWSToolsException("Number of Infaults mismatch for operation:"+w1.getName());
+            
+            len = inf1.length;
+            for(int i=0; i< len; i++)
+            {
+               bool = checkQNameEquality(inf1[i].getRef(),inf2[i].getRef());
+               if(bool)
+                  bool = checkNCNameEquality(inf1[i].getMessageLabel(),inf2[i].getMessageLabel());
+               if(bool == false) return bool;
+            }
+              
+            WSDLInterfaceOperationOutfault[] outf1 = w1.getOutfaults();
+            WSDLInterfaceOperationOutfault[] outf2 = w2.getOutfaults();
+            if( (outf1 != null && outf2 == null) ||
+                 (outf1 == null && outf2 != null) )
+                 throw new JBossWSToolsException("Outfaults mismatch for operation:"+w1.getName());
+            if(outf1.length != outf2.length)
+               throw new JBossWSToolsException("Number of Infaults mismatch for operation:"+w1.getName());
+            
+            len = outf1.length;
+            for(int i=0; i< len; i++)
+            {
+               bool = checkQNameEquality(outf1[i].getRef(),outf2[i].getRef());
+               if(bool)
+                  bool = checkNCNameEquality(outf1[i].getMessageLabel(),outf2[i].getMessageLabel());
+               if(bool == false) return bool;
+            }
+      }
+         
+      return bool;
+   }
+   
+   private static boolean validateInterfaceOperationInput(WSDLInterfaceOperationInput i1,
+                                   WSDLInterfaceOperationInput i2) throws JBossWSToolsException
+   {
+      boolean bool = false;
+      QName xmlName1 = i1.getElement();
+      QName xmlName2 = i2.getElement();
+      bool = checkQNameEquality(xmlName1,xmlName2);
+      if(bool == false)
+         throw new JBossWSToolsException(xmlName1 + " & " + xmlName2 + " mismatch");
+      return bool;
+   }
+   
+   private static boolean validateInterfaceOperationOutput(WSDLInterfaceOperationOutput i1,
+         WSDLInterfaceOperationOutput i2)
+   {
+      boolean bool = false;
+      bool = checkQNameEquality(i1.getElement(),i2.getElement());
+      if(bool == false) return false;
+      return bool;
+   }
+   
+   private static boolean validateBindingOperations(WSDLBindingOperation[] barr1, WSDLBindingOperation[] barr2)
+   throws JBossWSToolsException
+   {
+      boolean bool = false;
+      if((barr1 == null && barr2 != null) ||
+            (barr1 != null && barr2 == null))
+         throw new JBossWSToolsException("Mismatch in the Binding Operations");
+      if(barr1.length != barr2.length)
+         throw new JBossWSToolsException("Mismatch in number of Binding Operations");
+      
+      int len = barr1.length;
+      
+      for(int i=0; i< len; i++)
+      {
+         bool = validateBindingOperation(barr1[i], barr2[i]);
+         if(!bool) return bool;
+      }
+      
+      return bool;
+   }
+   
+   private static boolean validateBindingOperation(WSDLBindingOperation b1, WSDLBindingOperation b2)
+   throws JBossWSToolsException
+   {
+      String bname = b1.getRef().getLocalPart();
+      boolean bool = false;
+      bool = checkQNameEquality(b1.getRef(),b2.getRef());
+      WSDLBindingOperationInput[] wb1 = b1.getInputs();
+      WSDLBindingOperationInput[] wb2 = b2.getInputs();
+      
+      if(wb1.length != wb2.length)
+         throw new JBossWSToolsException("Mismatch in the number of inputs for binding op:"+bname);
+      
+      int len = wb1.length;
+      for(int i=0; i< len; i++)
+      {
+         WSDLBindingOperationInput bindin1 = wb1[i];
+         WSDLBindingOperationInput bindin2 = wb2[i]; 
+         bool = checkNCNameEquality(bindin1.getMessageLabel(),bindin2.getMessageLabel());
+         if(!bool) return bool;
+      }
+      
+      WSDLBindingOperationOutput[] wboutarr1 = b1.getOutputs();
+      WSDLBindingOperationOutput[] wboutarr2 = b2.getOutputs();
+      
+      if(wboutarr1.length != wboutarr2.length)
+         throw new JBossWSToolsException("Mismatch in the number of outputs for binding op:"+bname);
+      
+      len = wboutarr1.length;
+      for(int i=0; i< len; i++)
+      {
+         WSDLBindingOperationOutput bindout1 = wboutarr1[i];
+         WSDLBindingOperationOutput bindout2 = wboutarr2[i]; 
+         bool = checkNCNameEquality(bindout1.getMessageLabel(),bindout2.getMessageLabel());
+      }
+      return bool;
+   }
+   
+   private static boolean validateWSDLEndpoints(WSDLEndpoint[] warr1, WSDLEndpoint[] warr2)
+   throws JBossWSToolsException
+   {
+      boolean bool = false;
+      if(warr1 == null || warr1.length == 0)
+         throw new JBossWSToolsException("Number of endpoints in first wsdl is null");
+      if(warr2 == null || warr2.length == 0)
+         throw new JBossWSToolsException("Number of endpoints in second wsdl is null");
+      int len = warr1.length;
+      for(int i=0; i< len;i++)
+      {
+         WSDLEndpoint e1 = warr1[i];
+         WSDLEndpoint e2 = warr2[i];
+         String add1 = e1.getAddress();
+         String add2 = e2.getAddress();
+         if(add1.equals(add2) == false)
+            throw new JBossWSToolsException("Endpoint addresses do not match");
+         bool = checkQNameEquality(e1.getBinding(),e2.getBinding());
+         if(bool == false) 
+            throw new JBossWSToolsException("Endpoint binding do not match");
+         bool = checkNCNameEquality(e1.getName(),e2.getName()); 
+         if(bool == false) 
+            throw new JBossWSToolsException("Endpoint Names do not match"); 
+      }
+      return bool;
+   }
+}

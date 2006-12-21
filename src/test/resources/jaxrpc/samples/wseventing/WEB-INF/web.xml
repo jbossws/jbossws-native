@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  
+  <display-name>Sysmon Eventsource App</display-name>
+  
+  <servlet>
+    <servlet-name>EventSourceServlet</servlet-name>
+    <servlet-class>org.jboss.ws.extensions.eventing.EventSourceEndpointImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SubscriptionManagerServlet</servlet-name>
+    <servlet-class>org.jboss.ws.extensions.eventing.SubscriptionManagerEndpointImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>EventSourceServlet</servlet-name>
+    <url-pattern>/subscribe</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubscriptionManagerServlet</servlet-name>
+    <url-pattern>/manage</url-pattern>
+  </servlet-mapping>
+  
+</web-app>

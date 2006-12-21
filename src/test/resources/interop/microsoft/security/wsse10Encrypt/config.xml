@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   This file is used from the webservice/test subdirectory
+   therefore the resource references have to be relative to that base directory.
+-->
+<configuration xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+   <wsdl location="resources/interop/microsoft/security/wsse10Encrypt/WEB-INF/wsdl/WsSecurity10Encrypt.wsdl"
+         packageName="org.jboss.test.ws.interop.microsoft.security.wsse10Encrypt"/>
+</configuration>

@@ -1,0 +1,84 @@
+
+@implementation.title@
+@implementation.url@
+
+Version: jbossws-@version.id@
+
+Release Notes
+=============
+
+The UserGuide can be found in the docs directory and is usally a good starting point
+A list of examples that accompany the UserGuide can be found in the samples
+
+If you have any questions, please post to the JBossWS User Forum
+http://www.jboss.org/index.html?module=bb&op=viewforum&f=200
+
+For details see the change log. 
+http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.project:changelog-panel
+
+For issues that are scheduled for future versions see the road map.
+http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.project:roadmap-panel
+
+What's new in jbossws-@version.id@
+----------------------------------
+
+* [JBWS-660]  XOP inline base64Binary and sign message  
+* [JBWS-779]  Add webservices.xml support to wsdlTojava  
+* [JBWS-868]  BPEL in jbossws-samples
+* [JBWS-1113] Improve performance of Service.getPort()
+* [JBWS-1178] Multiple virtual host and soap:address problem
+* [JBWS-1182] Change wsdl-java@file to wsdl-java@location
+* [JBWS-1200] Provide source download for GA release
+* [JBWS-1261] Provide support for additional MTOM java types besides byte[]
+* [JBWS-1299] Add support for wsdl-java@parameter-style
+* [JBWS-1302] Use EAR name in context root for EJB endpoints
+* [JBWS-1323] Add JBoss EULA
+* Bug fixes
+
+Errata
+------
+
+* FIXME: [JBWS-1291] Fix JaxrpcMappingValidator
+* FIXME: [JBWS-1292] Fix XOPElementRPCTestCase
+* FIXME: [JBWS-269] Support attachments in Web Services Tools
+* FIXME: [JBWS-269] Support attachments in Web Services Tools
+* FIXME: [JBWS-434] Support sequences of anys
+* FIXME: [JBWS-798] Complete EventingTestCase
+* FIXME: [JBWS-798] Complete EventingTestCase
+* FIXME: [JBWS-798] Complete EventingTestCase
+* FIXME: [JBWS-940] Add wsdl-java support for jdk 1.4 typesafe enums
+
+Enjoy,
+The JBossWS Team
+
+Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What's new in jbossws-1.0.3
+----------------------------------
+
+* [JBWS-983]  Configure SOAPAction on the Call object  
+* [JBWS-1090] preventing override of webservices.xml when multiple web services are processed with wstools  
+* [JBWS-1160] XOP Inline base64 for doc/lit requests
+* Bug fixes
+
+What's new in jbossws-1.0.2
+----------------------------------
+
+* [JBWS-855] Provide MTOM for document/literal  
+* [JBWS-920] integrate wstools wsdl2java functionality
+* [JBWS-921] integrate wstools java2wsdl functionality
+* [JBWS-932] Performance bottleneck when marshalling array types
+* Bug fixes
+
+What's new in jbossws-1.0.1
+----------------------------------
+
+* [JBWS-776] WSDLToJava Support wildcards
+* [JBWS-852] Integration with Mikrocontainer
+* [JBWS-865] Support security annotations for EJB3 endpoints
+* [JBWS-871] Arrays with JSR181 endpoints  
+* [JBWS-923] Complete MTOM for rpc/literal
+* Bug fixes
+
+Enjoy,
+The JBossWS Team

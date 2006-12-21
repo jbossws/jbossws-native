@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project default="release" name="JBossWS Release">
+
+  <target name="release" depends="all,release-to-repository,release-to-portal" description="Release JBossWS">
+    <echo message="*********************************************"/>
+    <echo message="* Released: jbossws-${version.id}"/>
+    <echo message="*"/>
+    <echo message="* Almost there, please do these steps manually"/>
+    <echo message="*"/>
+    <echo message="*  1) Create SVN tag: jbossws-${version.id}"/>
+    <echo message="*  2) Update portal-content/project.xml"/>
+    <echo message="*  3) Update portal-content/counter.xml"/>
+    <echo message="*  4) Update news in portal-content/freezone/projectDescription.xml"/>
+    <echo message="*  5) Verify release notes and install instructions"/>
+    <echo message="*  6) Commit the portal-content"/>
+    <echo message="*  7) Commit the repository jars"/>
+    <echo message="*  8) Write a stick post on the user forum"/>
+    <echo message="*  9) Release the jbossws-${version.id} version in JIRA"/>
+    <echo message="* 10) Post a message to jbossws-announce@lists.jboss.org"/>
+    <echo message="* 11) Post a message to thecore@jboss.org"/>
+    <echo message="*"/>
+    <echo message="*********************************************"/>
+  </target>
+
+  <!-- Release to jboss.local.repository -->
+  <target name="release-to-repository" depends="module-jars" description="Release to jboss.local.repository">
+
+    <!-- jbossws -->
+    <property name="jbossws.dir" value="${jboss.local.repository}/jboss/jbossws/${repository.id}"/>
+    <mkdir dir="${jbossws.dir}/lib"/>
+    <copy todir="${jbossws.dir}/lib" overwrite="true">
+      <fileset dir="${build.lib.dir}">
+        <include name="jbossws.sar"/>
+        <include name="jbossws.deployer"/>
+        <include name="jbossws-client.jar"/>
+        <include name="jbossws-jboss-integration.jar"/>
+        <include name="jbossws-tomcat-integration.jar"/>
+        <include name="jboss-jaxrpc.jar"/>
+        <include name="jboss-jaxws.jar"/>
+        <include name="jboss-saaj.jar"/>
+      </fileset>
+    </copy>
+    <copy tofile="${jbossws.dir}/component-info.xml" file="${src.etc.dir}/jbossws-component-info.xml" filtering="true" overwrite="true">
+      <filterset>
+        <filtersfile file="version.properties"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Release to portal content -->
+  <target name="check-portal-content" depends="prepare" unless="jbossws.portal.content.available">
+    <echo message="*********************************************"/>
+    <echo message="* Not available: ${jbossws.portal.content}"/>
+    <echo message="*********************************************"/>
+  </target>
+  <target name="release-to-portal" depends="check-portal-content" description="Release to portal-content" if="jbossws.portal.content.available">
+    
+    <property name="portal.freezone" value="${jbossws.portal.content}/freezone"/>
+    <property name="portal.userguide" value="${portal.freezone}/user-guide"/>
+    <property name="portal.downloads" value="${jbossws.portal.content}/downloads"/>
+    
+    <!-- Copy user guide -->
+    <copy todir="${portal.userguide}" overwrite="true">
+      <fileset dir="${docs.userguide.dir}/build">
+        <include name="en/**"/>
+      </fileset>
+    </copy>
+    
+    <!-- Copy downloads -->
+    <copy todir="${portal.downloads}" overwrite="true">
+      <fileset dir="${build.dir}">
+        <include name="jbossws-${version.id}.zip"/>
+        <include name="jbossws-src-${version.id}.zip"/>
+        <include name="jbossws-samples-${version.id}.zip"/>
+      </fileset>
+    </copy>
+    
+    <!-- Copy Release Notes -->
+    <copy tofile="${portal.downloads}/ReleaseNotes-${version.id}.txt" file="${build.bin.dist}/ReleaseNotes.txt" overwrite="true"/>
+    <copy tofile="${portal.downloads}/Install-${version.id}.txt" file="${build.bin.dist}/Install.txt" overwrite="true"/>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Build distributions                                                -->
+  <!-- ================================================================== -->
+
+  <!-- Build the bin dist -->
+  <target name="build-bin-dist" description="Build the binary distribution"
+    depends="main,jbossws-thirdparty-jar,build-samples,build-docs">
+    
+    <mkdir dir="${build.bin.dist}"/>
+    <mkdir dir="${build.bin.dist}/bin"/>
+    <mkdir dir="${build.bin.dist}/docs/html"/>
+    <mkdir dir="${build.bin.dist}/lib/jboss-jdk1.5"/>
+    <mkdir dir="${build.bin.dist}/lib/jboss-jdk1.4"/>
+    <mkdir dir="${build.bin.dist}/lib/tomcat/common/endorsed"/>
+    <mkdir dir="${build.bin.dist}/lib/tomcat/common/lib"/>
+    <mkdir dir="${build.bin.dist}/lib/tomcat/webapps"/>
+    
+    <copy todir="${build.bin.dist}" file="${src.etc.dir}/JBossORG-EULA.txt" overwrite="true"/>
+    <copy todir="${build.bin.dist}" filtering="true" overwrite="true">
+      <fileset dir="${src.dist.dir}"/>
+      <filterset>
+        <filtersfile file="version.properties"/>
+      </filterset>
+    </copy>
+    <copy todir="${build.bin.dist}/bin">
+      <fileset dir="${src.etc.dir}">
+        <include name="wstools.bat"/>
+        <include name="wstools.sh"/>
+      </fileset>
+    </copy>
+
+    <!-- samples -->
+    <copy todir="${build.bin.dist}" file="${build.dir}/${samples.target}.zip" overwrite="true"/>
+    
+    <!-- documentation -->
+    <copy todir="${build.bin.dist}/docs/html" overwrite="true">
+      <fileset dir="${docs.userguide.dir}/build/en/html"/>
+    </copy>
+    <copy todir="${build.bin.dist}/docs" overwrite="true">
+      <fileset dir="${docs.userguide.dir}/build/en/pdf"/>
+    </copy>
+
+    <!-- lib/jdk1.5 -->
+    <copy todir="${build.bin.dist}/lib/jboss-jdk1.5" overwrite="true">
+      <fileset dir="${build.lib.dir}" includes="jbossws-client.jar,jbossws.sar"/>
+    </copy>
+
+    <!-- lib/tomcat -->
+    <copy todir="${build.bin.dist}/lib/tomcat/common/endorsed" overwrite="true">
+      <fileset dir="${thirdparty.dir}">
+        <include name="serializer.jar"/>
+        <include name="xalan.jar"/>
+        <include name="xercesImpl.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${build.bin.dist}/lib/tomcat/common/lib" overwrite="true">
+      <fileset dir="${thirdparty.dir}">
+        <include name="activation.jar"/>
+        <include name="log4j.jar"/>
+        <include name="mailapi.jar"/>
+      </fileset>
+      <fileset dir="${build.lib.dir}">
+        <include name="jbossws-core.jar"/>
+        <include name="jbossws-tomcat-integration.jar"/>
+        <include name="jbossws-thirdparty.jar"/>
+        <include name="jboss-jaxws.jar"/>
+        <include name="jboss-jaxrpc.jar"/>
+      	<include name="jboss-saaj.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${build.bin.dist}/lib/tomcat/webapps" overwrite="true">
+      <fileset dir="${build.lib.dir}" includes="jbossws.war"/>
+    </copy>
+    
+    <zip destfile="${build.dir}/jbossws-${version.id}.zip" basedir="${build.bin.dist}"/>
+  </target>
+  
+  <!-- Build the src dist -->
+  <target name="build-src-dist" description="Build the source distribution">
+    <mkdir dir="${build.src.dist}/jbossws-src-${version.id}"/>
+    <copy todir="${build.src.dist}/jbossws-src-${version.id}">
+      <fileset dir="${basedir}">
+        <include name="ant.properties.example"/>
+        <include name="version.properties"/>
+        <include name="build.xml"/>
+        <include name="src/**"/>
+        <include name="docs/user-guide/**"/>
+      </fileset>
+    </copy>
+    <zip destfile="${build.dir}/jbossws-src-${version.id}.zip" basedir="${build.src.dist}"
+      includes="jbossws-src-${version.id}/**"/>
+  </target>
+  
+</project>

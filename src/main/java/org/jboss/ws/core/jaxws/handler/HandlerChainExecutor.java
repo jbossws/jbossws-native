@@ -1,0 +1,321 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.jboss.ws.core.jaxws.handler;
+
+// $Id:HandlerChainExecutor.java 710 2006-08-08 20:19:52Z thomas.diesler@jboss.com $
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPPart;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.LogicalHandler;
+import javax.xml.ws.handler.MessageContext;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
+import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+
+/**
+ * Executes a list of JAXWS handlers.
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 06-May-2004
+ */
+public class HandlerChainExecutor
+{
+   private static Logger log = Logger.getLogger(HandlerChainExecutor.class);
+
+   // The endpoint meta data
+   private EndpointMetaData epMetaData;
+   // The List<Entry> objects
+   protected List<Handler> handlers = new ArrayList<Handler>();
+   // The index of the first handler that returned false during processing
+   protected int falseIndex = -1;
+
+   /**
+    * Constructs a handler chain with the given handlers
+    */
+   public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> handlerList)
+   {
+      this.epMetaData = epMetaData;
+      
+      log.debug("Create a handler executor: " + handlerList);
+      for (Handler handler : handlerList)
+      {
+         handlers.add(handler);
+      }
+   }
+
+   /**
+    * Indicates the end of lifecycle for a HandlerChain.
+    */
+   public void close()
+   {
+      log.debug("close");
+      for (Handler handler : handlers)
+      {
+         handler.close(null);
+      }
+   }
+
+   public boolean handleRequest(MessageContext msgContext)
+   {
+      boolean doNext = true;
+
+      if (handlers.size() > 0)
+      {
+         log.debug("Enter: handleRequest");
+
+         SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
+         soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+
+         int handlerIndex = 0;
+         Handler currHandler = null;
+         try
+         {
+            String lastMessageTrace = null;
+            for (; doNext && handlerIndex < handlers.size(); handlerIndex++)
+            {
+               currHandler = handlers.get(handlerIndex);
+               
+               if (log.isTraceEnabled())
+               {
+                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  lastMessageTrace = traceSOAPPart("BEFORE handleRequest - " + currHandler, soapPart, lastMessageTrace);
+               }
+
+               doNext = handleMessage(currHandler, soapContext);
+
+               if (log.isTraceEnabled())
+               {
+                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  lastMessageTrace = traceSOAPPart("AFTER handleRequest - " + currHandler, soapPart, lastMessageTrace);
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            doNext = false;
+            processHandlerFailure(ex);
+         }
+         finally
+         {
+            // we start at this index in the response chain
+            if (doNext == false)
+               falseIndex = (handlerIndex - 1);
+
+            soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+            log.debug("Exit: handleRequest with status: " + doNext);
+         }
+      }
+
+      return doNext;
+   }
+
+   public boolean handleResponse(MessageContext msgContext)
+   {
+      boolean doNext = true;
+
+      SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
+      soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+
+      if (handlers.size() > 0)
+      {
+         log.debug("Enter: handleResponse");
+
+         int handlerIndex = handlers.size() - 1;
+         if (falseIndex != -1)
+            handlerIndex = falseIndex;
+
+         Handler currHandler = null;
+         try
+         {
+            String lastMessageTrace = null;
+            for (; doNext && handlerIndex >= 0; handlerIndex--)
+            {
+               currHandler = handlers.get(handlerIndex);
+               
+               if (log.isTraceEnabled())
+               {
+                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  lastMessageTrace = traceSOAPPart("BEFORE handleResponse - " + currHandler, soapPart, lastMessageTrace);
+               }
+
+               doNext = handleMessage(currHandler, soapContext);
+
+               if (log.isTraceEnabled())
+               {
+                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  lastMessageTrace = traceSOAPPart("AFTER handleResponse - " + currHandler, soapPart, lastMessageTrace);
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            doNext = false;
+            processHandlerFailure(ex);
+         }
+         finally
+         {
+            // we start at this index in the fault chain
+            if (doNext == false)
+               falseIndex = (handlerIndex - 1);
+
+            soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+            log.debug("Exit: handleResponse with status: " + doNext);
+         }
+      }
+
+      return doNext;
+   }
+
+   public boolean handleFault(MessageContext msgContext)
+   {
+      boolean doNext = true;
+
+      if (handlers.size() > 0)
+      {
+         log.debug("Enter: handleFault");
+
+         SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
+         soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+
+         int handlerIndex = 0;
+         Handler currHandler = null;
+         try
+         {
+            String lastMessageTrace = null;
+            for (; doNext && handlerIndex < handlers.size(); handlerIndex++)
+            {
+               currHandler = handlers.get(handlerIndex);
+               
+               if (log.isTraceEnabled())
+               {
+                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  lastMessageTrace = traceSOAPPart("BEFORE handleFault - " + currHandler, soapPart, lastMessageTrace);
+               }
+
+               doNext = handleFault(currHandler, soapContext);
+
+               if (log.isTraceEnabled())
+               {
+                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  lastMessageTrace = traceSOAPPart("AFTER handleFault - " + currHandler, soapPart, lastMessageTrace);
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            doNext = false;
+            processHandlerFailure(ex);
+         }
+         finally
+         {
+            // we start at this index in the response chain
+            if (doNext == false)
+               falseIndex = (handlerIndex - 1);
+
+            soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+            log.debug("Exit: handleFault with status: " + doNext);
+         }
+      }
+
+      return doNext;
+   }
+
+   // 4.14 Conformance (Exceptions During Handler Processing): Exceptions thrown during handler processing on
+   // the client MUST be passed on to the application. If the exception in question is a subclass of WebService-
+   // Exception then an implementation MUST rethrow it as-is, without any additional wrapping, otherwise it
+   // MUST throw a WebServiceException whose cause is set to the exception that was thrown during handler processing.
+   private void processHandlerFailure(Exception ex)
+   {
+      log.error("Exception during handler processing", ex);
+      if (ex instanceof WebServiceException)
+      {
+         throw (WebServiceException)ex;
+      }
+      throw new WebServiceException(ex);
+   }
+
+   private boolean handleMessage(Handler currHandler, SOAPMessageContextJAXWS soapContext)
+   {
+      MessageContext handlerContext = soapContext;
+      if (currHandler instanceof LogicalHandler)
+      {
+         if (epMetaData.getStyle() == Style.RPC)
+            throw new WebServiceException("Cannot use logical handler with RPC");
+         
+         handlerContext = new LogicalMessageContextImpl(soapContext);
+      }
+
+      boolean doNext = currHandler.handleMessage(handlerContext);
+
+      return doNext;
+   }
+
+   private boolean handleFault(Handler currHandler, SOAPMessageContextJAXWS soapContext)
+   {
+      MessageContext handlerContext = soapContext;
+      if (currHandler instanceof LogicalHandler)
+      {
+         handlerContext = new LogicalMessageContextImpl(soapContext);
+      }
+
+      boolean doNext = currHandler.handleFault(handlerContext);
+
+      return doNext;
+   }
+
+   /**
+    * Trace the SOAPPart, do nothing if the String representation is equal to the last one.
+    * @param logMsg TODO
+    */
+   protected String traceSOAPPart(String logMsg, SOAPPart soapPart, String lastMessageTrace)
+   {
+      try
+      {
+         SOAPEnvelopeImpl soapEnv = (SOAPEnvelopeImpl)soapPart.getEnvelope();
+         String envString = DOMWriter.printNode(soapEnv, true);
+         if (envString.equals(lastMessageTrace))
+         {
+            log.trace(logMsg + ": unchanged");
+         }
+         else
+         {
+            log.trace(logMsg + "\n" + envString);
+            lastMessageTrace = envString;
+         }
+         return lastMessageTrace;
+      }
+      catch (SOAPException e)
+      {
+         log.error("Cannot get SOAPEnvelope", e);
+         return null;
+      }
+   }
+}

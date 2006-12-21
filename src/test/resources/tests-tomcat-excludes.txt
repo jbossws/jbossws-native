@@ -1,0 +1,8 @@
+org/jboss/test/ws/jaxrpc/jbws1011/**
+org/jboss/test/ws/jaxrpc/samples/dynamichandler/**
+org/jboss/test/ws/jaxrpc/samples/jmstransport/**
+org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
+org/jboss/test/ws/jaxrpc/samples/secureejb/**
+org/jboss/test/ws/jaxrpc/samples/wsbpel/**
+org/jboss/test/ws/jaxrpc/samples/wssecurity/StorePassEncryptTestCase.class
+org/jboss/test/ws/jaxws/samples/jsr181ejb/**

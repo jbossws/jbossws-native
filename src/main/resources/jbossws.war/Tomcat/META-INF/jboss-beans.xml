@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd"
+  xmlns="urn:jboss:bean-deployer">
+  
+  <bean name="ServiceEndpointManager" class="org.jboss.ws.core.server.ServiceEndpointManager">
+    <!--
+      The WSDL, that is a required deployment artifact for an endpoint, has a <soap:address>
+      element which points to the location of the endpoint. JBossWS supports rewriting of that SOAP address.
+    
+      If the content of <soap:address> is a valid URL, JBossWS will not rewrite it unless AlwaysModifySOAPAddress is true.
+      If the content of <soap:address> is not a valid URL, JBossWS will rewrite it using the attribute values given below.
+    -->
+    <property name="alwaysModifySOAPAddress">true</property>
+    <property name="webServiceHost">localhost</property>
+    <property name="webServiceSecurePort">8443</property>
+    <property name="webServicePort">8080</property>
+    <property name="serviceEndpointInvokerJSE">org.jboss.ws.core.server.ServiceEndpointInvokerJSE</property>
+  </bean>
+  
+  <bean name="ServiceEndpointDeployer" class="org.jboss.ws.core.server.ServiceEndpointDeployer">
+    <property name="serviceEndpointManager"><inject bean="ServiceEndpointManager"/></property>
+  </bean>
+  
+  <bean name="ServiceEndpointPublisher" class="org.jboss.ws.integration.tomcat.TomcatServiceEndpointPublisher">
+    <property name="serviceEndpointServlet">org.jboss.ws.integration.tomcat.TomcatServiceEndpointServlet</property>
+    <property name="deployDir">${catalina.home}/jbossws-deploy</property>
+    <property name="targetDir">${catalina.home}/webapps</property>
+    <property name="interval">500</property>
+  </bean>
+  
+  <!-- 
+    A subscription manager for WS-Eventing 
+  -->
+  <bean name="SubscriptionManager" class="org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager"/>
+  
+  <bean name="ServerConfig" class="org.jboss.ws.integration.tomcat.ServerConfigImpl"/>
+  
+  <bean name="KernelLocator" class="org.jboss.ws.core.server.KernelLocator"/>
+  
+</deployment>

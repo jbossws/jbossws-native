@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application-client version="1.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd">
+
+   <display-name>Eventing Service test</display-name>
+
+   <service-ref>
+      <service-ref-name>service/interop/ComplexDataTypesDocLitBService</service-ref-name>
+      <service-interface>org.jboss.test.ws.interop.microsoft.soapwsdl.ComplexDataTypesShared.ComplexDataTypesDocLitBService</service-interface>
+      <wsdl-file>META-INF/wsdl/service.wsdl</wsdl-file>
+      <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
+
+      <port-component-ref>
+         <service-endpoint-interface>org.jboss.test.ws.interop.microsoft.soapwsdl.ComplexDataTypesShared.IComplexDataTypesDocLitB</service-endpoint-interface>
+      </port-component-ref>
+
+   </service-ref>
+</application-client>
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+      <!--
+         This file is used from the webservice/test subdirectory
+         therefore the resource references have to be relative to that base directory.
+      -->
+      
+<configuration
+    xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+    <wsdl
+        location="resources/interop/microsoft/addressing/sep06/wsa10/WEB-INF/wsdl/service.wsdl"
+        packageName="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10">
+       <namespaceMappingRegistry>
+          <namespaceMapping namespace="http://example.org/" packageName="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10"/>
+          <namespaceMapping namespace="http://example.org/echo" packageName="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.echo"/>
+          <namespaceMapping namespace="http://example.org/echo/Imports" packageName="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.echo"/>
+          <namespaceMapping namespace="http://example.org/notify" packageName="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.notify"/>
+          <namespaceMapping namespace="http://example.org/notify/Imports" packageName="org.jboss.test.ws.interop.microsoft.addressing.sep06.wsa10.notify"/>
+       </namespaceMappingRegistry>
+    </wsdl>
+</configuration>
