@@ -34,8 +34,6 @@ import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.ejb3.client.ClientLauncher;
-import org.jboss.client.AppClientLauncher;
 
 /**
  * Test the JAXWS annotation: javax.xml.ws.WebServiceref
@@ -72,6 +70,7 @@ public class WebServiceRefClientTestCase extends JBossWSTest
       assertEquals(helloWorld, retObj);
    }
 
+   /* externalize 
    public void testApplicationClient() throws Throwable
    {
       String helloWorld = "Hello World!";
@@ -81,4 +80,5 @@ public class WebServiceRefClientTestCase extends JBossWSTest
       apl.launch(ApplicationClient.class.getName(), "jbossws-client",  new String[]{helloWorld});
       assertEquals(helloWorld, ApplicationClient.retStr);
    }
+   */
 }

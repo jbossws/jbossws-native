@@ -27,8 +27,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 
@@ -48,17 +50,25 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractServiceEndpointPublisher
 {
-   // default bean name
-   public static final String BEAN_NAME = "ServiceEndpointPublisher";
-
-   // The servlet init param in web.xml that is the service endpoint class
-   public static final String INIT_PARAM_SERVICE_ENDPOINT_IMPL = "ServiceEndpointImpl";
-
    // logging support
    private static Logger log = Logger.getLogger(AbstractServiceEndpointPublisher.class);
 
+   // The default bean name
+   public static final String BEAN_NAME = "ServiceEndpointPublisher";
+   // The servlet init param in web.xml that is the service endpoint class
+   public static final String INIT_PARAM_SERVICE_ENDPOINT_IMPL = "ServiceEndpointImpl";
+
    // The configured service endpoint servlet
-   protected String servletName;
+   private String servletName;
+
+   // The results of the URL rewriting
+   public class RewriteResults
+   {
+      // The URL to the rewrittn web.xml
+      public URL webXML;
+      // Map<servlet-name, servlet-class> the servlet-class enties are the implementation beans 
+      public Map<String, String> sepTargetMap = new HashMap<String, String>();
+   }
 
    public String getServiceEndpointServlet()
    {
@@ -74,13 +84,7 @@ public abstract class AbstractServiceEndpointPublisher
 
    public abstract String destroyServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception;
 
-   public URL rewriteWebXml(UnifiedDeploymentInfo udi)
-   {
-      URL warURL = udi.expandedWebApp;
-      return rewriteWebXml(warURL);
-   }
-   
-   public URL rewriteWebXml(URL warURL)
+   public RewriteResults rewriteWebXml(URL warURL)
    {
       File warFile = new File(warURL.getFile());
       if (warFile.isDirectory() == false)
@@ -113,7 +117,7 @@ public abstract class AbstractServiceEndpointPublisher
       }
    }
 
-   public URL rewriteWebXml(InputStream source, File dest, ClassLoader loader) throws Exception
+   public RewriteResults rewriteWebXml(InputStream source, File dest, ClassLoader loader) throws Exception
    {
       if (dest == null)
       {
@@ -122,18 +126,20 @@ public abstract class AbstractServiceEndpointPublisher
       }
 
       Element root = DOMUtils.parse(source);
-      modifyServletConfig(root, loader);
+      RewriteResults results = modifyServletConfig(root, loader);
+      results.webXML = dest.toURL();
 
       FileOutputStream fos = new FileOutputStream(dest);
       new DOMWriter(fos).setPrettyprint(true).print(root);
       fos.flush();
       fos.close();
 
-      return dest.toURL();
+      return results;
    }
 
-   private void modifyServletConfig(Element root, ClassLoader loader) throws ClassNotFoundException
+   private RewriteResults modifyServletConfig(Element root, ClassLoader loader) throws ClassNotFoundException
    {
+      RewriteResults results = new RewriteResults();
       Iterator itServlets = DOMUtils.getChildElements(root, "servlet");
       while (itServlets.hasNext())
       {
@@ -166,7 +172,21 @@ public abstract class AbstractServiceEndpointPublisher
          String targetBeanName = null;
 
          // Nothing to do if we have an <init-param>
-         if (isAlreadyModified(servletElement) == false)
+         if (isAlreadyModified(servletElement))
+         {
+            Iterator itParams = DOMUtils.getChildElements(servletElement, "init-param");
+            while (itParams.hasNext())
+            {
+               Element elParam = (Element)itParams.next();
+               Element elParamName = DOMUtils.getFirstChildElement(elParam, "param-name");
+               Element elParamValue = DOMUtils.getFirstChildElement(elParam, "param-value");
+               if (INIT_PARAM_SERVICE_ENDPOINT_IMPL.equals(DOMUtils.getTextContent(elParamName)))
+               {
+                  targetBeanName = DOMUtils.getTextContent(elParamValue);
+               }
+            }
+         }
+         else
          {
             // Check if it is a real servlet that we can ignore
             if (servletClass != null && JavaUtils.isAssignableFrom(Servlet.class, servletClass))
@@ -224,24 +244,15 @@ public abstract class AbstractServiceEndpointPublisher
                servletElement.appendChild(el);
             }
          }
-         else
-         {
-            Iterator itParams = DOMUtils.getChildElements(servletElement, "init-param");
-            while (itParams.hasNext())
-            {
-               Element elParam = (Element)itParams.next();
-               Element elParamName = DOMUtils.getFirstChildElement(elParam, "param-name");
-               Element elParamValue = DOMUtils.getFirstChildElement(elParam, "param-value");
-               if (INIT_PARAM_SERVICE_ENDPOINT_IMPL.equals(DOMUtils.getTextContent(elParamName)))
-               {
-                  targetBeanName = DOMUtils.getTextContent(elParamValue);
-               }
-            }
-         }
 
          if (targetBeanName == null)
             throw new IllegalStateException("Cannot obtain service endpoint bean for: " + linkName);
+
+         // remember the target bean name
+         results.sepTargetMap.put(linkName, targetBeanName.trim());
       }
+
+      return results;
    }
 
    // Return true if the web.xml is already modified

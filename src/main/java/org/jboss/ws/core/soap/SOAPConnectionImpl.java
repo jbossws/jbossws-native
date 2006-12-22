@@ -74,12 +74,20 @@ public class SOAPConnectionImpl extends SOAPConnection
    private static Map<String, String> configMap = new HashMap<String, String>();
    static
    {
-      configMap.put(StubExt.PROPERTY_KEY_STORE, SSLSocketBuilder.REMOTING_KEY_STORE_FILE_PATH);
-      configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, SSLSocketBuilder.REMOTING_KEY_STORE_PASSWORD);
-      configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, SSLSocketBuilder.REMOTING_KEY_STORE_TYPE);
-      configMap.put(StubExt.PROPERTY_TRUST_STORE, SSLSocketBuilder.REMOTING_TRUST_STORE_FILE_PATH);
-      configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, SSLSocketBuilder.REMOTING_TRUST_STORE_PASSWORD);
-      configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, SSLSocketBuilder.REMOTING_TRUST_STORE_TYPE);
+      // Remoting constants since 2.0.0.GA
+      //configMap.put(StubExt.PROPERTY_KEY_STORE, SSLSocketBuilder.REMOTING_KEY_STORE_FILE_PATH);
+      //configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, SSLSocketBuilder.REMOTING_KEY_STORE_PASSWORD);
+      //configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, SSLSocketBuilder.REMOTING_KEY_STORE_TYPE);
+      //configMap.put(StubExt.PROPERTY_TRUST_STORE, SSLSocketBuilder.REMOTING_TRUST_STORE_FILE_PATH);
+      //configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, SSLSocketBuilder.REMOTING_TRUST_STORE_PASSWORD);
+      //configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, SSLSocketBuilder.REMOTING_TRUST_STORE_TYPE);
+      
+      configMap.put(StubExt.PROPERTY_KEY_STORE, "org.jboss.remoting.keyStore");
+      configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, "org.jboss.remoting.keyStorePassword");
+      configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, "org.jboss.remoting.keyStoreType");
+      configMap.put(StubExt.PROPERTY_TRUST_STORE, "org.jboss.remoting.trustStore");
+      configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, "org.jboss.remoting.trustStorePassword");
+      configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, "org.jboss.remoting.trustStoreType");
    }
 
    private boolean closed;
@@ -272,7 +280,8 @@ public class SOAPConnectionImpl extends SOAPConnection
       Map<String, Object> metadata = new HashMap<String, Object>();
 
       // We need to unmarshall faults (HTTP 500)
-      metadata.put(HTTPMetadataConstants.NO_THROW_ON_ERROR, "true");
+      // metadata.put(HTTPMetadataConstants.NO_THROW_ON_ERROR, "true"); // since 2.0.0.GA
+      metadata.put("NoThrowOnError", "true");
 
       Properties props = new Properties();
       metadata.put("HEADER", props);

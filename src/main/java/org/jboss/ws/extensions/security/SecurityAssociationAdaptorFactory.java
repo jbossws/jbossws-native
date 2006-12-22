@@ -23,16 +23,14 @@ package org.jboss.ws.extensions.security;
 
 // $Id$
 
-import java.security.Principal;
 
 /**
- * A container idependent security adaptor
+ * A container idependent security adaptor factory
  *
  * @author Thomas.Diesler@jboss.org
  * @since 10-May-2005
  */
-public interface SecurityAdaptor 
+public interface SecurityAssociationAdaptorFactory 
 {
-   void setPrincipal(Principal pricipal);
-   void setCredential(Object credential);
+   SecurityAssociationAdaptor getSecurityAssociationAdaptor();
 }

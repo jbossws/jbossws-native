@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project default="main" basedir="../jbossws" name="JBossWS-Main">
+  
+  <import file="${basedir}/../build/import/build-samples.xml"/>
+  <import file="${basedir}/../build/import/build-setup.xml"/>
+  <import file="${basedir}/../build/import/build-thirdparty.xml"/>
+  
+  <property name="jbossws.src.dir" value="${jbossws.dir}/src/main"/>
+  <property name="jbossws.java.dir" value="${jbossws.src.dir}/java"/>
+  <property name="jbossws.resources.dir" value="${jbossws.src.dir}/resources"/>
+  <property name="jbossws.output.dir" value="${jbossws.dir}/output"/>
+  <property name="jbossws.output.classes.dir" value="${jbossws.output.dir}/classes"/>
+  <property name="jbossws.output.classes14.dir" value="${jbossws.output.dir}/classes14"/>
+  <property name="jbossws.output.lib.dir" value="${jbossws.output.dir}/lib"/>
+  
+  <target name="jbossws-init" depends="prepare, thirdparty">
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Compile                                                            -->
+  <!-- ================================================================== -->
+  
+  <!--
+  | Compile everything.
+  |
+  | This target should depend on other compile-* targets for each
+  | different type of compile that needs to be performed, short of
+  | documentation compiles.
+  -->
+  
+  <target name="jbossws-compile" depends="jbossws-init,jbossws-compile-classes,jbossws-compile-etc" description="Compile all source files."/>
+  
+  <!-- Compile java sources -->
+  <target name="jbossws-compile-classes" depends="jbossws-compile-interfaces,jbossws-compile-core"/>
+  
+  <!-- Compile core java sources -->
+  <target name="jbossws-compile-interfaces" depends="jbossws-init">
+    <mkdir dir="${jbossws.output.classes14.dir}"/>
+    <javac srcdir="${jbossws.java.dir}" destdir="${jbossws.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
+      failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
+      <include name="javax/xml/rpc/**"/>
+      <include name="javax/xml/soap/**"/>
+      <classpath refid="jboss.core.classpath"/>
+      <classpath refid="library.classpath"/>
+    </javac>
+  </target>
+  
+  <!-- Compile core java sources -->
+  <target name="jbossws-compile-core" depends="jbossws-compile-interfaces">
+    <mkdir dir="${jbossws.output.classes.dir}"/>
+    <javac srcdir="${jbossws.java.dir}" sourcepath="" destdir="${jbossws.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
+      deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
+      <include name="javax/xml/ws/**"/>
+      <include name="javax/jws/**"/>
+      <include name="org/jboss/ws/**"/>
+      <exclude name="org/jboss/ws/integration/**"/>
+      <classpath path="${jbossws.output.classes14.dir}"/>
+      <classpath refid="jboss.core.classpath"/>
+      <classpath refid="library.classpath"/>
+    </javac>
+  </target>
+  
+  
+  <!-- Compile etc files (manifests and such) -->
+  <target name="jbossws-compile-etc" depends="jbossws-init">
+    <mkdir dir="${output.etc.dir}"/>
+    <copy todir="${output.etc.dir}" filtering="yes" overwrite="yes">
+      <fileset dir="${build.dir}/etc"/>
+      <filterset>
+        <filter token="java.vm.version" value="${java.vm.version}"/>
+        <filter token="java.vm.vendor" value="${java.vm.vendor}"/>
+        <filter token="build.id" value="${build.id}"/>
+        <filter token="implementation.version" value="jbossws-${version.id}"/>
+        <filtersfile file="${build.dir}/version.properties"/>
+      </filterset>
+    </copy>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Archives                                                           -->
+  <!-- ================================================================== -->
+  
+  <!--
+  | Build all jar files.
+  -->
+  <target name="jbossws-jars" depends="jbossws-compile,jbossws-module-jars" description="Builds all jar files.">
+  </target>
+  
+  <!--
+  |  Build all jar files.
+  -->
+  <target name="jbossws-module-jars">
+    
+    <!-- Build jboss-jaxrpc.jar -->
+    <mkdir dir="${jbossws.output.lib.dir}"/>
+    <jar jarfile="${jbossws.output.lib.dir}/jboss-jaxrpc.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${jbossws.output.classes14.dir}">
+        <include name="javax/xml/rpc/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- Build jboss-saaj.jar -->
+    <mkdir dir="${jbossws.output.lib.dir}"/>
+    <jar jarfile="${jbossws.output.lib.dir}/jboss-saaj.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${jbossws.output.classes14.dir}">
+        <include name="javax/xml/soap/**"/>
+      </fileset>
+      <metainf dir="${jbossws.resources.dir}/jboss-saaj.jar/META-INF"/>
+    </jar>
+    
+    <!-- Build jboss-jaxws.jar -->
+    <mkdir dir="${jbossws.output.lib.dir}"/>
+    <jar jarfile="${jbossws.output.lib.dir}/jboss-jaxws.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${jbossws.output.classes.dir}">
+        <include name="javax/jws/**"/>
+        <include name="javax/xml/ws/**"/>
+        <include name="org/jboss/ws/jaxws/injection/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- Build jbossws-core.jar -->
+    <mkdir dir="${jbossws.output.lib.dir}"/>
+    <jar jarfile="${jbossws.output.lib.dir}/jbossws-core.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${jbossws.output.classes.dir}">
+        <include name="org/jboss/ws/**"/>
+        <exclude name="org/jboss/ws/integration/**"/>
+      </fileset>
+      <fileset dir="${jbossws.resources.dir}">
+        <include name="schema/**"/>
+        <include name="dtd/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- Build jbossws-client.jar -->
+    <jar jarfile="${jbossws.output.lib.dir}/jbossws-client.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${jbossws.output.classes14.dir}">
+        <include name="javax/xml/rpc/**"/>
+        <include name="javax/xml/soap/**"/>
+      </fileset>
+      <fileset dir="${jbossws.output.classes.dir}">
+        <include name="javax/xml/ws/**"/>
+        <include name="javax/jws/**"/>
+        <include name="org/jboss/ws/**"/>
+        <exclude name="org/jboss/ws/integration/jboss50/**"/>
+        <exclude name="org/jboss/ws/integration/tomcat/**"/>
+      </fileset>
+      <fileset dir="${jbossws.resources.dir}/jbossws.sar">
+        <include name="META-INF/standard-jaxrpc-client-config.xml"/>
+        <include name="META-INF/standard-jaxws-client-config.xml"/>
+      </fileset>
+      <fileset dir="${jbossws.resources.dir}">
+        <include name="schema/**"/>
+        <include name="dtd/**"/>
+      </fileset>
+      <fileset dir="${output.etc.dir}">
+        <include name="wstools.sh"/>
+        <include name="wstools.bat"/>
+        <include name="wstools-log4j.xml"/>
+      </fileset>
+      <metainf dir="${jbossws.resources.dir}/jboss-saaj.jar/META-INF"/>
+    </jar>
+    
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Documentation                                                      -->
+  <!-- ================================================================== -->
+
+   <!-- Generate the JavaDoc -->
+   <target name="jbossws-javadoc" depends="jbossws-init" description="Generate the Javadoc">
+
+      <mkdir dir="${output.api-docs}"/>
+      <javadoc destdir="${output.api-docs}" author="true" version="true" use="true" windowtitle="JBossWS API">
+         <packageset dir="${jbossws.java.dir}" defaultexcludes="yes">
+            <include name="org/jboss/ws/**"/>
+         </packageset>
+         <packageset dir="${jboss.server.root}/../src/main" defaultexcludes="yes">
+            <include name="org/jboss/webservice/metadata/**"/>
+         </packageset>
+
+         <doctitle><![CDATA[<h1>JBossWS</h1>]]></doctitle>
+         <tag name="todo" scope="all" description="To do:"/>
+         <group title="Core" packages="org.jboss.ws.core*"/>
+         <group title="Metadata" packages="org.jboss.ws.metadata*"/>
+         <group title="Integration" packages="org.jboss.ws.integration*"/>
+         <group title="Extensions" packages="org.jboss.ws.extensions*"/>
+         <group title="Tools" packages="org.jboss.ws.tools*"/>
+      </javadoc>
+   </target>
+  
+  <target name="clean" depends="prepare" description="Cleans up most generated files.">
+    <delete dir="${jbossws.output.dir}"/>
+  </target>
+  
+  <target name="main" description="Executes the default target (most)." depends="most"/>
+  
+  <target name="most" description="Builds almost everything." depends="jbossws-jars"/>
+  
+  <target name="all" description="Create a distribution zip file" depends="main">
+  </target>
+  
+</project>

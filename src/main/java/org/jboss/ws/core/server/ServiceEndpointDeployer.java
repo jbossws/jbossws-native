@@ -42,9 +42,6 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
  * container (i.e. JBoss, Tomcat). The containers deployer architecture should be used to populate
  * the UnifiedDeploymentInfo object.
  *
- * @deprecated
- * This functionality should be handled by the ServiceEndpointManager
- *
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2006
  */

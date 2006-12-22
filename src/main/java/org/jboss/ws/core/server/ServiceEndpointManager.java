@@ -583,7 +583,10 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
    {
       ServiceEndpoint wsEndpoint = getServiceEndpointByID(sepID);
       if (wsEndpoint == null)
-         throw new WSException("Cannot find service endpoint: " + sepID);
+      {
+         log.error("Cannot find service endpoint: " + sepID);
+         return;
+      }
 
       wsEndpoint.stop();
 
@@ -597,7 +600,10 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
    {
       ServiceEndpoint wsEndpoint = getServiceEndpointByID(sepID);
       if (wsEndpoint == null)
-         throw new WSException("Cannot find service endpoint: " + sepID);
+      {
+         log.error("Cannot find service endpoint: " + sepID);
+         return;
+      }
 
       wsEndpoint.destroy();
 

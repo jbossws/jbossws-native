@@ -61,19 +61,14 @@ public class UnifiedDeploymentInfo
    /** The string identifing this deployment **/
    public String name;
    /** The URL to the expanded webapp **/
-   public URL expandedWebApp;
+   public URL webappURL;
    /** We can hold "typed" metadata */
    public Object metaData;
    /** The deployment classloader **/
    public ClassLoader classLoader;
    /** An arbitrary map of state associated with the deployment */
    public Map<String, Object> context = new HashMap<String, Object>();
-
-   // [TODO] unify jboss42 properties
-   public URL localUrl;
-   public URLClassLoader annotationsCl;
-   public URLClassLoader localCl;
-   public URLClassLoader ucl;
+   /** An optional ObjectName of the deployed object */
    public ObjectName deployedObject;
    
    /** The sortName concatenated with the canonical names of all parents. */
