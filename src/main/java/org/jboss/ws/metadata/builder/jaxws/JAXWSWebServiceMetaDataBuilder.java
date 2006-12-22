@@ -167,6 +167,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
 
       FaultMetaData fmd = new FaultMetaData(omd, xmlName, xmlType, exception.getName());
       fmd.setFaultBeanName(faultBeanName);
+      fmd.setAccessorFactoryCreator(JAXBAccessor.FACTORY_CREATOR);
 
       if (generate)
          wrapperGenerator.generate(fmd);
@@ -887,7 +888,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
    protected void processSOAPBinding(EndpointMetaData epMetaData, Class<?> wsClass)
    {
 
-      if (! wsClass.isAnnotationPresent(SOAPBinding.class))
+      if (!wsClass.isAnnotationPresent(SOAPBinding.class))
          return;
 
       SOAPBinding anSoapBinding = wsClass.getAnnotation(SOAPBinding.class);
@@ -965,9 +966,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          // Clear the java types, etc.
          resetMetaDataBuilder(udi.classLoader);
 
-         ServerEndpointMetaData sepMetaData  = result.semd;
-         ServiceMetaData serviceMetaData     = result.smd;
-         Class<?> seiClass                   = result.klass;
+         ServerEndpointMetaData sepMetaData = result.semd;
+         ServiceMetaData serviceMetaData = result.smd;
+         Class<?> seiClass = result.klass;
 
          sepMetaData.setLinkName(linkName);
          sepMetaData.setServiceEndpointImplName(sepClass.getName());
@@ -975,9 +976,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
 
          // Assign the WS-Security configuration,
          WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(udi);         
+         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(udi);
          serviceMetaData.setSecurityConfiguration(securityConfiguration);
-
 
          // Process an optional @SOAPBinding annotation
          processSOAPBinding(sepMetaData, seiClass);
@@ -1013,7 +1013,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          {
             processHandlerChain(sepMetaData, seiClass);
          }
-
 
          // Sanity check: read the generated WSDL and initialize the schema model
          WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();

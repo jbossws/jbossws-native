@@ -15,14 +15,8 @@
 package org.jboss.ws.core.jaxws;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.soap.Detail;
@@ -57,6 +51,8 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Element;
 
 /**
+ * Helper methods to translate between SOAPFault and SOAPFaultException
+ * as well as between Exception and SOAPMessage containing a fault.
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
  * @version $Revision$
  */
@@ -64,8 +60,6 @@ public class SOAPFaultHelperJAXWS
 {
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultHelperJAXWS.class);
-
-   private static final Collection<String> excludedGetters = Arrays.asList(new String[] { "getCause", "getLocalizedMessage", "getStackTrace", "getClass" });
 
    /** Factory method for FaultException for a given SOAPFault */
    public static SOAPFaultException getSOAPFaultException(SOAPFault soapFault)
@@ -116,8 +110,8 @@ public class SOAPFaultHelperJAXWS
                         log.warn("Declaration of detail entry namespace failed", e);
                      }
                   }
-               }               
-               
+               }
+
                // Try jaxb deserialization
                try
                {
@@ -125,44 +119,12 @@ public class SOAPFaultHelperJAXWS
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
                   Object faultBean = des.deserialize(xmlName, xmlType, xmlFragment, serContext);
 
-                  /* JAX-WS 2.5: A wsdl:fault element refers to a wsdl:message that contains
-                   * a single part. The global element declaration referred to by that part
-                   * is mapped to a Java bean. A wrapper exception class contains the 
-                   * following methods: 
-                   * - WrapperException(String message, FaultBean faultInfo)
-                   * - WrapperException(String message, FaultBean faultInfo, Throwable cause)
-                   * - FaultBean getFaultInfo() */
-                  Class<?> serviceExGenericClass = faultMetaData.getJavaType();
-                  Class<? extends Exception> serviceExClass = serviceExGenericClass.asSubclass(Exception.class);
-                  
-                  Exception serviceEx;
-                  try
-                  {
-                     Constructor<? extends Exception> serviceExCtor = serviceExClass.getConstructor(String.class, faultBeanClass);
-                     serviceEx = serviceExCtor.newInstance(soapFault.getFaultString(), faultBean);
-                  }
-                  catch (NoSuchMethodException e)
-                  {
-                     serviceEx = toServiceException(faultBean, serviceExClass);
-                  }
-                  catch (InstantiationException e)
-                  {
-                     throw new WebServiceException("Service specific exception class is not instantiable", e);
-                  }
-
+                  Exception serviceEx = faultMetaData.toServiceException(faultBean, soapFault.getFaultString());
                   faultEx.initCause(serviceEx);
                }
                catch (BindingException e)
                {
                   throw new WebServiceException(e);
-               }
-               catch (IllegalAccessException e)
-               {
-                  throw new WebServiceException(e);
-               }
-               catch (InvocationTargetException e)
-               {
-                  throw new WebServiceException(e.getTargetException());
                }
             }
             else
@@ -173,58 +135,6 @@ public class SOAPFaultHelperJAXWS
       }
 
       return faultEx;
-   }
-
-   private static Exception toServiceException(Object faultBean, Class<? extends Exception> serviceExClass) throws IllegalAccessException, InvocationTargetException
-   {
-      Class<?> faultBeanClass = faultBean.getClass();
-      XmlType xmlType = faultBeanClass.getAnnotation(XmlType.class);
-
-      if (xmlType == null)
-         throw new WebServiceException("@XmlType annotation missing from fault bean class: " + faultBeanClass.getName());
-
-      String[] propertyNames = xmlType.propOrder();
-      Class<?>[] propertyTypes = new Class<?>[propertyNames.length];
-      Object[] propertyValues = new Object[propertyNames.length];
-
-      for (int i = 0; i < propertyNames.length; i++)
-      {
-         String propertyName = propertyNames[i];
-         propertyName = Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-
-         Method propertyGetter;
-         try
-         {
-            propertyGetter = faultBeanClass.getMethod("get" + propertyName);
-         }
-         catch (NoSuchMethodException e)
-         {
-            try
-            {
-               propertyGetter = faultBeanClass.getMethod("is" + propertyName);
-            }
-            catch (NoSuchMethodException ee)
-            {
-               throw new WebServiceException("Fault bean has no getter for property: " + propertyName, ee);
-            }
-         }
-         propertyValues[i] = propertyGetter.invoke(faultBean);
-         propertyTypes[i] = propertyGetter.getReturnType();
-      }
-
-      try
-      {
-         Constructor<? extends Exception> serviceExCtor = serviceExClass.getConstructor(propertyTypes);
-         return serviceExCtor.newInstance(propertyValues);
-      }
-      catch (NoSuchMethodException e)
-      {
-         throw new WebServiceException("Service exception has no constructor for parameter types: " + Arrays.toString(propertyTypes));
-      }
-      catch (InstantiationException e)
-      {
-         throw new WebServiceException("Service exception is not instantiable", e);
-      }
    }
 
    /** Translate the request exception into a SOAPFault message. */
@@ -351,34 +261,7 @@ public class SOAPFaultHelperJAXWS
       if (opMetaData != null && opMetaData.getFault(exClass) != null)
       {
          FaultMetaData faultMetaData = opMetaData.getFault(exClass);
-         Class faultBeanClass = faultMetaData.getFaultBean();
-         Object faultBean;
-         try
-         {
-            try
-            {
-               /* JAX-WS 3.7: For exceptions that match the pattern described in section
-                * 2.5 (i.e. exceptions that have a getFaultInfo method), the FaultBean
-                * is used as input to JAXB */
-               Method getFaultInfo = exClass.getMethod("getFaultInfo");
-               faultBean = getFaultInfo.invoke(ex);
-            }
-            catch (NoSuchMethodException e)
-            {
-               /* JAX-WS 3.7: For exceptions that do not match the pattern described in
-                * section 2.5, JAX-WS maps those exceptions to Java beans and then uses
-                * those Java beans as input to the JAXB mapping. */
-               faultBean = toFaultBean(ex, faultBeanClass);
-            }
-         }
-         catch (IllegalAccessException e)
-         {
-            throw new WebServiceException(e);
-         }
-         catch (InvocationTargetException e)
-         {
-            throw new WebServiceException(e.getTargetException());
-         }
+         Object faultBean = faultMetaData.toFaultBean(ex);
 
          Detail detail = soapFault.addDetail();
          SOAPElement detailEntry = toDetailEntry(faultBean, serContext, faultMetaData);
@@ -412,62 +295,6 @@ public class SOAPFaultHelperJAXWS
          faultString = ex.toString();
 
       return faultString;
-   }
-
-   private static Object toFaultBean(Exception userEx, Class faultBeanClass) throws IllegalAccessException, InvocationTargetException
-   {
-      Object faultBean;
-      try
-      {
-         faultBean = faultBeanClass.newInstance();
-      }
-      catch (InstantiationException e)
-      {
-         throw new WebServiceException("Fault bean class is not instantiable", e);
-      }
-
-      /* For each getter in the exception and its superclasses, a property of
-       * the same type and name is added to the bean. The getCause, getLocalizedMessage
-       * and getStackTrace getters from java.lang.Throwable and the getClass getter
-       * from java.lang.Object are excluded from the list of getters to be mapped. */
-      for (Method exMethod : userEx.getClass().getMethods())
-      {
-         if (exMethod.getParameterTypes().length > 0)
-            continue;
-
-         String exMethodName = exMethod.getName();
-
-         if (excludedGetters.contains(exMethodName))
-            continue;
-
-         String propertyName;
-         if (exMethodName.startsWith("get"))
-         {
-            propertyName = exMethodName.substring(3);
-         }
-         else if (exMethodName.startsWith("is"))
-         {
-            propertyName = exMethodName.substring(2);
-         }
-         else continue;
-
-         // get the property value from the exception
-         Object propertyValue = exMethod.invoke(userEx);
-         Class propertyClass = exMethod.getReturnType();
-
-         try
-         {
-            // set the value to the bean
-            Method beanSetter = faultBeanClass.getMethod("set" + propertyName, propertyClass);
-            beanSetter.invoke(faultBean, propertyValue);
-         }
-         catch (NoSuchMethodException e)
-         {
-            throw new WebServiceException("Fault bean has no setter for property: " + propertyName, e);
-         }
-      }
-
-      return faultBean;
    }
 
    private static SOAPElement toDetailEntry(Object faultObject, SerializationContext serContext, FaultMetaData faultMetaData) throws SOAPException

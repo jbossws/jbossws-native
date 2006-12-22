@@ -43,7 +43,6 @@ import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveXOPScanner;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
-import org.jboss.ws.metadata.umdm.WrappedParameter.AccessorFactory;
 
 /**
  * A request/response parameter that a given operation supports.
@@ -77,11 +76,6 @@ public class ParameterMetaData
    private boolean soapArrayParam;
    private QName soapArrayCompType;
    private AccessorFactoryCreator accessorFactoryCreator = ReflectiveMethodAccessor.FACTORY_CREATOR;
-
-   public static interface AccessorFactoryCreator
-   {
-      public AccessorFactory create(ParameterMetaData parameter);
-   }
 
    private static final List<String> messageTypes = new ArrayList<String>();
    static
@@ -120,7 +114,7 @@ public class ParameterMetaData
       if (index == -1 && matchTypes(returnType, expectedType, exact, false))
          return true;
 
-      boolean indexInBounds = -1 < index && index < parameters.length; 
+      boolean indexInBounds = -1 < index && index < parameters.length;
       if (indexInBounds && matchTypes(parameters[index], expectedType, exact, holder))
       {
          matches.add(index);
@@ -388,13 +382,12 @@ public class ParameterMetaData
       // TODO: this should only apply to JAX-WS and needs to happen outside UMD
       ReflectiveXOPScanner scanner = new ReflectiveXOPScanner();
       String mimeType = scanner.scan(javaType);
-      if(mimeType!=null)
+      if (mimeType != null)
       {
          log.debug("MTOM parameter found: " + xmlName);
          setXOP(true);
       }
    }
-
 
    private ClassLoader getClassLoader()
    {

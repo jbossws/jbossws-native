@@ -25,11 +25,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.metadata.umdm.Accessor;
+import org.jboss.ws.metadata.umdm.AccessorFactory;
+import org.jboss.ws.metadata.umdm.AccessorFactoryCreator;
+import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.metadata.umdm.ParameterMetaData.AccessorFactoryCreator;
-import org.jboss.ws.metadata.umdm.WrappedParameter.Accessor;
-import org.jboss.ws.metadata.umdm.WrappedParameter.AccessorFactory;
 
 import com.sun.xml.bind.api.AccessorException;
 import com.sun.xml.bind.api.JAXBRIContext;
@@ -46,16 +47,24 @@ public class JAXBAccessor implements Accessor
 {
    private RawAccessor accessor;
 
-   public static AccessorFactoryCreator FACTORY_CREATOR = new AccessorFactoryCreator()
-   {
+   public static AccessorFactoryCreator FACTORY_CREATOR = new AccessorFactoryCreator() {
+
       public AccessorFactory create(ParameterMetaData parameter)
       {
-         final Class clazz = parameter.getJavaType();
-         final JAXBRIContext ctx;
+         return create(parameter.getJavaType());
+      }
 
+      public AccessorFactory create(FaultMetaData fault)
+      {
+         return create(fault.getFaultBean());
+      }
+
+      private AccessorFactory create(final Class clazz)
+      {
+         final JAXBRIContext ctx;
          try
          {
-            ctx = (JAXBRIContext) JAXBRIContext.newInstance(new Class[]{clazz});
+            ctx = (JAXBRIContext)JAXBRIContext.newInstance(new Class[] { clazz });
          }
          catch (JAXBException e)
          {
@@ -64,11 +73,11 @@ public class JAXBAccessor implements Accessor
             throw ex;
          }
 
-         return new AccessorFactory()
+         return new AccessorFactory() 
          {
             public Accessor create(WrappedParameter parameter)
             {
-               RawAccessor<Object,Object> accessor;
+               RawAccessor<Object, Object> accessor;
                try
                {
                   QName name = parameter.getName();

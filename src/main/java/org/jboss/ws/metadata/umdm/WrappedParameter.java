@@ -42,17 +42,6 @@ public class WrappedParameter
    private int index = -2;
    private Accessor accessor;
 
-   public static interface AccessorFactory
-   {
-      public Accessor create(WrappedParameter parameter);
-   }
-
-   public static interface Accessor
-   {
-      public void set(Object bean, Object value);
-      public Object get(Object bean);
-   }
-
    public WrappedParameter(QName name, String type, String variable, int index)
    {
       this.setName(name);
@@ -133,6 +122,7 @@ public class WrappedParameter
 
    public String toString()
    {
-      return "[name = " + getName() + ", type = " + getType() + ", typeArgs = " + JavaUtils.printArray(getTypeArguments()) + ", variable = " + getVariable() + ", index = " + getIndex() + "]";
+      return "[name = " + getName() + ", type = " + getType() + ", typeArgs = " + JavaUtils.printArray(getTypeArguments()) + ", variable = " + getVariable()
+            + ", index = " + getIndex() + "]";
    }
 }

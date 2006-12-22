@@ -25,11 +25,12 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.metadata.umdm.Accessor;
+import org.jboss.ws.metadata.umdm.AccessorFactory;
+import org.jboss.ws.metadata.umdm.AccessorFactoryCreator;
+import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.metadata.umdm.ParameterMetaData.AccessorFactoryCreator;
-import org.jboss.ws.metadata.umdm.WrappedParameter.Accessor;
-import org.jboss.ws.metadata.umdm.WrappedParameter.AccessorFactory;
 
 /**
  * A simple JavaBean accessor that uses ordinary reflection.
@@ -47,8 +48,16 @@ public class ReflectiveMethodAccessor implements Accessor
    {
       public AccessorFactory create(ParameterMetaData parameter)
       {
-         final Class clazz = parameter.getJavaType();
+         return create(parameter.getJavaType());
+      }
 
+      public AccessorFactory create(FaultMetaData fault)
+      {
+         return create(fault.getFaultBean());
+      }
+
+      private AccessorFactory create(final Class clazz)
+      {
          return new AccessorFactory()
          {
             public Accessor create(WrappedParameter parameter)
