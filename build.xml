@@ -11,19 +11,19 @@
 
 <!-- $Id$ -->
 
-<project default="main" basedir="../jbossws" name="JBossWS-Main">
+<project default="main" basedir="../jbossws-core" name="JBossWS-Main">
   
-  <import file="${basedir}/../build/import/build-samples.xml"/>
-  <import file="${basedir}/../build/import/build-setup.xml"/>
-  <import file="${basedir}/../build/import/build-thirdparty.xml"/>
+  <import file="${basedir}/../build/ant-import/build-samples.xml"/>
+  <import file="${basedir}/../build/ant-import/build-setup.xml"/>
+  <import file="${basedir}/../build/ant-import/build-thirdparty.xml"/>
   
-  <property name="jbossws.src.dir" value="${jbossws.dir}/src/main"/>
-  <property name="jbossws.java.dir" value="${jbossws.src.dir}/java"/>
-  <property name="jbossws.resources.dir" value="${jbossws.src.dir}/resources"/>
-  <property name="jbossws.output.dir" value="${jbossws.dir}/output"/>
-  <property name="jbossws.output.classes.dir" value="${jbossws.output.dir}/classes"/>
-  <property name="jbossws.output.classes14.dir" value="${jbossws.output.dir}/classes14"/>
-  <property name="jbossws.output.lib.dir" value="${jbossws.output.dir}/lib"/>
+  <property name="core.src.dir" value="${core.dir}/src/main"/>
+  <property name="core.java.dir" value="${core.src.dir}/java"/>
+  <property name="core.resources.dir" value="${core.src.dir}/resources"/>
+  <property name="core.output.dir" value="${core.dir}/output"/>
+  <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
+  <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
+  <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
   
   <target name="jbossws-init" depends="prepare, thirdparty">
   </target>
@@ -47,8 +47,8 @@
   
   <!-- Compile core java sources -->
   <target name="jbossws-compile-interfaces" depends="jbossws-init">
-    <mkdir dir="${jbossws.output.classes14.dir}"/>
-    <javac srcdir="${jbossws.java.dir}" destdir="${jbossws.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
+    <mkdir dir="${core.output.classes14.dir}"/>
+    <javac srcdir="${core.java.dir}" destdir="${core.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
       failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
       <include name="javax/xml/rpc/**"/>
       <include name="javax/xml/soap/**"/>
@@ -59,14 +59,14 @@
   
   <!-- Compile core java sources -->
   <target name="jbossws-compile-core" depends="jbossws-compile-interfaces">
-    <mkdir dir="${jbossws.output.classes.dir}"/>
-    <javac srcdir="${jbossws.java.dir}" sourcepath="" destdir="${jbossws.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
+    <mkdir dir="${core.output.classes.dir}"/>
+    <javac srcdir="${core.java.dir}" sourcepath="" destdir="${core.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
       deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
       <include name="javax/xml/ws/**"/>
       <include name="javax/jws/**"/>
       <include name="org/jboss/ws/**"/>
       <exclude name="org/jboss/ws/integration/**"/>
-      <classpath path="${jbossws.output.classes14.dir}"/>
+      <classpath path="${core.output.classes14.dir}"/>
       <classpath refid="jboss.core.classpath"/>
       <classpath refid="library.classpath"/>
     </javac>
@@ -104,26 +104,26 @@
   <target name="jbossws-module-jars">
     
     <!-- Build jboss-jaxrpc.jar -->
-    <mkdir dir="${jbossws.output.lib.dir}"/>
-    <jar jarfile="${jbossws.output.lib.dir}/jboss-jaxrpc.jar" manifest="${output.etc.dir}/default.mf">
-      <fileset dir="${jbossws.output.classes14.dir}">
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
         <include name="javax/xml/rpc/**"/>
       </fileset>
     </jar>
     
     <!-- Build jboss-saaj.jar -->
-    <mkdir dir="${jbossws.output.lib.dir}"/>
-    <jar jarfile="${jbossws.output.lib.dir}/jboss-saaj.jar" manifest="${output.etc.dir}/default.mf">
-      <fileset dir="${jbossws.output.classes14.dir}">
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
         <include name="javax/xml/soap/**"/>
       </fileset>
-      <metainf dir="${jbossws.resources.dir}/jboss-saaj.jar/META-INF"/>
+      <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
     </jar>
     
     <!-- Build jboss-jaxws.jar -->
-    <mkdir dir="${jbossws.output.lib.dir}"/>
-    <jar jarfile="${jbossws.output.lib.dir}/jboss-jaxws.jar" manifest="${output.etc.dir}/default.mf">
-      <fileset dir="${jbossws.output.classes.dir}">
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
         <include name="javax/jws/**"/>
         <include name="javax/xml/ws/**"/>
         <include name="org/jboss/ws/jaxws/injection/**"/>
@@ -131,36 +131,36 @@
     </jar>
     
     <!-- Build jbossws-core.jar -->
-    <mkdir dir="${jbossws.output.lib.dir}"/>
-    <jar jarfile="${jbossws.output.lib.dir}/jbossws-core.jar" manifest="${output.etc.dir}/default.mf">
-      <fileset dir="${jbossws.output.classes.dir}">
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/ws/**"/>
         <exclude name="org/jboss/ws/integration/**"/>
       </fileset>
-      <fileset dir="${jbossws.resources.dir}">
+      <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
         <include name="dtd/**"/>
       </fileset>
     </jar>
     
     <!-- Build jbossws-client.jar -->
-    <jar jarfile="${jbossws.output.lib.dir}/jbossws-client.jar" manifest="${output.etc.dir}/default.mf">
-      <fileset dir="${jbossws.output.classes14.dir}">
+    <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
         <include name="javax/xml/rpc/**"/>
         <include name="javax/xml/soap/**"/>
       </fileset>
-      <fileset dir="${jbossws.output.classes.dir}">
+      <fileset dir="${core.output.classes.dir}">
         <include name="javax/xml/ws/**"/>
         <include name="javax/jws/**"/>
         <include name="org/jboss/ws/**"/>
         <exclude name="org/jboss/ws/integration/jboss50/**"/>
         <exclude name="org/jboss/ws/integration/tomcat/**"/>
       </fileset>
-      <fileset dir="${jbossws.resources.dir}/jbossws.sar">
+      <fileset dir="${core.resources.dir}/jbossws.sar">
         <include name="META-INF/standard-jaxrpc-client-config.xml"/>
         <include name="META-INF/standard-jaxws-client-config.xml"/>
       </fileset>
-      <fileset dir="${jbossws.resources.dir}">
+      <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
         <include name="dtd/**"/>
       </fileset>
@@ -169,7 +169,7 @@
         <include name="wstools.bat"/>
         <include name="wstools-log4j.xml"/>
       </fileset>
-      <metainf dir="${jbossws.resources.dir}/jboss-saaj.jar/META-INF"/>
+      <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
     </jar>
     
   </target>
@@ -183,7 +183,7 @@
 
       <mkdir dir="${output.api-docs}"/>
       <javadoc destdir="${output.api-docs}" author="true" version="true" use="true" windowtitle="JBossWS API">
-         <packageset dir="${jbossws.java.dir}" defaultexcludes="yes">
+         <packageset dir="${core.java.dir}" defaultexcludes="yes">
             <include name="org/jboss/ws/**"/>
          </packageset>
          <packageset dir="${jboss.server.root}/../src/main" defaultexcludes="yes">
@@ -201,7 +201,7 @@
    </target>
   
   <target name="clean" depends="prepare" description="Cleans up most generated files.">
-    <delete dir="${jbossws.output.dir}"/>
+    <delete dir="${core.output.dir}"/>
   </target>
   
   <target name="main" description="Executes the default target (most)." depends="most"/>
