@@ -113,7 +113,7 @@
   <target name="init" depends="prepare,thirdparty">
     
     <!-- Define excluded tests -->
-    <condition property="tests.excludesfile" value="${test.resources.dir}/tests-no-excludes.txt">
+    <condition property="tests.excludesfile" value="${test.resources.dir}/tests-excludes.txt">
       <equals arg1="${jbossws.target.server}" arg2="jboss"/>
     </condition>
     <condition property="tests.excludesfile" value="${test.resources.dir}/tests-tomcat-excludes.txt">
@@ -319,7 +319,7 @@
     <antcall target="tests-main">
       <param name="include.wildcard" value="org/jboss/test/ws/**/*TestCase.class"/>
       <param name="exclude.wildcard" value="org/jboss/test/ws/*/benchmark/**"/>
-      <param name="excludesfile" value="${test.resources.dir}/tests-no-excludes.txt"/>
+      <param name="excludesfile" value="${test.resources.dir}/tests-excludes.txt"/>
     </antcall>
     <antcall target="tests-report"/>
   </target>
@@ -328,7 +328,7 @@
   <target name="tests-benchmark" description="Run benchmark unit tests">
     <antcall target="tests-main">
       <param name="include.wildcard" value="org/jboss/test/ws/benchmark/**/*TestCase.class"/>
-      <param name="excludesfile" value="${test.resources.dir}/tests-no-excludes.txt"/>
+      <param name="excludesfile" value="${test.resources.dir}/tests-excludes.txt"/>
     </antcall>
     <antcall target="tests-report"/>
   </target>
@@ -346,7 +346,7 @@
   <target name="tests-tools" description="Run tools unit tests">
     <antcall target="tests-main">
       <param name="include.wildcard" value="org/jboss/test/ws/tools/**/*TestCase.class"/>
-      <param name="excludesfile" value="${test.resources.dir}/tests-no-excludes.txt"/>
+      <param name="excludesfile" value="${test.resources.dir}/tests-excludes.txt"/>
     </antcall>
     <antcall target="tests-report"/>
   </target>
@@ -358,7 +358,7 @@
   <target name="test" if="test" description="Run all unit tests in a given directory">
     <antcall target="tests-main">
       <param name="include.wildcard" value="org/jboss/test/ws/${test}/**/*TestCase.class"/>
-      <param name="excludesfile" value="${test.resources.dir}/tests-no-excludes.txt"/>
+      <param name="excludesfile" value="${test.resources.dir}/tests-excludes.txt"/>
     </antcall>
   </target>
   

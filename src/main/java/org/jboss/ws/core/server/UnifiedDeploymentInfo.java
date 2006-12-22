@@ -61,7 +61,7 @@ public class UnifiedDeploymentInfo
    /** The string identifing this deployment **/
    public String name;
    /** The URL to the expanded webapp **/
-   public URL expandedWebApp;
+   public URL webappURL;
    /** We can hold "typed" metadata */
    public Object metaData;
    /** The deployment classloader **/
