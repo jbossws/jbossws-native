@@ -25,7 +25,7 @@
   <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
   <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
   
-  <target name="jbossws-init" depends="prepare, thirdparty">
+  <target name="core-init" depends="prepare, thirdparty">
   </target>
   
   <!-- ================================================================== -->
@@ -40,25 +40,21 @@
   | documentation compiles.
   -->
   
-  <target name="jbossws-compile" depends="jbossws-init,jbossws-compile-classes,jbossws-compile-etc" description="Compile all source files."/>
+  <target name="core-compile" depends="core-init,core-compile-classes,core-compile-etc" description="Compile all source files."/>
   
   <!-- Compile java sources -->
-  <target name="jbossws-compile-classes" depends="jbossws-compile-interfaces,jbossws-compile-core"/>
+  <target name="core-compile-classes" depends="core-init">
   
-  <!-- Compile core java sources -->
-  <target name="jbossws-compile-interfaces" depends="jbossws-init">
+    <!-- Compile interfaces with jdk1.4 -->
     <mkdir dir="${core.output.classes14.dir}"/>
     <javac srcdir="${core.java.dir}" destdir="${core.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
       failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
       <include name="javax/xml/rpc/**"/>
       <include name="javax/xml/soap/**"/>
-      <classpath refid="jboss.core.classpath"/>
-      <classpath refid="library.classpath"/>
+      <classpath refid="core.classpath"/>
     </javac>
-  </target>
-  
-  <!-- Compile core java sources -->
-  <target name="jbossws-compile-core" depends="jbossws-compile-interfaces">
+    
+    <!-- Compile core classes with jdk1.4 -->
     <mkdir dir="${core.output.classes.dir}"/>
     <javac srcdir="${core.java.dir}" sourcepath="" destdir="${core.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
       deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
@@ -67,14 +63,13 @@
       <include name="org/jboss/ws/**"/>
       <exclude name="org/jboss/ws/integration/**"/>
       <classpath path="${core.output.classes14.dir}"/>
-      <classpath refid="jboss.core.classpath"/>
-      <classpath refid="library.classpath"/>
+      <classpath refid="core.classpath"/>
     </javac>
   </target>
   
   
   <!-- Compile etc files (manifests and such) -->
-  <target name="jbossws-compile-etc" depends="jbossws-init">
+  <target name="core-compile-etc" depends="core-init">
     <mkdir dir="${output.etc.dir}"/>
     <copy todir="${output.etc.dir}" filtering="yes" overwrite="yes">
       <fileset dir="${build.dir}/etc"/>
@@ -95,13 +90,13 @@
   <!--
   | Build all jar files.
   -->
-  <target name="jbossws-jars" depends="jbossws-compile,jbossws-module-jars" description="Builds all jar files.">
+  <target name="core-jars" depends="core-compile,core-module-jars" description="Builds all jar files.">
   </target>
   
   <!--
   |  Build all jar files.
   -->
-  <target name="jbossws-module-jars">
+  <target name="core-module-jars">
     
     <!-- Build jboss-jaxrpc.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
@@ -179,7 +174,7 @@
   <!-- ================================================================== -->
 
    <!-- Generate the JavaDoc -->
-   <target name="jbossws-javadoc" depends="jbossws-init" description="Generate the Javadoc">
+   <target name="core-javadoc" depends="core-init" description="Generate the Javadoc">
 
       <mkdir dir="${output.api-docs}"/>
       <javadoc destdir="${output.api-docs}" author="true" version="true" use="true" windowtitle="JBossWS API">
@@ -206,7 +201,7 @@
   
   <target name="main" description="Executes the default target (most)." depends="most"/>
   
-  <target name="most" description="Builds almost everything." depends="jbossws-jars"/>
+  <target name="most" description="Builds almost everything." depends="core-jars"/>
   
   <target name="all" description="Create a distribution zip file" depends="main">
   </target>
