@@ -11,28 +11,22 @@
 <project name="JBossWS-Tests" default="main" basedir="../..">
   
   <import file="${basedir}/../build/import/build-thirdparty.xml"/>
+  <import file="${basedir}/../build/import/build-setup.xml"/>
   
-  <!-- ================================================================== -->
-  <!-- Setup                                                              -->
-  <!-- ================================================================== -->
+  <property name="jbossws.output.dir" value="${jbossws.dir}/output"/>
+  <property name="jbossws.output.classes.dir" value="${jbossws.output.dir}/classes"/>
+  <property name="jbossws.output.classes14.dir" value="${jbossws.output.dir}/classes14"/>
+  <property name="jbossws.output.lib.dir" value="${jbossws.output.dir}/lib"/>
   
-  <property file="${basedir}/../build/ant.properties"/>
-  <property file="${basedir}/../build/version.properties"/>
-
-  <property name="build.dir" value="${basedir}/../build/output"/>
-  <property name="build.lib.dir" value="${build.dir}/lib"/>
-  <property name="build.resources.dir" value="${build.dir}/resources"/>
-  <property name="build.tests.dir" value="${build.dir}/tests"/>
   <property name="test.dir" value="${basedir}/src/test"/>
   <property name="test.etc.dir" value="${test.dir}/etc"/>
   <property name="test.java.dir" value="${test.dir}/java"/>
   <property name="test.resources.dir" value="${test.dir}/resources"/>
+  <property name="test.output.dir" value="${jbossws.output.dir}/tests"/>
   
-  <property name="thirdparty.dir" value="${basedir}/../build/thirdparty"/>
-  
-  <!-- JDK Detection -->
-  <available classname="java.lang.StackTraceElement" property="HAVE_JDK_1.4"/>
-  <available classname="java.lang.Enum" property="HAVE_JDK_1.5"/>
+  <!-- ================================================================== -->
+  <!-- Setup                                                              -->
+  <!-- ================================================================== -->
   
   <!-- Use -Ddebug=true for remote debugging -->
   <condition property="remote.debug.line" value="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006">
@@ -98,8 +92,8 @@
     
     <fail message="Not available: ${jboss.home}/client/jbossall-client.jar" unless="jbossws.available"/>
     
-    <mkdir dir="${build.tests.dir}/log"/>
-    <touch file="${build.tests.dir}/logtest.log"/>
+    <mkdir dir="${test.output.dir}/log"/>
+    <touch file="${test.output.dir}/logtest.log"/>
     
     <tstamp>
       <format property="build.id" pattern="yyyyMMddHHmm"/>
@@ -122,7 +116,7 @@
     
     <!-- The jbossws client classpath -->
     <path id="jbossws.client.classpath">
-      <pathelement location="${build.lib.dir}/jbossws-client.jar"/>
+      <pathelement location="${jbossws.output.lib.dir}/jbossws-client.jar"/>
       <pathelement location="${jboss.client}/activation.jar"/>
       <pathelement location="${jboss.client}/commons-logging.jar"/>
       <pathelement location="${jboss.client}/javassist.jar"/>
@@ -151,8 +145,9 @@
       <pathelement location="${jboss.server.lib}/jboss.jar"/>
       <pathelement location="${jboss.server.deploy}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
       <pathelement location="${jboss.server.deploy}/ejb3.deployer/jboss-ejb3x.jar"/>
-      <pathelement location="${build.lib.dir}/jbossws-${jboss.integration.target}-integration.jar"/>
-      <pathelement location="${build.lib.dir}/jbossws-tomcat-integration.jar"/>
+      <pathelement location="${integration.jboss50.dir}/output/lib/jbossws-${jboss.integration.target}-integration.jar"/>
+      <pathelement location="${integration.jboss42.dir}/output/lib/jbossws-${jboss.integration.target}-integration.jar"/>
+      <pathelement location="${integration.tomcat.dir}/output/lib/jbossws-tomcat-integration.jar"/>
     </path>
     
     <!--
@@ -161,8 +156,8 @@
     -->
     <path id="test.client.classpath">
       <path refid="jbossws.client.classpath"/>
-      <pathelement location="${build.lib.dir}/jbossws-${jboss.integration.target}-integration.jar"/>
-      <pathelement location="${build.lib.dir}/jbossws-tomcat-integration.jar"/>
+      <pathelement location="${jbossws.output.lib.dir}/jbossws-${jboss.integration.target}-integration.jar"/>
+      <pathelement location="${jbossws.output.lib.dir}/jbossws-tomcat-integration.jar"/>
       <pathelement location="${jboss.client}/jboss-aspect-jdk50-client.jar"/>
       <pathelement location="${jboss.client}/jboss-aop-jdk50-client.jar"/>
       <pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
@@ -185,8 +180,8 @@
   <target name="compile" depends="compile14, compile15" description="Compile sources"/>
   
   <target name="compile14" depends="init" unless="HAVE_JDK_1.5">
-    <mkdir dir="${build.tests.dir}/classes"/>
-    <javac destdir="${build.tests.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
+    <mkdir dir="${test.output.dir}/classes"/>
+    <javac destdir="${test.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
       <src path="${test.java.dir}"/>
       <exclude name="org/jboss/test/ws/interop/**"/>
       <exclude name="org/jboss/test/ws/jaxrpc/jbws718/**"/>
@@ -197,8 +192,8 @@
   </target>
   
   <target name="compile15" depends="init" if="HAVE_JDK_1.5">
-    <mkdir dir="${build.tests.dir}/classes"/>
-    <javac destdir="${build.tests.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
+    <mkdir dir="${test.output.dir}/classes"/>
+    <javac destdir="${test.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
       <src path="${test.java.dir}"/>
       <exclude name="org/jboss/test/ws/interop/**"/>
       <exclude name="org/jboss/test/ws/jaxrpc/jbws718/**"/>
@@ -207,19 +202,19 @@
   </target>
   
   <target name="compile-generated" depends="init" description="Compile generated sources">
-    <mkdir dir="${build.tests.dir}/classes"/>
-    <javac destdir="${build.tests.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
-      <src path="${build.tests.dir}/wstools/java"/>
+    <mkdir dir="${test.output.dir}/classes"/>
+    <javac destdir="${test.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
+      <src path="${test.output.dir}/wstools/java"/>
       <exclude name="org/jboss/test/ws/interop/**"/>
       <classpath refid="javac.classpath"/>
     </javac>
   </target>
   
   <target name="copy-resources" depends="init" description="Copy the deployment resources.">
-    <copy todir="${build.tests.dir}/classes" file="${test.etc.dir}/jndi.properties"/>
-    <copy todir="${build.tests.dir}/classes" file="${test.etc.dir}/log4j.xml"/>
+    <copy todir="${test.output.dir}/classes" file="${test.etc.dir}/jndi.properties"/>
+    <copy todir="${test.output.dir}/classes" file="${test.etc.dir}/log4j.xml"/>
     <!-- Copy resources -->
-    <copy todir="${build.tests.dir}/resources">
+    <copy todir="${test.output.dir}/resources">
       <fileset dir="${test.resources.dir}">
         <include name="**/*.wsdl"/>
         <include name="**/*.xml"/>
@@ -227,11 +222,11 @@
       </fileset>
       <filterset>
         <filter token="jbosstest.host.name" value="${node0}"/>
-        <filter token="wsdl-publish-location" value="${build.tests.dir}/wsdl-publish"/>
+        <filter token="wsdl-publish-location" value="${test.output.dir}/wsdl-publish"/>
       </filterset>
     </copy>
     <!-- Copy binary files -->
-    <copy todir="${build.tests.dir}/resources">
+    <copy todir="${test.output.dir}/resources">
       <fileset dir="${test.resources.dir}">
         <exclude name="**/*.wsdl"/>
         <exclude name="**/*.xml"/>
@@ -244,8 +239,8 @@
   <!-- ================================================================== -->
   
   <target name="main" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" description="Build the deployments.">
-    <mkdir dir="${build.tests.dir}/reports"/>
-    <mkdir dir="${build.tests.dir}/libs"/>
+    <mkdir dir="${test.output.dir}/reports"/>
+    <mkdir dir="${test.output.dir}/libs"/>
     <ant antfile="${test.dir}/ant/build-jars-jaxrpc.xml" target="build-jars" inheritall="true"/>
     <ant antfile="${test.dir}/ant/build-jars-jaxws.xml" target="build-jars" inheritall="true"/>
   </target>
@@ -256,47 +251,47 @@
   <target name="generate-sources" depends="compile" description="Generate the deployment resources.">
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath refid="jbossws.client.classpath"/>
-      <classpath location="${build.tests.dir}/classes"/>
-      <classpath location="${build.tests.dir}"/>
+      <classpath location="${test.output.dir}/classes"/>
+      <classpath location="${test.output.dir}"/>
     </taskdef>
-    <mkdir dir="${build.tests.dir}/wstools/java"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/jbws718/WEB-INF" config="${test.resources.dir}/jaxrpc/jbws718/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/docstyle/bare/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/dynamichandler/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/dynamichandler/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/exception/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/exception/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/handler/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/handler/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/holder/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/holder/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jmstransport/META-INF" config="${test.resources.dir}/jaxrpc/samples/jmstransport/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/doclit/META-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109ejb/doclit/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/rpclit/META-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109ejb/rpclit/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109pojo/doclit/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109pojo/rpclit/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/message/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/message/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${test.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxws/samples/jsr181ejb/META-INF" config="${test.resources.dir}/jaxws/samples/jsr181ejb/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxws/samples/jsr181pojo/META-INF" config="${test.resources.dir}/jaxws/samples/jsr181pojo/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxws/samples/jsr181pojo/docwrapped/META-INF" config="${test.resources.dir}/jaxws/samples/jsr181pojo/docwrapped/wstools-config.xml"/>
-    <wstools dest="${build.tests.dir}/wstools/resources/jaxws/samples/wsaddressing/META-INF" config="${test.resources.dir}/jaxws/samples/wsaddressing/wstools-config.xml"/>
-    <move todir="${build.tests.dir}/wstools/java">
-      <fileset dir="${build.tests.dir}/wstools/resources/jaxrpc/jbws718/WEB-INF" includes="org/**"/>
-      <fileset dir="${build.tests.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
+    <mkdir dir="${test.output.dir}/wstools/java"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/jbws718/WEB-INF" config="${test.resources.dir}/jaxrpc/jbws718/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/docstyle/bare/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/dynamichandler/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/dynamichandler/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/exception/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/exception/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/handler/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/handler/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/holder/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/holder/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/jmstransport/META-INF" config="${test.resources.dir}/jaxrpc/samples/jmstransport/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/doclit/META-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109ejb/doclit/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/rpclit/META-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109ejb/rpclit/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109pojo/doclit/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/jsr109pojo/rpclit/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/message/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/message/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${test.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${test.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxws/samples/jsr181ejb/META-INF" config="${test.resources.dir}/jaxws/samples/jsr181ejb/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxws/samples/jsr181pojo/META-INF" config="${test.resources.dir}/jaxws/samples/jsr181pojo/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxws/samples/jsr181pojo/docwrapped/META-INF" config="${test.resources.dir}/jaxws/samples/jsr181pojo/docwrapped/wstools-config.xml"/>
+    <wstools dest="${test.output.dir}/wstools/resources/jaxws/samples/wsaddressing/META-INF" config="${test.resources.dir}/jaxws/samples/wsaddressing/wstools-config.xml"/>
+    <move todir="${test.output.dir}/wstools/java">
+      <fileset dir="${test.output.dir}/wstools/resources/jaxrpc/jbws718/WEB-INF" includes="org/**"/>
+      <fileset dir="${test.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
     </move>
   </target>
   
   <target name="copy-generated" depends="init" description="Copy the deployment resources.">
     <!-- Copy generated resources -->
-    <copy todir="${build.tests.dir}/resources">
-      <fileset dir="${build.tests.dir}/wstools/resources">
+    <copy todir="${test.output.dir}/resources">
+      <fileset dir="${test.output.dir}/wstools/resources">
         <include name="**/*.wsdl"/>
         <include name="**/*.xml"/>
       </fileset>
     </copy>
     <!-- Copy resources that cannot (yet) be generated -->
-    <copy todir="${build.tests.dir}/resources/jaxrpc/samples" overwrite="true">
+    <copy todir="${test.output.dir}/resources/jaxrpc/samples" overwrite="true">
       <fileset dir="${test.resources.dir}/jaxrpc/samples-override"/>
       <filterset>
         <filter token="jbosstest.host.name" value="${node0}"/>
@@ -364,14 +359,14 @@
   
   <!-- Common test target -->
   <target name="tests-main" depends="init">
-    <junit printsummary="yes" showoutput="yes" dir="${build.tests.dir}">
+    <junit printsummary="yes" showoutput="yes" dir="${test.output.dir}">
       <jvmarg value="-Djava.security.manager"/>
       <sysproperty key="java.security.policy" value="${test.etc.dir}/tst.policy"/>
       <sysproperty key="jboss.home" value="${jboss.home}"/>
       <sysproperty key="tomcat.home" value="${tomcat.home}"/>
       <sysproperty key="jbosstest.host.name" value="${node0}"/>
       <sysproperty key="java.naming.provider.url" value="${node0.jndi.url}"/>
-      <sysproperty key="build.testlog" value="${build.tests.dir}/log"/>
+      <sysproperty key="build.testlog" value="${test.output.dir}/log"/>
       <sysproperty key="java.endorsed.dirs" value="${jboss.home}/lib/endorsed"/>
       <sysproperty key="jbosstest.server.host" value="${node0}"/>
       <sysproperty key="jbossws.target.server" value="${jbossws.target.server}"/>
@@ -386,12 +381,12 @@
       <sysproperty key="client.scenario" value="${client.scenario}"/>
       <classpath>
         <path refid="test.client.classpath"/>
-        <pathelement location="${build.tests.dir}/classes"/>
+        <pathelement location="${test.output.dir}/classes"/>
       </classpath>
       <formatter type="plain" usefile="true"/>
       <formatter type="xml" usefile="true"/>
-      <batchtest todir="${build.tests.dir}/reports" fork="true">
-        <fileset dir="${build.tests.dir}/classes" includes="${include.wildcard}" excludes="${exclude.wildcard}" excludesfile="${excludesfile}"/>
+      <batchtest todir="${test.output.dir}/reports" fork="true">
+        <fileset dir="${test.output.dir}/classes" includes="${include.wildcard}" excludes="${exclude.wildcard}" excludesfile="${excludesfile}"/>
       </batchtest>
     </junit>
   </target>
@@ -401,7 +396,7 @@
   ant -Dtest=org.jboss.test.ws.jaxrpc.samples.jsr109pojo.RpcJSETestCase one-test
   -->
   <target name="one-test" depends="init" if="test" description="Run a single unit test">
-    <junit printsummary="yes" showoutput="yes" dir="${build.tests.dir}">
+    <junit printsummary="yes" showoutput="yes" dir="${test.output.dir}">
       <jvmarg line="${remote.debug.line}"/>
       <jvmarg value="-Djava.security.manager"/>
       <sysproperty key="java.security.policy" value="${test.etc.dir}/tst.policy"/>
@@ -409,7 +404,7 @@
       <sysproperty key="tomcat.home" value="${tomcat.home}"/>
       <sysproperty key="jbosstest.host.name" value="${node0}"/>
       <sysproperty key="java.naming.provider.url" value="${node0.jndi.url}"/>
-      <sysproperty key="build.testlog" value="${build.tests.dir}/log"/>
+      <sysproperty key="build.testlog" value="${test.output.dir}/log"/>
       <sysproperty key="java.endorsed.dirs" value="${jboss.home}/lib/endorsed"/>
       <sysproperty key="jbosstest.server.host" value="${node0}"/>
       <sysproperty key="jbossws.target.server" value="${jbossws.target.server}"/>
@@ -435,11 +430,11 @@
       <sysproperty key="org.jboss.ws.wsse.trustStoreType" value="jks"/>
       <classpath>
         <path refid="test.client.classpath"/>
-        <pathelement location="${build.tests.dir}/classes"/>
+        <pathelement location="${test.output.dir}/classes"/>
       </classpath>
       <formatter type="plain" usefile="true"/>
       <formatter type="xml" usefile="true"/>
-      <test todir="${build.tests.dir}/reports" name="${test}" fork="true"/>
+      <test todir="${test.output.dir}/reports" name="${test}" fork="true"/>
     </junit>
   </target>
   
@@ -449,14 +444,14 @@
   
   <!-- Build the tests report -->
   <target name="tests-report" depends="init" description="Build the tests report">
-    <junitreport todir="${build.tests.dir}/reports">
-      <fileset dir="${build.tests.dir}/reports">
+    <junitreport todir="${test.output.dir}/reports">
+      <fileset dir="${test.output.dir}/reports">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${build.tests.dir}/reports/html"/>
+      <report format="frames" todir="${test.output.dir}/reports/html"/>
     </junitreport>
-    <zip destfile="${build.tests.dir}/test-report-${build.id}.zip">
-      <fileset dir="${build.tests.dir}" includes="reports/**"/>
+    <zip destfile="${test.output.dir}/test-report-${build.id}.zip">
+      <fileset dir="${test.output.dir}" includes="reports/**"/>
     </zip>
   </target>
   
@@ -465,7 +460,7 @@
   <!-- ================================================================== -->
   
   <target name="clean" description="Delete all generated test files.">
-    <delete dir="${build.tests.dir}"/>
+    <delete dir="${test.output.dir}"/>
   </target>
   
 </project>

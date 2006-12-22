@@ -25,11 +25,6 @@
   <property name="jbossws.output.classes14.dir" value="${jbossws.output.dir}/classes14"/>
   <property name="jbossws.output.lib.dir" value="${jbossws.output.dir}/lib"/>
   
-  <property name="test.dir" value="${basedir}/src/test"/>
-  <property name="test.etc.dir" value="${test.dir}/etc"/>
-  <property name="test.jbossws.java.dir" value="${test.dir}/java"/>
-  <property name="test.jbossws.resources.dir" value="${test.dir}/resources"/>
-  
   <target name="jbossws-init" depends="prepare, thirdparty">
   </target>
   
