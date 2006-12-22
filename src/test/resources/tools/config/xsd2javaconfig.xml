@@ -1,7 +1,0 @@
-<!--This is the config file used by jbossws-->
-<configuration> 
-  <xsdtojava   schemafile="resources/somedir/somefile.xsd" 
-                       packagename="org.jboss.testtypes"
-                       javadir="output/somedir" 
-                       createjavadir="true" />  
-</configuration>
