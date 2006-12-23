@@ -168,18 +168,17 @@ public class PortComponentMetaData
     */
    public String serialize()
    {
-      StringBuilder builder = new StringBuilder("<port-component> <port-component-name>");
-      builder.append(portComponentName + "</port-component-name><wsdl-port>impl:");
-      builder.append(wsdlPort.getLocalPart() + "</wsdl-port><service-endpoint-interface>");
-      builder.append(serviceEndpointInterface);
-      builder.append("</service-endpoint-interface>");
+      StringBuilder builder = new StringBuilder("<port-component>");
+      builder.append("<port-component-name>").append(portComponentName).append("</port-component-name>");
+      builder.append("<wsdl-port xmlns:").append(wsdlPort.getPrefix()).append("='").append(wsdlPort.getNamespaceURI()).append("'>");
+      builder.append(wsdlPort.getPrefix()).append(':').append(wsdlPort.getLocalPart()).append("</wsdl-port>");
+      builder.append("<service-endpoint-interface>").append(serviceEndpointInterface).append("</service-endpoint-interface>");
       builder.append("<service-impl-bean>");
       if (ejbLink != null)
       {
          builder.append("<ejb-link>");
          builder.append(ejbLink);
          builder.append("</ejb-link>");
-
       }
       else
       {

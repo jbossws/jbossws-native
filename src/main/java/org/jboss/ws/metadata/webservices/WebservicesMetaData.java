@@ -24,10 +24,7 @@ package org.jboss.ws.metadata.webservices;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.namespace.QName;
+import java.util.Map;
 
 import org.jboss.ws.Constants;
 
@@ -76,34 +73,46 @@ public class WebservicesMetaData
    //Serialize as a String
    public String serialize()
    {
-      StringBuilder buffer = new StringBuilder();
       //Construct the webservices.xml definitions
-      List qnames = new ArrayList();
-      Iterator iter = webserviceDescriptions.iterator();
-      while (iter != null && iter.hasNext())
-      {
-         WebserviceDescriptionMetaData wmd = (WebserviceDescriptionMetaData)iter.next();
-         qnames.addAll(wmd.getPortComponentQNames());
-      }
-      createHeader(buffer, qnames);
+      StringBuilder buffer = new StringBuilder();
+
+      // header: opening webservices tag
+      createHeader(buffer);
+
+      // webservice-description subelements
       for (WebserviceDescriptionMetaData wm : webserviceDescriptions)
          buffer.append(wm.serialize());
+
+      // closing webservices tag
       buffer.append("</webservices>");
       return buffer.toString();
    }
 
-   private void createHeader(StringBuilder buf, List qnames)
+   private void createHeader(StringBuilder buf)
    {
       buf.append("<webservices xmlns='http://java.sun.com/xml/ns/j2ee'");
-      buf.append(" xmlns:xsi='" + Constants.NS_SCHEMA_XSI + "'");
-      //Lets append the port type namespaces
-      Iterator iter = qnames.iterator();
-      while (iter != null && iter.hasNext())
-      {
-         QName qn = (QName)iter.next();
-         buf.append(" xmlns:").append(qn.getPrefix()).append("='").append(qn.getNamespaceURI()).append("'");
-      }
+      buf.append(" xmlns:xsi='").append(Constants.NS_SCHEMA_XSI).append('\'');
       buf.append(" xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd'");
-      buf.append(" version='1.1' >");
+      buf.append(" version='1.1'>");
+   }
+
+   private String createAlternatePrefix(String prefix, Map<String, String> namespaces)
+   {
+      // allocate working buffer
+      StringBuilder altPrefixBuilder = new StringBuilder(prefix);
+      // remember original length
+      int baseLength = prefix.length();
+
+      for (int i = 2; i < Integer.MAX_VALUE; i++)
+      {
+         // append a natural number to the original prefix
+         String altPrefix = altPrefixBuilder.append(i).toString();
+         // if the alternate prefix does not match an existing one, we're done
+         if (!namespaces.containsKey(altPrefix))
+            return altPrefix;
+         // truncate buffer to original length
+         altPrefixBuilder.setLength(baseLength);
+      }
+      throw new IllegalArgumentException("could not create alternate prefix from: " + prefix);
    }
 }

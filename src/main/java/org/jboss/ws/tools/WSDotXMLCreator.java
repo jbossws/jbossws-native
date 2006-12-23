@@ -31,14 +31,15 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.webservices.PortComponentMetaData;
 import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.ws.metadata.webservices.WebservicesFactory;
 import org.jboss.ws.metadata.webservices.WebservicesMetaData;
 import org.jboss.ws.tools.interfaces.WSDotXMLCreatorIntf;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jboss.xb.binding.JBossXBException;
+import org.jboss.xb.binding.ObjectModelFactory;
+import org.jboss.xb.binding.Unmarshaller;
+import org.jboss.xb.binding.UnmarshallerFactory;
 
 /**
  * Creates the webservices.xml deployment descriptor
@@ -142,37 +143,42 @@ public class WSDotXMLCreator implements WSDotXMLCreatorIntf
    /* (non-Javadoc)
     * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#generateWSXMLDescriptor(java.io.File)
     */
-   public void generateWSXMLDescriptor(File file) throws IOException
+   public void generateWSXMLDescriptor(File wsXmlFile) throws IOException
    {
       WebservicesMetaData webservices = constructWSMetaData();
 
-      Element webservicesElem;
-      if (append && file.exists())
+      // handle append flag
+      if (append && wsXmlFile.exists())
       {
-         // append generated webservice descriptions to existing file
-         // parse existing file
-         InputStream wsxmlStream = new FileInputStream(file);
-         webservicesElem = DOMUtils.parse(wsxmlStream);
-         wsxmlStream.close();
+         WebservicesMetaData existingWebservices;
 
-         // obtain <webservice-description> subelements and append them to <webservices>
-         Document webservicesDoc = webservicesElem.getOwnerDocument();
-         for (WebserviceDescriptionMetaData wsdescription : webservices.getWebserviceDescriptions())
+         // parse existing webservices descriptor
+         InputStream wsXmlStream = new FileInputStream(wsXmlFile);
+         try
          {
-            String wsdescriptionString = wsdescription.serialize();
-            Element wsdescriptionElem = DOMUtils.parse(wsdescriptionString);
-            webservicesElem.appendChild(webservicesDoc.importNode(wsdescriptionElem, true));
+            Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
+            ObjectModelFactory factory = new WebservicesFactory(wsXmlFile.toURL());
+            existingWebservices = (WebservicesMetaData)unmarshaller.unmarshal(wsXmlStream, factory, null);
          }
-      }
-      else
-      {
-         // write generated webservices descriptor to new file
-         String wmdata = webservices.serialize();
-         webservicesElem = DOMUtils.parse(wmdata);
+         catch (JBossXBException e)
+         {
+            throw new WSException("Could not unmarshal existing webservices descriptor: " + wsXmlFile, e);
+         }
+         finally
+         {
+            wsXmlStream.close();
+         }
+
+         // append generated webservice-descriptions to existing descriptor
+         for (WebserviceDescriptionMetaData webserviceDescription : webservices.getWebserviceDescriptions())
+            existingWebservices.addWebserviceDescription(webserviceDescription);
+
+         webservices = existingWebservices;
       }
 
-      FileWriter fw = new FileWriter(file);
-      fw.write(DOMWriter.printNode(webservicesElem, true));
+      // (re-)write generated webservices descriptor to file
+      FileWriter fw = new FileWriter(wsXmlFile);
+      fw.write(webservices.serialize());
       fw.close();
    }
 
@@ -195,7 +201,7 @@ public class WSDotXMLCreator implements WSDotXMLCreatorIntf
       wsdm.setJaxrpcMappingFile(this.mappingFile);
       PortComponentMetaData pm1 = new PortComponentMetaData(wsdm);
       pm1.setPortComponentName(portName);
-      pm1.setWsdlPort(new QName(this.targetNamespace, portName, "impl"));
+      pm1.setWsdlPort(new QName(this.targetNamespace, portName, "portNS"));
       pm1.setServiceEndpointInterface(seiName);
       if (this.servletLink != null && this.servletLink.length() > 0)
          pm1.setServletLink(this.servletLink);

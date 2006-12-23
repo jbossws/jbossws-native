@@ -26,7 +26,6 @@ package org.jboss.ws.metadata.webservices;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -85,16 +84,14 @@ public class WebserviceDescriptionMetaData
     * 
     * @return
     */
-   public Collection getPortComponentQNames()
+   public Collection<QName> getPortComponentQNames()
    {
       //TODO:Check if there is just one QName that drives all portcomponents
       //or each port component can have a distinct QName (namespace/prefix)
       //Maintain uniqueness of the QName
-      Map map = new HashMap();
-      Iterator iter = portComponents.iterator();
-      while (iter != null && iter.hasNext())
+      Map<String, QName> map = new HashMap<String, QName>();
+      for (PortComponentMetaData pcm : portComponents)
       {
-         PortComponentMetaData pcm = (PortComponentMetaData)iter.next();
          QName qname = pcm.getWsdlPort();
          map.put(qname.getPrefix(), qname);
       }
@@ -109,16 +106,13 @@ public class WebserviceDescriptionMetaData
     */
    public PortComponentMetaData getPortComponentByWsdlPort(String name)
    {
-      ArrayList pcNames = new ArrayList();
-      Iterator it = portComponents.iterator();
-      while (it.hasNext())
+      ArrayList<String> pcNames = new ArrayList<String>();
+      for (PortComponentMetaData pc : portComponents)
       {
-         PortComponentMetaData pc = (PortComponentMetaData)it.next();
          String wsdlPortName = pc.getWsdlPort().getLocalPart();
          if (wsdlPortName.equals(name))
-         {
             return pc;
-         }
+
          pcNames.add(wsdlPortName);
       }
 
@@ -163,11 +157,10 @@ public class WebserviceDescriptionMetaData
     */
    public String serialize()
    {
-      StringBuilder buffer = new StringBuilder("<webservice-description> <webservice-description-name>");
-      buffer.append(this.webserviceDescriptionName);
-      buffer.append("</webservice-description-name>");
-      buffer.append("<wsdl-file>" + wsdlFile + "</wsdl-file>");
-      buffer.append("<jaxrpc-mapping-file>" + jaxrpcMappingFile + "</jaxrpc-mapping-file>");
+      StringBuilder buffer = new StringBuilder("<webservice-description>");
+      buffer.append("<webservice-description-name>").append(webserviceDescriptionName).append("</webservice-description-name>");
+      buffer.append("<wsdl-file>").append(wsdlFile).append("</wsdl-file>");
+      buffer.append("<jaxrpc-mapping-file>").append(jaxrpcMappingFile).append("</jaxrpc-mapping-file>");
       for (PortComponentMetaData pm : portComponents)
          buffer.append(pm.serialize());
       buffer.append("</webservice-description>");
