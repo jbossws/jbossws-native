@@ -190,7 +190,12 @@ public class FaultMetaData
          throw new WSException("Cannot load java type: " + javaTypeName);
 
       faultBean = getFaultBean();
+      if (faultBean != null)
+         initializeFaultBean();
+   }
 
+   private void initializeFaultBean()
+   {
       /* JAX-WS 3.7: For exceptions that match the pattern described in section
        * 2.5 (i.e. exceptions that have a getFaultInfo method), the FaultBean
        * is used as input to JAXB */

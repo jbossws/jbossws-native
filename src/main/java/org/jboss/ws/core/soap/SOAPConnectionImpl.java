@@ -42,8 +42,7 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.security.SSLSocketBuilder;
-import org.jboss.remoting.transport.http.HTTPMetadataConstants;
+import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.ws.core.jaxrpc.StubExt;
 import org.jboss.ws.extensions.xop.XOPContext;
 
@@ -81,7 +80,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       //configMap.put(StubExt.PROPERTY_TRUST_STORE, SSLSocketBuilder.REMOTING_TRUST_STORE_FILE_PATH);
       //configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, SSLSocketBuilder.REMOTING_TRUST_STORE_PASSWORD);
       //configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, SSLSocketBuilder.REMOTING_TRUST_STORE_TYPE);
-      
+
       configMap.put(StubExt.PROPERTY_KEY_STORE, "org.jboss.remoting.keyStore");
       configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, "org.jboss.remoting.keyStorePassword");
       configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, "org.jboss.remoting.keyStoreType");
@@ -94,9 +93,9 @@ public class SOAPConnectionImpl extends SOAPConnection
 
    public SOAPConnectionImpl()
    {
-	      // HTTPClientInvoker conect sends gratuitous POST
-	      // http://jira.jboss.com/jira/browse/JBWS-711
-	      config.put(Client.ENABLE_LEASE, false);
+      // HTTPClientInvoker conect sends gratuitous POST
+      // http://jira.jboss.com/jira/browse/JBWS-711
+      config.put(Client.ENABLE_LEASE, false);
    }
 
    /**
@@ -128,8 +127,6 @@ public class SOAPConnectionImpl extends SOAPConnection
       if (closed)
          throw new SOAPException("SOAPConnection is already closed");
 
-      InvokerLocator locator;
-      Client remotingClient;
       String targetAddress;
       Map callProps;
 
@@ -142,8 +139,7 @@ public class SOAPConnectionImpl extends SOAPConnection
          if (callProps.containsKey(StubExt.PROPERTY_CLIENT_TIMEOUT))
          {
             Object timeout = callProps.get(StubExt.PROPERTY_CLIENT_TIMEOUT);
-            int qmIndex = targetAddress.indexOf("?");
-            targetAddress += (qmIndex < 0 ? "?" : "&") + "timeout=" + timeout;
+            targetAddress = addURLParameter(targetAddress, "timeout", timeout.toString());
          }
       }
       else if (endpoint instanceof EndpointReference)
@@ -158,47 +154,22 @@ public class SOAPConnectionImpl extends SOAPConnection
          callProps = null;
       }
 
-	  // enforce xop transitions
+      // enforce xop transitions
       // TODO: there should be a clear transition to an immutable object model
       XOPContext.eagerlyCreateAttachments();
 
       // save object model changes
-      if (reqMessage.saveRequired()) reqMessage.saveChanges();
+      if (reqMessage.saveRequired())
+         reqMessage.saveChanges();
 
-      try
-      {
-         // Get the invoker from Remoting for a given endpoint address
-         log.debug("Get locator for: " + endpoint);
-         locator = new InvokerLocator(targetAddress);
-      }
-      catch (MalformedURLException e)
-      {
-         throw new SOAPException("Malformed endpoint address", e);
-      }
-
-      Map metadata = getRemotingMetaData(reqMessage, targetAddress, callProps);
-
-      try
-      {
-         remotingClient = new Client(locator, "saaj", config);
-         remotingClient.connect();
-         remotingClient.setMarshaller(new SOAPMessageMarshaller());
-         if (oneway == false)
-            remotingClient.setUnMarshaller(new SOAPMessageUnMarshaller());
-      }
-      catch (RuntimeException rte)
-      {
-         throw rte;
-      }
-      catch (Exception e)
-      {
-         throw new SOAPException("Could not setup remoting client", e);
-      }
+      // setup remoting client
+      Map metadata = createRemotingMetaData(reqMessage, callProps);
+      Client client = createRemotingClient(endpoint, targetAddress, oneway);
 
       try
       {
          // debug the outgoing message
-         if(msgLog.isTraceEnabled())
+         if (msgLog.isTraceEnabled())
          {
             SOAPEnvelope soapReqEnv = reqMessage.getSOAPPart().getEnvelope();
             String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapReqEnv, true);
@@ -209,15 +180,15 @@ public class SOAPConnectionImpl extends SOAPConnection
          SOAPMessage resMessage = null;
          if (oneway == true)
          {
-            remotingClient.invokeOneway(reqMessage, metadata, false);
+            client.invokeOneway(reqMessage, metadata, false);
          }
          else
          {
-            resMessage = (SOAPMessage)remotingClient.invoke(reqMessage, metadata);
+            resMessage = (SOAPMessage)client.invoke(reqMessage, metadata);
          }
 
-         // disconnect the rmoting client
-         remotingClient.disconnect();
+         // Disconnect the remoting client
+         client.disconnect();
 
          // debug the incomming response message
          if (resMessage != null && msgLog.isTraceEnabled())
@@ -231,12 +202,20 @@ public class SOAPConnectionImpl extends SOAPConnection
       }
       catch (RuntimeException rte)
       {
+         rte.printStackTrace();
          throw rte;
       }
       catch (Throwable t)
       {
          throw new SOAPException("Could not transmit message", t);
       }
+   }
+
+   private String addURLParameter(String url, String key, String value)
+   {
+      int qmIndex = url.indexOf("?");
+      url += (qmIndex < 0 ? "?" : "&") + key + "=" + value;
+      return url;
    }
 
    /** Closes this SOAPConnection
@@ -249,7 +228,47 @@ public class SOAPConnectionImpl extends SOAPConnection
       closed = true;
    }
 
-   private Map getRemotingMetaData(SOAPMessage reqMessage, String targetAddress, Map callProps) throws SOAPException
+   private Client createRemotingClient(Object endpoint, String targetAddress, boolean oneway) throws SOAPException
+   {
+      Client client;
+      try
+      {
+         // Get the invoker from Remoting for a given endpoint address
+         log.debug("Get locator for: " + endpoint);
+         targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "SOAPMessage");
+         InvokerLocator locator = new InvokerLocator(targetAddress);
+         
+         /* An HTTPClientInvoker may disconnect from the server and recreated by the remoting layer.
+          * In that case the new invoker does not inherit the marshaller/unmarshaller from the disconnected invoker.
+          * We therefore explicitly specify the invoker locator datatype and register the SOAP marshaller/unmarshaller
+          * with the MarshalFactory. 
+          * 
+          * This applies to remoting-1.4.5 
+          */
+         SOAPMessageMarshaller marshaller = new SOAPMessageMarshaller();
+         SOAPMessageUnMarshaller unmarshaller = new SOAPMessageUnMarshaller();
+         MarshalFactory.addMarshaller("SOAPMessage", marshaller, unmarshaller);
+
+         client = new Client(locator, "saaj", config);
+         client.connect();
+
+         client.setMarshaller(marshaller);
+         
+         if (oneway == false)
+            client.setUnMarshaller(unmarshaller);
+      }
+      catch (MalformedURLException e)
+      {
+         throw new SOAPException("Malformed endpoint address", e);
+      }
+      catch (Exception e)
+      {
+         throw new SOAPException("Could not setup remoting client", e);
+      }
+      return client;
+   }
+
+   private Map createRemotingMetaData(SOAPMessage reqMessage, Map callProps) throws SOAPException
    {
       // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
       // with a quoted value equal to the value of the soapAction attribute of

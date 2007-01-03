@@ -46,6 +46,9 @@ public class ReceiveUsernameOperation implements TokenOperation
       UsernameToken user = (UsernameToken)token;
       String propName = SecurityAssociationAdaptorFactory.class.getName();
       SecurityAssociationAdaptorFactory factory = (SecurityAssociationAdaptorFactory)FactoryLoader.loadFactory(propName, null);
+      if (factory == null)
+         throw new WSSecurityException("Cannot load: " + propName);
+      
       SecurityAssociationAdaptor securityAdaptor = factory.getSecurityAssociationAdaptor();
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());

@@ -23,8 +23,6 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
-import java.io.IOException;
-
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceProvider;
 
@@ -38,24 +36,17 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
  */
 public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
 {
-   public abstract UnifiedMetaData buildMetaData(UnifiedDeploymentInfo udi);
-
-   protected JAXWSEndpointMetaDataBuilder getEndpointBuilder(Class<?> bean)
+   protected void setupEndpoint(UnifiedMetaData umd, UnifiedDeploymentInfo udi, Class<?> beanClass, String beanName) throws Exception
    {
-      if (bean.isAnnotationPresent(WebServiceProvider.class))
-         return new JAXWSProviderMetaDataBuilder();
-
-      if (bean.isAnnotationPresent(WebService.class))
-         return new JAXWSWebServiceMetaDataBuilder();
-
-      return null;
-   }
-
-   protected void setupEndpoint(UnifiedMetaData umd, UnifiedDeploymentInfo udi, Class<?> beanClass, String beanName)
-      throws SecurityException, ClassNotFoundException, NoSuchMethodException, IOException
-   {
-      JAXWSEndpointMetaDataBuilder builder = getEndpointBuilder(beanClass);
-      if (builder != null)
+      if (beanClass.isAnnotationPresent(WebService.class))
+      {
+         JAXWSEndpointMetaDataBuilder builder = new JAXWSWebServiceMetaDataBuilder();
          builder.buildEndpointMetaData(umd, udi, beanClass, beanName);
+      }
+      else if (beanClass.isAnnotationPresent(WebServiceProvider.class))
+      {
+         JAXWSEndpointMetaDataBuilder builder = new JAXWSProviderMetaDataBuilder();
+         builder.buildEndpointMetaData(umd, udi, beanClass, beanName);
+      }
    }
 }

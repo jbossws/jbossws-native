@@ -84,8 +84,9 @@ public abstract class AbstractServiceEndpointPublisher
 
    public abstract String destroyServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception;
 
-   public RewriteResults rewriteWebXml(URL warURL)
+   public RewriteResults rewriteWebXml(UnifiedDeploymentInfo udi)
    {
+      URL warURL = udi.webappURL;
       File warFile = new File(warURL.getFile());
       if (warFile.isDirectory() == false)
          throw new WSException("Expected a war directory: " + warURL);
@@ -105,7 +106,7 @@ public abstract class AbstractServiceEndpointPublisher
             throw new WSException("Cannot rename web.xml: " + orgWebXML);
 
          FileInputStream stream = new FileInputStream(orgWebXML);
-         return rewriteWebXml(stream, webXML, null);
+         return rewriteWebXml(stream, webXML, udi.classLoader);
       }
       catch (RuntimeException rte)
       {

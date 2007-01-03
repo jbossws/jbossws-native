@@ -24,6 +24,10 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 import java.util.Iterator;
 
+import javax.jws.WebService;
+import javax.xml.ws.WebServiceProvider;
+
+import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
@@ -64,10 +68,25 @@ public class JAXWSMetaDataBuilderEJB21 extends JAXWSServerMetaDataBuilder
          {
             UnifiedBeanMetaData beanMetaData = (UnifiedBeanMetaData)it.next();
 
-            String ejbName = beanMetaData.getEjbName();
             String ejbClassName = beanMetaData.getEjbClass();
             Class beanClass = udi.classLoader.loadClass(ejbClassName);
-            setupEndpoint(wsMetaData, udi, beanClass, ejbName);
+            if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))
+            {
+               String ejbLink = beanMetaData.getEjbName();
+               setupEndpoint(wsMetaData, udi, beanClass, ejbLink);
+               
+               // setup the security domain
+               if (beanClass.isAnnotationPresent(SecurityDomain.class))
+               {
+                  SecurityDomain anSecurityDomain = (SecurityDomain)beanClass.getAnnotation(SecurityDomain.class);
+                  String lastDomain = wsMetaData.getSecurityDomain();
+                  String securityDomain = anSecurityDomain.value();
+                  if (lastDomain != null && lastDomain.equals(securityDomain) == false)
+                     throw new IllegalStateException("Multiple security domains not supported: " + securityDomain);
+
+                  wsMetaData.setSecurityDomain(securityDomain);
+               }
+            }
          }
 
          log.debug("END buildMetaData: " + wsMetaData);

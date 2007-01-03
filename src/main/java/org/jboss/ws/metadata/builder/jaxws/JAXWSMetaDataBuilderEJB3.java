@@ -25,6 +25,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 import java.util.Iterator;
 
 import javax.jws.WebService;
+import javax.xml.ws.WebServiceProvider;
 
 import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
@@ -70,7 +71,7 @@ public class JAXWSMetaDataBuilderEJB3 extends JAXWSServerMetaDataBuilder
             UnifiedBeanMetaData beanMetaData = it.next();
             String ejbClassName = beanMetaData.getEjbClass();
             Class<?> beanClass = udi.classLoader.loadClass(ejbClassName);
-            if (beanClass.isAnnotationPresent(WebService.class))
+            if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))
             {
                String ejbLink = beanMetaData.getEjbName();
                setupEndpoint(wsMetaData, udi, beanClass, ejbLink);

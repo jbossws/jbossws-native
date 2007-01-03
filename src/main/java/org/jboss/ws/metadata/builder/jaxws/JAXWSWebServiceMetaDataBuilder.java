@@ -669,10 +669,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          if (anWebService.portName().length() > 0 || anWebService.serviceName().length() > 0 || anWebService.endpointInterface().length() > 0)
             throw new WSException("@WebService[portName,serviceName,endpointInterface] MUST NOT be defined on: " + seiName);
 
-         name = anWebService.name();
-         if (name.length() == 0)
-            name = WSDLUtils.getJustClassName(seiClass);
-
+         // @WebService[name] is allowed, but what should we do with it?
+            
          interfaceNS = anWebService.targetNamespace();
          if (interfaceNS.length() == 0)
             interfaceNS = wsdlUtils.getTypeNamespace(seiClass);
