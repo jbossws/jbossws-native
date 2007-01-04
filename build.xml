@@ -148,8 +148,6 @@
         <include name="javax/xml/ws/**"/>
         <include name="javax/jws/**"/>
         <include name="org/jboss/ws/**"/>
-        <exclude name="org/jboss/ws/integration/jboss50/**"/>
-        <exclude name="org/jboss/ws/integration/tomcat/**"/>
       </fileset>
       <fileset dir="${core.resources.dir}/jbossws.sar">
         <include name="META-INF/standard-jaxrpc-client-config.xml"/>
