@@ -38,7 +38,6 @@ import javax.xml.ws.Endpoint;
 public abstract class HttpServer 
 {
    public static String HTTP_SERVER_PROPERTY = HttpServer.class.getName();
-   public static String DEFAULT_HTTP_SERVER_PROPERTY = "org.jboss.ws.integration.jboss.JBossHttpServer";
    
    private Map<String, Object> properties = new HashMap<String, Object>();
    
@@ -53,7 +52,7 @@ public abstract class HttpServer
     */
    public static HttpServer create()
    {
-      HttpServer server = (HttpServer)FactoryLoader.loadFactory(HTTP_SERVER_PROPERTY, DEFAULT_HTTP_SERVER_PROPERTY);
+      HttpServer server = (HttpServer)FactoryLoader.loadFactory(HTTP_SERVER_PROPERTY, null);
       return server;
    }
    

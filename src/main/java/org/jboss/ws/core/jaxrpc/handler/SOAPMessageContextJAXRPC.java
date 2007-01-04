@@ -24,7 +24,8 @@ package org.jboss.ws.core.jaxrpc.handler;
 // $Id$
 
 import javax.xml.rpc.handler.soap.SOAPMessageContext;
-import javax.xml.soap.SOAPMessage;
+
+import org.jboss.ws.core.CommonMessageContext;
 
 /**
  * Provides access to the SOAP message for either RPC request or response.
@@ -40,24 +41,9 @@ public class SOAPMessageContextJAXRPC extends MessageContextJAXRPC implements SO
    {
    }
 
-   /** Gets the SOAPMessage from this message context
-    *
-    * @return Returns the SOAPMessage; returns null if no SOAPMessage is present in this message context
-    */
-   public SOAPMessage getMessage()
+   public SOAPMessageContextJAXRPC(CommonMessageContext msgContext)
    {
-      return getSOAPMessage();
-   }
-
-   /** Sets the SOAPMessage in this message context
-    *
-    * @param message SOAP message
-    * @throws javax.xml.rpc.JAXRPCException If any error during the setting of the SOAPMessage in this message context
-    * @throws UnsupportedOperationException - If this operation is not supported
-    */
-   public void setMessage(SOAPMessage message)
-   {
-      setSOAPMessage(message);
+      super(msgContext);
    }
 
    /**

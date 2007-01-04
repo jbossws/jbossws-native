@@ -56,6 +56,19 @@ public abstract class CommonMessageContext
    // The map of the properties
    protected Map<String, Object> props = new HashMap<String, Object>();
 
+   public CommonMessageContext()
+   {
+   }
+
+   // Copy constructor
+   public CommonMessageContext(CommonMessageContext msgContext)
+   {
+      this.epMetaData = msgContext.epMetaData;
+      this.opMetaData = msgContext.opMetaData;
+      this.soapMessage = msgContext.soapMessage;
+      this.props = msgContext.props;
+   }
+
    public EndpointMetaData getEndpointMetaData()
    {
       if (epMetaData == null && opMetaData != null)

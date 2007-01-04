@@ -39,6 +39,8 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
+import org.jboss.ws.core.CommonMessageContext;
+
 /**
  * The interface SOAPMessageContext provides access to the SOAP message for either RPC request or response. 
  * The javax.xml.soap.SOAPMessage specifies the standard Java API for the representation of a SOAP 1.1 message with attachments.
@@ -54,6 +56,11 @@ public class SOAPMessageContextJAXWS extends MessageContextJAXWS implements SOAP
    /** Default ctor */
    public SOAPMessageContextJAXWS()
    {
+   }
+
+   public SOAPMessageContextJAXWS(CommonMessageContext msgContext)
+   {
+      super(msgContext);
    }
 
    /**

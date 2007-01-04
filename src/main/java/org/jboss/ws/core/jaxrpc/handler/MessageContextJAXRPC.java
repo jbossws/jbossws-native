@@ -51,19 +51,26 @@ public class MessageContextJAXRPC extends CommonMessageContext implements Messag
    public static final String SERVLET_RESPONSE = "javax.xml.ws.servlet.response";
    public static final String SERVLET_SESSION = "javax.xml.ws.servlet.session";
 
-   // The SOAP message
-   private SOAPMessage message;
    // The serialization context for this message ctx
    private SerializationContext serContext;
 
+   public MessageContextJAXRPC()
+   {
+   }
+
+   public MessageContextJAXRPC(CommonMessageContext msgContext)
+   {
+      super(msgContext);
+   }
+
    public SOAPMessage getMessage()
    {
-      return message;
+      return getSOAPMessage();
    }
 
    public void setMessage(SOAPMessage message)
    {
-      this.message = message;
+      setSOAPMessage(message);
    }
    
    /** Get or create the serialization context

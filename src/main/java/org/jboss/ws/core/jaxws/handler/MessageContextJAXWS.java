@@ -54,6 +54,15 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
    // The map of property scopes
    private HashMap<String, Scope> scopes = new HashMap<String, Scope>();
 
+   public MessageContextJAXWS()
+   {
+   }
+
+   public MessageContextJAXWS(CommonMessageContext msgContext)
+   {
+      super(msgContext);
+   }
+
    /** Get or create the serialization context
     */
    public SerializationContext getSerializationContext()
