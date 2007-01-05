@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxrpc;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,15 +34,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Stub;
+import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * The dynamic proxy that delegates to the underlying Call implementation
@@ -49,10 +56,10 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 07-Jan-2005
  */
-public class CallProxy implements InvocationHandler
+public class PortProxy implements InvocationHandler
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(CallProxy.class);
+   private static final Logger log = Logger.getLogger(PortProxy.class);
    
    // The underlying Call
    private CallImpl call;
@@ -84,7 +91,7 @@ public class CallProxy implements InvocationHandler
       legacyPropertyMap.put("org.jboss.webservice.trustStoreType", StubExt.PROPERTY_TRUST_STORE_TYPE);
    }
    
-   public CallProxy(CallImpl call)
+   public PortProxy(CallImpl call)
    {
       this.call = call;
       this.stubMethods = Arrays.asList(StubExt.class.getMethods());
@@ -110,6 +117,34 @@ public class CallProxy implements InvocationHandler
          else if (methodName.equals("_setProperty"))
          {
             setProperty((String)args[0], args[1]);
+            return null;
+         }
+         else if (methodName.equals("getConfigFile"))
+         {
+            EndpointMetaData epMetaData = call.getEndpointMetaData();
+            return epMetaData.getConfigFile();
+         }
+         else if (methodName.equals("setConfigFile"))
+         {
+            EndpointMetaData epMetaData = call.getEndpointMetaData();
+            epMetaData.setConfigFile((String)args[0]);
+            return null;
+         }
+         else if (methodName.equals("getConfigName"))
+         {
+            EndpointMetaData epMetaData = call.getEndpointMetaData();
+            return epMetaData.getConfigName();
+         }
+         else if (methodName.equals("setConfigName"))
+         {
+            EndpointMetaData epMetaData = call.getEndpointMetaData();
+            epMetaData.setConfigName((String)args[0]);
+            epMetaData.configure(epMetaData);
+
+            // Reinitialize the client handler chain
+            ServiceImpl jaxrpcService = call.getServiceImpl();
+            jaxrpcService.setupHandlerChain(epMetaData);
+            
             return null;
          }
          else

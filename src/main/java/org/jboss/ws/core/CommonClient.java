@@ -307,9 +307,6 @@ public abstract class CommonClient
             // unbind the return values
             if (handlerPass)
             {
-               // BP-1.0 R1027
-               HandlerChainBaseImpl.checkMustUnderstand(msgContext, new String[]{});
-
                // unbind the return values
                SOAPMessage resMessage = msgContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
@@ -320,6 +317,10 @@ public abstract class CommonClient
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.PRE);
 
+            // BP-1.0 R1027
+            if (handlerPass)
+               HandlerChainBaseImpl.checkMustUnderstand(msgContext, new String[]{});
+
             // Check if protocol handlers modified the payload
             if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
             {
@@ -327,7 +328,7 @@ public abstract class CommonClient
                SOAPMessage resMessage = msgContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
-
+            
             retObj = syncOutputParams(inputParams, epInv);
          }
 

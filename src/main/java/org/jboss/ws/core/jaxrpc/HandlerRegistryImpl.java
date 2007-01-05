@@ -79,7 +79,6 @@ public class HandlerRegistryImpl implements HandlerRegistry
          list = new ArrayList<HandlerInfo>();
          
       return new ArrayList(list);
-
    }
 
    public void setHandlerChain(QName portName, List chain)

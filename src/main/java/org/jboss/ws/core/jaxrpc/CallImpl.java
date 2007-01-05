@@ -140,6 +140,11 @@ public class CallImpl extends CommonClient implements Call
          setTargetEndpointAddress(epMetaData.getEndpointAddress());
    }
 
+   public ServiceImpl getServiceImpl()
+   {
+      return jaxrpcService;
+   }
+
    @Override
    protected Map<String, Object> getRequestContext()
    {

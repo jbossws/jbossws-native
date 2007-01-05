@@ -109,4 +109,28 @@ public interface StubExt extends javax.xml.rpc.Stub
     * A propriatory extension, that is not part of JAXRPC.
     */
    Iterator getUnboundHeaders();
+
+   /** 
+    * Get the current port configuration file 
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   String getConfigFile();
+
+   /** 
+    * Set the current port configuration file 
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   void setConfigFile(String configFile);
+
+   /** 
+    * Get the current port configuration name 
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   String getConfigName();
+
+   /** 
+    * Set the current port configuration name 
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   void setConfigName(String configName);
 }

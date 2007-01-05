@@ -13,9 +13,8 @@
 
 <project default="main" basedir="../jbossws-core" name="JBossWS-Main">
   
-  <import file="${basedir}/../build/ant-import/build-samples.xml"/>
-  <import file="${basedir}/../build/ant-import/build-setup.xml"/>
   <import file="${basedir}/../build/ant-import/build-thirdparty.xml"/>
+  <import file="${basedir}/../build/ant-import/build-setup.xml"/>
   
   <property name="core.src.dir" value="${core.dir}/src/main"/>
   <property name="core.java.dir" value="${core.src.dir}/java"/>

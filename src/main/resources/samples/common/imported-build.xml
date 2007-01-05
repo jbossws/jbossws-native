@@ -42,6 +42,14 @@
     <condition property="jbossws.integration.target.tomcat">
       <equals arg1="${jbossws.integration.target}" arg2="tomcat"/>
     </condition>
+      
+    <!-- Java Endorsed -->
+    <condition property="endorsed.dirs" value="${jboss.home}/lib/endorsed">
+      <isset property="jbossws.integration.target.jboss"/>
+    </condition>
+    <condition property="endorsed.dirs" value="${tomcat.home}/common/endorsed">
+      <isset property="jbossws.integration.target.tomcat"/>
+    </condition>
     
     <!-- Set a hostname property based on COMPUTERNAME for win32, HOSTNAME
     otherwise and initialize the node0/node1 cluster hostnames to localhost
@@ -108,11 +116,6 @@
     <available property="jboss.available" file="${jboss.home}/client/jboss-client.jar"/>
     <fail message="JBoss not available: ${jboss.home}" unless="jboss.available"/>
     
-    <!-- Java Endorsed -->
-    <condition property="jbossws.endorsed.dirs" value="${jboss.home}/lib/endorsed">
-      <isset property="jbossws.integration.target.jboss"/>
-    </condition>
-    
     <property name="jboss.lib" value="${jboss.home}/lib"/>
     <property name="jboss.client" value="${jboss.home}/client"/>
     <property name="jboss.server" value="${jboss.home}/server/${jboss.server.instance}"/>
@@ -134,9 +137,6 @@
       </and>
     </condition>
     <fail message="Tomcat not available: ${tomcat.home}" if="cannot.use.tomcat"/>
-    
-    <!-- Java Endorsed -->
-    <property name="jbossws.endorsed.dirs" value="${tomcat.home}/common/endorsed"/>
     
   </target>
   
@@ -220,7 +220,7 @@
       <sysproperty key="jbosstest.host.name" value="${node0}"/>
       <sysproperty key="java.naming.provider.url" value="${node0.jndi.url}"/>
       <sysproperty key="log.dir" value="${build.tests.dir}/log"/>
-      <sysproperty key="java.endorsed.dirs" value="${jbossws.endorsed.dirs}"/>
+      <sysproperty key="java.endorsed.dirs" value="${endorsed.dirs}"/>
       <sysproperty key="jbosstest.server.host" value="${node0}"/>
       <sysproperty key="jbossws.integration.target" value="${jbossws.integration.target}"/>
       <sysproperty key="tomcat.manager.username" value="${tomcat.manager.username}"/>
@@ -264,7 +264,7 @@
       <sysproperty key="jbosstest.host.name" value="${node0}"/>
       <sysproperty key="java.naming.provider.url" value="${node0.jndi.url}"/>
       <sysproperty key="log.dir" value="${build.tests.dir}/log"/>
-      <sysproperty key="java.endorsed.dirs" value="${jbossws.endorsed.dirs}"/>
+      <sysproperty key="java.endorsed.dirs" value="${endorsed.dirs}"/>
       <sysproperty key="jbosstest.server.host" value="${node0}"/>
       <sysproperty key="jbossws.integration.target" value="${jbossws.integration.target}"/>
       <sysproperty key="tomcat.manager.username" value="${tomcat.manager.username}"/>

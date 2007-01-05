@@ -27,6 +27,8 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.rmi.Remote;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -36,15 +38,21 @@ import javax.xml.rpc.Call;
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 import javax.xml.rpc.handler.HandlerChain;
+import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.handler.HandlerRegistry;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 
 /**
@@ -61,6 +69,9 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
  */
 public class ServiceImpl implements ServiceExt
 {
+   // provide logging
+   private static final Logger log = Logger.getLogger(ServiceImpl.class);
+
    // The service meta data that is associated with this JAXRPC Service
    private ServiceMetaData serviceMetaData;
 
@@ -379,7 +390,7 @@ public class ServiceImpl implements ServiceExt
    {
       CallImpl call = new CallImpl(this, epMetaData);
 
-      CallProxy handler = new CallProxy(call);
+      PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, StubExt.class }, handler);
 
@@ -400,5 +411,38 @@ public class ServiceImpl implements ServiceExt
    public void registerHandlerChain(QName portName, List infos, Set roles)
    {
       handlerRegistry.registerClientHandlerChain(portName, infos, roles);
+   }
+
+   void setupHandlerChain(EndpointMetaData epMetaData)
+   {
+      QName portName = epMetaData.getQName();
+      Set<String> handlerRoles = new HashSet<String>();
+      ArrayList handlerInfos = new ArrayList();
+      for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(HandlerType.ALL))
+      {
+         HandlerMetaDataJAXRPC jaxrpcMetaData = (HandlerMetaDataJAXRPC)handlerMetaData;
+         handlerRoles.addAll(jaxrpcMetaData.getSoapRoles());
+
+         HashMap hConfig = new HashMap();
+         for (HandlerInitParam param : jaxrpcMetaData.getInitParams())
+         {
+            hConfig.put(param.getParamName(), param.getParamValue());
+         }
+
+         Set<QName> headers = jaxrpcMetaData.getSoapHeaders();
+         QName[] headerArr = new QName[headers.size()];
+         headers.toArray(headerArr);
+
+         Class hClass = jaxrpcMetaData.getHandlerClass();
+         hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
+         HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
+
+         log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
+         handlerInfos.add(info);
+
+         // register the handlers with the client engine
+         if (handlerInfos.size() > 0)
+            registerHandlerChain(portName, handlerInfos, handlerRoles);
+      }
    }
 }

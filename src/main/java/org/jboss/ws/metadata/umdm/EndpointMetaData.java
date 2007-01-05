@@ -64,8 +64,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public abstract class EndpointMetaData extends ExtensibleMetaData
-   implements ConfigurationProvider, Configurable
+public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, Configurable
 {
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
@@ -163,10 +162,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    public void setBindingId(String bindingId)
    {
-      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId)
-         && !Constants.SOAP12HTTP_BINDING.equals(bindingId)
-         && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
-         && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId) && !Constants.SOAP12HTTP_BINDING.equals(bindingId) && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
+            && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
       {
          throw new WSException("Unsupported binding: " + bindingId);
       }
@@ -198,7 +195,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    /** Get the class loader associated with the endpoint meta data */
    public ClassLoader getClassLoader()
    {
-      return getServiceMetaData().getUnifiedMetaData().getClassLoader();      
+      return getServiceMetaData().getUnifiedMetaData().getClassLoader();
    }
 
    /**
@@ -393,10 +390,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
             boolean doesMatch = aux.getJavaMethod().equals(method);
 
             // fallback for async methods
-            if(!doesMatch && method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
+            if (!doesMatch && method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
             {
                String name = method.getName();
-               name = name.substring(0, name.length()-5);
+               name = name.substring(0, name.length() - 5);
                doesMatch = aux.getJavaName().equals(name);
             }
 
@@ -522,7 +519,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
             List<Class> registeredTypes = typeMapping.getJavaTypes(xmlType);
 
             boolean registered = false;
-            for (Class current : registeredTypes) {
+            for (Class current : registeredTypes)
+            {
                if (current.getName().equals(javaTypeName))
                {
                   registered = true;
@@ -573,20 +571,21 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
     *
     * @param configurable
     */
-   public void configure(Configurable configurable) {
+   public void configure(Configurable configurable)
+   {
 
-      if(null == endpointConfig)
+      if (endpointConfig == null)
       {
          JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
          endpointConfig = factory.getConfig(getConfigName(), getConfigFile());
       }
 
       // SOAPBinding configuration
-      if(configurable instanceof CommonBindingProvider)
+      if (configurable instanceof CommonBindingProvider)
       {
          log.debug("Configure SOAPBinding");
 
-         if(endpointConfig.hasFeature(EndpointFeature.MTOM))
+         if (endpointConfig.hasFeature(EndpointFeature.MTOM))
          {
             ((CommonSOAPBinding)configurable).setMTOMEnabled(true);
             log.debug("Enable MTOM on endpoint " + this.getQName());
@@ -594,9 +593,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
       }
 
       // Configure EndpointMetaData
-      else if(configurable instanceof EndpointMetaData)
+      else if (configurable instanceof EndpointMetaData)
       {
-
          log.debug("Configure EndpointMetaData");
 
          List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
@@ -612,7 +610,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
          log.debug("Added " + preHandlers.size() + " PRE handlers");
          log.debug("Added " + postHandlers.size() + " POST handlers");
       }
-
    }
 
    public String getConfigFile()
@@ -636,5 +633,4 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
       this.configName = configName;
       this.endpointConfig = null;
    }
-
 }

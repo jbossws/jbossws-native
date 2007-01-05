@@ -36,5 +36,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/xml-apis.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xmlsec.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xmlunit1.0.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-vfs.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>

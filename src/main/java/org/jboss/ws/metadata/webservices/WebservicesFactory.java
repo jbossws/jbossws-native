@@ -26,7 +26,6 @@ package org.jboss.ws.metadata.webservices;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
-import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.xb.binding.ObjectModelFactory;

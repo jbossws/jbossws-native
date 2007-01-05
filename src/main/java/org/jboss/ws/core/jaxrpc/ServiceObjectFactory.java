@@ -233,7 +233,7 @@ public class ServiceObjectFactory implements ObjectFactory
          }
 
          // Setup the handler chain
-         setupHandlerChain(jaxrpcService, serviceRefMetaData);
+         setupHandlerChain(jaxrpcService);
 
          InvocationHandler handler = new ServiceProxy(jaxrpcService, siClass);
          return Proxy.newProxyInstance(contextCL, new Class[] { siClass, ServiceExt.class }, handler);
@@ -247,45 +247,13 @@ public class ServiceObjectFactory implements ObjectFactory
 
    /**
     * Setup the handler chain(s) for this service
-    * <p/>
-    * This registers a handler chain with the service for every endpoint
-    * that has handlers configured in the <service-ref> element
     */
-   private void setupHandlerChain(ServiceImpl jaxrpcService, UnifiedServiceRefMetaData serviceRefMetaData) throws Exception
+   private void setupHandlerChain(ServiceImpl jaxrpcService) throws Exception
    {
       List<EndpointMetaData> endpoints = jaxrpcService.getServiceMetaData().getEndpoints();
       for (EndpointMetaData epMetaData : endpoints)
       {
-         QName portName = epMetaData.getQName();
-
-         Set<String> handlerRoles = new HashSet<String>();
-         ArrayList handlerInfos = new ArrayList();
-         for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(HandlerType.ALL))
-         {
-            HandlerMetaDataJAXRPC jaxrpcMetaData = (HandlerMetaDataJAXRPC)handlerMetaData;
-            handlerRoles.addAll(jaxrpcMetaData.getSoapRoles());
-
-            HashMap hConfig = new HashMap();
-            for (HandlerInitParam param : jaxrpcMetaData.getInitParams())
-            {
-               hConfig.put(param.getParamName(), param.getParamValue());
-            }
-
-            Set<QName> headers = jaxrpcMetaData.getSoapHeaders();
-            QName[] headerArr = new QName[headers.size()];
-            headers.toArray(headerArr);
-            
-            Class hClass = jaxrpcMetaData.getHandlerClass();
-            hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
-            HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
-
-            log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
-            handlerInfos.add(info);
-
-            // register the handlers with the client engine
-            if (handlerInfos.size() > 0)
-               jaxrpcService.registerHandlerChain(portName, handlerInfos, handlerRoles);
-         }
+         jaxrpcService.setupHandlerChain(epMetaData);
       }
    }
 }
