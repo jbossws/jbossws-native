@@ -25,7 +25,6 @@ package org.jboss.ws.metadata.umdm;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -306,7 +305,28 @@ public class FaultMetaData
       return getPropertyXmlName(propertySetter);
    }
 
-   private QName getPropertyXmlName(AnnotatedElement propertyMember)
+   // [JBBUILD-330] Add support for java.lang.reflect.AnnotatedElement
+   // private QName getPropertyXmlName(AnnotatedElement propertyMember)
+   private QName getPropertyXmlName(Field propertyMember)
+   {
+      QName propertyXmlName = null;
+
+      XmlElement xmlElement = propertyMember.getAnnotation(XmlElement.class);
+      if (xmlElement != null)
+         propertyXmlName = new QName(xmlElement.namespace(), xmlElement.name());
+      else
+      {
+         XmlAttribute xmlAttribute = propertyMember.getAnnotation(XmlAttribute.class);
+         if (xmlAttribute != null)
+            propertyXmlName = new QName(xmlAttribute.namespace(), xmlAttribute.name());
+         // TODO should any other annotation be examined?
+      }
+      return propertyXmlName;
+   }
+   
+   // [JBBUILD-330] Add support for java.lang.reflect.AnnotatedElement
+   // private QName getPropertyXmlName(AnnotatedElement propertyMember)
+   private QName getPropertyXmlName(Method propertyMember)
    {
       QName propertyXmlName = null;
 

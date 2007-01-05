@@ -282,6 +282,7 @@ public class HolderUtils
     * @param holder JAX-WS holder type
     * @return generic value type
     */
+   // [JBBUILD-331] Add support for java.lang.reflect.Type
    public static Type getGenericValueType(Type holder)
    {
       return (holder instanceof ParameterizedType) ? ((ParameterizedType)holder).getActualTypeArguments()[0] : Object.class;
