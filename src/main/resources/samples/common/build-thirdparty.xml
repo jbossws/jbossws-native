@@ -24,107 +24,71 @@
     description="Gets the thirdparty libraries">
 
     <mkdir dir="${thirdparty.dir}"/>
-    <get src="${jboss.repository}/apache-collections/${apache-collections}/lib/commons-collections.jar" dest="${thirdparty.dir}/commons-collections.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-log4j/${apache-log4j}/lib/log4j.jar" dest="${thirdparty.dir}/log4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-logging/${apache-logging}/lib/commons-logging.jar" dest="${thirdparty.dir}/commons-logging.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/ibm-wsdl4j/${ibm-wsdl4j}/lib/wsdl4j.jar" dest="${thirdparty.dir}/wsdl4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/javassist/${javassist}/lib/javassist.jar" dest="${thirdparty.dir}/javassist.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/backport-concurrent/${jboss-backport-concurrent}/lib/jboss-backport-concurrent.jar" dest="${thirdparty.dir}/jboss-backport-concurrent.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/common/${jboss-common}/lib/jboss-common.jar" dest="${thirdparty.dir}/jboss-common.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossretro/${jboss-jbossretro}/lib/jbossretro.jar" dest="${thirdparty.dir}/jbossretro.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossretro/${jboss-jbossretro}/lib/jbossretro-rt.jar" dest="${thirdparty.dir}/jbossretro-rt.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-core/${jboss-common-core}/lib/jboss-common-core.jar" dest="${thirdparty.dir}/jboss-common-core.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-logging-spi/${jboss-common-logging}/lib/jboss-logging-spi.jar" dest="${thirdparty.dir}/jboss-logging-spi.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/ejb3/${jboss-ejb3}/bin/ejb3.deployer" dest="${thirdparty.dir}/ejb3.deployer.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jboss-jaxrpc.jar" dest="${thirdparty.dir}/jboss-jaxrpc.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jboss-jaxws.jar" dest="${thirdparty.dir}/jboss-jaxws.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jboss-saaj.jar" dest="${thirdparty.dir}/jboss-saaj.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jbossws-client.jar" dest="${thirdparty.dir}/jbossws-client.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jbossws-jboss-integration.jar" dest="${thirdparty.dir}/jbossws-jboss-integration.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jbossws-tomcat-integration.jar" dest="${thirdparty.dir}/jbossws-tomcat-integration.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws14/${jboss-jbossws}/lib/jboss-jaxws14.jar" dest="${thirdparty.dir}/jboss-jaxws14.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws14/${jboss-jbossws}/lib/jbossws14-client.jar" dest="${thirdparty.dir}/jbossws14-client.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws14/${jboss-jbossws}/lib/jbossws14-jboss-integration.jar" dest="${thirdparty.dir}/jbossws14-jboss-integration.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws14/${jboss-jbossws}/lib/jbossws14-tomcat-integration.jar" dest="${thirdparty.dir}/jbossws14-tomcat-integration.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jbossas/core-libs/${jbossas}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jbossas/core-libs/${jbossas-core-libs}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbpm/bpel/${jbpm-bpel}/lib/jbpm-bpel.sar" dest="${thirdparty.dir}/jbpm-bpel.sar" usetimestamp="true" verbose="true" />    
     <get src="${jboss.repository}/oswego-concurrent/${oswego-concurrent}/lib/concurrent.jar" dest="${thirdparty.dir}/concurrent.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaf/${sun-jaf}/lib/activation.jar" dest="${thirdparty.dir}/activation.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-api.jar" dest="${thirdparty.dir}/jaxb-api.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-impl.jar" dest="${thirdparty.dir}/jaxb-impl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-javamail/${sun-javamail}/lib/mailapi.jar" dest="${thirdparty.dir}/mailapi.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-javamail/${sun-javamail}/lib/mail.jar" dest="${thirdparty.dir}/mail.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
+    <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
   </target>
   
   <target name="thirdparty-classpath">
 
-    <!-- jbossws vs. jbossws14 -->    
-    <condition property="jbossws.version" value="jbossws14">
-      <not>
-        <isset property="HAVE_JDK_1.5"/>
-      </not>
-    </condition>
-    <property name="jbossws.version" value="jbossws"/>
-    
-    <!-- jboss-jaxws vs. jboss-jaxws14 -->    
-    <condition property="jaxws.version" value="jboss-jaxws14">
-      <not>
-        <isset property="HAVE_JDK_1.5"/>
-      </not>
-    </condition>
-    <property name="jaxws.version" value="jboss-jaxws"/>
-    
     <path id="client.classpath">
       <fileset dir="${thirdparty.dir}">
         <include name="activation.jar"/>
         <include name="commons-logging.jar"/>
         <include name="concurrent.jar"/>
         <include name="javassist.jar"/>
-        <include name="jboss-common.jar"/>
+        <include name="jaxb-api.jar"/>
+        <include name="jaxb-impl.jar"/>
+        <include name="jboss-common-core.jar"/>
         <include name="jboss-jaxrpc.jar"/>
+        <include name="jboss-jaxws.jar"/>
         <include name="jboss-saaj.jar"/>
+        <include name="jboss-logging-spi.jar"/>
         <include name="jboss-xml-binding.jar"/>
-        <include name="jbossretro-rt.jar"/>
-        <include name="jboss-backport-concurrent.jar"/>
+        <include name="jbossws-client.jar"/>
         <include name="log4j.jar"/>
         <include name="mail.jar"/>
         <include name="wsdl4j.jar"/>
         <include name="xml-apis.jar"/>
-        <include name="${jbossws.version}-client.jar"/>
-        <include name="${jaxws.version}.jar"/>
       </fileset>
     </path>
     
-    <!-- In case of jdk1.4, use a dummy location -->
-    <property name="jboss.ejb3.deployer" value="${thirdparty.dir}"/>
-    
     <path id="compile.classpath">
       <path refid="client.classpath"/>
-      <fileset dir="${jboss.client}">
-        <include name="jbosssx-client.jar"/>
-      </fileset>
-      <fileset dir="${jboss.ejb3.deployer}">
-        <include name="jboss-annotations-ejb3.jar"/>
-        <include name="jboss-ejb3x.jar"/>
-      </fileset>
-      <fileset dir="${thirdparty.dir}">
-        <include name="jboss-j2ee.jar"/>
-        <include name="mailapi.jar"/>
-        <include name="${jbossws.version}-jboss-integration.jar"/>
-        <include name="${jbossws.version}-tomcat-integration.jar"/>
-      </fileset>
+      <pathelement location="${jboss.client}/jbosssx-client.jar"/>
+      <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
+      <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
+      <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-j2ee.jar"/>
+      <pathelement location="${thirdparty.dir}/mailapi.jar"/>
     </path>
     
     <path id="tests.classpath">
       <path refid="client.classpath"/>
-      <fileset dir="${jboss.client}">
-        <include name="jboss-aop-jdk50-client.jar"/>
-        <include name="jboss-aspect-jdk50-client.jar"/>
-        <include name="jboss-ejb3-client.jar"/>
-        <include name="jbossall-client.jar"/>
-      </fileset>
-      <fileset dir="${thirdparty.dir}">
-        <include name="${jbossws.version}-jboss-integration.jar"/>
-        <include name="${jbossws.version}-tomcat-integration.jar"/>
-        <include name="servlet-api.jar"/>
-      </fileset>
+      <pathelement location="${jboss.client}/jboss-aop-jdk50-client.jar"/>
+      <pathelement location="${jboss.client}/jboss-aspect-jdk50-client.jar"/>
+      <pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
+      <pathelement location="${jboss.client}/jbossall-client.jar"/>
+      <pathelement location="${thirdparty.dir}/servlet-api.jar"/>
     </path>
 
   </target>

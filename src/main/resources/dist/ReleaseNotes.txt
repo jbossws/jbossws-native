@@ -22,6 +22,19 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-@version.id@
 ----------------------------------
 
+
+Errata
+------
+
+
+Enjoy,
+The JBossWS Team
+
+Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What's new in jbossws-1.0.4
+---------------------------
+
 * [JBWS-660]  XOP inline base64Binary and sign message  
 * [JBWS-779]  Add webservices.xml support to wsdlTojava  
 * [JBWS-868]  BPEL in jbossws-samples
@@ -47,11 +60,6 @@ Errata
 * FIXME: [JBWS-798] Complete EventingTestCase
 * FIXME: [JBWS-798] Complete EventingTestCase
 * FIXME: [JBWS-940] Add wsdl-java support for jdk 1.4 typesafe enums
-
-Enjoy,
-The JBossWS Team
-
-Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 What's new in jbossws-1.0.3
 ----------------------------------
@@ -79,6 +87,3 @@ What's new in jbossws-1.0.1
 * [JBWS-871] Arrays with JSR181 endpoints  
 * [JBWS-923] Complete MTOM for rpc/literal
 * Bug fixes
-
-Enjoy,
-The JBossWS Team

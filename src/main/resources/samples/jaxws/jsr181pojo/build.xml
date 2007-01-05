@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+<!-- $Id$ -->
 
 <project default="main" basedir="../.." name="JBossWS Examples">
 
@@ -11,8 +11,8 @@
 
   <import file="${basedir}/common/imported-build.xml"/>
 
-  <target name="generate-sources" depends="compile15" 
-    description="Generate the deployment resources." if="HAVE_JDK_1.5">
+  <target name="generate-sources" depends="compile" 
+    description="Generate the deployment resources.">
     
     <!-- Define a taskdef for the wstools ant task -->
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
@@ -30,8 +30,8 @@
   <!--
   Build the test deployments
   -->
-  <target name="jars" depends="compile15,copy-resources,generate-sources,compile-generated,copy-generated" 
-    description="build the deployments" if="HAVE_JDK_1.5">
+  <target name="jars" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" 
+    description="build the deployments">
     
     <!-- jaxws-samples-jsr181pojo -->
     <war warfile="${build.tests.dir}/libs/jaxws-samples-jsr181pojo.war" webxml="${build.tests.dir}/resources/jaxws/samples/jsr181pojo/WEB-INF/web.xml">

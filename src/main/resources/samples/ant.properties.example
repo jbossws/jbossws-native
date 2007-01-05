@@ -2,19 +2,24 @@
 #
 
 # Required JBoss Home
-#jboss.jdk15.home=/home/tdiesler/svn/jboss/jbossas/branches/Branch_4_0/build/output/jboss-4.0.5.GA-ejb3
+#jboss50.home=/home/tdiesler/svn/jbossas/trunk/build/output/jboss-5.0.0.Beta2
+#jboss42.home=/home/tdiesler/svn/jbossas/branches/Branch_4_2/build/output/jboss-4.2.0.CR1-ejb3
+#jboss40.home=/home/tdiesler/svn/jbossas/tags/JBoss_4_0_5_GA/build/output/jboss-4.0.5.GA-ejb3
 
-# Optional JBoss Home
-#jboss.jdk14.home=/home/tdiesler/svn/jboss/jbossas/tags/JBoss_4_0_5_GA/build/output/jboss-4.0.5.GA
+# The JBoss server under test. This can be [jboss50|jboss42|jboss40|tomcat]
+jbossws.integration.target=jboss42
 
 # The JBoss server instance
 jboss.server.instance=default
 
 # Tomcat Home
-#tomcat.home=/usr/java/apache/apache-tomcat-5.5.17
+#tomcat.home=/usr/java/tomcat
 #tomcat.manager.username=manager
 #tomcat.manager.password=manager
 
-# The target server the test endpoints are deployed to 
-# This can be [jboss|tomcat]
-jbossws.target.server=jboss
+# Force thirdparty HTTP get
+#force.thirdparty.get=true
+
+# JBoss Repository
+#jboss.repository=file:/home/tdiesler/cvs/jboss.local.repository
+jboss.repository=http://repository.jboss.com

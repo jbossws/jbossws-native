@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+<!-- $Id$ -->
 
 <project default="main" basedir="../.." name="JBossWS Examples">
 
@@ -44,6 +44,7 @@
       <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
         <include name="webservices.xml"/>
+        <include name="jboss-web.xml"/>
         <include name="wsdl/**"/>
       </webinf>
     </war>

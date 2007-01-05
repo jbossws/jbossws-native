@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+<!-- $Id$ -->
 
 <project default="main" basedir="../.." name="JBossWS Examples">
 
@@ -28,7 +28,8 @@
   <!--
   Build the test deployments
   -->
-  <target name="jars" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" description="build the deployments">
+  <target name="jars" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" 
+    description="build the deployments">
     
     <!-- jaxrpc-samples-secureejb -->
     <jar jarfile="${build.tests.dir}/libs/jaxrpc-samples-secureejb.jar">

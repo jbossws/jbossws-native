@@ -14,8 +14,8 @@
   <!--
   Build the test deployments
   -->
-  <target name="jars" depends="compile15,copy-resources" 
-    description="build the deployments" if="HAVE_JDK_1.5">
+  <target name="jars" depends="compile,copy-resources" 
+    description="build the deployments">
     
     <!-- jaxws-samples-retail -->
     <jar jarfile="${build.test.dir}/libs/jaxws-samples-retail.ejb3">

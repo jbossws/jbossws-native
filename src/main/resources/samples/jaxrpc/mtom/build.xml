@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id:build.xml 1125 2006-10-03 15:45:31Z thomas.diesler@jboss.com $ -->
+<!-- $Id$ -->
 
 <project default="main" basedir="../.." name="JBossWS Examples">
 
@@ -34,8 +34,8 @@
     <!-- jaxrpc-samples-mtom -->
     <war warfile="${build.tests.dir}/libs/jaxrpc-samples-mtom.war" webxml="${build.tests.dir}/resources/jaxrpc/samples/mtom/WEB-INF/web.xml">
       <classes dir="${build.tests.dir}/classes">
-        <include name="org/jboss/test/ws/jaxrpc/samples/mtom/XOPTestImpl.class"/>
-        <include name="org/jboss/test/ws/jaxrpc/samples/mtom/XOPTest.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/mtom/**"/>
+        <exclude name="org/jboss/test/ws/jaxrpc/samples/mtom/MTOMTestCase.class"/>
       </classes>
       <webinf dir="${build.tests.dir}/resources/jaxrpc/samples/mtom/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>

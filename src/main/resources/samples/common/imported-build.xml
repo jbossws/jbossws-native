@@ -2,60 +2,47 @@
 
 <!-- $Id$ -->
 
-<project default="imported">
+<project>
   
-  <!--
-  Init
-  -->
-  <target name="init">
+  <import file="${basedir}/common/build-thirdparty.xml"/>
+  
+  <!-- Prepare-->
+  <target name="prepare">
     
     <property file="${basedir}/ant.properties"/>
+    <property file="${basedir}/version.properties"/>
     
     <property name="common.java" value="${basedir}/common/java"/>
     <property name="common.resources" value="${basedir}/common/resources"/>
-    <property name="build.test.dir" value="${basedir}/output"/>
+    <property name="build.tests.dir" value="${basedir}/output"/>
+    <property name="thirdparty.dir" value="${basedir}/thirdparty"/>
     
-    <!-- JDK Detection -->
-    <available classname="java.lang.StackTraceElement" property="HAVE_JDK_1.4"/>
-    <available classname="java.lang.Enum" property="HAVE_JDK_1.5"/>
-
-    <!-- Target Server [jboss|tomcat] -->
-    <property name="jbossws.target.server.${jbossws.target.server}" value="true"/>
-    <condition property="only-on-jboss">
-      <isset property="jbossws.target.server.jboss"/>
-    </condition>
-    <condition property="only-on-jboss-jdk15">
-      <and>
-        <isset property="jbossws.target.server.jboss"/>
-        <isset property="HAVE_JDK_1.5"/>
-      </and>
-    </condition>
-  	
-    <!-- JBoss Home -->    
-    <condition property="jboss.home" value="${jboss.jdk14.home}">
+    <!-- Force Thirdparty Get -->
+    <condition property="force.thirdparty.get">
       <not>
-        <isset property="HAVE_JDK_1.5"/>
+        <available file="${thirdparty.dir}" type="dir"/>
       </not>
     </condition>
-    <condition property="jboss.home" value="${jboss.jdk15.home}">
-      <isset property="HAVE_JDK_1.5"/>
+      
+    <!-- Define jboss.home -->
+    <condition property="jboss.home" value="${jboss50.home}">
+      <equals arg1="${jbossws.integration.target}" arg2="jboss50"/>
+    </condition>
+    <condition property="jboss.home" value="${jboss42.home}">
+      <equals arg1="${jbossws.integration.target}" arg2="jboss42"/>
+    </condition>
+    <condition property="jboss.home" value="${jboss40.home}">
+      <equals arg1="${jbossws.integration.target}" arg2="jboss40"/>
+    </condition>
+      
+    <!-- Integration Target Server -->
+    <condition property="jbossws.integration.target.jboss">
+      <isset property="jboss.home"/>
+    </condition>
+    <condition property="jbossws.integration.target.tomcat">
+      <equals arg1="${jbossws.integration.target}" arg2="tomcat"/>
     </condition>
     
-    <property name="jboss.client" value="${jboss.home}/client"/>
-    <property name="jboss.lib" value="${jboss.home}/lib"/>
-    <property name="jboss.client" value="${jboss.home}/client"/>
-    <property name="jboss.server" value="${jboss.home}/server/${jboss.server.instance}"/>
-    <property name="jboss.server.lib" value="${jboss.server}/lib"/>
-    <property name="jboss.server.deploy" value="${jboss.server}/deploy"/>
-    
-  	<!-- Java Endorsed -->
-    <condition property="jbossws.endorsed.dirs" value="${jboss.home}/lib/endorsed">
-      <isset property="jbossws.target.server.jboss"/>
-    </condition>
-    <condition property="jbossws.endorsed.dirs" value="${tomcat.home}/common/endorsed">
-      <isset property="jbossws.target.server.tomcat"/>
-    </condition>
-  	
     <!-- Set a hostname property based on COMPUTERNAME for win32, HOSTNAME
     otherwise and initialize the node0/node1 cluster hostnames to localhost
     and ${hostname} by default. If you cannot route multicast traffic between
@@ -78,77 +65,85 @@
     <property name="node0.http.url" value="http://${node0}:8080"/>
     <property name="node0.jndi.url" value="jnp://${node0}:1099"/>
     
-    <available property="jbossws.client.jar" value="jbossws14-client.jar" file="${jboss.client}/jbossws14-client.jar"/>
-    <available property="jbossws.client.jar" value="jbossws-client.jar" file="${jboss.client}/jbossws-client.jar"/>
+    <!-- Use -Ddebug=true for client debugging -->
+    <condition property="remote.debug.line" value="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006">
+      <isset property="debug"/>
+    </condition>
+    <condition property="remote.debug.line" value="">
+      <not>
+        <isset property="debug"/>
+      </not>
+    </condition>
     
-    <path id="client.classpath">
-      <fileset dir="${jboss.client}">
-        <include name="activation.jar"/>
-        <include name="commons-logging.jar"/>
-        <include name="javassist.jar"/>
-        <include name="jboss-xml-binding.jar"/>
-        <include name="jbossall-client.jar"/>
-        <include name="jbossretro-rt.jar"/>
-        <include name="jboss-backport-concurrent.jar"/>
-        <include name="${jbossws.client.jar}"/>
-        <include name="log4j.jar"/>
-        <include name="mail.jar"/>
-      </fileset>
-    </path>
+  </target>
+  
+  <!-- Init-->
+  <target name="init" depends="prepare,check-jboss,check-tomcat">
     
-    <path id="compile.classpath">
-      <path refid="client.classpath"/>
-      <pathelement location="${basedir}/lib/${jbossws.version}-jboss-integration.jar"/>
-      <pathelement location="${basedir}/lib/${jbossws.version}-tomcat-integration.jar"/>
-    </path>
-    
-    <path id="tests.classpath">
-      <path refid="client.classpath"/>
-      <fileset dir="${jboss.client}">
-        <include name="jboss-aop-jdk50-client.jar"/>
-        <include name="jboss-aspect-jdk50-client.jar"/>
-        <include name="jboss-ejb3-client.jar"/>
-      </fileset>
-      <pathelement location="${basedir}/lib/jbossws-jboss-integration.jar"/>
-      <pathelement location="${basedir}/lib/jbossws-tomcat-integration.jar"/>
-    </path>
-    
-    <echo message="jboss.home  = ${jboss.home}"/>
-    <echo message="tomcat.home = ${tomcat.home}"/>
-    <echo message="java.home   = ${java.home}"/>
-    <echo message="node0       = ${node0}"/>
+    <echo message="jboss.home   = ${jboss.home}"/>
+    <echo message="tomcat.home  = ${tomcat.home}"/>
+    <echo message="java.home    = ${java.home}"/>
+    <echo message="node0        = ${node0}"/>
+    <echo/>
+    <echo message="***************************"/>
+    <echo message="* ${chapter}"/>
+    <echo message="***************************"/>
     <echo/>
     
-    <available property="jbossws.available" file="${jboss.home}/client/jbossall-client.jar"/>
-    <fail message="Not available: ${jboss.home}/client/jbossall-client.jar" unless="jbossws.available"/>
+    <mkdir dir="${build.tests.dir}/classes"/>
+    <mkdir dir="${build.tests.dir}/resources"/>
+    <mkdir dir="${build.tests.dir}/reports"/>
+    <mkdir dir="${build.tests.dir}/libs"/>
+    <mkdir dir="${build.tests.dir}/log"/>
+    <mkdir dir="${build.tests.dir}/wstools/java"/>
+    <mkdir dir="${build.tests.dir}/wstools/resources"/>
     
-    <mkdir dir="${build.test.dir}/classes"/>
-    <mkdir dir="${build.test.dir}/resources"/>
-    <mkdir dir="${build.test.dir}/reports"/>
-    <mkdir dir="${build.test.dir}/libs"/>
-    <mkdir dir="${build.test.dir}/log"/>
-    <mkdir dir="${build.test.dir}/wstools/java"/>
-    <mkdir dir="${build.test.dir}/wstools/resources"/>
+    <touch file="${build.tests.dir}/log/samples.log"/>
     
-    <touch file="${build.test.dir}/log/samples.log"/>
   </target>
   
-  <!--
-  Compile the java sources
-  -->
-  <target name="compile" depends="init" description="compile the sources" if="HAVE_JDK_1.4">
-    <javac destdir="${build.test.dir}/classes" classpathref="compile.classpath" debug="on">
-      <src path="${common.java}"/>
-      <src path="${java.dir}"/>
-    </javac>
+  <!-- Check JBoss -->
+  <target name="check-jboss">
+    
+    <available property="jboss.available" file="${jboss.home}/client/jboss-client.jar"/>
+    <fail message="JBoss not available: ${jboss.home}" unless="jboss.available"/>
+    
+    <!-- Java Endorsed -->
+    <condition property="jbossws.endorsed.dirs" value="${jboss.home}/lib/endorsed">
+      <isset property="jbossws.integration.target.jboss"/>
+    </condition>
+    
+    <property name="jboss.lib" value="${jboss.home}/lib"/>
+    <property name="jboss.client" value="${jboss.home}/client"/>
+    <property name="jboss.server" value="${jboss.home}/server/${jboss.server.instance}"/>
+    <property name="jboss.server.deploy" value="${jboss.server}/deploy"/>
+    <property name="jboss.server.lib" value="${jboss.server}/lib"/>
+    
   </target>
   
-  <!--
-  Compile the java sources with jdk-1.5
-  -->
-  <target name="compile15" depends="init" description="compile the sources" if="HAVE_JDK_1.5">
-    <mkdir dir="${build.test.dir}/classes"/>
-    <javac destdir="${build.test.dir}/classes" classpathref="compile.classpath" debug="on">
+  <!-- Check tomcat -->
+  <target name="check-tomcat" if="jbossws.integration.target.tomcat">
+    
+    <available property="tomcat.available" file="${tomcat.home}/server/lib/catalina.jar"/>
+    <condition property="cannot.use.tomcat">
+      <and>
+        <isset property="jbossws.integration.target.tomcat"/>
+        <not>
+          <isset property="tomcat.available"/>
+        </not>
+      </and>
+    </condition>
+    <fail message="Tomcat not available: ${tomcat.home}" if="cannot.use.tomcat"/>
+    
+    <!-- Java Endorsed -->
+    <property name="jbossws.endorsed.dirs" value="${tomcat.home}/common/endorsed"/>
+    
+  </target>
+  
+  <!-- Compile the java sources -->
+  <target name="compile" depends="init,thirdparty" 
+    description="compile the sources">
+    <javac destdir="${build.tests.dir}/classes" classpathref="compile.classpath" debug="on">
       <src path="${common.java}"/>
       <src path="${java.dir}"/>
     </javac>
@@ -158,9 +153,9 @@
   Compile the generated java sources
   -->
   <target name="compile-generated" depends="init" description="compile the generated sources">
-    <mkdir dir="${build.test.dir}/classes"/>
-    <javac destdir="${build.test.dir}/classes" classpathref="compile.classpath" debug="on">
-      <src path="${build.test.dir}/wstools/java"/>
+    <mkdir dir="${build.tests.dir}/classes"/>
+    <javac destdir="${build.tests.dir}/classes" classpathref="compile.classpath" debug="on">
+      <src path="${build.tests.dir}/wstools/java"/>
     </javac>
   </target>
   
@@ -169,17 +164,18 @@
   -->
   <target name="copy-resources" depends="init" description="copy the resources">
     <!-- copy resource files -->
-    <copy todir="${build.test.dir}/resources/${sample.path}">
+    <copy todir="${build.tests.dir}/resources/${sample.path}">
       <fileset dir="${resources.dir}">
         <include name="**/*.wsdl"/>
         <include name="**/*.xml"/>
       </fileset>
       <filterset>
         <filter token="jbosstest.host.name" value="${node0}"/>
+        <filter token="wsdl-publish-location" value="${build.tests.dir}/wsdl-publish"/>
       </filterset>
     </copy>
     <!-- copy binary files -->
-    <copy todir="${build.test.dir}/resources/${sample.path}">
+    <copy todir="${build.tests.dir}/resources/${sample.path}">
       <fileset dir="${resources.dir}">
         <exclude name="**/*.wsdl"/>
         <exclude name="**/*.xml"/>
@@ -192,14 +188,14 @@
   -->
   <target name="copy-generated" depends="init" description="copy the resources">
     <!-- copy generated resource files -->
-    <copy todir="${build.test.dir}/resources">
-      <fileset dir="${build.test.dir}/wstools/resources">
+    <copy todir="${build.tests.dir}/resources">
+      <fileset dir="${build.tests.dir}/wstools/resources">
         <include name="${sample.path}/**/*.wsdl"/>
         <include name="${sample.path}/**/*.xml"/>
       </fileset>
     </copy>
     <!-- copy override resource files -->
-    <copy todir="${build.test.dir}/resources" overwrite="true">
+    <copy todir="${build.tests.dir}/resources" overwrite="true">
       <fileset dir="${common.resources}/overrides">
         <include name="${sample.path}/**/*.wsdl"/>
         <include name="${sample.path}/**/*.xml"/>
@@ -217,41 +213,41 @@
   -->
   <target name="one-test" depends="init" if="test" description="run a single test">
     
-    <junit printsummary="yes" showoutput="yes" dir="${build.test.dir}">
-			<!--jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" /-->
+    <junit printsummary="yes" showoutput="yes" dir="${build.tests.dir}">
+      <jvmarg line="${remote.debug.line}"/>
       <sysproperty key="jboss.home" value="${jboss.home}"/>
       <sysproperty key="tomcat.home" value="${tomcat.home}"/>
       <sysproperty key="jbosstest.host.name" value="${node0}"/>
       <sysproperty key="java.naming.provider.url" value="${node0.jndi.url}"/>
-      <sysproperty key="log.dir" value="${build.test.dir}/log"/>
+      <sysproperty key="log.dir" value="${build.tests.dir}/log"/>
       <sysproperty key="java.endorsed.dirs" value="${jbossws.endorsed.dirs}"/>
       <sysproperty key="jbosstest.server.host" value="${node0}"/>
-      <sysproperty key="jbossws.target.server" value="${jbossws.target.server}"/>
+      <sysproperty key="jbossws.integration.target" value="${jbossws.integration.target}"/>
       <sysproperty key="tomcat.manager.username" value="${tomcat.manager.username}"/>
       <sysproperty key="tomcat.manager.password" value="${tomcat.manager.password}"/>
       
       <sysproperty key="org.jboss.security.ignoreHttpsHost" value="true"/>
-      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${build.test.dir}/resources/jaxrpc/samples/wssecurity/wsse.keystore"/>
-      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${build.test.dir}/resources/jaxrpc/samples/wssecurity/wsse.truststore"/>
+      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/wsse.keystore"/>
+      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/wsse.truststore"/>
       <sysproperty key="org.jboss.ws.wsse.keyStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.trustStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.keyStoreType" value="jks"/>
       <sysproperty key="org.jboss.ws.wsse.trustStoreType" value="jks"/>
       <classpath>
-        <pathelement path="${build.test.dir}/classes"/>
+        <pathelement path="${build.tests.dir}/classes"/>
         <pathelement path="${common.resources}"/>
         <path refid="tests.classpath"/>
       </classpath>
       <formatter type="plain"/>
       <formatter type="xml"/>
-      <test fork="yes" todir="${build.test.dir}/reports" name="${test}"/>
+      <test fork="yes" todir="${build.tests.dir}/reports" name="${test}"/>
     </junit>
     
-    <junitreport todir="${build.test.dir}/reports">
-      <fileset dir="${build.test.dir}/reports">
+    <junitreport todir="${build.tests.dir}/reports">
+      <fileset dir="${build.tests.dir}/reports">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${build.test.dir}/reports/html"/>
+      <report format="frames" todir="${build.tests.dir}/reports/html"/>
     </junitreport>
   </target>
   
@@ -262,33 +258,33 @@
   -->
   <target name="test" depends="init" if="test" description="run a collection of tests">
     
-    <junit printsummary="yes" showoutput="yes" dir="${build.test.dir}">
+    <junit printsummary="yes" showoutput="yes" dir="${build.tests.dir}">
       <sysproperty key="jboss.home" value="${jboss.home}"/>
       <sysproperty key="tomcat.home" value="${tomcat.home}"/>
       <sysproperty key="jbosstest.host.name" value="${node0}"/>
       <sysproperty key="java.naming.provider.url" value="${node0.jndi.url}"/>
-      <sysproperty key="log.dir" value="${build.test.dir}/log"/>
+      <sysproperty key="log.dir" value="${build.tests.dir}/log"/>
       <sysproperty key="java.endorsed.dirs" value="${jbossws.endorsed.dirs}"/>
       <sysproperty key="jbosstest.server.host" value="${node0}"/>
-      <sysproperty key="jbossws.target.server" value="${jbossws.target.server}"/>
+      <sysproperty key="jbossws.integration.target" value="${jbossws.integration.target}"/>
       <sysproperty key="tomcat.manager.username" value="${tomcat.manager.username}"/>
       <sysproperty key="tomcat.manager.password" value="${tomcat.manager.password}"/>
       
       <sysproperty key="org.jboss.security.ignoreHttpsHost" value="true"/>
-      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${build.test.dir}/resources/jaxrpc/samples/wssecurity/wsse.keystore"/>
-      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${build.test.dir}/resources/jaxrpc/samples/wssecurity/wsse.truststore"/>
+      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/wsse.keystore"/>
+      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${build.tests.dir}/resources/jaxrpc/samples/wssecurity/wsse.truststore"/>
       <sysproperty key="org.jboss.ws.wsse.keyStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.trustStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.keyStoreType" value="jks"/>
       <sysproperty key="org.jboss.ws.wsse.trustStoreType" value="jks"/>
       <classpath>
-        <pathelement path="${build.test.dir}/classes"/>
+        <pathelement path="${build.tests.dir}/classes"/>
         <pathelement path="${common.resources}"/>
         <path refid="tests.classpath"/>
       </classpath>
       <formatter type="plain"/>
       <formatter type="xml"/>
-      <batchtest fork="yes" todir="${build.test.dir}/reports">
+      <batchtest fork="yes" todir="${build.tests.dir}/reports">
         <fileset dir="${java.dir}">
           <include name="org/jboss/test/ws/${test}/**/*TestCase.java"/>
         </fileset>
@@ -301,11 +297,11 @@
   Generate the test report
   -->
   <target name="tests-report" depends="init" description="generate the test report">
-    <junitreport todir="${build.test.dir}/reports">
-      <fileset dir="${build.test.dir}/reports">
+    <junitreport todir="${build.tests.dir}/reports">
+      <fileset dir="${build.tests.dir}/reports">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${build.test.dir}/reports/html"/>
+      <report format="frames" todir="${build.tests.dir}/reports/html"/>
     </junitreport>
   </target>
   
@@ -319,7 +315,7 @@
   Clean the build
   -->
   <target name="clean" depends="init" description="clean the build">
-    <delete dir="${build.test.dir}"/>
+    <delete dir="${build.tests.dir}"/>
   </target>
   
 </project>
