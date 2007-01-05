@@ -95,6 +95,11 @@ public class UnifiedDeploymentInfo
          catch (MalformedURLException ex)
          {
             String deploymentPath = url.toExternalForm();
+            
+            // FIXME: remove this hack
+            if (deploymentPath.startsWith("vfsfile:"))
+               deploymentPath = "jar:" + deploymentPath.substring(3);
+            
             if (deploymentPath.startsWith("jar:") && deploymentPath.endsWith("!/") == false)
                deploymentPath += "!/";
             
