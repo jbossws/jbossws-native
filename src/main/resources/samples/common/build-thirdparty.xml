@@ -43,7 +43,6 @@
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-api.jar" dest="${thirdparty.dir}/jaxb-api.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-impl.jar" dest="${thirdparty.dir}/jaxb-impl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-javamail/${sun-javamail}/lib/mailapi.jar" dest="${thirdparty.dir}/mailapi.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/sun-javamail/${sun-javamail}/lib/mail.jar" dest="${thirdparty.dir}/mail.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
     <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
   </target>
@@ -68,7 +67,6 @@
       <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
       <pathelement location="${thirdparty.dir}/log4j.jar"/>
       <pathelement location="${thirdparty.dir}/mailapi.jar"/>
-      <pathelement location="${thirdparty.dir}/mail.jar"/>
       <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
       <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
       
