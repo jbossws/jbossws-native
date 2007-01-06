@@ -80,7 +80,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Set wsdl location
             String wsdlFile = wsdMetaData.getWsdlFile();
-            URL wsdlLocation = udi.getMetaDataFile(wsdlFile);
+            URL wsdlLocation = udi.getMetaDataFileURL(wsdlFile);
 
             // Unmarshall the WSDL
             serviceMetaData.setWsdlLocation(wsdlLocation);
@@ -88,7 +88,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Unmarshall the jaxrpc-mapping.xml
             String mappingFile = wsdMetaData.getJaxrpcMappingFile();
-            serviceMetaData.setMappingLocation(udi.getMetaDataFile(mappingFile));
+            serviceMetaData.setMappingLocation(udi.getMetaDataFileURL(mappingFile));
             JavaWsdlMapping javaWsdlMapping = serviceMetaData.getJavaWsdlMapping();
             if (javaWsdlMapping == null)
                throw new WSException("jaxrpc-mapping-file not configured from webservices.xml");

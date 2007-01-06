@@ -25,11 +25,14 @@ package org.jboss.ws.core.server;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.ObjectName;
+
+import org.jboss.virtual.VirtualFile;
 
 /**
  * The container independent deployment info.
@@ -57,6 +60,8 @@ public class UnifiedDeploymentInfo
    public String simpleName;
    /** The URL for this deployment */
    public URL url;
+   /** The virtual file for the deployment root */
+   public VirtualFile vfRoot;
    /** The string identifing this deployment **/
    public String name;
    /** The URL to the expanded webapp **/
@@ -69,7 +74,7 @@ public class UnifiedDeploymentInfo
    public Map<String, Object> context = new HashMap<String, Object>();
    /** An optional ObjectName of the deployed object */
    public ObjectName deployedObject;
-   
+
    /** The sortName concatenated with the canonical names of all parents. */
    public String getCanonicalName()
    {
@@ -78,15 +83,15 @@ public class UnifiedDeploymentInfo
          name = parent.getCanonicalName() + "/" + name;
       return name;
    }
-   
-   public URL getMetaDataFile(String resourcePath) throws IOException
+
+   public URL getMetaDataFileURL(String resourcePath) throws IOException
    {
       URL resourceURL = null;
       if (resourcePath != null && resourcePath.length() > 0)
       {
          if (resourcePath.startsWith("/"))
             resourcePath = resourcePath.substring(1);
-            
+
          try
          {
             // assign an absolute URL 
@@ -94,23 +99,53 @@ public class UnifiedDeploymentInfo
          }
          catch (MalformedURLException ex)
          {
+            // ignore
+         }
+
+         if (resourceURL == null)
+         {
+            try
+            {
+               VirtualFile vfResource = vfRoot.findChild(resourcePath);
+               resourceURL = vfResource.toURL();
+            }
+            catch (URISyntaxException e)
+            {
+               // ignore
+            }
+         }
+
+         if (resourceURL == null)
+         {
             String deploymentPath = url.toExternalForm();
-            
-            // FIXME: remove this hack
-            if (deploymentPath.startsWith("vfsfile:"))
-               deploymentPath = "jar:" + deploymentPath.substring(3);
-            
+
+            if (deploymentPath.startsWith("vfsfile:") && deploymentPath.endsWith("!/") == false)
+               deploymentPath += "!/";
+
             if (deploymentPath.startsWith("jar:") && deploymentPath.endsWith("!/") == false)
                deploymentPath += "!/";
-            
-            if(deploymentPath.endsWith("/") == false)
+
+            if (deploymentPath.endsWith("/") == false)
                deploymentPath += "/";
-            
+
             // assign a relative URL
             resourceURL = new URL(deploymentPath + resourcePath);
          }
       }
       return resourceURL;
+   }
+
+   public VirtualFile getMetaDataFile(String resourcePath) throws IOException
+   {
+      VirtualFile vfResource = null;
+      if (resourcePath != null && resourcePath.length() > 0)
+      {
+         if (resourcePath.startsWith("/"))
+            resourcePath = resourcePath.substring(1);
+
+         vfResource = vfRoot.findChild(resourcePath);
+      }
+      return vfResource;
    }
 
    public String toString()

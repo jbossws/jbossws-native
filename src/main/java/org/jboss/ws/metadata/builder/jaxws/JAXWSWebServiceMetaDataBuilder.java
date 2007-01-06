@@ -102,9 +102,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
 {
    private static class EndpointResult
    {
-      private Class<?> klass;
-      private ServerEndpointMetaData semd;
-      private ServiceMetaData smd;
+      private Class<?> epClass;
+      private ServerEndpointMetaData sepMetaData;
+      private ServiceMetaData serviceMetaData;
       private URL wsdlLocation;
    }
 
@@ -688,12 +688,12 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
       QName portTypeQName = new QName(interfaceNS, name);
 
       EndpointResult result = new EndpointResult();
-      result.smd = new ServiceMetaData(wsMetaData, new QName(serviceNS, serviceName));
-      result.semd = new ServerEndpointMetaData(result.smd, portQName, portTypeQName, EndpointMetaData.Type.JAXWS);
-      result.klass = (seiClass != null ? seiClass : sepClass);
-      result.wsdlLocation = udi.getMetaDataFile(wsdlLocation);
-      result.smd.addEndpoint(result.semd);
-      wsMetaData.addService(result.smd);
+      result.serviceMetaData = new ServiceMetaData(wsMetaData, new QName(serviceNS, serviceName));
+      result.sepMetaData = new ServerEndpointMetaData(result.serviceMetaData, portQName, portTypeQName, EndpointMetaData.Type.JAXWS);
+      result.epClass = (seiClass != null ? seiClass : sepClass);
+      result.wsdlLocation = udi.getMetaDataFileURL(wsdlLocation);
+      result.serviceMetaData.addEndpoint(result.sepMetaData);
+      wsMetaData.addService(result.serviceMetaData);
 
       return result;
    }
@@ -964,9 +964,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          // Clear the java types, etc.
          resetMetaDataBuilder(udi.classLoader);
 
-         ServerEndpointMetaData sepMetaData = result.semd;
-         ServiceMetaData serviceMetaData = result.smd;
-         Class<?> seiClass = result.klass;
+         ServerEndpointMetaData sepMetaData = result.sepMetaData;
+         ServiceMetaData serviceMetaData = result.serviceMetaData;
+         Class<?> seiClass = result.epClass;
 
          sepMetaData.setLinkName(linkName);
          sepMetaData.setServiceEndpointImplName(sepClass.getName());

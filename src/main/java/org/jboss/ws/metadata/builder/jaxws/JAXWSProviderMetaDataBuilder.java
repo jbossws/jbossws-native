@@ -130,7 +130,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
       String wsdlLocation = anWebServiceProvider.wsdlLocation();
       if (wsdlLocation.length() > 0)
       {
-         URL wsdlURL = udi.getMetaDataFile(wsdlLocation);
+         URL wsdlURL = udi.getMetaDataFileURL(wsdlLocation);
          serviceMetaData.setWsdlLocation(wsdlURL);
       }
 

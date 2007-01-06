@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/wstx-lgpl-2.0.6.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xalan.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-vfs.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>

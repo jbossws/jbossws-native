@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.jboss.logging.Logger;
+import org.jboss.virtual.VirtualFile;
+import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -78,15 +80,27 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       return new WSSecurityOMFactory();
    }
 
-   /**
-    * Factory method for JavaWsdlMapping
-    */
    public WSSecurityConfiguration parse(URL configURL) throws IOException
    {
       if (configURL == null)
-         throw new IllegalArgumentException("URL cannot be null");
+         throw new IllegalArgumentException("Security config URL cannot be null");
 
       InputStream is = new ResourceURL(configURL).openStream();
+      return parse(is, configURL);
+   }
+
+   public WSSecurityConfiguration parse(VirtualFile vfConfig) throws IOException
+   {
+      if (vfConfig == null)
+         throw new IllegalArgumentException("Security config file cannot be null");
+
+      InputStream is = vfConfig.openStream();
+      URL configURL = IOUtils.toURL(vfConfig);
+      return parse(is, configURL);
+   }
+
+   private WSSecurityConfiguration parse(InputStream is, URL configURL) throws IOException
+   {
       try
       {
          Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();

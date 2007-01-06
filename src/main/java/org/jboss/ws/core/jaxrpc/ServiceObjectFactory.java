@@ -35,12 +35,8 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.rmi.Remote;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -51,9 +47,9 @@ import javax.naming.spi.ObjectFactory;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.handler.HandlerInfo;
 
 import org.jboss.logging.Logger;
+import org.jboss.net.protocol.URLStreamHandlerFactory;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.ServiceEndpoint;
@@ -63,11 +59,7 @@ import org.jboss.ws.metadata.j2ee.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 
 /**
@@ -109,7 +101,7 @@ public class ServiceObjectFactory implements ObjectFactory
       try
       {
          Reference ref = (Reference)obj;
-
+         
          // Unmarshall the ServiceRefMetaData
          UnifiedServiceRefMetaData serviceRefMetaData = null;
          RefAddr metaRefAddr = ref.get(ServiceReferenceable.SERVICE_REF_META_DATA);
@@ -120,9 +112,11 @@ public class ServiceObjectFactory implements ObjectFactory
             serviceRefMetaData = (UnifiedServiceRefMetaData)ois.readObject();
             ois.close();
          }
-         catch (IOException e)
+         catch (IOException ex)
          {
-            throw new NamingException("Cannot unmarshall service ref meta data, cause: " + e.toString());
+            NamingException ne = new NamingException("Cannot unmarshall service ref meta data");
+            ne.setRootCause(ex);
+            throw ne;
          }
 
          // Unmarshall the WSSecurityConfiguration

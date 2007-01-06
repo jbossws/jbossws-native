@@ -28,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
-import java.net.URL;
 
 import javax.naming.BinaryRefAddr;
 import javax.naming.NamingException;
@@ -37,10 +36,10 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
+import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.ws.metadata.j2ee.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
@@ -102,7 +101,7 @@ public class ServiceReferenceable implements Referenceable
       myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshallServiceRef()));
 
       // FIXME: JBWS-1431 Merge ws-security config with jaxrpc/jaxws config
-      if (getSecurityConfigURL() != null)
+      if (getSecurityConfig() != null)
          myRef.add(new BinaryRefAddr(SECURITY_CONFIG, marshallSecurityConfig()));
 
       // Add references to port component links
@@ -162,8 +161,8 @@ public class ServiceReferenceable implements Referenceable
       try
       {
          ObjectOutputStream oos = new ObjectOutputStream(baos);
-         URL securityURL = getSecurityConfigURL();
-         WSSecurityConfiguration securityConfig = WSSecurityOMFactory.newInstance().parse(securityURL);
+         VirtualFile vfConfig = getSecurityConfig();
+         WSSecurityConfiguration securityConfig = WSSecurityOMFactory.newInstance().parse(vfConfig);
          oos.writeObject(securityConfig);
          oos.close();
       }
@@ -174,16 +173,16 @@ public class ServiceReferenceable implements Referenceable
       return baos.toByteArray();
    }
 
-   private URL getSecurityConfigURL()
+   private VirtualFile getSecurityConfig()
    {
       String descriptorPath = udi.metaData instanceof UnifiedWebMetaData ? "WEB-INF" : "META-INF";
       descriptorPath = descriptorPath + "/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME;
       try
       {
-         URL securityURL = udi.getMetaDataFile(descriptorPath);
-         InputStream inputStream = new ResourceURL(securityURL).openStream();
+         VirtualFile vfConfig = udi.getMetaDataFile(descriptorPath);
+         InputStream inputStream = vfConfig.openStream();
          inputStream.close();
-         return securityURL;
+         return vfConfig;
       }
       catch (IOException ex)
       {

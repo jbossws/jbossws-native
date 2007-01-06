@@ -30,6 +30,8 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.virtual.VirtualFile;
+import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -65,24 +67,40 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    /**
     * Factory method for JavaWsdlMapping
     */
-   public JavaWsdlMapping parse(URL mappingLocation) throws IOException
+   public JavaWsdlMapping parse(URL mappingURL) throws IOException
    {
-      if (mappingLocation == null)
+      if (mappingURL == null)
       {
-         throw new IllegalArgumentException("URL cannot be null");
+         throw new IllegalArgumentException("JAXRPC mapping URL cannot be null");
       }
 
       // setup the XML binding Unmarshaller
-      Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-      InputStream is = new ResourceURL(mappingLocation).openStream();
+      InputStream is = new ResourceURL(mappingURL).openStream();
+      return parse(is, mappingURL);
+   }
+   
+   public JavaWsdlMapping parse(VirtualFile vfMapping) throws IOException
+   {
+      if (vfMapping == null)
+         throw new IllegalArgumentException("JAXRPC mapping file cannot be null");
+
+      // setup the XML binding Unmarshaller
+      InputStream is = vfMapping.openStream();
+      URL mappingURL = IOUtils.toURL(vfMapping);
+      return parse(is, mappingURL);
+   }
+
+   private JavaWsdlMapping parse(InputStream is, URL mappingURL) throws IOException
+   {
       try
       {
+         Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
          JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, this, null);
          return javaWsdlMapping;
       }
       catch (JBossXBException e)
       {
-         IOException ioex = new IOException("Cannot parse: " + mappingLocation);
+         IOException ioex = new IOException("Cannot parse: " + mappingURL);
          Throwable cause = e.getCause();
          if (cause != null)
             ioex.initCause(cause);
@@ -93,6 +111,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
          is.close();
       }
    }
+
 
    /**
     * This method is called on the factory by the object model builder when the parsing starts.

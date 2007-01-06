@@ -436,7 +436,7 @@ public class WSDL11Reader
       if (locationURL == null)
       {
          String parentProtocol = parentURL.getProtocol();
-         if (parentProtocol.equals("file") && !location.startsWith("/"))
+         if (parentProtocol.indexOf("file") >= 0 && !location.startsWith("/"))
          {
             String path = parentURL.toExternalForm();
             path = path.substring(0, path.lastIndexOf("/"));

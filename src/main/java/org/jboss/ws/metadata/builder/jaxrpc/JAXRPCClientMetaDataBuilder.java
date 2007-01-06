@@ -30,10 +30,11 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.config.jaxrpc.ClientConfigJAXRPC;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
+import org.jboss.ws.metadata.config.jaxrpc.ClientConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -112,10 +113,13 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          serviceMetaData.setWsdlLocation(wsdlURL);
          WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
 
-         URL mappingURL = null;
          if (javaWsdlMapping != null)
          {
-            mappingURL = new URL(Constants.NS_JBOSSWS_URI + "/dummy-mapping-url");
+            URL mappingURL = new URL(Constants.NS_JBOSSWS_URI + "/dummy-mapping-file");
+            if (serviceRefMetaData != null && serviceRefMetaData.getMappingLocation() != null)
+            {
+               mappingURL = serviceRefMetaData.getMappingLocation();
+            }
             wsMetaData.addMappingDefinition(mappingURL.toExternalForm(), javaWsdlMapping);
             serviceMetaData.setMappingLocation(mappingURL);
          }
