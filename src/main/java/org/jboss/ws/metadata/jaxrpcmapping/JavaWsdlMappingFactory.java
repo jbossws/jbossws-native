@@ -30,7 +30,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
@@ -76,22 +75,6 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
 
       // setup the XML binding Unmarshaller
       InputStream is = new ResourceURL(mappingURL).openStream();
-      return parse(is, mappingURL);
-   }
-   
-   public JavaWsdlMapping parse(VirtualFile vfMapping) throws IOException
-   {
-      if (vfMapping == null)
-         throw new IllegalArgumentException("JAXRPC mapping file cannot be null");
-
-      // setup the XML binding Unmarshaller
-      InputStream is = vfMapping.openStream();
-      URL mappingURL = IOUtils.toURL(vfMapping);
-      return parse(is, mappingURL);
-   }
-
-   private JavaWsdlMapping parse(InputStream is, URL mappingURL) throws IOException
-   {
       try
       {
          Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();

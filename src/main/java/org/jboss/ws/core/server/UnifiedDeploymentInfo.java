@@ -25,14 +25,11 @@ package org.jboss.ws.core.server;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.ObjectName;
-
-import org.jboss.virtual.VirtualFile;
 
 /**
  * The container independent deployment info.
@@ -61,7 +58,7 @@ public class UnifiedDeploymentInfo
    /** The URL for this deployment */
    public URL url;
    /** The virtual file for the deployment root */
-   public VirtualFile vfRoot;
+   public UnifiedVirtualFile vfRoot;
    /** The string identifing this deployment **/
    public String name;
    /** The URL to the expanded webapp **/
@@ -102,25 +99,15 @@ public class UnifiedDeploymentInfo
             // ignore
          }
 
-         if (resourceURL == null)
+         if (resourceURL == null && vfRoot != null)
          {
-            try
-            {
-               VirtualFile vfResource = vfRoot.findChild(resourcePath);
-               resourceURL = vfResource.toURL();
-            }
-            catch (URISyntaxException e)
-            {
-               // ignore
-            }
+            UnifiedVirtualFile vfResource = vfRoot.findChild(resourcePath);
+            resourceURL = vfResource.toURL();
          }
 
          if (resourceURL == null)
          {
             String deploymentPath = url.toExternalForm();
-
-            if (deploymentPath.startsWith("vfsfile:") && deploymentPath.endsWith("!/") == false)
-               deploymentPath += "!/";
 
             if (deploymentPath.startsWith("jar:") && deploymentPath.endsWith("!/") == false)
                deploymentPath += "!/";
@@ -135,17 +122,14 @@ public class UnifiedDeploymentInfo
       return resourceURL;
    }
 
-   public VirtualFile getMetaDataFile(String resourcePath) throws IOException
+   /**
+    * An adaptor a VirtualFile from jboss-vfs.jar
+    * jboss-vfs cannot be used in jboss-4.x because of its dependeny on jboss-common-core.jar 
+    */
+   public interface UnifiedVirtualFile
    {
-      VirtualFile vfResource = null;
-      if (resourcePath != null && resourcePath.length() > 0)
-      {
-         if (resourcePath.startsWith("/"))
-            resourcePath = resourcePath.substring(1);
-
-         vfResource = vfRoot.findChild(resourcePath);
-      }
-      return vfResource;
+      UnifiedVirtualFile findChild(String child) throws IOException;
+      URL toURL();
    }
 
    public String toString()

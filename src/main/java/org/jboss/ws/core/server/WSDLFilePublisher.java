@@ -40,7 +40,6 @@ import javax.wsdl.factory.WSDLFactory;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
@@ -216,8 +215,8 @@ public class WSDLFilePublisher
                      resourcePath = resourcePath + "/";
 
                   resourcePath = expLocation + resourcePath + schemaLocation;
-                  VirtualFile vfResource = udi.getMetaDataFile(resourcePath);
-                  InputStream is = vfResource.openStream();
+                  URL resourceURL = udi.getMetaDataFileURL(resourcePath);
+                  InputStream is = new ResourceURL(resourceURL).openStream();
                   if (is == null)
                      throw new IllegalArgumentException("Cannot find schema import in deployment: " + resourcePath);
 

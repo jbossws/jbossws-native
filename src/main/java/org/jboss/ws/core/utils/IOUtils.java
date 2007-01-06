@@ -40,7 +40,6 @@ import java.net.URL;
 import javax.activation.DataHandler;
 
 import org.jboss.logging.Logger;
-import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.ServerConfig;
 import org.jboss.ws.core.server.ServerConfigFactory;
@@ -117,21 +116,5 @@ public final class IOUtils
       File tmpdir = new File(config.getServerTempDir().getCanonicalPath() + "/jbossws");
       tmpdir.mkdirs();
       return tmpdir;
-   }
-   
-   public static URL toURL(VirtualFile file)
-   {
-      try
-      {
-         return file.toURL();
-      }
-      catch (MalformedURLException e)
-      {
-         return null;
-      }
-      catch (URISyntaxException e)
-      {
-         return null;
-      }
    }
 }

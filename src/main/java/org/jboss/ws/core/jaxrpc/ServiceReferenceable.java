@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 
 import javax.naming.BinaryRefAddr;
 import javax.naming.NamingException;
@@ -36,7 +37,6 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
-import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
@@ -161,7 +161,7 @@ public class ServiceReferenceable implements Referenceable
       try
       {
          ObjectOutputStream oos = new ObjectOutputStream(baos);
-         VirtualFile vfConfig = getSecurityConfig();
+         URL vfConfig = getSecurityConfig();
          WSSecurityConfiguration securityConfig = WSSecurityOMFactory.newInstance().parse(vfConfig);
          oos.writeObject(securityConfig);
          oos.close();
@@ -173,13 +173,13 @@ public class ServiceReferenceable implements Referenceable
       return baos.toByteArray();
    }
 
-   private VirtualFile getSecurityConfig()
+   private URL getSecurityConfig()
    {
       String descriptorPath = udi.metaData instanceof UnifiedWebMetaData ? "WEB-INF" : "META-INF";
       descriptorPath = descriptorPath + "/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME;
       try
       {
-         VirtualFile vfConfig = udi.getMetaDataFile(descriptorPath);
+         URL vfConfig = udi.getMetaDataFileURL(descriptorPath);
          InputStream inputStream = vfConfig.openStream();
          inputStream.close();
          return vfConfig;

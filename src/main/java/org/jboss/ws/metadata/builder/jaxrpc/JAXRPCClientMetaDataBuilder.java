@@ -30,7 +30,6 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.virtual.VirtualFile;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
