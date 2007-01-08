@@ -47,6 +47,7 @@ import javax.xml.soap.SOAPException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonClient;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
@@ -344,6 +345,11 @@ public class CallImpl extends CommonClient implements Call
    public Object invoke(QName operationName, Object[] inputParams) throws RemoteException
    {
       return invokeInternal(operationName, inputParams, unboundHeaders, false);
+   }
+
+   protected CommonMessageContext processPivot(CommonMessageContext requestContext) {
+      log.debug("Begin response processing");
+      return requestContext;
    }
 
    /** Returns a List values for the output parameters of the last invoked operation.

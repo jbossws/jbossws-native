@@ -51,9 +51,11 @@ import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.jaxws.StubExt;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /** 
@@ -62,7 +64,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jul-2006
  */
-public class ClientImpl extends CommonClient implements BindingProvider
+public class ClientImpl extends CommonClient implements BindingProvider, StubExt
 {
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);
@@ -159,6 +161,16 @@ public class ClientImpl extends CommonClient implements BindingProvider
          // Reset the message context association
          MessageContextAssociation.popMessageContext();
       }
+   }
+
+   protected CommonMessageContext processPivot(CommonMessageContext requestContext) {
+      log.debug("Begin response processing");
+      
+      SOAPMessageContextJAXWS responseContext = new SOAPMessageContextJAXWS(requestContext);
+      responseContext.setSOAPMessage(null);
+      responseContext.clear(); // clear message context properties
+      MessageContextAssociation.pushMessageContext(responseContext);
+      return responseContext;
    }
 
    /**

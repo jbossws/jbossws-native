@@ -46,6 +46,7 @@ import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
+import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -291,6 +292,9 @@ public abstract class CommonClient
                resMessage = new SOAPConnectionImpl().call(reqMessage, epInfo);
             }
 
+            // at pivot the message context might be replaced
+            msgContext = processPivot(msgContext);
+
             // Associate current message with message context
             msgContext.setSOAPMessage(resMessage);
          }
@@ -299,7 +303,7 @@ public abstract class CommonClient
 
          // Get the return object
          Object retObj = null;
-         if (oneway == false)
+         if (oneway == false && handlerPass)
          {
             // Call the response handlers
             handlerPass = callResponseHandlerChain(portName, HandlerType.POST);
@@ -339,6 +343,8 @@ public abstract class CommonClient
          resContext.putAll(msgContext.getProperties());
       }
    }
+
+   protected abstract CommonMessageContext processPivot(CommonMessageContext requestContext);
 
    protected CommonBindingProvider getCommonBindingProvider()
    {
