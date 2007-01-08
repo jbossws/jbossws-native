@@ -304,7 +304,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (opMetaData.isRPCEncoded())
             XOPContext.setMTOMEnabled(false);
          else
-            XOPContext.setMTOMEnabled( isMTOMEnabled() );
+            XOPContext.setMTOMEnabled( isMTOMEnabled() );  // TODO: shouldn't this depend on the request encoding?
 
          // Associate current message with message context
          SOAPMessageImpl resMessage = (SOAPMessageImpl)createMessage(opMetaData);

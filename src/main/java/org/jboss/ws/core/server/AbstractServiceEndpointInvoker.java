@@ -25,15 +25,16 @@ package org.jboss.ws.core.server;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.core.*;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerDelegateJAXWS;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -170,6 +171,8 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
                msgContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             }
 
+            msgContext = processPivot(msgContext);
+
             // Set the outbound property
             if (epMetaData.getType() == EndpointMetaData.Type.JAXWS)
                msgContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, new Boolean(true));
@@ -215,6 +218,13 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       {
          destroyServiceEndpoint(seInfo, seInstance);
       }
+   }
+
+   protected CommonMessageContext processPivot(CommonMessageContext requestContext)
+   {
+      log.debug("Begin response processing");
+      // TODO: implement
+      return requestContext;
    }
 
    private OperationMetaData getDispatchDestination(EndpointMetaData epMetaData, SOAPMessageImpl reqMessage) throws SOAPException
