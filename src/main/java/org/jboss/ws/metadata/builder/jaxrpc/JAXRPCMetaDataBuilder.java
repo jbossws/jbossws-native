@@ -660,30 +660,35 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          MethodParamPartsMapping[] partsMappings = seiMethodMapping.getMethodParamPartsMappings();
          if (partsMappings.length > 0)
          {
+            List<String> anyTypes = new ArrayList<String>();
+            anyTypes.add("javax.xml.soap.SOAPElement");
+            anyTypes.add("org.w3c.dom.Element");
+            
             boolean matchingPartFound = false;
             for (MethodParamPartsMapping partsMapping : partsMappings)
             {
-               String paramTypeName = partsMapping.getParamType();
-               if (paramTypeName.equals(javaTypeName))
+               String methodMappingTypeName = partsMapping.getParamType();
+               if (methodMappingTypeName.equals(javaTypeName))
                {
                   matchingPartFound = true;
                   break;
                }
+               // Check xsd:anyType
+               else if (anyTypes.contains(javaTypeName) && anyTypes.contains(methodMappingTypeName))
+               {
+                  matchingPartFound = true;
+                  break;
+               }
+               // Check assignability,
                else
                {
-                  // Check assignability,
-                  // JavaUtils.isAssignableFrom("org.w3c.dom.Element",
-                  // "javax.xml.soap.SOAPElement")
                   try
                   {
-                     Class paramType = JavaUtils.loadJavaType(paramTypeName);
+                     Class paramType = JavaUtils.loadJavaType(methodMappingTypeName);
                      Class javaType = JavaUtils.loadJavaType(javaTypeName);
 
-                     // If it is assignable the explict mapping takes presedence
-                     // and we don't wrap
                      if (JavaUtils.isAssignableFrom(javaType, paramType))
                      {
-                        // javaTypeName = paramTypeName;
                         matchingPartFound = true;
                         break;
                      }
@@ -691,8 +696,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                   catch (ClassNotFoundException e)
                   {
                      // Ignore. For simple types this should work, others should
-                     // be lexically equal
-                     // if it is not wrapped.
+                     // be lexically equal if it is not wrapped.
                   }
                }
             }

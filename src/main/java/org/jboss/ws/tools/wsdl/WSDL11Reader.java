@@ -116,9 +116,14 @@ public class WSDL11Reader
    // provide logging
    private static final Logger log = Logger.getLogger(WSDL11Reader.class);
 
+   private static QName HTTP_BINDING = new QName(Constants.NS_HTTP, "binding");
+
    private static QName SOAP12_BINDING = new QName(Constants.NS_SOAP12, "binding");
+
    private static QName SOAP12_BODY = new QName(Constants.NS_SOAP12, "body");
+
    private static QName SOAP12_OPERATION = new QName(Constants.NS_SOAP12, "operation");
+
    private static QName SOAP12_ADDRESS = new QName(Constants.NS_SOAP12, "address");
 
    private WSDLDefinitions destWsdl;
@@ -130,6 +135,7 @@ public class WSDL11Reader
    private Map<String, URL> schemaLocationsMap = new HashMap<String, URL>();
 
    private LinkedHashMap<QName, Binding> allBindings;
+
    private LinkedHashMap<QName, Binding> portTypeBindings;
 
    // Temporary files used by this reader.
@@ -165,10 +171,10 @@ public class WSDL11Reader
 
    private void cleanupTemporaryFiles()
    {
-     for (File current : tempFiles)
-     {
-        current.delete();
-     }
+      for (File current : tempFiles)
+      {
+         current.delete();
+      }
    }
 
    // process all bindings not within service separetly
@@ -519,7 +525,7 @@ public class WSDL11Reader
          if (wsaAction != null)
             destOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_IN, wsaAction.getLocalPart()));
 
-         List<String> paramOrder = (List<String>) srcOperation.getParameterOrdering();
+         List<String> paramOrder = (List<String>)srcOperation.getParameterOrdering();
          if (paramOrder != null)
          {
             for (String name : paramOrder)
@@ -530,12 +536,12 @@ public class WSDL11Reader
          }
 
          WSDLInterfaceOperationInput rpcInput = new WSDLInterfaceOperationInput(destOperation);
-         for (Part srcPart : (List<Part>) srcMessage.getOrderedParts(paramOrder))
+         for (Part srcPart : (List<Part>)srcMessage.getOrderedParts(paramOrder))
          {
             if (Constants.URI_STYLE_IRI == destOperation.getStyle())
             {
                WSDLInterfaceOperationInput destInput = new WSDLInterfaceOperationInput(destOperation);
-               QName elementName = messagePartToElementName(srcWsdl, srcPortType, srcOperation, srcMessage, srcPart);
+               QName elementName = messagePartToElementName(srcMessage, srcPart);
                destInput.setElement(elementName);
 
                //Lets remember the Message name
@@ -554,8 +560,7 @@ public class WSDL11Reader
                QName xmlType = srcPart.getTypeName();
                if (xmlType != null)
                   rpcInput.addChildPart(new WSDLRPCPart(srcPart.getName(), destWsdl.registerQName(xmlType)));
-               else
-                  messagePartToElementName(srcWsdl, srcPortType, srcOperation, srcMessage, srcPart);
+               else messagePartToElementName(srcMessage, srcPart);
             }
          }
          if (Constants.URI_STYLE_RPC == destOperation.getStyle())
@@ -582,11 +587,11 @@ public class WSDL11Reader
       log.trace("processOperationOutput: " + srcMessage.getQName());
 
       destOperation.setPattern(Constants.WSDL20_PATTERN_IN_OUT);
-      QName wsaAction = (QName) srcOutput.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSA_ACTION);
+      QName wsaAction = (QName)srcOutput.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSA_ACTION);
       if (wsaAction != null)
          destOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_OUT, wsaAction.getLocalPart()));
 
-      List<String> paramOrder = (List<String>) srcOperation.getParameterOrdering();
+      List<String> paramOrder = (List<String>)srcOperation.getParameterOrdering();
       if (paramOrder != null)
       {
          for (String name : paramOrder)
@@ -596,26 +601,24 @@ public class WSDL11Reader
                WSDLRPCSignatureItem item = destOperation.getRpcSignatureitem(name);
                if (item != null)
                   item.setDirection(Direction.INOUT);
-               else
-                  destOperation.addRpcSignatureItem(new WSDLRPCSignatureItem(name, Direction.OUT));
+               else destOperation.addRpcSignatureItem(new WSDLRPCSignatureItem(name, Direction.OUT));
             }
          }
       }
 
       WSDLInterfaceOperationOutput rpcOutput = new WSDLInterfaceOperationOutput(destOperation);
-      for (Part srcPart : (List<Part>) srcMessage.getOrderedParts(null))
+      for (Part srcPart : (List<Part>)srcMessage.getOrderedParts(null))
       {
          if (Constants.URI_STYLE_IRI == destOperation.getStyle())
          {
             WSDLInterfaceOperationOutput destOutput = new WSDLInterfaceOperationOutput(destOperation);
 
-            QName elementName = messagePartToElementName(srcWsdl, srcPortType, srcOperation, srcMessage, srcPart);
+            QName elementName = messagePartToElementName(srcMessage, srcPart);
             destOutput.setElement(elementName);
 
             // Lets remember the Message name
             destOutput.setMessageName(srcMessage.getQName());
-            destOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_OUT, srcMessage.getQName()
-                  .getLocalPart()));
+            destOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_OUT, srcMessage.getQName().getLocalPart()));
 
             // Remember the original part name
             destOutput.setPartName(srcPart.getName());
@@ -630,8 +633,7 @@ public class WSDL11Reader
             QName xmlType = srcPart.getTypeName();
             if (xmlType != null)
                rpcOutput.addChildPart(new WSDLRPCPart(srcPart.getName(), destWsdl.registerQName(xmlType)));
-            else
-               messagePartToElementName(srcWsdl, srcPortType, srcOperation, srcMessage, srcPart);
+            else messagePartToElementName(srcMessage, srcPart);
          }
       }
 
@@ -702,7 +704,7 @@ public class WSDL11Reader
 
    /** Translate the message part name into an XML element name.
     */
-   private QName messagePartToElementName(Definition srcWsdl, PortType srcPortType, Operation srcOperation, Message srcMessage, Part srcPart)
+   private QName messagePartToElementName(Message srcMessage, Part srcPart)
    {
       // <part name="param" element="tns:SomeType" />
       QName xmlName = srcPart.getElementName();
@@ -756,26 +758,26 @@ public class WSDL11Reader
 
       if (operationStyle == null)
       {
-         for (ExtensibilityElement extElement : (List<ExtensibilityElement>) srcBinding.getExtensibilityElements())
+         for (ExtensibilityElement extElement : (List<ExtensibilityElement>)srcBinding.getExtensibilityElements())
          {
             QName elementType = extElement.getElementType();
             if (extElement instanceof SOAPBinding)
             {
-               SOAPBinding soapBinding = (SOAPBinding) extElement;
+               SOAPBinding soapBinding = (SOAPBinding)extElement;
                operationStyle = soapBinding.getStyle();
             }
             else if (SOAP12_BINDING.equals(elementType))
             {
-               Element domElement = ((UnknownExtensibilityElement) extElement).getElement();
+               Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
                operationStyle = getOptionalAttribute(domElement, "style");
             }
          }
       }
 
-      return  ("rpc".equals(operationStyle)) ? Constants.URI_STYLE_RPC : Constants.URI_STYLE_IRI;
+      return ("rpc".equals(operationStyle)) ? Constants.URI_STYLE_RPC : Constants.URI_STYLE_IRI;
    }
 
-   private void processBinding(Definition srcWsdl, Binding srcBinding)
+   private boolean processBinding(Definition srcWsdl, Binding srcBinding)
    {
       QName srcBindingQName = srcBinding.getQName();
       log.trace("processBinding: " + srcBindingQName);
@@ -787,34 +789,63 @@ public class WSDL11Reader
          if (srcPortType == null)
             throw new WSException("Cannot find port type for binding: " + ncName);
 
-         processPortType(srcWsdl, srcPortType);
-
-         WSDLBinding destBinding = new WSDLBinding(destWsdl);
-         destBinding.setQName(srcBindingQName);
-         destBinding.setName(ncName);
-         destBinding.setInterfaceName(srcPortType.getQName());
-
-         String bindingStyle = Style.getDefaultStyle().toString();
+         // Get binding type
+         String bindingType = null;
          List<ExtensibilityElement> extList = srcBinding.getExtensibilityElements();
          for (ExtensibilityElement extElement : extList)
          {
             QName elementType = extElement.getElementType();
             if (extElement instanceof SOAPBinding)
             {
-               destBinding.setType(Constants.NS_SOAP11);
+               bindingType = Constants.NS_SOAP11;
+            }
+            else if (SOAP12_BINDING.equals(elementType))
+            {
+               bindingType = Constants.NS_SOAP12;
+            }
+            else if ("binding".equals(elementType.getLocalPart()))
+            {
+               log.warn("Unsupported binding: " + elementType);
+               bindingType = elementType.getNamespaceURI();
+            }
+         }
+
+         if (bindingType == null)
+            throw new WSException("Cannot obtain binding type for: " + srcBindingQName);
+
+         // Ignore unknown bindings
+         if (Constants.NS_SOAP11.equals(bindingType) == false && Constants.NS_SOAP12.equals(bindingType) == false)
+            return false;
+
+         WSDLBinding destBinding = new WSDLBinding(destWsdl);
+         destBinding.setQName(srcBindingQName);
+         destBinding.setName(ncName);
+         destBinding.setInterfaceName(srcPortType.getQName());
+         destBinding.setType(bindingType);
+         destWsdl.addBinding(destBinding);
+
+         processPortType(srcWsdl, srcPortType);
+
+         String bindingStyle = Style.getDefaultStyle().toString();
+         for (ExtensibilityElement extElement : extList)
+         {
+            QName elementType = extElement.getElementType();
+            if (extElement instanceof SOAPBinding)
+            {
                SOAPBinding soapBinding = (SOAPBinding)extElement;
                bindingStyle = soapBinding.getStyle();
             }
             else if (SOAP12_BINDING.equals(elementType))
             {
-               destBinding.setType(Constants.NS_SOAP12);
                Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
                bindingStyle = getOptionalAttribute(domElement, "style");
             }
          }
-         destWsdl.addBinding(destBinding);
-         processBindingOperations(destBinding, srcBinding, bindingStyle);
+
+         processBindingOperations(srcWsdl, destBinding, srcBinding, bindingStyle);
       }
+      
+      return true;
    }
 
    private Map<QName, Binding> getPortTypeBindings(Definition srcWsdl)
@@ -858,17 +889,17 @@ public class WSDL11Reader
       return allBindings;
    }
 
-   private void processBindingOperations(WSDLBinding destBinding, Binding srcBinding, String bindingStyle)
+   private void processBindingOperations(Definition srcWsdl, WSDLBinding destBinding, Binding srcBinding, String bindingStyle)
    {
       Iterator it = srcBinding.getBindingOperations().iterator();
       while (it.hasNext())
       {
          BindingOperation srcBindingOperation = (BindingOperation)it.next();
-         processBindingOperation(destBinding, bindingStyle, srcBindingOperation);
+         processBindingOperation(srcWsdl, destBinding, bindingStyle, srcBindingOperation);
       }
    }
 
-   private void processBindingOperation(WSDLBinding destBinding, String bindingStyle, BindingOperation srcBindingOperation)
+   private void processBindingOperation(Definition srcWsdl, WSDLBinding destBinding, String bindingStyle, BindingOperation srcBindingOperation)
    {
       String srcBindingName = srcBindingOperation.getName();
       log.trace("processBindingOperation: " + srcBindingName);
@@ -904,24 +935,27 @@ public class WSDL11Reader
       BindingInput srcBindingInput = srcBindingOperation.getBindingInput();
       if (srcBindingInput != null)
       {
-         processBindingInput(destBindingOperation, destIntfOperation, srcBindingOperation, srcBindingInput);
+         processBindingInput(srcWsdl, destBindingOperation, destIntfOperation, srcBindingOperation, srcBindingInput);
       }
 
       BindingOutput srcBindingOutput = srcBindingOperation.getBindingOutput();
       if (srcBindingOutput != null)
       {
-         processBindingOutput(destBindingOperation, destIntfOperation, srcBindingOperation, srcBindingOutput);
+         processBindingOutput(srcWsdl, destBindingOperation, destIntfOperation, srcBindingOperation, srcBindingOutput);
       }
    }
 
    interface ReferenceCallback
    {
       void removeReference(QName element);
+
       void removeRPCPart(String partName);
+
       QName getXmlType(String partName);
    }
 
-   private void processBindingInput(WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation, final BindingOperation srcBindingOperation, BindingInput srcBindingInput)
+   private void processBindingInput(Definition srcWsdl, WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation,
+         final BindingOperation srcBindingOperation, BindingInput srcBindingInput)
    {
       log.trace("processBindingInput");
 
@@ -930,8 +964,7 @@ public class WSDL11Reader
       WSDLBindingOperationInput input = new WSDLBindingOperationInput(destBindingOperation);
       destBindingOperation.addInput(input);
 
-      ReferenceCallback cb = new ReferenceCallback()
-      {
+      ReferenceCallback cb = new ReferenceCallback() {
          public QName getXmlType(String partName)
          {
             return srcBindingOperation.getOperation().getInput().getMessage().getPart(partName).getTypeName();
@@ -951,10 +984,11 @@ public class WSDL11Reader
          }
       };
 
-      processBindingReference(destBindingOperation, destIntfOperation, soap11Body, extList, input, cb);
+      processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, soap11Body, extList, input, srcBindingOperation, cb);
    }
 
-   private void processBindingOutput(WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation, final BindingOperation srcBindingOperation, BindingOutput srcBindingOutput)
+   private void processBindingOutput(Definition srcWsdl, WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation,
+         final BindingOperation srcBindingOperation, BindingOutput srcBindingOutput)
    {
       log.trace("processBindingInput");
 
@@ -963,8 +997,7 @@ public class WSDL11Reader
       WSDLBindingOperationOutput output = new WSDLBindingOperationOutput(destBindingOperation);
       destBindingOperation.addOutput(output);
 
-      ReferenceCallback cb = new ReferenceCallback()
-      {
+      ReferenceCallback cb = new ReferenceCallback() {
          public QName getXmlType(String partName)
          {
             return srcBindingOperation.getOperation().getOutput().getMessage().getPart(partName).getTypeName();
@@ -985,12 +1018,11 @@ public class WSDL11Reader
          }
       };
 
-      processBindingReference(destBindingOperation, destIntfOperation, soap11Body, extList, output, cb);
+      processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, soap11Body, extList, output, srcBindingOperation, cb);
    }
 
-
-   private void processBindingReference(WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation,
-         QName soap11Body, List<ExtensibilityElement> extList, WSDLBindingMessageReference reference, ReferenceCallback callback)
+   private void processBindingReference(Definition srcWsdl, WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation, QName soap11Body,
+         List<ExtensibilityElement> extList, WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback)
    {
       for (ExtensibilityElement extElement : extList)
       {
@@ -1002,23 +1034,42 @@ public class WSDL11Reader
          else if (extElement instanceof SOAPHeader)
          {
             SOAPHeader header = (SOAPHeader)extElement;
-            QName messageQName = header.getMessage();
-            String partName = header.getPart();
+            QName headerMessageName = header.getMessage();
+            String headerPartName = header.getPart();
 
-            String key = messageQName + "->" + partName;
+            String key = headerMessageName + "->" + headerPartName;
             QName elementName = (QName)messagePartToElementMap.get(key);
-            if (elementName == null)
-               throw new WSException("Could not determine element name from header: " + partName);
 
-            reference.addSoapHeader(new WSDLSOAPHeader(elementName, partName));
-            if (Constants.URI_STYLE_IRI == destIntfOperation.getStyle())
+            // The message may not have been reachable from a port type operation
+            boolean isImplicitHeader = false;
+            Message srcMessage = srcWsdl.getMessage(headerMessageName);
+            if (elementName == null && srcMessage != null)
             {
-               callback.removeReference(elementName);
+               Iterator itParts = srcMessage.getParts().values().iterator();
+               while (itParts.hasNext())
+               {
+                  Part srcPart = (Part)itParts.next();
+                  String partName = srcPart.getName();
+                  if (partName.equals(headerPartName))
+                     isImplicitHeader = true;
+               }
             }
-            else
+
+            if (elementName == null && isImplicitHeader == false)
+               throw new WSException("Could not determine element name from header: " + key);
+
+            if (elementName != null)
             {
-               // Just in case
-               callback.removeRPCPart(partName);
+               reference.addSoapHeader(new WSDLSOAPHeader(elementName, headerPartName));
+               if (Constants.URI_STYLE_IRI == destIntfOperation.getStyle())
+               {
+                  callback.removeReference(elementName);
+               }
+               else
+               {
+                  // Just in case
+                  callback.removeRPCPart(headerPartName);
+               }
             }
          }
          else if (extElement instanceof MIMEMultipartRelated)
@@ -1053,7 +1104,7 @@ public class WSDL11Reader
                // Found content types in this part
                if (name != null)
                {
-                  QName xmlType  = callback.getXmlType(name);
+                  QName xmlType = callback.getXmlType(name);
                   reference.addMimePart(new WSDLMIMEPart(name, xmlType, types));
                   if (Constants.URI_STYLE_IRI == destIntfOperation.getStyle())
                   {
@@ -1069,7 +1120,6 @@ public class WSDL11Reader
          }
       }
    }
-
 
    private void processEncodingStyle(ExtensibilityElement extElement, WSDLBindingOperation destBindingOperation)
    {
@@ -1171,9 +1221,9 @@ public class WSDL11Reader
       destEndpoint.setBinding(srcBinding.getQName());
       destEndpoint.setQName(new QName(srcWsdl.getTargetNamespace(), srcPort.getName()));
       destEndpoint.setAddress(getSOAPAddress(srcPort));
-      destService.addEndpoint(destEndpoint);
 
-      processBinding(srcWsdl, srcBinding);
+      if (processBinding(srcWsdl, srcBinding))
+         destService.addEndpoint(destEndpoint);
    }
 
    /** Get the endpoint address from the ports extensible element

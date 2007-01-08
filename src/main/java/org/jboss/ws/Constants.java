@@ -58,6 +58,8 @@ public interface Constants
    static final String NS_SOAP11_ENV = SOAPConstants.URI_NS_SOAP_ENVELOPE;
    /** SOAP-1.2 namespace http://schemas.xmlsoap.org/wsdl/soap12/ */
    static final String NS_SOAP12 = "http://schemas.xmlsoap.org/wsdl/soap12/";
+   /** HTTP binding namespace http://schemas.xmlsoap.org/wsdl/http/ */
+   static final String NS_HTTP = "http://schemas.xmlsoap.org/wsdl/http/";
    /** SOAP-1.2 envelope namespace http://www.w3.org/2003/05/soap-envelope */
    static final String NS_SOAP12_ENV = "http://www.w3.org/2003/05/soap-envelope";
    /** The namespace for the SwA mime type */

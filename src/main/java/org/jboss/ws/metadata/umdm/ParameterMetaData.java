@@ -131,8 +131,22 @@ public class ParameterMetaData
 
       Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
       Class valueClass = JavaUtils.erasure(valueType);
-      boolean matched = (exact ? valueClass.getName().equals(expectedType.getName()) : JavaUtils.isAssignableFrom(valueClass, expectedType));
-
+      
+      List<Class> anyTypes = new ArrayList<Class>();
+      anyTypes.add(javax.xml.soap.SOAPElement.class);
+      anyTypes.add(org.w3c.dom.Element.class);
+      
+      boolean matched;
+      if (exact)
+      {
+         matched = valueClass.getName().equals(expectedType.getName());
+         if (matched == false && anyTypes.contains(valueClass))
+            matched = anyTypes.contains(expectedType);
+      }
+      else
+      {
+         matched = JavaUtils.isAssignableFrom(valueClass, expectedType);
+      }
       return matched;
    }
 
