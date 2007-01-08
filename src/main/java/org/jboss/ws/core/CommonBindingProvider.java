@@ -32,6 +32,9 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.logging.Logger;
+
+import java.util.Observable;
 
 /**
  * Provides access to the protocol binding.
@@ -41,6 +44,8 @@ import org.jboss.ws.metadata.config.ConfigurationProvider;
  */
 public class CommonBindingProvider implements Configurable
 {
+   private static Logger log = Logger.getLogger(CommonBindingProvider.class);
+
    protected EndpointMetaData epMetaData;
    protected CommonBinding binding;
 
@@ -48,11 +53,23 @@ public class CommonBindingProvider implements Configurable
    {
       this.epMetaData = epMetaData;
       initBinding(epMetaData.getBindingId(), epMetaData.getType());
+      configure();
    }
 
    public CommonBindingProvider(String bindingId, Type type)
    {
       initBinding(bindingId, type);
+      configure();
+   }
+
+   private void configure()
+   {
+      // process MTOM config elements
+      if(epMetaData!=null)
+      {
+         ConfigurationProvider configProvider = (ConfigurationProvider)epMetaData;
+         configProvider.configure(this);
+      }
    }
 
    protected void initBinding(String bindingId, Type type)
@@ -71,17 +88,16 @@ public class CommonBindingProvider implements Configurable
       {
          throw new WSException("Unsupported binding: " + bindingId);
       }
-
-      // process MTOM config elements
-      if(epMetaData!=null)
-      {
-         ConfigurationProvider configProvider = (ConfigurationProvider)epMetaData;
-         configProvider.configure(this);
-      }
+      
    }
 
    public CommonBinding getCommonBinding()
    {
       return binding;
+   }
+
+   public void update(Observable observable, Object object) {
+      log.debug("Update config: " + object);
+      configure();
    }
 }

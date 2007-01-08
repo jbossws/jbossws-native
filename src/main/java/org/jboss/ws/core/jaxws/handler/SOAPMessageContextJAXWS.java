@@ -60,7 +60,7 @@ public class SOAPMessageContextJAXWS extends MessageContextJAXWS implements SOAP
 
    public SOAPMessageContextJAXWS(CommonMessageContext msgContext)
    {
-      super(msgContext);
+      super(msgContext);      
    }
 
    /**

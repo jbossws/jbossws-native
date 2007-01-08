@@ -113,8 +113,8 @@ public class XOPContext
    /**
     * Check if MTOM is enabled.<br>
     * 
-    * With JAX-WS is depends on a endpoint property and defaults to FALSE,
-    * opposed to JAX-RPC where it defaults to TRUE and is set through a message context property.    
+    * Even though the client API to enable/disable MTOM is different
+    * between JAX-WS and JAXRPC, both do will cases will propagate a message context property. 
     * (<code>org.jboss.ws.mtom.enabled</code>)<br>
     */
    public static boolean isMTOMEnabled()

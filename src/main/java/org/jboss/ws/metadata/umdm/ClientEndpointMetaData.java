@@ -57,11 +57,11 @@ public class ClientEndpointMetaData extends EndpointMetaData
       {
          if (getType() == Type.JAXRPC)
          {
-            configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG;
+            configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
          }
          else
          {
-            configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG;
+            configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
          }
          setConfigFile(configFile);
       }

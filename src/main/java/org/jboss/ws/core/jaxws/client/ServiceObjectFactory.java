@@ -45,6 +45,7 @@ import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.jaxws.ServiceDecorator;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.ws.Service
@@ -104,7 +105,7 @@ public class ServiceObjectFactory implements ObjectFactory
          {
             if (wsdlURL != null)
             {
-               target = Service.create(wsdlURL, null);
+               target = ServiceDecorator.create(wsdlURL, null);
             }
             else
             {
@@ -144,12 +145,28 @@ public class ServiceObjectFactory implements ObjectFactory
                throw new WebServiceException("Cannot find getter for port type: " + portTypeName);
          }
 
+         // process config-name and config-file
+         processConfig(target, serviceRef);
+
          return target;
       }
       catch (Exception ex)
       {
          log.error("Cannot create service", ex);
          throw ex;
+      }
+   }
+
+   private void processConfig(Object target, UnifiedServiceRef serviceRef) {
+      if(target instanceof ServiceDecorator)
+      {
+         ServiceDecorator service = (ServiceDecorator)target;
+         service.setProperty(ServiceDecorator.CLIENT_CONF_NAME, serviceRef.getConfigName());
+         service.setProperty(ServiceDecorator.CLIENT_CONF_FILE, serviceRef.getConfigFile());
+      }
+      else
+      {
+         log.warn("Configuration ignored for " + target.getClass().getName());
       }
    }
 

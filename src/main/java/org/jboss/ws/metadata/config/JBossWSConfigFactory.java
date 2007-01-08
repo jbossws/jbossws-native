@@ -115,6 +115,9 @@ public class JBossWSConfigFactory
       }
    }
 
+   /**
+    * @return config - cannot be null
+    */
    public CommonConfig getConfig(String configName, String configFile)
    {
       CommonConfig config;

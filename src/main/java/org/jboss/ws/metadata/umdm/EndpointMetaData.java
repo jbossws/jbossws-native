@@ -24,12 +24,7 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
@@ -64,7 +59,8 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, Configurable
+public abstract class EndpointMetaData extends ExtensibleMetaData
+   implements ConfigurationProvider, Configurable
 {
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
@@ -78,7 +74,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private ServiceMetaData serviceMetaData;
 
    // The REQUIRED endpoint config
-   private CommonConfig endpointConfig;
+   private CommonConfig config;
 
    // The REQUIRED name
    private QName portName;
@@ -118,6 +114,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private boolean handlersInitialized;
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
+
+   private ConfigObservable configObservable = new ConfigObservable();
 
    public EndpointMetaData(ServiceMetaData service, QName qname, QName interfaceQName, Type type)
    {
@@ -162,8 +160,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void setBindingId(String bindingId)
    {
-      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId) && !Constants.SOAP12HTTP_BINDING.equals(bindingId) && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
-            && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId)
+         && !Constants.SOAP12HTTP_BINDING.equals(bindingId)
+         && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
+         && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
       {
          throw new WSException("Unsupported binding: " + bindingId);
       }
@@ -390,10 +390,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             boolean doesMatch = aux.getJavaMethod().equals(method);
 
             // fallback for async methods
-            if (!doesMatch && method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
+            if(!doesMatch && method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
             {
                String name = method.getName();
-               name = name.substring(0, name.length() - 5);
+               name = name.substring(0, name.length()-5);
                doesMatch = aux.getJavaName().equals(name);
             }
 
@@ -519,8 +519,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             List<Class> registeredTypes = typeMapping.getJavaTypes(xmlType);
 
             boolean registered = false;
-            for (Class current : registeredTypes)
-            {
+            for (Class current : registeredTypes) {
                if (current.getName().equals(javaTypeName))
                {
                   registered = true;
@@ -571,37 +570,46 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
     *
     * @param configurable
     */
-   public void configure(Configurable configurable)
-   {
+   public void configure(Configurable configurable) {
 
-      if (endpointConfig == null)
+      // emit notificatins when the config changes
+      this.configObservable.addObserver(configurable);
+
+      if(null == config)
       {
+         log.trace("Create new config: " + getConfigFile()+":"+getConfigName());
          JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-         endpointConfig = factory.getConfig(getConfigName(), getConfigFile());
+         config = factory.getConfig(getConfigName(), getConfigFile());
+      }
+      else
+      {
+         log.trace("Reusing cached config. Current should be: " + getConfigFile()+":"+getConfigName());
       }
 
       // SOAPBinding configuration
-      if (configurable instanceof CommonBindingProvider)
+      if(configurable instanceof CommonBindingProvider)
       {
          log.debug("Configure SOAPBinding");
 
-         if (endpointConfig.hasFeature(EndpointFeature.MTOM))
+         if(config.hasFeature(EndpointFeature.MTOM))
          {
-            ((CommonSOAPBinding)configurable).setMTOMEnabled(true);
+            CommonBindingProvider provider = (CommonBindingProvider)configurable;
+            ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
             log.debug("Enable MTOM on endpoint " + this.getQName());
          }
       }
 
       // Configure EndpointMetaData
-      else if (configurable instanceof EndpointMetaData)
+      else if(configurable instanceof EndpointMetaData)
       {
+
          log.debug("Configure EndpointMetaData");
 
          List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
          clearHandlers();
 
-         List<HandlerMetaData> preHandlers = endpointConfig.getHandlers(this, HandlerType.PRE);
-         List<HandlerMetaData> postHandlers = endpointConfig.getHandlers(this, HandlerType.POST);
+         List<HandlerMetaData> preHandlers = config.getHandlers(this, HandlerType.PRE);
+         List<HandlerMetaData> postHandlers = config.getHandlers(this, HandlerType.POST);
 
          addHandlers(preHandlers);
          addHandlers(sepHandlers);
@@ -610,6 +618,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          log.debug("Added " + preHandlers.size() + " PRE handlers");
          log.debug("Added " + postHandlers.size() + " POST handlers");
       }
+
    }
 
    public String getConfigFile()
@@ -620,7 +629,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setConfigFile(String configFile)
    {
       this.configFile = configFile;
-      this.endpointConfig = null;
+      this.config = null;
    }
 
    public String getConfigName()
@@ -631,6 +640,22 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setConfigName(String configName)
    {
       this.configName = configName;
-      this.endpointConfig = null;
+      this.config = null;
+
+      // notify obervers
+      log.debug("Reconfiguration forced");
+      this.configObservable.touch();
+      this.configObservable.notifyObservers(configName);
+   }
+
+   public void update(Observable observable, Object object) {
+      log.trace("Ingore configuration change notification");
+}
+
+   class ConfigObservable extends Observable {
+      public void touch()
+      {
+         setChanged();
+      };
    }
 }
