@@ -165,11 +165,17 @@ public class ClientImpl extends CommonClient implements BindingProvider, StubExt
 
    protected CommonMessageContext processPivot(CommonMessageContext requestContext) {
       log.debug("Begin response processing");
-      
+
+      // remove existing context
+      MessageContextAssociation.popMessageContext();
+
       SOAPMessageContextJAXWS responseContext = new SOAPMessageContextJAXWS(requestContext);
       responseContext.setSOAPMessage(null);
       responseContext.clear(); // clear message context properties
+
+      // associate new context
       MessageContextAssociation.pushMessageContext(responseContext);
+      
       return responseContext;
    }
 
