@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.tools;
 
 import java.beans.Introspector;
@@ -67,6 +67,7 @@ public class XSDTypeToJava
    protected JavaWriter jwriter = new JavaWriter();
 
    //Additional variables
+   protected String containingElement = "";
    protected String fname = "";
    protected File loc = null;
    protected String pkgname = "";
@@ -78,46 +79,43 @@ public class XSDTypeToJava
     * obtained from the base class go into the generated constructor alone and
     * not as accessors
     */
-   private Map<String,List> typeNameToBaseVARList = new HashMap<String,List>();
+   private Map<String, List> typeNameToBaseVARList = new HashMap<String, List>();
 
    public XSDTypeToJava()
    {
    }
 
-   public void createJavaFile(XSComplexTypeDefinition type, File loc,
-                              String pkgname, XSModel schema)
-      throws IOException
+   public void createJavaFile(XSComplexTypeDefinition type, File loc, String pkgname, XSModel schema) throws IOException
    {
-      if(typeMapping == null)
+      if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       this.fname = type.getName();
-      if (fname == null) throw new WSException("File Name is null");
+      if (fname == null)
+         throw new WSException("File Name is null");
       this.loc = loc;
       this.pkgname = pkgname;
 
       createJavaFile(type, schema, false);
    }
 
-   public void createJavaFile(XSComplexTypeDefinition type, String filename, File loc,
-         String pkgname, XSModel schema, boolean isExceptionType)
-   throws IOException
+   public void createJavaFile(XSComplexTypeDefinition type, String containingElement, File loc, String pkgname, XSModel schema, boolean isExceptionType)
+         throws IOException
    {
-      if(typeMapping == null)
+      if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       this.fname = type.getName();
+      this.containingElement = containingElement;
       if (fname == null)
-         fname = filename;
+         fname = containingElement;
       this.loc = loc;
       this.pkgname = pkgname;
 
-      createJavaFile(type, schema,isExceptionType );
+      createJavaFile(type, schema, isExceptionType);
    }
 
-   public void createJavaFile(XSSimpleTypeDefinition type, File loc,
-                              String pkgname, XSModel schema)
-      throws IOException
+   public void createJavaFile(XSSimpleTypeDefinition type, File loc, String pkgname, XSModel schema) throws IOException
    {
-      if(typeMapping == null)
+      if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       this.fname = type.getName();
       this.loc = loc;
@@ -126,11 +124,9 @@ public class XSDTypeToJava
       createJavaFile(type, schema);
    }
 
-
-   public void createJavaFile(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType)
-   throws IOException
+   public void createJavaFile(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType) throws IOException
    {
-      if(typeMapping == null)
+      if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       XSTypeDefinition baseType = type.getBaseType();
       //Ensure that the first character is uppercase
@@ -145,24 +141,21 @@ public class XSDTypeToJava
             generatedFiles.add(baseName);
             String pushName = fname;
             fname = baseName;
-            this.createJavaFile((XSComplexTypeDefinition) baseType, schema, isExceptionType);
+            this.createJavaFile((XSComplexTypeDefinition)baseType, schema, isExceptionType);
             fname = pushName;
          }
       }
 
-      vars =  this.getVARList(type, schema, isExceptionType);
+      vars = this.getVARList(type, schema, isExceptionType);
 
       if (baseName == null && isExceptionType)
          baseName = "Exception";
-      jwriter.createJavaFile(loc, fname, pkgname, vars, null,
-            baseName, isExceptionType, typeNameToBaseVARList);
+      jwriter.createJavaFile(loc, fname, pkgname, vars, null, baseName, isExceptionType, typeNameToBaseVARList);
    }
 
-
-   public void createJavaFile(XSSimpleTypeDefinition xsSimple, XSModel schema)
-   throws IOException
+   public void createJavaFile(XSSimpleTypeDefinition xsSimple, XSModel schema) throws IOException
    {
-      if(typeMapping == null)
+      if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       XSTypeDefinition baseType = xsSimple.getBaseType();
 
@@ -174,23 +167,21 @@ public class XSDTypeToJava
          if (slist != null && slist.getLength() > 0)
          {
             //Enumerated List
-            jwriter.createJavaFileForEnumeratedValues(fname, slist,
-                  loc, pkgname, xsSimple);
+            jwriter.createJavaFileForEnumeratedValues(fname, slist, loc, pkgname, xsSimple);
          }
          else
          {
-            if(Constants.NS_SCHEMA_XSD.equals(xsSimple.getNamespace()) )
-                  return;
+            if (Constants.NS_SCHEMA_XSD.equals(xsSimple.getNamespace()))
+               return;
             //TODO: Take care of other cases
             return;
          }
       }
    }
 
-   public List<VAR> getVARList(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType)
-   throws IOException
+   public List<VAR> getVARList(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType) throws IOException
    {
-      if(typeMapping == null)
+      if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       XSTypeDefinition baseType = type.getBaseType();
       List vars = new ArrayList();
@@ -220,7 +211,7 @@ public class XSDTypeToJava
 
          if (XSConstants.DERIVATION_RESTRICTION == der)
          {
-            vars.addAll(createVARsforXSParticle(type, schema) );
+            vars.addAll(createVARsforXSParticle(type, schema));
          }
       }
       else if (XSComplexTypeDefinition.CONTENTTYPE_ELEMENT == contentType)
@@ -229,7 +220,7 @@ public class XSDTypeToJava
          {
             short der = type.getDerivationMethod();
 
-            if(XSConstants.DERIVATION_NONE == der)
+            if (XSConstants.DERIVATION_NONE == der)
             {
                handleContentTypeElementsWithDerivationNone(type, schema, isExceptionType, vars, type.getParticle());
             }
@@ -279,21 +270,19 @@ public class XSDTypeToJava
             XSTerm xterm = xspar.getTerm();
             if (xterm instanceof XSElementDeclaration)
             {
-               vars.addAll(createVARforXSElementDeclaration(xterm,
-                     schemautils.isArrayType(xspar) , schema, type));
+               vars.addAll(createVARforXSElementDeclaration(xterm, schemautils.isArrayType(xspar), schema, type));
             }
             else if (xterm instanceof XSModelGroup)
             {
                XSModelGroup xsmodelgrp = (XSModelGroup)xterm;
-               vars.addAll(createVARsforXSModelGroup(xsmodelgrp , schema, type));
+               vars.addAll(createVARsforXSModelGroup(xsmodelgrp, schema, type));
             }
          }
       }
    }
 
-   private void handleContentTypeElementsWithDerivationExtension(XSComplexTypeDefinition type, XSModel schema,
-         boolean isExceptionType, List vars, XSParticle xsparticle)
-   throws IOException
+   private void handleContentTypeElementsWithDerivationExtension(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType, List vars, XSParticle xsparticle)
+         throws IOException
    {
       if (xsparticle != null)
       {
@@ -317,28 +306,25 @@ public class XSDTypeToJava
 
                // HACK - The only way to know what elements are local to the subclass, and not inherited, is to compare to the base class
                // THIS TIES US TO XERCES
-               if (baseType instanceof XSComplexTypeDefinition == false || ((XSComplexTypeDefinition) baseType).getParticle().getTerm() == xsterm)
+               if (baseType instanceof XSComplexTypeDefinition == false || ((XSComplexTypeDefinition)baseType).getParticle().getTerm() == xsterm)
                   return;
             }
 
             XSParticle xspar = (XSParticle)xparts.item(length - 1);
             XSTerm xsparTerm = xspar.getTerm();
-            if(xsparTerm instanceof XSModelGroup)
+            if (xsparTerm instanceof XSModelGroup)
             {
                XSModelGroup xsmodelgrp = (XSModelGroup)xspar.getTerm();
                vars.addAll(createVARsforXSModelGroup(xsmodelgrp, schema, type));
             }
-            else
-               if(xsparTerm instanceof XSElementDeclaration)
-                  vars.addAll(createVARforXSElementDeclaration(xsparTerm,
-                        schemautils.isArrayType(xspar),  schema, type));
+            else if (xsparTerm instanceof XSElementDeclaration)
+               vars.addAll(createVARforXSElementDeclaration(xsparTerm, schemautils.isArrayType(xspar), schema, type));
          }
       }
    }
 
-   private void handleContentTypeElementsWithDerivationNone(XSComplexTypeDefinition type,
-         XSModel schema, boolean isExceptionType, List vars, XSParticle xsparticle)
-   throws IOException
+   private void handleContentTypeElementsWithDerivationNone(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType, List vars, XSParticle xsparticle)
+         throws IOException
    {
       if (xsparticle != null)
       {
@@ -347,33 +333,33 @@ public class XSDTypeToJava
          {
             XSModelGroup xsm = (XSModelGroup)xsterm;
             XSObjectList xparts = xsm.getParticles();
-            int len = xparts != null ? xparts.getLength():0;
+            int len = xparts != null ? xparts.getLength() : 0;
             int diff = len - 0;
 
-            for(int i = 0 ; i < len ; i++)
+            for (int i = 0; i < len; i++)
             {
-               if(isExceptionType && type.getBaseType() != null )
+               if (isExceptionType && type.getBaseType() != null)
                {
                   List<VAR> baseList = new ArrayList<VAR>();
 
                   //The first few xsterms are modelgroups for base class
-                  for(int j = 0; j < diff -1 ; j++)
+                  for (int j = 0; j < diff - 1; j++)
                   {
                      XSParticle xspar = (XSParticle)xparts.item(j);
                      XSTerm xsparTerm = xspar.getTerm();
-                     if(xsparTerm instanceof XSModelGroup)
+                     if (xsparTerm instanceof XSModelGroup)
                      {
                         XSModelGroup xsmodelgrp = (XSModelGroup)xspar.getTerm();
                         baseList.addAll(createVARsforXSModelGroup(xsmodelgrp, schema, type));
                      }
 
                   }
-                  if(baseList.size() > 0)
-                     this.typeNameToBaseVARList.put(type.getName(),baseList);
+                  if (baseList.size() > 0)
+                     this.typeNameToBaseVARList.put(type.getName(), baseList);
                   //Now take the modelgroup for the type in question
-                  XSParticle xspar = (XSParticle)xparts.item(len-1);
+                  XSParticle xspar = (XSParticle)xparts.item(len - 1);
                   XSTerm xsparTerm = xspar.getTerm();
-                  if(xsparTerm instanceof XSModelGroup)
+                  if (xsparTerm instanceof XSModelGroup)
                   {
                      XSModelGroup xsmodelgrp = (XSModelGroup)xspar.getTerm();
                      vars.addAll(createVARsforXSModelGroup(xsmodelgrp, schema, type));
@@ -382,24 +368,20 @@ public class XSDTypeToJava
                }
                XSParticle xspar = (XSParticle)xparts.item(i);
                XSTerm xsparTerm = xspar.getTerm();
-               if(xsparTerm instanceof XSModelGroup)
+               if (xsparTerm instanceof XSModelGroup)
                {
                   XSModelGroup xsmodelgrp = (XSModelGroup)xspar.getTerm();
                   vars.addAll(createVARsforXSModelGroup(xsmodelgrp, schema, type));
                }
-               else
-                  if(xsparTerm instanceof XSElementDeclaration)
-                     vars.addAll(createVARforXSElementDeclaration(xsparTerm,
-                           schemautils.isArrayType(xspar) , schema, type) );
+               else if (xsparTerm instanceof XSElementDeclaration)
+                  vars.addAll(createVARforXSElementDeclaration(xsparTerm, schemautils.isArrayType(xspar), schema, type));
             }
-         }else
-            if(xsterm instanceof XSElementDeclaration)
-            {
-               vars.addAll(createVARforXSElementDeclaration(xsterm,
-                     schemautils.isArrayType(xsparticle) , schema, type) );
-            }
-            else
-               throw new WSException("Unhandled Type");
+         }
+         else if (xsterm instanceof XSElementDeclaration)
+         {
+            vars.addAll(createVARforXSElementDeclaration(xsterm, schemautils.isArrayType(xsparticle), schema, type));
+         }
+         else throw new WSException("Unhandled Type");
       }
 
    }
@@ -417,15 +399,15 @@ public class XSDTypeToJava
             XSSimpleTypeDefinition xstype = att.getTypeDefinition();
             QName qn = SchemaUtils.handleSimpleType(xstype);
             VAR v = createVAR(qn, att.getName(), pkgname);
-            if (vars == null) vars = new ArrayList();
+            if (vars == null)
+               vars = new ArrayList();
             vars.add(v);
          }
       }
       return vars;
    }
 
-   private List createVARsforXSParticle(XSComplexTypeDefinition type, XSModel schema)
-   throws IOException
+   private List createVARsforXSParticle(XSComplexTypeDefinition type, XSModel schema) throws IOException
    {
       List<VAR> list = new ArrayList<VAR>();
       XSParticle xsparticle = type.getParticle();
@@ -448,11 +430,9 @@ public class XSDTypeToJava
       return list;
    }
 
-   private List<VAR> createVARsforXSModelGroup(XSModelGroup xsm, XSModel schema,
-         XSComplexTypeDefinition origType)
-      throws IOException
+   private List<VAR> createVARsforXSModelGroup(XSModelGroup xsm, XSModel schema, XSComplexTypeDefinition origType) throws IOException
    {
-      List<VAR>  vars = new ArrayList<VAR>();
+      List<VAR> vars = new ArrayList<VAR>();
       short compositor = xsm.getCompositor();
 
       if (XSModelGroup.COMPOSITOR_SEQUENCE == compositor)
@@ -467,19 +447,17 @@ public class XSDTypeToJava
 
             if (term instanceof XSElementDeclaration)
             {
-               vars.addAll(createVARforXSElementDeclaration(term,
-                  schemautils.isArrayType(xsparticle) , schema, origType) );
+               vars.addAll(createVARforXSElementDeclaration(term, schemautils.isArrayType(xsparticle), schema, origType));
             }
             else if (term instanceof XSModelGroup)
             {
-               vars.addAll(createVARsforXSModelGroup((XSModelGroup) term, schema, origType));
+               vars.addAll(createVARsforXSModelGroup((XSModelGroup)term, schema, origType));
             }
          }
       }
 
       return vars;
    }
-
 
    private VAR createVAR(QName qn, String varstr, String pkgname)
    {
@@ -503,42 +481,35 @@ public class XSDTypeToJava
       return v;
    }
 
-   private List createVARsForElements(XSObjectList xsobjlist,
-         XSModel schema ,
-         XSComplexTypeDefinition origType)
-   throws IOException
+   private List createVARsForElements(XSObjectList xsobjlist, XSModel schema, XSComplexTypeDefinition origType) throws IOException
    {
-      List<VAR> list =  new ArrayList<VAR>();
+      List<VAR> list = new ArrayList<VAR>();
       int len = xsobjlist.getLength();
       for (int i = 0; i < len; i++)
       {
          XSParticle xsparticle = (XSParticle)xsobjlist.item(i);
          XSTerm xsterm = xsparticle.getTerm();
 
-         list.addAll(createVARforXSElementDeclaration(xsterm,
-               schemautils.isArrayType(xsparticle), schema, origType) );
+         list.addAll(createVARforXSElementDeclaration(xsterm, schemautils.isArrayType(xsparticle), schema, origType));
          continue;
       }
 
       return list;
    }
 
-
-   private List createVARforXSElementDeclaration(XSTerm xsterm,
-         boolean arrayType,  XSModel schema, XSComplexTypeDefinition origType)
-   throws IOException
+   private List createVARforXSElementDeclaration(XSTerm xsterm, boolean arrayType, XSModel schema, XSComplexTypeDefinition origType) throws IOException
    {
-      List <VAR> vars = new ArrayList<VAR>();
+      List<VAR> vars = new ArrayList<VAR>();
       // Handle xsd:any elements
       if (xsterm instanceof XSWildcard)
       {
          XSWildcard xsw = (XSWildcard)xsterm;
-//         if (xsw.getConstraintType() == XSWildcard.NSCONSTRAINT_ANY)
-//         {
-            VAR v = new VAR("_any", "javax.xml.soap.SOAPElement", arrayType);
-            vars.add(v);
-            return vars;
-//         }
+         //         if (xsw.getConstraintType() == XSWildcard.NSCONSTRAINT_ANY)
+         //         {
+         VAR v = new VAR("_any", "javax.xml.soap.SOAPElement", arrayType);
+         vars.add(v);
+         return vars;
+         //         }
       }
 
       // Handle xsd:group
@@ -550,8 +521,6 @@ public class XSDTypeToJava
 
       XSElementDeclaration elem = (XSElementDeclaration)xsterm;
 
-
-
       //    TODO: Check if the element contains any anon complex type
       //    TODO: If yes, create class that is ComplexTypeName+ElementName
       //    TODO: ItemsItem  If the elem contains anon simpletype
@@ -562,86 +531,88 @@ public class XSDTypeToJava
 
       String xstypename = xstypedef.getName();
       // Check if it is a composite type
-      if(xstypename != null && xstypedef.getName().equals(origType.getName())
-            && xstypedef.getNamespace().equals(origType.getNamespace()))
+      if (xstypename != null && xstypedef.getName().equals(origType.getName()) && xstypedef.getNamespace().equals(origType.getNamespace()))
       {
          // it is a composite type
-         QName qn = new QName(origType.getNamespace(),origType.getName());
+         QName qn = new QName(origType.getNamespace(), origType.getName());
          VAR vr = createVAR(qn, elem, (XSComplexTypeDefinition)xstypedef, tname, pkgname, arrayType);
          vars.add(vr);
          return vars;
       }
       else
 
-         if (xstypename == null && xstypedef instanceof XSComplexTypeDefinition)
-         {
-            XSComplexTypeDefinition xsc = (XSComplexTypeDefinition)xstypedef;
-            String subname = utils.firstLetterUpperCase(tname);
-            // Save the fname in a temp var
-            String tempfname = this.fname;
-            // it will be an anonymous type
-            String anonName = fname + subname;
-            this.fname = anonName;
-            this.createJavaFile((XSComplexTypeDefinition)xstypedef, schema, false);
+      if (xstypename == null && xstypedef instanceof XSComplexTypeDefinition)
+      {
+         XSComplexTypeDefinition xsc = (XSComplexTypeDefinition)xstypedef;
+         String subname = utils.firstLetterUpperCase(tname);
+         // Save the fname in a temp var
+         String tempfname = this.fname;
+         // it will be an anonymous type
+         if (containingElement == null || containingElement.length() == 0)
+            containingElement = origType.getName();
 
-            // Restore the fname
-            this.fname = tempfname;
-            // Bypass rest of processing
-            QName anonqn = new QName(anonName);
-            VAR vr = createVAR(anonqn, elem, xsc, tname, pkgname, arrayType);
-            vars.add(vr);
-            return vars;
+         String anonName = containingElement + subname;
+         anonName = utils.firstLetterUpperCase(anonName);
+         this.fname = anonName;
+         this.createJavaFile((XSComplexTypeDefinition)xstypedef, schema, false);
+
+         // Restore the fname
+         this.fname = tempfname;
+         // Bypass rest of processing
+         QName anonqn = new QName(anonName);
+         VAR vr = createVAR(anonqn, elem, xsc, tname, pkgname, arrayType);
+         vars.add(vr);
+         return vars;
+      }
+      else
+      {
+         // Unwrap any array wrappers
+         if (SchemaUtils.isWrapperArrayType(xstypedef))
+         {
+            XSComplexTypeDefinition complex = (XSComplexTypeDefinition)xstypedef;
+            XSModelGroup group = (XSModelGroup)complex.getParticle().getTerm();
+            XSElementDeclaration element = (XSElementDeclaration)((XSParticle)group.getParticles().item(0)).getTerm();
+            xstypedef = element.getTypeDefinition();
+            xstypename = xstypedef.getName();
+            arrayType = true;
+         }
+
+         QName qn = null;
+         if (xstypedef instanceof XSSimpleTypeDefinition)
+         {
+            qn = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xstypedef);
          }
          else
          {
-            // Unwrap any array wrappers
-            if (SchemaUtils.isWrapperArrayType(xstypedef))
-            {
-               XSComplexTypeDefinition complex = (XSComplexTypeDefinition) xstypedef;
-               XSModelGroup group = (XSModelGroup) complex.getParticle().getTerm();
-               XSElementDeclaration element = (XSElementDeclaration) ((XSParticle)group.getParticles().item(0)).getTerm();
-               xstypedef = element.getTypeDefinition();
-               xstypename = xstypedef.getName();
-               arrayType = true;
-            }
-
-            QName qn = null;
-            if (xstypedef instanceof XSSimpleTypeDefinition)
-            {
-               qn = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xstypedef);
-            }
-            else
-            {
-               qn = new QName(xstypedef.getNamespace(), xstypename);
-            }
-
-            String temp = this.fname;
-
-            if (xstypename != null && xstypedef instanceof XSComplexTypeDefinition)
-            {
-               this.fname = utils.firstLetterUpperCase(xstypename);
-               if (! generatedFiles.contains(this.fname))
-               {
-                  generatedFiles.add(this.fname);
-                  this.createJavaFile((XSComplexTypeDefinition)xstypedef, schema, false);
-               }
-               this.fname = temp;
-            }
-
-            VAR v = createVAR( qn , elem, xstypedef, tname, pkgname, arrayType);
-            vars.add(v);
+            qn = new QName(xstypedef.getNamespace(), xstypename);
          }
+
+         String temp = this.fname;
+
+         if (xstypename != null && xstypedef instanceof XSComplexTypeDefinition)
+         {
+            this.fname = utils.firstLetterUpperCase(xstypename);
+            if (!generatedFiles.contains(this.fname))
+            {
+               generatedFiles.add(this.fname);
+               this.createJavaFile((XSComplexTypeDefinition)xstypedef, schema, false);
+            }
+            this.fname = temp;
+         }
+
+         VAR v = createVAR(qn, elem, xstypedef, tname, pkgname, arrayType);
+         vars.add(v);
+      }
       return vars;
    }
 
-
-   private VAR createVAR(QName qn, XSElementDeclaration elem,
-                         XSTypeDefinition t, String varstr, String pkgname, boolean arrayType)
+   private VAR createVAR(QName qn, XSElementDeclaration elem, XSTypeDefinition t, String varstr, String pkgname, boolean arrayType)
    {
       if (t instanceof XSSimpleTypeDefinition)
       {
          QName tempqn = schemautils.handleSimpleType((XSSimpleTypeDefinition)t);
-         if (tempqn != null) qn = tempqn;
+         if (tempqn != null)
+            qn = tempqn;
       }
       String clname = "";
       Class cls = typeMapping.getJavaType(qn);
@@ -650,7 +621,7 @@ public class XSDTypeToJava
       {
          clname = JavaUtils.getSourceName(cls);
          String primitive = utils.getPrimitive(clname);
-         if ((! elem.getNillable()) && primitive != null)
+         if ((!elem.getNillable()) && primitive != null)
             clname = primitive;
       }
       else
@@ -659,8 +630,7 @@ public class XSDTypeToJava
 
          if (t.getName() == null)
             typename = qn;
-         else
-            typename = new QName(t.getName());
+         else typename = new QName(t.getName());
          if (typename != null)
          {
             String nsuri = typename.getNamespaceURI();
@@ -668,7 +638,8 @@ public class XSDTypeToJava
                clname = pkgname + ".";
             clname += typename.getLocalPart();
          }
-         else if (qn != null) clname = qn.getLocalPart();
+         else if (qn != null)
+            clname = qn.getLocalPart();
       }
 
       v = new VAR(Introspector.decapitalize(varstr), clname, arrayType);
@@ -687,8 +658,7 @@ public class XSDTypeToJava
          //Check baseType is xsd:anyType
          if (baseType != null)
          {
-            if (baseType.getNamespace() == Constants.NS_SCHEMA_XSD &&
-               baseType.getName().equals("anyType"))
+            if (baseType.getNamespace() == Constants.NS_SCHEMA_XSD && baseType.getName().equals("anyType"))
                baseType = null; //Ignore this baseType
          }
          if (XSComplexTypeDefinition.CONTENTTYPE_SIMPLE == t.getContentType())
@@ -697,7 +667,7 @@ public class XSDTypeToJava
          }
       }
 
-      if(baseName == null && baseType != null)
+      if (baseName == null && baseType != null)
          baseName = baseType.getName();
 
       return baseName;

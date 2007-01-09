@@ -84,11 +84,6 @@ public class MappingFileGenerator
    protected Class serviceEndpointInterface = null;
 
    /**
-    * Server side generation - user can provide a type Namespace
-    */
-   protected String typeNamespace;
-
-   /**
     * Type Mapping that is input from outside
     */
    protected LiteralTypeMapping typeMapping = null;
@@ -145,17 +140,6 @@ public class MappingFileGenerator
       this.serviceName = serviceName;
    }
 
-   /**
-    * The user may have generated the types in a different namespace
-    * aka typeNamespace in comparison to the wsdl targetNamespace
-    *
-    * @param typeNamespace
-    */
-   public void setTypeNamespace(String typeNamespace)
-   {
-      this.typeNamespace = typeNamespace;
-   }
-
    public void setParameterStyle(String paramStyle)
    {
       this.parameterStyle = paramStyle;
@@ -172,17 +156,9 @@ public class MappingFileGenerator
     */
    public JavaWsdlMapping generate() throws IOException
    {
-      MappingFileGeneratorHelper helper = new MappingFileGeneratorHelper(wsdlDefinitions, serviceName, packageName, serviceEndpointInterface,
-            typeNamespace, typeMapping, parameterStyle);
-      String targetNS = wsdlDefinitions.getTargetNamespace();
-      if (typeNamespace == null)
-         typeNamespace = targetNS;
+      MappingFileGeneratorHelper helper = new MappingFileGeneratorHelper(this.wsdlDefinitions, this.serviceName, this.packageName, this.serviceEndpointInterface,
+            this.typeMapping, this.parameterStyle);
       JavaWsdlMapping jwm = new JavaWsdlMapping();
-      //Construct package mapping
-      //Check if the user has provided a typeNamespace
-      if (typeNamespace != null && typeNamespace.equals(targetNS) == false || isServerSideGeneration())
-         jwm.addPackageMapping(helper.constructPackageMapping(jwm, packageName, typeNamespace));
-      jwm.addPackageMapping(helper.constructPackageMapping(jwm, packageName, targetNS));
 
       //If the schema has types, we will need to generate the java/xml type mapping
       helper.constructJavaXmlTypeMapping(jwm);
@@ -196,6 +172,19 @@ public class MappingFileGenerator
          jwm.addServiceInterfaceMappings(helper.constructServiceInterfaceMapping(jwm, wsdlService));
          helper.constructServiceEndpointInterfaceMapping(jwm, wsdlService);
       }
+
+      // Add package to namespace mapping after helper has generated the rest of the file.
+      String targetNS = wsdlDefinitions.getTargetNamespace();
+      String typeNamespace = helper.getTypeNamespace();
+      if (typeNamespace == null)
+         typeNamespace = targetNS;
+
+      //Construct package mapping
+      //Check if the user has provided a typeNamespace
+      if (typeNamespace != null && typeNamespace.equals(targetNS) == false || isServerSideGeneration())
+         jwm.addPackageMapping(helper.constructPackageMapping(jwm, packageName, typeNamespace));
+      jwm.addPackageMapping(helper.constructPackageMapping(jwm, packageName, targetNS));
+
       return jwm;
    }
 
@@ -219,7 +208,7 @@ public class MappingFileGenerator
          MethodParamPartsMapping[] mppmarr = mm.getMethodParamPartsMappings();
          int lenmppmarr = mppmarr != null ? mppmarr.length : 0;
          for (int j = 0; j < lenmppmarr; j++)
-         {            
+         {
             listInputs.addAll(xst.getVARList((XSComplexTypeDefinition)xsmodel.getTypeDefinition(opname, typeNamespace), xsmodel, false));
          }
          JavaWriter jw = new JavaWriter();
