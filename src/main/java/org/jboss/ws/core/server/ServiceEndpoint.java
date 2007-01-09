@@ -191,7 +191,7 @@ public class ServiceEndpoint
          {
             SOAPEnvelope soapEnv = reqMessage.getSOAPPart().getEnvelope();
             String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, true);
-            msgLog.trace("Incomming SOAPMessage\n" + envStr);
+            msgLog.trace("Incoming SOAPMessage\n" + envStr);
          }
 
          // Set the thread context class loader
