@@ -35,6 +35,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
+import org.jboss.ws.core.jaxws.WebServiceContextInjector;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -88,7 +89,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
       {
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext instanceof SOAPMessageContextJAXWS)
-            MessageContextInjector.injectMessageContext(seiImpl, (SOAPMessageContextJAXWS)msgContext);
+            WebServiceContextInjector.injectContext(seiImpl, (SOAPMessageContextJAXWS)msgContext);
          
          Class implClass = seiImpl.getClass();
          Method seiMethod = epInv.getJavaMethod();

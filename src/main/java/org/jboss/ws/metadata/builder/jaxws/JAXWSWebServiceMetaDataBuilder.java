@@ -997,7 +997,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          processOrGenerateWSDL(seiClass, serviceMetaData, result.wsdlLocation, sepMetaData);
 
          // process config name and config file amongst others
-         processPortComponent(udi, seiClass, linkName, sepMetaData);
+         // Note, that @PortComponent needs to be defined on the endpoint not the SEI
+         processPortComponent(udi, sepClass, linkName, sepMetaData);
 
          // setup handler chain from config
          sepMetaData.configure(sepMetaData);

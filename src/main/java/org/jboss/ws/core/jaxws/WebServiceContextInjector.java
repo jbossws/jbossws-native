@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.jaxws;
 
 // $Id$
 
@@ -39,15 +39,14 @@ import org.jboss.ws.core.jaxws.WebServiceContextImpl;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jan-2006
  */
-public class MessageContextInjector
+public class WebServiceContextInjector
 {
    // provide logging
-   private static Logger log = Logger.getLogger(MessageContextInjector.class);
+   private static Logger log = Logger.getLogger(WebServiceContextInjector.class);
 
-   public static void injectMessageContext(Object epImpl, MessageContext msgContext)
+   public static void injectContext(Object epImpl, MessageContext msgContext)
    {
       WebServiceContextImpl webServiceContext = new WebServiceContextImpl(msgContext);
-
       try
       {
          // scan fields that are marked with @Resource

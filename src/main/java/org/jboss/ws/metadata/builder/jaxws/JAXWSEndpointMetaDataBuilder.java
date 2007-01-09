@@ -79,7 +79,7 @@ public abstract class JAXWSEndpointMetaDataBuilder extends JAXWSMetaDataBuilder
          sepMetaData.setConfigFile(configFile);
       }
 
-      boolean isJSEEndpoint = udi.type == DeploymentType.JAXWS_JSE;
+      boolean isJSEEndpoint = (udi.type == DeploymentType.JAXWS_JSE);
 
       // context-root
       if (anPortComponent.contextRoot().length() > 0)
