@@ -579,9 +579,9 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          String fieldname = prop.getName();
          Class fieldType = prop.getPropertyType();
 
-         if (prop instanceof IndexedPropertyDescriptor)
+         if (prop instanceof IndexedPropertyDescriptor && fieldType==null)
          {
-        	 log.warn("Indexed Properties are not supported skipping: " + javaType.getName() + "." + fieldname);
+        	 log.warn("Indexed Properties without non-indexed accessors are not supported skipping: " + javaType.getName() + "." + fieldname);
         	 continue;
          }
 
