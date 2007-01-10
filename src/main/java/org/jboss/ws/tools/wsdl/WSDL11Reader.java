@@ -844,7 +844,7 @@ public class WSDL11Reader
 
          processBindingOperations(srcWsdl, destBinding, srcBinding, bindingStyle);
       }
-      
+
       return true;
    }
 
@@ -1051,25 +1051,27 @@ public class WSDL11Reader
                   Part srcPart = (Part)itParts.next();
                   String partName = srcPart.getName();
                   if (partName.equals(headerPartName))
+                  {
                      isImplicitHeader = true;
+                     elementName = srcPart.getElementName();
+                  }
                }
             }
 
-            if (elementName == null && isImplicitHeader == false)
+            if (elementName == null)
                throw new WSException("Could not determine element name from header: " + key);
 
-            if (elementName != null)
+            WSDLSOAPHeader soapHeader = new WSDLSOAPHeader(elementName, headerPartName);
+            soapHeader.setIncludeInSignature(!isImplicitHeader);
+            reference.addSoapHeader(soapHeader);
+            if (Constants.URI_STYLE_IRI == destIntfOperation.getStyle())
             {
-               reference.addSoapHeader(new WSDLSOAPHeader(elementName, headerPartName));
-               if (Constants.URI_STYLE_IRI == destIntfOperation.getStyle())
-               {
-                  callback.removeReference(elementName);
-               }
-               else
-               {
-                  // Just in case
-                  callback.removeRPCPart(headerPartName);
-               }
+               callback.removeReference(elementName);
+            }
+            else
+            {
+               // Just in case
+               callback.removeRPCPart(headerPartName);
             }
          }
          else if (extElement instanceof MIMEMultipartRelated)

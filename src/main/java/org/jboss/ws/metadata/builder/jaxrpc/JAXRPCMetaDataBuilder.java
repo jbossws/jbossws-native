@@ -222,23 +222,33 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       }
    }
 
-   private ParameterMetaData buildInputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, String partName, QName xmlName, QName xmlType, int pos)
+   private ParameterMetaData buildInputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, String partName, QName xmlName, QName xmlType, int pos, boolean optional)
    {
       WSDLRPCSignatureItem item = wsdlOperation.getRpcSignatureitem(partName);
       if (item != null)
          pos = item.getPosition();
 
       String javaTypeName = typeMapping.getJavaTypeName(xmlType);
+      boolean mapped = false;
       if (seiMethodMapping != null)
       {
          MethodParamPartsMapping paramMapping = seiMethodMapping.getMethodParamPartsMappingByPartName(partName);
-         if (paramMapping == null)
+         if (paramMapping != null)
+         {
+            javaTypeName = paramMapping.getParamType();
+            pos = paramMapping.getParamPosition();
+            mapped = true;
+         }
+         else if (!optional)
+         {
             throw new WSException("Cannot obtain method parameter mapping for message part '" + partName + "' in wsdl operation: "
                   + seiMethodMapping.getWsdlOperation());
-
-         javaTypeName = paramMapping.getParamType();
-         pos = paramMapping.getParamPosition();
+         }
       }
+
+      // For now we ignore unlisted headers with no mapping information
+      if (!mapped && optional)
+         return null;
 
       JavaWsdlMapping javaWsdlMapping = opMetaData.getEndpointMetaData().getServiceMetaData().getJavaWsdlMapping();
       if (javaTypeName == null && javaWsdlMapping != null)
@@ -274,7 +284,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       return inMetaData;
    }
 
-   private ParameterMetaData buildOutputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, int pos, String partName, QName xmlName, QName xmlType, TypeMappingImpl typeMapping)
+   private ParameterMetaData buildOutputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, int pos, String partName, QName xmlName, QName xmlType, TypeMappingImpl typeMapping, boolean optional)
    {
       // Default is first listed output
       boolean hasReturnMapping = opMetaData.getReturnParameter() == null;
@@ -287,6 +297,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       }
 
       String javaTypeName = typeMapping.getJavaTypeName(xmlType);
+
+      boolean mapped = false;
       if (seiMethodMapping != null)
       {
          MethodParamPartsMapping paramMapping = seiMethodMapping.getMethodParamPartsMappingByPartName(partName);
@@ -295,18 +307,27 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             javaTypeName = paramMapping.getParamType();
             pos = paramMapping.getParamPosition();
             hasReturnMapping = false;
+            mapped = true;
          }
          else
          {
             WsdlReturnValueMapping returnMapping = seiMethodMapping.getWsdlReturnValueMapping();
-            String mappingPart = returnMapping.getWsdlMessagePartName();
-            if (returnMapping != null && mappingPart != null && partName.equals(mappingPart));
+            if (returnMapping != null)
             {
-               javaTypeName = returnMapping.getMethodReturnValue();
-               hasReturnMapping = true;
+               String mappingPart = returnMapping.getWsdlMessagePartName();
+               if (mappingPart != null && partName.equals(mappingPart))
+               {
+                  javaTypeName = returnMapping.getMethodReturnValue();
+                  hasReturnMapping = true;
+                  mapped = true;
+               }
             }
          }
       }
+
+      // For now we ignore unlisted headers with no mapping information
+      if (!mapped && optional)
+         return null;
 
       JavaWsdlMapping javaWsdlMapping = opMetaData.getEndpointMetaData().getServiceMetaData().getJavaWsdlMapping();
       if (javaTypeName == null && javaWsdlMapping != null)
@@ -360,8 +381,9 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          QName xmlType = lookupSchemaType(wsdlOperation, xmlName);
          String partName = header.getPartName();
 
-         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++);
-         pmd.setInHeader(true);
+         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, !header.isIncludeInSignature());
+         if (pmd != null)
+            pmd.setInHeader(true);
       }
 
       for (WSDLMIMEPart mimePart : bindingInput.getMimeParts())
@@ -370,7 +392,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          QName xmlName = new QName(partName);
          QName xmlType = mimePart.getXmlType();
 
-         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++);
+         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, false);
          pmd.setSwA(true);
          pmd.setMimeTypes(mimePart.getMimeTypes());
       }
@@ -395,11 +417,13 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          {
             QName xmlType = lookupSchemaType(wsdlOperation, xmlName);
 
-            ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping);
-            pmd.setInHeader(true);
-
-            if (opMetaData.getReturnParameter() != pmd)
-               wsdlPosition++;
+            ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping, !header.isIncludeInSignature());
+            if (pmd != null)
+            {
+               pmd.setInHeader(true);
+               if (opMetaData.getReturnParameter() != pmd)
+                  wsdlPosition++;
+            }
          }
       }
 
@@ -417,7 +441,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          {
             QName xmlType = mimePart.getXmlType();
 
-            ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping);
+            ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping, false);
             pmd.setSwA(true);
             pmd.setMimeTypes(mimePart.getMimeTypes());
 
@@ -523,7 +547,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          String partName = part.getName();
          QName xmlName = new QName(partName);
 
-         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++);
+         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, false);
 
          setupXOPAttachmentParameter(wsdlOperation, pmd);
          setupSOAPArrayParameter(pmd);
@@ -549,7 +573,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                QName xmlName = new QName(partName);
                QName xmlType = part.getType();
 
-               ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping);
+               ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping, false);
                if (opMetaData.getReturnParameter() != pmd)
                   wsdlPosition++;
 
@@ -607,6 +631,9 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          for (MethodParamPartsMapping partMapping : seiMethodMapping.getMethodParamPartsMappings())
          {
             WsdlMessageMapping wsdlMessageMapping = partMapping.getWsdlMessageMapping();
+            if (wsdlMessageMapping.isSoapHeader())
+               continue;
+
             if (wsdlMessageMapping == null)
                throw new IllegalArgumentException("wsdl-message-message mapping required for document/literal wrapped");
 
@@ -663,7 +690,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             List<String> anyTypes = new ArrayList<String>();
             anyTypes.add("javax.xml.soap.SOAPElement");
             anyTypes.add("org.w3c.dom.Element");
-            
+
             boolean matchingPartFound = false;
             for (MethodParamPartsMapping partsMapping : partsMappings)
             {
