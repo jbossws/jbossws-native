@@ -310,7 +310,18 @@ public class XSDTypeToJava
                   return;
             }
 
-            XSParticle xspar = (XSParticle)xparts.item(length - 1);
+            XSParticle xspar;
+
+            if (baseType instanceof XSComplexTypeDefinition && ((XSComplexTypeDefinition)baseType).getContentType() == XSComplexTypeDefinition.CONTENTTYPE_EMPTY)
+            {
+               // If the base type is empty there will not have been a particle to ignore.
+               xspar = xsparticle;
+            }
+            else
+            {
+               xspar = (XSParticle)xparts.item(length - 1);
+            }
+
             XSTerm xsparTerm = xspar.getTerm();
             if (xsparTerm instanceof XSModelGroup)
             {
@@ -319,6 +330,7 @@ public class XSDTypeToJava
             }
             else if (xsparTerm instanceof XSElementDeclaration)
                vars.addAll(createVARforXSElementDeclaration(xsparTerm, schemautils.isArrayType(xspar), schema, type));
+
          }
       }
    }
