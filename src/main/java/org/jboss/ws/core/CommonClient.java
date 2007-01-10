@@ -331,9 +331,10 @@ public abstract class CommonClient
                log.debug("Handler modified body payload, unbind message again");
                SOAPMessage resMessage = msgContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
+
+               retObj = syncOutputParams(inputParams, epInv);
             }
             
-            retObj = syncOutputParams(inputParams, epInv);
          }
 
          return retObj;

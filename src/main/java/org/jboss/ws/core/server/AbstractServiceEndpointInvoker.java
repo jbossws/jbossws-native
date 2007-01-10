@@ -175,7 +175,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
             // Set the outbound property
             if (epMetaData.getType() == EndpointMetaData.Type.JAXWS)
-               msgContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, new Boolean(true));
+               msgContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
 
             if(binding instanceof CommonSOAPBinding)
                XOPContext.setMTOMEnabled( ((CommonSOAPBinding)binding).isMTOMEnabled());

@@ -230,7 +230,7 @@ public class ParameterWrapping
                {
                   Class targetType = targetTypes[param.getIndex()];
                   if (HolderUtils.isHolderType(targetType))
-                     value = HolderUtils.createHolderInstance(value, targetType);
+                    HolderUtils.setHolderValue(methodParams[param.getIndex()], value);
                   methodParams[param.getIndex()] = value;
                }
             }

@@ -80,6 +80,6 @@ public class WebServiceRefDeployer
       if (sref.getWsdlLocation() == null && wsref.wsdlLocation().length() > 0)
          sref.setWsdlLocation(wsref.wsdlLocation());
       
-      Util.bind(ctx, jndiName, new ServiceReferenceable(serviceTypeName, portTypeName, sref));
+      Util.rebind(ctx, jndiName, new ServiceReferenceable(serviceTypeName, portTypeName, sref));
    }
 }

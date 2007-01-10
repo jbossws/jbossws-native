@@ -337,7 +337,7 @@ public class EndpointInvocation
          {
             try
             {
-               if (param.getIndex() >= 0)
+               if (param.getIndex() >= 0 && !outParameters.containsKey(param.getIndex()) )
                   outParameters.put(param.getIndex(), targetParameterTypes[param.getIndex()].newInstance());
             }
             catch (Exception e)
