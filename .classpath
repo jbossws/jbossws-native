@@ -17,7 +17,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-remoting.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-security-spi.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-xml-binding.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/mailapi.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/wsdl4j.jar" sourcepath="/build/thirdparty/wsdl4j-1_5_2.zip"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xmlsec.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>
@@ -30,5 +29,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/wstx-lgpl-2.0.6.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xalan.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/mail.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>
