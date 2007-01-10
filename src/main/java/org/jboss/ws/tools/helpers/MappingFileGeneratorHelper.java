@@ -234,17 +234,20 @@ public class MappingFileGeneratorHelper
          QName xmlType = win.getXMLType();
          String partName = win.getPartName();
          String wsdlMessageName = win.getMessageName().getLocalPart();
+         XSTypeDefinition xt = schemaModel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
 
          boolean wrapped = isWrapped();
 
          if (wrapped)
          {
-            XSTypeDefinition xt = schemaModel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
             wrapped = unwrapRequest(semm, wsdlMessageName, xmlName.getLocalPart(), xt);
          }
 
          if (wrapped == false)
          {
+            if (xt instanceof XSSimpleTypeDefinition)
+               xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
+
             mpin = getMethodParamPartsMapping(semm, xmlName, xmlType, paramPosition, wsdlMessageName, "IN", partName, false, true);
             semm.addMethodParamPartsMapping(mpin);
          }
@@ -331,6 +334,7 @@ public class MappingFileGeneratorHelper
       if (win == null)
          throw new WSException("RPC endpoints require an input message");
       String wsdlMessageName = win.getMessageName().getLocalPart();
+      JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
 
       RPCSignature signature = new RPCSignature(wiop);
       int i = 0;
@@ -339,6 +343,10 @@ public class MappingFileGeneratorHelper
          String partName = part.getName();
          QName xmlName = new QName(partName);
          QName xmlType = part.getType();
+
+         XSTypeDefinition xt = schemaModel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
+         if (xt instanceof XSSimpleTypeDefinition)
+            xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
 
          MethodParamPartsMapping mpin = getMethodParamPartsMapping(semm, xmlName, xmlType, i++, wsdlMessageName, getMode(wiop, part.getName()), partName, false, true);
 
@@ -351,6 +359,10 @@ public class MappingFileGeneratorHelper
          String partName = returnParameter.getName();
          QName xmlName = new QName(partName);
          QName xmlType = returnParameter.getType();
+
+         XSTypeDefinition xt = schemaModel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
+         if (xt instanceof XSSimpleTypeDefinition)
+            xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
 
          WsdlReturnValueMapping wrvm = new WsdlReturnValueMapping(semm);
          wrvm.setMethodReturnValue(getJavaTypeAsString(xmlName, xmlType, false, true));
