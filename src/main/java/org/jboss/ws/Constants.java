@@ -100,7 +100,7 @@ public interface Constants
    static final String URI_LITERAL_ENC = "";
    /** WSDL 2.0 Encoding Rules */
    static final String URI_STYLE_RPC = "http://www.w3.org/2004/03/wsdl/style/rpc";
-   static final String URI_STYLE_IRI = "http://www.w3.org/2004/03/wsdl/style/iri"; //represents doc
+   static final String URI_STYLE_DOCUMENT = "http://www.w3.org/2004/03/wsdl/style/iri"; 
    /**Style of WSDL */
    static final String RPC_LITERAL = "RPC/Literal";
    static final String DOCUMENT_LITERAL = "Document/Literal";
@@ -261,8 +261,8 @@ public interface Constants
 
    /** The key to the original message part name */
    static final String WSDL_PROPERTY_PART_NAME = "http://www.jboss.org/jbossws/partname";
-   /** The key to the message part type in case a part does not reference an element; http://www.jboss.org/jbossws/rpc/xmltype */
-   static final String WSDL_PROPERTY_RPC_XMLTYPE = "http://www.jboss.org/jbossws/rpc/xmltype";
+   /** The key to the message part type in case a part does not reference an element; http://www.jboss.org/jbossws/part/xmltype */
+   static final String WSDL_PROPERTY_PART_XMLTYPE = "http://www.jboss.org/jbossws/part/xmltype";
    /** Used as WSDL 2.0 property string to provide support for WSDL 1.1 mime types */
    static final String WSDL_PROPERTY_WSDL11_MIME_TYPE = NS_ATTACHMENT_MIME_TYPE;
    /** Indicate that the operation has zero arguments */

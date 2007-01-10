@@ -54,6 +54,8 @@ public class WSDLProperty implements Serializable
    /** A OPTIONAL type definition constraining the value of the property, or the token
     * #value if the {value} property is not empty.*/
    private QName constraint;
+   
+   private QName qnameValue;
 
    public WSDLProperty(String uri, String value)
    {
@@ -62,6 +64,15 @@ public class WSDLProperty implements Serializable
 
       this.uri = uri;
       this.value = value;
+   }
+
+   public WSDLProperty(String uri, QName value)
+   {
+      if (uri == null)
+         throw new IllegalArgumentException("Illegal property URI: " + uri);
+
+      this.uri = uri;
+      this.qnameValue = value;
    }
 
    public WSDLProperty(String uri, boolean required, String value, QName constraint)

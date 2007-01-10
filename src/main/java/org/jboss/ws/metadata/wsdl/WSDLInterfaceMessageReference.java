@@ -128,7 +128,7 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
       // Fall back to the property
       if (xmlType == null)
       {
-         WSDLProperty property = getProperty(Constants.WSDL_PROPERTY_RPC_XMLTYPE);
+         WSDLProperty property = getProperty(Constants.WSDL_PROPERTY_PART_XMLTYPE);
          if (property != null)
          {
             String qnameRef = property.getValue();

@@ -187,7 +187,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
          // Set the operation style
          String style = wsdlOperation.getStyle();
-         epMetaData.setStyle((Constants.URI_STYLE_IRI.equals(style) ? Style.DOCUMENT : Style.RPC));
+         epMetaData.setStyle((Constants.URI_STYLE_DOCUMENT.equals(style) ? Style.DOCUMENT : Style.RPC));
 
          // Set the operation MEP
          if (Constants.WSDL20_PATTERN_IN_ONLY.equals(wsdlOperation.getPattern()))

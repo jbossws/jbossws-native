@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="/build/thirdparty/javassist.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jaxb-impl.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/jboss-common-core.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-common-core.jar" sourcepath="/build/thirdparty/jboss-common-core-sources.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-container.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-j2ee.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-log4j.jar"/>
@@ -18,7 +18,7 @@
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-security-spi.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-xml-binding.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/mailapi.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/wsdl4j.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/wsdl4j.jar" sourcepath="/build/thirdparty/wsdl4j-1_5_2.zip"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xmlsec.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/ejb3.deployer/jboss-ejb3x.jar"/>

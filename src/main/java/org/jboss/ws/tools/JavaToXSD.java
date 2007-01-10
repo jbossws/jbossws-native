@@ -38,6 +38,7 @@ import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
@@ -172,12 +173,16 @@ public class JavaToXSD implements JavaToXSDIntf
             log.debug("Load schema: " + nsURI + "=" + url);
             XMLInputSource inputSource = new XMLInputSource(null, url.toExternalForm(), null);
             inputSource.setByteStream(new ResourceURL(url).openStream());
-            gs[index++] = (SchemaGrammar)loader.loadGrammar(inputSource);
+            SchemaGrammar grammar = (SchemaGrammar)loader.loadGrammar(inputSource);
+            gs[index++] = grammar;
+         }
+         catch (RuntimeException rte)
+         {
+            throw rte;
          }
          catch (Exception ex)
          {
-            log.error("Cannot parse schema", ex);
-            return null;
+            throw new IllegalStateException("Cannot parse schema", ex);
          }
       }
       XSModel xsmodel = new XSModelImpl(gs);

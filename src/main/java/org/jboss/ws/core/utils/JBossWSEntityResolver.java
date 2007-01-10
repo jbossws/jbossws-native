@@ -51,6 +51,10 @@ public class JBossWSEntityResolver extends JBossEntityResolver
       registerEntity("http://java.sun.com/xml/ns/javaee", "schema/javaee_web_services_1_2.xsd");
       registerEntity("http://www.w3.org/2005/08/addressing", "schema/ws-addr.xsd");
       registerEntity("http://schemas.xmlsoap.org/ws/2004/08/eventing", "eventing.xsd");
+      registerEntity("http://schemas.xmlsoap.org/soap/encoding/", "soap-encoding_1_1.xsd");
+      registerEntity("http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd", "j2ee_web_services_client_1_1.xsd");
+      registerEntity("http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd", "j2ee_web_services_1_1.xsd");
+      registerEntity("http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd", "j2ee_jaxrpc_mapping_1_1.xsd");
    }
 
    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
@@ -59,21 +63,23 @@ public class JBossWSEntityResolver extends JBossEntityResolver
       InputSource inputSource = super.resolveEntity(publicId, systemId);
 
       if (inputSource == null)
-      {
-         inputSource = resolveSystemIDasURL(systemId, log.isTraceEnabled());
-      }
-
+         inputSource = resolveSystemIDAsURL(systemId, log.isTraceEnabled());
+      
+      if (inputSource == null)
+         log.debug("Cannot resolve entity: [pub=" + publicId + ",sysid=" + systemId + "]");
+      
       return inputSource;
    }
 
-   /** This method should be protected in the super class. */
-   protected InputSource resolveSystemIDasURL(String systemId, boolean trace)
+   /** Use a ResourceURL to access the resource.
+    *  This method should be protected in the super class. */
+   protected InputSource resolveSystemIDAsURL(String id, boolean trace)
    {
-      if (systemId == null)
+      if (id == null)
          return null;
 
       if (trace)
-         log.trace("resolveSystemIDasURL, systemId=" + systemId);
+         log.trace("resolveIDAsResourceURL, id=" + id);
 
       InputSource inputSource = null;
 
@@ -81,37 +87,35 @@ public class JBossWSEntityResolver extends JBossEntityResolver
       try
       {
          if (trace)
-            log.trace("Trying to resolve systemId as a URL");
+            log.trace("Trying to resolve id as a URL");
 
-         URL url = new URL(systemId);
+         URL url = new URL(id);
          if (url.getProtocol().equalsIgnoreCase("file") == false)
-         {
-            log.warn("Trying to resolve systemId as a non-file URL: " + systemId);
-         }
+            log.warn("Trying to resolve id as a non-file URL: " + id);
 
          InputStream ins = new ResourceURL(url).openStream();
          if (ins != null)
          {
             inputSource = new InputSource(ins);
-            inputSource.setSystemId(systemId);
+            inputSource.setSystemId(id);
          }
          else
          {
-            log.warn("Cannot load systemId as URL: " + systemId);
+            log.warn("Cannot load id as URL: " + id);
          }
 
          if (trace)
-            log.trace("Resolved systemId as a URL");
+            log.trace("Resolved id as a URL");
       }
       catch (MalformedURLException ignored)
       {
          if (trace)
-            log.trace("SystemId is not a url: " + systemId, ignored);
+            log.trace("id is not a url: " + id, ignored);
       }
       catch (IOException e)
       {
          if (trace)
-            log.trace("Failed to obtain URL.InputStream from systemId: " + systemId, e);
+            log.trace("Failed to obtain URL.InputStream from id: " + id, e);
       }
       return inputSource;
    }

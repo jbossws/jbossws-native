@@ -1,30 +1,31 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLErrorHandler;
 import org.apache.xerces.xni.parser.XMLParseException;
 import org.jboss.logging.Logger;
+
 /**
  *  Error Handler for the Xerces schema parser default implementation
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
@@ -41,9 +42,9 @@ public class JBossXSErrorHandler implements XMLErrorHandler
     * @param exception - Exception.
     * @throws XNIException Thrown to signal that the parser should stop parsing the document.
     */
-   public void warning(String domain,  String key, XMLParseException xexp) throws XNIException
+   public void warning(String domain, String key, XMLParseException xexp) throws XNIException
    {
-      log.trace(getFormattedString(domain,key,xexp));
+      log.trace(getFormattedString(domain, key, xexp));
    }
 
    /**
@@ -53,11 +54,13 @@ public class JBossXSErrorHandler implements XMLErrorHandler
     * @param exception - Exception.
     * @throws XNIException Thrown to signal that the parser should stop parsing the document.
     */
-   public void error(String domain,  String key, XMLParseException xexp) throws XNIException
+   public void error(String domain, String key, XMLParseException xexp) throws XNIException
    {
-      if("src-include.2.1".equals(key))
-         throw new XNIException("Parser should stop:",xexp);
-      log.error(getFormattedString(domain,key,xexp));
+      if ("src-include.2.1".equals(key))
+         throw new XNIException("Parser should stop:", xexp);
+
+      String errorMsg = getFormattedString(domain, key, xexp);
+      log.error(errorMsg);
    }
 
    /**
@@ -68,25 +71,24 @@ public class JBossXSErrorHandler implements XMLErrorHandler
     * @param exception - Exception.
     * @throws XNIException Thrown to signal that the parser should stop parsing the document.
     */
-   public void fatalError(String domain,  String key, XMLParseException xexp) throws XNIException
+   public void fatalError(String domain, String key, XMLParseException xexp) throws XNIException
    {
-      log.fatal(getFormattedString(domain,key,xexp));
-      throw new XNIException("Parser should stop:",xexp);
+      String errorMsg = getFormattedString(domain, key, xexp);
+      log.error(errorMsg);
+      throw new XNIException("Parser should stop: " + errorMsg, xexp);
    }
 
    /**
     * Get the name of the schema file in question
-    *
-    * @param xexp
-    * @return
     */
    private String getFileName(XMLParseException xexp)
    {
       String fname = xexp.getExpandedSystemId();
-      if (fname != null) {
-          int index = fname.lastIndexOf('/');
-          if (index != -1)
-             fname = fname.substring(index + 1);
+      if (fname != null)
+      {
+         int index = fname.lastIndexOf('/');
+         if (index != -1)
+            fname = fname.substring(index + 1);
       }
       else
       {
@@ -99,12 +101,8 @@ public class JBossXSErrorHandler implements XMLErrorHandler
    /**
     * Return a formatted string that gives as much information
     * as possible to the user
-    * @param domain
-    * @param key
-    * @param xexp
-    * @return
     */
-   private String getFormattedString(String domain,  String key, XMLParseException xexp)
+   private String getFormattedString(String domain, String key, XMLParseException xexp)
    {
       StringBuilder buf = new StringBuilder(getFileName(xexp));
       buf.append("[domain:");

@@ -169,7 +169,7 @@ public abstract class WSDLGenerator
 
    protected void processOperationDOC(WSDLInterfaceOperation interfaceOperation, WSDLBindingOperation bindingOperation, OperationMetaData operation)
    {
-      interfaceOperation.setStyle(Constants.URI_STYLE_IRI);
+      interfaceOperation.setStyle(Constants.URI_STYLE_DOCUMENT);
 
       WSDLInterfaceOperationInput input = new WSDLInterfaceOperationInput(interfaceOperation);
       WSDLBindingOperationInput bindingInput = new WSDLBindingOperationInput(bindingOperation);
