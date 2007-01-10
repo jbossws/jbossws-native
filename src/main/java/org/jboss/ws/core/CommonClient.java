@@ -313,9 +313,7 @@ public abstract class CommonClient
             {
                // unbind the return values
                SOAPMessage resMessage = msgContext.getSOAPMessage();
-               binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
-               
-               retObj = syncOutputParams(inputParams, epInv);
+               binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);                             
             }
 
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
