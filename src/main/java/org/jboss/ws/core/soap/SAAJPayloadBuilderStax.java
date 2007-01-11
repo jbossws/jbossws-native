@@ -127,11 +127,6 @@ public class SAAJPayloadBuilderStax implements PayloadBuilder
          if (!ignoreParseError)
             throw new IOException("Failed to parse stream: " + e.getMessage());
       }
-      catch (SOAPException e)
-      {
-         e.printStackTrace();
-         throw e;
-      }
       finally
       {
          try

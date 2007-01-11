@@ -580,7 +580,6 @@ public class CallImpl extends CommonClient implements Call
       }
       catch (Exception ex)
       {
-         ex.printStackTrace();
          throw new RemoteException("Call invocation failed", ex);
       }
       finally

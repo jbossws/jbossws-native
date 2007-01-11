@@ -606,7 +606,7 @@ public class WSDLToJava implements WSDLToJavaIntf
       return seiName;
    }
 
-   private void createSEI(File loc, WSDLDefinitions wsdl)
+   private void createSEI(File loc, WSDLDefinitions wsdl) throws IOException
    {
       WSDLInterface[] intarr = wsdl.getInterfaces();
       if (intarr == null || intarr.length == 0)
@@ -615,14 +615,7 @@ public class WSDLToJava implements WSDLToJavaIntf
       for (int i = 0; i < len; i++)
       {
          WSDLInterface intf = intarr[i];
-         try
-         {
-            createSEIFile(intf, loc);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
+         createSEIFile(intf, loc);
       }
    }
 

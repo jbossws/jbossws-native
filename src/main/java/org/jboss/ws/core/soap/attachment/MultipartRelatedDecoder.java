@@ -95,7 +95,11 @@ public class MultipartRelatedDecoder
 
       try
       {
-         boundary = ("\r\n--" + boundaryParameter).getBytes("US-ASCII");
+         // [JBWS-1393] - Problem interpreting messages with attachment when confronted with no <start> header
+         if (start == null)
+            boundary = ("--" + boundaryParameter).getBytes("US-ASCII");
+         else 
+            boundary = ("\r\n--" + boundaryParameter).getBytes("US-ASCII");
       }
       catch (UnsupportedEncodingException e)
       {
@@ -140,7 +144,7 @@ public class MultipartRelatedDecoder
          {
             if (isValidRootType(part.getContentType()) == false)
                throw new IllegalArgumentException("multipart/related type specified a root type other than the one" + " that was found.");
-            
+
             rootPart = part;
          }
          else

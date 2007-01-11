@@ -24,6 +24,7 @@ package org.jboss.ws.core.soap;
 // $Id$
 
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,6 +44,8 @@ import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.remoting.marshal.MarshalFactory;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.jaxrpc.StubExt;
 import org.jboss.ws.extensions.xop.XOPContext;
 
@@ -127,6 +130,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       if (closed)
          throw new SOAPException("SOAPConnection is already closed");
 
+      Object timeout = null;
       String targetAddress;
       Map callProps;
 
@@ -138,7 +142,7 @@ public class SOAPConnectionImpl extends SOAPConnection
 
          if (callProps.containsKey(StubExt.PROPERTY_CLIENT_TIMEOUT))
          {
-            Object timeout = callProps.get(StubExt.PROPERTY_CLIENT_TIMEOUT);
+            timeout = callProps.get(StubExt.PROPERTY_CLIENT_TIMEOUT);
             targetAddress = addURLParameter(targetAddress, "timeout", timeout.toString());
          }
       }
@@ -178,13 +182,22 @@ public class SOAPConnectionImpl extends SOAPConnection
          }
 
          SOAPMessage resMessage = null;
-         if (oneway == true)
+         try
          {
-            client.invokeOneway(reqMessage, metadata, false);
+            if (oneway == true)
+            {
+               client.invokeOneway(reqMessage, metadata, false);
+            }
+            else
+            {
+               resMessage = (SOAPMessage)client.invoke(reqMessage, metadata);
+            }
          }
-         else
+         catch (RuntimeException rte)
          {
-            resMessage = (SOAPMessage)client.invoke(reqMessage, metadata);
+            if (timeout != null && rte.getCause() instanceof SocketTimeoutException)
+               throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
+            else throw rte;
          }
 
          // Disconnect the remoting client
@@ -202,7 +215,6 @@ public class SOAPConnectionImpl extends SOAPConnection
       }
       catch (RuntimeException rte)
       {
-         rte.printStackTrace();
          throw rte;
       }
       catch (Throwable t)
@@ -237,7 +249,7 @@ public class SOAPConnectionImpl extends SOAPConnection
          log.debug("Get locator for: " + endpoint);
          targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "SOAPMessage");
          InvokerLocator locator = new InvokerLocator(targetAddress);
-         
+
          /* An HTTPClientInvoker may disconnect from the server and recreated by the remoting layer.
           * In that case the new invoker does not inherit the marshaller/unmarshaller from the disconnected invoker.
           * We therefore explicitly specify the invoker locator datatype and register the SOAP marshaller/unmarshaller
@@ -253,7 +265,7 @@ public class SOAPConnectionImpl extends SOAPConnection
          client.connect();
 
          client.setMarshaller(marshaller);
-         
+
          if (oneway == false)
             client.setUnMarshaller(unmarshaller);
       }
