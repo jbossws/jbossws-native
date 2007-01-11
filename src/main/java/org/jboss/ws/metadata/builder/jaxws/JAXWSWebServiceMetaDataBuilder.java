@@ -94,7 +94,7 @@ import java.util.Map;
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @author Heiko.Braun@jboss.org
- * 
+ *
  * @since 15-Oct-2005
  */
 @SuppressWarnings("deprecation")
@@ -167,7 +167,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
 
       FaultMetaData fmd = new FaultMetaData(omd, xmlName, xmlType, exception.getName());
       fmd.setFaultBeanName(faultBeanName);
-      fmd.setAccessorFactoryCreator(JAXBAccessor.FACTORY_CREATOR);
 
       if (generate)
          wrapperGenerator.generate(fmd);
@@ -670,7 +669,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
             throw new WSException("@WebService[portName,serviceName,endpointInterface] MUST NOT be defined on: " + seiName);
 
          // @WebService[name] is allowed, but what should we do with it?
-            
+
          interfaceNS = anWebService.targetNamespace();
          if (interfaceNS.length() == 0)
             interfaceNS = wsdlUtils.getTypeNamespace(seiClass);

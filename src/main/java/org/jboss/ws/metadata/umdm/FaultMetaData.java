@@ -26,13 +26,12 @@ package org.jboss.ws.metadata.umdm;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
@@ -41,6 +40,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.metadata.acessor.ReflectiveFieldAccessor;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
 
 /**
@@ -67,10 +67,11 @@ public class FaultMetaData
 
    private Method getFaultInfoMethod;
    private Constructor<? extends Exception> serviceExceptionConstructor;
-   private PropertyDescriptor[] serviceExceptionProperties;
+   private Method[] serviceExceptionGetters;
 
    private WrappedParameter[] faultBeanProperties;
-   private AccessorFactoryCreator accessorFactoryCreator = ReflectiveMethodAccessor.FACTORY_CREATOR;
+
+   private Class<?>[] propertyTypes;
 
    public FaultMetaData(OperationMetaData operation, QName xmlName, QName xmlType, String javaTypeName)
    {
@@ -202,8 +203,8 @@ public class FaultMetaData
       {
          /* JAX-WS 2.5: A wsdl:fault element refers to a wsdl:message that contains
           * a single part. The global element declaration referred to by that part
-          * is mapped to a Java bean. A wrapper exception class contains the 
-          * following methods: 
+          * is mapped to a Java bean. A wrapper exception class contains the
+          * following methods:
           * . WrapperException(String message, FaultBean faultInfo)
           * . WrapperException(String message, FaultBean faultInfo, Throwable cause)
           * . FaultBean getFaultInfo() */
@@ -221,14 +222,13 @@ public class FaultMetaData
          if (xmlType == null)
             throw new WebServiceException("@XmlType missing from fault bean: " + faultBeanName);
 
-         AccessorFactory accessorFactory = accessorFactoryCreator.create(this);
+         AccessorFactory accessorFactory = getAccessorFactory(faultBean);
 
          String[] propertyNames = xmlType.propOrder();
          int propertyCount = propertyNames.length;
-         Class<?>[] propertyTypes = new Class<?>[propertyCount];
-
+         propertyTypes = new Class<?>[propertyCount];
          faultBeanProperties = new WrappedParameter[propertyCount];
-         serviceExceptionProperties = new PropertyDescriptor[propertyCount];
+         serviceExceptionGetters = new Method[propertyCount];
 
          for (int i = 0; i < propertyCount; i++)
          {
@@ -237,10 +237,9 @@ public class FaultMetaData
             try
             {
                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(propertyName, faultBean);
-               QName propertyXmlName = getPropertyXmlName(propertyDescriptor);
                Class<?> propertyType = propertyDescriptor.getPropertyType();
 
-               WrappedParameter faultBeanProperty = new WrappedParameter(propertyXmlName, propertyType.getName(), propertyName, i);
+               WrappedParameter faultBeanProperty = new WrappedParameter(null, propertyType.getName(), propertyName, i);
                faultBeanProperty.setAccessor(accessorFactory.create(faultBeanProperty));
                faultBeanProperties[i] = faultBeanProperty;
 
@@ -258,7 +257,7 @@ public class FaultMetaData
                 * of PropertyDescriptor(String, Class) because the latter fails
                 * with an IntrospectionException: Method not found: setXXX  */
                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(propertyName, javaType, "is" + JavaUtils.capitalize(propertyName), null);
-               serviceExceptionProperties[i] = propertyDescriptor;
+               serviceExceptionGetters[i] = propertyDescriptor.getReadMethod();
             }
             catch (IntrospectionException ie)
             {
@@ -268,84 +267,26 @@ public class FaultMetaData
 
          try
          {
+            // Attempt to locate a usable constructor
             serviceExceptionConstructor = javaType.asSubclass(Exception.class).getConstructor(propertyTypes);
          }
          catch (NoSuchMethodException e)
          {
-            throw new WSException("Service exception has no constructor for parameter types: " + Arrays.toString(propertyTypes));
+            // Only needed for client side. The spec does not clarify this, and the TCK makes use of non matching constructors,
+            // so we allow them for server side usage and only fail when used by the client.
          }
       }
    }
 
-   private QName getPropertyXmlName(PropertyDescriptor propertyDescriptor)
+   private AccessorFactory getAccessorFactory(Class<?> faultBean)
    {
-      QName propertyXmlName;
+      // This should catch all cases due to the constraints that JAX-WS puts on the fault bean
+      // However, if issues arrise then switch this to a full jaxb reflection library
+      XmlAccessorType type = faultBean.getAnnotation(XmlAccessorType.class);
+      if (type != null && type.value() == XmlAccessType.FIELD)
+         return ReflectiveFieldAccessor.FACTORY_CREATOR.create(this);
 
-      // examine the underlying field, if any
-      try
-      {
-         Field propertyField = faultBean.getDeclaredField(propertyDescriptor.getName());
-         propertyXmlName = getPropertyXmlName(propertyField);
-         if (propertyXmlName != null)
-            return propertyXmlName;
-      }
-      catch (NoSuchFieldException e)
-      {
-         // proceed to examine the accessor methods
-      }
-
-      // examine the getter
-      Method propertyGetter = propertyDescriptor.getReadMethod();
-      propertyXmlName = getPropertyXmlName(propertyGetter);
-      if (propertyXmlName != null)
-         return propertyXmlName;
-
-      // examine the setter
-      Method propertySetter = propertyDescriptor.getWriteMethod();
-      return getPropertyXmlName(propertySetter);
-   }
-
-   // [JBBUILD-330] Add support for java.lang.reflect.AnnotatedElement
-   // private QName getPropertyXmlName(AnnotatedElement propertyMember)
-   private QName getPropertyXmlName(Field propertyMember)
-   {
-      QName propertyXmlName = null;
-
-      XmlElement xmlElement = propertyMember.getAnnotation(XmlElement.class);
-      if (xmlElement != null)
-         propertyXmlName = new QName(xmlElement.namespace(), xmlElement.name());
-      else
-      {
-         XmlAttribute xmlAttribute = propertyMember.getAnnotation(XmlAttribute.class);
-         if (xmlAttribute != null)
-            propertyXmlName = new QName(xmlAttribute.namespace(), xmlAttribute.name());
-         // TODO should any other annotation be examined?
-      }
-      return propertyXmlName;
-   }
-   
-   // [JBBUILD-330] Add support for java.lang.reflect.AnnotatedElement
-   // private QName getPropertyXmlName(AnnotatedElement propertyMember)
-   private QName getPropertyXmlName(Method propertyMember)
-   {
-      QName propertyXmlName = null;
-
-      XmlElement xmlElement = propertyMember.getAnnotation(XmlElement.class);
-      if (xmlElement != null)
-         propertyXmlName = new QName(xmlElement.namespace(), xmlElement.name());
-      else
-      {
-         XmlAttribute xmlAttribute = propertyMember.getAnnotation(XmlAttribute.class);
-         if (xmlAttribute != null)
-            propertyXmlName = new QName(xmlAttribute.namespace(), xmlAttribute.name());
-         // TODO should any other annotation be examined?
-      }
-      return propertyXmlName;
-   }
-
-   public void setAccessorFactoryCreator(AccessorFactoryCreator accessorFactoryCreator)
-   {
-      this.accessorFactoryCreator = accessorFactoryCreator;
+      return ReflectiveMethodAccessor.FACTORY_CREATOR.create(this);
    }
 
    public Object toFaultBean(Exception serviceException)
@@ -353,7 +294,7 @@ public class FaultMetaData
       Object faultBeanInstance;
       try
       {
-         /* is the service exception a wrapper 
+         /* is the service exception a wrapper
           * (i.e. does it match the pattern in JAX-WS 2.5)? */
          if (getFaultInfoMethod != null)
          {
@@ -373,13 +314,13 @@ public class FaultMetaData
             }
 
             // copy the properties from the service exception to the fault bean
-            for (int i = 0, n = serviceExceptionProperties.length; i < n; i++)
+            for (int i = 0; i < serviceExceptionGetters.length; i++)
             {
-               PropertyDescriptor serviceExceptionProperty = serviceExceptionProperties[i];
-               Object propertyValue = serviceExceptionProperty.getReadMethod().invoke(serviceException);
+               Object propertyValue = serviceExceptionGetters[i].invoke(serviceException);
 
                WrappedParameter faultBeanProperty = faultBeanProperties[i];
-               log.debug("copying from " + javaType.getSimpleName() + '.' + serviceExceptionProperty.getName() 
+               if (log.isTraceEnabled())
+                  log.trace("copying from " + javaType.getSimpleName() + '.' + serviceExceptionGetters[i].getName()
                      + " to " + faultBean.getSimpleName() + '.' + faultBeanProperty.getVariable() + "<->" + faultBeanProperty.getName()
                      + ": " + propertyValue);
                faultBeanProperty.accessor().set(faultBeanInstance, propertyValue);
@@ -403,7 +344,7 @@ public class FaultMetaData
 
       try
       {
-         /* is the service exception a wrapper 
+         /* is the service exception a wrapper
           * (i.e. does it match the pattern in JAX-WS 2.5)? */
          if (getFaultInfoMethod != null)
          {
@@ -411,6 +352,9 @@ public class FaultMetaData
          }
          else
          {
+            if (serviceExceptionConstructor == null)
+               throw new WSException("Could not instantiate service exception (" + javaType.getSimpleName()  +"), since neither a faultInfo nor sorted constructor is present: " + Arrays.toString(propertyTypes));
+
             // extract the properties from the fault bean
             int propertyCount = faultBeanProperties.length;
             Object[] propertyValues = new Object[propertyCount];
