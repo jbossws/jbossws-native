@@ -142,8 +142,7 @@ public class WSDL11Reader
    // Temporary files used by this reader.
    private List<File> tempFiles = new ArrayList<File>();
 
-   // SWA handling
-   private static final QName SWA_PORT_TYPE = new QName("jboss.ws.wsdl.porttype.swa");
+   // SWA handling   
    private Map<QName, List<String>> skippedSWAParts = new HashMap<QName, List<String>>();
 
    /**
@@ -769,7 +768,7 @@ public class WSDL11Reader
          // R2204 A document-literal binding in a DESCRIPTION MUST refer, in each of its soapbind:body element(s), 
          // only to wsdl:part element(s) that have been defined using the element attribute
          // [hb] do this only for non swa porttypes
-         if (srcPart.getElementName() == null && srcPart.getExtensionAttribute(SWA_PORT_TYPE)==null)
+         if (srcPart.getElementName() == null)
             throw new WSDLException(WSDLException.INVALID_WSDL, "Document style message parts must define an element name: " + srcMessage.getQName());
 
          // <part name="param" element="tns:SomeType" />
@@ -929,7 +928,7 @@ public class WSDL11Reader
 
          // Input
          if(bindingOperation.getBindingInput()!=null)
-            markSWAParts( bindingOperation.getBindingInput().getExtensibilityElements() , srcBinding, srcWsdl); 
+            markSWAParts( bindingOperation.getBindingInput().getExtensibilityElements() , srcBinding, srcWsdl);
 
          // Output
          if(bindingOperation.getBindingOutput()!=null)
@@ -966,8 +965,6 @@ public class WSDL11Reader
                }
             }
 
-            PortTypeImpl p = (PortTypeImpl)srcWsdl.getPortTypes().get(portTypeName);
-            p.setExtensionAttribute( SWA_PORT_TYPE, "true");
             break;
          }
       }
