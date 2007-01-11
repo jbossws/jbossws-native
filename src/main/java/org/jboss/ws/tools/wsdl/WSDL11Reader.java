@@ -102,6 +102,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import com.ibm.wsdl.PortTypeImpl;
 
 /**
  * A helper that translates a WSDL-1.1 object graph into a WSDL-2.0 object graph.
@@ -140,6 +141,10 @@ public class WSDL11Reader
 
    // Temporary files used by this reader.
    private List<File> tempFiles = new ArrayList<File>();
+
+   // SWA handling
+   private static final QName SWA_PORT_TYPE = new QName("jboss.ws.wsdl.porttype.swa");
+   private Map<QName, List<String>> skippedSWAParts = new HashMap<QName, List<String>>();
 
    /**
     * Takes a WSDL11 Definition element and converts into
@@ -521,7 +526,7 @@ public class WSDL11Reader
          Message srcMessage = srcInput.getMessage();
          if (srcMessage == null)
             throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find input message on operation " + srcOperation.getName() + " on port type: "
-                  + srcPortType.getQName());
+               + srcPortType.getQName());
 
          log.trace("processOperationInput: " + srcMessage.getQName());
 
@@ -542,12 +547,15 @@ public class WSDL11Reader
          WSDLInterfaceOperationInput rpcInput = new WSDLInterfaceOperationInput(destOperation);
          for (Part srcPart : (List<Part>)srcMessage.getOrderedParts(paramOrder))
          {
+            // Skip SWA attachment parts
+            if( ignorePart(srcPortType, srcPart) ) continue;
+
             if (Constants.URI_STYLE_DOCUMENT == destOperation.getStyle())
             {
                WSDLInterfaceOperationInput destInput = new WSDLInterfaceOperationInput(destOperation);
                QName elementName = messagePartToElementName(srcMessage, srcPart, destOperation);
                destInput.setElement(elementName);
-               
+
                //Lets remember the Message name
                destInput.setMessageName(srcMessage.getQName());
                destOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_IN, srcMessage.getQName().getLocalPart()));
@@ -578,6 +586,22 @@ public class WSDL11Reader
       }
    }
 
+   private boolean ignorePart(PortType srcPortType, Part srcPart) {
+
+      boolean canBeSkipped = false;
+      QName parentName = srcPortType.getQName();
+      if(skippedSWAParts.containsKey(parentName))
+      {
+         if(skippedSWAParts.get(parentName).contains(srcPart.getName()))
+         {
+            log.trace("Skip attachment part: " + parentName+"->"+srcPart.getName());
+            canBeSkipped = true;
+         }
+      }
+
+      return canBeSkipped;
+   }
+
    private void processOperationOutput(Definition srcWsdl, Operation srcOperation, WSDLInterfaceOperation destOperation, PortType srcPortType) throws WSDLException
    {
       Output srcOutput = srcOperation.getOutput();
@@ -590,8 +614,8 @@ public class WSDL11Reader
       Message srcMessage = srcOutput.getMessage();
       if (srcMessage == null)
          throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find output message on operation " + srcOperation.getName() + " on port type: "
-               + srcPortType.getQName());
-      
+            + srcPortType.getQName());
+
       log.trace("processOperationOutput: " + srcMessage.getQName());
 
       destOperation.setPattern(Constants.WSDL20_PATTERN_IN_OUT);
@@ -617,6 +641,9 @@ public class WSDL11Reader
       WSDLInterfaceOperationOutput rpcOutput = new WSDLInterfaceOperationOutput(destOperation);
       for (Part srcPart : (List<Part>)srcMessage.getOrderedParts(null))
       {
+         // Skip SWA attachment parts
+         if(ignorePart(srcPortType, srcPart)) continue;
+
          if (Constants.URI_STYLE_DOCUMENT == destOperation.getStyle())
          {
             WSDLInterfaceOperationOutput destOutput = new WSDLInterfaceOperationOutput(destOperation);
@@ -711,12 +738,12 @@ public class WSDL11Reader
    }
 
    /** Translate the message part name into an XML element name.
-    * @throws WSDLException 
+    * @throws WSDLException
     */
    private QName messagePartToElementName(Message srcMessage, Part srcPart, WSDLInterfaceOperation destOperation) throws WSDLException
    {
       QName xmlName;
-      
+
       // R2306 A wsdl:message in a DESCRIPTION MUST NOT specify both type and element attributes on the same wsdl:part
       if (srcPart.getTypeName() != null && srcPart.getElementName() != null)
          throw new WSDLException(WSDLException.INVALID_WSDL, "Message parts must not define an element name and type name: " + srcMessage.getQName());
@@ -728,11 +755,11 @@ public class WSDL11Reader
          // only to wsdl:part element(s) that have been defined using the type attribute.
          if (srcPart.getName() == null)
             throw new WSDLException(WSDLException.INVALID_WSDL, "RPC style message parts must define a typy name: " + srcMessage.getQName());
-         
+
          // <part name="param" element="tns:SomeType" />
          // Headers do have an element name even in rpc
          xmlName = srcPart.getElementName();
-         
+
          // <part name="param" type="xsd:string" />
          if (xmlName == null)
             xmlName = new QName(srcPart.getName());
@@ -741,9 +768,10 @@ public class WSDL11Reader
       {
          // R2204 A document-literal binding in a DESCRIPTION MUST refer, in each of its soapbind:body element(s), 
          // only to wsdl:part element(s) that have been defined using the element attribute
-         if (srcPart.getElementName() == null)
+         // [hb] do this only for non swa porttypes
+         if (srcPart.getElementName() == null && srcPart.getExtensionAttribute(SWA_PORT_TYPE)==null)
             throw new WSDLException(WSDLException.INVALID_WSDL, "Document style message parts must define an element name: " + srcMessage.getQName());
-         
+
          // <part name="param" element="tns:SomeType" />
          xmlName = srcPart.getElementName();
       }
@@ -859,6 +887,9 @@ public class WSDL11Reader
          destBinding.setType(bindingType);
          destWsdl.addBinding(destBinding);
 
+         // mark SWA Parts upfront
+         preProcessSWAParts(srcBinding, srcWsdl);
+
          processPortType(srcWsdl, srcPortType);
 
          String bindingStyle = Style.getDefaultStyle().toString();
@@ -881,6 +912,65 @@ public class WSDL11Reader
       }
 
       return true;
+   }
+
+   /**
+    * Identify and mark message parts that belong to
+    * an SWA binding and can be skipped when processing this WSDL
+    * @param srcBinding
+    * @param srcWsdl
+    */
+   private void preProcessSWAParts(Binding srcBinding, Definition srcWsdl) {
+
+      Iterator opIt = srcBinding.getBindingOperations().iterator();
+      while(opIt.hasNext())
+      {
+         BindingOperation bindingOperation = (BindingOperation)opIt.next();
+
+         // Input
+         if(bindingOperation.getBindingInput()!=null)
+            markSWAParts( bindingOperation.getBindingInput().getExtensibilityElements() , srcBinding, srcWsdl); 
+
+         // Output
+         if(bindingOperation.getBindingOutput()!=null)
+            markSWAParts( bindingOperation.getBindingOutput().getExtensibilityElements() , srcBinding, srcWsdl);
+      }
+   }
+
+   private void markSWAParts(List extensions, Binding srcBinding, Definition srcWsdl) {
+      Iterator extIt = extensions.iterator();
+      while(extIt.hasNext())
+      {
+         Object o = extIt.next();
+         if(o instanceof MIMEMultipartRelated)
+         {
+
+            QName portTypeName = srcBinding.getPortType().getQName();
+
+            if(log.isTraceEnabled())
+               log.trace("SWA found on portType" + portTypeName);
+
+            MIMEMultipartRelated mrel = (MIMEMultipartRelated)o;
+            Iterator mimePartIt = mrel.getMIMEParts().iterator();
+            while(mimePartIt.hasNext())
+            {
+               MIMEPart mimePartDesc = (MIMEPart)mimePartIt.next();
+               List mimePartExt = mimePartDesc.getExtensibilityElements();
+               if(! mimePartExt.isEmpty() && (mimePartExt.get(0) instanceof MIMEContent))
+               {
+                  MIMEContent mimeContent = (MIMEContent)mimePartExt.get(0);
+
+                  if(skippedSWAParts.get(portTypeName)==null)
+                     skippedSWAParts.put(portTypeName, new ArrayList<String>());
+                  skippedSWAParts.get(portTypeName).add(mimeContent.getPart());
+               }
+            }
+
+            PortTypeImpl p = (PortTypeImpl)srcWsdl.getPortTypes().get(portTypeName);
+            p.setExtensionAttribute( SWA_PORT_TYPE, "true");
+            break;
+         }
+      }
    }
 
    private Map<QName, Binding> getPortTypeBindings(Definition srcWsdl)
@@ -990,7 +1080,7 @@ public class WSDL11Reader
    }
 
    private void processBindingInput(Definition srcWsdl, WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation,
-         final BindingOperation srcBindingOperation, BindingInput srcBindingInput) throws WSDLException
+                                    final BindingOperation srcBindingOperation, BindingInput srcBindingInput) throws WSDLException
    {
       log.trace("processBindingInput");
 
@@ -1023,7 +1113,7 @@ public class WSDL11Reader
    }
 
    private void processBindingOutput(Definition srcWsdl, WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation,
-         final BindingOperation srcBindingOperation, BindingOutput srcBindingOutput) throws WSDLException
+                                     final BindingOperation srcBindingOperation, BindingOutput srcBindingOutput) throws WSDLException
    {
       log.trace("processBindingInput");
 
@@ -1057,7 +1147,7 @@ public class WSDL11Reader
    }
 
    private void processBindingReference(Definition srcWsdl, WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation, QName soap11Body,
-         List<ExtensibilityElement> extList, WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback) throws WSDLException
+                                        List<ExtensibilityElement> extList, WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback) throws WSDLException
    {
       for (ExtensibilityElement extElement : extList)
       {
