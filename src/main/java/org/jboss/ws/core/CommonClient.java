@@ -182,7 +182,7 @@ public abstract class CommonClient
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData();
          wsMetaData.setClassLoader(Thread.currentThread().getContextClassLoader());
-         
+
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousService"));
          wsMetaData.addService(serviceMetaData);
 
@@ -313,7 +313,7 @@ public abstract class CommonClient
             {
                // unbind the return values
                SOAPMessage resMessage = msgContext.getSOAPMessage();
-               binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);                             
+               binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
@@ -376,13 +376,22 @@ public abstract class CommonClient
       {
          ParameterMode paramMode = paramMetaData.getMode();
 
-         if (paramMode == ParameterMode.INOUT || paramMode == ParameterMode.OUT)
+         int index = paramMetaData.getIndex();
+         if (index == -1 || paramMode == ParameterMode.INOUT || paramMode == ParameterMode.OUT)
          {
             QName xmlName = paramMetaData.getXmlName();
             Object value = epInv.getResponseParamValue(xmlName);
-            int index = paramMetaData.getIndex();
-            log.debug("holder [" + index + "] " + xmlName);
-            HolderUtils.setHolderValue(inParams[index], value);
+            // document/literal wrapped return value header
+            if (index == -1)
+            {
+               retValue = value;
+            }
+            else
+            {
+               if (log.isTraceEnabled())
+                  log.trace("holder [" + index + "] " + xmlName);
+               HolderUtils.setHolderValue(inParams[index], value);
+            }
          }
       }
 

@@ -131,11 +131,11 @@ public class ParameterMetaData
 
       Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
       Class valueClass = JavaUtils.erasure(valueType);
-      
+
       List<Class> anyTypes = new ArrayList<Class>();
       anyTypes.add(javax.xml.soap.SOAPElement.class);
       anyTypes.add(org.w3c.dom.Element.class);
-      
+
       boolean matched;
       if (exact)
       {
@@ -340,6 +340,12 @@ public class ParameterMetaData
       return index;
    }
 
+   /**
+    * Sets the method parameter index of the parameter this meta data corresponds to. A value of -1 indicates
+    * that this parameter is mapped to the return value.
+    *
+    * @param index the method parameter offset, or -1 for a return value
+    */
    public void setIndex(int index)
    {
       this.index = index;

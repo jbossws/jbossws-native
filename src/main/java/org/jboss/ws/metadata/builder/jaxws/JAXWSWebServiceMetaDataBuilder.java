@@ -555,7 +555,19 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
             paramMetaData.setIndex(i);
             paramMetaData.setMode(mode);
 
-            if (anWebParam != null && anWebParam.partName().length() > 0)
+            /*
+             * Note: The TCK enforces the following rule in the spec regarding
+             * partName: "This is only used if the operation is rpc style or if
+             * the operation is document style and the parameter style is BARE."
+             *
+             * This seems to be a flaw in the spec, because the intention is
+             * obviously to prevent the ambiguity of wrapped parameters that
+             * specify different partName values. There is, however, no reason
+             * that this limitation should apply to header parameters since they
+             * are never wrapped. In order to comply we adhere to this confusing
+             * rule, although I will ask for clarification.
+             */
+            if (anWebParam != null && !opMetaData.isDocumentWrapped() && anWebParam.partName().length() > 0)
                paramMetaData.setPartName(anWebParam.partName());
 
             opMetaData.addParameter(paramMetaData);
@@ -575,10 +587,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
 
          WebResult anWebResult = method.getAnnotation(WebResult.class);
          boolean isHeader = anWebResult != null && anWebResult.header();
-         boolean isWrapped = opMetaData.isDocumentWrapped() && !isHeader;
+         boolean isWrappedBody = opMetaData.isDocumentWrapped() && !isHeader;
          QName xmlName = getWebResultName(opMetaData, anWebResult);
 
-         if (isWrapped)
+         if (isWrappedBody)
          {
             WrappedParameter wrapped = new WrappedParameter(xmlName, returnTypeName, convertToVariable(xmlName.getLocalPart()), -1);
             wrapped.setTypeArguments(convertTypeArguments(returnType, genericReturnType));
@@ -590,10 +602,29 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          {
             ParameterMetaData retMetaData = new ParameterMetaData(opMetaData, xmlName, returnTypeName);
             retMetaData.setInHeader(isHeader);
-            if (anWebResult != null && anWebResult.partName().length() > 0)
-               retMetaData.setPartName(anWebResult.partName());
+            retMetaData.setIndex(-1);
+            retMetaData.setMode(ParameterMode.OUT);
 
-            opMetaData.setReturnParameter(retMetaData);
+            // Special case: If we have a document/literal wrapped message, then
+            // the return metadata must be the wrapper type that is sent in the
+            // body. So, in order to handle headers that are mapped to the java
+            // return value, we have to add them to a parameter with an index of
+            // -1 to signify the return value. All other binding styles use the
+            // expected return value mechanism.
+            if (opMetaData.isDocumentWrapped())
+            {
+               opMetaData.addParameter(retMetaData);
+            }
+            else
+            {
+               // See above comment in the parameter for loop section as to why
+               // we prevent customization of part names on document wrapped
+               // header parameters.
+               if (anWebResult != null && anWebResult.partName().length() > 0)
+                  retMetaData.setPartName(anWebResult.partName());
+
+               opMetaData.setReturnParameter(retMetaData);
+            }
 
             javaTypes.add(returnType);
             typeRefs.add(new TypeReference(xmlName, genericReturnType, method.getAnnotations()));
@@ -668,7 +699,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
          if (anWebService.portName().length() > 0 || anWebService.serviceName().length() > 0 || anWebService.endpointInterface().length() > 0)
             throw new WSException("@WebService[portName,serviceName,endpointInterface] MUST NOT be defined on: " + seiName);
 
-         // @WebService[name] is allowed, but what should we do with it?
+         // Redfine the interface or "PortType" name
+         name = anWebService.name();
+         if (name.length() == 0)
+            name = WSDLUtils.getJustClassName(seiClass);
 
          interfaceNS = anWebService.targetNamespace();
          if (interfaceNS.length() == 0)

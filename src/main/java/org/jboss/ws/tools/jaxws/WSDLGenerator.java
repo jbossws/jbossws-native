@@ -186,12 +186,24 @@ public abstract class WSDLGenerator
          ParameterMetaData returnParameter = operation.getReturnParameter();
          if (returnParameter != null)
          {
-            output.setElement(returnParameter.getXmlName());
-            output.setPartName(returnParameter.getPartName());
+            QName xmlName = returnParameter.getXmlName();
+            String partName = returnParameter.getPartName();
+            if (returnParameter.isInHeader())
+            {
+               WSDLSOAPHeader header = new WSDLSOAPHeader(xmlName, partName);
+               header.setIncludeInSignature(true);
+               bindingOutput.addSoapHeader(header);
+            }
+            else
+            {
+               output.setElement(xmlName);
+               output.setPartName(partName);
+            }
             addSignatureItem(interfaceOperation, returnParameter, true);
          }
 
-         // If there is no return parameter, it will be set later with an INOUT or OUT parameter
+         // If there is no return parameter, it will most likely be set later with an INOUT or OUT parameter.
+         // Otherwise, a null element means there is a 0 body element part, which is allowed by BP 1.0
          interfaceOperation.addOutput(output);
          bindingOperation.addOutput(bindingOutput);
       }
@@ -246,12 +258,23 @@ public abstract class WSDLGenerator
          bindingOutput = new WSDLBindingOperationOutput(bindingOperation);
          output.setElement(new QName(operationName.getNamespaceURI(), operationName.getLocalPart() + "Response"));
 
-         ParameterMetaData returnParam = operation.getReturnParameter();
-         if (returnParam != null)
+         ParameterMetaData returnParameter = operation.getReturnParameter();
+         if (returnParameter != null)
          {
-            WSDLRPCPart part = new WSDLRPCPart(returnParam.getPartName(), returnParam.getXmlType());
-            output.addChildPart(part);
-            addSignatureItem(interfaceOperation, returnParam, true);
+            QName xmlName = returnParameter.getXmlName();
+            String partName = returnParameter.getPartName();
+            if (returnParameter.isInHeader())
+            {
+               WSDLSOAPHeader header = new WSDLSOAPHeader(xmlName, partName);
+               header.setIncludeInSignature(true);
+               bindingOutput.addSoapHeader(header);
+            }
+            else
+            {
+               WSDLRPCPart part = new WSDLRPCPart(returnParameter.getPartName(), returnParameter.getXmlType());
+               output.addChildPart(part);
+            }
+            addSignatureItem(interfaceOperation, returnParameter, true);
          }
 
          interfaceOperation.addOutput(output);

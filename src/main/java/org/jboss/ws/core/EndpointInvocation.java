@@ -248,6 +248,12 @@ public class EndpointInvocation
    {
       for (ParameterMetaData paramMetaData : opMetaData.getParameters())
       {
+         int index = paramMetaData.getIndex();
+
+         // doc/lit wrapped return headers are OUT, so skip
+         if (index < 0)
+            continue;
+
          QName xmlName = paramMetaData.getXmlName();
          Class javaType = paramMetaData.getJavaType();
 
@@ -258,7 +264,7 @@ public class EndpointInvocation
          }
          else
          {
-            value = inputParams[paramMetaData.getIndex()];
+            value = inputParams[index];
             if (value != null)
             {
                Class inputType = value.getClass();
