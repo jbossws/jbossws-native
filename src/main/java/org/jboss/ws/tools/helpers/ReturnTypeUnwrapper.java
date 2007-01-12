@@ -46,6 +46,7 @@ public class ReturnTypeUnwrapper
    public QName xmlType;
    public XSElementDeclaration unwrappedElement;
    public boolean array = false;
+   public boolean primitive = false;
    private boolean wrapped;
 
    public ReturnTypeUnwrapper(QName xmlType, JBossXSModel xsmodel, boolean wrapped)
@@ -110,6 +111,7 @@ public class ReturnTypeUnwrapper
                xmlType = new QName(unwrappedElement.getTypeDefinition().getNamespace(), unwrappedElement.getTypeDefinition().getName());
 
             this.array = array;
+            primitive = !(unwrappedElement.getNillable() || (particle.getMinOccurs() == 0 && particle.getMaxOccurs() == 1));
          }
 
       }

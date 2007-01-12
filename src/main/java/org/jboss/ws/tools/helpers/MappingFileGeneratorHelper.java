@@ -259,6 +259,7 @@ public class MappingFileGeneratorHelper
       {
          QName xmlName = output.getElement();
          QName xmlType = output.getXMLType();
+         boolean primitive = true;
 
          String targetNS = wsdlDefinitions.getTargetNamespace();
          QName messageName = new QName(targetNS, output.getMessageName().getLocalPart(), WSToolsConstants.WSTOOLS_CONSTANT_MAPPING_WSDL_MESSAGE_NS);
@@ -275,6 +276,7 @@ public class MappingFileGeneratorHelper
             {
                XSElementDeclaration element = unwrapper.unwrappedElement;
                xt = element.getTypeDefinition();
+               primitive = unwrapper.primitive;
                partName = element.getName();
                containingElement = containingElement + unwrapper.unwrappedElement.getName();
                array = unwrapper.array;
@@ -296,7 +298,7 @@ public class MappingFileGeneratorHelper
          if (xt instanceof XSSimpleTypeDefinition)
             xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
 
-         String javaType = getJavaTypeAsString(xmlName, xmlType, array, true);
+         String javaType = getJavaTypeAsString(xmlName, xmlType, array, primitive);
 
          if (isDocStyle() == false && "void".equals(javaType))
             return;
@@ -512,9 +514,10 @@ public class MappingFileGeneratorHelper
             }
 
             boolean array = particle.getMaxOccursUnbounded() || particle.getMaxOccurs() > 1;
+            boolean primitive = !(element.getNillable() || (particle.getMinOccurs() == 0 && particle.getMaxOccurs() == 1));
 
             MethodParamPartsMapping part = getMethodParamPartsMapping(methodMapping, xmlName, xmlType, partsMappings.size(), messageName, "IN", xmlName.getLocalPart(),
-                  array, !element.getNillable());
+                  array, primitive);
             partsMappings.add(part);
          }
       }
@@ -542,7 +545,7 @@ public class MappingFileGeneratorHelper
          throw new WSException("Only a sequence type can be unwrapped.");
 
       XSObjectList particles = group.getParticles();
-      String returnType = null;
+
       for (int i = 0; i < particles.getLength(); i++)
       {
          XSParticle particle = (XSParticle)particles.item(i);
@@ -558,9 +561,9 @@ public class MappingFileGeneratorHelper
             QName xmlName = new QName(element.getNamespace(), element.getName());
             QName xmlType = new QName(element.getTypeDefinition().getNamespace(), element.getTypeDefinition().getName());
             boolean array = particle.getMaxOccursUnbounded() || particle.getMaxOccurs() > 1;
-            StringBuilder buf = new StringBuilder();
+            boolean primitive = !(element.getNillable() || (particle.getMinOccurs() == 0 && particle.getMaxOccurs() == 1));
 
-            String javaType = getJavaTypeAsString(xmlName, xmlType, array, !element.getNillable());
+            String javaType = getJavaTypeAsString(xmlName, xmlType, array, primitive);
 
             WsdlReturnValueMapping wrvm = new WsdlReturnValueMapping(methodMapping);
             wrvm.setMethodReturnValue(javaType);

@@ -418,8 +418,8 @@ public class WSDLToJava implements WSDLToJavaIntf
          String elementName = in.getElement().getLocalPart();
 
          if (elementName.equals(operationName) == false)
-            throw new WSException("[JAX-RPC - 2.3.1.2] Unable to unwrap parameters, wrapper element name must match operation name. operationName=" + operationName + " elementName="
-                  + elementName);
+            throw new WSException("[JAX-RPC - 2.3.1.2] Unable to unwrap parameters, wrapper element name must match operation name. operationName=" + operationName
+                  + " elementName=" + elementName);
 
          wrapped = unwrapElementParameters(buf, containingElement, xt);
       }
@@ -507,7 +507,8 @@ public class WSDLToJava implements WSDLToJavaIntf
 
             JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
             boolean array = particle.getMaxOccursUnbounded() || particle.getMaxOccurs() > 1;
-            generateParameter(buf, tempContainingElement, xmlType, xsmodel, type, array, !element.getNillable(), false);
+            boolean primitive = !(element.getNillable() || (particle.getMinOccurs() == 0 && particle.getMaxOccurs() == 1));
+            generateParameter(buf, tempContainingElement, xmlType, xsmodel, type, array, primitive, false);
 
             String paramName;
             if (type.getAnonymous())
@@ -623,6 +624,7 @@ public class WSDLToJava implements WSDLToJavaIntf
    {
       String containingElement = xmlName.getLocalPart();
       String arraySuffix = "";
+      boolean primitive = true;
 
       JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
       xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
@@ -636,7 +638,9 @@ public class WSDLToJava implements WSDLToJavaIntf
 
          if (unwrapper.unwrappedElement != null)
          {
-            xt = unwrapper.unwrappedElement.getTypeDefinition();
+            XSElementDeclaration element = unwrapper.unwrappedElement;
+            xt = element.getTypeDefinition();
+            primitive = unwrapper.primitive;
 
             if (unwrapper.xmlType != null)
                xmlType = unwrapper.xmlType;
@@ -648,7 +652,6 @@ public class WSDLToJava implements WSDLToJavaIntf
          }
       }
 
-      boolean primitive = true;
       WrappedArray wrappedArray = new WrappedArray(xt);
       if (wrappedArray.unwrap())
       {
