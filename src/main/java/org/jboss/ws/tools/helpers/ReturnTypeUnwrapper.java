@@ -63,13 +63,13 @@ public class ReturnTypeUnwrapper
       XSTypeDefinition xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
 
       if (xt instanceof XSComplexTypeDefinition == false)
-         throw new WSException("Tried to unwrap a non-complex type.");
+         throw new WSException("[JAX-RPC 2.3.1.2] Tried to unwrap a non-complex type.");
 
       XSComplexTypeDefinition wrapper = (XSComplexTypeDefinition)xt;
 
       boolean hasAttributes = wrapper.getAttributeUses().getLength() > 0;
       if (hasAttributes)
-         throw new WSException("Can not unwrap, complex type contains attributes.");
+         throw new WSException("[JAX-RPC 2.3.1.2] Can not unwrap, complex type contains attributes.");
 
       boolean unwrapped = false;
 
@@ -79,7 +79,7 @@ public class ReturnTypeUnwrapper
          XSTerm term = particle.getTerm();
 
          if (term instanceof XSModelGroup == false)
-            throw new WSException("Expected model group, could not unwrap");
+            throw new WSException("[JAX-RPC 2.3.1.2] Expected model group, could not unwrap");
 
          XSModelGroup group = (XSModelGroup)term;
 
@@ -115,7 +115,7 @@ public class ReturnTypeUnwrapper
       }
       else
       {
-         throw new WSException("Unable to unwrap model group with multiple particles.");
+         throw new WSException("[JAX-RPC 2.3.1.2] Unable to unwrap model group with multiple particles.");
       }
 
       return unwrappedElement != null;

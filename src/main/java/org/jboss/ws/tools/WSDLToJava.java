@@ -412,13 +412,13 @@ public class WSDLToJava implements WSDLToJavaIntf
       {
          int inputs = in.getWsdlOperation().getInputs().length;
          if (inputs > 1)
-            throw new WSException("Can not unwrap parameters for operation with mutliple inputs. inputs=" + inputs);
+            throw new WSException("[JAX-RPC - 2.3.1.2] Can not unwrap parameters for operation with mutliple inputs. inputs=" + inputs);
 
          String operationName = in.getWsdlOperation().getName().toString();
          String elementName = in.getElement().getLocalPart();
 
          if (elementName.equals(operationName) == false)
-            throw new WSException("Unable to unwrap parameters, wrapper element name must match operation name. operationName=" + operationName + " elementName="
+            throw new WSException("[JAX-RPC - 2.3.1.2] Unable to unwrap parameters, wrapper element name must match operation name. operationName=" + operationName + " elementName="
                   + elementName);
 
          wrapped = unwrapElementParameters(buf, containingElement, xt);
@@ -446,7 +446,7 @@ public class WSDLToJava implements WSDLToJavaIntf
 
       boolean hasAttributes = wrapper.getAttributeUses().getLength() > 0;
       if (hasAttributes)
-         throw new WSException("Can not unwrap, complex type contains attributes.");
+         throw new WSException("[JAX-RPC 2.3.1.2] Can not unwrap, complex type contains attributes.");
 
       boolean unwrappedElement = false;
 
