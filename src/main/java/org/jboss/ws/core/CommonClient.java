@@ -242,6 +242,9 @@ public abstract class CommonClient
 
          // Bind the request message
          SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, unboundHeaders);
+         
+         // Add possible attachment parts
+         addAttachmentParts(reqMessage);
 
          setOutboundContextProperties();
 
@@ -295,7 +298,7 @@ public abstract class CommonClient
             // at pivot the message context might be replaced
             msgContext = processPivot(msgContext);
 
-            // Associate current message with message context
+            // Associate response message with message context
             msgContext.setSOAPMessage(resMessage);
          }
 
@@ -340,6 +343,11 @@ public abstract class CommonClient
       {
          resContext.putAll(msgContext.getProperties());
       }
+   }
+
+   protected void addAttachmentParts(SOAPMessage reqMessage)
+   {
+      // By default do nothing
    }
 
    protected abstract CommonMessageContext processPivot(CommonMessageContext requestContext);

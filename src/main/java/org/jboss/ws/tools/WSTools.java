@@ -45,9 +45,6 @@ public class WSTools
 {
    private static Logger log = Logger.getLogger(WSTools.class);
 
-   private Configuration config;
-   private String outputDir = ".";
-
    /**
     * Entry point for the command line scripts.
     * Just passes the arguments to
@@ -63,28 +60,35 @@ public class WSTools
 
    /**
     * Entry point for the programmatic use
-    *
-    * @param args
-    * @throws IOException
     */
-   public void generate(String[] args) throws IOException
+   public boolean generate(String configLocation, String outputDir) throws IOException
    {
-      boolean knownArgument = false;
+      ToolsSchemaConfigReader configReader = new ToolsSchemaConfigReader();
+      Configuration config = configReader.readConfig(configLocation);
+
+      return process(config, outputDir);
+   }
+
+   /**
+    * Entry point for the programmatic use
+    */
+   public boolean generate(String[] args) throws IOException
+   {
+      String configLocation = null;
+      String outputDir = null;
       for (int i = 0; i < args.length; i++)
       {
          String arg = args[i];
 
          if ("-config".equals(arg))
          {
-            readToolsConfiguration(args[i + 1]);
-            knownArgument = true;
+            configLocation = args[i + 1];
             i++;
          }
 
          else if ("-dest".equals(arg))
          {
             outputDir = args[i + 1];
-            knownArgument = true;
             i++;
          }
 
@@ -94,7 +98,7 @@ public class WSTools
 
             int tokens = st.countTokens();
             URL[] urls = new URL[tokens];
-            for(int j = 0; j < tokens; j++)
+            for (int j = 0; j < tokens; j++)
             {
                String token = st.nextToken();
                urls[j] = new File(token).toURL();
@@ -103,50 +107,39 @@ public class WSTools
             ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
             URLClassLoader urlLoader = new URLClassLoader(urls, ctxLoader);
             Thread.currentThread().setContextClassLoader(urlLoader);
-            knownArgument = true;
             i++;
+         }
+         else
+         {
+            System.out.println("Usage: wstools (-classpath|-cp) <classpath> -config <config> [-dest <destination path>]");
+            System.exit(1);
          }
       }
 
-      if (! knownArgument)
-      {
-         System.out.println("Usage: wstools (-classpath|-cp) <classpath> -config <config> [-dest <destination path>]");
-         System.exit(1);
-      }
-
-      if (config == null)
-         throw new IllegalArgumentException("wstools config not found");
-
-      process();
+      return generate(configLocation, outputDir);
    }
 
-   private void process() throws IOException
+   private boolean process(Configuration config, String outputDir) throws IOException
    {
-      ToolsHelper helper = new ToolsHelper();
       if (config == null)
-         throw new WSException("Configuration is null");
-
-      boolean processed = false;
+         throw new IllegalArgumentException("Configuration is null");
+      
+      if (outputDir == null)
+         outputDir = ".";
+      
+      ToolsHelper helper = new ToolsHelper();
       if (config.getJavaToWSDLConfig(false) != null)
       {
          helper.handleJavaToWSDLGeneration(config, outputDir);
-         processed = true;
       }
-
-      if (config.getWSDLToJavaConfig(false) != null)
+      else if (config.getWSDLToJavaConfig(false) != null)
       {
          helper.handleWSDLToJavaGeneration(config, outputDir);
-         processed = true;
       }
-
-      if (!processed)
+      else
+      {
          throw new WSException("Nothing done, Configuration source must have JavaToWSDL or WSDLToJava specified");
-   }
-
-   private void readToolsConfiguration(String filename) throws IOException
-   {
-      log.debug("Config file name=" + filename);
-      ToolsSchemaConfigReader configReader = new ToolsSchemaConfigReader();
-      config = configReader.readConfig(filename);
+      }
+      return true;
    }
 }

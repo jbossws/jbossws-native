@@ -42,7 +42,10 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
 import javax.xml.rpc.encoding.SerializerFactory;
 import javax.xml.rpc.soap.SOAPFaultException;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -85,6 +88,8 @@ public class CallImpl extends CommonClient implements Call
    private Map<QName, UnboundHeader> unboundHeaders = new LinkedHashMap<QName, UnboundHeader>();
    // A Map<String,Object> of Call properties
    private Map<String, Object> properties = new HashMap<String, Object>();
+   // A List<AttachmentPart> of attachment parts set through the proxy
+   private List<AttachmentPart> attachmentParts = new ArrayList<AttachmentPart>();
 
    // The set of supported properties
    private static final Set<String> standardProperties = new HashSet<String>();
@@ -218,6 +223,39 @@ public class CallImpl extends CommonClient implements Call
    public Iterator getUnboundHeaders()
    {
       return unboundHeaders.keySet().iterator();
+   }
+   
+   /**
+    * Adds the given AttachmentPart object to the outgoing SOAPMessage.
+    * An AttachmentPart object must be created before it can be added to a message.
+    */
+   public void addAttachmentPart(AttachmentPart part)
+   {
+      attachmentParts.add(part);
+   }
+
+   /**
+    * Clears the list of attachment parts.
+    */
+   public void clearAttachmentParts()
+   {
+      attachmentParts.clear();
+   }
+
+   /**
+    * Creates a new empty AttachmentPart object.
+    */
+   public AttachmentPart createAttachmentPart()
+   {
+      try
+      {
+         MessageFactory factory = MessageFactory.newInstance();
+         return factory.createMessage().createAttachmentPart();
+      }
+      catch (SOAPException ex)
+      {
+         throw new JAXRPCException("Cannot create attachment part");
+      }
    }
 
    /** Gets the address of a target service endpoint.
@@ -586,6 +624,16 @@ public class CallImpl extends CommonClient implements Call
       {
          // Reset the message context association
          MessageContextAssociation.popMessageContext();
+      }
+   }
+
+   @Override
+   protected void addAttachmentParts(SOAPMessage reqMessage)
+   {
+      for (AttachmentPart part : attachmentParts)
+      {
+         log.debug("Adding attachment part: " + part.getContentId());
+         reqMessage.addAttachmentPart(part);
       }
    }
 

@@ -38,6 +38,8 @@ public interface ServiceEndpointManagerMBean
    // default object name
    static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=ServiceEndpointManager");
    
+   String getImplementationVersion();
+   
    String getWebServiceHost();
    void setWebServiceHost(String host) throws UnknownHostException;
 

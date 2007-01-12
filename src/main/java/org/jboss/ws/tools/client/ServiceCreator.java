@@ -210,9 +210,12 @@ public class ServiceCreator implements ServiceCreatorIntf
    private void generateServiceFile(WSDLService wsdlService) throws IOException
    {      
       String serviceName = wsdlService.getName().toString();
+      if (serviceName.endsWith("Service") == false)
+         serviceName = serviceName + "Service";
+      
       //Check if the serviceName conflicts with a portType or interface name
       if(wsdl.getInterface(new NCName(serviceName)) != null )
-         serviceName += "_Service";
+         serviceName = new StringBuilder(serviceName).insert(serviceName.lastIndexOf("Service"), '_').toString();
       
       StringBuilder buf = new StringBuilder();
       generateHeader(buf);

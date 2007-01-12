@@ -25,6 +25,7 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.soap.AttachmentPart;
 
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
@@ -109,6 +110,22 @@ public interface StubExt extends javax.xml.rpc.Stub
     * A propriatory extension, that is not part of JAXRPC.
     */
    Iterator getUnboundHeaders();
+   
+   /**
+    * Adds the given AttachmentPart object to the outgoing SOAPMessage.
+    * An AttachmentPart object must be created before it can be added to a message.
+    */
+   void addAttachmentPart(AttachmentPart attachmentpart);
+
+   /**
+    * Clears the list of attachment parts.
+    */
+   void clearAttachmentParts();
+   
+   /**
+    * Creates a new empty AttachmentPart object.
+    */
+   AttachmentPart createAttachmentPart();
 
    /** 
     * Get the current port configuration file 

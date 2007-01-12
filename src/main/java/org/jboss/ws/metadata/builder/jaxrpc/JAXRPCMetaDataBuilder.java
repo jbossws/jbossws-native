@@ -386,15 +386,20 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             pmd.setInHeader(true);
       }
 
-      for (WSDLMIMEPart mimePart : bindingInput.getMimeParts())
+      // we don't support swa binding parameters in document style 
+      // http://jira.jboss.org/jira/browse/JBWS-1384
+      if (opMetaData.getStyle() == Style.RPC)
       {
-         String partName = mimePart.getPartName();
-         QName xmlName = new QName(partName);
-         QName xmlType = mimePart.getXmlType();
+         for (WSDLMIMEPart mimePart : bindingInput.getMimeParts())
+         {
+            String partName = mimePart.getPartName();
+            QName xmlName = new QName(partName);
+            QName xmlType = mimePart.getXmlType();
 
-         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, false);
-         pmd.setSwA(true);
-         pmd.setMimeTypes(mimePart.getMimeTypes());
+            ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, false);
+            pmd.setSwA(true);
+            pmd.setMimeTypes(mimePart.getMimeTypes());
+         }
       }
 
       return wsdlPosition;
@@ -638,7 +643,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                throw new IllegalArgumentException("wsdl-message-message mapping required for document/literal wrapped");
 
             String elementName = wsdlMessageMapping.getWsdlMessagePartName();
-            String variable = variableMap.get(wsdlMessageMapping.getWsdlMessagePartName());
+            String variable = variableMap.get(elementName);
             if (variable == null)
                throw new IllegalArgumentException("Could not determine variable name for element: " + elementName);
 

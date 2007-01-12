@@ -26,30 +26,34 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.webservices.PortComponentMetaData;
 import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.ws.metadata.webservices.WebservicesFactory;
 import org.jboss.ws.metadata.webservices.WebservicesMetaData;
-import org.jboss.ws.tools.interfaces.WSDotXMLCreatorIntf;
+import org.jboss.ws.tools.interfaces.WebservicesXMLCreator;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;
+import org.w3c.dom.Element;
 
 /**
  * Creates the webservices.xml deployment descriptor
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Jun 20, 2005 
  */
-public class WSDotXMLCreator implements WSDotXMLCreatorIntf
+public class WebservicesXMLCreatorImpl implements WebservicesXMLCreator
 {
    // provide logging
-   protected static final Logger log = Logger.getLogger(WSDotXMLCreator.class);
+   protected static final Logger log = Logger.getLogger(WebservicesXMLCreatorImpl.class);
    protected String targetNamespace = null;
 
    protected String seiName = null;
@@ -67,69 +71,45 @@ public class WSDotXMLCreator implements WSDotXMLCreatorIntf
 
    protected boolean append = false;
 
-   public WSDotXMLCreator()
+   public WebservicesXMLCreatorImpl()
    {
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setTargetNamespace(java.lang.String)
-    */
    public void setTargetNamespace(String targetNamespace)
    {
       this.targetNamespace = targetNamespace;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setSeiName(java.lang.String)
-    */
    public void setSeiName(String seiName)
    {
       this.seiName = seiName;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setPortName(java.lang.String)
-    */
    public void setPortName(String portName)
    {
       this.portName = portName;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setServiceName(java.lang.String)
-    */
    public void setServiceName(String serviceName)
    {
       this.serviceName = serviceName;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setEjbLink(java.lang.String)
-    */
    public void setEjbLink(String ejbLink)
    {
       this.ejbLink = ejbLink;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setServletLink(java.lang.String)
-    */
    public void setServletLink(String servletLink)
    {
       this.servletLink = servletLink;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setMappingFile(java.lang.String)
-    */
    public void setMappingFile(String mappingFile)
    {
       this.mappingFile = mappingFile;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#setWsdlFile(java.lang.String)
-    */
    public void setWsdlFile(String wsdlFile)
    {
       this.wsdlFile = wsdlFile;
@@ -140,9 +120,6 @@ public class WSDotXMLCreator implements WSDotXMLCreatorIntf
       this.append = append;
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.ws.tools.WSDotXMLCreatorIntf#generateWSXMLDescriptor(java.io.File)
-    */
    public void generateWSXMLDescriptor(File wsXmlFile) throws IOException
    {
       WebservicesMetaData webservices = constructWSMetaData();
@@ -177,9 +154,10 @@ public class WSDotXMLCreator implements WSDotXMLCreatorIntf
       }
 
       // (re-)write generated webservices descriptor to file
-      FileWriter fw = new FileWriter(wsXmlFile);
-      fw.write(webservices.serialize());
-      fw.close();
+      Element root = DOMUtils.parse(webservices.serialize());
+      FileWriter fwriter = new FileWriter(wsXmlFile);
+      new DOMWriter(fwriter).setPrettyprint(true).print(root);
+      fwriter.close();
    }
 
    //PRIVATE METHODS

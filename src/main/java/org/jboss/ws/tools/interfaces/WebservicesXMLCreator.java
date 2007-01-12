@@ -30,7 +30,7 @@ import java.io.IOException;
  *  @since   Jul 23, 2005 
  */
 
-public interface WSDotXMLCreatorIntf
+public interface WebservicesXMLCreator
 {
 
    /**

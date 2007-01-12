@@ -60,13 +60,13 @@ import org.jboss.ws.tools.JavaToWSDL;
 import org.jboss.ws.tools.JavaWriter;
 import org.jboss.ws.tools.NamespacePackageMapping;
 import org.jboss.ws.tools.WSDLToJava;
-import org.jboss.ws.tools.WSDotXMLCreator;
+import org.jboss.ws.tools.WebservicesXMLCreatorImpl;
 import org.jboss.ws.tools.Configuration.GlobalConfig;
 import org.jboss.ws.tools.Configuration.JavaToWSDLConfig;
 import org.jboss.ws.tools.Configuration.WSDLToJavaConfig;
 import org.jboss.ws.tools.XSDTypeToJava.VAR;
 import org.jboss.ws.tools.client.ServiceCreator;
-import org.jboss.ws.tools.interfaces.WSDotXMLCreatorIntf;
+import org.jboss.ws.tools.interfaces.WebservicesXMLCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 
@@ -145,7 +145,7 @@ public class ToolsHelper
       //Generate the webservices.xml file
       if (j2wc.wsxmlFileNeeded)
       {
-         WSDotXMLCreatorIntf wscr = new WSDotXMLCreator();
+         WebservicesXMLCreator wscr = new WebservicesXMLCreatorImpl();
          wscr.setTargetNamespace(j2wc.targetNamespace);
          //wscr.setLocation(new File(outDir).toURL());
          wscr.setSeiName(j2wc.endpointName);
@@ -336,7 +336,7 @@ public class ToolsHelper
                seiName = seiPackage + "." + wsdlToJava.getServiceEndpointInterfaceName(wsdl.getInterfaces()[0]);
             }
 
-            WSDotXMLCreatorIntf wscr = new WSDotXMLCreator();
+            WebservicesXMLCreator wscr = new WebservicesXMLCreatorImpl();
             wscr.setTargetNamespace(wsdl.getTargetNamespace());
             wscr.setSeiName(seiName);
             wscr.setServiceName(serviceName);

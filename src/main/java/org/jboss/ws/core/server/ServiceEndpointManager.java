@@ -200,6 +200,11 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       this.serviceEndpointInvokerJSE = invoker;
    }
 
+   public String getImplementationVersion()
+   {
+      return UnifiedMetaData.getImplementationVersion();
+   }
+   
    public List<ObjectName> getServiceEndpoints()
    {
       ArrayList<ObjectName> list = new ArrayList<ObjectName>();
@@ -616,7 +621,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public void create() throws Exception
    {
-      log.info(UnifiedMetaData.getImplementationVersion());
+      log.info(getImplementationVersion());
       MBeanServer server = getJMXServer();
       if (server != null)
       {
