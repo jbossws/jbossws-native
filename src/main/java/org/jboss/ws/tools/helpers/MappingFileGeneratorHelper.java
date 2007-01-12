@@ -33,6 +33,7 @@ import javax.xml.soap.SOAPElement;
 import org.apache.xerces.xs.XSAttributeDeclaration;
 import org.apache.xerces.xs.XSAttributeUse;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
+import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSModelGroup;
 import org.apache.xerces.xs.XSObjectList;
@@ -745,8 +746,15 @@ public class MappingFileGeneratorHelper
          {
             XSElementDeclaration xe = (XSElementDeclaration)xsterm;
             XSTypeDefinition typeDefinition = xe.getTypeDefinition();
-            //XSTypeDefinition xt, String name, String containingElement, JavaWsdlMapping jwm, boolean skipWrapperArray
-            addJavaXMLTypeMap(typeDefinition, xe.getName(), containingElement, containingType, jwm, !isDocStyle());
+            String tempContainingElement = "";
+            String tempContainingType = "";
+            if (xe.getScope() != XSConstants.SCOPE_GLOBAL)
+            {
+               tempContainingElement = containingElement;
+               tempContainingType = containingType;
+            }
+
+            addJavaXMLTypeMap(typeDefinition, xe.getName(), tempContainingElement, tempContainingType, jwm, !isDocStyle());
          }
       }
    }

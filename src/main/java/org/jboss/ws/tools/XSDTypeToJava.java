@@ -563,10 +563,24 @@ public class XSDTypeToJava
          if (containingElement == null || containingElement.length() == 0)
             containingElement = origType.getName();
 
-         String anonName = containingElement + subname;
+         String anonName;
+         if (elem.getScope() == XSConstants.SCOPE_GLOBAL)
+         {
+            anonName = subname;
+         }
+         else
+         {
+            anonName = containingElement + subname;
+         }
+
          anonName = utils.firstLetterUpperCase(anonName);
          this.fname = anonName;
-         this.createJavaFile((XSComplexTypeDefinition)xstypedef, schema, false);
+
+         if (!generatedFiles.contains(this.fname))
+         {
+            generatedFiles.add(this.fname);
+            this.createJavaFile((XSComplexTypeDefinition)xstypedef, schema, false);
+         }
 
          // Restore the fname
          this.fname = tempfname;

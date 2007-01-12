@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
 import java.io.IOException;
@@ -77,7 +77,6 @@ public class WSSchemaUtils
       this.targetNamespace = targetNamespace;
    }
 
-
    /**
     * Checks whether given a targetNS and other regular schema namespaces,
     * the passed "checkNS" is a custom namespace
@@ -87,15 +86,14 @@ public class WSSchemaUtils
     */
    public boolean checkCustomNamespace(String targetNS, String checkNS)
    {
-      String[]  nsarr = new String[] {xsNS,Constants.NS_SCHEMA_XSI  };
+      String[] nsarr = new String[] { xsNS, Constants.NS_SCHEMA_XSI };
       List<String> knownNamespaces = Arrays.asList(nsarr);
       boolean isCustom = false;
-      if(xsNS.equals(targetNS))
-         throw new IllegalArgumentException("targetNamespace cannot be "+xsNS );
-      if(checkNS == null)
+      if (xsNS.equals(targetNS))
+         throw new IllegalArgumentException("targetNamespace cannot be " + xsNS);
+      if (checkNS == null)
          throw new IllegalArgumentException("checkNS is null");
-      if(knownNamespaces.contains(checkNS) == false &&
-            targetNS.equals(checkNS) == false)
+      if (knownNamespaces.contains(checkNS) == false && targetNS.equals(checkNS) == false)
          isCustom = true;
       return isCustom;
    }
@@ -108,8 +106,7 @@ public class WSSchemaUtils
     * @return
     */
 
-   public JBossXSElementDeclaration createGlobalXSElementDeclaration(String name, XSTypeDefinition xstype,
-         String targetNS)
+   public JBossXSElementDeclaration createGlobalXSElementDeclaration(String name, XSTypeDefinition xstype, String targetNS)
    {
       JBossXSElementDeclaration xsel = new JBossXSElementDeclaration();
       xsel.setName(name);
@@ -130,11 +127,10 @@ public class WSSchemaUtils
       return new JBossXSModel();
    }
 
-   public JBossXSComplexTypeDefinition createXSComplexTypeDefinition( String name,
-         XSTypeDefinition baseType, List<XSParticle> xsparts, String typens)
+   public JBossXSComplexTypeDefinition createXSComplexTypeDefinition(String name, XSTypeDefinition baseType, List<XSParticle> xsparts, String typens)
    {
       //No complex type if particles are null
-      if(xsparts == null)
+      if (xsparts == null)
          return null;
 
       JBossXSComplexTypeDefinition ct = new JBossXSComplexTypeDefinition();
@@ -147,17 +143,16 @@ public class WSSchemaUtils
       // Plug the particle array into the modelgroup
       JBossXSParticle xspa = new JBossXSParticle(null, typens);
       xspa.setTerm(group);
-      ((JBossXSComplexTypeDefinition) ct).setParticle(xspa);
+      ((JBossXSComplexTypeDefinition)ct).setParticle(xspa);
 
       if (baseType != null)
       {
-         ((JBossXSComplexTypeDefinition) ct).setDerivationMethod(XSConstants.DERIVATION_EXTENSION);
-         ((JBossXSComplexTypeDefinition) ct).setBaseType(baseType);
+         ((JBossXSComplexTypeDefinition)ct).setDerivationMethod(XSConstants.DERIVATION_EXTENSION);
+         ((JBossXSComplexTypeDefinition)ct).setBaseType(baseType);
       }
 
       return ct;
    }
-
 
    /**
     * Create a local XSElementDeclaration object
@@ -168,7 +163,7 @@ public class WSSchemaUtils
     * @return
     */
 
-   public JBossXSElementDeclaration createXSElementDeclaration(String name, XSTypeDefinition xstype,boolean isNillable)
+   public JBossXSElementDeclaration createXSElementDeclaration(String name, XSTypeDefinition xstype, boolean isNillable)
    {
       JBossXSElementDeclaration xsel = new JBossXSElementDeclaration();
       xsel.setName(name);
@@ -186,7 +181,6 @@ public class WSSchemaUtils
       return xsp;
    }
 
-
    /**
     * Creates a XSTypeDefinition object given a QName
     *
@@ -201,7 +195,6 @@ public class WSSchemaUtils
       return jbxs;
    }
 
-
    /**
     * Generate a complex type for a custom exception
     * @param exname
@@ -213,12 +206,11 @@ public class WSSchemaUtils
    {
       JBossXSParticle xsp = new JBossXSParticle();
       /*xsp.setType(XSConstants.ELEMENT_DECLARATION);
-      xsp.setMaxOccurs(-1);
-      JBossXSElementDeclaration xsel = (JBossXSElementDeclaration)createXSElementDeclaration("name", utils.getSchemaBasicType("string"),  true);
+       xsp.setMaxOccurs(-1);
+       JBossXSElementDeclaration xsel = (JBossXSElementDeclaration)createXSElementDeclaration("name", utils.getSchemaBasicType("string"),  true);
 
-      xsp.setTerm(xsel); */
-      XSComplexTypeDefinition ct =
-         new JBossXSComplexTypeDefinition(exname, ns);
+       xsp.setTerm(xsel); */
+      XSComplexTypeDefinition ct = new JBossXSComplexTypeDefinition(exname, ns);
 
       ((JBossXSComplexTypeDefinition)ct).setParticle(xsp);
       return ct;
@@ -233,10 +225,10 @@ public class WSSchemaUtils
     */
    public JBossXSModel getJBossXSModel(XSModel xsmodel)
    {
-      if(xsmodel instanceof JBossXSModel)
+      if (xsmodel instanceof JBossXSModel)
          return (JBossXSModel)xsmodel;
       JBossXSModel jbxs = new JBossXSModel();
-      copyXSModel(xsmodel,jbxs);
+      copyXSModel(xsmodel, jbxs);
       return jbxs;
    }
 
@@ -248,17 +240,20 @@ public class WSSchemaUtils
     */
    public boolean isEmptySchema(JBossXSModel xsmodel, String namespace)
    {
-      if(xsmodel == null) return true;
-      if(namespace == null) throw new WSException("Target Namespace of xsmodel is null");
+      if (xsmodel == null)
+         return true;
+      if (namespace == null)
+         throw new WSException("Target Namespace of xsmodel is null");
       XSNamedMap tmap = xsmodel.getComponentsByNamespace(XSConstants.TYPE_DEFINITION, namespace);
       XSNamedMap emap = xsmodel.getComponentsByNamespace(XSConstants.ELEMENT_DECLARATION, namespace);
 
-      if (tmap != null && tmap.getLength() > 0) return false;
-      if (emap != null && emap.getLength() > 0) return false;
+      if (tmap != null && tmap.getLength() > 0)
+         return false;
+      if (emap != null && emap.getLength() > 0)
+         return false;
 
       return true;
    }
-
 
    /**
     *  Serialize the SchemaModel into a  Writer
@@ -269,7 +264,7 @@ public class WSSchemaUtils
    public void serialize(XSModel xsmodel, Writer writer) throws IOException
    {
       StringBuilder buffer = new StringBuilder();
-      if(xsmodel instanceof JBossXSModel)
+      if (xsmodel instanceof JBossXSModel)
       {
          String str = ((JBossXSModel)xsmodel).serialize();
          buffer.append(str);
@@ -285,7 +280,6 @@ public class WSSchemaUtils
       }
       writer.write(buffer.toString());
    }
-
 
    /**
     *  Serialize the SchemaModel (with no types and elements)  into a  Writer
@@ -316,7 +310,7 @@ public class WSSchemaUtils
    public String write(XSElementDeclaration xsel, XSParticle xsp)
    {
       XSTypeDefinition xst = xsel.getTypeDefinition();
-      if(xst == null)
+      if (xst == null)
          throw new IllegalStateException("Type xst is null");
 
       boolean isGlobalRef = (xsel.getScope() == XSConstants.SCOPE_GLOBAL);
@@ -326,7 +320,7 @@ public class WSSchemaUtils
       String elname = xsel.getName();
       String prefix = null;
 
-      if(isGlobalRef)
+      if (isGlobalRef)
       {
          String namespace = xsel.getNamespace();
          prefix = getPrefix(namespace);
@@ -337,14 +331,14 @@ public class WSSchemaUtils
          String namespace = xst.getNamespace();
          String typename = xst.getName();
 
-         if (! Constants.NS_SCHEMA_XSD.equals(namespace))
+         if (!Constants.NS_SCHEMA_XSD.equals(namespace))
          {
             prefix = getPrefix(namespace);
             typename = prefix + ":" + typename;
          }
          buf.append("<element name='" + elname + "'");
 
-         if(! isAnonType)
+         if (!isAnonType)
             buf.append(" type='" + typename + "' ");
       }
 
@@ -357,16 +351,14 @@ public class WSSchemaUtils
       {
          if (xsp.getMaxOccursUnbounded())
             buf.append(" maxOccurs='unbounded' ");
-         else
-            buf.append(" maxOccurs='" + xsp.getMaxOccurs() + "'");
+         else buf.append(" maxOccurs='" + xsp.getMaxOccurs() + "'");
 
          buf.append(" minOccurs='" + xsp.getMinOccurs() + "'");
       }
 
-      if(! isAnonType)
+      if (isAnonType == false || isGlobalRef == true)
          buf.append("/>");
-      else
-         buf.append(">").append(write(xst)).append("</element>");
+      else buf.append(">").append(write(xst)).append("</element>");
 
       return buf.toString();
    }
@@ -374,7 +366,7 @@ public class WSSchemaUtils
    public String write(XSAttributeDeclaration decl)
    {
       XSTypeDefinition xst = decl.getTypeDefinition();
-      if(xst == null)
+      if (xst == null)
          throw new IllegalStateException("Type xst is null");
 
       boolean isGlobalRef = (decl.getScope() == XSConstants.SCOPE_GLOBAL);
@@ -395,21 +387,20 @@ public class WSSchemaUtils
          String namespace = xst.getNamespace();
          String typename = xst.getName();
 
-         if (! Constants.NS_SCHEMA_XSD.equals(namespace))
+         if (!Constants.NS_SCHEMA_XSD.equals(namespace))
          {
             prefix = getPrefix(namespace);
             typename = prefix + ":" + typename;
          }
          buf.append("<attribute name='" + name + "'");
 
-         if(! isAnonType)
+         if (!isAnonType)
             buf.append(" type='" + typename + "' ");
       }
 
-      if(! isAnonType)
+      if (!isAnonType)
          buf.append("/>");
-      else
-         buf.append(">").append(write(xst)).append("</attribute>");
+      else buf.append(">").append(write(xst)).append("</attribute>");
 
       return buf.toString();
    }
@@ -434,25 +425,22 @@ public class WSSchemaUtils
       String namespace = xst.getNamespace();
       String prefix = null;
 
-      if (! Constants.NS_SCHEMA_XSD.equals(namespace))
+      if (!Constants.NS_SCHEMA_XSD.equals(namespace))
       {
          prefix = getPrefix(namespace);
          typename = prefix + ":" + typename;
       }
 
       buf.append("<element name='" + elname + "'");
-      if(!isAnonType)
+      if (!isAnonType)
          buf.append(" type='" + typename + "' ");
-      else
-         buf.append(">").append(write(xst));
+      else buf.append(">").append(write(xst));
 
-      if (xsel.getNillable() &&
-            xsel.getScope() != XSConstants.SCOPE_GLOBAL)
+      if (xsel.getNillable() && xsel.getScope() != XSConstants.SCOPE_GLOBAL)
          buf.append(" nillable='true' ");
-      if(!isAnonType)
+      if (!isAnonType)
          buf.append("/>");
-      else
-         buf.append("</element>");
+      else buf.append("</element>");
 
       return buf.toString();
    }
@@ -474,13 +462,12 @@ public class WSSchemaUtils
          XSParticle jxsp = (XSParticle)objlist.item(i);
          XSTerm xterm = jxsp.getTerm();
          short termType = xterm.getType();
-         if(termType == XSConstants.ELEMENT_DECLARATION)
+         if (termType == XSConstants.ELEMENT_DECLARATION)
          {
             XSElementDeclaration xsel = (XSElementDeclaration)jxsp.getTerm();
             buf.append(this.write(xsel, jxsp));
          }
-         else
-            if ( termType == XSConstants.MODEL_GROUP)
+         else if (termType == XSConstants.MODEL_GROUP)
          {
             XSObjectList olist = ((XSModelGroup)xterm).getParticles();
             int lobj = olist != null ? olist.getLength() : 0;
@@ -489,17 +476,15 @@ public class WSSchemaUtils
                XSParticle jxp = (XSParticle)olist.item(k);
                XSTerm xsterm = jxp.getTerm();
                termType = xsterm.getType();
-               if(termType == XSConstants.ELEMENT_DECLARATION)
+               if (termType == XSConstants.ELEMENT_DECLARATION)
                   buf.append(write((XSElementDeclaration)xsterm, jxsp));
-               else
-                  if(termType == XSConstants.MODEL_GROUP && k > 0)
-                     buf.append(write((XSModelGroup)xsterm));
+               else if (termType == XSConstants.MODEL_GROUP && k > 0)
+                  buf.append(write((XSModelGroup)xsterm));
             }
          }
       }
       return buf.toString();
    }
-
 
    /**
     * Return a string for the xs type
@@ -517,9 +502,9 @@ public class WSSchemaUtils
          String jxsTypeName = jxstype.getName();
          boolean isSimple = jxstype.getContentType() == XSComplexTypeDefinition.CONTENTTYPE_SIMPLE;
 
-         if(xstype.getAnonymous()) buf.append("<complexType>");
-         else
-          buf.append("<complexType name='" + jxsTypeName + "'>");
+         if (xstype.getAnonymous())
+            buf.append("<complexType>");
+         else buf.append("<complexType name='" + jxsTypeName + "'>");
 
          XSTypeDefinition xsbase = (XSTypeDefinition)jxstype.getBaseType();
          String baseType = null;
@@ -533,12 +518,13 @@ public class WSSchemaUtils
          }
 
          XSParticle xsp = jxstype.getParticle();
-         if (xsp != null) appendComplexTypeDefinition(buf,jxstype);
+         if (xsp != null)
+            appendComplexTypeDefinition(buf, jxstype);
 
          XSObjectList list = jxstype.getAttributeUses();
          for (int i = 0; i < list.getLength(); i++)
          {
-            XSAttributeUse use = (XSAttributeUse) list.item(i);
+            XSAttributeUse use = (XSAttributeUse)list.item(i);
             XSAttributeDeclaration decl = use.getAttrDeclaration();
             buf.append(write(decl));
          }
@@ -560,7 +546,7 @@ public class WSSchemaUtils
          {
             String baseType = xsbase.getName();
             String ns = xsbase.getNamespace();
-            if (! Constants.NS_SCHEMA_XSD.equals(ns))
+            if (!Constants.NS_SCHEMA_XSD.equals(ns))
             {
                String prefix = getPrefix(ns);
                baseType = prefix + ":" + baseType;
@@ -572,7 +558,7 @@ public class WSSchemaUtils
             for (int i = 0; i < list.getLength(); i++)
             {
                String listItem = DOMWriter.normalize(list.item(i), false);
-               buf.append("<enumeration value='" + listItem +"'/>");
+               buf.append("<enumeration value='" + listItem + "'/>");
             }
             buf.append("</restriction>");
          }
@@ -582,7 +568,7 @@ public class WSSchemaUtils
       return buf.toString();
    }
 
-// Private methods
+   // Private methods
 
    private void appendSchemaDefinitions(StringBuilder buffer, XSNamespaceItemList itemlist)
    {
@@ -594,13 +580,14 @@ public class WSSchemaUtils
          String ns = nsitem.getSchemaNamespace();
          //Ignore the one for xsd
 
-         if (Constants.NS_SCHEMA_XSD.equals(ns)) continue;
+         if (Constants.NS_SCHEMA_XSD.equals(ns))
+            continue;
          buffer.append(utils.getSchemaDefinitions(ns));
 
       } //end for
    }
 
-   private void appendComplexTypeDefinition(StringBuilder buf , XSComplexTypeDefinition jxstype)
+   private void appendComplexTypeDefinition(StringBuilder buf, XSComplexTypeDefinition jxstype)
    {
       XSParticle xsp = jxstype.getParticle();
       XSTerm xsterm = xsp.getTerm();
@@ -651,10 +638,11 @@ public class WSSchemaUtils
             }
             else if (xterm instanceof XSModelGroup)
             {
-               if(deriveMethod == XSConstants.DERIVATION_EXTENSION && i != lenobj -1)
+               if (deriveMethod == XSConstants.DERIVATION_EXTENSION && i != lenobj - 1)
                   continue;
 
-               if (i == 0) continue;//Ignore as it provides the baseclass sequence of elements
+               if (i == 0)
+                  continue;//Ignore as it provides the baseclass sequence of elements
                XSObjectList olist = ((XSModelGroup)xterm).getParticles();
                int lobj = olist != null ? olist.getLength() : 0;
                for (int k = 0; k < lobj; k++)
@@ -662,11 +650,10 @@ public class WSSchemaUtils
                   XSParticle jxp = (XSParticle)olist.item(k);
                   XSTerm jxpterm = jxp.getTerm();
                   short termType = jxpterm.getType();
-                  if(termType == XSConstants.ELEMENT_DECLARATION)
+                  if (termType == XSConstants.ELEMENT_DECLARATION)
                      buf.append(write((XSElementDeclaration)jxpterm, jxsp));
-                  else
-                     if(termType == XSConstants.MODEL_GROUP)
-                        buf.append(write((XSModelGroup)jxpterm));
+                  else if (termType == XSConstants.MODEL_GROUP)
+                     buf.append(write((XSModelGroup)jxpterm));
                }
             }
          }
@@ -682,11 +669,11 @@ public class WSSchemaUtils
       for (int i = 0; i < len; i++)
       {
          XSTypeDefinition xstype = (XSTypeDefinition)xsmap.item(i);
-         if (Constants.NS_SCHEMA_XSD.equals(xstype.getNamespace())) continue;
+         if (Constants.NS_SCHEMA_XSD.equals(xstype.getNamespace()))
+            continue;
          buffer.append(this.write(xstype));
       }
    }
-
 
    private void appendGlobalElements(StringBuilder buffer, XSModel xsmodel)
    {
@@ -695,7 +682,8 @@ public class WSSchemaUtils
       for (int i = 0; i < len; i++)
       {
          XSElementDeclaration xsel = (XSElementDeclaration)xsmap.item(i);
-         if (Constants.NS_SCHEMA_XSD.equals(xsel.getNamespace())) continue;
+         if (Constants.NS_SCHEMA_XSD.equals(xsel.getNamespace()))
+            continue;
          buffer.append(this.write(xsel));
       }
    }
@@ -703,9 +691,9 @@ public class WSSchemaUtils
    //Copy the Xerces implementation of XSModel into JBossXSModel
    public void copyXSModel(XSModel xsmodel, JBossXSModel jb)
    {
-      if(xsmodel == null)
+      if (xsmodel == null)
          throw new IllegalArgumentException("Illegal Null Argument:xsmodel");
-      if(jb == null)
+      if (jb == null)
          throw new IllegalArgumentException("Illegal Null Argument:jb");
       //Copy all the Namespace Items
       jb.setXSNamespaceItemList(xsmodel.getNamespaceItems());
@@ -724,7 +712,8 @@ public class WSSchemaUtils
       for (int i = 0; i < len; i++)
       {
          XSTypeDefinition xstype = (XSTypeDefinition)xsmp.item(i);
-         if (!this.xsNS.equals(xstype.getNamespace())) jb.addXSTypeDefinition(xstype);
+         if (!this.xsNS.equals(xstype.getNamespace()))
+            jb.addXSTypeDefinition(xstype);
       }
 
       //Copy all the attributes
@@ -739,7 +728,7 @@ public class WSSchemaUtils
       //copy all the global annotations
       //xsmp = xsmodel.getComponents(XSConstants.ANNOTATION);
       XSObjectList xo = xsmodel.getAnnotations();
-      len = xo != null ? xo.getLength():0;
+      len = xo != null ? xo.getLength() : 0;
       //len = xsmp != null ? xsmp.getLength() : 0;
       for (int i = 0; i < len; i++)
       {
