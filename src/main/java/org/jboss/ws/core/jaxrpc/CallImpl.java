@@ -51,6 +51,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
@@ -615,6 +616,10 @@ public class CallImpl extends CommonClient implements Call
       catch (RemoteException rex)
       {
          throw rex;
+      }
+      catch (WSTimeoutException toex)
+      {
+         throw toex;
       }
       catch (Exception ex)
       {
