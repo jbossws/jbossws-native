@@ -410,7 +410,8 @@ public class XSDTypeToJava
             XSAttributeDeclaration att = obj.getAttrDeclaration();
             XSSimpleTypeDefinition xstype = att.getTypeDefinition();
             QName qn = SchemaUtils.handleSimpleType(xstype);
-            VAR v = createVAR(qn, att.getName(), pkgname);
+            boolean primitive = obj.getRequired();
+            VAR v = createVAR(qn, att.getName(), pkgname, primitive);
             if (vars == null)
                vars = new ArrayList();
             vars.add(v);
@@ -471,7 +472,7 @@ public class XSDTypeToJava
       return vars;
    }
 
-   private VAR createVAR(QName qn, String varstr, String pkgname)
+   private VAR createVAR(QName qn, String varstr, String pkgname, boolean primitive)
    {
       String clname = "";
       Class cls = typeMapping.getJavaType(qn);
@@ -479,6 +480,13 @@ public class XSDTypeToJava
       if (cls != null)
       {
          clname = cls.getName();
+         if (primitive)
+         {
+            String primName = utils.getPrimitive(clname);
+            if (primName != null)
+               clname = primName;
+         }
+
       }
       else
       {
