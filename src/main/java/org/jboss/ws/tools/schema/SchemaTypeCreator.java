@@ -308,7 +308,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       }
       else
       {
-         name = utils.getJustClassName(javaType);
+         name = WSDLUtils.getJustClassName(javaType);
          namespace = getNamespace(javaType);
       }
 
@@ -705,21 +705,27 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       else
       {
          namespace = getNamespace(javaType);
-         name = utils.getJustClassName(javaType);
+         name = WSDLUtils.getJustClassName(javaType);
       }
 
-      JBossXSComplexTypeDefinition complexType = new JBossXSComplexTypeDefinition();
+      List<XSParticle> particles = new ArrayList<XSParticle>(0);
+      List<Class> types = new ArrayList<Class>(0);
+      JBossXSComplexTypeDefinition complexType = new JBossXSComplexTypeDefinition();      
       complexType.setName(name);
       complexType.setNamespace(namespace);
 
+      xsModel.addXSComplexTypeDefinition(complexType);
+      xsModel.addXSElementDeclaration(sutils.createGlobalXSElementDeclaration(name, complexType, namespace));
+      typeMapping.register(javaType, new QName(namespace, name), null, null);
+      registerJavaTypeMapping(new QName(namespace, name), javaType, "complexType", particles, null);
+      
       Class superClass = javaType.getSuperclass();
       if (!Exception.class.equals(superClass) || Throwable.class.equals(superClass))
       {
          JBossXSTypeDefinition baseType = generateType(null, superClass);
          complexType.setBaseType(baseType);
       }
-      List<Class> types = new ArrayList<Class>(0);
-      List<XSParticle> particles = new ArrayList<XSParticle>(0);
+            
       generateExceptionParticles(namespace, javaType, types, particles);
 
       boolean found = hasConstructor(javaType, types);
@@ -744,12 +750,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          }
       }
 
-      complexType.setParticle(createGroupParticle(namespace, particles));
-
-      xsModel.addXSComplexTypeDefinition(complexType);
-      xsModel.addXSElementDeclaration(sutils.createGlobalXSElementDeclaration(name, complexType, namespace));
-      typeMapping.register(javaType, new QName(namespace, name), null, null);
-      registerJavaTypeMapping(new QName(namespace, name), javaType, "complexType", particles, null);
+      complexType.setParticle(createGroupParticle(namespace, particles));      
 
       return complexType;
    }
