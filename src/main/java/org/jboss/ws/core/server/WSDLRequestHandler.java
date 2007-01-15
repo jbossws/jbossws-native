@@ -111,7 +111,7 @@ public class WSDLRequestHandler
             Element childElement = (Element)childNode;
             String nodeName = childElement.getLocalName();
 
-            // Replace xsd:import location attributes
+            // Replace xsd:import and xsd:include location attributes
             if ("import".equals(nodeName) || "include".equals(nodeName))
             {
                Attr locationAttr = childElement.getAttributeNode("schemaLocation");
@@ -132,7 +132,7 @@ public class WSDLRequestHandler
                      String reqPath = reqURL.getPath();
                      String completeHost = wsdlHost;
 
-                     if (! wsdlHost.startsWith("http://") && wsdlHost.startsWith("https://"))
+                     if (! (wsdlHost.startsWith("http://") || wsdlHost.startsWith("https://")) )
                      {
 	                     String reqProtocol = reqURL.getProtocol();
 	                     int reqPort = reqURL.getPort();
@@ -141,6 +141,8 @@ public class WSDLRequestHandler
                      }
 
                      String newLocation = completeHost + reqPath + "?wsdl&resource=" + newResourcePath;
+                     locationAttr.setNodeValue(newLocation);
+                     
                      log.debug("Mapping import from '" + orgLocation + "' to '" + newLocation + "'");
                   }
                }
@@ -161,7 +163,7 @@ public class WSDLRequestHandler
                   if (reqURL.getProtocol().equals(locProtocol) && reqURL.getPath().equals(locPath))
                   {
                      String completeHost = wsdlHost;
-                	 if (!completeHost.startsWith("http://") || !completeHost.startsWith("https://"))
+                	 if (! (completeHost.startsWith("http://") || completeHost.startsWith("https://")) )
                      {
 	                	 int locPort = locURL.getPort();
 	                     String hostAndPort = wsdlHost + (locPort > 0 ? ":" + locPort : "");

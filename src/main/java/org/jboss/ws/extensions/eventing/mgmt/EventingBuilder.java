@@ -22,7 +22,7 @@ public class EventingBuilder {
 
    public EventSource newEventSource(EventingEndpointDI desc) {
       URI eventSourceNS = newEventSourceURI(desc.getName());
-      EventSource eventSource = new EventSource(desc.getName(), eventSourceNS, (String)desc.getSchema());
+      EventSource eventSource = new EventSource(desc.getName(), eventSourceNS, desc.getSchema(), desc.getNotificationRootElementNS());
       eventSource.getSupportedFilterDialects().add(EventingConstants.getDefaultFilterDialect());
       return eventSource;
    }

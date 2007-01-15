@@ -48,6 +48,7 @@ import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.eventing.EventingConstants;
+import org.jboss.ws.extensions.eventing.EventingUtils;
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpoint;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPScanner;
@@ -97,7 +98,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  * A meta data builder that is based on webservices.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @authoer <a href="mailto:jason.greene@jboss.org">Jason T. Greene</a>
+ * @author <a href="mailto:jason.greene@jboss.org">Jason T. Greene</a>
  * @since 19-Oct-2005
  */
 public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
@@ -953,11 +954,31 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          {
             ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)epMetaData;
             String eventSourceNS = wsdlInterface.getQName().getNamespaceURI() + "/" + wsdlInterface.getQName().getLocalPart();
-            Object notificationSchema = null; // todo: resolve schema from operation message
+
+            // extract the schema model
+            JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
+            String[] notificationSchema = EventingUtils.extractNotificationSchema(schemaModel);
+
+            // extract the root element NS
+            String notificationRootElementNS = null;
+            WSDLInterfaceOperation wsdlInterfaceOperation = wsdlInterface.getOperations()[0];
+            if(wsdlInterfaceOperation.getOutputs().length > 0 )
+            {
+               WSDLInterfaceOperationOutput wsdlInterfaceOperationOutput = wsdlInterfaceOperation.getOutputs()[0];
+               notificationRootElementNS = wsdlInterfaceOperationOutput.getElement().getNamespaceURI();
+            }
+            else
+            {
+               // WSDL operation of an WSDL interface that is marked as an event source
+               // requires to carry an output message.
+               throw new WSException("Unable to resolve eventing root element NS. No operation output found at "+
+                  wsdlInterfaceOperation.getQName());
+            }
 
             EventingEpMetaExt ext = new EventingEpMetaExt(EventingConstants.NS_EVENTING);
             ext.setEventSourceNS(eventSourceNS);
             ext.setNotificationSchema(notificationSchema);
+            ext.setNotificationRootElementNS(notificationRootElementNS);
 
             sepMetaData.addExtension(ext);
             sepMetaData.setManagedEndpointBean(EventingEndpoint.class.getName());

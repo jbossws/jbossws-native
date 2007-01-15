@@ -44,10 +44,12 @@ class EventSource implements java.io.Serializable
 
    private String name;
    private URI nameSpace;
-   private String notificationSchema;
 
    private URI managerAddress;
    private List<URI> supportedFilter = new ArrayList<URI>();
+
+   private String[] notificationSchema;
+   private String notificationRootElementNS;
 
    public EventSource(String name, URI nameSpace) {
       this.name = name;
@@ -55,11 +57,12 @@ class EventSource implements java.io.Serializable
       this.state = State.CREATED;
    }
 
-   public EventSource(String name, URI nameSpace, String schema)
+   public EventSource(String name, URI nameSpace, String[] schema, String notificationRootElementNS)
    {
       this.name = name;
       this.nameSpace = nameSpace;
       this.notificationSchema = schema;
+      this.notificationRootElementNS = notificationRootElementNS;
       this.state = State.CREATED;
    }
 
@@ -97,7 +100,7 @@ class EventSource implements java.io.Serializable
       return supportedFilter;
    }
 
-   public String getNotificationSchema() {
+   public String[] getNotificationSchema() {
       return notificationSchema;
    }
 
@@ -111,6 +114,10 @@ class EventSource implements java.io.Serializable
 
    public URI getManagerAddress() {
       return managerAddress;
+   }
+
+   public String getNotificationRootElementNS() {
+      return notificationRootElementNS;
    }
 
    public void setManagerAddress(String managerAddress) {

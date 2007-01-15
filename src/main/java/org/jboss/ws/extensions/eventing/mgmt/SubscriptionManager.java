@@ -25,6 +25,7 @@ package org.jboss.ws.extensions.eventing.mgmt;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,18 +44,27 @@ import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.ObjectNameFactory;
 import org.jboss.ws.core.utils.UUIDGenerator;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.eventing.EventingConstants;
+import org.jboss.ws.extensions.eventing.DispatchException;
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
 import org.jboss.ws.extensions.eventing.element.EndpointReference;
 import org.jboss.ws.extensions.eventing.element.ReferenceParameters;
 import org.jboss.ws.extensions.eventing.element.NotificationFailure;
 import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.SAXException;
+import org.apache.xml.utils.DefaultErrorHandler;
 
 /**
  * The SubscriptionManager maintains event sources and subscriptions.<br>
@@ -87,7 +97,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    private static final Logger log = Logger.getLogger(SubscriptionManager.class);
 
    public static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=SubscriptionManager,module=eventing");
-   
+
    /**
     * Maps event source namespaces to event source instances.
     */
@@ -124,6 +134,11 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
     */
    private List<NotificationFailure> notificationFailures = new ArrayList<NotificationFailure>();
 
+   /**
+    * True force validation of every notification message against its schema
+    */
+   private boolean validateNotifications = false;
+
    public void create() throws Exception
    {
       MBeanServer server = getJMXServer();
@@ -147,31 +162,31 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    public void start() throws Exception
    {
       log.debug("Start subscription manager");
-      
+
       // setup thread pool
       threadPool = new ThreadPoolExecutor(5, 15, // core/max num threads
-            5000, TimeUnit.MILLISECONDS, // 5 seconds keepalive
-            eventQueue);
+         5000, TimeUnit.MILLISECONDS, // 5 seconds keepalive
+         eventQueue);
 
       // start the subscription watchdog
       watchDog = new WatchDog(subscriptionMapping);
       watchDog.startup();
    }
 
-   public void stop() 
+   public void stop()
    {
       log.debug("Stop subscription manager");
       try
       {
          // remove event dispatcher
          Util.unbind(new InitialContext(), EventingConstants.DISPATCHER_JNDI_NAME);
-         
+
          // stop thread pool
          threadPool.shutdown();
-         
+
          // stop the watchdog
          watchDog.shutdown();
-         
+
          for (URI eventSourceNS : eventSourceMapping.keySet())
          {
             removeEventSource(eventSourceNS);
@@ -180,7 +195,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       catch (NamingException e)
       {
          // ignore
-      }      
+      }
    }
 
    private static URI generateSubscriptionID()
@@ -462,6 +477,9 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    public void dispatch(URI eventSourceNS, Element payload)
    {
       DispatchJob dispatchJob = new DispatchJob(eventSourceNS, payload, subscriptionMapping);
+      if (validateNotifications && !this.validateMessage(DOMWriter.printNode(payload,false),eventSourceNS)) {
+         throw new DispatchException("Notification message validation failed!");
+      }
       threadPool.execute(dispatchJob);
    }
 
@@ -473,6 +491,48 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    public List<NotificationFailure> showNotificationFailures()
    {
       return notificationFailures;
+   }
+
+   private boolean validateMessage(String msg, URI eventSourceNS) {
+      try
+      {
+         EventSource es = eventSourceMapping.get(eventSourceNS);
+         log.info(new StringBuffer("Validating message: \n\n").append(msg)
+            .append("\n\nagainst the following schema(s): \n").toString());
+         for (int i=0;i<es.getNotificationSchema().length;i++) {
+            log.info(es.getNotificationSchema()[i]);
+         }
+         Element rootElement = DOMUtils.parse(msg);
+         if (!es.getNotificationRootElementNS().equalsIgnoreCase(rootElement.getNamespaceURI())) {
+            log.error("Root element expected namespace: "+es.getNotificationRootElementNS());
+            return false;
+         }
+         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+         factory.setNamespaceAware(true);
+         factory.setValidating(true);
+         factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+
+         String[] notificationSchemas = es.getNotificationSchema();
+         InputSource[] is = new InputSource[notificationSchemas.length];
+         for (int i=0; i<notificationSchemas.length; i++) {
+            is[i] = new InputSource(new StringReader(notificationSchemas[notificationSchemas.length-1-i]));
+            //is[i] = new InputSource(new StringReader(notificationSchemas[i]));
+         }
+
+         factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", is);
+         DocumentBuilder docBuilder = factory.newDocumentBuilder();
+         DefaultErrorHandler errorHandler = new Validator();
+         docBuilder.setErrorHandler(errorHandler);
+         docBuilder.parse(new InputSource(new StringReader(msg)));
+         log.info("Document validated!");
+         return true;
+      }
+      catch (Exception e) {
+         log.error(e);
+         log.info("Cannot validate and/or parse the document!");
+         return false;
+      }
+
    }
 
    // ----------------------------------------------------------------------
@@ -516,6 +576,25 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    public void setEventKeepAlive(long millies)
    {
       threadPool.setKeepAliveTime(millies, TimeUnit.MILLISECONDS);
+   }
+
+   public boolean isValidateNotifications() {
+      return this.validateNotifications;
+   }
+
+   public void setValidateNotifications(boolean validateNotifications) {
+      this.validateNotifications = validateNotifications;
+   }
+
+   private MBeanServer getJMXServer()
+   {
+      MBeanServer server = null;
+      ArrayList servers = MBeanServerFactory.findMBeanServer(null);
+      if (servers.size() > 0)
+      {
+         server = (MBeanServer)servers.get(0);
+      }
+      return server;
    }
 
    /**
@@ -574,14 +653,14 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
    }
 
-   private MBeanServer getJMXServer()
-   {
-      MBeanServer server = null;
-      ArrayList servers = MBeanServerFactory.findMBeanServer(null);
-      if (servers.size() > 0)
-      {
-         server = (MBeanServer)servers.get(0);
+   private class Validator extends DefaultErrorHandler {
+      public void error(SAXParseException exception) throws SAXException {
+         throw new SAXException(exception);
       }
-      return server;
+      public void fatalError(SAXParseException exception) throws SAXException {
+         throw new SAXException(exception);
+      }
+      public void warning(SAXParseException exception) throws SAXException { }
    }
+
 }

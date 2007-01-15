@@ -100,7 +100,15 @@ public interface Constants
    static final String URI_LITERAL_ENC = "";
    /** WSDL 2.0 Encoding Rules */
    static final String URI_STYLE_RPC = "http://www.w3.org/2004/03/wsdl/style/rpc";
-   static final String URI_STYLE_DOCUMENT = "http://www.w3.org/2004/03/wsdl/style/iri"; 
+
+   static final String URI_STYLE_DOCUMENT = "http://www.w3.org/2004/03/wsdl/style/iri";
+
+    /** WS-Eventing namespace uri **/
+    static final String URI_WS_EVENTING = "http://schemas.xmlsoap.org/ws/2004/08/eventing";
+
+    /** WS-Addressing namespace uri **/
+   static final String URI_WS_ADDRESSING = "http://www.w3.org/2005/08/addressing";
+
    /**Style of WSDL */
    static final String RPC_LITERAL = "RPC/Literal";
    static final String DOCUMENT_LITERAL = "Document/Literal";
@@ -272,9 +280,10 @@ public interface Constants
    /** Indicates that an output is a return parameter */
    static final String WSDL_PROPERTY_RETURN_PART = "http://www.jboss.org/jbossws/return-part";
 
-   static final QName WSDL_ATTRIBUTE_WSA_ACTION = new QName("http://www.w3.org/2005/08/addressing", "Action");
+   static final QName WSDL_ATTRIBUTE_WSA_ACTION = new QName(URI_WS_ADDRESSING, "Action");
 
-   static final QName WSDL_ATTRIBUTE_WSE_EVENTSOURCE = new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "EventSource");
+   static final QName WSDL_ATTRIBUTE_WSE_EVENTSOURCE = new QName(URI_WS_EVENTING, "EventSource");
+    
 
    /** WSDL-2.0 exchange patterns */
    static final String WSDL20_PATTERN_IN_ONLY = "http://www.w3.org/2004/08/wsdl/in-only";

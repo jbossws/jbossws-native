@@ -35,23 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.wsdl.Binding;
-import javax.wsdl.BindingInput;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Definition;
-import javax.wsdl.Fault;
-import javax.wsdl.Import;
-import javax.wsdl.Input;
-import javax.wsdl.Message;
-import javax.wsdl.Operation;
-import javax.wsdl.Output;
-import javax.wsdl.Part;
-import javax.wsdl.Port;
-import javax.wsdl.PortType;
-import javax.wsdl.Service;
-import javax.wsdl.Types;
-import javax.wsdl.WSDLException;
+import javax.wsdl.*;
 import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.wsdl.extensions.mime.MIMEContent;
@@ -509,7 +493,12 @@ public class WSDL11Reader
          destOperation.setName(new NCName(srcOperation.getName()));
          destOperation.setStyle(getOperationStyle(srcWsdl, srcPortType, srcOperation));
 
-         processOperationInput(srcWsdl, srcOperation, destOperation, srcPortType);
+         if(srcOperation.getStyle()!=null
+            && false == OperationType.NOTIFICATION.equals(srcOperation.getStyle()))
+         {
+            processOperationInput(srcWsdl, srcOperation, destOperation, srcPortType);
+         }
+
          processOperationOutput(srcWsdl, srcOperation, destOperation, srcPortType);
          processOperationFaults(srcOperation, destOperation, destInterface);
 
@@ -612,8 +601,11 @@ public class WSDL11Reader
 
       Message srcMessage = srcOutput.getMessage();
       if (srcMessage == null)
-         throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find output message on operation " + srcOperation.getName() + " on port type: "
-            + srcPortType.getQName());
+         throw new WSDLException(
+            WSDLException.INVALID_WSDL,
+            "Cannot find output message on operation " + srcOperation.getName() +
+               " on port type: "+ srcPortType.getQName()
+         );
 
       log.trace("processOperationOutput: " + srcMessage.getQName());
 

@@ -104,4 +104,8 @@ public interface SubscriptionManagerMBean
    public void addNotificationFailure(NotificationFailure failure);
 
    public List<NotificationFailure> showNotificationFailures();
+
+   public boolean isValidateNotifications();
+
+   public void setValidateNotifications(boolean validateNotifications);
 }

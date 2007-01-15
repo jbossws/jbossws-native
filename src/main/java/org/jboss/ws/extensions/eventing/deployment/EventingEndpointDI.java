@@ -1,10 +1,5 @@
 package org.jboss.ws.extensions.eventing.deployment;
 
-import java.io.IOException;
-
-import org.jboss.ws.core.utils.DOMUtils;
-import org.w3c.dom.Element;
-
 /**
  * Eventsource endpoint deployment info.
  *
@@ -16,19 +11,20 @@ public class EventingEndpointDI {
    /* event source URI */
    private String name;
 
-   /* notification schema */
-   private Object schema;
-
-   private Element schemaElement;
-
    private String portName;
 
    // event source endpoint address
    private String endpointAddress;
 
-   public EventingEndpointDI(String name, Object schema) {
+   /* notification schema */
+   private String[] schema;
+
+   private String notificationRootElementNS;
+
+   public EventingEndpointDI(String name, String[] schema, String notificationRootElementNS) {
       this.name = name;
       this.schema = schema;
+      this.notificationRootElementNS = notificationRootElementNS;
    }
 
    public String getPortName() {
@@ -43,7 +39,7 @@ public class EventingEndpointDI {
       return name;
    }
 
-   public Object getSchema() {
+   public String[] getSchema() {
       return schema;
    }
 
@@ -55,18 +51,12 @@ public class EventingEndpointDI {
       this.endpointAddress = endpointAddress;
    }
 
-   Element getSchemaElement() {
-      try
-      {
-         if(null == this.schemaElement)
-            this.schemaElement = DOMUtils.parse((String)getSchema());
-      }
-      catch (IOException e)
-      {
-         throw new IllegalArgumentException("Failed to parse notification schema:" +e.getMessage());
-      }
+   public String getNotificationRootElementNS() {
+      return notificationRootElementNS;
+   }
 
-      return this.schemaElement;
+   public void setNotificationRootElementNS(String notificationRootElementNS) {
+      this.notificationRootElementNS = notificationRootElementNS;
    }
 
 }

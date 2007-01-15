@@ -44,7 +44,7 @@ public class EventingEndpoint extends ServiceEndpoint
       // See also http://jira.jboss.org/jira/browse/JBWS-770
 
       // create pending incomplete event source
-      EventingEndpointDI desc = new EventingEndpointDI(ext.getEventSourceNS(), ext.getNotificationSchema());
+      EventingEndpointDI desc = new EventingEndpointDI(ext.getEventSourceNS(), ext.getNotificationSchema(), ext.getNotificationRootElementNS());
       desc.setEndpointAddress(epMetaData.getEndpointAddress());
       desc.setPortName(epMetaData.getPortComponentName());
 

@@ -15,7 +15,9 @@ public class EventingEpMetaExt extends MetaDataExtension {
 
    private boolean isEventSource = true;
    private String eventSourceNS;
-   private Object notificationSchema;
+
+   private String[] notificationSchema;
+   private String notificationRootElementNS;
 
    public EventingEpMetaExt(String extensionNameSpace) {
       super(extensionNameSpace);
@@ -48,12 +50,20 @@ public class EventingEpMetaExt extends MetaDataExtension {
          throw new IllegalArgumentException("Illegal event source URI: " + eventSourceNS);
       }
    }
-   
-   public Object getNotificationSchema() {
-      return notificationSchema;
+
+   public String[] getNotificationSchema() {
+      return this.notificationSchema;
    }
 
-   public void setNotificationSchema(Object notificationSchema) {
+   public void setNotificationSchema(String[] notificationSchema) {
       this.notificationSchema = notificationSchema;
+   }
+
+   public String getNotificationRootElementNS() {
+      return notificationRootElementNS;
+   }
+
+   public void setNotificationRootElementNS(String notificationRootElementNS) {
+      this.notificationRootElementNS = notificationRootElementNS;
    }
 }
