@@ -25,9 +25,11 @@ package org.jboss.ws.extensions.eventing.mgmt;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
 import org.jboss.ws.extensions.eventing.element.EndpointReference;
+import org.jboss.ws.extensions.eventing.element.NotificationFailure;
 import org.w3c.dom.Element;
 
 /**
@@ -98,4 +100,8 @@ public interface SubscriptionManagerMBean
    String showSubscriptionTable();
 
    String showEventsourceTable();
+
+   public void addNotificationFailure(NotificationFailure failure);
+
+   public List<NotificationFailure> showNotificationFailures();
 }

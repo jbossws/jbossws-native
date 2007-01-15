@@ -39,6 +39,7 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.element.EndpointReference;
+import org.jboss.ws.extensions.eventing.element.NotificationFailure;
 import org.w3c.dom.Element;
 
 /**
@@ -57,6 +58,8 @@ class Subscription
    final private Filter filter;
    final private EndpointReference endpointReference;
    final private URI eventSourceNS;
+
+   private SubscriptionManagerFactory factory = SubscriptionManagerFactory.getInstance();
 
    public Subscription(URI eventSourceNS, EndpointReference endpointReference, EndpointReference notifyTo, EndpointReference endTo, Date expires, Filter filter)
    {
@@ -98,7 +101,9 @@ class Subscription
       }
       catch (Exception e)
       {
-         // todo: this should get back to manager
+         SubscriptionManagerMBean manager = factory.getSubscriptionManager();
+         NotificationFailure failure = new NotificationFailure(this.endTo.getAddress(), event, e);
+         manager.addNotificationFailure(failure);
          log.error("Failed to send notification message", e);
       }
    }

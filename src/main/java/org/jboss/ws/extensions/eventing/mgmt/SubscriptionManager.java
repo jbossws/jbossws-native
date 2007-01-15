@@ -53,6 +53,7 @@ import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
 import org.jboss.ws.extensions.eventing.element.EndpointReference;
 import org.jboss.ws.extensions.eventing.element.ReferenceParameters;
+import org.jboss.ws.extensions.eventing.element.NotificationFailure;
 import org.w3c.dom.Element;
 
 /**
@@ -115,6 +116,13 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    private WatchDog watchDog;
 
    private static EventingBuilder builder = EventingBuilder.createEventingBuilder();
+
+
+   /**
+    * List containing all errors occured during notification since service startup
+    * todo: save this list and made possible to resend failed notification using jms instead of list
+    */
+   private List<NotificationFailure> notificationFailures = new ArrayList<NotificationFailure>();
 
    public void create() throws Exception
    {
@@ -455,6 +463,16 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    {
       DispatchJob dispatchJob = new DispatchJob(eventSourceNS, payload, subscriptionMapping);
       threadPool.execute(dispatchJob);
+   }
+
+   public void addNotificationFailure(NotificationFailure failure)
+   {
+      notificationFailures.add(failure);
+   }
+
+   public List<NotificationFailure> showNotificationFailures()
+   {
+      return notificationFailures;
    }
 
    // ----------------------------------------------------------------------
