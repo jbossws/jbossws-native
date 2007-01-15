@@ -61,23 +61,6 @@ public @interface PortComponent {
     */
    String urlPattern() default "";
 
-   /** 
-    * The optional config-name element gives the client configuration name that must be present in
-    * the configuration given by element config-file.
-    *  
-    * Server side default: Standard Endpoint 
-    * Client side default: Standard Client 
-    */
-   String configName() default "";
-
-   /** 
-    * The optional config-file element gives the to a URL or resource name for the configuration.
-    * 
-    * Server side default: standard-jaxrpc-endpoint-config.xml, standard-jaxws-endpoint-config.xml 
-    * Client side default: standard-jaxrpc-client-config.xml, standard-jaxws-client-config.xml 
-    */
-   String configFile() default "";
-
    /**
     * The authMethod is used to configure the authentication mechanism for the web service. 
     * As a prerequisite to gaining access to any web service which are protected by an authorization
@@ -100,4 +83,30 @@ public @interface PortComponent {
     * CONFIDENTIAL flag will indicate that the use of SSL is required.
     */
    String transportGuarantee() default "";
+
+   /**
+    * A secure endpoint does not by default publish it's wsdl on an unsecure transport.
+    * You can override this behaviour by explicitly setting the secureWSDLAccess flag to false.
+    * 
+    * Protect access to WSDL
+    * http://jira.jboss.org/jira/browse/JBWS-723   
+    */
+   boolean secureWSDLAccess() default true;
+   
+   /** 
+    * The optional config-name element gives the client configuration name that must be present in
+    * the configuration given by element config-file.
+    *  
+    * Server side default: Standard Endpoint 
+    * Client side default: Standard Client 
+    */
+   String configName() default "";
+
+   /** 
+    * The optional config-file element gives the to a URL or resource name for the configuration.
+    * 
+    * Server side default: standard-jaxrpc-endpoint-config.xml, standard-jaxws-endpoint-config.xml 
+    * Client side default: standard-jaxrpc-client-config.xml, standard-jaxws-client-config.xml 
+    */
+   String configFile() default "";
 }

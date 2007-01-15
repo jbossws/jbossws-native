@@ -58,6 +58,8 @@ public class ServerEndpointMetaData extends EndpointMetaData
    private String urlPattern;
    // The optional transport guarantee
    private String transportGuarantee;
+   // The optional secure wsdl access 
+   private boolean secureWSDLAccess = true;
    // The bean that registers with the ServiceEndpointManager
    private String managedEndpointBean = "org.jboss.ws.core.server.ServiceEndpoint";
 
@@ -152,6 +154,16 @@ public class ServerEndpointMetaData extends EndpointMetaData
       this.transportGuarantee = transportGuarantee;
    }
 
+   public boolean isSecureWSDLAccess()
+   {
+      return secureWSDLAccess;
+   }
+
+   public void setSecureWSDLAccess(boolean secureWSDLAccess)
+   {
+      this.secureWSDLAccess = secureWSDLAccess;
+   }
+
    public String getManagedEndpointBean()
    {
       return managedEndpointBean;
@@ -209,6 +221,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
       buffer.append("\n configName=").append(getConfigName());
       buffer.append("\n authMethod=").append(getAuthMethod());
       buffer.append("\n transportGuarantee=").append(getTransportGuarantee());
+      buffer.append("\n secureWSDLAccess=").append(isSecureWSDLAccess());
       buffer.append("\n properties=").append(getProperties());
 
       for (OperationMetaData opMetaData : getOperations())

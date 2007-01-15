@@ -135,6 +135,9 @@ public abstract class JAXWSEndpointMetaDataBuilder extends JAXWSMetaDataBuilder
             sepMetaData.setTransportGuarantee(transportGuarantee);
          }
       }
+      
+      // secure wsdl access
+      sepMetaData.setSecureWSDLAccess(anPortComponent.secureWSDLAccess());
 
       // virtual hosts
       String[] virtualHosts = anPortComponent.virtualHosts();
