@@ -700,7 +700,9 @@ public abstract class CommonSOAPBinding implements CommonBinding
             {
                QName compXMLName = paramMetaData.getXmlName();
                Element compElement = DOMUtils.getFirstChildElement(aux);
-               if (compElement.getNodeName().equals(compXMLName.getLocalPart()))
+               // NPE when the soap encoded array size is 0 on the return path
+               // http://jira.jboss.org/jira/browse/JBWS-1285
+               if (compElement == null || compElement.getNodeName().equals(compXMLName.getLocalPart()))
                {
                   soapContentElement = aux;
                   soapContentElement.setParamMetaData(paramMetaData);
