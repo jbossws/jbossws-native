@@ -50,6 +50,7 @@ import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
@@ -210,6 +211,10 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    private SOAPMessage getRequestMessage(Object obj)
    {
+      // jaxws/api/javax_xml_ws/Dispatch/Client.java#invokeTestJAXBNull
+      if (obj == null)
+         throw new SOAPFaultException("Request object cannot be null");
+      
       SOAPMessage reqMsg = null;
       try
       {
