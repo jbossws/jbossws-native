@@ -134,7 +134,8 @@ public class ServiceEndpoint
       ServiceEndpointInfo sepInfo = getServiceEndpointInfo();
       EndpointMetaData epMetaData = sepInfo.getServerEndpointMetaData();
 
-      String wsdlHost = reqURL.getHost();
+      //String wsdlHost = reqURL.getHost();
+      String wsdlHost = reqURL.getProtocol() + "://" + reqURL.getHost() + ":" + reqURL.getPort();
       
       ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
       ServiceEndpointManager epManager = factory.getServiceEndpointManager();

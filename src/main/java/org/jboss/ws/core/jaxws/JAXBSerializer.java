@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxws;
 // $Id$
 
 import java.io.StringWriter;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -36,6 +37,7 @@ import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
 import org.w3c.dom.NamedNodeMap;
 
@@ -63,7 +65,29 @@ public class JAXBSerializer extends ComplexTypeSerializer
       try
       {
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
-         Class javaType = typeMapping.getJavaType(xmlType);
+
+         Class javaType = null;
+         List<Class> possibleJavaTypes = typeMapping.getJavaTypes(xmlType);
+         if(possibleJavaTypes.size()>1)
+         {
+             // resolve java type by assignability
+            for(Class type : possibleJavaTypes)
+            {
+               if(JavaUtils.isAssignableFrom(type, value.getClass()))
+               {
+                  javaType = value.getClass();
+                  break;
+               }
+            }
+         }
+         else
+         {
+            javaType = typeMapping.getJavaType(xmlType);
+         }
+
+         if(null == javaType)
+            throw new Exception("Unable to resolve target java type");
+
          JAXBContext jaxbContext = JAXBContext.newInstance(javaType);
          Marshaller marshaller = jaxbContext.createMarshaller();
 

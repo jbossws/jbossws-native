@@ -25,6 +25,7 @@ package org.jboss.ws.core;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -67,7 +68,8 @@ public abstract class CommonContextServlet extends HttpServlet
       setupHTMLResponseHeader(writer);
 
       writer.print("<body>");
-      writer.print(epManager.showServiceEndpointTable());
+      //writer.print(epManager.showServiceEndpointTable());
+      writer.print(epManager.showServiceEndpointTable(new URL(req.getRequestURL().toString())));
       writer.print("</body>");
       writer.print("</html>");
       writer.close();

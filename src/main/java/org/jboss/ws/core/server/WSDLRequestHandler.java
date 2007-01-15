@@ -110,6 +110,8 @@ public class WSDLRequestHandler
          {
             Element childElement = (Element)childNode;
             String nodeName = childElement.getLocalName();
+
+            // Replace xsd:import location attributes
             if ("import".equals(nodeName) || "include".equals(nodeName))
             {
                Attr locationAttr = childElement.getAttributeNode("schemaLocation");
@@ -127,18 +129,24 @@ public class WSDLRequestHandler
                      if (resPath != null && resPath.indexOf("/") > 0)
                         newResourcePath = resPath.substring(0, resPath.lastIndexOf("/") + 1) + orgLocation;
 
-                     String reqProtocol = reqURL.getProtocol();
-                     int reqPort = reqURL.getPort();
-                     String hostAndPort = wsdlHost + (reqPort > 0 ? ":" + reqPort : "");
                      String reqPath = reqURL.getPath();
-                     
-                     String newLocation = reqProtocol + "://" + hostAndPort + reqPath + "?wsdl&resource=" + newResourcePath;
-                     locationAttr.setNodeValue(newLocation);
+                     String completeHost = wsdlHost;
 
+                     if (! wsdlHost.startsWith("http://") && wsdlHost.startsWith("https://"))
+                     {
+	                     String reqProtocol = reqURL.getProtocol();
+	                     int reqPort = reqURL.getPort();
+	                     String hostAndPort = wsdlHost + (reqPort > 0 ? ":" + reqPort : "");
+	                     completeHost = reqProtocol + "://" + hostAndPort;
+                     }
+
+                     String newLocation = completeHost + reqPath + "?wsdl&resource=" + newResourcePath;
                      log.debug("Mapping import from '" + orgLocation + "' to '" + newLocation + "'");
                   }
                }
             }
+
+            // Replace the soap:address location attribute
             else if ("address".equals(nodeName))
             {
                Attr locationAttr = childElement.getAttributeNode("location");
@@ -149,12 +157,19 @@ public class WSDLRequestHandler
                   URL locURL = new URL(orgLocation);
                   String locProtocol = locURL.getProtocol();
                   String locPath = locURL.getPath();
+
                   if (reqURL.getProtocol().equals(locProtocol) && reqURL.getPath().equals(locPath))
                   {
-                     int locPort = locURL.getPort();
-                     String hostAndPort = wsdlHost + (locPort > 0 ? ":" + locPort : "");
-                     
-                     String newLocation = locProtocol + "://" + hostAndPort + locPath;
+                     String completeHost = wsdlHost;
+                	 if (!completeHost.startsWith("http://") || !completeHost.startsWith("https://"))
+                     {
+	                	 int locPort = locURL.getPort();
+	                     String hostAndPort = wsdlHost + (locPort > 0 ? ":" + locPort : "");
+
+	                     completeHost = locProtocol + "://" + hostAndPort;
+                     }
+
+                     String newLocation = completeHost  + locPath;
                      locationAttr.setNodeValue(newLocation);
 
                      log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");

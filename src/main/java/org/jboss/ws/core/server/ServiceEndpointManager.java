@@ -269,7 +269,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    /** Show the registered webservices
     */
-   public String showServiceEndpointTable()
+   public String showServiceEndpointTable(URL requestURL) throws java.net.MalformedURLException
    {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
@@ -286,7 +286,15 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          ServiceEndpoint wsEndpoint = (ServiceEndpoint)entry.getValue();
          ServiceEndpointInfo seInfo = wsEndpoint.getServiceEndpointInfo();
          String endpointAddress = seInfo.getServerEndpointMetaData().getEndpointAddress();
-         pw.println("<tr><td>" + sepID.getCanonicalName() + "</td><td><a href='" + endpointAddress + "?wsdl'>" + endpointAddress + "?wsdl</a></td></tr>");
+         //pw.println("<tr><td>" + sepID.getCanonicalName() + "</td><td><a href='" + endpointAddress + "?wsdl'>" + endpointAddress + "?wsdl</a></td></tr>");
+         URL displayURL = new URL(endpointAddress);
+         String endPointPath = displayURL.getPath();
+         if (this.getWebServiceHost().equals(ServiceEndpointManager.UNDEFINED_HOSTNAME) == true)
+         {
+        	 displayURL = requestURL;
+         }
+         String displayAddress = displayURL.getProtocol() + "://" + displayURL.getHost() + ":" + displayURL.getPort() + endPointPath;
+         pw.println("<tr><td>" + sepID.getCanonicalName() + "</td><td><a href='" + displayAddress + "?wsdl'>" + displayAddress + "?wsdl</a></td></tr>");
       }
       pw.println("</table>");
       pw.close();
