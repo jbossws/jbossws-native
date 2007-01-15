@@ -69,11 +69,13 @@ public class EndpointImpl extends Endpoint
 
    public EndpointImpl(String bindingId, Object implementor)
    {
+      log.debug("new EndpointImpl(bindingId=" + bindingId + ",implementor=" + implementor + ")");
+      
+      if (implementor == null)
+         throw new IllegalArgumentException("Implementor cannot be null");
+      
       this.implementor = implementor;
       this.bindingProvider = new BindingProviderImpl(bindingId);
-
-      if (implementor == null)
-         throw new WebServiceException("Implementor cannot be null");
    }
 
    @Override
@@ -98,6 +100,8 @@ public class EndpointImpl extends Endpoint
    @Override
    public void publish(String address)
    {
+      log.debug("publish: " + address);
+      
       URI addrURI;
       try
       {
@@ -133,6 +137,8 @@ public class EndpointImpl extends Endpoint
    @Override
    public void publish(Object context)
    {
+      log.debug("publish: " + context);
+      
       if (isDestroyed)
          throw new IllegalStateException("Endpoint already destroyed");
 
@@ -151,6 +157,8 @@ public class EndpointImpl extends Endpoint
    @Override
    public void stop()
    {
+      log.debug("stop");
+      
       if (serverContext == null || isPublished == false)
          log.error("Endpoint not published");
 

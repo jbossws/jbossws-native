@@ -26,6 +26,7 @@ package javax.xml.ws;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.Provider;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
@@ -97,7 +98,15 @@ public abstract class Endpoint
     **/
    public static Endpoint create(Object implementor)
    {
-      return create(null, implementor);
+      if (implementor == null)
+         throw new IllegalArgumentException("Implementor cannot be null");
+      
+      String bindingId = SOAPBinding.SOAP11HTTP_BINDING;
+      BindingType anBindingType = implementor.getClass().getAnnotation(BindingType.class);
+      if (anBindingType != null)
+         bindingId = anBindingType.value();
+         
+      return create(bindingId, implementor);
    }
 
    /**
