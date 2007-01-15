@@ -96,6 +96,7 @@ public class MappingFileGeneratorHelper
    private String serviceName = null;
    private String packageName = null;
    private Set<String> registeredTypes = new HashSet<String>();
+   private Set<String> registeredExceptions = new HashSet<String>();
 
    private LiteralTypeMapping typeMapping = null;
    private String wsdlStyle;
@@ -217,14 +218,14 @@ public class MappingFileGeneratorHelper
          semm.setWrappedElement(isWrapped());
 
          if (isDocStyle())
-            constructDOCParameters(semm, wiop, j);
+            constructDOCParameters(semm, wiop);
          else constructRPCParameters(semm, wiop);
 
          seim.addServiceEndpointMethodMapping(semm);
       }
    }
 
-   private void constructDOCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop, int paramPosition)
+   private void constructDOCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop)
    {
       WSDLInterfaceOperationInput win = WSDLUtils.getWsdl11Input(wiop);
       JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
@@ -249,7 +250,7 @@ public class MappingFileGeneratorHelper
             if (xt instanceof XSSimpleTypeDefinition)
                xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
 
-            mpin = getMethodParamPartsMapping(semm, xmlName, xmlType, paramPosition, wsdlMessageName, "IN", partName, false, true);
+            mpin = getMethodParamPartsMapping(semm, xmlName, xmlType, 0, wsdlMessageName, "IN", partName, false, true);
             semm.addMethodParamPartsMapping(mpin);
          }
       }
@@ -426,10 +427,16 @@ public class MappingFileGeneratorHelper
                XSTypeDefinition xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
                addJavaXMLTypeMap(xt, xmlName.getLocalPart(), "", "", jwm, true);
 
-               ExceptionMapping exceptionMapping = new ExceptionMapping(jwm);
-               exceptionMapping.setExceptionType(getJavaTypeAsString(null, xmlType, false, true));
-               exceptionMapping.setWsdlMessage(new QName(wsdlDefinitions.getTargetNamespace(), fault.getName().toString()));
-               jwm.addExceptionMappings(exceptionMapping);
+               String exceptionType = getJavaTypeAsString(null, xmlType, false, true);
+
+               if (registeredExceptions.contains(exceptionType) == false)
+               {
+                  registeredExceptions.add(exceptionType);
+                  ExceptionMapping exceptionMapping = new ExceptionMapping(jwm);
+                  exceptionMapping.setExceptionType(exceptionType);
+                  exceptionMapping.setWsdlMessage(new QName(wsdlDefinitions.getTargetNamespace(), fault.getName().toString()));
+                  jwm.addExceptionMappings(exceptionMapping);
+               }
             }
          }//end for
       }
