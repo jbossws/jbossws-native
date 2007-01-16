@@ -42,7 +42,7 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @since 19-May-2005
  */
-public class JAXWSMetaDataBuilderEJB3 extends JAXWSServerMetaDataBuilder
+public class JAXWSMetaDataBuilderEJB3
 {
    // provide logging
    private final Logger log = Logger.getLogger(JAXWSMetaDataBuilderEJB3.class);
@@ -74,7 +74,7 @@ public class JAXWSMetaDataBuilderEJB3 extends JAXWSServerMetaDataBuilder
             if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))
             {
                String ejbLink = beanMetaData.getEjbName();
-               setupEndpoint(wsMetaData, udi, beanClass, ejbLink);
+               JAXWSServerMetaDataBuilder.setupProviderOrWebService(wsMetaData, udi, beanClass, ejbLink);
 
                // setup the security domain
                if (beanClass.isAnnotationPresent(SecurityDomain.class))

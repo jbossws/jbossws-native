@@ -37,7 +37,7 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @since 23-Jul-2005
  */
-public class JAXWSMetaDataBuilderJSE extends JAXWSServerMetaDataBuilder
+public class JAXWSMetaDataBuilderJSE
 {
    // provide logging
    private final Logger log = Logger.getLogger(JAXWSMetaDataBuilderJSE.class);
@@ -65,7 +65,7 @@ public class JAXWSMetaDataBuilderJSE extends JAXWSServerMetaDataBuilder
             try
             {
                Class beanClass = udi.classLoader.loadClass(servletClassName);
-               setupEndpoint(wsMetaData, udi, beanClass, servletName);
+               JAXWSServerMetaDataBuilder.setupProviderOrWebService(wsMetaData, udi, beanClass, servletName);
             }
             catch (ClassNotFoundException ex)
             {

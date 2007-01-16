@@ -36,7 +36,6 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServicePermission;
 
 import org.jboss.logging.Logger;
@@ -44,6 +43,8 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.server.HttpContext;
 import org.jboss.ws.core.server.HttpServer;
+import org.jboss.ws.core.server.ServiceEndpointManager;
+import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -61,6 +62,8 @@ public class EndpointImpl extends Endpoint
    private static final WebServicePermission ENDPOINT_PUBLISH_PERMISSION = new WebServicePermission("publishEndpoint");
 
    private Object implementor;
+   private Executor executor;
+   private List<Source> metadata;
    private BindingProvider bindingProvider;
    private Map<String, Object> properties = new HashMap<String, Object>();
    private HttpContext serverContext;
@@ -145,6 +148,23 @@ public class EndpointImpl extends Endpoint
       // Check with the security manger
       checkPublishEndpointPermission();
       
+      // Check if we are standalone
+      boolean isStandalone;
+      try
+      {
+         ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
+         factory.getServiceEndpointManager();
+         isStandalone = false;
+      }
+      catch (Exception ex) 
+      {
+         // ignore, there should be no ServiceEndpointManager in VM
+         isStandalone = true;
+      }
+      
+      if (isStandalone == false)
+         throw new IllegalStateException("Cannot publish endpoint from within server");
+      
       if (context instanceof HttpContext)
       {
          serverContext = (HttpContext)context;
@@ -188,25 +208,27 @@ public class EndpointImpl extends Endpoint
    @Override
    public List<Source> getMetadata()
    {
-      throw new NotImplementedException();
+      return metadata;
    }
 
    @Override
    public void setMetadata(List<Source> list)
    {
-      throw new NotImplementedException();
+      log.info("Ignore metadata, not implemented");
+      this.metadata = list;
    }
 
    @Override
    public Executor getExecutor()
    {
-      throw new NotImplementedException();
+      return executor;
    }
 
    @Override
    public void setExecutor(Executor executor)
    {
-      throw new NotImplementedException();
+      log.info("Ignore executor, not implemented");
+      this.executor = executor;
    }
 
    @Override

@@ -23,29 +23,6 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxws.client.ClientImpl;
-import org.jboss.ws.core.jaxws.client.ClientProxy;
-import org.jboss.ws.core.jaxws.client.DispatchImpl;
-import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
-import org.jboss.ws.core.jaxws.StubExt;
-import org.jboss.ws.metadata.builder.jaxws.JAXWSClientEndpointMetaDataBuilder;
-import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-
-import javax.jws.WebService;
-import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
-import javax.xml.ws.*;
-import javax.xml.ws.Service.Mode;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.spi.ServiceDelegate;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,6 +32,33 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.jws.WebService;
+import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Dispatch;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.Service.Mode;
+import javax.xml.ws.handler.HandlerResolver;
+import javax.xml.ws.spi.ServiceDelegate;
+
+import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
+import org.jboss.ws.Constants;
+import org.jboss.ws.core.jaxws.StubExt;
+import org.jboss.ws.core.jaxws.client.ClientImpl;
+import org.jboss.ws.core.jaxws.client.ClientProxy;
+import org.jboss.ws.core.jaxws.client.DispatchImpl;
+import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
+import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -89,8 +93,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
 
-      ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
-      serviceMetaData = builder.buildMetaData(serviceName, wsdlURL, ctxClassLoader);
+      serviceMetaData = builder.buildMetaData(serviceName, wsdlURL);
 
       for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
       {
@@ -179,7 +182,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       // Adjust the endpoint meta data according to the annotations
       if (annotatedPorts.contains(portName) == false)
       {
-         JAXWSClientEndpointMetaDataBuilder metaDataBuilder = new JAXWSClientEndpointMetaDataBuilder();
+         JAXWSClientMetaDataBuilder metaDataBuilder = new JAXWSClientMetaDataBuilder();
          metaDataBuilder.rebuildEndpointMetaData(epMetaData, seiClass);
       }
 

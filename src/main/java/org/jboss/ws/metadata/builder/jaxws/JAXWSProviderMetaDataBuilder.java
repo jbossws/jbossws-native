@@ -37,7 +37,6 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.Service.Mode;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
@@ -58,16 +57,9 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @since 23-Jul-2005
  */
-public class JAXWSProviderMetaDataBuilder extends JAXWSEndpointMetaDataBuilder
+public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
-   // provide logging
-   private final Logger log = Logger.getLogger(JAXWSProviderMetaDataBuilder.class);
-
-   /** Build from annotations
-    */
-
-   @Override
-   public ServerEndpointMetaData buildEndpointMetaData(UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName) throws IOException
+   public ServerEndpointMetaData buildProviderMetaData(UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName) throws IOException
    {
       // 5.3 Conformance (Provider implementation): A Provider based service endpoint implementation MUST
       // implement a typed Provider interface.

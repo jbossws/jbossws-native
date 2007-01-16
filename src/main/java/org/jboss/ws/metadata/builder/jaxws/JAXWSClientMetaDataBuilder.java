@@ -26,9 +26,11 @@ package org.jboss.ws.metadata.builder.jaxws;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.jws.HandlerChain;
+import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingType;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
@@ -57,12 +59,9 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  */
 public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 {
-   // provide logging
-   private final Logger log = Logger.getLogger(JAXWSClientMetaDataBuilder.class);
-
    /** Build from WSDL and jaxrpc-mapping.xml
     */
-   public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL, ClassLoader loader)
+   public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL)
    {
       if (wsdlURL == null)
          throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
@@ -169,5 +168,43 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          if (wsdlBindingOperation != null)
             opMetaData.setSOAPAction(wsdlBindingOperation.getSOAPAction());
       }
+   }
+
+   public void rebuildEndpointMetaData(EndpointMetaData epMetaData, Class<?> wsClass)
+   {
+      log.debug("START: rebuildMetaData");
+
+      // Clear the java types, etc.
+      resetMetaDataBuilder(epMetaData.getClassLoader());
+
+      // Nuke parameterStyle
+      epMetaData.setParameterStyle(null);
+
+      // Process an optional @BindingType annotation
+      if (wsClass.isAnnotationPresent(BindingType.class))
+         processBindingType(epMetaData, wsClass);
+
+      // Process @SOAPBinding
+      if (wsClass.isAnnotationPresent(SOAPBinding.class))
+         processSOAPBinding(epMetaData, wsClass);
+
+      // process config, this will as well setup the handler
+      epMetaData.configure(epMetaData);
+
+      // Process an optional @HandlerChain annotation
+      if (wsClass.isAnnotationPresent(HandlerChain.class))
+         processHandlerChain(epMetaData, wsClass);
+
+      // Process @WebMethod
+      processWebMethods(epMetaData, wsClass);
+
+      // Initialize types
+      createJAXBContext(epMetaData);
+      populateXmlTypes(epMetaData);
+
+      // Eager initialization
+      epMetaData.eagerInitialize();
+
+      log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
    }
 }
