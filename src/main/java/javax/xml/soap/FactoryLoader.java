@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
 public class FactoryLoader
 {
    // provide logging
-   private static Logger log = Logger.getLogger(MessageFactory.class);
+   private static Logger log = Logger.getLogger(FactoryLoader.class);
    
    private FactoryLoader()
    {
