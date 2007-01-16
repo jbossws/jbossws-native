@@ -72,7 +72,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
             throw new WSException("Invalid HTTP server response [" + resCode + "] - " + resMessage);
 
          MimeHeaders mimeHeaders = getMimeHeaders(metadata);
-         SOAPMessage soapMsg = new MessageFactoryImpl().createMessageInternal(mimeHeaders, inputStream, true);
+         SOAPMessage soapMsg = new MessageFactoryImpl().createMessage(mimeHeaders, inputStream, true);
          return soapMsg;
       }
       catch (SOAPException e)

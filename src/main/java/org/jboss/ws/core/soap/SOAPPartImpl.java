@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -41,7 +40,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.core.jaxrpc.Style;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -154,9 +153,9 @@ public class SOAPPartImpl extends SOAPPart
          return;
       }
 
-      Element domElement;
       if (source instanceof DOMSource)
       {
+         Element domElement;
          DOMSource domSource = (DOMSource)source;
          Node node = domSource.getNode();
          if (node instanceof Document)
@@ -165,13 +164,17 @@ public class SOAPPartImpl extends SOAPPart
             domElement = (Element)node;
          else
             throw new SOAPException("Unsupported DOMSource node: " + node);
+         
+         EnvelopeBuilderDOM envBuilder = new EnvelopeBuilderDOM(Style.DOCUMENT);
+         envBuilder.build(soapMessage, domElement);
       }
       else if (source instanceof StreamSource)
       {
          try
          {
             StreamSource streamSource = (StreamSource)source;
-            domElement = DOMUtils.parse(streamSource.getInputStream());
+            EnvelopeBuilderDOM envBuilder = new EnvelopeBuilderDOM(Style.DOCUMENT);
+            envBuilder.build(soapMessage, streamSource.getInputStream(), false);
          }
          catch (IOException e)
          {
@@ -182,19 +185,11 @@ public class SOAPPartImpl extends SOAPPart
       {
          throw new SOAPException("Unsupported source parameter: " + source);
       }
-
-      SOAPFactoryImpl factory = new SOAPFactoryImpl();
-      SOAPElement soapElement = factory.createElement(domElement);
-
-      SOAPBody body = soapEnvelope.getBody();
-      body.removeContents();
-      body.addChildElement(soapElement);
    }
 
    public Source getContent() throws SOAPException
    {
-      SOAPBody body = soapEnvelope.getBody();
-      return new DOMSource(body.getFirstChild());
+      return new DOMSource(soapEnvelope);
    }
 
    // Document *********************************************************************************************************

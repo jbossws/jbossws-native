@@ -298,6 +298,7 @@ public class DispatchImpl<T> implements Dispatch<T>
             SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
             SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
 
+            log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             retObj = unmarshaller.unmarshal(soapElement);
          }
@@ -308,7 +309,7 @@ public class DispatchImpl<T> implements Dispatch<T>
       }
       catch (Exception ex)
       {
-         throw new WebServiceException("Cannot create request message", ex);
+         throw new WebServiceException("Cannot process response message", ex);
       }
       return retObj;
    }

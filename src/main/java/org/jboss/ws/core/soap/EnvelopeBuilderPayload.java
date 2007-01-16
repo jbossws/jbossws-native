@@ -29,8 +29,10 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.ws.core.utils.DOMUtils;
@@ -43,9 +45,9 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.com
  * @since 30-Jun-2006
  */
-public class JAXWSPayloadBuilder implements PayloadBuilder
+public class EnvelopeBuilderPayload implements EnvelopeBuilder
 {
-   public void build(SOAPMessageImpl soapMessage, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
+   public SOAPEnvelope build(SOAPMessage soapMessage, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
    {
       // Parse the XML input stream
       Element domEnv = null;
@@ -57,7 +59,7 @@ public class JAXWSPayloadBuilder implements PayloadBuilder
       {
          if (ignoreParseError)
          {
-            return;
+            return null;
          }
          throw ex;
       }
@@ -106,5 +108,7 @@ public class JAXWSPayloadBuilder implements PayloadBuilder
          Element domBodyElement = (Element)itBody.next();
          soapBody.setPayload(new DOMSource(domBodyElement));
       }
+      
+      return soapEnv;
    }
 }

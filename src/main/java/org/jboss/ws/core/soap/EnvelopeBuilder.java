@@ -26,14 +26,16 @@ package org.jboss.ws.core.soap;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 /**
  * @author Heiko Braun, <heiko.braun@jboss.com>
  * @author Thomas.Diesler@jboss.com
  * @since 19-Apr-2006
  */
-public interface PayloadBuilder
+public interface EnvelopeBuilder
 {
-   void build(SOAPMessageImpl soapMessage, InputStream in, boolean ignoreParseError) throws IOException, SOAPException;
+   SOAPEnvelope build(SOAPMessage soapMessage, InputStream in, boolean ignoreParseError) throws IOException, SOAPException;
 }

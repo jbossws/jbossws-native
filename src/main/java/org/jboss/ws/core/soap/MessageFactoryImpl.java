@@ -37,8 +37,10 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
@@ -46,7 +48,9 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
+import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.IOUtils;
+import org.w3c.dom.Element;
 
 /**
  * MessageFactory implementation
@@ -168,10 +172,10 @@ public class MessageFactoryImpl extends MessageFactory
     */
    public SOAPMessage createMessage(MimeHeaders mimeHeaders, InputStream ins) throws IOException, SOAPException
    {
-      return createMessageInternal(mimeHeaders, ins, false);
+      return createMessage(mimeHeaders, ins, false);
    }
 
-   public SOAPMessage createMessageInternal(MimeHeaders mimeHeaders, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
+   public SOAPMessage createMessage(MimeHeaders mimeHeaders, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
    {
       if (mimeHeaders == null)
       {
@@ -239,19 +243,18 @@ public class MessageFactoryImpl extends MessageFactory
          soapMessage.setAttachments(attachments);
 
       // Get the SOAPEnvelope builder
-      PayloadBuilder payloadBuilder;
+      EnvelopeBuilder envBuilder;
       if (serviceMode == Mode.PAYLOAD)
       {
-         payloadBuilder = new JAXWSPayloadBuilder();
+         envBuilder = new EnvelopeBuilderPayload();
       }
       else
       {
-         SAAJPayloadBuilderDOM jaxrpcBuilder = new SAAJPayloadBuilderDOM(getStyle());
-         payloadBuilder = jaxrpcBuilder;
+         envBuilder = new EnvelopeBuilderDOM(getStyle());
       }
 
       // Build the payload
-      payloadBuilder.build(soapMessage, ins, ignoreParseError);
+      envBuilder.build(soapMessage, ins, ignoreParseError);
 
       return soapMessage;
    }

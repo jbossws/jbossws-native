@@ -29,9 +29,11 @@ import java.io.InputStream;
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -47,7 +49,7 @@ import com.ctc.wstx.stax.WstxInputFactory;
  * @author Thomas.Diesler@jboss.com
  * @since 15-Apr-2006
  */
-public class SAAJPayloadBuilderStax implements PayloadBuilder
+public class EnvelopeBuilderStax implements EnvelopeBuilder
 {
    private static final String END_ELEMENT_BRACKET = "</";
    private static final String EMPTY_STRING = "";
@@ -76,7 +78,7 @@ public class SAAJPayloadBuilderStax implements PayloadBuilder
 
    private static XMLInputFactory factory;
 
-   public SAAJPayloadBuilderStax()
+   public EnvelopeBuilderStax()
    {
       resetFragmentBuffer();
    }
@@ -87,7 +89,7 @@ public class SAAJPayloadBuilderStax implements PayloadBuilder
       this.fragmentBuffer.ensureCapacity(2048);
    }
 
-   public void build(SOAPMessageImpl soapMessage, InputStream in, boolean ignoreParseError) throws IOException, SOAPException
+   public SOAPEnvelope build(SOAPMessage soapMessage, InputStream in, boolean ignoreParseError) throws IOException, SOAPException
    {
       try
       {
@@ -139,6 +141,7 @@ public class SAAJPayloadBuilderStax implements PayloadBuilder
             // ignore
          }
       }
+      return soapEnv;
    }
 
    private static synchronized XMLInputFactory getFactoryInstance()

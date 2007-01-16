@@ -31,8 +31,10 @@ import javax.xml.soap.Detail;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -48,19 +50,19 @@ import org.w3c.dom.NodeList;
  * @author Thomas.Diesler@jboss.com
  * @since 19-Apr-2006
  */
-public class SAAJPayloadBuilderDOM implements PayloadBuilder
+public class EnvelopeBuilderDOM implements EnvelopeBuilder
 {
    // provide logging
-   private static Logger log = Logger.getLogger(SAAJPayloadBuilderDOM.class);
+   private static Logger log = Logger.getLogger(EnvelopeBuilderDOM.class);
    
    private Style style = Style.DOCUMENT;
 
-   public SAAJPayloadBuilderDOM(Style style)
+   public EnvelopeBuilderDOM(Style style)
    {
       this.style = style;
    }
 
-   public void build(SOAPMessageImpl soapMessage, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
+   public SOAPEnvelope build(SOAPMessage soapMessage, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
    {
       // Parse the XML input stream
       Element domEnv = null;
@@ -72,11 +74,16 @@ public class SAAJPayloadBuilderDOM implements PayloadBuilder
       {
          if (ignoreParseError)
          {
-            return;
+            return null;
          }
          throw ex;
       }
 
+      return build(soapMessage, domEnv);
+   }
+
+   public SOAPEnvelope build(SOAPMessage soapMessage, Element domEnv) throws SOAPException
+   {
       String envNS = domEnv.getNamespaceURI();
       String envPrefix = domEnv.getPrefix();
 
@@ -249,6 +256,8 @@ public class SAAJPayloadBuilderDOM implements PayloadBuilder
             }
          }
       }
+      
+      return soapEnv;
    }
 
    /**
