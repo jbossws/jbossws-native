@@ -132,6 +132,9 @@ public class ParameterMetaData
       Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
       Class valueClass = JavaUtils.erasure(valueType);
 
+      // FIXME - Why do we need this hack? It shouldn't be needed. The method
+      // signature should _ALWAYS_ match, else we will get ambiguous or
+      // incorrect results
       List<Class> anyTypes = new ArrayList<Class>();
       anyTypes.add(javax.xml.soap.SOAPElement.class);
       anyTypes.add(org.w3c.dom.Element.class);
@@ -312,11 +315,15 @@ public class ParameterMetaData
       this.soapArrayCompType = xmlType;
    }
 
+
+   @Deprecated
+   // FIXME This hack should be removed
    public boolean isMessageType()
    {
       return messageTypes.contains(javaTypeName);
    }
 
+   @Deprecated
    public static boolean isMessageType(String javaTypeName)
    {
       return messageTypes.contains(javaTypeName);
@@ -384,7 +391,8 @@ public class ParameterMetaData
       // reset java type
       javaType = null;
 
-      if (getOperationMetaData().isDocumentWrapped() && !isInHeader() && !isMessageType())
+      // FIXME - Remove messageType hack
+      if (getOperationMetaData().isDocumentWrapped() && !isInHeader() && !isSwA() && !isMessageType())
       {
          new DynamicWrapperGenerator(getClassLoader()).generate(this);
 

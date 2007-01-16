@@ -23,6 +23,7 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public abstract class WSDLBindingMessageReference
    private WSDLBindingOperation wsdlBindingOperation;
    private NCName messageLabel;
    private List<WSDLSOAPHeader> soapHeaders = new ArrayList<WSDLSOAPHeader>();
-   private List<WSDLMIMEPart> mimeParts = new ArrayList<WSDLMIMEPart>();
+   private LinkedHashMap<String, WSDLMIMEPart> mimeParts = new LinkedHashMap<String, WSDLMIMEPart>();
 
    public WSDLBindingMessageReference(WSDLBindingOperation wsdlBindingOperation)
    {
@@ -111,7 +112,7 @@ public abstract class WSDLBindingMessageReference
     */
    public void addMimePart(WSDLMIMEPart mimePart)
    {
-      this.mimeParts.add(mimePart);
+      this.mimeParts.put(mimePart.getPartName(), mimePart);
    }
 
    /**
@@ -121,6 +122,17 @@ public abstract class WSDLBindingMessageReference
     */
    public Collection<WSDLMIMEPart> getMimeParts()
    {
-      return mimeParts;
+      return mimeParts.values();
+   }
+
+   /**
+    * Gets a specific MIME part
+    *
+    * @param partName the wsdl part name
+    * @return
+    */
+   public WSDLMIMEPart getMimePart(String partName)
+   {
+      return mimeParts.get(partName);
    }
 }

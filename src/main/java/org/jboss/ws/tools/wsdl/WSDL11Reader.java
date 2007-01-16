@@ -126,7 +126,7 @@ public class WSDL11Reader
    // Temporary files used by this reader.
    private List<File> tempFiles = new ArrayList<File>();
 
-   // SWA handling   
+   // SWA handling
    private Map<QName, List<String>> skippedSWAParts = new HashMap<QName, List<String>>();
 
    /**
@@ -536,7 +536,8 @@ public class WSDL11Reader
          for (Part srcPart : (List<Part>)srcMessage.getOrderedParts(paramOrder))
          {
             // Skip SWA attachment parts
-            if( ignorePart(srcPortType, srcPart) ) continue;
+            if (ignorePart(srcPortType, srcPart))
+               continue;
 
             if (Constants.URI_STYLE_DOCUMENT == destOperation.getStyle())
             {
@@ -742,7 +743,7 @@ public class WSDL11Reader
       String style = destOperation.getStyle();
       if (Constants.URI_STYLE_RPC.equals(style))
       {
-         // R2203 An rpc-literal binding in a DESCRIPTION MUST refer, in its soapbind:body element(s), 
+         // R2203 An rpc-literal binding in a DESCRIPTION MUST refer, in its soapbind:body element(s),
          // only to wsdl:part element(s) that have been defined using the type attribute.
          if (srcPart.getName() == null)
             throw new WSDLException(WSDLException.INVALID_WSDL, "RPC style message parts must define a typy name: " + srcMessage.getQName());
@@ -757,7 +758,7 @@ public class WSDL11Reader
       }
       else
       {
-         // R2204 A document-literal binding in a DESCRIPTION MUST refer, in each of its soapbind:body element(s), 
+         // R2204 A document-literal binding in a DESCRIPTION MUST refer, in each of its soapbind:body element(s),
          // only to wsdl:part element(s) that have been defined using the element attribute
          // [hb] do this only for non swa porttypes
          if (srcPart.getElementName() == null)
@@ -1087,7 +1088,7 @@ public class WSDL11Reader
          public void removeReference(QName element)
          {
             WSDLInterfaceOperationInput destIntfInput = destIntfOperation.getInput(element);
-            if (destIntfInput == null)
+            if (destIntfInput != null)
                destIntfOperation.removeInput(element);
          }
 
@@ -1120,7 +1121,7 @@ public class WSDL11Reader
          public void removeReference(QName element)
          {
             WSDLInterfaceOperationOutput destIntfOutput = destIntfOperation.getOutput(element);
-            if (destIntfOutput == null)
+            if (destIntfOutput != null)
                destIntfOperation.removeInput(element);
          }
 
@@ -1217,7 +1218,6 @@ public class WSDL11Reader
                   }
                }
 
-               // Found content types in this part
                if (name != null)
                {
                   QName xmlType = callback.getXmlType(name);

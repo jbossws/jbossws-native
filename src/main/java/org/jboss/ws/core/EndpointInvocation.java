@@ -258,7 +258,7 @@ public class EndpointInvocation
          Class javaType = paramMetaData.getJavaType();
 
          Object value;
-         if (opMetaData.isDocumentWrapped() && paramMetaData.isInHeader() == false)
+         if (opMetaData.isDocumentWrapped() && !paramMetaData.isInHeader() && !paramMetaData.isSwA())
          {
             value = ParameterWrapping.wrapRequestParameters(paramMetaData, inputParams);
          }
@@ -300,7 +300,7 @@ public class EndpointInvocation
       Method method = opMetaData.getJavaMethod();
       Class[] targetParameterTypes = method.getParameterTypes();
 
-      if (opMetaData.isDocumentWrapped() && paramMetaData.isInHeader() == false && paramMetaData.isMessageType() == false)
+      if (opMetaData.isDocumentWrapped() && !paramMetaData.isInHeader()&& !paramMetaData.isSwA() && !paramMetaData.isMessageType())
       {
          outParameters = ParameterWrapping.unwrapRequestParameters(paramMetaData, paramValue, payload);
          syncOutWrappedParameters(targetParameterTypes);
