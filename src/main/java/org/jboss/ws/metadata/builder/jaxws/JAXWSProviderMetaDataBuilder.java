@@ -126,8 +126,11 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
          serviceMetaData.setWsdlLocation(wsdlURL);
       }
 
+      // process config
+      processEndpointConfig(udi, sepClass, linkName, sepMetaData);
+
       // Set the endpoint address
-      processPortComponent(udi, sepClass, linkName, sepMetaData);
+      processWebContext(udi, sepClass, linkName, sepMetaData);
 
       // Init the endpoint address
       MetaDataBuilder.initEndpointAddress(udi, sepMetaData, linkName);

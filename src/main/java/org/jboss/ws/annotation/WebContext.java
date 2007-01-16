@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })
-public @interface PortComponent {
+public @interface WebContext {
 
    /** 
     * The contextRoot element specifies the context root that the web service endpoint is deployed to.
@@ -92,21 +92,5 @@ public @interface PortComponent {
     * http://jira.jboss.org/jira/browse/JBWS-723   
     */
    boolean secureWSDLAccess() default true;
-   
-   /** 
-    * The optional config-name element gives the client configuration name that must be present in
-    * the configuration given by element config-file.
-    *  
-    * Server side default: Standard Endpoint 
-    * Client side default: Standard Client 
-    */
-   String configName() default "";
-
-   /** 
-    * The optional config-file element gives the to a URL or resource name for the configuration.
-    * 
-    * Server side default: standard-jaxrpc-endpoint-config.xml, standard-jaxws-endpoint-config.xml 
-    * Client side default: standard-jaxrpc-client-config.xml, standard-jaxws-client-config.xml 
-    */
-   String configFile() default "";
+    
 }

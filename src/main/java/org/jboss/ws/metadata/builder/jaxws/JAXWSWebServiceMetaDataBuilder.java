@@ -110,9 +110,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Process or generate WSDL
          processOrGenerateWSDL(seiClass, serviceMetaData, result.wsdlLocation, sepMetaData);
 
-         // process config name and config file amongst others
-         // Note, that @PortComponent needs to be defined on the endpoint not the SEI
-         processPortComponent(udi, sepClass, linkName, sepMetaData);
+         // process config
+         processEndpointConfig(udi, sepClass, linkName, sepMetaData);
+
+         // Note, that @WebContext needs to be defined on the endpoint not the SEI
+         processWebContext(udi, sepClass, linkName, sepMetaData);
 
          // setup handler chain from config
          sepMetaData.configure(sepMetaData);

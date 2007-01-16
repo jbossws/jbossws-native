@@ -23,14 +23,15 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceProvider;
-
-import org.jboss.ws.annotation.PortComponent;
+import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.ws.annotation.WebContext;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+
+import javax.jws.WebService;
+import javax.xml.ws.WebServiceProvider;
 
 /**
  * Builds ServiceEndpointMetaData for a JAX-WS endpoint.
@@ -54,37 +55,46 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       }
    }
 
-   protected void processPortComponent(UnifiedDeploymentInfo udi, Class<?> wsClass, String linkName, ServerEndpointMetaData sepMetaData)
+   protected void processEndpointConfig(UnifiedDeploymentInfo udi, Class<?> wsClass, String linkName, ServerEndpointMetaData sepMetaData)
    {
-      PortComponent anPortComponent = wsClass.getAnnotation(PortComponent.class);
-      if (anPortComponent == null)
+      EndpointConfig anEndpointConfig = wsClass.getAnnotation(EndpointConfig.class);
+
+      if (anEndpointConfig== null)
          return;
 
       // setup config name
-      if (anPortComponent.configName().length() > 0)
+      if (anEndpointConfig.configName().length() > 0)
       {
-         String configName = anPortComponent.configName();
+         String configName = anEndpointConfig.configName();
          sepMetaData.setConfigName(configName);
       }
 
       // setup config file
-      if (anPortComponent.configFile().length() > 0)
+      if (anEndpointConfig.configFile().length() > 0)
       {
-         String configFile = anPortComponent.configFile();
+         String configFile = anEndpointConfig.configFile();
          sepMetaData.setConfigFile(configFile);
       }
+   }
 
+   protected void processWebContext(UnifiedDeploymentInfo udi, Class<?> wsClass, String linkName, ServerEndpointMetaData sepMetaData)
+   {
+      WebContext anWebContext = wsClass.getAnnotation(WebContext.class);
+
+      if (anWebContext == null)
+         return;
+      
       boolean isJSEEndpoint = (udi.type == DeploymentType.JAXWS_JSE);
 
       // context-root
-      if (anPortComponent.contextRoot().length() > 0)
+      if (anWebContext.contextRoot().length() > 0)
       {
          if (isJSEEndpoint)
-            log.warn("@PortComponent.contextRoot is only valid on EJB endpoints");
+            log.warn("@WebContext.contextRoot is only valid on EJB endpoints");
 
          if (isJSEEndpoint == false)
          {
-            String contextRoot = anPortComponent.contextRoot();
+            String contextRoot = anWebContext.contextRoot();
             if (contextRoot.startsWith("/") == false)
                contextRoot = "/" + contextRoot;
 
@@ -93,49 +103,49 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       }
 
       // url-pattern
-      if (anPortComponent.urlPattern().length() > 0)
+      if (anWebContext.urlPattern().length() > 0)
       {
          if (isJSEEndpoint)
-            log.warn("@PortComponent.urlPattern is only valid on EJB endpoints");
+            log.warn("@WebContext.urlPattern is only valid on EJB endpoints");
 
          if (isJSEEndpoint == false)
          {
-            String urlPattern = anPortComponent.urlPattern();
+            String urlPattern = anWebContext.urlPattern();
             sepMetaData.setURLPattern(urlPattern);
          }
       }
 
       // auth-method
-      if (anPortComponent.authMethod().length() > 0)
+      if (anWebContext.authMethod().length() > 0)
       {
          if (isJSEEndpoint)
-            log.warn("@PortComponent.authMethod is only valid on EJB endpoints");
+            log.warn("@WebContext.authMethod is only valid on EJB endpoints");
 
          if (isJSEEndpoint == false)
          {
-            String authMethod = anPortComponent.authMethod();
+            String authMethod = anWebContext.authMethod();
             sepMetaData.setAuthMethod(authMethod);
          }
       }
 
       // transport-guarantee
-      if (anPortComponent.transportGuarantee().length() > 0)
+      if (anWebContext.transportGuarantee().length() > 0)
       {
          if (isJSEEndpoint)
-            log.warn("@PortComponent.transportGuarantee is only valid on EJB endpoints");
+            log.warn("@WebContext.transportGuarantee is only valid on EJB endpoints");
 
          if (isJSEEndpoint == false)
          {
-            String transportGuarantee = anPortComponent.transportGuarantee();
+            String transportGuarantee = anWebContext.transportGuarantee();
             sepMetaData.setTransportGuarantee(transportGuarantee);
          }
       }
       
       // secure wsdl access
-      sepMetaData.setSecureWSDLAccess(anPortComponent.secureWSDLAccess());
+      sepMetaData.setSecureWSDLAccess(anWebContext.secureWSDLAccess());
 
       // virtual hosts
-      String[] virtualHosts = anPortComponent.virtualHosts();
+      String[] virtualHosts = anWebContext.virtualHosts();
       if (virtualHosts != null & virtualHosts.length > 0)
       {
          sepMetaData.setVirtualHosts(virtualHosts);
