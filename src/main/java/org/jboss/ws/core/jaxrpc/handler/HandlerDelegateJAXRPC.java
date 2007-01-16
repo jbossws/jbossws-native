@@ -171,7 +171,7 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
          hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
          HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
 
-         log.debug("Adding server side handler to service '" + sepMetaData.getQName() + "': " + info);
+         log.debug("Adding server side handler to service '" + sepMetaData.getPortName() + "': " + info);
          hInfos.add(info);
       }
 

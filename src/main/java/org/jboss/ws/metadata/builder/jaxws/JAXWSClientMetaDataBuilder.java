@@ -179,7 +179,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       // Nuke parameterStyle
       epMetaData.setParameterStyle(null);
-
+      
       // Process an optional @BindingType annotation
       if (wsClass.isAnnotationPresent(BindingType.class))
          processBindingType(epMetaData, wsClass);
@@ -201,6 +201,9 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       // Initialize types
       createJAXBContext(epMetaData);
       populateXmlTypes(epMetaData);
+
+      // Set SEI name
+      epMetaData.setServiceEndpointInterfaceName(wsClass.getName());
 
       // Eager initialization
       epMetaData.eagerInitialize();

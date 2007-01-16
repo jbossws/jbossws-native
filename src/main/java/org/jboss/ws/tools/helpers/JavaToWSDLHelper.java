@@ -183,7 +183,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
       serviceMapping.setServiceInterface(serviceInterfaceName);
       serviceMapping.setWsdlServiceName(serviceQName);
 
-      String endpointName = endpoint.getQName().getLocalPart();
+      String endpointName = endpoint.getPortName().getLocalPart();
       PortMapping portMapping = new PortMapping(serviceMapping);
       portMapping.setJavaPortName(endpointName);
       portMapping.setPortName(endpointName);
@@ -191,7 +191,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
 
       javaWsdlMapping.addServiceInterfaceMappings(serviceMapping);
 
-      String interfaceName = endpoint.getInterfaceQName().getLocalPart();
+      String interfaceName = endpoint.getPortTypeName().getLocalPart();
       ServiceEndpointInterfaceMapping seiMapping = new ServiceEndpointInterfaceMapping(javaWsdlMapping);
       seiMapping.setServiceEndpointInterface(endpoint.getServiceEndpointInterfaceName());
       seiMapping.setWsdlPortType(new QName(wsdl.getTargetNamespace(), interfaceName, "portTypeNS"));

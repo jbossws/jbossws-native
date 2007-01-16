@@ -46,7 +46,7 @@ public class PortInfoImpl implements PortInfo
    public PortInfoImpl(EndpointMetaData epMetaData)
    {
       this.serviceName = epMetaData.getServiceMetaData().getServiceName();
-      this.portName = epMetaData.getQName();
+      this.portName = epMetaData.getPortName();
       this.bindingID = epMetaData.getBindingId();
    }
    

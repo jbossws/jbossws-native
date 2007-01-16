@@ -89,7 +89,7 @@ public abstract class MetaDataBuilder
       {
          for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
          {
-            if (epMetaData.getQName().equals(wsdlEndpoint.getQName()))
+            if (epMetaData.getPortName().equals(wsdlEndpoint.getQName()))
             {
                QName bindQName = wsdlEndpoint.getBinding();
                NCName ncName = new NCName(bindQName.getLocalPart());
@@ -282,7 +282,7 @@ public abstract class MetaDataBuilder
    public static void replaceAddressLocation(ServerEndpointMetaData sepMetaData)
    {
       WSDLDefinitions wsdlDefinitions = sepMetaData.getServiceMetaData().getWsdlDefinitions();
-      QName portName = sepMetaData.getQName();
+      QName portName = sepMetaData.getPortName();
 
       boolean endpointFound = false;
       for (WSDLService wsdlService : wsdlDefinitions.getServices())

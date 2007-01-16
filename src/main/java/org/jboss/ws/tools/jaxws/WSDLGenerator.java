@@ -70,14 +70,14 @@ public abstract class WSDLGenerator
    protected void processEndpoint(WSDLService service, EndpointMetaData endpoint)
    {
       WSDLEndpoint wsdlEndpoint = new WSDLEndpoint(service);
-      wsdlEndpoint.setQName(endpoint.getQName());
-      wsdlEndpoint.setName(new NCName(endpoint.getQName().getLocalPart()));
+      wsdlEndpoint.setQName(endpoint.getPortName());
+      wsdlEndpoint.setName(new NCName(endpoint.getPortName().getLocalPart()));
       String address = endpoint.getEndpointAddress();
       wsdlEndpoint.setAddress(address == null ? "REPLACE_WITH_ACTUAL_URL" : address);
       service.addEndpoint(wsdlEndpoint);
 
       WSDLInterface wsdlInterface = new WSDLInterface(wsdl);
-      QName interfaceQName = endpoint.getInterfaceQName();
+      QName interfaceQName = endpoint.getPortTypeName();
       wsdlInterface.setQName(interfaceQName);
       wsdlInterface.setName(new NCName(interfaceQName));
       wsdl.addInterface(wsdlInterface);
@@ -325,7 +325,7 @@ public abstract class WSDLGenerator
       if (endpoint == null)
          throw new IllegalStateException("A service must have an endpoint");
 
-      wsdlService.setInterfaceName(endpoint.getQName());
+      wsdlService.setInterfaceName(endpoint.getPortName());
    }
 
    /**

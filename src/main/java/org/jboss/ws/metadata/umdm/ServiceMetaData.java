@@ -185,7 +185,7 @@ public class ServiceMetaData
 
    public void addEndpoint(EndpointMetaData epMetaData)
    {
-      QName portName = epMetaData.getQName();
+      QName portName = epMetaData.getPortName();
 
       // This happends when we have multiple port components in sharing the same wsdl port
       // The EndpointMetaData name is the wsdl port, so we cannot have multiple meta data for the same port.

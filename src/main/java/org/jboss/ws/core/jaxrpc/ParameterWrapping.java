@@ -281,7 +281,7 @@ public class ParameterWrapping
 
       String serviceName = serviceMetaData.getServiceName().getLocalPart();
       String parameterName = pmd.getXmlName().getLocalPart();
-      String endpointName = endpointMetaData.getQName().getLocalPart();
+      String endpointName = endpointMetaData.getPortName().getLocalPart();
       String packageName = endpointMetaData.getServiceEndpointInterface().getPackage().getName();
 
       String wrapperName = packageName + "._JBossWS_" + serviceName + "_" + endpointName + "_" + parameterName;

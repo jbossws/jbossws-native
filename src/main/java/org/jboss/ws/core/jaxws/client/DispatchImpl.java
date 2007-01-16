@@ -40,6 +40,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.AsyncHandler;
@@ -283,8 +284,7 @@ public class DispatchImpl<T> implements Dispatch<T>
             {
                SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
                SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
-               String xmlPayload = DOMWriter.printNode(soapElement, false);
-               retObj = new StreamSource(new StringReader(xmlPayload));
+               retObj = new DOMSource(soapElement);
             }
             if (mode == Mode.MESSAGE)
             {

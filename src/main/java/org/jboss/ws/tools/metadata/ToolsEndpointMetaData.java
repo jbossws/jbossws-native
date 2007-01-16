@@ -37,8 +37,8 @@ public class ToolsEndpointMetaData extends EndpointMetaData
 {
    public String typeNamespace;
 
-   public ToolsEndpointMetaData(ServiceMetaData service, QName name, QName interfaceQName)
+   public ToolsEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
    {
-      super(service, name, interfaceQName, Type.JAXRPC);
+      super(service, portName, portTypeName, Type.JAXRPC);
    }
 }

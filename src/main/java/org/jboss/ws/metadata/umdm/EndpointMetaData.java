@@ -81,7 +81,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    // The REQUIRED binding id
    private String bindingId;
    // The REQUIRED name of the WSDL interface/portType
-   private QName interfaceQName;
+   private QName portTypeName;
    // The REQUIRED config-name
    private String configName;
    // The REQUIRED config-file
@@ -117,11 +117,11 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    private ConfigObservable configObservable = new ConfigObservable();
 
-   public EndpointMetaData(ServiceMetaData service, QName qname, QName interfaceQName, Type type)
+   public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
       this.serviceMetaData = service;
-      this.portName = qname;
-      this.interfaceQName = interfaceQName;
+      this.portName = portName;
+      this.portTypeName = portTypeName;
       this.type = type;
 
       // The default binding
@@ -133,14 +133,14 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
       return serviceMetaData;
    }
 
-   public QName getQName()
+   public QName getPortName()
    {
       return portName;
    }
 
-   public QName getInterfaceQName()
+   public QName getPortTypeName()
    {
-      return interfaceQName;
+      return portTypeName;
    }
 
    public String getEndpointAddress()
@@ -595,7 +595,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
          {
             CommonBindingProvider provider = (CommonBindingProvider)configurable;
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
-            log.debug("Enable MTOM on endpoint " + this.getQName());
+            log.debug("Enable MTOM on endpoint " + this.getPortName());
          }
       }
 

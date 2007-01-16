@@ -77,7 +77,7 @@ public class SOAPMessageDispatcher
       // Dispatch to JAXWS Provider
       if (opMetaData == null && epMetaData.getServiceMode() != null)
       {
-         QName xmlName = new QName(epMetaData.getQName().getNamespaceURI(), "invoke");
+         QName xmlName = new QName(epMetaData.getPortName().getNamespaceURI(), "invoke");
          opMetaData = epMetaData.getOperation(xmlName);
       }
 

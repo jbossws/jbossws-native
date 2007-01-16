@@ -26,7 +26,6 @@ package org.jboss.ws.core.jaxws.spi;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -47,7 +46,6 @@ import javax.xml.ws.spi.ServiceDelegate;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxws.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
@@ -57,6 +55,7 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
@@ -79,8 +78,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    // The service meta data that is associated with this JAXWS Service
    private ServiceMetaData serviceMetaData;
-   // The ports known by this service
-   private HashMap<QName, Port> ports = new HashMap<QName,Port>();
    // The handler resolver
    private HandlerResolver handlerResolver = new HandlerResolverImpl();
    // The executor service
@@ -91,17 +88,16 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName)
    {
-      JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
-
-      serviceMetaData = builder.buildMetaData(serviceName, wsdlURL);
-
-      for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
+      if (wsdlURL != null)
       {
-         QName portName = epMetaData.getQName();
-         String bindingId = epMetaData.getBindingId();
-         String epAddress = epMetaData.getEndpointAddress();
-         Port port = new Port (portName, bindingId, epAddress);
-         ports.put(portName, port);
+         JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
+         serviceMetaData = builder.buildMetaData(serviceName, wsdlURL);
+      }
+      else
+      {
+         UnifiedMetaData wsMetaData = new UnifiedMetaData();
+         serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
+         wsMetaData.addService(serviceMetaData);
       }
    }
 
@@ -159,7 +155,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
          for(EndpointMetaData epmd : serviceMetaData.getEndpoints())
          {
-            QName interfaceQName = epmd.getInterfaceQName(); // skip namespaces here
+            QName interfaceQName = epmd.getPortTypeName(); // skip namespaces here
             if( interfaceQName.getLocalPart().equals( portTypeName.getLocalPart() ) )
             {
                epmd.setServiceEndpointInterfaceName(seiClass.getName());
@@ -177,7 +173,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    private <T> T getPortInternal(EndpointMetaData epMetaData, Class<T> seiClass)
    {
-      QName portName = epMetaData.getQName();
+      QName portName = epMetaData.getPortName();
 
       // Adjust the endpoint meta data according to the annotations
       if (annotatedPorts.contains(portName) == false)
@@ -204,11 +200,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
     * Ports created in this way contain no WSDL port type information
     * and can only be used for creating Dispatchinstances.
     */
-
    public void addPort(QName portName, String bindingId, String epAddress)
    {
-      Port port = new Port (portName, bindingId, epAddress);
-      ports.put(portName, port);
+      EndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, null, Type.JAXWS);
+      epMetaData.setBindingId(bindingId);
+      epMetaData.setEndpointAddress(epAddress);
+      serviceMetaData.addEndpoint(epMetaData);
    }
 
    @Override
@@ -231,18 +228,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    private EndpointMetaData getEndpointMetaData(QName portName)
    {
-      Port port = ports.get(portName);
-      if (port == null)
-         throw new WebServiceException("Cannot find port: " + portName);
-
-      // Create an anonymous endpoint
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-      {
-         epMetaData = new ClientEndpointMetaData(serviceMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousPort"), new QName(Constants.NS_JBOSSWS_URI, "Anonymous"), Type.JAXWS);
-         epMetaData.setEndpointAddress(port.getEndpointAddress());
-         epMetaData.setBindingId(port.getBindingId());
-      }
+         throw new WebServiceException("Cannot find port: " + portName);
+      
       return epMetaData;
    }
 
@@ -258,9 +247,9 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public Iterator<QName> getPorts()
    {
       ArrayList<QName> portNames = new ArrayList<QName>();
-      for (Port port : ports.values())
+      for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
       {
-         portNames.add(port.getQName());
+         portNames.add(epMetaData.getPortName());
       }
       return portNames.iterator();
    }
@@ -327,35 +316,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
       catch (Exception ex)
       {
          throw new WebServiceException("Cannot create proxy", ex);
-      }
-   }
-
-   private static class Port
-   {
-      private QName qname;
-      private String bindingId;
-      private String endpointAddress;
-
-      public Port(QName qname, String bindingId, String endpointAddress)
-      {
-         this.qname = qname;
-         this.bindingId = bindingId;
-         this.endpointAddress = endpointAddress;
-      }
-
-      public String getBindingId()
-      {
-         return bindingId;
-      }
-
-      public String getEndpointAddress()
-      {
-         return endpointAddress;
-      }
-
-      public QName getQName()
-      {
-         return qname;
       }
    }
 

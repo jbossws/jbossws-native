@@ -249,7 +249,7 @@ public abstract class CommonClient
          setOutboundContextProperties();
 
          // Call the request handlers
-         QName portName = epMetaData.getQName();
+         QName portName = epMetaData.getPortName();
          boolean handlerPass = callRequestHandlerChain(portName, HandlerType.PRE);
          handlerPass = handlerPass && callRequestHandlerChain(portName, HandlerType.ENDPOINT);
          handlerPass = handlerPass && callRequestHandlerChain(portName, HandlerType.POST);

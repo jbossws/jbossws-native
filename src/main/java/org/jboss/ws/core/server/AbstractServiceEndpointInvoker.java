@@ -241,11 +241,11 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          {
             SOAPBodyElement soapBodyElement = (SOAPBodyElement)soapBody.getChildElements().next();
             Name soapName = soapBodyElement.getElementName();
-            faultString = "Endpoint " + epMetaData.getQName() + " does not contain operation meta data for: " + soapName;
+            faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for: " + soapName;
          }
          else
          {
-            faultString = "Endpoint " + epMetaData.getQName() + " does not contain operation meta data for empty soap body";
+            faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for empty soap body";
          }
 
          // R2724 If an INSTANCE receives a message that is inconsistent with its WSDL description, it SHOULD generate a soap:Fault

@@ -36,12 +36,13 @@ import javax.xml.namespace.QName;
  */
 public class ClientEndpointMetaData extends EndpointMetaData
 {
-   public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName interfaceQName, Type type)
+   public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {
-      super(service, qname, interfaceQName, type);
+      super(service, qname, portTypeName, type);
    }
 
-   public String getConfigName() {
+   public String getConfigName()
+   {
       String configName = super.getConfigName();
       if (configName == null)
       {
@@ -51,7 +52,8 @@ public class ClientEndpointMetaData extends EndpointMetaData
       return configName;
    }
 
-   public String getConfigFile() {
+   public String getConfigFile()
+   {
       String configFile = super.getConfigFile();
       if (configFile == null)
       {
@@ -72,22 +74,22 @@ public class ClientEndpointMetaData extends EndpointMetaData
    {
       StringBuilder buffer = new StringBuilder("\nClientEndpointMetaData:");
       buffer.append("\n type=").append(getType());
-      buffer.append("\n qname=").append(getQName());
-      buffer.append("\n address=" ).append(getEndpointAddress());
-      buffer.append("\n binding=" ).append( getBindingId());
-      buffer.append("\n seiName=" ).append( getServiceEndpointInterfaceName());
-      buffer.append("\n configFile=" ).append( getConfigFile());
-      buffer.append("\n configName=" ).append( getConfigName());
-      buffer.append("\n authMethod=" ).append( getAuthMethod());
-      buffer.append("\n properties=" ).append( getProperties());
+      buffer.append("\n qname=").append(getPortName());
+      buffer.append("\n address=").append(getEndpointAddress());
+      buffer.append("\n binding=").append(getBindingId());
+      buffer.append("\n seiName=").append(getServiceEndpointInterfaceName());
+      buffer.append("\n configFile=").append(getConfigFile());
+      buffer.append("\n configName=").append(getConfigName());
+      buffer.append("\n authMethod=").append(getAuthMethod());
+      buffer.append("\n properties=").append(getProperties());
 
       for (OperationMetaData opMetaData : getOperations())
       {
-         buffer.append("\n" ).append( opMetaData);
+         buffer.append("\n").append(opMetaData);
       }
       for (HandlerMetaData hdlMetaData : getHandlerMetaData(HandlerType.ALL))
       {
-         buffer.append("\n" ).append( hdlMetaData);
+         buffer.append("\n").append(hdlMetaData);
       }
       return buffer.toString();
    }

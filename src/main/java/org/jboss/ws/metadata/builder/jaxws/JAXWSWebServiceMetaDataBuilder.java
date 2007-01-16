@@ -247,7 +247,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
 
             // Ensure that types are only in the interface qname
-            wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getInterfaceQName().getNamespaceURI());
+            wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
 
             final File tmpdir = IOUtils.createTempDirectory();
             File wsdlTmpFile = File.createTempFile(serviceName, ".wsdl", tmpdir);

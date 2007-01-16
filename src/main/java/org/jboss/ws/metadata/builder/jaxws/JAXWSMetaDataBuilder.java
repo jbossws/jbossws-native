@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
@@ -105,37 +105,34 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
    protected void processBindingType(EndpointMetaData epMetaData, Class<?> wsClass)
    {
-      if (! wsClass.isAnnotationPresent(BindingType.class))
-         return;
-   
-      BindingType anBindingType = (BindingType)wsClass.getAnnotation(BindingType.class);
-      String uri = anBindingType.value();
-      if (uri.length() > 0)
+      if (wsClass.isAnnotationPresent(BindingType.class))
       {
-         epMetaData.setBindingId(uri);
+         log.debug("processBindingType on: " + wsClass.getName());
+         BindingType anBindingType = (BindingType)wsClass.getAnnotation(BindingType.class);
+         epMetaData.setBindingId(anBindingType.value());
       }
    }
 
    protected void processSOAPBinding(EndpointMetaData epMetaData, Class<?> wsClass)
    {
-   
-      if (!wsClass.isAnnotationPresent(SOAPBinding.class))
-         return;
-   
-      SOAPBinding anSoapBinding = wsClass.getAnnotation(SOAPBinding.class);
-   
-      SOAPBinding.Style attrStyle = anSoapBinding.style();
-      Style style = (attrStyle == SOAPBinding.Style.RPC ? Style.RPC : Style.DOCUMENT);
-      epMetaData.setStyle(style);
-   
-      SOAPBinding.Use attrUse = anSoapBinding.use();
-      if (attrUse == SOAPBinding.Use.ENCODED)
-         throw new WSException("SOAP encoding is not supported for JSR-181 deployments");
-   
-      epMetaData.setEncodingStyle(Use.LITERAL);
-   
-      ParameterStyle paramStyle = anSoapBinding.parameterStyle();
-      epMetaData.setParameterStyle(paramStyle);
+      if (wsClass.isAnnotationPresent(SOAPBinding.class))
+      {
+         log.debug("processSOAPBinding on: " + wsClass.getName());
+         SOAPBinding anSoapBinding = wsClass.getAnnotation(SOAPBinding.class);
+
+         SOAPBinding.Style attrStyle = anSoapBinding.style();
+         Style style = (attrStyle == SOAPBinding.Style.RPC ? Style.RPC : Style.DOCUMENT);
+         epMetaData.setStyle(style);
+
+         SOAPBinding.Use attrUse = anSoapBinding.use();
+         if (attrUse == SOAPBinding.Use.ENCODED)
+            throw new WSException("SOAP encoding is not supported for JSR-181 deployments");
+
+         epMetaData.setEncodingStyle(Use.LITERAL);
+
+         ParameterStyle paramStyle = anSoapBinding.parameterStyle();
+         epMetaData.setParameterStyle(paramStyle);
+      }
    }
 
    /**
@@ -153,12 +150,13 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(SOAPMessageHandlers.class))
          throw new WSException("Cannot combine @HandlerChain with @SOAPMessageHandlers");
-   
+
       HandlerChain anHandlerChain = wsClass.getAnnotation(HandlerChain.class);
-   
+
       URL fileURL = null;
       String filename = anHandlerChain.file();
-   
+      log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
+
       // Try the filename as URL
       try
       {
@@ -168,7 +166,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          // ignore
       }
-   
+
       // Try the filename as File
       if (fileURL == null)
       {
@@ -183,23 +181,23 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             // ignore
          }
       }
-   
+
       // Try the filename as Resource
       if (fileURL == null)
       {
          fileURL = epMetaData.getClassLoader().getResource(filename);
       }
-   
+
       // Try the filename relative to class
       if (fileURL == null)
       {
          String packagePath = wsClass.getPackage().getName().replace('.', '/');
          fileURL = epMetaData.getClassLoader().getResource(packagePath + "/" + filename);
       }
-   
+
       if (fileURL == null)
          throw new WSException("Cannot resolve handler file '" + filename + "' on " + wsClass.getName());
-   
+
       try
       {
          HandlerChainsMetaData handlerChainsMetaData = null;
@@ -217,7 +215,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          {
             is.close();
          }
-   
+
          // Setup the endpoint handlers
          for (HandlerChainMetaData handlerChainMetaData : handlerChainsMetaData.getHandlerChains())
          {
@@ -242,16 +240,16 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (omd.isOneWay())
          throw new IllegalStateException("JSR-181 4.3.1 - A JSR-181 processor is REQUIRED to report an error if an operation marked "
                + "@Oneway has a return value, declares any checked exceptions or has any INOUT or OUT parameters.");
-   
+
       WebFault annotation = exception.getAnnotation(WebFault.class);
-   
+
       String name;
       String namespace;
       String faultBeanName = null;
-   
+
       // Only the element name is effected by @WebFault, the type uses the same convention
       QName xmlType = new QName(omd.getQName().getNamespaceURI(), exception.getSimpleName());
-   
+
       /*
        * If @WebFault is present, and the exception contains getFaultInfo, the
        * return value should be used. Otherwise we need to generate the bean.
@@ -263,7 +261,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          namespace = annotation.targetNamespace();
          if (namespace.length() == 0)
             namespace = omd.getQName().getNamespaceURI();
-   
+
          Class<?> faultBean = getFaultInfo(exception);
          if (faultBean != null)
          {
@@ -276,21 +274,21 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          name = xmlType.getLocalPart();
          namespace = xmlType.getNamespaceURI();
       }
-   
+
       if (faultBeanName == null)
          faultBeanName = JavaUtils.getPackageName(omd.getEndpointMetaData().getServiceEndpointInterface()) + ".jaxws." + exception.getSimpleName() + "Bean";
-   
+
       QName xmlName = new QName(namespace, name);
-   
+
       FaultMetaData fmd = new FaultMetaData(omd, xmlName, xmlType, exception.getName());
       fmd.setFaultBeanName(faultBeanName);
-   
+
       if (generate)
          wrapperGenerator.generate(fmd);
-   
+
       javaTypes.add(fmd.getFaultBean());
       typeRefs.add(new TypeReference(fmd.getXmlName(), fmd.getFaultBean()));
-   
+
       omd.addFault(fmd);
    }
 
@@ -303,16 +301,16 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (!Collection.class.isAssignableFrom(rawType) && !Map.class.isAssignableFrom(rawType))
          return null;
-   
+
       if (!(type instanceof ParameterizedType))
          return null;
-   
+
       ParameterizedType paramType = (ParameterizedType)type;
       Type[] arguments = paramType.getActualTypeArguments();
       String[] ret = new String[arguments.length];
       for (int i = 0; i < arguments.length; i++)
          ret[i] = JavaUtils.erasure(arguments[i]).getName();
-   
+
       return ret;
    }
 
@@ -324,27 +322,27 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (method.isAnnotationPresent(RequestWrapper.class))
       {
          RequestWrapper anReqWrapper = method.getAnnotation(RequestWrapper.class);
-   
+
          String localName = anReqWrapper.localName().length() > 0 ? anReqWrapper.localName() : xmlName.getLocalPart();
          String targetNamespace = anReqWrapper.targetNamespace().length() > 0 ? anReqWrapper.targetNamespace() : xmlName.getNamespaceURI();
          xmlName = new QName(targetNamespace, localName);
-   
+
          if (anReqWrapper.className().length() > 0)
             requestWrapperType = anReqWrapper.className();
       }
-   
+
       // Conformance 3.18, the default value must be the same as the method name
       if (requestWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass()) + ".jaxws";
          requestWrapperType = packageName + "." + JavaUtils.capitalize(method.getName());
       }
-   
+
       // JAX-WS p.37 pg.1, the annotation only affects the element name, not the type name
       ParameterMetaData wrapperParameter = new ParameterMetaData(operation, xmlName, xmlType, requestWrapperType);
       wrapperParameter.setAccessorFactoryCreator(JAXBAccessor.FACTORY_CREATOR);
       operation.addParameter(wrapperParameter);
-   
+
       return wrapperParameter;
    }
 
@@ -353,30 +351,30 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       QName operationQName = operation.getQName();
       QName xmlName = new QName(operationQName.getNamespaceURI(), operationQName.getLocalPart() + "Response");
       QName xmlType = xmlName;
-   
+
       String responseWrapperType = null;
       if (method.isAnnotationPresent(ResponseWrapper.class))
       {
          ResponseWrapper anResWrapper = method.getAnnotation(ResponseWrapper.class);
-   
+
          String localName = anResWrapper.localName().length() > 0 ? anResWrapper.localName() : xmlName.getLocalPart();
          String targetNamespace = anResWrapper.targetNamespace().length() > 0 ? anResWrapper.targetNamespace() : xmlName.getNamespaceURI();
          xmlName = new QName(targetNamespace, localName);
-   
+
          if (anResWrapper.className().length() > 0)
             responseWrapperType = anResWrapper.className();
       }
-   
+
       if (responseWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass()) + ".jaxws";
          responseWrapperType = packageName + "." + JavaUtils.capitalize(method.getName()) + "Response";
       }
-   
+
       ParameterMetaData retMetaData = new ParameterMetaData(operation, xmlName, xmlType, responseWrapperType);
       retMetaData.setAccessorFactoryCreator(JAXBAccessor.FACTORY_CREATOR);
       operation.setReturnParameter(retMetaData);
-   
+
       return retMetaData;
    }
 
@@ -388,7 +386,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          Class<?> returnType = method.getReturnType();
          if (returnType == void.class)
             return null;
-   
+
          return returnType;
       }
       catch (SecurityException e)
@@ -410,7 +408,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          if (anWebParam.mode() == WebParam.Mode.OUT)
             return ParameterMode.OUT;
       }
-   
+
       return HolderUtils.isHolderType(javaType) ? ParameterMode.INOUT : ParameterMode.IN;
    }
 
@@ -419,7 +417,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       for (Annotation annotation : method.getParameterAnnotations()[pos])
          if (annotation instanceof WebParam)
             return (WebParam)annotation;
-   
+
       return null;
    }
 
@@ -428,33 +426,33 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       String namespace = null;
       String name = null;
       boolean header = false;
-   
+
       if (webParam != null)
       {
          if (webParam.targetNamespace().length() > 0)
             namespace = webParam.targetNamespace();
-   
+
          // RPC types use the partName for their XML name
          if (webParam.partName().length() > 0 && opMetaData.isRPCLiteral())
             name = webParam.partName();
          else if (webParam.name().length() > 0)
             name = webParam.name();
-   
+
          header = webParam.header();
       }
-   
+
       // Bare and headers must be qualified
       if (namespace == null && (opMetaData.isDocumentBare() || header))
          namespace = opMetaData.getQName().getNamespaceURI();
-   
+
       // RPC body parts must have no namespace
       else if (opMetaData.isRPCLiteral() && !header)
          namespace = null;
-   
+
       // Bare uses the operation name as the default, everything else is generated
       if (name == null)
          name = opMetaData.isDocumentBare() && !header ? opMetaData.getQName().getLocalPart() : "arg" + index;
-   
+
       return (namespace != null) ? new QName(namespace, name) : new QName(name);
    }
 
@@ -463,33 +461,33 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       String name = null;
       String namespace = null;
       boolean header = false;
-   
+
       if (anWebResult != null)
       {
          if (anWebResult.targetNamespace().length() > 0)
             namespace = anWebResult.targetNamespace();
-   
+
          // RPC types use the partName for their XML name
          if (anWebResult.partName().length() > 0 && opMetaData.isRPCLiteral())
             name = anWebResult.partName();
          else if (anWebResult.name().length() > 0)
             name = anWebResult.name();
-   
+
          header = anWebResult.header();
       }
-   
+
       // Bare and headers must be qualified
       if (namespace == null && (opMetaData.isDocumentBare() || header))
          namespace = opMetaData.getQName().getNamespaceURI();
-   
+
       // RPC body parts must have no namespace
       else if (opMetaData.isRPCLiteral() && !header)
          namespace = null;
-   
+
       // Bare uses the operation name as the default, everything else is generated
       if (name == null)
          name = opMetaData.isDocumentBare() && !header ? opMetaData.getResponseName().getLocalPart() : "return";
-   
+
       return (namespace != null) ? new QName(namespace, name) : new QName(name);
    }
 
@@ -500,31 +498,31 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       // Until there is a addressing annotion we fallback to implicit action association
       // TODO: figure out a way to assign message name instead of IN and OUT
-      String tns = epMetaData.getQName().getNamespaceURI();
-      String portTypeName = epMetaData.getQName().getLocalPart();
-   
+      String tns = epMetaData.getPortName().getNamespaceURI();
+      String portTypeName = epMetaData.getPortName().getLocalPart();
+
       AddressingProperties ADDR = new AddressingPropertiesImpl();
       AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
       addrExt.setInboundAction(tns + "/" + portTypeName + "/IN");
-   
+
       if (!opMetaData.isOneWay())
          addrExt.setOutboundAction(tns + "/" + portTypeName + "/OUT");
-   
+
       opMetaData.addExtension(addrExt);
    }
 
    private void processWebMethod(EndpointMetaData epMetaData, Method method)
    {
       String javaName = method.getName();
-   
+
       // skip asnyc methods, they dont need meta data representation
       if (method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
          return;
-   
+
       // reflection defaults
       String soapAction = "";
       String operationName = method.getName();
-   
+
       // annotation values that override defaults
       if (method.isAnnotationPresent(WebMethod.class))
       {
@@ -535,12 +533,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             operationName = anWebMethod.operationName();
          }
       }
-   
-      String targetNS = epMetaData.getInterfaceQName().getNamespaceURI();
+
+      String targetNS = epMetaData.getPortTypeName().getNamespaceURI();
       OperationMetaData opMetaData = new OperationMetaData(epMetaData, new QName(targetNS, operationName), javaName);
       opMetaData.setOneWay(method.isAnnotationPresent(Oneway.class));
       opMetaData.setSOAPAction(soapAction);
-   
+
       if (method.isAnnotationPresent(SOAPBinding.class))
       {
          SOAPBinding anBinding = method.getAnnotation(SOAPBinding.class);
@@ -548,28 +546,28 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             throw new IllegalArgumentException("@SOAPBinding must be specified using DOCUMENT style when placed on a method");
          opMetaData.setParameterStyle(anBinding.parameterStyle());
       }
-   
+
       epMetaData.addOperation(opMetaData);
-   
+
       // Build parameter meta data
       Class[] parameterTypes = method.getParameterTypes();
       Type[] genericTypes = method.getGenericParameterTypes();
       Annotation[][] parameterAnnotations = method.getParameterAnnotations();
       ParameterMetaData wrapperParameter = null, wrapperOutputParameter = null;
       List<WrappedParameter> wrappedParameters = null, wrappedOutputParameters = null;
-   
+
       // Force paramter style to wrapped
       if (method.isAnnotationPresent(RequestWrapper.class) || method.isAnnotationPresent(ResponseWrapper.class))
       {
          epMetaData.setParameterStyle(ParameterStyle.WRAPPED);
       }
-   
+
       if (opMetaData.isDocumentWrapped())
       {
          wrapperParameter = createRequestWrapper(opMetaData, method);
          wrappedParameters = new ArrayList<WrappedParameter>(parameterTypes.length);
          wrapperParameter.setWrappedParameters(wrappedParameters);
-   
+
          if (!opMetaData.isOneWay())
          {
             wrapperOutputParameter = createResponseWrapper(opMetaData, method);
@@ -577,7 +575,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             wrapperOutputParameter.setWrappedParameters(wrappedOutputParameters);
          }
       }
-   
+
       for (int i = 0; i < parameterTypes.length; i++)
       {
          Class javaType = parameterTypes[i];
@@ -587,26 +585,26 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          boolean isHeader = anWebParam != null && anWebParam.header();
          boolean isWrapped = opMetaData.isDocumentWrapped() && !isHeader;
          ParameterMode mode = getParameterMode(anWebParam, javaType);
-   
+
          // Assert one-way
          if (opMetaData.isOneWay() && mode != ParameterMode.IN)
             throw new IllegalArgumentException("A one-way operation can not have output parameters [" + "method = " + method.getName() + ", parameter = " + i + "]");
-   
+
          if (HolderUtils.isHolderType(javaType))
          {
             genericType = HolderUtils.getGenericValueType(genericType);
             javaType = JavaUtils.erasure(genericType);
             javaTypeName = javaType.getName();
          }
-   
+
          if (isWrapped)
          {
             QName wrappedElementName = getWebParamName(opMetaData, i, anWebParam);
             String variable = convertToVariable(wrappedElementName.getLocalPart());
-   
+
             WrappedParameter wrappedParameter = new WrappedParameter(wrappedElementName, javaTypeName, variable, i);
             wrappedParameter.setTypeArguments(convertTypeArguments(javaType, genericType));
-   
+
             if (mode != ParameterMode.OUT)
                wrappedParameters.add(wrappedParameter);
             if (mode != ParameterMode.IN)
@@ -618,12 +616,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          else
          {
             QName xmlName = getWebParamName(opMetaData, i, anWebParam);
-   
+
             ParameterMetaData paramMetaData = new ParameterMetaData(opMetaData, xmlName, javaTypeName);
             paramMetaData.setInHeader(isHeader);
             paramMetaData.setIndex(i);
             paramMetaData.setMode(mode);
-   
+
             /*
              * Note: The TCK enforces the following rule in the spec regarding
              * partName: "This is only used if the operation is rpc style or if
@@ -638,13 +636,13 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
              */
             if (anWebParam != null && !opMetaData.isDocumentWrapped() && anWebParam.partName().length() > 0)
                paramMetaData.setPartName(anWebParam.partName());
-   
+
             opMetaData.addParameter(paramMetaData);
             javaTypes.add(javaType);
             typeRefs.add(new TypeReference(xmlName, genericType, parameterAnnotations[i]));
          }
       }
-   
+
       // Build result meta data
       Class returnType = method.getReturnType();
       Type genericReturnType = method.getGenericReturnType();
@@ -653,17 +651,17 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          if (opMetaData.isOneWay())
             throw new IllegalArgumentException("[JSR-181 2.5.1] The method '" + method.getName() + "' can not have a return value if it is marked OneWay");
-   
+
          WebResult anWebResult = method.getAnnotation(WebResult.class);
          boolean isHeader = anWebResult != null && anWebResult.header();
          boolean isWrappedBody = opMetaData.isDocumentWrapped() && !isHeader;
          QName xmlName = getWebResultName(opMetaData, anWebResult);
-   
+
          if (isWrappedBody)
          {
             WrappedParameter wrapped = new WrappedParameter(xmlName, returnTypeName, convertToVariable(xmlName.getLocalPart()), -1);
             wrapped.setTypeArguments(convertTypeArguments(returnType, genericReturnType));
-   
+
             // insert at the beginning just for prettiness
             wrappedOutputParameters.add(0, wrapped);
          }
@@ -673,7 +671,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             retMetaData.setInHeader(isHeader);
             retMetaData.setIndex(-1);
             retMetaData.setMode(ParameterMode.OUT);
-   
+
             // Special case: If we have a document/literal wrapped message, then
             // the return metadata must be the wrapper type that is sent in the
             // body. So, in order to handle headers that are mapped to the java
@@ -691,15 +689,15 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
                // header parameters.
                if (anWebResult != null && anWebResult.partName().length() > 0)
                   retMetaData.setPartName(anWebResult.partName());
-   
+
                opMetaData.setReturnParameter(retMetaData);
             }
-   
+
             javaTypes.add(returnType);
             typeRefs.add(new TypeReference(xmlName, genericReturnType, method.getAnnotations()));
          }
       }
-   
+
       // Generate wrapper beans
       if (opMetaData.isDocumentWrapped())
       {
@@ -717,12 +715,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             typeRefs.add(new TypeReference(wrapperOutputParameter.getXmlName(), wrapperClass));
          }
       }
-   
+
       // Add faults
       for (Class exClass : method.getExceptionTypes())
          if (!RemoteException.class.isAssignableFrom(exClass))
             addFault(opMetaData, exClass);
-   
+
       // process op meta data extension
       processMetaExtensions(epMetaData, opMetaData);
    }
@@ -730,7 +728,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    protected void processWebMethods(EndpointMetaData epMetaData, Class wsClass)
    {
       epMetaData.clearOperations();
-   
+
       // Process @WebMethod annotations
       int webMethodCount = 0;
       for (Method method : wsClass.getMethods())
@@ -743,7 +741,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             webMethodCount++;
          }
       }
-   
+
       // @WebService should expose all inherited methods if @WebMethod is never specified
       if (webMethodCount == 0 && !wsClass.isInterface())
       {
@@ -758,7 +756,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             }
          }
       }
-   
+
       if (webMethodCount == 0)
          throw new WSException("No exposable methods found");
    }
@@ -775,7 +773,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       try
       {
-         String targetNS = epMetaData.getInterfaceQName().getNamespaceURI();
+         String targetNS = epMetaData.getPortTypeName().getNamespaceURI();
          log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
          jaxbCtx = JAXBRIContext.newInstance(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false);
       }
@@ -789,10 +787,10 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       EndpointMetaData epMetaData = faultMetaData.getOperationMetaData().getEndpointMetaData();
       TypesMetaData types = epMetaData.getServiceMetaData().getTypesMetaData();
-   
+
       QName xmlType = faultMetaData.getXmlType();
       String faultBeanName = faultMetaData.getFaultBeanName();
-   
+
       types.addTypeMapping(new TypeMappingMetaData(types, xmlType, faultBeanName));
    }
 
@@ -800,12 +798,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       EndpointMetaData epMetaData = paramMetaData.getOperationMetaData().getEndpointMetaData();
       TypesMetaData types = epMetaData.getServiceMetaData().getTypesMetaData();
-   
+
       QName xmlName = paramMetaData.getXmlName();
       QName xmlType = paramMetaData.getXmlType();
       Class javaType = paramMetaData.getJavaType();
       String javaName = paramMetaData.getJavaTypeName();
-   
+
       if (xmlType == null)
       {
          try
@@ -816,7 +814,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          {
             throw new IllegalStateException("Cannot obtain xml type for: [xmlName=" + xmlName + ",javaName=" + javaName + "]");
          }
-   
+
          /* Anonymous type.
           *
           * Currently the design of our stack is based on the
@@ -826,10 +824,10 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
           */
          if (xmlType == null)
             xmlType = new QName(xmlName.getNamespaceURI(), ">" + xmlName.getLocalPart());
-   
+
          paramMetaData.setXmlType(xmlType);
       }
-   
+
       types.addTypeMapping(new TypeMappingMetaData(types, xmlType, javaName));
    }
 
@@ -842,12 +840,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          {
             populateXmlType(paramMetaData);
          }
-   
+
          // return value
          ParameterMetaData returnParameter = operation.getReturnParameter();
          if (returnParameter != null)
             populateXmlType(returnParameter);
-   
+
          // faults
          for (FaultMetaData faultMetaData : operation.getFaults())
          {

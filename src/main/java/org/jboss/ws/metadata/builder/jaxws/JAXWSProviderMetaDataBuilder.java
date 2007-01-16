@@ -146,7 +146,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
    private void processInvokeMethod(ServerEndpointMetaData epMetaData)
    {
       String javaName = "invoke";
-      String targetNS = epMetaData.getQName().getNamespaceURI();
+      String targetNS = epMetaData.getPortName().getNamespaceURI();
       OperationMetaData opMetaData = new OperationMetaData(epMetaData, new QName(targetNS, javaName), javaName);
       epMetaData.addOperation(opMetaData);
 

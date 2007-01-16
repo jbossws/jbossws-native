@@ -136,7 +136,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
    private PortInfo getPortInfo(EndpointMetaData epMetaData)
    {
       QName serviceName = epMetaData.getServiceMetaData().getServiceName();
-      QName portName = epMetaData.getQName();
+      QName portName = epMetaData.getPortName();
       String bindingId = epMetaData.getBindingId();
       PortInfo info = new PortInfoImpl(serviceName, portName, bindingId);
       return info;

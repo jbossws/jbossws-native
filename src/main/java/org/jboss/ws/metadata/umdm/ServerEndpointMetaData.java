@@ -63,9 +63,9 @@ public class ServerEndpointMetaData extends EndpointMetaData
    // The bean that registers with the ServiceEndpointManager
    private String managedEndpointBean = "org.jboss.ws.core.server.ServiceEndpoint";
 
-   public ServerEndpointMetaData(ServiceMetaData service, QName qname, QName interfaceQName, Type type)
+   public ServerEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
-      super(service, qname, interfaceQName, type);
+      super(service, portName, portTypeName, type);
    }
 
    public String getLinkName()
@@ -206,7 +206,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    {
       StringBuilder buffer = new StringBuilder("\nServerEndpointMetaData:");
       buffer.append("\n type=").append(getType());
-      buffer.append("\n qname=").append(getQName());
+      buffer.append("\n qname=").append(getPortName());
       buffer.append("\n id=").append(getServiceEndpointID().getCanonicalName());
       buffer.append("\n address=").append(getEndpointAddress());
       buffer.append("\n binding=").append(getBindingId());

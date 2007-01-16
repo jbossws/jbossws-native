@@ -128,7 +128,7 @@ public class WSSecurityDispatcher
          }
 
          String operation = opMetaData.getQName().toString();
-         String port = opMetaData.getEndpointMetaData().getQName().getLocalPart();
+         String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
 
          if (hasRequirements(config, operation, port))
             throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
@@ -155,7 +155,7 @@ public class WSSecurityDispatcher
          }
 
          String operation = opMetaData.getQName().toString();
-         String port = opMetaData.getEndpointMetaData().getQName().getLocalPart();
+         String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
 
          List<OperationDescription<RequireOperation>> operations = buildRequireOperations(config, operation, port);
 
@@ -228,7 +228,7 @@ public class WSSecurityDispatcher
 
       OperationMetaData opMetaData = ctx.getOperationMetaData();
       String operation = opMetaData.getQName().toString();
-      String port = opMetaData.getEndpointMetaData().getQName().getLocalPart();
+      String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
 
       Config operationConfig = getConfig(config, port, operation);
 

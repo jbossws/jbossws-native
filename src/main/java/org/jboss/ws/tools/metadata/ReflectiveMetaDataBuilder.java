@@ -68,7 +68,7 @@ public class ReflectiveMetaDataBuilder
    {
       this.seiClass = tmd.getServiceEndpointInterface();
       checkServiceEndpointInterface();
-      this.targetNamespace = tmd.getQName().getNamespaceURI();
+      this.targetNamespace = tmd.getPortName().getNamespaceURI();
       this.tmd = tmd;
    }
 

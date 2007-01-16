@@ -295,7 +295,7 @@ public class ServiceImpl implements ServiceExt
       {
          for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
          {
-            list.add(epMetaData.getQName());
+            list.add(epMetaData.getPortName());
          }
       }
       return list.iterator();
@@ -415,7 +415,7 @@ public class ServiceImpl implements ServiceExt
 
    void setupHandlerChain(EndpointMetaData epMetaData)
    {
-      QName portName = epMetaData.getQName();
+      QName portName = epMetaData.getPortName();
       Set<String> handlerRoles = new HashSet<String>();
       ArrayList handlerInfos = new ArrayList();
       for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(HandlerType.ALL))

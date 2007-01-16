@@ -238,7 +238,7 @@ public class HandlerResolverImpl implements HandlerResolver
             ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
             for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
             {
-               QName qname = epmd.getQName();
+               QName qname = epmd.getPortName();
                String nsURI = qname.getNamespaceURI();
                String localPart = qname.getLocalPart();
                if (nsURI.equals(namespaceURI) && localPart.startsWith(localPattern))
@@ -252,7 +252,7 @@ public class HandlerResolverImpl implements HandlerResolver
             ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
             for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
             {
-               QName qname = epmd.getQName();
+               QName qname = epmd.getPortName();
                if (ports.equals(qname))
                {
                   infos.add(new PortInfoImpl(null, qname, null));
