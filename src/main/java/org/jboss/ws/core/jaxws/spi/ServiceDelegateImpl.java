@@ -153,10 +153,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
          // TODO: default name mapping when annotations not used
          QName portTypeName = new QName(ns, name);
 
-         for(EndpointMetaData epmd : serviceMetaData.getEndpoints())
+         for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
          {
             QName interfaceQName = epmd.getPortTypeName(); // skip namespaces here
-            if( interfaceQName.getLocalPart().equals( portTypeName.getLocalPart() ) )
+            if (interfaceQName.getLocalPart().equals(portTypeName.getLocalPart()))
             {
                epmd.setServiceEndpointInterfaceName(seiClass.getName());
                epMetaData = epmd;
@@ -185,12 +185,13 @@ public class ServiceDelegateImpl extends ServiceDelegate
       return (T)createProxy(seiClass, epMetaData);
    }
 
-   private void assertSEIConstraints(Class seiClass) {
+   private void assertSEIConstraints(Class seiClass)
+   {
 
       if (seiClass == null)
          throw new IllegalArgumentException("Service endpoint interface cannot be null");
 
-      if(!seiClass.isAnnotationPresent(WebService.class))
+      if (!seiClass.isAnnotationPresent(WebService.class))
          throw new WebServiceException("SEI is missing @WebService annotation: " + seiClass);
    }
 
@@ -202,10 +203,14 @@ public class ServiceDelegateImpl extends ServiceDelegate
     */
    public void addPort(QName portName, String bindingId, String epAddress)
    {
-      EndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, null, Type.JAXWS);
+      EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
+      if (epMetaData == null)
+      {
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, null, Type.JAXWS);
+         serviceMetaData.addEndpoint(epMetaData);
+      }
       epMetaData.setBindingId(bindingId);
       epMetaData.setEndpointAddress(epAddress);
-      serviceMetaData.addEndpoint(epMetaData);
    }
 
    @Override
@@ -231,7 +236,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
          throw new WebServiceException("Cannot find port: " + portName);
-      
+
       return epMetaData;
    }
 
