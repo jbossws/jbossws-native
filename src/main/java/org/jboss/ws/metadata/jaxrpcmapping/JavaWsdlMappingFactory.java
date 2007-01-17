@@ -30,7 +30,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
