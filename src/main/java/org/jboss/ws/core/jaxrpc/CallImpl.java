@@ -42,10 +42,7 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
 import javax.xml.rpc.encoding.SerializerFactory;
 import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -57,7 +54,6 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -85,12 +81,8 @@ public class CallImpl extends CommonClient implements Call
    private ServiceImpl jaxrpcService;
    // The port type name
    private QName portType;
-   // A Map<QName,UnboundHeader> of header entries
-   private Map<QName, UnboundHeader> unboundHeaders = new LinkedHashMap<QName, UnboundHeader>();
    // A Map<String,Object> of Call properties
    private Map<String, Object> properties = new HashMap<String, Object>();
-   // A List<AttachmentPart> of attachment parts set through the proxy
-   private List<AttachmentPart> attachmentParts = new ArrayList<AttachmentPart>();
 
    // The set of supported properties
    private static final Set<String> standardProperties = new HashSet<String>();
@@ -156,107 +148,6 @@ public class CallImpl extends CommonClient implements Call
    protected Map<String, Object> getRequestContext()
    {
       return properties;
-   }
-
-   /**
-    * Add a header that is not bound to an input parameter.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    * @param xmlType The XML type of the header element
-    */
-   public void addUnboundHeader(QName xmlName, QName xmlType, Class javaType, ParameterMode mode)
-   {
-      UnboundHeader unboundHeader = new UnboundHeader(xmlName, xmlType, javaType, mode);
-      unboundHeaders.put(xmlName, unboundHeader);
-   }
-
-   /**
-    * Get the header value for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    * @return The header value, or null
-    */
-   public Object getUnboundHeaderValue(QName xmlName)
-   {
-      UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
-      return (unboundHeader != null ? unboundHeader.getHeaderValue() : null);
-   }
-
-   /**
-    * Set the header value for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    */
-   public void setUnboundHeaderValue(QName xmlName, Object value)
-   {
-      UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
-      if (unboundHeader == null)
-         throw new IllegalArgumentException("Cannot find unbound header: " + xmlName);
-
-      unboundHeader.setHeaderValue(value);
-   }
-
-   /**
-    * Clear all registered headers.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   public void clearUnboundHeaders()
-   {
-      unboundHeaders.clear();
-   }
-
-   /**
-    * Remove the header for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   public void removeUnboundHeader(QName xmlName)
-   {
-      unboundHeaders.remove(xmlName);
-   }
-
-   /**
-    * Get an Iterator over the registered header XML names.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   public Iterator getUnboundHeaders()
-   {
-      return unboundHeaders.keySet().iterator();
-   }
-   
-   /**
-    * Adds the given AttachmentPart object to the outgoing SOAPMessage.
-    * An AttachmentPart object must be created before it can be added to a message.
-    */
-   public void addAttachmentPart(AttachmentPart part)
-   {
-      attachmentParts.add(part);
-   }
-
-   /**
-    * Clears the list of attachment parts.
-    */
-   public void clearAttachmentParts()
-   {
-      attachmentParts.clear();
-   }
-
-   /**
-    * Creates a new empty AttachmentPart object.
-    */
-   public AttachmentPart createAttachmentPart()
-   {
-      try
-      {
-         MessageFactory factory = MessageFactory.newInstance();
-         return factory.createMessage().createAttachmentPart();
-      }
-      catch (SOAPException ex)
-      {
-         throw new JAXRPCException("Cannot create attachment part");
-      }
    }
 
    /** Gets the address of a target service endpoint.
@@ -364,7 +255,7 @@ public class CallImpl extends CommonClient implements Call
    {
       try
       {
-         invokeInternal(operationName, inputParams, unboundHeaders, true);
+         invokeInternal(operationName, inputParams, true);
       }
       catch (RemoteException ex)
       {
@@ -376,14 +267,14 @@ public class CallImpl extends CommonClient implements Call
     */
    public Object invoke(Object[] inputParams) throws RemoteException
    {
-      return invokeInternal(operationName, inputParams, unboundHeaders, false);
+      return invokeInternal(operationName, inputParams, false);
    }
 
    /** Invokes a specific operation using a synchronous request-response interaction mode.
     */
    public Object invoke(QName operationName, Object[] inputParams) throws RemoteException
    {
-      return invokeInternal(operationName, inputParams, unboundHeaders, false);
+      return invokeInternal(operationName, inputParams, false);
    }
 
    protected CommonMessageContext processPivot(CommonMessageContext requestContext) {
@@ -588,7 +479,7 @@ public class CallImpl extends CommonClient implements Call
    {
    }
 
-   private Object invokeInternal(QName opName, Object[] inputParams, Map<QName, UnboundHeader> unboundHeaders, boolean forceOneway) throws RemoteException
+   private Object invokeInternal(QName opName, Object[] inputParams, boolean forceOneway) throws RemoteException
    {
       if (opName.equals(operationName) == false)
          setOperationName(opName);
@@ -604,7 +495,7 @@ public class CallImpl extends CommonClient implements Call
       Object retObj = null;
       try
       {
-         retObj = super.invoke(opName, inputParams, unboundHeaders, properties, forceOneway);
+         retObj = super.invoke(opName, inputParams, properties, forceOneway);
          return retObj;
       }
       catch (SOAPFaultException ex)
@@ -629,16 +520,6 @@ public class CallImpl extends CommonClient implements Call
       {
          // Reset the message context association
          MessageContextAssociation.popMessageContext();
-      }
-   }
-
-   @Override
-   protected void addAttachmentParts(SOAPMessage reqMessage)
-   {
-      for (AttachmentPart part : attachmentParts)
-      {
-         log.debug("Adding attachment part: " + part.getContentId());
-         reqMessage.addAttachmentPart(part);
       }
    }
 
@@ -731,5 +612,15 @@ public class CallImpl extends CommonClient implements Call
             throw new IllegalArgumentException("Different java type already registered: " + regJavaType.getName());
          }
       }
+   }
+
+   @Override
+   public void setConfigName(String configName)
+   {
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      epMetaData.setConfigName(configName);
+      
+      // Reinitialize the client handler chain
+      jaxrpcService.setupHandlerChain(epMetaData);
    }
 }

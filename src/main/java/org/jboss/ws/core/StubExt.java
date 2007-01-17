@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.core.jaxrpc;
+package org.jboss.ws.core;
 
 import java.util.Iterator;
 
@@ -32,12 +32,12 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 // $Id$
 
 /**
- * An instance of a stub class represents a client side proxy or stub instance for the target service endpoint.
+ * An extension of the standard JAXRPC/JAXWS stubs.
  *
  * @author Thomas.Diesler@jboss.org
- * @since 27-Jan-2005
+ * @since 17-Jan-2007
  */
-public interface StubExt extends javax.xml.rpc.Stub
+public interface StubExt 
 {
    /** ClientTimeout property: org.jboss.ws.timeout */
    static final String PROPERTY_CLIENT_TIMEOUT = "org.jboss.ws.timeout";

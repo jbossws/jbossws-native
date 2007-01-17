@@ -121,13 +121,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          // Process an optional @HandlerChain annotation
          if (sepClass.isAnnotationPresent(HandlerChain.class))
-         {
             processHandlerChain(sepMetaData, sepClass);
-         }
          else if (seiClass.isAnnotationPresent(HandlerChain.class))
-         {
             processHandlerChain(sepMetaData, seiClass);
-         }
 
          // Sanity check: read the generated WSDL and initialize the schema model
          WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();

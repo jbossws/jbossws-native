@@ -44,9 +44,8 @@ import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.remoting.marshal.MarshalFactory;
-import org.jboss.ws.WSException;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
-import org.jboss.ws.core.jaxrpc.StubExt;
 import org.jboss.ws.extensions.xop.XOPContext;
 
 /**
@@ -365,7 +364,7 @@ public class SOAPConnectionImpl extends SOAPConnection
             if (metadataMap.containsKey(key))
             {
                String remotingKey = metadataMap.get(key);
-               if (key.equals(Stub.USERNAME_PROPERTY) || key.equals(Stub.PASSWORD_PROPERTY))
+               if ("http.basic.username".equals(remotingKey) || "http.basic.password".equals(remotingKey))
                {
                   if (authType.equals(StubExt.PROPERTY_AUTH_TYPE_BASIC))
                   {

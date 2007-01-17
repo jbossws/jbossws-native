@@ -45,17 +45,16 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.jaxws.StubExt;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /** 
@@ -140,7 +139,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, StubExt
 
       try
       {
-         Object retObj = invoke(opName, args, null, resContext, false);
+         Object retObj = invoke(opName, args, resContext, false);
          return retObj;
       }
       catch (Exception ex)
@@ -276,5 +275,13 @@ public class ClientImpl extends CommonClient implements BindingProvider, StubExt
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
    {
       throw new NotImplementedException();
+   }
+
+   public void setConfigName(String configName)
+   {
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      epMetaData.setConfigName(configName);
+      // TODO: Handlers not re-initialized
+      log.warn("Handlers not re-initialized");
    }
 }

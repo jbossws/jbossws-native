@@ -42,6 +42,7 @@ import javax.xml.rpc.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
@@ -94,7 +95,8 @@ public class PortProxy implements InvocationHandler
    public PortProxy(CallImpl call)
    {
       this.call = call;
-      this.stubMethods = Arrays.asList(StubExt.class.getMethods());
+      this.stubMethods = new ArrayList(Arrays.asList(StubExt.class.getMethods()));
+      this.stubMethods.addAll(Arrays.asList(Stub.class.getMethods()));
       this.objectMethods = Arrays.asList(Object.class.getMethods());
    }
 
@@ -117,34 +119,6 @@ public class PortProxy implements InvocationHandler
          else if (methodName.equals("_setProperty"))
          {
             setProperty((String)args[0], args[1]);
-            return null;
-         }
-         else if (methodName.equals("getConfigFile"))
-         {
-            EndpointMetaData epMetaData = call.getEndpointMetaData();
-            return epMetaData.getConfigFile();
-         }
-         else if (methodName.equals("setConfigFile"))
-         {
-            EndpointMetaData epMetaData = call.getEndpointMetaData();
-            epMetaData.setConfigFile((String)args[0]);
-            return null;
-         }
-         else if (methodName.equals("getConfigName"))
-         {
-            EndpointMetaData epMetaData = call.getEndpointMetaData();
-            return epMetaData.getConfigName();
-         }
-         else if (methodName.equals("setConfigName"))
-         {
-            EndpointMetaData epMetaData = call.getEndpointMetaData();
-            epMetaData.setConfigName((String)args[0]);
-            epMetaData.configure(epMetaData);
-
-            // Reinitialize the client handler chain
-            ServiceImpl jaxrpcService = call.getServiceImpl();
-            jaxrpcService.setupHandlerChain(epMetaData);
-            
             return null;
          }
          else

@@ -19,52 +19,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws;
+package org.jboss.ws.core.jaxws;
 
-/** 
- * A RuntimeException that should be thrown when a cause is needed
- * 
- * The retrotranslator-0.9.5 cannot handle
+// $Id$
+
+/**
+ * Service provider for ServiceDelegate and Endpoint objects.
  *  
- *   new IllegalStateException(String, Throwable)
- *
- * @author Thomas.Diesler@jboss.org
- * @since 06-Jan-2006
+ * @author Thomas.Diesler@jboss.com
+ * @since 17-Jan-2006
  */
-public class WSException extends RuntimeException
+public interface ServiceConfiguration
 {
-   public WSException()
-   {
-   }
+   /** 
+    * Get the port configuration file for newly created ports 
+    */
+   String getConfigFile();
 
-   public WSException(String message)
-   {
-      super(message);
-   }
+   /** 
+    * Set the port configuration file for newly created ports 
+    */
+   void setConfigFile(String configFile);
 
-   public WSException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+   /** 
+    * Get the port configuration name for newly created ports 
+    */
+   String getConfigName();
 
-   public WSException(Throwable cause)
-   {
-      super(cause);
-   }
-
-   public static void rethrow(String string, Throwable th)
-   {
-      if (th instanceof WSException)
-         throw (WSException)th;
-
-      throw new WSException(string, th);
-   }
-
-   public static void rethrow(Throwable th)
-   {
-      if (th instanceof WSException)
-         throw (WSException)th;
-
-      throw new WSException(th);
-   }
+   /** 
+    * Set the port configuration name for newly created ports 
+    */
+   void setConfigName(String configName);
 }

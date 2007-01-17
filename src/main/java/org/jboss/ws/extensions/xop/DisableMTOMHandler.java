@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.GenericHandler;
 import javax.xml.rpc.handler.MessageContext;
 
-import org.jboss.ws.core.jaxrpc.StubExt;
+import org.jboss.ws.core.StubExt;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>

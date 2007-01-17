@@ -25,10 +25,17 @@ package org.jboss.ws.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.addressing.AddressingProperties;
@@ -63,7 +70,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 10-Oct-2004
  */
-public abstract class CommonClient
+public abstract class CommonClient implements StubExt
 {
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
@@ -76,6 +83,10 @@ public abstract class CommonClient
    protected EndpointInvocation epInv;
    // The binding provider
    protected CommonBindingProvider bindingProvider;
+   // A Map<QName,UnboundHeader> of header entries
+   private Map<QName, UnboundHeader> unboundHeaders = new LinkedHashMap<QName, UnboundHeader>();
+   // A List<AttachmentPart> of attachment parts set through the proxy
+   private List<AttachmentPart> attachmentParts = new ArrayList<AttachmentPart>();
 
    /** Create a call that needs to be configured manually
     */
@@ -212,7 +223,7 @@ public abstract class CommonClient
     * 6) unwrap the result using the BindingProvider
     * 7) return the result
     */
-   protected Object invoke(QName opName, Object[] inputParams, Map<QName, UnboundHeader> unboundHeaders, Map<String, Object> resContext, boolean forceOneway) throws Exception
+   protected Object invoke(QName opName, Object[] inputParams, Map<String, Object> resContext, boolean forceOneway) throws Exception
    {
       if (opName.equals(operationName) == false)
          setOperationName(opName);
@@ -347,7 +358,11 @@ public abstract class CommonClient
 
    protected void addAttachmentParts(SOAPMessage reqMessage)
    {
-      // By default do nothing
+      for (AttachmentPart part : attachmentParts)
+      {
+         log.debug("Adding attachment part: " + part.getContentId());
+         reqMessage.addAttachmentPart(part);
+      }
    }
 
    protected abstract CommonMessageContext processPivot(CommonMessageContext requestContext);
@@ -404,5 +419,126 @@ public abstract class CommonClient
       }
 
       return retValue;
+   }
+
+   /**
+    * Add a header that is not bound to an input parameter.
+    * A propriatory extension, that is not part of JAXRPC.
+    *
+    * @param xmlName The XML name of the header element
+    * @param xmlType The XML type of the header element
+    */
+   public void addUnboundHeader(QName xmlName, QName xmlType, Class javaType, ParameterMode mode)
+   {
+      UnboundHeader unboundHeader = new UnboundHeader(xmlName, xmlType, javaType, mode);
+      unboundHeaders.put(xmlName, unboundHeader);
+   }
+
+   /**
+    * Get the header value for the given XML name.
+    * A propriatory extension, that is not part of JAXRPC.
+    *
+    * @param xmlName The XML name of the header element
+    * @return The header value, or null
+    */
+   public Object getUnboundHeaderValue(QName xmlName)
+   {
+      UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
+      return (unboundHeader != null ? unboundHeader.getHeaderValue() : null);
+   }
+
+   /**
+    * Set the header value for the given XML name.
+    * A propriatory extension, that is not part of JAXRPC.
+    *
+    * @param xmlName The XML name of the header element
+    */
+   public void setUnboundHeaderValue(QName xmlName, Object value)
+   {
+      UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
+      if (unboundHeader == null)
+         throw new IllegalArgumentException("Cannot find unbound header: " + xmlName);
+
+      unboundHeader.setHeaderValue(value);
+   }
+
+   /**
+    * Clear all registered headers.
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   public void clearUnboundHeaders()
+   {
+      unboundHeaders.clear();
+   }
+
+   /**
+    * Remove the header for the given XML name.
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   public void removeUnboundHeader(QName xmlName)
+   {
+      unboundHeaders.remove(xmlName);
+   }
+
+   /**
+    * Get an Iterator over the registered header XML names.
+    * A propriatory extension, that is not part of JAXRPC.
+    */
+   public Iterator getUnboundHeaders()
+   {
+      return unboundHeaders.keySet().iterator();
+   }
+   
+   /**
+    * Adds the given AttachmentPart object to the outgoing SOAPMessage.
+    * An AttachmentPart object must be created before it can be added to a message.
+    */
+   public void addAttachmentPart(AttachmentPart part)
+   {
+      attachmentParts.add(part);
+   }
+
+   /**
+    * Clears the list of attachment parts.
+    */
+   public void clearAttachmentParts()
+   {
+      attachmentParts.clear();
+   }
+
+   /**
+    * Creates a new empty AttachmentPart object.
+    */
+   public AttachmentPart createAttachmentPart()
+   {
+      try
+      {
+         MessageFactory factory = MessageFactory.newInstance();
+         return factory.createMessage().createAttachmentPart();
+      }
+      catch (SOAPException ex)
+      {
+         throw new JAXRPCException("Cannot create attachment part");
+      }
+   }
+
+   public String getConfigName()
+   {
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      return epMetaData.getConfigName();
+   }
+
+   public abstract void setConfigName(String configName);
+   
+   public String getConfigFile()
+   {
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      return epMetaData.getConfigFile();
+   }
+
+   public void setConfigFile(String configFile)
+   {
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      epMetaData.setConfigFile(configFile);
    }
 }

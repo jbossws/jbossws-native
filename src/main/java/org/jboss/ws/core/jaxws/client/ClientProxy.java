@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxws.client;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +46,8 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.core.jaxws.StubExt;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
@@ -68,8 +69,6 @@ public class ClientProxy implements InvocationHandler
    // List<Method> of the Object methods
    private List objectMethods;
 
-   private List stubExtMethods;
-
    // The service configured executor
    private ExecutorService executor;
 
@@ -89,9 +88,9 @@ public class ClientProxy implements InvocationHandler
    {
       this.client = client;
       this.executor = executor;
-      this.stubMethods = Arrays.asList(BindingProvider.class.getMethods());
+      this.stubMethods = new ArrayList(Arrays.asList(BindingProvider.class.getMethods()));
+      this.stubMethods.addAll(Arrays.asList(StubExt.class.getMethods()));
       this.objectMethods = Arrays.asList(Object.class.getMethods());
-      this.stubExtMethods = Arrays.asList(StubExt.class.getMethods());
    }
 
    /** Processes a method invocation on a proxy instance and returns the result.
@@ -111,13 +110,6 @@ public class ClientProxy implements InvocationHandler
       {
          Method objMethod = ClientImpl.class.getMethod(methodName, method.getParameterTypes());
          return objMethod.invoke(client, args);
-      }
-
-      // An invocation on StubExt interface
-      else if (stubExtMethods.contains(method))
-      {
-         Method stubExtMethod = ClientImpl.class.getMethod(methodName, method.getParameterTypes());
-         return stubExtMethod.invoke(client, args);
       }
 
       // An invocation on the service endpoint interface

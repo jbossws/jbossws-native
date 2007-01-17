@@ -36,12 +36,14 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
 import javax.xml.rpc.ServiceException;
+import javax.xml.rpc.Stub;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 import javax.xml.rpc.handler.HandlerChain;
 import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.handler.HandlerRegistry;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -392,7 +394,7 @@ public class ServiceImpl implements ServiceExt
 
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
-      Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, StubExt.class }, handler);
+      Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
 
       return proxy;
    }

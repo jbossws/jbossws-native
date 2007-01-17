@@ -35,7 +35,7 @@ import javax.xml.soap.SOAPHeader;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.StubExt;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;

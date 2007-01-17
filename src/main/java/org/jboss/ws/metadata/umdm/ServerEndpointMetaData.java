@@ -139,7 +139,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setURLPattern(String urlPattern)
    {
       if (urlPattern != null && !urlPattern.startsWith("/"))
-         throw new IllegalArgumentException("url pattern should start with '/'");
+         throw new IllegalArgumentException("URL pattern should start with '/'");
 
       this.urlPattern = urlPattern;
    }

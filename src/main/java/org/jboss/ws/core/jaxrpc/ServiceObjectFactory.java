@@ -49,7 +49,6 @@ import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
-import org.jboss.net.protocol.URLStreamHandlerFactory;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.ServiceEndpoint;
