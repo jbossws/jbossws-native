@@ -30,6 +30,7 @@ import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -249,7 +250,10 @@ public class SOAPContentElement extends SOAPElementImpl
             throw new WSException("MessageContext not available");
 
          SerializationContext serContext = msgContext.getSerializationContext();
-         serContext.setProperty(ParameterMetaData.class.getName(), getParamMetaData());
+         ParameterMetaData pmd = getParamMetaData();
+         serContext.setProperty(ParameterMetaData.class.getName(), pmd);
+         List<Class> registeredTypes = pmd.getOperationMetaData().getEndpointMetaData().getRegisteredTypes();
+         serContext.setProperty(SerializationContext.CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
 
          try
          {
@@ -323,7 +327,7 @@ public class SOAPContentElement extends SOAPElementImpl
 
                   if(!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
                   {
-                     throw new WSException("Java type '" + javaType + "' is not assignable from: " + objType.getName());   
+                     throw new WSException("Java type '" + javaType + "' is not assignable from: " + objType.getName());
                   }
                }
             }

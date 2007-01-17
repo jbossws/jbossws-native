@@ -31,12 +31,14 @@ import org.jboss.xb.binding.NamespaceRegistry;
 
 /**
  * An abstract serialization context
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 04-Dec-2004
  */
 public abstract class SerializationContext
 {
+   public static final String CONTEXT_TYPES = "org.jboss.ws.jaxrpc.binding.contextTypes";
+
    // The type mapping that is valid for this serialization context
    private TypeMappingImpl typeMapping;
    // The namespace registry that is valid for this serialization context

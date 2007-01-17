@@ -95,7 +95,7 @@ public class SOAPFaultHelperJAXWS
                // http://jira.jboss.org/jira/browse/JBWS-955
                // Cannot deserialize fault detail
                String prefix = deElement.getPrefix();
-               if (prefix.length() > 0)
+               if (prefix != null && prefix.length() > 0)
                {
                   String nsURI = deElement.getNamespaceURI();
                   String attrValue = deElement.getAttribute("xmlns:" + prefix);
@@ -115,6 +115,9 @@ public class SOAPFaultHelperJAXWS
                // Try jaxb deserialization
                try
                {
+                  Class[] types = opMetaData.getEndpointMetaData().getRegisteredTypes().toArray(new Class[0]);
+                  serContext.setProperty(SerializationContext.CONTEXT_TYPES, types);
+
                   String xmlFragment = DOMWriter.printNode(deElement, false);
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
                   Object faultBean = des.deserialize(xmlName, xmlType, xmlFragment, serContext);

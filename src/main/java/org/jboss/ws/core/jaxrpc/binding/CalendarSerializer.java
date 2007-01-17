@@ -48,11 +48,11 @@ public class CalendarSerializer extends SerializerSupport
    public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
-      
+
       String valueStr = SimpleTypeBindings.marshalDateTime((Calendar)value);
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
-      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, attributes, true);
+      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
       return xmlFragment;
    }
 }

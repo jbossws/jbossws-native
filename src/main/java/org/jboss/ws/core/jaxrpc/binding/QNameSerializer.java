@@ -23,12 +23,12 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.NamedNodeMap;
@@ -52,26 +52,19 @@ public class QNameSerializer extends SerializerSupport
       String nsURI = qnameValue.getNamespaceURI();
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
-
+      Set<String> additionalNamespaces = new HashSet<String>();
       // Remove prefix and register again
       if (nsURI.length() > 0)
       {
-         qnameValue = new QName(qnameValue.getNamespaceURI(), qnameValue.getLocalPart());
+         qnameValue = new QName(nsURI, qnameValue.getLocalPart());
          qnameValue = nsRegistry.registerQName(qnameValue);
+         if (!nsURI.equals(xmlName.getNamespaceURI()))
+            additionalNamespaces.add(nsURI);
       }
 
       String valueStr = SimpleTypeBindings.marshalQName(qnameValue, nsRegistry);
-      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, attributes, true);
 
-      // Insert the NS declaration for the qnameValue
-      if (nsURI.length() > 0)
-      {
-         StringBuilder buffer = new StringBuilder(xmlFragment);
-         int indexGT = xmlFragment.indexOf(">");
-         String prefix = qnameValue.getPrefix();
-         buffer.insert(indexGT, " xmlns:" + prefix + "='" + nsURI + "'");
-         xmlFragment = buffer.toString();
-      }
+      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, additionalNamespaces, attributes, true);
 
       return xmlFragment;
    }

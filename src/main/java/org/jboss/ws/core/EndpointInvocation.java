@@ -47,6 +47,7 @@ import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
+import org.w3c.dom.Element;
 
 /** A web service invocation.
  *
@@ -187,7 +188,7 @@ public class EndpointInvocation
    {
       QName xmlName = paramMetaData.getXmlName();
       QName xmlType = paramMetaData.getXmlType();
-      Class javaType = paramMetaData.getJavaType();
+      Class<?> javaType = paramMetaData.getJavaType();
       String javaName = paramMetaData.getJavaTypeName();
 
       if (xmlType == null)
@@ -229,8 +230,11 @@ public class EndpointInvocation
       }
       else if (paramValue instanceof SOAPContentElement)
       {
-         // For type other than xsd:anyType we return the object value
-         if (xmlType.getLocalPart().equals("anyType") == false)
+         // If this is bound to a SOAPElement, or Element, then we can return
+         // the content element as is.
+         // Note, that it is possible for a Java type to be bound to an any
+         // type, so checking the xml type is not sufficient.
+         if (! Element.class.isAssignableFrom(javaType))
          {
             SOAPContentElement soapElement = (SOAPContentElement)paramValue;
             retValue = soapElement.getObjectValue();

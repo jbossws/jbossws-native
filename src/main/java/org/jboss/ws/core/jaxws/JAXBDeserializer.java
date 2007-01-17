@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxws;
 // $Id$
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -38,6 +39,7 @@ import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeDeserializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.
@@ -55,23 +57,25 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
    }
 
    @Override
-   public Object deserialize(QName xmlName, QName xmlType, String val, SerializationContext serContext) 
+   public Object deserialize(QName xmlName, QName xmlType, String val, SerializationContext serContext)
    {
       log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       Object value = null;
       try
       {
+         Class[] types = (Class[])serContext.getProperty(SerializationContext.CONTEXT_TYPES);
+
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
          Class javaType = typeMapping.getJavaType(xmlType);
-         JAXBContext jaxbContext = JAXBContext.newInstance(javaType);
+         JAXBContext jaxbContext = JAXBContext.newInstance(types);
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
          unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());
-          
+
          ByteArrayInputStream ins = new ByteArrayInputStream(val.getBytes("UTF-8"));
          JAXBElement jbe = unmarshaller.unmarshal(new StreamSource(ins), javaType);
          value = jbe.getValue();
-         
+
          log.debug("deserialized: " + (value != null ? value.getClass().getName() : null));
       }
       catch (Exception ex)
@@ -82,14 +86,14 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
 
    }
 
-   // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall 
+   // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
    // a request or unmarshall a response, an implementation MUST throw a WebServiceException whose
    // cause is set to the original JAXBException.
    private void handleUnmarshallException(Exception ex)
    {
       if (ex instanceof WebServiceException)
          throw (WebServiceException)ex;
-      
+
       throw new WebServiceException(ex);
    }
 }

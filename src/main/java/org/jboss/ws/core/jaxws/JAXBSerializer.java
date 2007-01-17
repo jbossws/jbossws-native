@@ -75,7 +75,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
             {
                if(JavaUtils.isAssignableFrom(type, value.getClass()))
                {
-                  javaType = value.getClass();
+                  javaType = type;
                   break;
                }
             }
@@ -91,9 +91,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
          JAXBContext jaxbContext = JAXBContext.newInstance(javaType);
          Marshaller marshaller = jaxbContext.createMarshaller();
 
-         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);         
+         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
          marshaller.setAttachmentMarshaller(new AttachmentMarshallerImpl());
-          
+
          StringWriter strwr = new StringWriter();
          marshaller.marshal(new JAXBElement(xmlName, javaType, value), strwr);
          xmlFragment = strwr.toString();
@@ -106,15 +106,15 @@ public class JAXBSerializer extends ComplexTypeSerializer
       }
       return xmlFragment;
    }
-   
-   // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall 
+
+   // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
    // a request or unmarshall a response, an implementation MUST throw a WebServiceException whose
    // cause is set to the original JAXBException.
    private void handleMarshallException(Exception ex)
    {
       if (ex instanceof WebServiceException)
          throw (WebServiceException)ex;
-      
+
       throw new WebServiceException(ex);
    }
 }

@@ -46,13 +46,13 @@ public class NullValueSerializer extends SerializerSupport
 
    /**
     *  Serializes an object null value.
-    *  
+    *
     *  If a message part of an RPC parameter is defined like this
-    *  
+    *
     *  <message name='SomeMessage'>
     *   <part name='partName' element='someElement'/>
     *  </message>
-    *  
+    *
     *  it is possible that the element definition does not allow
     *  null values. In that case an error should be generated.
     */
@@ -62,7 +62,7 @@ public class NullValueSerializer extends SerializerSupport
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       nsRegistry.registerURI(Constants.NS_SCHEMA_XSI, Constants.PREFIX_XSI);
-      String xmlFragment = wrapValueStr(xmlName, null, nsRegistry, attributes, true);
+      String xmlFragment = wrapValueStr(xmlName, null, nsRegistry, null, attributes, true);
       return xmlFragment;
    }
 }

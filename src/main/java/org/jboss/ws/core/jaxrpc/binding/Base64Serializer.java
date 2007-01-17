@@ -63,13 +63,13 @@ public class Base64Serializer extends SerializerSupport
          xopObject.setContentType("application/octet-stream");
          String cid = xopMarshaller.addMtomAttachment(xopObject, xmlName.getNamespaceURI(), xmlType.getLocalPart() );
          String xopInclude = "<xop:Include xmlns:xop='http://www.w3.org/2004/08/xop/include' href='"+cid+"'/>";
-         xmlFragment = wrapValueStr(xmlName, xopInclude, nsRegistry, attributes, false);
+         xmlFragment = wrapValueStr(xmlName, xopInclude, nsRegistry, null, attributes, false);
       }
       else
       {
          value = JavaUtils.getPrimitiveValueArray(value);
          String valueStr = SimpleTypeBindings.marshalBase64((byte[])value);
-         xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, attributes, true);
+         xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
       }
       return xmlFragment;
    }

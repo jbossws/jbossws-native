@@ -54,7 +54,7 @@ public class HexSerializer extends SerializerSupport
       String valueStr = SimpleTypeBindings.marshalHexBinary((byte[])value);
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
-      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, attributes, true);
+      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
       return xmlFragment;
    }
 }

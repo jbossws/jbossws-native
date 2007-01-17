@@ -68,7 +68,7 @@ public class SimpleSerializer extends SerializerSupport
          valueStr = SimpleTypeBindings.marshal(xmlType.getLocalPart(), value, nsRegistry);
       }
 
-      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, attributes, true);
+      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
       return xmlFragment;
    }
 }

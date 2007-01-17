@@ -24,7 +24,14 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Properties;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
@@ -114,6 +121,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    private boolean handlersInitialized;
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
+   // All of the registered types
+   private List<Class> registeredTypes = new ArrayList<Class>();
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -510,16 +519,18 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    private void eagerInitializeTypes()
    {
       TypeMappingImpl typeMapping = serviceMetaData.getTypeMapping();
-      for (TypeMappingMetaData tmMetaData : serviceMetaData.getTypesMetaData().getTypeMappings())
+      List<TypeMappingMetaData> typeMappings = serviceMetaData.getTypesMetaData().getTypeMappings();
+      registeredTypes = new ArrayList<Class>(typeMappings.size());
+      for (TypeMappingMetaData tmMetaData : typeMappings)
       {
          String javaTypeName = tmMetaData.getJavaTypeName();
          QName xmlType = tmMetaData.getXmlType();
          if (xmlType != null)
          {
-            List<Class> registeredTypes = typeMapping.getJavaTypes(xmlType);
+            List<Class> types = typeMapping.getJavaTypes(xmlType);
 
             boolean registered = false;
-            for (Class current : registeredTypes) {
+            for (Class current : types) {
                if (current.getName().equals(javaTypeName))
                {
                   registered = true;
@@ -536,6 +547,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
                   if (JavaUtils.isPrimitive(javaTypeName))
                      javaType = JavaUtils.getWrapperType(javaType);
+
+                  // Needed for runtime JAXB context
+                  registeredTypes.add(javaType);
 
                   if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
                   {
@@ -646,6 +660,11 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
       log.debug("Reconfiguration forced");
       this.configObservable.touch();
       this.configObservable.notifyObservers(configName);
+   }
+
+   public List<Class> getRegisteredTypes()
+   {
+      return Collections.unmodifiableList(registeredTypes);
    }
 
    public void update(Observable observable, Object object) {

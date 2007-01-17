@@ -23,6 +23,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.Serializer;
 
@@ -54,11 +56,10 @@ public abstract class SerializerSupport implements Serializer
 
    /** Wrap the value string in a XML fragment with the given name
     */
-   protected String wrapValueStr(QName xmlName, String valueStr, NamespaceRegistry nsRegistry, NamedNodeMap attributes, boolean normalize)
+   protected String wrapValueStr(QName xmlName, String valueStr, NamespaceRegistry nsRegistry, Set<String> additionalNamespaces, NamedNodeMap attributes, boolean normalize)
    {
       String nsURI = xmlName.getNamespaceURI();
       String localPart = xmlName.getLocalPart();
-      String prefix = xmlName.getPrefix();
 
       StringBuilder nsAttr = new StringBuilder("");
       if (attributes != null)
@@ -76,18 +77,26 @@ public abstract class SerializerSupport implements Serializer
       if (nsURI.length() > 0)
       {
          xmlName = nsRegistry.registerQName(xmlName);
-         prefix = xmlName.getPrefix();
+         String prefix = xmlName.getPrefix();
          elName = prefix + ":" + localPart;
 
-         String xmlns = " xmlns:" + prefix + "='" + nsURI + "'";
-         if (nsAttr.indexOf(xmlns) < 0)
-         {
-            nsAttr.append(xmlns);
-         }
+         nsAttr.append(" xmlns:" + prefix + "='" + nsURI + "'");
       }
       else
       {
          elName = localPart;
+      }
+
+      if (additionalNamespaces != null)
+      {
+         for (String ns : additionalNamespaces)
+         {
+            if (ns.equals(nsURI))
+               continue;
+
+            String prefix = nsRegistry.getPrefix(ns);
+            nsAttr.append(" xmlns:" + prefix + "='" + ns + "'");
+         }
       }
 
       String xmlFragment;

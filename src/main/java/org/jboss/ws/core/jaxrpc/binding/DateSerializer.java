@@ -62,7 +62,7 @@ public class DateSerializer extends SerializerSupport
       String valueStr = SimpleTypeBindings.marshalDateTime((Calendar)value);
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
-      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, attributes, true);
+      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
       return xmlFragment;
    }
 }
