@@ -24,7 +24,8 @@ package org.jboss.ws.core.jaxws.client;
 //$Id$
 
 import java.io.Serializable;
-import java.net.URL;
+
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 
 /**
  * Represents a <service-ref> element of the jboss.xml, jboss-web.xml, jboss-client.xml deployment descriptor 
@@ -34,23 +35,23 @@ import java.net.URL;
  */
 public class UnifiedServiceRef implements Serializable
 {
-   private static final long serialVersionUID = 7575421890971083734L;
+   private static final long serialVersionUID = -5518998734737147195L;
    
-   private URL rootURL;
+   private UnifiedVirtualFile vfsRoot;
    private String encName;
    private String wsdlLocation;
    private String configName;
    private String configFile;
 
-   public UnifiedServiceRef(URL rootURL, String name)
+   public UnifiedServiceRef(UnifiedVirtualFile vfsRoot, String name)
    {
-      this.rootURL = rootURL;
+      this.vfsRoot = vfsRoot;
       this.encName = name;
    }
 
-   public URL getRootURL()
+   public UnifiedVirtualFile getRootFile()
    {
-      return rootURL;
+      return vfsRoot;
    }
 
    public String getEncName()

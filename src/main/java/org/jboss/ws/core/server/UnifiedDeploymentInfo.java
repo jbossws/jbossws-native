@@ -122,16 +122,6 @@ public class UnifiedDeploymentInfo
       return resourceURL;
    }
 
-   /**
-    * An adaptor a VirtualFile from jboss-vfs.jar
-    * jboss-vfs cannot be used in jboss-4.x because of its dependeny on jboss-common-core.jar 
-    */
-   public interface UnifiedVirtualFile
-   {
-      UnifiedVirtualFile findChild(String child) throws IOException;
-      URL toURL();
-   }
-
    public String toString()
    {
       StringBuilder builder = new StringBuilder();
