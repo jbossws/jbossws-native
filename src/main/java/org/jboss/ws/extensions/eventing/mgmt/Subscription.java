@@ -26,11 +26,13 @@ package org.jboss.ws.extensions.eventing.mgmt;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URL;
+import java.net.URISyntaxException;
 import java.util.Date;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.TransformerException;
+import javax.xml.bind.JAXBElement;
 
 import org.apache.xpath.XPathAPI;
 import org.apache.xpath.objects.XObject;
@@ -38,8 +40,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.eventing.EventingConstants;
-import org.jboss.ws.extensions.eventing.element.EndpointReference;
-import org.jboss.ws.extensions.eventing.element.NotificationFailure;
+import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
+import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.w3c.dom.Element;
 
 /**
@@ -52,23 +54,23 @@ class Subscription
 {
    final private static Logger log = Logger.getLogger(Subscription.class);
 
-   final private EndpointReference notifyTo;
-   final private EndpointReference endTo;
+   final private EndpointReferenceType notifyTo;
+   final private EndpointReferenceType endTo;
    private Date expires;
    final private Filter filter;
-   final private EndpointReference endpointReference;
+   final private EndpointReferenceType endpointReference;
    final private URI eventSourceNS;
 
    private SubscriptionManagerFactory factory = SubscriptionManagerFactory.getInstance();
 
-   public Subscription(URI eventSourceNS, EndpointReference endpointReference, EndpointReference notifyTo, EndpointReference endTo, Date expires, Filter filter)
+   public Subscription(URI eventSourceNS, EndpointReferenceType epr, EndpointReferenceType notifyTo, EndpointReferenceType endTo, Date expires, Filter filter)
    {
       this.eventSourceNS = eventSourceNS;
       this.notifyTo = notifyTo;
       this.endTo = endTo; // is optional, can be null
       this.expires = expires;
       this.filter = filter;
-      this.endpointReference = endpointReference;
+      this.endpointReference = epr;
    }
 
    public void notify(Element event)
@@ -96,13 +98,14 @@ class Subscription
          sb.append("</env:Envelope>");
 
          SOAPMessage reqMsg = msgFactory.createMessage(null, new ByteArrayInputStream(sb.toString().getBytes()));
-         URL epURL = notifyTo.getAddress().toURL();
+         URL epURL = new URL(notifyTo.getAddress().getValue());
          new SOAPConnectionImpl().callOneWay(reqMsg, epURL);
       }
       catch (Exception e)
       {
          SubscriptionManagerMBean manager = factory.getSubscriptionManager();
-         NotificationFailure failure = new NotificationFailure(this.endTo.getAddress(), event, e);
+         AttributedURIType address = this.endTo.getAddress();
+         NotificationFailure failure = new NotificationFailure(address.getValue(), event, e);
          manager.addNotificationFailure(failure);
          log.error("Failed to send notification message", e);
       }
@@ -169,7 +172,7 @@ class Subscription
       {
          MessageFactory msgFactory = MessageFactory.newInstance();
          SOAPMessage reqMsg = msgFactory.createMessage(null, new ByteArrayInputStream(sb.toString().getBytes()));
-         URL epURL = endTo.getAddress().toURL();
+         URL epURL = new URL(endTo.getAddress().getValue());
          new SOAPConnectionImpl().callOneWay(reqMsg, epURL);
       }
       catch (Exception e)
@@ -189,12 +192,12 @@ class Subscription
       return System.currentTimeMillis() > expires.getTime();
    }
 
-   public EndpointReference getNotifyTo()
+   public EndpointReferenceType getNotifyTo()
    {
       return notifyTo;
    }
 
-   public EndpointReference getEndTo()
+   public EndpointReferenceType getEndTo()
    {
       return endTo;
    }
@@ -209,14 +212,19 @@ class Subscription
       return filter;
    }
 
-   public EndpointReference getEndpointReference()
+   public EndpointReferenceType getEndpointReferenceType()
    {
       return endpointReference;
    }
 
    public URI getIdentifier()
    {
-      return endpointReference.getReferenceParams().getIdentifier();
+      try {
+         JAXBElement<String> jaxbElement = (JAXBElement<String>)endpointReference.getReferenceParameters().getAny().get(0);
+         return new URI(jaxbElement.getValue());
+      } catch (URISyntaxException e) {
+         throw new RuntimeException(e);
+      }
    }
 
    public void setExpires(Date expires)

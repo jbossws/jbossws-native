@@ -23,27 +23,6 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
-import java.lang.reflect.Proxy;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.jws.WebService;
-import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Dispatch;
-import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.Service.Mode;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.spi.ServiceDelegate;
-
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.StubExt;
@@ -54,10 +33,25 @@ import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+
+import javax.jws.WebService;
+import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.*;
+import javax.xml.ws.Service.Mode;
+import javax.xml.ws.handler.HandlerResolver;
+import javax.xml.ws.spi.ServiceDelegate;
+import java.lang.reflect.Proxy;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -299,15 +293,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private <T> T createProxy(Class<T> seiClass, EndpointMetaData epMetaData) throws WebServiceException
    {
       try
-      {
-         if (handlerResolver instanceof HandlerResolverImpl)
-         {
-            HandlerResolverImpl impl = ((HandlerResolverImpl)handlerResolver);
-            impl.initHandlerChain(epMetaData, HandlerType.PRE);
-            impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT);
-            impl.initHandlerChain(epMetaData, HandlerType.POST);
-         }
-
+      {         
          ExecutorService executor = (ExecutorService)getExecutor();
          ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();

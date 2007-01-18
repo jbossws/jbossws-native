@@ -621,6 +621,7 @@ public class CallImpl extends CommonClient implements Call
       epMetaData.setConfigName(configName);
       
       // Reinitialize the client handler chain
+      // TODO: is this necessary?
       jaxrpcService.setupHandlerChain(epMetaData);
    }
 }

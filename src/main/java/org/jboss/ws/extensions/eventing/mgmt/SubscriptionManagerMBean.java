@@ -28,8 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
-import org.jboss.ws.extensions.eventing.element.EndpointReference;
-import org.jboss.ws.extensions.eventing.element.NotificationFailure;
+import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.w3c.dom.Element;
 
 /**
@@ -81,8 +80,8 @@ public interface SubscriptionManagerMBean
 
    public void setEventKeepAlive(long millies);
 
-   // subscription endpointReference business
-   SubscriptionTicket subscribe(URI eventSourceNS, EndpointReference notifyTo, EndpointReference endTo, Date expires, Filter filter) throws SubscriptionError;
+   // subscription EndpointReferenceType business
+   SubscriptionTicket subscribe(URI eventSourceNS, EndpointReferenceType notifyTo, EndpointReferenceType endTo, Date expires, Filter filter) throws SubscriptionError;
 
    Date renew(URI identifier, Date lease) throws SubscriptionError;
 

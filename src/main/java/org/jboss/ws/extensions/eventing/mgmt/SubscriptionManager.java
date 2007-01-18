@@ -46,6 +46,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
@@ -55,11 +57,10 @@ import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.eventing.EventingConstants;
-import org.jboss.ws.extensions.eventing.DispatchException;
+import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
+import org.jboss.ws.extensions.eventing.jaxws.ReferenceParametersType;
+import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
-import org.jboss.ws.extensions.eventing.element.EndpointReference;
-import org.jboss.ws.extensions.eventing.element.ReferenceParameters;
-import org.jboss.ws.extensions.eventing.element.NotificationFailure;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
@@ -67,7 +68,7 @@ import org.xml.sax.SAXException;
 import org.apache.xml.utils.DefaultErrorHandler;
 
 /**
- * The SubscriptionManager maintains event sources and subscriptions.<br>
+ * The SubscriptionManagerEndpoint maintains event sources and subscriptions.<br>
  * It is interfaced through the EventSourceEndpoint and SubscriptionManagerEndpoint SOAP endpoints.
  * <p>
  * Applications can use the EventDispatcher interface to dispatch
@@ -84,9 +85,9 @@ import org.apache.xml.utils.DefaultErrorHandler;
  * <p>
  * Currently only event push is supported.
  *
- * @see org.jboss.ws.extensions.eventing.EventSourceEndpoint
- * @see org.jboss.ws.extensions.eventing.SubscriptionManagerEndpoint
- * @see org.jboss.ws.extensions.eventing.element.FilterType
+ * @see org.jboss.ws.extensions.eventing.jaxws.EventSourceEndpoint
+ * @see org.jboss.ws.extensions.eventing.jaxws.SubscriptionManagerEndpoint
+ * @see org.jboss.ws.extensions.eventing.jaxws.FilterType
  *
  * @author Heiko Braun, <heiko@openj.net>
  * @since 02-Dec-2005
@@ -257,15 +258,15 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    }
 
    /**
-    * the of deployment info's is unknown therefore we try to
-    * update the event source manager EPR anytime.
+    * When both the EventSourcePort and the SubscriptionManagerPort are registered
+    * we finally know the real SubscriptionManager EPR and update the endpoint adress.
     * @param deploymentInfo
     * @param eventSource
     */
    private static void updateManagerAddress(EventingEndpointDI deploymentInfo, EventSource eventSource)
    {
       String addr = null;
-      if(deploymentInfo.getPortName().equals("SubscriptionManagerPort"))  // hackalert
+      if(deploymentInfo.getPortName().getLocalPart().equals("SubscriptionManagerPort"))
          addr = deploymentInfo.getEndpointAddress();
 
       if(addr!=null)
@@ -291,7 +292,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    /**
     * Subscribe to an event source.
     */
-   public SubscriptionTicket subscribe(URI eventSourceNS, EndpointReference notifyTo, EndpointReference endTo, Date expires, Filter filter) throws SubscriptionError
+   public SubscriptionTicket subscribe(URI eventSourceNS, EndpointReferenceType notifyTo, EndpointReferenceType endTo, Date expires, Filter filter) throws SubscriptionError
    {
 
       log.debug("Subscription request for " + eventSourceNS);
@@ -333,16 +334,24 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       }
 
       // create subscription
-      EndpointReference endpointReference = new EndpointReference();
-      endpointReference.setAddress(eventSource.getManagerAddress());
-      endpointReference.setReferenceParams(new ReferenceParameters(generateSubscriptionID()));
+      EndpointReferenceType epr = new EndpointReferenceType();
+      AttributedURIType attrURI = new AttributedURIType();
+      attrURI.setValue(eventSource.getManagerAddress().toString());
+      epr.setAddress(attrURI);
+      ReferenceParametersType refParam = new ReferenceParametersType();
+      JAXBElement idqn = new JAXBElement(
+         new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "Identifier"),
+         String.class, generateSubscriptionID().toString()
+      );
+      refParam.getAny().add(idqn);
+      epr.setReferenceParameters(refParam);
 
-      Subscription subscription = new Subscription(eventSource.getNameSpace(), endpointReference, notifyTo, endTo, expires, filter);
+      Subscription subscription = new Subscription(eventSource.getNameSpace(), epr, notifyTo, endTo, expires, filter);
 
       subscriptionMapping.get(eventSourceNS).add(subscription);
       log.debug("Registered subscription " + subscription.getIdentifier());
 
-      return new SubscriptionTicket(endpointReference, subscription.getExpires());
+      return new SubscriptionTicket(epr, subscription.getExpires());
    }
 
    private void assertLeaseConstraints(Date expireDate) throws SubscriptionError

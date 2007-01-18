@@ -143,7 +143,7 @@ public class WSDLRequestHandler
                      String newLocation = completeHost + reqPath + "?wsdl&resource=" + newResourcePath;
                      locationAttr.setNodeValue(newLocation);
                      
-                     log.debug("Mapping import from '" + orgLocation + "' to '" + newLocation + "'");
+                     log.trace("Mapping import from '" + orgLocation + "' to '" + newLocation + "'");
                   }
                }
             }
@@ -174,7 +174,7 @@ public class WSDLRequestHandler
                      String newLocation = completeHost  + locPath;
                      locationAttr.setNodeValue(newLocation);
 
-                     log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                     log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
                   }
                }
             }

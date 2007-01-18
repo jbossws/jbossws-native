@@ -26,6 +26,12 @@ package org.jboss.ws.metadata.builder;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.extensions.eventing.EventingUtils;
+import org.jboss.ws.extensions.eventing.EventingConstants;
+import org.jboss.ws.extensions.eventing.deployment.EventingEndpoint;
+import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
+import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
+import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
@@ -36,7 +42,9 @@ import org.jboss.ws.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceC
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.wsdl.*;
+import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.w3c.dom.Element;
 
 import javax.management.ObjectName;
@@ -48,6 +56,7 @@ import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.xml.namespace.QName;
+import javax.xml.ws.addressing.AddressingProperties;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -419,5 +428,83 @@ public abstract class MetaDataBuilder
       {
          return null;
       }
+   }
+
+   protected void processEndpointMetaDataExtensions(EndpointMetaData epMetaData, WSDLDefinitions wsdlDefinitions)
+   {
+      for (WSDLInterface wsdlInterface : wsdlDefinitions.getInterfaces())
+      {
+         WSDLProperty eventSourceProp = wsdlInterface.getProperty(Constants.WSDL_PROPERTY_EVENTSOURCE);
+         if (eventSourceProp != null && epMetaData instanceof ServerEndpointMetaData)
+         {
+            ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)epMetaData;
+            String eventSourceNS = wsdlInterface.getQName().getNamespaceURI() + "/" + wsdlInterface.getQName().getLocalPart();
+
+            // extract the schema model
+            JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
+            String[] notificationSchema = EventingUtils.extractNotificationSchema(schemaModel);
+
+            // extract the root element NS
+            String notificationRootElementNS = null;
+            WSDLInterfaceOperation wsdlInterfaceOperation = wsdlInterface.getOperations()[0];
+            if(wsdlInterfaceOperation.getOutputs().length > 0 )
+            {
+               WSDLInterfaceOperationOutput wsdlInterfaceOperationOutput = wsdlInterfaceOperation.getOutputs()[0];
+               notificationRootElementNS = wsdlInterfaceOperationOutput.getElement().getNamespaceURI();
+            }
+            else
+            {
+               // WSDL operation of an WSDL interface that is marked as an event source
+               // requires to carry an output message.
+               throw new WSException("Unable to resolve eventing root element NS. No operation output found at "+
+                  wsdlInterfaceOperation.getQName());
+            }
+
+            EventingEpMetaExt ext = new EventingEpMetaExt(EventingConstants.NS_EVENTING);
+            ext.setEventSourceNS(eventSourceNS);
+            ext.setNotificationSchema(notificationSchema);
+            ext.setNotificationRootElementNS(notificationRootElementNS);
+
+            sepMetaData.addExtension(ext);
+            sepMetaData.setManagedEndpointBean(EventingEndpoint.class.getName());
+         }
+      }
+   }
+
+   /** Process operation meta data extensions. */
+   protected void processOpMetaExtensions(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation)
+   {
+
+      String tns = wsdlOperation.getQName().getNamespaceURI();
+      String portTypeName = wsdlOperation.getQName().getLocalPart();
+
+      AddressingProperties ADDR = new AddressingPropertiesImpl();
+      AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
+
+      // inbound action
+      WSDLProperty wsaInAction = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_ACTION_IN);
+      if (wsaInAction != null)
+      {
+         addrExt.setInboundAction(wsaInAction.getValue());
+      }
+      else
+      {
+         WSDLProperty messageName = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_IN);
+         addrExt.setInboundAction(tns + "/" + portTypeName + "/" + messageName);
+      }
+
+      // outbound action
+      WSDLProperty wsaOutAction = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_ACTION_OUT);
+      if (wsaOutAction != null)
+      {
+         addrExt.setOutboundAction(wsaOutAction.getValue());
+      }
+      else
+      {
+         WSDLProperty messageName = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_OUT);
+         addrExt.setOutboundAction(tns + "/" + portTypeName + "/" + messageName);
+      }
+
+      opMetaData.addExtension(addrExt);
    }
 }

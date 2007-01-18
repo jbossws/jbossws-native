@@ -46,7 +46,7 @@ public class EventingEndpoint extends ServiceEndpoint
       // create pending incomplete event source
       EventingEndpointDI desc = new EventingEndpointDI(ext.getEventSourceNS(), ext.getNotificationSchema(), ext.getNotificationRootElementNS());
       desc.setEndpointAddress(epMetaData.getEndpointAddress());
-      desc.setPortName(epMetaData.getPortComponentName());
+      desc.setPortName(epMetaData.getPortName());
 
       SubscriptionManagerMBean manager = factory.getSubscriptionManager();
       manager.registerEventSource(desc);

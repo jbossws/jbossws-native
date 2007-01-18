@@ -53,6 +53,7 @@ import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 import javax.xml.ws.WebFault;
 import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.addressing.Action;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -239,7 +240,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (omd.isOneWay())
          throw new IllegalStateException("JSR-181 4.3.1 - A JSR-181 processor is REQUIRED to report an error if an operation marked "
-               + "@Oneway has a return value, declares any checked exceptions or has any INOUT or OUT parameters.");
+            + "@Oneway has a return value, declares any checked exceptions or has any INOUT or OUT parameters.");
 
       WebFault annotation = exception.getAnnotation(WebFault.class);
 
@@ -445,7 +446,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (namespace == null && (opMetaData.isDocumentBare() || header))
          namespace = opMetaData.getQName().getNamespaceURI();
 
-      // RPC body parts must have no namespace
+         // RPC body parts must have no namespace
       else if (opMetaData.isRPCLiteral() && !header)
          namespace = null;
 
@@ -480,7 +481,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (namespace == null && (opMetaData.isDocumentBare() || header))
          namespace = opMetaData.getQName().getNamespaceURI();
 
-      // RPC body parts must have no namespace
+         // RPC body parts must have no namespace
       else if (opMetaData.isRPCLiteral() && !header)
          namespace = null;
 
@@ -494,19 +495,27 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    /**
     * Process operation meta data extensions.
     */
-   private void processMetaExtensions(EndpointMetaData epMetaData, OperationMetaData opMetaData)
+   private void processMetaExtensions(Method method, EndpointMetaData epMetaData, OperationMetaData opMetaData)
    {
-      // Until there is a addressing annotion we fallback to implicit action association
-      // TODO: figure out a way to assign message name instead of IN and OUT
-      String tns = epMetaData.getPortName().getNamespaceURI();
-      String portTypeName = epMetaData.getPortName().getLocalPart();
-
       AddressingProperties ADDR = new AddressingPropertiesImpl();
       AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
-      addrExt.setInboundAction(tns + "/" + portTypeName + "/IN");
 
-      if (!opMetaData.isOneWay())
-         addrExt.setOutboundAction(tns + "/" + portTypeName + "/OUT");
+      Action anAction = method.getAnnotation(Action.class);
+      if(anAction!=null)
+      {
+         addrExt.setInboundAction(anAction.input());
+         addrExt.setOutboundAction(anAction.output());
+      }
+      else  // default action values
+      {
+         // TODO: figure out a way to assign message name instead of IN and OUT
+         String tns = epMetaData.getPortName().getNamespaceURI();
+         String portTypeName = epMetaData.getPortName().getLocalPart();
+         addrExt.setInboundAction(tns + "/" + portTypeName + "/IN");
+
+         if (!opMetaData.isOneWay())
+            addrExt.setOutboundAction(tns + "/" + portTypeName + "/OUT");
+      }
 
       opMetaData.addExtension(addrExt);
    }
@@ -722,7 +731,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             addFault(opMetaData, exClass);
 
       // process op meta data extension
-      processMetaExtensions(epMetaData, opMetaData);
+      processMetaExtensions(method, epMetaData, opMetaData);
    }
 
    protected void processWebMethods(EndpointMetaData epMetaData, Class wsClass)

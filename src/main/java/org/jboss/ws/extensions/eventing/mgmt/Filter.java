@@ -28,7 +28,6 @@ import java.net.URI;
 /**
  * A local filter representation.
  *
- * @see org.jboss.ws.extensions.eventing.element.FilterType
  * 
  * @author Heiko Braun, <heiko@openj.net>
  * @since 08-Dec-2005

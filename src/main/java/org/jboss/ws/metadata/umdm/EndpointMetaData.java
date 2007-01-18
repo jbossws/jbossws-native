@@ -587,7 +587,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    public void configure(Configurable configurable) {
 
       // emit notificatins when the config changes
-      this.configObservable.addObserver(configurable);
+      registerConfigObserver(configurable);
 
       if(null == config)
       {
@@ -619,20 +619,28 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
          log.debug("Configure EndpointMetaData");
 
-         List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
-         clearHandlers();
+         // It's not necessarily the same instance
+         EndpointMetaData epmd = (EndpointMetaData)configurable;
+
+         // TODO: Why should we keep them?
+         List<HandlerMetaData> sepHandlers = epmd.getHandlerMetaData(HandlerType.ENDPOINT);
+         epmd.clearHandlers();
 
          List<HandlerMetaData> preHandlers = config.getHandlers(this, HandlerType.PRE);
          List<HandlerMetaData> postHandlers = config.getHandlers(this, HandlerType.POST);
 
-         addHandlers(preHandlers);
-         addHandlers(sepHandlers);
-         addHandlers(postHandlers);
+         epmd.addHandlers(preHandlers);
+         epmd.addHandlers(sepHandlers);
+         epmd.addHandlers(postHandlers);
 
          log.debug("Added " + preHandlers.size() + " PRE handlers");
          log.debug("Added " + postHandlers.size() + " POST handlers");
       }
 
+   }
+
+   public void registerConfigObserver(Configurable observer) {
+       this.configObservable.addObserver(observer);
    }
 
    public String getConfigFile()
@@ -656,7 +664,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
       this.configName = configName;
       this.config = null;
 
-      // notify obervers
+      // notify observers
       log.debug("Reconfiguration forced");
       this.configObservable.touch();
       this.configObservable.notifyObservers(configName);
@@ -669,7 +677,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    public void update(Observable observable, Object object) {
       log.trace("Ingore configuration change notification");
-}
+   }
 
    class ConfigObservable extends Observable {
       public void touch()

@@ -23,10 +23,11 @@ package org.jboss.ws.extensions.eventing.mgmt;
 
 // $Id$
 
+import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
+
+import javax.xml.bind.JAXBElement;
 import java.net.URI;
 import java.util.Date;
-
-import org.jboss.ws.extensions.eventing.element.EndpointReference;
 
 /**
  * @author Heiko Braun, <heiko@openj.net>
@@ -34,14 +35,18 @@ import org.jboss.ws.extensions.eventing.element.EndpointReference;
  */
 public final class SubscriptionTicket
 {
-
    private URI identifier;
-   private EndpointReference subscriptionManager;
+   private EndpointReferenceType subscriptionManager;
    private Date expires;
 
-   public SubscriptionTicket(EndpointReference subscriptionManager, Date expires)
+   public SubscriptionTicket(EndpointReferenceType subscriptionManager, Date expires)
    {
-      this.identifier = subscriptionManager.getReferenceParams().getIdentifier();
+      try {
+         JAXBElement<String> jaxbElement = (JAXBElement<String>)subscriptionManager.getReferenceParameters().getAny().get(0);
+         this.identifier = new URI(jaxbElement.getValue());
+      } catch (Exception e) {
+         throw new RuntimeException(e);
+      }
       this.subscriptionManager = subscriptionManager;
       this.expires = expires;
    }
@@ -51,7 +56,7 @@ public final class SubscriptionTicket
       return identifier;
    }
 
-   public org.jboss.ws.extensions.eventing.element.EndpointReference getSubscriptionManager()
+   public EndpointReferenceType getSubscriptionManager()
    {
       return subscriptionManager;
    }
@@ -59,5 +64,5 @@ public final class SubscriptionTicket
    public Date getExpires()
    {
       return expires;
-   }  
+   }
 }

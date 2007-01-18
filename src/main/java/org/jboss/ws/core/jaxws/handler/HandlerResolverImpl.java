@@ -131,6 +131,10 @@ public class HandlerResolverImpl implements HandlerResolver
    public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)
    {
       log.debug("initHandlerChain: " + type);
+
+      // clear all exisisting handler to avoid double registration
+      log.debug("Clear handler map: " +handlerMap);
+
       for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(type))
       {
          HandlerMetaDataJAXWS jaxwsMetaData = (HandlerMetaDataJAXWS)handlerMetaData;

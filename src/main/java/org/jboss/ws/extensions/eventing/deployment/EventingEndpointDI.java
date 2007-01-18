@@ -1,5 +1,7 @@
 package org.jboss.ws.extensions.eventing.deployment;
 
+import javax.xml.namespace.QName;
+
 /**
  * Eventsource endpoint deployment info.
  *
@@ -11,7 +13,7 @@ public class EventingEndpointDI {
    /* event source URI */
    private String name;
 
-   private String portName;
+   private QName portName;
 
    // event source endpoint address
    private String endpointAddress;
@@ -27,11 +29,11 @@ public class EventingEndpointDI {
       this.notificationRootElementNS = notificationRootElementNS;
    }
 
-   public String getPortName() {
+   public QName getPortName() {
       return portName;
    }
 
-   public void setPortName(String portName) {
+   public void setPortName(QName portName) {
       this.portName = portName;
    }
 

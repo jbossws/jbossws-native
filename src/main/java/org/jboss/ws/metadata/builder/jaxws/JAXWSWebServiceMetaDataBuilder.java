@@ -140,6 +140,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          if (sepClass.isAnnotationPresent(SOAPMessageHandlers.class) || seiClass.isAnnotationPresent(SOAPMessageHandlers.class))
             log.warn("@SOAPMessageHandlers is deprecated as of JAX-WS 2.0 with no replacement.");
 
+         // process endpoint meta data extensions
+         processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
+
          // init service endpoint id
          ObjectName sepID = MetaDataBuilder.createServiceEndpointID(udi, sepMetaData);
          sepMetaData.setServiceEndpointID(sepID);

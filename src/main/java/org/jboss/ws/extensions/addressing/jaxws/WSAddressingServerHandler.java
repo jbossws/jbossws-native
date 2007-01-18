@@ -120,7 +120,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          if (!isFault && !opMetaData.isOneWay())
          {
 
-            AddressingOpMetaExt addrExt = (AddressingOpMetaExt)opMetaData.getExtension(ADDR_CONSTANTS.getNamespaceURI());
+            AddressingOpMetaExt addrExt = (AddressingOpMetaExt)opMetaData.getExtension(ADDR_CONSTANTS.getNamespaceURI());                       
             if (addrExt != null)
             {
                outProps.setAction(ADDR_BUILDER.newURI(addrExt.getOutboundAction()));

@@ -48,6 +48,8 @@ public interface ConfigurationProvider {
     */
    void configure(Configurable configurable);
 
+   void registerConfigObserver(Configurable configurable);
+
    String getConfigFile();
 
    void setConfigFile(String configFile);

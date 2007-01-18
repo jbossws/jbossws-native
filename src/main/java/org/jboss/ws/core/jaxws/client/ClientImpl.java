@@ -23,9 +23,20 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
+import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.CommonBindingProvider;
+import org.jboss.ws.core.CommonClient;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxws.binding.BindingExt;
+import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
+import org.jboss.ws.core.jaxws.handler.*;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.config.Configurable;
+import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
@@ -39,55 +50,80 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
 
-import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.CommonBindingProvider;
-import org.jboss.ws.core.CommonClient;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.binding.BindingExt;
-import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
-import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
-import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
-import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-
-/** 
+/**
  * Provides support for the dynamic invocation of a service endpoint.
  *
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jul-2006
  */
-public class ClientImpl extends CommonClient implements BindingProvider
+public class ClientImpl extends CommonClient implements BindingProvider, Configurable
 {
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);
-   
+
+   private final EndpointMetaData epMetaData;
+   private final HandlerResolver handlerResolver;
+
    public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
    {
       super(epMetaData);
       setTargetEndpointAddress(epMetaData.getEndpointAddress());
-      initBindingHandlerChain(epMetaData, handlerResolver);
+
+      this.epMetaData = epMetaData;
+      this.handlerResolver = handlerResolver;
+
+      resetCreateBindingHandlerChain();
+
+      // The config may change at some later point in time
+      // when applications utilize the ServiceDecorator API
+      // When clients change the config-name, we need reset the handlerchain
+      ((ConfigurationProvider)epMetaData).registerConfigObserver(this);
    }
 
-   // Init the cilent handler chain in the binding
-   private void initBindingHandlerChain(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
+   /**
+    * Reset or create the client handler chain in the binding.<br>
+    */
+   private void resetCreateBindingHandlerChain()
    {
+      if (handlerResolver instanceof HandlerResolverImpl)
+      {
+         HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
+         impl.initHandlerChain(epMetaData, HandlerType.PRE);
+         impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT);
+         impl.initHandlerChain(epMetaData, HandlerType.POST);
+      }
+
       Binding binding = getBindingProvider().getBinding();
       if (handlerResolver != null)
       {
          PortInfoImpl portInfo = new PortInfoImpl(epMetaData);
          List<Handler> handlerChain = binding.getHandlerChain();
+         handlerChain.clear();
          for (Handler handler : handlerResolver.getHandlerChain(portInfo))
          {
             handlerChain.add(handler);
          }
       }
+   }
+
+   /**
+    * Callback when the config-name or config-file changes.
+    * @param observable
+    * @param object
+    */
+   public void update(Observable observable, Object object) {
+      log.debug("Configuration change event received. Reconfigure handler chain: "+object);
+
+      // reconfigure endpoint meta data handler information from config
+      ((ConfigurationProvider)epMetaData).configure(epMetaData);
+
+      // re-populate the binding handler chain
+      resetCreateBindingHandlerChain();
    }
 
    @Override
@@ -123,14 +159,14 @@ public class ClientImpl extends CommonClient implements BindingProvider
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setProperty(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, new Boolean(true));
    }
-   
+
    // Invoked by the proxy invokation handler
    public Object invoke(QName opName, Object[] args, Map<String, Object> resContext) throws RemoteException
    {
       // Associate a message context with the current thread
       SOAPMessageContextJAXWS msgContext = new SOAPMessageContextJAXWS();
       MessageContextAssociation.pushMessageContext(msgContext);
-      
+
       // The contents of the request context are used to initialize the message context (see section 9.4.1)
       // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
       // request context is copied to the message context with a scope of HANDLER.
@@ -174,7 +210,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
 
       // associate new context
       MessageContextAssociation.pushMessageContext(responseContext);
-      
+
       return responseContext;
    }
 
@@ -195,7 +231,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
    }
 
    /**
-    * 4.2.4  Conformance (Remote Exceptions): If an error occurs during a remote operation invocation, an implemention 
+    * 4.2.4  Conformance (Remote Exceptions): If an error occurs during a remote operation invocation, an implemention
     * MUST throw a service specific exception if possible. If the error cannot be mapped to a service
     * specific exception, an implementation MUST throw a ProtocolException or one of its subclasses, as
     * appropriate for the binding in use. See section 6.4.1 for more details.
@@ -246,7 +282,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
       }
       return bindingProvider;
    }
-   
+
    public Map<String, Object> getRequestContext()
    {
       return getBindingProvider().getRequestContext();
