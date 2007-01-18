@@ -28,17 +28,17 @@ import java.io.Serializable;
 import org.jboss.ws.core.server.UnifiedVirtualFile;
 
 /**
- * Represents a <service-ref> element of the jboss.xml, jboss-web.xml, jboss-client.xml deployment descriptor 
- * for the 5.0 schema
+ * Represents a <service-ref> element of the jboss.xml, jboss-web.xml, jboss-client.xml
  *
  * @author Thomas.Diesler@jboss.com
+ * @since 16-Dec-2006
  */
 public class UnifiedServiceRef implements Serializable
 {
    private static final long serialVersionUID = -5518998734737147195L;
    
    private UnifiedVirtualFile vfsRoot;
-   private String encName;
+   private String serviceRefName;
    private String wsdlLocation;
    private String configName;
    private String configFile;
@@ -46,7 +46,7 @@ public class UnifiedServiceRef implements Serializable
    public UnifiedServiceRef(UnifiedVirtualFile vfsRoot, String name)
    {
       this.vfsRoot = vfsRoot;
-      this.encName = name;
+      this.serviceRefName = name;
    }
 
    public UnifiedVirtualFile getRootFile()
@@ -54,9 +54,9 @@ public class UnifiedServiceRef implements Serializable
       return vfsRoot;
    }
 
-   public String getEncName()
+   public String getServiceRefName()
    {
-      return encName;
+      return serviceRefName;
    }
 
    public String getWsdlLocation()
@@ -93,7 +93,7 @@ public class UnifiedServiceRef implements Serializable
    {
       StringBuilder sb = new StringBuilder();
       sb.append("[");
-      sb.append("name=").append(encName);
+      sb.append("name=").append(serviceRefName);
       sb.append(",config-name=").append(configName);
       sb.append(",config-file=").append(configFile);
       sb.append(",wsdl=").append(wsdlLocation);
