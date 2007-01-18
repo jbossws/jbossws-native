@@ -23,6 +23,9 @@ package javax.xml.ws;
 
 // $Id$
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;
@@ -63,8 +66,7 @@ import javax.xml.ws.spi.ServiceDelegate;
  **/
 public class Service
 {
-
-   private ServiceDelegate delegate;
+   protected ServiceDelegate delegate;
 
    /**
     * The orientation of a dynamic client or service. MESSAGE provides
@@ -714,9 +716,25 @@ public class Service
     * @throws WebServiceException If any error in creation of the
     *                    specified service.
     **/
-   public static Service create(java.net.URL wsdlDocumentLocation, QName serviceName)
+   public static Service create(URL wsdlLocation, QName serviceName)
    {
-      return new Service(wsdlDocumentLocation, serviceName);
+      Service service;
+      try
+      {
+         Class extClass = Class.forName("org.jboss.ws.core.jaxws.client.ServiceExt");
+         Constructor ctor = extClass.getConstructor(new Class[]{URL.class, QName.class});
+         service = (Service)ctor.newInstance(new Object[]{wsdlLocation, serviceName});
+      }
+      catch (InvocationTargetException ex)
+      {
+         RuntimeException rte = (RuntimeException)ex.getTargetException();
+         throw rte;
+      }
+      catch (Exception e)
+      {
+         service = new Service(wsdlLocation, serviceName);
+      }
+      return service;
    }
 
    /**
@@ -728,6 +746,6 @@ public class Service
     */
    public static Service create(QName serviceName)
    {
-      return new Service(null, serviceName);
+      return create(null, serviceName);
    }
 }

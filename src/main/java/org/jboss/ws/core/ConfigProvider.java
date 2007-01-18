@@ -19,35 +19,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxws;
+package org.jboss.ws.core;
 
 // $Id$
 
 /**
- * Service provider for ServiceDelegate and Endpoint objects.
+ * Provides configuration for JAXRPC/JAXWS ports
  *  
  * @author Thomas.Diesler@jboss.com
  * @since 17-Jan-2006
  */
-public interface ServiceConfiguration
+public interface ConfigProvider
 {
    /** 
-    * Get the port configuration file for newly created ports 
+    * Get the port configuration file 
     */
    String getConfigFile();
 
    /** 
-    * Set the port configuration file for newly created ports 
+    * Set the port configuration file 
     */
    void setConfigFile(String configFile);
 
    /** 
-    * Get the port configuration name for newly created ports 
+    * Get the port configuration name 
     */
    String getConfigName();
 
    /** 
-    * Set the port configuration name for newly created ports 
+    * Set the port configuration name 
     */
    void setConfigName(String configName);
 }

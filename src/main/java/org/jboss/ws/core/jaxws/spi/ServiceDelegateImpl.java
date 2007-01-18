@@ -47,7 +47,6 @@ import javax.xml.ws.spi.ServiceDelegate;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.ServiceConfiguration;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
@@ -69,7 +68,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.com
  * @since 03-May-2006
  */
-public class ServiceDelegateImpl extends ServiceDelegate implements ServiceConfiguration
+public class ServiceDelegateImpl extends ServiceDelegate
 {
    // provide logging
    private final Logger log = Logger.getLogger(ServiceDelegateImpl.class);
@@ -83,10 +82,6 @@ public class ServiceDelegateImpl extends ServiceDelegate implements ServiceConfi
    private HandlerResolver handlerResolver = new HandlerResolverImpl();
    // The executor service
    private ExecutorService executor;
-   // The config name for all created ports 
-   private String configName;
-   // The config file for all created ports 
-   private String configFile;
 
    // A list of annotated ports
    private List<QName> annotatedPorts = new ArrayList<QName>();
@@ -104,26 +99,6 @@ public class ServiceDelegateImpl extends ServiceDelegate implements ServiceConfi
          serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
       }
-   }
-
-   public String getConfigFile()
-   {
-      return configFile;
-   }
-
-   public void setConfigFile(String configFile)
-   {
-      this.configFile = configFile;
-   }
-
-   public String getConfigName()
-   {
-      return configName;
-   }
-
-   public void setConfigName(String configName)
-   {
-      this.configName = configName;
    }
 
    /**

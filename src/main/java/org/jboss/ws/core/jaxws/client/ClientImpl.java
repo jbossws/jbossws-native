@@ -63,7 +63,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jul-2006
  */
-public class ClientImpl extends CommonClient implements BindingProvider, StubExt
+public class ClientImpl extends CommonClient implements BindingProvider
 {
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);

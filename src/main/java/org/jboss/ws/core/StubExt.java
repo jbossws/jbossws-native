@@ -37,7 +37,7 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 17-Jan-2007
  */
-public interface StubExt 
+public interface StubExt extends ConfigProvider
 {
    /** ClientTimeout property: org.jboss.ws.timeout */
    static final String PROPERTY_CLIENT_TIMEOUT = "org.jboss.ws.timeout";
@@ -126,28 +126,4 @@ public interface StubExt
     * Creates a new empty AttachmentPart object.
     */
    AttachmentPart createAttachmentPart();
-
-   /** 
-    * Get the current port configuration file 
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   String getConfigFile();
-
-   /** 
-    * Set the current port configuration file 
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   void setConfigFile(String configFile);
-
-   /** 
-    * Get the current port configuration name 
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   String getConfigName();
-
-   /** 
-    * Set the current port configuration name 
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   void setConfigName(String configName);
 }
