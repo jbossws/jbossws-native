@@ -26,17 +26,13 @@ package org.jboss.ws.extensions.eventing.jaxrpc;
 import java.rmi.RemoteException;
 
 import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.AttributedURI;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.extensions.eventing.jaxrpc.element.EndpointReference;
 import org.jboss.ws.extensions.eventing.jaxrpc.element.SubscribeRequest;
 import org.jboss.ws.extensions.eventing.jaxrpc.element.SubscribeResponse;
 import org.jboss.ws.extensions.eventing.jaxrpc.element.SubscriptionEndRequest;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.jaxrpc.EventSourceEndpoint;
-import org.jboss.ws.extensions.eventing.mgmt.*;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 
 /**

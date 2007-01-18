@@ -53,9 +53,7 @@ import java.net.URISyntaxException;
    targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing",
    wsdlLocation = "/WEB-INF/wsdl/wind.wsdl")
 @EndpointConfig(configName = "Standard WSAddressing Endpoint")
-public class EventSourceEndpointImpl extends EventingEndpointBase implements EventSourceEndpoint {
-
-   private static Logger log = Logger.getLogger(EventSourceEndpointImpl.class);
+public abstract class AbstractEventSourceEndpoint extends EventingEndpointBase implements EventSourceEndpoint {
 
    @WebMethod(operationName = "SubscribeOp")
    @WebResult(name = "SubscribeResponse", targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing", partName = "body")
@@ -69,7 +67,7 @@ public class EventSourceEndpointImpl extends EventingEndpointBase implements Eve
          // retrieve addressing headers
          AddressingProperties inProps = getAddrProperties();
          AttributedURI eventSourceURI = inProps.getTo();
-         log.debug("Subscribe request for event source: " + eventSourceURI.getURI());
+         getLogger().debug("Subscribe request for event source: " + eventSourceURI.getURI());
 
          assertSubscriberEndpoints(request);
          EndpointReferenceType notifyTo = request.getDelivery().getNotifyTo();
@@ -123,4 +121,10 @@ public class EventSourceEndpointImpl extends EventingEndpointBase implements Eve
             null, null
          );
    }
+
+   /**
+    * Subsclasses need to provide a logger for this endpoint
+    * @return a custom {@link org.jboss.logging.Logger} instance
+    */
+   protected abstract Logger getLogger();
 }

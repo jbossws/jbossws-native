@@ -29,6 +29,7 @@ import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
+import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
 
 import javax.jws.WebMethod;
@@ -56,7 +57,7 @@ import java.util.Date;
    targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing",
    wsdlLocation = "/WEB-INF/wsdl/wind.wsdl")
 @EndpointConfig(configName = "Standard WSAddressing Endpoint")
-public class SubscriptionManagerEndpointImpl extends EventingEndpointBase implements SubscriptionManagerEndpoint {
+public abstract class AbstractSubscriptionManagerEndpoint extends EventingEndpointBase implements SubscriptionManagerEndpoint {
 
    public static final QName IDQN = new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "Identifier", "ns1");
 
@@ -67,7 +68,10 @@ public class SubscriptionManagerEndpointImpl extends EventingEndpointBase implem
       output = "http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatusResponse"
    )
    public GetStatusResponse getStatusOp(@WebParam(name = "GetStatus", targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing", partName = "body") GetStatus body) {
+
       URI identifier = retrieveSubscriptionId();
+
+      getLogger().debug("GetStatus request for subscriptionID: " + identifier);
 
       try
       {
@@ -93,6 +97,8 @@ public class SubscriptionManagerEndpointImpl extends EventingEndpointBase implem
 
       URI identifier = retrieveSubscriptionId();
 
+      getLogger().debug("Renew request for subscriptionID: " + identifier);
+
       try
       {
          Date newLeaseTime = getSubscriptionManager().renew(identifier, request.getExpires());
@@ -116,6 +122,8 @@ public class SubscriptionManagerEndpointImpl extends EventingEndpointBase implem
 
       URI identifier = retrieveSubscriptionId();
 
+      getLogger().debug("Unsubscribe request for subscriptionID: " + identifier);
+
       try
       {
          getSubscriptionManager().unsubscribe(identifier);
@@ -128,7 +136,7 @@ public class SubscriptionManagerEndpointImpl extends EventingEndpointBase implem
    }
 
    private URI retrieveSubscriptionId()
-   {
+   {     
       URI subscriptionId = null;
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       AddressingProperties addrProps = (AddressingProperties)msgContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
@@ -185,4 +193,10 @@ public class SubscriptionManagerEndpointImpl extends EventingEndpointBase implem
 
       return subscriptionId;
    }
+
+   /**
+    * Subsclasses need to provide a logger for this endpoint
+    * @return a custom {@link org.jboss.logging.Logger} instance
+    */
+   protected abstract Logger getLogger();
 }

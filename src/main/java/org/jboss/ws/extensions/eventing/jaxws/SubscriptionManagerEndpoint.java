@@ -36,7 +36,7 @@ import javax.xml.ws.addressing.Action;
  * 
  */
 @WebService(name = "SubscriptionManager", targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing")
-@SOAPBinding(parameterStyle = ParameterStyle.WRAPPED)
+@SOAPBinding(parameterStyle = ParameterStyle.BARE)
 public interface SubscriptionManagerEndpoint {
 
 
