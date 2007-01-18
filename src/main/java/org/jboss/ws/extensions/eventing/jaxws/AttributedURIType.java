@@ -97,4 +97,7 @@ public class AttributedURIType {
         return otherAttributes;
     }
 
+   public String toString() {
+      return this.getValue();
+   }
 }

@@ -86,6 +86,8 @@ public abstract class EventingEndpointBase
    {
       if (null == inProps)
          throw new SOAPFaultException(Constants.SOAP11_FAULT_CODE_CLIENT, "Addressing headers missing from request", "wse:InvalidMessage", null);
+      if(null == inProps.getTo())
+         throw new SOAPFaultException(Constants.SOAP11_FAULT_CODE_CLIENT, "Event source URI missing from request (wsa:To)", "wse:InvalidMessage", null);
    }
 
    public QName buildFaultQName(String elementName)
