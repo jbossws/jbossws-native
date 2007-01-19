@@ -126,6 +126,7 @@
         <include name="javax/xml/ws/**"/>
         <include name="org/jboss/ws/jaxws/injection/**"/>
       </fileset>
+      <metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
     </jar>
     
     <!-- Build jbossws-core.jar -->

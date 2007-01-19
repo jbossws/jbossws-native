@@ -29,6 +29,9 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
+import org.jboss.ws.core.jaxws.client.NameValuePair;
+import org.jboss.ws.core.jaxws.client.PortInfo;
+import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -49,6 +52,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,7 +73,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    // The executor service
    private static ExecutorService defaultExecutor = Executors.newCachedThreadPool();
-
+   // The UnifiedServiceRef association
+   private static ThreadLocal serviceRefAssociation = new ThreadLocal();
    // The service meta data that is associated with this JAXWS Service
    private ServiceMetaData serviceMetaData;
    // The handler resolver
@@ -95,6 +100,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
    }
 
+   public static void associateUnifiedServiceRef(UnifiedServiceRef usRef)
+   {
+      serviceRefAssociation.set(usRef);
+   }
+   
    /**
     * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
     * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
@@ -298,6 +308,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
          ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
          T proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, BindingProvider.class, StubExt.class }, handler);
+         
+         // Configure the stub
+         configureStub((StubExt)proxy);
+         
          return proxy;
       }
       catch (WebServiceException ex)
@@ -308,6 +322,63 @@ public class ServiceDelegateImpl extends ServiceDelegate
       {
          throw new WebServiceException("Cannot create proxy", ex);
       }
+   }
+   
+   private void configureStub(StubExt stub)
+   {
+      EndpointMetaData epMetaData = stub.getEndpointMetaData();
+      String seiName = epMetaData.getServiceEndpointInterfaceName();
+      QName portName = epMetaData.getPortName();
+
+      UnifiedServiceRef usRef = (UnifiedServiceRef)serviceRefAssociation.get();
+      if(usRef == null || usRef.getPortInfos().size() == 0)
+      {
+         log.debug("No port configuration for: " + portName);
+         return;
+      }
+      
+      String configFile = usRef.getConfigFile();
+      String configName = usRef.getConfigName();
+      
+      boolean match = false;
+      for (PortInfo pi : usRef.getPortInfos())
+      {
+         String piSEI = pi.getServiceEndpointInterface();
+         QName piPort = pi.getPortQName();
+         match = (piSEI == null && piPort == null);
+         if (match == false)
+         {
+            if (piSEI != null && piPort != null)
+               match = seiName.equals(piSEI) && portName.equals(piPort);
+            else 
+               match = seiName.equals(piSEI) || portName.equals(piPort);
+         }
+         if (match == true)
+         {
+            if (pi.getConfigFile() != null)
+               configFile = pi.getConfigFile();
+            if (pi.getConfigName() != null)
+               configName = pi.getConfigName();
+            
+            BindingProvider bp = (BindingProvider)stub;
+            Map<String, Object> reqCtx = bp.getRequestContext();
+            for (NameValuePair nvp : pi.getStubProperties())
+            {
+               log.debug("Set stub property: " + nvp);
+               reqCtx.put(nvp.getName(), nvp.getValue());
+            }
+            break;
+         }
+      }
+
+      if (match == false)
+         log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
+      
+      log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
+      if (configFile != null)
+         stub.setConfigFile(configFile);
+      if (configName != null)
+         stub.setConfigName(configName);
    }
 
    @Override

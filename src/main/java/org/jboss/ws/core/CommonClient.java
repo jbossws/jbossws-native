@@ -53,7 +53,6 @@ import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;

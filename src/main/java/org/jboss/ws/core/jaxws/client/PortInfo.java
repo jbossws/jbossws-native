@@ -29,80 +29,50 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.core.server.UnifiedVirtualFile;
-
 /**
- * Represents a <service-ref> element of the jboss.xml, jboss-web.xml, jboss-client.xml
+ * Represents a <port-info> element in <service-ref>
  *
  * @author Thomas.Diesler@jboss.com
- * @since 16-Dec-2006
  */
-public class UnifiedServiceRef implements Serializable
+public class PortInfo implements Serializable
 {
-   private static final long serialVersionUID = -6242639118713373752L;
+   private static final long serialVersionUID = -5517739021682888778L;
    
-   private UnifiedVirtualFile vfsRoot;
-   private String serviceRefName;
-   private String serviceClassName;
-   private QName serviceQName;
+   private UnifiedServiceRef serviceRef;
+   private String serviceEndpointInterface;
+   private QName portQName;
    private String configName;
    private String configFile;
-   private List<PortInfo> portInfos = new ArrayList<PortInfo>();
-   private String wsdlLocation;
+   private List<NameValuePair> stubProperties = new ArrayList<NameValuePair>();
 
-   public UnifiedVirtualFile getRootFile()
+   public PortInfo(UnifiedServiceRef serviceRef)
    {
-      return vfsRoot;
+      this.serviceRef = serviceRef;
    }
    
-   public void setRootFile(UnifiedVirtualFile vfsRoot)
+   public UnifiedServiceRef getServiceRef()
    {
-      this.vfsRoot = vfsRoot;
-   }
-   
-   public String getServiceRefName()
-   {
-      return serviceRefName;
+      return serviceRef;
    }
 
-   public void setServiceRefName(String name)
+   public QName getPortQName()
    {
-      this.serviceRefName = name;
+      return portQName;
    }
 
-   public String getServiceClassName()
+   public void setPortQName(QName portName)
    {
-      return serviceClassName;
+      this.portQName = portName;
    }
 
-   public void setServiceClassName(String serviceClassName)
+   public String getServiceEndpointInterface()
    {
-      this.serviceClassName = serviceClassName;
+      return serviceEndpointInterface;
    }
 
-   public QName getServiceQName()
+   public void setServiceEndpointInterface(String serviceEndpointInterface)
    {
-      return serviceQName;
-   }
-
-   public void setServiceQName(QName serviceQName)
-   {
-      this.serviceQName = serviceQName;
-   }
-   
-   public List<PortInfo> getPortInfos()
-   {
-      return portInfos;
-   }
-
-   public String getWsdlLocation()
-   {
-      return wsdlLocation;
-   }
-
-   public void setWsdlLocation(String wsdlLocation)
-   {
-      this.wsdlLocation = wsdlLocation;
+      this.serviceEndpointInterface = serviceEndpointInterface;
    }
 
    public String getConfigFile()
@@ -125,12 +95,8 @@ public class UnifiedServiceRef implements Serializable
       this.configName = configName;
    }
 
-   public String toString()
+   public List<NameValuePair> getStubProperties()
    {
-      StringBuffer sb = new StringBuffer(100);
-      sb.append("[");
-      sb.append("name=").append(serviceRefName);
-      sb.append("]");
-      return sb.toString();
+      return stubProperties;
    }
 }
