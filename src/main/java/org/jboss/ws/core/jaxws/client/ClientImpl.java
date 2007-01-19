@@ -315,9 +315,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
    public void setConfigName(String configName)
    {
-      EndpointMetaData epMetaData = getEndpointMetaData();
-      epMetaData.setConfigName(configName);
-      // TODO: Handlers not re-initialized
-      log.warn("Handlers not re-initialized");
+      ConfigurationProvider configProvider = (ConfigurationProvider)getEndpointMetaData();
+      configProvider.setConfigName(configName);     
    }
 }
