@@ -39,7 +39,11 @@ import org.w3c.dom.Element;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 
-
+/**
+ * JAXBWSDLGenerator provides a JAXB based WSDLGenerator.
+ * 
+ * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
+ */
 public class JAXBWSDLGenerator extends WSDLGenerator
 {
    private JAXBRIContext ctx;
