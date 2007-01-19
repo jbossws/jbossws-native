@@ -83,7 +83,7 @@ public final class W3CEndpointReferenceBuilder {
      * @return A <code>W3CEndpointReferenceBuilder</code> instance with
      *   the <code>address</code> set to the <code>wsa:Address</code>.
      */
-    public W3CEndpointReferenceBuilder address(String adddress) {
+    public W3CEndpointReferenceBuilder address(String address) {
         this.address = address;
         return this;
     }
