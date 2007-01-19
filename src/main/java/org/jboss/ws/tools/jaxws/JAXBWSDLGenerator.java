@@ -33,6 +33,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.metadata.wsdl.DOMTypes;
+import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

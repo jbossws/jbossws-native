@@ -69,7 +69,7 @@ import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
 import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.ws.tools.interfaces.JavaToXSDIntf;
 import org.jboss.ws.tools.interfaces.SchemaCreatorIntf;
-import org.jboss.ws.tools.jaxws.WSDLGenerator;
+import org.jboss.ws.tools.wsdl.WSDLGenerator;
 
 /**
  *  Java To WSDL Helper which uses UnifiedMetaData
