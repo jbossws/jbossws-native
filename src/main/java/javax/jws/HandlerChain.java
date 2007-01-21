@@ -34,13 +34,11 @@ import java.lang.annotation.Target;
  * handler configuration needs to be shared across multiple Web Services, or where the handler chain consists of
  * handlers for multiple transports.
  *
- * It is an error to combine this annotation with the @SOAPMessageHandlers annotation.
- *
  * @author thomas.diesler@jboss.org
  * @since 26-Apr-2005
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.TYPE })
+@Target(value = { ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 public @interface HandlerChain
 {
 
