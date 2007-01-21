@@ -89,7 +89,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
       {
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext instanceof SOAPMessageContextJAXWS)
-            WebServiceContextInjector.injectContext(seiImpl, (SOAPMessageContextJAXWS)msgContext);
+            new WebServiceContextInjector().injectContext(seiImpl, (SOAPMessageContextJAXWS)msgContext);
          
          Class implClass = seiImpl.getClass();
          Method seiMethod = epInv.getJavaMethod();

@@ -25,13 +25,20 @@ package org.jboss.ws.core.jaxws;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxws.WebServiceContextImpl;
+import org.jboss.security.RealmMapping;
+import org.jboss.security.SecurityAssociation;
+import org.jboss.security.SimplePrincipal;
 
 /**
  * Inject the JAXWS WebServiceContext
@@ -44,9 +51,9 @@ public class WebServiceContextInjector
    // provide logging
    private static Logger log = Logger.getLogger(WebServiceContextInjector.class);
 
-   public static void injectContext(Object epImpl, MessageContext msgContext)
+   public void injectContext(Object epImpl, MessageContext msgContext)
    {
-      WebServiceContextImpl webServiceContext = new WebServiceContextImpl(msgContext);
+      AbstractWebServiceContext webServiceContext = new WebServiceContextJSE(msgContext);
       try
       {
          // scan fields that are marked with @Resource
@@ -80,6 +87,56 @@ public class WebServiceContextInjector
       catch (Exception ex)
       {
          log.warn("Cannot inject WebServiceContext", ex);
+      }
+   }
+   
+   class WebServiceContextJSE extends AbstractWebServiceContext
+   {
+      private RealmMapping realmMapping;
+      
+      public WebServiceContextJSE(MessageContext messageContext)
+      {
+         super(messageContext);
+      }
+
+      @Override
+      public Principal getUserPrincipal()
+      {
+         Principal principal = SecurityAssociation.getCallerPrincipal();
+         return principal;
+      }
+
+      @Override
+      public boolean isUserInRole(String role)
+      {
+         boolean isUserInRole = false;
+         Principal principal = SecurityAssociation.getCallerPrincipal();
+         RealmMapping realmMapping = getRealmMapping();
+         if (realmMapping != null && principal != null)
+         {
+            Set<Principal> roles = new HashSet<Principal>();
+            roles.add(new SimplePrincipal(role));
+            isUserInRole = realmMapping.doesUserHaveRole(principal, roles);
+         }
+         return isUserInRole;
+      }
+      
+      private RealmMapping getRealmMapping()
+      {
+         if (realmMapping == null)
+         {
+            String lookupName = "java:comp/env/security/realmMapping";
+            try
+            {
+               InitialContext iniCtx = new InitialContext();
+               realmMapping = (RealmMapping) iniCtx.lookup(lookupName);
+            }
+            catch (NamingException e)
+            {
+               log.debug("Cannot obtain realm mapping from: " + lookupName);
+            }
+         }
+         return realmMapping;
       }
    }
 }

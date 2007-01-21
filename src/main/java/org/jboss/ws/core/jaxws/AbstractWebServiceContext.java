@@ -39,12 +39,11 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.com
  * @since 03-May-2006
  */
-public class WebServiceContextImpl implements WebServiceContext
+public abstract class AbstractWebServiceContext implements WebServiceContext
 {
    private MessageContext messageContext;
-
    
-   public WebServiceContextImpl(MessageContext messageContext)
+   public AbstractWebServiceContext(MessageContext messageContext)
    {
       this.messageContext = messageContext;
    }
@@ -54,15 +53,9 @@ public class WebServiceContextImpl implements WebServiceContext
       return messageContext;
    }
 
-   public Principal getUserPrincipal()
-   {
-      throw new NotImplementedException();
-   }
+   public abstract Principal getUserPrincipal();
 
-   public boolean isUserInRole(String role)
-   {
-      throw new NotImplementedException();
-   }
+   public abstract boolean isUserInRole(String role);
 
    public EndpointReference getEndpointReference(Element... referenceParameters)
    {
