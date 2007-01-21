@@ -23,30 +23,6 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.client.ClientImpl;
-import org.jboss.ws.core.jaxws.client.ClientProxy;
-import org.jboss.ws.core.jaxws.client.DispatchImpl;
-import org.jboss.ws.core.jaxws.client.NameValuePair;
-import org.jboss.ws.core.jaxws.client.PortInfo;
-import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
-import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
-import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-
-import javax.jws.WebService;
-import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
-import javax.xml.ws.*;
-import javax.xml.ws.Service.Mode;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.spi.ServiceDelegate;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,6 +32,36 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.jws.WebService;
+import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Dispatch;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.Service.Mode;
+import javax.xml.ws.handler.HandlerResolver;
+import javax.xml.ws.spi.ServiceDelegate;
+
+import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.core.jaxws.client.ClientImpl;
+import org.jboss.ws.core.jaxws.client.ClientProxy;
+import org.jboss.ws.core.jaxws.client.DispatchImpl;
+import org.jboss.ws.core.jaxws.client.NameValuePair;
+import org.jboss.ws.core.jaxws.client.PortInfo;
+import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
+import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
+import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
+import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -73,10 +79,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    // The executor service
    private static ExecutorService defaultExecutor = Executors.newCachedThreadPool();
-   // The UnifiedServiceRef association
-   private static ThreadLocal serviceRefAssociation = new ThreadLocal();
    // The service meta data that is associated with this JAXWS Service
    private ServiceMetaData serviceMetaData;
+   // The UnifiedServiceRef supplied by the ServiceObjectFactory 
+   private UnifiedServiceRef usRef;
    // The handler resolver
    private HandlerResolver handlerResolver = new HandlerResolverImpl();
    // The executor service
@@ -87,6 +93,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName)
    {
+      // If this Service was constructed through the ServiceObjectFactory
+      // this thread local association should be available
+      usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
+      
       if (wsdlURL != null)
       {
          JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
@@ -100,11 +110,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
    }
 
-   public static void associateUnifiedServiceRef(UnifiedServiceRef usRef)
-   {
-      serviceRefAssociation.set(usRef);
-   }
-   
    /**
     * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
     * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
@@ -330,7 +335,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
       String seiName = epMetaData.getServiceEndpointInterfaceName();
       QName portName = epMetaData.getPortName();
 
-      UnifiedServiceRef usRef = (UnifiedServiceRef)serviceRefAssociation.get();
       if(usRef == null || usRef.getPortInfos().size() == 0)
       {
          log.debug("No port configuration for: " + portName);
