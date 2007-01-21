@@ -50,25 +50,26 @@ public class WebServiceContextInjector
       try
       {
          // scan fields that are marked with @Resource
-         Field[] fields = epImpl.getClass().getFields();
+         Field[] fields = epImpl.getClass().getDeclaredFields();
          for (Field field : fields)
          {
             Class type = field.getType();
             if (type == WebServiceContext.class && field.isAnnotationPresent(Resource.class))
             {
+               field.setAccessible(true);
                field.set(epImpl, webServiceContext);
             }
          }
 
          // scan methods that are marked with @Resource
-         Method[] methods = epImpl.getClass().getMethods();
+         Method[] methods = epImpl.getClass().getDeclaredMethods();
          for (Method method : methods)
          {
             Class[] paramTypes = method.getParameterTypes();
             if (paramTypes.length == 1 && paramTypes[0] == WebServiceContext.class && method.isAnnotationPresent(Resource.class))
             {
+               method.setAccessible(true);
                method.invoke(epImpl, new Object[] { webServiceContext });
-
             }
          }
       }
