@@ -23,6 +23,8 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id$
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.Iterator;
 
@@ -35,8 +37,11 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.core.utils.DOMUtils;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 
@@ -47,7 +52,11 @@ import org.jboss.ws.core.soap.SOAPContentElement;
  */
 public class LogicalMessageImpl implements LogicalMessage
 {
+   // provide logging
+   private static final Logger log = Logger.getLogger(LogicalMessageImpl.class);
+   
    private SOAPBodyImpl soapBody;
+   private boolean setPayloadBodyChild;
 
    public LogicalMessageImpl(SOAPMessage soapMessage)
    {
@@ -64,18 +73,12 @@ public class LogicalMessageImpl implements LogicalMessage
    public Source getPayload()
    {
       Source source = soapBody.getPayload();
+      setPayloadBodyChild = false;
       if (source == null)
       {
          SOAPContentElement soapElement = (SOAPContentElement)soapBody.getChildElements().next();
-         if (soapElement.isDOMValid())
-         {
-            source = new DOMSource(soapElement);
-         }
-         else
-         {
-            String xmlPayload = soapElement.getXMLFragment();
-            source = new StreamSource(new StringReader(xmlPayload));
-         }
+         source = soapElement.getPayload();
+         setPayloadBodyChild = true;
       }
       return source;
    }
@@ -83,6 +86,11 @@ public class LogicalMessageImpl implements LogicalMessage
    public void setPayload(Source source)
    {
       soapBody.setPayload(source);
+      if (setPayloadBodyChild)
+      {
+         SOAPContentElement soapElement = (SOAPContentElement)soapBody.getChildElements().next();
+         soapElement.setPayload(source);
+      }
    }
 
    public Object getPayload(JAXBContext jaxbContext)

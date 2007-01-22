@@ -38,6 +38,11 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -159,6 +164,38 @@ public class SOAPContentElement extends SOAPElementImpl
    public boolean isFragmentValid()
    {
       return xmlFragment != null;
+   }
+   
+   /** Get the payload as source. 
+    */
+   public Source getPayload()
+   {
+      // expand to DOM, so the source is repeatedly readable
+      expandToDOM();
+      return new DOMSource(this);
+   }
+
+   /** Set the payload as source 
+    */
+   public void setPayload(Source source)
+   {
+      try
+      {
+         TransformerFactory tf = TransformerFactory.newInstance();
+         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+         tf.newTransformer().transform(source, new StreamResult(baos));
+         String xmlFragment = new String(baos.toByteArray());
+         if (xmlFragment.startsWith("<?xml"))
+         {
+            int index = xmlFragment.indexOf(">");
+            xmlFragment = xmlFragment.substring(index + 1);
+         }
+         setXMLFragment(xmlFragment);
+      }
+      catch (TransformerException ex)
+      {
+         WSException.rethrow(ex);
+      }
    }
 
    public String getXMLFragment()
