@@ -90,6 +90,9 @@ public class ServiceObjectFactory implements ObjectFactory
       {
          Reference ref = (Reference)obj;
 
+         // Get the target class name
+         String targetClassName = (String)ref.get(ServiceReferenceable.TARGET_CLASS_NAME).getContent();
+
          // Unmarshall the UnifiedServiceRef
          UnifiedServiceRef usRef = unmarshallServiceRef(ref);
          String serviceRefName = usRef.getServiceRefName();
@@ -99,20 +102,20 @@ public class ServiceObjectFactory implements ObjectFactory
          if (serviceClassName == null)
             serviceClassName = (String)ref.get(ServiceReferenceable.SERVICE_CLASS_NAME).getContent();
 
+         // If the target defaults to javax.xml.ws.Service, user the service as the target
+         if (Service.class.getName().equals(targetClassName))
+            targetClassName = serviceClassName;
+         
          log.debug("Service class name: " + serviceClassName);
+         log.debug("Target class name: " + targetClassName);
 
          // Load the service class
          ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
          Class serviceClass = ctxLoader.loadClass(serviceClassName);
+         Class targetClass = (targetClassName != null ? ctxLoader.loadClass(targetClassName) : null);
 
          if (Service.class.isAssignableFrom(serviceClass) == false)
             throw new IllegalArgumentException("WebServiceRef type '" + serviceClass + "' is not assignable to javax.xml.ws.Service");
-
-         // Load the target class
-         String targetClassName = (String)ref.get(ServiceReferenceable.TARGET_CLASS_NAME).getContent();
-         Class targetClass = (targetClassName != null ? ctxLoader.loadClass(targetClassName) : null);
-
-         log.debug("Target class name: " + serviceClassName);
 
          // Receives either a javax.xml.ws.Service or a dynamic proxy
          Object target;

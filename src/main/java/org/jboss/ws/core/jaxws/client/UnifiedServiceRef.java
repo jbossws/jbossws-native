@@ -47,6 +47,7 @@ public class UnifiedServiceRef implements Serializable
    private QName serviceQName;
    private String configName;
    private String configFile;
+   private String handlerChain;
    private List<PortInfo> portInfos = new ArrayList<PortInfo>();
    private String wsdlLocation;
 
@@ -90,21 +91,6 @@ public class UnifiedServiceRef implements Serializable
       this.serviceQName = serviceQName;
    }
    
-   public List<PortInfo> getPortInfos()
-   {
-      return portInfos;
-   }
-
-   public String getWsdlLocation()
-   {
-      return wsdlLocation;
-   }
-
-   public void setWsdlLocation(String wsdlLocation)
-   {
-      this.wsdlLocation = wsdlLocation;
-   }
-
    public String getConfigFile()
    {
       return configFile;
@@ -123,6 +109,31 @@ public class UnifiedServiceRef implements Serializable
    public void setConfigName(String configName)
    {
       this.configName = configName;
+   }
+
+   public String getHandlerChain()
+   {
+      return handlerChain;
+   }
+
+   public void setHandlerChain(String handlerChain)
+   {
+      this.handlerChain = handlerChain;
+   }
+
+   public List<PortInfo> getPortInfos()
+   {
+      return portInfos;
+   }
+
+   public String getWsdlLocation()
+   {
+      return wsdlLocation;
+   }
+
+   public void setWsdlLocation(String wsdlLocation)
+   {
+      this.wsdlLocation = wsdlLocation;
    }
 
    public String toString()

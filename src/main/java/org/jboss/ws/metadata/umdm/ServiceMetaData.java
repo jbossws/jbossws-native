@@ -72,6 +72,7 @@ public class ServiceMetaData
    private String wsdName;
    private URL wsdlLocation;
    private URL mappingLocation;
+   private String handlerChain;
    private String wsdlPublishLocation;
 
    // The type mapping that is maintained by this service
@@ -128,6 +129,16 @@ public class ServiceMetaData
    public void setWsdlLocation(URL wsdlLocation)
    {
       this.wsdlLocation = wsdlLocation;
+   }
+
+   public String getHandlerChain()
+   {
+      return handlerChain;
+   }
+
+   public void setHandlerChain(String handlerChain)
+   {
+      this.handlerChain = handlerChain;
    }
 
    public String getWsdlPublishLocation()
@@ -367,7 +378,8 @@ public class ServiceMetaData
       buffer.append("\n qname=" + serviceName);
       buffer.append("\n wsdName=" + wsdName);
       buffer.append("\n wsdlFile=" + wsdlLocation);
-      buffer.append("\n jaxrpcFile=" + mappingLocation);
+      buffer.append("\n mappingFile=" + mappingLocation);
+      buffer.append("\n handlerChain=" + handlerChain);
       buffer.append("\n publishLocation=" + wsdlPublishLocation);
       buffer.append("\n properties=" + properties);
       buffer.append("\n" + types);

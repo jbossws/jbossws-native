@@ -93,10 +93,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName)
    {
-      // If this Service was constructed through the ServiceObjectFactory
-      // this thread local association should be available
-      usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
-      
       if (wsdlURL != null)
       {
          JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
@@ -108,6 +104,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
          serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
       }
+      
+      // If this Service was constructed through the ServiceObjectFactory
+      // this thread local association should be available
+      usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
+      if (usRef != null && usRef.getHandlerChain() != null)
+         serviceMetaData.setHandlerChain(usRef.getHandlerChain());
    }
 
    /**
@@ -196,7 +198,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    private void assertSEIConstraints(Class seiClass)
    {
-
       if (seiClass == null)
          throw new IllegalArgumentException("Service endpoint interface cannot be null");
 

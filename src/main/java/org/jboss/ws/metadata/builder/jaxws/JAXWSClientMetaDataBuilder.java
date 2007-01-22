@@ -192,8 +192,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       epMetaData.configure(epMetaData);
 
       // Process an optional @HandlerChain annotation
-      if (wsClass.isAnnotationPresent(HandlerChain.class))
-         processHandlerChain(epMetaData, wsClass);
+      processHandlerChain(epMetaData, wsClass);
 
       // Process @WebMethod
       processWebMethods(epMetaData, wsClass);

@@ -152,10 +152,18 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (wsClass.isAnnotationPresent(SOAPMessageHandlers.class))
          throw new WSException("Cannot combine @HandlerChain with @SOAPMessageHandlers");
 
+      // The explicit handler chain on the service has priority 
+      String filename = epMetaData.getServiceMetaData().getHandlerChain();
+      
       HandlerChain anHandlerChain = wsClass.getAnnotation(HandlerChain.class);
+      if (filename == null && anHandlerChain != null)
+         filename = anHandlerChain.file();
 
+      // Nothing to do
+      if (filename == null)
+         return;
+      
       URL fileURL = null;
-      String filename = anHandlerChain.file();
       log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
 
       // Try the filename as URL
