@@ -108,8 +108,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
       // If this Service was constructed through the ServiceObjectFactory
       // this thread local association should be available
       usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
-      if (usRef != null && usRef.getHandlerChain() != null)
-         serviceMetaData.setHandlerChain(usRef.getHandlerChain());
+      if (usRef != null)
+      {
+         serviceMetaData.setServiceRefName(usRef.getServiceRefName());
+         if (usRef.getHandlerChain() != null)
+            serviceMetaData.setHandlerChain(usRef.getHandlerChain());
+      }
    }
 
    /**

@@ -106,8 +106,7 @@ public class ServiceObjectFactory implements ObjectFactory
          if (Service.class.getName().equals(targetClassName))
             targetClassName = serviceClassName;
          
-         log.debug("Service class name: " + serviceClassName);
-         log.debug("Target class name: " + targetClassName);
+         log.debug("[name=" + serviceRefName + ",service=" + serviceClassName + ",target=" + targetClassName + "]");
 
          // Load the service class
          ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();

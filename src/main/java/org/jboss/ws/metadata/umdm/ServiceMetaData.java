@@ -69,6 +69,7 @@ public class ServiceMetaData
    private Map<QName, EndpointMetaData> endpoints = new LinkedHashMap<QName, EndpointMetaData>();
 
    private QName serviceName;
+   private String serviceRefName;
    private String wsdName;
    private URL wsdlLocation;
    private URL mappingLocation;
@@ -109,6 +110,16 @@ public class ServiceMetaData
    public QName getServiceName()
    {
       return serviceName;
+   }
+
+   public String getServiceRefName()
+   {
+      return serviceRefName;
+   }
+
+   public void setServiceRefName(String serviceRefName)
+   {
+      this.serviceRefName = serviceRefName;
    }
 
    public String getWebserviceDescriptionName()
@@ -376,9 +387,10 @@ public class ServiceMetaData
    {
       StringBuilder buffer = new StringBuilder("\nServiceMetaData:");
       buffer.append("\n qname=" + serviceName);
+      buffer.append("\n refName=" + serviceRefName);
       buffer.append("\n wsdName=" + wsdName);
-      buffer.append("\n wsdlFile=" + wsdlLocation);
-      buffer.append("\n mappingFile=" + mappingLocation);
+      buffer.append("\n wsdlLocation=" + wsdlLocation);
+      buffer.append("\n jaxrpcMapping=" + mappingLocation);
       buffer.append("\n handlerChain=" + handlerChain);
       buffer.append("\n publishLocation=" + wsdlPublishLocation);
       buffer.append("\n properties=" + properties);

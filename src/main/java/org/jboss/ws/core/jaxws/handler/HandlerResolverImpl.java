@@ -111,7 +111,7 @@ public class HandlerResolverImpl implements HandlerResolver
          log.debug("add general handlers: " + list);
          unsortedChain.addAll(list);
       }
-      
+
       // Sort handler logical handlers first
       List<Handler> sortedChain = new ArrayList<Handler>();
       for (Handler handler : unsortedChain)
@@ -124,7 +124,7 @@ public class HandlerResolverImpl implements HandlerResolver
          if ((handler instanceof LogicalHandler) == false)
             sortedChain.add(handler);
       }
-      
+
       return Collections.unmodifiableList(sortedChain);
    }
 
@@ -133,7 +133,7 @@ public class HandlerResolverImpl implements HandlerResolver
       log.debug("initHandlerChain: " + type);
 
       // clear all exisisting handler to avoid double registration
-      log.debug("Clear handler map: " +handlerMap);
+      log.debug("Clear handler map: " + handlerMap);
 
       for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(type))
       {
@@ -155,7 +155,7 @@ public class HandlerResolverImpl implements HandlerResolver
             if (handler instanceof GenericSOAPHandler)
                ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
 
-            List<PortInfo> infos = getPortInfo(epMetaData, jaxwsMetaData);
+            List<PortInfo> infos = getPortInfos(epMetaData, jaxwsMetaData);
             for (PortInfo info : infos)
             {
                addHandler(info, handler);
@@ -172,7 +172,7 @@ public class HandlerResolverImpl implements HandlerResolver
       }
    }
 
-   private List<PortInfo> getPortInfo(EndpointMetaData epMetaData, HandlerMetaDataJAXWS handlerMetaData)
+   private List<PortInfo> getPortInfos(EndpointMetaData epMetaData, HandlerMetaDataJAXWS handlerMetaData)
    {
       String protocols = handlerMetaData.getProtocolBindings();
       QName services = handlerMetaData.getServiceNamePattern();
