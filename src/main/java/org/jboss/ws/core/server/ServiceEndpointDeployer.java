@@ -30,7 +30,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCDeployment;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
-import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB21;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -88,11 +87,6 @@ public class ServiceEndpointDeployer
          else if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXWS_JSE)
          {
             JAXWSMetaDataBuilderJSE builder = new JAXWSMetaDataBuilderJSE();
-            wsMetaData = builder.buildMetaData(udi);
-         }
-         else if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXWS_EJB21)
-         {
-            JAXWSMetaDataBuilderEJB21 builder = new JAXWSMetaDataBuilderEJB21();
             wsMetaData = builder.buildMetaData(udi);
          }
          else if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXWS_EJB3)

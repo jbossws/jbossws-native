@@ -68,7 +68,7 @@ public class ServiceEndpointInfo
       {
          this.type = EndpointType.JSE;
       }
-      else if (udi.type == DeploymentType.JAXRPC_EJB21 || udi.type == DeploymentType.JAXWS_EJB21)
+      else if (udi.type == DeploymentType.JAXRPC_EJB21)
       {
          String ejbName = sepMetaData.getLinkName();
          if (ejbName == null)

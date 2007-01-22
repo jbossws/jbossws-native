@@ -41,7 +41,7 @@ public class UnifiedDeploymentInfo
 {
    public enum DeploymentType
    {
-      JAXRPC_Client, JAXRPC_JSE, JAXRPC_EJB21, JAXRPC_EJB3, JAXWS_JSE, JAXWS_EJB21, JAXWS_EJB3
+      JAXRPC_Client, JAXRPC_JSE, JAXRPC_EJB21, JAXRPC_EJB3, JAXWS_JSE, JAXWS_EJB3
    };
 
    public UnifiedDeploymentInfo(DeploymentType type)
