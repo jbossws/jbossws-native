@@ -206,6 +206,39 @@ public class HolderUtils
    }
 
    /**
+    * Gets the value type of a JAX-RPC holder. Note this method should not be used 
+    * for JAX-WS, as a JAX-WS holder requires generic info. Instead, use the Type 
+    * version.
+    *
+    * @param holderType the generic type for JAX-WS, a standard class for JAX-RPC
+    * @return the value type
+    */
+   public static Class getValueType(Class holderClass)
+   {
+      boolean jaxrpcHolder = javax.xml.rpc.holders.Holder.class.isAssignableFrom(holderClass);
+      boolean jaxwsHolder = javax.xml.ws.Holder.class.isAssignableFrom(holderClass);
+      if (!jaxrpcHolder && !jaxwsHolder)
+         throw new IllegalArgumentException("Is not a holder: " + holderClass.getName());
+
+      // No generic info
+      if (jaxwsHolder)
+         return Object.class;
+
+      // Holder is supposed to have a public value field.
+      Field field;
+      try
+      {
+         field = holderClass.getField("value");
+      }
+      catch (NoSuchFieldException e)
+      {
+         throw new IllegalArgumentException("Cannot find public value field: " + holderClass);
+      }
+
+      return field.getType();
+   }
+
+   /**
     * Gets the value object of a JAX-WS or JAX-RPC holder instance.
     *
     * @param holder the holder object instance
@@ -282,10 +315,14 @@ public class HolderUtils
     * @param holder JAX-WS holder type
     * @return generic value type
     */
-   // [JBBUILD-331] Add support for java.lang.reflect.Type
    public static Type getGenericValueType(Type holder)
    {
-      return (holder instanceof ParameterizedType) ? ((ParameterizedType)holder).getActualTypeArguments()[0] : Object.class;
+      // For some reason the JDK 4 bytecode verifier trips up on this function if you use the ternary operator
+      // The only difference between it and the working form here is the use of a goto instruction. JDK bug perhaps?
+      if (holder instanceof ParameterizedType) 
+        return ((ParameterizedType)holder).getActualTypeArguments()[0];
+     
+      return Object.class;
    }
 
 

@@ -586,6 +586,17 @@ public class JavaUtils
 
       return ret;
    }
+   
+   /**
+    * This method tests for retro translation by searching for a known problem where Class
+    * does not implement Type. If this is true, then code must never cast a Class to a Type.
+    * 
+    * @return true if we are in retro
+    */
+   public static boolean isRetro14()
+   {
+      return !(String.class instanceof java.lang.reflect.Type);
+   }
 
    /**
     * Tests if this class loader is a JBoss RepositoryClassLoader

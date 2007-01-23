@@ -109,13 +109,21 @@ public class ParameterMetaData
    private static boolean matchParameter(Method method, int index, Class expectedType, Set<Integer> matches, boolean exact, boolean holder)
    {
       Class returnType = method.getReturnType();
-      Type[] parameters = method.getGenericParameterTypes();
+      Type[] genericParameters = method.getGenericParameterTypes();
+      Class[] classParameters = method.getParameterTypes();
 
       if (index == -1 && matchTypes(returnType, expectedType, exact, false))
          return true;
 
-      boolean indexInBounds = -1 < index && index < parameters.length;
-      if (indexInBounds && matchTypes(parameters[index], expectedType, exact, holder))
+      boolean indexInBounds = -1 < index && index < classParameters.length;
+      boolean matchTypes;
+      
+      if (JavaUtils.isRetro14())
+         matchTypes = matchTypes(classParameters[index], expectedType, exact, holder);
+      else 
+         matchTypes = matchTypes(genericParameters[index], expectedType, exact, holder);
+      
+      if (indexInBounds && matchTypes)
       {
          matches.add(index);
          return true;
@@ -123,7 +131,7 @@ public class ParameterMetaData
 
       return false;
    }
-
+   
    private static boolean matchTypes(Type actualType, Class expectedType, boolean exact, boolean holder)
    {
       if (holder && HolderUtils.isHolderType(actualType) == false)
@@ -132,6 +140,24 @@ public class ParameterMetaData
       Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
       Class valueClass = JavaUtils.erasure(valueType);
 
+      return matchTypesInternal(valueClass, expectedType, exact);
+   }
+
+   // This duplication is needed because Class does not implement Type in 1.4, 
+   // which makes retrotranslation not possible. This takes advantage of overloading to
+   // prevent the problem.
+   private static boolean matchTypes(Class actualType, Class expectedType, boolean exact, boolean holder)
+   {
+      if (holder && HolderUtils.isHolderType(actualType) == false)
+         return false;
+
+      Class valueClass = (holder ? HolderUtils.getValueType(actualType) : actualType);
+
+      return matchTypesInternal(valueClass, expectedType, exact);
+   }
+   
+   private static boolean matchTypesInternal(Class valueClass, Class expectedType, boolean exact)
+   {
       // FIXME - Why do we need this hack? It shouldn't be needed. The method
       // signature should _ALWAYS_ match, else we will get ambiguous or
       // incorrect results
