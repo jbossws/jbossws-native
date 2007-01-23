@@ -29,12 +29,14 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 import javax.xml.rpc.soap.SOAPFaultException;
+import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
+import org.jboss.ws.core.jaxws.WebServiceContextImpl;
 import org.jboss.ws.core.jaxws.WebServiceContextInjector;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -89,7 +91,10 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
       {
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext instanceof SOAPMessageContextJAXWS)
-            new WebServiceContextInjector().injectContext(seiImpl, (SOAPMessageContextJAXWS)msgContext);
+         {
+            WebServiceContext wsContext = new WebServiceContextImpl((SOAPMessageContextJAXWS)msgContext);
+            new WebServiceContextInjector().injectContext(seiImpl, wsContext);
+         }
          
          Class implClass = seiImpl.getClass();
          Method seiMethod = epInv.getJavaMethod();
