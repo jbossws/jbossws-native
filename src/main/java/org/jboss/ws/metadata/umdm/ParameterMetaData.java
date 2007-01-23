@@ -115,7 +115,9 @@ public class ParameterMetaData
       if (index == -1 && matchTypes(returnType, expectedType, exact, false))
          return true;
 
-      boolean indexInBounds = -1 < index && index < classParameters.length;
+      if (index < 0 || index >= classParameters.length)
+         return false;
+
       boolean matchTypes;
       
       if (JavaUtils.isRetro14())
@@ -123,7 +125,7 @@ public class ParameterMetaData
       else 
          matchTypes = matchTypes(genericParameters[index], expectedType, exact, holder);
       
-      if (indexInBounds && matchTypes)
+      if (matchTypes)
       {
          matches.add(index);
          return true;
