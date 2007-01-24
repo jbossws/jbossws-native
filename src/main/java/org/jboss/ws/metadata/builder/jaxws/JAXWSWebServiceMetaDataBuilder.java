@@ -142,7 +142,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          // process endpoint meta data extensions
          processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
-
+         
          // init service endpoint id
          ObjectName sepID = MetaDataBuilder.createServiceEndpointID(udi, sepMetaData);
          sepMetaData.setServiceEndpointID(sepID);
@@ -161,51 +161,51 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    
    private EndpointResult processWebService(UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi) throws ClassNotFoundException, IOException
    {
-      WebService anWebService = sepClass.getAnnotation(WebService.class);
-      if (anWebService == null)
+      WebService endpointImplAnnotation = sepClass.getAnnotation(WebService.class);
+      if (endpointImplAnnotation == null)
          throw new WSException("Cannot obtain @WebService annotation from: " + sepClass.getName());
 
       Class<?> seiClass = null;
       String seiName;
       WSDLUtils wsdlUtils = WSDLUtils.getInstance();
 
-      String name = anWebService.name();
+      String name = endpointImplAnnotation.name();
       if (name.length() == 0)
          name = WSDLUtils.getJustClassName(sepClass);
 
-      String serviceName = anWebService.serviceName();
+      String serviceName = endpointImplAnnotation.serviceName();
       if (serviceName.length() == 0)
          serviceName = name + "Service";
 
-      String serviceNS = anWebService.targetNamespace();
+      String serviceNS = endpointImplAnnotation.targetNamespace();
       if (serviceNS.length() == 0)
          serviceNS = wsdlUtils.getTypeNamespace(sepClass);
 
-      String portName = anWebService.portName();
+      String portName = endpointImplAnnotation.portName();
       if (portName.length() == 0)
          portName = name + "Port";
 
-      String wsdlLocation = anWebService.wsdlLocation();
-      String interfaceNS = serviceNS;
+      String wsdlLocation = endpointImplAnnotation.wsdlLocation();
+      String interfaceNS = serviceNS; // the default, but a SEI annotation may override this
 
-      if (anWebService.endpointInterface().length() > 0)
+      if (endpointImplAnnotation.endpointInterface().length() > 0)
       {
-         seiName = anWebService.endpointInterface();
+         seiName = endpointImplAnnotation.endpointInterface();
          seiClass = udi.classLoader.loadClass(seiName);
-         anWebService = seiClass.getAnnotation(WebService.class);
+         WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 
-         if (anWebService == null)
+         if (seiAnnotation == null)
             throw new WSException("Interface does not have a @WebService annotation: " + seiName);
 
-         if (anWebService.portName().length() > 0 || anWebService.serviceName().length() > 0 || anWebService.endpointInterface().length() > 0)
+         if (seiAnnotation.portName().length() > 0 || seiAnnotation.serviceName().length() > 0 || seiAnnotation.endpointInterface().length() > 0)
             throw new WSException("@WebService[portName,serviceName,endpointInterface] MUST NOT be defined on: " + seiName);
 
-         // Redfine the interface or "PortType" name
-         name = anWebService.name();
+         // Redefine the interface or "PortType" name
+         name = seiAnnotation.name();
          if (name.length() == 0)
             name = WSDLUtils.getJustClassName(seiClass);
 
-         interfaceNS = anWebService.targetNamespace();
+         interfaceNS = seiAnnotation.targetNamespace();
          if (interfaceNS.length() == 0)
             interfaceNS = wsdlUtils.getTypeNamespace(seiClass);
 
@@ -214,7 +214,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // when wsdlLocation is defined on the bean
 
          if (wsdlLocation.length() == 0)
-            wsdlLocation = anWebService.wsdlLocation();
+            wsdlLocation = seiAnnotation.wsdlLocation();
       }
 
       // Setup the ServerEndpointMetaData

@@ -23,38 +23,8 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
-import java.io.File;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.jws.HandlerChain;
-import javax.jws.Oneway;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPMessageHandlers;
-import javax.jws.soap.SOAPBinding.ParameterStyle;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.BindingType;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
-import javax.xml.ws.WebFault;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.Action;
-
+import com.sun.xml.bind.api.JAXBRIContext;
+import com.sun.xml.bind.api.TypeReference;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -73,20 +43,38 @@ import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.jsr181.HandlerChainFactory;
 import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
 import org.jboss.ws.metadata.jsr181.HandlerChainsMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.FaultMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
-import org.jboss.ws.metadata.umdm.TypesMetaData;
-import org.jboss.ws.metadata.umdm.WrappedParameter;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;
 
-import com.sun.xml.bind.api.JAXBRIContext;
-import com.sun.xml.bind.api.TypeReference;
+import javax.jws.*;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.jws.soap.SOAPMessageHandlers;
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.BindingType;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
+import javax.xml.ws.WebFault;
+import javax.xml.ws.addressing.Action;
+import javax.xml.ws.addressing.AddressingProperties;
+import java.io.File;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract class that represents a JAX-WS metadata builder.
@@ -503,7 +491,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    /**
     * Process operation meta data extensions.
     */
-   private void processMetaExtensions(Method method, EndpointMetaData epMetaData, OperationMetaData opMetaData)
+   private void processOpMetaExtensions(Method method, EndpointMetaData epMetaData, OperationMetaData opMetaData)
    {
       AddressingProperties ADDR = new AddressingPropertiesImpl();
       AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
@@ -518,11 +506,14 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          // TODO: figure out a way to assign message name instead of IN and OUT
          String tns = epMetaData.getPortName().getNamespaceURI();
+         if(tns.length()>0 && !"/".equals(tns.substring(tns.length()-1)))
+            tns = tns+"/";
+
          String portTypeName = epMetaData.getPortName().getLocalPart();
-         addrExt.setInboundAction(tns + "/" + portTypeName + "/IN");
+         addrExt.setInboundAction(tns + portTypeName + "/IN");
 
          if (!opMetaData.isOneWay())
-            addrExt.setOutboundAction(tns + "/" + portTypeName + "/OUT");
+            addrExt.setOutboundAction(tns + portTypeName + "/OUT");
       }
 
       opMetaData.addExtension(addrExt);
@@ -739,7 +730,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             addFault(opMetaData, exClass);
 
       // process op meta data extension
-      processMetaExtensions(method, epMetaData, opMetaData);
+      processOpMetaExtensions(method, epMetaData, opMetaData);
    }
 
    protected void processWebMethods(EndpointMetaData epMetaData, Class wsClass)
