@@ -47,12 +47,7 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
@@ -88,7 +83,7 @@ public class ServiceImpl implements ServiceExt
     */
    ServiceImpl(QName serviceName)
    {
-      UnifiedMetaData wsMetaData = new UnifiedMetaData();
+      UnifiedMetaData wsMetaData = new UnifiedMetaData(new DefaultFileAdapter());
       serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
       handlerRegistry = new HandlerRegistryImpl(serviceMetaData);
    }

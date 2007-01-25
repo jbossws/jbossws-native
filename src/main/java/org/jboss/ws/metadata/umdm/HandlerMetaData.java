@@ -152,8 +152,8 @@ public abstract class HandlerMetaData implements Serializable
       List<String> securityHandlers = new ArrayList<String>();
       securityHandlers.add(org.jboss.ws.extensions.security.jaxrpc.WSSecurityHandlerInbound.class.getName());
       securityHandlers.add(org.jboss.ws.extensions.security.jaxrpc.WSSecurityHandlerOutbound.class.getName());
-      securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerInbound.class.getName());
-      securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerOutbound.class.getName());
+      securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerServer.class.getName());
+      securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerClient.class.getName());
       
       if (securityHandlers.contains(handlerClassName))
       {

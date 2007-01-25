@@ -75,10 +75,7 @@ public class DynamicWrapperGenerator extends WrapperGenerator
     */
    public void generate(ParameterMetaData pmd)
    {
-      // If a wrapper already present, no need to generate one
       String wrapperName = pmd.getJavaTypeName();
-      if (JavaUtils.isLoaded(wrapperName, loader))
-         return;
 
       List<WrappedParameter> wrappedParameters = pmd.getWrappedParameters();
       OperationMetaData opMetaData = pmd.getOperationMetaData();
@@ -119,11 +116,7 @@ public class DynamicWrapperGenerator extends WrapperGenerator
 
    public void generate(FaultMetaData fmd)
    {
-      // If a wrapper already present, no need to generate one
       String faultBeanName = fmd.getFaultBeanName();
-      if (faultBeanName == null || JavaUtils.isLoaded(faultBeanName, loader))
-         return;
-
       log.debug("Generating fault bean: " + faultBeanName);
 
       QName xmlType = fmd.getXmlType();

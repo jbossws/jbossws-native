@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.server.ServiceEndpointManager;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 
@@ -57,6 +58,8 @@ public class UnifiedMetaData
    private String deploymentName;
    // The modules class loader
    private ClassLoader classLoader;
+   // The resource loader
+   private UnifiedVirtualFile vfsRoot;
    // The optional security domain
    private String securityDomain;
    // The implementation version
@@ -76,8 +79,12 @@ public class UnifiedMetaData
    // Used by validate
    private boolean validated;
 
-   public UnifiedMetaData()
-   {
+   public UnifiedMetaData(UnifiedVirtualFile vfsRoot) {
+
+      if(null==vfsRoot)
+         throw new IllegalArgumentException("VFS root cannot be null");
+      
+      this.vfsRoot = vfsRoot;
       this.classLoader = Thread.currentThread().getContextClassLoader();
    }
 
@@ -87,6 +94,10 @@ public class UnifiedMetaData
          throw new IllegalStateException ("Class loader not available");
       
       return classLoader;
+   }
+
+   public UnifiedVirtualFile getVfsRoot() {
+      return vfsRoot;
    }
 
    public void setClassLoader(ClassLoader classLoader)

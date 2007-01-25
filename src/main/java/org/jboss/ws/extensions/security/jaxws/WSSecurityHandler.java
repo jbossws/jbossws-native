@@ -23,15 +23,20 @@ package org.jboss.ws.extensions.security.jaxws;
 
 // $Id$
 
-import javax.xml.soap.SOAPException;
-import javax.xml.ws.handler.MessageContext;
-
 import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+
+import javax.xml.soap.SOAPException;
+import javax.xml.ws.handler.MessageContext;
+import java.io.IOException;
 
 /**
  * An abstract JAXWS handler that delegates to the WSSecurityDispatcher
@@ -43,7 +48,7 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
 {
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityHandler.class);
-   
+
    protected boolean handleInboundSecurity(MessageContext msgContext)
    {
       try
@@ -78,13 +83,43 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
       return true;
    }
 
+   /**
+    * Load security config from vfsRoot
+    * @param msgContext
+    */
    private WSSecurityConfiguration getSecurityConfiguration(MessageContext msgContext)
    {
       EndpointMetaData epMetaData = ((CommonMessageContext)msgContext).getEndpointMetaData();
-      WSSecurityConfiguration securityConfiguration = epMetaData.getServiceMetaData().getSecurityConfiguration();
-      if (securityConfiguration == null)
-         log.warn("Cannot obtain security configuration");
-      
-      return securityConfiguration;
+      ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+
+      if(null == serviceMetaData.getSecurityConfiguration()) // might be set through ServiceObjectFactory
+      {
+         UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getVfsRoot();
+         boolean successful = false;
+         WSSecurityConfiguration config = null;
+         try
+         {
+            WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
+            config = wsseConfFactory.createConfiguration(vfsRoot, getConfigResourceName());
+            if(config!=null) successful = true;
+
+         }
+         catch (IOException e)
+         {
+            successful = false;
+         }
+
+         if(!successful)
+            throw new WSException("Failed to access security config");
+
+         // it's required further down the processing chain
+         // TODO: cleanup
+         serviceMetaData.setSecurityConfiguration(config);
+
+      }
+
+      return serviceMetaData.getSecurityConfiguration();
    }
+
+   protected abstract String getConfigResourceName();
 }

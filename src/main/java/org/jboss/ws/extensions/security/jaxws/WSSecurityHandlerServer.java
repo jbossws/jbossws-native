@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.security.jaxws;
 
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+
 import javax.xml.ws.handler.MessageContext;
 
 // $Id$
@@ -32,7 +34,7 @@ import javax.xml.ws.handler.MessageContext;
  * @author Thomas.Diesler@jboss.org
  * @since 12-Nov-2005
  */
-public class WSSecurityHandlerInbound extends WSSecurityHandler
+public class WSSecurityHandlerServer extends WSSecurityHandler
 {
    protected boolean handleInbound(MessageContext msgContext)
    {
@@ -42,5 +44,9 @@ public class WSSecurityHandlerInbound extends WSSecurityHandler
    protected boolean handleOutbound(MessageContext msgContext)
    {
       return handleOutboundSecurity(msgContext);
+   }
+
+   protected String getConfigResourceName() {
+      return WSSecurityOMFactory.SERVER_RESOURCE_NAME; 
    }
 }

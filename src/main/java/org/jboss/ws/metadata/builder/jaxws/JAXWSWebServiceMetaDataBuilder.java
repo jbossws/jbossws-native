@@ -34,6 +34,7 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
@@ -88,7 +89,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          // Assign the WS-Security configuration,
          WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(udi);
+         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(
+            wsMetaData.getVfsRoot(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
+         );
          serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
          // Process an optional @SOAPBinding annotation

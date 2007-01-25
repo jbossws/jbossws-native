@@ -167,6 +167,11 @@ public class PayloadBinding implements CommonBinding, BindingExt
       delegate.setHandlerChain(handlerChain);
    }
    
+   public void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType)
+   {
+      delegate.setHandlerChain(handlerChain, handlerType);
+   }
+   
    private void handleException(Exception ex) throws BindingException
    {
       if (ex instanceof RuntimeException)

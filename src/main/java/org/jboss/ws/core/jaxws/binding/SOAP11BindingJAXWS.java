@@ -96,6 +96,11 @@ public class SOAP11BindingJAXWS extends CommonSOAP11Binding implements BindingEx
       delegate.setHandlerChain(handlerChain);
    }
 
+   public void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType)
+   {
+      delegate.setHandlerChain(handlerChain, handlerType);
+   }
+   
    public SOAPMessage createFaultMessageFromException(Exception ex)
    {
       return SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);

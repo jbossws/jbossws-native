@@ -63,17 +63,26 @@ public class HandlerResolverImpl implements HandlerResolver
 {
    private static Logger log = Logger.getLogger(HandlerResolverImpl.class);
 
-   private Map<PortInfo, List<Handler>> handlerMap = new HashMap<PortInfo, List<Handler>>();
+   private Map<PortInfo, List<Handler>> preHandlers = new HashMap<PortInfo, List<Handler>>();
+   private Map<PortInfo, List<Handler>> jaxwsHandlers = new HashMap<PortInfo, List<Handler>>();
+   private Map<PortInfo, List<Handler>> postHandlers = new HashMap<PortInfo, List<Handler>>();
 
    public List<Handler> getHandlerChain(PortInfo info)
    {
-      log.debug("getHandlerChain: " + info);
+      return getHandlerChain(info, HandlerType.ENDPOINT);
+   }
+   
+   public List<Handler> getHandlerChain(PortInfo info, HandlerType type)
+   {
+      log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
 
       List<Handler> unsortedChain = new ArrayList<Handler>();
 
       String bindingID = info.getBindingID();
       QName serviceName = info.getServiceName();
       QName portName = info.getPortName();
+      
+      Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
 
       if (bindingID != null)
       {
@@ -133,7 +142,9 @@ public class HandlerResolverImpl implements HandlerResolver
       log.debug("initHandlerChain: " + type);
 
       // clear all exisisting handler to avoid double registration
-      log.debug("Clear handler map: " + handlerMap);
+      log.debug("Clear handler map: " + jaxwsHandlers);
+      Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
+      handlerMap.clear();
 
       for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(type))
       {
@@ -158,7 +169,7 @@ public class HandlerResolverImpl implements HandlerResolver
             List<PortInfo> infos = getPortInfos(epMetaData, jaxwsMetaData);
             for (PortInfo info : infos)
             {
-               addHandler(info, handler);
+               addHandler(info, handler, type);
             }
          }
          catch (RuntimeException rte)
@@ -273,10 +284,11 @@ public class HandlerResolverImpl implements HandlerResolver
       return infos;
    }
 
-   public boolean addHandler(PortInfo info, Handler handler)
+   private boolean addHandler(PortInfo info, Handler handler, HandlerType type)
    {
       log.debug("addHandler: " + info + ":" + handler);
 
+      Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
       List<Handler> handlerList = handlerMap.get(info);
       if (handlerList == null)
       {
@@ -285,5 +297,17 @@ public class HandlerResolverImpl implements HandlerResolver
       handlerList.add(handler);
 
       return true;
+   }
+
+   private Map<PortInfo, List<Handler>> getHandlerMap(HandlerType type)
+   {
+      Map<PortInfo, List<Handler>> handlerMap = null;
+      if (type == HandlerType.PRE)
+         handlerMap = preHandlers;
+      else if (type == HandlerType.ENDPOINT)
+         handlerMap = jaxwsHandlers;
+      else if (type == HandlerType.POST)
+         handlerMap = postHandlers;
+      return handlerMap;
    }
 }

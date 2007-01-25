@@ -89,6 +89,11 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
       delegate.setHandlerChain(handlerChain);
    }
 
+   public void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType)
+   {
+      delegate.setHandlerChain(handlerChain, handlerType);
+   }
+   
    public String getBindingID()
    {
       throw new NotImplementedException();

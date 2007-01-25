@@ -24,7 +24,6 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +42,7 @@ import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveXOPScanner;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * A request/response parameter that a given operation supports.
@@ -109,21 +109,25 @@ public class ParameterMetaData
    private static boolean matchParameter(Method method, int index, Class expectedType, Set<Integer> matches, boolean exact, boolean holder)
    {
       Class returnType = method.getReturnType();
-      Type[] genericParameters = method.getGenericParameterTypes();
-      Class[] classParameters = method.getParameterTypes();
 
       if (index == -1 && matchTypes(returnType, expectedType, exact, false))
          return true;
 
+      Class[] classParameters = method.getParameterTypes();
       if (index < 0 || index >= classParameters.length)
          return false;
 
       boolean matchTypes;
       
       if (JavaUtils.isRetro14())
+      {
          matchTypes = matchTypes(classParameters[index], expectedType, exact, holder);
-      else 
+      }
+      else
+      {
+         java.lang.reflect.Type[] genericParameters = method.getGenericParameterTypes();
          matchTypes = matchTypes(genericParameters[index], expectedType, exact, holder);
+      }
       
       if (matchTypes)
       {
@@ -134,12 +138,12 @@ public class ParameterMetaData
       return false;
    }
    
-   private static boolean matchTypes(Type actualType, Class expectedType, boolean exact, boolean holder)
+   private static boolean matchTypes(java.lang.reflect.Type actualType, Class expectedType, boolean exact, boolean holder)
    {
       if (holder && HolderUtils.isHolderType(actualType) == false)
          return false;
 
-      Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
+      java.lang.reflect.Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
       Class valueClass = JavaUtils.erasure(valueType);
 
       return matchTypesInternal(valueClass, expectedType, exact);
@@ -160,9 +164,7 @@ public class ParameterMetaData
    
    private static boolean matchTypesInternal(Class valueClass, Class expectedType, boolean exact)
    {
-      // FIXME - Why do we need this hack? It shouldn't be needed. The method
-      // signature should _ALWAYS_ match, else we will get ambiguous or
-      // incorrect results
+      // FIXME - Why do we need this hack? The method signature should _ALWAYS_ match, else we will get ambiguous or incorrect results
       List<Class> anyTypes = new ArrayList<Class>();
       anyTypes.add(javax.xml.soap.SOAPElement.class);
       anyTypes.add(org.w3c.dom.Element.class);
@@ -229,6 +231,21 @@ public class ParameterMetaData
 
       javaTypeName = typeName;
       javaType = null;
+   }
+   
+   public Class loadWrapperBean()
+   {
+      Class wrapperBean = null;
+      try
+      {
+         ClassLoader loader = getOperationMetaData().getEndpointMetaData().getClassLoader();
+         wrapperBean = JavaUtils.loadJavaType(javaTypeName, loader);
+      }
+      catch (ClassNotFoundException ex)
+      {
+         // ignore
+      }
+      return wrapperBean;
    }
 
    /** Load the java type.
@@ -420,9 +437,16 @@ public class ParameterMetaData
       javaType = null;
 
       // FIXME - Remove messageType hack
+      Type epType = getOperationMetaData().getEndpointMetaData().getType();
       if (getOperationMetaData().isDocumentWrapped() && !isInHeader() && !isSwA() && !isMessageType())
       {
-         new DynamicWrapperGenerator(getClassLoader()).generate(this);
+            if (loadWrapperBean() == null)
+            {
+               if (epType == EndpointMetaData.Type.JAXRPC)
+                  throw new WSException("Autogeneration of wrapper beans not supported with JAXRPC");
+               
+               new DynamicWrapperGenerator(getClassLoader()).generate(this);
+            }
 
          // Initialize accessors
          AccessorFactory factory = accessorFactoryCreator.create(this);
@@ -435,19 +459,21 @@ public class ParameterMetaData
          throw new WSException("Cannot load java type: " + javaTypeName);
 
       // check if the JavaType is an mtom parameter
-      // TODO: this should only apply to JAX-WS and needs to happen outside UMD
-      ReflectiveXOPScanner scanner = new ReflectiveXOPScanner();
-      String mimeType = scanner.scan(javaType);
-      if (mimeType != null)
+      if (epType == EndpointMetaData.Type.JAXWS)
       {
-         log.debug("MTOM parameter found: " + xmlName);
-         setXOP(true);
+         ReflectiveXOPScanner scanner = new ReflectiveXOPScanner();
+         String mimeType = scanner.scan(javaType);
+         if (mimeType != null)
+         {
+            log.debug("MTOM parameter found: " + xmlName);
+            setXOP(true);
+         }
       }
    }
 
    private ClassLoader getClassLoader()
    {
-      ClassLoader loader = opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData().getClassLoader();
+      ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
       if (loader == null)
          throw new WSException("ClassLoader not available");
       return loader;

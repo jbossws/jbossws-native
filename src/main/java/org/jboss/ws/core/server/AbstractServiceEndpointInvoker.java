@@ -77,8 +77,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       else
       {
          bindingProvider = new BindingProviderImpl(sepMetaData);
-         Binding binding = ((BindingProvider)bindingProvider).getBinding();
-         handlerDelegate = new HandlerDelegateJAXWS(binding);
+         handlerDelegate = new HandlerDelegateJAXWS();
       }
    }
 

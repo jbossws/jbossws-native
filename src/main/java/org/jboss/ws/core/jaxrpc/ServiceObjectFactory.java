@@ -24,30 +24,6 @@ package org.jboss.ws.core.jaxrpc;
 
 // $Id$
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.rmi.Remote;
-import java.util.Hashtable;
-import java.util.List;
-
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
-import javax.xml.rpc.Service;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -60,6 +36,20 @@ import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+
+import javax.naming.*;
+import javax.naming.spi.ObjectFactory;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
+import javax.xml.rpc.Service;
+import java.io.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.rmi.Remote;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service

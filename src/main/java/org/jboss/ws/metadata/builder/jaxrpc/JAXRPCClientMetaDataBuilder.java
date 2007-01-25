@@ -32,6 +32,7 @@ import javax.xml.namespace.QName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.ClientConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
@@ -39,10 +40,7 @@ import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsdl.NCName;
@@ -103,7 +101,10 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       log.debug("START buildMetaData: [service=" + serviceQName + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData();
+         DefaultFileAdapter vfsRoot = new DefaultFileAdapter();
+         vfsRoot.setLoader(loader);
+
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
          wsMetaData.setClassLoader(loader);
 
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, serviceQName);
@@ -126,7 +127,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          if (securityConfig != null)
          {
             serviceMetaData.setSecurityConfiguration(securityConfig);
-            setupSecurity(securityConfig, loader);
+            setupSecurity(securityConfig, wsMetaData.getVfsRoot());
          }
 
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions, javaWsdlMapping, serviceRefMetaData);
@@ -244,20 +245,26 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       epMetaData.addHandlers(jaxrpcConfig.getHandlers(epMetaData, HandlerType.POST));
    }
 
-   private void setupSecurity(WSSecurityConfiguration securityConfig, ClassLoader loader)
+   private void setupSecurity(WSSecurityConfiguration securityConfig, UnifiedVirtualFile vfsRoot)
    {
       if (securityConfig.getKeyStoreFile() != null)
       {
-         URL location = loader.getResource(securityConfig.getKeyStoreFile());
-         if (location != null)
-            securityConfig.setKeyStoreURL(location);
+         try {
+            UnifiedVirtualFile child = vfsRoot.findChild( securityConfig.getKeyStoreFile() );
+            securityConfig.setKeyStoreURL(child.toURL());
+         } catch (IOException e) {
+            // ignore
+         }
       }
 
       if (securityConfig.getTrustStoreFile() != null)
       {
-         URL location = loader.getResource(securityConfig.getTrustStoreFile());
-         if (location != null)
-            securityConfig.setTrustStoreURL(location);
+         try {
+            UnifiedVirtualFile child = vfsRoot.findChild( securityConfig.getTrustStoreFile() );
+            securityConfig.setTrustStoreURL(child.toURL());
+         } catch (IOException e) {
+            // Ignore
+         }
       }
    }
 }

@@ -16,6 +16,7 @@
     <property name="common.resources" value="${basedir}/common/resources"/>
     <property name="build.tests.dir" value="${basedir}/output"/>
     <property name="thirdparty.dir" value="${basedir}/thirdparty"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
     
     <!-- Force Thirdparty Get -->
     <condition property="force.thirdparty.get">

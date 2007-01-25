@@ -23,6 +23,8 @@ package org.jboss.ws.extensions.security.jaxrpc;
 
 // $Id$
 
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+
 import javax.xml.rpc.handler.MessageContext;
 
 
@@ -42,5 +44,9 @@ public class WSSecurityHandlerOutbound extends WSSecurityHandler
    public boolean handleResponse(MessageContext msgContext)
    {
       return handleInboundSecurity(msgContext);
+   }
+
+    protected String getConfigResourceName() {
+      return WSSecurityOMFactory.CLIENT_RESOURCE_NAME;
    }
 }

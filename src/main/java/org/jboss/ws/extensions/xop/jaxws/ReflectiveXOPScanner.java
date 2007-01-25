@@ -21,16 +21,17 @@
 */
 package org.jboss.ws.extensions.xop.jaxws;
 
-import org.jboss.ws.core.utils.JavaUtils;
-
-import javax.activation.DataHandler;
-import javax.xml.bind.annotation.XmlMimeType;
-import javax.xml.transform.Source;
-import java.awt.*;
+import java.awt.Image;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.activation.DataHandler;
+import javax.xml.bind.annotation.XmlMimeType;
+import javax.xml.transform.Source;
+
+import org.jboss.ws.core.utils.JavaUtils;
 
 /**
  * Scans data types for MTOM declarations.

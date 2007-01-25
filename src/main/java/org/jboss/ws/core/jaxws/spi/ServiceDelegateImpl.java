@@ -48,6 +48,7 @@ import javax.xml.ws.spi.ServiceDelegate;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.StubExt;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
@@ -57,10 +58,7 @@ import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
 import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
@@ -93,21 +91,29 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName)
    {
+      usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
+
+      UnifiedVirtualFile vfsRoot;
+      if(usRef!=null)
+         vfsRoot = usRef.getRootFile();
+      else
+         vfsRoot = new DefaultFileAdapter();
+
       if (wsdlURL != null)
       {
          JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
-         serviceMetaData = builder.buildMetaData(serviceName, wsdlURL);
+         serviceMetaData = builder.buildMetaData(serviceName, wsdlURL, vfsRoot);
       }
       else
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData();
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
          serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
       }
       
       // If this Service was constructed through the ServiceObjectFactory
       // this thread local association should be available
-      usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
+
       if (usRef != null)
       {
          serviceMetaData.setServiceRefName(usRef.getServiceRefName());

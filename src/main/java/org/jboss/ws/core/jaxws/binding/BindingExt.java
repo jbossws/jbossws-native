@@ -38,5 +38,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  */
 public interface BindingExt extends Binding
 {
-   public List<Handler> getHandlerChain(HandlerType handlerType);
+   List<Handler> getHandlerChain(HandlerType handlerType);
+   
+   void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType);
 }

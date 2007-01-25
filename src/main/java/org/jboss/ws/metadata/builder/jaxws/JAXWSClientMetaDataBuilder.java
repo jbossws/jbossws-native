@@ -34,11 +34,8 @@ import javax.xml.ws.BindingType;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
@@ -59,9 +56,8 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  */
 public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 {
-   /** Build from WSDL and jaxrpc-mapping.xml
-    */
-   public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL)
+
+   public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL, UnifiedVirtualFile vfsRoot)
    {
       if (wsdlURL == null)
          throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
@@ -69,7 +65,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       log.debug("START buildMetaData: [service=" + serviceName + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData();
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
 
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
@@ -95,6 +91,13 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       {
          throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
       }
+   }
+
+   /** Build from WSDL and service name
+    */
+   public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL)
+   {
+      return buildMetaData(serviceName, wsdlURL, new DefaultFileAdapter()); 
    }
 
    private void buildMetaDataInternal(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions) throws IOException

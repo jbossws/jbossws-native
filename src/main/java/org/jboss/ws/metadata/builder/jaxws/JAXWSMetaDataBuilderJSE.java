@@ -29,6 +29,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.DefaultFileAdapter;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -49,7 +50,7 @@ public class JAXWSMetaDataBuilderJSE
       log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData();
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.vfRoot);
          wsMetaData.setDeploymentName(udi.getCanonicalName());
          wsMetaData.setClassLoader(udi.classLoader);
 

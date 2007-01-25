@@ -23,20 +23,11 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.CommonBindingProvider;
-import org.jboss.ws.core.CommonClient;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxws.binding.BindingExt;
-import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.jaxws.handler.*;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.config.Configurable;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
@@ -50,10 +41,25 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
+
+import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.CommonBindingProvider;
+import org.jboss.ws.core.CommonClient;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxws.binding.BindingExt;
+import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
+import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
+import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
+import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
+import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.config.Configurable;
+import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * Provides support for the dynamic invocation of a service endpoint.
@@ -90,24 +96,26 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
     */
    private void resetCreateBindingHandlerChain()
    {
+      BindingExt binding = (BindingExt)getBindingProvider().getBinding();
+      PortInfoImpl portInfo = new PortInfoImpl(epMetaData);
+
       if (handlerResolver instanceof HandlerResolverImpl)
       {
          HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
          impl.initHandlerChain(epMetaData, HandlerType.PRE);
          impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT);
          impl.initHandlerChain(epMetaData, HandlerType.POST);
+
+         List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
+         binding.setHandlerChain(preChain, HandlerType.PRE);
+         List<Handler> postChain = impl.getHandlerChain(portInfo, HandlerType.POST);
+         binding.setHandlerChain(postChain, HandlerType.POST);
       }
 
-      Binding binding = getBindingProvider().getBinding();
       if (handlerResolver != null)
       {
-         PortInfoImpl portInfo = new PortInfoImpl(epMetaData);
-         List<Handler> handlerChain = binding.getHandlerChain();
-         handlerChain.clear();
-         for (Handler handler : handlerResolver.getHandlerChain(portInfo))
-         {
-            handlerChain.add(handler);
-         }
+         List<Handler> epChain = handlerResolver.getHandlerChain(portInfo);
+         binding.setHandlerChain(epChain);
       }
    }
 
@@ -116,8 +124,9 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
     * @param observable
     * @param object
     */
-   public void update(Observable observable, Object object) {
-      log.debug("Configuration change event received. Reconfigure handler chain: "+object);
+   public void update(Observable observable, Object object)
+   {
+      log.debug("Configuration change event received. Reconfigure handler chain: " + object);
 
       // reconfigure endpoint meta data handler information from config
       ((ConfigurationProvider)epMetaData).configure(epMetaData);
@@ -198,7 +207,8 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       }
    }
 
-   protected CommonMessageContext processPivot(CommonMessageContext requestContext) {
+   protected CommonMessageContext processPivot(CommonMessageContext requestContext)
+   {
       log.debug("Begin response processing");
 
       // remove existing context
@@ -316,6 +326,6 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    public void setConfigName(String configName)
    {
       ConfigurationProvider configProvider = (ConfigurationProvider)getEndpointMetaData();
-      configProvider.setConfigName(configName);     
+      configProvider.setConfigName(configName);
    }
 }

@@ -42,6 +42,7 @@ import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.acessor.ReflectiveFieldAccessor;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * A Fault component describes a fault that a given operation supports.
@@ -62,10 +63,10 @@ public class FaultMetaData
    private QName xmlType;
    private String javaTypeName;
    private String faultBeanName;
-   private Class<? extends Exception> javaType;
-   private Class<?> faultBean;
+   private Class javaType;
+   private Class faultBean;
 
-   private Method getFaultInfoMethod;
+   private Method faultInfoMethod;
    private Constructor<? extends Exception> serviceExceptionConstructor;
    private Method[] serviceExceptionGetters;
 
@@ -156,6 +157,21 @@ public class FaultMetaData
       this.faultBeanName = faultBeanName;
    }
 
+   public Class loadFaultBean()
+   {
+      Class faultBean = null;
+      try
+      {
+         ClassLoader loader = getOperationMetaData().getEndpointMetaData().getClassLoader();
+         faultBean = JavaUtils.loadJavaType(faultBeanName, loader);
+      }
+      catch (ClassNotFoundException ex)
+      {
+         // ignore
+      }
+      return faultBean;
+   }
+   
    public Class getFaultBean()
    {
       Class tmpFaultBean = faultBean;
@@ -181,17 +197,30 @@ public class FaultMetaData
 
    public void eagerInitialize()
    {
-      ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
-      new DynamicWrapperGenerator(loader).generate(this);
+      Type epType = getOperationMetaData().getEndpointMetaData().getType();
+      if (epType == EndpointMetaData.Type.JAXWS && faultBeanName != null)
+      {
+         if (loadFaultBean() == null)
+         {
+            ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
+            new DynamicWrapperGenerator(loader).generate(this);
+         }
+      }
 
       // Initialize the cache
-      javaType = getJavaType().asSubclass(Exception.class);
+      javaType = getJavaType();
       if (javaType == null)
          throw new WSException("Cannot load java type: " + javaTypeName);
 
-      faultBean = getFaultBean();
-      if (faultBean != null)
-         initializeFaultBean();
+      if (JavaUtils.isAssignableFrom(Exception.class, javaType) == false)
+         throw new WSException("Fault java type is not a java.lang.Exception: " + javaTypeName);
+
+      if (epType == EndpointMetaData.Type.JAXWS)
+      {
+         faultBean = getFaultBean();
+         if (faultBean != null)
+            initializeFaultBean();
+      }
    }
 
    private void initializeFaultBean()
@@ -209,7 +238,7 @@ public class FaultMetaData
           * . WrapperException(String message, FaultBean faultInfo, Throwable cause)
           * . FaultBean getFaultInfo() */
          serviceExceptionConstructor = javaType.getConstructor(String.class, faultBean);
-         getFaultInfoMethod = javaType.getMethod("getFaultInfo");
+         faultInfoMethod = javaType.getMethod("getFaultInfo");
       }
       /* JAX-WS 3.7: For exceptions that do not match the pattern described in
        * section 2.5, JAX-WS maps those exceptions to Java beans and then uses
@@ -218,7 +247,7 @@ public class FaultMetaData
       {
          /* For each getter in the exception and its superclasses, a property of
           * the same type and name is added to the bean. */
-         XmlType xmlType = faultBean.getAnnotation(XmlType.class);
+         XmlType xmlType = (XmlType)faultBean.getAnnotation(XmlType.class);
          if (xmlType == null)
             throw new WebServiceException("@XmlType missing from fault bean: " + faultBeanName);
 
@@ -296,10 +325,10 @@ public class FaultMetaData
       {
          /* is the service exception a wrapper
           * (i.e. does it match the pattern in JAX-WS 2.5)? */
-         if (getFaultInfoMethod != null)
+         if (faultInfoMethod != null)
          {
             // extract the fault bean from the wrapper exception
-            faultBeanInstance = getFaultInfoMethod.invoke(serviceException);
+            faultBeanInstance = faultInfoMethod.invoke(serviceException);
          }
          else
          {
@@ -346,7 +375,7 @@ public class FaultMetaData
       {
          /* is the service exception a wrapper
           * (i.e. does it match the pattern in JAX-WS 2.5)? */
-         if (getFaultInfoMethod != null)
+         if (faultInfoMethod != null)
          {
             serviceException = serviceExceptionConstructor.newInstance(message, faultBean);
          }

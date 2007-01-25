@@ -26,7 +26,6 @@
     <ant antfile="${basedir}/jaxrpc/secureejb/build.xml" target="jars"/>
     <ant antfile="${basedir}/jaxrpc/swa/build.xml" target="jars"/>
     <!--ant antfile="${basedir}/jaxrpc/wsbpel/build.xml" target="jars"/-->    
-    <ant antfile="${basedir}/jaxrpc/wseventing/build.xml" target="jars"/>
     <ant antfile="${basedir}/jaxrpc/wssecurity/build.xml" target="jars"/>
 
     <ant antfile="${basedir}/jaxws/jsr181ejb/build.xml" target="jars"/>
@@ -54,7 +53,6 @@
     <ant antfile="${basedir}/jaxrpc/secureejb/build.xml" target="tests"/>
     <ant antfile="${basedir}/jaxrpc/swa/build.xml" target="tests"/>
     <!--ant antfile="${basedir}/jaxrpc/wsbpel/build.xml" target="tests"/-->    
-    <ant antfile="${basedir}/jaxrpc/wseventing/build.xml" target="tests"/>
     <ant antfile="${basedir}/jaxrpc/wssecurity/build.xml" target="tests"/>
     
     <ant antfile="${basedir}/jaxws/jsr181ejb/build.xml" target="tests"/>

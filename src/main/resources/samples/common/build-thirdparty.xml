@@ -29,13 +29,10 @@
     <get src="${jboss.repository}/ibm-wsdl4j/${ibm-wsdl4j}/lib/wsdl4j.jar" dest="${thirdparty.dir}/wsdl4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/javassist/${javassist}/lib/javassist.jar" dest="${thirdparty.dir}/javassist.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/common-core/${jboss-common-core}/lib/jboss-common-core.jar" dest="${thirdparty.dir}/jboss-common-core.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/common-logging-spi/${jboss-common-logging}/lib/jboss-logging-spi.jar" dest="${thirdparty.dir}/jboss-logging-spi.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-logging-log4j/${jboss-common-logging-log4j}/lib/jboss-logging-log4j.jar" dest="${thirdparty.dir}/jboss-logging-log4j.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-logging-spi/${jboss-common-logging-spi}/lib/jboss-logging-spi.jar" dest="${thirdparty.dir}/jboss-logging-spi.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/ejb3/${jboss-ejb3}/bin/ejb3.deployer" dest="${thirdparty.dir}/ejb3.deployer.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jboss-jaxrpc.jar" dest="${thirdparty.dir}/jboss-jaxrpc.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jboss-jaxws.jar" dest="${thirdparty.dir}/jboss-jaxws.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jboss-saaj.jar" dest="${thirdparty.dir}/jboss-saaj.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws/${jboss-jbossws}/lib/jbossws-client.jar" dest="${thirdparty.dir}/jbossws-client.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbossas/core-libs/${jbossas-core-libs}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbpm/bpel/${jbpm-bpel}/lib/jbpm-bpel.sar" dest="${thirdparty.dir}/jbpm-bpel.sar" usetimestamp="true" verbose="true" />    
     <get src="${jboss.repository}/oswego-concurrent/${oswego-concurrent}/lib/concurrent.jar" dest="${thirdparty.dir}/concurrent.jar" usetimestamp="true" verbose="true"/>
@@ -70,10 +67,10 @@
       <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
       <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
       
-      <pathelement location="${thirdparty.dir}/jboss-jaxrpc.jar"/>
-      <pathelement location="${thirdparty.dir}/jboss-jaxws.jar"/>
-      <pathelement location="${thirdparty.dir}/jboss-saaj.jar"/>
-      <pathelement location="${thirdparty.dir}/jbossws-client.jar"/>
+      <pathelement location="${lib.dir}/jboss-jaxrpc.jar"/>
+      <pathelement location="${lib.dir}/jboss-jaxws.jar"/>
+      <pathelement location="${lib.dir}/jboss-saaj.jar"/>
+      <pathelement location="${lib.dir}/jbossws-client.jar"/>
     </path>
     
     <path id="compile.classpath">

@@ -38,7 +38,8 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
-/** Delegates to JAXWS handlers
+/**
+ * Delegates to JAXWS handlers
  *
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
@@ -47,14 +48,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
 {
    // provide logging
    private static Logger log = Logger.getLogger(HandlerDelegateJAXWS.class);
-
-   private HandlerResolverImpl preHandlers = new HandlerResolverImpl();
-   private HandlerResolverImpl endpointHandlers = new HandlerResolverImpl();
-   private HandlerResolverImpl postHandlers = new HandlerResolverImpl();
-
-   public HandlerDelegateJAXWS(Binding binding)
-   {
-   }
+   private HandlerResolverImpl resolver = new HandlerResolverImpl();
 
    public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
@@ -65,10 +59,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
       // Initialize the handler chain
       if (epMetaData.isHandlersInitialized() == false)
       {
-         initHandlerChain(epMetaData, HandlerType.PRE);
-         initHandlerChain(epMetaData, HandlerType.ENDPOINT);
-         initHandlerChain(epMetaData, HandlerType.POST);
-         epMetaData.setHandlersInitialized(true);
+         initResolverChain(epMetaData);
       }
 
       List<Handler> handlerChain = getHandlerChain(epMetaData, type);
@@ -99,38 +90,14 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
    private List<Handler> getHandlerChain(EndpointMetaData epMetaData, HandlerType type)
    {
       PortInfo info = getPortInfo(epMetaData);
-
-      List<Handler> handlerChain = null;
-      if (type == HandlerType.PRE)
-      {
-         handlerChain = preHandlers.getHandlerChain(info);
-      }
-      else if (type == HandlerType.ENDPOINT)
-      {
-         handlerChain = endpointHandlers.getHandlerChain(info);
-      }
-      else if (type == HandlerType.POST)
-      {
-         handlerChain = postHandlers.getHandlerChain(info);
-      }
-      return handlerChain;
+      return resolver.getHandlerChain(info, type);
    }
 
-   private void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)
+   private void initResolverChain(EndpointMetaData epMetaData)
    {
-      if (type == HandlerType.PRE)
-      {
-         preHandlers.initHandlerChain(epMetaData, type);
-      }
-      else if (type == HandlerType.ENDPOINT)
-      {
-         endpointHandlers.initHandlerChain(epMetaData, type);
-      }
-      else if (type == HandlerType.POST)
-      {
-         postHandlers.initHandlerChain(epMetaData, type);
-      }
-
+      resolver.initHandlerChain(epMetaData, HandlerType.PRE);
+      resolver.initHandlerChain(epMetaData, HandlerType.ENDPOINT);
+      resolver.initHandlerChain(epMetaData, HandlerType.POST);
    }
 
    private PortInfo getPortInfo(EndpointMetaData epMetaData)

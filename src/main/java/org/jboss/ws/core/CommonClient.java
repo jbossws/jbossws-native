@@ -54,12 +54,7 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
@@ -190,8 +185,12 @@ public abstract class CommonClient implements StubExt
    {
       if (epMetaData == null)
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData();
-         wsMetaData.setClassLoader(Thread.currentThread().getContextClassLoader());
+         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+         DefaultFileAdapter vfsRoot = new DefaultFileAdapter();
+         vfsRoot.setLoader(contextClassLoader);
+         UnifiedMetaData wsMetaData = new UnifiedMetaData( vfsRoot );
+         wsMetaData.setClassLoader(contextClassLoader);
 
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousService"));
          wsMetaData.addService(serviceMetaData);

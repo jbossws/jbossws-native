@@ -64,16 +64,40 @@ public class BindingImpl implements BindingExt
       return Collections.unmodifiableList(handlerChain);
    }
 
+   public void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType)
+   {
+      if (handlerType == HandlerType.PRE || handlerType == HandlerType.ALL)
+      {
+         preHandlerChain.clear();
+         preHandlerChain.addAll(handlerChain);
+      }
+      
+      if (handlerType == HandlerType.ENDPOINT || handlerType == HandlerType.ALL)
+      {
+         jaxwsHandlerChain.clear();
+         jaxwsHandlerChain.addAll(handlerChain);
+      }
+      
+      if (handlerType == HandlerType.POST || handlerType == HandlerType.ALL)
+      {
+         postHandlerChain.clear();
+         postHandlerChain.addAll(handlerChain);
+      }
+   }
+
    public List<Handler> getHandlerChain()
    {
       log.debug("getHandlerChain: " + jaxwsHandlerChain);
-      return jaxwsHandlerChain;
+      List<Handler> handlerChain = new ArrayList<Handler>();
+      handlerChain.addAll(jaxwsHandlerChain);
+      return handlerChain;
    }
 
    public void setHandlerChain(List<Handler> handlerChain)
    {
       log.debug("setHandlerChain: " + handlerChain);
-      this.jaxwsHandlerChain = handlerChain;
+      jaxwsHandlerChain.clear();
+      jaxwsHandlerChain.addAll(handlerChain);
    }
 
    public String getBindingID()

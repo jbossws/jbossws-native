@@ -69,7 +69,7 @@ public class OperationMetaData extends ExtensibleMetaData
 
    public OperationMetaData(QName qname, String javaName)
    {
-      UnifiedMetaData umd = new UnifiedMetaData();
+      UnifiedMetaData umd = new UnifiedMetaData(new DefaultFileAdapter());
       ServiceMetaData smd = new ServiceMetaData(umd, new QName("mock-service"));
       ServerEndpointMetaData epmd = new ServerEndpointMetaData(smd, new QName("mock-endpoint"), new QName("mock-interface"), Type.JAXRPC);
       initOperationMetaData(epmd, qname, javaName);

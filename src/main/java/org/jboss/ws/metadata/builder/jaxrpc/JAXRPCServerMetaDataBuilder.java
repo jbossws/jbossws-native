@@ -24,8 +24,8 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
+import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.*;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
@@ -41,6 +41,7 @@ import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
@@ -66,8 +67,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
       log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
-         // For every webservice-description build the ServiceMetaData
-         UnifiedMetaData wsMetaData = new UnifiedMetaData();
+         // For every webservice-description build the ServiceMetaData         
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.vfRoot);
          wsMetaData.setDeploymentName(udi.getCanonicalName());
          wsMetaData.setClassLoader(udi.classLoader);
 
@@ -98,7 +99,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Assign the WS-Security configuration,
             WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-            WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(udi);
+            WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(
+               wsMetaData.getVfsRoot(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
+            );
             serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
             // For every port-component build the EndpointMetaData
