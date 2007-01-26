@@ -186,7 +186,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          {
             String configName= serviceRefMetaData.getConfigName();
             String configFile = serviceRefMetaData.getConfigFile();
-            if (configName != null)
+            if (configName != null || configFile != null)
                epMetaData.setConfigName(configName, configFile);
          }
 

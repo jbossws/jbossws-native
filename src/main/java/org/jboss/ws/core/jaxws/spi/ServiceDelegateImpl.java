@@ -390,7 +390,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
       
       log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
-      if (configName != null)
+      if (configName != null || configFile != null)
          stub.setConfigName(configName, configFile);
    }
 

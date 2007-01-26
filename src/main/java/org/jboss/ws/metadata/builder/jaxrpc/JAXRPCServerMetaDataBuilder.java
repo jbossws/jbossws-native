@@ -156,7 +156,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                   String configName = apMetaData.getConfigName();
                   String configFile = apMetaData.getConfigFile();
-                  if (configName != null)
+                  if (configName != null || configFile != null)
                      sepMetaData.setConfigName(configName, configFile);
 
                   UnifiedEjbPortComponentMetaData bpcMetaData = beanMetaData.getPortComponent();
@@ -191,7 +191,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                   String configName = webMetaData.getConfigName();
                   String configFile = webMetaData.getConfigFile();
-                  if (configName != null)
+                  if (configName != null || configFile != null)
                      sepMetaData.setConfigName(configName, configFile);
 
                   initTransportGuaranteeJSE(udi, sepMetaData, linkName);

@@ -71,7 +71,7 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anEndpointConfig.configFile().length() > 0)
          configFile = anEndpointConfig.configFile();
 
-      if (configName != null)
+      if (configName != null || configFile != null)
          sepMetaData.setConfigName(configName, configFile);
    }
 

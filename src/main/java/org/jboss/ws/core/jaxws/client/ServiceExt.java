@@ -127,7 +127,7 @@ public class ServiceExt extends Service implements ConfigProvider
    private void configurePort(Object port)
    {
       ConfigProvider cp = (ConfigProvider)port;
-      if (configName != null)
+      if (configName != null || configFile != null)
          cp.setConfigName(configName, configFile);
    }
 }
