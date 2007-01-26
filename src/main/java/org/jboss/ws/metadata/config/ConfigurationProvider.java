@@ -52,9 +52,9 @@ public interface ConfigurationProvider {
 
    String getConfigFile();
 
-   void setConfigFile(String configFile);
-
    String getConfigName();
 
    void setConfigName(String configName);
+   
+   void setConfigName(String configName, String configFile);
 }

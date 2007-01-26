@@ -97,7 +97,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
     */
    public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL)
    {
-      return buildMetaData(serviceName, wsdlURL, new DefaultFileAdapter()); 
+      return buildMetaData(serviceName, wsdlURL, new ResourceLoaderAdapter()); 
    }
 
    private void buildMetaDataInternal(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions) throws IOException

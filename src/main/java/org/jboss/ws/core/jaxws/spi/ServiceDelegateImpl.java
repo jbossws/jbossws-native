@@ -97,7 +97,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       if(usRef!=null)
          vfsRoot = usRef.getRootFile();
       else
-         vfsRoot = new DefaultFileAdapter();
+         vfsRoot = new ResourceLoaderAdapter();
 
       if (wsdlURL != null)
       {
@@ -390,10 +390,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
          log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
       
       log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
-      if (configFile != null)
-         stub.setConfigFile(configFile);
       if (configName != null)
-         stub.setConfigName(configName);
+         stub.setConfigName(configName, configFile);
    }
 
    @Override

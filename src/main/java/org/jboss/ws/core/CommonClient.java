@@ -54,7 +54,13 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.metadata.umdm.*;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
@@ -185,17 +191,16 @@ public abstract class CommonClient implements StubExt
    {
       if (epMetaData == null)
       {
-         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-
-         DefaultFileAdapter vfsRoot = new DefaultFileAdapter();
-         vfsRoot.setLoader(contextClassLoader);
-         UnifiedMetaData wsMetaData = new UnifiedMetaData( vfsRoot );
-         wsMetaData.setClassLoader(contextClassLoader);
+         ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+         ResourceLoaderAdapter vfsRoot = new ResourceLoaderAdapter();
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
+         wsMetaData.setClassLoader(ctxLoader);
 
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousService"));
          wsMetaData.addService(serviceMetaData);
 
-         epMetaData = new ClientEndpointMetaData(serviceMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousPort"), new QName(Constants.NS_JBOSSWS_URI, "Anonymous"), Type.JAXRPC);
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousPort"),
+               new QName(Constants.NS_JBOSSWS_URI, "Anonymous"), Type.JAXRPC);
          epMetaData.setStyle(Style.RPC);
 
          serviceMetaData.addEndpoint(epMetaData);
@@ -251,7 +256,7 @@ public abstract class CommonClient implements StubExt
 
          // Bind the request message
          SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, unboundHeaders);
-         
+
          // Add possible attachment parts
          addAttachmentParts(reqMessage);
 
@@ -333,7 +338,7 @@ public abstract class CommonClient implements StubExt
 
             // BP-1.0 R1027
             if (handlerPass)
-               HandlerChainBaseImpl.checkMustUnderstand(msgContext, new String[]{});
+               HandlerChainBaseImpl.checkMustUnderstand(msgContext, new String[] {});
 
             // Check if protocol handlers modified the payload
             if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
@@ -486,7 +491,7 @@ public abstract class CommonClient implements StubExt
    {
       return unboundHeaders.keySet().iterator();
    }
-   
+
    /**
     * Adds the given AttachmentPart object to the outgoing SOAPMessage.
     * An AttachmentPart object must be created before it can be added to a message.
@@ -526,17 +531,16 @@ public abstract class CommonClient implements StubExt
       return epMetaData.getConfigName();
    }
 
-   public abstract void setConfigName(String configName);
-   
+   public void setConfigName(String configName)
+   {
+      setConfigName(configName, null);
+   }
+
+   public abstract void setConfigName(String configName, String configFile);
+
    public String getConfigFile()
    {
       EndpointMetaData epMetaData = getEndpointMetaData();
       return epMetaData.getConfigFile();
-   }
-
-   public void setConfigFile(String configFile)
-   {
-      EndpointMetaData epMetaData = getEndpointMetaData();
-      epMetaData.setConfigFile(configFile);
    }
 }

@@ -90,7 +90,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Assign the WS-Security configuration,
          WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
          WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(
-            wsMetaData.getVfsRoot(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
+            wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
          );
          serviceMetaData.setSecurityConfiguration(securityConfiguration);
 

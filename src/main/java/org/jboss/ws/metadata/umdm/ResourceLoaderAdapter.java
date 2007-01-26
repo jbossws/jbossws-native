@@ -21,43 +21,52 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-import org.jboss.ws.core.server.UnifiedVirtualFile;
+// $Id: $
 
-import java.io.IOException;
 import java.io.File;
-import java.net.URL;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 
 /**
  * The default file adapter loads resources through an associated classloader.
  * If no classload is set, the the thread context classloader will be used.
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 25.01.2007
  */
-public class DefaultFileAdapter implements UnifiedVirtualFile {
-
+public class ResourceLoaderAdapter implements UnifiedVirtualFile
+{
    private URL location;
    private ClassLoader loader;
 
-   public DefaultFileAdapter(URL location) {
-      this.location = location;
-   }
-
-   public DefaultFileAdapter() {
-   }
-
-   public UnifiedVirtualFile findChild(String child) throws IOException
+   public ResourceLoaderAdapter()
    {
+      this(Thread.currentThread().getContextClassLoader());
+   }
+   
+   public ResourceLoaderAdapter(ClassLoader loader)
+   {
+      this.loader = loader;
+   }
+   
+   private ResourceLoaderAdapter(ClassLoader loader, URL location)
+   {
+      this.location = location;
+      this.loader = loader;
+   }
 
-      URL loc = null;
-      if (child != null)
+   public UnifiedVirtualFile findChild(String resourcePath) throws IOException
+   {
+      URL resourceURL = null;
+      if (resourcePath != null)
       {
          // Try the child as URL
          try
          {
-            loc = new URL(child);
+            resourceURL = new URL(resourcePath);
          }
          catch (MalformedURLException ex)
          {
@@ -65,13 +74,13 @@ public class DefaultFileAdapter implements UnifiedVirtualFile {
          }
 
          // Try the filename as File
-         if (loc == null)
+         if (resourceURL == null)
          {
             try
             {
-               File file = new File(child);
+               File file = new File(resourcePath);
                if (file.exists())
-                  loc = file.toURL();
+                  resourceURL = file.toURL();
             }
             catch (MalformedURLException e)
             {
@@ -80,39 +89,34 @@ public class DefaultFileAdapter implements UnifiedVirtualFile {
          }
 
          // Try the filename as Resource
-         if (loc == null)
+         if (resourceURL == null)
          {
             try
             {
-               loc = getLoader().getResource(child);
+               resourceURL = loader.getResource(resourcePath);
             }
             catch (Exception ex)
             {
                // ignore
             }
          }
-
       }
 
-      if (loc == null)
-         throw new IllegalArgumentException("Cannot get URL for: " + child);
+      if (resourceURL == null)
+         throw new IOException("Cannot get URL for: " + resourcePath);
 
-      return new DefaultFileAdapter(loc);
+      return new ResourceLoaderAdapter(loader, resourceURL);
    }
 
-   public URL toURL() {
-      if(null == this.location)
+   public URL toURL()
+   {
+      if (null == this.location)
          throw new IllegalStateException("UnifiedVirtualFile not initialized");
       return location;
    }
 
-   public void setLoader(ClassLoader loader) {
-      this.loader = loader;
-   }
-
-   public ClassLoader getLoader() {
-      if(null == this.loader)
-         loader = Thread.currentThread().getContextClassLoader();
+   public ClassLoader getResourceLoader()
+   {
       return loader;
    }
 }

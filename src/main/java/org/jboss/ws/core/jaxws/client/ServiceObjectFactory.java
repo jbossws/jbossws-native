@@ -218,10 +218,8 @@ public class ServiceObjectFactory implements ObjectFactory
          log.debug("Configure Service: [configName=" + configName + ",configFile=" + configFile + "]");
 
          ConfigProvider cp = (ConfigProvider)service;
-         if (configFile != null)
-            cp.setConfigFile(configFile);
          if (configName != null)
-            cp.setConfigName(configName);
+            cp.setConfigName(configName, configFile);
       }
    }
 

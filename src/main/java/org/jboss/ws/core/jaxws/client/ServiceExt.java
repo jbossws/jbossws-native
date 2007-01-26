@@ -60,14 +60,6 @@ public class ServiceExt extends Service implements ConfigProvider
    }
 
    /** 
-    * Set the port configuration file for newly created ports 
-    */
-   public void setConfigFile(String configFile)
-   {
-      this.configFile = configFile;
-   }
-
-   /** 
     * Get the port configuration name for newly created ports 
     */
    public String getConfigName()
@@ -81,6 +73,15 @@ public class ServiceExt extends Service implements ConfigProvider
    public void setConfigName(String configName)
    {
       this.configName = configName;
+   }
+
+   /** 
+    * Set the port configuration name for newly created ports 
+    */
+   public void setConfigName(String configName, String configFile)
+   {
+      this.configName = configName;
+      this.configFile = configFile;
    }
 
    @Override
@@ -126,9 +127,7 @@ public class ServiceExt extends Service implements ConfigProvider
    private void configurePort(Object port)
    {
       ConfigProvider cp = (ConfigProvider)port;
-      if (configFile != null)
-         cp.setConfigFile(configFile);
       if (configName != null)
-         cp.setConfigName(configName);
+         cp.setConfigName(configName, configFile);
    }
 }

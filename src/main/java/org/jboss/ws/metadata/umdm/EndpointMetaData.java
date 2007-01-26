@@ -52,6 +52,7 @@ import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.Configurable;
@@ -66,8 +67,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public abstract class EndpointMetaData extends ExtensibleMetaData
-   implements ConfigurationProvider, Configurable
+public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, Configurable
 {
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
@@ -169,10 +169,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    public void setBindingId(String bindingId)
    {
-      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId)
-         && !Constants.SOAP12HTTP_BINDING.equals(bindingId)
-         && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
-         && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId) && !Constants.SOAP12HTTP_BINDING.equals(bindingId) && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
+            && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
       {
          throw new WSException("Unsupported binding: " + bindingId);
       }
@@ -399,10 +397,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
             boolean doesMatch = aux.getJavaMethod().equals(method);
 
             // fallback for async methods
-            if(!doesMatch && method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
+            if (!doesMatch && method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
             {
                String name = method.getName();
-               name = name.substring(0, name.length()-5);
+               name = name.substring(0, name.length() - 5);
                doesMatch = aux.getJavaName().equals(name);
             }
 
@@ -530,7 +528,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
             List<Class> types = typeMapping.getJavaTypes(xmlType);
 
             boolean registered = false;
-            for (Class current : types) {
+            for (Class current : types)
+            {
                if (current.getName().equals(javaTypeName))
                {
                   registered = true;
@@ -584,28 +583,29 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
     *
     * @param configurable
     */
-   public void configure(Configurable configurable) {
+   public void configure(Configurable configurable)
+   {
 
       // emit notificatins when the config changes
       registerConfigObserver(configurable);
 
-      if(null == config)
+      if (null == config)
       {
-         log.trace("Create new config: " + getConfigFile()+":"+getConfigName());
+         log.trace("Create new config: " + getConfigFile() + ":" + getConfigName());
          JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-         config = factory.getConfig(getConfigName(), getConfigFile());
+         config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
       }
       else
       {
-         log.trace("Reusing cached config. Current should be: " + getConfigFile()+":"+getConfigName());
+         log.trace("Reusing cached config. Current should be: " + getConfigFile() + ":" + getConfigName());
       }
 
       // SOAPBinding configuration
-      if(configurable instanceof CommonBindingProvider)
+      if (configurable instanceof CommonBindingProvider)
       {
          log.debug("Configure SOAPBinding");
 
-         if(config.hasFeature(EndpointFeature.MTOM))
+         if (config.hasFeature(EndpointFeature.MTOM))
          {
             CommonBindingProvider provider = (CommonBindingProvider)configurable;
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
@@ -614,7 +614,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
       }
 
       // Configure EndpointMetaData
-      else if(configurable instanceof EndpointMetaData)
+      else if (configurable instanceof EndpointMetaData)
       {
 
          log.debug("Configure EndpointMetaData");
@@ -636,22 +636,21 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
          log.debug("Added " + preHandlers.size() + " PRE handlers");
          log.debug("Added " + postHandlers.size() + " POST handlers");
       }
-
    }
 
-   public void registerConfigObserver(Configurable observer) {
-       this.configObservable.addObserver(observer);
+   public UnifiedVirtualFile getRootFile()
+   {
+      return getServiceMetaData().getUnifiedMetaData().getRootFile();
+   }
+
+   public void registerConfigObserver(Configurable observer)
+   {
+      this.configObservable.addObserver(observer);
    }
 
    public String getConfigFile()
    {
       return this.configFile;
-   }
-
-   public void setConfigFile(String configFile)
-   {
-      this.configFile = configFile;
-      this.config = null;
    }
 
    public String getConfigName()
@@ -661,32 +660,48 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    public void setConfigName(String configName)
    {
-      if(null == configName)
-         throw new IllegalArgumentException("Invalid config name: " + configName);
+      setConfigNameInternal(configName, null);
+   }
 
-      if( !configName.equals(this.configName) )
+   public void setConfigName(String configName, String configFile)
+   {
+      setConfigNameInternal(configName, configFile);
+   }
+   
+   private void setConfigNameInternal(String configName, String configFile)
+   {
+      if (configName == null)
+         throw new IllegalArgumentException("Config name cannot be null");
+
+      if (configFile != null)
+         this.configFile = configFile;
+      
+      if (configName.equals(this.configName) == false)
       {
          this.configName = configName;
          this.config = null;
 
          // notify observers
-         log.debug("Reconfiguration forced, new config is '"+configName+"'");
+         log.debug("Reconfiguration forced, new config is '" + configName + "'");
          this.configObservable.doNotify(configName);
       }
    }
-
+   
    public List<Class> getRegisteredTypes()
    {
       return Collections.unmodifiableList(registeredTypes);
    }
 
-   public void update(Observable observable, Object object) {
+   public void update(Observable observable, Object object)
+   {
       log.trace("Ingore configuration change notification");
    }
 
-   class ConfigObservable extends Observable {
+   class ConfigObservable extends Observable
+   {
 
-      public void doNotify(Object object) {
+      public void doNotify(Object object)
+      {
          setChanged();
          notifyObservers(object);
       }

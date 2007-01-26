@@ -101,8 +101,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       log.debug("START buildMetaData: [service=" + serviceQName + "]");
       try
       {
-         DefaultFileAdapter vfsRoot = new DefaultFileAdapter();
-         vfsRoot.setLoader(loader);
+         ResourceLoaderAdapter vfsRoot = new ResourceLoaderAdapter(loader);
 
          UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
          wsMetaData.setClassLoader(loader);
@@ -127,7 +126,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          if (securityConfig != null)
          {
             serviceMetaData.setSecurityConfiguration(securityConfig);
-            setupSecurity(securityConfig, wsMetaData.getVfsRoot());
+            setupSecurity(securityConfig, wsMetaData.getRootFile());
          }
 
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions, javaWsdlMapping, serviceRefMetaData);
@@ -185,13 +184,10 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          // config-name, config-file
          if (serviceRefMetaData != null)
          {
-            String configName = serviceRefMetaData.getConfigName();
-            if (configName != null)
-               epMetaData.setConfigName(configName);
-
+            String configName= serviceRefMetaData.getConfigName();
             String configFile = serviceRefMetaData.getConfigFile();
-            if (configFile != null)
-               epMetaData.setConfigFile(configFile);
+            if (configName != null)
+               epMetaData.setConfigName(configName, configFile);
          }
 
          // Init the endpoint binding
@@ -224,8 +220,11 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
    private void setupHandlers(UnifiedServiceRefMetaData serviceRefMetaData, QName portName, EndpointMetaData epMetaData)
    {
       // Add pre handlers
+      UnifiedVirtualFile vfsRoot = epMetaData.getRootFile();
+      String configName = epMetaData.getConfigName();
+      String configFile = epMetaData.getConfigFile();
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ClientConfigJAXRPC jaxrpcConfig = (ClientConfigJAXRPC)factory.getConfig(epMetaData.getConfigName(), epMetaData.getConfigFile());
+      ClientConfigJAXRPC jaxrpcConfig = (ClientConfigJAXRPC)factory.getConfig(vfsRoot, configName, configFile);
       epMetaData.addHandlers(jaxrpcConfig.getHandlers(epMetaData, HandlerType.PRE));
 
       // Setup the endpoint handlers

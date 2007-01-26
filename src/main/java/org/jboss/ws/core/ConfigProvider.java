@@ -37,11 +37,6 @@ public interface ConfigProvider
    String getConfigFile();
 
    /** 
-    * Set the port configuration file 
-    */
-   void setConfigFile(String configFile);
-
-   /** 
     * Get the port configuration name 
     */
    String getConfigName();
@@ -50,4 +45,9 @@ public interface ConfigProvider
     * Set the port configuration name 
     */
    void setConfigName(String configName);
+
+   /** 
+    * Set the port configuration name and file
+    */
+   void setConfigName(String configName, String configFile);
 }

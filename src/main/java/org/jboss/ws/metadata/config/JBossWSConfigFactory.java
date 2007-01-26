@@ -23,21 +23,22 @@ package org.jboss.ws.metadata.config;
 
 //$Id$
 
+import java.io.IOException;
+import java.net.URL;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXWS;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
+import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;
 import org.w3c.dom.Element;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * A factory for the JBossWS endpoint/client configuration 
@@ -50,8 +51,8 @@ public class JBossWSConfigFactory
    // provide logging
    private final Logger log = Logger.getLogger(JBossWSConfigFactory.class);
 
-   private static String URN_JAXRPC_CONFIG   = "urn:jboss:jaxrpc-config:2.0";
-   private static String URN_JAXWS_CONFIG    = "urn:jboss:jaxws-config:2.0";
+   private static String URN_JAXRPC_CONFIG = "urn:jboss:jaxrpc-config:2.0";
+   private static String URN_JAXWS_CONFIG = "urn:jboss:jaxws-config:2.0";
 
    // Hide constructor
    private JBossWSConfigFactory()
@@ -95,7 +96,8 @@ public class JBossWSConfigFactory
       {
          throw new WSException("Error while parsing configuration", e);
       }
-      catch (IOException e) {
+      catch (IOException e)
+      {
          throw new WSException("Failed to read config file: " + configURL, e);
       }
 
@@ -118,17 +120,21 @@ public class JBossWSConfigFactory
    /**
     * @return config - cannot be null
     */
-   public CommonConfig getConfig(String configName, String configFile)
+   public CommonConfig getConfig(UnifiedVirtualFile vfsRoot, String configName, String configFile)
    {
-      CommonConfig config;
-
       log.debug("getConfig: [name=" + configName + ",url=" + configFile + "]");
 
+      if (configName == null)
+         throw new IllegalArgumentException("Config name cannot be null");
+      if (configFile == null)
+         throw new IllegalArgumentException("Config file cannot be null");
+
       // Get the config root
-      URL configURL = filenameToURL(configFile);
+      URL configURL = filenameToURL(vfsRoot, configFile);
       Object configRoot = parse(configURL);
 
       // Get the endpoint config
+      CommonConfig config;
       if (configRoot instanceof ConfigRootJAXRPC)
       {
          config = ((ConfigRootJAXRPC)configRoot).getConfigByName(configName);
@@ -141,31 +147,37 @@ public class JBossWSConfigFactory
       if (config == null)
          throw new WSException("Cannot obtain config: " + configName);
 
-
       return config;
    }
 
-   private static URL filenameToURL(String configFile) {
+   private URL filenameToURL(UnifiedVirtualFile vfsRoot, String configFile)
+   {
       URL configURL = null;
       try
       {
-         configURL = new URL(configFile);
+         configURL = vfsRoot.findChild(configFile).toURL();
       }
-      catch (MalformedURLException ex)
+      catch (IOException ex)
       {
          // ignore
       }
-
+      
       // Try to get the URL as resource
       if (configURL == null)
       {
-         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-         configURL = cl.getResource(configFile);
-         if (configURL == null)
-            throw new WSException("Cannot get resource: " + configFile);
+         try
+         {
+            configURL = new ResourceLoaderAdapter().findChild(configFile).toURL();
+         }
+         catch (IOException ex)
+         {
+            // ignore
+         }
       }
-
+      
+      if (configURL == null)
+         throw new WSException("Cannot find configFile: " + configFile);
+      
       return configURL;
    }
-
 }

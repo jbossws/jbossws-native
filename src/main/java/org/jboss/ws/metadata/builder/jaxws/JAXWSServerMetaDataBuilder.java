@@ -62,19 +62,17 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anEndpointConfig== null)
          return;
 
-      // setup config name
+      String configName = null;
+      String configFile = null;
+      
       if (anEndpointConfig.configName().length() > 0)
-      {
-         String configName = anEndpointConfig.configName();
-         sepMetaData.setConfigName(configName);
-      }
+         configName = anEndpointConfig.configName();
 
-      // setup config file
       if (anEndpointConfig.configFile().length() > 0)
-      {
-         String configFile = anEndpointConfig.configFile();
-         sepMetaData.setConfigFile(configFile);
-      }
+         configFile = anEndpointConfig.configFile();
+
+      if (configName != null)
+         sepMetaData.setConfigName(configName, configFile);
    }
 
    protected void processWebContext(UnifiedDeploymentInfo udi, Class<?> wsClass, String linkName, ServerEndpointMetaData sepMetaData)

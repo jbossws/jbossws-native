@@ -24,7 +24,6 @@ package org.jboss.ws.core.jaxws.client;
 // $Id$
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -323,9 +322,9 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       throw new NotImplementedException();
    }
 
-   public void setConfigName(String configName)
+   public void setConfigName(String configName, String configFile)
    {
       ConfigurationProvider configProvider = (ConfigurationProvider)getEndpointMetaData();
-      configProvider.setConfigName(configName);
+      configProvider.setConfigName(configName, configFile);
    }
 }

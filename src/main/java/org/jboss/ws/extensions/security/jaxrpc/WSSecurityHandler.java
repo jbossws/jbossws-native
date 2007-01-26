@@ -100,7 +100,7 @@ public abstract class WSSecurityHandler extends GenericHandler
 
       if(null == serviceMetaData.getSecurityConfiguration()) // might be set through ServiceObjectFactory
       {
-         UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getVfsRoot();
+         UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
          boolean successful = false;
 
          WSSecurityConfiguration config = null;

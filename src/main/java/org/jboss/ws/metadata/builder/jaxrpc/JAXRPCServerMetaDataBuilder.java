@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.*;
@@ -100,7 +101,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
             // Assign the WS-Security configuration,
             WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
             WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(
-               wsMetaData.getVfsRoot(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
+               wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
             );
             serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
@@ -154,12 +155,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                      throw new WSException("Cannot obtain UnifiedBeanMetaData for: " + linkName);
 
                   String configName = apMetaData.getConfigName();
-                  if (configName != null)
-                     sepMetaData.setConfigName(configName);
-
                   String configFile = apMetaData.getConfigFile();
-                  if (configFile != null)
-                     sepMetaData.setConfigFile(configFile);
+                  if (configName != null)
+                     sepMetaData.setConfigName(configName, configFile);
 
                   UnifiedEjbPortComponentMetaData bpcMetaData = beanMetaData.getPortComponent();
                   if (bpcMetaData != null)
@@ -192,12 +190,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   serviceMetaData.setWsdlPublishLocation(wsdlPublishLocation);
 
                   String configName = webMetaData.getConfigName();
-                  if (configName != null)
-                     sepMetaData.setConfigName(configName);
-
                   String configFile = webMetaData.getConfigFile();
-                  if (configFile != null)
-                     sepMetaData.setConfigFile(configFile);
+                  if (configName != null)
+                     sepMetaData.setConfigName(configName, configFile);
 
                   initTransportGuaranteeJSE(udi, sepMetaData, linkName);
                }
@@ -222,8 +217,11 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                setupOperationsFromWSDL(sepMetaData, wsdlEndpoint, seiMapping);
 
                // Add pre handlers
+               UnifiedVirtualFile vfsRoot = sepMetaData.getRootFile();
+               String configName = sepMetaData.getConfigName();
+               String configFile = sepMetaData.getConfigFile();
                JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-               EndpointConfigJAXRPC jaxrpcConfig = (EndpointConfigJAXRPC)factory.getConfig(sepMetaData.getConfigName(), sepMetaData.getConfigFile());
+               EndpointConfigJAXRPC jaxrpcConfig = (EndpointConfigJAXRPC)factory.getConfig(vfsRoot, configName, configFile);
                sepMetaData.addHandlers(jaxrpcConfig.getHandlers(sepMetaData, HandlerType.PRE));
 
                // Setup the endpoint handlers

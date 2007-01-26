@@ -615,13 +615,12 @@ public class CallImpl extends CommonClient implements Call
    }
 
    @Override
-   public void setConfigName(String configName)
+   public void setConfigName(String configName, String configFile)
    {
       EndpointMetaData epMetaData = getEndpointMetaData();
-      epMetaData.setConfigName(configName);
+      epMetaData.setConfigName(configName, configFile);
       
       // Reinitialize the client handler chain
-      // TODO: is this necessary?
       jaxrpcService.setupHandlerChain(epMetaData);
    }
 }
