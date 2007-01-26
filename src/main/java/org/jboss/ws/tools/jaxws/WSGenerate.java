@@ -1,0 +1,210 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.jboss.ws.tools.jaxws;
+
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
+
+/**
+ * WSGenerate is a command line tool that generates portable JAX-WS artifacts
+ * for a service endpoint implementation.
+ * 
+ * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ */
+public class WSGenerate
+{
+   private boolean generateSource = false;
+   private boolean generateWsdl = false;
+   private boolean quiet = false;
+   private boolean showTraces = false;
+   private ClassLoader loader = Thread.currentThread().getContextClassLoader();
+   private File outputDir = new File("output");
+   private File resourceDir = null;
+   private File sourceDir = null;
+   
+   public static String PROGRAM_NAME = System.getProperty("program.name", "wsgen");
+
+   public static void main(String[] args)
+   {
+      WSGenerate generate = new WSGenerate();
+      String endpoint = generate.parseArguments(args);
+      System.exit(generate.generate(endpoint));
+   }
+   
+   private String parseArguments(String[] args)
+   {
+      String shortOpts = "hwko:r:s:cqt";
+      LongOpt[] longOpts = 
+      {
+         new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
+         new LongOpt("wsdl", LongOpt.NO_ARGUMENT, null, 'w'),
+         new LongOpt("keep", LongOpt.NO_ARGUMENT, null, 'k'),
+         new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o'),
+         new LongOpt("resource", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
+         new LongOpt("source", LongOpt.REQUIRED_ARGUMENT, null, 's'),
+         new LongOpt("classpath", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
+         new LongOpt("quiet", LongOpt.NO_ARGUMENT, null, 'q'),
+         new LongOpt("show-traces", LongOpt.NO_ARGUMENT, null, 't'),
+      };
+      
+      Getopt getopt = new Getopt(PROGRAM_NAME, args, shortOpts, longOpts);
+      int c;
+      while ((c = getopt.getopt()) != -1)
+      {
+         switch (c)
+         {
+            case 'k':
+               generateSource = true;
+               break;
+            case 's':
+               sourceDir = new File(getopt.getOptarg());
+               break;
+            case 'r':
+               resourceDir = new File(getopt.getOptarg());
+               break;
+            case 'w':
+               generateWsdl = true;
+               break;
+            case 't':
+               showTraces = true;
+               break;
+            case 'o':
+               outputDir = new File(getopt.getOptarg());
+               break;
+            case 'q':
+               quiet = true;
+               break;
+            case 'c':
+               processClassPath(getopt.getOptarg());
+               break;
+            case 'h':
+               printHelp();
+               System.exit(0);
+            case '?':
+               System.exit(1);
+         }
+      }
+      
+      int endpointPos = getopt.getOptind();
+      if (endpointPos >= args.length)
+      {
+         System.err.println("Error: endpoint implementation was not specified!");
+         printHelp();
+         System.exit(1);
+      }
+      
+      return args[endpointPos];
+   }
+   
+   
+   private int generate(String endpoint)
+   {
+      if (!JavaUtils.isLoaded(endpoint, loader))
+      {
+         System.err.println("Error: Could not load class [" + endpoint + "]. Did you specify a valid --classpath?");
+         return 1;
+      }
+      
+      WebServiceGenerator gen = WebServiceGenerator.newInstance(loader);
+      gen.setGenerateWsdl(generateWsdl);
+      gen.setGenerateSource(generateSource);
+      gen.setOutputDirectory(outputDir);
+      if (resourceDir != null)
+         gen.setResourceDirectory(resourceDir);
+      if (sourceDir != null)
+         gen.setSourceDirectory(sourceDir);
+
+      if (! quiet)
+         gen.setMessageStream(System.out);
+      
+      try
+      {
+         gen.generate(endpoint);
+         return 0;
+      }
+      catch (Throwable t)
+      {
+         System.err.println("Error: Could not generate. (use --show-traces to see full traces)");
+         if (!showTraces)
+         {
+            String message = t.getMessage();
+            if (message == null)
+               message = t.getClass().getSimpleName();
+            System.err.println("Error: " + message);
+         }
+         else
+         {
+            t.printStackTrace(System.err);
+         }
+         
+      }
+      
+      return 1;
+   }
+
+   private void processClassPath(String classPath)
+   {
+      String[] entries =  classPath.split(File.pathSeparator);
+      List<URL> urls= new ArrayList<URL>(entries.length);
+      for (String entry : entries)
+      {
+         try 
+         {
+            urls.add(new File(entry).toURL());
+         }
+         catch (MalformedURLException e)
+         {
+            System.err.println("Error: a classpath entry was malformed: " + entry);
+         }
+      }
+      loader = new URLClassLoader(urls.toArray(new URL[0]), loader);
+   }
+
+   private static void printHelp()
+   {
+      PrintStream out = System.out;
+      out.println("WSGenerate generates portable JAX-WS artifacts for an endpoint implementation.\n");
+      out.println("usage: " + PROGRAM_NAME + " [options] <endpoint class name>\n");
+      out.println("options: ");
+      out.println("    -h, --help                  Show this help message");
+      out.println("    -k, --keep                  Keep/Generate Java source");
+      out.println("    -w, --wsdl                  Enable WSDL file generation");
+      out.println("    -c. --classpath             The classpath that contains the endpoint");
+      out.println("    -o, --output=<directory>    The directory to put generated artifacts");
+      out.println("    -r, --resource=<directory>  The directory to put resource artifacts");
+      out.println("    -s, --source=<directory>    The directory to put Java source");
+      out.println("    -q, --quiet                 Be somewhat more quiet");
+      out.println("    -t, --show-traces           Show full exception stack traces");
+      out.flush();
+   }
+}

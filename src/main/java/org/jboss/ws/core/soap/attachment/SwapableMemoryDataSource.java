@@ -111,17 +111,7 @@ public class SwapableMemoryDataSource implements DataSource
 
          if (rbaos != null && rbaos.size() > maxMemorySize)
          {
-            File tmpdir = null;
-            try
-            {
-               tmpdir = IOUtils.createTempDirectory();
-            }
-            catch (Throwable e)
-            {
-               // Ignore if the server config cannot be found
-               // this would be the case if we are on the client side
-            }
-
+            File tmpdir = IOUtils.createTempDirectory();
             swapFile = File.createTempFile(SWAP_PREFIX, SWAP_SUFFIX, tmpdir);
             swapFile.deleteOnExit();
             os = new FileOutputStream(swapFile);

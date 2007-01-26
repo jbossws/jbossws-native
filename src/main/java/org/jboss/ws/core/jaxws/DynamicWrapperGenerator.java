@@ -53,19 +53,32 @@ import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
 
-public class DynamicWrapperGenerator extends WrapperGenerator
+public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 {
    private static Logger log = Logger.getLogger(DynamicWrapperGenerator.class);
 
-   private ClassPool pool;
+   protected ClassPool pool;
+   protected boolean prune = true;
 
    public DynamicWrapperGenerator(ClassLoader loader)
    {
       super(loader);
+      init(loader);
+   }
+   
+   private void init(ClassLoader loader)
+   {
       pool = new ClassPool(true);
       pool.appendClassPath(new LoaderClassPath(loader));
    }
-
+   
+   @Override
+   public void reset(ClassLoader loader)
+   {
+      super.reset(loader);
+      init(loader);
+   }
+   
    /**
     * Generates a wrapper type and assigns it to the passed ParameterMetaData
     * object. This routine requires the pmd to contain completed wrappedTypes
@@ -101,6 +114,7 @@ public class DynamicWrapperGenerator extends WrapperGenerator
          {
             addProperty(clazz, parameter.getType(), parameter.getName(), parameter.getVariable(), parameter.getTypeArguments());
          }
+         clazz.stopPruning(!prune);
          pool.toClass(clazz, loader);
          JavaUtils.clearBlacklists(loader);
       }

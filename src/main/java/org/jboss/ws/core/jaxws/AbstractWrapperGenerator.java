@@ -31,23 +31,27 @@ import java.util.TreeMap;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
-
 /**
  * Base class for JAX-WS wrapper generation.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public abstract class WrapperGenerator
+public abstract class AbstractWrapperGenerator implements WrapperGenerator
 {
    private static Set<String> excludedGetters;
    protected ClassLoader loader;
 
-   public WrapperGenerator(ClassLoader loader)
+   public AbstractWrapperGenerator(ClassLoader loader)
    {
       this.loader = loader;
    }
-
+   
+   public void reset(ClassLoader loader)
+   {
+      this.loader = loader;
+   }
+   
    static
    {
       excludedGetters = new HashSet<String>(4);
@@ -91,9 +95,4 @@ public abstract class WrapperGenerator
 
       return sortedGetters;
    }
-
-
-
-   public abstract void generate(ParameterMetaData pmd);
-   public abstract void generate(FaultMetaData fmd);
 }

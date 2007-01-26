@@ -85,9 +85,12 @@ public class WSSecurityConfigFactory
       {
          UnifiedVirtualFile child = vfsRoot.findChild(resource);
          URL url = child.toURL();
-         InputStream inputStream = url.openStream();
-         inputStream.close();
-
+         if (url != null)
+         {
+            InputStream inputStream = url.openStream();
+            inputStream.close();
+         }
+         
          return url;
       }
       catch (Exception e)

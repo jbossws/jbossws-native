@@ -23,12 +23,27 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Writer;
+import java.net.URL;
+
+import javax.jws.HandlerChain;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPMessageHandlers;
+import javax.management.ObjectName;
+import javax.xml.namespace.QName;
+
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
-import org.jboss.ws.metadata.umdm.*;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
@@ -39,15 +54,6 @@ import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
-
-import javax.jws.*;
-import javax.jws.soap.SOAPMessageHandlers;
-import javax.management.ObjectName;
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.URL;
 
 /**
  * An abstract annotation meta data builder.
@@ -61,6 +67,11 @@ import java.net.URL;
 @SuppressWarnings("deprecation")
 public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
+   private boolean generateWsdl = true;
+   private boolean toolMode = false;
+   private File wsdlDirectory = null;
+   private PrintStream messageStream = null;
+   
    private static class EndpointResult
    {
       private Class<?> epClass;
@@ -68,7 +79,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       private ServiceMetaData serviceMetaData;
       private URL wsdlLocation;
    }
-
+   
+   public void setGenerateWsdl(boolean generateWsdl)
+   {
+      this.generateWsdl = generateWsdl;
+   }
 
    public ServerEndpointMetaData buildWebServiceMetaData(UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName)
    {
@@ -110,9 +125,20 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          createJAXBContext(sepMetaData);
          populateXmlTypes(sepMetaData);
 
-         // Process or generate WSDL
-         processOrGenerateWSDL(seiClass, serviceMetaData, result.wsdlLocation, sepMetaData);
+         // The server must always generate WSDL
+         if (generateWsdl || !toolMode)
+            processOrGenerateWSDL(seiClass, serviceMetaData, result.wsdlLocation, sepMetaData);
 
+         // No need to process endpoint items if we are in tool mode
+         if (toolMode)
+            return sepMetaData;
+
+         // Sanity check: read the generated WSDL and initialize the schema model
+         // Note, this should no longer be needed, look into removing it
+         WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
+         JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
+         serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
+         
          // process config
          processEndpointConfig(udi, sepClass, linkName, sepMetaData);
 
@@ -128,22 +154,14 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          else if (seiClass.isAnnotationPresent(HandlerChain.class))
             processHandlerChain(sepMetaData, seiClass);
 
-         // Sanity check: read the generated WSDL and initialize the schema model
-         WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
-         JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
-         serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
-
          // Init the endpoint address
          MetaDataBuilder.initEndpointAddress(udi, sepMetaData, linkName);
-
-         // replace the SOAP address
-         MetaDataBuilder.replaceAddressLocation(sepMetaData);
 
          // Process an optional @SOAPMessageHandlers annotation
          if (sepClass.isAnnotationPresent(SOAPMessageHandlers.class) || seiClass.isAnnotationPresent(SOAPMessageHandlers.class))
             log.warn("@SOAPMessageHandlers is deprecated as of JAX-WS 2.0 with no replacement.");
 
-         // process endpoint meta data extensions
+         MetaDataBuilder.replaceAddressLocation(sepMetaData);
          processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
          
          // init service endpoint id
@@ -253,25 +271,45 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             // Ensure that types are only in the interface qname
             wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
 
-            final File tmpdir = IOUtils.createTempDirectory();
-            File wsdlTmpFile = File.createTempFile(serviceName, ".wsdl", tmpdir);
-            wsdlTmpFile.deleteOnExit();
+            final File dir, wsdlFile;
+            
+            if (wsdlDirectory != null)
+            {
+               dir = wsdlDirectory;
+               wsdlFile = new File(dir, serviceName + ".wsdl");
+            }
+            else
+            {
+               dir =  IOUtils.createTempDirectory();
+               wsdlFile = File.createTempFile(serviceName, ".wsdl", dir);
+               wsdlFile.deleteOnExit();
+            }
 
-            Writer writer = IOUtils.getCharsetFileWriter(wsdlTmpFile, Constants.DEFAULT_XML_CHARSET);
+            message(wsdlFile.getName());
+            Writer writer = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
             new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver() {
                public WSDLWriterResolver resolve(String suggestedFile) throws IOException
                {
-                  File newTmpFile = File.createTempFile(suggestedFile, ".wsdl", tmpdir);
-                  newTmpFile.deleteOnExit();
-                  actualFile = newTmpFile.getName();
+                  File file;
+                  if (wsdlDirectory != null)
+                  {
+                     file = new File(dir, suggestedFile + ".wsdl");
+                  }
+                  else 
+                  {
+                     file = File.createTempFile(suggestedFile, ".wsdl", dir);
+                     file.deleteOnExit();
+                  }
+                  actualFile = file.getName();
+                  message(actualFile);
                   charset = Constants.DEFAULT_XML_CHARSET;
-                  writer = IOUtils.getCharsetFileWriter(newTmpFile, Constants.DEFAULT_XML_CHARSET);
+                  writer = IOUtils.getCharsetFileWriter(file, Constants.DEFAULT_XML_CHARSET);
                   return this;
                }
             });
             writer.close();
 
-            serviceMetaData.setWsdlLocation(wsdlTmpFile.toURL());
+            serviceMetaData.setWsdlLocation(wsdlFile.toURL());
          }
          catch (RuntimeException rte)
          {
@@ -282,5 +320,26 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             throw new WSException("Cannot write generated wsdl", e);
          }
       }
+   }
+   
+   private void message(String msg)
+   {
+      if (messageStream != null)
+         messageStream.println(msg);
+   }
+
+   public void setToolMode(boolean toolMode)
+   {
+      this.toolMode = toolMode;
+   }
+
+   public void setWsdlDirectory(File wsdlDirectory)
+   {
+      this.wsdlDirectory = wsdlDirectory;
+   }
+
+   public void setMessageStream(PrintStream messageStream)
+   {
+      this.messageStream = messageStream;
    }
 }

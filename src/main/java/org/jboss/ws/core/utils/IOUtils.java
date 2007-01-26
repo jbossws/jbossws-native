@@ -111,10 +111,21 @@ public final class IOUtils
 
    public static File createTempDirectory() throws IOException
    {
-      ServerConfigFactory factory = ServerConfigFactory.getInstance();
-      ServerConfig config = factory.getServerConfig();
-      File tmpdir = new File(config.getServerTempDir().getCanonicalPath() + "/jbossws");
-      tmpdir.mkdirs();
+      File tmpdir = null;
+      
+      try
+      {
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         ServerConfig config = factory.getServerConfig();
+      
+         tmpdir = new File(config.getServerTempDir().getCanonicalPath() + "/jbossws");
+         tmpdir.mkdirs();
+      }
+      catch (Throwable t)
+      {
+         // Use the Java temp directory if there is no server config (the client)
+      }
+      
       return tmpdir;
    }
 }

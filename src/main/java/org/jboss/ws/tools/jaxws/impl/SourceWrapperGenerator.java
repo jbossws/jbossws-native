@@ -19,8 +19,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools;
+package org.jboss.ws.tools.jaxws.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -33,7 +36,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxws.WrapperGenerator;
+import org.jboss.ws.core.jaxws.AbstractWrapperGenerator;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -55,15 +58,31 @@ import com.sun.codemodel.JMod;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public class SourceWrapperGenerator extends WrapperGenerator
+public class SourceWrapperGenerator extends AbstractWrapperGenerator implements WritableWrapperGenerator
 {
-
    private static Logger log = Logger.getLogger(SourceWrapperGenerator.class);
-   private JCodeModel codeModel = new JCodeModel();
+   private PrintStream stream;
+   private JCodeModel codeModel;
 
-   public SourceWrapperGenerator(ClassLoader loader)
+   
+   public SourceWrapperGenerator(ClassLoader loader, PrintStream stream)
    {
       super(loader);
+      this.stream = stream;
+      codeModel = new JCodeModel();
+   }
+   
+   @Override
+   public void reset(ClassLoader loader)
+   {
+      super.reset(loader);
+      codeModel = new JCodeModel();
+   }
+   
+   public void write(File directory) throws IOException
+   {
+      stream.println("Writing Source:");
+      codeModel.build(directory, stream);
    }
 
    public void generate(ParameterMetaData pmd)

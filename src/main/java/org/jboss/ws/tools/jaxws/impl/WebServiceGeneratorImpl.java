@@ -1,0 +1,169 @@
+/*
+* JBoss, Home of Professional Open Source
+* Copyright 2005, JBoss Inc., and individual contributors as indicated
+* by the @authors tag. See the copyright.txt in the distribution for a
+* full listing of individual contributors.
+*
+* This is free software; you can redistribute it and/or modify it
+* under the terms of the GNU Lesser General Public License as
+* published by the Free Software Foundation; either version 2.1 of
+* the License, or (at your option) any later version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this software; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+*/
+package org.jboss.ws.tools.jaxws.impl;
+
+import static org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType.JAXWS_EJB3;
+import static org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType.JAXWS_JSE;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ejb.Stateless;
+
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
+import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
+import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
+
+/**
+ * The provided implementation of a WebServiceGenerator.
+ * 
+ * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ */
+final class WebServiceGeneratorImpl extends WebServiceGenerator
+{
+   private ClassLoader loader;
+   private boolean generateWsdl = false;
+   private boolean generateSource = false;
+   private File outputDir = new File("output");
+   private File resourceDir = outputDir;
+   private File sourceDir = outputDir;
+   private PrintStream messageStream = new NullPrintStream();
+   
+   @Override
+   public void generate(Class<?> endpointClass)
+   {
+      if (!outputDir.exists())
+         if (!outputDir.mkdirs())
+            throw new WSException("Could not create directory: " + outputDir);
+      
+      if (generateWsdl && !resourceDir.exists())
+         if (!resourceDir.mkdirs())
+            throw new WSException("Could not create directory: " + resourceDir);
+      
+      
+      if (generateSource && !sourceDir.exists())
+         if (!sourceDir.mkdirs())
+            throw new WSException("Could not create directory: " + sourceDir);
+      
+      DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
+      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(type)
+      {
+         @Override
+         public URL getMetaDataFileURL(String resourcePath) throws IOException
+         {
+            return null;
+         }
+      };
+      udi.classLoader = loader;
+      
+      UnifiedMetaData umd = new UnifiedMetaData(new ResourceLoaderAdapter(loader));
+      umd.setClassLoader(loader);
+      
+      ChainedWritableWrapperGenerator generator = new ChainedWritableWrapperGenerator();
+      if (generateSource)
+         generator.add(new SourceWrapperGenerator(loader, messageStream), sourceDir);
+      generator.add(new BytecodeWrapperGenerator(loader, messageStream), outputDir);
+      
+      JAXWSWebServiceMetaDataBuilder builder = new JAXWSWebServiceMetaDataBuilder();
+      builder.setWrapperGenerator(generator);
+      builder.setGenerateWsdl(generateWsdl);
+      builder.setToolMode(true);
+      builder.setWsdlDirectory(resourceDir);
+      builder.setMessageStream(messageStream);
+      
+      if (generateWsdl)
+         messageStream.println("Generating WSDL:");
+      
+      builder.buildWebServiceMetaData(umd, udi, endpointClass, null);
+      try
+      {
+         generator.write();
+      }
+      catch (IOException io)
+      {
+         throw new WSException("Could not write output files:", io);
+      }
+   }
+
+   @Override
+   public void generate(String endpointClass)
+   {
+      try
+      {
+         generate(loader.loadClass(endpointClass));
+      }
+      catch (ClassNotFoundException e)
+      {
+         throw new WSException("Class not found: " + endpointClass);
+      }
+   }
+
+   @Override
+   public void setClassLoader(ClassLoader loader)
+   {
+      this.loader = loader;
+   }
+
+   @Override
+   public void setGenerateWsdl(boolean generateWsdl)
+   {
+      this.generateWsdl = generateWsdl;
+   }
+
+   @Override
+   public void setOutputDirectory(File directory)
+   {
+      outputDir = directory;
+   }
+
+   @Override
+   public void setGenerateSource(boolean generateSource)
+   {
+      this.generateSource = generateSource;
+   }
+   
+   @Override
+   public void setResourceDirectory(File directory)
+   {
+      resourceDir = directory;
+   }
+
+   @Override
+   public void setSourceDirectory(File directory)
+   {
+      sourceDir = directory;
+   }
+
+   @Override
+   public void setMessageStream(PrintStream messageStream)
+   {
+      this.messageStream = messageStream;
+   }
+}

@@ -60,6 +60,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.Use;
+import org.jboss.ws.core.jaxws.AbstractWrapperGenerator;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.jaxws.WrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
@@ -784,9 +785,18 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          throw new WSException("No exposable methods found");
    }
 
+   protected void initWrapperGenerator(ClassLoader loader)
+   {
+      // Use the dynamic generator by default. Otherwise reset the last 
+      if (wrapperGenerator == null)
+         wrapperGenerator = new DynamicWrapperGenerator(loader);
+      else
+         wrapperGenerator.reset(loader);
+   }
+   
    protected void resetMetaDataBuilder(ClassLoader loader)
    {
-      wrapperGenerator = new DynamicWrapperGenerator(loader);
+      initWrapperGenerator(loader);
       javaTypes.clear();
       typeRefs.clear();
       jaxbCtx = null;
@@ -875,5 +885,13 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             populateXmlType(faultMetaData);
          }
       }
+   }
+
+   /**
+    * Set the wrapper generator for this builder.
+    */
+   public void setWrapperGenerator(WrapperGenerator wrapperGenerator)
+   {
+      this.wrapperGenerator = wrapperGenerator;
    }
 }
