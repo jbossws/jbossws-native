@@ -520,6 +520,20 @@ public class JavaUtils
       return c + source.substring(1);
    }
 
+   public static boolean isLoaded(String className, ClassLoader loader)
+   {
+      try
+      {
+         loadJavaType(className, loader);
+      }
+      catch (ClassNotFoundException e)
+      {
+         return false;
+      }
+
+      return true;
+   }
+
    public static String getPackageName(Class<?> clazz)
    {
       String fullName = clazz.getName();
