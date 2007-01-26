@@ -14,8 +14,8 @@ jboss.server.instance=default
 
 # Tomcat Home
 tomcat.home=/usr/java/tomcat
-#tomcat.manager.username=manager
-#tomcat.manager.password=manager
+tomcat.manager.username=manager
+tomcat.manager.password=manager
 
 # Force thirdparty HTTP get
 #force.thirdparty.get=true

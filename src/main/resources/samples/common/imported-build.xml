@@ -37,19 +37,19 @@
     </condition>
       
     <!-- Integration Target Server -->
-    <condition property="jbossws.integration.target.jboss">
+    <condition property="integration.target.jboss">
       <isset property="jboss.home"/>
     </condition>
-    <condition property="jbossws.integration.target.tomcat">
+    <condition property="integration.target.tomcat">
       <equals arg1="${jbossws.integration.target}" arg2="tomcat"/>
     </condition>
       
     <!-- Java Endorsed -->
     <condition property="endorsed.dirs" value="${jboss.home}/lib/endorsed">
-      <isset property="jbossws.integration.target.jboss"/>
+      <isset property="integration.target.jboss"/>
     </condition>
     <condition property="endorsed.dirs" value="${tomcat.home}/common/endorsed">
-      <isset property="jbossws.integration.target.tomcat"/>
+      <isset property="integration.target.tomcat"/>
     </condition>
     
     <!-- Set a hostname property based on COMPUTERNAME for win32, HOSTNAME
@@ -112,7 +112,7 @@
   </target>
   
   <!-- Check JBoss -->
-  <target name="check-jboss">
+  <target name="check-jboss" if="integration.target.jboss">
     
     <available property="jboss.available" file="${jboss.home}/client/jboss-client.jar"/>
     <fail message="JBoss not available: ${jboss.home}" unless="jboss.available"/>
@@ -123,15 +123,19 @@
     <property name="jboss.server.deploy" value="${jboss.server}/deploy"/>
     <property name="jboss.server.lib" value="${jboss.server}/lib"/>
     
+    <!-- Define excluded tests -->
+    <property name="excludes-short-name" value="tests-jboss-excludes.txt"/>
+    <property name="excludesfile" value="${common.resources}/${excludes-short-name}"/>
+    
   </target>
   
   <!-- Check tomcat -->
-  <target name="check-tomcat" if="jbossws.integration.target.tomcat">
+  <target name="check-tomcat" if="integration.target.tomcat">
     
     <available property="tomcat.available" file="${tomcat.home}/server/lib/catalina.jar"/>
     <condition property="cannot.use.tomcat">
       <and>
-        <isset property="jbossws.integration.target.tomcat"/>
+        <isset property="integration.target.tomcat"/>
         <not>
           <isset property="tomcat.available"/>
         </not>
@@ -139,12 +143,16 @@
     </condition>
     <fail message="Tomcat not available: ${tomcat.home}" if="cannot.use.tomcat"/>
     
+    <!-- Define excluded tests -->
+    <property name="excludes-short-name" value="tests-tomcat-excludes.txt"/>
+    <property name="excludesfile" value="${common.resources}/${excludes-short-name}"/>
+    
   </target>
   
   <!-- Compile the java sources -->
   <target name="compile" depends="init,thirdparty" 
     description="compile the sources">
-    <javac destdir="${build.tests.dir}/classes" classpathref="compile.classpath" debug="on">
+    <javac destdir="${build.tests.dir}/classes" classpathref="compile.classpath" debug="on" excludesfile="${excludesfile}">
       <src path="${common.java}"/>
       <src path="${java.dir}"/>
     </javac>

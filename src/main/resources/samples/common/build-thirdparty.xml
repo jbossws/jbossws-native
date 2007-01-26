@@ -71,6 +71,7 @@
       <pathelement location="${lib.dir}/jboss-jaxws.jar"/>
       <pathelement location="${lib.dir}/jboss-saaj.jar"/>
       <pathelement location="${lib.dir}/jbossws-client.jar"/>
+      <pathelement location="${lib.dir}/jbossws-tomcat-integration.jar"/>
     </path>
     
     <path id="compile.classpath">
