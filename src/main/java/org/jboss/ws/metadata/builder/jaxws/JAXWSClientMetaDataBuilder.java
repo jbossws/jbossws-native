@@ -33,8 +33,8 @@ import javax.xml.ws.BindingType;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.NCName;

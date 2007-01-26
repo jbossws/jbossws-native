@@ -21,7 +21,7 @@
 */
 package org.jboss.ws.metadata.wsse;
 
-import org.jboss.ws.core.server.UnifiedVirtualFile;
+import org.jboss.ws.core.UnifiedVirtualFile;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -29,7 +29,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.core.server.UnifiedVirtualFile;
+import org.jboss.ws.core.UnifiedVirtualFile;
 
 /**
  * Represents a <service-ref> element of the jboss.xml, jboss-web.xml, jboss-client.xml

@@ -47,7 +47,7 @@ import javax.xml.ws.Service;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
-import org.jboss.ws.core.server.UnifiedVirtualFile;
+import org.jboss.ws.core.UnifiedVirtualFile;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.ws.Service

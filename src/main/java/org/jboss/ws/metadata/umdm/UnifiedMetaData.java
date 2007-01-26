@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.server.ServiceEndpointManager;
-import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 

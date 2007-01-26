@@ -24,7 +24,7 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedVirtualFile;
+import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.*;

@@ -31,6 +31,8 @@ import java.util.Map;
 
 import javax.management.ObjectName;
 
+import org.jboss.ws.core.UnifiedVirtualFile;
+
 /**
  * The container independent deployment info.
  *
