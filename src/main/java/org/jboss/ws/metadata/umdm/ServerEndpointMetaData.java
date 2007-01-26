@@ -66,6 +66,12 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public ServerEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
       super(service, portName, portTypeName, type);
+      super.configName = ConfigurationProvider.DEFAULT_ENDPOINT_CONFIG_NAME;
+
+      if (type == Type.JAXRPC)
+         configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
+      else
+         configFile = ConfigurationProvider.DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE;
    }
 
    public String getLinkName()
@@ -172,34 +178,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setManagedEndpointBean(String managedEndpointBean)
    {
       this.managedEndpointBean = managedEndpointBean;
-   }
-
-   public String getConfigName() {
-      String configName = super.getConfigName();
-      if (configName == null)
-      {
-         configName = ConfigurationProvider.DEFAULT_ENDPOINT_CONFIG_NAME;
-         setConfigName(configName);
-      }
-      return configName;
-   }
-
-   public String getConfigFile() {
-      String configFile = super.getConfigFile();
-
-      if (configFile == null)
-      {
-         if (getType() == Type.JAXRPC)
-         {
-            configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
-         }
-         else
-         {
-            configFile = ConfigurationProvider.DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE;
-         }
-         setConfigFile(configFile);
-      }
-      return configFile;
    }
 
    public String toString()

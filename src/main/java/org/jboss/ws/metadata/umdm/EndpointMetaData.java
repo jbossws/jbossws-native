@@ -90,9 +90,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    // The REQUIRED name of the WSDL interface/portType
    private QName portTypeName;
    // The REQUIRED config-name
-   private String configName;
+   protected String configName;
    // The REQUIRED config-file
-   private String configFile;
+   protected String configFile;
    // The endpoint address
    private String endpointAddress;
    // The endpoint interface name
@@ -645,7 +645,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    public String getConfigFile()
    {
-      return configFile;
+      return this.configFile;
    }
 
    public void setConfigFile(String configFile)
@@ -656,18 +656,23 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
 
    public String getConfigName()
    {
-      return configName;
+      return this.configName;
    }
 
    public void setConfigName(String configName)
    {
-      this.configName = configName;
-      this.config = null;
+      if(null == configName)
+         throw new IllegalArgumentException("Invalid config name: " + configName);
 
-      // notify observers
-      log.debug("Reconfiguration forced");
-      this.configObservable.touch();
-      this.configObservable.notifyObservers(configName);
+      if( !configName.equals(this.configName) )
+      {
+         this.configName = configName;
+         this.config = null;
+
+         // notify observers
+         log.debug("Reconfiguration forced, new config is '"+configName+"'");
+         this.configObservable.doNotify(configName);
+      }
    }
 
    public List<Class> getRegisteredTypes()
@@ -680,9 +685,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData
    }
 
    class ConfigObservable extends Observable {
-      public void touch()
-      {
+
+      public void doNotify(Object object) {
          setChanged();
-      };
+         notifyObservers(object);
+      }
    }
 }

@@ -39,35 +39,12 @@ public class ClientEndpointMetaData extends EndpointMetaData
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {
       super(service, qname, portTypeName, type);
-   }
+      super.configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
 
-   public String getConfigName()
-   {
-      String configName = super.getConfigName();
-      if (configName == null)
-      {
-         configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
-         setConfigName(configName);
-      }
-      return configName;
-   }
-
-   public String getConfigFile()
-   {
-      String configFile = super.getConfigFile();
-      if (configFile == null)
-      {
-         if (getType() == Type.JAXRPC)
-         {
-            configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
-         }
-         else
-         {
-            configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
-         }
-         setConfigFile(configFile);
-      }
-      return configFile;
+      if (type == Type.JAXRPC)
+         super.configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
+      else
+         super.configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
    }
 
    public String toString()
