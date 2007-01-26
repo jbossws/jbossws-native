@@ -88,7 +88,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
          if(null == javaType)
             throw new Exception("Unable to resolve target java type");
 
-         JAXBContext jaxbContext = JAXBContext.newInstance(javaType);
+         JAXBContextCache contextCache = JAXBContextCache.getContextCache();
+         JAXBContext jaxbContext = contextCache.getInstance(javaType);
+                  
          Marshaller marshaller = jaxbContext.createMarshaller();
 
          marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);

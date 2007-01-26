@@ -52,6 +52,7 @@ import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
+import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.server.UnifiedVirtualFile;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.config.CommonConfig;
@@ -125,6 +126,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private List<Class> registeredTypes = new ArrayList<Class>();
 
    private ConfigObservable configObservable = new ConfigObservable();
+
+   private JAXBContextCache jaxbCache;
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
@@ -573,6 +576,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             }
          }
       }
+   }
+
+   public JAXBContextCache getJaxbCache() {
+      if(null == jaxbCache)
+         jaxbCache = new JAXBContextCache();
+      return jaxbCache;
    }
 
    // ---------------------------------------------------------------

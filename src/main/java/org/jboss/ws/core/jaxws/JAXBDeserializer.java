@@ -29,6 +29,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.WebServiceException;
@@ -68,7 +69,10 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
 
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
          Class javaType = typeMapping.getJavaType(xmlType);
-         JAXBContext jaxbContext = JAXBContext.newInstance(types);
+         
+         JAXBContextCache contextCache = JAXBContextCache.getContextCache();
+         JAXBContext jaxbContext = contextCache.getInstance(types);
+
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
          unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());
 
@@ -84,6 +88,11 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
       }
       return value;
 
+   }
+
+   private JAXBContext getJAXBContext(Class[] types) throws JAXBException {
+      JAXBContext jaxbContext = JAXBContext.newInstance(types);
+      return jaxbContext;
    }
 
    // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
