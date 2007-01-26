@@ -47,6 +47,7 @@ import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
+import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.ServerConfig;
@@ -381,6 +382,7 @@ public class SchemaUtils
       XMLSchemaLoader xsloader = new XMLSchemaLoader();
       JBossXSErrorHandler eh = new JBossXSErrorHandler();
       xsloader.setErrorHandler(eh);
+      xsloader.setProperty("http://apache.org/xml/properties/internal/grammar-pool", new XMLGrammarPoolImpl());
       return xsloader;
    }
 
@@ -396,6 +398,7 @@ public class SchemaUtils
       XMLSchemaLoader xsloader = new XMLSchemaLoader();
       xsloader.setEntityResolver(xer);
       xsloader.setErrorHandler(xeh);
+      xsloader.setProperty("http://apache.org/xml/properties/internal/grammar-pool", new XMLGrammarPoolImpl());
       return xsloader;
    }
 
