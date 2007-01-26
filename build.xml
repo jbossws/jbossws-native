@@ -21,6 +21,7 @@
   <property name="core.resources.dir" value="${core.src.dir}/resources"/>
   <property name="core.samples.dir" value="${core.resources.dir}/samples"/>
   <property name="core.output.dir" value="${core.dir}/output"/>
+  <property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
   <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
   <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
   <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
@@ -179,15 +180,12 @@
    <!-- Generate the JavaDoc -->
    <target name="core-javadoc" depends="core-init" description="Generate the Javadoc">
 
-      <mkdir dir="${output.api-docs}"/>
-      <javadoc destdir="${output.api-docs}" author="true" version="true" use="true" windowtitle="JBossWS API">
+      <mkdir dir="${core.output.apidocs.dir}"/>
+      <javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">
+         <classpath refid="core.classpath"/>
          <packageset dir="${core.java.dir}" defaultexcludes="yes">
             <include name="org/jboss/ws/**"/>
          </packageset>
-         <packageset dir="${jboss.server.root}/../src/main" defaultexcludes="yes">
-            <include name="org/jboss/webservice/metadata/**"/>
-         </packageset>
-
          <doctitle><![CDATA[<h1>JBossWS</h1>]]></doctitle>
          <tag name="todo" scope="all" description="To do:"/>
          <group title="Core" packages="org.jboss.ws.core*"/>
