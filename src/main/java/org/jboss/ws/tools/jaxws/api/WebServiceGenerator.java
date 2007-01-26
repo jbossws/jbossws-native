@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.PrintStream;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.tools.TestMe;
 import org.jboss.ws.tools.jaxws.spi.WebServiceGeneratorProvider;
 
 
