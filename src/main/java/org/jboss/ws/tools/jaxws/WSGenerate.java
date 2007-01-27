@@ -39,7 +39,21 @@ import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
  * WSGenerate is a command line tool that generates portable JAX-WS artifacts
  * for a service endpoint implementation.
  * 
+ * <pre>
+ *  options: 
+ *  -h, --help                  Show this help message
+ *  -k, --keep                  Keep/Generate Java source
+ *  -w, --wsdl                  Enable WSDL file generation
+ *  -c. --classpath             The classpath that contains the endpoint
+ *  -o, --output=&lt;directory&gt;    The directory to put generated artifacts
+ *  -r, --resource=&lt;directory&gt;  The directory to put resource artifacts
+ *  -s, --source=&lt;directory&gt;    The directory to put Java source
+ *  -q, --quiet                 Be somewhat more quiet
+ *  -t, --show-traces           Show full exception stack traces
+ * </pre>
+ * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @version $Revision$
  */
 public class WSGenerate
 {

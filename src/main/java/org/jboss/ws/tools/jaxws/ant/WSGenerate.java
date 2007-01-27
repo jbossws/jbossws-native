@@ -38,7 +38,31 @@ import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
 /**
  * Ant task which invokes WebServiceGenerate.
  * 
+ * Example:
+ * 
+ * <pre>
+ *  &lt;target name=&quot;test-wsgen&quot; depends=&quot;init&quot;&gt;
+ *    &lt;taskdef name=&quot;wsgen&quot; classname=&quot;org.jboss.ws.tools.jaxws.ant.WSGenerate&quot;&gt;
+ *      &lt;classpath refid=&quot;core.classpath&quot;/&gt;
+ *    &lt;/taskdef&gt;
+ *    &lt;wsgen
+ *      fork=&quot;false&quot;
+ *      keep=&quot;true&quot;
+ *      destdir=&quot;out&quot;
+ *      resourcedestdir=&quot;out-resource&quot;
+ *      sourcedestdir=&quot;out-source&quot;
+ *      genwsdl=&quot;true&quot; 
+ *      verbose=&quot;true&quot;
+ *      sei=&quot;org.jboss.test.ws.jaxws.jsr181.soapbinding.DocWrappedServiceImpl&quot;&gt;
+ *      &lt;classpath&gt;
+ *        &lt;pathelement path=&quot;${tests.output.dir}/classes&quot;/&gt;
+ *      &lt;/classpath&gt;
+ *    &lt;/wsgen&gt;
+ *  &lt;/target&gt;
+ * </pre>
+ * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @version $Revision$
  */
 public class WSGenerate extends Task
 {
