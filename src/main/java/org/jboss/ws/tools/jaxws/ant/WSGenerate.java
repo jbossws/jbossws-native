@@ -38,7 +38,21 @@ import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
 /**
  * Ant task which invokes WebServiceGenerate.
  * 
- * Example:
+ * <table border="1">
+ *   <tr align="left" BGCOLOR="#CCCCFF" CLASS="TableHeadingColor"><th>Attribute</th><th>Description</th><th>Default</th></tr>
+ *   <tr><td>fork</td><td>Whether or not to run the generation task in a separate VM.</td><td>true</td></tr>
+ *   <tr><td>keep</td><td>Keep/Enable Java source code generation.</td><td>false</td></tr>
+ *   <tr><td>destdir</td><td>The output directory for generated artifacts.</td><td>"output"</td></tr>
+ *   <tr><td>resourcedestdir</td><td>The output directory for resource artifacts (WSDL/XSD).</td><td>value of destdir</td></tr>
+ *   <tr><td>sourcedir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
+ *   <tr><td>genwsdl</td><td>Whether or not to generate WSDL.</td><td>false</td><tr>
+ *   <tr><td>verbose</td><td>Enables more informational output about command progress.</td><td>false</td><tr>
+ *   <tr><td>sei*</td><td>Service Endpoint Implementation.</td><td></td><tr>
+ *   <tr><td>classpath</td><td>The classpath that contains the service endpoint implementation.</td><td>""</tr>
+ * </table>
+ * <b>* = required.</b>
+ * 
+ * <p>Example:
  * 
  * <pre>
  *  &lt;target name=&quot;test-wsgen&quot; depends=&quot;init&quot;&gt;
@@ -106,11 +120,6 @@ public class WSGenerate extends Task
       this.sei = sei;
    }
    
-   public void setEndpoint(String endpoint)
-   {
-      this.sei = endpoint;
-   }
-
    public void setFork(boolean fork)
    {
       this.fork = fork;
@@ -173,6 +182,9 @@ public class WSGenerate extends Task
    
    public void execute() throws BuildException
    {
+      if (sei == null)
+         throw new BuildException("The sei attribute must be specified!", getLocation());
+      
       if (fork)
          executeForked();
       else
