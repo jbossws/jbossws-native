@@ -40,7 +40,7 @@ import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
  * for a service endpoint implementation.
  * 
  * <pre>
- *  usage: wsgen [options] <endpoint class name>
+ *  usage: wsgen [options] &lt;endpoint class name&gt;
  *  options: 
  *  -h, --help                  Show this help message
  *  -k, --keep                  Keep/Generate Java source
