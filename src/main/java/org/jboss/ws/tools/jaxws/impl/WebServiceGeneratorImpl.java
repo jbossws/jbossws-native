@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,12 +53,11 @@ final class WebServiceGeneratorImpl extends WebServiceGenerator
    private boolean generateWsdl = false;
    private boolean generateSource = false;
    private File outputDir = new File("output");
-   private File resourceDir = outputDir;
-   private File sourceDir = outputDir;
+   private File resourceDir = null;
+   private File sourceDir = null;
    private PrintStream messageStream = new NullPrintStream();
    
-   @Override
-   public void generate(Class<?> endpointClass)
+   private void createDirectories(File resourceDir, File sourceDir)
    {
       if (!outputDir.exists())
          if (!outputDir.mkdirs())
@@ -67,11 +67,13 @@ final class WebServiceGeneratorImpl extends WebServiceGenerator
          if (!resourceDir.mkdirs())
             throw new WSException("Could not create directory: " + resourceDir);
       
-      
       if (generateSource && !sourceDir.exists())
          if (!sourceDir.mkdirs())
             throw new WSException("Could not create directory: " + sourceDir);
-      
+   }
+
+   private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
+   {
       DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
       UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(type)
       {
@@ -82,7 +84,20 @@ final class WebServiceGeneratorImpl extends WebServiceGenerator
          }
       };
       udi.classLoader = loader;
+      return udi;
+   }
+
+   @Override
+   public void generate(Class<?> endpointClass)
+   {
+      // Use the output directory as the default
+      File resourceDir = (this.resourceDir != null) ? this.resourceDir : outputDir;
+      File sourceDir = (this.sourceDir != null) ? this.sourceDir : outputDir;
       
+      createDirectories(resourceDir, sourceDir);
+      
+      // Create a dummy classloader to catch generated classes
+      ClassLoader loader = new URLClassLoader(new URL[0], this.loader);
       UnifiedMetaData umd = new UnifiedMetaData(new ResourceLoaderAdapter(loader));
       umd.setClassLoader(loader);
       
@@ -100,7 +115,8 @@ final class WebServiceGeneratorImpl extends WebServiceGenerator
       
       if (generateWsdl)
          messageStream.println("Generating WSDL:");
-      
+
+      UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
       builder.buildWebServiceMetaData(umd, udi, endpointClass, null);
       try
       {
