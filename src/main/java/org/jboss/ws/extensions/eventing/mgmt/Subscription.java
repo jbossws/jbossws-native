@@ -177,7 +177,7 @@ class Subscription
       }
       catch (Exception e)
       {
-         log.warn("Failed to send subscription end message to: " + this.endTo, e);
+         log.warn("Failed to send subscription end message to: " + this.endTo + "("+e.getMessage()+")");
       }
 
    }
