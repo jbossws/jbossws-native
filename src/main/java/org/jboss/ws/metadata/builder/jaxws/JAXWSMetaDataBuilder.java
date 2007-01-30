@@ -304,7 +304,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
    private String convertToVariable(String localName)
    {
-      return JAXBRIContext.mangleNameToVariableName(localName);
+      return JAXBRIContext.mangleNameToVariableName(localName.intern());
    }
 
    private String[] convertTypeArguments(Class rawType, Type type)
@@ -806,7 +806,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       try
       {
-         String targetNS = epMetaData.getPortTypeName().getNamespaceURI();
+         String targetNS = epMetaData.getPortTypeName().getNamespaceURI().intern();
          log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
          jaxbCtx = JAXBRIContext.newInstance(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false);
       }

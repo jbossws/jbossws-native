@@ -21,14 +21,20 @@
  */
 package org.jboss.ws.metadata.acessor;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+
+import org.jboss.ws.WSException;
+import org.jboss.ws.metadata.umdm.Accessor;
+import org.jboss.ws.metadata.umdm.AccessorFactory;
+import org.jboss.ws.metadata.umdm.AccessorFactoryCreator;
+import org.jboss.ws.metadata.umdm.FaultMetaData;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.ws.metadata.umdm.WrappedParameter;
+
 import com.sun.xml.bind.api.AccessorException;
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.RawAccessor;
-import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.umdm.*;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
 
 /**
  * A JAXB object accessor.
@@ -45,20 +51,20 @@ public class JAXBAccessor implements Accessor
 
       public AccessorFactory create(ParameterMetaData parameter)
       {
-         return create(parameter.getJavaType(), parameter.getOperationMetaData().getEndpointMetaData().getClassLoader());
+         return create(parameter.getJavaType());
       }
 
       public AccessorFactory create(FaultMetaData fault)
       {
-         return create(fault.getFaultBean(), fault.getOperationMetaData().getEndpointMetaData().getClassLoader());
+         return create(fault.getFaultBean());
       }
 
-      private AccessorFactory create(final Class clazz, ClassLoader loader)
+      private AccessorFactory create(final Class clazz)
       {
          final JAXBRIContext ctx;
          try
          {
-            ctx = (JAXBRIContext)JAXBRIContext.newInstance(clazz.getPackage().getName(), loader);
+            ctx = (JAXBRIContext)JAXBRIContext.newInstance(new Class[] { clazz });
          }
          catch (JAXBException e)
          {
