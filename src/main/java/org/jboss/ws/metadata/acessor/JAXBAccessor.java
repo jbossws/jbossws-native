@@ -21,20 +21,14 @@
  */
 package org.jboss.ws.metadata.acessor;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-
-import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.umdm.Accessor;
-import org.jboss.ws.metadata.umdm.AccessorFactory;
-import org.jboss.ws.metadata.umdm.AccessorFactoryCreator;
-import org.jboss.ws.metadata.umdm.FaultMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.WrappedParameter;
-
 import com.sun.xml.bind.api.AccessorException;
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.RawAccessor;
+import org.jboss.ws.WSException;
+import org.jboss.ws.metadata.umdm.*;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
 
 /**
  * A JAXB object accessor.
@@ -51,20 +45,20 @@ public class JAXBAccessor implements Accessor
 
       public AccessorFactory create(ParameterMetaData parameter)
       {
-         return create(parameter.getJavaType());
+         return create(parameter.getJavaType(), parameter.getOperationMetaData().getEndpointMetaData().getClassLoader());
       }
 
       public AccessorFactory create(FaultMetaData fault)
       {
-         return create(fault.getFaultBean());
+         return create(fault.getFaultBean(), fault.getOperationMetaData().getEndpointMetaData().getClassLoader());
       }
 
-      private AccessorFactory create(final Class clazz)
+      private AccessorFactory create(final Class clazz, ClassLoader loader)
       {
          final JAXBRIContext ctx;
          try
          {
-            ctx = (JAXBRIContext)JAXBRIContext.newInstance(new Class[] { clazz });
+            ctx = (JAXBRIContext)JAXBRIContext.newInstance(clazz.getPackage().getName(), loader);
          }
          catch (JAXBException e)
          {
@@ -73,7 +67,7 @@ public class JAXBAccessor implements Accessor
             throw ex;
          }
 
-         return new AccessorFactory() 
+         return new AccessorFactory()
          {
             public Accessor create(WrappedParameter parameter)
             {
@@ -81,7 +75,11 @@ public class JAXBAccessor implements Accessor
                try
                {
                   QName name = parameter.getName();
-                  accessor = ctx.getElementPropertyAccessor(clazz, name.getNamespaceURI(), name.getLocalPart());
+                  accessor = ctx.getElementPropertyAccessor(
+                     clazz,
+                     name.getNamespaceURI().intern(), // JAXB internally optimizes String usage towards intern()
+                     name.getLocalPart().intern()     // see com.sun.xml.bind.v2.util.QNameMap;
+                  );
                }
                catch (Throwable t)
                {

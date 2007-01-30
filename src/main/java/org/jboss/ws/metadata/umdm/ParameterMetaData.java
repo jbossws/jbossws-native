@@ -238,7 +238,7 @@ public class ParameterMetaData
       Class wrapperBean = null;
       try
       {
-         ClassLoader loader = getOperationMetaData().getEndpointMetaData().getClassLoader();
+         ClassLoader loader = getClassLoader();
          wrapperBean = JavaUtils.loadJavaType(javaTypeName, loader);
       }
       catch (ClassNotFoundException ex)
@@ -258,7 +258,7 @@ public class ParameterMetaData
       {
          try
          {
-            ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
+            ClassLoader loader = getClassLoader();
             tmpJavaType = JavaUtils.loadJavaType(javaTypeName, loader);
 
             UnifiedMetaData wsMetaData = opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData();
@@ -436,7 +436,7 @@ public class ParameterMetaData
       // reset java type
       javaType = null;
 
-      // FIXME - Remove messageType hack
+      // TODO - Remove messageType hack
       Type epType = getOperationMetaData().getEndpointMetaData().getType();
       if (getOperationMetaData().isDocumentWrapped() && !isInHeader() && !isSwA() && !isMessageType())
       {
@@ -445,7 +445,7 @@ public class ParameterMetaData
                if (epType == EndpointMetaData.Type.JAXRPC)
                   throw new WSException("Autogeneration of wrapper beans not supported with JAXRPC");
                
-               new DynamicWrapperGenerator(getClassLoader()).generate(this);
+               new DynamicWrapperGenerator( getClassLoader() ).generate(this);
             }
 
          // Initialize accessors
