@@ -28,6 +28,6 @@ package org.jboss.ws.jaxrpc;
  * Included for backwards compatibility
  * @deprecated
  */
-public class ServiceFactoryImpl extends org.jboss.ws.core.jaxrpc.ServiceFactoryImpl
+public class ServiceFactoryImpl extends org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl
 {
 }

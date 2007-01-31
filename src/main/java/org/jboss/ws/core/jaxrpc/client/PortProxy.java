@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.core.jaxrpc;
+package org.jboss.ws.core.jaxrpc.client;
 
 // $Id$
 
@@ -34,10 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Stub;
-import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
@@ -45,11 +43,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * The dynamic proxy that delegates to the underlying Call implementation

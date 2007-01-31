@@ -80,12 +80,12 @@ public class UnifiedBeanMetaData
       this.portComponent = portComponent;
    }
 
-   public String getServiceEndpoint()
+   public String getServiceEndpointInterface()
    {
       return seiName;
    }
 
-   public void setServiceEndpoint(String seiName)
+   public void setServiceEndpointInterface(String seiName)
    {
       this.seiName = seiName;
    }

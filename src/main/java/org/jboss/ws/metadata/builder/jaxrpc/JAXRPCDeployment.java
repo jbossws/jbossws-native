@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.webservices.WebservicesFactory;
 import org.jboss.ws.metadata.webservices.WebservicesMetaData;
@@ -43,13 +44,14 @@ public class JAXRPCDeployment extends UnifiedDeploymentInfo
 {
    private WebservicesMetaData jsr109MetaData;
 
-   public JAXRPCDeployment(DeploymentType type, URL webservicesURL)
+   public JAXRPCDeployment(DeploymentType type, UnifiedVirtualFile vfWebservices)
    {
       super(type);
 
       try
       {
          // Unmarshall webservices.xml
+         URL webservicesURL = vfWebservices.toURL();
          InputStream is = webservicesURL.openStream();
          try
          {

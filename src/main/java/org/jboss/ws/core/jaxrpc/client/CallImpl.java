@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxrpc;
+package org.jboss.ws.core.jaxrpc.client;
 
 // $Id$
 
@@ -49,6 +49,9 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.WSTimeoutException;
+import org.jboss.ws.core.jaxrpc.SchemaGenerator;
+import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.jaxrpc.UnqualifiedCallParameter;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;

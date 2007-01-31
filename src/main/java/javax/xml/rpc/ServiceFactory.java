@@ -54,7 +54,7 @@ public abstract class ServiceFactory
    /** A constant representing the property used to lookup the name of a ServiceFactory implementation class. */
    public static final String SERVICEFACTORY_PROPERTY = "javax.xml.rpc.ServiceFactory";
 
-   private static final String DEFAULT_SERVICE_FACTORY = "org.jboss.ws.core.jaxrpc.ServiceFactoryImpl";
+   private static final String DEFAULT_SERVICE_FACTORY = "org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl";
    private static final String[] alternativeFactories = new String[] {};
 
    protected ServiceFactory()
