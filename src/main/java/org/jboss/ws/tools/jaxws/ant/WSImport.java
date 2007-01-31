@@ -125,7 +125,7 @@ public class WSImport extends Task
       this.sourcedestdir = sourcedestdir;
    }
 
-   public void setTargetPackage(String targetPackage)
+   public void setPackage(String targetPackage)
    {
       this.targetPackage = targetPackage;
    }
