@@ -21,6 +21,22 @@
  */
 package org.jboss.ws.extensions.eventing.jaxws;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Date;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.soap.SOAPFaultException;
+import javax.xml.ws.addressing.Action;
+import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.addressing.ReferenceParameters;
+
+import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.core.CommonMessageContext;
@@ -29,22 +45,7 @@ import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
-import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
-
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.JAXWSAConstants;
-import javax.xml.ws.addressing.ReferenceParameters;
-import javax.xml.ws.addressing.Action;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Date;
 
 /**
  * @author Heiko.Braun@jboss.org

@@ -23,11 +23,11 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
-
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * Client side endpoint meta data.

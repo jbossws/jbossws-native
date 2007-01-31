@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.http.HTTPBinding;
 

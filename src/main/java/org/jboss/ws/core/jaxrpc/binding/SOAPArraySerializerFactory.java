@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 
 // $Id$
 

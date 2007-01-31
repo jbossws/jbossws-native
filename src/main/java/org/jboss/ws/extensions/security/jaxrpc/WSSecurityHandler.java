@@ -23,6 +23,13 @@ package org.jboss.ws.extensions.security.jaxrpc;
 
 // $Id$
 
+import java.io.IOException;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.handler.GenericHandler;
+import javax.xml.rpc.handler.MessageContext;
+import javax.xml.soap.SOAPException;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.UnifiedVirtualFile;
@@ -32,12 +39,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-
-import javax.xml.namespace.QName;
-import javax.xml.rpc.handler.GenericHandler;
-import javax.xml.rpc.handler.MessageContext;
-import javax.xml.soap.SOAPException;
-import java.io.IOException;
 
 /**
  * An abstract JAXRPC handler that delegates to the WSSecurityDispatcher

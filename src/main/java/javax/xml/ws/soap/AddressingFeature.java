@@ -24,8 +24,6 @@ package javax.xml.ws.soap;
 // $Id$
 
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.spi.Provider;
 
 /**
  * This feature represents the use of WS-Addressing with either

@@ -24,12 +24,11 @@ package org.jboss.ws.core.jaxws;
 // $Id$
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.WebServiceException;
@@ -40,7 +39,6 @@ import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeDeserializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.

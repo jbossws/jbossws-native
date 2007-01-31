@@ -21,14 +21,15 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 /**
  * Cache JAXBContext's.

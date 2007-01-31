@@ -23,9 +23,9 @@ package org.jboss.ws.extensions.security.jaxrpc;
 
 // $Id$
 
-import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-
 import javax.xml.rpc.handler.MessageContext;
+
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 
 
 /**

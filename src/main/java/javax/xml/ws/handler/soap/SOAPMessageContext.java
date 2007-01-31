@@ -23,10 +23,12 @@ package javax.xml.ws.handler.soap;
 
 // $Id$
 
-import javax.xml.soap.SOAPMessage;
+import java.util.Set;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
-import java.util.Set;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceException;
 
 /** The interface <code>SOAPMessageContext</code> 
  *  provides access to the SOAP message for either RPC request or 

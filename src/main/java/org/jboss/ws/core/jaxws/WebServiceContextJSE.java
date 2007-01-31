@@ -23,7 +23,6 @@ package org.jboss.ws.core.jaxws;
 
 // $Id$
 
-import java.io.Serializable;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;

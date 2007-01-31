@@ -21,9 +21,9 @@
  */
 package org.jboss.ws.extensions.security.jaxws;
 
-import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-
 import javax.xml.ws.handler.MessageContext;
+
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 
 // $Id$
 

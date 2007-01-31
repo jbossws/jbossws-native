@@ -26,9 +26,6 @@ package org.jboss.ws.core.jaxrpc.binding;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

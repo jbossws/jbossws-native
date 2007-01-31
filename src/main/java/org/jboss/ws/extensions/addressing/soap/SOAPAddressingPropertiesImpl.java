@@ -47,7 +47,6 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.soap.NameImpl;
-import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;

@@ -24,8 +24,8 @@ package org.jboss.ws.extensions.eventing.mgmt;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

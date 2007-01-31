@@ -24,8 +24,6 @@ package org.jboss.ws.extensions.eventing.common;
 
 // $Id$ 
 
-import java.net.URI;
-
 import javax.xml.namespace.QName;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.ws.addressing.AddressingBuilder;
@@ -35,9 +33,9 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerFactory;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerMBean;
-import org.jboss.ws.extensions.eventing.EventingConstants;
 
 /**
  * @author Heiko Braun, <heiko@openj.net>

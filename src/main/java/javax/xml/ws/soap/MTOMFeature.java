@@ -23,11 +23,8 @@ package javax.xml.ws.soap;
 
 // $Id$
 
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingType;
-import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.spi.Provider;
+import javax.xml.ws.WebServiceFeature;
 
 
 /**

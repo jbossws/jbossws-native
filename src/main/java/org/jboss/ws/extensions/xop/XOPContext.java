@@ -21,6 +21,18 @@
  */
 package org.jboss.ws.extensions.xop;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
+
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -38,13 +50,6 @@ import org.jboss.ws.extensions.xop.jaxrpc.XOPMarshallerImpl;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.jboss.xb.binding.sunday.xop.XOPMarshaller;
 import org.jboss.xb.binding.sunday.xop.XOPObject;
-
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.soap.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
 
 /**
  * XOP context associated with a message context.

@@ -24,13 +24,14 @@ package javax.xml.ws.wsaddressing;
 // $Id$
 
 
-import org.w3c.dom.Element;
-
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.spi.Provider;
+
+import org.w3c.dom.Element;
 
 
 /**

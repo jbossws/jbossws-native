@@ -26,7 +26,6 @@ package org.jboss.ws.core.jaxws.handler;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Binding;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.PortInfo;
 

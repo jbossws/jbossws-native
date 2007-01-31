@@ -32,6 +32,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xerces.impl.dv.xs.SchemaDVFactoryImpl;
 import org.apache.xerces.impl.xs.XMLSchemaLoader;
+import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLErrorHandler;
 import org.apache.xerces.xs.StringList;
@@ -47,7 +48,6 @@ import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.ServerConfig;

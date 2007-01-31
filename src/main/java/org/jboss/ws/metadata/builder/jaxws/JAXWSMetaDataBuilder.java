@@ -60,7 +60,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.Use;
-import org.jboss.ws.core.jaxws.AbstractWrapperGenerator;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.jaxws.WrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;

@@ -34,7 +34,6 @@ import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations

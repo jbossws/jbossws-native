@@ -23,7 +23,8 @@ package javax.xml.ws.wsaddressing;
 
 // $Id$
 
-import org.w3c.dom.Element;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -39,8 +40,8 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
-import java.util.List;
-import java.util.Map;
+
+import org.w3c.dom.Element;
 
 
 /**

@@ -25,14 +25,14 @@ package org.jboss.ws.extensions.eventing.mgmt;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
-import java.net.URL;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.TransformerException;
-import javax.xml.bind.JAXBElement;
 
 import org.apache.xpath.XPathAPI;
 import org.apache.xpath.objects.XObject;

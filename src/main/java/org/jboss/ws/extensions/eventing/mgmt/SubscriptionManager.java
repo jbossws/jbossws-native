@@ -24,8 +24,8 @@ package org.jboss.ws.extensions.eventing.mgmt;
 // $Id$
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -44,28 +44,28 @@ import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.xml.utils.DefaultErrorHandler;
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.ObjectNameFactory;
-import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.core.utils.ObjectNameFactory;
+import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.extensions.eventing.EventingConstants;
+import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
+import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.jboss.ws.extensions.eventing.jaxws.ReferenceParametersType;
-import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
-import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.SAXException;
-import org.apache.xml.utils.DefaultErrorHandler;
+import org.xml.sax.SAXParseException;
 
 /**
  * The SubscriptionManagerEndpoint maintains event sources and subscriptions.<br>

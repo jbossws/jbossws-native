@@ -23,6 +23,11 @@ package org.jboss.ws.extensions.security.jaxws;
 
 // $Id$
 
+import java.io.IOException;
+
+import javax.xml.soap.SOAPException;
+import javax.xml.ws.handler.MessageContext;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
@@ -33,10 +38,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-
-import javax.xml.soap.SOAPException;
-import javax.xml.ws.handler.MessageContext;
-import java.io.IOException;
 
 /**
  * An abstract JAXWS handler that delegates to the WSSecurityDispatcher

@@ -23,6 +23,26 @@ package org.jboss.ws.core;
 
 // $Id$
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
+
 import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
@@ -31,7 +51,18 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.soap.*;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.NameImpl;
+import org.jboss.ws.core.soap.SOAPBodyElementDoc;
+import org.jboss.ws.core.soap.SOAPBodyElementRpc;
+import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.core.soap.SOAPElementImpl;
+import org.jboss.ws.core.soap.SOAPFactoryImpl;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
+import org.jboss.ws.core.soap.SOAPHeaderElementImpl;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.utils.DOMUtils;
@@ -43,15 +74,6 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Element;
-
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.soap.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * The SOAPBinding interface is an abstraction for the SOAP binding.

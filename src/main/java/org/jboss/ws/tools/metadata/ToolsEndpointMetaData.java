@@ -23,10 +23,10 @@ package org.jboss.ws.tools.metadata;
 
 // $Id$
 
+import javax.xml.namespace.QName;
+
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-
-import javax.xml.namespace.QName;
 
 /**
  *  Tools Endpoint Metadata

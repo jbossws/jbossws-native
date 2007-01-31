@@ -23,14 +23,14 @@ package org.jboss.ws.metadata.config;
 
 //$Id$
 
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * A common configuration 

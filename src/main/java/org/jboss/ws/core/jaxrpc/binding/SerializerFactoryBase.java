@@ -29,8 +29,6 @@ import javax.xml.rpc.encoding.Serializer;
 import javax.xml.rpc.encoding.SerializerFactory;
 
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 
 /**
  * @author Thomas.Diesler@jboss.org

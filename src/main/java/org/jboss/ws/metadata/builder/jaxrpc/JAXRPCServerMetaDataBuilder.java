@@ -22,19 +22,29 @@
 // $Id$
 package org.jboss.ws.metadata.builder.jaxrpc;
 
+import java.net.URL;
+import java.util.Set;
+
+import javax.management.ObjectName;
+import javax.xml.namespace.QName;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
-import org.jboss.ws.metadata.j2ee.*;
+import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
+import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
+import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
+import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.webservices.PortComponentMetaData;
 import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -43,11 +53,6 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-
-import javax.management.ObjectName;
-import javax.xml.namespace.QName;
-import java.net.URL;
-import java.util.Set;
 
 /**
  * A server side meta data builder that is based on webservices.xml.

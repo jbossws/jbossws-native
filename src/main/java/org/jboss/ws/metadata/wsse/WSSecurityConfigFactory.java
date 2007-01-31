@@ -21,11 +21,11 @@
 */
 package org.jboss.ws.metadata.wsse;
 
-import org.jboss.ws.core.UnifiedVirtualFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import org.jboss.ws.core.UnifiedVirtualFile;
 
 /**
  * Created by IntelliJ IDEA.

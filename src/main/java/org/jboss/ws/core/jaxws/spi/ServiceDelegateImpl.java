@@ -58,7 +58,11 @@ import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
 import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.*;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**

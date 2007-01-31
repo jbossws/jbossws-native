@@ -21,15 +21,15 @@
  */
 package org.jboss.ws.metadata.config.jaxws;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // $Id$
 

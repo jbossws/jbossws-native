@@ -23,9 +23,10 @@ package javax.xml.ws.handler.soap;
 
 // $Id$
 
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
-import java.util.Set;
 
 /** The <code>SOAPHandler</code> class extends <code>Handler</code>
  *  to provide typesafety for the message context parameter and add a method

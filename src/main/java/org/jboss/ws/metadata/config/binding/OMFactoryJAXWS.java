@@ -25,7 +25,11 @@ package org.jboss.ws.metadata.config.binding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.EndpointProperty;
-import org.jboss.ws.metadata.config.jaxws.*;
+import org.jboss.ws.metadata.config.jaxws.ClientConfigJAXWS;
+import org.jboss.ws.metadata.config.jaxws.CommonConfigJAXWS;
+import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
+import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
+import org.jboss.ws.metadata.config.jaxws.HandlerChainsConfigJAXWS;
 import org.jboss.ws.metadata.jsr181.HandlerChainFactory;
 import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;

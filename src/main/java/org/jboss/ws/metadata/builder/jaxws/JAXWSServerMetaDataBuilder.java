@@ -23,15 +23,15 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
+import javax.jws.WebService;
+import javax.xml.ws.WebServiceProvider;
+
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.annotation.WebContext;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceProvider;
 
 /**
  * Builds ServiceEndpointMetaData for a JAX-WS endpoint.

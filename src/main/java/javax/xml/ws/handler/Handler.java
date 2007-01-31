@@ -24,7 +24,6 @@ package javax.xml.ws.handler;
 // $Id$
 
 import javax.xml.ws.ProtocolException;
-import javax.xml.ws.handler.MessageContext;
 
 /** The <code>Handler</code> interface
  *  is the base interface for JAX-WS handlers.

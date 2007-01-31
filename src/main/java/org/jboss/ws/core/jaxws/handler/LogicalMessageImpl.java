@@ -23,25 +23,18 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id$
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
-import org.jboss.ws.core.utils.DOMUtils;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 

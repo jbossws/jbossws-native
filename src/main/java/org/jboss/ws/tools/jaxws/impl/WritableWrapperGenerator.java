@@ -23,7 +23,6 @@ package org.jboss.ws.tools.jaxws.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 
 import org.jboss.ws.core.jaxws.WrapperGenerator;
 

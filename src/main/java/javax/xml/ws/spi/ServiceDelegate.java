@@ -24,13 +24,16 @@ package javax.xml.ws.spi;
 // $Id$
 
 import java.util.Iterator;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Dispatch;
-import javax.xml.ws.Service;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.WebServiceFeature;
+
 import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ServiceException;
+import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.handler.HandlerResolver;
 
 /**
  * Service delegates are used internally by <code>Service</code> objects

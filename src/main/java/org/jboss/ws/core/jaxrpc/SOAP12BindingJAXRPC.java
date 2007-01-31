@@ -25,9 +25,7 @@ package org.jboss.ws.core.jaxrpc;
 
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAP12Binding;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 

@@ -21,6 +21,18 @@
  */
 package org.jboss.ws.extensions.eventing.jaxws;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.xml.rpc.soap.SOAPFaultException;
+import javax.xml.ws.addressing.Action;
+import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.addressing.AttributedURI;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.EndpointConfig;
@@ -30,17 +42,6 @@ import org.jboss.ws.extensions.eventing.mgmt.Filter;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerMBean;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionTicket;
-
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.AttributedURI;
-import javax.xml.ws.addressing.Action;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * @author Heiko.Braun@jboss.org

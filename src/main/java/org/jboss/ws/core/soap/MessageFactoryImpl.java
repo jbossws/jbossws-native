@@ -37,10 +37,8 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
@@ -48,9 +46,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.IOUtils;
-import org.w3c.dom.Element;
 
 /**
  * MessageFactory implementation

@@ -21,14 +21,14 @@
  */
 package org.jboss.ws.extensions.eventing;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jboss.ws.Constants;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSNamespaceItem;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSStringList;
-import org.jboss.ws.Constants;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
 
 /**
  * @author Heiko.Braun@jboss.org

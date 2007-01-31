@@ -23,11 +23,12 @@ package org.jboss.ws.extensions.eventing.mgmt;
 
 // $Id$
 
-import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
-
-import javax.xml.bind.JAXBElement;
 import java.net.URI;
 import java.util.Date;
+
+import javax.xml.bind.JAXBElement;
+
+import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 
 /**
  * @author Heiko Braun, <heiko@openj.net>

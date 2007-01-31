@@ -28,9 +28,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.jboss.ws.metadata.umdm.FaultMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-
 /**
  * Base class for JAX-WS wrapper generation.
  *

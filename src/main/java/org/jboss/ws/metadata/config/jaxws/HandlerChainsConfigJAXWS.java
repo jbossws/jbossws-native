@@ -21,10 +21,10 @@
  */
 package org.jboss.ws.metadata.config.jaxws;
 
-import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
 
 
 /** 

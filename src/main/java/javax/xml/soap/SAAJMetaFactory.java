@@ -21,7 +21,6 @@
  */
 package javax.xml.soap;
 
-import java.security.PrivilegedAction;
 
 // $Id$
 

@@ -23,6 +23,8 @@ package org.jboss.ws.metadata.config.binding;
 
 //$Id$
 
+import java.util.List;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.jaxrpc.ClientConfigJAXRPC;
@@ -35,8 +37,6 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
-
-import java.util.List;
 
 /** 
  * ObjectModelFactory for JAXRPC configurations.
