@@ -164,14 +164,16 @@
         <include name="dtd/**"/>
       </fileset>
       <fileset dir="${etc.dir}">
-        <include name="wsgen.sh"/>
         <include name="wsgen.bat"/>
-        <include name="wsimport.sh"/>
         <include name="wsimport.bat"/>
-        <include name="wstools.sh"/>
         <include name="wstools.bat"/>
         <include name="wstools-log4j.xml"/>
       </fileset>
+      <zipfileset dir="${etc.dir}" filemode="755">
+        <include name="wsgen.sh"/>
+        <include name="wsimport.sh"/>
+        <include name="wstools.sh"/>
+      </zipfileset>
       <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
     </jar>
     
