@@ -343,9 +343,14 @@ public class WSDL11Writer extends WSDLWriter
          WSDLInterfaceOperation operation = operations[i];
          buffer.append("<operation name='" + operation.getName().toString() + "'");
 
-         String parameterOrder = getParameterOrder(operation);
-         if (parameterOrder.length() > 0)
-            buffer.append(" parameterOrder='").append(parameterOrder).append("'");
+         // JBWS-1501 wsimport RI fails when processing parameterOrder on one-way operations
+         if (! Constants.WSDL20_PATTERN_IN_ONLY.equals(operation.getPattern()))
+         {
+            String parameterOrder = getParameterOrder(operation);
+            if (parameterOrder.length() > 0)
+               buffer.append(" parameterOrder='").append(parameterOrder).append("'");
+          
+         }
          buffer.append(">");
 
          String opname = operation.getName().toString();
