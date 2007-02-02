@@ -34,9 +34,7 @@ public class Requires implements Serializable
    private static final long serialVersionUID = 6899913633295989845L;
 
    private RequireTimestamp requireTimestamp;
-
    private RequireSignature requireSignature;
-
    private RequireEncryption requireEncryption;
 
    public RequireEncryption getRequireEncryption()

@@ -125,7 +125,6 @@
         <include name="javax/annotation/**"/>
         <include name="javax/jws/**"/>
         <include name="javax/xml/ws/**"/>
-        <include name="org/jboss/ws/jaxws/injection/**"/>
       </fileset>
       <metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
     </jar>
@@ -136,7 +135,6 @@
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/annotation/**"/>
         <include name="org/jboss/ws/**"/>
-        <exclude name="org/jboss/ws/integration/**"/>
       </fileset>
       <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
@@ -146,14 +144,9 @@
     
     <!-- Build jbossws-client.jar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${etc.dir}/default.mf">
-      <fileset dir="${core.output.classes14.dir}">
-        <include name="javax/xml/rpc/**"/>
-        <include name="javax/xml/soap/**"/>
-      </fileset>
       <fileset dir="${core.output.classes.dir}">
-        <include name="javax/xml/ws/**"/>
-        <include name="javax/jws/**"/>
         <include name="org/jboss/ws/**"/>
+        <exclude name="org/jboss/ws/core/server/**"/>
       </fileset>
       <fileset dir="${core.resources.dir}/jbossws.sar">
         <include name="META-INF/standard-jaxrpc-client-config.xml"/>
@@ -174,7 +167,6 @@
         <include name="wsimport.sh"/>
         <include name="wstools.sh"/>
       </zipfileset>
-      <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
     </jar>
     
   </target>

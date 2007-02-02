@@ -21,21 +21,23 @@
 */
 package org.jboss.ws.metadata.wsse;
 
+// $Id: $
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 
 /**
- * Created by IntelliJ IDEA.
- * User: hbraun
- * Date: 14.12.2006
- * Time: 16:17:02
- * To change this template use File | Settings | File Templates.
+ * @author hbraun
+ * @author Thomas.Diesler@jboss.com
  */
 public class WSSecurityConfigFactory
 {
+   // provide logging
+   final Logger log = Logger.getLogger(JAXRPCServerMetaDataBuilder.class);
 
    public static WSSecurityConfigFactory newInstance()
    {
@@ -52,6 +54,7 @@ public class WSSecurityConfigFactory
 
       if (location != null)
       {
+         log.debug("createConfiguration from: " + location);
          config = WSSecurityOMFactory.newInstance().parse(location);
 
          // Get and set deployment path to the keystore file
@@ -59,39 +62,32 @@ public class WSSecurityConfigFactory
          {
             location = getResource(vfsRoot, config.getKeyStoreFile());
             if (location != null)
+            {
+               log.debug("Add keystore: " + location);
                config.setKeyStoreURL(location);
+            }
          }
 
          if (config.getTrustStoreFile() != null)
          {
             location = getResource(vfsRoot, config.getTrustStoreFile());
             if (location != null)
+            {
+               log.debug("Add truststore: " + location);
                config.setTrustStoreURL(location);
+            }
          }
       }
 
       return config;
    }
 
-   /**
-    *
-    * @param vfsRoot
-    * @param resource
-    * @return null, when the resource cannot be found
-    */
    private URL getResource(UnifiedVirtualFile vfsRoot, String resource)
    {
       try
       {
          UnifiedVirtualFile child = vfsRoot.findChild(resource);
-         URL url = child.toURL();
-         if (url != null)
-         {
-            InputStream inputStream = url.openStream();
-            inputStream.close();
-         }
-         
-         return url;
+         return child.toURL();
       }
       catch (Exception e)
       {

@@ -22,7 +22,6 @@
 // $Id$
 package org.jboss.ws.metadata.builder.jaxrpc;
 
-import java.net.URL;
 import java.util.Set;
 
 import javax.management.ObjectName;
@@ -30,9 +29,6 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.UnifiedVirtualFile;
-import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
@@ -85,12 +81,11 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
             serviceMetaData.setWebserviceDescriptionName(wsdMetaData.getWebserviceDescriptionName());
             wsMetaData.addService(serviceMetaData);
 
-            // Set wsdl location
+            // Set wsdl file
             String wsdlFile = wsdMetaData.getWsdlFile();
-            URL wsdlLocation = udi.getMetaDataFileURL(wsdlFile);
+            serviceMetaData.setWsdlFile(wsdlFile);
 
             // Unmarshall the WSDL
-            serviceMetaData.setWsdlLocation(wsdlLocation);
             WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
 
             // Unmarshall the jaxrpc-mapping.xml
@@ -221,14 +216,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                // Setup the endpoint operations
                setupOperationsFromWSDL(sepMetaData, wsdlEndpoint, seiMapping);
 
-               // Add pre handlers
-               UnifiedVirtualFile vfsRoot = sepMetaData.getRootFile();
-               String configName = sepMetaData.getConfigName();
-               String configFile = sepMetaData.getConfigFile();
-               JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-               EndpointConfigJAXRPC jaxrpcConfig = (EndpointConfigJAXRPC)factory.getConfig(vfsRoot, configName, configFile);
-               sepMetaData.addHandlers(jaxrpcConfig.getHandlers(sepMetaData, HandlerType.PRE));
-
                // Setup the endpoint handlers
                for (UnifiedHandlerMetaData uhmd : pcMetaData.getHandlers())
                {
@@ -238,9 +225,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                      sepMetaData.addHandler(uhmd.getHandlerMetaDataJAXRPC(sepMetaData, HandlerType.ENDPOINT));
                   }
                }
-
-               // Add post handlers
-               sepMetaData.addHandlers(jaxrpcConfig.getHandlers(sepMetaData, HandlerType.POST));
             }
          }
 

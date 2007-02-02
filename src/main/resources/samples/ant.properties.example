@@ -7,7 +7,7 @@ jboss42.home=/home/tdiesler/svn/jbossas/branches/Branch_4_2/build/output/jboss-4
 jboss40.home=/home/tdiesler/svn/jbossas/branches/Branch_4_0/build/output/jboss-4.0.5.SP1-ejb3
 
 # The JBoss server under test. This can be [jboss50|jboss42|jboss40|tomcat]
-jbossws.integration.target=jboss42
+jbossws.integration.target=jboss50
 
 # The JBoss server instance
 jboss.server.instance=default
@@ -17,9 +17,15 @@ tomcat.home=/usr/java/tomcat
 tomcat.manager.username=manager
 tomcat.manager.password=manager
 
+# JBoss Repository
+jboss.repository=file:/home/tdiesler/cvs/jboss.local.repository
+#jboss.repository=http://repository.jboss.com
+
 # Force thirdparty HTTP get
 #force.thirdparty.get=true
 
-# JBoss Repository
-#jboss.repository=file:/home/tdiesler/cvs/jboss.local.repository
-jboss.repository=http://repository.jboss.com
+# Java Compiler options
+javac.debug=yes
+javac.deprecation=yes
+javac.fail.onerror=yes
+javac.verbose=no

@@ -280,12 +280,12 @@ public class MessageFactoryImpl extends MessageFactory
    private boolean isSoapContent(ContentType type)
    {
       String baseType = type.getBaseType();
-      return MimeConstants.TYPE_SOAP11.equals(baseType) || MimeConstants.TYPE_SOAP12.equals(baseType);
+      return MimeConstants.TYPE_SOAP11.equalsIgnoreCase(baseType) || MimeConstants.TYPE_SOAP12.equalsIgnoreCase(baseType);
    }
 
    private boolean isMultipartRelatedContent(ContentType type)
    {
       String baseType = type.getBaseType();
-      return MimeConstants.TYPE_MULTIPART_RELATED.equals(baseType);
+      return MimeConstants.TYPE_MULTIPART_RELATED.equalsIgnoreCase(baseType);
    }
 }

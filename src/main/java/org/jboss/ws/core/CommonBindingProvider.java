@@ -65,22 +65,19 @@ public class CommonBindingProvider implements Configurable
    private void configure()
    {
       // process MTOM config elements
-      if(epMetaData!=null)
+      if (epMetaData != null)
       {
-         ConfigurationProvider configProvider = (ConfigurationProvider)epMetaData;
-         configProvider.configure(this);
+         epMetaData.configure(this);
       }
    }
 
    protected void initBinding(String bindingId, Type type)
    {
-      if (CommonSOAPBinding.SOAP11HTTP_BINDING.equals(bindingId)
-         || CommonSOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(bindingId))
+      if (CommonSOAPBinding.SOAP11HTTP_BINDING.equals(bindingId) || CommonSOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(bindingId))
       {
          binding = (type == Type.JAXWS ? new SOAP11BindingJAXWS() : new SOAP11BindingJAXRPC());
       }
-      else if (CommonSOAPBinding.SOAP12HTTP_BINDING.equals(bindingId)
-         || CommonSOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+      else if (CommonSOAPBinding.SOAP12HTTP_BINDING.equals(bindingId) || CommonSOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
       {
          binding = (type == Type.JAXWS ? new SOAP12BindingJAXWS() : new SOAP12BindingJAXRPC());
       }
@@ -88,7 +85,7 @@ public class CommonBindingProvider implements Configurable
       {
          throw new WSException("Unsupported binding: " + bindingId);
       }
-      
+
    }
 
    public CommonBinding getCommonBinding()
@@ -96,7 +93,8 @@ public class CommonBindingProvider implements Configurable
       return binding;
    }
 
-   public void update(Observable observable, Object object) {
+   public void update(Observable observable, Object object)
+   {
       log.debug("Update config: " + object);
       configure();
    }

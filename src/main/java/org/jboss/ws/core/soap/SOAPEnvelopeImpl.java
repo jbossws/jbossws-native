@@ -63,6 +63,10 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
 
       String prefix = getPrefix();
       String namespaceURI = getNamespaceURI();
+      String localName = getLocalName();
+      
+      if ("Envelope".equals(localName) == false)
+         throw new IllegalArgumentException("Cannot create SOAP envelope from: " + element.getElementQName());
 
       assertEnvelopeNamespace(namespaceURI);
       addNamespaceDeclaration(prefix, namespaceURI);

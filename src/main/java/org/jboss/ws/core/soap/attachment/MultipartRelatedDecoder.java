@@ -67,7 +67,7 @@ public class MultipartRelatedDecoder
    public MultipartRelatedDecoder(ContentType contentType) throws IOException, MessagingException
    {
       this.contentType = contentType;
-      if (!contentType.getBaseType().equals(MimeConstants.TYPE_MULTIPART_RELATED))
+      if (MimeConstants.TYPE_MULTIPART_RELATED.equalsIgnoreCase(contentType.getBaseType()) == false)
          throw new IllegalArgumentException("Multipart related decoder called with a non-multipart/related type");
 
       rootType = contentType.getParameter("type");

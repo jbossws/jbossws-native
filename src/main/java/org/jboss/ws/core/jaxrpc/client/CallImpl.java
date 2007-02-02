@@ -447,10 +447,12 @@ public class CallImpl extends CommonClient implements Call
    {
       if (null == name)
          throw new JAXRPCException("Unsupported property: " + name);
+      
       // CTS: com/sun/ts/tests/jaxrpc/api/javax_xml_rpc/Call/Client.java#SetGetPropertyTest2
       if (name.startsWith("javax.xml.rpc") && standardProperties.contains(name) == false)
          throw new JAXRPCException("Unsupported property: " + name);
 
+      log.debug("setProperty: [name=" + name + ",value=" + value + "]");
       properties.put(name, value);
    }
 

@@ -102,13 +102,13 @@ public class ServiceObjectFactory implements ObjectFactory
          Reference ref = (Reference)obj;
          
          // Unmarshall the ServiceRefMetaData
-         UnifiedServiceRefMetaData serviceRefMetaData = null;
+         UnifiedServiceRefMetaData usrMetaData = null;
          RefAddr metaRefAddr = ref.get(ServiceReferenceable.SERVICE_REF_META_DATA);
          ByteArrayInputStream bais = new ByteArrayInputStream((byte[])metaRefAddr.getContent());
          try
          {
             ObjectInputStream ois = new ObjectInputStream(bais);
-            serviceRefMetaData = (UnifiedServiceRefMetaData)ois.readObject();
+            usrMetaData = (UnifiedServiceRefMetaData)ois.readObject();
             ois.close();
          }
          catch (IOException ex)
@@ -137,15 +137,15 @@ public class ServiceObjectFactory implements ObjectFactory
          }
 
          ServiceImpl jaxrpcService = null;
-         URL wsdlLocation = serviceRefMetaData.getWsdlLocation();
+         URL wsdlLocation = usrMetaData.getWsdlLocation();
          if (wsdlLocation != null)
          {
             log.debug("Create jaxrpc service from wsdl");
 
             // Create the actual service object
-            QName serviceName = serviceRefMetaData.getServiceQName();
-            JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)serviceRefMetaData.getJavaWsdlMapping();
-            jaxrpcService = new ServiceImpl(serviceName, wsdlLocation, javaWsdlMapping, securityConfig, serviceRefMetaData);
+            QName serviceName = usrMetaData.getServiceQName();
+            JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)usrMetaData.getJavaWsdlMapping();
+            jaxrpcService = new ServiceImpl(serviceName, wsdlLocation, javaWsdlMapping, securityConfig, usrMetaData);
          }
          else
          {
@@ -155,7 +155,7 @@ public class ServiceObjectFactory implements ObjectFactory
 
          // Set any service level properties
          ServiceMetaData serviceMetaData = jaxrpcService.getServiceMetaData();
-         serviceMetaData.setProperties(serviceRefMetaData.getCallProperties());
+         serviceMetaData.setProperties(usrMetaData.getCallProperties());
 
          // The web service client using a port-component-link, the contet is the URL to
          // the PortComponentLinkServlet that will return the actual endpoint address
@@ -211,12 +211,12 @@ public class ServiceObjectFactory implements ObjectFactory
 
          // load the service interface class
          ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
-         Class siClass = contextCL.loadClass(serviceRefMetaData.getServiceInterface());
+         Class siClass = contextCL.loadClass(usrMetaData.getServiceInterface());
          if (Service.class.isAssignableFrom(siClass) == false)
             throw new JAXRPCException("The service interface does not implement javax.xml.rpc.Service: " + siClass.getName());
 
          // load all service endpoint interface classes
-         UnifiedPortComponentRefMetaData[] pcrArray = serviceRefMetaData.getPortComponentRefs();
+         UnifiedPortComponentRefMetaData[] pcrArray = usrMetaData.getPortComponentRefs();
          for (int i = 0; i < pcrArray.length; i++)
          {
             UnifiedPortComponentRefMetaData pcr = pcrArray[i];

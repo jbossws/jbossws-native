@@ -68,7 +68,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, Configurable
+public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider
 {
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
@@ -127,7 +127,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private ConfigObservable configObservable = new ConfigObservable();
 
-   private JAXBContextCache jaxbCache;
+   private JAXBContextCache jaxbCache = new JAXBContextCache();
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
@@ -579,8 +579,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    }
 
    public JAXBContextCache getJaxbCache() {
-      if(null == jaxbCache)
-         jaxbCache = new JAXBContextCache();
       return jaxbCache;
    }
 
@@ -589,26 +587,13 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    /**
     * Callback for components that require configuration through jbossws-dd
-    *
-    * @param configurable
     */
    public void configure(Configurable configurable)
    {
-
-      // emit notificatins when the config changes
-      registerConfigObserver(configurable);
-
-      if (null == config)
-      {
-         log.trace("Create new config: " + getConfigFile() + ":" + getConfigName());
-         JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-         config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
-      }
-      else
-      {
-         log.trace("Reusing cached config. Current should be: " + getConfigFile() + ":" + getConfigName());
-      }
-
+      // Make sure we have a configuration
+      if (config == null)
+         initEndpointConfig();
+      
       // SOAPBinding configuration
       if (configurable instanceof CommonBindingProvider)
       {
@@ -620,30 +605,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
             log.debug("Enable MTOM on endpoint " + this.getPortName());
          }
-      }
-
-      // Configure EndpointMetaData
-      else if (configurable instanceof EndpointMetaData)
-      {
-
-         log.debug("Configure EndpointMetaData");
-
-         // It's not necessarily the same instance
-         EndpointMetaData epmd = (EndpointMetaData)configurable;
-
-         // TODO: Why should we keep them?
-         List<HandlerMetaData> sepHandlers = epmd.getHandlerMetaData(HandlerType.ENDPOINT);
-         epmd.clearHandlers();
-
-         List<HandlerMetaData> preHandlers = config.getHandlers(this, HandlerType.PRE);
-         List<HandlerMetaData> postHandlers = config.getHandlers(this, HandlerType.POST);
-
-         epmd.addHandlers(preHandlers);
-         epmd.addHandlers(sepHandlers);
-         epmd.addHandlers(postHandlers);
-
-         log.debug("Added " + preHandlers.size() + " PRE handlers");
-         log.debug("Added " + postHandlers.size() + " POST handlers");
       }
    }
 
@@ -688,27 +649,48 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (configName.equals(this.configName) == false)
       {
          this.configName = configName;
-         this.config = null;
-
-         // notify observers
+         
          log.debug("Reconfiguration forced, new config is '" + configName + "'");
-         this.configObservable.doNotify(configName);
+         initEndpointConfig();
+         configObservable.doNotify(configName);
       }
    }
+
+   public void initEndpointConfig()
+   {
+      log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
+      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
+      config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
+      
+      reconfigHandlerMetaData();
+   }
    
+   private void reconfigHandlerMetaData()
+   {
+      log.debug("Configure EndpointMetaData");
+
+      List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
+      clearHandlers();
+      
+      List<HandlerMetaData> preHandlers = config.getHandlers(this, HandlerType.PRE);
+      List<HandlerMetaData> postHandlers = config.getHandlers(this, HandlerType.POST);
+
+      addHandlers(preHandlers);
+      addHandlers(sepHandlers);
+      addHandlers(postHandlers);
+
+      log.debug("Added " + preHandlers.size() + " PRE handlers");
+      log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
+      log.debug("Added " + postHandlers.size() + " POST handlers");
+   }
+
    public List<Class> getRegisteredTypes()
    {
       return Collections.unmodifiableList(registeredTypes);
    }
 
-   public void update(Observable observable, Object object)
-   {
-      log.trace("Ingore configuration change notification");
-   }
-
    class ConfigObservable extends Observable
    {
-
       public void doNotify(Object object)
       {
          setChanged();

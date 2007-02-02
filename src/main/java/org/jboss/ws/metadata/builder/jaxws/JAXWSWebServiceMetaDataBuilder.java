@@ -146,7 +146,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processWebContext(udi, sepClass, linkName, sepMetaData);
 
          // setup handler chain from config
-         sepMetaData.configure(sepMetaData);
+         sepMetaData.initEndpointConfig();
 
          // Process an optional @HandlerChain annotation
          if (sepClass.isAnnotationPresent(HandlerChain.class))

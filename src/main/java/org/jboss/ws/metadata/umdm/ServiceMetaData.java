@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,6 +37,7 @@ import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.Use;
@@ -72,6 +74,7 @@ public class ServiceMetaData
    private String serviceRefName;
    private String wsdName;
    private URL wsdlLocation;
+   private String wsdlFile;
    private URL mappingLocation;
    private String handlerChain;
    private String wsdlPublishLocation;
@@ -83,13 +86,16 @@ public class ServiceMetaData
 
    // Arbitrary properties given by <call-property>
    private Properties properties;
-
+   
    // derived cached encoding style
    private Use encStyle;
-
+   
    // The security configuration
-   private WSSecurityConfiguration securityConfiguration;
-
+   private WSSecurityConfiguration securityConfig;
+   
+   // The key to the wsdl cache
+   private String wsdlCacheKey;
+   
    public ServiceMetaData(UnifiedMetaData wsMetaData, QName serviceName)
    {
       this.wsMetaData = wsMetaData;
@@ -130,6 +136,16 @@ public class ServiceMetaData
    public void setWebserviceDescriptionName(String wsdName)
    {
       this.wsdName = wsdName;
+   }
+
+   public String getWsdlFile()
+   {
+      return wsdlFile;
+   }
+
+   public void setWsdlFile(String wsdlFile)
+   {
+      this.wsdlFile = wsdlFile;
    }
 
    public URL getWsdlLocation()
@@ -255,15 +271,47 @@ public class ServiceMetaData
     */
    public WSDLDefinitions getWsdlDefinitions()
    {
-      WSDLDefinitions wsdlDefinitions = null;
-      if (wsdlLocation != null)
+      URL wsdlURL = wsdlLocation;
+      if (wsdlURL == null && wsdlFile != null)
       {
-         wsdlDefinitions = (WSDLDefinitions)wsMetaData.getWSDLDefinition(wsdlLocation.toExternalForm());
+         // Try wsdlFile as URL
+         try
+         {
+            wsdlURL = new URL(wsdlFile);
+         }
+         catch (MalformedURLException e)
+         {
+            // ignore
+         }
+         
+         // Try wsdlFile as child from root 
+         if (wsdlURL == null)
+         {
+            try
+            {
+               UnifiedVirtualFile vfsRoot = getUnifiedMetaData().getRootFile();
+               wsdlURL = vfsRoot.findChild(wsdlFile).toURL();
+            }
+            catch (IOException ex)
+            {
+               throw new IllegalStateException("Cannot find wsdl: " + wsdlFile);
+            }
+         }
+      }
+      
+      WSDLDefinitions wsdlDefinitions = null;
+      if (wsdlURL != null)
+      {
+         // The key should not after it is assigned
+         if (wsdlCacheKey == null)
+            wsdlCacheKey = "#" + (wsdlLocation != null ? wsdlLocation : wsdlFile);
+         
+         wsdlDefinitions = (WSDLDefinitions)wsMetaData.getWsdlDefinition(wsdlCacheKey);
          if (wsdlDefinitions == null)
          {
             WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-            wsdlDefinitions = factory.parse(wsdlLocation);
-            wsMetaData.addWSDLDefinition(wsdlLocation.toExternalForm(), wsdlDefinitions);
+            wsdlDefinitions = factory.parse(wsdlURL);
+            wsMetaData.addWsdlDefinition(wsdlCacheKey, wsdlDefinitions);
          }
       }
       return wsdlDefinitions;
@@ -281,12 +329,12 @@ public class ServiceMetaData
 
    public WSSecurityConfiguration getSecurityConfiguration()
    {
-      return securityConfiguration;
+      return securityConfig;
    }
 
    public void setSecurityConfiguration(WSSecurityConfiguration securityConfiguration)
    {
-      this.securityConfiguration = securityConfiguration;
+      this.securityConfig = securityConfiguration;
    }
 
    public Use getEncodingStyle()
@@ -331,7 +379,7 @@ public class ServiceMetaData
    {
       // Validate that there is at least one handler configured
       // if we have a security configuration
-      if (securityConfiguration != null)
+      if (securityConfig != null)
       {
          int handlerCount = 0;
          for (EndpointMetaData epMetaData : endpoints.values())
@@ -389,10 +437,12 @@ public class ServiceMetaData
       buffer.append("\n qname=" + serviceName);
       buffer.append("\n refName=" + serviceRefName);
       buffer.append("\n wsdName=" + wsdName);
+      buffer.append("\n wsdlFile=" + wsdlFile);
       buffer.append("\n wsdlLocation=" + wsdlLocation);
       buffer.append("\n jaxrpcMapping=" + mappingLocation);
       buffer.append("\n handlerChain=" + handlerChain);
       buffer.append("\n publishLocation=" + wsdlPublishLocation);
+      buffer.append("\n securityConfig=" + (securityConfig != null ? "found" : null));
       buffer.append("\n properties=" + properties);
       buffer.append("\n" + types);
       buffer.append("\n");

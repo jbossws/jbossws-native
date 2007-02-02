@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.jaxws;
 
+// $Id: $
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,18 +37,19 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
  * Cache JAXBContext's.
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id:$
  * @since 26.01.2007
  */
-public class JAXBContextCache {
-
+public class JAXBContextCache
+{
    private Map<Integer, JAXBContext> cache = new ConcurrentHashMap<Integer, JAXBContext>();
 
-   private JAXBContext get(Integer id) {
+   private JAXBContext get(Integer id)
+   {
       return cache.get(id);
    }
 
-   private void add(Integer id, JAXBContext context) {
+   private void add(Integer id, JAXBContext context)
+   {
       cache.put(id, context);
    }
 
@@ -61,7 +64,7 @@ public class JAXBContextCache {
    {
       Integer id = buildId(classes);
       JAXBContext ctx = get(id);
-      if(null==ctx)
+      if (null == ctx)
       {
          ctx = JAXBContext.newInstance(classes);
          add(id, ctx);
@@ -81,7 +84,7 @@ public class JAXBContextCache {
    {
       Integer id = buildId(clazz);
       JAXBContext ctx = get(id);
-      if(null==ctx)
+      if (null == ctx)
       {
          ctx = JAXBContext.newInstance(clazz);
          add(id, ctx);
@@ -105,7 +108,7 @@ public class JAXBContextCache {
    private static Integer buildId(Class[] classes)
    {
       int sum = 0;
-      for(Class cls : classes)
+      for (Class cls : classes)
       {
          sum += cls.hashCode();
       }
@@ -114,6 +117,6 @@ public class JAXBContextCache {
 
    private static Integer buildId(Class clazz)
    {
-      return buildId(new Class[] {clazz});
+      return buildId(new Class[] { clazz });
    }
 }

@@ -33,8 +33,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.UnifiedVirtualFile;
-import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.ws.metadata.config.jaxrpc.ClientConfigJAXRPC;
 import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -100,7 +98,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
    /** Build from WSDL and jaxrpc-mapping.xml
     */
    public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, JavaWsdlMapping javaWsdlMapping, WSSecurityConfiguration securityConfig,
-         UnifiedServiceRefMetaData serviceRefMetaData, ClassLoader loader)
+         UnifiedServiceRefMetaData usrMetaData, ClassLoader loader)
    {
       log.debug("START buildMetaData: [service=" + serviceQName + "]");
       try
@@ -119,9 +117,9 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          if (javaWsdlMapping != null)
          {
             URL mappingURL = new URL(Constants.NS_JBOSSWS_URI + "/dummy-mapping-file");
-            if (serviceRefMetaData != null && serviceRefMetaData.getMappingLocation() != null)
+            if (usrMetaData != null && usrMetaData.getMappingLocation() != null)
             {
-               mappingURL = serviceRefMetaData.getMappingLocation();
+               mappingURL = usrMetaData.getMappingLocation();
             }
             wsMetaData.addMappingDefinition(mappingURL.toExternalForm(), javaWsdlMapping);
             serviceMetaData.setMappingLocation(mappingURL);
@@ -133,7 +131,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             setupSecurity(securityConfig, wsMetaData.getRootFile());
          }
 
-         buildMetaDataInternal(serviceMetaData, wsdlDefinitions, javaWsdlMapping, serviceRefMetaData);
+         buildMetaDataInternal(serviceMetaData, wsdlDefinitions, javaWsdlMapping, usrMetaData);
 
          // eagerly initialize
          wsMetaData.eagerInitialize();
@@ -223,14 +221,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
 
    private void setupHandlers(UnifiedServiceRefMetaData serviceRefMetaData, QName portName, EndpointMetaData epMetaData)
    {
-      // Add pre handlers
-      UnifiedVirtualFile vfsRoot = epMetaData.getRootFile();
-      String configName = epMetaData.getConfigName();
-      String configFile = epMetaData.getConfigFile();
-      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ClientConfigJAXRPC jaxrpcConfig = (ClientConfigJAXRPC)factory.getConfig(vfsRoot, configName, configFile);
-      epMetaData.addHandlers(jaxrpcConfig.getHandlers(epMetaData, HandlerType.PRE));
-
       // Setup the endpoint handlers
       if (serviceRefMetaData != null)
       {
@@ -243,9 +233,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             }
          }
       }
-
-      // Add post handlers
-      epMetaData.addHandlers(jaxrpcConfig.getHandlers(epMetaData, HandlerType.POST));
    }
 
    private void setupSecurity(WSSecurityConfiguration securityConfig, UnifiedVirtualFile vfsRoot)

@@ -31,15 +31,16 @@ package org.jboss.ws.metadata.config;
  *
  * @see org.jboss.ws.metadata.umdm.EndpointMetaData
  */
-public interface ConfigurationProvider {
+public interface ConfigurationProvider
+{
 
-   static final String DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE  = "META-INF/standard-jaxrpc-endpoint-config.xml";
-   static final String DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE   = "META-INF/standard-jaxws-endpoint-config.xml";
-   static final String DEFAULT_ENDPOINT_CONFIG_NAME         = "Standard Endpoint";
+   static final String DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE = "META-INF/standard-jaxrpc-endpoint-config.xml";
+   static final String DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE = "META-INF/standard-jaxws-endpoint-config.xml";
+   static final String DEFAULT_ENDPOINT_CONFIG_NAME = "Standard Endpoint";
 
-   static final String DEFAULT_JAXRPC_CLIENT_CONFIG_FILE    = "META-INF/standard-jaxrpc-client-config.xml";
-   static final String DEFAULT_JAXWS_CLIENT_CONFIG_FILE     = "META-INF/standard-jaxws-client-config.xml";
-   static final String DEFAULT_CLIENT_CONFIG_NAME           = "Standard Client";
+   static final String DEFAULT_JAXRPC_CLIENT_CONFIG_FILE = "META-INF/standard-jaxrpc-client-config.xml";
+   static final String DEFAULT_JAXWS_CLIENT_CONFIG_FILE = "META-INF/standard-jaxws-client-config.xml";
+   static final String DEFAULT_CLIENT_CONFIG_NAME = "Standard Client";
 
    /**
     * Callback for components that require configuration through jbossws-dd
@@ -55,6 +56,6 @@ public interface ConfigurationProvider {
    String getConfigName();
 
    void setConfigName(String configName);
-   
+
    void setConfigName(String configName, String configFile);
 }

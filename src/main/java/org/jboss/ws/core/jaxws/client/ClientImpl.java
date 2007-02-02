@@ -127,9 +127,6 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       log.debug("Configuration change event received. Reconfigure handler chain: " + object);
 
-      // reconfigure endpoint meta data handler information from config
-      ((ConfigurationProvider)epMetaData).configure(epMetaData);
-
       // re-populate the binding handler chain
       resetCreateBindingHandlerChain();
    }

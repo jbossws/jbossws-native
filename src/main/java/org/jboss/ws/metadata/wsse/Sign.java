@@ -33,9 +33,7 @@ public class Sign extends Targetable
    private static final long serialVersionUID = -2645745357707804441L;
 
    private String type;
-
    private String alias;
-
    private boolean includeTimestamp;
 
    public Sign(String type, String alias, boolean includeTimestamp)

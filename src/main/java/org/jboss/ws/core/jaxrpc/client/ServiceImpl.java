@@ -27,10 +27,12 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.rmi.Remote;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -45,6 +47,7 @@ import javax.xml.rpc.handler.HandlerRegistry;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
+import org.jboss.ws.metadata.j2ee.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -77,9 +80,10 @@ public class ServiceImpl implements ServiceExt
 
    // The service meta data that is associated with this JAXRPC Service
    private ServiceMetaData serviceMetaData;
-
    // The optional WSDL location
    private URL wsdlLocation;
+   // The <service-ref> meta data
+   private UnifiedServiceRefMetaData usrMetaData;
 
    // The handler registry
    private HandlerRegistryImpl handlerRegistry;
@@ -111,14 +115,15 @@ public class ServiceImpl implements ServiceExt
    /**
     * Construct a Service that has access to some WSDL meta data
     */
-   ServiceImpl(QName serviceName, URL wsdlURL, JavaWsdlMapping mappingURL, WSSecurityConfiguration securityConfig, UnifiedServiceRefMetaData serviceRefMetaData)
+   ServiceImpl(QName serviceName, URL wsdlURL, JavaWsdlMapping mappingURL, WSSecurityConfiguration securityConfig, UnifiedServiceRefMetaData usrMetaData)
    {
       this.wsdlLocation = wsdlURL;
+      this.usrMetaData = usrMetaData;
+
       JAXRPCClientMetaDataBuilder builder = new JAXRPCClientMetaDataBuilder();
-
       ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
-
-      serviceMetaData = builder.buildMetaData(serviceName, wsdlURL, mappingURL, securityConfig, serviceRefMetaData, ctxClassLoader);
+      
+      serviceMetaData = builder.buildMetaData(serviceName, wsdlURL, mappingURL, securityConfig, usrMetaData, ctxClassLoader);
       handlerRegistry = new HandlerRegistryImpl(serviceMetaData);
    }
 
@@ -160,7 +165,9 @@ public class ServiceImpl implements ServiceExt
    {
       String nsURI = portName.getNamespaceURI();
       serviceMetaData.assertTargetNamespace(nsURI);
-      return new CallImpl(this, portName, null);
+      CallImpl call = new CallImpl(this, portName, null);
+      initCallProperties(call, null);
+      return call;
    }
 
    /**
@@ -180,7 +187,9 @@ public class ServiceImpl implements ServiceExt
       String nsURI = portName.getNamespaceURI();
       serviceMetaData.assertTargetNamespace(nsURI);
       QName opName = new QName(nsURI, operationName);
-      return new CallImpl(this, portName, opName);
+      CallImpl call = new CallImpl(this, portName, opName);
+      initCallProperties(call, null);
+      return call;
    }
 
    /**
@@ -199,7 +208,9 @@ public class ServiceImpl implements ServiceExt
    {
       serviceMetaData.assertTargetNamespace(portName.getNamespaceURI());
       serviceMetaData.assertTargetNamespace(opName.getNamespaceURI());
-      return new CallImpl(this, portName, opName);
+      CallImpl call = new CallImpl(this, portName, opName);
+      initCallProperties(call, null);
+      return call;
    }
 
    /**
@@ -213,7 +224,9 @@ public class ServiceImpl implements ServiceExt
     */
    public Call createCall() throws ServiceException
    {
-      return new CallImpl(this);
+      CallImpl call = new CallImpl(this);
+      initCallProperties(call, null);
+      return call;
    }
 
    /**
@@ -392,12 +405,54 @@ public class ServiceImpl implements ServiceExt
    private Remote createProxy(Class seiClass, EndpointMetaData epMetaData) throws Exception
    {
       CallImpl call = new CallImpl(this, epMetaData);
+      initCallProperties(call, seiClass.getName());
 
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
 
       return proxy;
+   }
+
+   private void initCallProperties(CallImpl call, String seiName)
+   {
+      // nothing to do
+      if (usrMetaData == null)
+         return;
+      
+      // General properties
+      Properties callProps = usrMetaData.getCallProperties();
+      if (callProps != null)
+      {
+         Enumeration<?> names = callProps.propertyNames();
+         while (names.hasMoreElements())
+         {
+            String name = (String)names.nextElement();
+            String value = callProps.getProperty(name);
+            call.setProperty(name, value);
+         }
+      }
+      
+      if (seiName != null)
+      {
+         for (UnifiedPortComponentRefMetaData upcRef : usrMetaData.getPortComponentRefs())
+         {
+            if (seiName.equals(upcRef.getServiceEndpointInterface()))
+            {
+               callProps = upcRef.getCallProperties();
+               if (callProps != null)
+               {
+                  Enumeration<?> names = callProps.propertyNames();
+                  while (names.hasMoreElements())
+                  {
+                     String name = (String)names.nextElement();
+                     String value = callProps.getProperty(name);
+                     call.setProperty(name, value);
+                  }
+               }
+            }
+         }
+      }
    }
 
    /**

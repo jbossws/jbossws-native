@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.webservices.WebservicesFactory;
@@ -66,7 +67,7 @@ public class JAXRPCDeployment extends UnifiedDeploymentInfo
       }
       catch (Exception ex)
       {
-         throw new RuntimeException(ex);
+         WSException.rethrow(ex);
       }
    }
 

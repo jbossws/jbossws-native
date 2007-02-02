@@ -35,9 +35,7 @@ public class Encrypt extends Targetable implements Serializable
    private static final long serialVersionUID = -2802677183149218760L;
 
    private String type;
-
    private String alias;
-
    private String algorithm;
 
    public Encrypt(String type, String alias, String algorithm)

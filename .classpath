@@ -9,7 +9,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/javassist.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jaxb-impl.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/jboss-common-core.jar" sourcepath="/build/thirdparty/jboss-common-core-sources.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-container.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-j2ee.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-log4j.jar"/>
@@ -31,5 +30,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/jbosssx-client.jar" sourcepath="/build/thirdparty/jbosssx-src.zip"/>
 	<classpathentry kind="lib" path="/build/thirdparty/wstx.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/getopt.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-common.jar" sourcepath="/build/thirdparty/jboss-common-sources.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>

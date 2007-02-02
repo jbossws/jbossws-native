@@ -36,24 +36,19 @@ public class WSSecurityConfiguration implements Serializable
    private static final long serialVersionUID = 1022564645797303076L;
 
    private Config defaultConfig;
-
    private HashMap<String, Port> ports = new HashMap<String, Port>();
-
    private String keyStoreFile;
-
    private URL keyStoreURL;
-
    private String keyStoreType;
-
    private String keyStorePassword;
-
    private String trustStoreFile;
-
    private URL trustStoreURL;
-
    private String trustStoreType;
-
    private String trustStorePassword;
+
+   public WSSecurityConfiguration()
+   {
+   }
 
    public Config getDefaultConfig()
    {

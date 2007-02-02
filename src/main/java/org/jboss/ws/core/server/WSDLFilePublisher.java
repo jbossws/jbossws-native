@@ -42,6 +42,7 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
@@ -71,12 +72,9 @@ public class WSDLFilePublisher
    {
       this.udi = udi;
 
-      String archiveName = udi.simpleName;
-      if (archiveName.endsWith(".jar") || archiveName.endsWith(".ejb3"))
-         expLocation = "META-INF/wsdl/";
-      else if (archiveName.endsWith(".war"))
+      if (udi.type == DeploymentType.JAXRPC_JSE || udi.type == DeploymentType.JAXWS_JSE)
          expLocation = "WEB-INF/wsdl/";
-      else throw new WSException("Can only publish wsdl from WAR or JAR deployment");
+      else expLocation = "META-INF/wsdl/";
    }
 
    /** Publish the deployed wsdl file to the data directory
@@ -88,58 +86,44 @@ public class WSDLFilePublisher
       // For each service
       for (ServiceMetaData serviceMetaData : wsMetaData.getServices())
       {
-         String wsdlPath = serviceMetaData.getWsdlLocation().toExternalForm();
-         log.debug("Publish WSDL file: " + wsdlPath);
+         File wsdlFile = getPublishLocation(deploymentName, serviceMetaData);
+         wsdlFile.getParentFile().mkdirs();
 
-         if (wsdlPath != null)
+         // Get the wsdl definition and write it to the wsdl publish location
+         try
          {
-            File targetFile = getPublishLocation(deploymentName, serviceMetaData);
-            targetFile.getParentFile().mkdirs();
+            Writer fWriter = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
+            WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
+            new WSDLWriter(wsdlDefinitions).write(fWriter, Constants.DEFAULT_XML_CHARSET);
 
-            // Get the wsdl definition and write it to the wsdl publish location
-            try
+            URL wsdlPublishURL = wsdlFile.toURL();
+            log.info("WSDL published to: " + wsdlPublishURL);
+
+            // udpate the wsdl file location 
+            serviceMetaData.setWsdlLocation(wsdlFile.toURL());
+            
+            // Process the wsdl imports
+            Definition wsdl11Definition = wsdlDefinitions.getWsdlOneOneDefinition();
+            if (wsdl11Definition != null)
             {
-               Writer fWriter = IOUtils.getCharsetFileWriter(targetFile, Constants.DEFAULT_XML_CHARSET);
-               WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
-               new WSDLWriter(wsdlDefinitions).write(fWriter, Constants.DEFAULT_XML_CHARSET);
+               publishWsdlImports(wsdlFile.toURL(), wsdl11Definition);
 
-               URL wsdlPublishURL = targetFile.toURL();
-               log.info("WSDL published to: " + wsdlPublishURL);
-
-               // delete wsdl temp file 
-               ServerConfigFactory factory = ServerConfigFactory.getInstance();
-               ServerConfig config = factory.getServerConfig();
-               if (wsdlPath.startsWith(config.getServerTempDir().toURL().toExternalForm()))
-               {
-                  new File(wsdlPath).delete();
-               }
-
-               // udpate the wsdl file location 
-               serviceMetaData.setWsdlLocation(wsdlPublishURL);
-
-               // Process the wsdl imports
-               Definition wsdl11Definition = wsdlDefinitions.getWsdlOneOneDefinition();
-               if (wsdl11Definition != null)
-               {
-                  publishWsdlImports(targetFile.toURL(), wsdl11Definition);
-
-                  // Publish XMLSchema imports
-                  Document document = wsdlDefinitions.getWsdlDocument();
-                  publishSchemaImports(targetFile.toURL(), document.getDocumentElement());
-               }
-               else
-               {
-                  throw new NotImplementedException("WSDL-2.0 imports");
-               }
+               // Publish XMLSchema imports
+               Document document = wsdlDefinitions.getWsdlDocument();
+               publishSchemaImports(wsdlFile.toURL(), document.getDocumentElement());
             }
-            catch (RuntimeException rte)
+            else
             {
-               throw rte;
+               throw new NotImplementedException("WSDL-2.0 imports");
             }
-            catch (Exception e)
-            {
-               throw new WSException("Cannot publish wsdl to: " + targetFile, e);
-            }
+         }
+         catch (RuntimeException rte)
+         {
+            throw rte;
+         }
+         catch (Exception e)
+         {
+            throw new WSException("Cannot publish wsdl to: " + wsdlFile, e);
          }
       }
    }
@@ -281,6 +265,17 @@ public class WSDLFilePublisher
     */
    private File getPublishLocation(String archiveName, ServiceMetaData serviceMetaData) throws IOException
    {
+      String wsdlLocation = null;
+      if (serviceMetaData.getWsdlLocation() != null)
+         wsdlLocation = serviceMetaData.getWsdlLocation().toExternalForm();
+      else if (serviceMetaData.getWsdlFile() != null)
+         wsdlLocation = serviceMetaData.getWsdlFile();
+
+      if (wsdlLocation == null)
+         throw new IllegalStateException("Cannot obtain wsdl location for: " + serviceMetaData.getServiceName());
+      
+      log.debug("Publish WSDL file: " + wsdlLocation);
+      
       // Only file URLs are supported in <wsdl-publish-location>
       String publishLocation = serviceMetaData.getWsdlPublishLocation();
       boolean predefinedLocation = publishLocation != null && publishLocation.startsWith("file:");
@@ -304,10 +299,9 @@ public class WSDLFilePublisher
       }
 
       File wsdlFile;
-      String wsdlLocation = serviceMetaData.getWsdlLocation().toExternalForm();
-      if (wsdlLocation.startsWith(expLocation))
+      if (wsdlLocation.indexOf(expLocation) >= 0)
       {
-         wsdlLocation = wsdlLocation.substring(expLocation.length());
+         wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(expLocation) + expLocation.length());
          wsdlFile = new File(locationFile + "/" + wsdlLocation);
       }
       else if (wsdlLocation.startsWith("vfsfile:") || wsdlLocation.startsWith("file:") || wsdlLocation.startsWith("jar:"))
@@ -319,7 +313,7 @@ public class WSDLFilePublisher
       {
          throw new WSException("Invalid wsdlFile '" + wsdlLocation + "', expected in: " + expLocation);
       }
-
+      
       return wsdlFile;
    }
 }

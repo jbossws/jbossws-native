@@ -40,8 +40,7 @@ public class UnifiedPortComponentRefMetaData implements Serializable
    private String serviceEndpointInterface;
    // The optional <port-component-link> element
    private String portComponentLink;
-
-   /** Arbitrary proxy properties given by <call-property> */
+   // Arbitrary proxy properties given by <call-property> 
    private Properties callProperties;
 
    public String getPortComponentLink()

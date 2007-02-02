@@ -196,7 +196,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          processSOAPBinding(epMetaData, wsClass);
 
       // process config, this will as well setup the handler
-      epMetaData.configure(epMetaData);
+      epMetaData.initEndpointConfig();
 
       // Process an optional @HandlerChain annotation
       processHandlerChain(epMetaData, wsClass);

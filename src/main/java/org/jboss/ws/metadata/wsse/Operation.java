@@ -35,7 +35,6 @@ public class Operation implements Serializable
    private static final long serialVersionUID = 4223295703633326725L;
 
    private Config config;
-
    private String name;
 
    public Operation(String name)

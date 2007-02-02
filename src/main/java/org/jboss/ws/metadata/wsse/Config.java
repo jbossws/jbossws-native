@@ -34,13 +34,9 @@ public class Config implements Serializable
    private static final long serialVersionUID = 4219543242657899910L;
 
    private Timestamp timestamp;
-
    private Username username;
-
    private Sign sign;
-
    private Encrypt encrypt;
-
    private Requires requires;
 
    public Encrypt getEncrypt()

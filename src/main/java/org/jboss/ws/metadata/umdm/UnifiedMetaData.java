@@ -140,12 +140,12 @@ public class UnifiedMetaData
       services.add(serviceMetaData);
    }
 
-   public void addWSDLDefinition(String wsdlFile, WSDLDefinitions wsdlDefinitions)
+   public void addWsdlDefinition(String wsdlFile, WSDLDefinitions wsdlDefinitions)
    {
       wsdlMap.put(wsdlFile, wsdlDefinitions);
    }
 
-   public WSDLDefinitions getWSDLDefinition(String wsdlFile)
+   public WSDLDefinitions getWsdlDefinition(String wsdlFile)
    {
       return wsdlMap.get(wsdlFile);
    }

@@ -116,6 +116,11 @@ public class SchemaBindingBuilder
          processPackageMapping(schemaBinding, packageMapping);
       }
 
+      for (ExceptionMapping exceptionMapping : wsdlMapping.getExceptionMappings())
+      {
+         processExceptionMapping(schemaBinding, exceptionMapping);
+      }
+      
       for (JavaXmlTypeMapping typeMapping : wsdlMapping.getJavaXmlTypeMappings())
       {
          processJavaXmlTypeMapping(schemaBinding, typeMapping);
@@ -147,6 +152,24 @@ public class SchemaBindingBuilder
       else
       {
          processNonArrayType(schemaBinding, typeMapping);
+      }
+   }
+
+   private void processExceptionMapping(SchemaBinding schemaBinding, ExceptionMapping exceptionMapping)
+   {
+      QName xmlType = exceptionMapping.getWsdlMessage();
+      String javaType = exceptionMapping.getExceptionType();
+      log.trace("processExceptionMapping: [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+      
+      if (schemaBinding.getType(xmlType) == null)
+      {
+         TypeBinding typeBinding = new TypeBinding(xmlType);
+         ClassMetaData cmd = new ClassMetaData();
+         cmd.setUseNoArgCtor(Boolean.FALSE);
+         cmd.setImpl(javaType);
+         typeBinding.setClassMetaData(cmd);
+         typeBinding.setSimple(false);
+         schemaBinding.addType(typeBinding);
       }
    }
 

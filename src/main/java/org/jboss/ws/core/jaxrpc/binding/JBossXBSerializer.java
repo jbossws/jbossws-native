@@ -33,7 +33,6 @@ import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshaller;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
-import org.jboss.ws.core.jaxrpc.binding.jbossxb.XercesXSMarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.w3c.dom.NamedNodeMap;
 
@@ -89,13 +88,6 @@ public class JBossXBSerializer extends ComplexTypeSerializer
 
          // schemabinding marshaller is the default delegate
          JBossXBMarshaller delegate = marshaller;
-
-         if(value instanceof Exception)
-         {
-            // todo: CTS workaround for custom exceptions, clarify when Alexey is back
-            // causes NPE in MarshallerImpl:458
-            delegate = new XercesXSMarshallerImpl();
-         }
 
          // marshalling context
          delegate.setProperty(JBossXBConstants.JBXB_XS_MODEL, model);

@@ -36,9 +36,7 @@ public class Port implements Serializable
    private static final long serialVersionUID = 8294850341855208663L;
 
    private String name;
-
    private Config defaultConfig;
-
    private HashMap<String, Operation> operations = new HashMap<String, Operation>();
 
    public Port(String name)
