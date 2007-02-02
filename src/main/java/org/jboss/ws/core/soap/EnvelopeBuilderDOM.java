@@ -68,6 +68,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       Element domEnv = null;
       try
       {
+         // TODO: The parser unescapes special characters, which we need to escape later on again         
          domEnv = DOMUtils.parse(ins);
       }
       catch (IOException ex)
@@ -107,7 +108,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          {
             Element srcElement = (Element)it.next();
             //registerNamespacesLocally(srcElement);
-            String xmlFragment = DOMWriter.printNode(srcElement, false);
+            String xmlFragment = DOMWriter.printNode(srcElement, false, true);
 
             Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
             SOAPContentElement destElement = new SOAPHeaderElementImpl(name);
@@ -201,7 +202,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
                   DOMUtils.copyAttributes(destElement, srcElement);
                   
-                  String xmlFragment = DOMWriter.printNode(srcElement, false);
+                  String xmlFragment = DOMWriter.printNode(srcElement, false, true);
                   destElement.setXMLFragment(xmlFragment);
                }
             }
@@ -214,7 +215,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
                DOMUtils.copyAttributes(destElement, srcElement);
                
-               String xmlFragment = DOMWriter.printNode(srcElement, false);
+               String xmlFragment = DOMWriter.printNode(srcElement, false, true);
                destElement.setXMLFragment(xmlFragment);
             }
             else if (style == null)

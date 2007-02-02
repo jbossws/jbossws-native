@@ -64,29 +64,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
       String xmlFragment = null;
       try
       {
-         TypeMappingImpl typeMapping = serContext.getTypeMapping();
-
-         Class javaType = null;
-         List<Class> possibleJavaTypes = typeMapping.getJavaTypes(xmlType);
-         if(possibleJavaTypes.size()>1)
-         {
-             // resolve java type by assignability
-            for(Class type : possibleJavaTypes)
-            {
-               if(JavaUtils.isAssignableFrom(type, value.getClass()))
-               {
-                  javaType = type;
-                  break;
-               }
-            }
-         }
-         else
-         {
-            javaType = typeMapping.getJavaType(xmlType);
-         }
-
-         if(null == javaType)
-            throw new Exception("Unable to resolve target java type");
+         // It needs to be a valid JAXB type
+         // Therefore we don't need to look into our TypeMapping
+         Class javaType = value.getClass();
 
          JAXBContextCache contextCache = JAXBContextCache.getContextCache();
          JAXBContext jaxbContext = contextCache.getInstance(javaType);

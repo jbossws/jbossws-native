@@ -67,30 +67,30 @@ public class LiteralTypeMapping extends TypeMappingImpl
       JBossXBSerializerFactory jbxbSF = new JBossXBSerializerFactory();
       JBossXBDeserializerFactory jbxbDF = new JBossXBDeserializerFactory();
 
-      registerInternal(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
 
-      registerInternal(String.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(Image.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(Source.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      registerInternal(MimeMultipart.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(String.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(Image.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(Source.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
+      register(MimeMultipart.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
       
       registerStandardLiteralTypes();
 
       // register default mime mappings
-      registerInternal(DataHandler.class, Constants.TYPE_MIME_APPLICATION_XML, null, null);
-      registerInternal(DataHandler.class, Constants.TYPE_MIME_IMAGE_GIF, null, null);
-      registerInternal(DataHandler.class, Constants.TYPE_MIME_IMAGE_JPEG, null, null);
-      registerInternal(DataHandler.class, Constants.TYPE_MIME_TEXT_PLAIN, null, null);
-      registerInternal(DataHandler.class, Constants.TYPE_MIME_TEXT_XML, null, null);
-      registerInternal(MimeMultipart.class, Constants.TYPE_MIME_MULTIPART_MIXED, null, null);
+      register(DataHandler.class, Constants.TYPE_MIME_APPLICATION_XML, null, null);
+      register(DataHandler.class, Constants.TYPE_MIME_IMAGE_GIF, null, null);
+      register(DataHandler.class, Constants.TYPE_MIME_IMAGE_JPEG, null, null);
+      register(DataHandler.class, Constants.TYPE_MIME_TEXT_PLAIN, null, null);
+      register(DataHandler.class, Constants.TYPE_MIME_TEXT_XML, null, null);
+      register(MimeMultipart.class, Constants.TYPE_MIME_MULTIPART_MIXED, null, null);
 
       // register mapping for xsd:anyType
-      registerInternal(SOAPElement.class, Constants.TYPE_LITERAL_ANYTYPE, new SOAPElementSerializerFactory(), new SOAPElementDeserializerFactory());
-      registerInternal(Element.class, Constants.TYPE_LITERAL_ANYTYPE, new ElementSerializerFactory(), new ElementDeserializerFactory());
+      register(SOAPElement.class, Constants.TYPE_LITERAL_ANYTYPE, new SOAPElementSerializerFactory(), new SOAPElementDeserializerFactory());
+      register(Element.class, Constants.TYPE_LITERAL_ANYTYPE, new ElementSerializerFactory(), new ElementDeserializerFactory());
    }
 
    /**

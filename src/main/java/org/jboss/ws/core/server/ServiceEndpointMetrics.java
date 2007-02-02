@@ -34,7 +34,7 @@ import javax.management.ObjectName;
  * @author Thomas.Diesler@jboss.org
  * @since 14-Dec-2005
  */
-public class ServiceEndpointMetrics implements Serializable
+public class ServiceEndpointMetrics implements Serializable, Cloneable
 {
    private static final long serialVersionUID = -7730514070812711512L;
 
@@ -171,5 +171,23 @@ public class ServiceEndpointMetrics implements Serializable
       buffer.append("\n  avgProcessingTime=" + avgProcessingTime);
       buffer.append("\n  totalProcessingTime=" + totalProcessingTime);
       return buffer.toString();
+   }
+
+   protected Object clone() throws CloneNotSupportedException {
+      ServiceEndpointMetrics sem = new ServiceEndpointMetrics(this.endpointID);
+
+      sem.avgProcessingTime = this.avgProcessingTime;
+      sem.maxProcessingTime = this.maxProcessingTime;
+      sem.minProcessingTime = this.minProcessingTime;
+
+      sem.faultCount = this.faultCount;
+      sem.requestCount = this.requestCount;
+      sem.responseCount = this.responseCount;
+
+      sem.startTime = this.startTime;
+      sem.stopTime = this.stopTime;
+      sem.totalProcessingTime = this.totalProcessingTime;
+
+      return sem;
    }
 }

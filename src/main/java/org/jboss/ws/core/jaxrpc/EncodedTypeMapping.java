@@ -79,82 +79,82 @@ public class EncodedTypeMapping extends TypeMappingImpl
       registerStandardSOAP11EncodedTypes();
 
       // register mapping for xsd:anyType
-      registerInternal(SOAPElement.class, Constants.TYPE_SOAP11_ANYTYPE, new SOAPElementSerializerFactory(), new SOAPElementDeserializerFactory());
-      registerInternal(Element.class, Constants.TYPE_SOAP11_ANYTYPE, new ElementSerializerFactory(), new ElementDeserializerFactory());
+      register(SOAPElement.class, Constants.TYPE_SOAP11_ANYTYPE, new SOAPElementSerializerFactory(), new SOAPElementDeserializerFactory());
+      register(Element.class, Constants.TYPE_SOAP11_ANYTYPE, new ElementSerializerFactory(), new ElementDeserializerFactory());
    }
 
    private void registerStandardSOAP11EncodedTypes()
    {
-      registerInternal(BigDecimal.class, Constants.TYPE_SOAP11_DECIMAL, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigDecimal.class, Constants.TYPE_SOAP11_DECIMAL, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(BigInteger.class, Constants.TYPE_SOAP11_POSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_SOAP11_NEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_SOAP11_NONPOSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_SOAP11_NONNEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_SOAP11_UNSIGNEDLONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_SOAP11_INTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_SOAP11_POSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_SOAP11_NEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_SOAP11_NONPOSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_SOAP11_NONNEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_SOAP11_UNSIGNEDLONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_SOAP11_INTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(Date.class, Constants.TYPE_SOAP11_DATETIME, new DateSerializerFactory(), new DateDeserializerFactory());
+      register(Date.class, Constants.TYPE_SOAP11_DATETIME, new DateSerializerFactory(), new DateDeserializerFactory());
 
-      registerInternal(Calendar.class, Constants.TYPE_SOAP11_DATE, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
-      registerInternal(Calendar.class, Constants.TYPE_SOAP11_TIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
-      registerInternal(Calendar.class, Constants.TYPE_SOAP11_DATETIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
+      register(Calendar.class, Constants.TYPE_SOAP11_DATE, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
+      register(Calendar.class, Constants.TYPE_SOAP11_TIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
+      register(Calendar.class, Constants.TYPE_SOAP11_DATETIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
 
-      registerInternal(QName.class, Constants.TYPE_SOAP11_QNAME, new QNameSerializerFactory(), new QNameDeserializerFactory());
+      register(QName.class, Constants.TYPE_SOAP11_QNAME, new QNameSerializerFactory(), new QNameDeserializerFactory());
 
-      registerInternal(String.class, Constants.TYPE_SOAP11_ANYSIMPLETYPE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_DURATION, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_GDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_GMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_GMONTHDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_GYEAR, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_GYEARMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_ID, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_LANGUAGE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_NAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_NCNAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_NMTOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_NORMALIZEDSTRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_TOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_SOAP11_STRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_ANYSIMPLETYPE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_DURATION, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_GDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_GMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_GMONTHDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_GYEAR, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_GYEARMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_ID, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_LANGUAGE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_NAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_NCNAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_NMTOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_NORMALIZEDSTRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_TOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_SOAP11_STRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(String[].class, Constants.TYPE_SOAP11_NMTOKENS, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String[].class, Constants.TYPE_SOAP11_NMTOKENS, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(URI.class, Constants.TYPE_SOAP11_ANYURI, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(URI.class, Constants.TYPE_SOAP11_ANYURI, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(boolean.class, Constants.TYPE_SOAP11_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Boolean.class, Constants.TYPE_SOAP11_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(boolean.class, Constants.TYPE_SOAP11_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Boolean.class, Constants.TYPE_SOAP11_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(byte.class, Constants.TYPE_SOAP11_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Byte.class, Constants.TYPE_SOAP11_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(byte.class, Constants.TYPE_SOAP11_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Byte.class, Constants.TYPE_SOAP11_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(byte[].class, Constants.TYPE_SOAP11_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
-      registerInternal(Byte[].class, Constants.TYPE_SOAP11_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
-      registerInternal(byte[].class, Constants.TYPE_SOAP11_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
-      registerInternal(Byte[].class, Constants.TYPE_SOAP11_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
-      registerInternal(byte[].class, Constants.TYPE_SOAP11_BASE64, new Base64SerializerFactory(), new Base64DeserializerFactory());
-      registerInternal(Byte[].class, Constants.TYPE_SOAP11_BASE64, new Base64SerializerFactory(), new Base64DeserializerFactory());
+      register(byte[].class, Constants.TYPE_SOAP11_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
+      register(Byte[].class, Constants.TYPE_SOAP11_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
+      register(byte[].class, Constants.TYPE_SOAP11_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
+      register(Byte[].class, Constants.TYPE_SOAP11_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
+      register(byte[].class, Constants.TYPE_SOAP11_BASE64, new Base64SerializerFactory(), new Base64DeserializerFactory());
+      register(Byte[].class, Constants.TYPE_SOAP11_BASE64, new Base64SerializerFactory(), new Base64DeserializerFactory());
 
-      registerInternal(double.class, Constants.TYPE_SOAP11_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Double.class, Constants.TYPE_SOAP11_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(double.class, Constants.TYPE_SOAP11_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Double.class, Constants.TYPE_SOAP11_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(float.class, Constants.TYPE_SOAP11_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Float.class, Constants.TYPE_SOAP11_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(float.class, Constants.TYPE_SOAP11_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Float.class, Constants.TYPE_SOAP11_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(int.class, Constants.TYPE_SOAP11_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Integer.class, Constants.TYPE_SOAP11_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(int.class, Constants.TYPE_SOAP11_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Integer.class, Constants.TYPE_SOAP11_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(int.class, Constants.TYPE_SOAP11_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Integer.class, Constants.TYPE_SOAP11_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(int.class, Constants.TYPE_SOAP11_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Integer.class, Constants.TYPE_SOAP11_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(long.class, Constants.TYPE_SOAP11_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Long.class, Constants.TYPE_SOAP11_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(long.class, Constants.TYPE_SOAP11_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Long.class, Constants.TYPE_SOAP11_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(long.class, Constants.TYPE_SOAP11_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Long.class, Constants.TYPE_SOAP11_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(long.class, Constants.TYPE_SOAP11_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Long.class, Constants.TYPE_SOAP11_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(short.class, Constants.TYPE_SOAP11_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Short.class, Constants.TYPE_SOAP11_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(short.class, Constants.TYPE_SOAP11_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Short.class, Constants.TYPE_SOAP11_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(short.class, Constants.TYPE_SOAP11_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Short.class, Constants.TYPE_SOAP11_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(short.class, Constants.TYPE_SOAP11_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Short.class, Constants.TYPE_SOAP11_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
    }
 
    /**

@@ -112,6 +112,8 @@ public class SOAPElementWriter
          // This is expensive. Make sure it only happens for debugging
          try
          {
+            // TODO: this unescapes sepcial chars, which might be quiet confusing
+            // but they are actually send escaped.
             xmlStr = DOMWriter.printNode(DOMUtils.parse(xmlStr), true);
          }
          catch (IOException ex)

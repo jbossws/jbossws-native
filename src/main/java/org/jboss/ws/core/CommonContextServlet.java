@@ -26,6 +26,7 @@ package org.jboss.ws.core;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.server.ServiceEndpointManager;
+import org.jboss.ws.core.server.ServiceEndpointDTO;
 
 /**
  * The servlet that that is associated with context /jbossws
@@ -67,9 +69,90 @@ public abstract class CommonContextServlet extends HttpServlet
       writer.print("<html>");
       setupHTMLResponseHeader(writer);
 
+      URL requestURL = new URL(req.getRequestURL().toString());
+
       writer.print("<body>");
-      //writer.print(epManager.showServiceEndpointTable());
-      writer.print(epManager.showServiceEndpointTable(new URL(req.getRequestURL().toString())));
+
+      writer.print("<div class='pageHeader'>JBossWS/Services</div>");
+      writer.print("<div class='pageSection'>");
+      writer.print("<fieldset>");
+      writer.print("<legend><b>Registered Service Endpoints</b></legend>");
+      writer.print("<table>");
+
+      // begin iteration
+      List<ServiceEndpointDTO> endpoints = epManager.getRegisteredEndpoints(requestURL);
+
+      if(endpoints.isEmpty())
+      {
+         writer.print("<tr>");
+         writer.print("	<td><h3>There currently no endpoints deployed</h3></td>");                           
+         writer.print("</tr>");
+      }
+
+      for(ServiceEndpointDTO ep : endpoints)
+      {
+         writer.print("<tr>");
+         writer.print("	<td>ServiceEndpointID</td>");
+         writer.print("	<td>"+ep.getSepID()+"</td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+         writer.print("	<td>ServiceEndpointAddress</td>");
+         writer.print("	<td><a href='"+ep.getAddress()+"?wsdl'>"+ep.getAddress()+"?wsdl</a></td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+         writer.print("	<td colspan=2>");
+         writer.print("	");
+         writer.print("");
+         writer.print("<table class='metrics'>");
+         writer.print("<tr>");
+         writer.print("	<td>StartTime</td>");
+         writer.print("	<td>StopTime</td>");
+         writer.print("	<td></td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+         writer.print("	<td>"+ep.getSeMetrics().getStartTime()+"</td>");
+
+         String stopTime = ep.getSeMetrics().getStopTime() != null ? ep.getSeMetrics().getStopTime().toString() : "";
+         writer.print("	<td>"+stopTime+"</td>");
+         writer.print("	<td></td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+
+         writer.print("	<td>RequestCount</td>");
+         writer.print("	<td>ResponseCount</td>");
+         writer.print("	<td>FaultCount</td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+         writer.print("	<td>"+ep.getSeMetrics().getRequestCount()+"</td>");
+         writer.print("	<td>"+ep.getSeMetrics().getResponseCount()+"</td>");
+         writer.print("	<td>"+ep.getSeMetrics().getFaultCount()+"</td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+         writer.print("	<td>MinProcessingTime</td>");
+         writer.print("	<td>MaxProcessingTime</td>");
+         writer.print("	<td>AvgProcessingTime</td>");
+         writer.print("</tr>");
+         writer.print("<tr>");
+         writer.print("	<td>"+ep.getSeMetrics().getMinProcessingTime()+"</td>");
+         writer.print("	<td>"+ep.getSeMetrics().getMaxProcessingTime()+"</td>");
+         writer.print("	<td>"+ep.getSeMetrics().getAverageProcessingTime()+"</td>");
+         writer.print("</tr>");
+         writer.print("");
+         writer.print("");
+         writer.print("</table>");
+         writer.print("");
+         writer.print("	</td>");
+         writer.print("</tr>");
+
+         writer.print("<tr><td colspan='3'>&nbsp;</td></tr>");
+      }
+      // end iteration
+      writer.print("</table>");
+      writer.print("");
+      writer.print("</fieldset>");
+      writer.print("</div>");
+
+
       writer.print("</body>");
       writer.print("</html>");
       writer.close();

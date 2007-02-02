@@ -140,7 +140,7 @@ public class WSDLRequestHandler
 	                     completeHost = reqProtocol + "://" + hostAndPort;
                      }
 
-                     String newLocation = completeHost + reqPath + "?wsdl&resource=" + newResourcePath;
+                     String newLocation = completeHost + reqPath + "?wsdl&amp;resource=" + newResourcePath;
                      locationAttr.setNodeValue(newLocation);
                      
                      log.trace("Mapping import from '" + orgLocation + "' to '" + newLocation + "'");

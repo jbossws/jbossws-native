@@ -23,36 +23,21 @@ package org.jboss.ws.core.jaxrpc;
 
 // $Id$
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
+import org.jboss.ws.core.jaxrpc.binding.*;
+import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.core.utils.HashCodeUtil;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.DeserializerFactory;
 import javax.xml.rpc.encoding.SerializerFactory;
 import javax.xml.rpc.encoding.TypeMapping;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxrpc.binding.Base64DeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.Base64SerializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.CalendarDeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.CalendarSerializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.DateDeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.DateSerializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.HexDeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.HexSerializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.QNameDeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.QNameSerializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
-import org.jboss.ws.core.utils.JavaUtils;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This is the representation of a type mapping.
@@ -72,6 +57,8 @@ public abstract class TypeMappingImpl implements TypeMapping
    // Map<KeyPair,FactoryPair>
    private Map<KeyPair, FactoryPair> tupleMap = new LinkedHashMap<KeyPair, FactoryPair>();
 
+   private Map<Integer, List<KeyPair>> keyPairCache = new ConcurrentHashMap<Integer, List<KeyPair>>();
+
    /**
     * Gets the DeserializerFactory registered for the specified pair of Java type and XML data type.
     * @param javaType Class of the Java type
@@ -80,7 +67,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public DeserializerFactory getDeserializer(Class javaType, QName xmlType)
    {
-      FactoryPair fPair = getFactoryPair(xmlType, javaType);
+      FactoryPair fPair = getFactoryPair(new IQName(xmlType), javaType);
       return (fPair != null ? fPair.getDeserializerFactory() : null);
    }
 
@@ -92,7 +79,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public SerializerFactory getSerializer(Class javaType, QName xmlType)
    {
-      FactoryPair fPair = getFactoryPair(xmlType, javaType);
+      FactoryPair fPair = getFactoryPair(new IQName(xmlType), javaType);
       return (fPair != null ? fPair.getSerializerFactory() : null);
    }
 
@@ -121,7 +108,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public boolean isRegistered(Class javaType, QName xmlType)
    {
-      return getFactoryPair(xmlType, javaType) != null;
+      return getFactoryPair(new IQName(xmlType), javaType) != null;
    }
 
    /**
@@ -136,10 +123,11 @@ public abstract class TypeMappingImpl implements TypeMapping
    public void register(Class javaType, QName xmlType, SerializerFactory sf, DeserializerFactory df)
    {
       log.debug("register: TypeMappingImpl@"  + hashCode() + " [xmlType=" + xmlType + ",javaType=" + javaType.getName() + ",sf=" + sf + ",df=" + df + "]");
-      registerInternal(javaType, xmlType, sf, df);
+      registerInternal(javaType, new IQName(xmlType), sf, df);
+      keyPairCache.clear();
    }
 
-   void registerInternal(Class javaType, QName xmlType, SerializerFactory sf, DeserializerFactory df)
+   private void registerInternal(Class javaType, IQName xmlType, SerializerFactory sf, DeserializerFactory df)
    {
       if (javaType == null)
          throw new IllegalArgumentException("javaType cannot be null for: " + xmlType);
@@ -159,7 +147,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public void removeDeserializer(Class javaType, QName xmlType)
    {
-      FactoryPair fPair = getFactoryPair(xmlType, javaType);
+      FactoryPair fPair = getFactoryPair(new IQName(xmlType), javaType);
       if (fPair != null)
          fPair.setDeserializerFactory(null);
    }
@@ -172,7 +160,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public void removeSerializer(Class javaType, QName xmlType)
    {
-      FactoryPair fPair = getFactoryPair(xmlType, javaType);
+      FactoryPair fPair = getFactoryPair(new IQName(xmlType), javaType);
       if (fPair != null)
          fPair.setSerializerFactory(null);
    }
@@ -183,7 +171,7 @@ public abstract class TypeMappingImpl implements TypeMapping
       List<QName> types = new ArrayList<QName>();
       for (KeyPair keyPair : getKeyPairs(null, null))
       {
-         types.add(keyPair.getXmlType());
+         types.add(keyPair.getXmlType().toQName());
       }
       return types;
    }
@@ -204,7 +192,7 @@ public abstract class TypeMappingImpl implements TypeMapping
    {
       Class javaType = null;
 
-      List keyPairList = getKeyPairs(xmlType, null);
+      List keyPairList = getKeyPairs(new IQName(xmlType), null);
       int size = keyPairList.size();
       if (size > 0)
       {
@@ -220,17 +208,17 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public List<Class> getJavaTypes(QName xmlType)
    {
-      List<KeyPair> keyPairList = getKeyPairs(xmlType, null);
+      List<KeyPair> keyPairList = getKeyPairs( new IQName(xmlType), null);
       List<Class> classes = new ArrayList<Class>(keyPairList.size());
-      
+
       for (KeyPair current : keyPairList)
       {
          classes.add(current.getJavaType());
       }
-      
+
       return classes;
    }
-   
+
    /**
     * Get the Class that was registered last for this xmlType
     * If there are two Java Types registered for the xmlType
@@ -242,7 +230,7 @@ public abstract class TypeMappingImpl implements TypeMapping
       //Lets get the primitive type if available
       Class javaType = null;
 
-      List keyPairList = getKeyPairs(xmlType, null);
+      List keyPairList = getKeyPairs(new IQName(xmlType), null);
       int size = keyPairList.size();
       if (size == 2 && getPrimitive)
       {
@@ -253,10 +241,10 @@ public abstract class TypeMappingImpl implements TypeMapping
          if(javaType2.isPrimitive() && !javaType1.isPrimitive())
             javaType =  javaType2;
          else
-            if(javaType1.isPrimitive() && !javaType2.isPrimitive())
-               javaType =  javaType1;
+         if(javaType1.isPrimitive() && !javaType2.isPrimitive())
+            javaType =  javaType1;
          else
-               javaType = javaType2; //Fallback on the most latest
+            javaType = javaType2; //Fallback on the most latest
       }
       else
          return getJavaType(xmlType);
@@ -281,7 +269,7 @@ public abstract class TypeMappingImpl implements TypeMapping
       if (size > 0)
       {
          KeyPair kPair = (KeyPair)keyPairList.get(size - 1);
-         xmlType = kPair.getXmlType();
+         xmlType = kPair.getXmlType().toQName();
       }
 
       return xmlType;
@@ -305,7 +293,7 @@ public abstract class TypeMappingImpl implements TypeMapping
       if (size > 0)
       {
          KeyPair kPair = (KeyPair)keyPairList.get(size - 1);
-         xmlType = kPair.getXmlType();
+         xmlType = kPair.getXmlType().toQName();
       }
 
       return xmlType;
@@ -315,8 +303,33 @@ public abstract class TypeMappingImpl implements TypeMapping
     * Get the serializer/deserializer factory pair for the given xmlType, javaType
     * Both xmlType, javaType may be null. In that case, this implementation still
     * returns a FactoryPair if there is only one possible match.
+    *
+    * @param xmlType can be null
+    * @param javaType can be null
     */
-   List<KeyPair> getKeyPairs(QName xmlType, Class javaType)
+   private List<KeyPair> getKeyPairs(IQName xmlType, Class javaType)
+   {
+      Integer cacheId = cacheIdFor(javaType, xmlType);
+
+      List<KeyPair> keyPairList = keyPairCache.get(cacheId);
+      if(null == keyPairList)
+      {
+         keyPairList = getKeyPairsInternal(xmlType, javaType);
+         keyPairCache.put(cacheId, keyPairList);
+      }
+
+      return keyPairList;
+   }
+
+   private Integer cacheIdFor(Class javaType, IQName xmlType) {
+      int result = HashCodeUtil.SEED;
+      int nullHash = HashCodeUtil.hash(result, "null");
+      result = javaType!= null ? HashCodeUtil.hash(result, javaType.getName()) : HashCodeUtil.hash(result, nullHash);
+      result = xmlType!= null ? HashCodeUtil.hash(result, xmlType.hashCode()): HashCodeUtil.hash(result, nullHash);
+      return new Integer(result);
+   }
+
+   private List<KeyPair> getKeyPairsInternal(IQName xmlType, Class javaType)
    {
       List<KeyPair> keyPairList = new ArrayList<KeyPair>();
 
@@ -387,6 +400,20 @@ public abstract class TypeMappingImpl implements TypeMapping
       return keyPairList;
    }
 
+    private List<KeyPair> getKeyPairs(IQName xmlType, Class javaType, boolean tryAssignable)
+    {
+      Integer cacheId = cacheIdFor(javaType, xmlType);
+
+      List<KeyPair> keyPairList = keyPairCache.get(cacheId);
+      if(null == keyPairList)
+      {
+         keyPairList = getKeyPairsInternal(xmlType, javaType, tryAssignable);
+         keyPairCache.put(cacheId, keyPairList);
+      }
+
+      return keyPairList;
+    }
+
    /**
     * Get the serializer/deserializer factory pair for the given xmlType, javaType
     * Both xmlType, javaType may be null. In that case, this implementation still
@@ -394,9 +421,9 @@ public abstract class TypeMappingImpl implements TypeMapping
     * <br>Note: This method does not try for the base class, if no keypair exists for the
     * javaType in question.
     */
-   List<KeyPair> getKeyPairs(QName xmlType, Class javaType, boolean tryAssignable)
+   private List<KeyPair> getKeyPairsInternal(IQName xmlType, Class javaType, boolean tryAssignable)
    {
-      if(tryAssignable) return getKeyPairs(  xmlType,   javaType);
+      if(tryAssignable) return getKeyPairs( xmlType, javaType );
 
       List<KeyPair> keyPairList = new ArrayList<KeyPair>();
 
@@ -450,7 +477,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     * Both xmlType, javaType may be null. In that case, this implementation still
     * returns a FactoryPair that was last registered
     */
-   FactoryPair getFactoryPair(QName xmlType, Class javaType)
+   private FactoryPair getFactoryPair(IQName xmlType, Class javaType)
    {
       FactoryPair fPair = null;
 
@@ -467,85 +494,85 @@ public abstract class TypeMappingImpl implements TypeMapping
 
    protected void registerStandardLiteralTypes()
    {
-      registerInternal(BigDecimal.class, Constants.TYPE_LITERAL_DECIMAL, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigDecimal.class, Constants.TYPE_LITERAL_DECIMAL, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(BigInteger.class, Constants.TYPE_LITERAL_POSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_LITERAL_NEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_LITERAL_NONPOSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_LITERAL_NONNEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_LITERAL_UNSIGNEDLONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(BigInteger.class, Constants.TYPE_LITERAL_INTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_LITERAL_POSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_LITERAL_NEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_LITERAL_NONPOSITIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_LITERAL_NONNEGATIVEINTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_LITERAL_UNSIGNEDLONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(BigInteger.class, Constants.TYPE_LITERAL_INTEGER, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(Date.class, Constants.TYPE_LITERAL_DATETIME, new DateSerializerFactory(), new DateDeserializerFactory());
+      register(Date.class, Constants.TYPE_LITERAL_DATETIME, new DateSerializerFactory(), new DateDeserializerFactory());
 
-      registerInternal(Calendar.class, Constants.TYPE_LITERAL_DATE, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
-      registerInternal(Calendar.class, Constants.TYPE_LITERAL_TIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
-      registerInternal(Calendar.class, Constants.TYPE_LITERAL_DATETIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
+      register(Calendar.class, Constants.TYPE_LITERAL_DATE, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
+      register(Calendar.class, Constants.TYPE_LITERAL_TIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
+      register(Calendar.class, Constants.TYPE_LITERAL_DATETIME, new CalendarSerializerFactory(), new CalendarDeserializerFactory());
 
-      registerInternal(QName.class, Constants.TYPE_LITERAL_QNAME, new QNameSerializerFactory(), new QNameDeserializerFactory());
+      register(QName.class, Constants.TYPE_LITERAL_QNAME, new QNameSerializerFactory(), new QNameDeserializerFactory());
 
-      registerInternal(String.class, Constants.TYPE_LITERAL_ANYSIMPLETYPE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_DURATION, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_GDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_GMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_GMONTHDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_GYEAR, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_GYEARMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_ID, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_LANGUAGE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_NAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_NCNAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_NMTOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_NORMALIZEDSTRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_TOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(String.class, Constants.TYPE_LITERAL_STRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_ANYSIMPLETYPE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_DURATION, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_GDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_GMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_GMONTHDAY, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_GYEAR, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_GYEARMONTH, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_ID, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_LANGUAGE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_NAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_NCNAME, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_NMTOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_NORMALIZEDSTRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_TOKEN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String.class, Constants.TYPE_LITERAL_STRING, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(String[].class, Constants.TYPE_LITERAL_NMTOKENS, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(String[].class, Constants.TYPE_LITERAL_NMTOKENS, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(URI.class, Constants.TYPE_LITERAL_ANYURI, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(URI.class, Constants.TYPE_LITERAL_ANYURI, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(boolean.class, Constants.TYPE_LITERAL_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Boolean.class, Constants.TYPE_LITERAL_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(boolean.class, Constants.TYPE_LITERAL_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Boolean.class, Constants.TYPE_LITERAL_BOOLEAN, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(byte.class, Constants.TYPE_LITERAL_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Byte.class, Constants.TYPE_LITERAL_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(byte.class, Constants.TYPE_LITERAL_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Byte.class, Constants.TYPE_LITERAL_BYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(Byte[].class, Constants.TYPE_LITERAL_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
-      registerInternal(byte[].class, Constants.TYPE_LITERAL_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
+      register(Byte[].class, Constants.TYPE_LITERAL_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
+      register(byte[].class, Constants.TYPE_LITERAL_HEXBINARY, new HexSerializerFactory(), new HexDeserializerFactory());
 
-      registerInternal(Byte[].class, Constants.TYPE_LITERAL_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
-      registerInternal(byte[].class, Constants.TYPE_LITERAL_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
+      register(Byte[].class, Constants.TYPE_LITERAL_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
+      register(byte[].class, Constants.TYPE_LITERAL_BASE64BINARY, new Base64SerializerFactory(), new Base64DeserializerFactory());
 
-      registerInternal(double.class, Constants.TYPE_LITERAL_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Double.class, Constants.TYPE_LITERAL_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(double.class, Constants.TYPE_LITERAL_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Double.class, Constants.TYPE_LITERAL_DOUBLE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(float.class, Constants.TYPE_LITERAL_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Float.class, Constants.TYPE_LITERAL_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(float.class, Constants.TYPE_LITERAL_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Float.class, Constants.TYPE_LITERAL_FLOAT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(int.class, Constants.TYPE_LITERAL_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Integer.class, Constants.TYPE_LITERAL_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(int.class, Constants.TYPE_LITERAL_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Integer.class, Constants.TYPE_LITERAL_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(int.class, Constants.TYPE_LITERAL_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Integer.class, Constants.TYPE_LITERAL_UNSIGNEDSHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(int.class, Constants.TYPE_LITERAL_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Integer.class, Constants.TYPE_LITERAL_INT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(long.class, Constants.TYPE_LITERAL_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Long.class, Constants.TYPE_LITERAL_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(long.class, Constants.TYPE_LITERAL_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Long.class, Constants.TYPE_LITERAL_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(long.class, Constants.TYPE_LITERAL_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Long.class, Constants.TYPE_LITERAL_UNSIGNEDINT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(long.class, Constants.TYPE_LITERAL_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Long.class, Constants.TYPE_LITERAL_LONG, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
 
-      registerInternal(short.class, Constants.TYPE_LITERAL_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Short.class, Constants.TYPE_LITERAL_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(short.class, Constants.TYPE_LITERAL_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
-      registerInternal(Short.class, Constants.TYPE_LITERAL_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(short.class, Constants.TYPE_LITERAL_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Short.class, Constants.TYPE_LITERAL_UNSIGNEDBYTE, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(short.class, Constants.TYPE_LITERAL_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
+      register(Short.class, Constants.TYPE_LITERAL_SHORT, new SimpleSerializerFactory(), new SimpleDeserializerFactory());
    }
 
    /** A tuple of the type {XML typeQName, Java Class, SerializerFactory, DeserializerFactory}.
     */
-   public static class KeyPair
+   private static class KeyPair
    {
-      private QName xmlType;
+      private IQName xmlType;
       private Class javaType;
 
-      public KeyPair(QName xmlType, Class javaType)
+      public KeyPair(IQName xmlType, Class javaType)
       {
          this.javaType = javaType;
          this.xmlType = xmlType;
@@ -556,7 +583,7 @@ public abstract class TypeMappingImpl implements TypeMapping
          return javaType;
       }
 
-      public QName getXmlType()
+      public IQName getXmlType()
       {
          return xmlType;
       }
@@ -619,6 +646,68 @@ public abstract class TypeMappingImpl implements TypeMapping
       public void setSerializerFactory(SerializerFactory sf)
       {
          this.serializerFactory = sf;
+      }
+   }
+
+   /**
+    * A duck typed QName that relies on internalized Strings.<p>
+    * Taken from the {@link javax.xml.namespace.QName} docs:<br>
+    * The value of a QName contains a Namespace URI, local part and prefix.
+    * The prefix is included in QName to retain lexical information when present in an XML input source.
+    * The prefix is NOT used in QName.equals(Object) or to compute the QName.hashCode().
+    * Equality and the hash code are defined using only the Namespace URI and local part.
+    * If not specified, the Namespace URI is set to "" (the empty string).
+    * If not specified, the prefix is set to "" (the empty string).
+    */
+   private final class IQName
+   {
+      public String namespace;
+      public String localPart;
+      public String prefix;
+      public int hash;
+
+      public IQName(QName name)
+      {
+         namespace = name.getNamespaceURI() != null ? name.getNamespaceURI().intern() : "".intern();
+         localPart = name.getLocalPart() != null ? name.getLocalPart().intern() : "".intern();
+         prefix = name.getPrefix() != null ? name.getPrefix().intern() : "".intern();
+         hash = name.hashCode();
+      }
+
+      public boolean equals(Object object) {
+         if(!(object instanceof IQName))
+            throw new IllegalArgumentException("Cannot compare IQName to " + object);
+
+         IQName iqn = (IQName)object;
+         return (iqn.namespace == this.namespace && iqn.localPart == this.localPart);
+      }
+
+      public QName toQName()
+      {
+         QName qname;
+
+         if(null == namespace)
+            qname = new QName(localPart);
+         else if(null == prefix)
+            qname = new QName(namespace, localPart);
+         else
+            qname = new QName(namespace, localPart, prefix);
+
+         return qname;
+      }
+
+      /**
+       * This implementation currently represents a QName as: "{" + Namespace URI + "}" + local part.
+       * If the Namespace URI .equals(""), only the local part is returned.
+       */
+      public String toString() {
+         String ns = "".equals(namespace) ? namespace : "{"+namespace+"}";
+         return ns+localPart;
+      }
+
+      public int hashCode()
+      {
+         return this.hash;
       }
    }
 }

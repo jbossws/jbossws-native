@@ -207,6 +207,8 @@ public class SOAPContentElement extends SOAPElementImpl
 
          QName xmlType = getXmlType();
          Class javaType = getJavaType();
+         QName xmlName = getElementQName();
+
          log.debug("getXMLFragment from Object [xmlType=" + xmlType + ",javaType=" + javaType + "]");
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
@@ -218,7 +220,6 @@ public class SOAPContentElement extends SOAPElementImpl
 
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
 
-         QName xmlName = getElementQName();
          try
          {
             SerializerSupport ser;
@@ -232,9 +233,10 @@ public class SOAPContentElement extends SOAPElementImpl
                ser = new NullValueSerializer();
             }
 
-            xmlFragment = ser.serialize(xmlName, xmlType, getObjectValue(), serContext, null);
-            log.debug("xmlFragment: " + xmlFragment);
-            invalidateObjectContent();
+            String tmpFragment = ser.serialize(xmlName, xmlType, getObjectValue(), serContext, null);
+            log.debug("xmlFragment: " + tmpFragment);
+
+            setXMLFragment(tmpFragment);
          }
          catch (BindingException e)
          {

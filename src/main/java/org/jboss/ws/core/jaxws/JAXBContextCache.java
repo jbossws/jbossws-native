@@ -30,6 +30,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.utils.HashCodeUtil;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
@@ -107,11 +108,11 @@ public class JAXBContextCache
 
    private static Integer buildId(Class[] classes)
    {
-      int sum = 0;
+      int sum = HashCodeUtil.SEED;
       for (Class cls : classes)
       {
-         sum += cls.hashCode();
-      }
+         sum = HashCodeUtil.hash(sum, cls.getName());
+      }      
       return new Integer(sum);
    }
 

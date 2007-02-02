@@ -34,6 +34,7 @@ import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -285,21 +286,50 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          ObjectName sepID = (ObjectName)entry.getKey();
          ServiceEndpoint wsEndpoint = (ServiceEndpoint)entry.getValue();
          ServiceEndpointInfo seInfo = wsEndpoint.getServiceEndpointInfo();
-         String endpointAddress = seInfo.getServerEndpointMetaData().getEndpointAddress();
-         //pw.println("<tr><td>" + sepID.getCanonicalName() + "</td><td><a href='" + endpointAddress + "?wsdl'>" + endpointAddress + "?wsdl</a></td></tr>");
-         URL displayURL = new URL(endpointAddress);
-         String endPointPath = displayURL.getPath();
-         if (this.getWebServiceHost().equals(ServiceEndpointManager.UNDEFINED_HOSTNAME) == true)
-         {
-        	 displayURL = requestURL;
-         }
-         String displayAddress = displayURL.getProtocol() + "://" + displayURL.getHost() + ":" + displayURL.getPort() + endPointPath;
+         String displayAddress = getDisplayAddress(seInfo, requestURL);
          pw.println("<tr><td>" + sepID.getCanonicalName() + "</td><td><a href='" + displayAddress + "?wsdl'>" + displayAddress + "?wsdl</a></td></tr>");
       }
       pw.println("</table>");
       pw.close();
 
       return sw.toString();
+   }
+
+   public List<ServiceEndpointDTO> getRegisteredEndpoints(URL requestURL) throws java.net.MalformedURLException
+   {
+      List<ServiceEndpointDTO> registered = new ArrayList<ServiceEndpointDTO>();
+      Iterator it = registry.entrySet().iterator();
+      while (it.hasNext())
+      {
+         Map.Entry entry = (Map.Entry)it.next();
+         ObjectName sepID = (ObjectName)entry.getKey();
+         ServiceEndpoint wsEndpoint = (ServiceEndpoint)entry.getValue();
+         ServiceEndpointInfo seInfo = wsEndpoint.getServiceEndpointInfo();
+         String displayAddress = getDisplayAddress(seInfo, requestURL);
+
+         try {
+            ServiceEndpointDTO dto = new ServiceEndpointDTO();
+            dto.setSepID(sepID);
+            dto.setAddress(displayAddress);
+            dto.setSeMetrics((ServiceEndpointMetrics)wsEndpoint.getServiceEndpointMetrics().clone());
+            dto.setState(wsEndpoint.getState());
+            registered.add(dto);
+         } catch (CloneNotSupportedException e) { }
+      }
+
+      return registered;
+   }
+
+   private String getDisplayAddress(ServiceEndpointInfo seInfo, URL requestURL) throws MalformedURLException {
+      String endpointAddress = seInfo.getServerEndpointMetaData().getEndpointAddress();
+      URL displayURL = new URL(endpointAddress);
+      String endPointPath = displayURL.getPath();
+      if (this.getWebServiceHost().equals(ServiceEndpointManager.UNDEFINED_HOSTNAME) == true)
+      {
+         displayURL = requestURL;
+      }
+      String displayAddress = displayURL.getProtocol() + "://" + displayURL.getHost() + ":" + displayURL.getPort() + endPointPath;
+      return displayAddress;
    }
 
    /** Get the endpoint metrics
