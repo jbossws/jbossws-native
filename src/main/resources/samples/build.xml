@@ -149,8 +149,8 @@
   
   <target name="common-classpath" depends="prepare,thirdparty">
     
-    <!-- The combined compile classpath -->
-    <path id="jbossws.jars.classpath">
+    <path id="jbossws.classpath">
+      <pathelement location="${tests.lib.dir}/jbossws-core.jar"/>
       <pathelement location="${tests.lib.dir}/jbossws-client.jar"/>
       <pathelement location="${tests.lib.dir}/jboss-jaxrpc.jar"/>
       <pathelement location="${tests.lib.dir}/jboss-jaxws.jar"/>
@@ -164,7 +164,7 @@
     <!-- The combined compile classpath -->
     <path id="javac.classpath">
       <path refid="core.classpath"/>
-      <path refid="jbossws.jars.classpath"/>
+      <path refid="jbossws.classpath"/>
       <pathelement location="${thirdparty.dir}/activation.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-vfs.jar"/>
       <pathelement location="${thirdparty.dir}/junit.jar"/>
@@ -182,7 +182,7 @@
     
     <!-- The test client classpath -->
     <path id="test.client.classpath">
-      <path refid="jbossws.jars.classpath"/>
+      <path refid="jbossws.classpath"/>
       <pathelement location="${jboss.client}/commons-logging.jar"/>
       <pathelement location="${jboss.client}/jboss-backport-concurrent.jar"/>
       <pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
@@ -201,7 +201,7 @@
     
     <!-- The jBPM BPEL classpath -->
     <path id="jbpm.bpel.classpath">
-      <path refid="jbossws.jars.classpath"/>
+      <path refid="jbossws.classpath"/>
       <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
       <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
       <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
@@ -220,10 +220,13 @@
   </target>
   
   <target name="tomcat-classpath" depends="common-classpath" if="jbossws.integration.target.tomcat">
+    
+    <fail message="jdk-1.5 is required for Tomcat integration" unless="HAVE_JDK_1.5"/>
+    
     <!-- The test client classpath -->
     <path id="test.client.classpath">
-      <path refid="jbossws.jars.classpath"/>
-      <pathelement location="${tomcat.common.lib}/jbossws-thirdparty.jar"/> 
+      <path refid="jbossws.classpath"/>
+      <pathelement location="${tomcat.home}/common/lib/jbossws-thirdparty.jar"/> 
       <path refid="javac.classpath"/>
     </path>
   </target>
@@ -320,7 +323,7 @@
 	  <!-- generate mapping artifacts -->
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath refid="core.classpath"/>
-      <classpath location="${tests.lib.dir}/jbossws-client.jar"/>
+      <classpath refid="jbossws.classpath"/>
       <classpath location="${thirdparty.dir}/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
       <classpath location="${tests.output.dir}"/>
@@ -405,8 +408,8 @@
       <sysproperty key="tomcat.home" value="${tomcat.home}"/>
       <sysproperty key="tomcat.manager.password" value="${tomcat.manager.password}"/>
       <sysproperty key="tomcat.manager.username" value="${tomcat.manager.username}"/>
-      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${tests.resources.dir}/jaxrpc/wsse/wsse.keystore"/>
-      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${tests.resources.dir}/jaxrpc/wsse/wsse.truststore"/>
+      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${tests.resources.dir}/jaxrpc/samples/wssecurity/wsse.keystore"/>
+      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${tests.resources.dir}/jaxrpc/samples/wssecurity/wsse.truststore"/>
       <sysproperty key="org.jboss.ws.wsse.keyStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.trustStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.keyStoreType" value="jks"/>
@@ -446,8 +449,8 @@
       <sysproperty key="tomcat.manager.username" value="${tomcat.manager.username}"/>
       <!--
       http://jira.jboss.com/jira/browse/JBWS-917
-      <sysproperty key="javax.net.ssl.keyStore" value="${tests.resources.dir}/jaxrpc/wsse/wsse.keystore"/>
-      <sysproperty key="javax.net.ssl.trustStore" value="${tests.resources.dir}/jaxrpc/wsse/wsse.truststore"/>
+      <sysproperty key="javax.net.ssl.keyStore" value="${tests.resources.dir}/jaxrpc/samples/wssecurity/wsse.keystore"/>
+      <sysproperty key="javax.net.ssl.trustStore" value="${tests.resources.dir}/jaxrpc/samples/wssecurity/wsse.truststore"/>
       <sysproperty key="javax.net.ssl.keyStorePassword" value="jbossws"/>
       <sysproperty key="javax.net.ssl.trustStorePassword" value="jbossws"/>
       <sysproperty key="javax.net.ssl.keyStoreType" value="jks"/>
@@ -455,8 +458,8 @@
       -->
       <!-- HTTPS hostname wrong:  should be <localhost> -->
       <sysproperty key="org.jboss.security.ignoreHttpsHost" value="true"/>
-      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${tests.resources.dir}/jaxrpc/wsse/wsse.keystore"/>
-      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${tests.resources.dir}/jaxrpc/wsse/wsse.truststore"/>
+      <sysproperty key="org.jboss.ws.wsse.keyStore" value="${tests.resources.dir}/jaxrpc/samples/wssecurity/wsse.keystore"/>
+      <sysproperty key="org.jboss.ws.wsse.trustStore" value="${tests.resources.dir}/jaxrpc/samples/wssecurity/wsse.truststore"/>
       <sysproperty key="org.jboss.ws.wsse.keyStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.trustStorePassword" value="jbossws"/>
       <sysproperty key="org.jboss.ws.wsse.keyStoreType" value="jks"/>

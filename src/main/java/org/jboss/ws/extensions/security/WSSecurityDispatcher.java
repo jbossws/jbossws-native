@@ -143,7 +143,9 @@ public class WSSecurityDispatcher
          SecurityDecoder decoder = new SecurityDecoder(securityStore);
 
          decoder.decode(soapMessage.getSOAPPart(), secHeaderElement);
-         if(log.isDebugEnabled()) log.debug("Decoded Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
+         
+         if (log.isTraceEnabled())
+            log.trace("Decoded Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
 
          OperationMetaData opMetaData = ctx.getOperationMetaData();
          if (opMetaData == null)
@@ -178,7 +180,7 @@ public class WSSecurityDispatcher
    {
       WSSecurityConfiguration config = ctx.getEndpointMetaData().getServiceMetaData().getSecurityConfiguration();
       if (config == null)
-         throw new WSException("Cannot obtatin security configuration from message context");
+         throw new WSException("Cannot obtain security configuration from message context");
 
       return config;
    }
@@ -232,7 +234,8 @@ public class WSSecurityDispatcher
 
       Config operationConfig = getConfig(config, port, operation);
 
-      if(log.isDebugEnabled()) log.debug("WS-Security config:" + operationConfig);
+      log.debug("WS-Security config: " + operationConfig);
+      
       // Nothing to process
       if (operationConfig == null)
          return;

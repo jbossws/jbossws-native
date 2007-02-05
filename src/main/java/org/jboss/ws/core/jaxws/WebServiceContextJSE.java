@@ -24,73 +24,41 @@ package org.jboss.ws.core.jaxws;
 // $Id$
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.handler.MessageContext;
 
-import org.jboss.logging.Logger;
-import org.jboss.security.RealmMapping;
-import org.jboss.security.SecurityAssociation;
-import org.jboss.security.SimplePrincipal;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 
 /**
- * A WebServiceContext implementation that delegates to jbosssx.
+ * A WebServiceContext implementation that delegates to the HttpServletRequest.
  *
  * @author Thomas.Diesler@jboss.org
  * @since 23-Jan-2007
  */
 public class WebServiceContextJSE extends AbstractWebServiceContext
 {
-   // provide logging
-   private Logger log = Logger.getLogger(WebServiceContextJSE.class);
-
-   private RealmMapping realmMapping;
+   private HttpServletRequest httpRequest;
 
    public WebServiceContextJSE(MessageContext messageContext)
    {
       super(messageContext);
+      httpRequest = (HttpServletRequest)messageContext.get(MessageContextJAXWS.SERVLET_REQUEST);
+      if (httpRequest == null)
+         throw new IllegalStateException("Cannot obtain HTTPServletRequest from message context");
    }
 
    @Override
    public Principal getUserPrincipal()
    {
-      Principal principal = SecurityAssociation.getCallerPrincipal();
+      Principal principal = httpRequest.getUserPrincipal();
       return principal;
    }
 
    @Override
    public boolean isUserInRole(String role)
    {
-      boolean isUserInRole = false;
-      Principal principal = SecurityAssociation.getCallerPrincipal();
-      RealmMapping realmMapping = getRealmMapping();
-      if (realmMapping != null && principal != null)
-      {
-         Set<Principal> roles = new HashSet<Principal>();
-         roles.add(new SimplePrincipal(role));
-         isUserInRole = realmMapping.doesUserHaveRole(principal, roles);
-      }
+      boolean isUserInRole = httpRequest.isUserInRole(role);
       return isUserInRole;
-   }
-
-   private RealmMapping getRealmMapping()
-   {
-      if (realmMapping == null)
-      {
-         String lookupName = "java:comp/env/security/realmMapping";
-         try
-         {
-            InitialContext iniCtx = new InitialContext();
-            realmMapping = (RealmMapping)iniCtx.lookup(lookupName);
-         }
-         catch (NamingException e)
-         {
-            if(log.isDebugEnabled()) log.debug("Cannot obtain realm mapping from: " + lookupName);
-         }
-      }
-      return realmMapping;
    }
 }

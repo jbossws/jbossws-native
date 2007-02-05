@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.extensions.security.jaxrpc;
 
 // $Id$
@@ -99,34 +99,25 @@ public abstract class WSSecurityHandler extends GenericHandler
       EndpointMetaData epMetaData = ((SOAPMessageContextJAXRPC)msgContext).getEndpointMetaData();
       ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
 
-      if(null == serviceMetaData.getSecurityConfiguration()) // might be set through ServiceObjectFactory
+      WSSecurityConfiguration config = serviceMetaData.getSecurityConfiguration();
+      if (config == null) // might be set through ServiceObjectFactory
       {
-         UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
-         boolean successful = false;
-
-         WSSecurityConfiguration config = null;
-
          try
          {
             WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
+            UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
             config = wsseConfFactory.createConfiguration(vfsRoot, getConfigResourceName());
-            if(config!=null) successful = true;
-
          }
          catch (IOException e)
          {
-            successful = false;
+            throw new WSException("Cannot obtain security config: " + getConfigResourceName());
          }
-
-         if(!successful)
-            throw new WSException("Cannot obtain security config: " +getConfigResourceName());
 
          // it's required further down the processing chain
          serviceMetaData.setSecurityConfiguration(config);
       }
 
-      return serviceMetaData.getSecurityConfiguration();
-
+      return config;
    }
 
    protected abstract String getConfigResourceName();

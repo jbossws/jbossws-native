@@ -21,17 +21,13 @@
  */
 package javax.xml.rpc.soap;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamField;
+// $Id$
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.Name;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.id.SerialVersion;
 
 /** The SOAPFaultException exception represents a SOAP fault.
  * 
@@ -49,35 +45,11 @@ import org.jboss.util.id.SerialVersion;
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
  * @author Rahul Sharma (javadoc)
- * @version $Revision$
  */
 public class SOAPFaultException extends RuntimeException
 {
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultException.class);
-
-   /** @since 4.0.2 */
-   static final long serialVersionUID;
-   private static final int CODE_IDX = 0;
-   private static final int STRING_IDX = 1;
-   private static final int ACTOR_IDX = 2;
-   private static final int DETAIL_IDX = 3;
-   private static final ObjectStreamField[] serialPersistentFields;
-   static
-   {
-      if (SerialVersion.version == SerialVersion.LEGACY)
-      {
-         serialVersionUID = -290987278985292477L;
-         serialPersistentFields = new ObjectStreamField[] { new ObjectStreamField("faultCode", QName.class), new ObjectStreamField("faultString", String.class),
-               new ObjectStreamField("faultActor", String.class), new ObjectStreamField("faultDetail", Detail.class), };
-      }
-      else
-      {
-         serialVersionUID = -7224636940495025621L;
-         serialPersistentFields = new ObjectStreamField[] { new ObjectStreamField("faultcode", QName.class), new ObjectStreamField("faultstring", String.class),
-               new ObjectStreamField("faultactor", String.class), new ObjectStreamField("faultdetail", Detail.class), };
-      }
-   }
 
    private QName faultCode;
    private String faultString;
@@ -115,34 +87,5 @@ public class SOAPFaultException extends RuntimeException
    public Detail getDetail()
    {
       return faultDetail;
-   }
-
-   // Private -------------------------------------------------------
-   private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
-   {
-      ObjectInputStream.GetField fields = ois.readFields();
-      String name = serialPersistentFields[CODE_IDX].getName();
-      this.faultCode = (QName)fields.get(name, null);
-      name = serialPersistentFields[STRING_IDX].getName();
-      this.faultString = (String)fields.get(name, null);
-      name = serialPersistentFields[ACTOR_IDX].getName();
-      this.faultActor = (String)fields.get(name, null);
-      name = serialPersistentFields[DETAIL_IDX].getName();
-      this.faultDetail = (Detail)fields.get(name, null);
-   }
-
-   private void writeObject(ObjectOutputStream oos) throws IOException
-   {
-      // Write j2ee 1.4.1 RI field names
-      ObjectOutputStream.PutField fields = oos.putFields();
-      String name = serialPersistentFields[CODE_IDX].getName();
-      fields.put(name, faultCode);
-      name = serialPersistentFields[STRING_IDX].getName();
-      fields.put(name, faultString);
-      name = serialPersistentFields[ACTOR_IDX].getName();
-      fields.put(name, faultActor);
-      name = serialPersistentFields[DETAIL_IDX].getName();
-      fields.put(name, faultDetail);
-      oos.writeFields();
    }
 }

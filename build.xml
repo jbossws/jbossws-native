@@ -146,7 +146,6 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/ws/**"/>
-        <exclude name="org/jboss/ws/core/server/**"/>
       </fileset>
       <fileset dir="${core.resources.dir}/jbossws.sar">
         <include name="META-INF/standard-jaxrpc-client-config.xml"/>

@@ -177,7 +177,7 @@ public class ServiceObjectFactory implements ObjectFactory
 
                endpointAddress = serviceEndpoint.getServiceEndpointInfo().getServerEndpointMetaData().getEndpointAddress();
             }
-            catch (Exception ex)
+            catch (Throwable ex)
             {
                // ignore, we are probably a remote client
             }

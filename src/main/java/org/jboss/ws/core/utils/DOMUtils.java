@@ -37,7 +37,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.xml.JBossEntityResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,7 +67,7 @@ public final class DOMUtils
                 factory.setValidating(false);
                 factory.setNamespaceAware(true);
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                builder.setEntityResolver(new JBossEntityResolver());
+                builder.setEntityResolver(new JBossWSEntityResolver());
                 return builder;
             }
             catch (ParserConfigurationException e)

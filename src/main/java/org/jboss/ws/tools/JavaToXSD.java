@@ -170,7 +170,7 @@ public class JavaToXSD implements JavaToXSDIntf
             URL orgURL = locs.get(nsURI); 
             URL resURL = resolveNamespaceURI(resolver, nsURI);
             URL url = resURL != null ? resURL : orgURL;
-            if(log.isDebugEnabled()) log.debug("Load schema: " + nsURI + "=" + url);
+            log.debug("Load schema: " + nsURI + "=" + url);
             XMLInputSource inputSource = new XMLInputSource(null, url.toExternalForm(), null);
 
             InputSource tmpSrc = resolver.resolveEntity(null, url.toExternalForm());
@@ -178,6 +178,9 @@ public class JavaToXSD implements JavaToXSDIntf
             inputSource.setByteStream(in);
             
             SchemaGrammar grammar = (SchemaGrammar)loader.loadGrammar(inputSource);
+            if (grammar == null)
+               throw new IllegalStateException("Cannot load grammar: " + url);
+            
             gs[index++] = grammar;
          }
          catch (RuntimeException rte)

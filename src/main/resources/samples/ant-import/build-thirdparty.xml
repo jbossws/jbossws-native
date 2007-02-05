@@ -61,22 +61,14 @@
       <pathelement location="${thirdparty.dir}/jaxb-api.jar"/>
       <pathelement location="${thirdparty.dir}/jaxb-impl.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-common.jar"/>
-      <pathelement location="${thirdparty.dir}/jboss-dependency.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-j2ee.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-logging-spi.jar"/>
-      <pathelement location="${thirdparty.dir}/jboss-microcontainer.jar"/>
-      <pathelement location="${thirdparty.dir}/jboss-remoting.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
       <pathelement location="${thirdparty.dir}/jbosssx-client.jar"/>
       <pathelement location="${thirdparty.dir}/mail.jar"/>
       <pathelement location="${thirdparty.dir}/servlet-api.jar"/>
       <pathelement location="${thirdparty.dir}/stax-api.jar"/>
       <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
-      <pathelement location="${thirdparty.dir}/wstx.jar"/>
-      <pathelement location="${thirdparty.dir}/getopt.jar"/>
-      <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
-      <pathelement location="${thirdparty.dir}/xercesImpl.jar"/>
-      <pathelement location="${thirdparty.dir}/xalan.jar"/>
     </path>
 
   </target>

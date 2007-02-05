@@ -39,7 +39,7 @@ import org.jboss.ws.core.UnifiedVirtualFile;
  */
 public class ResourceLoaderAdapter implements UnifiedVirtualFile
 {
-   private URL location;
+   private URL resourceURL;
    private ClassLoader loader;
 
    public ResourceLoaderAdapter()
@@ -52,9 +52,9 @@ public class ResourceLoaderAdapter implements UnifiedVirtualFile
       this.loader = loader;
    }
    
-   private ResourceLoaderAdapter(ClassLoader loader, URL location)
+   private ResourceLoaderAdapter(ClassLoader loader, URL resourceURL)
    {
-      this.location = location;
+      this.resourceURL = resourceURL;
       this.loader = loader;
    }
 
@@ -110,13 +110,8 @@ public class ResourceLoaderAdapter implements UnifiedVirtualFile
 
    public URL toURL()
    {
-      if (null == this.location)
+      if (null == this.resourceURL)
          throw new IllegalStateException("UnifiedVirtualFile not initialized");
-      return location;
-   }
-
-   public ClassLoader getResourceLoader()
-   {
-      return loader;
+      return resourceURL;
    }
 }
