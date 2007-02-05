@@ -57,13 +57,22 @@ package org.jboss.ws.core.utils;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.w3c.dom.*;
-
-import java.io.*;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.jboss.logging.Logger;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Traverse a DOM tree in order to print a document that is parsed.
@@ -93,8 +102,6 @@ public class DOMWriter
    private Node rootNode;
    // True if we want namespace completion
    private boolean completeNamespaces = true;
-
-   private boolean escapeCharacters = false;
 
    public DOMWriter(Writer w)
    {
@@ -137,25 +144,12 @@ public class DOMWriter
    /** 
     * Print a node with explicit prettyprinting.
     * The defaults for all other DOMWriter properties apply. 
-    * Special characters will not be escaped.
+    *  
     */
    public static String printNode(Node node, boolean prettyprint)
    {
       StringWriter strw = new StringWriter();
       new DOMWriter(strw).setPrettyprint(prettyprint).print(node);
-      return strw.toString();
-   }
-
-   /**
-    * Print a node with explicit prettyprinting.
-    * Special characters can be escaped. This is idiot proof
-    * but can be very expensive.
-    *
-    */
-   public static String printNode(Node node, boolean prettyprint, boolean escape)
-   {
-      StringWriter strw = new StringWriter();
-      new DOMWriter(strw).setPrettyprint(prettyprint).setEscapeCharacters(escape).print(node);
       return strw.toString();
    }
 
@@ -174,11 +168,6 @@ public class DOMWriter
       return this;
    }
 
-   public DOMWriter setEscapeCharacters(boolean b)
-   {
-      this.escapeCharacters = b;
-      return this;
-   }
    /**
     * Set wheter subelements should have their namespaces completed.
     * Setting this to false may lead to invalid XML fragments.
@@ -298,7 +287,7 @@ public class DOMWriter
                Attr attr = attrs[i];
                String atPrefix = attr.getPrefix();
                String atName = attr.getNodeName();
-               String atValue = escapeCharacters ? normalize(attr.getNodeValue(), canonical) : attr.getNodeValue();
+               String atValue = normalize(attr.getNodeValue(), canonical);
 
                if (atPrefix != null && !atPrefix.equals("xmlns") && !atPrefix.equals("xml"))
                {
@@ -405,7 +394,7 @@ public class DOMWriter
             // print text
          case Node.TEXT_NODE:
          {
-            String text = escapeCharacters ? normalize(node.getNodeValue(), canonical) : node.getNodeValue();
+            String text = normalize(node.getNodeValue(), canonical);
             if (prettyprint == false || text.trim().length() > 0)
                out.print(text);
             break;

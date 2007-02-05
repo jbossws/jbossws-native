@@ -187,8 +187,6 @@ public class NodeImpl implements javax.xml.soap.Node
 
       org.w3c.dom.Node child = (org.w3c.dom.Node)getFirstChild();
 
-      value = DOMWriter.normalize(value, false);
-      
       if (child instanceof org.w3c.dom.Text)
          ((org.w3c.dom.Text)child).setNodeValue(value);
 

@@ -108,7 +108,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          {
             Element srcElement = (Element)it.next();
             //registerNamespacesLocally(srcElement);
-            String xmlFragment = DOMWriter.printNode(srcElement, false, true);
+            String xmlFragment = DOMWriter.printNode(srcElement, false);
 
             Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
             SOAPContentElement destElement = new SOAPHeaderElementImpl(name);
@@ -202,7 +202,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
                   DOMUtils.copyAttributes(destElement, srcElement);
                   
-                  String xmlFragment = DOMWriter.printNode(srcElement, false, true);
+                  String xmlFragment = DOMWriter.printNode(srcElement, false);
                   destElement.setXMLFragment(xmlFragment);
                }
             }
@@ -215,7 +215,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
                DOMUtils.copyAttributes(destElement, srcElement);
                
-               String xmlFragment = DOMWriter.printNode(srcElement, false, true);
+               String xmlFragment = DOMWriter.printNode(srcElement, false);
                destElement.setXMLFragment(xmlFragment);
             }
             else if (style == null)
