@@ -102,7 +102,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
 
    private MimeHeaders getMimeHeaders(Map metadata)
    {
-      log.debug("getMimeHeaders from: " + metadata);
+      if(log.isDebugEnabled()) log.debug("getMimeHeaders from: " + metadata);
 
       MimeHeaders headers = new MimeHeaders();
       Iterator i = metadata.keySet().iterator();

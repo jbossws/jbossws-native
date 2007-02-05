@@ -51,7 +51,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
 
    public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
-      log.debug("callRequestHandlerChain: " + type);
+      if(log.isDebugEnabled()) log.debug("callRequestHandlerChain: " + type);
       SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
       EndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
 
@@ -68,7 +68,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
 
    public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
-      log.debug("callResponseHandlerChain: " + type);
+      if(log.isDebugEnabled()) log.debug("callResponseHandlerChain: " + type);
       SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
       List<Handler> handlerChain = getHandlerChain(epMetaData, type);
@@ -78,7 +78,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
 
    public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex)
    {
-      log.debug("callFaultHandlerChain: " + type);
+      if(log.isDebugEnabled()) log.debug("callFaultHandlerChain: " + type);
       SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
       List<Handler> handlerChain = getHandlerChain(epMetaData, type);

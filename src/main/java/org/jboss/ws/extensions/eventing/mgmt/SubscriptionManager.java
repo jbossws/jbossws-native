@@ -145,7 +145,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       MBeanServer server = getJMXServer();
       if (server != null)
       {
-         log.debug("Create subscription manager");
+         if(log.isDebugEnabled()) log.debug("Create subscription manager");
          server.registerMBean(this, OBJECT_NAME);
       }
    }
@@ -155,14 +155,14 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       MBeanServer server = getJMXServer();
       if (server != null)
       {
-         log.debug("Destroy subscription manager");
+         if(log.isDebugEnabled()) log.debug("Destroy subscription manager");
          server.unregisterMBean(OBJECT_NAME);
       }
    }
 
    public void start() throws Exception
    {
-      log.debug("Start subscription manager");
+      if(log.isDebugEnabled()) log.debug("Start subscription manager");
 
       // setup thread pool
       threadPool = new ThreadPoolExecutor(5, 15, // core/max num threads
@@ -176,7 +176,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
    public void stop()
    {
-      log.debug("Stop subscription manager");
+      if(log.isDebugEnabled()) log.debug("Stop subscription manager");
       try
       {
          // remove event dispatcher
@@ -226,7 +226,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
          updateManagerAddress(deploymentInfo, eventSource);
 
          eventSource.setState(EventSource.State.CREATED);
-         log.debug("Created: " + eventSource);
+         if(log.isDebugEnabled()) log.debug("Created: " + eventSource);
       }
       else
       {
@@ -235,7 +235,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
          subscriptionMapping.put(eventSource.getNameSpace(), new CopyOnWriteArrayList<Subscription>());
 
          eventSource.setState(EventSource.State.STARTED);
-         log.debug("Started: " + eventSource);
+         if(log.isDebugEnabled()) log.debug("Started: " + eventSource);
       }
    }
 
@@ -285,7 +285,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
          subscriptions.clear();
          eventSourceMapping.remove(eventSourceNS);
-         log.debug("Event source " + eventSourceNS + " removed");
+         if(log.isDebugEnabled()) log.debug("Event source " + eventSourceNS + " removed");
       }
    }
 
@@ -295,7 +295,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    public SubscriptionTicket subscribe(URI eventSourceNS, EndpointReferenceType notifyTo, EndpointReferenceType endTo, Date expires, Filter filter) throws SubscriptionError
    {
 
-      log.debug("Subscription request for " + eventSourceNS);
+      if(log.isDebugEnabled()) log.debug("Subscription request for " + eventSourceNS);
 
       EventSource eventSource = eventSourceMapping.get(eventSourceNS);
       if (null == eventSource)
@@ -349,7 +349,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       Subscription subscription = new Subscription(eventSource.getNameSpace(), epr, notifyTo, endTo, expires, filter);
 
       subscriptionMapping.get(eventSourceNS).add(subscription);
-      log.debug("Registered subscription " + subscription.getIdentifier());
+      if(log.isDebugEnabled()) log.debug("Registered subscription " + subscription.getIdentifier());
 
       return new SubscriptionTicket(epr, subscription.getExpires());
    }
@@ -414,7 +414,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
             if (identifier.equals(s.getIdentifier()))
             {
                subscriptions.remove(s);
-               log.debug("Removed subscription " + s);
+               if(log.isDebugEnabled()) log.debug("Removed subscription " + s);
                break;
             }
          }

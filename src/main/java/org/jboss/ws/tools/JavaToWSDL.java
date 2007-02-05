@@ -294,7 +294,7 @@ public class JavaToWSDL
     */
    public WSDLDefinitions generate(Class endpoint)
    {
-      log.debug("generate [endpoint=" + endpoint.getName() + ",tnsURI=" + targetNamespace + ",service=" + serviceName
+      if(log.isDebugEnabled()) log.debug("generate [endpoint=" + endpoint.getName() + ",tnsURI=" + targetNamespace + ",service=" + serviceName
             + ",portType=" + portTypeName + "]");
 
       if( umd == null)
@@ -329,8 +329,8 @@ public class JavaToWSDL
          // Debug the generated wsdl
          StringWriter sw = new StringWriter();
          new WSDLWriter(wsdlDefinitions).write(sw, Constants.DEFAULT_XML_CHARSET);
-         log.debug("Generated WSDL:\n" + sw.toString());
-         
+         if(log.isDebugEnabled()) log.debug("Generated WSDL:\n" + sw.toString());
+
          // Debug the generated mapping file
          String jaxrpcMappingStr = null;
          if (javaWsdlMapping != null)
@@ -338,7 +338,7 @@ public class JavaToWSDL
             Element root = DOMUtils.parse(javaWsdlMapping.serialize());
             jaxrpcMappingStr = DOMWriter.printNode(root, true);
          }
-         log.debug("Generated Mapping:\n" + jaxrpcMappingStr);
+         if(log.isDebugEnabled()) log.debug("Generated Mapping:\n" + jaxrpcMappingStr);
       }
       catch (RuntimeException rte)
       {

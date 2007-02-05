@@ -209,7 +209,7 @@ public class SOAPContentElement extends SOAPElementImpl
          Class javaType = getJavaType();
          QName xmlName = getElementQName();
 
-         log.debug("getXMLFragment from Object [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+         if(log.isDebugEnabled()) log.debug("getXMLFragment from Object [xmlType=" + xmlType + ",javaType=" + javaType + "]");
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
@@ -234,7 +234,7 @@ public class SOAPContentElement extends SOAPElementImpl
             }
 
             String tmpFragment = ser.serialize(xmlName, xmlType, getObjectValue(), serContext, null);
-            log.debug("xmlFragment: " + tmpFragment);
+            if(log.isDebugEnabled()) log.debug("xmlFragment: " + tmpFragment);
 
             setXMLFragment(tmpFragment);
          }
@@ -247,9 +247,9 @@ public class SOAPContentElement extends SOAPElementImpl
       // Generate the xmlFragment from the DOM tree
       else if (xmlFragment == null && isDOMValid)
       {
-         log.debug("getXMLFragment from DOM");
+         if(log.isDebugEnabled()) log.debug("getXMLFragment from DOM");
          xmlFragment = DOMWriter.printNode(this, false);
-         log.debug("xmlFragment: " + xmlFragment);
+         if(log.isDebugEnabled()) log.debug("xmlFragment: " + xmlFragment);
          invalidateDOMContent();
       }
 
@@ -261,7 +261,7 @@ public class SOAPContentElement extends SOAPElementImpl
 
    public void setXMLFragment(String xmlFragment)
    {
-      log.debug("setXMLFragment: " + xmlFragment);
+      if(log.isDebugEnabled()) log.debug("setXMLFragment: " + xmlFragment);
 
       if (xmlFragment == null || xmlFragment.startsWith("<") == false)
          throw new WSException("Invalid XMLFragment: " + xmlFragment);
@@ -281,7 +281,7 @@ public class SOAPContentElement extends SOAPElementImpl
          QName xmlType = getXmlType();
          Class javaType = getJavaType();
 
-         log.debug("getObjectValue [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+         if(log.isDebugEnabled()) log.debug("getObjectValue [xmlType=" + xmlType + ",javaType=" + javaType + "]");
          assertContentMapping();
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
@@ -345,7 +345,7 @@ public class SOAPContentElement extends SOAPElementImpl
                   try
                   {
                      String contentType = MimeUtils.resolveMimeType(javaType);
-                     log.debug("Adopt DataHandler to " + javaType +", contentType "+ contentType);
+                     if(log.isDebugEnabled()) log.debug("Adopt DataHandler to " + javaType +", contentType "+ contentType);
 
                      DataSource ds = new SwapableMemoryDataSource(((DataHandler)obj).getInputStream(), contentType);
                      DataHandler dh = new DataHandler(ds);
@@ -379,7 +379,7 @@ public class SOAPContentElement extends SOAPElementImpl
             throw new WSException(e);
          }
 
-         log.debug("objectValue: " + (objectValue != null ? objectValue.getClass().getName() : null));
+         if(log.isDebugEnabled()) log.debug("objectValue: " + (objectValue != null ? objectValue.getClass().getName() : null));
       }
 
       return objectValue;
@@ -387,7 +387,7 @@ public class SOAPContentElement extends SOAPElementImpl
 
    public void setObjectValue(Object objValue)
    {
-      log.debug("setObjectValue: " + objValue);
+      if(log.isDebugEnabled()) log.debug("setObjectValue: " + objValue);
       removeContentsAsIs();
       resetElementContent();
       this.objectValue = objValue;
@@ -1068,7 +1068,7 @@ public class SOAPContentElement extends SOAPElementImpl
          // This will inline any XOP include element and remove the attachment part.
          // See SOAPFactoryImpl for details.
 
-         log.debug("MTOM disabled: Force inline XOP data");
+         if(log.isDebugEnabled()) log.debug("MTOM disabled: Force inline XOP data");
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          expandToDOM();
@@ -1079,7 +1079,7 @@ public class SOAPContentElement extends SOAPElementImpl
          // but MTOM is enabled we need to convert the inlined
          // element back to an xop:Include element and create the attachment part
 
-         log.debug("MTOM enabled: Restore XOP data");
+         if(log.isDebugEnabled()) log.debug("MTOM enabled: Restore XOP data");
          XOPContext.restoreXOPDataDOM(this);
       }
    }

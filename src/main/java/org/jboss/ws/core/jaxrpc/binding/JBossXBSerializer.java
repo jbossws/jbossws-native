@@ -73,7 +73,7 @@ public class JBossXBSerializer extends ComplexTypeSerializer
     */
    public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       // Expect the specific JAXRPC serialization context
       SerializationContextJAXRPC jaxrpcContext = (SerializationContextJAXRPC)serContext;
@@ -100,7 +100,7 @@ public class JBossXBSerializer extends ComplexTypeSerializer
          delegate.marshal(value, strwr);
          String xmlFragment = strwr.toString();
 
-         log.debug("serialized: " + xmlFragment);
+         if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
          return xmlFragment;
       }
       catch (RuntimeException rte)

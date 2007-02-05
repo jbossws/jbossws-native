@@ -68,7 +68,7 @@ public class SOAPMessageDispatcher
             if (wsaAction.equals(opAux.getSOAPAction()))
             {
                opMetaData = opAux;
-               log.debug("Use wsa:Action dispatch: " + wsaAction);
+               if(log.isDebugEnabled()) log.debug("Use wsa:Action dispatch: " + wsaAction);
                break;
             }
          }
@@ -91,13 +91,13 @@ public class SOAPMessageDispatcher
          {
             if (epMetaData.getStyle() == Style.RPC)
                throw new SOAPException("Empty SOAP body with no child element not supported for RPC");
-               
+
             // [JBWS-1125] Support empty soap body elements
             for (OperationMetaData opAux : epMetaData.getOperations())
             {
                if (opAux.getParameters().size() == 0)
                {
-                  log.debug ("Dispatching empty SOAP body");
+                  if(log.isDebugEnabled()) log.debug ("Dispatching empty SOAP body");
                   opMetaData = opAux;
                   break;
                }
@@ -122,14 +122,14 @@ public class SOAPMessageDispatcher
          {
             if (opAux.isMessageEndpoint())
             {
-               log.debug("Use generic message style dispatch");
+               if(log.isDebugEnabled()) log.debug("Use generic message style dispatch");
                opMetaData = opAux;
                break;
             }
          }
       }
 
-      log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
+      if(log.isDebugEnabled()) log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
       return opMetaData;
    }
 }

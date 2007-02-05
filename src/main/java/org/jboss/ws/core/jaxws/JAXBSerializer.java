@@ -59,7 +59,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
    @Override
    public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       String xmlFragment = null;
       try
@@ -70,7 +70,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
 
          JAXBContextCache contextCache = JAXBContextCache.getContextCache();
          JAXBContext jaxbContext = contextCache.getInstance(javaType);
-                  
+
          Marshaller marshaller = jaxbContext.createMarshaller();
 
          marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
@@ -80,7 +80,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
          marshaller.marshal(new JAXBElement(xmlName, javaType, value), strwr);
          xmlFragment = strwr.toString();
 
-         log.debug("serialized: " + xmlFragment);
+         if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
       }
       catch (Exception ex)
       {

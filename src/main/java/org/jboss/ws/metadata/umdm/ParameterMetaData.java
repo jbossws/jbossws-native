@@ -465,7 +465,7 @@ public class ParameterMetaData
          String mimeType = scanner.scan(javaType);
          if (mimeType != null)
          {
-            log.debug("MTOM parameter found: " + xmlName);
+            if(log.isDebugEnabled()) log.debug("MTOM parameter found: " + xmlName);
             setXOP(true);
          }
       }
@@ -504,7 +504,7 @@ public class ParameterMetaData
          }
          catch (Exception ex)
          {
-            log.debug("Invalid wrapper type:" + typeName, ex);
+            if(log.isDebugEnabled()) log.debug("Invalid wrapper type:" + typeName, ex);
             return false;
          }
       }

@@ -49,7 +49,7 @@ public class SchemaGenerator
 
    public JBossXSModel generateXSDSchema(QName xmlType, Class javaType)
    {
-      log.debug("generateXSDSchema: [xmlType=" + xmlType + ",javaType=" + javaType.getName() + "]");
+      if(log.isDebugEnabled()) log.debug("generateXSDSchema: [xmlType=" + xmlType + ",javaType=" + javaType.getName() + "]");
       try
       {
          assertXmlType(xmlType);
@@ -72,7 +72,7 @@ public class SchemaGenerator
          if (xsModel == null)
             throw new WSException("Cannot generate XSModel");
 
-         log.debug("\n" + xsModel.serialize());
+         if(log.isDebugEnabled()) log.debug("\n" + xsModel.serialize());
          return xsModel;
       }
       catch (RuntimeException rte)

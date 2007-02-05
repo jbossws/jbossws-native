@@ -188,7 +188,7 @@ public class MessageFactoryImpl extends MessageFactory
       }
 
       ContentType contentType = getContentType(mimeHeaders);
-      log.debug("createMessage: [contentType=" + contentType + "]");
+      if(log.isDebugEnabled()) log.debug("createMessage: [contentType=" + contentType + "]");
 
       // Debug the incoming message
       if (log.isTraceEnabled())

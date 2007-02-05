@@ -99,7 +99,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       if (wrappedParameters == null)
          throw new WSException("Cannot generate a type when their is no wrapper parameters");
 
-      log.debug("Generating wrapper: " + wrapperName);
+      if(log.isDebugEnabled()) log.debug("Generating wrapper: " + wrapperName);
 
       QName xmlName = pmd.getXmlName();
       QName xmlType = pmd.getXmlType();
@@ -131,7 +131,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
    public void generate(FaultMetaData fmd)
    {
       String faultBeanName = fmd.getFaultBeanName();
-      log.debug("Generating fault bean: " + faultBeanName);
+      if(log.isDebugEnabled()) log.debug("Generating fault bean: " + faultBeanName);
 
       QName xmlType = fmd.getXmlType();
       

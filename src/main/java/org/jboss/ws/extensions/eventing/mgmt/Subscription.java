@@ -75,7 +75,7 @@ class Subscription
 
    public void notify(Element event)
    {
-      log.debug(getIdentifier() + " dispatching " + event);
+      if(log.isDebugEnabled()) log.debug(getIdentifier() + " dispatching " + event);
 
       try
       {
@@ -137,7 +137,7 @@ class Subscription
       if (null == endTo) // it's an optional field.
          return;
 
-      log.debug("Ending subscription " + getIdentifier());
+      if(log.isDebugEnabled()) log.debug("Ending subscription " + getIdentifier());
 
       StringBuffer sb = new StringBuffer();
       sb.append("<env:Envelope xmlns:env='http://www.w3.org/2003/05/soap-envelope' ");

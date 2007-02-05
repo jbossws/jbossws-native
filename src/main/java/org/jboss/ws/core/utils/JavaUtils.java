@@ -411,7 +411,7 @@ public class JavaUtils
       {
          ClassLoader destLoader = dest.getClassLoader();
          ClassLoader srcLoader = src.getClassLoader();
-         log.debug("Not assignable because of conflicting class loaders:\ndstLoader=" + destLoader + "\nsrcLoader=" + srcLoader);
+         if(log.isDebugEnabled()) log.debug("Not assignable because of conflicting class loaders:\ndstLoader=" + destLoader + "\nsrcLoader=" + srcLoader);
       }
 
       if (isAssignable == false && isPrimitive(dest))
@@ -586,11 +586,11 @@ public class JavaUtils
 
       return ret;
    }
-   
+
    /**
     * This method tests for retro translation by searching for a known problem where Class
     * does not implement Type. If this is true, then code must never cast a Class to a Type.
-    * 
+    *
     * @return true if we are in retro
     */
    public static boolean isRetro14()
@@ -641,7 +641,7 @@ public class JavaUtils
          }
          catch (Exception e)
          {
-            log.debug("Could not clear blacklists on " + loader);
+            if(log.isDebugEnabled()) log.debug("Could not clear blacklists on " + loader);
          }
       }
    }

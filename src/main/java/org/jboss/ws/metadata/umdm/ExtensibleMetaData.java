@@ -2,6 +2,7 @@ package org.jboss.ws.metadata.umdm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
  */
 public abstract class ExtensibleMetaData {
 
-   private Map<String, MetaDataExtension> extensions = new HashMap<String, MetaDataExtension>();
+   private Map<String, MetaDataExtension> extensions = new ConcurrentHashMap<String, MetaDataExtension>();
 
    public Map<String, MetaDataExtension> getExtensions() {
       return extensions;

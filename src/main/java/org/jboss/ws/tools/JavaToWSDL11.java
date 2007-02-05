@@ -72,7 +72,7 @@ public class JavaToWSDL11
     */
    public JavaToWSDL11()
    {
-      log.debug("Creating JavaToWSDL11 instance");
+      if(log.isDebugEnabled()) log.debug("Creating JavaToWSDL11 instance");
    }
 
    /**

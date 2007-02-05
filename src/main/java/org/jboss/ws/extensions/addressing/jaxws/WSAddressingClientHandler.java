@@ -60,7 +60,7 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
 
    protected boolean handleOutbound(MessageContext msgContext)
    {
-      log.debug("handleOutbound");
+      if(log.isDebugEnabled()) log.debug("handleOutbound");
 
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)msgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
       if (addrProps != null)
@@ -86,7 +86,7 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
 
    protected boolean handleInbound(MessageContext msgContext)
    {
-      log.debug("handleInbound");
+      if(log.isDebugEnabled()) log.debug("handleInbound");
 
       try
       {

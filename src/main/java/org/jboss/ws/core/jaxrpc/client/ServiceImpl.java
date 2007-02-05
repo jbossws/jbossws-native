@@ -495,7 +495,7 @@ public class ServiceImpl implements ServiceExt
          hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
          HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
 
-         log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
+         if(log.isDebugEnabled()) log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
          handlerInfos.add(info);
 
          // register the handlers with the client engine

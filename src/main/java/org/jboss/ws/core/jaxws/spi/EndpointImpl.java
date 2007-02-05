@@ -71,11 +71,11 @@ public class EndpointImpl extends Endpoint
 
    public EndpointImpl(String bindingId, Object implementor)
    {
-      log.debug("new EndpointImpl(bindingId=" + bindingId + ",implementor=" + implementor + ")");
-      
+      if(log.isDebugEnabled()) log.debug("new EndpointImpl(bindingId=" + bindingId + ",implementor=" + implementor + ")");
+
       if (implementor == null)
          throw new IllegalArgumentException("Implementor cannot be null");
-      
+
       this.implementor = implementor;
       this.bindingProvider = new BindingProviderImpl(bindingId);
    }
@@ -93,17 +93,17 @@ public class EndpointImpl extends Endpoint
    }
 
    /**
-    * Publishes this endpoint at the given address. The necessary server infrastructure will be created and configured by the JAX-WS 
-    * implementation using some default configuration. In order to get more control over the server configuration, 
+    * Publishes this endpoint at the given address. The necessary server infrastructure will be created and configured by the JAX-WS
+    * implementation using some default configuration. In order to get more control over the server configuration,
     * please use the javax.xml.ws.Endpoint#publish(Object) method instead.
-    * 
+    *
     * @param URI specifying the address to use. The address must be compatible with the binding specified at the time the endpoint was created.
     */
    @Override
    public void publish(String address)
    {
-      log.debug("publish: " + address);
-      
+      if(log.isDebugEnabled()) log.debug("publish: " + address);
+
       URI addrURI;
       try
       {
@@ -116,7 +116,7 @@ public class EndpointImpl extends Endpoint
 
       // Check with the security manger
       checkPublishEndpointPermission();
-      
+
       // Create and start the HTTP server
       HttpServer httpServer = HttpServer.create();
       httpServer.setProperties(properties);
@@ -130,23 +130,23 @@ public class EndpointImpl extends Endpoint
    }
 
    /**
-    * Publishes this endpoint at the provided server context. 
-    * A server context encapsulates the server infrastructure and addressing information for a particular transport. 
+    * Publishes this endpoint at the provided server context.
+    * A server context encapsulates the server infrastructure and addressing information for a particular transport.
     * For a call to this method to succeed, the server context passed as an argument to it must be compatible with the endpoint's binding.
-    * 
+    *
     * @param serverContext An object representing a server context to be used for publishing the endpoint.
     */
    @Override
    public void publish(Object context)
    {
-      log.debug("publish: " + context);
-      
+      if(log.isDebugEnabled()) log.debug("publish: " + context);
+
       if (isDestroyed)
          throw new IllegalStateException("Endpoint already destroyed");
 
       // Check with the security manger
       checkPublishEndpointPermission();
-      
+
       // Check if we are standalone
       boolean isStandalone;
       try
@@ -155,15 +155,15 @@ public class EndpointImpl extends Endpoint
          factory.getServiceEndpointManager();
          isStandalone = false;
       }
-      catch (Exception ex) 
+      catch (Exception ex)
       {
          // ignore, there should be no ServiceEndpointManager in VM
          isStandalone = true;
       }
-      
+
       if (isStandalone == false)
          throw new IllegalStateException("Cannot publish endpoint from within server");
-      
+
       if (context instanceof HttpContext)
       {
          serverContext = (HttpContext)context;
@@ -176,7 +176,7 @@ public class EndpointImpl extends Endpoint
    @Override
    public void stop()
    {
-      log.debug("stop");
+      if(log.isDebugEnabled()) log.debug("stop");
       
       if (serverContext == null || isPublished == false)
          log.error("Endpoint not published");

@@ -43,14 +43,14 @@ public class AttachmentMarshallerImpl extends AttachmentMarshaller
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
 
       QName xmlName = new QName(elementNamespace, elementLocalName);
-      log.debug("serialize: [xmlName=" + xmlName + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + "]");
 
       String cid = soapMessage.getCidGenerator().generateFromName(xmlName.getLocalPart());
       AttachmentPart xopPart = soapMessage.createAttachmentPart(data);
       xopPart.addMimeHeader(MimeConstants.CONTENT_ID, '<' + cid + '>'); // RFC2392 requirement
       soapMessage.addAttachmentPart(xopPart);
 
-      log.debug("Created attachment part " + cid + ", with content-type " + xopPart.getContentType());
+      if(log.isDebugEnabled()) log.debug("Created attachment part " + cid + ", with content-type " + xopPart.getContentType());
 
       return "cid:" + cid;
    }

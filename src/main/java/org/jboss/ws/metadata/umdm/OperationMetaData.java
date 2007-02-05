@@ -211,14 +211,14 @@ public class OperationMetaData extends ExtensibleMetaData
             // compare params by java type name
             if (matchParameters(method, true))
             {
-               log.debug("Found best matching java method: " + method);
+               if(log.isDebugEnabled()) log.debug("Found best matching java method: " + method);
                isJavaMethod = true;
             }
 
             // compare params by assignability
             if (!isJavaMethod && matchParameters(method, false))
             {
-               log.debug("Found possible matching java method: " + method);
+               if(log.isDebugEnabled()) log.debug("Found possible matching java method: " + method);
                isJavaMethod = true;
             }
          }

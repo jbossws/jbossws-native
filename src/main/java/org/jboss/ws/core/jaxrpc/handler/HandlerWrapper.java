@@ -90,7 +90,7 @@ public class HandlerWrapper implements Handler
     */
    public void init(HandlerInfo config) throws JAXRPCException
    {
-      log.debug("init: " + delegate);
+      if(log.isDebugEnabled()) log.debug("init: " + delegate);
       delegate.init(config);
       state = METHOD_READY;
    }
@@ -100,7 +100,7 @@ public class HandlerWrapper implements Handler
     */
    public void destroy() throws JAXRPCException
    {
-      log.debug("destroy: " + delegate);
+      if(log.isDebugEnabled()) log.debug("destroy: " + delegate);
       state = DOES_NOT_EXIST;
       delegate.destroy();
    }

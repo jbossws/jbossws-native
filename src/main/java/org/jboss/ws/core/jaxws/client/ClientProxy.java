@@ -177,8 +177,8 @@ public class ClientProxy implements InvocationHandler
       ResponseImpl response = new ResponseImpl();
       Runnable task = new AsyncRunnable(response, null, opName, args, retType);
 
-      log.debug("Schedule task " + ((AsyncRunnable)task).getTaskID().toString());
-      
+      if(log.isDebugEnabled()) log.debug("Schedule task " + ((AsyncRunnable)task).getTaskID().toString());
+
       Future future = executor.submit(task);
       response.setFuture(future);
       return response;
@@ -194,7 +194,7 @@ public class ClientProxy implements InvocationHandler
    }
 
    /**
-    * 4.2.4  Conformance (Remote Exceptions): If an error occurs during a remote operation invocation, an implemention 
+    * 4.2.4  Conformance (Remote Exceptions): If an error occurs during a remote operation invocation, an implemention
     * MUST throw a service specific exception if possible. If the error cannot be mapped to a service
     * specific exception, an implementation MUST throw a ProtocolException or one of its subclasses, as
     * appropriate for the binding in use. See section 6.4.1 for more details.
@@ -240,7 +240,7 @@ public class ClientProxy implements InvocationHandler
             Map<String, Object> resContext = response.getContext();
             Object result = invoke(opName, args, retType, resContext);
 
-            log.debug("Finished task " + getTaskID().toString()+": " + result);
+            if(log.isDebugEnabled()) log.debug("Finished task " + getTaskID().toString()+": " + result);
 
             response.set(result);
 

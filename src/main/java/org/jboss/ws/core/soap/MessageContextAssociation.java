@@ -43,7 +43,7 @@ public class MessageContextAssociation
 
    public static void pushMessageContext(CommonMessageContext msgContext)
    {
-      log.debug("pushMessageContext: " + msgContext + " (Thread " +Thread.currentThread().getName()+ ")");
+      if(log.isDebugEnabled()) log.debug("pushMessageContext: " + msgContext + " (Thread " +Thread.currentThread().getName()+ ")");
       Stack<CommonMessageContext> stack = ThreadLocalAssociation.localMsgContextAssoc().get();
       if (stack == null)
       {
@@ -52,7 +52,7 @@ public class MessageContextAssociation
       }
       stack.push(msgContext);
    }
-   
+
    public static CommonMessageContext peekMessageContext()
    {
       CommonMessageContext msgContext = null;
@@ -63,7 +63,7 @@ public class MessageContextAssociation
       }
       return msgContext;
    }
-   
+
    public static CommonMessageContext popMessageContext()
    {
       CommonMessageContext msgContext = null;
@@ -72,7 +72,7 @@ public class MessageContextAssociation
       {
          msgContext = stack.pop();
       }
-      log.debug("popMessageContext: " + msgContext +" (Thread " +Thread.currentThread().getName()+ ")");
+      if(log.isDebugEnabled()) log.debug("popMessageContext: " + msgContext +" (Thread " +Thread.currentThread().getName()+ ")");
       return msgContext;
    }
 }

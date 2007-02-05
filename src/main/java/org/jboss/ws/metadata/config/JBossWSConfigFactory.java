@@ -68,7 +68,7 @@ public class JBossWSConfigFactory
 
    public Object parse(URL configURL)
    {
-      log.debug("parse: " + configURL);
+      if(log.isDebugEnabled()) log.debug("parse: " + configURL);
 
       Object wsConfig;
       try
@@ -122,7 +122,7 @@ public class JBossWSConfigFactory
     */
    public CommonConfig getConfig(UnifiedVirtualFile vfsRoot, String configName, String configFile)
    {
-      log.debug("getConfig: [name=" + configName + ",url=" + configFile + "]");
+      if(log.isDebugEnabled()) log.debug("getConfig: [name=" + configName + ",url=" + configFile + "]");
 
       if (configName == null)
          throw new IllegalArgumentException("Config name cannot be null");

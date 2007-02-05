@@ -108,7 +108,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(BindingType.class))
       {
-         log.debug("processBindingType on: " + wsClass.getName());
+         if(log.isDebugEnabled()) log.debug("processBindingType on: " + wsClass.getName());
          BindingType anBindingType = (BindingType)wsClass.getAnnotation(BindingType.class);
          epMetaData.setBindingId(anBindingType.value());
       }
@@ -118,7 +118,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(SOAPBinding.class))
       {
-         log.debug("processSOAPBinding on: " + wsClass.getName());
+         if(log.isDebugEnabled()) log.debug("processSOAPBinding on: " + wsClass.getName());
          SOAPBinding anSoapBinding = wsClass.getAnnotation(SOAPBinding.class);
 
          SOAPBinding.Style attrStyle = anSoapBinding.style();
@@ -152,9 +152,9 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (wsClass.isAnnotationPresent(SOAPMessageHandlers.class))
          throw new WSException("Cannot combine @HandlerChain with @SOAPMessageHandlers");
 
-      // The explicit handler chain on the service has priority 
+      // The explicit handler chain on the service has priority
       String filename = epMetaData.getServiceMetaData().getHandlerChain();
-      
+
       HandlerChain anHandlerChain = wsClass.getAnnotation(HandlerChain.class);
       if (filename == null && anHandlerChain != null)
          filename = anHandlerChain.file();
@@ -162,9 +162,9 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Nothing to do
       if (filename == null)
          return;
-      
+
       URL fileURL = null;
-      log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
+      if(log.isDebugEnabled()) log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
 
       // Try the filename as URL
       try
@@ -720,20 +720,20 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          if (wrapperParameter.loadWrapperBean() == null)
             wrapperGenerator.generate(wrapperParameter);
-         
+
          Class wrapperClass = wrapperParameter.getJavaType();
          javaTypes.add(wrapperClass);
-         
+
          // In case there is no @XmlRootElement
          typeRefs.add(new TypeReference(wrapperParameter.getXmlName(), wrapperClass));
          if (!opMetaData.isOneWay())
          {
             if (wrapperOutputParameter.loadWrapperBean() == null)
                wrapperGenerator.generate(wrapperOutputParameter);
-            
+
             wrapperClass = wrapperOutputParameter.getJavaType();
             javaTypes.add(wrapperClass);
-            
+
             // In case there is no @XmlRootElement
             typeRefs.add(new TypeReference(wrapperOutputParameter.getXmlName(), wrapperClass));
          }
@@ -786,13 +786,13 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
    protected void initWrapperGenerator(ClassLoader loader)
    {
-      // Use the dynamic generator by default. Otherwise reset the last 
+      // Use the dynamic generator by default. Otherwise reset the last
       if (wrapperGenerator == null)
          wrapperGenerator = new DynamicWrapperGenerator(loader);
       else
          wrapperGenerator.reset(loader);
    }
-   
+
    protected void resetMetaDataBuilder(ClassLoader loader)
    {
       initWrapperGenerator(loader);
@@ -806,7 +806,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       try
       {
          String targetNS = epMetaData.getPortTypeName().getNamespaceURI().intern();
-         log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
+         if(log.isDebugEnabled()) log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
          jaxbCtx = JAXBRIContext.newInstance(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false);
       }
       catch (JAXBException ex)

@@ -129,7 +129,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    /** On the client side, generate the payload from IN parameters. */
    public Object bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
    {
-      log.debug("bindRequestMessage: " + opMetaData.getQName());
+      if(log.isDebugEnabled()) log.debug("bindRequestMessage: " + opMetaData.getQName());
 
       try
       {
@@ -141,7 +141,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (opMetaData.isRPCEncoded())
             XOPContext.setMTOMEnabled(false);
          else
-            XOPContext.setMTOMEnabled( isMTOMEnabled() );         
+            XOPContext.setMTOMEnabled( isMTOMEnabled() );
 
          // Associate current message with message context
          SOAPMessageImpl reqMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -161,7 +161,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             QName opQName = opMetaData.getQName();
             Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
 
-            log.debug("Create RPC body element: " + opName);
+            if(log.isDebugEnabled()) log.debug("Create RPC body element: " + opName);
             soapBodyElement = new SOAPBodyElementRpc(opName);
             soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
          }
@@ -199,7 +199,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   xmlName = namespaceRegistry.registerQName(xmlName);
                   Name soapName = new NameImpl(xmlName.getLocalPart(), xmlName.getPrefix(), xmlName.getNamespaceURI());
 
-                  log.debug("Add unboundHeader element: " + soapName);
+                  if(log.isDebugEnabled()) log.debug("Add unboundHeader element: " + soapName);
                   SOAPContentElement contentElement = new SOAPHeaderElementImpl(soapName);
                   contentElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
                   soapHeader.addChildElement(contentElement);
@@ -226,7 +226,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
    public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, Object payload) throws BindingException
    {
-      log.debug("unbindRequestMessage: " + opMetaData.getQName());
+      if(log.isDebugEnabled()) log.debug("unbindRequestMessage: " + opMetaData.getQName());
 
       try
       {
@@ -313,7 +313,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    /** On the server side, generate the payload from OUT parameters. */
    public Object bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
-      log.debug("bindResponseMessage: " + opMetaData.getQName());
+      if(log.isDebugEnabled()) log.debug("bindResponseMessage: " + opMetaData.getQName());
 
       try
       {
@@ -416,7 +416,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    public void unbindResponseMessage(OperationMetaData opMetaData, Object payload, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
       throws BindingException
    {
-      log.debug("unbindResponseMessage: " + opMetaData.getQName());
+      if(log.isDebugEnabled()) log.debug("unbindResponseMessage: " + opMetaData.getQName());
 
       try
       {

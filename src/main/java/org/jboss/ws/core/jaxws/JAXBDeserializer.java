@@ -58,7 +58,7 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
    @Override
    public Object deserialize(QName xmlName, QName xmlType, String val, SerializationContext serContext)
    {
-      log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       Object value = null;
       try
@@ -67,7 +67,7 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
 
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
          Class javaType = typeMapping.getJavaType(xmlType);
-         
+
          JAXBContextCache contextCache = JAXBContextCache.getContextCache();
          JAXBContext jaxbContext = contextCache.getInstance(types);
 
@@ -78,7 +78,7 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
          JAXBElement jbe = unmarshaller.unmarshal(new StreamSource(ins), javaType);
          value = jbe.getValue();
 
-         log.debug("deserialized: " + (value != null ? value.getClass().getName() : null));
+         if(log.isDebugEnabled()) log.debug("deserialized: " + (value != null ? value.getClass().getName() : null));
       }
       catch (Exception ex)
       {

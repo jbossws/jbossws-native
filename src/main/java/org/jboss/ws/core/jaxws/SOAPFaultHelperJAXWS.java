@@ -83,7 +83,7 @@ public class SOAPFaultHelperJAXWS
             FaultMetaData faultMetaData = opMetaData.getFault(xmlName);
             if (faultMetaData != null)
             {
-               log.debug("Deserialize fault: " + faultMetaData);
+               if(log.isDebugEnabled()) log.debug("Deserialize fault: " + faultMetaData);
                QName xmlType = faultMetaData.getXmlType();
                Class<?> faultBeanClass = faultMetaData.getFaultBean();
 
@@ -132,7 +132,7 @@ public class SOAPFaultHelperJAXWS
             }
             else
             {
-               log.debug("Cannot find fault meta data for: " + xmlName);
+               if(log.isDebugEnabled()) log.debug("Cannot find fault meta data for: " + xmlName);
             }
          }
       }
@@ -272,7 +272,7 @@ public class SOAPFaultHelperJAXWS
       }
       else
       {
-         log.debug("Cannot obtain fault meta data for: " + exClass);
+         if(log.isDebugEnabled()) log.debug("Cannot obtain fault meta data for: " + exClass);
       }
 
       return soapMessage;

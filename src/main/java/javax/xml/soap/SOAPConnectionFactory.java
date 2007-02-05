@@ -81,7 +81,7 @@ public abstract class SOAPConnectionFactory
                }
                catch (ClassNotFoundException e1)
                {
-                  log.debug("Cannot load factory: " + factoryName);
+                  if(log.isDebugEnabled()) log.debug("Cannot load factory: " + factoryName);
                }
             }
          }

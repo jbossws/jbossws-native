@@ -66,7 +66,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       if (wsdlURL == null)
          throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
 
-      log.debug("START buildMetaData: [service=" + serviceName + "]");
+      if(log.isDebugEnabled()) log.debug("START buildMetaData: [service=" + serviceName + "]");
       try
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
@@ -84,7 +84,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
 
-         log.debug("END buildMetaData: " + wsMetaData);
+         if(log.isDebugEnabled()) log.debug("END buildMetaData: " + wsMetaData);
          return serviceMetaData;
       }
       catch (RuntimeException rte)
@@ -101,7 +101,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
     */
    public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL)
    {
-      return buildMetaData(serviceName, wsdlURL, new ResourceLoaderAdapter()); 
+      return buildMetaData(serviceName, wsdlURL, new ResourceLoaderAdapter());
    }
 
    private void buildMetaDataInternal(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions) throws IOException
@@ -179,14 +179,14 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
    public void rebuildEndpointMetaData(EndpointMetaData epMetaData, Class<?> wsClass)
    {
-      log.debug("START: rebuildMetaData");
+      if(log.isDebugEnabled()) log.debug("START: rebuildMetaData");
 
       // Clear the java types, etc.
       resetMetaDataBuilder(epMetaData.getClassLoader());
 
       // Nuke parameterStyle
       epMetaData.setParameterStyle(null);
-      
+
       // Process an optional @BindingType annotation
       if (wsClass.isAnnotationPresent(BindingType.class))
          processBindingType(epMetaData, wsClass);
@@ -214,6 +214,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       // Eager initialization
       epMetaData.eagerInitialize();
 
-      log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
+      if(log.isDebugEnabled()) log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
    }
 }

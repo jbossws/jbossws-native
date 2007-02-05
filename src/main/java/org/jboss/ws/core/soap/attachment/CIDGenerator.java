@@ -50,11 +50,11 @@ public class CIDGenerator
       cid.append("cid:").append(count++).append("-").append(time).append("-")
          .append(cid.hashCode()).append("@").append(MimeConstants.CID_DOMAIN);
 
-      log.debug("generateFromCount: " + cid);
+      if(log.isDebugEnabled()) log.debug("generateFromCount: " + cid);
       return cid.toString();
    }
 
-   public String generateFromName(String name) 
+   public String generateFromName(String name)
    {
 
       // See http://www.ietf.org/rfc/rfc2392.txt on rules howto create cid's
@@ -69,7 +69,7 @@ public class CIDGenerator
       }
 
       String cid = name + "-" + UUIDGenerator.generateRandomUUIDString() + "@" + MimeConstants.CID_DOMAIN;
-      log.debug("generateFromName: " + cid);
+      if(log.isDebugEnabled()) log.debug("generateFromName: " + cid);
       return cid;
    }
 }

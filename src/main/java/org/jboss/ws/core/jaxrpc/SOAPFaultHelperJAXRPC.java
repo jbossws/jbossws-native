@@ -116,7 +116,7 @@ public class SOAPFaultHelperJAXRPC
             FaultMetaData faultMetaData = opMetaData.getFault(xmlName);
             if (faultMetaData != null)
             {
-               log.debug("Deserialize fault: " + faultMetaData);
+               if(log.isDebugEnabled()) log.debug("Deserialize fault: " + faultMetaData);
                QName xmlType = faultMetaData.getXmlType();
                Class javaType = faultMetaData.getJavaType();
 
@@ -158,7 +158,7 @@ public class SOAPFaultHelperJAXRPC
             }
             else
             {
-               log.debug("Cannot find fault meta data for: " + xmlName);
+               if(log.isDebugEnabled()) log.debug("Cannot find fault meta data for: " + xmlName);
             }
          }
       }
@@ -280,7 +280,7 @@ public class SOAPFaultHelperJAXRPC
          }
          else
          {
-            log.debug("Cannot obtain fault meta data for: " + javaType);
+            if(log.isDebugEnabled()) log.debug("Cannot obtain fault meta data for: " + javaType);
          }
       }
 

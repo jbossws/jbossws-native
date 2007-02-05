@@ -64,7 +64,7 @@ public class HandlerChainExecutor
    {
       this.epMetaData = epMetaData;
       
-      log.debug("Create a handler executor: " + handlerList);
+      if(log.isDebugEnabled()) log.debug("Create a handler executor: " + handlerList);
       for (Handler handler : handlerList)
       {
          handlers.add(handler);
@@ -76,7 +76,7 @@ public class HandlerChainExecutor
     */
    public void close()
    {
-      log.debug("close");
+      if(log.isDebugEnabled()) log.debug("close");
       for (Handler handler : handlers)
       {
          handler.close(null);
@@ -89,7 +89,7 @@ public class HandlerChainExecutor
 
       if (handlers.size() > 0)
       {
-         log.debug("Enter: handleRequest");
+         if(log.isDebugEnabled()) log.debug("Enter: handleRequest");
 
          SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
          soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -102,7 +102,7 @@ public class HandlerChainExecutor
             for (; doNext && handlerIndex < handlers.size(); handlerIndex++)
             {
                currHandler = handlers.get(handlerIndex);
-               
+
                if (log.isTraceEnabled())
                {
                   SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
@@ -130,7 +130,7 @@ public class HandlerChainExecutor
                falseIndex = (handlerIndex - 1);
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleRequest with status: " + doNext);
+            if(log.isDebugEnabled()) log.debug("Exit: handleRequest with status: " + doNext);
          }
       }
 
@@ -146,7 +146,7 @@ public class HandlerChainExecutor
 
       if (handlers.size() > 0)
       {
-         log.debug("Enter: handleResponse");
+         if(log.isDebugEnabled()) log.debug("Enter: handleResponse");
 
          int handlerIndex = handlers.size() - 1;
          if (falseIndex != -1)
@@ -159,7 +159,7 @@ public class HandlerChainExecutor
             for (; doNext && handlerIndex >= 0; handlerIndex--)
             {
                currHandler = handlers.get(handlerIndex);
-               
+
                if (log.isTraceEnabled())
                {
                   SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
@@ -187,7 +187,7 @@ public class HandlerChainExecutor
                falseIndex = (handlerIndex - 1);
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleResponse with status: " + doNext);
+            if(log.isDebugEnabled()) log.debug("Exit: handleResponse with status: " + doNext);
          }
       }
 
@@ -200,7 +200,7 @@ public class HandlerChainExecutor
 
       if (handlers.size() > 0)
       {
-         log.debug("Enter: handleFault");
+         if(log.isDebugEnabled()) log.debug("Enter: handleFault");
 
          SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
          soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -213,7 +213,7 @@ public class HandlerChainExecutor
             for (; doNext && handlerIndex < handlers.size(); handlerIndex++)
             {
                currHandler = handlers.get(handlerIndex);
-               
+
                if (log.isTraceEnabled())
                {
                   SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
@@ -241,7 +241,7 @@ public class HandlerChainExecutor
                falseIndex = (handlerIndex - 1);
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleFault with status: " + doNext);
+            if(log.isDebugEnabled()) log.debug("Exit: handleFault with status: " + doNext);
          }
       }
 

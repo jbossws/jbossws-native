@@ -186,7 +186,7 @@ public class ServiceReferenceable implements Referenceable
       }
       catch (IOException ex)
       {
-         log.debug("Cannot find security config: " + descriptorPath);
+         if(log.isDebugEnabled()) log.debug("Cannot find security config: " + descriptorPath);
          return null;
       }
    }

@@ -335,7 +335,7 @@ public abstract class MetaDataBuilder
 
                if (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0)
                {
-                  log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");
+                  if(log.isDebugEnabled()) log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");
                   wsdlEndpoint.setAddress(serviceEndpointURL);
                   sepMetaData.setEndpointAddress(serviceEndpointURL);
 
@@ -345,7 +345,7 @@ public abstract class MetaDataBuilder
                }
                else
                {
-                  log.debug("Don't replace service endpoint address '" + orgAddress + "'");
+                  if(log.isDebugEnabled()) log.debug("Don't replace service endpoint address '" + orgAddress + "'");
                   try
                   {
                      sepMetaData.setEndpointAddress(new URL(orgAddress).toExternalForm());

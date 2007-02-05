@@ -125,7 +125,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
     */
    public void update(Observable observable, Object object)
    {
-      log.debug("Configuration change event received. Reconfigure handler chain: " + object);
+      if(log.isDebugEnabled()) log.debug("Configuration change event received. Reconfigure handler chain: " + object);
 
       // re-populate the binding handler chain
       resetCreateBindingHandlerChain();
@@ -205,7 +205,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
    protected CommonMessageContext processPivot(CommonMessageContext requestContext)
    {
-      log.debug("Begin response processing");
+      if(log.isDebugEnabled()) log.debug("Begin response processing");
 
       // remove existing context
       MessageContextAssociation.popMessageContext();

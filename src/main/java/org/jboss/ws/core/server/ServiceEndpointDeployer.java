@@ -70,7 +70,7 @@ public class ServiceEndpointDeployer
 
    public void create(UnifiedDeploymentInfo udi)
    {
-      log.debug("create: " + udi.name);
+      if(log.isDebugEnabled()) log.debug("create: " + udi.name);
       try
       {
          UnifiedMetaData wsMetaData;
@@ -122,7 +122,7 @@ public class ServiceEndpointDeployer
 
    public void start(UnifiedDeploymentInfo udi)
    {
-      log.debug("start: " + udi.name);
+      if(log.isDebugEnabled()) log.debug("start: " + udi.name);
       try
       {
          UnifiedMetaData wsMetaData = getUnifiedMetaData(udi);
@@ -157,7 +157,7 @@ public class ServiceEndpointDeployer
 
    public void stop(UnifiedDeploymentInfo udi)
    {
-      log.debug("stop: " + udi.name);
+      if(log.isDebugEnabled()) log.debug("stop: " + udi.name);
       try
       {
          UnifiedMetaData wsMetaData = getUnifiedMetaData(udi);
@@ -190,7 +190,7 @@ public class ServiceEndpointDeployer
 
    public void destroy(UnifiedDeploymentInfo udi)
    {
-      log.debug("destroy: " + udi.name);
+      if(log.isDebugEnabled()) log.debug("destroy: " + udi.name);
       try
       {
          UnifiedMetaData wsMetaData = getUnifiedMetaData(udi);

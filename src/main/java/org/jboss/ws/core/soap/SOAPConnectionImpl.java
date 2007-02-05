@@ -245,7 +245,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       try
       {
          // Get the invoker from Remoting for a given endpoint address
-         log.debug("Get locator for: " + endpoint);
+         if(log.isDebugEnabled()) log.debug("Get locator for: " + endpoint);
          targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "SOAPMessage");
          InvokerLocator locator = new InvokerLocator(targetAddress);
 

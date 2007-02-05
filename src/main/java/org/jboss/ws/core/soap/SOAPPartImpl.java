@@ -148,7 +148,7 @@ public class SOAPPartImpl extends SOAPPart
       // Specifically, the HTTP response entity-body must be empty.
       if (source == null)
       {
-         log.debug("Setting content source to null removes the SOAPEnvelope");
+         if(log.isDebugEnabled()) log.debug("Setting content source to null removes the SOAPEnvelope");
          soapEnvelope = null;
          return;
       }

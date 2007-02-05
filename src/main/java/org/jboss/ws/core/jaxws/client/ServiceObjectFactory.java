@@ -106,7 +106,7 @@ public class ServiceObjectFactory implements ObjectFactory
          if (Service.class.getName().equals(targetClassName))
             targetClassName = serviceClassName;
          
-         log.debug("[name=" + serviceRefName + ",service=" + serviceClassName + ",target=" + targetClassName + "]");
+         if(log.isDebugEnabled()) log.debug("[name=" + serviceRefName + ",service=" + serviceClassName + ",target=" + targetClassName + "]");
 
          // Load the service class
          ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
@@ -126,7 +126,7 @@ public class ServiceObjectFactory implements ObjectFactory
          {
             // Associate the UnifiedServiceRef with this thread
             serviceRefAssociation.set(usRef);
-            
+
             // Generic javax.xml.ws.Service
             if (serviceClass == Service.class)
             {
@@ -202,7 +202,7 @@ public class ServiceObjectFactory implements ObjectFactory
          return null;
       }
    }
-   
+
    public static UnifiedServiceRef getUnifiedServiceRefAssociation()
    {
       // The ServiceDelegateImpl get the usRef at ctor time
@@ -215,7 +215,7 @@ public class ServiceObjectFactory implements ObjectFactory
       String configName = usRef.getConfigName();
       if (service instanceof ConfigProvider)
       {
-         log.debug("Configure Service: [configName=" + configName + ",configFile=" + configFile + "]");
+         if(log.isDebugEnabled()) log.debug("Configure Service: [configName=" + configName + ",configFile=" + configFile + "]");
 
          ConfigProvider cp = (ConfigProvider)service;
          if (configName != null || configFile != null)

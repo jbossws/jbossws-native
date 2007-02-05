@@ -72,7 +72,7 @@ public class FactoryLoader
       {
          try
          {
-            log.debug("Load from system property: " + factoryName);
+            if(log.isDebugEnabled()) log.debug("Load from system property: " + factoryName);
             Class factoryClass = loader.loadClass(factoryName);
             factory = factoryClass.newInstance();
          }
@@ -82,8 +82,8 @@ public class FactoryLoader
          }
       }
 
-      // Use the properties file "lib/jaxm.properties" in the JRE directory. 
-      // This configuration file is in standard java.util.Properties format and contains the fully qualified name of the implementation class with the key being the system property defined above.  
+      // Use the properties file "lib/jaxm.properties" in the JRE directory.
+      // This configuration file is in standard java.util.Properties format and contains the fully qualified name of the implementation class with the key being the system property defined above.
       if (factory == null)
       {
          action = new PropertyAccessAction("java.home");
@@ -98,7 +98,7 @@ public class FactoryLoader
                factoryName = jaxmProperties.getProperty(propertyName);
                if (factoryName != null)
                {
-                  log.debug("Load from " + jaxmFile + ": " + factoryName);
+                  if(log.isDebugEnabled()) log.debug("Load from " + jaxmFile + ": " + factoryName);
                   Class factoryClass = loader.loadClass(factoryName);
                   factory = factoryClass.newInstance();
                }
@@ -110,7 +110,7 @@ public class FactoryLoader
          }
       }
 
-      // Use the Services API (as detailed in the JAR specification), if available, to determine the classname. 
+      // Use the Services API (as detailed in the JAR specification), if available, to determine the classname.
       if (factory == null)
       {
          String filename = "META-INF/services/" + propertyName;
@@ -124,7 +124,7 @@ public class FactoryLoader
                br.close();
                if (factoryName != null)
                {
-                  log.debug("Load from Service API " + filename + ": " + factoryName);
+                  if(log.isDebugEnabled()) log.debug("Load from Service API " + filename + ": " + factoryName);
                   Class factoryClass = loader.loadClass(factoryName);
                   factory = factoryClass.newInstance();
                }
@@ -142,7 +142,7 @@ public class FactoryLoader
          try
          {
             factoryName = defaultFactory;
-            log.debug("Load from default: " + factoryName);
+            if(log.isDebugEnabled()) log.debug("Load from default: " + factoryName);
             Class factoryClass = loader.loadClass(factoryName);
             factory = factoryClass.newInstance();
          }

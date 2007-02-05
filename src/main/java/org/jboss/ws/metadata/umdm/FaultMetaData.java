@@ -391,7 +391,7 @@ public class FaultMetaData
             for (int i = 0; i < propertyCount; i++)
                propertyValues[i] = faultBeanProperties[i].accessor().get(faultBean);
 
-            log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
+            if(log.isDebugEnabled()) log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
             serviceException = serviceExceptionConstructor.newInstance(propertyValues);
          }
       }

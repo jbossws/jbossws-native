@@ -77,7 +77,7 @@ public class JavaToWSDL20
     */
    public JavaToWSDL20()
    {
-      log.debug("Creating JavaToWSDL20 instance");
+      if(log.isDebugEnabled()) log.debug("Creating JavaToWSDL20 instance");
    }
 
    /**

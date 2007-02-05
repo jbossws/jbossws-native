@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
@@ -121,7 +122,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // True if the handlers are initialized
    private boolean handlersInitialized;
    // Maps the java method to the operation meta data
-   private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
+   private Map<Method, OperationMetaData> opMetaDataCache = new ConcurrentHashMap<Method, OperationMetaData>();
    // All of the registered types
    private List<Class> registeredTypes = new ArrayList<Class>();
 
@@ -240,7 +241,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (use == null)
       {
          use = Use.getDefaultUse();
-         log.debug("Using default encoding style: " + use);
+         if(log.isDebugEnabled()) log.debug("Using default encoding style: " + use);
       }
       return use;
    }
@@ -259,7 +260,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (style == null)
       {
          style = Style.getDefaultStyle();
-         log.debug("Using default style: " + style);
+         if(log.isDebugEnabled()) log.debug("Using default style: " + style);
       }
       return style;
    }
@@ -278,7 +279,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (parameterStyle == null)
       {
          parameterStyle = ParameterStyle.WRAPPED;
-         log.debug("Using default parameter style: " + parameterStyle);
+         if(log.isDebugEnabled()) log.debug("Using default parameter style: " + parameterStyle);
       }
       return parameterStyle;
    }
@@ -288,7 +289,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (value != null && parameterStyle != null && !parameterStyle.equals(value))
          throw new WSException("Mixed SOAP parameter styles not supported");
 
-      log.debug("setParameterStyle: " + value);
+      if(log.isDebugEnabled()) log.debug("setParameterStyle: " + value);
       this.parameterStyle = value;
    }
 
@@ -593,17 +594,17 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       // Make sure we have a configuration
       if (config == null)
          initEndpointConfig();
-      
+
       // SOAPBinding configuration
       if (configurable instanceof CommonBindingProvider)
       {
-         log.debug("Configure SOAPBinding");
+         if(log.isDebugEnabled()) log.debug("Configure SOAPBinding");
 
          if (config.hasFeature(EndpointFeature.MTOM))
          {
             CommonBindingProvider provider = (CommonBindingProvider)configurable;
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
-            log.debug("Enable MTOM on endpoint " + this.getPortName());
+            if(log.isDebugEnabled()) log.debug("Enable MTOM on endpoint " + this.getPortName());
          }
       }
    }
@@ -637,7 +638,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       setConfigNameInternal(configName, configFile);
    }
-   
+
    private void setConfigNameInternal(String configName, String configFile)
    {
       if (configName == null)
@@ -645,12 +646,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       if (configFile != null)
          this.configFile = configFile;
-      
+
       if (configName.equals(this.configName) == false)
       {
          this.configName = configName;
-         
-         log.debug("Reconfiguration forced, new config is '" + configName + "'");
+
+         if(log.isDebugEnabled()) log.debug("Reconfiguration forced, new config is '" + configName + "'");
          initEndpointConfig();
          configObservable.doNotify(configName);
       }
@@ -658,20 +659,20 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void initEndpointConfig()
    {
-      log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
+      if(log.isDebugEnabled()) log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
       config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
-      
+
       reconfigHandlerMetaData();
    }
-   
+
    private void reconfigHandlerMetaData()
    {
-      log.debug("Configure EndpointMetaData");
+      if(log.isDebugEnabled()) log.debug("Configure EndpointMetaData");
 
       List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
       clearHandlers();
-      
+
       List<HandlerMetaData> preHandlers = config.getHandlers(this, HandlerType.PRE);
       List<HandlerMetaData> postHandlers = config.getHandlers(this, HandlerType.POST);
 
@@ -679,9 +680,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       addHandlers(sepHandlers);
       addHandlers(postHandlers);
 
-      log.debug("Added " + preHandlers.size() + " PRE handlers");
-      log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
-      log.debug("Added " + postHandlers.size() + " POST handlers");
+      if(log.isDebugEnabled()) log.debug("Added " + preHandlers.size() + " PRE handlers");
+      if(log.isDebugEnabled()) log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
+      if(log.isDebugEnabled()) log.debug("Added " + postHandlers.size() + " POST handlers");
    }
 
    public List<Class> getRegisteredTypes()

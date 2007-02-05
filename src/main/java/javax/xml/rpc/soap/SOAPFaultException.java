@@ -89,7 +89,7 @@ public class SOAPFaultException extends RuntimeException
       super(faultString);
 
       Name detailName = faultDetail != null ? faultDetail.getElementName() : null;
-      log.debug("new SOAPFaultException [code=" + faultCode + ",string=" + faultString + ",actor=" + faultActor + ",detail=" + detailName + "]");
+      if(log.isDebugEnabled()) log.debug("new SOAPFaultException [code=" + faultCode + ",string=" + faultString + ",actor=" + faultActor + ",detail=" + detailName + "]");
 
       this.faultCode = faultCode;
       this.faultString = faultString;

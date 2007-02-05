@@ -122,7 +122,7 @@ public abstract class TypeMappingImpl implements TypeMapping
     */
    public void register(Class javaType, QName xmlType, SerializerFactory sf, DeserializerFactory df)
    {
-      log.debug("register: TypeMappingImpl@"  + hashCode() + " [xmlType=" + xmlType + ",javaType=" + javaType.getName() + ",sf=" + sf + ",df=" + df + "]");
+      if(log.isDebugEnabled()) log.debug("register: TypeMappingImpl@"  + hashCode() + " [xmlType=" + xmlType + ",javaType=" + javaType.getName() + ",sf=" + sf + ",df=" + df + "]");
       registerInternal(javaType, new IQName(xmlType), sf, df);
       keyPairCache.clear();
    }

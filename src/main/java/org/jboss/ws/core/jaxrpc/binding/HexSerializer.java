@@ -45,7 +45,7 @@ public class HexSerializer extends SerializerSupport
 
    public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       value = JavaUtils.getPrimitiveValueArray(value);
       String valueStr = SimpleTypeBindings.marshalHexBinary((byte[])value);

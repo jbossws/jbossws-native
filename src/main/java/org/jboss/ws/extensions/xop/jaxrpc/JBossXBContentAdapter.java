@@ -81,7 +81,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
       if( mtomDisabled && convertableType )
       {
          String contentType = MimeUtils.resolveMimeType(object);
-         log.debug("Adopt " + object.getClass() + " to byte[], contentType " + contentType);
+         if(log.isDebugEnabled()) log.debug("Adopt " + object.getClass() + " to byte[], contentType " + contentType);
 
          DataHandler dh = new DataHandler(object, contentType);
          ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -125,7 +125,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
       if( isRegularMessage && isSimpleType && !doTypesMatch)
       {
          String contentType = MimeUtils.resolveMimeType(targetClass);
-         log.debug("Adopt byte[] to " + targetClass +", contentType "+ contentType);
+         if(log.isDebugEnabled()) log.debug("Adopt byte[] to " + targetClass +", contentType "+ contentType);
 
          try
          {
@@ -154,7 +154,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
          try
          {
             String contentType = MimeUtils.resolveMimeType(targetClass);
-            log.debug("Adopt DataHandler to " + targetClass +", contentType "+ contentType);
+            if(log.isDebugEnabled()) log.debug("Adopt DataHandler to " + targetClass +", contentType "+ contentType);
 
             DataHandler dh = new DataHandler(
                 wrapAsDataSource(object, contentType)

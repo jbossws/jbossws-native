@@ -266,7 +266,7 @@ public class XOPContext
    {
 
       SOAPElement parentElement = xopElement.getParentElement();
-      log.debug("Replace base64 representation on element [xmlName=" + parentElement.getLocalName() + "]");
+      if(log.isDebugEnabled()) log.debug("Replace base64 representation on element [xmlName=" + parentElement.getLocalName() + "]");
 
       String base64 = xopElement.getValue();
       byte[] data = SimpleTypeBindings.unmarshalBase64(base64);
@@ -288,7 +288,7 @@ public class XOPContext
       {
          SOAPElement xopInclude = xopElement.addChildElement(Constants.NAME_XOP_INCLUDE);
          xopInclude.setAttribute("href", cid);
-         log.debug("Restored xop:Include element on [xmlName=" + xopElement.getLocalName() + "]");
+         if(log.isDebugEnabled()) log.debug("Restored xop:Include element on [xmlName=" + xopElement.getLocalName() + "]");
 
          XOPContext.setXOPMessage(true);
       }
@@ -302,7 +302,7 @@ public class XOPContext
    private static void replaceXOPInclude(SOAPElement parent, SOAPElement xopIncludeElement)
    {
 
-      log.debug("Replace xop:Include on element [xmlName=" + parent.getLocalName() + "]");
+      if(log.isDebugEnabled()) log.debug("Replace xop:Include on element [xmlName=" + parent.getLocalName() + "]");
 
       String cid = xopIncludeElement.getAttribute("href");
       byte[] data;
@@ -331,7 +331,7 @@ public class XOPContext
       parent.setValue(base64);
       parent.setAttributeNS(NS_XOP_JBOSSWS, "content-type", contentType);
 
-      log.debug("Created base64 representation for content-type " + contentType);
+      if(log.isDebugEnabled()) log.debug("Created base64 representation for content-type " + contentType);
 
       // cleanup the attachment part
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
@@ -345,7 +345,7 @@ public class XOPContext
       if (null == removedPart)
          throw new WSException("Unable to remove attachment part " + cid);
 
-      log.debug("Removed attachment part " + cid);
+      if(log.isDebugEnabled()) log.debug("Removed attachment part " + cid);
 
       // leave soap object model in a valid state
       setXOPMessage(false);

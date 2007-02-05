@@ -44,7 +44,7 @@ public class CalendarSerializer extends SerializerSupport
 
    public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       String valueStr = SimpleTypeBindings.marshalDateTime((Calendar)value);
 

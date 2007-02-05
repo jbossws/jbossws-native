@@ -54,7 +54,7 @@ public class WSSecurityConfigFactory
 
       if (location != null)
       {
-         log.debug("createConfiguration from: " + location);
+         if(log.isDebugEnabled()) log.debug("createConfiguration from: " + location);
          config = WSSecurityOMFactory.newInstance().parse(location);
 
          // Get and set deployment path to the keystore file
@@ -63,7 +63,7 @@ public class WSSecurityConfigFactory
             location = getResource(vfsRoot, config.getKeyStoreFile());
             if (location != null)
             {
-               log.debug("Add keystore: " + location);
+               if(log.isDebugEnabled()) log.debug("Add keystore: " + location);
                config.setKeyStoreURL(location);
             }
          }
@@ -73,7 +73,7 @@ public class WSSecurityConfigFactory
             location = getResource(vfsRoot, config.getTrustStoreFile());
             if (location != null)
             {
-               log.debug("Add truststore: " + location);
+               if(log.isDebugEnabled()) log.debug("Add truststore: " + location);
                config.setTrustStoreURL(location);
             }
          }

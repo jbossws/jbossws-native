@@ -127,12 +127,12 @@ public class SwapableMemoryDataSource implements DataSource
 
       if (rbaos == null)
       {
-         log.debug("Using swap file, location = " + swapFile.toURL() + " size = " + swapFile.length());
+         if(log.isDebugEnabled()) log.debug("Using swap file, location = " + swapFile.toURL() + " size = " + swapFile.length());
       }
       else
       {
          contentLength = rbaos.size();
-         log.debug("Using memory buffer, size = " + contentLength);
+         if(log.isDebugEnabled()) log.debug("Using memory buffer, size = " + contentLength);
          content = rbaos.getBytes();
       }
    }

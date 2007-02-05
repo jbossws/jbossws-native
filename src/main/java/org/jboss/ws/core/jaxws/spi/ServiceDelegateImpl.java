@@ -352,13 +352,13 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
       if(usRef == null || usRef.getPortInfos().size() == 0)
       {
-         log.debug("No port configuration for: " + portName);
+         if(log.isDebugEnabled()) log.debug("No port configuration for: " + portName);
          return;
       }
-      
+
       String configFile = usRef.getConfigFile();
       String configName = usRef.getConfigName();
-      
+
       boolean match = false;
       for (PortInfo pi : usRef.getPortInfos())
       {
@@ -369,7 +369,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          {
             if (piSEI != null && piPort != null)
                match = seiName.equals(piSEI) && portName.equals(piPort);
-            else 
+            else
                match = seiName.equals(piSEI) || portName.equals(piPort);
          }
          if (match == true)
@@ -378,12 +378,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
                configFile = pi.getConfigFile();
             if (pi.getConfigName() != null)
                configName = pi.getConfigName();
-            
+
             BindingProvider bp = (BindingProvider)stub;
             Map<String, Object> reqCtx = bp.getRequestContext();
             for (NameValuePair nvp : pi.getStubProperties())
             {
-               log.debug("Set stub property: " + nvp);
+               if(log.isDebugEnabled()) log.debug("Set stub property: " + nvp);
                reqCtx.put(nvp.getName(), nvp.getValue());
             }
             break;
@@ -391,9 +391,9 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
 
       if (match == false)
-         log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
-      
-      log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
+         if(log.isDebugEnabled()) log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
+
+      if(log.isDebugEnabled()) log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
       if (configName != null || configFile != null)
          stub.setConfigName(configName, configFile);
    }

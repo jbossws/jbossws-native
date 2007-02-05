@@ -68,7 +68,7 @@ public class XOPMarshallerImpl implements XOPMarshaller {
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
 
       QName xmlName = new QName(elementNamespace, elementName);
-      log.debug("serialize: [xmlName=" + xmlName + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + "]");
 
       String cid = soapMessage.getCidGenerator().generateFromName(xmlName.getLocalPart());
 
@@ -77,7 +77,7 @@ public class XOPMarshallerImpl implements XOPMarshaller {
       xopPart.addMimeHeader(MimeConstants.CONTENT_ID, '<'+cid+'>'); // RFC2392 requirement
       soapMessage.addAttachmentPart(xopPart);
 
-      log.debug("Created attachment part " +cid+", with content-type " +xopPart.getContentType());
+      if(log.isDebugEnabled()) log.debug("Created attachment part " +cid+", with content-type " +xopPart.getContentType());
 
       return "cid:" + cid;
 

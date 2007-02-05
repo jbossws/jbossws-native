@@ -160,7 +160,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          // Check if protocol handlers modified the payload
          if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
          {
-            log.debug("Handler modified body payload, unbind message again");
+            if(log.isDebugEnabled()) log.debug("Handler modified body payload, unbind message again");
             epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
          }
 
@@ -185,7 +185,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
             if(binding instanceof CommonSOAPBinding)
                XOPContext.setMTOMEnabled( ((CommonSOAPBinding)binding).isMTOMEnabled());
-            
+
             // Bind the response message
             SOAPMessage resMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
             msgContext.setSOAPMessage(resMessage);
@@ -208,7 +208,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          {
             CommonBinding binding = bindingProvider.getCommonBinding();
             binding.bindFaultMessage(ex);
-            
+
             // call the handler chain
             boolean handlersPass = callFaultHandlerChain(seInfo, HandlerType.POST, ex);
             handlersPass = handlersPass && callFaultHandlerChain(seInfo, HandlerType.ENDPOINT, ex);
@@ -228,7 +228,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
    protected CommonMessageContext processPivot(CommonMessageContext requestContext)
    {
-      log.debug("Begin response processing");
+      if(log.isDebugEnabled()) log.debug("Begin response processing");
       // TODO: implement
       return requestContext;
    }

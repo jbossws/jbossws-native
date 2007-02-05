@@ -99,13 +99,13 @@ public class EndpointInvocation
 
    public void setRequestParamValue(QName xmlName, Object value)
    {
-      log.debug("setRequestParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
+      if(log.isDebugEnabled()) log.debug("setRequestParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
       reqPayload.put(xmlName, value);
    }
 
    public Object getRequestParamValue(QName xmlName) throws SOAPException
    {
-      log.debug("getRequestParamValue: " + xmlName);
+      if(log.isDebugEnabled()) log.debug("getRequestParamValue: " + xmlName);
       Object paramValue = reqPayload.get(xmlName);
       ParameterMetaData paramMetaData = opMetaData.getParameter(xmlName);
       paramValue = transformPayloadValue(paramMetaData, paramValue);
@@ -116,7 +116,7 @@ public class EndpointInvocation
     */
    public Object[] getRequestPayload() throws SOAPException
    {
-      log.debug("getRequestPayload");
+      if(log.isDebugEnabled()) log.debug("getRequestPayload");
       List<QName> xmlNames = getRequestParamNames();
 
       Object[] payload = new Object[opMetaData.getJavaMethod().getParameterTypes().length];
@@ -141,13 +141,13 @@ public class EndpointInvocation
 
    public void setResponseParamValue(QName xmlName, Object value)
    {
-      log.debug("setResponseParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
+      if(log.isDebugEnabled()) log.debug("setResponseParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
       resPayload.put(xmlName, value);
    }
 
    public Object getResponseParamValue(QName xmlName) throws SOAPException
    {
-      log.debug("getResponseParamValue: " + xmlName);
+      if(log.isDebugEnabled()) log.debug("getResponseParamValue: " + xmlName);
       Object paramValue = resPayload.get(xmlName);
       ParameterMetaData paramMetaData = opMetaData.getParameter(xmlName);
       paramValue = transformPayloadValue(paramMetaData, paramValue);
@@ -168,13 +168,13 @@ public class EndpointInvocation
       if (value != null && retMetaData == null)
          throw new WSException("Operation does not have a return value: " + opMetaData.getQName());
 
-      log.debug("setReturnValue: " + getTypeName(value));
+      if(log.isDebugEnabled()) log.debug("setReturnValue: " + getTypeName(value));
       this.returnValue = value;
    }
 
    public Object getReturnValue() throws SOAPException
    {
-      log.debug("getReturnValue");
+      if(log.isDebugEnabled()) log.debug("getReturnValue");
       Object paramValue = returnValue;
       ParameterMetaData paramMetaData = opMetaData.getReturnParameter();
       if (paramMetaData != null)
@@ -241,7 +241,7 @@ public class EndpointInvocation
          }
       }
 
-      log.debug("transformPayloadValue: " + getTypeName(paramValue) + " -> " + getTypeName(retValue));
+      if(log.isDebugEnabled()) log.debug("transformPayloadValue: " + getTypeName(paramValue) + " -> " + getTypeName(retValue));
       return retValue;
    }
 
@@ -333,7 +333,7 @@ public class EndpointInvocation
                retValue = JavaUtils.syncArray(retValue, targetParameterType);
          }
 
-         log.debug("syncEndpointInputParam: " + getTypeName(paramValue) + " -> " + getTypeName(retValue) + "(" + index + ")");
+         if(log.isDebugEnabled()) log.debug("syncEndpointInputParam: " + getTypeName(paramValue) + " -> " + getTypeName(retValue) + "(" + index + ")");
          payload[index] = retValue;
       }
    }

@@ -170,7 +170,7 @@ public class JavaToXSD implements JavaToXSDIntf
             URL orgURL = locs.get(nsURI); 
             URL resURL = resolveNamespaceURI(resolver, nsURI);
             URL url = resURL != null ? resURL : orgURL;
-            log.debug("Load schema: " + nsURI + "=" + url);
+            if(log.isDebugEnabled()) log.debug("Load schema: " + nsURI + "=" + url);
             XMLInputSource inputSource = new XMLInputSource(null, url.toExternalForm(), null);
 
             InputSource tmpSrc = resolver.resolveEntity(null, url.toExternalForm());

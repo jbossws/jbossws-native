@@ -103,7 +103,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    public void setPayload(Source payload)
    {
-      log.debug("setPayload: " + payload.getClass().getName());
+      if(log.isDebugEnabled()) log.debug("setPayload: " + payload.getClass().getName());
       removeContents();
       this.payload = payload;
       this.isDOMValid = false;
@@ -377,7 +377,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
                child = DOMUtils.parse(new InputSource(reader));
             }
 
-            // reset the excausted input stream  
+            // reset the excausted input stream
             String xmlStr = DOMWriter.printNode(child, false);
             payload = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
          }
@@ -400,8 +400,8 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
          }
          else if (payload instanceof SAXSource)
          {
-            // The fact that JAXBSource derives from SAXSource is an implementation detail. 
-            // Thus in general applications are strongly discouraged from accessing methods defined on SAXSource. 
+            // The fact that JAXBSource derives from SAXSource is an implementation detail.
+            // Thus in general applications are strongly discouraged from accessing methods defined on SAXSource.
             // The XMLReader object obtained by the getXMLReader method shall be used only for parsing the InputSource object returned by the getInputSource method.
 
             TransformerFactory tf = TransformerFactory.newInstance();
@@ -433,7 +433,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       {
          Element child = getBodyElementFromSource();
          String xmlPayload = DOMWriter.printNode(child, false);
-         log.debug("writeElementContent from payload: " + xmlPayload);
+         if(log.isDebugEnabled()) log.debug("writeElementContent from payload: " + xmlPayload);
          writer.write(xmlPayload);
       }
       else

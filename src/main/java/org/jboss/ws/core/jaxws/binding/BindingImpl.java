@@ -87,13 +87,13 @@ public class BindingImpl implements BindingExt
 
    public List<Handler> getHandlerChain()
    {
-      log.debug("getHandlerChain: " + jaxwsHandlerChain);
+      if(log.isDebugEnabled()) log.debug("getHandlerChain: " + jaxwsHandlerChain);
       return Collections.unmodifiableList(jaxwsHandlerChain);
    }
 
    public void setHandlerChain(List<Handler> handlerChain)
    {
-      log.debug("setHandlerChain: " + handlerChain);
+      if(log.isDebugEnabled()) log.debug("setHandlerChain: " + handlerChain);
       jaxwsHandlerChain.clear();
       jaxwsHandlerChain.addAll(handlerChain);
    }

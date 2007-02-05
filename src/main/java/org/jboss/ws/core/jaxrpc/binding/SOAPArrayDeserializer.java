@@ -61,7 +61,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
     */
    public Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
    {
-      log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       try
       {
          ParameterMetaData paramMetaData = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
@@ -84,7 +84,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
             throw new WSException("Cannot obtain component xmlType for: " + compJavaType);
 
          // Get the component type deserializer factory
-         log.debug("Get component deserializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
+         if(log.isDebugEnabled()) log.debug("Get component deserializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
          DeserializerFactoryBase compDeserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(compJavaType, compXmlType);
          if (compDeserializerFactory == null)
          {
@@ -99,7 +99,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
 
          if (arrDims.length < 1 || 2 < arrDims.length)
             throw new WSException("Unsupported array dimensions: " + Arrays.asList(arrDims));
-         
+
          Iterator it = DOMUtils.getChildElements(arrayElement);
          if (arrDims.length == 1)
          {
@@ -115,7 +115,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
             }
          }
 
-         log.debug("deserialized: " + retArray.getClass().getName());
+         if(log.isDebugEnabled()) log.debug("deserialized: " + retArray.getClass().getName());
          return retArray;
       }
       catch (RuntimeException e)

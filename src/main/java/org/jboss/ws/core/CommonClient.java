@@ -283,12 +283,12 @@ public abstract class CommonClient implements StubExt
                   try
                   {
                      URL wsaToURL = new URL(wsaTo);
-                     log.debug("Sending request to addressing destination: " + wsaToURL);
+                     if(log.isDebugEnabled()) log.debug("Sending request to addressing destination: " + wsaToURL);
                      targetAddress = wsaToURL.toExternalForm();
                   }
                   catch (MalformedURLException ex)
                   {
-                     log.debug("Not a valid URL: " + wsaTo);
+                     if(log.isDebugEnabled()) log.debug("Not a valid URL: " + wsaTo);
                   }
                }
             }
@@ -343,7 +343,7 @@ public abstract class CommonClient implements StubExt
             // Check if protocol handlers modified the payload
             if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
             {
-               log.debug("Handler modified body payload, unbind message again");
+               if(log.isDebugEnabled()) log.debug("Handler modified body payload, unbind message again");
                SOAPMessage resMessage = msgContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
@@ -363,7 +363,7 @@ public abstract class CommonClient implements StubExt
    {
       for (AttachmentPart part : attachmentParts)
       {
-         log.debug("Adding attachment part: " + part.getContentId());
+         if(log.isDebugEnabled()) log.debug("Adding attachment part: " + part.getContentId());
          reqMessage.addAttachmentPart(part);
       }
    }

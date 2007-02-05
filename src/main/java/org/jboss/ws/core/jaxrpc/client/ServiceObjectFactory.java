@@ -140,7 +140,7 @@ public class ServiceObjectFactory implements ObjectFactory
          URL wsdlLocation = usrMetaData.getWsdlLocation();
          if (wsdlLocation != null)
          {
-            log.debug("Create jaxrpc service from wsdl");
+            if(log.isDebugEnabled()) log.debug("Create jaxrpc service from wsdl");
 
             // Create the actual service object
             QName serviceName = usrMetaData.getServiceQName();
@@ -149,7 +149,7 @@ public class ServiceObjectFactory implements ObjectFactory
          }
          else
          {
-            log.debug("Create jaxrpc service with no wsdl");
+            if(log.isDebugEnabled()) log.debug("Create jaxrpc service with no wsdl");
             jaxrpcService = new ServiceImpl(new QName(Constants.NS_JBOSSWS_URI, "AnonymousService"));
          }
 
@@ -163,7 +163,7 @@ public class ServiceObjectFactory implements ObjectFactory
          if (pcLinkRef != null)
          {
             String pcLink = (String)pcLinkRef.getContent();
-            log.debug("Resolving port-component-link: " + pcLink);
+            if(log.isDebugEnabled()) log.debug("Resolving port-component-link: " + pcLink);
 
             // First try to obtain the endpoint address loacally
             String endpointAddress = null;
@@ -193,7 +193,7 @@ public class ServiceObjectFactory implements ObjectFactory
                is.close();
             }
 
-            log.debug("Resolved to: " + endpointAddress);
+            if(log.isDebugEnabled()) log.debug("Resolved to: " + endpointAddress);
             if (serviceMetaData.getEndpoints().size() == 1)
             {
                EndpointMetaData epMetaData = serviceMetaData.getEndpoints().get(0);

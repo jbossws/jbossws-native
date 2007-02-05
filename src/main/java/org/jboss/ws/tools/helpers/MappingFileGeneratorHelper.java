@@ -808,8 +808,8 @@ public class MappingFileGeneratorHelper
 
       if (javaType == null)
       {
-         log.debug("Typemapping lookup failed for " + xmlName);
-         log.debug("Falling back to identifier generation");
+         if(log.isDebugEnabled()) log.debug("Typemapping lookup failed for " + xmlName);
+         if(log.isDebugEnabled()) log.debug("Falling back to identifier generation");
          String className = xmlType.getLocalPart();
          if (className.charAt(0) == '>')
             className = className.substring(1);

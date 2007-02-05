@@ -660,7 +660,7 @@ public class JBossXSModel implements XSModel, Cloneable
          if (type.getAnonymous())
          {
             anonymousTypeMap.put(namespace + ":" + name, type);
-            log.debug("Registered as anon type: {" + namespace + ":" + name + "} -> " + type);
+            if(log.isDebugEnabled()) log.debug("Registered as anon type: {" + namespace + ":" + name + "} -> " + type);
          }
          return name;
       }

@@ -156,7 +156,7 @@ public class TypesMetaData
             {
                tmMetaData = new TypeMappingMetaData(this, xmlType, javaTypeName);
                tmMetaData.setQNameScope(TypeMappingMetaData.QNAME_SCOPE_SIMPLE_TYPE);
-               log.debug("Adding a simpleType without jaxrpc-mapping: " + tmMetaData);
+               if(log.isDebugEnabled()) log.debug("Adding a simpleType without jaxrpc-mapping: " + tmMetaData);
                addTypeMapping(tmMetaData);
             }
             else

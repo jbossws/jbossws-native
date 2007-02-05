@@ -95,7 +95,7 @@ public class CommonBindingProvider implements Configurable
 
    public void update(Observable observable, Object object)
    {
-      log.debug("Update config: " + object);
+      if(log.isDebugEnabled()) log.debug("Update config: " + object);
       configure();
    }
 }

@@ -88,7 +88,7 @@ public class WebServiceContextJSE extends AbstractWebServiceContext
          }
          catch (NamingException e)
          {
-            log.debug("Cannot obtain realm mapping from: " + lookupName);
+            if(log.isDebugEnabled()) log.debug("Cannot obtain realm mapping from: " + lookupName);
          }
       }
       return realmMapping;

@@ -347,7 +347,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       JBossXSModelGroup group = (JBossXSModelGroup)complexType.getParticle().getTerm();
       group.setParticles(particles);
 
-      log.debug("generateNewType: " + sutils.write(complexType));
+      if(log.isDebugEnabled()) log.debug("generateNewType: " + sutils.write(complexType));
       return complexType;
    }
 

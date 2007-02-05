@@ -63,7 +63,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
    protected boolean handleInbound(MessageContext msgContext)
    {
-      log.debug("handleInbound");
+      if(log.isDebugEnabled()) log.debug("handleInbound");
 
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)ADDR_BUILDER.newAddressingProperties();
       SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
@@ -78,7 +78,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
    protected boolean handleOutbound(MessageContext msgContext)
    {
-      log.debug("handleOutbound");
+      if(log.isDebugEnabled()) log.debug("handleOutbound");
       handleResponseOrFault(msgContext, false);
       return true;
    }
@@ -89,7 +89,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
     */
    public boolean handleFault(MessageContext msgContext)
    {
-      log.debug("handleFault");
+      if(log.isDebugEnabled()) log.debug("handleFault");
       handleResponseOrFault(msgContext, true);
       return true;
    }

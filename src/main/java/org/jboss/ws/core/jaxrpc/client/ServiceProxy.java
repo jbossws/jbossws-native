@@ -109,7 +109,7 @@ public class ServiceProxy implements InvocationHandler
          Object retObj = null;
          if (jaxrpcServiceMethods.contains(method))
          {
-            log.debug("Invoke on jaxrpc service: " + methodName);
+            if(log.isDebugEnabled()) log.debug("Invoke on jaxrpc service: " + methodName);
 
             if (method.getName().equals("getPort"))
             {
@@ -124,7 +124,7 @@ public class ServiceProxy implements InvocationHandler
          }
          if (serviceInterfaceMethods.contains(method))
          {
-            log.debug("Invoke on service interface: " + methodName);
+            if(log.isDebugEnabled()) log.debug("Invoke on service interface: " + methodName);
 
             Class seiClass = method.getReturnType();
             retObj = getPortMethod.invoke(jaxrpcService, new Object[]{seiClass});
@@ -132,7 +132,7 @@ public class ServiceProxy implements InvocationHandler
          }
          if (objectMethods.contains(method))
          {
-            log.debug("Invoke on object: " + methodName);
+            if(log.isDebugEnabled()) log.debug("Invoke on object: " + methodName);
 
             retObj = method.invoke(jaxrpcService, args);
             return retObj;

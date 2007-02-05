@@ -74,14 +74,14 @@ public class HandlerResolverImpl implements HandlerResolver
    
    public List<Handler> getHandlerChain(PortInfo info, HandlerType type)
    {
-      log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
+      if(log.isDebugEnabled()) log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
 
       List<Handler> unsortedChain = new ArrayList<Handler>();
 
       String bindingID = info.getBindingID();
       QName serviceName = info.getServiceName();
       QName portName = info.getPortName();
-      
+
       Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
 
       if (bindingID != null)
@@ -89,7 +89,7 @@ public class HandlerResolverImpl implements HandlerResolver
          List<Handler> list = handlerMap.get(new PortInfoImpl(null, null, bindingID));
          if (list != null)
          {
-            log.debug("add protocol handlers: " + list);
+            if(log.isDebugEnabled()) log.debug("add protocol handlers: " + list);
             unsortedChain.addAll(list);
          }
       }
@@ -99,7 +99,7 @@ public class HandlerResolverImpl implements HandlerResolver
          List<Handler> list = handlerMap.get(new PortInfoImpl(serviceName, null, null));
          if (list != null)
          {
-            log.debug("add service handlers: " + list);
+            if(log.isDebugEnabled()) log.debug("add service handlers: " + list);
             unsortedChain.addAll(list);
          }
       }
@@ -109,7 +109,7 @@ public class HandlerResolverImpl implements HandlerResolver
          List<Handler> list = handlerMap.get(new PortInfoImpl(null, portName, null));
          if (list != null)
          {
-            log.debug("add port handlers: " + list);
+            if(log.isDebugEnabled()) log.debug("add port handlers: " + list);
             unsortedChain.addAll(list);
          }
       }
@@ -117,7 +117,7 @@ public class HandlerResolverImpl implements HandlerResolver
       List<Handler> list = handlerMap.get(new PortInfoImpl(null, null, null));
       if (list != null)
       {
-         log.debug("add general handlers: " + list);
+         if(log.isDebugEnabled()) log.debug("add general handlers: " + list);
          unsortedChain.addAll(list);
       }
 
@@ -139,10 +139,10 @@ public class HandlerResolverImpl implements HandlerResolver
 
    public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)
    {
-      log.debug("initHandlerChain: " + type);
+      if(log.isDebugEnabled()) log.debug("initHandlerChain: " + type);
 
       // clear all exisisting handler to avoid double registration
-      log.debug("Clear handler map: " + jaxwsHandlers);
+      if(log.isDebugEnabled()) log.debug("Clear handler map: " + jaxwsHandlers);
       Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
       handlerMap.clear();
 
@@ -286,7 +286,7 @@ public class HandlerResolverImpl implements HandlerResolver
 
    private boolean addHandler(PortInfo info, Handler handler, HandlerType type)
    {
-      log.debug("addHandler: " + info + ":" + handler);
+      if(log.isDebugEnabled()) log.debug("addHandler: " + info + ":" + handler);
 
       Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
       List<Handler> handlerList = handlerMap.get(info);

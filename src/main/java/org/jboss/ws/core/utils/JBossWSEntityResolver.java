@@ -59,14 +59,14 @@ public class JBossWSEntityResolver extends JBossEntityResolver
 
    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
    {
-      log.debug("resolveEntity: [pub=" + publicId + ",sysid=" + systemId + "]");
+      if(log.isDebugEnabled()) log.debug("resolveEntity: [pub=" + publicId + ",sysid=" + systemId + "]");
       InputSource inputSource = super.resolveEntity(publicId, systemId);
 
       if (inputSource == null)
          inputSource = resolveSystemIDAsURL(systemId, log.isTraceEnabled());
-      
+
       if (inputSource == null)
-         log.debug("Cannot resolve entity: [pub=" + publicId + ",sysid=" + systemId + "]");
+         if(log.isDebugEnabled()) log.debug("Cannot resolve entity: [pub=" + publicId + ",sysid=" + systemId + "]");
       
       return inputSource;
    }

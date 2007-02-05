@@ -101,7 +101,7 @@ public class WSDLDefinitionsFactory
       if (wsdlLocation == null)
          throw new IllegalArgumentException("URL cannot be null");
 
-      log.debug("parse: " + wsdlLocation.toExternalForm());
+      if(log.isDebugEnabled()) log.debug("parse: " + wsdlLocation.toExternalForm());
       
       EntityResolver entityResolver = new JBossWSEntityResolver();
       WSDLDefinitions wsdlDefinitions = null;

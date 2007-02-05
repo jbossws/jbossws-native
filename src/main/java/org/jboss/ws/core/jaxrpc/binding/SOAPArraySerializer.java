@@ -59,7 +59,7 @@ public class SOAPArraySerializer extends SerializerSupport
     */
    public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + ",valueType=" + value.getClass().getName() + "]");
+      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + ",valueType=" + value.getClass().getName() + "]");
       try
       {
          ParameterMetaData paramMetaData = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
@@ -86,7 +86,7 @@ public class SOAPArraySerializer extends SerializerSupport
             throw new WSException("Cannot obtain component xmlType for: " + compJavaType);
 
          // Get the component type serializer factory
-         log.debug("Get component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
+         if(log.isDebugEnabled()) log.debug("Get component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
          SerializerFactoryBase compSerializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(compJavaType, compXmlType);
          if (compSerializerFactory == null)
          {
@@ -130,7 +130,7 @@ public class SOAPArraySerializer extends SerializerSupport
          }
          xmlFragment.append("</" + Constants.PREFIX_SOAP11_ENC + ":Array>");
 
-         log.debug("serialized: " + xmlFragment);
+         if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
          return xmlFragment.toString();
       }
       catch (RuntimeException e)

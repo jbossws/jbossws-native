@@ -70,7 +70,7 @@ public class JBossXBDeserializer extends ComplexTypeDeserializer
     */
    public Object deserialize(QName xmlName, QName xmlType, String val, SerializationContext serContext) throws BindingException
    {
-      log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       // Expect the specific JAXRPC serialization context
       SerializationContextJAXRPC jaxrpcContext = (SerializationContextJAXRPC)serContext;
@@ -103,7 +103,7 @@ public class JBossXBDeserializer extends ComplexTypeDeserializer
          throw new BindingException(ex);
       }
 
-      log.debug("deserialized: " + (value != null ? value.getClass().getName() : null));
+      if(log.isDebugEnabled()) log.debug("deserialized: " + (value != null ? value.getClass().getName() : null));
       return value;
 
    }

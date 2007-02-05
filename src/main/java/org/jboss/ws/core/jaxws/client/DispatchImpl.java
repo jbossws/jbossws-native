@@ -298,7 +298,7 @@ public class DispatchImpl<T> implements Dispatch<T>
             SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
             SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
 
-            log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
+            if(log.isDebugEnabled()) log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             retObj = unmarshaller.unmarshal(soapElement);
          }

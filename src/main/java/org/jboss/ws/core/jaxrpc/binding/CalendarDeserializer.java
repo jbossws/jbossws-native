@@ -42,7 +42,7 @@ public class CalendarDeserializer extends DeserializerSupport
 
    public Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
    {
-      log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       Calendar value = null;
 

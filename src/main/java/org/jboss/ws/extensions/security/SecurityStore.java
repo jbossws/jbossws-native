@@ -134,19 +134,19 @@ public class SecurityStore
       KeyStore keyStore = null; 
       try
       {
-         log.debug("loadStore: " + storeURL);
+         if(log.isDebugEnabled()) log.debug("loadStore: " + storeURL);
          InputStream stream = storeURL.openStream();
          if (stream == null)
             throw new WSSecurityException("Cannot load store from: " + storeURL);
-         
+
          keyStore = KeyStore.getInstance(storeType);
          if (keyStore == null)
             throw new WSSecurityException("Cannot get keystore for type: " + storeType);
-         
+
          String decryptedPassword = decryptPassword(storePassword);
          if (decryptedPassword == null)
             throw new WSSecurityException("Cannot decrypt store password");
-         
+
          keyStore.load(stream, decryptedPassword.toCharArray());
       }
       catch (RuntimeException rte)
@@ -161,7 +161,7 @@ public class SecurityStore
       {
          throw new WSSecurityException("Problems loading " + type + ": " + ex.getMessage(), ex);
       }
-      
+
       return keyStore;
    }
 
@@ -172,10 +172,10 @@ public class SecurityStore
    private String decryptPassword(String password) throws WSSecurityException
    {
       log.trace("decrypt password: " + password);
-      
+
       if (password == null)
          throw new WSSecurityException("Invalid null password for security store");
-      
+
       if (password.charAt(0) == '{')
       {
          StringTokenizer tokenizer = new StringTokenizer(password, "{}");
@@ -196,14 +196,14 @@ public class SecurityStore
       }
       if (password == null)
          throw new WSSecurityException("Cannot decrypt password, result is null");
-      
+
       log.trace("decrypted password: " + password);
       return password;
    }
 
    private String execPasswordCmd(String keyStorePasswordCmd) throws WSSecurityException
    {
-      log.debug("Executing command: " + keyStorePasswordCmd);
+      if(log.isDebugEnabled()) log.debug("Executing command: " + keyStorePasswordCmd);
       try
       {
          Runtime rt = Runtime.getRuntime();
@@ -213,7 +213,7 @@ public class SecurityStore
          String password = reader.readLine();
          stdin.close();
          int exitCode = p.waitFor();
-         log.debug("Command exited with: " + exitCode);
+         if(log.isDebugEnabled()) log.debug("Command exited with: " + exitCode);
          return password;
       }
       catch (Exception e)
@@ -233,7 +233,7 @@ public class SecurityStore
          classname = keyStorePasswordCmd.substring(0, colon);
          ctorArg = keyStorePasswordCmd.substring(colon + 1);
       }
-      log.debug("Loading class: " + classname + ", ctorArg=" + ctorArg);
+      if(log.isDebugEnabled()) log.debug("Loading class: " + classname + ", ctorArg=" + ctorArg);
       try
       {
          ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -252,16 +252,16 @@ public class SecurityStore
          }
          try
          {
-            log.debug("Checking for toCharArray");
+            if(log.isDebugEnabled()) log.debug("Checking for toCharArray");
             Class[] sig = {};
             Method toCharArray = c.getMethod("toCharArray", sig);
             Object[] args = {};
-            log.debug("Invoking toCharArray");
+            if(log.isDebugEnabled()) log.debug("Invoking toCharArray");
             password = new String((char[])toCharArray.invoke(instance, args));
          }
          catch (NoSuchMethodException e)
          {
-            log.debug("No toCharArray found, invoking toString");
+            if(log.isDebugEnabled()) log.debug("No toCharArray found, invoking toString");
             password = instance.toString();
          }
       }
@@ -428,7 +428,7 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         log.debug("Certificate is invalid", e);
+         if(log.isDebugEnabled()) log.debug("Certificate is invalid", e);
          throw new FailedAuthenticationException();
       }
 
@@ -477,7 +477,7 @@ public class SecurityStore
       }
       catch (CertPathValidatorException cpve)
       {
-         log.debug("Certificate is invalid:", cpve);
+         if(log.isDebugEnabled()) log.debug("Certificate is invalid:", cpve);
          throw new FailedAuthenticationException();
       }
       catch (InvalidAlgorithmParameterException e)

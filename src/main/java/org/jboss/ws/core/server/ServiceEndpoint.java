@@ -119,7 +119,7 @@ public class ServiceEndpoint
    {
       seMetrics.stop();
       seInfo.setState(State.STOPED);
-      log.debug("Stop Endpoint" + seMetrics);
+      if(log.isDebugEnabled()) log.debug("Stop Endpoint" + seMetrics);
    }
 
    public void destroy()
@@ -136,15 +136,15 @@ public class ServiceEndpoint
 
       //String wsdlHost = reqURL.getHost();
       String wsdlHost = reqURL.getProtocol() + "://" + reqURL.getHost() + ":" + reqURL.getPort();
-      
+
       ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
       ServiceEndpointManager epManager = factory.getServiceEndpointManager();
       if (epManager.getWebServiceHost().equals(ServiceEndpointManager.UNDEFINED_HOSTNAME) == false)
       {
          wsdlHost = epManager.getWebServiceHost();
       }
-      log.debug("WSDL request, using host: " + wsdlHost);
-      
+      if(log.isDebugEnabled()) log.debug("WSDL request, using host: " + wsdlHost);
+
       WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
 
@@ -174,7 +174,7 @@ public class ServiceEndpoint
             throw new SOAPFaultException(faultCode, faultString, null, null);
          }
 
-         log.debug("BEGIN handleRequest: " + seInfo.getServiceEndpointID());
+         if(log.isDebugEnabled()) log.debug("BEGIN handleRequest: " + seInfo.getServiceEndpointID());
          beginProcessing = seMetrics.processRequestMessage();
 
          MessageFactoryImpl msgFactory = new MessageFactoryImpl();
@@ -202,7 +202,7 @@ public class ServiceEndpoint
          // Invoke the service endpoint
          ServiceEndpointInvoker seInvoker = seInfo.getInvoker();
          SOAPMessage resMessage = seInvoker.invoke(seInfo, context);
-         
+
          if (resMessage != null)
             postProcessResponse(headerSource, resMessage);
 
@@ -223,7 +223,7 @@ public class ServiceEndpoint
 
          if (resMessage != null)
             postProcessResponse(headerSource, resMessage);
-         
+
          return resMessage;
       }
       finally
@@ -250,7 +250,7 @@ public class ServiceEndpoint
 
          // Reset the thread context class loader
          Thread.currentThread().setContextClassLoader(ctxClassLoader);
-         log.debug("END handleRequest: " + seInfo.getServiceEndpointID());
+         if(log.isDebugEnabled()) log.debug("END handleRequest: " + seInfo.getServiceEndpointID());
       }
    }
 

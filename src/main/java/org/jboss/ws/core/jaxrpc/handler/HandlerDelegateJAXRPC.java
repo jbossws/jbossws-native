@@ -171,7 +171,7 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
          hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
          HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
 
-         log.debug("Adding server side handler to service '" + sepMetaData.getPortName() + "': " + info);
+         if(log.isDebugEnabled()) log.debug("Adding server side handler to service '" + sepMetaData.getPortName() + "': " + info);
          hInfos.add(info);
       }
 
@@ -180,7 +180,7 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
 
    private void initHandlerChain(ServiceEndpointInfo seInfo, List<HandlerInfo> hInfos, Set<String> handlerRoles, HandlerType type)
    {
-      log.debug("Init handler chain with [" + hInfos.size() + "] handlers");
+      if(log.isDebugEnabled()) log.debug("Init handler chain with [" + hInfos.size() + "] handlers");
 
       ServerHandlerChain handlerChain = new ServerHandlerChain(hInfos, handlerRoles, type);
       if (type == HandlerType.PRE)

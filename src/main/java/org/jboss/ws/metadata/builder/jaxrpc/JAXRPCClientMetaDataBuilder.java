@@ -100,7 +100,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
    public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, JavaWsdlMapping javaWsdlMapping, WSSecurityConfiguration securityConfig,
          UnifiedServiceRefMetaData usrMetaData, ClassLoader loader)
    {
-      log.debug("START buildMetaData: [service=" + serviceQName + "]");
+      if(log.isDebugEnabled()) log.debug("START buildMetaData: [service=" + serviceQName + "]");
       try
       {
          ResourceLoaderAdapter vfsRoot = new ResourceLoaderAdapter(loader);
@@ -136,7 +136,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          // eagerly initialize
          wsMetaData.eagerInitialize();
 
-         log.debug("END buildMetaData: " + wsMetaData);
+         if(log.isDebugEnabled()) log.debug("END buildMetaData: " + wsMetaData);
          return serviceMetaData;
       }
       catch (RuntimeException rte)

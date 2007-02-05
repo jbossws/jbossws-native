@@ -134,13 +134,13 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
    {
       if (host == null || host.trim().length() == 0)
       {
-         log.debug("Using undefined host: " + UNDEFINED_HOSTNAME);
+         if(log.isDebugEnabled()) log.debug("Using undefined host: " + UNDEFINED_HOSTNAME);
          host = UNDEFINED_HOSTNAME;
       }
       if ("0.0.0.0".equals(host))
       {
          InetAddress localHost = InetAddress.getLocalHost();
-         log.debug("Using local host: " + localHost.getHostName());
+         if(log.isDebugEnabled()) log.debug("Using local host: " + localHost.getHostName());
          host = localHost.getHostName();
       }
       this.webServiceHost = host;
@@ -205,7 +205,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
    {
       return UnifiedMetaData.getImplementationVersion();
    }
-   
+
    public List<ObjectName> getServiceEndpoints()
    {
       ArrayList<ObjectName> list = new ArrayList<ObjectName>();
@@ -416,23 +416,23 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          msgContext.setProperty(MessageContextJAXWS.SERVLET_CONTEXT, servletContext);
          msgContext.setProperty(MessageContextJAXWS.SERVLET_REQUEST, httpRequest);
          msgContext.setProperty(MessageContextJAXWS.SERVLET_RESPONSE, httpResponse);
-         
+
       }
       msgContext.setEndpointMetaData(sepMetaData);
-      
+
       MessageContextAssociation.pushMessageContext(msgContext);
       try
       {
          SOAPMessage resMessage = wsEndpoint.handleRequest(headerSource, context, inStream);
-         
+
          Map<String, List<String>> headers = (Map<String, List<String>>)msgContext.getProperty(MessageContextJAXWS.HTTP_RESPONSE_HEADERS);
          if (headers != null)
             headerSource.setHeaderMap(headers);
-         
+
          Integer code = (Integer)msgContext.getProperty(MessageContextJAXWS.HTTP_RESPONSE_CODE);
          if (code != null)
             httpResponse.setStatus(code.intValue());
-            
+
          SOAPPart part = resMessage.getSOAPPart();
          if (part == null)
             throw new SOAPException("Cannot obtain SOAPPart from response message");
@@ -480,7 +480,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       }
       if (wsaTo != null)
       {
-         log.debug("Sending response to addressing destination: " + wsaTo);
+         if(log.isDebugEnabled()) log.debug("Sending response to addressing destination: " + wsaTo);
          new SOAPConnectionImpl().callOneWay(soapMessage, wsaTo);
       }
       else
@@ -493,7 +493,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
     */
    public String processSOAPRequest(ObjectName sepID, String inMessage) throws Exception
    {
-      log.debug("processSOAPRequest: " + sepID);
+      if(log.isDebugEnabled()) log.debug("processSOAPRequest: " + sepID);
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(inMessage.getBytes("UTF-8"));
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
@@ -603,7 +603,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       // Register the endpoint with the MBeanServer
       registry.put(sepID, wsEndpoint);
 
-      log.debug("WebService created: " + sepID);
+      if(log.isDebugEnabled()) log.debug("WebService created: " + sepID);
    }
 
    /** Start a service endpoint
@@ -654,7 +654,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       registry.remove(sepID);
 
       ServiceEndpointInfo seInfo = wsEndpoint.getServiceEndpointInfo();
-      log.debug("WebService destroyed: " + seInfo.getServerEndpointMetaData().getEndpointAddress());
+      if(log.isDebugEnabled()) log.debug("WebService destroyed: " + seInfo.getServerEndpointMetaData().getEndpointAddress());
    }
 
    public void create() throws Exception
@@ -669,7 +669,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public void destroy() throws Exception
    {
-      log.debug("Destroy service endpoint manager");
+      if(log.isDebugEnabled()) log.debug("Destroy service endpoint manager");
       MBeanServer server = getJMXServer();
       if (server != null)
       {

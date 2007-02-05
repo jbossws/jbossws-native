@@ -94,7 +94,7 @@ public class ParameterWrapping
       }
       catch (Exception ex)
       {
-         log.debug("Invalid request wrapper: " + ex);
+         if(log.isDebugEnabled()) log.debug("Invalid request wrapper: " + ex);
          return null;
       }
    }
@@ -104,7 +104,7 @@ public class ParameterWrapping
       assertOperationMetaData(request.getOperationMetaData());
 
       Class reqStructType = request.getJavaType();
-      log.debug("wrapRequestParameters: " + reqStructType.getName());
+      if(log.isDebugEnabled()) log.debug("wrapRequestParameters: " + reqStructType.getName());
       List<WrappedParameter> wrappedParameters = request.getWrappedParameters();
       try
       {
@@ -140,7 +140,7 @@ public class ParameterWrapping
       List<WrappedParameter> wrappedParameters = request.getWrappedParameters();
       Class reqStructType = reqStruct.getClass();
 
-      log.debug("unwrapRequestParameters: " + reqStructType.getName());
+      if(log.isDebugEnabled()) log.debug("unwrapRequestParameters: " + reqStructType.getName());
       try
       {
          for (WrappedParameter param : wrappedParameters)
@@ -177,11 +177,11 @@ public class ParameterWrapping
       Class resStructType = returnMetaData.getJavaType();
       if (returnValue != null && returnValue.getClass() == resStructType)
       {
-         log.debug("Response parameter already wrapped" + resStructType.getName());
+         if(log.isDebugEnabled()) log.debug("Response parameter already wrapped" + resStructType.getName());
          return returnValue;
       }
 
-      log.debug("wrapResponseParameter: " + resStructType.getName());
+      if(log.isDebugEnabled()) log.debug("wrapResponseParameter: " + resStructType.getName());
       List<WrappedParameter> wrappedParameters = returnMetaData.getWrappedParameters();
       try
       {
@@ -214,7 +214,7 @@ public class ParameterWrapping
       {
          Class resStructType = resStruct.getClass();
 
-         log.debug("unwrapResponseParameter: " + resStructType.getName());
+         if(log.isDebugEnabled()) log.debug("unwrapResponseParameter: " + resStructType.getName());
          List<WrappedParameter> wrappedParameters = retMetaData.getWrappedParameters();
          Class[] targetTypes = operationMetaData.getJavaMethod().getParameterTypes();
          try
@@ -285,7 +285,7 @@ public class ParameterWrapping
       String packageName = endpointMetaData.getServiceEndpointInterface().getPackage().getName();
 
       String wrapperName = packageName + "._JBossWS_" + serviceName + "_" + endpointName + "_" + parameterName;
-      log.debug("Generating wrapper: " + wrapperName);
+      if(log.isDebugEnabled()) log.debug("Generating wrapper: " + wrapperName);
 
       Class wrapperType;
       try

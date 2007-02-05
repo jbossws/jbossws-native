@@ -143,7 +143,7 @@ public class WSSecurityDispatcher
          SecurityDecoder decoder = new SecurityDecoder(securityStore);
 
          decoder.decode(soapMessage.getSOAPPart(), secHeaderElement);
-         log.debug("Decoded Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
+         if(log.isDebugEnabled()) log.debug("Decoded Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
 
          OperationMetaData opMetaData = ctx.getOperationMetaData();
          if (opMetaData == null)
@@ -160,7 +160,7 @@ public class WSSecurityDispatcher
          List<OperationDescription<RequireOperation>> operations = buildRequireOperations(config, operation, port);
 
          decoder.verify(operations);
-         log.debug("Verification is successful");
+         if(log.isDebugEnabled()) log.debug("Verification is successful");
 
          decoder.complete();
       }
@@ -168,7 +168,7 @@ public class WSSecurityDispatcher
       {
          if (e.isInternalError())
             log.error("Internal error occured handling inbound message:", e);
-         else log.debug("Returning error to sender: " + e.getMessage());
+         else if(log.isDebugEnabled()) log.debug("Returning error to sender: " + e.getMessage());
 
          throw convertToFault(e);
       }
@@ -232,7 +232,7 @@ public class WSSecurityDispatcher
 
       Config operationConfig = getConfig(config, port, operation);
 
-      log.debug("WS-Security config:" + operationConfig);
+      if(log.isDebugEnabled()) log.debug("WS-Security config:" + operationConfig);
       // Nothing to process
       if (operationConfig == null)
          return;
@@ -282,7 +282,7 @@ public class WSSecurityDispatcher
       if (operations.size() == 0)
          return;
 
-      log.debug("Encoding Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
+      if(log.isDebugEnabled()) log.debug("Encoding Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
 
       try
       {
@@ -295,7 +295,7 @@ public class WSSecurityDispatcher
       {
          if (e.isInternalError())
             log.error("Internal error occured handling outbound message:", e);
-         else log.debug("Returning error to sender: " + e.getMessage());
+         else if(log.isDebugEnabled()) log.debug("Returning error to sender: " + e.getMessage());
 
          throw convertToFault(e);
       }
