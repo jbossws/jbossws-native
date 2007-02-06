@@ -147,7 +147,8 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 
          for (String property : propertyOrder)
             addProperty(clazz, properties.get(property).getName(), new QName(property), property, null);
-
+         
+         clazz.stopPruning(!prune);
          pool.toClass(clazz, loader);
          JavaUtils.clearBlacklists(loader);
       }
