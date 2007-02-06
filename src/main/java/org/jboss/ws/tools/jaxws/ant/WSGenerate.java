@@ -89,6 +89,13 @@ public class WSGenerate extends Task
    private boolean genwsdl = false;
    private boolean verbose = false;
    private boolean fork = false;
+   private boolean debug = false;
+   
+   // Not actually used right now
+   public void setDebug(boolean debug)
+   {
+      this.debug = debug;
+   }
    
    public void setClasspath(Path classpath)
    {
