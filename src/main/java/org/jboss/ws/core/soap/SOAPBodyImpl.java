@@ -39,6 +39,7 @@ import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
+import javax.xml.soap.Text;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -232,20 +233,17 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("appendChild: " + newChild.getNodeName());
       expandToDOM();
-      Node retNode;
-      if (!(newChild instanceof SOAPBodyElement || newChild instanceof DocumentFragment))
-      {
+      if (needsConversionToBodyElement(newChild))
          newChild = convertToBodyElement(newChild);
-      }
-      retNode = super.appendChild(newChild);
-      return retNode;
+
+      return super.appendChild(newChild);
    }
 
    public Node insertBefore(Node newChild, Node refChild) throws DOMException
    {
       log.trace("insertBefore: " + newChild.getNodeName());
       expandToDOM();
-      if (!(newChild instanceof SOAPBodyElement || newChild instanceof DocumentFragment))
+      if (needsConversionToBodyElement(newChild))
          newChild = convertToBodyElement(newChild);
 
       return super.insertBefore(newChild, refChild);
@@ -255,10 +253,8 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("replaceChild: " + newChild.getNodeName());
       expandToDOM();
-      if (!(newChild instanceof SOAPBodyElement || newChild instanceof DocumentFragment))
-      {
+      if (needsConversionToBodyElement(newChild))
          newChild = convertToBodyElement(newChild);
-      }
 
       return super.replaceChild(newChild, oldChild);
    }
@@ -304,8 +300,16 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       expandToDOM();
       return super.hasChildNodes();
    }
+   
+   private static boolean needsConversionToBodyElement(Node node) 
+   {
+      // JBCTS-440 #addTextNodeTest1 appends a Text node to a SOAPBody
+      return !(node instanceof SOAPBodyElement 
+            || node instanceof DocumentFragment
+            || node instanceof Text);
+   }
 
-   private SOAPBodyElementDoc convertToBodyElement(Node node)
+   private static SOAPBodyElementDoc convertToBodyElement(Node node)
    {
       if (!(node instanceof SOAPElementImpl))
          throw new IllegalArgumentException("SOAPElement expected");

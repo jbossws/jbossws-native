@@ -30,8 +30,10 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.soap.Text;
 
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.Constants;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -49,8 +51,16 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    {
       super("Header", prefix, namespace);
    }
+   
+   private static boolean needsConversionToHeaderElement(Node newChild) 
+   {
+      // JBCTS-440 #addTextNodeTest2 appends a Text node to a SOAPHeader
+      return !(newChild instanceof SOAPHeaderElementImpl 
+            || newChild instanceof DocumentFragment
+            || newChild instanceof Text);
+   }
 
-   private SOAPHeaderElementImpl convertToHeaderElement(Node node)
+   private static SOAPHeaderElementImpl convertToHeaderElement(Node node)
    {
       if (!(node instanceof SOAPElementImpl))
          throw new IllegalArgumentException("SOAPElement expected");
@@ -61,8 +71,8 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
       element.detachNode();
       return new SOAPHeaderElementImpl(element);
    }
-
-   /*** Add a SOAPHeaderElement as a child of this SOAPHeader instance.
+   
+   /** Add a SOAPHeaderElement as a child of this SOAPHeader instance.
     */
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
@@ -71,6 +81,18 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
          child = convertToHeaderElement(child);
 
       return super.addChildElement(child);
+   }
+
+   /** Attaching a Text node is not legal.
+    */
+   @Override
+   public SOAPElement addTextNode(String value) throws SOAPException
+   {
+      // JBCTS-440 #addTextNodeTest2 adds a text node to a SOAPHeader and expects a SOAPException
+      if (Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
+         throw new SOAPException("Attaching a Text node to this SOAP 1.2 Element is not legal: " + getLocalName());
+      
+      return super.addTextNode(value);
    }
 
    /** Creates a new SOAPHeaderElement object initialized with the specified name and adds it to this SOAPHeader object.
@@ -89,7 +111,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    {
       return addHeaderElement(new NameImpl(qname));
    }
-
+   
    /** Returns an Iterator over all the SOAPHeaderElement objects in this SOAPHeader object.
     */
    public Iterator examineAllHeaderElements()
@@ -180,7 +202,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
 
    public Node appendChild(Node newChild) throws DOMException
    {
-      if (!(newChild instanceof SOAPHeaderElementImpl || newChild instanceof DocumentFragment))
+      if (needsConversionToHeaderElement(newChild))
          newChild = convertToHeaderElement(newChild);
 
       return super.appendChild(newChild);
@@ -188,7 +210,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
 
    public Node insertBefore(Node newChild, Node refChild) throws DOMException
    {
-      if (!(newChild instanceof SOAPHeaderElementImpl || newChild instanceof DocumentFragment))
+      if (needsConversionToHeaderElement(newChild))
          newChild = convertToHeaderElement(newChild);
 
       return super.insertBefore(newChild, refChild);
@@ -196,7 +218,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
 
    public Node replaceChild(Node newChild, Node oldChild) throws DOMException
    {
-      if (!(newChild instanceof SOAPHeaderElementImpl || newChild instanceof DocumentFragment))
+      if (needsConversionToHeaderElement(newChild))
          newChild = convertToHeaderElement(newChild);
 
       return super.replaceChild(newChild, oldChild);

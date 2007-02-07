@@ -68,13 +68,15 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    private Element element;
    // The element name
    private Name elementName;
-   // The element's encoding style
-   private String encodingStyle = Constants.URI_LITERAL_ENC;
+   /* The element's encoding style
+    * JBCTS-440 #getEncodingStyleTest1 expects the initial value of the 
+    * encodingStyle property to be null
+    */
+   private String encodingStyle = null;
 
    /** Called by SOAPFactory */
    public SOAPElementImpl(String localPart)
    {
-
       super(DOMUtils.createElement(localPart, null, null));
       this.element = (Element)domNode;
       log.trace("new SOAPElementImpl: " + getElementName());
@@ -123,33 +125,59 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public QName getElementQName()
    {
-      String nsURI = getNamespaceURI();
-      String localPart = getLocalName();
-      String prefix = getPrefix();
-
-      QName qname;
-      if (nsURI != null && prefix != null)
-      {
-         qname = new QName(nsURI, localPart, prefix);
-      }
-      else if (nsURI != null)
-      {
-         qname = new QName(nsURI, localPart);
-      }
-      else
-      {
-         qname = new QName(localPart);
-      }
-
-      return qname;
+      return ((NameImpl)getElementName()).toQName();
    }
 
+   /**
+    * Changes the name of this Element to newName if possible. SOAP Defined elements such as SOAPEnvelope, SOAPHeader, SOAPBody etc. cannot 
+    * have their names changed using this method. Any attempt to do so will result in a SOAPException being thrown.
+    * 
+    * Callers should not rely on the element instance being renamed as is. 
+    * Implementations could end up copying the content of the SOAPElement to a renamed instance. 
+    * @param qname the new name for the Element.
+    * @return The renamed Node
+    * @throws SOAPException if changing the name of this Element is not allowed.
+    */
    public SOAPElement setElementQName(QName qname) throws SOAPException
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) || Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
+         throw new SOAPException("Changing the name of this SOAP Element is not allowed: " + getLocalName());
+
+      // Since DOM Elements do not support renaming, we must copy the content
+      Element copy = DOMUtils.createElement(qname.getLocalPart(), qname.getPrefix(), qname.getNamespaceURI());
+
+      // copy attributes (and namespaces by the way)
+      NamedNodeMap attributes = element.getAttributes();
+      for (int i = 0; i < attributes.getLength(); i++)
+      {
+         org.w3c.dom.Node attribute = attributes.item(i);
+
+         // DOM disallows moving an attribute, it must explicitly be cloned
+         copy.setAttributeNode((Attr)attribute.cloneNode(true));
+      }
+
+      // move child nodes
+      for (org.w3c.dom.Node child = element.getFirstChild(), next; child != null; child = next)
+      {
+         next = child.getNextSibling();
+
+         // DOM removes a node from the tree before adding it to a different element
+         copy.appendChild(child);
+      }
+
+      // replace element with copy
+      org.w3c.dom.Node parent = element.getParentNode();
+      if (parent != null)
+         parent.replaceChild(copy, element);
+
+      // update fields
+      domNode = copy;
+      element = copy;
+      elementName = null; // getElementName() regenerates this field
+
+      return this;
    }
-   
+
    /**
     * Adds an attribute with the specified name and value to this SOAPElement object.
     *
@@ -316,6 +344,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     * @param value a String object with the textual content to be added
     * @return the SOAPElement object into which the new Text object was inserted
     * @throws javax.xml.soap.SOAPException if there is an error in creating the new Text object
+    *  or if it is not legal to attach it as a child to this SOAPElement
     */
    public SOAPElement addTextNode(String value) throws SOAPException
    {
@@ -656,17 +685,22 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     * Sets the encoding style for this SOAPElement object to one specified.
     *
     * @param encodingStyle a String giving the encoding style
-    * @throws javax.xml.soap.SOAPException if there was a problem in the encoding style being set.
+    * @throws IllegalArgumentException if there was a problem in the encoding style being set.
+    * @throws javax.xml.soap.SOAPException if setting the encodingStyle is invalid for this SOAPElement.
     */
    public void setEncodingStyle(String encodingStyle) throws SOAPException
    {
-      if (!Constants.URI_LITERAL_ENC.equals(encodingStyle) && !Constants.URI_SOAP11_ENC.equals(encodingStyle))
+      if (Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
+         throw new SOAPException("Setting the encodingStyle is invalid for this SOAP 1.2 Element: " + getLocalName());
+
+      /* JBCTS-440 #getEncodingStyleTest1 expects the initial value of the 
+       * encodingStyle property to be null, hence null is a legal argument
+       */
+      if (!Constants.URI_LITERAL_ENC.equals(encodingStyle) && !Constants.URI_SOAP11_ENC.equals(encodingStyle) && encodingStyle != null)
          throw new IllegalArgumentException("Unsupported encodingStyle: " + encodingStyle);
 
       this.encodingStyle = encodingStyle;
    }
-
-   // org.w3c.Element ***********************************************************************************************
 
    public String getTagName()
    {
@@ -776,9 +810,11 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       throw new NotImplementedException("setIdAttributeNS");
    }
 
-   public void accept(SAAJVisitor visitor) {
-      visitor.visitSOAPElement(this);  
+   public void accept(SAAJVisitor visitor)
+   {
+      visitor.visitSOAPElement(this);
    }
+
    /**
     * The default implementation uses a DOMWriter.
     * SOAPContentElements overwrite this to optimize DOM callbacks.
