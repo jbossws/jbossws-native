@@ -24,6 +24,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 // $Id$
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -53,13 +55,13 @@ public class NullValueSerializer extends SerializerSupport
     *  it is possible that the element definition does not allow
     *  null values. In that case an error should be generated.
     */
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       nsRegistry.registerURI(Constants.NS_SCHEMA_XSI, Constants.PREFIX_XSI);
       String xmlFragment = wrapValueStr(xmlName, null, nsRegistry, null, attributes, true);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
 }

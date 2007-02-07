@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -57,9 +59,13 @@ public class SOAPArrayDeserializer extends DeserializerSupport
    {
    }
 
+   public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
+      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
+   }
+
    /**
     */
-   public Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
+   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       try
@@ -137,7 +143,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
          if (it.hasNext())
          {
             Element childElement = (Element)it.next();
-            String compXMLFragment = DOMWriter.printNode(childElement, false);
+            Source compXMLFragment = new DOMSource(childElement);
             compValue = compDeserializer.deserialize(compXmlName, compXmlType, compXMLFragment, serContext);
             compValue = JavaUtils.getWrapperValueArray(compValue);
          }

@@ -25,6 +25,7 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.utils.DOMWriter;
@@ -47,7 +48,7 @@ public class SOAPElementSerializer extends SerializerSupport
     * @param serContext
     * @return the string representation od the value
     */
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       if (value == null)
@@ -56,6 +57,6 @@ public class SOAPElementSerializer extends SerializerSupport
          throw new IllegalArgumentException("Value is not a SOAPElement: " + value.getClass().getName());
 
       String xmlFragment = DOMWriter.printNode((SOAPElement)value, false);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
 }

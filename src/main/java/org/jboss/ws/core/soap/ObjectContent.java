@@ -1,0 +1,194 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.jboss.ws.core.soap;
+
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.core.jaxrpc.binding.*;
+import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.WSException;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.logging.Logger;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.namespace.QName;
+import java.lang.reflect.Method;
+
+/**
+ * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>
+ *
+ * @author Heiko.Braun@jboss.org
+ * @version $Id$
+ * @since 05.02.2007
+ */
+public class ObjectContent extends SOAPContent {
+
+   private static Logger log = Logger.getLogger(ObjectContent.class);
+
+   // The java object content of this element.
+   private Object objectValue;
+
+   protected ObjectContent(SOAPContentElement container) {
+      super(container);
+   }
+
+   State getState() {
+      return State.OBJECT_VALID;
+   }
+
+   SOAPContent transitionTo(State nextState) {
+
+      SOAPContent next = null;
+
+      if(State.XML_VALID == nextState)
+      {
+         XMLFragment fragment = marshallObjectContents();
+         XMLContent xmlValid = new XMLContent(container);
+         xmlValid.setXMLFragment(fragment);
+         next = xmlValid;
+      }
+      else if(State.OBJECT_VALID == nextState)
+      {
+         next = this;
+      }
+      else if(State.DOM_VALID == nextState)
+      {
+         // first transition to XML valid
+         XMLFragment fragment = marshallObjectContents();
+         XMLContent tmp = new XMLContent(container);
+         tmp.setXMLFragment(fragment);
+
+         // finally from XML valid to DOM valid
+         next = tmp.transitionTo(State.DOM_VALID);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Illegal state requested: " + nextState);
+      }
+
+      return next;
+   }
+
+   public Source getPayload() {
+      throw new IllegalStateException("Payload not available");
+   }
+
+   public void setPayload(Source source) {
+       throw new IllegalStateException("Payload not available");
+   }
+
+   public XMLFragment getXMLFragment() {
+
+      throw new IllegalStateException("XMLFragment not available");
+   }
+
+   public void setXMLFragment(XMLFragment xmlFragment) {
+      throw new IllegalStateException("XMLFragment not available");
+   }
+
+   public Object getObjectValue() {
+      return objectValue;
+   }
+
+   public void setObjectValue(Object objValue) {
+      this.objectValue = objValue;
+   }
+
+   private XMLFragment marshallObjectContents()
+   {
+      QName xmlType = container.getXmlType();
+      Class javaType = container.getJavaType();
+      QName xmlName = container.getElementQName();
+
+      log.debug("getXMLFragment from Object [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext == null)
+         throw new WSException("MessageContext not available");
+
+      SerializationContext serContext = msgContext.getSerializationContext();
+      serContext.setProperty(ParameterMetaData.class.getName(), container.getParamMetaData());
+
+      TypeMappingImpl typeMapping = serContext.getTypeMapping();
+      XMLFragment xmlFragment = null;
+      try
+      {
+         SerializerSupport ser;
+         if (objectValue != null)
+         {
+            SerializerFactoryBase serializerFactory = getSerializerFactory(typeMapping, javaType, xmlType);
+            ser = (SerializerSupport)serializerFactory.getSerializer();
+         }
+         else
+         {
+            ser = new NullValueSerializer();
+         }
+
+         Result result = ser.serialize(xmlName, xmlType, getObjectValue(), serContext, null);
+         xmlFragment = new XMLFragment(result);
+         log.debug("xmlFragment: " + xmlFragment);
+      }
+      catch (BindingException e)
+      {
+         throw new WSException(e);
+      }
+
+      return xmlFragment;
+   }
+
+   /**
+    * Get the serializer factory for a given javaType and xmlType
+    */
+   private SerializerFactoryBase getSerializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
+   {
+      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(javaType, xmlType);
+
+      // The type mapping might contain a mapping for the array wrapper bean
+      if (serializerFactory == null && javaType.isArray())
+      {
+         Class arrayWrapperType = typeMapping.getJavaType(xmlType);
+         if (arrayWrapperType != null)
+         {
+            try
+            {
+               Method toArrayMethod = arrayWrapperType.getMethod("toArray", new Class[] {});
+               Class returnType = toArrayMethod.getReturnType();
+               if (JavaUtils.isAssignableFrom(javaType, returnType))
+               {
+                  serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(arrayWrapperType, xmlType);
+               }
+            }
+            catch (NoSuchMethodException e)
+            {
+               // ignore
+            }
+         }
+      }
+
+      if (serializerFactory == null)
+         throw new WSException("Cannot obtain serializer factory for: [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+
+      return serializerFactory;
+   }
+
+}

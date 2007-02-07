@@ -85,7 +85,7 @@ public class EnvelopeBuilderPayload implements EnvelopeBuilder
          while (it.hasNext())
          {
             Element srcElement = (Element)it.next();
-            String xmlFragment = DOMWriter.printNode(srcElement, false);
+            XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
 
             Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
             SOAPContentElement destElement = new SOAPHeaderElementImpl(name);

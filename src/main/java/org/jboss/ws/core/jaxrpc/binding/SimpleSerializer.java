@@ -24,6 +24,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 // $Id$
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
@@ -48,7 +50,7 @@ public class SimpleSerializer extends SerializerSupport
     * @param serContext
     * @return the string representation od the value
     */
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
@@ -66,6 +68,6 @@ public class SimpleSerializer extends SerializerSupport
       }
 
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
 }

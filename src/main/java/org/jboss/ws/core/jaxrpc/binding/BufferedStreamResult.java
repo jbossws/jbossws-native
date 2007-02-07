@@ -19,52 +19,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.jaxrpc.binding;
 
-import javax.management.ObjectName;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 
 /**
  * @author Heiko.Braun@jboss.org
  * @version $Id$
- * @since 02.02.2007
+ * @since 06.02.2007
  */
-public class ServiceEndpointDTO {
+public class BufferedStreamResult extends StreamResult {
 
-   private ServiceEndpointMetrics seMetrics;
-   private ServiceEndpoint.State state;
-   private ObjectName sepID;
-   private String address;
+   ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
-   public ServiceEndpointMetrics getSeMetrics() {
-      return seMetrics;
+   public BufferedStreamResult()
+   {
+      super();
    }
 
-   public void setSeMetrics(ServiceEndpointMetrics seMetrics) {
-      this.seMetrics = seMetrics;
+   public void setOutputStream(OutputStream outputStream)
+   {
+      throw new IllegalArgumentException("Operation not supported");
    }
 
-   public ServiceEndpoint.State getState() {
-      return state;
+   public OutputStream getOutputStream()
+   {
+      return bout;
    }
 
-   public void setState(ServiceEndpoint.State state) {
-      this.state = state;
+   public void setWriter(Writer writer)
+   {
+      throw new IllegalArgumentException("Operation not supported");
    }
 
-   public ObjectName getSepID() {
-      return sepID;
+   public Writer getWriter()
+   {
+     return null;
    }
-
-   public void setSepID(ObjectName sepID) {
-      this.sepID = sepID;
-   }
-
-   public String getAddress() {
-      return address;
-   }
-
-   public void setAddress(String address) {
-      this.address = address;
-   }
-
 }

@@ -23,16 +23,20 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.rpc.encoding.Serializer;
-
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.encoding.Serializer;
+import javax.xml.transform.Result;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * The base class for all Serializers.
@@ -52,7 +56,20 @@ public abstract class SerializerSupport implements Serializer
     * @param attributes TODO
     * @param attributes The attributes on this element
     */
-   public abstract String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException;
+   public abstract Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException;
+
+   protected Result stringToResult(String xmlFragment) {
+      BufferedStreamResult result = null;
+      try {
+         ByteArrayInputStream in = new ByteArrayInputStream(xmlFragment.getBytes());
+         result = new BufferedStreamResult();
+         IOUtils.copyStream(result.getOutputStream(), in);
+      } catch (IOException e) {
+         WSException.rethrow(e);
+      }
+
+      return result;
+   }
 
    /** Wrap the value string in a XML fragment with the given name
     */

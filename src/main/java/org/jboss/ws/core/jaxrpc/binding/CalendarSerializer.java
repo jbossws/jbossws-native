@@ -26,6 +26,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 import java.util.Calendar;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -42,7 +44,7 @@ public class CalendarSerializer extends SerializerSupport
    // provide logging
    private static final Logger log = Logger.getLogger(CalendarSerializer.class);
 
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
@@ -50,6 +52,7 @@ public class CalendarSerializer extends SerializerSupport
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
+
 }

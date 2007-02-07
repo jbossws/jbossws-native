@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -46,7 +48,7 @@ public class DateSerializer extends SerializerSupport
    // provide logging
    private static final Logger log = Logger.getLogger(DateSerializer.class);
 
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       if (value != null)
@@ -60,6 +62,6 @@ public class DateSerializer extends SerializerSupport
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
 }

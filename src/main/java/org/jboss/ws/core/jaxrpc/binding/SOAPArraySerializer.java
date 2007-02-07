@@ -23,15 +23,17 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
-import javax.xml.namespace.QName;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.NamedNodeMap;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
 
 /**
  * A Serializer that can handle SOAP encoded arrays.
@@ -48,7 +50,7 @@ public class SOAPArraySerializer extends SerializerSupport
    private NullValueSerializer nullSerializer;
    private boolean isArrayComponentType;
    private boolean xsiNamespaceInserted;
-   private StringBuilder xmlFragment;
+   private StringBuilder buffer;
 
    public SOAPArraySerializer() throws BindingException
    {
@@ -57,7 +59,7 @@ public class SOAPArraySerializer extends SerializerSupport
 
    /**
     */
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + ",valueType=" + value.getClass().getName() + "]");
       try
@@ -103,7 +105,9 @@ public class SOAPArraySerializer extends SerializerSupport
          if (JavaUtils.isPrimitive(value.getClass()))
             value = JavaUtils.getWrapperValueArray(value);
 
-         xmlFragment = new StringBuilder("<" + Constants.PREFIX_SOAP11_ENC + ":Array ");
+         buffer = new StringBuilder("<" + Constants.PREFIX_SOAP11_ENC + ":Array "+
+            "xmlns:"+Constants.PREFIX_SOAP11_ENC+"='http://schemas.xmlsoap.org/soap/encoding/' ");
+
          if (value instanceof Object[])
          {
             Object[] objArr = (Object[])value;
@@ -120,7 +124,7 @@ public class SOAPArraySerializer extends SerializerSupport
             compXmlType = serContext.getNamespaceRegistry().registerQName(compXmlType);
             String arrayType = Constants.PREFIX_SOAP11_ENC + ":arrayType='" + compXmlType.getPrefix() + ":" + compXmlType.getLocalPart() + "[" + arrayDim + "]'";
             String compns = " xmlns:" + compXmlType.getPrefix() + "='" + compXmlType.getNamespaceURI() + "'";
-            xmlFragment.append(arrayType + compns + ">");
+            buffer.append(arrayType + compns + ">");
 
             serializeArrayComponents(compXmlName, compXmlType, serContext, objArr);
          }
@@ -128,10 +132,10 @@ public class SOAPArraySerializer extends SerializerSupport
          {
             throw new WSException("Unsupported array type: " + javaType);
          }
-         xmlFragment.append("</" + Constants.PREFIX_SOAP11_ENC + ":Array>");
+         buffer.append("</" + Constants.PREFIX_SOAP11_ENC + ":Array>");
 
-         if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
-         return xmlFragment.toString();
+         if(log.isDebugEnabled()) log.debug("serialized: " + buffer);
+         return stringToResult(buffer.toString());
       }
       catch (RuntimeException e)
       {
@@ -163,12 +167,13 @@ public class SOAPArraySerializer extends SerializerSupport
                {
                   xsiNamespaceInserted = true;
                   int insIndex = ("<" + Constants.PREFIX_SOAP11_ENC + ":Array ").length();
-                  xmlFragment.insert(insIndex, "xmlns:" + Constants.PREFIX_XSI + "='" + Constants.NS_SCHEMA_XSI + "' ");
+                  buffer.insert(insIndex, "xmlns:" + Constants.PREFIX_XSI + "='" + Constants.NS_SCHEMA_XSI + "' ");
                }
             }
 
-            String compFragment = ser.serialize(compXmlName, compXmlType, compValue, serContext, null);
-            xmlFragment.append(compFragment);
+            Result result = ser.serialize(compXmlName, compXmlType, compValue, serContext, null);
+            XMLFragment fragment = new XMLFragment(result);
+            buffer.append(fragment.toStringFragment());
          }
       }
    }

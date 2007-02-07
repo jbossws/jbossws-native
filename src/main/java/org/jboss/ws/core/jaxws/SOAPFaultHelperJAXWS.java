@@ -14,41 +14,30 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import java.io.IOException;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.rpc.encoding.TypeMapping;
-import javax.xml.soap.Detail;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
+import org.jboss.ws.core.jaxrpc.binding.*;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Element;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.encoding.TypeMapping;
+import javax.xml.soap.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Helper methods to translate between SOAPFault and SOAPFaultException
@@ -118,9 +107,9 @@ public class SOAPFaultHelperJAXWS
                   Class[] types = opMetaData.getEndpointMetaData().getRegisteredTypes().toArray(new Class[0]);
                   serContext.setProperty(SerializationContext.CONTEXT_TYPES, types);
 
-                  String xmlFragment = DOMWriter.printNode(deElement, false);
+                  Source source = new DOMSource(deElement);
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
-                  Object faultBean = des.deserialize(xmlName, xmlType, xmlFragment, serContext);
+                  Object faultBean = des.deserialize(xmlName, xmlType, source, serContext);
 
                   Exception serviceEx = faultMetaData.toServiceException(faultBean, soapFault.getFaultString());
                   faultEx.initCause(serviceEx);
@@ -315,10 +304,11 @@ public class SOAPFaultHelperJAXWS
       try
       {
          SerializerSupport ser = serFactory.getSerializer();
-         String xmlFragment = ser.serialize(xmlName, xmlType, faultObject, serContext, null);
+         Result result = ser.serialize(xmlName, xmlType, faultObject, serContext, null);
+         XMLFragment fragment = new XMLFragment(result);
 
          SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-         Element domElement = DOMUtils.parse(xmlFragment);
+         Element domElement = DOMUtils.parse(fragment.toStringFragment());
          return soapFactory.createElement(domElement);
       }
       catch (BindingException e)

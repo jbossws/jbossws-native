@@ -25,6 +25,7 @@ package org.jboss.ws.core.soap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
@@ -37,6 +38,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Element;
 
@@ -216,23 +218,28 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
       {
          SOAPHeader soapHeader = soapEnv.getHeader();
          SOAPContentElement lastHeaderElement = (SOAPContentElement)soapHeader.getChildNodes().item(soapHeader.getChildNodes().getLength() - 1);
-
-         lastHeaderElement.setXMLFragment(fragmentBuffer.toString());
+         lastHeaderElement.setXMLFragment(bufferToFragment(fragmentBuffer));
       }
       else if (Part.BODY == currentPart)
       {
          SOAPBody soapBody = soapEnv.getBody();
          SOAPContentElement lastBodyElement = (SOAPContentElement)soapBody.getChildNodes().item(soapBody.getChildNodes().getLength() - 1);
-         lastBodyElement.setXMLFragment(fragmentBuffer.toString());
+         lastBodyElement.setXMLFragment(bufferToFragment(fragmentBuffer));
       }
       else if (Part.FAULT == currentPart)
       {
          SOAPBody soapBody = soapEnv.getBody();
          SOAPContentElement faultElement = (SOAPContentElement)soapBody.getFault();
-         faultElement.setXMLFragment(fragmentBuffer.toString());
+         faultElement.setXMLFragment(bufferToFragment(fragmentBuffer));
       }
 
       resetFragmentBuffer();
+   }
+
+   // TODO: this is rubbish. Use Source internally instead...
+   private XMLFragment bufferToFragment(StringBuffer fragmentBuffer) {
+      StreamSource source = new StreamSource(new ByteArrayInputStream(fragmentBuffer.toString().getBytes()));
+      return new XMLFragment(source);
    }
 
    private void processStartElement() throws SOAPException

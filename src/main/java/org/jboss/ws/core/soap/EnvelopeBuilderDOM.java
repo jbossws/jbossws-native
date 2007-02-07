@@ -22,27 +22,19 @@
 package org.jboss.ws.core.soap;
 
 //$Id$
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPMessage;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.QName;
+import javax.xml.soap.*;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 /**
  * A SOAPEnvelope builder for JAXRPC based on DOM 
  * 
@@ -108,7 +100,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          {
             Element srcElement = (Element)it.next();
             //registerNamespacesLocally(srcElement);
-            String xmlFragment = DOMWriter.printNode(srcElement, false);
+            XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
 
             Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
             SOAPContentElement destElement = new SOAPHeaderElementImpl(name);
@@ -202,7 +194,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
                   DOMUtils.copyAttributes(destElement, srcElement);
                   
-                  String xmlFragment = DOMWriter.printNode(srcElement, false);
+                  XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
                   destElement.setXMLFragment(xmlFragment);
                }
             }
@@ -215,7 +207,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
                DOMUtils.copyAttributes(destElement, srcElement);
                
-               String xmlFragment = DOMWriter.printNode(srcElement, false);
+               XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
                destElement.setXMLFragment(xmlFragment);
             }
             else if (style == null)

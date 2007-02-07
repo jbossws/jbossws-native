@@ -24,6 +24,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 // $Id$
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.utils.JavaUtils;
@@ -43,7 +45,7 @@ public class HexSerializer extends SerializerSupport
    // provide logging
    private static final Logger log = Logger.getLogger(HexSerializer.class);
 
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
@@ -52,6 +54,6 @@ public class HexSerializer extends SerializerSupport
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
 }

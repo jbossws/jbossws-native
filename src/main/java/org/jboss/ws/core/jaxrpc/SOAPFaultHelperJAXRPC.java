@@ -23,46 +23,30 @@ package org.jboss.ws.core.jaxrpc;
 
 // $Id$
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxrpc.binding.*;
+import org.jboss.ws.core.soap.*;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.metadata.umdm.FaultMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.xb.binding.NamespaceRegistry;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.soap.Detail;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.NameImpl;
-import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
-import org.jboss.ws.core.soap.SOAPFactoryImpl;
-import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.metadata.umdm.FaultMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.xb.binding.NamespaceRegistry;
-import org.w3c.dom.Element;
+import javax.xml.soap.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A Helper that translates between SOAPFaultException and SOAPFault.
@@ -139,7 +123,7 @@ public class SOAPFaultHelperJAXRPC
                         deElement.addNamespaceDeclaration(prefix, nsURI);
                   }
 
-                  String xmlFragment = DOMWriter.printNode(deElement, false);
+                  Source xmlFragment = new DOMSource(deElement);
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
                   Object userEx = des.deserialize(xmlName, xmlType, xmlFragment, serContext);
                   if (userEx == null || (userEx instanceof Exception) == false)
@@ -260,10 +244,11 @@ public class SOAPFaultHelperJAXRPC
             try
             {
                SerializerSupport ser = (SerializerSupport)serFactory.getSerializer();
-               String xmlFragment = ser.serialize(xmlName, xmlType, faultCause, serContext, null);
+               Result result = ser.serialize(xmlName, xmlType, faultCause, serContext, null);
+               XMLFragment xmlFragment = new XMLFragment(result);
 
                SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-               Element domElement = DOMUtils.parse(xmlFragment);
+               Element domElement = DOMUtils.parse(xmlFragment.toStringFragment());
                SOAPElement soapElement = soapFactory.createElement(domElement);
 
                detail = soapFault.addDetail();

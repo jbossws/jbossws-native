@@ -23,9 +23,7 @@ package org.jboss.ws.core.utils;
 
 // $Id$
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,8 +33,15 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,451 +60,518 @@ import org.xml.sax.SAXException;
  */
 public final class DOMUtils
 {
-    private static Logger log = Logger.getLogger(DOMUtils.class);
+   private static Logger log = Logger.getLogger(DOMUtils.class);
 
-    // All elements created by the same thread are created by the same builder and belong to the same doc
-    private static ThreadLocal documentThreadLocal = new ThreadLocal();
-    private static ThreadLocal builderThreadLocal = new ThreadLocal() {
-        protected Object initialValue() {
-            try
+   // All elements created by the same thread are created by the same builder and belong to the same doc
+   private static ThreadLocal documentThreadLocal = new ThreadLocal();
+   private static ThreadLocal builderThreadLocal = new ThreadLocal() {
+      protected Object initialValue() {
+         try
+         {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setValidating(false);
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setEntityResolver(new JBossWSEntityResolver());
+            return builder;
+         }
+         catch (ParserConfigurationException e)
+         {
+            throw new RuntimeException("Failed to create DocumentBuilder", e);
+         }
+      }
+   };
+
+   // Hide the constructor
+   private DOMUtils()
+   {
+   }
+
+   /** Initialise the the DocumentBuilder
+    */
+   public static DocumentBuilder getDocumentBuilder()
+   {
+      DocumentBuilder builder = (DocumentBuilder)builderThreadLocal.get();
+      return builder;
+   }
+
+   /** Parse the given XML string and return the root Element
+    */
+   public static Element parse(String xmlString) throws IOException
+   {
+      try
+      {
+         return parse(new ByteArrayInputStream(xmlString.getBytes("UTF-8")));
+      }
+      catch (IOException e)
+      {
+         log.error("Cannot parse: " + xmlString);
+         throw e;
+      }
+   }
+
+   /** Parse the given XML stream and return the root Element
+    */
+   public static Element parse(InputStream xmlStream) throws IOException
+   {
+      try
+      {
+         Document doc = getDocumentBuilder().parse(xmlStream);
+         Element root = doc.getDocumentElement();
+         return root;
+      }
+      catch (SAXException e)
+      {
+         throw new IOException(e.toString());
+      }
+   }
+
+   /** Parse the given input source and return the root Element
+    */
+   public static Element parse(InputSource source) throws IOException
+   {
+      try
+      {
+         Document doc = getDocumentBuilder().parse(source);
+         Element root = doc.getDocumentElement();
+         return root;
+      }
+      catch (SAXException e)
+      {
+         throw new IOException(e.toString());
+      }
+   }
+
+   /** Create an Element for a given name
+    */
+   public static Element createElement(String localPart)
+   {
+      Document doc = getOwnerDocument();
+      log.trace("createElement {}" + localPart);
+      return doc.createElement(localPart);
+   }
+
+   /** Create an Element for a given name and prefix
+    */
+   public static Element createElement(String localPart, String prefix)
+   {
+      Document doc = getOwnerDocument();
+      log.trace("createElement {}" + prefix + ":" + localPart);
+      return doc.createElement(prefix + ":" + localPart);
+   }
+
+   /** Create an Element for a given name, prefix and uri
+    */
+   public static Element createElement(String localPart, String prefix, String uri)
+   {
+      Document doc = getOwnerDocument();
+      if (prefix == null || prefix.length() == 0)
+      {
+         log.trace("createElement {" + uri + "}" + localPart);
+         return doc.createElementNS(uri, localPart);
+      }
+      else
+      {
+         log.trace("createElement {" + uri + "}" + prefix + ":" + localPart);
+         return doc.createElementNS(uri, prefix + ":" + localPart);
+      }
+   }
+
+   /** Create an Element for a given QName
+    */
+   public static Element createElement(QName qname)
+   {
+      return createElement(qname.getLocalPart(), qname.getPrefix(), qname.getNamespaceURI());
+   }
+
+   /** Create a org.w3c.dom.Text node
+    */
+   public static Text createTextNode(String value)
+   {
+      Document doc = getOwnerDocument();
+      return doc.createTextNode(value);
+   }
+
+   /** Get the qname of the given node.
+    */
+   public static QName getElementQName(Element el)
+   {
+      String qualifiedName = el.getNodeName();
+      return resolveQName(el, qualifiedName);
+   }
+
+   /** Transform the giveen qualified name into a QName
+    */
+   public static QName resolveQName(Element el, String qualifiedName)
+   {
+      QName qname;
+      String prefix = "";
+      String namespaceURI = "";
+      String localPart = qualifiedName;
+
+      int colIndex = qualifiedName.indexOf(":");
+      if (colIndex > 0)
+      {
+         prefix = qualifiedName.substring(0, colIndex);
+         localPart = qualifiedName.substring(colIndex + 1);
+
+         if ("xmlns".equals(prefix))
+         {
+            namespaceURI = "URI:XML_PREDEFINED_NAMESPACE";
+         }
+         else
+         {
+            Element nsElement = el;
+            while (namespaceURI.equals("") && nsElement != null)
             {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                factory.setValidating(false);
-                factory.setNamespaceAware(true);
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                builder.setEntityResolver(new JBossWSEntityResolver());
-                return builder;
+               namespaceURI = nsElement.getAttribute("xmlns:" + prefix);
+               if (namespaceURI.equals(""))
+                  nsElement = getParentElement(nsElement);
             }
-            catch (ParserConfigurationException e)
+         }
+
+         if (namespaceURI.equals(""))
+            throw new IllegalArgumentException("Cannot find namespace uri for: " + qualifiedName);
+      }
+
+      qname = new QName(namespaceURI, localPart, prefix);
+      return qname;
+   }
+
+   /** Get the value from the given attribute
+    *
+    * @return null if the attribute value is empty or the attribute is not present
+    */
+   public static String getAttributeValue(Element el, String attrName)
+   {
+      return getAttributeValue(el, new QName(attrName));
+   }
+
+   /** Get the value from the given attribute
+    *
+    * @return null if the attribute value is empty or the attribute is not present
+    */
+   public static String getAttributeValue(Element el, QName attrName)
+   {
+      String attr = null;
+      if ("".equals(attrName.getNamespaceURI()))
+         attr = el.getAttribute(attrName.getLocalPart());
+      else attr = el.getAttributeNS(attrName.getNamespaceURI(), attrName.getLocalPart());
+
+      if ("".equals(attr))
+         attr = null;
+
+      return attr;
+   }
+
+   /** Get the qname value from the given attribute
+    */
+   public static QName getAttributeValueAsQName(Element el, String attrName)
+   {
+      return getAttributeValueAsQName(el, new QName(attrName));
+
+   }
+
+   /** Get the qname value from the given attribute
+    */
+   public static QName getAttributeValueAsQName(Element el, QName attrName)
+   {
+      QName qname = null;
+
+      String qualifiedName = getAttributeValue(el, attrName);
+      if (qualifiedName != null)
+      {
+         qname = resolveQName(el, qualifiedName);
+      }
+
+      return qname;
+   }
+
+   /** Get the boolean value from the given attribute
+    */
+   public static boolean getAttributeValueAsBoolean(Element el, String attrName)
+   {
+      return getAttributeValueAsBoolean(el, new QName(attrName));
+   }
+
+   /** Get the boolean value from the given attribute
+    */
+   public static boolean getAttributeValueAsBoolean(Element el, QName attrName)
+   {
+      String attrVal = getAttributeValue(el, attrName);
+      boolean ret = "true".equalsIgnoreCase(attrVal) || "1".equalsIgnoreCase(attrVal);
+      return ret;
+   }
+
+   /** Get the integer value from the given attribute
+    */
+   public static Integer getAttributeValueAsInteger(Element el, String attrName)
+   {
+      return getAttributeValueAsInteger(el, new QName(attrName));
+   }
+
+   /** Get the integer value from the given attribute
+    */
+   public static Integer getAttributeValueAsInteger(Element el, QName attrName)
+   {
+      String attrVal = getAttributeValue(el, attrName);
+      return (attrVal != null ? new Integer(attrVal) : null);
+   }
+
+   /** Get the attributes as Map<QName, String>
+    */
+   public static Map getAttributes(Element el)
+   {
+      Map attmap = new HashMap();
+      NamedNodeMap attribs = el.getAttributes();
+      for (int i = 0; i < attribs.getLength(); i++)
+      {
+         Attr attr = (Attr)attribs.item(i);
+         String name = attr.getName();
+         QName qname = resolveQName(el, name);
+         String value = attr.getNodeValue();
+         attmap.put(qname, value);
+      }
+      return attmap;
+   }
+
+   /** Copy attributes between elements
+    */
+   public static void copyAttributes(Element destElement, Element srcElement)
+   {
+      NamedNodeMap attribs = srcElement.getAttributes();
+      for (int i = 0; i < attribs.getLength(); i++)
+      {
+         Attr attr = (Attr)attribs.item(i);
+         String uri = attr.getNamespaceURI();
+         String qname = attr.getName();
+         String value = attr.getNodeValue();
+
+         // Prevent DOMException: NAMESPACE_ERR: An attempt is made to create or
+         // change an object in a way which is incorrect with regard to namespaces.
+         if (uri == null && qname.startsWith("xmlns"))
+         {
+            log.trace("Ignore attribute: [uri=" + uri + ",qname=" + qname + ",value=" + value + "]");
+         }
+         else
+         {
+            destElement.setAttributeNS(uri, qname, value);
+         }
+      }
+   }
+
+   /** True if the node has child elements
+    */
+   public static boolean hasChildElements(Node node)
+   {
+      NodeList nlist = node.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
+      {
+         Node child = nlist.item(i);
+         if (child.getNodeType() == Node.ELEMENT_NODE)
+            return true;
+      }
+      return false;
+   }
+
+   /** Gets child elements
+    */
+   public static Iterator getChildElements(Node node)
+   {
+      ArrayList list = new ArrayList();
+      NodeList nlist = node.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
+      {
+         Node child = nlist.item(i);
+         if (child.getNodeType() == Node.ELEMENT_NODE)
+            list.add(child);
+      }
+      return list.iterator();
+   }
+
+   /** Get the concatenated text content, or null.
+    */
+   public static String getTextContent(Node node)
+   {
+      boolean hasTextContent = false;
+      StringBuffer buffer = new StringBuffer();
+      NodeList nlist = node.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
+      {
+         Node child = nlist.item(i);
+         if (child.getNodeType() == Node.TEXT_NODE)
+         {
+            buffer.append(child.getNodeValue());
+            hasTextContent = true;
+         }
+      }
+      return (hasTextContent ? buffer.toString() : null);
+   }
+
+   /** Gets the first child element
+    */
+   public static Element getFirstChildElement(Node node)
+   {
+      return getFirstChildElementIntern(node, null);
+   }
+
+   /** Gets the first child element for a given local name without namespace
+    */
+   public static Element getFirstChildElement(Node node, String nodeName)
+   {
+      return getFirstChildElementIntern(node, new QName(nodeName));
+   }
+
+   /** Gets the first child element for a given qname
+    */
+   public static Element getFirstChildElement(Node node, QName nodeName)
+   {
+      return getFirstChildElementIntern(node, nodeName);
+   }
+
+   private static Element getFirstChildElementIntern(Node node, QName nodeName)
+   {
+      Element childElement = null;
+      Iterator it = getChildElementsIntern(node, nodeName);
+      if (it.hasNext())
+      {
+         childElement = (Element)it.next();
+      }
+      return childElement;
+   }
+
+   /** Gets the child elements for a given local name without namespace
+    */
+   public static Iterator getChildElements(Node node, String nodeName)
+   {
+      return getChildElementsIntern(node, new QName(nodeName));
+   }
+
+   /** Gets the child element for a given qname
+    */
+   public static Iterator getChildElements(Node node, QName nodeName)
+   {
+      return getChildElementsIntern(node, nodeName);
+   }
+
+   private static Iterator getChildElementsIntern(Node node, QName nodeName)
+   {
+      ArrayList list = new ArrayList();
+      NodeList nlist = node.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
+      {
+         Node child = nlist.item(i);
+         if (child.getNodeType() == Node.ELEMENT_NODE)
+         {
+            if (nodeName == null)
             {
-                throw new RuntimeException("Failed to create DocumentBuilder", e);
-            }
-        }
-    };
-
-    // Hide the constructor
-    private DOMUtils()
-    {
-    }
-
-    /** Initialise the the DocumentBuilder
-     */
-    public static DocumentBuilder getDocumentBuilder()
-    {
-        DocumentBuilder builder = (DocumentBuilder)builderThreadLocal.get();
-        return builder;
-    }
-
-    /** Parse the given XML string and return the root Element
-     */
-    public static Element parse(String xmlString) throws IOException
-    {
-        try
-        {
-            return parse(new ByteArrayInputStream(xmlString.getBytes("UTF-8")));
-        }
-        catch (IOException e)
-        {
-            log.error("Cannot parse: " + xmlString);
-            throw e;
-        }
-    }
-
-    /** Parse the given XML stream and return the root Element
-     */
-    public static Element parse(InputStream xmlStream) throws IOException
-    {
-        try
-        {
-            Document doc = getDocumentBuilder().parse(xmlStream);
-            Element root = doc.getDocumentElement();
-            return root;
-        }
-        catch (SAXException e)
-        {
-            throw new IOException(e.toString());
-        }
-    }
-
-    /** Parse the given input source and return the root Element
-     */
-    public static Element parse(InputSource source) throws IOException
-    {
-        try
-        {
-            Document doc = getDocumentBuilder().parse(source);
-            Element root = doc.getDocumentElement();
-            return root;
-        }
-        catch (SAXException e)
-        {
-            throw new IOException(e.toString());
-        }
-    }
-
-    /** Create an Element for a given name
-     */
-    public static Element createElement(String localPart)
-    {
-        Document doc = getOwnerDocument();
-        log.trace("createElement {}" + localPart);
-        return doc.createElement(localPart);
-    }
-
-    /** Create an Element for a given name and prefix
-     */
-    public static Element createElement(String localPart, String prefix)
-    {
-        Document doc = getOwnerDocument();
-        log.trace("createElement {}" + prefix + ":" + localPart);
-        return doc.createElement(prefix + ":" + localPart);
-    }
-
-    /** Create an Element for a given name, prefix and uri
-     */
-    public static Element createElement(String localPart, String prefix, String uri)
-    {
-        Document doc = getOwnerDocument();
-        if (prefix == null || prefix.length() == 0)
-        {
-            log.trace("createElement {" + uri + "}" + localPart);
-            return doc.createElementNS(uri, localPart);
-        }
-        else
-        {
-            log.trace("createElement {" + uri + "}" + prefix + ":" + localPart);
-            return doc.createElementNS(uri, prefix + ":" + localPart);
-        }
-    }
-
-    /** Create an Element for a given QName
-     */
-    public static Element createElement(QName qname)
-    {
-        return createElement(qname.getLocalPart(), qname.getPrefix(), qname.getNamespaceURI());
-    }
-
-    /** Create a org.w3c.dom.Text node
-     */
-    public static Text createTextNode(String value)
-    {
-        Document doc = getOwnerDocument();
-        return doc.createTextNode(value);
-    }
-
-    /** Get the qname of the given node.
-     */
-    public static QName getElementQName(Element el)
-    {
-        String qualifiedName = el.getNodeName();
-        return resolveQName(el, qualifiedName);
-    }
-
-    /** Transform the giveen qualified name into a QName
-     */
-    public static QName resolveQName(Element el, String qualifiedName)
-    {
-        QName qname;
-        String prefix = "";
-        String namespaceURI = "";
-        String localPart = qualifiedName;
-
-        int colIndex = qualifiedName.indexOf(":");
-        if (colIndex > 0)
-        {
-            prefix = qualifiedName.substring(0, colIndex);
-            localPart = qualifiedName.substring(colIndex + 1);
-
-            if ("xmlns".equals(prefix))
-            {
-                namespaceURI = "URI:XML_PREDEFINED_NAMESPACE";
+               list.add(child);
             }
             else
             {
-                Element nsElement = el;
-                while (namespaceURI.equals("") && nsElement != null)
-                {
-                    namespaceURI = nsElement.getAttribute("xmlns:" + prefix);
-                    if (namespaceURI.equals(""))
-                        nsElement = getParentElement(nsElement);
-                }
+               QName qname;
+               if (nodeName.getNamespaceURI().length() > 0)
+               {
+                  qname = new QName(child.getNamespaceURI(), child.getLocalName());
+               }
+               else
+               {
+                  qname = new QName(child.getLocalName());
+               }
+               if (qname.equals(nodeName))
+               {
+                  list.add(child);
+               }
             }
+         }
+      }
+      return list.iterator();
+   }
 
-            if (namespaceURI.equals(""))
-                throw new IllegalArgumentException("Cannot find namespace uri for: " + qualifiedName);
-        }
+   /** Gets parent element or null if there is none
+    */
+   public static Element getParentElement(Node node)
+   {
+      Node parent = node.getParentNode();
+      return (parent instanceof Element ? (Element)parent : null);
+   }
 
-        qname = new QName(namespaceURI, localPart, prefix);
-        return qname;
-    }
+   /** Get the owner document that is associated with the current thread */
+   public static Document getOwnerDocument()
+   {
+      Document doc = (Document)documentThreadLocal.get();
+      if (doc == null)
+      {
+         doc = getDocumentBuilder().newDocument();
+         documentThreadLocal.set(doc);
+      }
+      return doc;
+   }
 
-    /** Get the value from the given attribute
-     *
-     * @return null if the attribute value is empty or the attribute is not present
-     */
-    public static String getAttributeValue(Element el, String attrName)
-    {
-        return getAttributeValue(el, new QName(attrName));
-    }
+   public static Element sourceToElement(Source source)
+   {
+      Element elementResult = null;
 
-    /** Get the value from the given attribute
-     *
-     * @return null if the attribute value is empty or the attribute is not present
-     */
-    public static String getAttributeValue(Element el, QName attrName)
-    {
-        String attr = null;
-        if ("".equals(attrName.getNamespaceURI()))
-            attr = el.getAttribute(attrName.getLocalPart());
-        else attr = el.getAttributeNS(attrName.getNamespaceURI(), attrName.getLocalPart());
+      try {
+         if (source instanceof StreamSource)
+         {
+            StreamSource streamSource = (StreamSource)source;
 
-        if ("".equals(attr))
-            attr = null;
-
-        return attr;
-    }
-
-    /** Get the qname value from the given attribute
-     */
-    public static QName getAttributeValueAsQName(Element el, String attrName)
-    {
-        return getAttributeValueAsQName(el, new QName(attrName));
-
-    }
-
-    /** Get the qname value from the given attribute
-     */
-    public static QName getAttributeValueAsQName(Element el, QName attrName)
-    {
-        QName qname = null;
-
-        String qualifiedName = getAttributeValue(el, attrName);
-        if (qualifiedName != null)
-        {
-            qname = resolveQName(el, qualifiedName);
-        }
-
-        return qname;
-    }
-
-    /** Get the boolean value from the given attribute
-     */
-    public static boolean getAttributeValueAsBoolean(Element el, String attrName)
-    {
-        return getAttributeValueAsBoolean(el, new QName(attrName));
-    }
-
-    /** Get the boolean value from the given attribute
-     */
-    public static boolean getAttributeValueAsBoolean(Element el, QName attrName)
-    {
-        String attrVal = getAttributeValue(el, attrName);
-        boolean ret = "true".equalsIgnoreCase(attrVal) || "1".equalsIgnoreCase(attrVal);
-        return ret;
-    }
-
-    /** Get the integer value from the given attribute
-     */
-    public static Integer getAttributeValueAsInteger(Element el, String attrName)
-    {
-        return getAttributeValueAsInteger(el, new QName(attrName));
-    }
-
-    /** Get the integer value from the given attribute
-     */
-    public static Integer getAttributeValueAsInteger(Element el, QName attrName)
-    {
-        String attrVal = getAttributeValue(el, attrName);
-        return (attrVal != null ? new Integer(attrVal) : null);
-    }
-
-    /** Get the attributes as Map<QName, String>
-     */
-    public static Map getAttributes(Element el)
-    {
-        Map attmap = new HashMap();
-        NamedNodeMap attribs = el.getAttributes();
-        for (int i = 0; i < attribs.getLength(); i++)
-        {
-            Attr attr = (Attr)attribs.item(i);
-            String name = attr.getName();
-            QName qname = resolveQName(el, name);
-            String value = attr.getNodeValue();
-            attmap.put(qname, value);
-        }
-        return attmap;
-    }
-
-    /** Copy attributes between elements
-     */
-    public static void copyAttributes(Element destElement, Element srcElement)
-    {
-        NamedNodeMap attribs = srcElement.getAttributes();
-        for (int i = 0; i < attribs.getLength(); i++)
-        {
-            Attr attr = (Attr)attribs.item(i);
-            String uri = attr.getNamespaceURI();
-            String qname = attr.getName();
-            String value = attr.getNodeValue();
-            
-            // Prevent DOMException: NAMESPACE_ERR: An attempt is made to create or 
-            // change an object in a way which is incorrect with regard to namespaces.
-            if (uri == null && qname.startsWith("xmlns"))
+            InputStream ins = streamSource.getInputStream();
+            if (ins != null)
             {
-               log.trace("Ignore attribute: [uri=" + uri + ",qname=" + qname + ",value=" + value + "]");
+               elementResult = DOMUtils.parse(ins);
             }
             else
             {
-               destElement.setAttributeNS(uri, qname, value);
+               Reader reader = streamSource.getReader();
+               elementResult = DOMUtils.parse(new InputSource(reader));
             }
-        }
-    }
 
-    /** True if the node has child elements
-     */
-    public static boolean hasChildElements(Node node)
-    {
-        NodeList nlist = node.getChildNodes();
-        for (int i = 0; i < nlist.getLength(); i++)
-        {
-            Node child = nlist.item(i);
-            if (child.getNodeType() == Node.ELEMENT_NODE)
-                return true;
-        }
-        return false;
-    }
-
-    /** Gets child elements
-     */
-    public static Iterator getChildElements(Node node)
-    {
-        ArrayList list = new ArrayList();
-        NodeList nlist = node.getChildNodes();
-        for (int i = 0; i < nlist.getLength(); i++)
-        {
-            Node child = nlist.item(i);
-            if (child.getNodeType() == Node.ELEMENT_NODE)
-                list.add(child);
-        }
-        return list.iterator();
-    }
-
-    /** Get the concatenated text content, or null.
-     */
-    public static String getTextContent(Node node)
-    {
-        boolean hasTextContent = false;
-        StringBuffer buffer = new StringBuffer();
-        NodeList nlist = node.getChildNodes();
-        for (int i = 0; i < nlist.getLength(); i++)
-        {
-            Node child = nlist.item(i);
-            if (child.getNodeType() == Node.TEXT_NODE)
+            // reset the excausted input stream
+            String xmlStr = DOMWriter.printNode(elementResult, false);
+            source = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
+         }
+         else if (source instanceof DOMSource)
+         {
+            DOMSource domSource = (DOMSource)source;
+            Node node = domSource.getNode();
+            if (node instanceof Element)
             {
-                buffer.append(child.getNodeValue());
-                hasTextContent = true;
+               elementResult = (Element)node;
             }
-        }
-        return (hasTextContent ? buffer.toString() : null);
-    }
-
-    /** Gets the first child element
-     */
-    public static Element getFirstChildElement(Node node)
-    {
-        return getFirstChildElementIntern(node, null);
-    }
-
-    /** Gets the first child element for a given local name without namespace
-     */
-    public static Element getFirstChildElement(Node node, String nodeName)
-    {
-        return getFirstChildElementIntern(node, new QName(nodeName));
-    }
-
-    /** Gets the first child element for a given qname
-     */
-    public static Element getFirstChildElement(Node node, QName nodeName)
-    {
-        return getFirstChildElementIntern(node, nodeName);
-    }
-
-    private static Element getFirstChildElementIntern(Node node, QName nodeName)
-    {
-        Element childElement = null;
-        Iterator it = getChildElementsIntern(node, nodeName);
-        if (it.hasNext())
-        {
-            childElement = (Element)it.next();
-        }
-        return childElement;
-    }
-
-    /** Gets the child elements for a given local name without namespace
-     */
-    public static Iterator getChildElements(Node node, String nodeName)
-    {
-        return getChildElementsIntern(node, new QName(nodeName));
-    }
-
-    /** Gets the child element for a given qname
-     */
-    public static Iterator getChildElements(Node node, QName nodeName)
-    {
-        return getChildElementsIntern(node, nodeName);
-    }
-
-    private static Iterator getChildElementsIntern(Node node, QName nodeName)
-    {
-        ArrayList list = new ArrayList();
-        NodeList nlist = node.getChildNodes();
-        for (int i = 0; i < nlist.getLength(); i++)
-        {
-            Node child = nlist.item(i);
-            if (child.getNodeType() == Node.ELEMENT_NODE)
+            else if (node instanceof Document)
             {
-                if (nodeName == null)
-                {
-                    list.add(child);
-                }
-                else
-                {
-                    QName qname;
-                    if (nodeName.getNamespaceURI().length() > 0)
-                    {
-                        qname = new QName(child.getNamespaceURI(), child.getLocalName());
-                    }
-                    else
-                    {
-                        qname = new QName(child.getLocalName());
-                    }
-                    if (qname.equals(nodeName))
-                    {
-                        list.add(child);
-                    }
-                }
+               elementResult = ((Document)node).getDocumentElement();
             }
-        }
-        return list.iterator();
-    }
+            else
+            {
+               throw new WSException("Unsupported Node type: " + node.getClass().getName());
+            }
+         }
+         else if (source instanceof SAXSource)
+         {
+            // The fact that JAXBSource derives from SAXSource is an implementation detail.
+            // Thus in general applications are strongly discouraged from accessing methods defined on SAXSource.
+            // The XMLReader object obtained by the getXMLReader method shall be used only for parsing the InputSource object returned by the getInputSource method.
 
-    /** Gets parent element or null if there is none
-     */
-    public static Element getParentElement(Node node)
-    {
-        Node parent = node.getParentNode();
-        return (parent instanceof Element ? (Element)parent : null);
-    }
+            TransformerFactory tf = TransformerFactory.newInstance();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            tf.newTransformer().transform(source, new StreamResult(baos));
 
-    /** Get the owner document that is associated with the current thread */
-    public static Document getOwnerDocument()
-    {
-        Document doc = (Document)documentThreadLocal.get();
-        if (doc == null)
-        {
-            doc = getDocumentBuilder().newDocument();
-            documentThreadLocal.set(doc);
-        }
-        return doc;
-    }
+            elementResult = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
+         }
+         else
+         {
+            throw new WSException("Source type not implemented: " + source.getClass().getName());
+         }
+
+      }
+      catch (Exception e)
+      {
+         WSException.rethrow(e);
+      }
+
+      return elementResult;
+   }
 }

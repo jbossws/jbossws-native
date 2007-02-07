@@ -25,9 +25,16 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.Deserializer;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
+import org.jboss.ws.WSException;
+
+import java.io.ByteArrayOutputStream;
 
 /** The base class for all Deserializers.
  *
@@ -44,7 +51,29 @@ public abstract class DeserializerSupport implements Deserializer
     * @param xmlFragment The XML fragment to deserialize
     * @param serContext The serialization context
     */
-   public abstract Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException;
+   public abstract Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException;
+
+   protected static String sourceToString(Source source)
+   {
+      String xmlFragment = null;
+
+      try {
+         TransformerFactory tf = TransformerFactory.newInstance();
+         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+         StreamResult streamResult = new StreamResult(baos);
+         tf.newTransformer().transform(source, streamResult);         
+         xmlFragment = new String(baos.toByteArray());
+         if (xmlFragment.startsWith("<?xml"))
+         {
+            int index = xmlFragment.indexOf(">");
+            xmlFragment = xmlFragment.substring(index + 1);
+         }
+      } catch (TransformerException e) {
+         WSException.rethrow(e);
+      }
+
+      return xmlFragment;
+   }
 
    /** Unwrap the value string from the XML fragment
     *

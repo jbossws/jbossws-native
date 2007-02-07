@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxrpc.binding;
 import java.io.ByteArrayInputStream;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
@@ -33,6 +34,7 @@ import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshaller;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshallerImpl;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 
 /**
@@ -54,6 +56,10 @@ public class JBossXBDeserializer extends ComplexTypeDeserializer
       unmarshaller = new JBossXBUnmarshallerImpl();
    }
 
+   public Object deserialize(QName xmlName, QName xmlType, Source source, SerializationContext serContext) throws BindingException {     
+      return deserialize(xmlName, xmlType, sourceToString(source), serContext);
+   }
+
    /**
     * For unmarshalling the WS layer passes to the JAXB layer
     *
@@ -68,7 +74,7 @@ public class JBossXBDeserializer extends ComplexTypeDeserializer
     * The result is an object instance or null.
     * In case of an unmarshalling problem a descriptive exception is thrown.
     */
-   public Object deserialize(QName xmlName, QName xmlType, String val, SerializationContext serContext) throws BindingException
+   private Object deserialize(QName xmlName, QName xmlType, String val, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 

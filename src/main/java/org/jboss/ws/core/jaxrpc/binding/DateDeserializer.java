@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.xb.binding.SimpleTypeBindings;
@@ -40,7 +41,11 @@ public class DateDeserializer extends DeserializerSupport
    // provide logging
    private static final Logger log = Logger.getLogger(DateDeserializer.class);
 
-   public Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
+   public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
+      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
+   }
+
+   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 

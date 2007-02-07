@@ -19,52 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
-
-import javax.management.ObjectName;
+package org.jboss.ws.core.soap;
 
 /**
+ * Represent SOAP message payload that can transition from
+ * one representation to the next.
+ *
+ * @see SOAPContentElement
+ * 
  * @author Heiko.Braun@jboss.org
  * @version $Id$
- * @since 02.02.2007
+ * @since 05.02.2007
  */
-public class ServiceEndpointDTO {
+public abstract class SOAPContent implements SOAPContentAccess {
 
-   private ServiceEndpointMetrics seMetrics;
-   private ServiceEndpoint.State state;
-   private ObjectName sepID;
-   private String address;
+   public enum State {OBJECT_VALID, XML_VALID, DOM_VALID}
 
-   public ServiceEndpointMetrics getSeMetrics() {
-      return seMetrics;
-   }
+   abstract SOAPContent transitionTo(State nextState);
 
-   public void setSeMetrics(ServiceEndpointMetrics seMetrics) {
-      this.seMetrics = seMetrics;
-   }
+   abstract State getState();
 
-   public ServiceEndpoint.State getState() {
-      return state;
-   }
+   protected SOAPContentElement container;
 
-   public void setState(ServiceEndpoint.State state) {
-      this.state = state;
-   }
-
-   public ObjectName getSepID() {
-      return sepID;
-   }
-
-   public void setSepID(ObjectName sepID) {
-      this.sepID = sepID;
-   }
-
-   public String getAddress() {
-      return address;
-   }
-
-   public void setAddress(String address) {
-      this.address = address;
+   protected SOAPContent(SOAPContentElement container) {
+      this.container = container;
    }
 
 }

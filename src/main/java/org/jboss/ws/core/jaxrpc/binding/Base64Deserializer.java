@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxrpc.binding;
 import java.io.IOException;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -45,13 +46,17 @@ public class Base64Deserializer extends DeserializerSupport
 {
    // provide logging
    private static final Logger log = Logger.getLogger(Base64Deserializer.class);
-   
-   public Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
+
+   public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
+      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
+   }
+
+   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
-      
+
       byte[] value = null;
-      
+
       String valueStr = unwrapValueStr(xmlFragment);
       if(XOPContext.isXOPMessage())
       {

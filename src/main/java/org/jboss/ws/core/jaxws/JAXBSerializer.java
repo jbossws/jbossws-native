@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxws;
 // $Id$
 
 import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -31,12 +32,17 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.dom.DOMResult;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
 import org.w3c.dom.NamedNodeMap;
@@ -57,11 +63,11 @@ public class JAXBSerializer extends ComplexTypeSerializer
    }
 
    @Override
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
-      String xmlFragment = null;
+      Result result = null;
       try
       {
          // It needs to be a valid JAXB type
@@ -76,17 +82,19 @@ public class JAXBSerializer extends ComplexTypeSerializer
          marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
          marshaller.setAttachmentMarshaller(new AttachmentMarshallerImpl());
 
-         StringWriter strwr = new StringWriter();
-         marshaller.marshal(new JAXBElement(xmlName, javaType, value), strwr);
-         xmlFragment = strwr.toString();
+         // It's safe to pass a stream result, because the SCE will always be in XML_VALID state afterwards.
+         // This state can safely be written to an outstream. See XMLFragment and XMLContent as well.
+         result = new BufferedStreamResult();
+         marshaller.marshal(new JAXBElement(xmlName, javaType, value), result);
 
-         if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
+         if(log.isDebugEnabled()) log.debug("serialized: " + result);
       }
       catch (Exception ex)
       {
          handleMarshallException(ex);
       }
-      return xmlFragment;
+
+      return result;
    }
 
    // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall

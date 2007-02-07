@@ -23,112 +23,79 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.List;
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.w3c.dom.*;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
-import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
-import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.core.utils.MimeUtils;
-import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.TypeInfo;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Iterator;
 
 /**
- * A SOAPElement that gives access to its content as XML fragment or Java object.
+ * A SOAPElement that gives access to its content as XML fragment or Java object.<p>
  *
- * The SOAPContentElement has three content representations, which may exist in parallel.
+ * The SOAPContentElement has three content representations, which may not exist in parallel.
  * The getter and setter of the content properties perform the conversions.
- * It is the responsibility of this objects to keep the representations in sync.
- *
+ * <pre>
  * +---------+         +-------------+          +-------------+
  * | Object  | <-----> | XMLFragment |  <-----> | DOMTree     |
  * +---------+         +-------------+          +-------------+
+ * </pre>
+ * The idea is, that handlers can work with both the object and the dom view of this SOAPElement.
+ * Note that transitions may be expensive.
  *
- * The idea is, that jaxrpc handlers can work with both the object and the dom view of this SOAPElement.
- * Note, that state transitions may be expensive.
+ * @see ObjectContent
+ * @see XMLContent
+ * @see DOMContent
  *
  * @author Thomas.Diesler@jboss.org
+ * @author Heiko.Braun@jboss.org
  * @since 13-Dec-2004
+ *
  */
-public class SOAPContentElement extends SOAPElementImpl
-{
+public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAccess {
+
    // provide logging
    private static Logger log = Logger.getLogger(SOAPContentElement.class);
 
-   // The well formed XML content of this element.
-   private String xmlFragment;
-   // The java object content of this element.
-   private Object objectValue;
-   // True if the current DOM tree is valid
-   private boolean isDOMValid;
-   // True if the current content object is valid
-   private boolean isObjectValid;
-   // True while expanding to DOM
-   private boolean expandingToDOM;
-
    // The associated parameter
    private ParameterMetaData paramMetaData;
+
+   // content soapContent
+   private SOAPContent soapContent;
+
+   // while transitioning DOM expansion needs to be locked
+   private boolean lockDOMExpansion = false;
 
    /** Construct a SOAPContentElement
     */
    public SOAPContentElement(Name name)
    {
       super(name);
-      isDOMValid = true;
+      this.soapContent = new DOMContent(this);
    }
 
    public SOAPContentElement(QName qname)
    {
       super(qname);
-      isDOMValid = true;
+      this.soapContent = new DOMContent(this);
    }
 
    public SOAPContentElement(SOAPElementImpl element)
    {
       super(element);
-      isDOMValid = true;
+      this.soapContent = new DOMContent(this);
    }
 
-   public ParameterMetaData getParamMetaData()
+   ParameterMetaData getParamMetaData()
    {
       if (paramMetaData == null)
          throw new IllegalStateException("Parameter meta data not available");
@@ -151,338 +118,60 @@ public class SOAPContentElement extends SOAPElementImpl
       return getParamMetaData().getJavaType();
    }
 
-   public boolean isDOMValid()
+   private void transitionTo(SOAPContent.State nextState)
    {
-      return isDOMValid;
+      if(nextState!=soapContent.getState())
+      {
+         log.debug("-----------------------------------");
+         log.debug("Transitioning from " + soapContent.getState() + " to " + nextState);
+         lockDOMExpansion = true;
+
+         soapContent = soapContent.transitionTo(nextState);
+
+         lockDOMExpansion = false;
+         log.debug("-----------------------------------");
+      }
    }
 
-   public boolean isObjectValid()
-   {
-      return isObjectValid;
-   }
-
-   public boolean isFragmentValid()
-   {
-      return xmlFragment != null;
-   }
-   
    /** Get the payload as source. 
     */
    public Source getPayload()
    {
       // expand to DOM, so the source is repeatedly readable
-      expandToDOM();
-      return new DOMSource(this);
+      transitionTo(SOAPContent.State.DOM_VALID);
+      return soapContent.getPayload();
    }
 
    /** Set the payload as source 
     */
    public void setPayload(Source source)
    {
-      try
-      {
-         TransformerFactory tf = TransformerFactory.newInstance();
-         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-         tf.newTransformer().transform(source, new StreamResult(baos));
-         String xmlFragment = new String(baos.toByteArray());
-         if (xmlFragment.startsWith("<?xml"))
-         {
-            int index = xmlFragment.indexOf(">");
-            xmlFragment = xmlFragment.substring(index + 1);
-         }
-         setXMLFragment(xmlFragment);
-      }
-      catch (TransformerException ex)
-      {
-         WSException.rethrow(ex);
-      }
+      soapContent = new DOMContent(this);
+      soapContent.setPayload(source);
    }
 
-   public String getXMLFragment()
+   public XMLFragment getXMLFragment()
    {
-      // Serialize the valueContent
-      if (xmlFragment == null && isObjectValid)
-      {
-         assertContentMapping();
-
-         QName xmlType = getXmlType();
-         Class javaType = getJavaType();
-         QName xmlName = getElementQName();
-
-         if(log.isDebugEnabled()) log.debug("getXMLFragment from Object [xmlType=" + xmlType + ",javaType=" + javaType + "]");
-
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         if (msgContext == null)
-            throw new WSException("MessageContext not available");
-
-         SerializationContext serContext = msgContext.getSerializationContext();
-         serContext.setProperty(ParameterMetaData.class.getName(), getParamMetaData());
-
-         TypeMappingImpl typeMapping = serContext.getTypeMapping();
-
-         try
-         {
-            SerializerSupport ser;
-            if (objectValue != null)
-            {
-               SerializerFactoryBase serializerFactory = getSerializerFactory(typeMapping, javaType, xmlType);
-               ser = (SerializerSupport)serializerFactory.getSerializer();
-            }
-            else
-            {
-               ser = new NullValueSerializer();
-            }
-
-            String tmpFragment = ser.serialize(xmlName, xmlType, getObjectValue(), serContext, null);
-            if(log.isDebugEnabled()) log.debug("xmlFragment: " + tmpFragment);
-
-            setXMLFragment(tmpFragment);
-         }
-         catch (BindingException e)
-         {
-            throw new WSException(e);
-         }
-      }
-
-      // Generate the xmlFragment from the DOM tree
-      else if (xmlFragment == null && isDOMValid)
-      {
-         if(log.isDebugEnabled()) log.debug("getXMLFragment from DOM");
-         xmlFragment = DOMWriter.printNode(this, false);
-         if(log.isDebugEnabled()) log.debug("xmlFragment: " + xmlFragment);
-         invalidateDOMContent();
-      }
-
-      if (xmlFragment == null || xmlFragment.startsWith("<") == false)
-         throw new WSException("Invalid XMLFragment: " + xmlFragment);
-
-      return xmlFragment;
+      transitionTo(SOAPContent.State.XML_VALID);
+      return soapContent.getXMLFragment();
    }
 
-   public void setXMLFragment(String xmlFragment)
+   public void setXMLFragment(XMLFragment xmlFragment)
    {
-      if(log.isDebugEnabled()) log.debug("setXMLFragment: " + xmlFragment);
-
-      if (xmlFragment == null || xmlFragment.startsWith("<") == false)
-         throw new WSException("Invalid XMLFragment: " + xmlFragment);
-
-      removeContentsAsIs();
-      resetElementContent();
-
-      this.xmlFragment = xmlFragment;
-      invalidateDOMContent();
-      invalidateObjectContent();
+      soapContent = new XMLContent(this);
+      soapContent.setXMLFragment(xmlFragment);
    }
 
    public Object getObjectValue()
    {
-      if (isObjectValid == false)
-      {
-         QName xmlType = getXmlType();
-         Class javaType = getJavaType();
-
-         if(log.isDebugEnabled()) log.debug("getObjectValue [xmlType=" + xmlType + ",javaType=" + javaType + "]");
-         assertContentMapping();
-
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         if (msgContext == null)
-            throw new WSException("MessageContext not available");
-
-         SerializationContext serContext = msgContext.getSerializationContext();
-         ParameterMetaData pmd = getParamMetaData();
-         serContext.setProperty(ParameterMetaData.class.getName(), pmd);
-         List<Class> registeredTypes = pmd.getOperationMetaData().getEndpointMetaData().getRegisteredTypes();
-         serContext.setProperty(SerializationContext.CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
-
-         try
-         {
-            // Get the deserializer from the type mapping
-            TypeMappingImpl typeMapping = serContext.getTypeMapping();
-            DeserializerFactoryBase deserializerFactory = getDeserializerFactory(typeMapping, javaType, xmlType);
-            DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-
-            String strContent = getXMLFragment();
-
-            Object obj = des.deserialize(getElementQName(), xmlType, strContent, serContext);
-            if (obj != null)
-            {
-               Class objType = obj.getClass();
-               boolean isAssignable = JavaUtils.isAssignableFrom(javaType, objType);
-               if (isAssignable == false && javaType.isArray())
-               {
-                  try
-                  {
-                     Method toArrayMethod = objType.getMethod("toArray", new Class[] {});
-                     Class returnType = toArrayMethod.getReturnType();
-                     if (JavaUtils.isAssignableFrom(javaType, returnType))
-                     {
-                        Method getValueMethod = objType.getMethod("getValue", new Class[] {});
-                        Object value = getValueMethod.invoke(obj, new Object[] {});
-                        if (value != null)
-                        {
-                           // Do not invoke toArray if getValue returns null
-                           obj = toArrayMethod.invoke(obj, new Object[] {});
-                        }
-                        else
-                        {
-                           // if the fragment did not indicate a null return
-                           // by an xsi:nil we return an empty array
-                           Class componentType = javaType.getComponentType();
-                           obj = Array.newInstance(componentType, 0);
-                        }
-                        isAssignable = true;
-                     }
-                  }
-                  catch (Exception e)
-                  {
-                     // ignore
-                  }
-               }
-
-               if (isAssignable == false)
-               {
-                  // handle XOP simple types, i.e. in RPC/LIT
-                  try
-                  {
-                     String contentType = MimeUtils.resolveMimeType(javaType);
-                     if(log.isDebugEnabled()) log.debug("Adopt DataHandler to " + javaType +", contentType "+ contentType);
-
-                     DataSource ds = new SwapableMemoryDataSource(((DataHandler)obj).getInputStream(), contentType);
-                     DataHandler dh = new DataHandler(ds);
-                     obj = dh.getContent();
-
-                     // 'application/octet-stream' will return a byte[] instead fo the stream
-                     if(obj instanceof InputStream)
-                     {
-                        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                        dh.writeTo(bout);
-                        obj = bout.toByteArray();
-                     }
-                  }
-                  catch (IOException e)
-                  {
-                     throw new WSException("Failed to adopt XOP content type", e);
-                  }
-
-                  if(!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
-                  {
-                     throw new WSException("Java type '" + javaType + "' is not assignable from: " + objType.getName());
-                  }
-               }
-            }
-
-            this.objectValue = obj;
-            this.isObjectValid = true;
-         }
-         catch (BindingException e)
-         {
-            throw new WSException(e);
-         }
-
-         if(log.isDebugEnabled()) log.debug("objectValue: " + (objectValue != null ? objectValue.getClass().getName() : null));
-      }
-
-      return objectValue;
+      transitionTo(SOAPContent.State.OBJECT_VALID);
+      return soapContent.getObjectValue();
    }
 
    public void setObjectValue(Object objValue)
    {
-      if(log.isDebugEnabled()) log.debug("setObjectValue: " + objValue);
-      removeContentsAsIs();
-      resetElementContent();
-      this.objectValue = objValue;
-      this.isObjectValid = true;
-   }
-
-   private void removeContentsAsIs()
-   {
-      log.trace("removeContentsAsIs");
-      boolean cachedFlag = isDOMValid;
-      try
-      {
-         this.isDOMValid = true;
-         super.removeContents();
-      }
-      finally
-      {
-         this.isDOMValid = cachedFlag;
-      }
-   }
-
-   // Get the serializer factory for a given javaType and xmlType
-   private SerializerFactoryBase getSerializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
-   {
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(javaType, xmlType);
-
-      // The type mapping might contain a mapping for the array wrapper bean
-      if (serializerFactory == null && javaType.isArray())
-      {
-         Class arrayWrapperType = typeMapping.getJavaType(xmlType);
-         if (arrayWrapperType != null)
-         {
-            try
-            {
-               Method toArrayMethod = arrayWrapperType.getMethod("toArray", new Class[] {});
-               Class returnType = toArrayMethod.getReturnType();
-               if (JavaUtils.isAssignableFrom(javaType, returnType))
-               {
-                  serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(arrayWrapperType, xmlType);
-               }
-            }
-            catch (NoSuchMethodException e)
-            {
-               // ignore
-            }
-         }
-      }
-
-      if (serializerFactory == null)
-         throw new WSException("Cannot obtain serializer factory for: [xmlType=" + xmlType + ",javaType=" + javaType + "]");
-
-      return serializerFactory;
-   }
-
-   // Get the deserializer factory for a given javaType and xmlType
-   private DeserializerFactoryBase getDeserializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
-   {
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(javaType, xmlType);
-
-      // The type mapping might contain a mapping for the array wrapper bean
-      if (deserializerFactory == null && javaType.isArray())
-      {
-         Class arrayWrapperType = typeMapping.getJavaType(xmlType);
-         if (arrayWrapperType != null)
-         {
-            try
-            {
-               Method toArrayMethod = arrayWrapperType.getMethod("toArray", new Class[] {});
-               Class returnType = toArrayMethod.getReturnType();
-               if (JavaUtils.isAssignableFrom(javaType, returnType))
-               {
-                  deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(arrayWrapperType, xmlType);
-               }
-            }
-            catch (NoSuchMethodException e)
-            {
-               // ignore
-            }
-         }
-      }
-
-      if (deserializerFactory == null)
-         throw new WSException("Cannot obtain deserializer factory for: [xmlType=" + xmlType + ",javaType=" + javaType + "]");
-
-      return deserializerFactory;
-   }
-
-   /** Assert the notNull state of the xmlType and javaType
-    */
-   private void assertContentMapping()
-   {
-      if (getJavaType() == null)
-         throw new WSException("javaType cannot be null");
-      if (getXmlType() == null)
-         throw new WSException("xmlType cannot be null");
+      soapContent = new ObjectContent(this);
+      soapContent.setObjectValue(objValue);
    }
 
    // SOAPElement interface ********************************************************************************************
@@ -491,60 +180,42 @@ public class SOAPContentElement extends SOAPElementImpl
    {
       log.trace("addChildElement: " + child);
       expandToDOM();
-      SOAPElement soapElement = super.addChildElement(child);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return soapElement;
+      return super.addChildElement(child);
    }
 
    public SOAPElement addChildElement(String localName, String prefix) throws SOAPException
    {
       log.trace("addChildElement: [localName=" + localName + ",prefix=" + prefix + "]");
       expandToDOM();
-      SOAPElement soapElement = super.addChildElement(localName, prefix);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return soapElement;
+      return super.addChildElement(localName, prefix);
    }
 
    public SOAPElement addChildElement(String localName, String prefix, String uri) throws SOAPException
    {
       log.trace("addChildElement: [localName=" + localName + ",prefix=" + prefix + ",uri=" + uri + "]");
       expandToDOM();
-      SOAPElement soapElement = super.addChildElement(localName, prefix, uri);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return soapElement;
+      return super.addChildElement(localName, prefix, uri);
    }
 
    public SOAPElement addChildElement(Name name) throws SOAPException
    {
       log.trace("addChildElement: [name=" + name + "]");
       expandToDOM();
-      SOAPElement soapElement = super.addChildElement(name);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return soapElement;
+      return super.addChildElement(name);
    }
 
    public SOAPElement addChildElement(String name) throws SOAPException
    {
       log.trace("addChildElement: [name=" + name + "]");
       expandToDOM();
-      SOAPElement soapElement = super.addChildElement(name);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return soapElement;
+      return super.addChildElement(name);
    }
 
    public SOAPElement addTextNode(String value) throws SOAPException
    {
       log.trace("addTextNode: [value=" + value + "]");
       expandToDOM();
-      SOAPElement soapElement = super.addTextNode(value);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return soapElement;
+      return super.addTextNode(value);
    }
 
    public Iterator getChildElements()
@@ -566,8 +237,6 @@ public class SOAPContentElement extends SOAPElementImpl
       log.trace("removeContents");
       expandToDOM();
       super.removeContents();
-      invalidateObjectContent();
-      invalidateXMLContent();
    }
 
    public Iterator getAllAttributes()
@@ -768,10 +437,7 @@ public class SOAPContentElement extends SOAPElementImpl
    {
       log.trace("appendChild: " + newChild);
       expandToDOM();
-      Node node = super.appendChild(newChild);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return node;
+      return super.appendChild(newChild);
    }
 
    public Node cloneNode(boolean deep)
@@ -820,20 +486,19 @@ public class SOAPContentElement extends SOAPElementImpl
    {
       log.trace("removeChild: " + oldChild);
       expandToDOM();
-      Node node = super.removeChild(oldChild);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return node;
+      return super.removeChild(oldChild);
    }
 
    public Node replaceChild(Node newChild, Node oldChild) throws DOMException
    {
       log.trace("replaceChild: [new=" + newChild + ",old=" + oldChild + "]");
       expandToDOM();
-      Node node = super.replaceChild(newChild, oldChild);
-      invalidateObjectContent();
-      invalidateXMLContent();
-      return node;
+      return super.replaceChild(newChild, oldChild);
+   }
+
+   private void expandToDOM() {
+      if(!lockDOMExpansion)
+         transitionTo(SOAPContent.State.DOM_VALID);
    }
 
    public void setValue(String value)
@@ -841,8 +506,6 @@ public class SOAPContentElement extends SOAPElementImpl
       log.trace("setValue: " + value);
       expandToDOM();
       super.setValue(value);
-      invalidateObjectContent();
-      invalidateXMLContent();
    }
 
    public NamedNodeMap getAttributes()
@@ -857,190 +520,19 @@ public class SOAPContentElement extends SOAPElementImpl
 
    // END Node interface ***********************************************************************************************
 
-   /** Expand the content, generating appropriate child nodes
-    */
-   private void expandToDOM()
-   {
-      // SOAPContentElements should only be expanded when handlers do require it.
-      if (isDOMValid == false && expandingToDOM == false)
-      {
-         log.trace("BEGIN: expandToDOM " + getElementName());
-         expandingToDOM = true;
-
-         // DOM expansion should only happen when a handler accesses the DOM API.
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         if (msgContext != null && !UnifiedMetaData.isFinalRelease())
-         {
-            Boolean allowExpand = (Boolean)msgContext.getProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if (Boolean.TRUE.equals(allowExpand) == false)
-               throw new WSException("Expanding content element to DOM");
-         }
-
-         try
-         {
-            if (xmlFragment == null && isObjectValid)
-               xmlFragment = getXMLFragment();
-
-            if (xmlFragment == null && isObjectValid == false)
-               throw new IllegalStateException("Neither DOM, nor XML, nor Object valid");
-
-            if (xmlFragment != null)
-            {
-               String wrappedXMLFragment = insertNamespaceDeclarations("<wrapper>" + xmlFragment + "</wrapper>");
-               Element contentRoot = DOMUtils.parse(wrappedXMLFragment);
-               contentRoot = DOMUtils.getFirstChildElement(contentRoot);
-
-               String rootLocalName = contentRoot.getLocalName();
-               String rootPrefix = contentRoot.getPrefix();
-               String rootNS = contentRoot.getNamespaceURI();
-               Name contentRootName = new NameImpl(rootLocalName, rootPrefix, rootNS);
-
-               // Make sure the content root element name matches this element name
-               Name name = getElementName();
-               if (contentRootName.equals(name) == false)
-                  throw new WSException("Content root name does not match element name: " + contentRootName + " != " + name);
-
-               // Copy attributes
-               DOMUtils.copyAttributes(this, contentRoot);
-
-               SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-
-               NodeList nlist = contentRoot.getChildNodes();
-               for (int i = 0; i < nlist.getLength(); i++)
-               {
-                  Node child = nlist.item(i);
-                  short childType = child.getNodeType();
-                  if (childType == Node.ELEMENT_NODE)
-                  {
-                     SOAPElement soapElement = soapFactory.createElement((Element)child);
-                     super.addChildElement(soapElement);
-                     if (Constants.NAME_XOP_INCLUDE.equals(name) || isXOPParameter())
-                        XOPContext.inlineXOPData(soapElement);
-                  }
-                  else if (childType == Node.TEXT_NODE)
-                  {
-                     String nodeValue = child.getNodeValue();
-                     super.addTextNode(nodeValue);
-                  }
-                  else if (childType == Node.CDATA_SECTION_NODE)
-                  {
-                     String nodeValue = child.getNodeValue();
-                     super.addTextNode(nodeValue);
-                  }
-                  else
-                  {
-                     log.trace("Ignore child type: " + childType);
-                  }
-               }
-            }
-
-            isDOMValid = true;
-         }
-         catch (RuntimeException e)
-         {
-            invalidateDOMContent();
-            throw e;
-         }
-         catch (Exception e)
-         {
-            invalidateDOMContent();
-            throw new WSException(e);
-         }
-         finally
-         {
-            expandingToDOM = false;
-            log.trace("END: expandToDOM " + getElementName());
-         }
-
-         invalidateXMLContent();
-         invalidateObjectContent();
-      }
-   }
-
-   public String insertNamespaceDeclarations(String xmlfragment)
-   {
-      StringBuilder xmlBuffer = new StringBuilder(xmlfragment);
-
-      int endIndex = xmlfragment.indexOf(">");
-      int insIndex = endIndex;
-      if (xmlfragment.charAt(insIndex - 1) == '/')
-         insIndex = insIndex - 1;
-
-      SOAPElement soapElement = this;
-      while (soapElement != null)
-      {
-         Iterator it = soapElement.getNamespacePrefixes();
-         while (it.hasNext())
-         {
-            String prefix = (String)it.next();
-            String nsURI = soapElement.getNamespaceURI(prefix);
-            String nsDecl = " xmlns:" + prefix + "='" + nsURI + "'";
-
-            // Make sure there is not a duplicate on just the wrapper tag
-            int nsIndex = xmlBuffer.indexOf("xmlns:" + prefix);
-            if (nsIndex < 0 || nsIndex > endIndex)
-            {
-               xmlBuffer.insert(insIndex, nsDecl);
-               endIndex += nsDecl.length();
-            }
-         }
-         soapElement = soapElement.getParentElement();
-      }
-
-      log.trace("insertNamespaceDeclarations: " + xmlBuffer);
-      return xmlBuffer.toString();
-   }
-
-   private void invalidateDOMContent()
-   {
-      if (expandingToDOM == false)
-      {
-         log.trace("invalidateDOMContent");
-         this.isDOMValid = false;
-      }
-   }
-
-   private void invalidateObjectContent()
-   {
-      if (expandingToDOM == false)
-      {
-         log.trace("invalidateObjectContent");
-         this.isObjectValid = false;
-         this.objectValue = null;
-      }
-   }
-
-   private void invalidateXMLContent()
-   {
-      if (expandingToDOM == false)
-      {
-         log.trace("invalidateXMLContent");
-         this.xmlFragment = null;
-      }
-   }
-
-   private void resetElementContent()
-   {
-      if (expandingToDOM == false)
-      {
-         log.trace("resetElementContent");
-         invalidateDOMContent();
-         invalidateObjectContent();
-         invalidateXMLContent();
-      }
-   }
-
    public void writeElement(Writer writer) throws IOException
    {
       handleMTOMTransitions();
 
-      if (isDOMValid)
+      if (soapContent instanceof DOMContent)
       {
          new DOMWriter(writer).print(this);
       }
       else
       {
-         writer.write(getXMLFragment());
+         transitionTo(SOAPContent.State.XML_VALID);
+         soapContent.getXMLFragment().writeTo(writer);
+
       }
    }
 
@@ -1059,8 +551,9 @@ public class SOAPContentElement extends SOAPElementImpl
    public void handleMTOMTransitions()
    {
       // MTOM processing is only required on XOP parameters
-      if( isXOPParameter() == false)
-         return;
+      if(!isXOPParameter()) return;
+
+      boolean domContentState = (soapContent instanceof DOMContent);
 
       if ( !XOPContext.isMTOMEnabled() )
       {
@@ -1068,23 +561,23 @@ public class SOAPContentElement extends SOAPElementImpl
          // This will inline any XOP include element and remove the attachment part.
          // See SOAPFactoryImpl for details.
 
-         if(log.isDebugEnabled()) log.debug("MTOM disabled: Force inline XOP data");
+         log.debug("MTOM disabled: Force inline XOP data");
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          expandToDOM();
       }
-      else if ( isDOMValid && XOPContext.isMTOMEnabled() )
+      else if ( domContentState && XOPContext.isMTOMEnabled() )
       {
          // When the DOM representation is valid,
          // but MTOM is enabled we need to convert the inlined
          // element back to an xop:Include element and create the attachment part
 
-         if(log.isDebugEnabled()) log.debug("MTOM enabled: Restore XOP data");
+         log.debug("MTOM enabled: Restore XOP data");
          XOPContext.restoreXOPDataDOM(this);
       }
    }
 
-   private boolean isXOPParameter()
+   boolean isXOPParameter()
    {
       return paramMetaData != null && paramMetaData.isXOP();
    }

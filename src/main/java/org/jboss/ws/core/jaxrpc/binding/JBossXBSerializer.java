@@ -26,6 +26,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 import java.io.StringWriter;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
@@ -71,7 +73,7 @@ public class JBossXBSerializer extends ComplexTypeSerializer
     * The result is a self contained (i.e. contains all namespace definitions) XML document without the XML declaration.
     * In case of an marshalling problem a descriptive exception is thrown.
     */
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
@@ -101,7 +103,7 @@ public class JBossXBSerializer extends ComplexTypeSerializer
          String xmlFragment = strwr.toString();
 
          if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
-         return xmlFragment;
+         return stringToResult(xmlFragment);
       }
       catch (RuntimeException rte)
       {

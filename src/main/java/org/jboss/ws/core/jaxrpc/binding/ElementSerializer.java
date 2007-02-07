@@ -24,6 +24,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 // $Id$
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.utils.DOMWriter;
@@ -47,7 +49,7 @@ public class ElementSerializer extends SerializerSupport
     * @param serContext
     * @return the string representation od the value
     */
-   public String serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes)
+   public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes)
          throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
@@ -57,6 +59,6 @@ public class ElementSerializer extends SerializerSupport
          throw new IllegalArgumentException("Value is not a Element: " + value.getClass().getName());
 
       String xmlFragment = DOMWriter.printNode((Element)value, false);
-      return xmlFragment;
+      return stringToResult(xmlFragment);
    }
 }
