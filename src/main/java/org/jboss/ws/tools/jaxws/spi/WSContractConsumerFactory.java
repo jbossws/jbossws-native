@@ -21,23 +21,20 @@
  */
 package org.jboss.ws.tools.jaxws.spi;
 
-import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
+import org.jboss.ws.tools.jaxws.api.WSContractConsumer;
 
 /**
- * WebServiceGeneratorProvider defines the contract for a WebServiceGenerator provider.
+ * WSContractConsumerFactory defines the contract for a WSContractConsumer factory.
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  */
-public interface WebServiceGeneratorProvider
+public interface WSContractConsumerFactory
 {
    /**
-    * Create a new WebServiceGenerator. There are no restrictions on how this
-    * should be performed. The passed ClassLoader is the one used in
-    * {@link WebServiceGenerator#newInstance(ClassLoader)}. This loader
-    * should be made available to the generated WebServiceGenerator.
+    * Create a new WSContractConsumer. There are no restrictions on how this
+    * should be performed. 
     * 
-    * @param loader the ClassLoader for type discovery
-    * @return a new WebServiceGenerator
+    * @return a new WSContractConsumer
     */
-   public WebServiceGenerator createGenerator(ClassLoader loader);
+   public WSContractConsumer createImporter();
 }

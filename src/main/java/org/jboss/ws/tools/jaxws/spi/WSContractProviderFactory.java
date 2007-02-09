@@ -19,17 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools.jaxws.impl;
+package org.jboss.ws.tools.jaxws.spi;
 
-import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
-import org.jboss.ws.tools.jaxws.spi.WebServiceGeneratorProvider;
+import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 
-public class WebServiceGeneratorProviderImpl implements WebServiceGeneratorProvider
+/**
+ * WSContractProviderFactory defines the contract for a WSContractProvider factory.
+ * 
+ * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ */
+public interface WSContractProviderFactory
 {
-   public WebServiceGenerator createGenerator(ClassLoader loader)
-   {
-      WebServiceGeneratorImpl impl = new WebServiceGeneratorImpl();
-      impl.setClassLoader(loader);
-      return impl;
-   }
+   /**
+    * Create a new WSContractProvider. There are no restrictions on how this
+    * should be performed. The passed ClassLoader is the one used in
+    * {@link WSContractProvider#newInstance(ClassLoader)}. This loader
+    * should be made available to the generated WSContractProvider.
+    * 
+    * @param loader the ClassLoader for type discovery
+    * @return a new WSContractProvider
+    */
+   public WSContractProvider createGenerator(ClassLoader loader);
 }

@@ -38,14 +38,14 @@ import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
+import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 
 /**
- * The provided implementation of a WebServiceGenerator.
+ * The provided implementation of a WSContractProvider.
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  */
-final class WebServiceGeneratorImpl extends WebServiceGenerator
+final class WSContractProviderImpl extends WSContractProvider
 {
    private ClassLoader loader;
    private boolean generateWsdl = false;
@@ -86,7 +86,7 @@ final class WebServiceGeneratorImpl extends WebServiceGenerator
    }
 
    @Override
-   public void generate(Class<?> endpointClass)
+   public void provide(Class<?> endpointClass)
    {
       // Use the output directory as the default
       File resourceDir = (this.resourceDir != null) ? this.resourceDir : outputDir;
@@ -127,11 +127,11 @@ final class WebServiceGeneratorImpl extends WebServiceGenerator
    }
 
    @Override
-   public void generate(String endpointClass)
+   public void provide(String endpointClass)
    {
       try
       {
-         generate(loader.loadClass(endpointClass));
+         provide(loader.loadClass(endpointClass));
       }
       catch (ClassNotFoundException e)
       {

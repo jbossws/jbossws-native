@@ -30,7 +30,7 @@ import java.security.PrivilegedAction;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  *
  */
-class ProviderLocator 
+class Locator 
 {
    static <T> T locate(Class<T> providerType, String providerProperty, String defaultProvider, ClassLoader loader)
    {

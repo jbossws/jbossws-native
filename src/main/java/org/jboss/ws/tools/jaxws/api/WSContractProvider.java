@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.PrintStream;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.tools.jaxws.spi.WebServiceGeneratorProvider;
+import org.jboss.ws.tools.jaxws.spi.WSContractProviderFactory;
 
 
 /**
- * WebServiceGenerator is responsible for generating the required portable
+ * WSContractProvider is responsible for generating the required portable
  * JAX-WS artifacts for a service endpoint implementation. This includes class
  * files for wrapper types and fault beans. WSDL may be optionally generated as
  * well using this API.
@@ -18,49 +18,49 @@ import org.jboss.ws.tools.jaxws.spi.WebServiceGeneratorProvider;
  * <p>The following example generates class files, source files and WSDL for an
  * endpoint:</p> 
  * <pre>
- * WebServiceGenerator generator = WebServiceGenerator.newInstance();
- * generator.setGenerateSource(true);
- * generator.setGenerateWsdl(true);
- * generator.setOutputDirectory(new File("output"));
- * generator.setMessageStream(System.out);
- * generator.generate(TestMe.class);
+ * WSContractProvider provider = WSContractProvider.newInstance();
+ * provider.setGenerateSource(true);
+ * provider.setGenerateWsdl(true);
+ * provider.setOutputDirectory(new File("output"));
+ * provider.setMessageStream(System.out);
+ * provider.provide(TestMe.class);
  * </pre>
  * 
  * <p>Thread-Safety:</p>
  * This class expects to be thread-confined, so it can not be shared between threads.
  */
-public abstract class WebServiceGenerator
+public abstract class WSContractProvider
 {
-   private static String DEFAULT_PROVIDER = "org.jboss.ws.tools.jaxws.impl.WebServiceGeneratorProviderImpl";
-   public static final String PROVIDER_PROPERTY = "org.jboss.ws.tools.jaxws.webServiceGeneratorProvider";
+   private static String DEFAULT_PROVIDER = "org.jboss.ws.tools.jaxws.impl.WSContractProviderFactoryImpl";
+   public static final String PROVIDER_PROPERTY = "org.jboss.ws.tools.jaxws.WSContractProviderFactoryImpl";
    
-   protected WebServiceGenerator() 
+   protected WSContractProvider() 
    {
       
    }
    
    /**
-    * Obtain a new instance of a WebServiceGenerator. This will use the current
-    * thread's context class loader to locate the WebServiceGeneratorProvider
+    * Obtain a new instance of a WSContractProvider. This will use the current
+    * thread's context class loader to locate the WSContractProviderFactory
     * implementation.
     * 
-    * @return a new WebServiceGenerator
+    * @return a new WSContractProvider
     */
-   public static WebServiceGenerator newInstance()
+   public static WSContractProvider newInstance()
    {
       return newInstance(Thread.currentThread().getContextClassLoader());
    }
    
    /**
-    * Obtain a new instance of a WebServiceGenerator. The specified ClassLoader will be used to
-    * locate the WebServiceGeneratorProvide implementation
+    * Obtain a new instance of a WSContractProvider. The specified ClassLoader will be used to
+    * locate the WSContractProviderFactory implementation
     * 
     * @param loader the ClassLoader to use
-    * @return a new WebServiceGenerator
+    * @return a new WSContractProvider
     */
-   public static WebServiceGenerator newInstance(ClassLoader loader)
+   public static WSContractProvider newInstance(ClassLoader loader)
    {
-      WebServiceGeneratorProvider provider = ProviderLocator.locate(WebServiceGeneratorProvider.class, PROVIDER_PROPERTY, DEFAULT_PROVIDER, loader);
+      WSContractProviderFactory provider = Locator.locate(WSContractProviderFactory.class, PROVIDER_PROPERTY, DEFAULT_PROVIDER, loader);
       return provider.createGenerator(loader);
    }
    
@@ -118,7 +118,7 @@ public abstract class WebServiceGenerator
     * @param endpointClass the name of the endpoint implementation bean
     * @throws WSException if any error occurs during processing, or the class is not found
     */
-   public abstract void generate(String endpointClass);
+   public abstract void provide(String endpointClass);
 
    /**
     * Generates artifacts using the current settings. This method may be invoked
@@ -127,7 +127,7 @@ public abstract class WebServiceGenerator
     * @param endpointClass the endpoint implementation bean
     * @throws WSException if any error occurs during processing
     */
-   public abstract void generate(Class<?> endpointClass);
+   public abstract void provide(Class<?> endpointClass);
    
    /**
     * Sets the PrintStream to use for status feedback. The simplest example

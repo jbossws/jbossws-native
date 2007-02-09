@@ -156,14 +156,14 @@
         <include name="dtd/**"/>
       </fileset>
       <fileset dir="${etc.dir}">
-        <include name="wsgen.bat"/>
-        <include name="wsimport.bat"/>
+        <include name="wsprovide.bat"/>
+        <include name="wsconsume.bat"/>
         <include name="wstools.bat"/>
         <include name="wstools-log4j.xml"/>
       </fileset>
       <zipfileset dir="${etc.dir}" filemode="755">
-        <include name="wsgen.sh"/>
-        <include name="wsimport.sh"/>
+        <include name="wsprovide.sh"/>
+        <include name="wsconsume.sh"/>
         <include name="wstools.sh"/>
       </zipfileset>
     </jar>

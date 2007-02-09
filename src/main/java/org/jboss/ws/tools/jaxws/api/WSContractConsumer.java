@@ -27,10 +27,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import org.jboss.ws.tools.jaxws.spi.WebServiceImporterProvider;
+import org.jboss.ws.tools.jaxws.spi.WSContractConsumerFactory;
 
 /**
- * WebServiceImporter is responsible for generating JAX-WS client and server
+ * WSContractConsumer is responsible for generating JAX-WS client and server
  * artifacts from the specified WSDL file. To implement a client, one would use
  * the generated ___Service.java file. For a server, one only needs to provide
  * an implementation class that implements the generated service endpoint
@@ -39,33 +39,33 @@ import org.jboss.ws.tools.jaxws.spi.WebServiceImporterProvider;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public abstract class WebServiceImporter
+public abstract class WSContractConsumer
 {
-   private static String DEFAULT_PROVIDER = "org.jboss.com.sun.tools.ws.jbossws.WebServiceImporterProviderImpl";
-   public static final String PROVIDER_PROPERTY = "org.jboss.ws.tools.jaxws.webServiceImporterProvider";
+   private static String DEFAULT_PROVIDER = "org.jboss.ws.tools.jaxws.impl.WSContractConsumerFactoryImpl";
+   public static final String PROVIDER_PROPERTY = "org.jboss.ws.tools.jaxws.WSContractConsumerFactoryImpl";
 
    /**
-    * Obtain a new instance of a WebServiceGenerator. This will use the current
-    * thread's context class loader to locate the WebServiceGeneratorProvider
+    * Obtain a new instance of a WSContractProvider. This will use the current
+    * thread's context class loader to locate the WSContractProviderFactory
     * implementation.
     * 
-    * @return a new WebServiceGenerator
+    * @return a new WSContractProvider
     */
-   public static WebServiceImporter newInstance()
+   public static WSContractConsumer newInstance()
    {
       return newInstance(Thread.currentThread().getContextClassLoader());
    }
    
    /**
-    * Obtain a new instance of a WebServiceImporter. The specified ClassLoader will be used to
+    * Obtain a new instance of a WSContractConsumer. The specified ClassLoader will be used to
     * locate the WebServiceImporterProvide implementation
     * 
     * @param loader the ClassLoader to use
-    * @return a new WebServiceImporter
+    * @return a new WSContractConsumer
     */
-   public static WebServiceImporter newInstance(ClassLoader loader)
+   public static WSContractConsumer newInstance(ClassLoader loader)
    {
-      WebServiceImporterProvider provider = ProviderLocator.locate(WebServiceImporterProvider.class, PROVIDER_PROPERTY, DEFAULT_PROVIDER, loader);
+      WSContractConsumerFactory provider = Locator.locate(WSContractConsumerFactory.class, PROVIDER_PROPERTY, DEFAULT_PROVIDER, loader);
       return provider.createImporter();
    }
    
@@ -150,7 +150,7 @@ public abstract class WebServiceImporter
     * 
     * @param wsdl the URL of the WSDL
     */
-   public abstract void importServices(URL wsdl);
+   public abstract void consume(URL wsdl);
  
    /**
     * Generate the required artifacts using the specified WSDL. This method
@@ -160,7 +160,7 @@ public abstract class WebServiceImporter
     * @param wsdl a URL or local file path
     * @throws MalformedURLException if wsdl is not a legal URL or local file
     */
-   public void importServices(String wsdl) throws MalformedURLException
+   public void consume(String wsdl) throws MalformedURLException
    {
       URL url = null;
       try
@@ -173,6 +173,6 @@ public abstract class WebServiceImporter
          url = file.toURL();
       }
          
-      importServices(url);
+      consume(url);
    }
 }

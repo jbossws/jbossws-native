@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools.jaxws;
+package org.jboss.ws.tools.jaxws.command;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -27,67 +27,69 @@ import gnu.getopt.LongOpt;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
+import org.jboss.ws.tools.jaxws.api.WSContractConsumer;
 
 /**
- * WSGenerate is a command line tool that generates portable JAX-WS artifacts
- * for a service endpoint implementation.
+ * wsconsume is a command line tool that generates portable JAX-WS artifacts
+ * from a WSDL file.
  * 
  * <pre>
- *  usage: wsgen [options] &lt;endpoint class name&gt;
+ *  usage: wsimport [options] &lt;wsdl-urlgt;
  *  options: 
  *  -h, --help                  Show this help message
+ *  -b, --binding=&lt;file&gt;        One or more JAX-WS or JAXB binding files 
  *  -k, --keep                  Keep/Generate Java source
- *  -w, --wsdl                  Enable WSDL file generation
- *  -c. --classpath             The classpath that contains the endpoint
+ *  -c  --catalog=&lt;file&gt;        Oasis XML Catalog file for entity resolution
+ *  -p  --package=&lt;name&gt;        The target package for generated source
+ *  -w  --wsdlLocation=&lt;loc&gt;    Value to use for @@WebService.wsdlLocation
  *  -o, --output=&lt;directory&gt;    The directory to put generated artifacts
- *  -r, --resource=&lt;directory&gt;  The directory to put resource artifacts
  *  -s, --source=&lt;directory&gt;    The directory to put Java source
  *  -q, --quiet                 Be somewhat more quiet
  *  -t, --show-traces           Show full exception stack traces
  * </pre>
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
+ * @version $Revision: 2221 $
  */
-public class WSGenerate
+public class wsconsume
 {
+   private List<File> bindingFiles = new ArrayList<File>();
    private boolean generateSource = false;
-   private boolean generateWsdl = false;
+   private File catalog = null;
+   private String targetPackage = null;
+   private String wsdlLocation = null;
    private boolean quiet = false;
    private boolean showTraces = false;
-   private ClassLoader loader = Thread.currentThread().getContextClassLoader();
    private File outputDir = new File("output");
-   private File resourceDir = null;
    private File sourceDir = null;
    
-   public static String PROGRAM_NAME = System.getProperty("program.name", "wsgen");
+   public static String PROGRAM_NAME = System.getProperty("program.name", wsconsume.class.getName());
 
    public static void main(String[] args)
    {
-      WSGenerate generate = new WSGenerate();
-      String endpoint = generate.parseArguments(args);
-      System.exit(generate.generate(endpoint));
+      wsconsume importer = new wsconsume();
+      URL wsdl = importer.parseArguments(args);
+      System.exit(importer.importServices(wsdl));
    }
    
-   private String parseArguments(String[] args)
+   private URL parseArguments(String[] args)
    {
-      String shortOpts = "hwko:r:s:cqt";
+      String shortOpts = "hb:kc:p:w:o:s:qt";
       LongOpt[] longOpts = 
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
-         new LongOpt("wsdl", LongOpt.NO_ARGUMENT, null, 'w'),
+         new LongOpt("binding", LongOpt.REQUIRED_ARGUMENT, null, 'b'),
          new LongOpt("keep", LongOpt.NO_ARGUMENT, null, 'k'),
+         new LongOpt("catalog", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
+         new LongOpt("package", LongOpt.REQUIRED_ARGUMENT, null, 'p'),
+         new LongOpt("wsdlLocation", LongOpt.REQUIRED_ARGUMENT, null, 'w'),
          new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o'),
-         new LongOpt("resource", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
          new LongOpt("source", LongOpt.REQUIRED_ARGUMENT, null, 's'),
-         new LongOpt("classpath", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
          new LongOpt("quiet", LongOpt.NO_ARGUMENT, null, 'q'),
          new LongOpt("show-traces", LongOpt.NO_ARGUMENT, null, 't'),
       };
@@ -98,29 +100,32 @@ public class WSGenerate
       {
          switch (c)
          {
+            case 'b':
+               bindingFiles.add(new File(getopt.getOptarg()));
+               break;
             case 'k':
                generateSource = true;
                break;
-            case 's':
-               sourceDir = new File(getopt.getOptarg());
+            case 'c':
+               catalog = new File(getopt.getOptarg());
                break;
-            case 'r':
-               resourceDir = new File(getopt.getOptarg());
+            case 'p':
+               targetPackage = getopt.getOptarg();
                break;
             case 'w':
-               generateWsdl = true;
-               break;
-            case 't':
-               showTraces = true;
+               wsdlLocation = getopt.getOptarg();
                break;
             case 'o':
                outputDir = new File(getopt.getOptarg());
                break;
+            case 's':
+               sourceDir = new File(getopt.getOptarg());
+               break;
             case 'q':
                quiet = true;
                break;
-            case 'c':
-               processClassPath(getopt.getOptarg());
+            case 't':
+               showTraces = true;
                break;
             case 'h':
                printHelp();
@@ -130,46 +135,68 @@ public class WSGenerate
          }
       }
       
-      int endpointPos = getopt.getOptind();
-      if (endpointPos >= args.length)
+      int wsdlPos = getopt.getOptind();
+      if (wsdlPos >= args.length)
       {
-         System.err.println("Error: endpoint implementation was not specified!");
+         System.err.println("Error: WSDL URL was not specified!");
          printHelp();
          System.exit(1);
       }
       
-      return args[endpointPos];
+      URL url = null;
+      try
+      {
+         try
+         {
+            url = new URL(args[wsdlPos]);
+         }
+         catch (MalformedURLException e)
+         {
+            File file = new File(args[wsdlPos]);
+            url = file.toURL();
+         }
+      }
+      catch (MalformedURLException e)
+      {
+         System.err.println("Error: Invalid URI: " + args[wsdlPos]);
+         System.exit(1);
+      }
+      
+      return url;
    }
    
    
-   private int generate(String endpoint)
+   private int importServices(URL wsdl)
    {
-      if (!JavaUtils.isLoaded(endpoint, loader))
-      {
-         System.err.println("Error: Could not load class [" + endpoint + "]. Did you specify a valid --classpath?");
-         return 1;
-      }
-      
-      WebServiceGenerator gen = WebServiceGenerator.newInstance(loader);
-      gen.setGenerateWsdl(generateWsdl);
-      gen.setGenerateSource(generateSource);
-      gen.setOutputDirectory(outputDir);
-      if (resourceDir != null)
-         gen.setResourceDirectory(resourceDir);
+      WSContractConsumer importer = WSContractConsumer.newInstance();
+      importer.setGenerateSource(generateSource);
+      importer.setOutputDirectory(outputDir);
       if (sourceDir != null)
-         gen.setSourceDirectory(sourceDir);
+         importer.setSourceDirectory(sourceDir);
 
       if (! quiet)
-         gen.setMessageStream(System.out);
+         importer.setMessageStream(System.out);
+      
+      if (catalog != null)
+         importer.setCatalog(catalog);
+      
+      if (targetPackage != null)
+         importer.setTargetPackage(targetPackage);
+      
+      if (wsdlLocation != null)
+         importer.setWsdlLocation(wsdlLocation);
+      
+      if (bindingFiles != null && bindingFiles.size() > 0)
+         importer.setBindingFiles(bindingFiles);
       
       try
       {
-         gen.generate(endpoint);
+         importer.consume(wsdl);
          return 0;
       }
       catch (Throwable t)
       {
-         System.err.println("Error: Could not generate. (use --show-traces to see full traces)");
+         System.err.println("Error: Could not import. (use --show-traces to see full traces)");
          if (!showTraces)
          {
             String message = t.getMessage();
@@ -187,36 +214,19 @@ public class WSGenerate
       return 1;
    }
 
-   private void processClassPath(String classPath)
-   {
-      String[] entries =  classPath.split(File.pathSeparator);
-      List<URL> urls= new ArrayList<URL>(entries.length);
-      for (String entry : entries)
-      {
-         try 
-         {
-            urls.add(new File(entry).toURL());
-         }
-         catch (MalformedURLException e)
-         {
-            System.err.println("Error: a classpath entry was malformed: " + entry);
-         }
-      }
-      loader = new URLClassLoader(urls.toArray(new URL[0]), loader);
-   }
-
    private static void printHelp()
    {
       PrintStream out = System.out;
-      out.println("WSGenerate generates portable JAX-WS artifacts for an endpoint implementation.\n");
-      out.println("usage: " + PROGRAM_NAME + " [options] <endpoint class name>\n");
+      out.println("wsconsume is a command line tool that generates portable JAX-WS artifacts from a WSDL file.\n");
+      out.println("usage: " + PROGRAM_NAME + " [options] <wsdl-url>\n");
       out.println("options: ");
       out.println("    -h, --help                  Show this help message");
+      out.println("    -b, --binding=<file>        One or more JAX-WS or JAXB binding files ");
       out.println("    -k, --keep                  Keep/Generate Java source");
-      out.println("    -w, --wsdl                  Enable WSDL file generation");
-      out.println("    -c. --classpath             The classpath that contains the endpoint");
+      out.println("    -c  --catalog=<file>        Oasis XML Catalog file for entity resolution");
+      out.println("    -p  --package=<name>        The target package for generated source");
+      out.println("    -w  --wsdlLocation=<loc>    Value to use for @WebService.wsdlLocation");
       out.println("    -o, --output=<directory>    The directory to put generated artifacts");
-      out.println("    -r, --resource=<directory>  The directory to put resource artifacts");
       out.println("    -s, --source=<directory>    The directory to put Java source");
       out.println("    -q, --quiet                 Be somewhat more quiet");
       out.println("    -t, --show-traces           Show full exception stack traces");

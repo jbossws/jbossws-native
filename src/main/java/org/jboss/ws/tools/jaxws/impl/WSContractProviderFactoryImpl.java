@@ -19,22 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools.jaxws.spi;
+package org.jboss.ws.tools.jaxws.impl;
 
-import org.jboss.ws.tools.jaxws.api.WebServiceImporter;
+import org.jboss.ws.tools.jaxws.api.WSContractProvider;
+import org.jboss.ws.tools.jaxws.spi.WSContractProviderFactory;
 
-/**
- * WebServiceImporterProvider defines the contract for a WebServiceImporter provider.
- * 
- * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- */
-public interface WebServiceImporterProvider
+public class WSContractProviderFactoryImpl implements WSContractProviderFactory
 {
-   /**
-    * Create a new WebServiceImporter. There are no restrictions on how this
-    * should be performed. 
-    * 
-    * @return a new WebServiceImporter
-    */
-   public WebServiceImporter createImporter();
+   public WSContractProvider createGenerator(ClassLoader loader)
+   {
+      WSContractProviderImpl impl = new WSContractProviderImpl();
+      impl.setClassLoader(loader);
+      return impl;
+   }
 }
