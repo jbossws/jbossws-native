@@ -459,7 +459,9 @@ public class WSDL11Writer extends WSDLWriter
       StringBuilder bodyParts = new StringBuilder();
       if (Constants.DOCUMENT_LITERAL == wsdlStyle)
       {
-         bodyParts.append(reference.getPartName());
+         // Empty bare body
+         if (reference.getPartName() != null)
+            bodyParts.append(reference.getPartName());
       }
       else
       {

@@ -50,6 +50,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
@@ -263,7 +264,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       {
          try
          {
-            String serviceName = serviceMetaData.getServiceName().getLocalPart();
+            // The RI uses upper case, and the TCK expects it, so we just mimic this even though we don't really have to
+            String wsdlName =  ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
 
             WSDLGenerator generator = new JAXBWSDLGenerator(jaxbCtx);
             WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
@@ -276,12 +278,12 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             if (wsdlDirectory != null)
             {
                dir = wsdlDirectory;
-               wsdlFile = new File(dir, serviceName + ".wsdl");
+               wsdlFile = new File(dir, wsdlName + ".wsdl");
             }
             else
             {
                dir =  IOUtils.createTempDirectory();
-               wsdlFile = File.createTempFile(serviceName, ".wsdl", dir);
+               wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
                wsdlFile.deleteOnExit();
             }
 

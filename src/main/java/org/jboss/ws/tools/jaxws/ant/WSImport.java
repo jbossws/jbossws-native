@@ -34,6 +34,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -77,6 +78,7 @@ import org.jboss.ws.tools.jaxws.api.WebServiceImporter;
  */
 public class WSImport extends Task
 {
+   private CommandlineJava command = new CommandlineJava();
    private String wsdl = null;
    private File destdir = null;
    private File sourcedestdir = null;
@@ -93,6 +95,11 @@ public class WSImport extends Task
    public void setDebug(boolean debug)
    {
       this.debug = debug;
+   }
+   
+   public Commandline.Argument createJvmarg()
+   {
+      return command.createVmArgument();
    }
 
    public void setBinding(File bindingFile)
@@ -238,7 +245,6 @@ public class WSImport extends Task
 
    private void executeForked() throws BuildException
    {
-      CommandlineJava command = new CommandlineJava();
       command.setClassname(org.jboss.ws.tools.jaxws.WSImport.class.getName());
       
       Path path = command.createClasspath(getProject());

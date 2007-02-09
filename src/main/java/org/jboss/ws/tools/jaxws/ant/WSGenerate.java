@@ -30,6 +30,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -81,6 +82,7 @@ import org.jboss.ws.tools.jaxws.api.WebServiceGenerator;
 public class WSGenerate extends Task
 {
    private Path classpath = new Path(getProject());
+   private CommandlineJava command = new CommandlineJava();
    private String sei = null;
    private File destdir = null;
    private File resourcedestdir = null;
@@ -95,6 +97,11 @@ public class WSGenerate extends Task
    public void setDebug(boolean debug)
    {
       this.debug = debug;
+   }
+   
+   public Commandline.Argument createJvmarg() 
+   {
+      return command.createVmArgument();
    }
    
    public void setClasspath(Path classpath)
@@ -212,7 +219,6 @@ public class WSGenerate extends Task
 
    private void executeForked() throws BuildException
    {
-      CommandlineJava command = new CommandlineJava();
       command.setClassname(org.jboss.ws.tools.jaxws.WSGenerate.class.getName());
       
       Path path = command.createClasspath(getProject());
