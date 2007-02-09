@@ -126,7 +126,7 @@ public class XOPContext
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();     
       Boolean mtomEnabled = (Boolean)msgContext.getProperty(StubExt.PROPERTY_MTOM_ENABLED);
-      return Boolean.TRUE.equals(mtomEnabled) || mtomEnabled == null;
+      return Boolean.TRUE.equals(mtomEnabled);
    }
 
    public static void setMTOMEnabled(boolean b)

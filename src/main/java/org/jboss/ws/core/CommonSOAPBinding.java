@@ -777,7 +777,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       if (paramMetaData.isXOP() && XOPContext.isXOPEncodedRequest())
       {
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
-         soapMessage.setXOPMessage(true);
+         soapMessage.setXOPMessage(true);         
       }
       return soapContentElement;
    }

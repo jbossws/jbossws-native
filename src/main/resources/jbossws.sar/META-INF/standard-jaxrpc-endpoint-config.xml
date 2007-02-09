@@ -2,7 +2,8 @@
 
 <!-- $Id$ -->
 
-<jaxrpc-config xmlns="urn:jboss:jaxrpc-config:2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
+<jaxrpc-config xmlns="urn:jboss:jaxrpc-config:2.0"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
   xsi:schemaLocation="urn:jboss:jaxrpc-config:2.0 jaxrpc-config_2_0.xsd">
   
   <endpoint-config>
@@ -10,14 +11,8 @@
   </endpoint-config>
   
    <endpoint-config>
-      <config-name>Standard MTOM disabled endpoint</config-name>
-      <pre-handler-chain>
-         <handler-chain-name>MTOM handlers</handler-chain-name>
-         <handler>
-            <j2ee:handler-name>DisableMTOMHandler</j2ee:handler-name>
-            <j2ee:handler-class>org.jboss.ws.extensions.xop.DisableMTOMHandler</j2ee:handler-class>
-         </handler>
-      </pre-handler-chain>
+      <config-name>Standard MTOM Endpoint</config-name>
+      <feature>http://org.jboss.ws/mtom</feature>
    </endpoint-config>
 
    <endpoint-config>

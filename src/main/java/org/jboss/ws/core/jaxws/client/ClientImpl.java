@@ -46,6 +46,7 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
@@ -59,6 +60,7 @@ import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.extensions.xop.XOPContext;
 
 /**
  * Provides support for the dynamic invocation of a service endpoint.
@@ -207,12 +209,16 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       if(log.isDebugEnabled()) log.debug("Begin response processing");
 
+      // MTOM setting need to pass past pivot
+      boolean mtomEnabled = XOPContext.isMTOMEnabled();
+
       // remove existing context
       MessageContextAssociation.popMessageContext();
 
       SOAPMessageContextJAXWS responseContext = new SOAPMessageContextJAXWS(requestContext);
       responseContext.setSOAPMessage(null);
       responseContext.clear(); // clear message context properties
+      responseContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, mtomEnabled);
 
       // associate new context
       MessageContextAssociation.pushMessageContext(responseContext);

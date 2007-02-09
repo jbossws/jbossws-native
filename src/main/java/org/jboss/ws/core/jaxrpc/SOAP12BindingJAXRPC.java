@@ -42,7 +42,7 @@ public class SOAP12BindingJAXRPC extends CommonSOAP12Binding
 
    public SOAP12BindingJAXRPC() {
       super();
-      setMTOMEnabled(true);
+      setMTOMEnabled(false);
    }
 
    public void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage)
