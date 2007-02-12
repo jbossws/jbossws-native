@@ -78,7 +78,7 @@ public class wsprovide
    
    private String parseArguments(String[] args)
    {
-      String shortOpts = "hwko:r:s:cqt";
+      String shortOpts = "hwko:r:s:c:qt";
       LongOpt[] longOpts = 
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
@@ -214,7 +214,7 @@ public class wsprovide
       out.println("    -h, --help                  Show this help message");
       out.println("    -k, --keep                  Keep/Generate Java source");
       out.println("    -w, --wsdl                  Enable WSDL file generation");
-      out.println("    -c. --classpath             The classpath that contains the endpoint");
+      out.println("    -c. --classpath=<path>      The classpath that contains the endpoint");
       out.println("    -o, --output=<directory>    The directory to put generated artifacts");
       out.println("    -r, --resource=<directory>  The directory to put resource artifacts");
       out.println("    -s, --source=<directory>    The directory to put Java source");
