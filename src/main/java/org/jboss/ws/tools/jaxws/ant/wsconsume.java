@@ -52,7 +52,7 @@ import org.jboss.ws.tools.jaxws.api.WSContractConsumer;
  *   <tr><td>binding</td><td>A JAX-WS or JAXB binding file</td><td>none</td></tr>
  *   <tr><td>wsdlLocation</td><td>Value to use for @@WebService.wsdlLocation</td><td>generated</td></tr>
  *   <tr><td>destdir</td><td>The output directory for generated artifacts.</td><td>"output"</td></tr>
- *   <tr><td>sourcedir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
+ *   <tr><td>sourcedestdir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
  *   <tr><td>verbose</td><td>Enables more informational output about command progress.</td><td>false</td><tr>
  *   <tr><td>wsdl*</td><td>The WSDL file or URL</td><td>n/a</td><tr>
  * </table>

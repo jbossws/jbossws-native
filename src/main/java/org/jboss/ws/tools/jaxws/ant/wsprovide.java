@@ -45,7 +45,7 @@ import org.jboss.ws.tools.jaxws.api.WSContractProvider;
  *   <tr><td>keep</td><td>Keep/Enable Java source code generation.</td><td>false</td></tr>
  *   <tr><td>destdir</td><td>The output directory for generated artifacts.</td><td>"output"</td></tr>
  *   <tr><td>resourcedestdir</td><td>The output directory for resource artifacts (WSDL/XSD).</td><td>value of destdir</td></tr>
- *   <tr><td>sourcedir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
+ *   <tr><td>sourcedestdir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
  *   <tr><td>genwsdl</td><td>Whether or not to generate WSDL.</td><td>false</td><tr>
  *   <tr><td>verbose</td><td>Enables more informational output about command progress.</td><td>false</td><tr>
  *   <tr><td>sei*</td><td>Service Endpoint Implementation.</td><td></td><tr>
@@ -60,7 +60,7 @@ import org.jboss.ws.tools.jaxws.api.WSContractProvider;
  *    &lt;taskdef name=&quot;wsprovide&quot; classname=&quot;org.jboss.ws.tools.jaxws.ant.wsprovide&quot;&gt;
  *      &lt;classpath refid=&quot;core.classpath&quot;/&gt;
  *    &lt;/taskdef&gt;
- *    &lt;wsgen
+ *    &lt;wsprovide
  *      fork=&quot;false&quot;
  *      keep=&quot;true&quot;
  *      destdir=&quot;out&quot;
@@ -72,7 +72,7 @@ import org.jboss.ws.tools.jaxws.api.WSContractProvider;
  *      &lt;classpath&gt;
  *        &lt;pathelement path=&quot;${tests.output.dir}/classes&quot;/&gt;
  *      &lt;/classpath&gt;
- *    &lt;/wsgen&gt;
+ *    &lt;/wsprovide&gt;
  *  &lt;/target&gt;
  * </pre>
  * 
