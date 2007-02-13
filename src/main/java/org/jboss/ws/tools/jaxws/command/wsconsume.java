@@ -39,7 +39,7 @@ import org.jboss.ws.tools.jaxws.api.WSContractConsumer;
  * from a WSDL file.
  * 
  * <pre>
- *  usage: wsimport [options] &lt;wsdl-urlgt;
+ *  usage: wsconsume [options] &lt;wsdl-url&gt;
  *  options: 
  *  -h, --help                  Show this help message
  *  -b, --binding=&lt;file&gt;        One or more JAX-WS or JAXB binding files 
