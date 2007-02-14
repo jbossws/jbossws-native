@@ -162,9 +162,9 @@
         <include name="wstools-log4j.xml"/>
       </fileset>
       <zipfileset dir="${etc.dir}" filemode="755">
-        <include name="wsprovide"/>
-        <include name="wsrunclient"/>
-        <include name="wsconsume"/>
+        <include name="wsprovide.sh"/>
+        <include name="wsrunclient.sh"/>
+        <include name="wsconsume.sh"/>
         <include name="wstools.sh"/>
       </zipfileset>
     </jar>
