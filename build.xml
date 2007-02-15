@@ -158,6 +158,7 @@
       <fileset dir="${etc.dir}">
         <include name="wsprovide.bat"/>
         <include name="wsconsume.bat"/>
+        <include name="wsrunclient.bat"/>
         <include name="wstools.bat"/>
         <include name="wstools-log4j.xml"/>
       </fileset>
