@@ -32,9 +32,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -117,11 +117,25 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public int getWebServicePort()
    {
+      if (webServicePort == 0)
+      {
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         ServerConfig config = factory.getServerConfig();
+         webServicePort = config.getWebServicePort();
+         log.debug("Using WebServicePort: " + webServicePort);
+      }
       return webServicePort;
    }
 
    public int getWebServiceSecurePort()
    {
+      if (webServiceSecurePort == 0)
+      {
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         ServerConfig config = factory.getServerConfig();
+         webServiceSecurePort = config.getWebServiceSecurePort();
+         log.debug("Using WebServiceSecurePort: " + webServiceSecurePort);
+      }
       return webServiceSecurePort;
    }
 
@@ -148,25 +162,11 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public void setWebServicePort(int port)
    {
-      if (port == 0)
-      {
-         ServerConfigFactory factory = ServerConfigFactory.getInstance();
-         ServerConfig config = factory.getServerConfig();
-         port = config.getWebServicePort();
-         log.debug("Using WebServicePort: " + port);
-      }
       this.webServicePort = port;
    }
 
    public void setWebServiceSecurePort(int port)
    {
-      if (port == 0)
-      {
-         ServerConfigFactory factory = ServerConfigFactory.getInstance();
-         ServerConfig config = factory.getServerConfig();
-         port = config.getWebServiceSecurePort();
-         log.debug("Using WebServiceSecurePort: " + port);
-      }
       this.webServiceSecurePort = port;
    }
 
