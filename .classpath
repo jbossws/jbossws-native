@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-log4j.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-spi.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-remoting.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/jboss-xml-binding.jar" sourcepath="/build/thirdparty/jboss-xml-binding-src.zip"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-xml-binding.jar" sourcepath="/build/thirdparty/jboss-xml-binding-sources.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xmlsec.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>

@@ -24,8 +24,6 @@ package org.jboss.ws.core.server;
 //$Id: WebServiceDeployer.java 312 2006-05-11 10:49:22Z thomas.diesler@jboss.com $
 
 import org.jboss.kernel.Kernel;
-import org.jboss.kernel.spi.dependency.KernelControllerContext;
-import org.jboss.kernel.spi.dependency.KernelControllerContextAware;
 
 /**
  * Locate the single instance of the kernel 
@@ -33,22 +31,17 @@ import org.jboss.kernel.spi.dependency.KernelControllerContextAware;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2006
  */
-public class KernelLocator implements KernelControllerContextAware
+public class KernelLocator 
 {
    private static Kernel kernel;
 
    public static Kernel getKernel()
    {
-      return kernel;
+      return KernelLocator.kernel;
    }
 
-   public void setKernelControllerContext(KernelControllerContext context) throws Exception
+   public void setKernel(Kernel kernel)
    {
-      kernel = context.getKernel();
-   }
-
-   public void unsetKernelControllerContext(KernelControllerContext arg0) throws Exception
-   {
-      kernel = null;
+      KernelLocator.kernel = kernel;
    }
 }

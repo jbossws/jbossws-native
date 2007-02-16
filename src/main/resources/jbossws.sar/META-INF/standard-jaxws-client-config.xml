@@ -10,13 +10,6 @@
    </client-config>
 
    <client-config>
-      <config-name>Standard MTOM Client</config-name>
-
-      <feature>http://org.jboss.ws/mtom</feature>
-      
-   </client-config>
-
-   <client-config>
       <config-name>Standard WSAddressing Client</config-name>
       <post-handler-chains>
          <javaee:handler-chain>

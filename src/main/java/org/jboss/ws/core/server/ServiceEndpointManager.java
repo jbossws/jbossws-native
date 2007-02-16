@@ -148,11 +148,25 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public void setWebServicePort(int port)
    {
+      if (port == 0)
+      {
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         ServerConfig config = factory.getServerConfig();
+         port = config.getWebServicePort();
+         log.debug("Using WebServicePort: " + port);
+      }
       this.webServicePort = port;
    }
 
    public void setWebServiceSecurePort(int port)
    {
+      if (port == 0)
+      {
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         ServerConfig config = factory.getServerConfig();
+         port = config.getWebServiceSecurePort();
+         log.debug("Using WebServiceSecurePort: " + port);
+      }
       this.webServiceSecurePort = port;
    }
 

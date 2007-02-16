@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.soap;
 
+// $Id: $
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -59,40 +61,42 @@ import java.util.List;
  * Aggregates a {@link XMLFragment}.
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 05.02.2007
  */
-class XMLContent extends SOAPContent {
-
+class XMLContent extends SOAPContent
+{
    private static final Logger log = Logger.getLogger(XMLContent.class);
 
    // The well formed XML content of this element.
    private XMLFragment xmlFragment;
 
-   protected XMLContent(SOAPContentElement container) {
+   protected XMLContent(SOAPContentElement container)
+   {
       super(container);
    }
 
-   State getState() {
+   State getState()
+   {
       return State.XML_VALID;
    }
 
-   SOAPContent transitionTo(State nextState) {
+   SOAPContent transitionTo(State nextState)
+   {
 
       SOAPContent next;
 
-      if(State.XML_VALID == nextState)
+      if (State.XML_VALID == nextState)
       {
          next = this;
       }
-      else if(State.OBJECT_VALID == nextState)
+      else if (State.OBJECT_VALID == nextState)
       {
          Object obj = unmarshallObjectContents();
          SOAPContent objectValid = new ObjectContent(container);
          objectValid.setObjectValue(obj);
          next = objectValid;
       }
-      else if(State.DOM_VALID == nextState)
+      else if (State.DOM_VALID == nextState)
       {
          expandContainerChildren();
          next = new DOMContent(container);
@@ -105,7 +109,8 @@ class XMLContent extends SOAPContent {
       return next;
    }
 
-   private Object unmarshallObjectContents() {
+   private Object unmarshallObjectContents()
+   {
 
       Object obj;
       QName xmlType = container.getXmlType();
@@ -172,14 +177,14 @@ class XMLContent extends SOAPContent {
                try
                {
                   String contentType = MimeUtils.resolveMimeType(javaType);
-                  log.debug("Adopt DataHandler to " + javaType +", contentType "+ contentType);
+                  log.debug("Adopt DataHandler to " + javaType + ", contentType " + contentType);
 
                   DataSource ds = new SwapableMemoryDataSource(((DataHandler)obj).getInputStream(), contentType);
                   DataHandler dh = new DataHandler(ds);
                   obj = dh.getContent();
 
                   // 'application/octet-stream' will return a byte[] instead fo the stream
-                  if(obj instanceof InputStream)
+                  if (obj instanceof InputStream)
                   {
                      ByteArrayOutputStream bout = new ByteArrayOutputStream();
                      dh.writeTo(bout);
@@ -191,7 +196,7 @@ class XMLContent extends SOAPContent {
                   throw new WSException("Failed to adopt XOP content type", e);
                }
 
-               if(!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
+               if (!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
                {
                   throw new WSException("Java type '" + javaType + "' is not assignable from: " + objType.getName());
                }
@@ -208,7 +213,7 @@ class XMLContent extends SOAPContent {
       return obj;
    }
 
-// Get the deserializer factory for a given javaType and xmlType
+   // Get the deserializer factory for a given javaType and xmlType
    private static DeserializerFactoryBase getDeserializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
    {
       DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(javaType, xmlType);
@@ -245,7 +250,8 @@ class XMLContent extends SOAPContent {
     * Turn the xml fragment into a DOM repersentation and append
     * all children to the container.
     */
-   private void expandContainerChildren() {
+   private void expandContainerChildren()
+   {
 
       Element contentRoot = xmlFragment.toElement();
 
@@ -264,7 +270,8 @@ class XMLContent extends SOAPContent {
 
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
 
-      try {
+      try
+      {
          NodeList nlist = contentRoot.getChildNodes();
          for (int i = 0; i < nlist.getLength(); i++)
          {
@@ -292,33 +299,41 @@ class XMLContent extends SOAPContent {
                log.trace("Ignore child type: " + childType);
             }
          }
-      } catch (SOAPException e) {
+      }
+      catch (SOAPException e)
+      {
          throw new WSException("Failed to transition to DOM", e);
       }
    }
 
-   public Source getPayload() {
+   public Source getPayload()
+   {
       throw new IllegalStateException("Payload not available");
    }
 
-   public void setPayload(Source source) {
+   public void setPayload(Source source)
+   {
       throw new IllegalStateException("Payload not available");
    }
 
-   public XMLFragment getXMLFragment() {
+   public XMLFragment getXMLFragment()
+   {
       return this.xmlFragment;
    }
 
-   public void setXMLFragment(XMLFragment xmlFragment) {
+   public void setXMLFragment(XMLFragment xmlFragment)
+   {
 
       this.xmlFragment = xmlFragment;
    }
 
-   public Object getObjectValue() {
+   public Object getObjectValue()
+   {
       throw new IllegalStateException("Object value not available");
    }
 
-   public void setObjectValue(Object objValue) {
+   public void setObjectValue(Object objValue)
+   {
       throw new IllegalStateException("Object value not available");
    }
 

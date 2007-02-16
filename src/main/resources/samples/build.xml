@@ -31,7 +31,7 @@
   <!-- JDK Detection -->
   <available classname="java.lang.StackTraceElement" property="HAVE_JDK_1.4"/>
   <available classname="java.lang.Enum" property="HAVE_JDK_1.5"/>
-
+  
   <!-- Force thirdparty get -->
   <condition property="force.thirdparty.get">
     <not>
@@ -51,7 +51,7 @@
   
   <!-- Available integration target -->
   <property name="integration.target.${jbossws.integration.target}" value="true"/>
-	
+  
   <!-- Define jboss.home -->
   <condition property="jboss.home" value="${jboss50.home}">
     <equals arg1="${jbossws.integration.target}" arg2="jboss50"/>
@@ -155,10 +155,10 @@
       <pathelement location="${tests.lib.dir}/jboss-jaxrpc.jar"/>
       <pathelement location="${tests.lib.dir}/jboss-jaxws.jar"/>
       <pathelement location="${tests.lib.dir}/jboss-saaj.jar"/>
-      <pathelement location="${tests.lib.dir}/jbossws-jboss50-integration.jar"/> 
-      <pathelement location="${tests.lib.dir}/jbossws-jboss42-integration.jar"/> 
-      <pathelement location="${tests.lib.dir}/jbossws-jboss40-integration.jar"/> 
-      <pathelement location="${tests.lib.dir}/jbossws-tomcat-integration.jar"/> 
+      <pathelement location="${tests.lib.dir}/jbossws-jboss50-integration.jar"/>
+      <pathelement location="${tests.lib.dir}/jbossws-jboss42-integration.jar"/>
+      <pathelement location="${tests.lib.dir}/jbossws-jboss40-integration.jar"/>
+      <pathelement location="${tests.lib.dir}/jbossws-tomcat-integration.jar"/>
     </path>
     
     <!-- The combined compile classpath -->
@@ -191,11 +191,14 @@
       <pathelement location="${jboss.client}/jbossretro-rt.jar"/>
       <pathelement location="${jboss.client}/log4j.jar"/>
       <pathelement location="${jboss.client}/jbossall-client.jar"/>
-      <pathelement location="${jboss.lib}/jboss-vfs.jar"/> 
+      <pathelement location="${jboss.lib}/jboss-vfs.jar"/>
       <pathelement location="${jboss.server.lib}/hibernate3.jar"/>
-      <pathelement location="${jboss.server.lib}/jboss.jar"/> 
-      <pathelement location="${jboss.server.lib}/jbosssx.jar"/> 
-      <pathelement location="${jboss.server.lib}/jbosssx.jar"/> 
+      <pathelement location="${jboss.server.lib}/jboss.jar"/>
+      <pathelement location="${jboss.server.lib}/jbosssx.jar"/>
+      <pathelement location="${jboss.server.lib}/jbosssx.jar"/>
+      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi.jar"/> 
+      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi-saaj.jar"/> 
+      <pathelement location="${jboss.server.deploy}/juddi-service.sar/scout.jar"/> 
       <path refid="javac.classpath"/>
     </path>
     
@@ -203,10 +206,10 @@
     <path id="jbpm.bpel.classpath">
       <path refid="jbossws.classpath"/>
       <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jaxen.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar"/>
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar"/>
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar"/>
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jaxen.jar"/>
       <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
       <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
       <pathelement location="${thirdparty.dir}/dom4j.jar"/>
@@ -220,90 +223,35 @@
   </target>
   
   <target name="tomcat-classpath" depends="common-classpath" if="jbossws.integration.target.tomcat">
-    
     <fail message="jdk-1.5 is required for Tomcat integration" unless="HAVE_JDK_1.5"/>
-    
-    <!-- The test client classpath -->
     <path id="test.client.classpath">
       <path refid="jbossws.classpath"/>
-      <pathelement location="${tomcat.home}/common/lib/jbossws-thirdparty.jar"/> 
+      <pathelement location="${tomcat.home}/common/lib/jbossws-thirdparty.jar"/>
       <path refid="javac.classpath"/>
     </path>
   </target>
   
-  
   <!-- ================================================================== -->
-  <!-- Compiling                                                          -->
-  <!-- ================================================================== -->
-  
-  <target name="compile" depends="compile14,compile15" description="Compile sources"/>
-  
-  <target name="compile14" depends="init" unless="HAVE_JDK_1.5">
-    <mkdir dir="${tests.output.dir}/classes"/>
-    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
-      failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
-      <src path="${tests.java.dir}"/>
-      <exclude name="org/jboss/test/ws/jaxws/**"/>
-      <exclude name="org/jboss/test/ws/tools/jsr181/**"/>
-      <classpath refid="javac.classpath"/>
-    </javac>
-  </target>
-  
-  <target name="compile15" depends="init" if="HAVE_JDK_1.5">
-    <mkdir dir="${tests.output.dir}/classes"/>
-    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
-      failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
-      <src path="${tests.java.dir}"/>
-      <classpath refid="javac.classpath"/>
-    </javac>
-  </target>
-  
-  <target name="compile-generated" depends="init" description="Compile generated sources">
-    <mkdir dir="${tests.output.dir}/classes"/>
-    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
-      <src path="${tests.output.dir}/wstools/java"/>
-      <exclude name="org/jboss/test/ws/interop/**"/>
-      <classpath refid="javac.classpath"/>
-    </javac>
-  </target>
-  
-  <target name="copy-resources" depends="init" description="Copy the deployment resources.">
-    <copy todir="${tests.output.dir}/classes" file="${tests.etc.dir}/jndi.properties"/>
-    <copy todir="${tests.output.dir}/classes" file="${tests.etc.dir}/log4j.xml"/>
-    <!-- Copy resources -->
-    <copy todir="${tests.output.dir}/resources">
-      <fileset dir="${tests.resources.dir}">
-        <include name="**/*.wsdl"/>
-        <include name="**/*.xml"/>
-        <exclude name="jaxrpc/samples-override/**"/>
-      </fileset>
-      <filterset>
-        <filter token="jbosstest.host.name" value="${node0}"/>
-        <filter token="wsdl-publish-location" value="${tests.output.dir}/wsdl-publish"/>
-      </filterset>
-    </copy>
-    <!-- Copy binary files -->
-    <copy todir="${tests.output.dir}/resources">
-      <fileset dir="${tests.resources.dir}">
-        <exclude name="**/*.wsdl"/>
-        <exclude name="**/*.xml"/>
-      </fileset>
-    </copy>
-  </target>
-  
-  <!-- ================================================================== -->
-  <!-- Building                                                           -->
+  <!-- Generating sources                                                 -->
   <!-- ================================================================== -->
   
-  <target name="main" depends="compile,copy-resources,generate-sources,compile-generated,copy-generated" description="Build the deployments.">
-    <ant antfile="${basedir}/ant-import/build-samples-jaxrpc.xml" target="build-samples-jaxrpc" inheritall="true"/>
-    <ant antfile="${basedir}/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws" inheritall="true"/>
+  <target name="wsconsume" depends="init" description="Consume JAX-WS contracts" if="HAVE_JDK_1.5">
+	
+    <!-- Define the JAX-WS wsconsume task -->
+    <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
+      <classpath refid="core.classpath"/>
+      <classpath refid="jbossws.classpath"/>
+      <classpath location="${thirdparty.dir}/jbossws-wsconsume-impl.jar"/>
+      <classpath location="${thirdparty.dir}/jaxb-xjc.jar"/>
+    </taskdef>    
+    
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
   </target>
   
   <!--
-  Generate samples sources
+    Generate BPEL sources
   -->
-  <target name="generate-sources" depends="compile" description="Generate the deployment resources.">
+  <target name="servicegen" depends="compile" description="Generate the BPEL resources.">
     <!-- create jbpm process archives -->
 	  <mkdir dir="${tests.output.dir}/libs"/>
     <zip destfile="${tests.output.dir}/libs/jaxrpc-samples-wsbpel-hello-process.zip">
@@ -319,16 +267,25 @@
     <servicegen processfile="${tests.output.dir}/libs/jaxrpc-samples-wsbpel-hello-process.zip"
       outputdir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF/wsdl"
       bindingfile="hello-binding-.wsdl" servicefile="hello-service.wsdl" />
+  </target>
+  
+  <!--
+    Generate JAX-RPC sources
+  -->
+  <target name="wstools" depends="compile" description="Generate the JAX-RPC artifacts.">
 	
-	  <!-- generate mapping artifacts -->
+    <!-- Define the JAX-RPC tools task -->
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath refid="core.classpath"/>
       <classpath refid="jbossws.classpath"/>
+      <classpath location="${thirdparty.dir}/jbossretro-rt.jar"/>
+      <classpath location="${thirdparty.dir}/jboss-backport-concurrent.jar"/>
       <classpath location="${thirdparty.dir}/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
       <classpath location="${tests.output.dir}"/>
     </taskdef>    
-    <mkdir dir="${tests.output.dir}/libs"/>
+    
+    <!-- Generate JAX-RPC artifacts -->
     <mkdir dir="${tests.output.dir}/wstools/java"/>
     <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
     <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/bare/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
@@ -350,9 +307,7 @@
     <move todir="${tests.output.dir}/wstools/java">
       <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
     </move>
-  </target>
-  
-  <target name="copy-generated" depends="init" description="Copy the deployment resources.">
+    
     <!-- Copy generated resources -->
     <copy todir="${tests.output.dir}/resources">
       <fileset dir="${tests.output.dir}/wstools/resources">
@@ -369,6 +324,93 @@
     </copy>
   </target>
   
+  <!--
+    Generate JAX-WS sources
+  -->
+  <target name="wsprovide" depends="compile" description="Provide the JAX-WS contracts." if="HAVE_JDK_1.5">
+	
+    <!-- Define the JAX-WS wsprovide task -->
+    <taskdef name="wsprovide" classname="org.jboss.ws.tools.jaxws.ant.wsprovide">
+      <classpath refid="core.classpath"/>
+      <classpath refid="jbossws.classpath"/>
+      <classpath location="${thirdparty.dir}/concurrent.jar"/>
+      <classpath location="${tests.output.dir}/classes"/>
+    </taskdef>    
+    
+    <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
+  </target>
+  
+  <target name="generate-resources" depends="servicegen,wstools,wsprovide">
+    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
+      <src path="${tests.output.dir}/wstools/java"/>
+      <exclude name="org/jboss/test/ws/interop/**"/>
+      <classpath refid="javac.classpath"/>
+    </javac>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Compiling                                                          -->
+  <!-- ================================================================== -->
+  
+  <target name="compile" depends="wsconsume,compile14,compile15" description="Compile sources"/>
+  
+  <target name="compile14" depends="init" unless="HAVE_JDK_1.5">
+    <mkdir dir="${tests.output.dir}/classes"/>
+    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
+      failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
+      <src path="${tests.java.dir}"/>
+      <exclude name="org/jboss/test/ws/jaxws/**"/>
+      <exclude name="org/jboss/test/ws/tools/jaxws/**"/>
+      <exclude name="org/jboss/test/ws/tools/jsr181/**"/>
+      <classpath refid="javac.classpath"/>
+    </javac>
+  </target>
+  
+  <target name="compile15" depends="init" if="HAVE_JDK_1.5">
+    <mkdir dir="${tests.output.dir}/classes"/>
+    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
+      failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
+      <src path="${tests.java.dir}"/>
+      <src path="${tests.output.dir}/wsconsume/java"/>
+      <classpath refid="javac.classpath"/>
+    </javac>
+  </target>
+  
+  <!-- Copy resources -->
+  <target name="copy-resources" depends="init" description="Copy the deployment resources.">
+    <copy todir="${tests.output.dir}/classes" file="${tests.etc.dir}/jndi.properties"/>
+    <copy todir="${tests.output.dir}/classes" file="${tests.etc.dir}/log4j.xml"/>
+    
+    <copy todir="${tests.output.dir}/resources">
+      <fileset dir="${tests.resources.dir}">
+        <include name="**/*.wsdl"/>
+        <include name="**/*.xml"/>
+        <exclude name="jaxrpc/samples-override/**"/>
+      </fileset>
+      <filterset>
+        <filter token="jbosstest.host.name" value="${node0}"/>
+        <filter token="wsdl-publish-location" value="${tests.output.dir}/wsdl-publish"/>
+      </filterset>
+    </copy>
+    
+    <!-- Copy binary files -->
+    <copy todir="${tests.output.dir}/resources">
+      <fileset dir="${tests.resources.dir}">
+        <exclude name="**/*.wsdl"/>
+        <exclude name="**/*.xml"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Building                                                           -->
+  <!-- ================================================================== -->
+  
+  <target name="main" depends="wsconsume,compile,copy-resources,generate-resources" description="Build the deployments.">
+    <ant antfile="${basedir}/ant-import/build-samples-jaxrpc.xml" target="build-samples-jaxrpc" inheritall="true"/>
+    <ant antfile="${basedir}/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws" inheritall="true"/>
+  </target>
+  
   <!-- ================================================================== -->
   <!-- Testing                                                            -->
   <!-- ================================================================== -->
@@ -382,8 +424,8 @@
   </target>
   
   <!--
-     Run a collection of unit tests.
-     ant -Dtest=tools test
+  Run a collection of unit tests.
+  ant -Dtest=tools test
   -->
   <target name="test" depends="init" if="test" description="Run all unit tests in a given directory">
     <antcall target="tests-main">
@@ -427,8 +469,8 @@
   </target>
   
   <!--
-     Run a single unit test.
-     ant -Dtest=org.jboss.test.ws.jaxrpc.samples.jsr109pojo.RpcJSETestCase one-test
+  Run a single unit test.
+  ant -Dtest=org.jboss.test.ws.jaxrpc.samples.jsr109pojo.RpcJSETestCase one-test
   -->
   <target name="one-test" depends="init" if="test" description="Run a single unit test">
     <mkdir dir="${tests.output.dir}/reports"/>

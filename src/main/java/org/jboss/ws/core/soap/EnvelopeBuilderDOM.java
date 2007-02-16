@@ -22,6 +22,7 @@
 package org.jboss.ws.core.soap;
 
 //$Id$
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
@@ -35,6 +36,7 @@ import javax.xml.transform.dom.DOMSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+
 /**
  * A SOAPEnvelope builder for JAXRPC based on DOM 
  * 
@@ -46,7 +48,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 {
    // provide logging
    private static Logger log = Logger.getLogger(EnvelopeBuilderDOM.class);
-   
+
    private Style style = Style.DOCUMENT;
 
    public EnvelopeBuilderDOM(Style style)
@@ -60,7 +62,6 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       Element domEnv = null;
       try
       {
-         // TODO: The parser unescapes special characters, which we need to escape later on again         
          domEnv = DOMUtils.parse(ins);
       }
       catch (IOException ex)
@@ -100,7 +101,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          {
             Element srcElement = (Element)it.next();
             //registerNamespacesLocally(srcElement);
-            XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
+            XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
 
             Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
             SOAPContentElement destElement = new SOAPHeaderElementImpl(name);
@@ -193,8 +194,8 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
                   destElement = (SOAPContentElement)soapBodyElement.addChildElement(destElement);
 
                   DOMUtils.copyAttributes(destElement, srcElement);
-                  
-                  XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
+
+                  XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
                   destElement.setXMLFragment(xmlFragment);
                }
             }
@@ -206,8 +207,8 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
                destElement = (SOAPContentElement)soapBody.addChildElement(destElement);
 
                DOMUtils.copyAttributes(destElement, srcElement);
-               
-               XMLFragment xmlFragment = new XMLFragment( new DOMSource(srcElement) );
+
+               XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
                destElement.setXMLFragment(xmlFragment);
             }
             else if (style == null)
@@ -249,7 +250,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             }
          }
       }
-      
+
       return soapEnv;
    }
 
@@ -257,14 +258,15 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
     * Register globally available namespaces on element level.
     * This is necessary to ensure that each xml fragment is valid.    
     */
-   private void registerNamespacesLocally(Element srcElement) {
-      if(srcElement.getPrefix()== null)
+   private void registerNamespacesLocally(Element srcElement)
+   {
+      if (srcElement.getPrefix() == null)
       {
          srcElement.setAttribute("xmlns", srcElement.getNamespaceURI());
       }
       else
       {
-         srcElement.setAttribute("xmlns:"+srcElement.getPrefix(), srcElement.getNamespaceURI());
+         srcElement.setAttribute("xmlns:" + srcElement.getPrefix(), srcElement.getNamespaceURI());
       }
    }
 }

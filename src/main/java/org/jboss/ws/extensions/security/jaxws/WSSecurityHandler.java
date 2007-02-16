@@ -93,28 +93,21 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
       EndpointMetaData epMetaData = ((CommonMessageContext)msgContext).getEndpointMetaData();
       ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
 
-      if(null == serviceMetaData.getSecurityConfiguration()) // might be set through ServiceObjectFactory
+      if(serviceMetaData.getSecurityConfiguration() == null) // might be set through ServiceObjectFactory
       {
          UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
-         boolean successful = false;
          WSSecurityConfiguration config = null;
          try
          {
             WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
             config = wsseConfFactory.createConfiguration(vfsRoot, getConfigResourceName());
-            if(config!=null) successful = true;
-
          }
-         catch (IOException e)
+         catch (IOException ex)
          {
-            successful = false;
+            WSException.rethrow("Cannot load ws-security config", ex);
          }
-
-         if(!successful)
-            throw new WSException("Failed to access security config");
 
          // it's required further down the processing chain
-         // TODO: cleanup
          serviceMetaData.setSecurityConfiguration(config);
 
       }

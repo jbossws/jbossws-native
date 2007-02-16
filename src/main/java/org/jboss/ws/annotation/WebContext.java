@@ -88,8 +88,7 @@ public @interface WebContext {
     * A secure endpoint does not by default publish it's wsdl on an unsecure transport.
     * You can override this behaviour by explicitly setting the secureWSDLAccess flag to false.
     * 
-    * Protect access to WSDL
-    * http://jira.jboss.org/jira/browse/JBWS-723   
+    * Protect access to WSDL. See http://jira.jboss.org/jira/browse/JBWS-723   
     */
    boolean secureWSDLAccess() default true;
     

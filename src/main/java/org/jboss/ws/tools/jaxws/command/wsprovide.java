@@ -45,7 +45,7 @@ import org.jboss.ws.tools.jaxws.api.WSContractProvider;
  *  -h, --help                  Show this help message
  *  -k, --keep                  Keep/Generate Java source
  *  -w, --wsdl                  Enable WSDL file generation
- *  -c. --classpath=&lt;path&lt;      The classpath that contains the endpoint
+ *  -c, --classpath=&lt;directory&gt; The classpath that contains the endpoint
  *  -o, --output=&lt;directory&gt;    The directory to put generated artifacts
  *  -r, --resource=&lt;directory&gt;  The directory to put resource artifacts
  *  -s, --source=&lt;directory&gt;    The directory to put Java source
@@ -214,7 +214,7 @@ public class wsprovide
       out.println("    -h, --help                  Show this help message");
       out.println("    -k, --keep                  Keep/Generate Java source");
       out.println("    -w, --wsdl                  Enable WSDL file generation");
-      out.println("    -c. --classpath=<path>      The classpath that contains the endpoint");
+      out.println("    -c, --classpath=<directory> The classpath that contains the endpoint");
       out.println("    -o, --output=<directory>    The directory to put generated artifacts");
       out.println("    -r, --resource=<directory>  The directory to put resource artifacts");
       out.println("    -s, --source=<directory>    The directory to put Java source");

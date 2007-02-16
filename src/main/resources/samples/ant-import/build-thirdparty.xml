@@ -36,6 +36,7 @@
     <get src="${jboss.repository}/jboss/ejb3/${jboss-ejb3}/bin/ejb3.deployer" dest="${thirdparty.dir}/ejb3.deployer.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-client.jar" dest="${thirdparty.dir}/jbosssx-client.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-wsconsume-impl/${jbossws-wsconsume}/lib/jbossws-wsconsume-impl.jar" dest="${thirdparty.dir}/jbossws-wsconsume-impl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbossas/core-libs/${jbossas-core-libs}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbpm/bpel/${jbpm-bpel}/lib/jbpm-bpel.sar" dest="${thirdparty.dir}/jbpm-bpel.sar" usetimestamp="true" verbose="true" />    
     <get src="${jboss.repository}/oswego-concurrent/${oswego-concurrent}/lib/concurrent.jar" dest="${thirdparty.dir}/concurrent.jar" usetimestamp="true" verbose="true"/>
@@ -43,6 +44,7 @@
     <get src="${jboss.repository}/sun-jaf/${sun-jaf}/lib/activation.jar" dest="${thirdparty.dir}/activation.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-api.jar" dest="${thirdparty.dir}/jaxb-api.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-impl.jar" dest="${thirdparty.dir}/jaxb-impl.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-xjc.jar" dest="${thirdparty.dir}/jaxb-xjc.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-javamail/${sun-javamail}/lib/mail.jar" dest="${thirdparty.dir}/mail.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
     

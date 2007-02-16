@@ -10,14 +10,6 @@
    </endpoint-config>
 
    <endpoint-config>
-      <config-name>Standard Endpoint</config-name>
-
-      <feature>http://org.jboss.ws/mtom</feature>
-
-   </endpoint-config>
-
-
-   <endpoint-config>
       <config-name>Standard WSAddressing Endpoint</config-name>
       <pre-handler-chains>
          <javaee:handler-chain>

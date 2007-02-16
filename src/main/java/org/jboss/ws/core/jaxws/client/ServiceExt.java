@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
+import java.io.IOException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -30,13 +31,19 @@ import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
+import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 
 /**
  * Extends the standard JAXWS Service 
  *
  * @author Thomas.Diesler@jboss.com
- * @param <T>
  * @since 18-Jan-2007
  */
 public class ServiceExt extends Service implements ConfigProvider
@@ -45,12 +52,14 @@ public class ServiceExt extends Service implements ConfigProvider
    private String configName;
    // The config file for all created ports 
    private String configFile;
-   
+   // The WS-Security config
+   private String securityConfig;
+
    public ServiceExt(URL wsdlDocumentLocation, QName serviceName)
    {
       super(wsdlDocumentLocation, serviceName);
    }
-   
+
    /** 
     * Get the port configuration file for newly created ports 
     */
@@ -82,6 +91,22 @@ public class ServiceExt extends Service implements ConfigProvider
    {
       this.configName = configName;
       this.configFile = configFile;
+   }
+
+   /** 
+    * Get the WS-Security configuration  
+    */
+   public String getSecurityConfig()
+   {
+      return securityConfig;
+   }
+
+   /** 
+    * Set the WS-Security configuration  
+    */
+   public void setSecurityConfig(String securityConfig)
+   {
+      this.securityConfig = securityConfig;
    }
 
    @Override
@@ -123,11 +148,31 @@ public class ServiceExt extends Service implements ConfigProvider
       configurePort(port);
       return port;
    }
-   
+
    private void configurePort(Object port)
    {
       ConfigProvider cp = (ConfigProvider)port;
       if (configName != null || configFile != null)
          cp.setConfigName(configName, configFile);
+
+      if (securityConfig != null)
+      {
+         EndpointMetaData epMetaData = ((StubExt)port).getEndpointMetaData();
+         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+         if (serviceMetaData.getSecurityConfiguration() == null)
+         {
+            try
+            {
+               WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
+               UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
+               WSSecurityConfiguration config = wsseConfFactory.createConfiguration(vfsRoot, securityConfig);
+               serviceMetaData.setSecurityConfiguration(config);
+            }
+            catch (IOException ex)
+            {
+               WSException.rethrow("Cannot set security config", ex);
+            }
+         }
+      }
    }
 }

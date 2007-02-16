@@ -38,4 +38,8 @@ public interface ServerConfig
    File getServerTempDir();
 
    File getServerDataDir();
+
+   int getWebServicePort();
+   
+   int getWebServiceSecurePort();
 }

@@ -22,10 +22,94 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-@version.id@
 ----------------------------------
 
+Feature Request
+
+    * [JBWS-1156] - Implement injection of WebServiceRef
+    * [JBWS-1021] - Implement javax.xml.ws.Endpoint
+    * [JBWS-1022] - Implement javax.xml.ws.WebServiceContext
+    * [JBWS-1023] - Implement javax.xml.ws.Service
+    * [JBWS-1024] - Implement javax.xml.ws.BindingProvider
+    * [JBWS-1025] - Implement javax.xml.ws.Dispatch
+    * [JBWS-1070] - Add context-root in generated jboss-web.xml for Endpoint API
+    * [JBWS-1207] - Async jaxws dispatch
+    * [JBWS-1208] - Async jaxws proxy
+    * [JBWS-1020] - Implement javax.xml.ws.Provider
+    * [JBWS-1192] - Examples for JSR181 EJB Endpoints: show how to use a JavaBean as an operations's argument or return value
+    * [JBWS-1388] - Notification validation before dispatch
+    * [JBWS-1406] - WS-Eventing: event notification failure
+    * [JBWS-1438] - Implement @WebServiceRef injection for JBossAS-4.2
+    * [JBWS-1443] - getMessageContext Not Implemented
+    * [JBWS-1456] - Allow client configuration on StubExt
+    * [JBWS-1457] - Support soap attachments on StubExt
+
+Task
+
+    * [JBWS-1284] - Gracefully handle invalid ImageIO mime types
+    * [JBWS-1297] - Implement JAXB Fault Marshalling
+    * [JBWS-1404] - Add support for differing namespaces on SEI and implementation bean
+    * [JBWS-644]  - JAXWS initial implementation
+    * [JBWS-1031] - Use JAXB-2.0 for JSR-181 endpoints
+    * [JBWS-1099] - Implement JAXWS Handler Framework
+    * [JBWS-1150] - Implement JAXWS Logical Handlers
+    * [JBWS-1315] - Implement WS deployers for jbossas/trunk
+    * [JBWS-1425] - Update to remoting-2.0
+    * [JBWS-723]  - Protect access to WSDL
+    * [JBWS-1077] - Improve/Complete security documentation
+    * [JBWS-1098] - Publicly available interop endpoints
+    * [JBWS-1100] - Move WS-Eventing to updated wsa schema
+    * [JBWS-1155] - Document SwA/XOP usage with JSR181 endpoints.
+    * [JBWS-1307] - JAXWS user guide and samples
+    * [JBWS-1418] - Provide JBossWS API docs
+    * [JBWS-1429] - Cleanup PortComponent annotation
+    * [JBWS-1433] - Remerge connector discovery code
+    * [JBWS-1434] - Client programming: Add property API at Service level similiar to StubExt.
+    * [JBWS-1473] - Setup soak and performance tests
+    * [JBWS-1503] - Support XOP samples in tomcat
+    * [JBWS-1504] - Resolve dependency on snapshots
+
+Bug
+
+    * [JBWS-1079] - Incorrect WSDL to Java mapping for anonymous struct.
+    * [JBWS-1336] - JAXWSDeployerJSE throws NPE
+    * [JBWS-1389] - WebServiceProvider should be allowed on EJB3 beans
+    * [JBWS-1409] - WsdlGenerator crashes on void-methods
+    * [JBWS-1168] - JAXWS handler ordering
+    * [JBWS-1357] - JAXWSDeployerJSE is not handling jsp servlet defs correctly
+    * [JBWS-1374] - Package to namespace mapping is wrong
+    * [JBWS-1375] - JSR181MetaDataBuilder inspects java.* classes
+    * [JBWS-800]  - ClassCastException when trying to marshal a subclass of Date
+    * [JBWS-810]  - Simple type with restriction
+    * [JBWS-1184] - WSDL to Java - maps required xsd:double attribute to java.lang.Double
+    * [JBWS-1231] - wstools/java-wsdl does not handle recursive types
+    * [JBWS-1259] - WSDL To Java - StackOverflowError with self referencing element.
+    * [JBWS-1260] - WSDL To Java - Parameter unwrapping fails for a lot of scenarios.
+    * [JBWS-1285] - NPE when the soap encoded array size is 0 on the return path
+    * [JBWS-1317] - webservices.xml override does not account for namespaces
+    * [JBWS-1328] - Security configuration not correctly loaded when deployed as ear to JBoss 5.0.x
+    * [JBWS-1378] - NPE in replaceAddressLocation with SOAP1.2 WSDL
+    * [JBWS-1384] - Attachment parts with doclit message
+    * [JBWS-1386] - ComplexType with base64Binary property
+    * [JBWS-1393] - Problem interpreting messages with attachment when confronted with no <start> header
+    * [JBWS-1396] - Now jbossws-beans is exploded jbossws.sar must be exploded
+    * [JBWS-1408] - NPE when jbossws.sar is not expanded
+    * [JBWS-1410] - NumberFormatException From StubExt.PROPERTY_CLIENT_TIMEOUT
+    * [JBWS-1427] - Handling of invalid binding port type ref and doc/lit message parts
+    * [JBWS-1428] - Java to WSDL - Arrays defined with indexed properties within value type are skipped when generating the WSDL
+    * [JBWS-1441] - WSDL to Java - Complex type defined with complexContent only last element is in the generated java class if base type is empty
+    * [JBWS-1450] - WSDL To Java - Parameter unwrapping not handling nillable types correctly.
+    * [JBWS-1451] - comparison of the mime type should not be case sensitive
+    * [JBWS-1455] - WSDL To Java - Generated jaxrpc mapping contains same exception mapped multiple times if there are multiple operations.
+    * [JBWS-1468] - @Resource WebServiceContext for jbossas-4.x
+    * [JBWS-1497] - Fix failed resource lookup when offline
+    * [JBWS-1501] - wsimport RI fails when processing parameterOrder on one-way operations
+
 
 Errata
 ------
-
+    FIXME: [JBWS-1294] Add support for mapping async methods
+    FIXME: [JBWS-1511] MessageFactory does not preserve comments
+    FIXME: [JBWS-434] Support sequences of anys in JAXRPC
+    FIXME: [JBWS-751] Multiple schema imports with the same namespace
 
 Enjoy,
 The JBossWS Team

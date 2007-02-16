@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.wsse;
 // $Id: $
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
@@ -32,7 +33,9 @@ import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 
 /**
- * @author hbraun
+ * Create a WSSecurityConfiguration
+ *  
+ * @author Heiko.Braun@jboss.com
  * @author Thomas.Diesler@jboss.com
  */
 public class WSSecurityConfigFactory
@@ -47,33 +50,46 @@ public class WSSecurityConfigFactory
 
    public WSSecurityConfiguration createConfiguration(UnifiedVirtualFile vfsRoot, String resourceName) throws IOException
    {
-      WSSecurityConfiguration config = null;
-
-      URL location = getResource(vfsRoot, "WEB-INF/" + resourceName, false);
-      if (null == location)
-         location = getResource(vfsRoot, "META-INF/" + resourceName, false);
-
-      if (location != null)
+      URL configLocation = null;
+      try
       {
-         log.debug("createConfiguration from: " + location);
-         config = WSSecurityOMFactory.newInstance().parse(location);
+         configLocation = new URL(resourceName);
+      }
+      catch (MalformedURLException ex)
+      {
+         // ignore
+      }
+      
+      if (configLocation == null)
+         configLocation = getResource(vfsRoot, "WEB-INF/" + resourceName, false);
+      
+      if (configLocation == null)
+         configLocation = getResource(vfsRoot, "META-INF/" + resourceName, false);
 
+      WSSecurityConfiguration config = null;
+      if (configLocation != null)
+      {
+         log.debug("createConfiguration from: " + configLocation);
+         config = WSSecurityOMFactory.newInstance().parse(configLocation);
+         
          // Get and set deployment path to the keystore file
+         URL keystoreLocation = null;
          if (config.getKeyStoreFile() != null)
          {
-            location = getResource(vfsRoot, config.getKeyStoreFile(), true);
-            log.debug("Add keystore: " + location);
-            config.setKeyStoreURL(location);
+            keystoreLocation = getResource(vfsRoot, config.getKeyStoreFile(), true);
+            log.debug("Add keystore: " + keystoreLocation);
+            config.setKeyStoreURL(keystoreLocation);
          }
 
+         URL truststoreLocation = null;
          if (config.getTrustStoreFile() != null)
          {
-            location = getResource(vfsRoot, config.getTrustStoreFile(), true);
-            log.debug("Add truststore: " + location);
-            config.setTrustStoreURL(location);
+            truststoreLocation = getResource(vfsRoot, config.getTrustStoreFile(), true);
+            log.debug("Add truststore: " + truststoreLocation);
+            config.setTrustStoreURL(truststoreLocation);
          }
       }
-
+      
       return config;
    }
 

@@ -93,6 +93,7 @@ public class SchemaBindingBuilder
       schemaBinding.setUnmarshalListsToArrays(true); // note: default jaxb2.0 is false!
       schemaBinding.setSimpleContentProperty("_value");
       schemaBinding.setUseNoArgCtorIfFound(true);
+      schemaBinding.setReplacePropertyRefs(false);
       if (wsdlMapping != null)
       {
          bindSchemaToJava(schemaBinding, wsdlMapping);

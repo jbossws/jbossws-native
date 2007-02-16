@@ -32,8 +32,8 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.UnifiedVirtualFile;
-import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -62,7 +62,7 @@ public abstract class WSSecurityHandler extends GenericHandler
       {
          if (getSecurityConfiguration(msgContext) != null)
          {
-            WSSecurityDispatcher.handleInbound((SOAPMessageContextJAXRPC)msgContext);
+            WSSecurityDispatcher.handleInbound((CommonMessageContext)msgContext);
          }
       }
       catch (SOAPException ex)
@@ -79,7 +79,7 @@ public abstract class WSSecurityHandler extends GenericHandler
       {
          if (getSecurityConfiguration(msgContext) != null)
          {
-            WSSecurityDispatcher.handleOutbound((SOAPMessageContextJAXRPC)msgContext);
+            WSSecurityDispatcher.handleOutbound((CommonMessageContext)msgContext);
          }
       }
       catch (SOAPException ex)
@@ -96,7 +96,7 @@ public abstract class WSSecurityHandler extends GenericHandler
     */
    private WSSecurityConfiguration getSecurityConfiguration(MessageContext msgContext)
    {
-      EndpointMetaData epMetaData = ((SOAPMessageContextJAXRPC)msgContext).getEndpointMetaData();
+      EndpointMetaData epMetaData = ((CommonMessageContext)msgContext).getEndpointMetaData();
       ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
 
       WSSecurityConfiguration config = serviceMetaData.getSecurityConfiguration();

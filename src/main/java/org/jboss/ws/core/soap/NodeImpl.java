@@ -554,7 +554,7 @@ public class NodeImpl implements javax.xml.soap.Node
       }
       else
       {
-         throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Operation only supported for javax.xml.soap.Node, this is a " + node);
+         throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Operation not supported on this type of node: " + node);
       }
       return retNode;
    }
@@ -564,9 +564,7 @@ public class NodeImpl implements javax.xml.soap.Node
       org.w3c.dom.Node domParent = domNode.getParentNode();
       if (domParent != null && soapParent == null)
          throw new WSException("Inconsistent node, has a DOM parent but no SOAP parent [" + this + "] " + DOMWriter.printNode(this, false));
-      if (domParent == null && soapParent != null)
-         throw new WSException("Inconsistent node, has a SOAP parent but no DOM parent [" + this + "] " + DOMWriter.printNode(this, false));
-      if (soapParent != null && domParent != soapParent.domNode)
+      if (domParent != null && soapParent != null && domParent != soapParent.domNode)
          throw new WSException("Inconsistent node, SOAP parent is not identical with DOM parent [" + this + "] " + DOMWriter.printNode(this, false));
    }
 

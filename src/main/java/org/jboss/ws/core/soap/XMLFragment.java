@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.soap;
 
+//$Id: $
+
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 import org.jboss.ws.core.utils.DOMUtils;
@@ -43,44 +45,48 @@ import java.io.*;
  * @see XMLContent
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 05.02.2007
  */
-public class XMLFragment {
+public class XMLFragment
+{
 
    private Source source;
    private Result result;
 
    private boolean idempotent = true;
 
-   public XMLFragment(Source source) {
+   public XMLFragment(Source source)
+   {
       this.source = source;
    }
 
-   public XMLFragment(Result result) {
+   public XMLFragment(Result result)
+   {
       this.result = result;
    }
 
-   public Source getSource() {
-      if(null == source)
+   public Source getSource()
+   {
+      if (null == source)
          throw new IllegalStateException("Source not available");
       return source;
    }
 
-   public Result getResult() {
-      if(null == source)
+   public Result getResult()
+   {
+      if (null == source)
          throw new IllegalStateException("Result not available");
       return result;
    }
 
    public String toStringFragment()
    {
-      if(!idempotent) throw new IllegalStateException("Trying to call a non-idempotent operation");
+      if (!idempotent)
+         throw new IllegalStateException("Trying to call a non-idempotent operation");
 
-      if(this.source != null)
+      if (this.source != null)
          return sourceToStringFragement(this.source);
-      else
-         return resultToStringFragment(this.result);
+      else return resultToStringFragment(this.result);
    }
 
    /**
@@ -89,26 +95,29 @@ public class XMLFragment {
     */
    public Element toElement()
    {
-      if(!idempotent) throw new IllegalStateException("Trying to call a non-idempotent operation");
+      if (!idempotent)
+         throw new IllegalStateException("Trying to call a non-idempotent operation");
 
       Element resultingElement = null;
 
       try
       {
-         if(source != null)
+         if (source != null)
          {
             resultingElement = DOMUtils.sourceToElement(source);
 
             // Any Source besides DOMSource is expected not to be idempotent
-            if(! (source instanceof DOMSource) ) idempotent = false;
+            if (!(source instanceof DOMSource))
+               idempotent = false;
 
          }
          else
          {
-            resultingElement = DOMUtils.parse( resultToStringFragment(result));
+            resultingElement = DOMUtils.parse(resultToStringFragment(result));
 
             // Any Result besides DOMResult is expected not to be idempotent
-            if(! (result instanceof DOMResult) ) idempotent = false;
+            if (!(result instanceof DOMResult))
+               idempotent = false;
          }
       }
       catch (IOException e)
@@ -130,11 +139,12 @@ public class XMLFragment {
       return new XMLFragment(source);
    }
 
-   private String resultToStringFragment(Result result) {
+   private String resultToStringFragment(Result result)
+   {
 
-      if(result instanceof DOMResult)
+      if (result instanceof DOMResult)
       {
-         return DOMWriter.printNode( ((DOMResult)result).getNode(), false);
+         return DOMWriter.printNode(((DOMResult)result).getNode(), false);
       }
       else if (result instanceof BufferedStreamResult)
       {
@@ -146,35 +156,36 @@ public class XMLFragment {
       throw new IllegalArgumentException("Unable to process javax.xml.transform.Result implementation: " + result);
    }
 
-   private static String sourceToStringFragement(Source source) {
+   private static String sourceToStringFragement(Source source)
+   {
 
       throw new IllegalArgumentException("Source should never be converted to String");
 
       /*new RuntimeException("sourceToStringFragement").printStackTrace(System.out);
 
-      String xmlFragment = null;
+       String xmlFragment = null;
 
-      try {
-         TransformerFactory tf = TransformerFactory.newInstance();
-         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-         tf.newTransformer().transform(source, new StreamResult(baos));
-         xmlFragment = new String(baos.toByteArray());
-         if (xmlFragment.startsWith("<?xml"))
-         {
-            int index = xmlFragment.indexOf(">");
-            xmlFragment = xmlFragment.substring(index + 1);
-         }
-      } catch (TransformerException e) {
-         WSException.rethrow(e);
-      }
+       try {
+       TransformerFactory tf = TransformerFactory.newInstance();
+       ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+       tf.newTransformer().transform(source, new StreamResult(baos));
+       xmlFragment = new String(baos.toByteArray());
+       if (xmlFragment.startsWith("<?xml"))
+       {
+       int index = xmlFragment.indexOf(">");
+       xmlFragment = xmlFragment.substring(index + 1);
+       }
+       } catch (TransformerException e) {
+       WSException.rethrow(e);
+       }
 
-      return xmlFragment;
-      */
+       return xmlFragment;
+       */
    }
 
    public void writeTo(Writer writer) throws IOException
    {
-      if(result != null )
+      if (result != null)
       {
          writeResult(writer);
       }
@@ -184,20 +195,21 @@ public class XMLFragment {
       }
    }
 
-    /**
+   /**
     * Should only be called with <code>jbossws.SOAPMessage==TRACE</code>
     */
-   private void writeSource(Writer writer) throws IOException {
+   private void writeSource(Writer writer) throws IOException
+   {
 
       //new RuntimeException("writeSource").printStackTrace(System.out);
 
-      if(source instanceof DOMSource)
+      if (source instanceof DOMSource)
       {
          DOMSource domSource = (DOMSource)source;
          DOMWriter dw = new DOMWriter(writer).setPrettyprint(false);
          dw.print(domSource.getNode());
       }
-      else if(source instanceof StreamSource)
+      else if (source instanceof StreamSource)
       {
          StreamSource streamSource = (StreamSource)source;
          copyStream(streamSource.getInputStream(), writer);
@@ -219,14 +231,15 @@ public class XMLFragment {
       }
    }
 
-   private void writeResult(Writer writer) {
-      if(result instanceof DOMResult)
+   private void writeResult(Writer writer)
+   {
+      if (result instanceof DOMResult)
       {
          DOMResult domResult = (DOMResult)result;
          DOMWriter dw = new DOMWriter(writer).setPrettyprint(false);
          dw.print(domResult.getNode());
       }
-      else if(result instanceof BufferedStreamResult)
+      else if (result instanceof BufferedStreamResult)
       {
          BufferedStreamResult sr = (BufferedStreamResult)result;
          ByteArrayOutputStream out = (ByteArrayOutputStream)sr.getOutputStream();
@@ -248,11 +261,12 @@ public class XMLFragment {
 
    public void writeTo(OutputStream out) throws IOException
    {
-      writeTo( new PrintWriter(out) );
+      writeTo(new PrintWriter(out));
    }
 
-   public String toString() {
-      String contents = source != null ? "source="+source : "result="+result;
-      return "XMLFragment {"+contents+", idempotent="+idempotent+"}";
+   public String toString()
+   {
+      String contents = source != null ? "source=" + source : "result=" + result;
+      return "XMLFragment {" + contents + ", idempotent=" + idempotent + "}";
    }
 }
