@@ -157,4 +157,8 @@ class WSDLLocatorImpl implements WSDLLocator
    {
       return latestImportURI;
    }
+
+   public void close()
+   {
+   }
 }

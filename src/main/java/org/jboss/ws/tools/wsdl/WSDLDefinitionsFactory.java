@@ -47,8 +47,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;
 
-import com.ibm.wsdl.xml.WSDLReaderImpl;
-
 /**
  * A factory that creates a <code>WSDLDefinitions</code> object from an URL.
  *
@@ -126,7 +124,8 @@ public class WSDLDefinitionsFactory
             }
 
             // Set EntityResolver in patched version of wsdl4j-1.5.2jboss
-            ((WSDLReaderImpl)wsdlReader).setEntityResolver(entityResolver);            
+            // [TODO] show the usecase that needs this
+            //((WSDLReaderImpl)wsdlReader).setEntityResolver(entityResolver);            
 
             Definition definition = wsdlReader.readWSDL(new WSDLLocatorImpl(entityResolver, wsdlLocation));
             wsdlDefinitions = new WSDL11Reader().processDefinition(definition, wsdlLocation);

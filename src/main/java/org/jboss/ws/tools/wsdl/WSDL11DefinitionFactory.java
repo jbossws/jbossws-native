@@ -88,7 +88,8 @@ public class WSDL11DefinitionFactory
       EntityResolver entityResolver = new JBossWSEntityResolver();
       
       // Set EntityResolver in patched version of wsdl4j-1.5.2jboss
-      ((WSDLReaderImpl)wsdlReader).setEntityResolver(entityResolver);
+      // [TODO] show the usecase that needs this
+      // ((WSDLReaderImpl)wsdlReader).setEntityResolver(entityResolver);
       
       Definition wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(entityResolver, wsdlLocation));
       return wsdlDefinition;

@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
 import org.apache.xerces.xs.ShortList;
@@ -28,23 +28,22 @@ import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSException;
 import org.apache.xerces.xs.XSNamedMap;
+import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSTypeDefinition;
- 
+import org.jboss.util.NotImplementedException;
 
 /**
  * Represents an XS Element Declaration
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since  May 3, 2005
  */
-public class JBossXSElementDeclaration
-        extends JBossXSObject
-        implements XSElementDeclaration
+public class JBossXSElementDeclaration extends JBossXSObject implements XSElementDeclaration
 {
    protected String targetNamespace = null;
    protected JBossXSTypeDefinition xstype = null;
    protected boolean nillable = false;
    private XSElementDeclaration xsed;
-   
+
    /**
     * Sole Annotation object
     */
@@ -74,31 +73,29 @@ public class JBossXSElementDeclaration
     */
    public JBossXSElementDeclaration(XSElementDeclaration xe)
    {
-     if(xe == null)
-        throw new IllegalArgumentException("Illegal Null Argument:xe");
-     
-     xsed = xe;
-     name= xe.getName();
-     namespace = xe.getNamespace();
-     XSTypeDefinition xt = xe.getTypeDefinition();
-     if(xt instanceof JBossXSTypeDefinition == false
-           && xt instanceof XSComplexTypeDefinition)
-     {
-        xstype = new JBossXSComplexTypeDefinition((XSComplexTypeDefinition)xt);
-     }
-     else
-     if(xt instanceof JBossXSTypeDefinition == false)
-     {
-        xstype = new JBossXSTypeDefinition(xt);
-     }
-     this.annotation = xe.getAnnotation();
+      if (xe == null)
+         throw new IllegalArgumentException("Illegal Null Argument:xe");
+
+      xsed = xe;
+      name = xe.getName();
+      namespace = xe.getNamespace();
+      XSTypeDefinition xt = xe.getTypeDefinition();
+      if (xt instanceof JBossXSTypeDefinition == false && xt instanceof XSComplexTypeDefinition)
+      {
+         xstype = new JBossXSComplexTypeDefinition((XSComplexTypeDefinition)xt);
+      }
+      else if (xt instanceof JBossXSTypeDefinition == false)
+      {
+         xstype = new JBossXSTypeDefinition(xt);
+      }
+      this.annotation = xe.getAnnotation();
    }
 
    public XSElementDeclaration getXSElementDeclaration()
    {
       return xsed;
    }
-   
+
    /**
     * One of XSConstants.SCOPE_GLOBAL, XSConstants.SCOPE_LOCAL
     * or XSConstants.SCOPE_ABSENT
@@ -112,12 +109,11 @@ public class JBossXSElementDeclaration
       return this.xstype;
    }
 
-   public void setTypeDefinition(XSTypeDefinition xst )
+   public void setTypeDefinition(XSTypeDefinition xst)
    {
-      if(xst  instanceof JBossXSTypeDefinition)
-        this.xstype = (JBossXSTypeDefinition)xst ;
-      else
-         if(xst instanceof XSComplexTypeDefinition)
+      if (xst instanceof JBossXSTypeDefinition)
+         this.xstype = (JBossXSTypeDefinition)xst;
+      else if (xst instanceof XSComplexTypeDefinition)
          this.xstype = new JBossXSComplexTypeDefinition((XSComplexTypeDefinition)xst);
    }
 
@@ -141,7 +137,7 @@ public class JBossXSElementDeclaration
       return this.enclosingCTDefinition;
    }
 
-   public void setEnclosingCTDefinition( XSComplexTypeDefinition enclosingCTDefinition)
+   public void setEnclosingCTDefinition(XSComplexTypeDefinition enclosingCTDefinition)
    {
       this.enclosingCTDefinition = enclosingCTDefinition;
    }
@@ -154,7 +150,7 @@ public class JBossXSElementDeclaration
    public void setTargetNamespace(String targetNamespace)
    {
       this.targetNamespace = targetNamespace;
-      this.setNamespace(  targetNamespace );
+      this.setNamespace(targetNamespace);
    }
 
    public short getConstraintType()
@@ -231,7 +227,7 @@ public class JBossXSElementDeclaration
    {
       return this.annotation;
    }
-   
+
    /**
     * Get the type
     */
@@ -239,5 +235,10 @@ public class JBossXSElementDeclaration
    public short getType()
    {
       return XSConstants.ELEMENT_DECLARATION;
+   }
+
+   public XSObjectList getAnnotations()
+   {
+      throw new NotImplementedException();
    }
 }

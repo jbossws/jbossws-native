@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
 // $Id$
@@ -64,11 +64,6 @@ public class JBossXSEntityResolver implements XMLEntityResolver
    /**
     * Resolves an external parsed entity. If the entity cannot be
     * resolved, this method should return null.
-    *
-    * @param resourceIdentifier  description of the resource to be resolved
-    * @throws XNIException Thrown on general error.
-    * @throws IOException  Thrown if resolved entity stream cannot be
-    *                      opened or some other i/o error occurs.
     */
    public XMLInputSource resolveEntity(XMLResourceIdentifier resId) throws XNIException, IOException
    {
@@ -86,13 +81,13 @@ public class JBossXSEntityResolver implements XMLEntityResolver
          {
             XMLInputSource source = getXMLInputSource(inputSource, resId);
             return source;
-         }         
+         }
       }
       catch (Exception ex)
       {
          log.trace(ex);
-      }      
-      
+      }
+
       try
       {
          String expandedSysId = resId.getExpandedSystemId();
@@ -137,8 +132,7 @@ public class JBossXSEntityResolver implements XMLEntityResolver
          }
 
          // Delegate to JBoss Entity Resolver
-         XMLInputSource source = getXMLInputSource(
-               delegate.resolveEntity(null, namespaceURI), resId);
+         XMLInputSource source = getXMLInputSource(delegate.resolveEntity(null, namespaceURI), resId);
          if (source != null)
             return source;
       }

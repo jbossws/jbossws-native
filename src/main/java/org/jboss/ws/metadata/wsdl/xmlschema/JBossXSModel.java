@@ -54,6 +54,7 @@ import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
@@ -741,5 +742,10 @@ public class JBossXSModel implements XSModel, Cloneable
          // avoid the copy, trust the client
          return anonymousTypeMap;
       }
+   }
+
+   public XSObjectList getSubstitutionGroup(XSElementDeclaration arg0)
+   {
+      throw new NotImplementedException();
    }
 }

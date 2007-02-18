@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
 import java.util.Iterator;
@@ -28,14 +28,14 @@ import org.apache.xerces.xs.XSAnnotation;
 import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModelGroup;
 import org.apache.xerces.xs.XSObjectList;
+import org.jboss.util.NotImplementedException;
 
 /**
  * Implements a ModelGroup of the Xerces Schema API
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since  Apr 21, 2005
  */
-public class JBossXSModelGroup extends JBossXSObject
-        implements XSModelGroup
+public class JBossXSModelGroup extends JBossXSObject implements XSModelGroup
 {
    private JBossXSObjectList xsparts = new JBossXSObjectList();;
    protected short compositor = 0;
@@ -73,21 +73,21 @@ public class JBossXSModelGroup extends JBossXSObject
       Iterator iter = p.iterator();
       while (iter.hasNext())
       {
-           xsparts.addItem((JBossXSParticle)iter.next());
+         xsparts.addItem((JBossXSParticle)iter.next());
       }
    }
 
    public void setParticles(List p, boolean shouldSort)
    {
       xsparts = new JBossXSObjectList();
-      if(shouldSort)
+      if (shouldSort)
          setParticles(p);
       else
       {
          Iterator iter = p.iterator();
          while (iter.hasNext())
          {
-              xsparts.addItem((JBossXSParticle)iter.next(), false);
+            xsparts.addItem((JBossXSParticle)iter.next(), false);
          }
       }
 
@@ -105,5 +105,10 @@ public class JBossXSModelGroup extends JBossXSObject
    public short getType()
    {
       return XSConstants.MODEL_GROUP;
+   }
+
+   public XSObjectList getAnnotations()
+   {
+      throw new NotImplementedException();
    }
 }
