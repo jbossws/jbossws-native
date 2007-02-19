@@ -130,13 +130,12 @@ public abstract class WSDLGenerator
          interfaceFault.setName(new NCName(fault.getXmlName().getLocalPart()));
          wsdlInterface.addFault(interfaceFault);
 
-         QName ref = new QName(wsdl.getTargetNamespace(), interfaceFault.getName().toString());
          WSDLInterfaceOperationOutfault outfault = new WSDLInterfaceOperationOutfault(interfaceOperation);
-         outfault.setRef(ref);
+         outfault.setRef(fault.getXmlName());
          interfaceOperation.addOutfault(outfault);
 
          WSDLBindingFault bindingFault = new WSDLBindingFault(wsdlBinding);
-         bindingFault.setRef(ref);
+         bindingFault.setRef(fault.getXmlName());
          wsdlBinding.addFault(bindingFault);
       }
 
