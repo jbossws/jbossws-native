@@ -369,7 +369,8 @@ public class WSDL11Writer extends WSDLWriter
          for (WSDLInterfaceOperationOutfault fault : operation.getOutfaults())
          {
             QName element = fault.getRef();
-            buffer.append("<fault  message='" + utils.getFormattedString(element));
+            String faultPrefix = wsdl.getPrefix(element.getNamespaceURI());
+            buffer.append("<fault  message='" + faultPrefix + ":" + element.getLocalPart());
             buffer.append("' name='" + element.getLocalPart() + "'/>");
          }
 
