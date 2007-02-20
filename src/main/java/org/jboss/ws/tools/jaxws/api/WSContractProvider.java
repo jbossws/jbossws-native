@@ -61,7 +61,7 @@ public abstract class WSContractProvider
    public static WSContractProvider newInstance(ClassLoader loader)
    {
       WSContractProviderFactory provider = Locator.locate(WSContractProviderFactory.class, PROVIDER_PROPERTY, DEFAULT_PROVIDER, loader);
-      return provider.createGenerator(loader);
+      return provider.createProvider(loader);
    }
    
    /**

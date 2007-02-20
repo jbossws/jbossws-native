@@ -36,5 +36,5 @@ public interface WSContractConsumerFactory
     * 
     * @return a new WSContractConsumer
     */
-   public WSContractConsumer createImporter();
+   public WSContractConsumer createConsumer();
 }

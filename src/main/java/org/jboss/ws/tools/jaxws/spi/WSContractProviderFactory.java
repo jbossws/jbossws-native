@@ -39,5 +39,5 @@ public interface WSContractProviderFactory
     * @param loader the ClassLoader for type discovery
     * @return a new WSContractProvider
     */
-   public WSContractProvider createGenerator(ClassLoader loader);
+   public WSContractProvider createProvider(ClassLoader loader);
 }

@@ -26,7 +26,7 @@ import org.jboss.ws.tools.jaxws.spi.WSContractProviderFactory;
 
 public class WSContractProviderFactoryImpl implements WSContractProviderFactory
 {
-   public WSContractProvider createGenerator(ClassLoader loader)
+   public WSContractProvider createProvider(ClassLoader loader)
    {
       WSContractProviderImpl impl = new WSContractProviderImpl();
       impl.setClassLoader(loader);
