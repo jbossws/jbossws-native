@@ -148,6 +148,7 @@ public interface Constants
    static final Name SOAP11_HEADER = new NameImpl("Header", PREFIX_ENV, NS_SOAP11_ENV);
    static final Name SOAP11_BODY = new NameImpl("Body", PREFIX_ENV, NS_SOAP11_ENV);
    static final Name SOAP11_FAULT = new NameImpl("Fault", PREFIX_ENV, NS_SOAP11_ENV);
+   static final Name SOAP12_FAULT = new NameImpl("Fault", PREFIX_ENV, NS_SOAP12_ENV);
 
    /** The default RPC return parameter name */
    static final String DEFAULT_RPC_RETURN_NAME = "result"; // FIXME: According to JSR-181 this should be 'return'

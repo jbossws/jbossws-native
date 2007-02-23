@@ -48,7 +48,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
@@ -218,15 +217,22 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("getFault");
       expandToDOM();
-      Iterator it = getChildElements(new NameImpl("Fault", Constants.PREFIX_ENV, getSOAPEnvelope().getNamespaceURI()));
-      return (it.hasNext() ? (SOAPFault)it.next() : null);
+      Iterator it = getFaultIterator();
+      return it.hasNext() ? (SOAPFault)it.next() : null;
    }
 
    public boolean hasFault()
    {
       log.trace("hasFault");
       expandToDOM();
-      return getChildElements(Constants.SOAP11_FAULT).hasNext();
+      return getFaultIterator().hasNext();
+   }
+
+   private Iterator getFaultIterator()
+   {
+      Name faultName = Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) ? 
+            Constants.SOAP11_FAULT : Constants.SOAP12_FAULT;
+      return getChildElements(faultName);
    }
 
    public Node appendChild(Node newChild) throws DOMException
@@ -448,7 +454,38 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    public Document extractContentAsDocument() throws SOAPException
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      log.trace("extractContentAsDocument");
+      expandToDOM();
+
+      Iterator childElements = DOMUtils.getChildElements(this);
+      // zero child elements?
+      if (!childElements.hasNext()) 
+         throw new SOAPException("there is no child SOAPElement of this SOAPBody");         
+
+      SOAPElementImpl childElement = (SOAPElementImpl)childElements.next();
+
+      // more than one child element?
+      if (childElements.hasNext())
+         throw new SOAPException("there is more than one child SOAPElement of this SOAPBody");
+
+      if (childElement instanceof SOAPContentElement)
+      {
+         // cause expansion to DOM
+         SOAPContentElement contentElement = (SOAPContentElement) childElement;
+         // TODO change visibility of SOAPContentElement.expandToDOM() to package? 
+         contentElement.getPayload();
+      }
+
+      // child SOAPElement is removed as part of this process
+      childElement.detachNode();
+      
+      /* child element's owner document might be shared with other elements;
+       * we have to create a separate document for returning to our caller
+       */
+      Document newDocument = DOMUtils.getDocumentBuilder().newDocument();
+      Node adoptedElement = newDocument.adoptNode(childElement.domNode);
+      newDocument.appendChild(adoptedElement);
+
+      return newDocument;
    }
 }

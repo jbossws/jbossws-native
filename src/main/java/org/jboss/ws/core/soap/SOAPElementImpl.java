@@ -44,6 +44,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
@@ -68,8 +69,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    private Element element;
    // The element name
    private Name elementName;
-   /* The element's encoding style
-    * JBCTS-440 #getEncodingStyleTest1 expects the initial value of the 
+   // The element's encoding style
+   /* JBCTS-440 #getEncodingStyleTest1 expects the initial value of the 
     * encodingStyle property to be null
     */
    private String encodingStyle = null;
@@ -143,39 +144,13 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) || Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
          throw new SOAPException("Changing the name of this SOAP Element is not allowed: " + getLocalName());
 
-      // Since DOM Elements do not support renaming, we must copy the content
-      Element copy = DOMUtils.createElement(qname.getLocalPart(), qname.getPrefix(), qname.getNamespaceURI());
+      elementName = new NameImpl(qname);
 
-      // copy attributes (and namespaces by the way)
-      NamedNodeMap attributes = element.getAttributes();
-      for (int i = 0; i < attributes.getLength(); i++)
-      {
-         org.w3c.dom.Node attribute = attributes.item(i);
+      Document owner = domNode.getOwnerDocument();
+      domNode = owner.renameNode(domNode, elementName.getURI(), elementName.getQualifiedName());
+      element = (Element)domNode;
 
-         // DOM disallows moving an attribute, it must explicitly be cloned
-         copy.setAttributeNode((Attr)attribute.cloneNode(true));
-      }
-
-      // move child nodes
-      for (org.w3c.dom.Node child = element.getFirstChild(), next; child != null; child = next)
-      {
-         next = child.getNextSibling();
-
-         // DOM removes a node from the tree before adding it to a different element
-         copy.appendChild(child);
-      }
-
-      // replace element with copy
-      org.w3c.dom.Node parent = element.getParentNode();
-      if (parent != null)
-         parent.replaceChild(copy, element);
-
-      // update fields
-      domNode = copy;
-      element = copy;
-      elementName = null; // getElementName() regenerates this field
-
-      return this;
+      return this.completeNamespaceDeclaration();
    }
 
    /**
@@ -460,7 +435,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       String nsURI = getNamespaceURI(prefix);
       if (nsURI == null)
          throw new SOAPException("CAnnot obtain namespace URI for prefix: " + prefix);
-      
+
       return new QName(nsURI, localName, prefix);
    }
 
