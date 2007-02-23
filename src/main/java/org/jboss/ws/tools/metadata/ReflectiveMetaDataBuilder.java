@@ -97,10 +97,9 @@ public class ReflectiveMetaDataBuilder
    private FaultMetaData getFaultMetaData(Class exType, OperationMetaData om)
    {
       String exname = WSDLUtils.getInstance().getJustClassName(exType);
-      QName xmlType = new QName(tmd.typeNamespace, exname);
-      QName xmlName = new QName(om.getQName().getNamespaceURI(), exname);
+      QName xmlName = new QName(tmd.typeNamespace, exname);
 
-      FaultMetaData fm = new FaultMetaData(om, xmlName, xmlType, exType.getName());
+      FaultMetaData fm = new FaultMetaData(om, xmlName, xmlName, exType.getName());
       return fm;
    }
 
