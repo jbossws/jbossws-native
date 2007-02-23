@@ -124,6 +124,7 @@ public abstract class TypeMappingImpl implements TypeMapping
    {
       if (log.isTraceEnabled())
          log.trace("register: TypeMappingImpl@"  + hashCode() + " [xmlType=" + xmlType + ",javaType=" + javaType.getName() + ",sf=" + sf + ",df=" + df + "]");
+      
       registerInternal(javaType, new IQName(xmlType), sf, df);
       keyPairCache.clear();
    }

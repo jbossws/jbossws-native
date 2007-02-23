@@ -164,8 +164,8 @@
       </fileset>
       <zipfileset dir="${etc.dir}" filemode="755">
         <include name="wsprovide.sh"/>
-        <include name="wsrunclient.sh"/>
         <include name="wsconsume.sh"/>
+        <include name="wsrunclient.sh"/>
         <include name="wstools.sh"/>
       </zipfileset>
     </jar>

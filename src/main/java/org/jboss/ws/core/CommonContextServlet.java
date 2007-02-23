@@ -85,7 +85,7 @@ public abstract class CommonContextServlet extends HttpServlet
       if(endpoints.isEmpty())
       {
          writer.print("<tr>");
-         writer.print("	<td><h3>There currently no endpoints deployed</h3></td>");                           
+         writer.print("	<td><h3>There are currently no endpoints deployed</h3></td>");                           
          writer.print("</tr>");
       }
 

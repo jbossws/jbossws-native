@@ -533,58 +533,6 @@ public class MappingFileGeneratorHelper
       return true;
    }
 
-   private void unwrapResponse(ServiceEndpointMethodMapping methodMapping, QName messageName, XSTypeDefinition xt)
-   {
-      if (xt instanceof XSComplexTypeDefinition == false)
-         throw new WSException("Tried to unwrap a non-complex type.");
-
-      XSComplexTypeDefinition wrapper = (XSComplexTypeDefinition)xt;
-      XSParticle particle = wrapper.getParticle();
-      XSTerm term = particle.getTerm();
-      if (term instanceof XSModelGroup == false)
-         throw new WSException("Expected model group, could not unwrap");
-      unwrapResponseParticles(methodMapping, messageName, (XSModelGroup)term);
-   }
-
-   private boolean unwrapResponseParticles(ServiceEndpointMethodMapping methodMapping, QName messageName, XSModelGroup group)
-   {
-      if (group.getCompositor() != XSModelGroup.COMPOSITOR_SEQUENCE)
-         throw new WSException("Only a sequence type can be unwrapped.");
-
-      XSObjectList particles = group.getParticles();
-
-      for (int i = 0; i < particles.getLength(); i++)
-      {
-         XSParticle particle = (XSParticle)particles.item(i);
-         XSTerm term = particle.getTerm();
-         if (term instanceof XSModelGroup)
-         {
-            if (unwrapResponseParticles(methodMapping, messageName, (XSModelGroup)term))
-               return true;
-         }
-         else if (term instanceof XSElementDeclaration)
-         {
-            XSElementDeclaration element = (XSElementDeclaration)term;
-            QName xmlName = new QName(element.getNamespace(), element.getName());
-            QName xmlType = new QName(element.getTypeDefinition().getNamespace(), element.getTypeDefinition().getName());
-            boolean array = particle.getMaxOccursUnbounded() || particle.getMaxOccurs() > 1;
-            boolean primitive = !(element.getNillable() || (particle.getMinOccurs() == 0 && particle.getMaxOccurs() == 1));
-
-            String javaType = getJavaTypeAsString(xmlName, xmlType, array, primitive);
-
-            WsdlReturnValueMapping wrvm = new WsdlReturnValueMapping(methodMapping);
-            wrvm.setMethodReturnValue(javaType);
-            wrvm.setWsdlMessage(new QName(messageName.getNamespaceURI(), messageName.getLocalPart(), WSToolsConstants.WSTOOLS_CONSTANT_MAPPING_WSDL_MESSAGE_NS));
-            wrvm.setWsdlMessagePartName(xmlName.getLocalPart());
-            methodMapping.setWsdlReturnValueMapping(wrvm);
-
-            return true;
-         }
-      }
-
-      return false;
-   }
-
    private void checkEssentials()
    {
       if (typeMapping == null)
