@@ -27,11 +27,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
@@ -69,7 +68,7 @@ public class ServiceMetaData
    private UnifiedMetaData wsMetaData;
 
    // The service endpoints
-   private Map<QName, EndpointMetaData> endpoints = new ConcurrentHashMap<QName, EndpointMetaData>();
+   private Map<QName, EndpointMetaData> endpoints = new HashMap<QName, EndpointMetaData>();
 
    private QName serviceName;
    private String serviceRefName;

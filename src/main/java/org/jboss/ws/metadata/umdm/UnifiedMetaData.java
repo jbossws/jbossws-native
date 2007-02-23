@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.UnifiedVirtualFile;
@@ -69,10 +68,10 @@ public class UnifiedMetaData
    private static boolean isFinalRelease;
    // Map<String, WSDLDefinitions> the wsdl-file to the wsdl Document
    // Note the same wsdl can be used in multiple webservice descriptions
-   Map<String, WSDLDefinitions> wsdlMap = new ConcurrentHashMap<String, WSDLDefinitions>();
+   Map<String, WSDLDefinitions> wsdlMap = new HashMap<String, WSDLDefinitions>();
    // Maps the jaxrpc-mapping-file to {@link JavaWsdlMapping} object
    // Note the same jaxrpc-mapping.xml can be used in multiple webservice descriptions
-   Map<String, JavaWsdlMapping> jaxrpcMap = new ConcurrentHashMap<String, JavaWsdlMapping>();
+   Map<String, JavaWsdlMapping> jaxrpcMap = new HashMap<String, JavaWsdlMapping>();
    // The list of service meta data
    private List<ServiceMetaData> services = new ArrayList<ServiceMetaData>();
    // Used by eager initialization

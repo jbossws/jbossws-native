@@ -2,8 +2,6 @@ package org.jboss.ws.metadata.umdm;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 
 /**
  * Base class for UMD elements that are extensible.
@@ -11,19 +9,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Heiko Braun, <heiko@openj.net>
  * @since 21-Mar-2006
  */
-public abstract class ExtensibleMetaData {
+public abstract class ExtensibleMetaData
+{
+   private Map<String, MetaDataExtension> extensions = new HashMap<String, MetaDataExtension>();
 
-   private Map<String, MetaDataExtension> extensions = new ConcurrentHashMap<String, MetaDataExtension>();
-
-   public Map<String, MetaDataExtension> getExtensions() {
+   public Map<String, MetaDataExtension> getExtensions()
+   {
       return extensions;
    }
 
-   public void addExtension(MetaDataExtension ext) {
+   public void addExtension(MetaDataExtension ext)
+   {
       getExtensions().put(ext.getExtensionNameSpace(), ext);
    }
 
-   public MetaDataExtension getExtension(String namespace) {
+   public MetaDataExtension getExtension(String namespace)
+   {
       return getExtensions().get(namespace);
    }
 
