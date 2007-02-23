@@ -651,7 +651,13 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             if (! "OUT".equals(parameterMode))
                wrappedParameters.add(wrapped);
             if (! "IN".equals(parameterMode))
+            {
+               wrapped.setHolder(true);
+               // wrapped parameters can not be shared between request/response objects (accessors)
+               if ("INOUT".equals(parameterMode))
+                  wrapped = new WrappedParameter(wrapped);
                wrappedResponseParameters.add(wrapped);
+            }
          }
          inMetaData.setWrappedParameters(wrappedParameters);
          wsdlPosition = wrappedParameters.size();

@@ -42,6 +42,17 @@ public class WrappedParameter
    private int index = -2;
    private Accessor accessor;
 
+   public WrappedParameter(WrappedParameter wrapped)
+   {
+      this.name = wrapped.name;
+      this.type = wrapped.type;
+      this.typeArguments = wrapped.typeArguments;
+      this.variable = wrapped.variable;
+      this.holder = wrapped.holder;
+      this.index = wrapped.index;
+      this.accessor = wrapped.accessor;
+   }
+   
    public WrappedParameter(QName name, String type, String variable, int index)
    {
       this.setName(name);

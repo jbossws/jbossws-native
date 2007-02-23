@@ -624,10 +624,15 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
             if (mode != ParameterMode.OUT)
                wrappedParameters.add(wrappedParameter);
+            
             if (mode != ParameterMode.IN)
             {
-               wrappedOutputParameters.add(wrappedParameter);
                wrappedParameter.setHolder(true);
+
+               // WrappedParameters can not be shared between request/response objects (accessors)
+               if (mode == ParameterMode.INOUT)
+                  wrappedParameter = new WrappedParameter(wrappedParameter);
+               wrappedOutputParameters.add(wrappedParameter);
             }
          }
          else

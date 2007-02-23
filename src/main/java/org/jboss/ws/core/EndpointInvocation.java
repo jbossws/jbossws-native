@@ -307,7 +307,7 @@ public class EndpointInvocation
       if (opMetaData.isDocumentWrapped() && !paramMetaData.isInHeader()&& !paramMetaData.isSwA() && !paramMetaData.isMessageType())
       {
          outParameters = ParameterWrapping.unwrapRequestParameters(paramMetaData, paramValue, payload);
-         syncOutWrappedParameters(targetParameterTypes);
+         syncOutWrappedParameters(targetParameterTypes, payload);
       }
       else
       {
@@ -338,7 +338,7 @@ public class EndpointInvocation
       }
    }
 
-   private void syncOutWrappedParameters(Class[] targetParameterTypes)
+   private void syncOutWrappedParameters(Class[] targetParameterTypes, Object[] payload)
    {
       ParameterMetaData returnMetaData = opMetaData.getReturnParameter();
       if (returnMetaData != null)
@@ -347,8 +347,13 @@ public class EndpointInvocation
          {
             try
             {
-               if (param.getIndex() >= 0 && !outParameters.containsKey(param.getIndex()) )
-                  outParameters.put(param.getIndex(), targetParameterTypes[param.getIndex()].newInstance());
+               // only OUT parameters need to be initialized
+               if (param.getIndex() >= 0 && !outParameters.containsKey(param.getIndex()))
+               {
+                  Object holder = targetParameterTypes[param.getIndex()].newInstance();
+                  payload[param.getIndex()] = holder;
+                  outParameters.put(param.getIndex(), holder);
+               }
             }
             catch (Exception e)
             {
