@@ -722,13 +722,13 @@ public class Service
       try
       {
          Class extClass = Class.forName("org.jboss.ws.core.jaxws.client.ServiceExt");
-         Constructor ctor = extClass.getConstructor(new Class[]{URL.class, QName.class});
-         service = (Service)ctor.newInstance(new Object[]{wsdlLocation, serviceName});
+         Constructor ctor = extClass.getConstructor(new Class[] { URL.class, QName.class });
+         service = (Service)ctor.newInstance(new Object[] { wsdlLocation, serviceName });
       }
       catch (InvocationTargetException ex)
       {
-         RuntimeException rte = (RuntimeException)ex.getTargetException();
-         throw rte;
+         Throwable target = ex.getTargetException();
+         throw new WebServiceException(target);
       }
       catch (Exception e)
       {
