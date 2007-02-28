@@ -30,6 +30,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
 import javax.xml.transform.Source;
@@ -70,9 +71,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
       Result result = null;
       try
       {
-         // It needs to be a valid JAXB type
-         // Therefore we don't need to look into our TypeMapping
-         Class javaType = value.getClass();
+         Class javaType = deriveType(value);
 
          JAXBContextCache contextCache = JAXBContextCache.getContextCache();
          JAXBContext jaxbContext = contextCache.getInstance(javaType);
@@ -95,6 +94,20 @@ public class JAXBSerializer extends ComplexTypeSerializer
       }
 
       return result;
+   }
+
+   private Class deriveType(Object value)
+   {
+      // It needs to be a valid JAXB type
+      // Therefore we don't need to look into our TypeMapping
+      Class javaType = value.getClass();
+      
+      // Filter known interface types
+      // Implementation classes will cause JAXB to fail
+      if (XMLGregorianCalendar.class.isAssignableFrom(javaType))
+         javaType = XMLGregorianCalendar.class;
+      
+      return javaType;
    }
 
    // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
