@@ -347,7 +347,8 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       JBossXSModelGroup group = (JBossXSModelGroup)complexType.getParticle().getTerm();
       group.setParticles(particles);
 
-      if(log.isDebugEnabled()) log.debug("generateNewType: " + sutils.write(complexType));
+      if (log.isDebugEnabled())
+         log.debug("generateNewType: " + sutils.write(complexType));
       return complexType;
    }
 
@@ -485,10 +486,9 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
             continue;
          }
 
-         
          String name = term.getName();
-         String variableName = name; 
-         if (reversedNames != null && reversedNames.get(name) != null) 
+         String variableName = name;
+         if (reversedNames != null && reversedNames.get(name) != null)
             variableName = reversedNames.get(name);
 
          VariableMapping mapping = new VariableMapping(javaXmlTypeMapping);
@@ -497,8 +497,40 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          mapping.setXmlElementName(name);
          mapping.setDataMember(utils.doesPublicFieldExist(javaType, variableName));
 
-         javaXmlTypeMapping.addVariableMapping(mapping);
+         if (isAlreadyMapped(javaXmlTypeMapping, mapping) == false)
+         {
+            javaXmlTypeMapping.addVariableMapping(mapping);
+         }
       }
+   }
+
+   private boolean isAlreadyMapped(JavaXmlTypeMapping jxtm, VariableMapping vm)
+   {
+      String javaVariableName = vm.getJavaVariableName();
+      String attributeName = vm.getXmlAttributeName();
+      String elementName = vm.getXmlElementName();
+
+      for (VariableMapping current : jxtm.getVariableMappings())
+      {
+         boolean matched = checkStringEquality(javaVariableName, current.getJavaVariableName());
+
+         if (matched)
+         {
+            matched = checkStringEquality(attributeName, current.getXmlAttributeName());
+         }
+
+         if (matched)
+         {
+            matched = checkStringEquality(elementName, current.getXmlElementName());
+         }
+
+         if (matched)
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    private List<XSParticle> getXSParticlesForPublicFields(String typeNamespace, Class javaType, Map<String, QName> elementNames)
@@ -579,10 +611,10 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          String fieldname = prop.getName();
          Class fieldType = prop.getPropertyType();
 
-         if (prop instanceof IndexedPropertyDescriptor && fieldType==null)
+         if (prop instanceof IndexedPropertyDescriptor && fieldType == null)
          {
-        	 log.warn("Indexed Properties without non-indexed accessors are not supported skipping: " + javaType.getName() + "." + fieldname);
-        	 continue;
+            log.warn("Indexed Properties without non-indexed accessors are not supported skipping: " + javaType.getName() + "." + fieldname);
+            continue;
          }
 
          // Skip magic work around property used in ParameterWrapping
@@ -710,7 +742,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
 
       List<XSParticle> particles = new ArrayList<XSParticle>(0);
       List<Class> types = new ArrayList<Class>(0);
-      JBossXSComplexTypeDefinition complexType = new JBossXSComplexTypeDefinition();      
+      JBossXSComplexTypeDefinition complexType = new JBossXSComplexTypeDefinition();
       complexType.setName(name);
       complexType.setNamespace(namespace);
 
@@ -718,14 +750,14 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       xsModel.addXSElementDeclaration(sutils.createGlobalXSElementDeclaration(name, complexType, namespace));
       typeMapping.register(javaType, new QName(namespace, name), null, null);
       registerJavaTypeMapping(new QName(namespace, name), javaType, "complexType", particles, null);
-      
+
       Class superClass = javaType.getSuperclass();
       if (!Exception.class.equals(superClass) || Throwable.class.equals(superClass))
       {
          JBossXSTypeDefinition baseType = generateType(null, superClass);
          complexType.setBaseType(baseType);
       }
-            
+
       generateExceptionParticles(namespace, javaType, types, particles);
 
       boolean found = hasConstructor(javaType, types);
@@ -750,7 +782,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          }
       }
 
-      complexType.setParticle(createGroupParticle(namespace, particles));      
+      complexType.setParticle(createGroupParticle(namespace, particles));
 
       return complexType;
    }
@@ -875,5 +907,16 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       JBossXSElementDeclaration xsel = (JBossXSElementDeclaration)sutils.createXSElementDeclaration(name, xstype, isNillable);
 
       return sutils.createXSParticle(targetNS, isArray, xsel);
+   }
+
+   private boolean checkStringEquality(String str1, String str2)
+   {
+      if (str1 == null && str2 == null)
+         return true;
+      if (str1 == null && str2 != null)
+         return false;
+      if (str1 != null && str2 == null)
+         return false;
+      return str1.equals(str2);
    }
 }
