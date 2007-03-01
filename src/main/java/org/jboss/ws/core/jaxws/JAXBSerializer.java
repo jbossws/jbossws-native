@@ -71,7 +71,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
       Result result = null;
       try
       {
-         Class javaType = deriveType(value);
+         Class javaType = deriveType(value, xmlType, serContext.getTypeMapping());
 
          JAXBContextCache contextCache = JAXBContextCache.getContextCache();
          JAXBContext jaxbContext = contextCache.getInstance(javaType);
@@ -95,19 +95,17 @@ public class JAXBSerializer extends ComplexTypeSerializer
 
       return result;
    }
-
-   private Class deriveType(Object value)
+ 
+   private Class deriveType(Object value, QName xmlType, TypeMappingImpl typeMapping) throws BindingException
    {
-      // It needs to be a valid JAXB type
-      // Therefore we don't need to look into our TypeMapping
-      Class javaType = value.getClass();
+      // DO NOT REMOVE TYPE MAPPING CODE!!!
+      // We must pass the base type to JAXB so that xsi:type is serialized
+      List<Class> possibleJavaTypes = typeMapping.getJavaTypes(xmlType);
+      for(Class type : possibleJavaTypes)
+         if(JavaUtils.isAssignableFrom(type, value.getClass()))
+            return type;
       
-      // Filter known interface types
-      // Implementation classes will cause JAXB to fail
-      if (XMLGregorianCalendar.class.isAssignableFrom(javaType))
-         javaType = XMLGregorianCalendar.class;
-      
-      return javaType;
+      throw new BindingException("Unable to resolve target java type");
    }
 
    // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
