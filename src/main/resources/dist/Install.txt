@@ -14,10 +14,9 @@ In order to install JBossWS the following steps are necessary:
 
 1.) Copy lib/jbossws-client.jar to $JBOSS_HOME/client/
 2.) Unzip lib/jbossws.sar to $JBOSS_HOME/server/default/deploy/
-3.) Replacing jboss-xml-binding.jar
 
-You need to manually replace the jboss-xml-binding.jar in the $JBOSS_HOME/client and $JBOSS_HOME/lib directories. 
-The compatible release can be found here: http://repository.jboss.com/jboss/jbossxb/1.0.0.CR7
+Please consult the wiki for detailed up to date install instructions
+http://labs.jboss.com/portal/jbossws/
 
 After the jbossws.sar is deployed you should be able to access JBossWS under
 http://localhost:8080/jbossws

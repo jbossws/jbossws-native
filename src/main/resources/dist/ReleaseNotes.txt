@@ -7,7 +7,7 @@ Version: jbossws-@version.id@
 Release Notes
 =============
 
-The UserGuide can be found in the docs directory and is usally a good starting point
+The UserGuide accessible from http://labs.jboss.com/portal/jbossws is usally a good starting point
 A list of examples that accompany the UserGuide can be found in the samples
 
 If you have any questions, please post to the JBossWS User Forum
