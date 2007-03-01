@@ -30,6 +30,7 @@
     <get src="${jboss.repository}/dom4j/${dom4j}/lib/dom4j.jar" dest="${thirdparty.dir}/dom4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/ibm-wsdl4j/${ibm-wsdl4j}/lib/wsdl4j.jar" dest="${thirdparty.dir}/wsdl4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/javassist/${javassist}/lib/javassist.jar" dest="${thirdparty.dir}/javassist.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jaxen/${jaxen}/lib/jaxen.jar" dest="${thirdparty.dir}/jaxen.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/common/${jboss-common}/lib/jboss-common.jar" dest="${thirdparty.dir}/jboss-common.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/common-logging-log4j/${jboss-common-logging-log4j}/lib/jboss-logging-log4j.jar" dest="${thirdparty.dir}/jboss-logging-log4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/common-logging-spi/${jboss-common-logging-spi}/lib/jboss-logging-spi.jar" dest="${thirdparty.dir}/jboss-logging-spi.jar" usetimestamp="true" verbose="true"/>

@@ -213,6 +213,7 @@
       <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
       <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
       <pathelement location="${thirdparty.dir}/dom4j.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxen.jar"/>
       <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-logging-log4j.jar"/>
       <!--
