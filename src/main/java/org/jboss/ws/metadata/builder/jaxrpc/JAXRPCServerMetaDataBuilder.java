@@ -172,6 +172,11 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                         String transportGuarantee = bpcMetaData.getTransportGuarantee();
                         sepMetaData.setTransportGuarantee(transportGuarantee);
                      }
+                     if (bpcMetaData.getSecureWSDLAccess() != null)
+                     {
+                        Boolean secureWSDLAccess = bpcMetaData.getSecureWSDLAccess();
+                        sepMetaData.setSecureWSDLAccess(secureWSDLAccess);
+                     }
 
                      sepMetaData.setURLPattern(bpcMetaData.getURLPattern());
                   }

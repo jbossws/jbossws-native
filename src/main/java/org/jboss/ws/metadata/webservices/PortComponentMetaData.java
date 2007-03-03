@@ -73,6 +73,8 @@ public class PortComponentMetaData
 
    // The HTTP context root
    private String contextRoot;
+   // The optional secure wsdl access 
+   private Boolean secureWSDLAccess;
 
    /** Construct a new PortComponentMetaData for a given WebserviceDescriptionMetaData
     */
@@ -161,11 +163,16 @@ public class PortComponentMetaData
       this.contextRoot = contextRoot;
    }
 
-   /**
-    * Serialize as a String
-    * 
-    * @return
-    */
+   public Boolean getSecureWSDLAccess()
+   {
+      return secureWSDLAccess;
+   }
+
+   public void setSecureWSDLAccess(Boolean secureWSDLAccess)
+   {
+      this.secureWSDLAccess = secureWSDLAccess;
+   }
+
    public String serialize()
    {
       StringBuilder builder = new StringBuilder("<port-component>");
@@ -175,17 +182,9 @@ public class PortComponentMetaData
       builder.append("<service-endpoint-interface>").append(serviceEndpointInterface).append("</service-endpoint-interface>");
       builder.append("<service-impl-bean>");
       if (ejbLink != null)
-      {
-         builder.append("<ejb-link>");
-         builder.append(ejbLink);
-         builder.append("</ejb-link>");
-      }
+         builder.append("<ejb-link>" + ejbLink + "</ejb-link>");
       else
-      {
-         builder.append("<servlet-link>");
-         builder.append(servletLink);
-         builder.append("</servlet-link>");
-      }
+         builder.append("<servlet-link>"+ servletLink + "</servlet-link>");
       builder.append("</service-impl-bean>");
       builder.append("</port-component>");
       return builder.toString();

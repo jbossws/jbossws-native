@@ -26,6 +26,7 @@ package org.jboss.ws.metadata.umdm;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
@@ -38,6 +39,8 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  */
 public class ServerEndpointMetaData extends EndpointMetaData
 {
+   protected static final Logger log = Logger.getLogger(ServerEndpointMetaData.class);
+   
    public static final String SEPID_DOMAIN = "jboss.ws";
    public static final String SEPID_PROPERTY_CONTEXT = "context";
    public static final String SEPID_PROPERTY_ENDPOINT = "endpoint";
@@ -59,7 +62,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    // The optional transport guarantee
    private String transportGuarantee;
    // The optional secure wsdl access 
-   private boolean secureWSDLAccess = true;
+   private Boolean secureWSDLAccess;
    // The bean that registers with the ServiceEndpointManager
    private String managedEndpointBean = "org.jboss.ws.core.server.ServiceEndpoint";
 
@@ -160,12 +163,19 @@ public class ServerEndpointMetaData extends EndpointMetaData
       this.transportGuarantee = transportGuarantee;
    }
 
-   public boolean isSecureWSDLAccess()
+   public Boolean isSecureWSDLAccess()
    {
+      // For backward compatiblity we leave wsdl access for jaxrpc endpoints unprotected 
+      if (secureWSDLAccess == null)
+      {
+         secureWSDLAccess = (getType() == Type.JAXWS);
+         log.debug("Using default for secure wsdl access: " + secureWSDLAccess);
+      }
+      
       return secureWSDLAccess;
    }
 
-   public void setSecureWSDLAccess(boolean secureWSDLAccess)
+   public void setSecureWSDLAccess(Boolean secureWSDLAccess)
    {
       this.secureWSDLAccess = secureWSDLAccess;
    }

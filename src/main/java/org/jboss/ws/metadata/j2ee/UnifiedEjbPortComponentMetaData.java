@@ -37,6 +37,7 @@ public class UnifiedEjbPortComponentMetaData
    private String portComponentURI;
    private String authMethod;
    private String transportGuarantee;
+   private Boolean secureWSDLAccess;
    
    public String getPortComponentName()
    {
@@ -86,5 +87,15 @@ public class UnifiedEjbPortComponentMetaData
    public void setTransportGuarantee(String transportGuarantee)
    {
       this.transportGuarantee = transportGuarantee;
+   }
+
+   public Boolean getSecureWSDLAccess()
+   {
+      return secureWSDLAccess;
+   }
+
+   public void setSecureWSDLAccess(Boolean secureWSDLAccess)
+   {
+      this.secureWSDLAccess = secureWSDLAccess;
    }
 }
