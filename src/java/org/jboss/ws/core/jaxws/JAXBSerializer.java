@@ -23,27 +23,21 @@ package org.jboss.ws.core.jaxws;
 
 // $Id$
 
-import java.io.StringWriter;
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceException;
-import javax.xml.transform.Source;
 import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMResult;
+import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
 import org.w3c.dom.NamedNodeMap;
@@ -73,9 +67,11 @@ public class JAXBSerializer extends ComplexTypeSerializer
       {
          Class javaType = deriveType(value, xmlType, serContext.getTypeMapping());
 
-         JAXBContextCache contextCache = JAXBContextCache.getContextCache();
-         JAXBContext jaxbContext = contextCache.getInstance(javaType);
-
+         //JAXBContextCache contextCache = JAXBContextCache.getContextCache();
+         //JAXBContext jaxbContext = contextCache.getInstance(javaType);
+         
+         JAXBContext jaxbContext = JAXBContext.newInstance(javaType);
+         
          Marshaller marshaller = jaxbContext.createMarshaller();
 
          marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);

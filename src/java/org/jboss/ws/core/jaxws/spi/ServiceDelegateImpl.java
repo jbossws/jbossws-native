@@ -205,6 +205,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       {
          JAXWSClientMetaDataBuilder metaDataBuilder = new JAXWSClientMetaDataBuilder();
          metaDataBuilder.rebuildEndpointMetaData(epMetaData, seiClass);
+         annotatedPorts.add(portName);
       }
 
       return (T)createProxy(seiClass, epMetaData);

@@ -29,10 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.utils.HashCodeUtil;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 /**
  * Cache JAXBContext's.
@@ -57,9 +54,6 @@ public class JAXBContextCache
    /**
     * Retrieve a cached JAXBContext instance.
     * If no instance is cached a new one will be created and registered.
-    * @param classes
-    * @return
-    * @throws JAXBException
     */
    public JAXBContext getInstance(Class[] classes) throws JAXBException
    {
@@ -77,9 +71,6 @@ public class JAXBContextCache
    /**
     * Retrieve a cached JAXBContext instance.
     * If no instance is cached a new one will be created and registered.
-    * @param clazz
-    * @return
-    * @throws JAXBException
     */
    public JAXBContext getInstance(Class clazz) throws JAXBException
    {
@@ -98,13 +89,13 @@ public class JAXBContextCache
     * Access the JAXBContext cache through the message context.
     * The actual instance is assiciated with the EndpointMetaData.
     * @return JAXBContextCache
-    */
    public static JAXBContextCache getContextCache()
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
       return epMetaData.getJaxbCache();
    }
+   */
 
    private static Integer buildId(Class[] classes)
    {
