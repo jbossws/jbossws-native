@@ -16,10 +16,10 @@
   <property file="${basedir}/version.properties"/>
   
   <property name="tests.dir" value="${basedir}"/>
-  <property name="tests.etc.dir" value="${tests.dir}/src/main/etc"/>
+  <property name="tests.etc.dir" value="${tests.dir}/src/etc"/>
   <property name="tests.lib.dir" value="${tests.dir}/lib"/>
-  <property name="tests.java.dir" value="${tests.dir}/src/main/java"/>
-  <property name="tests.resources.dir" value="${tests.dir}/src/main/resources"/>
+  <property name="tests.java.dir" value="${tests.dir}/src/java"/>
+  <property name="tests.resources.dir" value="${tests.dir}/src/resources"/>
   <property name="tests.output.dir" value="${tests.dir}/output"/>
   
   <property name="thirdparty.dir" value="${basedir}/thirdparty"/>
