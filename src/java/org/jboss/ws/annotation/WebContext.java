@@ -85,11 +85,11 @@ public @interface WebContext {
    String transportGuarantee() default "";
 
    /**
-    * A secure endpoint does not by default publish it's wsdl on an unsecure transport.
-    * You can override this behaviour by explicitly setting the secureWSDLAccess flag to false.
+    * A secure endpoint does not secure wsdl access by default.
+    * Explicitly setting secureWSDLAccess overrides this behaviour.
     * 
     * Protect access to WSDL. See http://jira.jboss.org/jira/browse/JBWS-723   
     */
-   boolean secureWSDLAccess() default true;
+   boolean secureWSDLAccess() default false;
     
 }

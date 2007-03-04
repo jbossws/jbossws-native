@@ -178,10 +178,10 @@ public class UnifiedWebServiceRefHandler
                   validHandlerChain = true;
                   handlerChain = resource;
                }
-
-               if (validHandlerChain == false)
-                  throw new IllegalStateException("Cannot find handler chain: " + handlerChain);
             }
+
+            if (validHandlerChain == false)
+               throw new IllegalStateException("Cannot find handler chain: " + handlerChain);
 
             usRef.setHandlerChain(handlerChain);
          }

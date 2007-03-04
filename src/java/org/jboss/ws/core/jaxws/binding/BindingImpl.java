@@ -24,7 +24,6 @@ package org.jboss.ws.core.jaxws.binding;
 // $Id: $
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.ws.handler.Handler;
@@ -61,7 +60,10 @@ public class BindingImpl implements BindingExt
       if (handlerType == HandlerType.POST || handlerType == HandlerType.ALL)
          handlerChain.addAll(postHandlerChain);
       
-      return Collections.unmodifiableList(handlerChain);
+      log.warn("[JBCTS-544] - Binding.getHandlerChain() expected to return a modifyable list");
+      // return Collections.unmodifiableList(handlerChain);
+      
+      return handlerChain;
    }
 
    public void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType)
@@ -87,13 +89,15 @@ public class BindingImpl implements BindingExt
 
    public List<Handler> getHandlerChain()
    {
-      if(log.isDebugEnabled()) log.debug("getHandlerChain: " + jaxwsHandlerChain);
-      return Collections.unmodifiableList(jaxwsHandlerChain);
+      log.warn("[JBCTS-544] - Binding.getHandlerChain() expected to return a modifyable list");
+      // return Collections.unmodifiableList(handlerChain);
+      
+      return jaxwsHandlerChain;
    }
 
    public void setHandlerChain(List<Handler> handlerChain)
    {
-      if(log.isDebugEnabled()) log.debug("setHandlerChain: " + handlerChain);
+      log.debug("setHandlerChain: " + handlerChain);
       jaxwsHandlerChain.clear();
       jaxwsHandlerChain.addAll(handlerChain);
    }

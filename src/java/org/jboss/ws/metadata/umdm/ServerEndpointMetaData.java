@@ -62,7 +62,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    // The optional transport guarantee
    private String transportGuarantee;
    // The optional secure wsdl access 
-   private Boolean secureWSDLAccess;
+   private boolean secureWSDLAccess;
    // The bean that registers with the ServiceEndpointManager
    private String managedEndpointBean = "org.jboss.ws.core.server.ServiceEndpoint";
 
@@ -163,19 +163,12 @@ public class ServerEndpointMetaData extends EndpointMetaData
       this.transportGuarantee = transportGuarantee;
    }
 
-   public Boolean isSecureWSDLAccess()
+   public boolean isSecureWSDLAccess()
    {
-      // For backward compatiblity we leave wsdl access for jaxrpc endpoints unprotected 
-      if (secureWSDLAccess == null)
-      {
-         secureWSDLAccess = (getType() == Type.JAXWS);
-         log.debug("Using default for secure wsdl access: " + secureWSDLAccess);
-      }
-      
       return secureWSDLAccess;
    }
 
-   public void setSecureWSDLAccess(Boolean secureWSDLAccess)
+   public void setSecureWSDLAccess(boolean secureWSDLAccess)
    {
       this.secureWSDLAccess = secureWSDLAccess;
    }
