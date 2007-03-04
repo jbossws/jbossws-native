@@ -54,7 +54,7 @@ import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
  * @author Thomas.Diesler@jboss.org
  * @since 17-Jan-2007
  */
-public class UnifiedWebServiceRefHandler 
+public class UnifiedWebServiceRefHandler
 {
    // logging support
    private static Logger log = Logger.getLogger(UnifiedWebServiceRefHandler.class);
@@ -62,7 +62,7 @@ public class UnifiedWebServiceRefHandler
    protected void setupWebServiceRef(Context encCtx, String encName, AnnotatedElement anElement, UnifiedVirtualFile vfsRoot, Source metadata) throws NamingException
    {
       WebServiceRef wsref = null;
-      
+
       // Build the list of @WebServiceRef relevant annotations 
       List<WebServiceRef> wsrefList = new ArrayList<WebServiceRef>();
       for (Annotation an : anElement.getAnnotations())
@@ -145,13 +145,15 @@ public class UnifiedWebServiceRefHandler
          HandlerChain anHandlerChain = anElement.getAnnotation(HandlerChain.class);
          if (handlerChain == null && anHandlerChain != null && anHandlerChain.file().length() > 0)
             handlerChain = anHandlerChain.file();
-         
+
          // Resolve path to handler chain
          if (handlerChain != null)
          {
+            boolean validHandlerChain = false;
             try
             {
                new URL(handlerChain);
+               validHandlerChain = true;
             }
             catch (MalformedURLException ex)
             {
@@ -162,27 +164,32 @@ public class UnifiedWebServiceRefHandler
                   declaringClass = ((Method)anElement).getDeclaringClass();
                else if (anElement instanceof Class)
                   declaringClass = (Class)anElement;
-               
-               handlerChain = declaringClass.getPackage().getName().replace('.', '/') + "/" + handlerChain;
-               if (vfsRoot.getName().endsWith(".war"))
-                  handlerChain = "WEB-INF/classes/" + handlerChain;
-               
-               try 
+
+               String resource = declaringClass.getPackage().getName().replace('.', '/') + "/" + handlerChain;
+               if (findHandlerChain(vfsRoot, resource))
                {
-                  vfsRoot.findChild(handlerChain);
+                  validHandlerChain = true;
+                  handlerChain = resource;
                }
-               catch (IOException ioex)
+
+               resource = "WEB-INF/classes/" + resource;
+               if (findHandlerChain(vfsRoot, resource))
                {
-                  throw new IllegalStateException("Cannot find handler chain: " + handlerChain, ioex);
+                  validHandlerChain = true;
+                  handlerChain = resource;
                }
+
+               if (validHandlerChain == false)
+                  throw new IllegalStateException("Cannot find handler chain: " + handlerChain);
             }
+
             usRef.setHandlerChain(handlerChain);
          }
 
          // Do not use rebind, the binding should be unique
          // [JBWS-1499] - Revisit WebServiceRefHandler JNDI rebind
          Util.rebind(encCtx, encName, new ServiceReferenceable(serviceClassName, targetClassName, usRef));
-         
+
          log.debug("<service-ref> bound to: java:comp/env/" + encName);
       }
       catch (RuntimeException rte)
@@ -192,6 +199,19 @@ public class UnifiedWebServiceRefHandler
       catch (Exception ex)
       {
          throw new WSException("Cannot bind web service ref: " + encName, ex);
+      }
+   }
+
+   private boolean findHandlerChain(UnifiedVirtualFile vfsRoot, String handlerChain)
+   {
+      try
+      {
+         vfsRoot.findChild(handlerChain);
+         return true;
+      }
+      catch (IOException io)
+      {
+         return false;
       }
    }
 }
