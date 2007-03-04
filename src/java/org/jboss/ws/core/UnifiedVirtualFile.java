@@ -36,6 +36,8 @@ import java.net.URL;
  */
 public interface UnifiedVirtualFile extends Serializable
 {
+   String getName();
+   
    UnifiedVirtualFile findChild(String child) throws IOException;
 
    URL toURL();

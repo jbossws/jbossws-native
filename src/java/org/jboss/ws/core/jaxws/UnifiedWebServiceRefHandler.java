@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws;
 
 // $Id$
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -163,9 +164,17 @@ public class UnifiedWebServiceRefHandler
                   declaringClass = (Class)anElement;
                
                handlerChain = declaringClass.getPackage().getName().replace('.', '/') + "/" + handlerChain;
-               UnifiedVirtualFile vfHandlerChain = vfsRoot.findChild(handlerChain);
-               if (vfHandlerChain == null)
-                  throw new IllegalStateException("Cannot find handler chain: " + handlerChain);
+               if (vfsRoot.getName().endsWith(".war"))
+                  handlerChain = "WEB-INF/classes/" + handlerChain;
+               
+               try 
+               {
+                  vfsRoot.findChild(handlerChain);
+               }
+               catch (IOException ioex)
+               {
+                  throw new IllegalStateException("Cannot find handler chain: " + handlerChain, ioex);
+               }
             }
             usRef.setHandlerChain(handlerChain);
          }
