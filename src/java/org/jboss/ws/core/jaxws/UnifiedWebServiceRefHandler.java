@@ -149,11 +149,9 @@ public class UnifiedWebServiceRefHandler
          // Resolve path to handler chain
          if (handlerChain != null)
          {
-            boolean validHandlerChain = false;
             try
             {
                new URL(handlerChain);
-               validHandlerChain = true;
             }
             catch (MalformedURLException ex)
             {
@@ -165,24 +163,9 @@ public class UnifiedWebServiceRefHandler
                else if (anElement instanceof Class)
                   declaringClass = (Class)anElement;
 
-               String resource = declaringClass.getPackage().getName().replace('.', '/') + "/" + handlerChain;
-               if (findHandlerChain(vfsRoot, resource))
-               {
-                  validHandlerChain = true;
-                  handlerChain = resource;
-               }
-
-               resource = "WEB-INF/classes/" + resource;
-               if (findHandlerChain(vfsRoot, resource))
-               {
-                  validHandlerChain = true;
-                  handlerChain = resource;
-               }
+               handlerChain = declaringClass.getPackage().getName().replace('.', '/') + "/" + handlerChain;
             }
-
-            if (validHandlerChain == false)
-               throw new IllegalStateException("Cannot find handler chain: " + handlerChain);
-
+            
             usRef.setHandlerChain(handlerChain);
          }
 
