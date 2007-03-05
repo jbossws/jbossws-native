@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.tools;
 
 import java.io.File;
@@ -50,7 +50,6 @@ public class JavaWriter
    {
    }
 
-
    /**
     * Creates a Java Class that represents a Simple Type restricted by enumeration
     * @param fname
@@ -60,16 +59,13 @@ public class JavaWriter
     * @throws IOException
     */
 
-   public void createJavaFileForEnumeratedValues(String fname, StringList lst,
-                                                 File loc, String pkgname,
-                                                 XSSimpleTypeDefinition type)
-      throws IOException
+   public void createJavaFileForEnumeratedValues(String fname, StringList lst, File loc, String pkgname, XSSimpleTypeDefinition type) throws IOException
    {
       List importList = new ArrayList();
       importList.add("java.util.Map");
       importList.add("java.util.HashMap");
       File sei = utils.createPhysicalFile(loc, fname);
-      StringBuilder buf = utils.createClassBasicStructure(pkgname, fname, type, importList,null);
+      StringBuilder buf = utils.createClassBasicStructure(pkgname, fname, type, importList, null);
 
       buf.append("private java.lang.String value;" + newline);
       buf.append("private static Map valueMap = new HashMap();" + newline);
@@ -116,7 +112,8 @@ public class JavaWriter
       for (int i = 0; i < lenOfArr; i++)
       {
          String str = lst.item(i);
-         if (i > 0) buf.append("else ");
+         if (i > 0)
+            buf.append("else ");
 
          buf.append("if (" + str + ".value.equals(value)) {" + newline);
 
@@ -141,7 +138,8 @@ public class JavaWriter
       for (int i = 0; i < lenOfArr; i++)
       {
          String str = lst.item(i);
-         if (i > 0) buf.append("else ");
+         if (i > 0)
+            buf.append("else ");
          buf.append("if (value.equals(_" + str + "String)) {" + newline);
          buf.append("return " + str + ";" + newline + "}");
       }
@@ -157,24 +155,20 @@ public class JavaWriter
 
       //create -readResolve method
 
-      buf.append(newline + "private Object readResolve()" + newline +
-         "        throws java.io.ObjectStreamException {" + newline +
-         "        return fromValue(getValue());" + newline +
-         "    } " + newline);
+      buf.append(newline + "private Object readResolve()" + newline + "        throws java.io.ObjectStreamException {" + newline
+            + "        return fromValue(getValue());" + newline + "    } " + newline);
       //End - readResolve method
 
       //create - equals method
 
-      buf.append(newline + "private boolean equals(Object obj){" + newline +
-         "         if (!(obj instanceof " + fname + ")) {" + newline +
-         "         return false;" + newline + "    } " + newline);
+      buf.append(newline + "private boolean equals(Object obj){" + newline + "         if (!(obj instanceof " + fname + ")) {" + newline + "         return false;"
+            + newline + "    } " + newline);
       buf.append("return ((" + fname + ")obj).value.equals(value);" + newline + "}" + newline);
       //End - equals method
 
       //create - hashCode method
 
-      buf.append(newline + " public int hashCode() { " + newline +
-         "        return value.hashCode(); " + newline + "    }" + newline);
+      buf.append(newline + " public int hashCode() { " + newline + "        return value.hashCode(); " + newline + "    }" + newline);
       //End - hashCode method
       buf.append("}" + newline); //end of class
 
@@ -197,17 +191,14 @@ public class JavaWriter
     * @param typeNameToBaseVARList Needed if we are dealing with an exception type
     * @throws IOException
     */
-   public void createJavaFile(File location, String filename, String packageName,
-         List<VAR> vars, List<String> importList, String baseTypeName,
-         boolean isExceptionType, Map<String,List> typeNameToBaseVARList)
-   throws IOException
+   public void createJavaFile(File location, String filename, String packageName, List<VAR> vars, List<String> importList, String baseTypeName,
+         boolean isExceptionType, Map<String, List> typeNameToBaseVARList) throws IOException
    {
       File newLoc = null;
-      if(needToCreatePackageStructure(location, packageName))
-          newLoc = utils.createPackage(location.getPath(),packageName);
-      else
-          newLoc = location;
-      String classname = utils.chop(filename,".java");
+      if (needToCreatePackageStructure(location, packageName))
+         newLoc = utils.createPackage(location.getPath(), packageName);
+      else newLoc = location;
+      String classname = utils.chop(filename, ".java");
       File sei = utils.createPhysicalFile(newLoc, classname);
       StringBuilder buffer = new StringBuilder();
       utils.writeJbossHeader(buffer);
@@ -215,16 +206,16 @@ public class JavaWriter
       //Create the package Name
       buffer.append(newline).append("package ").append(packageName).append(";");
 
-      if(importList != null)
+      if (importList != null)
       {
-         for(String imp:importList)
+         for (String imp : importList)
          {
             buffer.append(newline).append("import ").append(imp).append(";");
          }
       }
       buffer.append(newline).append(newline);
       buffer.append(newline).append("public class  ").append(classname).append(newline);
-      if(baseTypeName != null && baseTypeName.length() > 0)
+      if (baseTypeName != null && baseTypeName.length() > 0)
          buffer.append(" extends ").append(baseTypeName);
       buffer.append("{").append(newline);
       createVariables(buffer, vars, isExceptionType);
@@ -239,14 +230,12 @@ public class JavaWriter
       writer.close();
    }
 
-
    //PRIVATE METHODS
-   private void createCTR(StringBuilder buf, String cname, List vars,
-         boolean isExceptionType,Map<String,List> typeNameToBaseVARList)
+   private void createCTR(StringBuilder buf, String cname, List vars, boolean isExceptionType, Map<String, List> typeNameToBaseVARList)
    {
-      if(vars.size() > 0 && isExceptionType == false)
+      if (vars.size() > 0 && isExceptionType == false)
       {
-         buf.append("public " + cname + "(){}");  //Empty CTR
+         buf.append("public " + cname + "(){}"); //Empty CTR
          buf.append(newline);
          buf.append(newline);
       }
@@ -255,17 +244,17 @@ public class JavaWriter
       StringBuilder ctrintbuf = new StringBuilder();
 
       boolean calledSuper = false;
-      if(isExceptionType)
+      if (isExceptionType)
       {
          List<VAR> baseList = typeNameToBaseVARList.get(cname);
-         int baseLen = baseList != null ? baseList.size() :0;
+         int baseLen = baseList != null ? baseList.size() : 0;
          String arrStr = "[]";
 
          if (baseLen > 0)
          {
             calledSuper = true;
             ctrintbuf.append("super(");
-            for(int i = 0 ; i < baseLen; i++)
+            for (int i = 0; i < baseLen; i++)
             {
 
                if (i > 0)
@@ -275,7 +264,7 @@ public class JavaWriter
                }
                VAR v = baseList.get(i);
                ctrvarbuf.append(v.getVartype());
-               if(v.isArrayType)
+               if (v.isArrayType)
                   ctrvarbuf.append(arrStr);
 
                ctrvarbuf.append(" ").append(v.getVarname());
@@ -294,10 +283,16 @@ public class JavaWriter
          }
          VAR v = (VAR)iter.next();
          String name = v.getVarname();
+         if (JavaKeywords.isJavaKeyword(name))
+         {
+            name = "_" + name;
+         }
+
          String type = v.getVartype();
          boolean isArr = v.isArrayType();
          ctrvarbuf.append(type);
-         if (isArr) ctrvarbuf.append("[]");
+         if (isArr)
+            ctrvarbuf.append("[]");
          ctrvarbuf.append(" " + name);
          if (isExceptionType && calledSuper == false && index == 1 && v.getVartype().equals("java.lang.String"))
          {
@@ -321,19 +316,27 @@ public class JavaWriter
       {
          VAR v = (VAR)iter.next();
          String name = v.getVarname();
+         String internalName = name;
+         if (JavaKeywords.isJavaKeyword(internalName))
+         {
+            internalName = "_" + internalName;
+         }
+
          String type = v.getVartype();
          boolean isArr = v.isArrayType();
          //Add getter/setter also
          buf.append("public " + type);
-         if (isArr) buf.append("[] ");
+         if (isArr)
+            buf.append("[] ");
          String str = " get";
          //boolean case
-         if (type.equals("boolean")) str = " is";
-         buf.append(str + utils.getMixedCase(name) + "() { return " + name + " ;}");
+         if (type.equals("boolean"))
+            str = " is";
+         buf.append(str + utils.getMixedCase(name) + "() { return " + internalName + " ;}");
          buf.append(newline);
          buf.append(newline);
-         if(isExceptionType == false)
-            writeSetter( buf,  name,  type,  isArr);
+         if (isExceptionType == false)
+            writeSetter(buf, name, internalName, type, isArr);
          buf.append(newline);
          buf.append(newline);
       }
@@ -341,23 +344,29 @@ public class JavaWriter
 
    private List createVariables(StringBuilder buf, List vars, boolean isExceptionType)
    {
-      if (vars == null) return vars;
+      if (vars == null)
+         return vars;
       Iterator iter = vars.iterator();
       while (iter.hasNext())
       {
          VAR v = (VAR)iter.next();
          String name = v.getVarname();
          // JBWS-1170 Convert characters which are illegal in Java identifiers
-         name=ToolsUtils.convertInvalidCharacters(name);
+         name = ToolsUtils.convertInvalidCharacters(name);
+
+         if (JavaKeywords.isJavaKeyword(name))
+         {
+            name = "_" + name;
+         }
 
          String type = v.getVartype();
          boolean isArr = v.isArrayType();
          buf.append(newline);
-         if(isExceptionType)
+         if (isExceptionType)
             buf.append("private " + type);
-         else
-           buf.append("protected " + type);
-         if (isArr) buf.append("[] ");
+         else buf.append("protected " + type);
+         if (isArr)
+            buf.append("[] ");
          buf.append(" " + name).append(";").append(newline);
       }
       return vars;
@@ -365,7 +374,7 @@ public class JavaWriter
 
    private boolean needToCreatePackageStructure(File location, String packageName)
    {
-      packageName = packageName.replace( '.','/');
+      packageName = packageName.replace('.', '/');
       try
       {
          String externalForm = location.toURL().toExternalForm();
@@ -378,13 +387,13 @@ public class JavaWriter
       }
    }
 
-   private void writeSetter(StringBuilder buf, String name, String type, boolean isArr)
+   private void writeSetter(StringBuilder buf, String name, String internalName, String type, boolean isArr)
    {
       buf.append("public void ");
       buf.append("set" + utils.getMixedCase(name) + "(" + type);
       if (isArr)
          buf.append("[]");
 
-      buf.append(" " + name + "){ this." + name + "=" + name+"; }");
+      buf.append(" " + internalName + "){ this." + internalName + "=" + internalName + "; }");
    }
 }

@@ -39,7 +39,6 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.holders.ByteArrayHolder;
 import javax.xml.rpc.holders.Holder;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
@@ -58,7 +57,6 @@ import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
  */
 public class ToolsUtils
 {
-   private static Logger log = Logger.getLogger(ToolsUtils.class);
 
    /**
     * Maintains a static reference to the TypeMapping just for

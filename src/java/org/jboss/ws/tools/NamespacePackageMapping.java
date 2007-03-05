@@ -38,13 +38,6 @@ public class NamespacePackageMapping
 
    private static final NamespacePackageMapping npm = new NamespacePackageMapping();
 
-   private final String[] keywordsArray = { "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do",
-         "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "goto", "implements", "import", "instanceof", "int", "interface", "long",
-         "native", "new", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw",
-         "throws", "transient", "try", "void", "volatile", "while" };
-
-   private final String[] restrictedLiteralsArray = { "true", "false", "null" };
-
    /*
     * The JAXB specification says to use the list of country codes as defined in ISO-3166 1981 to identify the top
     * level domains.
@@ -73,8 +66,6 @@ public class NamespacePackageMapping
 
    private final String[] topLevelDomainsArray = { "com", "gov", "net", "org", "edu" };
 
-   private final Set<String> restrictedKeywords;
-
    private final Set<String> topLevelDomains;
 
    /**
@@ -91,15 +82,8 @@ public class NamespacePackageMapping
 
    private NamespacePackageMapping()
    {
-      int keywordsSize = keywordsArray.length + restrictedLiteralsArray.length;
-      keywordsSize = (int)((double)keywordsSize / 0.75) + 1;
-
       int topLevelSize = countryCodesArray.length + topLevelDomainsArray.length;
       topLevelSize = (int)((double)topLevelSize / 0.75) + 1;
-
-      restrictedKeywords = new HashSet<String>(keywordsSize);
-      addAll(restrictedKeywords, keywordsArray);
-      addAll(restrictedKeywords, restrictedLiteralsArray);
 
       topLevelDomains = new HashSet<String>(topLevelSize);
       addAll(topLevelDomains, countryCodesArray);
@@ -185,7 +169,7 @@ public class NamespacePackageMapping
    private String convertReserved(final String component)
    {
       String result = component;
-      if (restrictedKeywords.contains(result))
+      if (JavaKeywords.isJavaKeyword(result))
       {
          result = result + "_";
       }

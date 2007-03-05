@@ -737,9 +737,22 @@ public class WSDLToJava implements WSDLToJavaIntf
       return cls;
    }
 
-   private String getMethodParam(String containingElement)
+   /**
+    * Make sure the first character is lower case and if the
+    * parameter is a reserved word prefix it with '_'.
+    * 
+    * @param containingElement
+    * @return
+    */
+   private String getMethodParam(String name)
    {
-      return ToolsUtils.firstLetterLowerCase(containingElement);
+      String paramName = ToolsUtils.firstLetterLowerCase(name);
+      if (JavaKeywords.isJavaKeyword(paramName))
+      {
+         paramName = "_" + paramName;
+      }
+
+      return paramName;
    }
 
    private File getLocationForJavaGeneration()
