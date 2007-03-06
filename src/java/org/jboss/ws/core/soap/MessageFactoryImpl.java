@@ -64,18 +64,24 @@ public class MessageFactoryImpl extends MessageFactory
    private Mode serviceMode;
    // The style used by this MessageFactory
    private Style style;
+   // Used if the style is dynamic
+   private boolean dynamic;
 
    public MessageFactoryImpl()
    {
       envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
    }
 
-   public MessageFactoryImpl(String protocol)
+   public MessageFactoryImpl(String protocol) throws SOAPException
    {
-      if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
-         envNamespace = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
-      else
+      if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol) || SOAPConstants.DEFAULT_SOAP_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
+      else if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
+         envNamespace = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
+      else if (SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
+         dynamic = true;
+      else
+         throw new SOAPException("Unknown protocol: " + protocol);
    }
 
    /**
@@ -144,6 +150,9 @@ public class MessageFactoryImpl extends MessageFactory
     */
    public SOAPMessage createMessage() throws SOAPException
    {
+      if (dynamic)
+         throw new UnsupportedOperationException();
+      
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
       new SOAPEnvelopeImpl(soapPart, envNamespace);
