@@ -28,6 +28,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.ws.WebServiceException;
@@ -40,7 +41,9 @@ import org.jboss.ws.core.jaxrpc.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.NamedNodeMap;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 
 /**
  * A Serializer that can handle complex types by delegating to JAXB.
@@ -65,12 +68,17 @@ public class JAXBSerializer extends ComplexTypeSerializer
       Result result = null;
       try
       {
-         Class javaType = deriveType(value, xmlType, serContext.getTypeMapping());
+         // The PMD contains the base type, which is needed for JAXB to marshall xsi:type correctly.
+         // This should be more efficient and accurate than searching the type mapping
+         ParameterMetaData pmd = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
+         Class expectedType = pmd.getJavaType();
+         Class actualType = value.getClass();
 
          //JAXBContextCache contextCache = JAXBContextCache.getContextCache();
-         //JAXBContext jaxbContext = contextCache.getInstance(javaType);
-         
-         JAXBContext jaxbContext = JAXBContext.newInstance(javaType);
+         //JAXBContext jaxbContext = contextCache.getInstance(expectedType, actualType);
+
+         Class[] types = shouldFilter(actualType) ? new Class[]{expectedType} : new Class[]{expectedType, actualType};
+         JAXBContext jaxbContext = JAXBContext.newInstance(types);
          
          Marshaller marshaller = jaxbContext.createMarshaller();
 
@@ -80,7 +88,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
          // It's safe to pass a stream result, because the SCE will always be in XML_VALID state afterwards.
          // This state can safely be written to an outstream. See XMLFragment and XMLContent as well.
          result = new BufferedStreamResult();
-         marshaller.marshal(new JAXBElement(xmlName, javaType, value), result);
+         marshaller.marshal(new JAXBElement(xmlName, expectedType, value), result);
 
          if(log.isDebugEnabled()) log.debug("serialized: " + result);
       }
@@ -91,17 +99,11 @@ public class JAXBSerializer extends ComplexTypeSerializer
 
       return result;
    }
- 
-   private Class deriveType(Object value, QName xmlType, TypeMappingImpl typeMapping) throws BindingException
+
+   // Remove this when we add a XMLGregorianCalendar Serializer
+   private boolean shouldFilter(Class<?> actualType)
    {
-      // DO NOT REMOVE TYPE MAPPING CODE!!!
-      // We must pass the base type to JAXB so that xsi:type is serialized
-      List<Class> possibleJavaTypes = typeMapping.getJavaTypes(xmlType);
-      for(Class type : possibleJavaTypes)
-         if(JavaUtils.isAssignableFrom(type, value.getClass()))
-            return type;
-      
-      throw new BindingException("Unable to resolve target java type");
+      return XMLGregorianCalendar.class.isAssignableFrom(actualType);
    }
 
    // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
