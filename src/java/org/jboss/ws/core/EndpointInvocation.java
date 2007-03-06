@@ -207,8 +207,11 @@ public class EndpointInvocation
             DataHandler handler = part.getDataHandler();
             String mimeType = MimeUtils.getBaseMimeType(handler.getContentType());
 
+            // JAX-WS 2.0, 2.6.3.1 MIME Content
+            // Conformance (MIME type mismatch): On receipt of a message where the MIME type of a part does not
+            // match that described in the WSDL an implementation SHOULD throw a WebServiceException.
             if (mimeTypes != null && !MimeUtils.isMemberOf(mimeType, mimeTypes))
-               throw new SOAPException("Mime type " + mimeType + " not allowed for parameter " + xmlName + " allowed types are " + mimeTypes);
+               log.warn("Mime type " + mimeType + " not allowed for parameter " + xmlName + " allowed types are " + mimeTypes);
 
             retValue = part.getDataHandler();
          }

@@ -529,11 +529,13 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             List<Class> types = typeMapping.getJavaTypes(xmlType);
 
+            // TODO: Clarification. In which cases is the type already registered?
             boolean registered = false;
             for (Class current : types)
             {
                if (current.getName().equals(javaTypeName))
                {
+                  registeredTypes.add(current);
                   registered = true;
                   break;
                }

@@ -72,6 +72,18 @@ public final class IOUtils
          r = ins.read(bytes);
       }
    }
+
+   public static void copyReader(OutputStream outs, Reader reader) throws IOException
+   {
+      OutputStreamWriter writer = new OutputStreamWriter(outs);
+      char[] bytes = new char[1024];
+      int r = reader.read(bytes);
+      while (r > 0)
+      {
+         writer.write(bytes, 0, r);
+         r = reader.read(bytes);
+      }
+   }
    
    public static byte[] convertToBytes(DataHandler dh)
    {

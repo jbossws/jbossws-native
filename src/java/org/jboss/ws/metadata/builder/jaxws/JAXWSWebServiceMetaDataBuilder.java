@@ -117,6 +117,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processBindingType(sepMetaData, seiClass);
 
          // Process web methods
+         if(result.wsdlLocation!=null) serviceMetaData.setWsdlLocation(result.wsdlLocation);
          processWebMethods(sepMetaData, seiClass);
 
          // Init the transport guarantee

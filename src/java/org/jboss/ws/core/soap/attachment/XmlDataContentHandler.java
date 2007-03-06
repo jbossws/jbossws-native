@@ -26,6 +26,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataContentHandler;
@@ -102,9 +103,14 @@ public class XmlDataContentHandler implements DataContentHandler
 
       // TODO - add support for reader source
       InputStream stream = ((StreamSource) obj).getInputStream();
-      if (stream == null)
-         throw new IOException("XML Content handler requires an input stream based StreamSource");
+      if (stream != null)
+      {
+         IOUtils.copyStream(os, stream);
+      }
+      else
+      {
+         IOUtils.copyReader(os, ((StreamSource) obj).getReader());
 
-      IOUtils.copyStream(os, stream);
+      }
    }
 }

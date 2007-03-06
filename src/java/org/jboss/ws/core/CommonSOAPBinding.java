@@ -387,7 +387,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             if (paramMetaData.isSwA())
             {
                CIDGenerator cidGenerator = resMessage.getCidGenerator();
-               AttachmentPart part = createAttachmentPart(retMetaData, value, cidGenerator);
+               AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
                resMessage.addAttachmentPart(part);
             }
             else
@@ -530,7 +530,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          handleException(e);
       }
    }
-   
+
    public Object bindFaultMessage(Exception ex)
    {
       SOAPMessage faultMessage = createFaultMessageFromException(ex);
@@ -570,8 +570,11 @@ public abstract class CommonSOAPBinding implements CommonBinding
          DataHandler handler = (DataHandler)value;
          String mimeType = MimeUtils.getBaseMimeType(handler.getContentType());
 
+         // JAX-WS 2.0, 2.6.3.1 MIME Content
+         // Conformance (MIME type mismatch): On receipt of a message where the MIME type of a part does not
+         // match that described in the WSDL an implementation SHOULD throw a WebServiceException.
          if (mimeTypes != null && !MimeUtils.isMemberOf(mimeType, mimeTypes))
-            throw new BindingException("Mime type " + mimeType + " not allowed for parameter " + partName + " allowed types are " + mimeTypes);
+            log.warn("Mime type " + mimeType + " not allowed for parameter " + partName + " allowed types are " + mimeTypes);
 
          part.setDataHandler((DataHandler)value);
       }
@@ -777,7 +780,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       if (paramMetaData.isXOP() && XOPContext.isXOPEncodedRequest())
       {
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
-         soapMessage.setXOPMessage(true);         
+         soapMessage.setXOPMessage(true);
       }
       return soapContentElement;
    }
