@@ -33,7 +33,6 @@ import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingFault;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
@@ -69,17 +68,13 @@ public abstract class WSDLGenerator
 
    protected void processEndpoint(WSDLService service, EndpointMetaData endpoint)
    {
-      WSDLEndpoint wsdlEndpoint = new WSDLEndpoint(service);
-      wsdlEndpoint.setQName(endpoint.getPortName());
-      wsdlEndpoint.setName(new NCName(endpoint.getPortName().getLocalPart()));
+      WSDLEndpoint wsdlEndpoint = new WSDLEndpoint(service, endpoint.getPortName());
       String address = endpoint.getEndpointAddress();
       wsdlEndpoint.setAddress(address == null ? "REPLACE_WITH_ACTUAL_URL" : address);
       service.addEndpoint(wsdlEndpoint);
 
-      WSDLInterface wsdlInterface = new WSDLInterface(wsdl);
       QName interfaceQName = endpoint.getPortTypeName();
-      wsdlInterface.setQName(interfaceQName);
-      wsdlInterface.setName(new NCName(interfaceQName));
+      WSDLInterface wsdlInterface = new WSDLInterface(wsdl, interfaceQName);
       wsdl.addInterface(wsdlInterface);
 
       // Add imports
@@ -92,10 +87,8 @@ public abstract class WSDLGenerator
          wsdl.registerNamespaceURI(interfaceQName.getNamespaceURI(), null);
       }
 
-      WSDLBinding wsdlBinding = new WSDLBinding(wsdl);
       QName bindingQName = new QName(interfaceQName.getNamespaceURI(), interfaceQName.getLocalPart() + "Binding");
-      wsdlBinding.setQName(bindingQName);
-      wsdlBinding.setName(new NCName(bindingQName.getLocalPart()));
+      WSDLBinding wsdlBinding = new WSDLBinding(wsdl, bindingQName);
       wsdlBinding.setInterfaceName(interfaceQName);
       wsdl.addBinding(wsdlBinding);
       wsdlEndpoint.setBinding(bindingQName);
@@ -108,10 +101,9 @@ public abstract class WSDLGenerator
 
    protected void processOperation(WSDLInterface wsdlInterface, WSDLBinding wsdlBinding, OperationMetaData operation)
    {
-      WSDLInterfaceOperation interfaceOperation = new WSDLInterfaceOperation(wsdlInterface);
+      WSDLInterfaceOperation interfaceOperation = new WSDLInterfaceOperation(wsdlInterface, operation.getQName());
       WSDLBindingOperation bindingOperation = new WSDLBindingOperation(wsdlBinding);
 
-      interfaceOperation.setName(new NCName(operation.getQName().getLocalPart()));
       interfaceOperation.setPattern(operation.isOneWay() ? Constants.WSDL20_PATTERN_IN_ONLY
             : Constants.WSDL20_PATTERN_IN_OUT);
 
@@ -125,18 +117,17 @@ public abstract class WSDLGenerator
 
       for (FaultMetaData fault : operation.getFaults())
       {
-         WSDLInterfaceFault interfaceFault = new WSDLInterfaceFault(wsdlInterface);
+         QName faultName = new QName(operation.getQName().getNamespaceURI(), fault.getXmlName().getLocalPart());
+         WSDLInterfaceFault interfaceFault = new WSDLInterfaceFault(wsdlInterface, faultName);
          interfaceFault.setElement(fault.getXmlName());
-         interfaceFault.setName(new NCName(fault.getXmlName().getLocalPart()));
          wsdlInterface.addFault(interfaceFault);
-
-         QName interfaceFaultRef = new QName(operation.getQName().getNamespaceURI(), fault.getXmlName().getLocalPart());
+         
          WSDLInterfaceOperationOutfault outfault = new WSDLInterfaceOperationOutfault(interfaceOperation);
-         outfault.setRef(interfaceFaultRef);
+         outfault.setRef(faultName);
          interfaceOperation.addOutfault(outfault);
 
          WSDLBindingFault bindingFault = new WSDLBindingFault(wsdlBinding);
-         bindingFault.setRef(interfaceFaultRef);
+         bindingFault.setRef(faultName);
          wsdlBinding.addFault(bindingFault);
       }
 
@@ -310,9 +301,7 @@ public abstract class WSDLGenerator
    protected void processService(ServiceMetaData service)
    {
 
-      WSDLService wsdlService = new WSDLService(wsdl);
-      wsdlService.setQName(service.getServiceName());
-      wsdlService.setName(new NCName(service.getServiceName().getLocalPart()));
+      WSDLService wsdlService = new WSDLService(wsdl, service.getServiceName());
       wsdl.addService(wsdlService);
 
       EndpointMetaData endpoint = null;

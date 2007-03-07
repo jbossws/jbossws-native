@@ -55,7 +55,7 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
     * of this message in the message exchange pattern of the given operation
     * element information item.
     */
-   private NCName messageLabel;
+   private String messageLabel;
 
    /**
     * The OPTIONAL element attribute information item is the element declaration
@@ -91,14 +91,13 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
       return wsdlOperation;
    }
 
-   public NCName getMessageLabel()
+   public String getMessageLabel()
    {
       return messageLabel;
    }
 
-   public void setMessageLabel(NCName messageLabel)
+   public void setMessageLabel(String messageLabel)
    {
-      log.trace("setMessageLabel: " + messageLabel);
       this.messageLabel = messageLabel;
    }
 

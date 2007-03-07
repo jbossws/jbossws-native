@@ -35,8 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointDTO;
+import org.jboss.ws.core.server.ServiceEndpointManager;
 
 /**
  * The servlet that that is associated with context /jbossws

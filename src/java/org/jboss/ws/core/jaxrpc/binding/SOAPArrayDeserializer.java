@@ -37,7 +37,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Element;

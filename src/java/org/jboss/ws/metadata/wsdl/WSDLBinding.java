@@ -37,6 +37,7 @@ import org.jboss.ws.WSException;
  * implementation details necessary to accessing the service.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  * @since 10-Oct-2004
  */
 public class WSDLBinding implements Serializable
@@ -47,15 +48,9 @@ public class WSDLBinding implements Serializable
    private static final Logger log = Logger.getLogger(WSDLBinding.class);
    
    // The parent WSDL definitions element.
-   private WSDLDefinitions wsdlDefinitions;
+   private final WSDLDefinitions wsdlDefinitions;
 
-   /** The REQUIRED name attribute information item together with the targetNamespace attribute information item
-    * of the definitions element information item forms the QName of the binding.*/
-   private NCName name;
-
-   /** Derived QName identifier. 
-    */
-   private QName qname;
+   private final QName name;
    
    /** The OPTIONAL interface attribute information item refers, by QName, to an Interface component. */
    private QName interfaceName;
@@ -72,10 +67,10 @@ public class WSDLBinding implements Serializable
     * information items in [children], if any.*/
    private ArrayList<WSDLBindingOperation> operations = new ArrayList<WSDLBindingOperation>();
 
-   public WSDLBinding(WSDLDefinitions wsdlDefinitions)
+   public WSDLBinding(WSDLDefinitions wsdlDefinitions, QName name)
    {
-      log.trace("new WSDLBinding");
       this.wsdlDefinitions = wsdlDefinitions;
+      this.name = name;
    }
 
    public WSDLDefinitions getWsdlDefinitions()
@@ -83,32 +78,9 @@ public class WSDLBinding implements Serializable
       return wsdlDefinitions;
    }
 
-   public NCName getName()
+   public QName getName()
    {
       return name;
-   }
-
-   public void setName(NCName name)
-   {
-      log.trace("setName: " + name);
-      this.name = name;
-   }
-
-   public QName getQName()
-   {
-      if (qname == null)
-      {
-         String tnsURI = wsdlDefinitions.getTargetNamespace();
-         qname = new QName(tnsURI, name.toString());
-      }
-      return qname;
-   }
-
-   
-   public void setQName(QName qname)
-   {
-      log.trace("setQName: " + qname);
-      this.qname = qname;
    }
 
    public QName getInterfaceName()
@@ -124,7 +96,7 @@ public class WSDLBinding implements Serializable
 
    public WSDLInterface getInterface()
    {
-      WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(new NCName(interfaceName.getLocalPart()));
+      WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(interfaceName);
       if (wsdlInterface == null)
          throw new WSException("Cannot get interface for name: " + interfaceName);
       return wsdlInterface;

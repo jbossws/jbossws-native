@@ -32,7 +32,6 @@ import org.jboss.ws.core.jaxrpc.SOAP12BindingJAXRPC;
 import org.jboss.ws.core.jaxws.binding.SOAP11BindingJAXWS;
 import org.jboss.ws.core.jaxws.binding.SOAP12BindingJAXWS;
 import org.jboss.ws.metadata.config.Configurable;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 

@@ -23,6 +23,15 @@ package org.jboss.ws.tools;
 
 // $Id$
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
 import org.apache.xerces.impl.xs.SchemaGrammar;
 import org.apache.xerces.impl.xs.XMLSchemaLoader;
 import org.apache.xerces.impl.xs.XSModelImpl;
@@ -46,14 +55,6 @@ import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBindingResolver;
 import org.w3c.dom.ls.LSInput;
 import org.xml.sax.InputSource;
-
-import javax.xml.namespace.QName;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * <P>

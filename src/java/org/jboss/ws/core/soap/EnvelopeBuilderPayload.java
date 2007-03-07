@@ -36,7 +36,6 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

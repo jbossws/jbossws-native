@@ -33,6 +33,7 @@ import org.jboss.ws.WSException;
  * Endpoint components are local to a given Service component; they cannot be referred to by QName.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  * @since 10-Oct-2004
  */
 public class WSDLEndpoint extends Extendable 
@@ -43,26 +44,20 @@ public class WSDLEndpoint extends Extendable
    private static final Logger log = Logger.getLogger(WSDLEndpoint.class);
    
    // The parent service
-   private WSDLService wsdlService;
+   private final WSDLService wsdlService;
 
-   /** The REQUIRED name attribute information item together with the targetNamespace attribute information item
-    * of the definitions element information item forms the QName of the endpoint. */
-   private NCName name;
+   private final QName name;
    
-   /** Derived QName identifier. 
-    */
-   private QName qname;
-
    /** The REQUIRED binding attribute information item refers, by QName, to a Binding component */
    private QName binding;
 
    /** The OPTIONAL address attribute information item specifies the address of the endpoint. */
    private String address;
 
-   public WSDLEndpoint(WSDLService wsdlService)
+   public WSDLEndpoint(WSDLService wsdlService, QName name)
    {
-      log.trace("new WSDLEndpoint");
       this.wsdlService = wsdlService;
+      this.name = name;
    }
    
    public WSDLService getWsdlService()
@@ -82,18 +77,18 @@ public class WSDLEndpoint extends Extendable
       if (wsdlService.getInterfaceName() != null)
       {
          QName qname = wsdlService.getInterfaceName();
-         wsdlInterface = wsdlDefinitions.getInterface(new NCName(qname));
+         wsdlInterface = wsdlDefinitions.getInterface(qname);
       }
       else
       {
-         WSDLBinding wsdlBinding = wsdlDefinitions.getBinding(new NCName(binding));
+         WSDLBinding wsdlBinding = wsdlDefinitions.getBinding(binding);
          if (wsdlBinding == null)
             throw new WSException("Cannot obtain the binding: " + binding);
 
          if (wsdlBinding.getInterfaceName() != null)
          {
             QName qname = wsdlBinding.getInterfaceName();
-            wsdlInterface = wsdlDefinitions.getInterface(new NCName(qname));
+            wsdlInterface = wsdlDefinitions.getInterface(qname);
          }
       }
 
@@ -103,46 +98,12 @@ public class WSDLEndpoint extends Extendable
       return wsdlInterface;
    }
 
-   /** Get the WSDLInterafceOperation for the given opName
-    *
-    * @param opName the operation name
-    * @return A WSDLOperation or null
-    */
-   public WSDLInterfaceOperation getInterfaceOperation(NCName opName)
-   {
-      WSDLInterface wsdlInterface = getInterface();
-      WSDLInterfaceOperation wsdlInterfaceOperation = wsdlInterface.getWSDLInterfaceOperation(opName);
-      return wsdlInterfaceOperation;
-   }
 
-   public NCName getName()
+   public QName getName()
    {
       return name;
    }
-
-   public void setName(NCName name)
-   {
-      log.trace("setName: " + name);
-      this.name = name;
-   }
-
-   public QName getQName()
-   {
-      if (qname == null)
-      {
-         String tnsURI = wsdlService.getWsdlDefinitions().getTargetNamespace();
-         qname = new QName(tnsURI, name.toString());
-      }
-      return qname;
-   }
-
    
-   public void setQName(QName qname)
-   {
-      log.trace("setQName: " + qname);
-      this.qname = qname;
-   }
-
    public QName getBinding()
    {
       return binding;

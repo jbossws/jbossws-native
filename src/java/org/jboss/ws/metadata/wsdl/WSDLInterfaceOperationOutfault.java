@@ -49,7 +49,7 @@ public class WSDLInterfaceOperationOutfault extends Extendable
     * pattern} property of the Interface Operation component it is contained within. The value of this
     * property MUST match the name of a placeholder message defined by the message exchange pattern.
     */
-   private NCName messageLabel;
+   private String messageLabel;
 
    public WSDLInterfaceOperationOutfault(WSDLInterfaceOperation wsdlInterfaceOperation)
    {
@@ -71,12 +71,12 @@ public class WSDLInterfaceOperationOutfault extends Extendable
       this.ref = ref;
    }
 
-   public NCName getMessageLabel()
+   public String getMessageLabel()
    {
       return messageLabel;
    }
 
-   public void setMessageLabel(NCName messageLabel)
+   public void setMessageLabel(String messageLabel)
    {
       this.messageLabel = messageLabel;
    }

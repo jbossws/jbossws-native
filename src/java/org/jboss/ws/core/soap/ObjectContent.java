@@ -21,18 +21,23 @@
  */
 package org.jboss.ws.core.soap;
 
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.core.jaxrpc.binding.*;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
-import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.logging.Logger;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.namespace.QName;
 import java.lang.reflect.Method;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
+import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
+import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
+import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
 /**
  * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>

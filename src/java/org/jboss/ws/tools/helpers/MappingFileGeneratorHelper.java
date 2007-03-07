@@ -58,7 +58,6 @@ import org.jboss.ws.metadata.jaxrpcmapping.ServiceInterfaceMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.VariableMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlMessageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlReturnValueMapping;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
@@ -135,10 +134,10 @@ public class MappingFileGeneratorHelper
 
    public ServiceInterfaceMapping constructServiceInterfaceMapping(JavaWsdlMapping jwm, WSDLService ser)
    {
-      serviceName = ser.getName().toString();
+      serviceName = ser.getName().getLocalPart();
       String javaServiceName = serviceName;
       //Check if the serviceName conflicts with a portType or interface name
-      if (wsdlDefinitions.getInterface(new NCName(serviceName)) != null)
+      if (wsdlDefinitions.getInterface(new QName(wsdlDefinitions.getTargetNamespace(), serviceName)) != null)
          javaServiceName += "_Service";
 
       if (this.serviceName == null || serviceName.length() == 0)
@@ -157,7 +156,7 @@ public class MappingFileGeneratorHelper
       for (int j = 0; j < lenendpoints; j++)
       {
          WSDLEndpoint endpt = endpoints[j];
-         String portname = endpt.getName().toString();
+         String portname = endpt.getName().getLocalPart();
          //port mapping
          PortMapping pm = new PortMapping(sim);
          pm.setPortName(portname);
@@ -169,7 +168,7 @@ public class MappingFileGeneratorHelper
 
    public void constructServiceEndpointInterfaceMapping(JavaWsdlMapping jwm, WSDLService ser)
    {
-      serviceName = ser.getName().toString();
+      serviceName = ser.getName().getLocalPart();
       if (this.serviceName == null || serviceName.length() == 0)
          throw new IllegalArgumentException("MappingFileGenerator:Service Name is null");
 
@@ -183,13 +182,13 @@ public class MappingFileGeneratorHelper
       {
          WSDLEndpoint endpt = endpoints[j];
          QName binding = endpt.getBinding();
-         WSDLBinding wsdlbind = wsdlDefinitions.getBinding(new NCName(binding.getLocalPart()));
-         String bindName = wsdlbind.getName().toString();
-         String portTypeName = wsdlbind.getInterfaceName().getLocalPart();
-         WSDLInterface wsdlintf = wsdlDefinitions.getInterface(new NCName(portTypeName));
-         String portName = wsdlintf.getName().toString();
+         WSDLBinding wsdlbind = wsdlDefinitions.getBinding(binding);
+         String bindName = wsdlbind.getName().getLocalPart();
+         QName portTypeName = wsdlbind.getInterfaceName();
+         WSDLInterface wsdlintf = wsdlDefinitions.getInterface(portTypeName);
+         String portName = wsdlintf.getName().getLocalPart();
          String javaPortName = utils.chopPortType(portName);
-         if (wsdlDefinitions.getService(new NCName(javaPortName)) != null)
+         if (wsdlDefinitions.getService(javaPortName) != null)
             javaPortName += "_PortType";
 
          ServiceEndpointInterfaceMapping seim = new ServiceEndpointInterfaceMapping(jwm);
@@ -211,7 +210,7 @@ public class MappingFileGeneratorHelper
       for (int j = 0; j < len; j++)
       {
          WSDLInterfaceOperation wiop = wioparr[j];
-         String opname = wiop.getName().toString();
+         String opname = wiop.getName().getLocalPart();
          ServiceEndpointMethodMapping semm = new ServiceEndpointMethodMapping(seim);
          semm.setJavaMethodName(ToolsUtils.firstLetterLowerCase(opname));
          semm.setWsdlOperation(opname);
@@ -434,7 +433,7 @@ public class MappingFileGeneratorHelper
                   registeredExceptions.add(exceptionType);
                   ExceptionMapping exceptionMapping = new ExceptionMapping(jwm);
                   exceptionMapping.setExceptionType(exceptionType);
-                  exceptionMapping.setWsdlMessage(new QName(wsdlDefinitions.getTargetNamespace(), fault.getName().toString()));
+                  exceptionMapping.setWsdlMessage(fault.getName());
                   jwm.addExceptionMappings(exceptionMapping);
                }
             }

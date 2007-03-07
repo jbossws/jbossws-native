@@ -23,8 +23,6 @@ package org.jboss.ws.core.jaxws;
 
 // $Id$
 
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
@@ -34,16 +32,13 @@ import javax.xml.transform.Result;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.NamedNodeMap;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 
 /**
  * A Serializer that can handle complex types by delegating to JAXB.

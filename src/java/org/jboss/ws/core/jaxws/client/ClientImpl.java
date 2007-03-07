@@ -55,12 +55,12 @@ import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-import org.jboss.ws.extensions.xop.XOPContext;
 
 /**
  * Provides support for the dynamic invocation of a service endpoint.

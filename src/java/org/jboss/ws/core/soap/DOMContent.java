@@ -21,10 +21,10 @@
  */
 package org.jboss.ws.core.soap;
 
-import org.jboss.logging.Logger;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+
+import org.jboss.logging.Logger;
 
 /**
  * Represents the DOM_VALID state of an {@link SOAPContentElement}.<br>

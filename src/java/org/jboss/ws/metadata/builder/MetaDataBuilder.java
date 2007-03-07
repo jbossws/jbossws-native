@@ -68,7 +68,6 @@ import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -97,7 +96,7 @@ public abstract class MetaDataBuilder
    {
       WSDLDefinitions wsdlDefinitions = wsdlEndpoint.getWsdlService().getWsdlDefinitions();
       WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
-      WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getQName());
+      WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
       String bindingType = wsdlBinding.getType();
       if (Constants.NS_SOAP11.equals(bindingType))
          epMetaData.setBindingId(Constants.SOAP11HTTP_BINDING);
@@ -114,13 +113,12 @@ public abstract class MetaDataBuilder
       {
          for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
          {
-            if (epMetaData.getPortName().equals(wsdlEndpoint.getQName()))
+            if (epMetaData.getPortName().equals(wsdlEndpoint.getName()))
             {
                QName bindQName = wsdlEndpoint.getBinding();
-               NCName ncName = new NCName(bindQName.getLocalPart());
-               WSDLBinding wsdlBinding = wsdlDefinitions.getBinding(ncName);
+               WSDLBinding wsdlBinding = wsdlDefinitions.getBinding(bindQName);
                if (wsdlBinding == null)
-                  throw new WSException("Cannot obtain binding: " + ncName);
+                  throw new WSException("Cannot obtain binding: " + bindQName);
 
                for (WSDLBindingOperation wsdlBindingOperation : wsdlBinding.getOperations())
                {
@@ -314,7 +312,7 @@ public abstract class MetaDataBuilder
       {
          for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
          {
-            QName wsdlPortName = wsdlEndpoint.getQName();
+            QName wsdlPortName = wsdlEndpoint.getName();
             if (wsdlPortName.equals(portName))
             {
                endpointFound = true;
@@ -454,7 +452,7 @@ public abstract class MetaDataBuilder
          if (eventSourceProp != null && epMetaData instanceof ServerEndpointMetaData)
          {
             ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)epMetaData;
-            String eventSourceNS = wsdlInterface.getQName().getNamespaceURI() + "/" + wsdlInterface.getQName().getLocalPart();
+            String eventSourceNS = wsdlInterface.getName().getNamespaceURI() + "/" + wsdlInterface.getName().getLocalPart();
 
             // extract the schema model
             JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
@@ -473,7 +471,7 @@ public abstract class MetaDataBuilder
                // WSDL operation of an WSDL interface that is marked as an event source
                // requires to carry an output message.
                throw new WSException("Unable to resolve eventing root element NS. No operation output found at "+
-                  wsdlInterfaceOperation.getQName());
+                  wsdlInterfaceOperation.getName());
             }
 
             EventingEpMetaExt ext = new EventingEpMetaExt(EventingConstants.NS_EVENTING);
@@ -491,8 +489,8 @@ public abstract class MetaDataBuilder
    protected void processOpMetaExtensions(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation)
    {
 
-      String tns = wsdlOperation.getQName().getNamespaceURI();
-      String portTypeName = wsdlOperation.getQName().getLocalPart();
+      String tns = wsdlOperation.getName().getNamespaceURI();
+      String portTypeName = wsdlOperation.getName().getLocalPart();
 
       AddressingProperties ADDR = new AddressingPropertiesImpl();
       AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());

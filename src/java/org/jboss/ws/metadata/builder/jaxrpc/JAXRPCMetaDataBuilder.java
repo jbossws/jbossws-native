@@ -63,7 +63,6 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
@@ -158,8 +157,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
       for (WSDLInterfaceOperation wsdlOperation : wsdlInterface.getOperations())
       {
-         String opName = wsdlOperation.getName().toString();
-         QName opQName = wsdlOperation.getQName();
+         QName opQName = wsdlOperation.getName();
+         String opName = opQName.getLocalPart();
 
          // Set java method name
          String javaName = opName.substring(0, 1).toLowerCase() + opName.substring(1);
@@ -187,7 +186,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             opMetaData.setOneWay(true);
 
          // Set the operation SOAPAction
-         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getQName());
+         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
          WSDLBindingOperation wsdlBindingOperation = wsdlBinding.getOperationByRef(opQName);
          if (wsdlBindingOperation != null)
             opMetaData.setSOAPAction(wsdlBindingOperation.getSOAPAction());
@@ -894,8 +893,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       if (null == wsaAction)
       {
 
-         String tns = wsdlOperation.getQName().getNamespaceURI();
-         String portTypeName = wsdlOperation.getQName().getLocalPart();
+         String tns = wsdlOperation.getName().getNamespaceURI();
+         String portTypeName = wsdlOperation.getName().getLocalPart();
          WSDLProperty messageName = wsdlOperation.getProperty("http://www.jboss.org/jbossws/messagename/in");
 
          actionValue = new String(tns + "/" + portTypeName + "/" + messageName.getValue());
@@ -917,7 +916,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       {
          QName ref = outFault.getRef();
 
-         WSDLInterfaceFault wsdlFault = wsdlInterface.getFault(new NCName(ref.getLocalPart()));
+         WSDLInterfaceFault wsdlFault = wsdlInterface.getFault(ref);
          QName xmlName = wsdlFault.getElement();
          QName xmlType = wsdlFault.getXmlType();
          String javaTypeName = null;

@@ -52,7 +52,6 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.Configuration;
@@ -151,8 +150,8 @@ public class ToolsHelper
          wscr.setSeiName(j2wc.endpointName);
          wscr.setServiceName(j2wc.serviceName);
          //Get the portname from wsdl definitions
-         WSDLService wsdlService = wsdl.getService(new NCName(j2wc.serviceName));
-         String portName = wsdlService.getEndpoints()[0].getName().toString();
+         WSDLService wsdlService = wsdl.getService(j2wc.serviceName);
+         String portName = wsdlService.getEndpoints()[0].getName().getLocalPart();
          //wscr.setPortName(j2wc.serviceName + "Port");
          wscr.setPortName(portName);
          //wscr.setMappingFileName(j2wc.mappingFileName);
@@ -311,7 +310,7 @@ public class ToolsHelper
          {
             MappingFileGenerator mgf = new MappingFileGenerator(wsdl, new LiteralTypeMapping());
             mgf.setPackageName(getPackageName(wsdl, glc));
-            mgf.setServiceName(wsdl.getServices()[0].getName().toString());
+            mgf.setServiceName(wsdl.getServices()[0].getName().getLocalPart());
             mgf.setParameterStyle(w2jc.parameterStyle);            
 
             JavaWsdlMapping jwm = mgf.generate();
@@ -328,7 +327,7 @@ public class ToolsHelper
             String serviceName = "MyServiceName";
 
             if (wsdl.getServices().length == 1)
-               serviceName = wsdl.getServices()[0].getName().toString();
+               serviceName = wsdl.getServices()[0].getName().getLocalPart();
 
             if (wsdl.getInterfaces().length == 1)
             {
@@ -340,8 +339,8 @@ public class ToolsHelper
             wscr.setTargetNamespace(wsdl.getTargetNamespace());
             wscr.setSeiName(seiName);
             wscr.setServiceName(serviceName);
-            WSDLService wsdlService = wsdl.getService(new NCName(serviceName));
-            String portName = wsdlService.getEndpoints()[0].getName().toString();
+            WSDLService wsdlService = wsdl.getService(serviceName);
+            String portName = wsdlService.getEndpoints()[0].getName().getLocalPart();
             wscr.setPortName(portName);
             
             String wsdlShortName = wsdlURL.getPath();

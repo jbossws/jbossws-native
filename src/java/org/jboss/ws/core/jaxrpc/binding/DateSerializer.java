@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;

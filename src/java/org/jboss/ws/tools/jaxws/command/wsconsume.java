@@ -27,7 +27,6 @@ import gnu.getopt.LongOpt;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

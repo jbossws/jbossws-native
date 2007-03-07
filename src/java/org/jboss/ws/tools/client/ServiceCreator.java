@@ -28,7 +28,6 @@ import java.io.IOException;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
@@ -196,11 +195,11 @@ public class ServiceCreator implements ServiceCreatorIntf
    
    private String getReturnType(WSDLBinding wbind)
    {
-      String portType = wbind.getInterface().getName().toString();
+      String portType = wbind.getInterface().getName().getLocalPart();
       portType = utils.chopPortType(portType);
       
       //Check if it conflicts with a service name
-      if(wsdl.getService(new NCName(portType) ) != null)
+      if(wsdl.getService(portType) != null)
          portType += "_PortType";
       return packageName + "." + portType ; 
    }
@@ -209,12 +208,12 @@ public class ServiceCreator implements ServiceCreatorIntf
 
    private void generateServiceFile(WSDLService wsdlService) throws IOException
    {      
-      String serviceName = wsdlService.getName().toString();
+      String serviceName = wsdlService.getName().getLocalPart();
       if (serviceName.endsWith("Service") == false)
          serviceName = serviceName + "Service";
       
       //Check if the serviceName conflicts with a portType or interface name
-      if(wsdl.getInterface(new NCName(serviceName)) != null )
+      if(wsdl.getInterface(new QName(wsdl.getTargetNamespace(), serviceName)) != null )
          serviceName = new StringBuilder(serviceName).insert(serviceName.lastIndexOf("Service"), '_').toString();
       
       StringBuilder buf = new StringBuilder();
@@ -244,10 +243,10 @@ public class ServiceCreator implements ServiceCreatorIntf
    {
       StringBuilder buf = new StringBuilder("     public ");
       QName bindName = endpt.getBinding();
-      WSDLBinding wbind = wsdl.getBinding(new NCName(bindName.getLocalPart()));
+      WSDLBinding wbind = wsdl.getBinding(bindName);
       
       buf.append(getReturnType(wbind)).append(" get"); 
-      buf.append(endpt.getName().toString()).append("()").append(" throws ServiceException;").append(newLine(1));
+      buf.append(endpt.getName().getLocalPart()).append("()").append(" throws ServiceException;").append(newLine(1));
       return buf.toString();
    }
    

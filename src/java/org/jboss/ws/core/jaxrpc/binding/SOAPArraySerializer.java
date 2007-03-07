@@ -23,6 +23,9 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
+import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -31,9 +34,6 @@ import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.NamedNodeMap;
-
-import javax.xml.namespace.QName;
-import javax.xml.transform.Result;
 
 /**
  * A Serializer that can handle SOAP encoded arrays.

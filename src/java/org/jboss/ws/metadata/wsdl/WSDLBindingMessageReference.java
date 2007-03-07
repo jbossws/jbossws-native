@@ -38,7 +38,7 @@ public abstract class WSDLBindingMessageReference
 {
    // The parent WSDL binding operation
    private WSDLBindingOperation wsdlBindingOperation;
-   private NCName messageLabel;
+   private String messageLabel;
    private List<WSDLSOAPHeader> soapHeaders = new ArrayList<WSDLSOAPHeader>();
    private LinkedHashMap<String, WSDLMIMEPart> mimeParts = new LinkedHashMap<String, WSDLMIMEPart>();
 
@@ -58,7 +58,7 @@ public abstract class WSDLBindingMessageReference
     * exchange pattern} of the Interface Operation component being bound by the
     * containing Binding Operation component.
     */
-   public NCName getMessageLabel()
+   public String getMessageLabel()
    {
       return messageLabel;
    }
@@ -69,7 +69,7 @@ public abstract class WSDLBindingMessageReference
     * exchange pattern} of the Interface Operation component being bound by the
     * containing Binding Operation component.
     */
-   public void setMessageLabel(NCName messageLabel)
+   public void setMessageLabel(String messageLabel)
    {
       this.messageLabel = messageLabel;
    }

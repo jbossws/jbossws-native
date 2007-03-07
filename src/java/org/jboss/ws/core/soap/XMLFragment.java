@@ -23,18 +23,25 @@ package org.jboss.ws.core.soap;
 
 //$Id: $
 
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
-import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.w3c.dom.Element;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.core.utils.DOMWriter;
+import org.w3c.dom.Element;
 
 /**
  * A XMLFragment represent either a XML {@link Source} or a {@link Result}.<br>

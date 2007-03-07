@@ -36,6 +36,7 @@ import org.jboss.logging.Logger;
  * which the service is provided.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  * @since 10-Oct-2004
  */
 public class WSDLService extends Extendable
@@ -46,15 +47,9 @@ public class WSDLService extends Extendable
    private static final Logger log = Logger.getLogger(WSDLService.class);
    
    // The parent WSDL definitions element.
-   private WSDLDefinitions wsdlDefinitions;
+   private final WSDLDefinitions wsdlDefinitions;
 
-   /** The REQUIRED name attribute information item together with the targetNamespace attribute information item
-    * of the definitions element information item forms the QName of the service.*/
-   private NCName name;
-
-   /** Derived QName identifier. 
-    */
-   private QName qname;
+   private final QName name;
    
    /** The interface attribute information item identifies the interface that the service is an instance of. */
    private QName interfaceName;
@@ -62,10 +57,10 @@ public class WSDLService extends Extendable
    /** One or more endpoint element information items */
    private ArrayList<WSDLEndpoint> endpoints = new ArrayList<WSDLEndpoint>();
 
-   public WSDLService(WSDLDefinitions wsdlDefinitions)
+   public WSDLService(WSDLDefinitions wsdlDefinitions, QName name)
    {
-      log.trace("new WSDLService");
       this.wsdlDefinitions = wsdlDefinitions;
+      this.name = name;
    }
 
    public WSDLDefinitions getWsdlDefinitions()
@@ -73,34 +68,11 @@ public class WSDLService extends Extendable
       return wsdlDefinitions;
    }
 
-   public NCName getName()
+   public QName getName()
    {
       return name;
    }
-
-   public void setName(NCName name)
-   {
-      log.trace("setName: " + name);
-      this.name = name;
-   }
-
-   public QName getQName()
-   {
-      if (qname == null)
-      {
-         String tnsURI = wsdlDefinitions.getTargetNamespace();
-         qname = new QName(tnsURI, name.toString());
-      }
-      return qname;
-   }
-
    
-   public void setQName(QName qname)
-   {
-      log.trace("setQName: " + qname);
-      this.qname = qname;
-   }
-
    public QName getInterfaceName()
    {
       return interfaceName;
@@ -131,7 +103,7 @@ public class WSDLService extends Extendable
       while (it.hasNext())
       {
          WSDLEndpoint wsdlEndpoint = (WSDLEndpoint)it.next();
-         if (portName.equals(wsdlEndpoint.getQName()))
+         if (portName.equals(wsdlEndpoint.getName()))
             return wsdlEndpoint;
       }
       return null;

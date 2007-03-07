@@ -23,7 +23,11 @@ package org.jboss.ws.core.utils;
 
 // $Id$
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,10 +39,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;

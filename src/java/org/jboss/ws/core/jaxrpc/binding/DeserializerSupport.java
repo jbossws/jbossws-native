@@ -23,18 +23,18 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
+import java.io.ByteArrayOutputStream;
+
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.Deserializer;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
 import org.jboss.ws.WSException;
-
-import java.io.ByteArrayOutputStream;
+import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
 
 /** The base class for all Deserializers.
  *

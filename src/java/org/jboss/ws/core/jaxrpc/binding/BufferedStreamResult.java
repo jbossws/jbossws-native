@@ -21,10 +21,11 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * @author Heiko.Braun@jboss.org

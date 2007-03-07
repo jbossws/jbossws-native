@@ -23,21 +23,38 @@ package org.jboss.ws.core.jaxrpc;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxrpc.binding.*;
-import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.core.utils.HashCodeUtil;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.DeserializerFactory;
 import javax.xml.rpc.encoding.SerializerFactory;
 import javax.xml.rpc.encoding.TypeMapping;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
+import org.jboss.ws.core.jaxrpc.binding.Base64DeserializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.Base64SerializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.CalendarDeserializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.CalendarSerializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.DateDeserializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.DateSerializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.HexDeserializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.HexSerializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.QNameDeserializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.QNameSerializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;
+import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
+import org.jboss.ws.core.utils.HashCodeUtil;
+import org.jboss.ws.core.utils.JavaUtils;
 
 /**
  * This is the representation of a type mapping.

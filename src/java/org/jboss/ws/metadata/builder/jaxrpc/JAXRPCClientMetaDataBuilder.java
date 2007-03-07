@@ -45,7 +45,6 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
@@ -162,11 +161,11 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             throw new IllegalArgumentException("Expected a single service element");
 
          wsdlService = wsdlDefinitions.getServices()[0];
-         serviceMetaData.setServiceName(wsdlService.getQName());
+         serviceMetaData.setServiceName(wsdlService.getName());
       }
       else
       {
-         wsdlService = wsdlDefinitions.getService(new NCName(serviceQName.getLocalPart()));
+         wsdlService = wsdlDefinitions.getService(serviceQName);
       }
       if (wsdlService == null)
          throw new IllegalArgumentException("Cannot obtain wsdl service: " + serviceQName);
@@ -177,8 +176,8 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       // Build endpoint meta data
       for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
       {
-         QName portName = wsdlEndpoint.getQName();
-         QName interfaceQName = wsdlEndpoint.getInterface().getQName();
+         QName portName = wsdlEndpoint.getName();
+         QName interfaceQName = wsdlEndpoint.getInterface().getName();
          ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXRPC);
          epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
          serviceMetaData.addEndpoint(epMetaData);
@@ -201,7 +200,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          ServiceEndpointInterfaceMapping seiMapping = null;
          if (javaWsdlMapping != null)
          {
-            QName portType = wsdlEndpoint.getInterface().getQName();
+            QName portType = wsdlEndpoint.getInterface().getName();
             seiMapping = javaWsdlMapping.getServiceEndpointInterfaceMappingByPortType(portType);
             if (seiMapping != null)
             {

@@ -68,11 +68,11 @@ public class WSDLDefinitions implements Serializable
    /** Types element information item */
    private WSDLTypes types;
    /** Zero or more interface element information items */
-   private Map<NCName, WSDLInterface> interfaces = new LinkedHashMap<NCName, WSDLInterface>();
+   private Map<QName, WSDLInterface> interfaces = new LinkedHashMap<QName, WSDLInterface>();
    /** Zero or more binding element information items */
-   private Map<NCName, WSDLBinding> bindings = new LinkedHashMap<NCName, WSDLBinding>();
+   private Map<QName, WSDLBinding> bindings = new LinkedHashMap<QName, WSDLBinding>();
    /** Zero or more service element information items */
-   private Map<NCName, WSDLService> services = new LinkedHashMap<NCName, WSDLService>();
+   private Map<QName, WSDLService> services = new LinkedHashMap<QName, WSDLService>();
 
    // Zero or more namespace definitions
    // [TODO] What is this doing here?
@@ -221,9 +221,9 @@ public class WSDLDefinitions implements Serializable
       this.types.setWSDLDefintiions(this);
    }
 
-   public WSDLInterface getInterface(NCName ncName)
+   public WSDLInterface getInterface(QName name)
    {
-      return interfaces.get(ncName);
+      return interfaces.get(name);
    }
 
    public WSDLInterface[] getInterfaces()
@@ -245,9 +245,9 @@ public class WSDLDefinitions implements Serializable
       return arr;
    }
 
-   public WSDLBinding getBinding(NCName ncName)
+   public WSDLBinding getBinding(QName name)
    {
-      return bindings.get(ncName);
+      return bindings.get(name);
    }
 
    public WSDLBinding getBindingByInterfaceName(QName qname)
@@ -283,9 +283,14 @@ public class WSDLDefinitions implements Serializable
       services.put(service.getName(), service);
    }
 
-   public WSDLService getService(NCName name)
+   public WSDLService getService(QName name)
    {
       return services.get(name);
+   }
+   
+   public WSDLService getService(String localName)
+   {
+      return services.get(new QName(targetNamespace, localName));
    }
 
    /** Unregister the given namespaceURI/prefix combination */

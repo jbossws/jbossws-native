@@ -42,6 +42,7 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
  * pattern used by the operation (see {message exchange pattern} property).
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="mailto:jason.greene@jboss.com>Jason T. Greene</a>
  * @since 10-Oct-2004
  */
 public class WSDLInterfaceOperation extends Extendable implements Comparable
@@ -51,10 +52,7 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
    // The parent interface
    private WSDLInterface wsdlInterface;
 
-   /** The REQUIRED name attribute information item identifies a given operation element information item inside a
-    * given interface element information item.
-    */
-   private NCName name;
+   private final QName name;
 
    /** The OPTIONAL pattern attribute information item identifies the message exchange pattern a given operation uses.
     */
@@ -81,9 +79,16 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
    /** Zero or more signature items */
    private LinkedHashMap<String, WSDLRPCSignatureItem> rpcSignatureItems = new LinkedHashMap<String, WSDLRPCSignatureItem>();
 
-   public WSDLInterfaceOperation(WSDLInterface wsdlInterface)
+   public WSDLInterfaceOperation(WSDLInterface wsdlInterface, QName name)
+   {
+      this.name = name;
+      this.wsdlInterface = wsdlInterface;
+   }
+   
+   public WSDLInterfaceOperation(WSDLInterface wsdlInterface, String localName)
    {
       this.wsdlInterface = wsdlInterface;
+      name = new QName(wsdlInterface.getName().getNamespaceURI(), localName);
    }
 
    public WSDLInterface getWsdlInterface()
@@ -91,20 +96,9 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
       return wsdlInterface;
    }
 
-   public NCName getName()
+   public QName getName()
    {
       return name;
-   }
-
-   public void setName(NCName name)
-   {
-      this.name = name;
-   }
-
-   public QName getQName()
-   {
-      String nsURI = wsdlInterface.getQName().getNamespaceURI();
-      return new QName(nsURI, name.toString());
    }
 
    public String getPattern()
@@ -258,11 +252,11 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
    public WSDLBindingOperation getBindingOperation()
    {
       WSDLInterface wsdlInterface = getWsdlInterface();
-      WSDLBinding binding = wsdlInterface.getWsdlDefinitions().getBindingByInterfaceName(wsdlInterface.getQName());
+      WSDLBinding binding = wsdlInterface.getWsdlDefinitions().getBindingByInterfaceName(wsdlInterface.getName());
       if (binding == null)
          return null;
 
-      WSDLBindingOperation bindingOperation = binding.getOperationByRef(getQName());
+      WSDLBindingOperation bindingOperation = binding.getOperationByRef(getName());
       if (bindingOperation == null)
          return null;
 
@@ -275,8 +269,8 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
       if (o instanceof WSDLInterfaceOperation)
       {
          WSDLInterfaceOperation w = (WSDLInterfaceOperation)o;
-         String oname = w.getName().toString();
-         String myname = name.toString();
+         String oname = w.getName().getLocalPart();
+         String myname = name.getLocalPart();
          c = myname.compareTo(oname);
       }
       return c;

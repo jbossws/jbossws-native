@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;

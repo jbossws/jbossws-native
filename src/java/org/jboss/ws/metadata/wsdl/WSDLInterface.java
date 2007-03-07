@@ -38,6 +38,7 @@ import org.jboss.logging.Logger;
  * and an interface is a set of operations. Thus, an interface defines the design of the application.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  * @since 10-Oct-2004
  */
 public class WSDLInterface extends Extendable
@@ -50,14 +51,7 @@ public class WSDLInterface extends Extendable
    // The parent WSDL definitions element.
    private WSDLDefinitions wsdlDefinitions;
 
-   /** The REQUIRED name attribute information item together with the targetNamespace attribute information item
-    * of the [parent] definitions element information item forms the QName of the interface.
-    */
-   private NCName name;
-   
-   /** Derived QName identifier. 
-    */
-   private QName qname;
+   private QName name;
 
    /** The OPTIONAL extends attribute information item lists the interfaces that this interface derives from.
     */
@@ -69,60 +63,27 @@ public class WSDLInterface extends Extendable
    private String styleDefault;
 
    /** Zero or more operation element information items */
-   private Map operations = new LinkedHashMap();
+   private Map<QName, WSDLInterfaceOperation> operations = new LinkedHashMap<QName, WSDLInterfaceOperation>();
    /** Zero or more fault element information items */
-   private Map faults = new LinkedHashMap();
+   private Map<QName, WSDLInterfaceFault> faults = new LinkedHashMap<QName, WSDLInterfaceFault>();
 
    /** Construct a WSDL interface for a given WSDL definition */
-   public WSDLInterface(WSDLDefinitions wsdlDefinitions)
+   public WSDLInterface(WSDLDefinitions wsdlDefinitions, QName name)
    {
-      log.trace("new WSDLInterface");
       this.wsdlDefinitions = wsdlDefinitions;
+      this.name = name;
    }
-
-   /** Get a WSDLOperation for a given name
-    *
-    * @param name The name of the operation
-    * @return A WSDLOperation or null
-    */
-   public WSDLInterfaceOperation getWSDLInterfaceOperation(NCName name)
-   {
-      return (WSDLInterfaceOperation)operations.get(name);
-   }
-
+   
    public WSDLDefinitions getWsdlDefinitions()
    {
       return wsdlDefinitions;
    }
 
-   public NCName getName()
+   public QName getName()
    {
       return name;
    }
-
-   public void setName(NCName name)
-   {
-      log.trace("setName: " + name);
-      this.name = name;
-   }
-
-   public QName getQName()
-   {
-      if (qname == null)
-      {
-         String tnsURI = wsdlDefinitions.getTargetNamespace();
-         qname = new QName(tnsURI, name.toString());
-      }
-      return qname;
-   }
-
    
-   public void setQName(QName qname)
-   {
-      log.trace("setQName: " + qname);
-      this.qname = qname;
-   }
-
    public QName[] getExtendList()
    {
       return extendList;
@@ -158,9 +119,15 @@ public class WSDLInterface extends Extendable
       return arr;
    }
 
-   public WSDLInterfaceOperation getOperation(NCName opName)
+   public WSDLInterfaceOperation getOperation(QName name)
    {
-      WSDLInterfaceOperation operation = (WSDLInterfaceOperation)operations.get(opName);
+      WSDLInterfaceOperation operation = operations.get(name);
+      return operation;
+   }
+   
+   public WSDLInterfaceOperation getOperation(String localName)
+   {
+      WSDLInterfaceOperation operation = operations.get(new QName(name.getNamespaceURI(), localName));
       return operation;
    }
 
@@ -176,19 +143,19 @@ public class WSDLInterface extends Extendable
       return arr;
    }
 
-   public WSDLInterfaceFault getFault(NCName fName)
+   public WSDLInterfaceFault getFault(QName name)
    {
-      WSDLInterfaceFault fault = (WSDLInterfaceFault)faults.get(fName);
+      WSDLInterfaceFault fault = faults.get(name);
+      return fault;
+   }
+   public WSDLInterfaceFault getFault(String localName)
+   {
+      WSDLInterfaceFault fault = faults.get(new QName(name.getNamespaceURI(), localName));
       return fault;
    }
 
    public void addFault(WSDLInterfaceFault fault)
    {
       faults.put(fault.getName(), fault);
-   }
-
-   public boolean containsInterfaceOperation(NCName name)
-   {
-      return operations.containsKey(name);
    }
 }

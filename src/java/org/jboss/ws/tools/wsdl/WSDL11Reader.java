@@ -72,7 +72,6 @@ import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.ResourceURL;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
@@ -192,7 +191,7 @@ public class WSDL11Reader
          Binding srcBinding = (Binding)it.next();
          QName srcQName = srcBinding.getQName();
 
-         WSDLBinding destBinding = destWsdl.getBinding(new NCName(srcQName));
+         WSDLBinding destBinding = destWsdl.getBinding(srcQName);
          if (destBinding == null)
          {
             processBinding(srcWsdl, srcBinding);
@@ -478,12 +477,9 @@ public class WSDL11Reader
       log.trace("processPortType: " + srcPortType.getQName());
 
       QName qname = srcPortType.getQName();
-      NCName ncName = new NCName(qname);
-      if (destWsdl.getInterface(ncName) == null)
+      if (destWsdl.getInterface(qname) == null)
       {
-         WSDLInterface destInterface = new WSDLInterface(destWsdl);
-         destInterface.setName(ncName);
-         destInterface.setQName(qname);
+         WSDLInterface destInterface = new WSDLInterface(destWsdl, qname);
 
          // eventing extensions
          QName eventSourceProp = (QName)srcPortType.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSE_EVENTSOURCE);
@@ -505,8 +501,7 @@ public class WSDL11Reader
       {
          Operation srcOperation = (Operation)itOperations.next();
 
-         WSDLInterfaceOperation destOperation = new WSDLInterfaceOperation(destInterface);
-         destOperation.setName(new NCName(srcOperation.getName()));
+         WSDLInterfaceOperation destOperation = new WSDLInterfaceOperation(destInterface, srcOperation.getName());
          destOperation.setStyle(getOperationStyle(srcWsdl, srcPortType, srcOperation));
 
          if(srcOperation.getStyle()!=null
@@ -584,7 +579,7 @@ public class WSDL11Reader
          {
             // This is really a place holder, but also the actual value used in
             // WSDL 2.0 RPC bindings
-            rpcInput.setElement(destOperation.getQName());
+            rpcInput.setElement(destOperation.getName());
             rpcInput.setMessageName(srcMessage.getQName());
             destOperation.addInput(rpcInput);
          }
@@ -684,7 +679,7 @@ public class WSDL11Reader
       {
          // This is really a place holder, but also the actual value used in
          // WSDL 2.0 RPC bindings
-         QName name = destOperation.getQName();
+         QName name = destOperation.getName();
          rpcOutput.setElement(new QName(name.getNamespaceURI(), name.getLocalPart() + "Response"));
          rpcOutput.setMessageName(srcMessage.getQName());
          destOperation.addOutput(rpcOutput);
@@ -708,10 +703,7 @@ public class WSDL11Reader
       String faultName = srcFault.getName();
       log.trace("processOperationFault: " + faultName);
 
-      WSDLInterfaceFault destFault = new WSDLInterfaceFault(destInterface);
-      NCName ncName = new NCName(faultName);
-      destFault.setName(ncName);
-
+      WSDLInterfaceFault destFault = new WSDLInterfaceFault(destInterface, faultName);
       Message message = srcFault.getMessage();
       QName messageName = message.getQName();
 
@@ -731,10 +723,6 @@ public class WSDL11Reader
          destFault.setElement(messageName);
          log.warn("Unsupported fault message part in message: " + messageName);
       }
-
-      WSDLInterfaceFault prevFault = destInterface.getFault(ncName);
-      if (prevFault != null && prevFault.getName().equals(ncName) == false)
-         throw new WSDLException(WSDLException.INVALID_WSDL, "Fault name must be unique: " + faultName);
 
       // Add the fault to the interface
       destInterface.addFault(destFault);
@@ -853,12 +841,11 @@ public class WSDL11Reader
       QName srcBindingQName = srcBinding.getQName();
       log.trace("processBinding: " + srcBindingQName);
 
-      NCName ncName = new NCName(srcBindingQName);
-      if (destWsdl.getBinding(ncName) == null)
+      if (destWsdl.getBinding(srcBindingQName) == null)
       {
          PortType srcPortType = srcBinding.getPortType();
          if (srcPortType == null)
-            throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find port type for binding: " + ncName);
+            throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find port type for binding: " + srcBindingQName);
 
          // Get binding type
          String bindingType = null;
@@ -888,9 +875,7 @@ public class WSDL11Reader
          if (Constants.NS_SOAP11.equals(bindingType) == false && Constants.NS_SOAP12.equals(bindingType) == false)
             return false;
 
-         WSDLBinding destBinding = new WSDLBinding(destWsdl);
-         destBinding.setQName(srcBindingQName);
-         destBinding.setName(ncName);
+         WSDLBinding destBinding = new WSDLBinding(destWsdl, srcBindingQName);
          destBinding.setInterfaceName(srcPortType.getQName());
          destBinding.setType(bindingType);
          destWsdl.addBinding(destBinding);
@@ -1036,7 +1021,7 @@ public class WSDL11Reader
       log.trace("processBindingOperation: " + srcBindingName);
 
       WSDLInterface destInterface = destBinding.getInterface();
-      String namespaceURI = destInterface.getQName().getNamespaceURI();
+      String namespaceURI = destInterface.getName().getNamespaceURI();
 
       WSDLBindingOperation destBindingOperation = new WSDLBindingOperation(destBinding);
       QName refQName = new QName(namespaceURI, srcBindingName);
@@ -1044,7 +1029,7 @@ public class WSDL11Reader
       destBinding.addOperation(destBindingOperation);
 
       String opName = srcBindingName;
-      WSDLInterfaceOperation destIntfOperation = destInterface.getOperation(new NCName(opName));
+      WSDLInterfaceOperation destIntfOperation = destInterface.getOperation(opName);
 
       // Process soap:operation@soapAction, soap:operation@style
       List<ExtensibilityElement> extList = srcBindingOperation.getExtensibilityElements();
@@ -1110,7 +1095,7 @@ public class WSDL11Reader
 
          public void removeRPCPart(String partName)
          {
-            WSDLInterfaceOperationInput operationInput = destIntfOperation.getInput(destIntfOperation.getQName());
+            WSDLInterfaceOperationInput operationInput = destIntfOperation.getInput(destIntfOperation.getName());
             operationInput.removeChildPart(partName);
          }
       };
@@ -1143,7 +1128,7 @@ public class WSDL11Reader
 
          public void removeRPCPart(String partName)
          {
-            QName name = destIntfOperation.getQName();
+            QName name = destIntfOperation.getName();
             WSDLInterfaceOperationOutput operationOutput = destIntfOperation.getOutput(new QName(name.getNamespaceURI(), name.getLocalPart() + "Response"));
             operationOutput.removeChildPart(partName);
          }
@@ -1304,9 +1289,7 @@ public class WSDL11Reader
          {
             Service srcService = (Service)it.next();
             QName qname = srcService.getQName();
-            WSDLService destService = new WSDLService(destWsdl);
-            destService.setName(new NCName(qname));
-            destService.setQName(qname);
+            WSDLService destService = new WSDLService(destWsdl, qname);
             destWsdl.addService(destService);
             processPorts(srcWsdl, destService, srcService);
          }
@@ -1347,11 +1330,9 @@ public class WSDL11Reader
       log.trace("processPort: " + srcPort.getName());
 
       Binding srcBinding = srcPort.getBinding();
-
-      WSDLEndpoint destEndpoint = new WSDLEndpoint(destService);
-      destEndpoint.setName(new NCName(srcPort.getName()));
+      QName endpointName = new QName(srcWsdl.getTargetNamespace(), srcPort.getName());
+      WSDLEndpoint destEndpoint = new WSDLEndpoint(destService, endpointName);
       destEndpoint.setBinding(srcBinding.getQName());
-      destEndpoint.setQName(new QName(srcWsdl.getTargetNamespace(), srcPort.getName()));
       destEndpoint.setAddress(getSOAPAddress(srcPort));
 
       if (processBinding(srcWsdl, srcBinding))

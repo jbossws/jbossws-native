@@ -34,8 +34,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.xml.sax.EntityResolver;
 
-import com.ibm.wsdl.xml.WSDLReaderImpl;
-
 /**
  * A factory that creates a WSDL-1.1 <code>Definition</code> from an URL.
  *

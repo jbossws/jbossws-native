@@ -26,7 +26,6 @@ package org.jboss.ws.core.jaxrpc.binding;
 import java.util.Calendar;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;

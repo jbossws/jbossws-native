@@ -126,8 +126,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   throw new WSException("Cannot find port in wsdl: " + portName);
 
                // set service name
-               serviceMetaData.setServiceName(wsdlEndpoint.getWsdlService().getQName());
-               QName interfaceQName = wsdlEndpoint.getInterface().getQName();
+               serviceMetaData.setServiceName(wsdlEndpoint.getWsdlService().getName());
+               QName interfaceQName = wsdlEndpoint.getInterface().getName();
 
                ServerEndpointMetaData sepMetaData = new ServerEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXRPC);
                sepMetaData.setPortComponentName(pcMetaData.getPortComponentName());

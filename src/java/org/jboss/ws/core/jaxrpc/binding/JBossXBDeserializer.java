@@ -34,7 +34,6 @@ import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshaller;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshallerImpl;
-import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 
 /**

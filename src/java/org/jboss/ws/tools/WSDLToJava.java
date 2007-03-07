@@ -45,7 +45,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
@@ -269,7 +268,7 @@ public class WSDLToJava implements WSDLToJavaIntf
    private void appendMethods(WSDLInterface intf, StringBuilder buf) throws IOException
    {
       buf.append(newline);
-      String itfname = intf.getName().toString();
+      String itfname = intf.getName().getLocalPart();
       WSDLInterfaceOperation[] ops = intf.getOperations();
       if (ops == null || ops.length == 0)
          throw new IllegalArgumentException("Interface " + itfname + " doesn't have operations");
@@ -299,7 +298,7 @@ public class WSDLToJava implements WSDLToJavaIntf
             returnType = "void";
 
          buf.append("  public " + returnType + "  ");
-         buf.append(ToolsUtils.firstLetterLowerCase(op.getName().toString()));
+         buf.append(ToolsUtils.firstLetterLowerCase(op.getName().getLocalPart()));
          buf.append("(").append(paramBuffer);
 
          buf.append(") throws ");
@@ -308,10 +307,10 @@ public class WSDLToJava implements WSDLToJavaIntf
          for (int k = 0; k < outfaults.length; k++)
          {
             WSDLInterfaceOperationOutfault fault = outfaults[k];
-            QName faultqname = fault.getRef();
+            QName faultName = fault.getRef();
 
             //Get the main fault from the wsdlInterface
-            WSDLInterfaceFault intfFault = fault.getWsdlInterfaceOperation().getWsdlInterface().getFault(new NCName(faultqname.getLocalPart()));
+            WSDLInterfaceFault intfFault = fault.getWsdlInterfaceOperation().getWsdlInterface().getFault(faultName);
             JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
             QName faultXMLName = intfFault.getElement();
             QName faultXMLType = intfFault.getXmlType();
@@ -414,7 +413,7 @@ public class WSDLToJava implements WSDLToJavaIntf
          if (inputs > 1)
             throw new WSException("[JAX-RPC - 2.3.1.2] Can not unwrap parameters for operation with mutliple inputs. inputs=" + inputs);
 
-         String operationName = in.getWsdlOperation().getName().toString();
+         String operationName = in.getWsdlOperation().getName().getLocalPart();
          String elementName = in.getElement().getLocalPart();
 
          if (elementName.equals(operationName) == false)
@@ -598,10 +597,10 @@ public class WSDLToJava implements WSDLToJavaIntf
 
    public String getServiceEndpointInterfaceName(WSDLInterface wsdlInterface)
    {
-      String seiName = utils.chopPortType(wsdlInterface.getName().toString());
+      String seiName = utils.chopPortType(wsdlInterface.getName().getLocalPart());
 
       //Check if the portType name conflicts with a service name
-      if (wsdl.getService(new NCName(seiName)) != null)
+      if (wsdl.getService(seiName) != null)
          seiName += "_PortType";
 
       return seiName;

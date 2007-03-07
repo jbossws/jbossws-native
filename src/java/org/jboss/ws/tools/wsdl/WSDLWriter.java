@@ -120,7 +120,7 @@ public class WSDLWriter
       if (services != null && services.length == 1)
       {
          WSDLService ser = services[0];
-         buffer.append(" name='" + ser.getName() + "'");
+         buffer.append(" name='" + ser.getName().getLocalPart() + "'");
       }
       buffer.append(" targetNamespace='" + namespace + "'");
       buffer.append(" xmlns='" + wsdl.getWsdlNamespace() + "'");

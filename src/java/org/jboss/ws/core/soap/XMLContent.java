@@ -23,6 +23,21 @@ package org.jboss.ws.core.soap;
 
 // $Id: $
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.xml.namespace.QName;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.transform.Source;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -41,20 +56,6 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.xml.namespace.QName;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.transform.Source;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Represents the XML_VALID state of an {@link SOAPContentElement}.<br>

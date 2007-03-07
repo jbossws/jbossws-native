@@ -41,7 +41,6 @@ import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -116,11 +115,11 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
             throw new IllegalArgumentException("Expected a single service element");
 
          wsdlService = wsdlDefinitions.getServices()[0];
-         serviceMetaData.setServiceName(wsdlService.getQName());
+         serviceMetaData.setServiceName(wsdlService.getName());
       }
       else
       {
-         wsdlService = wsdlDefinitions.getService(new NCName(serviceName.getLocalPart()));
+         wsdlService = wsdlDefinitions.getService(serviceName);
       }
       if (wsdlService == null)
          throw new IllegalArgumentException("Cannot obtain wsdl service: " + serviceName);
@@ -128,8 +127,8 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       // Build endpoint meta data
       for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
       {
-         QName portName = wsdlEndpoint.getQName();
-         QName interfaceQName = wsdlEndpoint.getInterface().getQName();
+         QName portName = wsdlEndpoint.getName();
+         QName interfaceQName = wsdlEndpoint.getInterface().getName();
          ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXWS);
          epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
          serviceMetaData.addEndpoint(epMetaData);
@@ -153,7 +152,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       for (WSDLInterfaceOperation wsdlOperation : wsdlInterface.getOperations())
       {
          String opName = wsdlOperation.getName().toString();
-         QName opQName = wsdlOperation.getQName();
+         QName opQName = wsdlOperation.getName();
 
          // Set java method name
          String javaName = opName.substring(0, 1).toLowerCase() + opName.substring(1);
@@ -170,7 +169,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
             opMetaData.setOneWay(true);
 
          // Set the operation SOAPAction
-         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getQName());
+         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
          WSDLBindingOperation wsdlBindingOperation = wsdlBinding.getOperationByRef(opQName);
          if (wsdlBindingOperation != null)
             opMetaData.setSOAPAction(wsdlBindingOperation.getSOAPAction());

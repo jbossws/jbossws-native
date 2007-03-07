@@ -46,16 +46,23 @@ public class WSDLInterfaceFault implements Serializable
    /** The REQUIRED name attribute information item identifies a given fault element information item inside a given
     * interface element information item.
     */
-   private NCName name;
-   /** The OPTIONAL element attribute information item refers, by QName, to an element declaration component.
+   private QName name;
+   /** The OPTIONAL element attribute information item refers, by QName, to a schema element declaration component.
     */
    private QName element;
 
    protected WSDLDocumentation documentationElement = null;
 
-   public WSDLInterfaceFault(WSDLInterface wsdlInterface)
+   public WSDLInterfaceFault(WSDLInterface wsdlInterface, QName name)
    {
       this.wsdlInterface = wsdlInterface;
+      this.name = name;
+   }
+   
+   public WSDLInterfaceFault(WSDLInterface wsdlInterface, String localName)
+   {
+      this.wsdlInterface = wsdlInterface;
+      name = new QName(wsdlInterface.getName().getNamespaceURI(), localName);
    }
 
    public WSDLInterface getWsdlInterface()
@@ -63,14 +70,9 @@ public class WSDLInterfaceFault implements Serializable
       return wsdlInterface;
    }
 
-   public NCName getName()
+   public QName getName()
    {
       return name;
-   }
-
-   public void setName(NCName name)
-   {
-      this.name = name;
    }
 
    public QName getElement()

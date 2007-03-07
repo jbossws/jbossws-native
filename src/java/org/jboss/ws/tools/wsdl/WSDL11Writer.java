@@ -35,7 +35,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.metadata.wsdl.NCName;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
@@ -173,7 +172,7 @@ public class WSDL11Writer extends WSDLWriter
       for (int i = 0; i < len; i++)
       {
          WSDLInterface intf = interfaces[i];
-         if (! namespace.equals(intf.getQName().getNamespaceURI()))
+         if (! namespace.equals(intf.getName().getNamespaceURI()))
             continue;
 
          WSDLInterfaceOperation[] operations = intf.getSortedOperations();
@@ -188,12 +187,12 @@ public class WSDL11Writer extends WSDLWriter
 
    private void appendMessage(StringBuilder buffer, WSDLInterfaceOperation operation)
    {
-      String opname = operation.getName().toString();
+      String opname = operation.getName().getLocalPart();
       //Determine the style of the wsdl
       if (Constants.URI_STYLE_RPC.equals(operation.getStyle()) == false)
          wsdlStyle = Constants.DOCUMENT_LITERAL; //Not RPC/Literal
 
-      String interfaceName = operation.getWsdlInterface().getName().toString();
+      String interfaceName = operation.getWsdlInterface().getName().getLocalPart();
       buffer.append("<message name='" + interfaceName + "_" + opname + "' >");
       for (WSDLInterfaceOperationInput input : operation.getInputs())
          appendMessageParts(buffer, input);
@@ -222,7 +221,7 @@ public class WSDL11Writer extends WSDLWriter
          if (writtenFaultMessages.contains(exceptionName))
             continue;
 
-         WSDLInterfaceFault interfaceFault = operation.getWsdlInterface().getFault(new NCName(exceptionName));
+         WSDLInterfaceFault interfaceFault = operation.getWsdlInterface().getFault(fault.getRef());
          QName xmlName = interfaceFault.getElement();
 
          buffer.append("<message name='" + exceptionName + "' >");
@@ -285,8 +284,8 @@ public class WSDL11Writer extends WSDLWriter
    {
       WSDLInterfaceOperation operation = reference.getWsdlOperation();
       WSDLInterface wsdlInterface = operation.getWsdlInterface();
-      WSDLBinding binding = wsdlInterface.getWsdlDefinitions().getBindingByInterfaceName(wsdlInterface.getQName());
-      WSDLBindingOperation bindingOperation = binding.getOperationByRef(operation.getQName());
+      WSDLBinding binding = wsdlInterface.getWsdlDefinitions().getBindingByInterfaceName(wsdlInterface.getName());
+      WSDLBindingOperation bindingOperation = binding.getOperationByRef(operation.getName());
       WSDLBindingMessageReference[] bindingReferences;
 
       if (reference instanceof WSDLInterfaceOperationInput)
@@ -309,10 +308,10 @@ public class WSDL11Writer extends WSDLWriter
       for (int i = 0; i < intfs.length; i++)
       {
          WSDLInterface intf = intfs[i];
-         if (!namespace.equals(intf.getQName().getNamespaceURI()))
+         if (!namespace.equals(intf.getName().getNamespaceURI()))
             continue;
 
-         buffer.append("<portType name='" + intf.getName() + "'>");
+         buffer.append("<portType name='" + intf.getName().getLocalPart() + "'>");
          appendPortOperations(buffer, intf);
          buffer.append("</portType>");
       }
@@ -336,12 +335,12 @@ public class WSDL11Writer extends WSDLWriter
 
    protected void appendPortOperations(StringBuilder buffer, WSDLInterface intf)
    {
-      String prefix = wsdl.getPrefix(intf.getQName().getNamespaceURI());
+      String prefix = wsdl.getPrefix(intf.getName().getNamespaceURI());
       WSDLInterfaceOperation[] operations = intf.getSortedOperations();
       for (int i = 0; i < operations.length; i++)
       {
          WSDLInterfaceOperation operation = operations[i];
-         buffer.append("<operation name='" + operation.getName().toString() + "'");
+         buffer.append("<operation name='" + operation.getName().getLocalPart() + "'");
 
          // JBWS-1501 wsimport RI fails when processing parameterOrder on one-way operations
          if (! Constants.WSDL20_PATTERN_IN_ONLY.equals(operation.getPattern()))
@@ -353,8 +352,8 @@ public class WSDL11Writer extends WSDLWriter
          }
          buffer.append(">");
 
-         String opname = operation.getName().toString();
-         String interfaceName = operation.getWsdlInterface().getName().toString();
+         String opname = operation.getName().getLocalPart();
+         String interfaceName = operation.getWsdlInterface().getName().getLocalPart();
          String msgEl = prefix + ":" + interfaceName + "_" + opname;
 
          buffer.append("<input message='" + msgEl + "'>").append("</input>");
@@ -384,9 +383,9 @@ public class WSDL11Writer extends WSDLWriter
       for (int i = 0; i < bindings.length; i++)
       {
          WSDLBinding binding = bindings[i];
-         if (!namespace.equals(binding.getQName().getNamespaceURI()))
+         if (!namespace.equals(binding.getName().getNamespaceURI()))
             continue;
-         buffer.append("<binding name='" + binding.getName() + "' type='" + getQNameRef(binding.getInterfaceName()) + "'>");
+         buffer.append("<binding name='" + binding.getName().getLocalPart() + "' type='" + getQNameRef(binding.getInterfaceName()) + "'>");
          //TODO:Need to derive the WSDLStyle from the Style attribute of InterfaceOperation
          if (wsdlStyle == null)
             throw new IllegalArgumentException("WSDL Style is null (should be rpc or document");
@@ -407,14 +406,14 @@ public class WSDL11Writer extends WSDLWriter
       for (int i = 0; i < operations.length; i++)
       {
          WSDLBindingOperation operation = operations[i];
-         String interfaceName = operation.getWsdlBinding().getInterfaceName().getLocalPart();
+         QName interfaceName = operation.getWsdlBinding().getInterfaceName();
 
-         WSDLInterface wsdlInterface = wsdl.getInterface(new NCName(interfaceName));
+         WSDLInterface wsdlInterface = wsdl.getInterface(interfaceName);
          if (wsdlInterface == null)
             throw new WSException("WSDL Interface should not be null");
-         WSDLInterfaceOperation interfaceOperation = wsdlInterface.getOperation(new NCName(operation.getRef().getLocalPart()));
+         WSDLInterfaceOperation interfaceOperation = wsdlInterface.getOperation(operation.getRef());
 
-         buffer.append("<operation name='" + interfaceOperation.getName() + "'>");
+         buffer.append("<operation name='" + interfaceOperation.getName().getLocalPart() + "'>");
          String soapAction = (operation.getSOAPAction() != null ? operation.getSOAPAction() : "");
          buffer.append("<" + soapPrefix + ":operation soapAction=\"" + soapAction + "\"/>");
 
@@ -453,7 +452,7 @@ public class WSDL11Writer extends WSDLWriter
    private void appendSOAPBinding(StringBuilder buffer, WSDLInterface wsdlInterface, WSDLBindingOperation operation, WSDLBindingMessageReference[] inputs)
    {
       String tns = wsdl.getTargetNamespace();
-      WSDLInterfaceOperation interfaceOperation = wsdlInterface.getOperation(new NCName(operation.getRef().getLocalPart()));
+      WSDLInterfaceOperation interfaceOperation = wsdlInterface.getOperation(operation.getRef());
       WSDLInterfaceMessageReference reference = (inputs instanceof WSDLBindingOperationInput[]) ? interfaceOperation.getInputs()[0]
             : interfaceOperation.getOutputs()[0];
 
@@ -479,7 +478,7 @@ public class WSDL11Writer extends WSDLWriter
       {
          if (header.isIncludeInSignature())
          {
-            String messageName = wsdlInterface.getName() + "_" + operation.getRef().getLocalPart();
+            String messageName = wsdlInterface.getName().getLocalPart() + "_" + operation.getRef().getLocalPart();
             if (reference instanceof WSDLInterfaceOperationOutput)
                messageName += "Response";
             soapHeader.append("<").append(soapPrefix).append(":header use='literal' message='tns:").append(messageName);
@@ -504,7 +503,7 @@ public class WSDL11Writer extends WSDLWriter
    private String getBindingOperationPattern(WSDLBindingOperation operation)
    {
       WSDLBinding binding = operation.getWsdlBinding();
-      String pattern = binding.getInterface().getOperation(new NCName(operation.getRef().getLocalPart())).getPattern();
+      String pattern = binding.getInterface().getOperation(operation.getRef()).getPattern();
 
       return pattern;
    }
@@ -517,9 +516,9 @@ public class WSDL11Writer extends WSDLWriter
       {
 
          WSDLService service = services[i];
-         if (!namespace.equals(service.getQName().getNamespaceURI()))
+         if (!namespace.equals(service.getName().getNamespaceURI()))
             continue;
-         buffer.append("<service name='" + service.getName() + "'>");
+         buffer.append("<service name='" + service.getName().getLocalPart() + "'>");
          WSDLEndpoint[] endpoints = service.getEndpoints();
          int lenend = endpoints.length;
          for (int j = 0; j < lenend; j++)
@@ -534,7 +533,7 @@ public class WSDL11Writer extends WSDLWriter
 
    protected void appendServicePort(StringBuilder buffer, WSDLEndpoint endpoint)
    {
-      String name = endpoint.getName().toString();
+      String name = endpoint.getName().getLocalPart();
       QName endpointBinding = endpoint.getBinding();
       String prefix = endpointBinding.getPrefix();
       prefix = wsdl.getPrefix(endpointBinding.getNamespaceURI());

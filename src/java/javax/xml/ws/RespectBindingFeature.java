@@ -24,8 +24,6 @@ package javax.xml.ws;
 // $Id$
 
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.spi.Provider;
 
 /**
  * This feature clarifies the use of the <code>wsdl:binding</code>

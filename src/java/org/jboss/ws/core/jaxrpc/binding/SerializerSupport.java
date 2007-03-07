@@ -23,6 +23,14 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 // $Id$
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.encoding.Serializer;
+import javax.xml.transform.Result;
+
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -30,13 +38,6 @@ import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
-import javax.xml.namespace.QName;
-import javax.xml.rpc.encoding.Serializer;
-import javax.xml.transform.Result;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Set;
 
 /**
  * The base class for all Serializers.

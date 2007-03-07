@@ -23,21 +23,27 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.w3c.dom.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
 
 /**
  * A SOAPElement that gives access to its content as XML fragment or Java object.<p>
