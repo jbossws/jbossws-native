@@ -19,9 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.j2ee;
+package org.jboss.ws.metadata.j2ee.serviceref;
 
-//$Id$
+// $Id$
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,43 +31,34 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
-/**
- * The container independent metdata data for a handler element
+/** The unified metdata data for a handler element
  * 
  * @author Thomas.Diesler@jboss.org
- * @since 05-May-2006
+ * @version $Revision$
  */
-public class UnifiedHandlerMetaData implements Serializable
+public class HandlerMetaData implements Serializable
 {
-   private static final long serialVersionUID = -3019416564080333900L;
-
-   private HandlerChainMetaData chainConfig;
-
+   private HandlerChainMetaData handlerChain;
+   
    // The required <handler-name> element
    private String handlerName;
    // The required <handler-class> element
    private String handlerClass;
    // The optional <init-param> elements
-   private ArrayList<HandlerInitParam> initParams = new ArrayList<HandlerInitParam>();
+   private List<InitParamMetaData> initParams = new ArrayList<InitParamMetaData>();
    // The optional <soap-header> elements
    private Set<QName> soapHeaders = new HashSet<QName>();
    // The optional <soap-role> elements
    private Set<String> soapRoles = new HashSet<String>();
-   // The optional <port-name> elements
+   // The optional <port-name> elements, these only apply to webserve clients
    private Set<String> portNames = new HashSet<String>();
 
-   public UnifiedHandlerMetaData(HandlerChainMetaData handlerChainMetaData)
-   {
-      this.chainConfig = handlerChainMetaData;
-   }
-
+   
    public void setHandlerName(String value)
    {
       this.handlerName = value;
@@ -88,24 +79,14 @@ public class UnifiedHandlerMetaData implements Serializable
       return handlerClass;
    }
 
-   public void addInitParam(HandlerInitParam param)
+   public void addInitParam(InitParamMetaData param)
    {
       initParams.add(param);
    }
 
-   public List<HandlerInitParam> getInitParams()
+   public List<InitParamMetaData> getInitParams()
    {
       return initParams;
-   }
-
-   public void addSoapRole(String value)
-   {
-      soapRoles.add(value);
-   }
-
-   public Set<String> getSoapRoles()
-   {
-      return soapRoles;
    }
 
    public void addSoapHeader(QName qName)
@@ -118,31 +99,26 @@ public class UnifiedHandlerMetaData implements Serializable
       return soapHeaders;
    }
 
-   public String getProtocolBindings()
+   public void addSoapRole(String value)
    {
-      return (chainConfig != null ? chainConfig.getProtocolBindings() : null);
+      soapRoles.add(value);
    }
 
-   public QName getServiceNamePattern()
+   public Set<String> getSoapRoles()
    {
-      return (chainConfig != null ? chainConfig.getServiceNamePattern() : null);
-   }
-
-   public QName getPortNamePattern()
-   {
-      return (chainConfig != null ? chainConfig.getPortNamePattern() : null);
-   }
-
-   public void addPortName(String portName)
-   {
-      portNames.add(portName);
+      return soapRoles;
    }
 
    public Set<String> getPortNames()
    {
       return portNames;
    }
-   
+
+   public void addPortName(String value)
+   {
+      portNames.add(value);
+   }
+
    public HandlerMetaDataJAXRPC getHandlerMetaDataJAXRPC (EndpointMetaData epMetaData, HandlerType type)
    {
       HandlerMetaDataJAXRPC hmd = new HandlerMetaDataJAXRPC(epMetaData, type);
@@ -161,23 +137,12 @@ public class UnifiedHandlerMetaData implements Serializable
       hmd.setHandlerName(getHandlerName());
       hmd.setHandlerClassName(getHandlerClass());
       hmd.seiInitParams(getInitParams());
-      hmd.setProtocolBindings(getProtocolBindings());
-      hmd.setServiceNamePattern(getServiceNamePattern());
-      hmd.setPortNamePattern(getPortNamePattern());
+      if (handlerChain != null)
+      {
+         hmd.setProtocolBindings(handlerChain.getProtocolBindings());
+         hmd.setServiceNamePattern(handlerChain.getServiceNamePattern());
+         hmd.setPortNamePattern(handlerChain.getPortNamePattern());
+      }
       return hmd;
-   }
-
-   public String toString()
-   {
-      StringBuffer buffer = new StringBuffer("\nUnifiedHandlerMetaData:");
-      buffer.append("\n name=" + getHandlerName());
-      buffer.append("\n class=" + getHandlerClass());
-      buffer.append("\n params=" + getInitParams());
-      buffer.append("\n headers=" + getSoapHeaders());
-      buffer.append("\n roles=" + getSoapRoles());
-      buffer.append("\n protocols=" + getProtocolBindings());
-      buffer.append("\n services=" + getServiceNamePattern());
-      buffer.append("\n ports=" + (getPortNamePattern() != null ? getPortNamePattern() : portNames));
-      return buffer.toString();
    }
 }

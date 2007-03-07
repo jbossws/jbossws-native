@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.ws.metadata.config.CommonConfig;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
@@ -42,25 +42,25 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  */
 public abstract class CommonConfigJAXRPC extends CommonConfig
 {
-   private HandlerChainMetaData preHandlerChain;
-   private HandlerChainMetaData postHandlerChain;
+   private UnifiedHandlerChainMetaData preHandlerChain;
+   private UnifiedHandlerChainMetaData postHandlerChain;
 
-   public HandlerChainMetaData getPostHandlerChain()
+   public UnifiedHandlerChainMetaData getPostHandlerChain()
    {
       return postHandlerChain;
    }
 
-   public void setPostHandlerChain(HandlerChainMetaData postHandlerChain)
+   public void setPostHandlerChain(UnifiedHandlerChainMetaData postHandlerChain)
    {
       this.postHandlerChain = postHandlerChain;
    }
 
-   public HandlerChainMetaData getPreHandlerChain()
+   public UnifiedHandlerChainMetaData getPreHandlerChain()
    {
       return preHandlerChain;
    }
 
-   public void setPreHandlerChain(HandlerChainMetaData preHandlerChain)
+   public void setPreHandlerChain(UnifiedHandlerChainMetaData preHandlerChain)
    {
       this.preHandlerChain = preHandlerChain;
    }
@@ -70,7 +70,7 @@ public abstract class CommonConfigJAXRPC extends CommonConfig
    {
       List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
       
-      HandlerChainMetaData handlerChain;
+      UnifiedHandlerChainMetaData handlerChain;
       if (type == HandlerType.PRE)
          handlerChain = getPreHandlerChain();
       else if (type == HandlerType.POST)

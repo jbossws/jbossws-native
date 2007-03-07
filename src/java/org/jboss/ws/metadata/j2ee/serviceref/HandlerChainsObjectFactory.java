@@ -19,13 +19,11 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.metadata.jsr181;
+package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.UnmarshallingContext;
@@ -37,12 +35,12 @@ import org.xml.sax.Attributes;
  * @author Thomas.Diesler@jboss.org
  * @since 15-Oct-2005
  */
-public class HandlerChainFactory implements ObjectModelFactory
+public class HandlerChainsObjectFactory implements ObjectModelFactory
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(HandlerChainFactory.class);
+   private static final Logger log = Logger.getLogger(HandlerChainsObjectFactory.class);
 
-   public HandlerChainFactory()
+   public HandlerChainsObjectFactory()
    {
    }
 
@@ -53,7 +51,7 @@ public class HandlerChainFactory implements ObjectModelFactory
     */
    public Object newRoot(Object root, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
-      HandlerChainsMetaData handlerConfigMetaData = new HandlerChainsMetaData(HandlerType.ENDPOINT);
+      UnifiedHandlerChainsMetaData handlerConfigMetaData = new UnifiedHandlerChainsMetaData(HandlerType.ENDPOINT);
       return handlerConfigMetaData;
    }
 
@@ -65,10 +63,10 @@ public class HandlerChainFactory implements ObjectModelFactory
    /**
     * Called when parsing of a new element started.
     */
-   public Object newChild(HandlerChainsMetaData handlerConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   public Object newChild(UnifiedHandlerChainsMetaData handlerConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       if ("handler-chain".equals(localName))
-         return new HandlerChainMetaData(handlerConfig);
+         return new UnifiedHandlerChainMetaData(handlerConfig);
       else 
          return null;
    }
@@ -76,7 +74,7 @@ public class HandlerChainFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(HandlerChainsMetaData handlerConfig, HandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName)
+   public void addChild(UnifiedHandlerChainsMetaData handlerConfig, UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       handlerConfig.addHandlerChain(handlerChain);
    }
@@ -84,7 +82,7 @@ public class HandlerChainFactory implements ObjectModelFactory
    /**
     * Called when parsing of a new element started.
     */
-   public Object newChild(HandlerChainMetaData chainConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   public Object newChild(UnifiedHandlerChainMetaData chainConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       if ("handler".equals(localName))
          return new UnifiedHandlerMetaData(chainConfig);
@@ -95,7 +93,7 @@ public class HandlerChainFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(HandlerChainMetaData handlerConfig, UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName)
+   public void addChild(UnifiedHandlerChainMetaData handlerConfig, UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       handlerConfig.addHandler(handler);
    }
@@ -106,14 +104,14 @@ public class HandlerChainFactory implements ObjectModelFactory
    public Object newChild(UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       if ("init-param".equals(localName))
-         return new HandlerInitParam();
+         return new UnifiedInitParamMetaData();
       else return null;
    }
 
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(UnifiedHandlerMetaData handler, HandlerInitParam param, UnmarshallingContext navigator, String namespaceURI, String localName)
+   public void addChild(UnifiedHandlerMetaData handler, UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       handler.addInitParam(param);
    }
@@ -121,10 +119,10 @@ public class HandlerChainFactory implements ObjectModelFactory
    /**
     * Called when a new simple child element with text value was read from the XML content.
     */
-   public void setValue(HandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   public void setValue(UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (log.isTraceEnabled())
-         log.trace("HandlerChainMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);
+         log.trace("UnifiedHandlerChainMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);
 
       if (localName.equals("protocol-bindings"))
          handlerChain.setProtocolBindings(value);
@@ -151,7 +149,7 @@ public class HandlerChainFactory implements ObjectModelFactory
    /**
     * Called when a new simple child element with text value was read from the XML content.
     */
-   public void setValue(HandlerInitParam param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   public void setValue(UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (log.isTraceEnabled())
          log.trace("UnifiedInitParamMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);

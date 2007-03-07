@@ -32,7 +32,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;

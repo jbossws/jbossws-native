@@ -31,9 +31,9 @@ import org.jboss.ws.metadata.config.jaxrpc.ClientConfigJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
@@ -115,13 +115,13 @@ public class OMFactoryJAXRPC implements ObjectModelFactory
 
       if ("pre-handler-chain".equals(localName))
       {
-         HandlerChainMetaData preHandlerChain = new HandlerChainMetaData(null);
+         UnifiedHandlerChainMetaData preHandlerChain = new UnifiedHandlerChainMetaData(null);
          commonConfig.setPreHandlerChain(preHandlerChain);
          return preHandlerChain;
       }
       if ("post-handler-chain".equals(localName))
       {
-         HandlerChainMetaData postHandlerChain = new HandlerChainMetaData(null);
+         UnifiedHandlerChainMetaData postHandlerChain = new UnifiedHandlerChainMetaData(null);
          commonConfig.setPostHandlerChain(postHandlerChain);
          return postHandlerChain;
       }
@@ -131,13 +131,13 @@ public class OMFactoryJAXRPC implements ObjectModelFactory
    /**
     * Called when parsing of a new element started.
     */
-   public Object newChild(HandlerChainMetaData handlerChainMetaData, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   public Object newChild(UnifiedHandlerChainMetaData UnifiedHandlerChainMetaData, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       log.trace("WSHandlerChainConfig newChild: " + localName);
       if ("handler".equals(localName))
       {
-         UnifiedHandlerMetaData handler = new UnifiedHandlerMetaData(handlerChainMetaData);
-         List<UnifiedHandlerMetaData> handlers = handlerChainMetaData.getHandlers();
+         UnifiedHandlerMetaData handler = new UnifiedHandlerMetaData(UnifiedHandlerChainMetaData);
+         List<UnifiedHandlerMetaData> handlers = UnifiedHandlerChainMetaData.getHandlers();
          handlers.add(handler);
          return handler;
       }
@@ -167,7 +167,7 @@ public class OMFactoryJAXRPC implements ObjectModelFactory
    /**
     * Called when a new simple child element with text value was read from the XML content.
     */
-   public void setValue(HandlerInitParam param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   public void setValue(UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (log.isTraceEnabled())
          log.trace("UnifiedInitParamMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);

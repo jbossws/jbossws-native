@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 
 /**
  * The common metdata data for a handler element
@@ -61,7 +62,7 @@ public abstract class HandlerMetaData implements Serializable
    // The optional <soap-header> elements
    private Set<QName> soapHeaders = new HashSet<QName>();
    // The optional <init-param> elements
-   private List<HandlerInitParam> initParams = new ArrayList<HandlerInitParam>();
+   private List<UnifiedInitParamMetaData> initParams = new ArrayList<UnifiedInitParamMetaData>();
    // The cached handler class
    private Class handlerClass;
 
@@ -137,12 +138,12 @@ public abstract class HandlerMetaData implements Serializable
       return soapHeaders;
    }
 
-   public void seiInitParams(List<HandlerInitParam> initParams)
+   public void seiInitParams(List<UnifiedInitParamMetaData> initParams)
    {
       this.initParams = initParams;
    }
 
-   public List<HandlerInitParam> getInitParams()
+   public List<UnifiedInitParamMetaData> getInitParams()
    {
       return initParams;
    }
@@ -165,40 +166,5 @@ public abstract class HandlerMetaData implements Serializable
    public void eagerInitialize()
    {
       handlerClass = getHandlerClass();
-   }
-   
-   public static class HandlerInitParam implements Serializable
-   {
-      private static final long serialVersionUID = -8687875291620457318L;
-      
-      // The required <handler-name> element
-      private String paramName;
-      // The required <handler-class> element
-      private String paramValue;
-
-      public String getParamName()
-      {
-         return paramName;
-      }
-
-      public void setParamName(String paramName)
-      {
-         this.paramName = paramName;
-      }
-
-      public String getParamValue()
-      {
-         return paramValue;
-      }
-
-      public void setParamValue(String paramValue)
-      {
-         this.paramValue = paramValue;
-      }
-
-      public String toString()
-      {
-         return "[name=" + paramName + ",value=" + paramValue + "]";
-      }
    }
 }

@@ -37,6 +37,7 @@ import java.net.URLEncoder;
 import java.rmi.Remote;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -44,6 +45,7 @@ import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
+import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
@@ -54,12 +56,15 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.ServiceEndpoint;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
-import org.jboss.ws.metadata.j2ee.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
+import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.ws.tools.wsdl.WSDL11DefinitionFactory;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service
@@ -102,13 +107,13 @@ public class ServiceObjectFactory implements ObjectFactory
          Reference ref = (Reference)obj;
          
          // Unmarshall the ServiceRefMetaData
-         UnifiedServiceRefMetaData usrMetaData = null;
+         UnifiedServiceRefMetaData serviceRef = null;
          RefAddr metaRefAddr = ref.get(ServiceReferenceable.SERVICE_REF_META_DATA);
          ByteArrayInputStream bais = new ByteArrayInputStream((byte[])metaRefAddr.getContent());
          try
          {
             ObjectInputStream ois = new ObjectInputStream(bais);
-            usrMetaData = (UnifiedServiceRefMetaData)ois.readObject();
+            serviceRef = (UnifiedServiceRefMetaData)ois.readObject();
             ois.close();
          }
          catch (IOException ex)
@@ -137,15 +142,15 @@ public class ServiceObjectFactory implements ObjectFactory
          }
 
          ServiceImpl jaxrpcService = null;
-         URL wsdlLocation = usrMetaData.getWsdlLocation();
+         URL wsdlLocation = serviceRef.getWsdlLocation();
          if (wsdlLocation != null)
          {
             if(log.isDebugEnabled()) log.debug("Create jaxrpc service from wsdl");
 
             // Create the actual service object
-            QName serviceName = usrMetaData.getServiceQName();
-            JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)usrMetaData.getJavaWsdlMapping();
-            jaxrpcService = new ServiceImpl(serviceName, wsdlLocation, javaWsdlMapping, securityConfig, usrMetaData);
+            QName serviceName = serviceRef.getServiceQName();
+            JavaWsdlMapping javaWsdlMapping = getJavaWsdlMapping(serviceRef);
+            jaxrpcService = new ServiceImpl(serviceName, wsdlLocation, javaWsdlMapping, securityConfig, serviceRef);
          }
          else
          {
@@ -153,9 +158,16 @@ public class ServiceObjectFactory implements ObjectFactory
             jaxrpcService = new ServiceImpl(new QName(Constants.NS_JBOSSWS_URI, "AnonymousService"));
          }
 
-         // Set any service level properties
          ServiceMetaData serviceMetaData = jaxrpcService.getServiceMetaData();
-         serviceMetaData.setProperties(usrMetaData.getCallProperties());
+         
+         // Set any service level properties
+         if (serviceRef.getCallProperties().size() > 0)
+         {
+            Properties callProps = new Properties();
+            serviceMetaData.setProperties(callProps);
+            for (UnifiedCallPropertyMetaData prop : serviceRef.getCallProperties())
+               callProps.setProperty(prop.getPropName(), prop.getPropValue());
+         }
 
          // The web service client using a port-component-link, the contet is the URL to
          // the PortComponentLinkServlet that will return the actual endpoint address
@@ -211,15 +223,13 @@ public class ServiceObjectFactory implements ObjectFactory
 
          // load the service interface class
          ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
-         Class siClass = contextCL.loadClass(usrMetaData.getServiceInterface());
+         Class siClass = contextCL.loadClass(serviceRef.getServiceInterface());
          if (Service.class.isAssignableFrom(siClass) == false)
             throw new JAXRPCException("The service interface does not implement javax.xml.rpc.Service: " + siClass.getName());
 
          // load all service endpoint interface classes
-         UnifiedPortComponentRefMetaData[] pcrArray = usrMetaData.getPortComponentRefs();
-         for (int i = 0; i < pcrArray.length; i++)
+         for (UnifiedPortComponentRefMetaData pcr : serviceRef.getPortComponentRefs())
          {
-            UnifiedPortComponentRefMetaData pcr = pcrArray[i];
             Class seiClass = contextCL.loadClass(pcr.getServiceEndpointInterface());
             if (Remote.class.isAssignableFrom(seiClass) == false)
                throw new IllegalArgumentException("The SEI does not implement java.rmi.Remote: " + seiClass.getName());
@@ -248,5 +258,46 @@ public class ServiceObjectFactory implements ObjectFactory
       {
          jaxrpcService.setupHandlerChain(epMetaData);
       }
+   }
+
+   private JavaWsdlMapping getJavaWsdlMapping(UnifiedServiceRefMetaData serviceRef)
+   {
+      JavaWsdlMapping javaWsdlMapping = null;
+      if (serviceRef.getMappingFile() != null)
+      {
+         String mappingFile = serviceRef.getMappingFile();
+         try
+         {
+            JavaWsdlMappingFactory mappingFactory = JavaWsdlMappingFactory.newInstance();
+            URL mappingURL = serviceRef.getVfsRoot().findChild(mappingFile).toURL();
+            javaWsdlMapping = mappingFactory.parse(mappingURL);
+         }
+         catch (Exception e)
+         {
+            throw new WSException("Cannot unmarshal jaxrpc-mapping-file: " + mappingFile, e);
+         }
+      }
+      return javaWsdlMapping;
+   }
+
+   private Definition getWsdlDefinition(UnifiedServiceRefMetaData serviceRef)
+   {
+      Definition wsdlDefinition = null;
+      {
+         URL wsdlLocation = serviceRef.getWsdlLocation();
+         if (wsdlLocation != null)
+         {
+            try
+            {
+               WSDL11DefinitionFactory factory = WSDL11DefinitionFactory.newInstance();
+               wsdlDefinition = factory.parse(wsdlLocation);
+            }
+            catch (Exception e)
+            {
+               throw new WSException("Cannot unmarshall wsdl-file: " + wsdlLocation, e);
+            }
+         }
+      }
+      return wsdlDefinition;
    }
 }

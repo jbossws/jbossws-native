@@ -26,7 +26,6 @@ package org.jboss.ws.core.jaxrpc.client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 
@@ -37,12 +36,11 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-import org.jboss.ws.metadata.j2ee.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 
@@ -61,25 +59,20 @@ public class ServiceReferenceable implements Referenceable
    private static Logger log = Logger.getLogger(ServiceReferenceable.class);
    
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
-   public static final String DEPLOYMENT_URL = "DEPLOYMENT_URL";
    public static final String SECURITY_CONFIG = "SECURITY_CONFIG";
-   public static final String DESCRIPTOR_LOC = "DESCRIPTOR_LOC";
    public static final String PORT_COMPONENT_LINK = "PORT_COMPONENT_LINK";
    public static final String PORT_COMPONENT_LINK_SERVLET = "PORT_COMPONENT_LINK_SERVLET";
 
    private UnifiedServiceRefMetaData refMetaData;
-   private UnifiedDeploymentInfo udi;
+   private UnifiedVirtualFile vfsRoot;
 
    /**
     * A service referenceable for a WSDL document that is part of the deployment
-    *
-    * @param refMetaData The service-ref meta data
-    * @param udi          The client DeploymentInfo
     */
-   public ServiceReferenceable(UnifiedServiceRefMetaData refMetaData, UnifiedDeploymentInfo udi)
+   public ServiceReferenceable(UnifiedServiceRefMetaData refMetaData)
    {
       this.refMetaData = refMetaData;
-      this.udi = udi;
+      this.vfsRoot = refMetaData.getVfsRoot();
    }
 
    /**
@@ -92,11 +85,6 @@ public class ServiceReferenceable implements Referenceable
    {
       Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactory.class.getName(), null);
 
-      // The deployment URL of the web service client deployment
-      // Add a reference to the client deployment URL
-      String deploymentID = udi.name;
-      myRef.add(new StringRefAddr(DEPLOYMENT_URL, deploymentID));
-
       // Add a reference to the ServiceRefMetaData and WSDLDefinitions
       myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshallServiceRef()));
 
@@ -105,10 +93,8 @@ public class ServiceReferenceable implements Referenceable
          myRef.add(new BinaryRefAddr(SECURITY_CONFIG, marshallSecurityConfig()));
 
       // Add references to port component links
-      UnifiedPortComponentRefMetaData[] pcrArr = refMetaData.getPortComponentRefs();
-      for (int i = 0; i < pcrArr.length; i++)
+      for (UnifiedPortComponentRefMetaData pcr : refMetaData.getPortComponentRefs())
       {
-         UnifiedPortComponentRefMetaData pcr = pcrArr[i];
          String pcLink = pcr.getPortComponentLink();
          if (pcLink != null)
          {
@@ -137,8 +123,6 @@ public class ServiceReferenceable implements Referenceable
     */
    private byte[] marshallServiceRef() throws NamingException
    {
-      refMetaData.getJavaWsdlMapping();
-
       ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
       try
       {
@@ -161,8 +145,8 @@ public class ServiceReferenceable implements Referenceable
       try
       {
          ObjectOutputStream oos = new ObjectOutputStream(baos);
-         URL vfConfig = getSecurityConfig();
-         WSSecurityConfiguration securityConfig = WSSecurityOMFactory.newInstance().parse(vfConfig);
+         WSSecurityOMFactory factory = WSSecurityOMFactory.newInstance();
+         WSSecurityConfiguration securityConfig = factory.parse(getSecurityConfig());
          oos.writeObject(securityConfig);
          oos.close();
       }
@@ -175,19 +159,23 @@ public class ServiceReferenceable implements Referenceable
 
    private URL getSecurityConfig()
    {
-      String descriptorPath = udi.metaData instanceof UnifiedWebMetaData ? "WEB-INF" : "META-INF";
-      descriptorPath = descriptorPath + "/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME;
+      URL securityConfigURL = null;
       try
       {
-         URL vfConfig = udi.getMetaDataFileURL(descriptorPath);
-         InputStream inputStream = vfConfig.openStream();
-         inputStream.close();
-         return vfConfig;
+         vfsRoot.findChild("WEB-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
       }
       catch (IOException ex)
       {
-         if(log.isDebugEnabled()) log.debug("Cannot find security config: " + descriptorPath);
-         return null;
+         // ignore
       }
+      try
+      {
+         vfsRoot.findChild("META-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
+      }
+      catch (IOException ex)
+      {
+         // ignore
+      }
+      return securityConfigURL;
    }
 }

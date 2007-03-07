@@ -19,29 +19,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config.jaxws;
+package org.jboss.ws.core.jaxrpc.client;
 
-import java.util.ArrayList;
-import java.util.List;
+// $Id$
 
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import javax.naming.Context;
+import javax.naming.NamingException;
 
-/** 
- * A JBossWS handler chains configuration 
+import org.jboss.logging.Logger;
+import org.jboss.util.naming.Util;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+
+/**
+ * Binds a JAXRPC Service object in the client's ENC for every service-ref element in the
+ * deployment descriptor.
  *
  * @author Thomas.Diesler@jboss.org
- * @since 18-Dec-2005
+ * @since 04-Nov-2006
  */
-public class HandlerChainsConfigJAXWS
+public class ServiceRefHandlerJAXRPC
 {
-   private List<UnifiedHandlerChainMetaData> chains = new ArrayList<UnifiedHandlerChainMetaData>();
+   // logging support
+   private static Logger log = Logger.getLogger(ServiceRefHandlerJAXRPC.class);
 
-   public HandlerChainsConfigJAXWS()
+   /**
+    * Binds a Service into the callers ENC for every service-ref element
+    */
+   public void setupServiceRef(Context encCtx, String encName, UnifiedServiceRefMetaData serviceRef) throws NamingException
    {
-   }
-   
-   public List<UnifiedHandlerChainMetaData> getHandlerChains()
-   {
-      return chains;
+      String serviceRefName = serviceRef.getServiceRefName();
+      ServiceReferenceable ref = new ServiceReferenceable(serviceRef);
+
+      // Do not use rebind, the binding should be unique
+      Util.bind(encCtx, encName, ref);
+
+      log.debug("<service-ref> bound to: java:comp/env/" + serviceRefName);
    }
 }

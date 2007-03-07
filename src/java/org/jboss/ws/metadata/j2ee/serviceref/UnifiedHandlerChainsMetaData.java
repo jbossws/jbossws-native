@@ -19,29 +19,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config.jaxws;
+package org.jboss.ws.metadata.j2ee.serviceref;
 
+// $Id$
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
-/** 
- * A JBossWS handler chains configuration 
- *
+/** The unified metdata data for a handler chains element
+ * 
  * @author Thomas.Diesler@jboss.org
- * @since 18-Dec-2005
  */
-public class HandlerChainsConfigJAXWS
+public class UnifiedHandlerChainsMetaData implements Serializable
 {
-   private List<UnifiedHandlerChainMetaData> chains = new ArrayList<UnifiedHandlerChainMetaData>();
+   private HandlerType handlerType;
+   private List<UnifiedHandlerChainMetaData> handlerChains = new ArrayList<UnifiedHandlerChainMetaData>();
 
-   public HandlerChainsConfigJAXWS()
+   public UnifiedHandlerChainsMetaData(HandlerType endpoint)
+   {
+      this.handlerType = handlerType;
+   }
+
+   public UnifiedHandlerChainsMetaData()
    {
    }
-   
+
    public List<UnifiedHandlerChainMetaData> getHandlerChains()
    {
-      return chains;
+      return handlerChains;
+   }
+
+   public void addHandlerChain(UnifiedHandlerChainMetaData handlerChain)
+   {
+      handlerChains.add(handlerChain);
    }
 }

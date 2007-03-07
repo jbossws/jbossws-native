@@ -34,6 +34,8 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+
 
 /**
  * A JNDI reference to a javax.xml.ws.Service
@@ -46,19 +48,19 @@ import javax.naming.StringRefAddr;
  */
 public class ServiceReferenceable implements Referenceable
 {
-   public static final String UNIFIED_SERVICE_REF = "UNIFIED_SERVICE_REF";
-   public static final String SERVICE_CLASS_NAME = "SERVICE_CLASS_NAME";
+   public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
+   public static final String SERVICE_IMPL_CLASS = "SERVICE_CLASS_NAME";
    public static final String TARGET_CLASS_NAME = "TARGET_CLASS_NAME";
 
-   private String serviceClassName;
+   private String serviceImplClass;
    private String targetClassName;
-   private UnifiedServiceRef usRef;
+   private UnifiedServiceRefMetaData serviceRef;
    
-   public ServiceReferenceable(String serviceClassName, String targetClassName, UnifiedServiceRef usRef)
+   public ServiceReferenceable(String serviceImplClass, String targetClassName, UnifiedServiceRefMetaData serviceRef)
    {
-      this.serviceClassName = serviceClassName;
+      this.serviceImplClass = serviceImplClass;
       this.targetClassName = targetClassName;
-      this.usRef = usRef;
+      this.serviceRef = serviceRef;
    }
 
    /**
@@ -71,9 +73,9 @@ public class ServiceReferenceable implements Referenceable
    {
       Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactory.class.getName(), null);
 
-      myRef.add(new StringRefAddr(SERVICE_CLASS_NAME, serviceClassName));
+      myRef.add(new StringRefAddr(SERVICE_IMPL_CLASS, serviceImplClass));
       myRef.add(new StringRefAddr(TARGET_CLASS_NAME, targetClassName));
-      myRef.add(new BinaryRefAddr(UNIFIED_SERVICE_REF, marshall(usRef)));
+      myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshall(serviceRef)));
 
       return myRef;
    }

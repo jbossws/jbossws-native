@@ -19,48 +19,45 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
+package org.jboss.ws.metadata.j2ee.serviceref;
+
 // $Id$
-package org.jboss.ws.metadata.jsr181;
 
-//$Id$
-
-import java.util.ArrayList;
-
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import java.io.Serializable;
 
 /**
- * XML Binding root element for JSR-181 HandlerChain
- *
  * @author Thomas.Diesler@jboss.org
- * @since 15-Oct-2005
+ * @since 06-May-2004
  */
-public class HandlerChainsMetaData
+public class UnifiedInitParamMetaData implements Serializable
 {
-   // The required handler type
-   private HandlerType handlerType;
-   // The required <handler-chain> elements
-   private ArrayList<HandlerChainMetaData> handlerChains = new ArrayList<HandlerChainMetaData>();
+   // The required <param-name> element
+   private String paramName;
+   // The required <param-value> element
+   private String paramValue;
 
-   public HandlerChainsMetaData(HandlerType handlerType)
+   public String getParamName()
    {
-      this.handlerType = handlerType;
+      return paramName;
    }
 
-   public HandlerType getHandlerType()
+   public void setParamName(String paramName)
    {
-      return handlerType;
+      this.paramName = paramName;
    }
 
-
-   public void addHandlerChain(HandlerChainMetaData handlerChain)
+   public String getParamValue()
    {
-      handlerChains.add(handlerChain);
+      return paramValue;
    }
 
-   public HandlerChainMetaData[] getHandlerChains()
+   public void setParamValue(String paramValue)
    {
-      HandlerChainMetaData[] array = new HandlerChainMetaData[handlerChains.size()];
-      handlerChains.toArray(array);
-      return array;
+      this.paramValue = paramValue;
+   }
+
+   public String toString()
+   {
+      return "[name=" + paramName + ",value=" + paramValue + "]";
    }
 }

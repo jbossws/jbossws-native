@@ -38,10 +38,10 @@ import org.jboss.ws.core.server.HandlerDelegate;
 import org.jboss.ws.core.server.ServiceEndpointInfo;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /** Delegates to JAXRPC handlers
@@ -158,7 +158,7 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
          handlerRoles.addAll(jaxrpcMetaData.getSoapRoles());
 
          HashMap<String, Object> hConfig = new HashMap<String, Object>();
-         for (HandlerInitParam param : jaxrpcMetaData.getInitParams())
+         for (UnifiedInitParamMetaData param : jaxrpcMetaData.getInitParams())
          {
             hConfig.put(param.getParamName(), param.getParamValue());
          }

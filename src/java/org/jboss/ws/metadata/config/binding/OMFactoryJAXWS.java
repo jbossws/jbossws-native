@@ -30,8 +30,8 @@ import org.jboss.ws.metadata.config.jaxws.CommonConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.HandlerChainsConfigJAXWS;
-import org.jboss.ws.metadata.jsr181.HandlerChainFactory;
-import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 
@@ -42,7 +42,7 @@ import org.xml.sax.Attributes;
  * @author Heiko.Braun@jboss.org
  * @since 18-Dec-2005
  */
-public class OMFactoryJAXWS extends HandlerChainFactory
+public class OMFactoryJAXWS extends HandlerChainsObjectFactory
 {
    // provide logging
    private final Logger log = Logger.getLogger(OMFactoryJAXWS.class);
@@ -135,7 +135,7 @@ public class OMFactoryJAXWS extends HandlerChainFactory
 
       if ("handler-chain".equals(localName))
       {
-         HandlerChainMetaData handlerChain = new HandlerChainMetaData(null);
+         UnifiedHandlerChainMetaData handlerChain = new UnifiedHandlerChainMetaData(null);
          handlerChains.getHandlerChains().add(handlerChain);
          return handlerChain;
       }

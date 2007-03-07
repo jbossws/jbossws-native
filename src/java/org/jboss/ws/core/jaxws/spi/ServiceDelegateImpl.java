@@ -52,12 +52,12 @@ import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
-import org.jboss.ws.core.jaxws.client.NameValuePair;
-import org.jboss.ws.core.jaxws.client.PortInfo;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
-import org.jboss.ws.core.jaxws.client.UnifiedServiceRef;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
@@ -83,8 +83,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private static ExecutorService defaultExecutor = Executors.newCachedThreadPool();
    // The service meta data that is associated with this JAXWS Service
    private ServiceMetaData serviceMetaData;
-   // The UnifiedServiceRef supplied by the ServiceObjectFactory 
-   private UnifiedServiceRef usRef;
+   // The ServiceRefMetaData supplied by the ServiceObjectFactory 
+   private UnifiedServiceRefMetaData usRef;
    // The handler resolver
    private HandlerResolver handlerResolver = new HandlerResolverImpl();
    // The executor service
@@ -95,11 +95,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName)
    {
-      usRef = ServiceObjectFactory.getUnifiedServiceRefAssociation();
+      usRef = ServiceObjectFactory.getServiceRefAssociation();
 
       UnifiedVirtualFile vfsRoot;
       if(usRef!=null)
-         vfsRoot = usRef.getRootFile();
+         vfsRoot = usRef.getVfsRoot();
       else
          vfsRoot = new ResourceLoaderAdapter();
 
@@ -351,7 +351,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       String seiName = epMetaData.getServiceEndpointInterfaceName();
       QName portName = epMetaData.getPortName();
 
-      if(usRef == null || usRef.getPortInfos().size() == 0)
+      if(usRef == null || usRef.getPortComponentRefs().size() == 0)
       {
          if(log.isDebugEnabled()) log.debug("No port configuration for: " + portName);
          return;
@@ -361,7 +361,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       String configName = usRef.getConfigName();
 
       boolean match = false;
-      for (PortInfo pi : usRef.getPortInfos())
+      for (UnifiedPortComponentRefMetaData pi : usRef.getPortComponentRefs())
       {
          String piSEI = pi.getServiceEndpointInterface();
          QName piPort = pi.getPortQName();
@@ -382,10 +382,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
             BindingProvider bp = (BindingProvider)stub;
             Map<String, Object> reqCtx = bp.getRequestContext();
-            for (NameValuePair nvp : pi.getStubProperties())
+            for (UnifiedStubPropertyMetaData prop : pi.getStubProperties())
             {
-               if(log.isDebugEnabled()) log.debug("Set stub property: " + nvp);
-               reqCtx.put(nvp.getName(), nvp.getValue());
+               log.debug("Set stub property: " + prop);
+               reqCtx.put(prop.getPropName(), prop.getPropValue());
             }
             break;
          }

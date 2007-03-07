@@ -26,8 +26,8 @@ package org.jboss.ws.metadata.webservices;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
@@ -129,14 +129,14 @@ public class WebservicesFactory implements ObjectModelFactory
    public Object newChild(UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       if ("init-param".equals(localName))
-         return new HandlerInitParam();
+         return new UnifiedInitParamMetaData();
       else return null;
    }
 
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(UnifiedHandlerMetaData handler, HandlerInitParam param, UnmarshallingContext navigator, String namespaceURI, String localName)
+   public void addChild(UnifiedHandlerMetaData handler, UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       handler.addInitParam(param);
    }
@@ -200,7 +200,7 @@ public class WebservicesFactory implements ObjectModelFactory
    /**
     * Called when a new simple child element with text value was read from the XML content.
     */
-   public void setValue(HandlerInitParam param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   public void setValue(UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (log.isTraceEnabled())
          log.trace("UnifiedInitParamMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);

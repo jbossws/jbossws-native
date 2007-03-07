@@ -27,12 +27,10 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.rmi.Remote;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -47,8 +45,10 @@ import javax.xml.rpc.handler.HandlerRegistry;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
-import org.jboss.ws.metadata.j2ee.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
@@ -57,7 +57,6 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerInitParam;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 
@@ -122,7 +121,7 @@ public class ServiceImpl implements ServiceExt
 
       JAXRPCClientMetaDataBuilder builder = new JAXRPCClientMetaDataBuilder();
       ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
-      
+
       serviceMetaData = builder.buildMetaData(serviceName, wsdlURL, mappingURL, securityConfig, usrMetaData, ctxClassLoader);
       handlerRegistry = new HandlerRegistryImpl(serviceMetaData);
    }
@@ -419,37 +418,19 @@ public class ServiceImpl implements ServiceExt
       // nothing to do
       if (usrMetaData == null)
          return;
-      
+
       // General properties
-      Properties callProps = usrMetaData.getCallProperties();
-      if (callProps != null)
-      {
-         Enumeration<?> names = callProps.propertyNames();
-         while (names.hasMoreElements())
-         {
-            String name = (String)names.nextElement();
-            String value = callProps.getProperty(name);
-            call.setProperty(name, value);
-         }
-      }
-      
+      for (UnifiedCallPropertyMetaData prop : usrMetaData.getCallProperties())
+         call.setProperty(prop.getPropName(), prop.getPropValue());
+
       if (seiName != null)
       {
          for (UnifiedPortComponentRefMetaData upcRef : usrMetaData.getPortComponentRefs())
          {
             if (seiName.equals(upcRef.getServiceEndpointInterface()))
             {
-               callProps = upcRef.getCallProperties();
-               if (callProps != null)
-               {
-                  Enumeration<?> names = callProps.propertyNames();
-                  while (names.hasMoreElements())
-                  {
-                     String name = (String)names.nextElement();
-                     String value = callProps.getProperty(name);
-                     call.setProperty(name, value);
-                  }
-               }
+               for (UnifiedCallPropertyMetaData prop : upcRef.getCallProperties())
+                  call.setProperty(prop.getPropName(), prop.getPropValue());
             }
          }
       }
@@ -482,7 +463,7 @@ public class ServiceImpl implements ServiceExt
          handlerRoles.addAll(jaxrpcMetaData.getSoapRoles());
 
          HashMap hConfig = new HashMap();
-         for (HandlerInitParam param : jaxrpcMetaData.getInitParams())
+         for (UnifiedInitParamMetaData param : jaxrpcMetaData.getInitParams())
          {
             hConfig.put(param.getParamName(), param.getParamValue());
          }
@@ -495,7 +476,8 @@ public class ServiceImpl implements ServiceExt
          hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
          HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
 
-         if(log.isDebugEnabled()) log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
+         if (log.isDebugEnabled())
+            log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
          handlerInfos.add(info);
 
          // register the handlers with the client engine

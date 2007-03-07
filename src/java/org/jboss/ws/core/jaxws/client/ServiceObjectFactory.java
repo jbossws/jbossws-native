@@ -25,13 +25,11 @@ package org.jboss.ws.core.jaxws.client;
 // $Id$
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 
@@ -47,7 +45,7 @@ import javax.xml.ws.Service;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
-import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.ws.Service
@@ -61,8 +59,8 @@ public class ServiceObjectFactory implements ObjectFactory
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceObjectFactory.class);
 
-   // The UnifiedServiceRef association
-   private static ThreadLocal serviceRefAssociation = new ThreadLocal();
+   // The ServiceRefMetaData association
+   private static ThreadLocal<UnifiedServiceRefMetaData> serviceRefAssociation = new ThreadLocal<UnifiedServiceRefMetaData>();
 
    /**
     * Creates an object using the location or reference information specified.
@@ -94,23 +92,23 @@ public class ServiceObjectFactory implements ObjectFactory
          String targetClassName = (String)ref.get(ServiceReferenceable.TARGET_CLASS_NAME).getContent();
 
          // Unmarshall the UnifiedServiceRef
-         UnifiedServiceRef usRef = unmarshallServiceRef(ref);
-         String serviceRefName = usRef.getServiceRefName();
-         QName serviceQName = usRef.getServiceQName();
+         UnifiedServiceRefMetaData serviceRef = unmarshallServiceRef(ref);
+         String serviceRefName = serviceRef.getServiceRefName();
+         QName serviceQName = serviceRef.getServiceQName();
 
-         String serviceClassName = usRef.getServiceClassName();
-         if (serviceClassName == null)
-            serviceClassName = (String)ref.get(ServiceReferenceable.SERVICE_CLASS_NAME).getContent();
+         String serviceImplClass = serviceRef.getServiceImplClass();
+         if (serviceImplClass == null)
+            serviceImplClass = (String)ref.get(ServiceReferenceable.SERVICE_IMPL_CLASS).getContent();
 
          // If the target defaults to javax.xml.ws.Service, user the service as the target
          if (Service.class.getName().equals(targetClassName))
-            targetClassName = serviceClassName;
+            targetClassName = serviceImplClass;
          
-         if(log.isDebugEnabled()) log.debug("[name=" + serviceRefName + ",service=" + serviceClassName + ",target=" + targetClassName + "]");
+         if(log.isDebugEnabled()) log.debug("[name=" + serviceRefName + ",service=" + serviceImplClass + ",target=" + targetClassName + "]");
 
          // Load the service class
          ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-         Class serviceClass = ctxLoader.loadClass(serviceClassName);
+         Class serviceClass = ctxLoader.loadClass(serviceImplClass);
          Class targetClass = (targetClassName != null ? ctxLoader.loadClass(targetClassName) : null);
 
          if (Service.class.isAssignableFrom(serviceClass) == false)
@@ -120,12 +118,11 @@ public class ServiceObjectFactory implements ObjectFactory
          Object target;
 
          // Get the URL to the wsdl
-         URL wsdlURL = getWsdlLocationURL(targetClass != null ? targetClass : serviceClass, usRef);
-
+         URL wsdlURL = serviceRef.getWsdlLocation();
          try
          {
-            // Associate the UnifiedServiceRef with this thread
-            serviceRefAssociation.set(usRef);
+            // Associate the ServiceRefMetaData with this thread
+            serviceRefAssociation.set(serviceRef);
 
             // Generic javax.xml.ws.Service
             if (serviceClass == Service.class)
@@ -159,9 +156,9 @@ public class ServiceObjectFactory implements ObjectFactory
          }
 
          // Configure the service
-         configureService((Service)target, usRef);
+         configureService((Service)target, serviceRef);
 
-         if (targetClassName != null && targetClassName.equals(serviceClassName) == false)
+         if (targetClassName != null && targetClassName.equals(serviceImplClass) == false)
          {
             try
             {
@@ -203,16 +200,16 @@ public class ServiceObjectFactory implements ObjectFactory
       }
    }
 
-   public static UnifiedServiceRef getUnifiedServiceRefAssociation()
+   public static UnifiedServiceRefMetaData getServiceRefAssociation()
    {
       // The ServiceDelegateImpl get the usRef at ctor time
-      return (UnifiedServiceRef)serviceRefAssociation.get();
+      return (UnifiedServiceRefMetaData)serviceRefAssociation.get();
    }
 
-   private void configureService(Service service, UnifiedServiceRef usRef)
+   private void configureService(Service service, UnifiedServiceRefMetaData serviceRef)
    {
-      String configFile = usRef.getConfigFile();
-      String configName = usRef.getConfigName();
+      String configFile = serviceRef.getConfigFile();
+      String configName = serviceRef.getConfigName();
       if (service instanceof ConfigProvider)
       {
          if(log.isDebugEnabled()) log.debug("Configure Service: [configName=" + configName + ",configFile=" + configFile + "]");
@@ -223,15 +220,15 @@ public class ServiceObjectFactory implements ObjectFactory
       }
    }
 
-   private UnifiedServiceRef unmarshallServiceRef(Reference ref) throws ClassNotFoundException, NamingException
+   private UnifiedServiceRefMetaData unmarshallServiceRef(Reference ref) throws ClassNotFoundException, NamingException
    {
-      UnifiedServiceRef sref;
-      RefAddr refAddr = ref.get(ServiceReferenceable.UNIFIED_SERVICE_REF);
+      UnifiedServiceRefMetaData sref;
+      RefAddr refAddr = ref.get(ServiceReferenceable.SERVICE_REF_META_DATA);
       ByteArrayInputStream bais = new ByteArrayInputStream((byte[])refAddr.getContent());
       try
       {
          ObjectInputStream ois = new ObjectInputStream(bais);
-         sref = (UnifiedServiceRef)ois.readObject();
+         sref = (UnifiedServiceRefMetaData)ois.readObject();
          ois.close();
       }
       catch (IOException e)
@@ -239,72 +236,5 @@ public class ServiceObjectFactory implements ObjectFactory
          throw new NamingException("Cannot unmarshall service ref meta data, cause: " + e.toString());
       }
       return sref;
-   }
-
-   private URL getWsdlLocationURL(Class userClass, UnifiedServiceRef usRef)
-   {
-      UnifiedVirtualFile vfsRoot = usRef.getRootFile();
-      String wsdlLocation = usRef.getWsdlLocation();
-
-      URL wsdlURL = null;
-      if (wsdlLocation != null)
-      {
-         // Try the wsdlLocation as URL
-         try
-         {
-            wsdlURL = new URL(wsdlLocation);
-         }
-         catch (MalformedURLException ex)
-         {
-            // ignore
-         }
-
-         // Try the filename as File
-         if (wsdlURL == null)
-         {
-            try
-            {
-               File file = new File(wsdlLocation);
-               if (file.exists())
-                  wsdlURL = file.toURL();
-            }
-            catch (MalformedURLException e)
-            {
-               // ignore
-            }
-         }
-
-         // Try the filename as Resource
-         if (wsdlURL == null)
-         {
-            try
-            {
-               wsdlURL = vfsRoot.findChild(wsdlLocation).toURL();
-            }
-            catch (Exception ex)
-            {
-               // ignore
-            }
-         }
-
-         // Try the filename relative to class
-         if (wsdlURL == null)
-         {
-            String packagePath = userClass.getPackage().getName().replace('.', '/');
-            String wsdlPath = packagePath + "/" + wsdlLocation;
-            try
-            {
-               wsdlURL = vfsRoot.findChild(wsdlPath).toURL();
-            }
-            catch (Exception ex)
-            {
-               // ignore
-            }
-         }
-
-         if (wsdlURL == null)
-            throw new IllegalArgumentException("Cannot get URL for: " + wsdlLocation);
-      }
-      return wsdlURL;
    }
 }

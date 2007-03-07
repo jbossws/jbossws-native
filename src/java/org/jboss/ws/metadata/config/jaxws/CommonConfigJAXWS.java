@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.ws.metadata.config.CommonConfig;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.jsr181.HandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
@@ -77,9 +77,9 @@ public abstract class CommonConfigJAXWS extends CommonConfig
 
       if (handlerChains != null)
       {
-         for (HandlerChainMetaData handlerChainMetaData : handlerChains.getHandlerChains())
+         for (UnifiedHandlerChainMetaData handlerChain : handlerChains.getHandlerChains())
          {
-            for (UnifiedHandlerMetaData uhmd : handlerChainMetaData.getHandlers())
+            for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
             {
                handlers.add(uhmd.getHandlerMetaDataJAXWS(epMetaData, type));
             }

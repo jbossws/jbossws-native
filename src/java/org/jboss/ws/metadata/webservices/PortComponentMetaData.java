@@ -30,7 +30,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.metadata.j2ee.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 
 /**
  * XML Binding and ws4ee meta-data element for
