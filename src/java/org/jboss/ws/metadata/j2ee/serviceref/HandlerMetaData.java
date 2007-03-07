@@ -50,7 +50,7 @@ public class HandlerMetaData implements Serializable
    // The required <handler-class> element
    private String handlerClass;
    // The optional <init-param> elements
-   private List<InitParamMetaData> initParams = new ArrayList<InitParamMetaData>();
+   private List<UnifiedInitParamMetaData> initParams = new ArrayList<UnifiedInitParamMetaData>();
    // The optional <soap-header> elements
    private Set<QName> soapHeaders = new HashSet<QName>();
    // The optional <soap-role> elements
@@ -79,12 +79,12 @@ public class HandlerMetaData implements Serializable
       return handlerClass;
    }
 
-   public void addInitParam(InitParamMetaData param)
+   public void addInitParam(UnifiedInitParamMetaData param)
    {
       initParams.add(param);
    }
 
-   public List<InitParamMetaData> getInitParams()
+   public List<UnifiedInitParamMetaData> getInitParams()
    {
       return initParams;
    }
