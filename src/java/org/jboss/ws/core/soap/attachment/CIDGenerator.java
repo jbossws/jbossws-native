@@ -47,7 +47,7 @@ public class CIDGenerator
       StringBuilder cid = new StringBuilder();
       long time = System.currentTimeMillis();
 
-      cid.append("cid:").append(count++).append("-").append(time).append("-")
+      cid.append(count++).append("-").append(time).append("-")
          .append(cid.hashCode()).append("@").append(MimeConstants.CID_DOMAIN);
 
       if(log.isDebugEnabled()) log.debug("generateFromCount: " + cid);

@@ -29,12 +29,20 @@ import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.xml.bind.annotation.XmlMimeType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlAttachmentRef;
 import javax.xml.transform.Source;
 
 import org.jboss.ws.core.utils.JavaUtils;
 
 /**
- * Scans data types for MTOM declarations.
+ * Scans data types for MTOM and swaRef declarations.
+ * It basically searches for
+ * <ul>
+ * <li><code>@XmlMimeType</code>
+ * <li><code>@XmlAttachmentRef</code>
+ * </ul>
+ * and returns the appropriate mimetype. 
  * In order to re-use an instance of this class you need to invoke <code>reset()</code>
  * in between scans.
  *
@@ -43,9 +51,11 @@ import org.jboss.ws.core.utils.JavaUtils;
  * @since 04.12.2006
  *
  */
-public class ReflectiveXOPScanner {
+public class ReflectiveAttachmentRefScanner {
 
    private static List<Class> SUPPORTED_TYPES = new ArrayList<Class>(5);
+
+   public static enum ResultType {XOP, SWA_REF};
 
    static {
       SUPPORTED_TYPES.add(String.class);
@@ -63,47 +73,57 @@ public class ReflectiveXOPScanner {
     * @param xmlRoot
     * @return the first matching XmlMimeType#value() or <code>null</code> if none found
     */
-   public String scan(Class xmlRoot)
+   public AttachmentScanResult scan(Class xmlRoot)
    {
-
       if( isJDKType(xmlRoot) )
          return null;
 
-      String mimeType = null;
+      AttachmentScanResult result = null;
 
       for(Field field : xmlRoot.getDeclaredFields())
       {
          Class<?> type = field.getType();
 
-         boolean exceptionToTheRule = isMTOMDataType(type);
+         boolean exceptionToTheRule = isAttachmentDataType(type);
 
          // only non JDK types are inspected except for byte[] and java.lang.String
          if( !alreadyScanned(field) && (exceptionToTheRule || !isJDKType(type)) )
          {
-            if(field.isAnnotationPresent(XmlMimeType.class))
+
+            // Scan for swa:Ref type declarations first
+            if(field.isAnnotationPresent(XmlAttachmentRef.class))
             {
-               XmlMimeType mimeTypeDecl = field.getAnnotation(XmlMimeType.class);
-               mimeType = mimeTypeDecl.value();
+               // arbitrary, it's not used
+               result = new AttachmentScanResult("application/octet-stream", AttachmentScanResult.Type.SWA_REF);
             }
 
-            if(null == mimeType) // try getter methods
+            // Scan for XOP field annotations
+            else if(field.isAnnotationPresent(XmlMimeType.class))
             {
-               mimeType = scanGetterAnnotation(xmlRoot, field);
+               XmlMimeType mimeTypeDecl = field.getAnnotation(XmlMimeType.class);
+               result = new AttachmentScanResult(mimeTypeDecl.value(), AttachmentScanResult.Type.XOP);
+            }
+
+            if(null == result) // try getter methods
+            {
+               String mimeType = scanGetterAnnotation(xmlRoot, field);
+               if(mimeType!=null)
+                  result = new AttachmentScanResult(mimeType, AttachmentScanResult.Type.XOP);
             }
 
             // avoid recursive loops
-            if(!isMTOMDataType(type))
+            if(!isAttachmentDataType(type))
                scannedFields.add(field);
 
             // drill down if none found so far
-            if(null == mimeType)
-               mimeType = scan(type);
+            if(null == result)
+               result = scan(type);
 
          }
 
       }
 
-      return mimeType;
+      return result;
    }
 
    private boolean alreadyScanned(Field field)
@@ -123,7 +143,7 @@ public class ReflectiveXOPScanner {
       scannedFields.clear();
    }
 
-   private static boolean isMTOMDataType(Class clazz) {
+   private static boolean isAttachmentDataType(Class clazz) {
       for(Class cl : SUPPORTED_TYPES)
       {
          if(JavaUtils.isAssignableFrom(cl, clazz))
@@ -144,7 +164,7 @@ public class ReflectiveXOPScanner {
       for(Method method : owner.getDeclaredMethods())
       {
          if(method.getName().equalsIgnoreCase(getterMethodName)
-           && method.isAnnotationPresent(XmlMimeType.class))
+            && method.isAnnotationPresent(XmlMimeType.class))
          {
             XmlMimeType mimeTypeDecl = method.getAnnotation(XmlMimeType.class);
             return mimeTypeDecl.value();

@@ -88,6 +88,18 @@ public class XOPContext
       return isXOP;
    }
 
+   public static boolean isSWARefMessage()
+   {
+      boolean isSWARef = false;
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null)
+      {
+         SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
+         isSWARef = (soapMessage != null && soapMessage.isSWARefMessage());
+      }
+      return isSWARef;
+   }
+
    /**
     * Check if the wire format is actually a xop encoded multipart message
     */
@@ -195,7 +207,7 @@ public class XOPContext
     */
    public static void eagerlyCreateAttachments()
    {
-      if (!isXOPMessage())
+      if (!isXOPMessage() && !isSWARefMessage())
          return;
 
       try

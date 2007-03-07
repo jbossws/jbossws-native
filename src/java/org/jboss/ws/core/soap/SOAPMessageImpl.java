@@ -67,6 +67,7 @@ public class SOAPMessageImpl extends SOAPMessage
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
    private CIDGenerator cidGenerator = new CIDGenerator();
    private boolean isXOPMessage;
+   private boolean isSWARefMessage;
    private SOAPPartImpl soapPart;
    private MultipartRelatedEncoder multipartRelatedEncoder;
 
@@ -93,6 +94,16 @@ public class SOAPMessageImpl extends SOAPMessage
    public void setXOPMessage(boolean isXOPMessage)
    {
       this.isXOPMessage = isXOPMessage;
+   }
+
+   public boolean isSWARefMessage()
+   {
+      return isSWARefMessage;
+   }
+
+   public void setSWARefMessage(boolean isSWAMessage)
+   {
+      this.isSWARefMessage = isSWAMessage;
    }
 
    public void setAttachments(Collection<AttachmentPart> parts) throws SOAPException

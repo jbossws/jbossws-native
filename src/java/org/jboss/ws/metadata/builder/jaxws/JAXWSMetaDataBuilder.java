@@ -758,7 +758,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          if (!RemoteException.class.isAssignableFrom(exClass))
             addFault(opMetaData, exClass);
 
-      // process op meta data extension
+      // process operation meta data extension
       processMetaExtensions(method, epMetaData, opMetaData);
    }
 
@@ -788,9 +788,10 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
                         String partName = mimePart.getPartName();
                         if(paramMetaData.getPartName().equals(partName))
                         {
-                           log.debug("Identified SWA parameter: " + partName + ", mimeTypes=" +mimePart.getMimeTypes());
+                           log.debug("Identified 'mime:content' binding: " + partName + ", mimeTypes=" +mimePart.getMimeTypes());
                            paramMetaData.setSwA(true);
                            paramMetaData.setMimeTypes(mimePart.getMimeTypes());
+                           break;
                         }
                      }
                   }
@@ -798,6 +799,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             }
          }
       }
+
    }
 
    protected void processWebMethods(EndpointMetaData epMetaData, Class wsClass)

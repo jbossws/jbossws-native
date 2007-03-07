@@ -173,6 +173,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
             if (paramMetaData.isSwA())
             {
+               // NOTE: swa:ref is handled by the AttachmentMarshaller callback
                CIDGenerator cidGenerator = reqMessage.getCidGenerator();
                AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
                reqMessage.addAttachmentPart(part);
@@ -231,7 +232,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       try
       {
          // Read the SOAPEnvelope from the reqMessage
-         SOAPMessage reqMessage = (SOAPMessage)payload;
+         SOAPMessageImpl reqMessage = (SOAPMessageImpl)payload;
          SOAPEnvelope soapEnvelope = reqMessage.getSOAPPart().getEnvelope();
          SOAPHeader soapHeader = soapEnvelope.getHeader();
          SOAPBody soapBody = soapEnvelope.getBody();
@@ -428,7 +429,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          }
 
          // WS-Addressing might redirect the response, which results in an empty envelope
-         SOAPMessage resMessage = (SOAPMessage)payload;
+         SOAPMessageImpl resMessage = (SOAPMessageImpl)payload;
          SOAPEnvelope soapEnvelope = resMessage.getSOAPPart().getEnvelope();
          if (soapEnvelope == null)
          {
@@ -684,6 +685,12 @@ public abstract class CommonSOAPBinding implements CommonBinding
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
          soapMessage.setXOPMessage(true);
       }
+      else if(paramMetaData.isSwaRef())
+      {
+         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+         SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
+         soapMessage.setSWARefMessage(true);
+      }
 
       contentElement.setObjectValue(value);
 
@@ -782,6 +789,12 @@ public abstract class CommonSOAPBinding implements CommonBinding
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
          soapMessage.setXOPMessage(true);
       }
+      else if(paramMetaData.isSwaRef())
+      {
+         SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
+         soapMessage.setSWARefMessage(true);
+      }
+
       return soapContentElement;
    }
 

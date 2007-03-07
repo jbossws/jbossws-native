@@ -40,7 +40,8 @@ import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.extensions.xop.jaxws.ReflectiveXOPScanner;
+import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
+import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
@@ -69,6 +70,7 @@ public class ParameterMetaData
    private boolean inHeader;
    private boolean isSwA;
    private boolean isXOP;
+   private boolean isSwaRef;
    private List<WrappedParameter> wrappedParameters;
    private int index;
 
@@ -330,6 +332,16 @@ public class ParameterMetaData
       this.isSwA = isSwA;
    }
 
+   public boolean isSwaRef()
+   {
+      return isSwaRef;
+   }
+
+   public void setSwaRef(boolean swaRef)
+   {
+      isSwaRef = swaRef;
+   }
+
    public boolean isXOP()
    {
       return isXOP;
@@ -458,15 +470,27 @@ public class ParameterMetaData
       if (javaType == null)
          throw new WSException("Cannot load java type: " + javaTypeName);
 
-      // check if the JavaType is an mtom parameter
-      if (epType == EndpointMetaData.Type.JAXWS)
+      initializeAttachmentParameter(epType);
+   }
+
+   /**
+    * Identify MTOM and SWA:Ref parameter as these require special treatment.
+    * This only affects JAX-WS endpoints
+    * @param epType
+    */
+   private void initializeAttachmentParameter(Type epType)
+   {
+      if (epType == Type.JAXWS)
       {
-         ReflectiveXOPScanner scanner = new ReflectiveXOPScanner();
-         String mimeType = scanner.scan(javaType);
-         if (mimeType != null)
+         ReflectiveAttachmentRefScanner scanner = new ReflectiveAttachmentRefScanner();
+         AttachmentScanResult scanResult = scanner.scan(javaType);
+         if (scanResult != null)
          {
-            if(log.isDebugEnabled()) log.debug("MTOM parameter found: " + xmlName);
-            setXOP(true);
+            if(log.isDebugEnabled()) log.debug("Identified attachment reference: " + xmlName + ", type="+scanResult.getType());
+            if(scanResult.getType() == AttachmentScanResult.Type.XOP)
+               setXOP(true);
+            else
+               setSwaRef(true);
          }
       }
    }

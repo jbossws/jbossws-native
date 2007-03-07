@@ -6,7 +6,6 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.AttachmentPart;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
@@ -79,7 +78,17 @@ public class AttachmentMarshallerImpl extends AttachmentMarshaller
 
    public String addSwaRefAttachment(DataHandler dataHandler)
    {
-      throw new WSException("Not yet implemented");
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
+
+      String cid = soapMessage.getCidGenerator().generateFromCount();
+      AttachmentPart swaRefPart = soapMessage.createAttachmentPart(dataHandler);
+      swaRefPart.addMimeHeader(MimeConstants.CONTENT_ID, '<' + cid + '>'); // RFC2392 requirement
+      soapMessage.addAttachmentPart(swaRefPart);
+
+      if(log.isDebugEnabled()) log.debug("Created attachment part " + cid + ", with content-type " + swaRefPart.getContentType());
+
+      return "cid:" + cid;
    }
 
    public boolean isXOPPackage()

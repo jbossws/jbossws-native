@@ -10,6 +10,9 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.xop.XOPContext;
 
 public class AttachmentUnmarshallerImpl extends AttachmentUnmarshaller
@@ -28,7 +31,7 @@ public class AttachmentUnmarshallerImpl extends AttachmentUnmarshaller
 
    public boolean isXOPPackage()
    {
-      return XOPContext.isXOPMessage();
+      return XOPContext.isXOPMessage();           
    }
 
    public DataHandler getAttachmentAsDataHandler(String cid)
