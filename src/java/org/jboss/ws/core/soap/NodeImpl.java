@@ -610,8 +610,7 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public boolean isEqualNode(Node arg)
    {
-      // FIXME isEqualNode
-      throw new NotImplementedException("isEqualNode");
+      return domNode.isEqualNode(arg);
    }
 
    public boolean isSameNode(Node other)

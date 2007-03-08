@@ -94,7 +94,7 @@ public abstract class SOAPFactory
    public static SOAPFactory newInstance(String protocol) throws SOAPException
    {
       SAAJMetaFactory saajFactory = SAAJMetaFactory.getInstance();
-      SOAPFactory factory = saajFactory.newSOAPFactory(SOAPConstants.DYNAMIC_SOAP_PROTOCOL);
+      SOAPFactory factory = saajFactory.newSOAPFactory(protocol);
       
       if (factory == null)
          throw new SOAPException("Failed to to determine the SOAPFactory implementation class");
