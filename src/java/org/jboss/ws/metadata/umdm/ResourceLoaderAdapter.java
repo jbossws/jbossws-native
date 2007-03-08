@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 
 /**
  * The default file adapter loads resources through an associated classloader.

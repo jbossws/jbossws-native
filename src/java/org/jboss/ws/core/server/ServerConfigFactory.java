@@ -23,6 +23,7 @@ package org.jboss.ws.core.server;
 
 import org.jboss.kernel.spi.registry.KernelRegistry;
 import org.jboss.logging.Logger;
+import org.jboss.ws.integration.KernelLocator;
 
 // $Id: ServiceEndpointManagerFactory.java 293 2006-05-08 16:31:50Z thomas.diesler@jboss.com $
 

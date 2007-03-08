@@ -23,13 +23,13 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.io.Serializable;
+import org.jboss.ws.integration.ServiceRefElement;
 
 /**
  * @author Thomas.Diesler@jboss.org
  * @since 06-May-2004
  */
-public class UnifiedCallPropertyMetaData implements Serializable
+public class UnifiedCallPropertyMetaData extends ServiceRefElement
 {
    // The required <prop-name> element
    private String propName;

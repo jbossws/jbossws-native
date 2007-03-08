@@ -23,11 +23,12 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,11 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.integration.ServiceRefMetaData;
+import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.xb.QNameBuilder;
+import org.w3c.dom.Element;
 
 /**
  * The metdata data from service-ref element in web.xml, ejb-jar.xml, and
@@ -44,7 +49,7 @@ import org.jboss.ws.core.UnifiedVirtualFile;
  * 
  * @author Thomas.Diesler@jboss.org
  */
-public class UnifiedServiceRefMetaData implements Serializable
+public class UnifiedServiceRefMetaData extends ServiceRefMetaData
 {
    // provide logging
    private static Logger log = Logger.getLogger(UnifiedServiceRefMetaData.class);
@@ -87,6 +92,9 @@ public class UnifiedServiceRefMetaData implements Serializable
    // Arbitrary proxy properties given by <call-property> 
    private List<UnifiedCallPropertyMetaData> callProperties = new ArrayList<UnifiedCallPropertyMetaData>();
 
+   private transient AnnotatedElement anElement;
+   private transient boolean processed;
+
    public UnifiedServiceRefMetaData(UnifiedVirtualFile vfRoot)
    {
       this.vfsRoot = vfRoot;
@@ -94,6 +102,41 @@ public class UnifiedServiceRefMetaData implements Serializable
 
    public UnifiedServiceRefMetaData()
    {
+   }
+
+   @Override
+   public void merge(ServiceRefMetaData sref)
+   {
+      UnifiedServiceRefMetaData sourceRef = (UnifiedServiceRefMetaData)sref;
+      serviceImplClass = sourceRef.serviceImplClass;
+      configName = sourceRef.configName;
+      configFile = sourceRef.configFile;
+      wsdlOverride = sourceRef.wsdlOverride;
+      handlerChain = sourceRef.handlerChain;
+      callProperties = sourceRef.callProperties;
+
+      if (serviceQName == null && sourceRef.serviceQName != null)
+         serviceQName = sourceRef.serviceQName;
+
+      for (UnifiedPortComponentRefMetaData pcref : sourceRef.getPortComponentRefs())
+      {
+         String seiName = pcref.getServiceEndpointInterface();
+         if (seiName == null)
+         {
+            log.warn("Ignore <port-component-ref> with null <service-endpoint-interface>");
+            continue;
+         }
+
+         UnifiedPortComponentRefMetaData targetPCRef = portComponentRefs.get(seiName);
+         if (targetPCRef == null)
+         {
+            log.warn("Cannot find port component ref with SEI name: " + seiName);
+            addPortComponentRef(pcref);
+            targetPCRef = pcref;
+         }
+
+         targetPCRef.merge(pcref);
+      }
    }
 
    public UnifiedVirtualFile getVfsRoot()
@@ -319,5 +362,117 @@ public class UnifiedServiceRefMetaData implements Serializable
    public void setHandlerChain(String handlerChain)
    {
       this.handlerChain = handlerChain;
+   }
+
+   public AnnotatedElement getAnnotatedElement()
+   {
+      return anElement;
+      
+   }
+
+   public boolean isProcessed()
+   {
+      return processed;
+   }
+
+   public void setProcessed(boolean flag)
+   {
+      this.processed = flag;
+   }
+   
+   public void setAnnotatedElement(AnnotatedElement anElement)
+   {
+      this.anElement = anElement;
+   }
+
+   @Override
+   public void importStandardXml(Element root)
+   {
+      Element child = DOMUtils.getFirstChildElement(root, "service-ref-name");
+      if (child != null)
+         serviceRefName = DOMUtils.getTextContent(child);
+
+      child = DOMUtils.getFirstChildElement(root, "service-interface");
+      if (child != null)
+         serviceInterface = DOMUtils.getTextContent(child);
+
+      child = DOMUtils.getFirstChildElement(root, "wsdl-file");
+      if (child != null)
+         wsdlFile = DOMUtils.getTextContent(child);
+
+      child = DOMUtils.getFirstChildElement(root, "jaxrpc-mapping-file");
+      if (child != null)
+         mappingFile = DOMUtils.getTextContent(child);
+
+      child = DOMUtils.getFirstChildElement(root, "service-qname");
+      if (child != null)
+         serviceQName = QNameBuilder.buildQName(child, DOMUtils.getTextContent(child));
+
+      // Parse the port-component-ref elements
+      Iterator iterator = DOMUtils.getChildElements(root, "port-component-ref");
+      while (iterator.hasNext())
+      {
+         Element pcrefElement = (Element)iterator.next();
+         UnifiedPortComponentRefMetaData pcrefMetaData = new UnifiedPortComponentRefMetaData(this);
+         pcrefMetaData.importStandardXml(pcrefElement);
+         portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
+      }
+
+      // Parse the handler elements
+      iterator = DOMUtils.getChildElements(root, "handler");
+      while (iterator.hasNext())
+      {
+         Element handlerElement = (Element)iterator.next();
+         UnifiedHandlerMetaData handlerMetaData = new UnifiedHandlerMetaData();
+         handlerMetaData.importStandardXml(handlerElement);
+         handlers.add(handlerMetaData);
+      }
+   }
+   
+   @Override
+   public void importJBossXml(Element root)
+   {
+      Element child = DOMUtils.getFirstChildElement(root, "config-name");
+      if (child != null)
+         configName = DOMUtils.getTextContent(child);
+      
+      child = DOMUtils.getFirstChildElement(root, "config-file");
+      if (child != null)
+         configFile = DOMUtils.getTextContent(child);
+
+      child = DOMUtils.getFirstChildElement(root, "wsdl-override");
+      if (child != null)
+         wsdlOverride = DOMUtils.getTextContent(child);
+
+      // Parse the port-component-ref elements
+      Iterator iterator = DOMUtils.getChildElements(root, "port-component-ref");
+      while (iterator.hasNext())
+      {
+         Element pcrefElement = (Element)iterator.next();
+         Element seiElement = DOMUtils.getFirstChildElement(pcrefElement, "service-endpoint-interface");
+         if (seiElement != null)
+         {
+            String seiName = DOMUtils.getTextContent(seiElement);
+            UnifiedPortComponentRefMetaData pcrefMetaData = (UnifiedPortComponentRefMetaData)portComponentRefs.get(seiName);
+            if (pcrefMetaData == null)
+            {
+               // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml
+               pcrefMetaData = new UnifiedPortComponentRefMetaData(this);
+               pcrefMetaData.importStandardXml(pcrefElement);
+               portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
+            }
+            pcrefMetaData.importJBossXml(pcrefElement);
+         }
+      }
+
+      // Parse the call-property elements
+      iterator = DOMUtils.getChildElements(root, "call-property");
+      while (iterator.hasNext())
+      {
+         Element propElement = (Element)iterator.next();
+         String name = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-name"));
+         String value = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-value"));
+         callProperties.add(new UnifiedCallPropertyMetaData(name, value));
+      }
    }
 }

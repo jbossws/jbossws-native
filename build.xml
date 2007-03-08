@@ -64,7 +64,6 @@
       <include name="javax/jws/**"/>
       <include name="org/jboss/annotation/**"/>
       <include name="org/jboss/ws/**"/>
-      <exclude name="org/jboss/ws/integration/**"/>
       <classpath path="${core.output.classes14.dir}"/>
       <classpath refid="core.classpath"/>
     </javac>
@@ -139,6 +138,14 @@
       <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
         <include name="dtd/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- Build jbossws-integration.jar -->
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jbossws-integration.jar" manifest="${etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
+        <include name="org/jboss/ws/integration/**"/>
       </fileset>
     </jar>
     

@@ -47,12 +47,11 @@ public class ServiceRefHandlerJAXRPC
     */
    public void setupServiceRef(Context encCtx, String encName, UnifiedServiceRefMetaData serviceRef) throws NamingException
    {
-      String serviceRefName = serviceRef.getServiceRefName();
-      ServiceReferenceable ref = new ServiceReferenceable(serviceRef);
+      String externalName = encCtx.getNameInNamespace() + "/" + encName;
+      log.info("setupServiceRef [jndi=" + externalName + "]");
 
       // Do not use rebind, the binding should be unique
+      ServiceReferenceable ref = new ServiceReferenceable(serviceRef);
       Util.bind(encCtx, encName, ref);
-
-      log.debug("<service-ref> bound to: java:comp/env/" + serviceRefName);
    }
 }

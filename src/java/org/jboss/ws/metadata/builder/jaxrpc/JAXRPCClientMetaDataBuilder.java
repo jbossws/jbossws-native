@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;

@@ -23,6 +23,7 @@ package org.jboss.ws.core.server;
 
 import org.jboss.kernel.spi.registry.KernelRegistry;
 import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+import org.jboss.ws.integration.KernelLocator;
 
 // $Id$
 

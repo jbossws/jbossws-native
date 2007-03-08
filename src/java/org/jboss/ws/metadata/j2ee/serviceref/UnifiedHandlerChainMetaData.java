@@ -23,17 +23,18 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.integration.ServiceRefElement;
+
 /** The unified metdata data for a handler chain element
  * 
  * @author Thomas.Diesler@jboss.org
  */
-public class UnifiedHandlerChainMetaData implements Serializable
+public class UnifiedHandlerChainMetaData extends ServiceRefElement
 {
    private UnifiedHandlerChainsMetaData handlerChains;
    

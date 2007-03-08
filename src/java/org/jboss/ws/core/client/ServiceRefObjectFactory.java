@@ -19,68 +19,65 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.j2ee.serviceref;
+package org.jboss.ws.core.client;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+// $Id$
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.WSException;
-import org.jboss.xb.binding.ObjectModelFactory;
-import org.jboss.xb.binding.Unmarshaller;
-import org.jboss.xb.binding.UnmarshallerFactory;
+import org.jboss.ws.integration.ServiceRefElement;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 
 /**
- * An ObjectModelFactory for ServiceRefMetaData
- *
- * @author Thomas.Diesler@jboss.org
- * @since 17-Jan-2007
+ * A object model factory for <service-ref>
+ * 
+ * @author Thomas.Diesler@jboss.com
  */
-public class ServiceRefObjectFactory implements ObjectModelFactory
+public class ServiceRefObjectFactory
 {
-   // Hide constructor
-   private ServiceRefObjectFactory()
+   public Object newChild(ServiceRefElement ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
+      Object child = null;
+      if (ref instanceof UnifiedHandlerChainsMetaData)
+         child = newChild((UnifiedHandlerChainsMetaData)ref, navigator, namespaceURI, localName, attrs);
+      else if (ref instanceof UnifiedHandlerMetaData)
+         child = newChild((UnifiedHandlerMetaData)ref, navigator, namespaceURI, localName, attrs);
+      else if (ref instanceof UnifiedPortComponentRefMetaData)
+         child = newChild((UnifiedPortComponentRefMetaData)ref, navigator, namespaceURI, localName, attrs);
+      else if (ref instanceof UnifiedServiceRefMetaData)
+         child = newChild((UnifiedServiceRefMetaData)ref, navigator, namespaceURI, localName, attrs);
+      return child;
    }
 
-   public static ServiceRefObjectFactory newInstance()
+   public void setValue(ServiceRefElement ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
-      return new ServiceRefObjectFactory();
-   }
-
-   public UnifiedServiceRefMetaData parse(String xmlFragment) 
-   {
-      try
-      {
-         InputStream is = new ByteArrayInputStream(xmlFragment.getBytes());
-         
-         Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-         return (UnifiedServiceRefMetaData)unmarshaller.unmarshal(is, this, null);
-      }
-      catch (Exception ex)
-      {
-         WSException.rethrow(ex);
-         return null;
-      }
+      if (ref instanceof UnifiedCallPropertyMetaData)
+         setValue((UnifiedCallPropertyMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedHandlerChainMetaData)
+         setValue((UnifiedHandlerChainMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedHandlerMetaData)
+         setValue((UnifiedHandlerMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedInitParamMetaData)
+         setValue((UnifiedInitParamMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedPortComponentRefMetaData)
+         setValue((UnifiedPortComponentRefMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedServiceRefMetaData)
+         setValue((UnifiedServiceRefMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedStubPropertyMetaData)
+         setValue((UnifiedStubPropertyMetaData)ref, navigator, namespaceURI, localName, value);
+      
    }
    
-   public Object newRoot(Object root, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
-   {
-      return new UnifiedServiceRefMetaData();
-   }
-
-   public Object completeRoot(Object root, UnmarshallingContext ctx, String uri, String name)
-   {
-      return root;
-   }
-
-   // ******************************************************** 
-   // START ServiceRefMetaData 
-
-   public void setValue(UnifiedServiceRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedServiceRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       /* Standard properties */
       if (localName.equals("service-ref-name"))
@@ -131,57 +128,44 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
    }
 
-   public Object newChild(UnifiedServiceRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   private Object newChild(UnifiedServiceRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       Object child = null;
       if (localName.equals("port-component-ref"))
+      {
          child = new UnifiedPortComponentRefMetaData(ref);
+         ref.addPortComponentRef((UnifiedPortComponentRefMetaData)child);
+      }
       else if (localName.equals("handler"))
+      {
          child = new UnifiedHandlerMetaData();
+         ref.addHandler((UnifiedHandlerMetaData)child);
+      }
       else if (localName.equals("handler-chains"))
+      {
          child = new UnifiedHandlerChainsMetaData();
-      
+         ref.setHandlerChains((UnifiedHandlerChainsMetaData)child);
+      }
       else if (localName.equals("call-property"))
+      {
          child = new UnifiedCallPropertyMetaData();
-
+         ref.addCallProperty((UnifiedCallPropertyMetaData)child);
+      }
       return child;
    }
 
-   public Object newChild(UnifiedHandlerChainsMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   private Object newChild(UnifiedHandlerChainsMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       Object child = null;
       if (localName.equals("handler-chain"))
+      {
          child = new UnifiedHandlerChainMetaData();
-
+         ref.addHandlerChain((UnifiedHandlerChainMetaData)child);
+      }
       return child;
    }
 
-   public void addChild(UnifiedServiceRefMetaData parent, UnifiedPortComponentRefMetaData pcRef, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      parent.addPortComponentRef(pcRef);
-   }
-
-   public void addChild(UnifiedServiceRefMetaData parent, UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      parent.addHandler(handler);
-   }
-
-   public void addChild(UnifiedServiceRefMetaData parent, UnifiedHandlerChainsMetaData handlerChains, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      parent.setHandlerChains(handlerChains);
-   }
-
-   public void addChild(UnifiedServiceRefMetaData parent, UnifiedCallPropertyMetaData callProp, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      parent.addCallProperty(callProp);
-   }
-
-   public void addChild(UnifiedHandlerChainsMetaData parent, UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      parent.addHandlerChain(handlerChain);
-   }
-
-   public void setValue(UnifiedPortComponentRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedPortComponentRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("service-endpoint-interface"))
       {
@@ -209,17 +193,23 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
    }
 
-   public Object newChild(UnifiedPortComponentRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   private Object newChild(UnifiedPortComponentRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       Object child = null;
       if (localName.equals("call-property"))
+      {
          child = new UnifiedCallPropertyMetaData();
+         ref.addCallProperty((UnifiedCallPropertyMetaData)child);
+      }
       if (localName.equals("stub-property"))
+      {
          child = new UnifiedStubPropertyMetaData();
+         ref.addStubProperty((UnifiedStubPropertyMetaData)child);
+      }
       return child;
    }
 
-   public void setValue(UnifiedHandlerChainMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedHandlerChainMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("service-name-pattern"))
       {
@@ -235,7 +225,7 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
    }
 
-   public void setValue(UnifiedHandlerMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedHandlerMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("handler-name"))
       {
@@ -247,7 +237,7 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
       else if (localName.equals("soap-header"))
       {
-         ref.addSoapHeader(QName.valueOf(value));
+         ref.addSoapHeader(navigator.resolveQName(value));
       }
       else if (localName.equals("soap-role"))
       {
@@ -259,21 +249,18 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
    }
 
-   public Object newChild(UnifiedHandlerMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   private Object newChild(UnifiedHandlerMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       Object child = null;
       if (localName.equals("init-param"))
+      {
          child = new UnifiedInitParamMetaData();
-
+         ref.addInitParam((UnifiedInitParamMetaData)child);
+      }
       return child;
    }
 
-   public void addChild(UnifiedHandlerMetaData parent, UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      parent.addInitParam(param);
-   }
-
-   public void setValue(UnifiedInitParamMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedInitParamMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("param-name"))
       {
@@ -285,7 +272,7 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
    }
 
-   public void setValue(UnifiedCallPropertyMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedCallPropertyMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("prop-name"))
       {
@@ -297,7 +284,7 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
       }
    }
 
-   public void setValue(UnifiedStubPropertyMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedStubPropertyMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("prop-name"))
       {
@@ -308,17 +295,4 @@ public class ServiceRefObjectFactory implements ObjectModelFactory
          ref.setPropValue(value);
       }
    }
-   
-   public void addChild(UnifiedPortComponentRefMetaData ref, UnifiedCallPropertyMetaData callProp, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      ref.addCallProperty(callProp);
-   }
-
-   public void addChild(UnifiedPortComponentRefMetaData ref, UnifiedStubPropertyMetaData stubProp, UnmarshallingContext navigator, String namespaceURI, String localName)
-   {
-      ref.addStubProperty(stubProp);
-   }
-
-   // END ServiceRefMetaData 
-   // ******************************************************** 
 }

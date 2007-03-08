@@ -36,9 +36,9 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;

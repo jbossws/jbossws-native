@@ -99,9 +99,9 @@ public class ServiceRefHandlerJAXWS
       else if (anElement instanceof Method)
          targetClass = ((Method)anElement).getParameterTypes()[0];
 
-      String externalName = encCtx.getNameInNamespace() + "/" + encName;
       String targetClassName = (targetClass != null ? targetClass.getName() : null);
-      log.debug("setupWebServiceRef [jndi=" + externalName + ",target=" + targetClassName + "]");
+      String externalName = encCtx.getNameInNamespace() + "/" + encName;
+      log.info("setupServiceRef [jndi=" + externalName + ",target=" + targetClassName + "]");
 
       String serviceImplClass = null;
 
@@ -164,7 +164,5 @@ public class ServiceRefHandlerJAXWS
       // Do not use rebind, the binding should be unique
       // [JBWS-1499] - Revisit WebServiceRefHandler JNDI rebind
       Util.rebind(encCtx, encName, new ServiceReferenceable(serviceImplClass, targetClassName, serviceRef));
-
-      log.debug("<service-ref> bound to: java:comp/env/" + encName);
    }
 }

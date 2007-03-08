@@ -23,17 +23,21 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.integration.ServiceRefElement;
+import org.w3c.dom.Element;
 
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
  */
-public class UnifiedPortComponentRefMetaData implements Serializable
+public class UnifiedPortComponentRefMetaData extends ServiceRefElement
 {
    // The parent service-ref
    private UnifiedServiceRefMetaData serviceRefMetaData;
@@ -60,6 +64,15 @@ public class UnifiedPortComponentRefMetaData implements Serializable
       this.serviceRefMetaData = serviceRefMetaData;
    }
 
+   public void merge(UnifiedPortComponentRefMetaData pcref)
+   {
+      portQName = pcref.portQName;
+      configName = pcref.configName;
+      configFile = pcref.configFile;
+      callProperties = pcref.callProperties;
+      stubProperties = pcref.stubProperties;
+   }
+   
    public UnifiedServiceRefMetaData getServiceRefMetaData()
    {
       return serviceRefMetaData;
@@ -164,5 +177,31 @@ public class UnifiedPortComponentRefMetaData implements Serializable
    public void setConfigName(String configName)
    {
       this.configName = configName;
+   }
+
+   @Deprecated
+   public void importStandardXml(Element root)
+   {
+      Element child = DOMUtils.getFirstChildElement(root, "service-endpoint-interface");
+      if (child != null)
+         serviceEndpointInterface = DOMUtils.getTextContent(child);
+      
+      child = DOMUtils.getFirstChildElement(root, "port-component-link");
+      if (child != null)
+         portComponentLink = DOMUtils.getTextContent(child);
+   }
+
+   @Deprecated
+   public void importJBossXml(Element root)
+   {
+      // Look for call-property elements
+      Iterator iterator = DOMUtils.getChildElements(root, "call-property");
+      while (iterator.hasNext())
+      {
+         Element propElement = (Element)iterator.next();
+         String name = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-name"));
+         String value = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-value"));
+         callProperties.add(new UnifiedCallPropertyMetaData(name, value));
+      }
    }
 }

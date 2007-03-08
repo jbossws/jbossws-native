@@ -34,7 +34,7 @@ import javax.xml.ws.WebServiceFeature;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.UnifiedVirtualFile;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;

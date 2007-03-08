@@ -25,8 +25,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.UnifiedVirtualFile;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.webservices.WebservicesFactory;
 import org.jboss.ws.metadata.webservices.WebservicesMetaData;
 import org.jboss.xb.binding.ObjectModelFactory;
