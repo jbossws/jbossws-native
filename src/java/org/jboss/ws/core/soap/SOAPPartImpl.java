@@ -28,12 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
+import javax.xml.soap.*;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
@@ -153,6 +148,11 @@ public class SOAPPartImpl extends SOAPPart
          return;
       }
 
+      // Start with a fresh soapMessage
+      /*MessageFactory mf = MessageFactory.newInstance();
+      soapMessage = mf.createMessage();
+      soapMessage.getSOAPHeader().detachNode();*/
+
       if (source instanceof DOMSource)
       {
          Element domElement;
@@ -164,7 +164,7 @@ public class SOAPPartImpl extends SOAPPart
             domElement = (Element)node;
          else
             throw new SOAPException("Unsupported DOMSource node: " + node);
-         
+
          EnvelopeBuilderDOM envBuilder = new EnvelopeBuilderDOM(Style.DOCUMENT);
          envBuilder.build(soapMessage, domElement);
       }

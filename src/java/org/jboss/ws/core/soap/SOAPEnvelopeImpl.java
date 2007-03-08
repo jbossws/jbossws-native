@@ -71,8 +71,9 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       assertEnvelopeNamespace(namespaceURI);
       addNamespaceDeclaration(prefix, namespaceURI);
 
-      addHeader();
-      addBody();
+      // the Element source might already contain a Header and Body declaration
+      if(null == soapPart.getEnvelope().getHeader()) addHeader();
+      if(null == soapPart.getEnvelope().getBody()) addBody();
    }
 
    /** Construct a SOAP envelope for the given SOAP version URI.
