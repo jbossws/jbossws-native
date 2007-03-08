@@ -56,12 +56,14 @@ public class SOAPFactoryImpl extends SOAPFactory
       envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
    }
 
-   public SOAPFactoryImpl(String protocol)
+   public SOAPFactoryImpl(String protocol) throws SOAPException
    {
       if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
-      else
+      else if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol) || SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
+      else
+         throw new SOAPException("Unsupported protocol: " + protocol);
    }
 
    @Override
