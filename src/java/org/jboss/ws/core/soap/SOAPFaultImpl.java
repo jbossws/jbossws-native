@@ -68,6 +68,8 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
    private SOAPElement faultactor;
    private Locale faultStringLocale;
 
+   private String faultRole;
+
    public SOAPFaultImpl() throws SOAPException
    {
       this(SOAPConstants.SOAP_ENV_PREFIX, SOAPConstants.URI_NS_SOAP_ENVELOPE);
@@ -295,8 +297,7 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 
    public String getFaultRole()
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      return this.faultRole;
    }
 
    public Iterator getFaultSubcodes()
@@ -325,7 +326,13 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 
    public void setFaultRole(String uri) throws SOAPException
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      assertSOAPBinding();
+      this.faultRole = uri;
+   }
+
+   private void assertSOAPBinding()
+   {
+      if(getNamespaceURI().equals(Constants.NS_SOAP11_ENV))
+         throw new UnsupportedOperationException();
    }
 }
