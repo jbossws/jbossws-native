@@ -162,7 +162,8 @@ public class ServiceReferenceable implements Referenceable
       URL securityConfigURL = null;
       try
       {
-         vfsRoot.findChild("WEB-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
+         UnifiedVirtualFile vfConfig = vfsRoot.findChild("WEB-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
+         securityConfigURL = vfConfig.toURL();
       }
       catch (IOException ex)
       {
@@ -170,7 +171,8 @@ public class ServiceReferenceable implements Referenceable
       }
       try
       {
-         vfsRoot.findChild("META-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
+         UnifiedVirtualFile vfConfig = vfsRoot.findChild("META-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
+         securityConfigURL = vfConfig.toURL();
       }
       catch (IOException ex)
       {
