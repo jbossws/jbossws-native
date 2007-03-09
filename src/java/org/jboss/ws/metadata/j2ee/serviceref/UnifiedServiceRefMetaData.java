@@ -388,91 +388,12 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    @Override
    public void importStandardXml(Element root)
    {
-      Element child = DOMUtils.getFirstChildElement(root, "service-ref-name");
-      if (child != null)
-         serviceRefName = DOMUtils.getTextContent(child);
-
-      child = DOMUtils.getFirstChildElement(root, "service-interface");
-      if (child != null)
-         serviceInterface = DOMUtils.getTextContent(child);
-
-      child = DOMUtils.getFirstChildElement(root, "wsdl-file");
-      if (child != null)
-         wsdlFile = DOMUtils.getTextContent(child);
-
-      child = DOMUtils.getFirstChildElement(root, "jaxrpc-mapping-file");
-      if (child != null)
-         mappingFile = DOMUtils.getTextContent(child);
-
-      child = DOMUtils.getFirstChildElement(root, "service-qname");
-      if (child != null)
-         serviceQName = QNameBuilder.buildQName(child, DOMUtils.getTextContent(child));
-
-      // Parse the port-component-ref elements
-      Iterator iterator = DOMUtils.getChildElements(root, "port-component-ref");
-      while (iterator.hasNext())
-      {
-         Element pcrefElement = (Element)iterator.next();
-         UnifiedPortComponentRefMetaData pcrefMetaData = new UnifiedPortComponentRefMetaData(this);
-         pcrefMetaData.importStandardXml(pcrefElement);
-         portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
-      }
-
-      // Parse the handler elements
-      iterator = DOMUtils.getChildElements(root, "handler");
-      while (iterator.hasNext())
-      {
-         Element handlerElement = (Element)iterator.next();
-         UnifiedHandlerMetaData handlerMetaData = new UnifiedHandlerMetaData();
-         handlerMetaData.importStandardXml(handlerElement);
-         handlers.add(handlerMetaData);
-      }
+      new ServiceRefMetaDataParser().importStandardXml(root, this);
    }
    
    @Override
    public void importJBossXml(Element root)
    {
-      Element child = DOMUtils.getFirstChildElement(root, "config-name");
-      if (child != null)
-         configName = DOMUtils.getTextContent(child);
-      
-      child = DOMUtils.getFirstChildElement(root, "config-file");
-      if (child != null)
-         configFile = DOMUtils.getTextContent(child);
-
-      child = DOMUtils.getFirstChildElement(root, "wsdl-override");
-      if (child != null)
-         wsdlOverride = DOMUtils.getTextContent(child);
-
-      // Parse the port-component-ref elements
-      Iterator iterator = DOMUtils.getChildElements(root, "port-component-ref");
-      while (iterator.hasNext())
-      {
-         Element pcrefElement = (Element)iterator.next();
-         Element seiElement = DOMUtils.getFirstChildElement(pcrefElement, "service-endpoint-interface");
-         if (seiElement != null)
-         {
-            String seiName = DOMUtils.getTextContent(seiElement);
-            UnifiedPortComponentRefMetaData pcrefMetaData = (UnifiedPortComponentRefMetaData)portComponentRefs.get(seiName);
-            if (pcrefMetaData == null)
-            {
-               // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml
-               pcrefMetaData = new UnifiedPortComponentRefMetaData(this);
-               pcrefMetaData.importStandardXml(pcrefElement);
-               portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
-            }
-            pcrefMetaData.importJBossXml(pcrefElement);
-         }
-      }
-
-      // Parse the call-property elements
-      iterator = DOMUtils.getChildElements(root, "call-property");
-      while (iterator.hasNext())
-      {
-         Element propElement = (Element)iterator.next();
-         String name = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-name"));
-         String value = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-value"));
-         callProperties.add(new UnifiedCallPropertyMetaData(name, value));
-      }
+      new ServiceRefMetaDataParser().importJBossXml(root, this);
    }
 }

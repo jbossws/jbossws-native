@@ -179,29 +179,13 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
       this.configName = configName;
    }
 
-   @Deprecated
    public void importStandardXml(Element root)
    {
-      Element child = DOMUtils.getFirstChildElement(root, "service-endpoint-interface");
-      if (child != null)
-         serviceEndpointInterface = DOMUtils.getTextContent(child);
-      
-      child = DOMUtils.getFirstChildElement(root, "port-component-link");
-      if (child != null)
-         portComponentLink = DOMUtils.getTextContent(child);
+      new ServiceRefMetaDataParser().importStandardXml(root, this);
    }
 
-   @Deprecated
    public void importJBossXml(Element root)
    {
-      // Look for call-property elements
-      Iterator iterator = DOMUtils.getChildElements(root, "call-property");
-      while (iterator.hasNext())
-      {
-         Element propElement = (Element)iterator.next();
-         String name = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-name"));
-         String value = DOMUtils.getTextContent(DOMUtils.getFirstChildElement(propElement, "prop-value"));
-         callProperties.add(new UnifiedCallPropertyMetaData(name, value));
-      }
+      new ServiceRefMetaDataParser().importJBossXml(root, this);
    }
 }

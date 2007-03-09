@@ -19,40 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.integration;
 
-import org.jboss.ws.integration.KernelLocator;
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.logging.Logger;
+//$Id$
 
-// $Id: ServiceEndpointManagerFactory.java 293 2006-05-08 16:31:50Z thomas.diesler@jboss.com $
+import org.jboss.kernel.Kernel;
 
 /**
- * Factory to container independent config 
- *
+ * Locate the single instance of the kernel 
+ * 
  * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * @since 12-May-2006
  */
-public class ServerConfigFactory
+public class KernelLocator 
 {
-   // provide logging
-   private static final Logger log = Logger.getLogger(ServerConfigFactory.class);
+   private static Kernel kernel;
 
-   private static ServerConfigFactory instance = new ServerConfigFactory();
-
-   // Hide ctor
-   protected ServerConfigFactory()
+   public static Kernel getKernel()
    {
+      return KernelLocator.kernel;
    }
 
-   public static ServerConfigFactory getInstance()
+   public void setKernel(Kernel kernel)
    {
-      return instance;
-   }
-
-   public ServerConfig getServerConfig()
-   {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      return (ServerConfig)registry.getEntry(ServerConfig.BEAN_NAME).getTarget();
+      KernelLocator.kernel = kernel;
    }
 }

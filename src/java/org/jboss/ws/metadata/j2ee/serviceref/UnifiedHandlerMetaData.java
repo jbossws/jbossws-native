@@ -25,19 +25,16 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.integration.ServiceRefElement;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
-import org.jboss.xb.QNameBuilder;
 import org.w3c.dom.Element;
 
 /** The unified metdata data for a handler element
@@ -158,54 +155,8 @@ public class UnifiedHandlerMetaData extends ServiceRefElement
       return hmd;
    }
 
-   @Deprecated
    public void importStandardXml(Element root)
    {
-      Element child = DOMUtils.getFirstChildElement(root, "handler-name");
-      if (child != null)
-         handlerName = DOMUtils.getTextContent(child);
-
-      child = DOMUtils.getFirstChildElement(root, "handler-class");
-      if (child != null)
-         handlerClass = DOMUtils.getTextContent(child);
-
-      // Parse the init-param elements
-      Iterator iterator = DOMUtils.getChildElements(root, "init-param");
-      while (iterator.hasNext())
-      {
-         Element paramElement = (Element)iterator.next();
-         UnifiedInitParamMetaData param = new UnifiedInitParamMetaData();
-         param.setParamName(DOMUtils.getTextContent(DOMUtils.getFirstChildElement(paramElement, "param-name")));
-         param.setParamValue(DOMUtils.getTextContent(DOMUtils.getFirstChildElement(paramElement, "param-value")));
-         initParams.add(param);
-      }
-
-      // Parse the soap-header elements
-      iterator = DOMUtils.getChildElements(root, "soap-header");
-      while (iterator.hasNext())
-      {
-         Element headerElement = (Element)iterator.next();
-         String content = DOMUtils.getTextContent(headerElement);
-         QName qname = QNameBuilder.buildQName(headerElement, content);
-         soapHeaders.add(qname);
-      }
-
-      // Parse the soap-role elements
-      iterator = DOMUtils.getChildElements(root, "soap-role");
-      while (iterator.hasNext())
-      {
-         Element roleElement = (Element)iterator.next();
-         String content = DOMUtils.getTextContent(roleElement);
-         soapRoles.add(content);
-      }
-
-      // Parse the port-name elements
-      iterator = DOMUtils.getChildElements(root, "port-name");
-      while (iterator.hasNext())
-      {
-         Element portElement = (Element)iterator.next();
-         String content = DOMUtils.getTextContent(portElement);
-         portNames.add(content);
-      }
+      new ServiceRefMetaDataParser().importStandardXml(root, this);
    }
 }
