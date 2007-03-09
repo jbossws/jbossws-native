@@ -528,7 +528,10 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public void writeElement(Writer writer) throws IOException
    {
-      handleMTOMTransitions();
+      // JMS transport hot fix
+      // Can be removed once we got a immutabe object model
+      if(MessageContextAssociation.peekMessageContext()!=null)
+         handleMTOMTransitions();
 
       if (soapContent instanceof DOMContent)
       {
