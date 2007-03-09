@@ -205,6 +205,7 @@ public class ServiceEndpointDeployer
                   epManager.destroyServiceEndpoint(sepID);
                }
             }
+            removeUnifiedMetaData(udi);
          }
       }
       catch (Exception ex)
@@ -221,5 +222,10 @@ public class ServiceEndpointDeployer
    {
       UnifiedMetaData wsMetaData = metaDataMap.get(udi.name);
       return wsMetaData;
+   }
+   
+   public void removeUnifiedMetaData(UnifiedDeploymentInfo udi)
+   {
+      metaDataMap.remove(udi.name);
    }
 }
