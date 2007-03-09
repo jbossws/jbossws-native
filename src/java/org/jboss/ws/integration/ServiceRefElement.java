@@ -19,38 +19,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
-
-import org.jboss.kernel.plugins.util.KernelLocator;
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+package org.jboss.ws.integration;
 
 // $Id$
 
+import java.io.Serializable;
+
 /**
- * Factory to the singleton instance of the ServiceEndpointManager 
- *
+ * A marker for all <service-ref> related objects.
+ * 
  * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * @since 08-Mar-2007
  */
-public class ServiceEndpointManagerFactory
+public abstract class ServiceRefElement implements Serializable
 {
-   private static ServiceEndpointManagerFactory instance = new ServiceEndpointManagerFactory();
-
-   // Hide ctor
-   private ServiceEndpointManagerFactory()
-   {
-   }
-
-   public static ServiceEndpointManagerFactory getInstance()
-   {
-      return instance;
-   }
-
-   public ServiceEndpointManager getServiceEndpointManager()
-   {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      KernelRegistryEntry entry = registry.getEntry(ServiceEndpointManager.BEAN_NAME);
-      return (ServiceEndpointManager)entry.getTarget();
-   }
 }

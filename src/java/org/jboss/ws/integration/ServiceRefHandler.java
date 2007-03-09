@@ -19,38 +19,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
-
-import org.jboss.kernel.plugins.util.KernelLocator;
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+package org.jboss.ws.integration;
 
 // $Id$
 
+import javax.naming.Context;
+import javax.naming.NamingException;
+
+import org.jboss.xb.binding.UnmarshallingContext;
+import org.xml.sax.Attributes;
+
 /**
- * Factory to the singleton instance of the ServiceEndpointManager 
- *
+ * An implementation of this interface handles all service-ref binding concerns 
+ * 
  * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * @since 05-May-2004
  */
-public class ServiceEndpointManagerFactory
+public interface ServiceRefHandler
 {
-   private static ServiceEndpointManagerFactory instance = new ServiceEndpointManagerFactory();
+   String BEAN_NAME = "ServiceRefHandler";
+   
+   ServiceRefMetaData newServiceRefMetaData();
 
-   // Hide ctor
-   private ServiceEndpointManagerFactory()
-   {
-   }
+   Object newChild(ServiceRefElement ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs);
 
-   public static ServiceEndpointManagerFactory getInstance()
-   {
-      return instance;
-   }
-
-   public ServiceEndpointManager getServiceEndpointManager()
-   {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      KernelRegistryEntry entry = registry.getEntry(ServiceEndpointManager.BEAN_NAME);
-      return (ServiceEndpointManager)entry.getTarget();
-   }
+   void setValue(ServiceRefElement ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value);
+   
+   void bindServiceRef(Context encCtx, String encName, UnifiedVirtualFile vfsRoot, ServiceRefMetaData sref) throws NamingException;
 }

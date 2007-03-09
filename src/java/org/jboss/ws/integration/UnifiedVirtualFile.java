@@ -19,38 +19,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
-
-import org.jboss.kernel.plugins.util.KernelLocator;
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+package org.jboss.ws.integration;
 
 // $Id$
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
+
 /**
- * Factory to the singleton instance of the ServiceEndpointManager 
- *
+ * An adaptor to a VirtualFile from jboss-vfs.jar
+ * jboss-vfs cannot be used in jboss-4.x because of its dependeny on jboss-common-core.jar
+ *  
  * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * @since 05-May-2006
  */
-public class ServiceEndpointManagerFactory
+public interface UnifiedVirtualFile extends Serializable
 {
-   private static ServiceEndpointManagerFactory instance = new ServiceEndpointManagerFactory();
+   UnifiedVirtualFile findChild(String child) throws IOException;
 
-   // Hide ctor
-   private ServiceEndpointManagerFactory()
-   {
-   }
-
-   public static ServiceEndpointManagerFactory getInstance()
-   {
-      return instance;
-   }
-
-   public ServiceEndpointManager getServiceEndpointManager()
-   {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      KernelRegistryEntry entry = registry.getEntry(ServiceEndpointManager.BEAN_NAME);
-      return (ServiceEndpointManager)entry.getTarget();
-   }
+   URL toURL();
 }

@@ -24,7 +24,6 @@ package org.jboss.ws.core.client;
 // $Id$
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Collection;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -54,21 +53,12 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
 
    private ServiceRefObjectFactory objectFactory = new ServiceRefObjectFactory();
    
-   public ServiceRefMetaData newMetaData()
+   public ServiceRefMetaData newServiceRefMetaData()
    {
       return new UnifiedServiceRefMetaData();
    }
 
-   public void setupServiceRefs(Context envCtx, UnifiedVirtualFile vfsRoot, Collection<ServiceRefMetaData> serviceRefs) throws NamingException
-   {
-      for (ServiceRefMetaData sref : serviceRefs)
-      {
-         String encName = sref.getServiceRefName();
-         setupServiceRef(envCtx, encName, vfsRoot, sref);
-      }
-   }
-   
-   public void setupServiceRef(Context encCtx, String encName, UnifiedVirtualFile vfsRoot, ServiceRefMetaData sref) throws NamingException
+   public void bindServiceRef(Context encCtx, String encName, UnifiedVirtualFile vfsRoot, ServiceRefMetaData sref) throws NamingException
    {
       if (sref.isProcessed())
       {

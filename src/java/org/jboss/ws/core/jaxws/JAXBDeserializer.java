@@ -65,10 +65,8 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
          Class javaType = typeMapping.getJavaType(xmlType);
 
-         //JAXBContextCache contextCache = JAXBContextCache.getContextCache();
-         //JAXBContext jaxbContext = contextCache.getInstance(types);
-         
-         JAXBContext jaxbContext = JAXBContext.newInstance(javaTypes);
+         JAXBContextCache contextCache = JAXBContextCache.getContextCache();
+         JAXBContext jaxbContext = contextCache.getInstance(javaTypes);
          
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
          unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());

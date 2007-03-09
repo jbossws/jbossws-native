@@ -69,11 +69,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
          Class expectedType = pmd.getJavaType();
          Class actualType = value.getClass();
 
-         //JAXBContextCache contextCache = JAXBContextCache.getContextCache();
-         //JAXBContext jaxbContext = contextCache.getInstance(expectedType, actualType);
-
+         JAXBContextCache contextCache = JAXBContextCache.getContextCache();
          Class[] types = shouldFilter(actualType) ? new Class[]{expectedType} : new Class[]{expectedType, actualType};
-         JAXBContext jaxbContext = JAXBContext.newInstance(types);
+         JAXBContext jaxbContext = contextCache.getInstance(types);
          
          Marshaller marshaller = jaxbContext.createMarshaller();
 

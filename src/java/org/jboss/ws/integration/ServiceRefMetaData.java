@@ -19,38 +19,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
-
-import org.jboss.kernel.plugins.util.KernelLocator;
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+package org.jboss.ws.integration;
 
 // $Id$
 
+import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
+
+import org.w3c.dom.Element;
+
 /**
- * Factory to the singleton instance of the ServiceEndpointManager 
- *
+ * An abstract service-ref meta data object.
+ * 
  * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * @since 08-Mar-2007
  */
-public class ServiceEndpointManagerFactory
+public abstract class ServiceRefMetaData extends ServiceRefElement implements Serializable
 {
-   private static ServiceEndpointManagerFactory instance = new ServiceEndpointManagerFactory();
+   public abstract String getServiceRefName();
 
-   // Hide ctor
-   private ServiceEndpointManagerFactory()
-   {
-   }
+   public abstract void setServiceRefName(String name);
+   
+   public abstract AnnotatedElement getAnnotatedElement();
 
-   public static ServiceEndpointManagerFactory getInstance()
-   {
-      return instance;
-   }
+   public abstract void setAnnotatedElement(AnnotatedElement anElement);
 
-   public ServiceEndpointManager getServiceEndpointManager()
-   {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      KernelRegistryEntry entry = registry.getEntry(ServiceEndpointManager.BEAN_NAME);
-      return (ServiceEndpointManager)entry.getTarget();
-   }
+   public abstract boolean isProcessed();
+
+   public abstract void setProcessed(boolean flag);
+   
+   public abstract void importStandardXml(Element element);
+
+   public abstract void importJBossXml(Element element);
+
+   public abstract void merge(ServiceRefMetaData targetRef);
 }

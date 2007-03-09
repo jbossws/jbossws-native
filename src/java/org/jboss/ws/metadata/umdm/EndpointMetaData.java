@@ -50,6 +50,7 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
+import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.utils.JavaUtils;
@@ -126,7 +127,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private ConfigObservable configObservable = new ConfigObservable();
 
-   //private JAXBContextCache jaxbCache = new JAXBContextCache();
+   private JAXBContextCache jaxbCache = new JAXBContextCache();
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
@@ -239,7 +240,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (use == null)
       {
          use = Use.getDefaultUse();
-         if(log.isDebugEnabled()) log.debug("Using default encoding style: " + use);
+         if (log.isDebugEnabled())
+            log.debug("Using default encoding style: " + use);
       }
       return use;
    }
@@ -258,7 +260,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (style == null)
       {
          style = Style.getDefaultStyle();
-         if(log.isDebugEnabled()) log.debug("Using default style: " + style);
+         if (log.isDebugEnabled())
+            log.debug("Using default style: " + style);
       }
       return style;
    }
@@ -277,7 +280,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (parameterStyle == null)
       {
          parameterStyle = ParameterStyle.WRAPPED;
-         if(log.isDebugEnabled()) log.debug("Using default parameter style: " + parameterStyle);
+         if (log.isDebugEnabled())
+            log.debug("Using default parameter style: " + parameterStyle);
       }
       return parameterStyle;
    }
@@ -287,7 +291,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (value != null && parameterStyle != null && !parameterStyle.equals(value))
          throw new WSException("Mixed SOAP parameter styles not supported");
 
-      if(log.isDebugEnabled()) log.debug("setParameterStyle: " + value);
+      if (log.isDebugEnabled())
+         log.debug("setParameterStyle: " + value);
       this.parameterStyle = value;
    }
 
@@ -579,11 +584,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       }
    }
 
-   /*
-   public JAXBContextCache getJaxbCache() {
+   public JAXBContextCache getJaxbCache()
+   {
       return jaxbCache;
    }
-   */
 
    // ---------------------------------------------------------------
    // Configuration provider impl
@@ -603,13 +607,15 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       // SOAPBinding configuration
       if (configurable instanceof CommonBindingProvider)
       {
-         if(log.isDebugEnabled()) log.debug("Configure SOAPBinding");
+         if (log.isDebugEnabled())
+            log.debug("Configure SOAPBinding");
 
          if (config.hasFeature(EndpointFeature.MTOM))
          {
             CommonBindingProvider provider = (CommonBindingProvider)configurable;
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
-            if(log.isDebugEnabled()) log.debug("Enable MTOM on endpoint " + this.getPortName());
+            if (log.isDebugEnabled())
+               log.debug("Enable MTOM on endpoint " + this.getPortName());
          }
       }
    }
@@ -656,7 +662,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       {
          this.configName = configName;
 
-         if(log.isDebugEnabled()) log.debug("Reconfiguration forced, new config is '" + configName + "'");
+         if (log.isDebugEnabled())
+            log.debug("Reconfiguration forced, new config is '" + configName + "'");
          initEndpointConfig();
          configObservable.doNotify(configName);
       }
@@ -664,7 +671,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void initEndpointConfig()
    {
-      if(log.isDebugEnabled()) log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
+      if (log.isDebugEnabled())
+         log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
       config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
 
@@ -673,7 +681,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private void reconfigHandlerMetaData()
    {
-      if(log.isDebugEnabled()) log.debug("Configure EndpointMetaData");
+      if (log.isDebugEnabled())
+         log.debug("Configure EndpointMetaData");
 
       List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
       clearHandlers();
@@ -685,9 +694,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       addHandlers(sepHandlers);
       addHandlers(postHandlers);
 
-      if(log.isDebugEnabled()) log.debug("Added " + preHandlers.size() + " PRE handlers");
-      if(log.isDebugEnabled()) log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
-      if(log.isDebugEnabled()) log.debug("Added " + postHandlers.size() + " POST handlers");
+      if (log.isDebugEnabled())
+         log.debug("Added " + preHandlers.size() + " PRE handlers");
+      if (log.isDebugEnabled())
+         log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
+      if (log.isDebugEnabled())
+         log.debug("Added " + postHandlers.size() + " POST handlers");
    }
 
    public List<Class> getRegisteredTypes()
