@@ -63,8 +63,8 @@ public class FaultMetaData
    private QName xmlType;
    private String javaTypeName;
    private String faultBeanName;
-   private Class javaType;
-   private Class faultBean;
+   private Class<? extends Exception> javaType;
+   private Class<?> faultBean;
 
    private Method faultInfoMethod;
    private Constructor<? extends Exception> serviceExceptionConstructor;
@@ -123,28 +123,31 @@ public class FaultMetaData
    /** Load the java type.
     *  It should only be cached during eager initialization.
     */
-   public Class<?> getJavaType()
+   public Class<? extends Exception> getJavaType()
    {
-      Class<?> tmpJavaType = javaType;
-      if (tmpJavaType == null && javaTypeName != null)
-      {
-         try
-         {
-            ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
-            tmpJavaType = JavaUtils.loadJavaType(javaTypeName, loader);
+      if (javaType != null)
+         return javaType;
 
-            if (opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData().isEagerInitialized())
-            {
-               log.warn("Loading java type after eager initialization");
-               javaType = tmpJavaType.asSubclass(Exception.class);
-            }
-         }
-         catch (ClassNotFoundException ex)
+      if (javaTypeName == null)
+         return null;
+
+      try
+      {
+         ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
+         Class<?> genericType = JavaUtils.loadJavaType(javaTypeName, loader);
+         Class<? extends Exception> exceptionType = genericType.asSubclass(Exception.class);
+
+         if (opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData().isEagerInitialized())
          {
-            throw new WSException("Cannot load java type: " + javaTypeName, ex);
+            log.warn("Loading java type after eager initialization");
+            javaType = exceptionType;
          }
+         return exceptionType;
       }
-      return tmpJavaType;
+      catch (ClassNotFoundException ex)
+      {
+         throw new WSException("Cannot load java type: " + javaTypeName, ex);
+      }
    }
 
    public String getFaultBeanName()
@@ -283,8 +286,8 @@ public class FaultMetaData
             try
             {
                /* use PropertyDescriptor(String, Class, String, String) instead
-                * of PropertyDescriptor(String, Class) because the latter fails
-                * with an IntrospectionException: Method not found: setXXX  */
+                * of PropertyDescriptor(String, Class) because the latter requires
+                * the setter method to be present */
                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(propertyName, javaType, "is" + JavaUtils.capitalize(propertyName), null);
                serviceExceptionGetters[i] = propertyDescriptor.getReadMethod();
             }
@@ -391,7 +394,7 @@ public class FaultMetaData
             for (int i = 0; i < propertyCount; i++)
                propertyValues[i] = faultBeanProperties[i].accessor().get(faultBean);
 
-            if(log.isDebugEnabled()) log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
+            log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
             serviceException = serviceExceptionConstructor.newInstance(propertyValues);
          }
       }

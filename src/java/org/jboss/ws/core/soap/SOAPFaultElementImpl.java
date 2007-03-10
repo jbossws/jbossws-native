@@ -40,4 +40,9 @@ public class SOAPFaultElementImpl extends SOAPElementImpl implements SOAPFaultEl
    {
       super(name);
    }
+
+   public SOAPFaultElementImpl(SOAPElementImpl element)
+   {
+      super(element);
+   }
 }

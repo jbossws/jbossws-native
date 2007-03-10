@@ -21,13 +21,23 @@
 */
 package org.jboss.ws.core.soap;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * A container for DetailEntry objects. DetailEntry objects give detailed error information that is application-specific
@@ -42,9 +52,45 @@ import javax.xml.soap.SOAPException;
  */
 public class DetailImpl extends SOAPFaultElementImpl implements Detail
 {
+   // provide logging
+   private static Logger log = Logger.getLogger(DetailImpl.class);
+
+   /** Creates a SOAP 1.1 detail element. */
    public DetailImpl()
    {
       super("detail");
+   }
+
+   /** Creates a SOAP 1.2 prefix:Detail element. */
+   public DetailImpl(String prefix, String namespace)
+   {
+      super("Detail", prefix, namespace);
+   }
+
+   /** Converts the given element to a Detail. */
+   DetailImpl(SOAPElementImpl element)
+   {
+      super(element.getElementName());
+
+      // altough detail schema does not define attributes, copy them for completeness 
+      DOMUtils.copyAttributes(this, element);
+
+      try
+      {
+         NodeList nodeList = element.getChildNodes();
+         for (int i = 0; i < nodeList.getLength(); i++)
+         {
+            Node node = nodeList.item(i);
+            if (node instanceof SOAPElement)
+               addChildElement((SOAPElement)node);
+            else
+               appendChild(node);
+         }
+      }
+      catch (SOAPException e)
+      {
+         throw new WSException("Unable to create fault detail", e);
+      }
    }
 
    public DetailEntry addDetailEntry(Name name) throws SOAPException
@@ -63,6 +109,42 @@ public class DetailImpl extends SOAPFaultElementImpl implements Detail
 
    public Iterator getDetailEntries()
    {
-      return getChildElements();
+      List<DetailEntry> list = new ArrayList<DetailEntry>();
+
+      NodeList nodeList = getChildNodes();
+      for (int i = 0; i < nodeList.getLength(); i++)
+      {
+         org.w3c.dom.Node node = nodeList.item(i);
+         if (node instanceof DetailEntry)
+            list.add((DetailEntry)node);
+      }
+
+      return list.iterator();
+   }
+
+   @Override
+   public Node appendChild(Node newChild) throws DOMException
+   {
+      if (newChild instanceof SOAPElementImpl && !(newChild instanceof DetailEntry))
+         newChild = convertToDetailEntry((SOAPElementImpl) newChild); 
+
+      return super.appendChild(newChild);
+   }
+
+   @Override
+   public SOAPElement addChildElement(SOAPElement child) throws SOAPException
+   {
+      if (!(child instanceof DetailEntry))
+         child = convertToDetailEntry((SOAPElementImpl)child);
+
+      return super.addChildElement(child);
+   }
+
+   private static DetailEntry convertToDetailEntry(SOAPElementImpl element)
+   {
+      element.detachNode();
+      DetailEntryImpl detailEntry = new DetailEntryImpl(element);
+      log.trace("convertToDetailEntry : " + detailEntry);
+      return detailEntry;
    }
 }

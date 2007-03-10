@@ -48,6 +48,8 @@ public interface Constants
    static final String NS_JBOSSWS_URI = "http://www.jboss.org/jbossws";
    /** XML Namespace */
    static final String NS_XML = "http://www.w3.org/XML/1998/namespace";
+   /** XML namespace declaration namespace */
+   static final String NS_XMLNS = "http://www.w3.org/2000/xmlns/";
    /** XMLSchema namespace http://www.w3.org/2001/XMLSchema */
    static final String NS_SCHEMA_XSD = "http://www.w3.org/2001/XMLSchema";
    /** XMLSchema instance namespace http://www.w3.org/2001/XMLSchema-instance */
@@ -61,7 +63,7 @@ public interface Constants
    /** HTTP binding namespace http://schemas.xmlsoap.org/wsdl/http/ */
    static final String NS_HTTP = "http://schemas.xmlsoap.org/wsdl/http/";
    /** SOAP-1.2 envelope namespace http://www.w3.org/2003/05/soap-envelope */
-   static final String NS_SOAP12_ENV = "http://www.w3.org/2003/05/soap-envelope";
+   static final String NS_SOAP12_ENV = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
    /** The namespace for the SwA mime type */
    static final String NS_SWA_MIME = "http://schemas.xmlsoap.org/wsdl/mime/";
    /** Default namespace for WSDL-1.1 http://schemas.xmlsoap.org/wsdl/ */
@@ -148,7 +150,20 @@ public interface Constants
    static final Name SOAP11_HEADER = new NameImpl("Header", PREFIX_ENV, NS_SOAP11_ENV);
    static final Name SOAP11_BODY = new NameImpl("Body", PREFIX_ENV, NS_SOAP11_ENV);
    static final Name SOAP11_FAULT = new NameImpl("Fault", PREFIX_ENV, NS_SOAP11_ENV);
-   static final Name SOAP12_FAULT = new NameImpl("Fault", PREFIX_ENV, NS_SOAP12_ENV);
+   static final QName SOAP11_FAULTCODE = new QName("faultcode");
+   static final QName SOAP11_FAULTSTRING = new QName("faultstring");
+   static final QName SOAP11_FAULTACTOR = new QName("faultactor");
+   static final QName SOAP11_DETAIL = new QName("detail");
+
+   /**SOAP-1.2 elements */
+   static final QName SOAP12_CODE = new QName(NS_SOAP12_ENV, "Code", PREFIX_ENV);
+   static final QName SOAP12_VALUE = new QName(NS_SOAP12_ENV, "Value", PREFIX_ENV);
+   static final QName SOAP12_SUBCODE = new QName(NS_SOAP12_ENV, "Subcode", PREFIX_ENV);
+   static final QName SOAP12_REASON = new QName(NS_SOAP12_ENV, "Reason", PREFIX_ENV);
+   static final QName SOAP12_TEXT = new QName(NS_SOAP12_ENV, "Text", PREFIX_ENV);
+   static final QName SOAP12_ROLE = new QName(NS_SOAP12_ENV, "Role", PREFIX_ENV);
+   static final QName SOAP12_NODE = new QName(NS_SOAP12_ENV, "Node", PREFIX_ENV);
+   static final QName SOAP12_DETAIL = new QName(NS_SOAP12_ENV, "Detail", PREFIX_ENV);
 
    /** The default RPC return parameter name */
    static final String DEFAULT_RPC_RETURN_NAME = "result"; // FIXME: According to JSR-181 this should be 'return'

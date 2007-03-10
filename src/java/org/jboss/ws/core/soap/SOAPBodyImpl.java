@@ -48,7 +48,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.utils.DOMUtils;
@@ -154,7 +153,10 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       if (hasFault())
          throw new SOAPException("A SOAPBody may contain at most one SOAPFault child element");
 
-      return addFault(new NameImpl(Constants.SOAP11_FAULT_CODE_SERVER), "Generic server fault");
+      SOAPFaultImpl soapFault = new SOAPFaultImpl(getPrefix(), getNamespaceURI());
+      soapFault = (SOAPFaultImpl)addChildElement(soapFault);
+      soapFault.setFaultCode(soapFault.getDefaultFaultCode());
+      return soapFault;
    }
 
    public SOAPFault addFault(Name faultCode, String faultString) throws SOAPException
@@ -217,7 +219,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("getFault");
       expandToDOM();
-      Iterator it = getFaultIterator();
+      Iterator it = faultIterator();
       return it.hasNext() ? (SOAPFault)it.next() : null;
    }
 
@@ -225,14 +227,12 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("hasFault");
       expandToDOM();
-      return getFaultIterator().hasNext();
+      return faultIterator().hasNext();
    }
 
-   private Iterator getFaultIterator()
+   private Iterator faultIterator()
    {
-      Name faultName = Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) ? 
-            Constants.SOAP11_FAULT : Constants.SOAP12_FAULT;
-      return getChildElements(faultName);
+      return getChildElements(new QName(getNamespaceURI(), "Fault"));
    }
 
    public Node appendChild(Node newChild) throws DOMException

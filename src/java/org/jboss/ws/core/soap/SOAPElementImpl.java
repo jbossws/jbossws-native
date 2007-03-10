@@ -487,6 +487,11 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public Iterator getChildElements(Name name)
    {
+      return getChildElements(((NameImpl)name).toQName());
+   }
+
+   public Iterator getChildElements(QName qname)
+   {
       List<SOAPElement> list = new ArrayList<SOAPElement>();
       Iterator it = getChildElements();
       while (it.hasNext())
@@ -495,16 +500,11 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
          if (elementOrTextNode instanceof SOAPElement)
          {
             SOAPElement el = (SOAPElement)elementOrTextNode;
-            if (el.getElementName().equals(name))
+            if (el.getElementQName().equals(qname))
                list.add(el);
          }
       }
       return list.iterator();
-   }
-
-   public Iterator getChildElements(QName qname)
-   {
-      return getChildElements(new NameImpl(qname));
    }
 
    /**

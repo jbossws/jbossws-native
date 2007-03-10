@@ -23,27 +23,19 @@ package org.jboss.ws.core.soap;
 
 //$Id$
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.dom.DOMSource;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.QName;
+import javax.xml.soap.*;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 
 /**
  * A SOAPEnvelope builder for JAXRPC based on DOM 
@@ -144,40 +136,9 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
             DOMUtils.copyAttributes(soapFault, domBodyElement);
 
-            Element domFaultCode = DOMUtils.getFirstChildElement(domBodyElement, new QName("faultcode"));
-            if (domFaultCode == null)
-               throw new SOAPException("SOAPFault does not contain a <faultcode> element");
-
-            Element domFaultString = DOMUtils.getFirstChildElement(domBodyElement, new QName("faultstring"));
-            if (domFaultString == null)
-               throw new SOAPException("SOAPFault does not contain a <faultstring> element");
-
-            String faultCode = DOMUtils.getTextContent(domFaultCode);
-            soapFault.setFaultCode(faultCode);
-
-            String faultString = DOMUtils.getTextContent(domFaultString);
-            soapFault.setFaultString(faultString);
-
-            Element domFaultActor = DOMUtils.getFirstChildElement(domBodyElement, new QName("faultactor"));
-            if (domFaultActor != null)
-            {
-               String faultActor = DOMUtils.getTextContent(domFaultActor);
-               soapFault.setFaultActor(faultActor);
-            }
-
-            // Add the fault detail
-            Element domFaultDetail = DOMUtils.getFirstChildElement(domBodyElement, "detail");
-            if (domFaultDetail != null)
-            {
-               Detail detail = soapFault.addDetail();
-               Iterator it = DOMUtils.getChildElements(domFaultDetail);
-               while (it.hasNext())
-               {
-                  Element domElement = (Element)it.next();
-                  SOAPElement detailEntry = new DetailEntryImpl(soapFactory.createElement(domElement));
-                  detailEntry = detail.addChildElement(detailEntry);
-               }
-            }
+            // copy everything and let soapFault discover child elements itself
+            XMLFragment xmlFragment = new XMLFragment(new DOMSource(domBodyElement));
+            soapFault.setXMLFragment(xmlFragment);
          }
 
          // Process and RPC or DOCUMENT style message

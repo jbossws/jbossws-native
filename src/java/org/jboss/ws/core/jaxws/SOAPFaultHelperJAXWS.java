@@ -68,11 +68,12 @@ public class SOAPFaultHelperJAXWS
    public static SOAPFaultException getSOAPFaultException(SOAPFault soapFault)
    {
       SOAPFaultException faultEx = new SOAPFaultException(soapFault);
-      Detail detail = soapFault.getDetail();
 
+      Detail detail = soapFault.getDetail();
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (detail != null && msgContext != null)
       {
+         log.debug("Processing detail");
          SerializationContext serContext = msgContext.getSerializationContext();
          TypeMapping typeMapping = serContext.getTypeMapping();
 
@@ -80,13 +81,14 @@ public class SOAPFaultHelperJAXWS
          while (it.hasNext())
          {
             DetailEntry deElement = (DetailEntry)it.next();
-            QName xmlName = new QName(deElement.getNamespaceURI(), deElement.getLocalName());
+            QName xmlName = deElement.getElementQName();
+            log.debug("Processing detail entry: " + xmlName);
 
             OperationMetaData opMetaData = msgContext.getOperationMetaData();
             FaultMetaData faultMetaData = opMetaData.getFault(xmlName);
             if (faultMetaData != null)
             {
-               if(log.isDebugEnabled()) log.debug("Deserialize fault: " + faultMetaData);
+               log.debug("Deserialize fault: " + faultMetaData);
                QName xmlType = faultMetaData.getXmlType();
                Class<?> faultBeanClass = faultMetaData.getFaultBean();
 
@@ -101,8 +103,7 @@ public class SOAPFaultHelperJAXWS
                if (prefix != null && prefix.length() > 0)
                {
                   String nsURI = deElement.getNamespaceURI();
-                  String attrValue = deElement.getAttribute("xmlns:" + prefix);
-                  if (nsURI.length() > 0 && attrValue.length() == 0)
+                  if (nsURI.length() > 0 && deElement.getAttributeNS(Constants.NS_XMLNS, prefix).length() == 0)
                   {
                      try
                      {
@@ -134,9 +135,7 @@ public class SOAPFaultHelperJAXWS
                }
             }
             else
-            {
-               if(log.isDebugEnabled()) log.debug("Cannot find fault meta data for: " + xmlName);
-            }
+               log.debug("Cannot find fault meta data for: " + xmlName);
          }
       }
 
@@ -274,9 +273,7 @@ public class SOAPFaultHelperJAXWS
          detail.addChildElement(detailEntry);
       }
       else
-      {
-         if(log.isDebugEnabled()) log.debug("Cannot obtain fault meta data for: " + exClass);
-      }
+         log.debug("Cannot obtain fault meta data for: " + exClass);
 
       return soapMessage;
    }

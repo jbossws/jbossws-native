@@ -63,13 +63,13 @@ public interface SOAPConstants
    /** The URI identifying the next application processing a SOAP request as the intended actor for a SOAP 1.1 header entry (see section 4.2.2 of the SOAP 1.1 specification). */
    String URI_SOAP_ACTOR_NEXT = "http://schemas.xmlsoap.org/soap/actor/next";
    /** SOAP 1.2 VersionMismatch Fault */
-   QName SOAP_VERSIONMISMATCH_FAULT = new QName("http://www.w3.org/2003/05/soap-envelope", "VersionMismatch");
+   QName SOAP_VERSIONMISMATCH_FAULT = new QName(URI_NS_SOAP_1_2_ENVELOPE, "VersionMismatch", SOAP_ENV_PREFIX);
    /** SOAP 1.2 MustUnderstand Fault */
-   QName SOAP_MUSTUNDERSTAND_FAULT = new QName("http://www.w3.org/2003/05/soap-envelope", "MustUnderstand");
+   QName SOAP_MUSTUNDERSTAND_FAULT = new QName(URI_NS_SOAP_1_2_ENVELOPE, "MustUnderstand", SOAP_ENV_PREFIX);
    /** SOAP 1.2 DataEncodingUnknown Fault */
-   QName SOAP_DATAENCODINGUNKNOWN_FAULT = new QName("http://www.w3.org/2003/05/soap-envelope", "DataEncodingUnknown");
+   QName SOAP_DATAENCODINGUNKNOWN_FAULT = new QName(URI_NS_SOAP_1_2_ENVELOPE, "DataEncodingUnknown", SOAP_ENV_PREFIX);
    /** SOAP 1.2 Sender Fault */
-   QName SOAP_SENDER_FAULT = new QName("http://www.w3.org/2003/05/soap-envelope", "Sender");
+   QName SOAP_SENDER_FAULT = new QName(URI_NS_SOAP_1_2_ENVELOPE, "Sender", SOAP_ENV_PREFIX);
    /** SOAP 1.2 Receiver Fault */
-   QName SOAP_RECEIVER_FAULT = new QName("http://www.w3.org/2003/05/soap-envelope", "Receiver");
+   QName SOAP_RECEIVER_FAULT = new QName(URI_NS_SOAP_1_2_ENVELOPE, "Receiver", SOAP_ENV_PREFIX);
 }
