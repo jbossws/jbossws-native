@@ -47,10 +47,11 @@ public class SOAPFactoryImpl extends SOAPFactory
 {
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFactoryImpl.class);
-   
-   // The envelope namespace used by the MessageFactory
+
+   // The envelope namespace used by the SOAPFactoryImpl
+   // JBCTS-441 null means the specified protocol was DYNAMIC_SOAP_PROTOCOL
    private String envNamespace;
-   
+
    public SOAPFactoryImpl()
    {
       envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
@@ -60,10 +61,14 @@ public class SOAPFactoryImpl extends SOAPFactory
    {
       if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
-      else if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol) || SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
+      else if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
+      else if (SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
+         envNamespace = null;
+      // JBCTS-441 #newInstanceTest4 passes "BOGUS" as the protocol and
+      // expects us to throw SOAPException
       else
-         throw new SOAPException("Unsupported protocol: " + protocol);
+         throw new SOAPException("Unknown protocol: " + protocol);
    }
 
    @Override
@@ -71,7 +76,7 @@ public class SOAPFactoryImpl extends SOAPFactory
    {
       return new SOAPElementImpl(name);
    }
-   
+
    @Override
    public SOAPElement createElement(QName qname) throws SOAPException
    {
@@ -95,7 +100,7 @@ public class SOAPFactoryImpl extends SOAPFactory
    {
       return createElement(domElement, true);
    }
-   
+
    /**
     * Create a SOAPElement from a DOM Element.
     * This method is not part of the javax.xml.soap.SOAPFactory interface.
@@ -107,7 +112,7 @@ public class SOAPFactoryImpl extends SOAPFactory
 
       if (domElement instanceof SOAPElement)
          return (SOAPElement)domElement;
-      
+
       String localName = domElement.getLocalName();
       String prefix = domElement.getPrefix() != null ? domElement.getPrefix() : "";
       String nsURI = domElement.getNamespaceURI() != null ? domElement.getNamespaceURI() : "";
@@ -154,7 +159,11 @@ public class SOAPFactoryImpl extends SOAPFactory
    @Override
    public Detail createDetail() throws SOAPException
    {
-      return new DetailImpl();
+      if (envNamespace == null)
+         throw new UnsupportedOperationException("the specified protocol was DYNAMIC_SOAP_PROTOCOL");
+
+      return SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(envNamespace) ? new DetailImpl() :
+         new DetailImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
    }
 
    @Override
@@ -172,8 +181,11 @@ public class SOAPFactoryImpl extends SOAPFactory
    @Override
    public SOAPFault createFault(String reasonText, QName faultCode) throws SOAPException
    {
+      if (envNamespace == null)
+         throw new UnsupportedOperationException("the specified protocol was DYNAMIC_SOAP_PROTOCOL");
+
       SOAPFaultImpl soapFault = new SOAPFaultImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
-      soapFault.setFaultCode(new NameImpl(faultCode));
+      soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(reasonText);
       return soapFault;
    }
@@ -181,6 +193,11 @@ public class SOAPFactoryImpl extends SOAPFactory
    @Override
    public SOAPFault createFault() throws SOAPException
    {
-      return new SOAPFaultImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
+      if (envNamespace == null)
+         throw new UnsupportedOperationException("the specified protocol was DYNAMIC_SOAP_PROTOCOL");
+
+      SOAPFaultImpl soapFault = new SOAPFaultImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
+      soapFault.setFaultCode(soapFault.getDefaultFaultCode());
+      return soapFault;
    }
 }
