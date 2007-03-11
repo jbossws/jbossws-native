@@ -24,7 +24,6 @@ package org.jboss.ws.integration;
 // $Id$
 
 import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
 
 import org.w3c.dom.Element;
 
@@ -40,9 +39,9 @@ public abstract class ServiceRefMetaData extends ServiceRefElement implements Se
 
    public abstract void setServiceRefName(String name);
    
-   public abstract AnnotatedElement getAnnotatedElement();
+   public abstract Object getAnnotatedElement();
 
-   public abstract void setAnnotatedElement(AnnotatedElement anElement);
+   public abstract void setAnnotatedElement(Object anElement);
 
    public abstract boolean isProcessed();
 

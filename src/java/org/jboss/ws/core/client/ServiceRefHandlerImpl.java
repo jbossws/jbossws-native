@@ -77,7 +77,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
          }
          else
          {
-            AnnotatedElement anElement = sref.getAnnotatedElement();
+            AnnotatedElement anElement = (AnnotatedElement)sref.getAnnotatedElement();
             ServiceRefHandlerJAXWS handler = new ServiceRefHandlerJAXWS();
             handler.setupServiceRef(encCtx, encName, anElement, serviceRef);
          }

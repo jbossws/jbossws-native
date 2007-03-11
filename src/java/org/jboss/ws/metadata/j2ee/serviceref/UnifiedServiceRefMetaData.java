@@ -364,7 +364,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
       this.handlerChain = handlerChain;
    }
 
-   public AnnotatedElement getAnnotatedElement()
+   public Object getAnnotatedElement()
    {
       return anElement;
       
@@ -380,7 +380,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
       this.processed = flag;
    }
    
-   public void setAnnotatedElement(AnnotatedElement anElement)
+   public void setAnnotatedElement(Object anElement)
    {
       this.anElement = anElement;
    }
