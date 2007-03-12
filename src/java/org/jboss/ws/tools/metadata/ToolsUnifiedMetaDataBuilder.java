@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;

@@ -35,8 +35,8 @@ import javax.ejb.Stateless;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 

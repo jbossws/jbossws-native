@@ -19,14 +19,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.umdm;
+package org.jboss.ws.integration;
 
-// $Id: $
+// $Id$
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 import org.jboss.ws.integration.UnifiedVirtualFile;
 
@@ -37,23 +38,20 @@ import org.jboss.ws.integration.UnifiedVirtualFile;
  * @author Heiko.Braun@jboss.org
  * @since 25.01.2007
  */
-public class ResourceLoaderAdapter implements UnifiedVirtualFile
+public class URLLoaderAdapter implements UnifiedVirtualFile
 {
+   private URL rootURL;
    private URL resourceURL;
-   private ClassLoader loader;
+   private transient URLClassLoader loader;
 
-   public ResourceLoaderAdapter()
+   public URLLoaderAdapter(URL rootURL)
    {
-      this(Thread.currentThread().getContextClassLoader());
+      this.rootURL = rootURL;
    }
    
-   public ResourceLoaderAdapter(ClassLoader loader)
+   private URLLoaderAdapter(URL rootURL, URLClassLoader loader, URL resourceURL)
    {
-      this.loader = loader;
-   }
-   
-   private ResourceLoaderAdapter(ClassLoader loader, URL resourceURL)
-   {
+      this.rootURL = rootURL;
       this.resourceURL = resourceURL;
       this.loader = loader;
    }
@@ -93,7 +91,7 @@ public class ResourceLoaderAdapter implements UnifiedVirtualFile
          {
             try
             {
-               resourceURL = loader.getResource(resourcePath);
+               resourceURL = getResourceLoader().getResource(resourcePath);
             }
             catch (Exception ex)
             {
@@ -105,7 +103,7 @@ public class ResourceLoaderAdapter implements UnifiedVirtualFile
       if (resourceURL == null)
          throw new IOException("Cannot get URL for: " + resourcePath);
 
-      return new ResourceLoaderAdapter(loader, resourceURL);
+      return new URLLoaderAdapter(rootURL, loader, resourceURL);
    }
 
    public URL toURL()
@@ -113,5 +111,15 @@ public class ResourceLoaderAdapter implements UnifiedVirtualFile
       if (null == this.resourceURL)
          throw new IllegalStateException("UnifiedVirtualFile not initialized");
       return resourceURL;
+   }
+
+   private URLClassLoader getResourceLoader()
+   {
+      if (loader == null)
+      {
+         ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+         loader = new URLClassLoader(new URL[]{rootURL}, ctxLoader);
+      }
+      return loader;
    }
 }

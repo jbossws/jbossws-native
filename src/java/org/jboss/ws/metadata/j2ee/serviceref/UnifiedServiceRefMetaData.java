@@ -92,7 +92,9 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    // Arbitrary proxy properties given by <call-property> 
    private List<UnifiedCallPropertyMetaData> callProperties = new ArrayList<UnifiedCallPropertyMetaData>();
 
-   private transient AnnotatedElement anElement;
+   // The JAXWS annotated element. JDK1.4 does not have java.lang.reflect.AnnotatedElement so we use an untyped Object
+   private transient Object anElement;
+   // A flag that should be set when this service-ref has been bound.
    private transient boolean processed;
 
    public UnifiedServiceRefMetaData(UnifiedVirtualFile vfRoot)

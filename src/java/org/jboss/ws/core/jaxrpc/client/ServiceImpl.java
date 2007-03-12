@@ -44,6 +44,7 @@ import javax.xml.rpc.handler.HandlerRegistry;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.StubExt;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
@@ -54,7 +55,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;

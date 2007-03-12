@@ -38,6 +38,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.w3c.dom.Element;
 
