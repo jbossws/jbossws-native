@@ -113,7 +113,11 @@ public class ServiceRefHandlerJAXWS
       if (serviceImplClass == null && targetClass != null && Service.class.isAssignableFrom(targetClass))
          serviceImplClass = targetClass.getName();
 
-      // #3 Use javax.xml.ws.Service 
+      // #3 Use <service-interface> 
+      if (serviceImplClass == null && serviceRef.getServiceInterface() != null)
+         serviceImplClass = serviceRef.getServiceInterface();
+
+      // #4 Use javax.xml.ws.Service 
       if (serviceImplClass == null)
          serviceImplClass = Service.class.getName();
 

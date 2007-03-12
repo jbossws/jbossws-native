@@ -24,6 +24,8 @@ package org.jboss.ws.core.client;
 // $Id$
 
 import java.lang.reflect.AnnotatedElement;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -36,6 +38,7 @@ import org.jboss.ws.integration.ServiceRefHandler;
 import org.jboss.ws.integration.ServiceRefMetaData;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 
@@ -70,7 +73,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       serviceRef.setVfsRoot(vfsRoot);
       try
       {
-         if (isServiceRefJaxRpc(serviceRef))
+         if (getServiceRefType(serviceRef) == Type.JAXRPC)
          {
             ServiceRefHandlerJAXRPC handler = new ServiceRefHandlerJAXRPC();
             handler.setupServiceRef(encCtx, encName, serviceRef);
@@ -98,10 +101,36 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       objectFactory.setValue(ref, navigator, namespaceURI, localName, value);
    }
 
-   private boolean isServiceRefJaxRpc(UnifiedServiceRefMetaData serviceRef)
+   private Type getServiceRefType(UnifiedServiceRefMetaData serviceRef) throws NamingException
    {
-      // The <service-interface> is a required element 
-      // for JAXRPC and not defined for JAXWS
-      return serviceRef.getServiceInterface() != null;
+      // The service-ref-type is JAXWS specific
+      String serviceRefType = serviceRef.getServiceRefType();
+      if (serviceRefType != null)
+         return Type.JAXWS;
+         
+      String siName = serviceRef.getServiceInterface();
+      if (siName == null)
+         throw new IllegalStateException("<service-interface> cannot be null");
+
+      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      URL rootURL = serviceRef.getVfsRoot().toURL();
+      URLClassLoader loader = new URLClassLoader(new URL[] {rootURL}, ctxLoader);
+      
+      Class siClass;
+      try
+      {
+         siClass = loader.loadClass(siName);
+      }
+      catch (ClassNotFoundException e)
+      {
+         throw new NamingException("Cannot load service-endpoint-interface: " + siName);
+      }
+      
+      if (javax.xml.ws.Service.class.isAssignableFrom(siClass))
+         return Type.JAXWS;
+      else if (javax.xml.rpc.Service.class.isAssignableFrom(siClass))
+         return Type.JAXRPC;
+      else
+         throw new IllegalStateException("Illegal service interface: " + siName);
    }
 }
