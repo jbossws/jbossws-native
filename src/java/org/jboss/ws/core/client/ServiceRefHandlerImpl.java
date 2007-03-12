@@ -105,7 +105,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
    {
       // The service-ref-type is JAXWS specific
       String serviceRefType = serviceRef.getServiceRefType();
-      if (serviceRefType != null)
+      if (serviceRefType != null || serviceRef.getAnnotatedElement() != null)
          return Type.JAXWS;
          
       String siName = serviceRef.getServiceInterface();
@@ -123,7 +123,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       }
       catch (ClassNotFoundException e)
       {
-         throw new NamingException("Cannot load service-endpoint-interface: " + siName);
+         throw new NamingException("Cannot load <service-interface>: " + siName);
       }
       
       if (javax.xml.ws.Service.class.isAssignableFrom(siClass))

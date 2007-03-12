@@ -72,8 +72,8 @@
   
   <!-- Compile etc files (manifests and such) -->
   <target name="core-compile-etc" depends="core-init">
-    <mkdir dir="${etc.dir}"/>
-    <copy todir="${etc.dir}" filtering="yes" overwrite="yes">
+    <mkdir dir="${build.etc.dir}"/>
+    <copy todir="${build.etc.dir}" filtering="yes" overwrite="yes">
       <fileset dir="${build.dir}/etc"/>
       <filterset>
         <filter token="java.vm.version" value="${java.vm.version}"/>
@@ -102,7 +102,7 @@
     
     <!-- Build jboss-jaxrpc.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${etc.dir}/default.mf">
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${build.etc.dir}/default.mf">
       <fileset dir="${core.output.classes14.dir}">
         <include name="javax/xml/rpc/**"/>
       </fileset>
@@ -110,7 +110,7 @@
     
     <!-- Build jboss-saaj.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${etc.dir}/default.mf">
+    <jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${build.etc.dir}/default.mf">
       <fileset dir="${core.output.classes14.dir}">
         <include name="javax/xml/soap/**"/>
       </fileset>
@@ -119,7 +119,7 @@
     
     <!-- Build jboss-jaxws.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${etc.dir}/default.mf">
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${build.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="javax/annotation/**"/>
         <include name="javax/jws/**"/>
@@ -130,7 +130,7 @@
     
     <!-- Build jbossws-core.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${etc.dir}/default.mf">
+    <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${build.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/annotation/**"/>
         <include name="org/jboss/ws/**"/>
@@ -143,14 +143,14 @@
     
     <!-- Build jbossws-integration.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jbossws-integration.jar" manifest="${etc.dir}/default.mf">
+    <jar jarfile="${core.output.lib.dir}/jbossws-integration.jar" manifest="${build.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/ws/integration/**"/>
       </fileset>
     </jar>
     
     <!-- Build jbossws-client.jar -->
-    <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${etc.dir}/default.mf">
+    <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${build.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/ws/**"/>
       </fileset>
@@ -162,14 +162,14 @@
         <include name="schema/**"/>
         <include name="dtd/**"/>
       </fileset>
-      <fileset dir="${etc.dir}">
+      <fileset dir="${build.etc.dir}">
         <include name="wsprovide.bat"/>
         <include name="wsconsume.bat"/>
         <include name="wsrunclient.bat"/>
         <include name="wstools.bat"/>
         <include name="wstools-log4j.xml"/>
       </fileset>
-      <zipfileset dir="${etc.dir}" filemode="755">
+      <zipfileset dir="${build.etc.dir}" filemode="755">
         <include name="wsprovide.sh"/>
         <include name="wsconsume.sh"/>
         <include name="wsrunclient.sh"/>
