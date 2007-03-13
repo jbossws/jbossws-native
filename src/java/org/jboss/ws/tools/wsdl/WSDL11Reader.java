@@ -729,7 +729,7 @@ public class WSDL11Reader
 
       // Add the fault refererence to the operation
       WSDLInterfaceOperationOutfault opOutFault = new WSDLInterfaceOperationOutfault(destOperation);
-      opOutFault.setRef(new QName(destWsdl.getTargetNamespace(), faultName));
+      opOutFault.setRef(destFault.getName());
       destOperation.addOutfault(opOutFault);
    }
 
