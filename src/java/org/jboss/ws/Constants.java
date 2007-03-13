@@ -135,8 +135,6 @@ public interface Constants
 
    /** SOAP-1.1 attributes */
    static final String SOAP11_ATTR_ACTOR = "actor";
-   static final String SOAP12_ATTR_ROLE = "role";
-   static final String SOAP12_ATTR_RELAY = "relay";
    static final String SOAP11_ATTR_MUST_UNDERSTAND = "mustUnderstand";
 
    /** SOAP-1.1 fault codes */
@@ -154,6 +152,10 @@ public interface Constants
    static final QName SOAP11_FAULTSTRING = new QName("faultstring");
    static final QName SOAP11_FAULTACTOR = new QName("faultactor");
    static final QName SOAP11_DETAIL = new QName("detail");
+
+   /** SOAP-1.2 attributes */
+   static final String SOAP12_ATTR_ROLE = "role";
+   static final String SOAP12_ATTR_RELAY = "relay";
 
    /**SOAP-1.2 elements */
    static final QName SOAP12_CODE = new QName(NS_SOAP12_ENV, "Code", PREFIX_ENV);
@@ -299,7 +301,6 @@ public interface Constants
    static final QName WSDL_ATTRIBUTE_WSA_ACTION = new QName(URI_WS_ADDRESSING, "Action");
 
    static final QName WSDL_ATTRIBUTE_WSE_EVENTSOURCE = new QName(URI_WS_EVENTING, "EventSource");
-    
 
    /** WSDL-2.0 exchange patterns */
    static final String WSDL20_PATTERN_IN_ONLY = "http://www.w3.org/2004/08/wsdl/in-only";

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
@@ -36,6 +37,8 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.utils.DOMUtils;
+import org.w3c.dom.Attr;
 
 /**
  * An object representing the contents in the SOAP header part of the SOAP envelope.
@@ -53,6 +56,11 @@ public class SOAPHeaderElementImpl extends SOAPContentElement implements SOAPHea
       super(name);
    }
    
+   public SOAPHeaderElementImpl(QName qname)
+   {
+      super(qname);
+   }
+
    public SOAPHeaderElementImpl(SOAPElementImpl element)
    {
       super(element);
@@ -60,58 +68,82 @@ public class SOAPHeaderElementImpl extends SOAPContentElement implements SOAPHea
 
    public String getRole()
    {
-      String envURI = Constants.NS_SOAP12_ENV;
-      String attr = getAttributeNS(envURI, Constants.SOAP12_ATTR_ROLE);
-      return attr;
+      final String headerURI = getParentElement().getNamespaceURI();
+
+      if (Constants.NS_SOAP11_ENV.equals(headerURI))
+         throw new UnsupportedOperationException("SOAP 1.1 does not support the concept of Role");
+
+      Attr roleAttr = getAttributeNodeNS(headerURI, Constants.SOAP12_ATTR_ROLE);
+      return roleAttr != null ? roleAttr.getValue() : null;
    }
 
    public void setRole(String roleURI)
    {
-      String envURI = Constants.NS_SOAP12_ENV;
-      String qualifiedName =  Constants.PREFIX_ENV + ":" + Constants.SOAP12_ATTR_ROLE;
-      setAttributeNS(envURI, qualifiedName, roleURI);
+      final SOAPElement header = getParentElement();
+      final String headerURI = header.getNamespaceURI();
+
+      if (Constants.NS_SOAP11_ENV.equals(headerURI))
+         throw new UnsupportedOperationException("SOAP 1.1 does not support the concept of Role");
+
+      setAttributeNS(headerURI, header.getPrefix() + ":" + Constants.SOAP12_ATTR_ROLE, roleURI);
    }
 
    public boolean getRelay()
    {
-      String envURI = Constants.NS_SOAP12_ENV;
-      String attr = getAttributeNS(envURI, Constants.SOAP12_ATTR_RELAY);
-      return "true".equals(attr);
+      final String headerURI = getParentElement().getNamespaceURI();
+
+      if (Constants.NS_SOAP11_ENV.equals(headerURI))
+         throw new UnsupportedOperationException("SOAP 1.1 does not support the concept of Role");
+
+      return DOMUtils.getAttributeValueAsBoolean(this, new QName(headerURI, Constants.SOAP12_ATTR_RELAY));
    }
 
    public void setRelay(boolean relay)
    {
-      String envURI = Constants.NS_SOAP12_ENV;
-      String qualifiedName =  Constants.PREFIX_ENV + ":" + Constants.SOAP12_ATTR_RELAY;
-      setAttributeNS(envURI, qualifiedName, new Boolean(relay).toString());
+      final SOAPElement header = getParentElement();
+      final String headerURI = header.getNamespaceURI();
+
+      if (Constants.NS_SOAP11_ENV.equals(headerURI))
+         throw new UnsupportedOperationException("SOAP 1.1 does not support the concept of Role");
+
+      setAttributeNS(headerURI, header.getPrefix() + ":" + Constants.SOAP12_ATTR_RELAY, Boolean.toString(relay));
    }
    
    public String getActor()
    {
-      String envURI = Constants.NS_SOAP11_ENV;
-      String attr = getAttributeNS(envURI, Constants.SOAP11_ATTR_ACTOR);
-      return attr;
-   }
+      final String headerURI = getParentElement().getNamespaceURI();
 
-   public boolean getMustUnderstand()
-   {
-      String envURI = Constants.NS_SOAP11_ENV;
-      String attr = getAttributeNS(envURI, Constants.SOAP11_ATTR_MUST_UNDERSTAND);
-      return "1".equals(attr);
+      if (!Constants.NS_SOAP11_ENV.equals(headerURI))
+         return getRole();
+
+      Attr actorAttr = getAttributeNodeNS(headerURI, Constants.SOAP11_ATTR_ACTOR);
+      return actorAttr != null ? actorAttr.getValue() : null;
    }
 
    public void setActor(String actorURI)
    {
-      String envURI = Constants.NS_SOAP11_ENV;
-      String qualifiedName =  Constants.PREFIX_ENV + ":" + Constants.SOAP11_ATTR_ACTOR;
-      setAttributeNS(envURI, qualifiedName, actorURI);
+      final SOAPElement header = getParentElement();
+      final String headerURI = header.getNamespaceURI();
+
+      if (Constants.NS_SOAP11_ENV.equals(headerURI))
+         setAttributeNS(headerURI, header.getPrefix() + ":" + Constants.SOAP11_ATTR_ACTOR, actorURI);
+      else
+         setRole(actorURI);
+   }
+
+   public boolean getMustUnderstand()
+   {
+      final String headerURI = getParentElement().getNamespaceURI();
+
+      return DOMUtils.getAttributeValueAsBoolean(this, new QName(headerURI, Constants.SOAP11_ATTR_MUST_UNDERSTAND));
    }
 
    public void setMustUnderstand(boolean mustUnderstand)
    {
-      String envURI = Constants.NS_SOAP11_ENV;
-      String qualifiedName =  Constants.PREFIX_ENV + ":" + Constants.SOAP11_ATTR_MUST_UNDERSTAND;
-      setAttributeNS(envURI, qualifiedName, mustUnderstand ? "1" : "0");
+      final SOAPElement header = getParentElement();
+      final String headerURI = header.getNamespaceURI();
+
+      setAttributeNS(headerURI, header.getPrefix()  + ":" + Constants.SOAP11_ATTR_MUST_UNDERSTAND, mustUnderstand ? "1" : "0");
    }
 
    public void setParentElement(SOAPElement parent) throws SOAPException
