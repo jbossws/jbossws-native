@@ -39,6 +39,7 @@ import javax.xml.soap.SOAPFaultElement;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.core.utils.SAAJUtils;
 import org.jboss.xb.QNameBuilder;
 import org.w3c.dom.Attr;
 
@@ -201,44 +202,7 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 
    private static void setCode(SOAPElement codeElement, QName code) throws SOAPException
    {
-      String nsURI = code.getNamespaceURI();
-      String prefix = code.getPrefix();
-      if (prefix.length() == 0)
-      {
-         // no given prefix, find prefix currently associated to given URI 
-         prefix = getNamespacePrefix(codeElement, nsURI);
-         if (prefix == null)
-         {
-            // no prefix currently associated to given URI, declare namespace locally
-            prefix = "codeNS";
-            codeElement.addNamespaceDeclaration(prefix, nsURI);
-         }
-      }
-      // verify given prefix is associated to given URI
-      else if (!nsURI.equals(codeElement.getNamespaceURI(prefix)))
-      {
-         // prefix is associated with other/no URI, declare namespace locally
-         codeElement.addNamespaceDeclaration(prefix, nsURI);
-      }
-
-      codeElement.setValue(prefix + ":" + code.getLocalPart());
-   }
-
-   /**
-    * Returns the prefix of the namespace that has the given URI.
-    * @param nsURI the URI of the namespace to search for
-    * @return the prefix of the namespace or <code>null</code> if not found
-    */
-   private static String getNamespacePrefix(SOAPElement element, String nsURI)
-   {
-      Iterator it = element.getVisibleNamespacePrefixes();
-      while (it.hasNext())
-      {
-         String prefix = (String)it.next();
-         if (nsURI.equals(element.getNamespaceURI(prefix)))
-            return prefix;
-      }
-      return null;
+      SAAJUtils.setQualifiedElementValue(codeElement, code);
    }
 
    private static SOAPElement addChildValueElement(SOAPElement codeElement) throws SOAPException

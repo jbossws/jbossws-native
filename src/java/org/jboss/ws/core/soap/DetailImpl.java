@@ -35,7 +35,6 @@ import javax.xml.soap.SOAPException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -120,15 +119,6 @@ public class DetailImpl extends SOAPFaultElementImpl implements Detail
       }
 
       return list.iterator();
-   }
-
-   @Override
-   public Node appendChild(Node newChild) throws DOMException
-   {
-      if (newChild instanceof SOAPElementImpl && !(newChild instanceof DetailEntry))
-         newChild = convertToDetailEntry((SOAPElementImpl) newChild); 
-
-      return super.appendChild(newChild);
    }
 
    @Override
