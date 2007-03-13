@@ -212,6 +212,8 @@ public abstract class CommonClient implements StubExt
 
    protected abstract boolean callResponseHandlerChain(QName portName, HandlerType type);
 
+   protected abstract void closeHandlerChain(QName portName, HandlerType type);
+
    protected abstract void setInboundContextProperties();
 
    protected abstract void setOutboundContextProperties();
@@ -335,6 +337,7 @@ public abstract class CommonClient implements StubExt
 
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.PRE);
+            closeHandlerChain(portName, HandlerType.ALL);
 
             // BP-1.0 R1027
             if (handlerPass)

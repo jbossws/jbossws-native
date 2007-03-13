@@ -51,7 +51,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
 
    public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
-      if(log.isDebugEnabled()) log.debug("callRequestHandlerChain: " + type);
+      log.debug("callRequestHandlerChain: " + type);
       SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
       EndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
 
@@ -59,6 +59,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
       if (epMetaData.isHandlersInitialized() == false)
       {
          initResolverChain(epMetaData);
+         epMetaData.setHandlersInitialized(true);
       }
 
       List<Handler> handlerChain = getHandlerChain(epMetaData, type);
@@ -68,7 +69,7 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
 
    public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
-      if(log.isDebugEnabled()) log.debug("callResponseHandlerChain: " + type);
+      log.debug("callResponseHandlerChain: " + type);
       SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
       List<Handler> handlerChain = getHandlerChain(epMetaData, type);
@@ -76,9 +77,22 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
       return status;
    }
 
+   public void closeHandlerChain(ServiceEndpointInfo seInfo)
+   {
+      log.debug("closeHandlerChain");
+      EndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
+      
+      List<Handler> handlerChain = getHandlerChain(epMetaData, HandlerType.POST);
+      new HandlerChainExecutor(epMetaData, handlerChain).close();
+      handlerChain = getHandlerChain(epMetaData, HandlerType.ENDPOINT);
+      new HandlerChainExecutor(epMetaData, handlerChain).close();
+      handlerChain = getHandlerChain(epMetaData, HandlerType.PRE);
+      new HandlerChainExecutor(epMetaData, handlerChain).close();
+   }
+   
    public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex)
    {
-      if(log.isDebugEnabled()) log.debug("callFaultHandlerChain: " + type);
+      log.debug("callFaultHandlerChain: " + type);
       SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
       List<Handler> handlerChain = getHandlerChain(epMetaData, type);

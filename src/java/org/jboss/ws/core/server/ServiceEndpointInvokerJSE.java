@@ -64,7 +64,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
    }
 
    /** Create an instance of the SEI implementation bean if necessary */
-   public Object createServiceEndpoint(ServiceEndpointInfo seInfo, Object context, Class seiImplClass) throws IllegalAccessException, InstantiationException
+   public Object createServiceEndpointInstance(ServiceEndpointInfo seInfo, Object context, Class seiImplClass) throws IllegalAccessException, InstantiationException
    {
       Object seiImpl = seiImplClass.newInstance();
       if (seiImpl instanceof ServiceLifecycle && context != null)
@@ -84,7 +84,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
    }
 
    /** Invoke an instance of the SEI implementation bean */
-   public void invokeServiceEndpoint(ServiceEndpointInfo seInfo, Object seiImpl, EndpointInvocation epInv) throws SOAPFaultException, Exception
+   public void invokeServiceEndpointInstance(ServiceEndpointInfo seInfo, Object seiImpl, EndpointInvocation epInv) throws SOAPFaultException, Exception
    {
       if(log.isDebugEnabled()) log.debug("invokeServiceEndpoint: " + epInv.getJavaMethod().getName());
       try
@@ -111,7 +111,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
    }
 
    /** Destroy an instance of the SEI implementation bean if necessary */
-   public void destroyServiceEndpoint(ServiceEndpointInfo seInfo, Object seiImpl)
+   public void destroyServiceEndpointInstance(ServiceEndpointInfo seInfo, Object seiImpl)
    {
       if (seiImpl instanceof ServiceLifecycle)
       {

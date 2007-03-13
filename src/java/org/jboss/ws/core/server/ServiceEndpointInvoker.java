@@ -33,8 +33,8 @@ import javax.xml.soap.SOAPMessage;
 public interface ServiceEndpointInvoker
 {
    /** Initialize the service endpoint */
-   public void initServiceEndpoint(ServiceEndpointInfo seInfo);
+   void initServiceEndpoint(ServiceEndpointInfo seInfo);
    
    /** Invoke the the service endpoint */
-   public SOAPMessage invoke(ServiceEndpointInfo seInfo, Object endpointContext) throws Exception;
+   SOAPMessage invoke(ServiceEndpointInfo seInfo, Object endpointContext) throws Exception;
 }

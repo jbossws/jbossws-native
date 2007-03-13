@@ -90,7 +90,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
     */
    public HandlerChainBaseImpl(List<HandlerInfo> infos, Set<String> roles)
    {
-      if(log.isDebugEnabled()) log.debug("Create a handler chain for roles: " + roles);
+      log.debug("Create a handler chain for roles: " + roles);
       addHandlersToChain(infos, roles);
    }
 
@@ -109,8 +109,6 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
    /**
     * Initialize the a handler chain with the given handlers infos
-    *
-    * @throws javax.xml.rpc.JAXRPCException If any error during initialization
     */
    private void addHandlersToChain(List<HandlerInfo> infos, Set<String> roleSet)
    {
@@ -159,7 +157,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
     */
    public void init(Map config)
    {
-      if(log.isDebugEnabled()) log.debug("init: [config=" + config + "]");
+      log.debug("init: [config=" + config + "]");
       for (int i = 0; i < handlers.size(); i++)
       {
          HandlerEntry entry = (HandlerEntry)handlers.get(i);
@@ -177,7 +175,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
     */
    public void destroy()
    {
-      if(log.isDebugEnabled()) log.debug("destroy");
+      log.debug("destroy");
       for (int i = 0; i < handlers.size(); i++)
       {
          HandlerEntry entry = (HandlerEntry)handlers.get(i);
@@ -217,7 +215,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
    public void setRoles(String[] soapActorNames)
    {
       List<String> newRoles = Arrays.asList(soapActorNames);
-      if(log.isDebugEnabled()) log.debug("setRoles: " + newRoles);
+      log.debug("setRoles: " + newRoles);
 
       roles.clear();
       roles.addAll(newRoles);
@@ -246,7 +244,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
       if (handlers.size() > 0)
       {
-         if(log.isDebugEnabled()) log.debug("Enter: handleRequest");
+         log.debug("Enter: handleRequest");
 
          SOAPMessageContextJAXRPC jaxrpcContext = (SOAPMessageContextJAXRPC)msgContext;
          jaxrpcContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -295,7 +293,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
                falseIndex = (handlerIndex - 1);
 
             jaxrpcContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if(log.isDebugEnabled()) log.debug("Exit: handleRequest with status: " + doNext);
+            log.debug("Exit: handleRequest with status: " + doNext);
          }
       }
 
@@ -328,7 +326,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
       if (handlers.size() > 0)
       {
-         if(log.isDebugEnabled()) log.debug("Enter: handleResponse");
+         log.debug("Enter: handleResponse");
 
          SOAPMessageContextJAXRPC jaxrpcContext = (SOAPMessageContextJAXRPC)msgContext;
          jaxrpcContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -377,7 +375,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
                falseIndex = (handlerIndex - 1);
 
             jaxrpcContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if(log.isDebugEnabled()) log.debug("Exit: handleResponse with status: " + doNext);
+            log.debug("Exit: handleResponse with status: " + doNext);
          }
       }
 
@@ -400,7 +398,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
       if (handlers.size() > 0)
       {
-         if(log.isDebugEnabled()) log.debug("Enter: handleFault");
+         log.debug("Enter: handleFault");
 
          SOAPMessageContextJAXRPC jaxrpcContext = (SOAPMessageContextJAXRPC)msgContext;
          jaxrpcContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -415,14 +413,14 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
             for (; doNext && handlerIndex >= 0; handlerIndex--)
             {
                currHandler = ((HandlerEntry)handlers.get(handlerIndex)).getHandler();
-               if(log.isDebugEnabled()) log.debug("Handle fault: " + currHandler);
+               log.debug("Handle fault: " + currHandler);
                doNext = currHandler.handleFault(msgContext);
             }
          }
          finally
          {
             jaxrpcContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if(log.isDebugEnabled()) log.debug("Exit: handleFault with status: " + doNext);
+            log.debug("Exit: handleFault with status: " + doNext);
          }
       }
 
@@ -465,7 +463,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          HandlerEntry entry = (HandlerEntry)handlers.get(i);
          if (entry.handler.getState() == HandlerWrapper.DOES_NOT_EXIST)
          {
-            if(log.isDebugEnabled()) log.debug("Replacing dirty handler: " + entry.handler);
+            log.debug("Replacing dirty handler: " + entry.handler);
             try
             {
                HandlerWrapper handler = new HandlerWrapper((Handler)entry.info.getHandlerClass().newInstance());
@@ -576,7 +574,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
          if (type == null)
          {
-            if(log.isDebugEnabled()) log.debug("Using handler type default: " + HandlerType.ENDPOINT);
+            log.debug("Using handler type default: " + HandlerType.ENDPOINT);
             type = HandlerType.ENDPOINT;
          }
 

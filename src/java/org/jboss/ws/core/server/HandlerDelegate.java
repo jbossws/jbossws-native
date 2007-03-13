@@ -25,8 +25,7 @@ package org.jboss.ws.core.server;
 
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
-/** An implementation of handles invocations on the endpoint
- *
+/** 
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
@@ -37,4 +36,6 @@ public interface HandlerDelegate
    public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type);
    
    public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex);
+
+   public void closeHandlerChain(ServiceEndpointInfo seInfo);
 }

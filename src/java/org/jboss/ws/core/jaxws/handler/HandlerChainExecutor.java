@@ -63,8 +63,8 @@ public class HandlerChainExecutor
    public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> handlerList)
    {
       this.epMetaData = epMetaData;
-      
-      if(log.isDebugEnabled()) log.debug("Create a handler executor: " + handlerList);
+
+      log.debug("Create a handler executor: " + handlerList);
       for (Handler handler : handlerList)
       {
          handlers.add(handler);
@@ -76,10 +76,12 @@ public class HandlerChainExecutor
     */
    public void close()
    {
-      if(log.isDebugEnabled()) log.debug("close");
-      for (Handler handler : handlers)
+      log.debug("close");
+      int handlerIndex = handlers.size() - 1;
+      for (; handlerIndex >= 0; handlerIndex--)
       {
-         handler.close(null);
+         Handler currHandler = handlers.get(handlerIndex);
+         currHandler.close(null);
       }
    }
 
@@ -89,7 +91,7 @@ public class HandlerChainExecutor
 
       if (handlers.size() > 0)
       {
-         if(log.isDebugEnabled()) log.debug("Enter: handleRequest");
+         log.debug("Enter: handleRequest");
 
          SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
          soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -130,7 +132,7 @@ public class HandlerChainExecutor
                falseIndex = (handlerIndex - 1);
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if(log.isDebugEnabled()) log.debug("Exit: handleRequest with status: " + doNext);
+            log.debug("Exit: handleRequest with status: " + doNext);
          }
       }
 
@@ -146,7 +148,7 @@ public class HandlerChainExecutor
 
       if (handlers.size() > 0)
       {
-         if(log.isDebugEnabled()) log.debug("Enter: handleResponse");
+         log.debug("Enter: handleResponse");
 
          int handlerIndex = handlers.size() - 1;
          if (falseIndex != -1)
@@ -187,7 +189,7 @@ public class HandlerChainExecutor
                falseIndex = (handlerIndex - 1);
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if(log.isDebugEnabled()) log.debug("Exit: handleResponse with status: " + doNext);
+            log.debug("Exit: handleResponse with status: " + doNext);
          }
       }
 
@@ -200,7 +202,7 @@ public class HandlerChainExecutor
 
       if (handlers.size() > 0)
       {
-         if(log.isDebugEnabled()) log.debug("Enter: handleFault");
+         log.debug("Enter: handleFault");
 
          SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
          soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
@@ -241,7 +243,7 @@ public class HandlerChainExecutor
                falseIndex = (handlerIndex - 1);
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if(log.isDebugEnabled()) log.debug("Exit: handleFault with status: " + doNext);
+            log.debug("Exit: handleFault with status: " + doNext);
          }
       }
 
@@ -269,7 +271,7 @@ public class HandlerChainExecutor
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
-         
+
          handlerContext = new LogicalMessageContextImpl(soapContext);
       }
 

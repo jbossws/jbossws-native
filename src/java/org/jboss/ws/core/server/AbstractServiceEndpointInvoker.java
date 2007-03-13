@@ -92,14 +92,13 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
    protected abstract Class loadServiceEndpoint(ServiceEndpointInfo seInfo) throws ClassNotFoundException;
 
    /** Create the instance of the SEI implementation bean if necessary */
-   protected abstract Object createServiceEndpoint(ServiceEndpointInfo seInfo, Object context, Class seiImplClass) throws IllegalAccessException,
-         InstantiationException;
+   protected abstract Object createServiceEndpointInstance(ServiceEndpointInfo seInfo, Object context, Class seiImplClass) throws Exception;
 
    /** Invoke the instance of the SEI implementation bean */
-   protected abstract void invokeServiceEndpoint(ServiceEndpointInfo seInfo, Object seiImpl, EndpointInvocation epInv) throws Exception;
+   protected abstract void invokeServiceEndpointInstance(ServiceEndpointInfo seInfo, Object seiImpl, EndpointInvocation epInv) throws Exception;
 
    /** Destroy the instance of the SEI implementation bean if necessary */
-   protected abstract void destroyServiceEndpoint(ServiceEndpointInfo seInfo, Object seiImpl);
+   protected abstract void destroyServiceEndpointInstance(ServiceEndpointInfo seInfo, Object seiImpl);
 
    public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
@@ -109,6 +108,11 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
    public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
       return handlerDelegate.callResponseHandlerChain(seInfo, type);
+   }
+
+   public void closeHandlerChain(ServiceEndpointInfo seInfo)
+   {
+      handlerDelegate.closeHandlerChain(seInfo);
    }
 
    public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex)
@@ -127,7 +131,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       Class seImpl = loadServiceEndpoint(seInfo);
 
       // Create an instance of the endpoint implementation bean
-      Object seInstance = createServiceEndpoint(seInfo, context, seImpl);
+      Object seInstance = createServiceEndpointInstance(seInfo, context, seImpl);
 
       try
       {
@@ -160,7 +164,8 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          // Check if protocol handlers modified the payload
          if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
          {
-            if(log.isDebugEnabled()) log.debug("Handler modified body payload, unbind message again");
+            if (log.isDebugEnabled())
+               log.debug("Handler modified body payload, unbind message again");
             epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
          }
 
@@ -170,7 +175,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
             try
             {
-               invokeServiceEndpoint(seInfo, seInstance, epInv);
+               invokeServiceEndpointInstance(seInfo, seInstance, epInv);
             }
             finally
             {
@@ -183,8 +188,8 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             if (epMetaData.getType() == EndpointMetaData.Type.JAXWS)
                msgContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
 
-            if(binding instanceof CommonSOAPBinding)
-               XOPContext.setMTOMEnabled( ((CommonSOAPBinding)binding).isMTOMEnabled());
+            if (binding instanceof CommonSOAPBinding)
+               XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
 
             // Bind the response message
             SOAPMessage resMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
@@ -197,6 +202,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             handlersPass = callResponseHandlerChain(seInfo, HandlerType.POST);
             handlersPass = handlersPass && callResponseHandlerChain(seInfo, HandlerType.ENDPOINT);
             handlersPass = handlersPass && callResponseHandlerChain(seInfo, HandlerType.PRE);
+            closeHandlerChain(seInfo);
          }
 
          SOAPMessage resMessage = msgContext.getSOAPMessage();
@@ -213,6 +219,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             boolean handlersPass = callFaultHandlerChain(seInfo, HandlerType.POST, ex);
             handlersPass = handlersPass && callFaultHandlerChain(seInfo, HandlerType.ENDPOINT, ex);
             handlersPass = handlersPass && callFaultHandlerChain(seInfo, HandlerType.PRE, ex);
+            closeHandlerChain(seInfo);
          }
          catch (Exception subEx)
          {
@@ -222,13 +229,14 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       }
       finally
       {
-         destroyServiceEndpoint(seInfo, seInstance);
+         destroyServiceEndpointInstance(seInfo, seInstance);
       }
    }
 
    protected CommonMessageContext processPivot(CommonMessageContext requestContext)
    {
-      if(log.isDebugEnabled()) log.debug("Begin response processing");
+      if (log.isDebugEnabled())
+         log.debug("Begin response processing");
       // TODO: implement
       return requestContext;
    }

@@ -23,6 +23,9 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id$
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
@@ -39,6 +44,7 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
@@ -74,7 +80,7 @@ public class HandlerResolverImpl implements HandlerResolver
    
    public List<Handler> getHandlerChain(PortInfo info, HandlerType type)
    {
-      if(log.isDebugEnabled()) log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
+      log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
 
       List<Handler> unsortedChain = new ArrayList<Handler>();
 
@@ -89,7 +95,7 @@ public class HandlerResolverImpl implements HandlerResolver
          List<Handler> list = handlerMap.get(new PortInfoImpl(null, null, bindingID));
          if (list != null)
          {
-            if(log.isDebugEnabled()) log.debug("add protocol handlers: " + list);
+            log.debug("add protocol handlers: " + list);
             unsortedChain.addAll(list);
          }
       }
@@ -99,7 +105,7 @@ public class HandlerResolverImpl implements HandlerResolver
          List<Handler> list = handlerMap.get(new PortInfoImpl(serviceName, null, null));
          if (list != null)
          {
-            if(log.isDebugEnabled()) log.debug("add service handlers: " + list);
+            log.debug("add service handlers: " + list);
             unsortedChain.addAll(list);
          }
       }
@@ -109,7 +115,7 @@ public class HandlerResolverImpl implements HandlerResolver
          List<Handler> list = handlerMap.get(new PortInfoImpl(null, portName, null));
          if (list != null)
          {
-            if(log.isDebugEnabled()) log.debug("add port handlers: " + list);
+            log.debug("add port handlers: " + list);
             unsortedChain.addAll(list);
          }
       }
@@ -117,7 +123,7 @@ public class HandlerResolverImpl implements HandlerResolver
       List<Handler> list = handlerMap.get(new PortInfoImpl(null, null, null));
       if (list != null)
       {
-         if(log.isDebugEnabled()) log.debug("add general handlers: " + list);
+         log.debug("add general handlers: " + list);
          unsortedChain.addAll(list);
       }
 
@@ -139,10 +145,9 @@ public class HandlerResolverImpl implements HandlerResolver
 
    public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)
    {
-      if(log.isDebugEnabled()) log.debug("initHandlerChain: " + type);
+      log.debug("initHandlerChain: " + type);
 
       // clear all exisisting handler to avoid double registration
-      if(log.isDebugEnabled()) log.debug("Clear handler map: " + jaxwsHandlers);
       Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
       handlerMap.clear();
 
@@ -165,6 +170,12 @@ public class HandlerResolverImpl implements HandlerResolver
 
             if (handler instanceof GenericSOAPHandler)
                ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
+            
+            // Inject resources 
+            injectResources(handler);
+            
+            // Call @PostConstruct
+            callPostConstruct(handler);
 
             List<PortInfo> infos = getPortInfos(epMetaData, jaxwsMetaData);
             for (PortInfo info : infos)
@@ -179,6 +190,33 @@ public class HandlerResolverImpl implements HandlerResolver
          catch (Exception ex)
          {
             throw new WSException("Cannot load handler: " + className, ex);
+         }
+      }
+   }
+
+   private void injectResources(Handler handler)
+   {
+      Class<? extends Handler> handlerClass = handler.getClass();
+      for (Field field : handlerClass.getFields())
+      {
+         if (field.isAnnotationPresent(Resource.class))
+            throw new NotImplementedException("@Resource not implemented for handler: " + handlerClass.getName());
+      }
+      for (Method method : handlerClass.getMethods())
+      {
+         if (method.isAnnotationPresent(Resource.class))
+            throw new NotImplementedException("@Resource not implemented for handler: " + handlerClass.getName());
+      }
+   }
+
+   private void callPostConstruct(Handler handler) throws Exception
+   {
+      Class<? extends Handler> handlerClass = handler.getClass();
+      for (Method method : handlerClass.getMethods())
+      {
+         if (method.isAnnotationPresent(PostConstruct.class))
+         {
+            method.invoke(handler, new Object[]{});
          }
       }
    }
@@ -286,7 +324,7 @@ public class HandlerResolverImpl implements HandlerResolver
 
    private boolean addHandler(PortInfo info, Handler handler, HandlerType type)
    {
-      if(log.isDebugEnabled()) log.debug("addHandler: " + info + ":" + handler);
+      log.debug("addHandler: " + info + ":" + handler);
 
       Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
       List<Handler> handlerList = handlerMap.get(info);
@@ -308,6 +346,9 @@ public class HandlerResolverImpl implements HandlerResolver
          handlerMap = jaxwsHandlers;
       else if (type == HandlerType.POST)
          handlerMap = postHandlers;
+      else
+         throw new IllegalArgumentException("Illegal handler type: " + type);
+      
       return handlerMap;
    }
 }

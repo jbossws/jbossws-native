@@ -555,6 +555,12 @@ public class CallImpl extends CommonClient implements Call
       return status;
    }
 
+   @Override
+   protected void closeHandlerChain(QName portName, HandlerType type)
+   {
+      // nothing to do for JAXRPC
+   }
+
    /** Generate or update the XSD schema for all parameters and the return.
     *  This should only be done when the Call is unconfigured, hence there is no WSDL
     */

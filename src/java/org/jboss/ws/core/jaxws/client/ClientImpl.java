@@ -152,6 +152,14 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    }
 
    @Override
+   protected void closeHandlerChain(QName portName, HandlerType type)
+   {
+      BindingExt binding = (BindingExt)getBindingProvider().getBinding();
+      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
+      executor.close();
+   }
+
+   @Override
    protected void setInboundContextProperties()
    {
       // Mark the message context as outbound

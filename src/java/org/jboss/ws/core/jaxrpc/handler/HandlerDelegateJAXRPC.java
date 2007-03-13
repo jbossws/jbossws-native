@@ -65,6 +65,11 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
    {
    }
 
+   public void closeHandlerChain(ServiceEndpointInfo seInfo)
+   {
+      // nothing to do for JAXRPC
+   }
+
    public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
@@ -196,5 +201,4 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
          handlerChain.init(null);
       }
    }
-
 }
