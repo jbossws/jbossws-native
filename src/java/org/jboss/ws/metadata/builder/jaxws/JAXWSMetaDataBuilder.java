@@ -169,7 +169,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          return;
 
       URL fileURL = null;
-      if(log.isDebugEnabled()) log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
+      log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
 
       // Try the filename as URL
       try
@@ -205,8 +205,16 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Try the filename relative to class
       if (fileURL == null)
       {
+         String filepath = filename;
          String packagePath = wsClass.getPackage().getName().replace('.', '/');
-         fileURL = epMetaData.getClassLoader().getResource(packagePath + "/" + filename);
+         String resourcePath = packagePath + "/" + filepath;
+         while (filepath.startsWith("../"))
+         {
+            packagePath = packagePath.substring(0, packagePath.lastIndexOf("/"));
+            filepath = filepath.substring(3);
+            resourcePath = packagePath + "/" + filepath;
+         }
+         fileURL = epMetaData.getClassLoader().getResource(resourcePath);
       }
 
       if (fileURL == null)
