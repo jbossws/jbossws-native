@@ -23,11 +23,6 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id: MessageContextImpl.java 275 2006-05-04 21:36:29Z jason.greene@jboss.com $
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
@@ -125,6 +120,27 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
       resContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, mtomEnabled);
       resContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, outbound);
       resContext.setProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
+
+      // Copy the handler scoped properties
+      try
+      {
+         reqContext.setCurrentScope(Scope.HANDLER);
+         resContext.setCurrentScope(Scope.HANDLER);
+         for(String key : reqContext.keySet())
+         {
+            if (((MessageContextJAXWS)reqContext).getScope(key) == Scope.HANDLER)
+            {
+               Object value = reqContext.get(key);
+               resContext.put(key, value);
+            }
+         }
+      }
+      finally
+      {
+         reqContext.setCurrentScope(Scope.APPLICATION);
+         resContext.setCurrentScope(Scope.APPLICATION);
+      }
+      
       MessageContextAssociation.pushMessageContext(resContext);
 
       return resContext;

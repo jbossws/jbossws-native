@@ -313,7 +313,6 @@ public class HandlerChainExecutor
       
       
       boolean doNext = false;
-      Scope scope = msgContext.getCurrentScope();
       try
       {
          msgContext.setCurrentScope(Scope.HANDLER);
@@ -321,7 +320,7 @@ public class HandlerChainExecutor
       }
       finally
       {
-         msgContext.setCurrentScope(scope);
+         msgContext.setCurrentScope(Scope.APPLICATION);
       }
 
       return doNext;
@@ -342,7 +341,6 @@ public class HandlerChainExecutor
          closeHandlers.add(currHandler);
       
       boolean doNext = false;
-      Scope scope = msgContext.getCurrentScope();
       try
       {
          msgContext.setCurrentScope(Scope.HANDLER);
@@ -350,7 +348,7 @@ public class HandlerChainExecutor
       }
       finally
       {
-         msgContext.setCurrentScope(scope);
+         msgContext.setCurrentScope(Scope.APPLICATION);
       }
 
       return doNext;

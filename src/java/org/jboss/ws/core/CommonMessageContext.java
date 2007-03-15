@@ -78,7 +78,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
       this.opMetaData = msgContext.opMetaData;
       this.soapMessage = msgContext.soapMessage;
       this.serContext = msgContext.serContext;
-      this.scopedProps = msgContext.scopedProps;
+      this.scopedProps = new HashMap<String, ScopedProperty>(msgContext.scopedProps);
       this.currentScope = msgContext.currentScope;
    }
 
@@ -218,13 +218,6 @@ public abstract class CommonMessageContext implements Map<String, Object>
       return isValidInScope(prop);
    }
 
-   private boolean isValidInScope(ScopedProperty prop)
-   {
-      // A property of scope APPLICATION is always visible
-      boolean valid = (prop != null && (prop.getScope() == Scope.APPLICATION || currentScope == Scope.HANDLER));
-      return valid;
-   }
-
    public boolean containsValue(Object value)
    {
       boolean valueFound = false;
@@ -292,17 +285,22 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
    public Set<String> keySet()
    {
-      return scopedProps.keySet();
+      Set<String> keys = new HashSet<String>(scopedProps.size());
+      for (ScopedProperty prop : scopedProps.values())
+      {
+         if (isValidInScope(prop))
+            keys.add(prop.getName());
+      }
+      return keys;
    }
 
    public Collection<Object> values()
    {
-      Collection<Object> values = new HashSet<Object>();
+      Collection<Object> values = new HashSet<Object>(scopedProps.size());
       for (ScopedProperty prop : scopedProps.values())
       {
          if (isValidInScope(prop))
             values.add(prop.getValue());
-
       }
       return values;
    }
@@ -321,6 +319,13 @@ public abstract class CommonMessageContext implements Map<String, Object>
          }
       }
       return entries;
+   }
+
+   private boolean isValidInScope(ScopedProperty prop)
+   {
+      // A property of scope APPLICATION is always visible
+      boolean valid = (prop != null && (prop.getScope() == Scope.APPLICATION || currentScope == Scope.HANDLER));
+      return valid;
    }
 
    private static class ImmutableEntry<K, V> implements Map.Entry<K, V>
