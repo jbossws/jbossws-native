@@ -29,6 +29,7 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
@@ -69,6 +70,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
       SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
       addrProps.readHeaders(soapMessage);
       msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
+      msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
 
       if (validate)
          validateRequest(addrProps);
@@ -107,6 +109,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          // create new response properties
          outProps = (SOAPAddressingProperties)builder.newAddressingProperties();
          msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, outProps);
+         msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, Scope.APPLICATION);
       }
 
       outProps.initializeAsReply(inProps, isFault);

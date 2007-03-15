@@ -32,9 +32,11 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
+import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -571,8 +573,13 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
          // See SOAPFactoryImpl for details.
 
          log.debug("MTOM disabled: Force inline XOP data");
+
+         // TODO: This property must be reset, otherwise you negate its purpose
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+         if (msgContext instanceof MessageContextJAXWS)
+            ((MessageContextJAXWS)msgContext).setScope(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Scope.APPLICATION);
+         
          expandToDOM();
       }
       else if ( domContentState && XOPContext.isMTOMEnabled() )
