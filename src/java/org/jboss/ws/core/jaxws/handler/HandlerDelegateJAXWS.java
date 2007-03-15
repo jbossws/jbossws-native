@@ -76,7 +76,7 @@ public class HandlerDelegateJAXWS extends HandlerDelegate
 
       HandlerChainExecutor executor = createExecutor(sepMetaData, type);
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      return executor.handleRequest(msgContext);
+      return executor.handleMessage(msgContext);
    }
 
    public boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
@@ -84,7 +84,7 @@ public class HandlerDelegateJAXWS extends HandlerDelegate
       log.debug("callResponseHandlerChain: " + type);
       HandlerChainExecutor executor =  getExecutor(type);
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      return (executor != null ? executor.handleResponse(msgContext) : true);
+      return (executor != null ? executor.handleMessage(msgContext) : true);
    }
 
    public void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)

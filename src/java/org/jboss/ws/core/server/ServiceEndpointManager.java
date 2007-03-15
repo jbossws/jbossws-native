@@ -460,7 +460,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          // Also, a one-way operation must show up as empty content, and can be detected
          // by a null envelope.
          SOAPEnvelope soapEnv = part.getEnvelope();
-         boolean isFault = soapEnv != null && soapEnv.getBody().getFault() != null;
+         boolean isFault = soapEnv != null && soapEnv.getBody().hasFault();
          if (isFault && httpResponse != null)
          {
             httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -34,6 +34,7 @@ import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.LogicalHandler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
@@ -57,10 +58,12 @@ public class HandlerChainExecutor
    private EndpointMetaData epMetaData;
    // The list of handlers 
    protected List<Handler> handlers = new ArrayList<Handler>();
-   // The list of handlers tp close
-   protected List<Handler> closeHandlers = new ArrayList<Handler>();
+   // The list of executed handlers
+   protected List<Handler> executedHandlers = new ArrayList<Handler>();
    // The index of the first handler that returned false during processing
    protected int falseIndex = -1;
+   // True if the current direction is outbound
+   protected Boolean isOutbound;
 
    public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> unsortedChain)
    {
@@ -92,47 +95,61 @@ public class HandlerChainExecutor
    public void close(MessageContext msgContext)
    {
       log.debug("close");
-      int handlerIndex = closeHandlers.size() - 1;
-      for (; handlerIndex >= 0; handlerIndex--)
+      CommonMessageContext context = (CommonMessageContext)msgContext;
+      for (int index = 1; index <= executedHandlers.size(); index++)
       {
-         Handler currHandler = closeHandlers.get(handlerIndex);
-         currHandler.close(msgContext);
+         Handler currHandler = executedHandlers.get(executedHandlers.size() - index);
+         try
+         {
+            context.setCurrentScope(Scope.HANDLER);
+            currHandler.close(msgContext);
+         }
+         finally
+         {
+            context.setCurrentScope(Scope.APPLICATION);
+         }
       }
    }
 
-   public boolean handleRequest(MessageContext msgContext)
+   public boolean handleMessage(MessageContext msgContext)
    {
+      isOutbound = (Boolean)msgContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+      if (isOutbound == null)
+         throw new IllegalStateException("Cannot find property: " + MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+
       boolean doNext = true;
 
       if (handlers.size() > 0)
       {
-         log.debug("Enter: handleRequest");
+         log.debug("Enter: handle" + (isOutbound ? "Out" : "In ") + "BoundMessage");
 
-         SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
-         soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
 
-         int handlerIndex = 0;
+         int index = getFirstHandler();
          Handler currHandler = null;
          try
          {
             String lastMessageTrace = null;
-            for (; doNext && handlerIndex < handlers.size(); handlerIndex++)
+            while (doNext && index >= 0)
             {
-               currHandler = handlers.get(handlerIndex);
+               currHandler = handlers.get(index);
 
-               if (log.isTraceEnabled())
+               if (log.isTraceEnabled() && msgContext instanceof SOAPMessageContext)
                {
-                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  SOAPPart soapPart = ((SOAPMessageContext)msgContext).getMessage().getSOAPPart();
                   lastMessageTrace = traceSOAPPart("BEFORE handleRequest - " + currHandler, soapPart, lastMessageTrace);
                }
 
-               doNext = handleMessage(currHandler, soapContext);
+               doNext = handleMessage(currHandler, msgContext);
 
-               if (log.isTraceEnabled())
+               if (log.isTraceEnabled() && msgContext instanceof SOAPMessageContext)
                {
-                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  SOAPPart soapPart = ((SOAPMessageContext)msgContext).getMessage().getSOAPPart();
                   lastMessageTrace = traceSOAPPart("AFTER handleRequest - " + currHandler, soapPart, lastMessageTrace);
                }
+
+               if (doNext)
+                  index = getNextIndex(index);
             }
          }
          catch (RuntimeException ex)
@@ -144,124 +161,96 @@ public class HandlerChainExecutor
          {
             // we start at this index in the response chain
             if (doNext == false)
-               falseIndex = handlerIndex;
+               falseIndex = index;
 
-            soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleRequest with status: " + doNext);
+            msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+            log.debug("Exit: handle" + (isOutbound ? "Out" : "In ") + "BoundMessage with status: " + doNext);
          }
       }
 
       return doNext;
    }
 
-   public boolean handleResponse(MessageContext msgContext)
+   private int getFirstHandler()
    {
-      boolean doNext = true;
-
-      SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
-      soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-
-      if (handlers.size() > 0)
+      int index;
+      if (falseIndex == -1)
       {
-         log.debug("Enter: handleResponse");
-
-         int handlerIndex = handlers.size() - 1;
-         if (falseIndex != -1)
-            handlerIndex = falseIndex - 1;
-
-         Handler currHandler = null;
-         try
-         {
-            String lastMessageTrace = null;
-            for (; doNext && handlerIndex >= 0; handlerIndex--)
-            {
-               currHandler = handlers.get(handlerIndex);
-
-               if (log.isTraceEnabled())
-               {
-                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
-                  lastMessageTrace = traceSOAPPart("BEFORE handleResponse - " + currHandler, soapPart, lastMessageTrace);
-               }
-
-               doNext = handleMessage(currHandler, soapContext);
-
-               if (log.isTraceEnabled())
-               {
-                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
-                  lastMessageTrace = traceSOAPPart("AFTER handleResponse - " + currHandler, soapPart, lastMessageTrace);
-               }
-            }
-         }
-         catch (RuntimeException ex)
-         {
-            doNext = false;
-            processHandlerFailure(ex);
-         }
-         finally
-         {
-            // we start at this index in the fault chain
-            if (doNext == false)
-               falseIndex = handlerIndex;
-
-            soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleResponse with status: " + doNext);
-         }
+         index = (isOutbound ? 0 : handlers.size() - 1);
       }
+      else
+      {
+         index = (isOutbound ? falseIndex - 1 : falseIndex + 1);
+      }
+      return index;
+   }
 
-      return doNext;
+   private int getNextIndex(int prevIndex)
+   {
+      int nextIndex = (isOutbound ? prevIndex + 1 : prevIndex - 1);
+      if (nextIndex >= handlers.size())
+         nextIndex = -1;
+      return nextIndex;
    }
 
    public boolean handleFault(MessageContext msgContext, Exception ex)
    {
+      isOutbound = (Boolean)msgContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+      if (isOutbound == null)
+         throw new IllegalStateException("Cannot find property: " + MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+
       boolean doNext = true;
 
       if (handlers.size() > 0)
       {
-         log.debug("Enter: handleFault");
+         log.debug("Enter: handle" + (isOutbound ? "Out" : "In ") + "BoundFault");
 
-         SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
-         soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-         SOAPMessage soapMessage = soapContext.getMessage();
-
-         // If the message is not already a fault message then it is replaced with a fault message
-         try
+         if (msgContext instanceof SOAPMessageContext)
          {
-            if (soapMessage == null || soapMessage.getSOAPBody().getFault() == null)
+            SOAPMessageContext soapContext = (SOAPMessageContext)msgContext;
+            SOAPMessage soapMessage = soapContext.getMessage();
+
+            // If the message is not already a fault message then it is replaced with a fault message
+            try
             {
-               soapMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
-               soapContext.setMessage(soapMessage);
+               if (soapMessage == null || soapMessage.getSOAPBody().getFault() == null)
+               {
+                  soapMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
+                  soapContext.setMessage(soapMessage);
+               }
+            }
+            catch (SOAPException se)
+            {
+               throw new WebServiceException("Cannot convert exception to fault message", ex);
             }
          }
-         catch (SOAPException se)
-         {
-            throw new WebServiceException("Cannot convert exception to fault message", ex);
-         }
-         
-         int handlerIndex = handlers.size() - 1;
-         if (falseIndex != -1)
-            handlerIndex = falseIndex - 1;
-         
+
+         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+
+         int index = getFirstHandler();
          Handler currHandler = null;
          try
          {
             String lastMessageTrace = null;
-            for (; doNext && handlerIndex >= 0; handlerIndex--)
+            while (doNext && index >= 0)
             {
-               currHandler = handlers.get(handlerIndex);
+               currHandler = handlers.get(index);
 
-               if (log.isTraceEnabled())
+               if (log.isTraceEnabled() && msgContext instanceof SOAPMessageContext)
                {
-                  SOAPPart soapPart = soapMessage.getSOAPPart();
+                  SOAPPart soapPart = ((SOAPMessageContext)msgContext).getMessage().getSOAPPart();
                   lastMessageTrace = traceSOAPPart("BEFORE handleFault - " + currHandler, soapPart, lastMessageTrace);
                }
 
-               doNext = handleFault(currHandler, soapContext);
+               doNext = handleFault(currHandler, msgContext);
 
-               if (log.isTraceEnabled())
+               if (log.isTraceEnabled() && msgContext instanceof SOAPMessageContext)
                {
-                  SOAPPart soapPart = soapMessage.getSOAPPart();
+                  SOAPPart soapPart = ((SOAPMessageContext)msgContext).getMessage().getSOAPPart();
                   lastMessageTrace = traceSOAPPart("AFTER handleFault - " + currHandler, soapPart, lastMessageTrace);
                }
+
+               index = getNextIndex(index);
             }
          }
          catch (RuntimeException rte)
@@ -271,12 +260,8 @@ public class HandlerChainExecutor
          }
          finally
          {
-            // we start at this index in the response chain
-            if (doNext == false)
-               falseIndex = handlerIndex;
-
-            soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleFault with status: " + doNext);
+            msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+            log.debug("Exit: handle" + (isOutbound ? "Out" : "In ") + "BoundFault with status: " + doNext);
          }
       }
 
@@ -297,61 +282,54 @@ public class HandlerChainExecutor
       throw new WebServiceException(ex);
    }
 
-   private boolean handleMessage(Handler currHandler, SOAPMessageContextJAXWS msgContext)
+   private boolean handleMessage(Handler currHandler, MessageContext msgContext)
    {
-      MessageContext handlerContext = msgContext;
-      if (currHandler instanceof LogicalHandler)
+      CommonMessageContext context = (CommonMessageContext)msgContext;
+      if (currHandler instanceof LogicalHandler && msgContext instanceof SOAPMessageContextJAXWS)
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
 
-         handlerContext = new LogicalMessageContextImpl(msgContext);
+         msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
       }
 
-      if (closeHandlers.contains(currHandler) == false)
-         closeHandlers.add(currHandler);
-      
-      
-      boolean doNext = false;
+      if (executedHandlers.contains(currHandler) == false)
+         executedHandlers.add(currHandler);
+
       try
       {
-         msgContext.setCurrentScope(Scope.HANDLER);
-         doNext = currHandler.handleMessage(handlerContext);
+         context.setCurrentScope(Scope.HANDLER);
+         return currHandler.handleMessage(msgContext);
       }
       finally
       {
-         msgContext.setCurrentScope(Scope.APPLICATION);
+         context.setCurrentScope(Scope.APPLICATION);
       }
-
-      return doNext;
    }
 
-   private boolean handleFault(Handler currHandler, SOAPMessageContextJAXWS msgContext)
+   private boolean handleFault(Handler currHandler, MessageContext msgContext)
    {
-      MessageContext handlerContext = msgContext;
-      if (currHandler instanceof LogicalHandler)
+      CommonMessageContext context = (CommonMessageContext)msgContext;
+      if (currHandler instanceof LogicalHandler && msgContext instanceof SOAPMessageContextJAXWS)
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
-         
-         handlerContext = new LogicalMessageContextImpl(msgContext);
+
+         msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
       }
 
-      if (closeHandlers.contains(currHandler) == false)
-         closeHandlers.add(currHandler);
-      
-      boolean doNext = false;
+      if (executedHandlers.contains(currHandler) == false)
+         executedHandlers.add(currHandler);
+
       try
       {
-         msgContext.setCurrentScope(Scope.HANDLER);
-         doNext = currHandler.handleFault(handlerContext);
+         context.setCurrentScope(Scope.HANDLER);
+         return currHandler.handleFault(msgContext);
       }
       finally
       {
-         msgContext.setCurrentScope(Scope.APPLICATION);
+         context.setCurrentScope(Scope.APPLICATION);
       }
-
-      return doNext;
    }
 
    /**

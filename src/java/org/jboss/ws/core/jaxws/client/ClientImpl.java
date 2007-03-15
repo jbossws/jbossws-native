@@ -141,7 +141,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       executorMap.put(type, executor);
       
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      return executor.handleRequest(msgContext);
+      return executor.handleMessage(msgContext);
    }
 
    @Override
@@ -149,7 +149,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
       HandlerChainExecutor executor =  executorMap.get(type);
-      return (executor != null ? executor.handleResponse(msgContext) : true);
+      return (executor != null ? executor.handleMessage(msgContext) : true);
    }
 
    @Override

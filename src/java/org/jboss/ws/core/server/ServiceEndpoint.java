@@ -233,7 +233,7 @@ public class ServiceEndpoint
             SOAPMessage soapMessage = msgContext.getSOAPMessage();
             if (soapMessage != null && soapMessage.getSOAPPart().getEnvelope() != null)
             {
-               if (soapMessage.getSOAPPart().getEnvelope().getBody().getFault() != null)
+               if (soapMessage.getSOAPPart().getEnvelope().getBody().hasFault())
                {
                   seMetrics.processFaultMessage(beginProcessing);
                }

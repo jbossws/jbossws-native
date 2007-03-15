@@ -79,6 +79,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    private Source payload;
    private boolean isDOMValid = true;
    private boolean isModifiedFromSource;
+   private boolean hasFault;
 
    public SOAPBodyImpl(String prefix, String namespace)
    {
@@ -112,7 +113,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
       log.trace("addChildElement: " + child.getElementName());
-      expandToDOM();
+      expandToDOM(false);
       if ((child instanceof SOAPBodyElement) == false)
          child = convertToBodyElement(child);
 
@@ -123,7 +124,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPBodyElement addBodyElement(Name name) throws SOAPException
    {
       log.trace("addBodyElement: " + name);
-      expandToDOM();
+      expandToDOM(false);
       SOAPBodyElement child = new SOAPBodyElementDoc(name);
       return (SOAPBodyElement)addChildElement(child);
    }
@@ -131,7 +132,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPBodyElement addBodyElement(QName qname) throws SOAPException
    {
       log.trace("addBodyElement: " + qname);
-      expandToDOM();
+      expandToDOM(false);
       SOAPBodyElement child = new SOAPBodyElementDoc(qname);
       return (SOAPBodyElement)addChildElement(child);
    }
@@ -139,7 +140,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPBodyElement addDocument(Document doc) throws SOAPException
    {
       log.trace("addDocument");
-      expandToDOM();
+      expandToDOM(false);
       Element rootElement = doc.getDocumentElement();
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
       SOAPElement soapElement = soapFactory.createElement(rootElement);
@@ -149,20 +150,21 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPFault addFault() throws SOAPException
    {
       log.trace("addFault");
-      expandToDOM();
+      expandToDOM(true);
       if (hasFault())
          throw new SOAPException("A SOAPBody may contain at most one SOAPFault child element");
 
       SOAPFaultImpl soapFault = new SOAPFaultImpl(getPrefix(), getNamespaceURI());
       soapFault = (SOAPFaultImpl)addChildElement(soapFault);
       soapFault.setFaultCode(soapFault.getDefaultFaultCode());
+      hasFault = true;
       return soapFault;
    }
 
    public SOAPFault addFault(Name faultCode, String faultString) throws SOAPException
    {
       log.trace("addFault");
-      expandToDOM();
+      expandToDOM(true);
       if (hasFault())
          throw new SOAPException("A SOAPBody may contain at most one SOAPFault child element");
 
@@ -170,13 +172,14 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault = (SOAPFaultImpl)addChildElement(soapFault);
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString);
+      hasFault = true;
       return soapFault;
    }
 
    public SOAPFault addFault(QName faultCode, String faultString) throws SOAPException
    {
       log.trace("addFault");
-      expandToDOM();
+      expandToDOM(true);
       if (hasFault())
          throw new SOAPException("A SOAPBody may contain at most one SOAPFault child element");
 
@@ -184,13 +187,14 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault = (SOAPFaultImpl)addChildElement(soapFault);
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString);
+      hasFault = true;
       return soapFault;
    }
 
    public SOAPFault addFault(Name faultCode, String faultString, Locale locale) throws SOAPException
    {
       log.trace("addFault");
-      expandToDOM();
+      expandToDOM(true);
       if (hasFault())
          throw new SOAPException("A SOAPBody may contain at most one SOAPFault child element");
 
@@ -198,13 +202,14 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString, locale);
       addChildElement(soapFault);
+      hasFault = true;
       return soapFault;
    }
 
    public SOAPFault addFault(QName faultCode, String faultString, Locale locale) throws SOAPException
    {
       log.trace("addFault");
-      expandToDOM();
+      expandToDOM(true);
       if (hasFault())
          throw new SOAPException("A SOAPBody may contain at most one SOAPFault child element");
 
@@ -212,22 +217,24 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString, locale);
       addChildElement(soapFault);
+      hasFault = true;
       return soapFault;
    }
 
    public SOAPFault getFault()
    {
       log.trace("getFault");
-      expandToDOM();
+      expandToDOM(true);
       Iterator it = faultIterator();
-      return it.hasNext() ? (SOAPFault)it.next() : null;
+      SOAPFault soapFault = it.hasNext() ? (SOAPFault)it.next() : null;
+      hasFault = (soapFault != null);
+      return soapFault;
    }
 
    public boolean hasFault()
    {
       log.trace("hasFault");
-      expandToDOM();
-      return faultIterator().hasNext();
+      return hasFault;
    }
 
    private Iterator faultIterator()
@@ -238,7 +245,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public Node appendChild(Node newChild) throws DOMException
    {
       log.trace("appendChild: " + newChild.getNodeName());
-      expandToDOM();
+      expandToDOM(false);
       if (needsConversionToBodyElement(newChild))
          newChild = convertToBodyElement(newChild);
 
@@ -248,7 +255,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public Node insertBefore(Node newChild, Node refChild) throws DOMException
    {
       log.trace("insertBefore: " + newChild.getNodeName());
-      expandToDOM();
+      expandToDOM(false);
       if (needsConversionToBodyElement(newChild))
          newChild = convertToBodyElement(newChild);
 
@@ -258,7 +265,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public Node replaceChild(Node newChild, Node oldChild) throws DOMException
    {
       log.trace("replaceChild: " + newChild.getNodeName());
-      expandToDOM();
+      expandToDOM(false);
       if (needsConversionToBodyElement(newChild))
          newChild = convertToBodyElement(newChild);
 
@@ -268,42 +275,42 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public Iterator getChildElements()
    {
       log.trace("getChildElements");
-      expandToDOM();
+      expandToDOM(false);
       return super.getChildElements();
    }
 
    public Iterator getChildElements(Name name)
    {
       log.trace("getChildElements: " + name);
-      expandToDOM();
+      expandToDOM(false);
       return super.getChildElements(name);
    }
 
    public NodeList getChildNodes()
    {
       log.trace("getChildNodes");
-      expandToDOM();
+      expandToDOM(false);
       return super.getChildNodes();
    }
 
    public Node getFirstChild()
    {
       log.trace("getFirstChild");
-      expandToDOM();
+      expandToDOM(false);
       return super.getFirstChild();
    }
 
    public Node getLastChild()
    {
       log.trace("getLastChild");
-      expandToDOM();
+      expandToDOM(false);
       return super.getLastChild();
    }
 
    public boolean hasChildNodes()
    {
       log.trace("hasChildNodes");
-      expandToDOM();
+      expandToDOM(false);
       return super.hasChildNodes();
    }
    
@@ -325,7 +332,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       return new SOAPBodyElementDoc(element);
    }
 
-   private void expandToDOM()
+   private void expandToDOM(boolean handleFault)
    {
       if (isDOMValid == false)
       {
@@ -335,7 +342,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
          if (msgContext != null && UnifiedMetaData.isFinalRelease() == false)
          {
             Boolean allowExpand = (Boolean)msgContext.getProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if (Boolean.TRUE.equals(allowExpand) == false)
+            if (handleFault == false && allowExpand == false)
                throw new WSException("Expanding content element to DOM");
          }
 
@@ -455,7 +462,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public Document extractContentAsDocument() throws SOAPException
    {
       log.trace("extractContentAsDocument");
-      expandToDOM();
+      expandToDOM(false);
 
       Iterator childElements = DOMUtils.getChildElements(this);
       // zero child elements?
