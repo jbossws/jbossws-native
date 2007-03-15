@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxrpc.handler;
 import javax.xml.rpc.handler.MessageContext;
 import javax.xml.soap.SOAPMessage;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
@@ -46,13 +47,12 @@ import org.jboss.xb.binding.NamespaceRegistry;
  */
 public class MessageContextJAXRPC extends CommonMessageContext implements MessageContext
 {
+   private static Logger log = Logger.getLogger(MessageContextJAXRPC.class);
+
    public static final String SERVLET_CONTEXT = "javax.xml.ws.servlet.context";
    public static final String SERVLET_REQUEST = "javax.xml.ws.servlet.request";
    public static final String SERVLET_RESPONSE = "javax.xml.ws.servlet.response";
    public static final String SERVLET_SESSION = "javax.xml.ws.servlet.session";
-
-   // The serialization context for this message ctx
-   private SerializationContext serContext;
 
    public MessageContextJAXRPC()
    {
@@ -72,22 +72,18 @@ public class MessageContextJAXRPC extends CommonMessageContext implements Messag
    {
       setSOAPMessage(message);
    }
-   
-   /** Get or create the serialization context
-    */
-   public SerializationContext getSerializationContext()
-   {
-      if (serContext == null)
-      {
-         EndpointMetaData epMetaData = getEndpointMetaData();
-         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
 
-         SerializationContextJAXRPC jaxrpcContext = new SerializationContextJAXRPC();
-         jaxrpcContext.setTypeMapping(serviceMetaData.getTypeMapping());
-         jaxrpcContext.setJavaWsdlMapping(serviceMetaData.getJavaWsdlMapping());
-         serContext = jaxrpcContext;
-      }
-      return serContext;
+   /** Create the serialization context
+    */
+   public SerializationContext createSerializationContext()
+   {
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+
+      SerializationContextJAXRPC jaxrpcContext = new SerializationContextJAXRPC();
+      jaxrpcContext.setTypeMapping(serviceMetaData.getTypeMapping());
+      jaxrpcContext.setJavaWsdlMapping(serviceMetaData.getJavaWsdlMapping());
+      return jaxrpcContext;
    }
 
    /** Gets the namespace registry for this message context */
@@ -95,4 +91,11 @@ public class MessageContextJAXRPC extends CommonMessageContext implements Messag
    {
       return getSerializationContext().getNamespaceRegistry();
    }
+
+   public static CommonMessageContext processPivot(CommonMessageContext requestContext)
+   {
+      log.debug("Begin response processing");
+      return requestContext;
+   }
+
 }

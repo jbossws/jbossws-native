@@ -394,6 +394,16 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
     */
    public boolean handleFault(MessageContext msgContext)
    {
+      return handleFaultInternal(msgContext, HandlerType.ALL);
+   }
+   
+   public boolean handleFault(MessageContext msgContext, HandlerType type)
+   {
+      return handleFaultInternal(msgContext, type);
+   }
+
+   private boolean handleFaultInternal(MessageContext msgContext, HandlerType type)
+   {
       boolean doNext = true;
 
       if (handlers.size() > 0)
@@ -412,9 +422,14 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
             Handler currHandler = null;
             for (; doNext && handlerIndex >= 0; handlerIndex--)
             {
-               currHandler = ((HandlerEntry)handlers.get(handlerIndex)).getHandler();
-               log.debug("Handle fault: " + currHandler);
-               doNext = currHandler.handleFault(msgContext);
+               HandlerEntry handlerEntry = (HandlerEntry)handlers.get(handlerIndex);
+               if (type == HandlerType.ALL || type == handlerEntry.getType())
+               {
+                  currHandler = handlerEntry.getHandler();
+               
+                  log.debug("Handle fault: " + currHandler);
+                  doNext = currHandler.handleFault(msgContext);
+               }
             }
          }
          finally

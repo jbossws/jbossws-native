@@ -55,6 +55,7 @@ import org.jboss.ws.core.jaxrpc.UnqualifiedCallParameter;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
+import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.utils.JavaUtils;
@@ -280,9 +281,9 @@ public class CallImpl extends CommonClient implements Call
       return invokeInternal(operationName, inputParams, false);
    }
 
-   protected CommonMessageContext processPivot(CommonMessageContext requestContext) {
-      if(log.isDebugEnabled()) log.debug("Begin response processing");
-      return requestContext;
+   protected CommonMessageContext processPivot(CommonMessageContext requestContext)
+   {
+      return MessageContextJAXRPC.processPivot(requestContext);
    }
 
    /** Returns a List values for the output parameters of the last invoked operation.
@@ -452,7 +453,8 @@ public class CallImpl extends CommonClient implements Call
       if (name.startsWith("javax.xml.rpc") && standardProperties.contains(name) == false)
          throw new JAXRPCException("Unsupported property: " + name);
 
-      if(log.isDebugEnabled()) log.debug("setProperty: [name=" + name + ",value=" + value + "]");
+      if (log.isDebugEnabled())
+         log.debug("setProperty: [name=" + name + ",value=" + value + "]");
       properties.put(name, value);
    }
 
@@ -493,7 +495,7 @@ public class CallImpl extends CommonClient implements Call
 
       // Check or generate the the schema if this call is unconfigured
       generateOrUpdateSchemas(opMetaData);
-      
+
       // Associate a message context with the current thread
       SOAPMessageContextJAXRPC msgContext = new SOAPMessageContextJAXRPC();
       MessageContextAssociation.pushMessageContext(msgContext);
@@ -537,7 +539,7 @@ public class CallImpl extends CommonClient implements Call
 
       if (type == HandlerType.ENDPOINT)
          XOPContext.visitAndRestoreXOPData();
-      
+
       return status;
    }
 
@@ -551,6 +553,20 @@ public class CallImpl extends CommonClient implements Call
       if (handlerChain != null)
       {
          status = handlerChain.handleResponse(msgContext, type);
+      }
+      return status;
+   }
+
+   @Override
+   protected boolean callFaultHandlerChain(QName portName, HandlerType type, Exception ex)
+   {
+      SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
+      HandlerChainBaseImpl handlerChain = (HandlerChainBaseImpl)jaxrpcService.getHandlerChain(portName);
+
+      boolean status = true;
+      if (handlerChain != null)
+      {
+         status = handlerChain.handleFault(msgContext, type);
       }
       return status;
    }
@@ -630,7 +646,7 @@ public class CallImpl extends CommonClient implements Call
    {
       EndpointMetaData epMetaData = getEndpointMetaData();
       epMetaData.setConfigName(configName, configFile);
-      
+
       // Reinitialize the client handler chain
       jaxrpcService.setupHandlerChain(epMetaData);
    }

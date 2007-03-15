@@ -240,8 +240,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (use == null)
       {
          use = Use.getDefaultUse();
-         if (log.isDebugEnabled())
-            log.debug("Using default encoding style: " + use);
+         log.debug("Using default encoding style: " + use);
       }
       return use;
    }
@@ -260,8 +259,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (style == null)
       {
          style = Style.getDefaultStyle();
-         if (log.isDebugEnabled())
-            log.debug("Using default style: " + style);
+         log.debug("Using default style: " + style);
       }
       return style;
    }
@@ -280,8 +278,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (parameterStyle == null)
       {
          parameterStyle = ParameterStyle.WRAPPED;
-         if (log.isDebugEnabled())
-            log.debug("Using default parameter style: " + parameterStyle);
+         log.debug("Using default parameter style: " + parameterStyle);
       }
       return parameterStyle;
    }
@@ -291,8 +288,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (value != null && parameterStyle != null && !parameterStyle.equals(value))
          throw new WSException("Mixed SOAP parameter styles not supported");
 
-      if (log.isDebugEnabled())
-         log.debug("setParameterStyle: " + value);
+      log.debug("setParameterStyle: " + value);
       this.parameterStyle = value;
    }
 
@@ -607,15 +603,13 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       // SOAPBinding configuration
       if (configurable instanceof CommonBindingProvider)
       {
-         if (log.isDebugEnabled())
-            log.debug("Configure SOAPBinding");
+         log.debug("Configure SOAPBinding");
 
          if (config.hasFeature(EndpointFeature.MTOM))
          {
             CommonBindingProvider provider = (CommonBindingProvider)configurable;
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
-            if (log.isDebugEnabled())
-               log.debug("Enable MTOM on endpoint " + this.getPortName());
+            log.debug("Enable MTOM on endpoint " + getPortName());
          }
       }
    }
@@ -627,7 +621,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void registerConfigObserver(Configurable observer)
    {
-      this.configObservable.addObserver(observer);
+      configObservable.addObserver(observer);
    }
 
    public String getConfigFile()

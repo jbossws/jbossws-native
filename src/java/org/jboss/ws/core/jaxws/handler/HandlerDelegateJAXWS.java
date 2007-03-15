@@ -24,14 +24,15 @@ package org.jboss.ws.core.jaxws.handler;
 // $Id:HandlerDelegateJAXWS.java 710 2006-08-08 20:19:52Z thomas.diesler@jboss.com $
 
 import java.util.List;
+import java.util.Observable;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.PortInfo;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.server.HandlerDelegate;
-import org.jboss.ws.core.server.ServiceEndpointInfo;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -43,74 +44,72 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public class HandlerDelegateJAXWS implements HandlerDelegate
+public class HandlerDelegateJAXWS extends HandlerDelegate
 {
    // provide logging
    private static Logger log = Logger.getLogger(HandlerDelegateJAXWS.class);
    private HandlerResolverImpl resolver = new HandlerResolverImpl();
+   
+   private ThreadLocal<HandlerChainExecutor> preExecutor = new ThreadLocal<HandlerChainExecutor>();
+   private ThreadLocal<HandlerChainExecutor> jaxwsExecutor = new ThreadLocal<HandlerChainExecutor>();
+   private ThreadLocal<HandlerChainExecutor> postExecutor = new ThreadLocal<HandlerChainExecutor>();
+   
+   public HandlerDelegateJAXWS(ServerEndpointMetaData sepMetaData)
+   {
+      super(sepMetaData);
+      sepMetaData.registerConfigObserver(this);
+   }
 
-   public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   public boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       log.debug("callRequestHandlerChain: " + type);
-      SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
-      EndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
 
       // Initialize the handler chain
-      if (epMetaData.isHandlersInitialized() == false)
+      if (isInitialized() == false)
       {
-         initResolverChain(epMetaData);
-         epMetaData.setHandlersInitialized(true);
+         resolver.initHandlerChain(sepMetaData, HandlerType.PRE);
+         resolver.initHandlerChain(sepMetaData, HandlerType.ENDPOINT);
+         resolver.initHandlerChain(sepMetaData, HandlerType.POST);
+         setInitialized(true);
       }
 
-      List<Handler> handlerChain = getHandlerChain(epMetaData, type);
-      boolean status = new HandlerChainExecutor(epMetaData, handlerChain).handleRequest(msgContext);
-      return status;
+      HandlerChainExecutor executor = createExecutor(sepMetaData, type);
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      return executor.handleRequest(msgContext);
    }
 
-   public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   public boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       log.debug("callResponseHandlerChain: " + type);
-      SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
-      ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
-      List<Handler> handlerChain = getHandlerChain(epMetaData, type);
-      boolean status = new HandlerChainExecutor(epMetaData, handlerChain).handleResponse(msgContext);
-      return status;
+      HandlerChainExecutor executor =  getExecutor(type);
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      return (executor != null ? executor.handleResponse(msgContext) : true);
    }
 
-   public void closeHandlerChain(ServiceEndpointInfo seInfo)
+   public void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       log.debug("closeHandlerChain");
-      EndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
-      
-      List<Handler> handlerChain = getHandlerChain(epMetaData, HandlerType.POST);
-      new HandlerChainExecutor(epMetaData, handlerChain).close();
-      handlerChain = getHandlerChain(epMetaData, HandlerType.ENDPOINT);
-      new HandlerChainExecutor(epMetaData, handlerChain).close();
-      handlerChain = getHandlerChain(epMetaData, HandlerType.PRE);
-      new HandlerChainExecutor(epMetaData, handlerChain).close();
+      HandlerChainExecutor executor =  getExecutor(type);
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      if (executor != null)
+      {
+         executor.close(msgContext);
+         removeExecutor(type);
+      }
    }
    
-   public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex)
+   public boolean callFaultHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type, Exception ex)
    {
       log.debug("callFaultHandlerChain: " + type);
-      SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
-      ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
-      List<Handler> handlerChain = getHandlerChain(epMetaData, type);
-      boolean status = new HandlerChainExecutor(epMetaData, handlerChain).handleFault(msgContext);
-      return status;
+      HandlerChainExecutor executor =  getExecutor(type);
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      return (executor != null ? executor.handleFault(msgContext, ex) : true);
    }
 
    private List<Handler> getHandlerChain(EndpointMetaData epMetaData, HandlerType type)
    {
       PortInfo info = getPortInfo(epMetaData);
       return resolver.getHandlerChain(info, type);
-   }
-
-   private void initResolverChain(EndpointMetaData epMetaData)
-   {
-      resolver.initHandlerChain(epMetaData, HandlerType.PRE);
-      resolver.initHandlerChain(epMetaData, HandlerType.ENDPOINT);
-      resolver.initHandlerChain(epMetaData, HandlerType.POST);
    }
 
    private PortInfo getPortInfo(EndpointMetaData epMetaData)
@@ -120,5 +119,54 @@ public class HandlerDelegateJAXWS implements HandlerDelegate
       String bindingId = epMetaData.getBindingId();
       PortInfo info = new PortInfoImpl(serviceName, portName, bindingId);
       return info;
+   }
+
+   private HandlerChainExecutor createExecutor(ServerEndpointMetaData sepMetaData, HandlerType type)
+   {
+      if (type == HandlerType.ALL)
+         throw new IllegalArgumentException("Invalid handler type: " + type);
+      
+      HandlerChainExecutor executor = new HandlerChainExecutor(sepMetaData, getHandlerChain(sepMetaData, type));
+      if (type == HandlerType.PRE)
+         preExecutor.set(executor);
+      else if (type == HandlerType.ENDPOINT)
+         jaxwsExecutor.set(executor);
+      else if (type == HandlerType.POST)
+         postExecutor.set(executor);
+      
+      return executor;
+   }
+
+   private HandlerChainExecutor getExecutor(HandlerType type)
+   {
+      if (type == HandlerType.ALL)
+         throw new IllegalArgumentException("Invalid handler type: " + type);
+      
+      HandlerChainExecutor executor = null;
+      if (type == HandlerType.PRE)
+         executor = preExecutor.get();
+      else if (type == HandlerType.ENDPOINT)
+         executor = jaxwsExecutor.get();
+      else if (type == HandlerType.POST)
+         executor = postExecutor.get();
+      
+      return executor;
+   }
+
+   private void removeExecutor(HandlerType type)
+   {
+      if (type == HandlerType.ALL)
+         throw new IllegalArgumentException("Invalid handler type: " + type);
+      
+      if (type == HandlerType.PRE)
+         preExecutor.remove();
+      else if (type == HandlerType.ENDPOINT)
+         jaxwsExecutor.remove();
+      else if (type == HandlerType.POST)
+         postExecutor.remove();
+   }
+
+   public void update(Observable observable, Object object)
+   {
    }
 }

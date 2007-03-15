@@ -438,6 +438,9 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       try
       {
          SOAPMessage resMessage = wsEndpoint.handleRequest(headerSource, context, inStream);
+         
+         // REplace the message context with the response context
+         msgContext = MessageContextAssociation.peekMessageContext();
 
          Map<String, List<String>> headers = (Map<String, List<String>>)msgContext.getProperty(MessageContextJAXWS.HTTP_RESPONSE_HEADERS);
          if (headers != null)
@@ -480,7 +483,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    private void sendResponse(OutputStream outputStream, CommonMessageContext msgContext, boolean isFault) throws SOAPException, IOException
    {
-      SOAPMessage soapMessage = msgContext.getSOAPMessage();
+      SOAPMessage resMessage = msgContext.getSOAPMessage();
       String wsaTo = null;
 
       // Get the destination from the AddressingProperties
@@ -495,11 +498,11 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       if (wsaTo != null)
       {
          if(log.isDebugEnabled()) log.debug("Sending response to addressing destination: " + wsaTo);
-         new SOAPConnectionImpl().callOneWay(soapMessage, wsaTo);
+         new SOAPConnectionImpl().callOneWay(resMessage, wsaTo);
       }
       else
       {
-         soapMessage.writeTo(outputStream);
+         resMessage.writeTo(outputStream);
       }
    }
 
@@ -602,7 +605,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          throw new WSException("Service already registerd: " + sepID);
 
       ServiceEndpointInvoker seInvoker = getServiceEndpointInvoker(seInfo);
-      seInvoker.initServiceEndpoint(seInfo);
+      seInvoker.init(seInfo);
       seInfo.setInvoker(seInvoker);
 
       // Load/Create the service endpoint impl

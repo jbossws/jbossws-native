@@ -19,22 +19,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core;
 
-// $Id$
+// $Id:CommonClient.java 660 2006-08-01 16:29:43Z thomas.diesler@jboss.com $
 
-import javax.xml.soap.SOAPMessage;
 
-/** An implementation handles invocations on the endpoint
+/**
+ * A holder for the message direction
  *
  * @author Thomas.Diesler@jboss.org
- * @since 19-Jan-2005
+ * @since 14-Mar-2007
  */
-public interface ServiceEndpointInvoker
+public class DirectionHolder
 {
-   /** Initialize the invoker */
-   void init(ServiceEndpointInfo seInfo);
-   
-   /** Invoke the the service endpoint */
-   SOAPMessage invoke(Object endpointContext) throws Exception;
+   public enum Direction
+   {
+      InBound, OutBound
+   }
+
+   private Direction direction;
+
+   public DirectionHolder(Direction direction)
+   {
+      this.direction = direction;
+   }
+
+   public Direction getDirection()
+   {
+      return direction;
+   }
+
+   public void setDirection(Direction direction)
+   {
+      this.direction = direction;
+   }
 }

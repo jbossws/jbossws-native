@@ -43,9 +43,7 @@ public interface ConfigurationProvider
    static final String DEFAULT_CLIENT_CONFIG_NAME = "Standard Client";
 
    /**
-    * Callback for components that require configuration through jbossws-dd
-    *
-    * @param configurable
+    * Callback for components that require configuration
     */
    void configure(Configurable configurable);
 

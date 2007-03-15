@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
@@ -36,6 +37,7 @@ import javax.xml.ws.handler.MessageContext;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -52,20 +54,32 @@ public class HandlerChainExecutor
 
    // The endpoint meta data
    private EndpointMetaData epMetaData;
-   // The List<Entry> objects
+   // The list of handlers 
    protected List<Handler> handlers = new ArrayList<Handler>();
+   // The list of handlers tp close
+   protected List<Handler> closeHandlers = new ArrayList<Handler>();
    // The index of the first handler that returned false during processing
    protected int falseIndex = -1;
 
-   /**
-    * Constructs a handler chain with the given handlers
-    */
-   public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> handlerList)
+   public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> unsortedChain)
    {
       this.epMetaData = epMetaData;
 
-      log.debug("Create a handler executor: " + handlerList);
-      for (Handler handler : handlerList)
+      // Sort handler logical handlers first
+      List<Handler> sortedChain = new ArrayList<Handler>();
+      for (Handler handler : unsortedChain)
+      {
+         if (handler instanceof LogicalHandler)
+            sortedChain.add(handler);
+      }
+      for (Handler handler : unsortedChain)
+      {
+         if ((handler instanceof LogicalHandler) == false)
+            sortedChain.add(handler);
+      }
+
+      log.debug("Create a handler executor: " + sortedChain);
+      for (Handler handler : sortedChain)
       {
          handlers.add(handler);
       }
@@ -74,14 +88,14 @@ public class HandlerChainExecutor
    /**
     * Indicates the end of lifecycle for a HandlerChain.
     */
-   public void close()
+   public void close(MessageContext msgContext)
    {
       log.debug("close");
-      int handlerIndex = handlers.size() - 1;
+      int handlerIndex = closeHandlers.size() - 1;
       for (; handlerIndex >= 0; handlerIndex--)
       {
-         Handler currHandler = handlers.get(handlerIndex);
-         currHandler.close(null);
+         Handler currHandler = closeHandlers.get(handlerIndex);
+         currHandler.close(msgContext);
       }
    }
 
@@ -120,7 +134,7 @@ public class HandlerChainExecutor
                }
             }
          }
-         catch (Exception ex)
+         catch (RuntimeException ex)
          {
             doNext = false;
             processHandlerFailure(ex);
@@ -129,7 +143,7 @@ public class HandlerChainExecutor
          {
             // we start at this index in the response chain
             if (doNext == false)
-               falseIndex = (handlerIndex - 1);
+               falseIndex = handlerIndex;
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handleRequest with status: " + doNext);
@@ -152,7 +166,7 @@ public class HandlerChainExecutor
 
          int handlerIndex = handlers.size() - 1;
          if (falseIndex != -1)
-            handlerIndex = falseIndex;
+            handlerIndex = falseIndex - 1;
 
          Handler currHandler = null;
          try
@@ -177,7 +191,7 @@ public class HandlerChainExecutor
                }
             }
          }
-         catch (Exception ex)
+         catch (RuntimeException ex)
          {
             doNext = false;
             processHandlerFailure(ex);
@@ -186,7 +200,7 @@ public class HandlerChainExecutor
          {
             // we start at this index in the fault chain
             if (doNext == false)
-               falseIndex = (handlerIndex - 1);
+               falseIndex = handlerIndex;
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handleResponse with status: " + doNext);
@@ -196,7 +210,7 @@ public class HandlerChainExecutor
       return doNext;
    }
 
-   public boolean handleFault(MessageContext msgContext)
+   public boolean handleFault(MessageContext msgContext, Exception ex)
    {
       boolean doNext = true;
 
@@ -206,19 +220,37 @@ public class HandlerChainExecutor
 
          SOAPMessageContextJAXWS soapContext = (SOAPMessageContextJAXWS)msgContext;
          soapContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+         SOAPMessage soapMessage = soapContext.getMessage();
 
-         int handlerIndex = 0;
+         // If the message is not already a fault message then it is replaced with a fault message
+         try
+         {
+            if (soapMessage == null || soapMessage.getSOAPBody().getFault() == null)
+            {
+               soapMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
+               soapContext.setMessage(soapMessage);
+            }
+         }
+         catch (SOAPException se)
+         {
+            throw new WebServiceException("Cannot convert exception to fault message", ex);
+         }
+         
+         int handlerIndex = handlers.size() - 1;
+         if (falseIndex != -1)
+            handlerIndex = falseIndex - 1;
+         
          Handler currHandler = null;
          try
          {
             String lastMessageTrace = null;
-            for (; doNext && handlerIndex < handlers.size(); handlerIndex++)
+            for (; doNext && handlerIndex >= 0; handlerIndex--)
             {
                currHandler = handlers.get(handlerIndex);
 
                if (log.isTraceEnabled())
                {
-                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  SOAPPart soapPart = soapMessage.getSOAPPart();
                   lastMessageTrace = traceSOAPPart("BEFORE handleFault - " + currHandler, soapPart, lastMessageTrace);
                }
 
@@ -226,21 +258,21 @@ public class HandlerChainExecutor
 
                if (log.isTraceEnabled())
                {
-                  SOAPPart soapPart = soapContext.getMessage().getSOAPPart();
+                  SOAPPart soapPart = soapMessage.getSOAPPart();
                   lastMessageTrace = traceSOAPPart("AFTER handleFault - " + currHandler, soapPart, lastMessageTrace);
                }
             }
          }
-         catch (Exception ex)
+         catch (RuntimeException rte)
          {
             doNext = false;
-            processHandlerFailure(ex);
+            processHandlerFailure(rte);
          }
          finally
          {
             // we start at this index in the response chain
             if (doNext == false)
-               falseIndex = (handlerIndex - 1);
+               falseIndex = handlerIndex;
 
             soapContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handleFault with status: " + doNext);
@@ -275,6 +307,9 @@ public class HandlerChainExecutor
          handlerContext = new LogicalMessageContextImpl(soapContext);
       }
 
+      if (closeHandlers.contains(currHandler) == false)
+         closeHandlers.add(currHandler);
+      
       boolean doNext = currHandler.handleMessage(handlerContext);
 
       return doNext;
@@ -285,9 +320,15 @@ public class HandlerChainExecutor
       MessageContext handlerContext = soapContext;
       if (currHandler instanceof LogicalHandler)
       {
+         if (epMetaData.getStyle() == Style.RPC)
+            throw new WebServiceException("Cannot use logical handler with RPC");
+         
          handlerContext = new LogicalMessageContextImpl(soapContext);
       }
 
+      if (closeHandlers.contains(currHandler) == false)
+         closeHandlers.add(currHandler);
+      
       boolean doNext = currHandler.handleFault(handlerContext);
 
       return doNext;
@@ -295,7 +336,6 @@ public class HandlerChainExecutor
 
    /**
     * Trace the SOAPPart, do nothing if the String representation is equal to the last one.
-    * @param logMsg TODO
     */
    protected String traceSOAPPart(String logMsg, SOAPPart soapPart, String lastMessageTrace)
    {

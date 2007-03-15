@@ -23,19 +23,38 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
+import org.jboss.ws.metadata.config.Configurable;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /** 
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public interface HandlerDelegate 
+public abstract class HandlerDelegate implements Configurable 
 {
-   public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type);
-
-   public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type);
+   private ServerEndpointMetaData sepMetaData;
    
-   public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex);
+   public HandlerDelegate(ServerEndpointMetaData sepMetaData)
+   {
+      this.sepMetaData = sepMetaData;
+   }
 
-   public void closeHandlerChain(ServiceEndpointInfo seInfo);
+   public abstract boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type);
+
+   public abstract boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type);
+   
+   public abstract boolean callFaultHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type, Exception ex);
+
+   public abstract void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type);
+
+   protected boolean isInitialized()
+   {
+      return sepMetaData.isHandlersInitialized();
+   }
+
+   protected void setInitialized(boolean flag)
+   {
+      sepMetaData.setHandlersInitialized(flag);
+   }
 }

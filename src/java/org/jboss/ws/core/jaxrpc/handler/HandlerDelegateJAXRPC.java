@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Observable;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -35,7 +36,6 @@ import javax.xml.rpc.handler.HandlerInfo;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.server.HandlerDelegate;
-import org.jboss.ws.core.server.ServiceEndpointInfo;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
@@ -49,7 +49,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public class HandlerDelegateJAXRPC implements HandlerDelegate
+public class HandlerDelegateJAXRPC extends HandlerDelegate
 {
    // provide logging
    private static Logger log = Logger.getLogger(HandlerDelegateJAXRPC.class);
@@ -61,27 +61,23 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
    // This endpoints handler chain
    private ServerHandlerChain postHandlerChain;
 
-   public HandlerDelegateJAXRPC()
+   public HandlerDelegateJAXRPC(ServerEndpointMetaData sepMetaData)
    {
+      super(sepMetaData);
+      sepMetaData.registerConfigObserver(this);
    }
 
-   public void closeHandlerChain(ServiceEndpointInfo seInfo)
-   {
-      // nothing to do for JAXRPC
-   }
-
-   public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   public boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
-      ServerEndpointMetaData sepMetaData = seInfo.getServerEndpointMetaData();
 
       // Initialize the handler chain
-      if (sepMetaData.isHandlersInitialized() == false)
+      if (isInitialized() == false)
       {
-         initHandlerChain(seInfo, HandlerType.PRE);
-         initHandlerChain(seInfo, HandlerType.ENDPOINT);
-         initHandlerChain(seInfo, HandlerType.POST);
-         sepMetaData.setHandlersInitialized(true);
+         initHandlerChain(sepMetaData, HandlerType.PRE);
+         initHandlerChain(sepMetaData, HandlerType.ENDPOINT);
+         initHandlerChain(sepMetaData, HandlerType.POST);
+         setInitialized(true);
       }
 
       boolean status = true;
@@ -108,7 +104,7 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
       return status;
    }
 
-   public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   public boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
       
@@ -128,7 +124,7 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
       return status;
    }
 
-   public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex)
+   public boolean callFaultHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type, Exception ex)
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
 
@@ -148,15 +144,19 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
       return status;
    }
 
+   public void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
+   {
+      // nothing to do for JAXRPC
+   }
+
    /**
     * Init the handler chain
     */
-   private void initHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   private void initHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       Set<String> handlerRoles = new HashSet<String>();
       List<HandlerInfo> hInfos = new ArrayList<HandlerInfo>();
 
-      ServerEndpointMetaData sepMetaData = seInfo.getServerEndpointMetaData();
       for (HandlerMetaData handlerMetaData : sepMetaData.getHandlerMetaData(type))
       {
          HandlerMetaDataJAXRPC jaxrpcMetaData = (HandlerMetaDataJAXRPC)handlerMetaData;
@@ -180,10 +180,10 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
          hInfos.add(info);
       }
 
-      initHandlerChain(seInfo, hInfos, handlerRoles, type);
+      initHandlerChain(sepMetaData, hInfos, handlerRoles, type);
    }
 
-   private void initHandlerChain(ServiceEndpointInfo seInfo, List<HandlerInfo> hInfos, Set<String> handlerRoles, HandlerType type)
+   private void initHandlerChain(ServerEndpointMetaData sepMetaData, List<HandlerInfo> hInfos, Set<String> handlerRoles, HandlerType type)
    {
       if(log.isDebugEnabled()) log.debug("Init handler chain with [" + hInfos.size() + "] handlers");
 
@@ -200,5 +200,9 @@ public class HandlerDelegateJAXRPC implements HandlerDelegate
          // what is the config for a handler chain?
          handlerChain.init(null);
       }
+   }
+   
+   public void update(Observable observable, Object object)
+   {
    }
 }

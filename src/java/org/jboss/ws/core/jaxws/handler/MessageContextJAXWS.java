@@ -28,15 +28,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
-
 
 /**
  * The interface MessageContext abstracts the message context that is processed by a handler in the handle  method.
@@ -49,8 +54,8 @@ import org.jboss.xb.binding.NamespaceRegistry;
  */
 public class MessageContextJAXWS extends CommonMessageContext implements MessageContext
 {
-   // The serialization context for this message ctx
-   private SerializationContext serContext;
+   private static Logger log = Logger.getLogger(MessageContextJAXWS.class);
+
    // The map of property scopes
    private HashMap<String, Scope> scopes = new HashMap<String, Scope>();
 
@@ -63,20 +68,16 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
       super(msgContext);
    }
 
-   /** Get or create the serialization context
+   /** Create the serialization context
     */
-   public SerializationContext getSerializationContext()
+   public SerializationContext createSerializationContext()
    {
-      if (serContext == null)
-      {
-         EndpointMetaData epMetaData = getEndpointMetaData();
-         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+      EndpointMetaData epMetaData = getEndpointMetaData();
+      ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
 
-         SerializationContextJAXWS jaxwsContext = new SerializationContextJAXWS();
-         jaxwsContext.setTypeMapping(serviceMetaData.getTypeMapping());
-         serContext = jaxwsContext;
-      }
-      return serContext;
+      SerializationContextJAXWS jaxwsContext = new SerializationContextJAXWS();
+      jaxwsContext.setTypeMapping(serviceMetaData.getTypeMapping());
+      return jaxwsContext;
    }
 
    /** Gets the namespace registry for this message context */
@@ -84,7 +85,7 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
    {
       return getSerializationContext().getNamespaceRegistry();
    }
-   
+
    /** Sets the scope of a property. */
    public void setScope(String key, Scope scope)
    {
@@ -96,6 +97,35 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
    {
       return scopes.get(key);
    }
+
+   public static CommonMessageContext processPivot(CommonMessageContext reqContext)
+   {
+      log.debug("Begin response processing");
+
+      // MTOM setting need to pass past pivot
+      boolean mtomEnabled = XOPContext.isMTOMEnabled();
+      
+      // Reverse the direction
+      Boolean outbound = (Boolean)reqContext.getProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+      outbound = new Boolean(!outbound.booleanValue());
+      
+      // Preserve addressing properties
+      SOAPAddressingProperties addrProps = (SOAPAddressingProperties)reqContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      
+      MessageContextAssociation.popMessageContext();
+      SOAPMessageContextJAXWS resContext = new SOAPMessageContextJAXWS(reqContext);
+      resContext.setSOAPMessage(null);
+      resContext.clear();
+
+      resContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, mtomEnabled);
+      resContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, outbound);
+      resContext.setProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
+      MessageContextAssociation.pushMessageContext(resContext);
+
+      return resContext;
+   }
+
+   // Map interface
 
    public int size()
    {

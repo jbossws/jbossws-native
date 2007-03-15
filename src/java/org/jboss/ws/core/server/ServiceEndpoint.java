@@ -201,7 +201,7 @@ public class ServiceEndpoint
 
          // Invoke the service endpoint
          ServiceEndpointInvoker seInvoker = seInfo.getInvoker();
-         SOAPMessage resMessage = seInvoker.invoke(seInfo, context);
+         SOAPMessage resMessage = seInvoker.invoke(context);
 
          if (resMessage != null)
             postProcessResponse(headerSource, resMessage);

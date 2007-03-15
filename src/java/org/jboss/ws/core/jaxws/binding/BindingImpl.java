@@ -90,9 +90,9 @@ public class BindingImpl implements BindingExt
    public List<Handler> getHandlerChain()
    {
       log.warn("[JBCTS-544] - Binding.getHandlerChain() expected to return a modifyable list");
-      // return Collections.unmodifiableList(handlerChain);
+      // return Collections.unmodifiableList(jaxwsHandlerChain);
       
-      return jaxwsHandlerChain;
+      return new ArrayList<Handler>(jaxwsHandlerChain);
    }
 
    public void setHandlerChain(List<Handler> handlerChain)

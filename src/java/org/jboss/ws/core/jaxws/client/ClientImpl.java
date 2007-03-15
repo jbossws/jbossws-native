@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxws.client;
 // $Id$
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -75,6 +76,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
    private final EndpointMetaData epMetaData;
    private final HandlerResolver handlerResolver;
+   private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
 
    public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
    {
@@ -122,8 +124,6 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
    /**
     * Callback when the config-name or config-file changes.
-    * @param observable
-    * @param object
     */
    public void update(Observable observable, Object object)
    {
@@ -137,7 +137,9 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    protected boolean callRequestHandlerChain(QName portName, HandlerType type)
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
-      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
+      HandlerChainExecutor executor =  new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
+      executorMap.put(type, executor);
+      
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
       return executor.handleRequest(msgContext);
    }
@@ -145,18 +147,25 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    @Override
    protected boolean callResponseHandlerChain(QName portName, HandlerType type)
    {
-      BindingExt binding = (BindingExt)getBindingProvider().getBinding();
-      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      return executor.handleResponse(msgContext);
+      HandlerChainExecutor executor =  executorMap.get(type);
+      return (executor != null ? executor.handleResponse(msgContext) : true);
+   }
+
+   @Override
+   protected boolean callFaultHandlerChain(QName portName, HandlerType type, Exception ex)
+   {
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      HandlerChainExecutor executor =  executorMap.get(type);
+      return (executor != null ? executor.handleFault(msgContext, ex) : true);
    }
 
    @Override
    protected void closeHandlerChain(QName portName, HandlerType type)
    {
-      BindingExt binding = (BindingExt)getBindingProvider().getBinding();
-      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
-      executor.close();
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      HandlerChainExecutor executor =  executorMap.get(type);
+      if (executor != null) executor.close(msgContext);
    }
 
    @Override
@@ -215,23 +224,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
    protected CommonMessageContext processPivot(CommonMessageContext requestContext)
    {
-      if(log.isDebugEnabled()) log.debug("Begin response processing");
-
-      // MTOM setting need to pass past pivot
-      boolean mtomEnabled = XOPContext.isMTOMEnabled();
-
-      // remove existing context
-      MessageContextAssociation.popMessageContext();
-
-      SOAPMessageContextJAXWS responseContext = new SOAPMessageContextJAXWS(requestContext);
-      responseContext.setSOAPMessage(null);
-      responseContext.clear(); // clear message context properties
-      responseContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, mtomEnabled);
-
-      // associate new context
-      MessageContextAssociation.pushMessageContext(responseContext);
-
-      return responseContext;
+      return MessageContextJAXWS.processPivot(requestContext);
    }
 
    /**

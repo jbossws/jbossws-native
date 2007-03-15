@@ -47,6 +47,8 @@ public abstract class CommonMessageContext
    // This property should be set the message context when it is ok to do so.
    public static String ALLOW_EXPAND_TO_DOM = "org.jboss.ws.allow.expand.dom";
    
+   // The serialization context for this message ctx
+   private SerializationContext serContext;
    // The operation for this message ctx
    private EndpointMetaData epMetaData;
    // The operation for this message ctx
@@ -66,6 +68,7 @@ public abstract class CommonMessageContext
       this.epMetaData = msgContext.epMetaData;
       this.opMetaData = msgContext.opMetaData;
       this.soapMessage = msgContext.soapMessage;
+      this.serContext = msgContext.serContext;
       this.props = msgContext.props;
    }
 
@@ -102,7 +105,21 @@ public abstract class CommonMessageContext
       this.soapMessage = soapMessage;
    }
 
-   public abstract SerializationContext getSerializationContext();
+   public SerializationContext getSerializationContext()
+   {
+      if (serContext == null)
+      {
+         serContext = createSerializationContext();
+      }
+      return serContext;
+   }
+   
+   public abstract SerializationContext createSerializationContext();
+   
+   public void setSerializationContext(SerializationContext serContext)
+   {
+      this.serContext = serContext;
+   }
    
    /** Gets the namespace registry for this message context */
    public NamespaceRegistry getNamespaceRegistry()

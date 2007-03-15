@@ -44,6 +44,7 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
@@ -212,6 +213,8 @@ public abstract class CommonClient implements StubExt
 
    protected abstract boolean callResponseHandlerChain(QName portName, HandlerType type);
 
+   protected abstract boolean callFaultHandlerChain(QName portName, HandlerType type, Exception ex);
+
    protected abstract void closeHandlerChain(QName portName, HandlerType type);
 
    protected abstract void setInboundContextProperties();
@@ -247,6 +250,10 @@ public abstract class CommonClient implements StubExt
          msgContext.setProperty(key, value);
       }
 
+      // The direction of the message
+      DirectionHolder direction = new DirectionHolder(Direction.OutBound);
+      
+      QName portName = epMetaData.getPortName();
       try
       {
          // Get the binding from the provider
@@ -265,7 +272,6 @@ public abstract class CommonClient implements StubExt
          setOutboundContextProperties();
 
          // Call the request handlers
-         QName portName = epMetaData.getPortName();
          boolean handlerPass = callRequestHandlerChain(portName, HandlerType.PRE);
          handlerPass = handlerPass && callRequestHandlerChain(portName, HandlerType.ENDPOINT);
          handlerPass = handlerPass && callRequestHandlerChain(portName, HandlerType.POST);
@@ -312,7 +318,7 @@ public abstract class CommonClient implements StubExt
             }
 
             // at pivot the message context might be replaced
-            msgContext = processPivot(msgContext);
+            msgContext = processPivotInternal(msgContext, direction);
 
             // Associate response message with message context
             msgContext.setSOAPMessage(resMessage);
@@ -337,7 +343,6 @@ public abstract class CommonClient implements StubExt
 
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.PRE);
-            closeHandlerChain(portName, HandlerType.ALL);
 
             // BP-1.0 R1027
             if (handlerPass)
@@ -356,10 +361,34 @@ public abstract class CommonClient implements StubExt
 
          return retObj;
       }
+      catch (Exception ex)
+      {
+         // Reverse the message direction
+         processPivotInternal(msgContext, direction);
+         
+         callFaultHandlerChain(portName, HandlerType.POST, ex);
+         callFaultHandlerChain(portName, HandlerType.ENDPOINT, ex);
+         callFaultHandlerChain(portName, HandlerType.PRE, ex);
+         throw ex;
+      }
       finally
       {
          resContext.putAll(msgContext.getProperties());
+         
+         closeHandlerChain(portName, HandlerType.POST);
+         closeHandlerChain(portName, HandlerType.ENDPOINT);
+         closeHandlerChain(portName, HandlerType.PRE);
       }
+   }
+
+   private CommonMessageContext processPivotInternal(CommonMessageContext msgContext, DirectionHolder direction)
+   {
+      if (direction.getDirection() == Direction.OutBound)
+      {
+         msgContext = processPivot(msgContext);
+         direction.setDirection(Direction.InBound);
+      }
+      return msgContext;
    }
 
    protected void addAttachmentParts(SOAPMessage reqMessage)

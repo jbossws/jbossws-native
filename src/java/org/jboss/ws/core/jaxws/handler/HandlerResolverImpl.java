@@ -82,7 +82,7 @@ public class HandlerResolverImpl implements HandlerResolver
    {
       log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
 
-      List<Handler> unsortedChain = new ArrayList<Handler>();
+      List<Handler> handlerChain = new ArrayList<Handler>();
 
       String bindingID = info.getBindingID();
       QName serviceName = info.getServiceName();
@@ -96,7 +96,7 @@ public class HandlerResolverImpl implements HandlerResolver
          if (list != null)
          {
             log.debug("add protocol handlers: " + list);
-            unsortedChain.addAll(list);
+            handlerChain.addAll(list);
          }
       }
 
@@ -106,7 +106,7 @@ public class HandlerResolverImpl implements HandlerResolver
          if (list != null)
          {
             log.debug("add service handlers: " + list);
-            unsortedChain.addAll(list);
+            handlerChain.addAll(list);
          }
       }
 
@@ -116,7 +116,7 @@ public class HandlerResolverImpl implements HandlerResolver
          if (list != null)
          {
             log.debug("add port handlers: " + list);
-            unsortedChain.addAll(list);
+            handlerChain.addAll(list);
          }
       }
 
@@ -124,23 +124,10 @@ public class HandlerResolverImpl implements HandlerResolver
       if (list != null)
       {
          log.debug("add general handlers: " + list);
-         unsortedChain.addAll(list);
+         handlerChain.addAll(list);
       }
 
-      // Sort handler logical handlers first
-      List<Handler> sortedChain = new ArrayList<Handler>();
-      for (Handler handler : unsortedChain)
-      {
-         if (handler instanceof LogicalHandler)
-            sortedChain.add(handler);
-      }
-      for (Handler handler : unsortedChain)
-      {
-         if ((handler instanceof LogicalHandler) == false)
-            sortedChain.add(handler);
-      }
-
-      return Collections.unmodifiableList(sortedChain);
+      return Collections.unmodifiableList(handlerChain);
    }
 
    public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)

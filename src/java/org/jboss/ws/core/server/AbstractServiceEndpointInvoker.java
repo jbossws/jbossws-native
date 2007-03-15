@@ -36,7 +36,6 @@ import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -44,10 +43,14 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
+import org.jboss.ws.core.DirectionHolder;
 import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
+import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerDelegateJAXWS;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
@@ -63,76 +66,81 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointInvoker, HandlerDelegate
+public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointInvoker
 {
    // provide logging
    private static Logger log = Logger.getLogger(AbstractServiceEndpointInvoker.class);
 
+   protected ServiceEndpointInfo seInfo;
    protected CommonBindingProvider bindingProvider;
-   protected HandlerDelegate handlerDelegate;
+   protected HandlerDelegate delegate;
 
    /** Initialize the service endpoint */
-   public void initServiceEndpoint(ServiceEndpointInfo seInfo)
+   public void init(ServiceEndpointInfo seInfo)
    {
+      this.seInfo = seInfo;
       ServerEndpointMetaData sepMetaData = seInfo.getServerEndpointMetaData();
 
       if (sepMetaData.getType() == EndpointMetaData.Type.JAXRPC)
       {
          bindingProvider = new CommonBindingProvider(sepMetaData);
-         handlerDelegate = new HandlerDelegateJAXRPC();
+         delegate = new HandlerDelegateJAXRPC(sepMetaData);
       }
       else
       {
          bindingProvider = new BindingProviderImpl(sepMetaData);
-         handlerDelegate = new HandlerDelegateJAXWS();
+         delegate = new HandlerDelegateJAXWS(sepMetaData);
       }
    }
 
    /** Load the SEI implementation bean if necessary */
-   protected abstract Class loadServiceEndpoint(ServiceEndpointInfo seInfo) throws ClassNotFoundException;
+   protected abstract Class loadServiceEndpoint() throws ClassNotFoundException;
 
    /** Create the instance of the SEI implementation bean if necessary */
-   protected abstract Object createServiceEndpointInstance(ServiceEndpointInfo seInfo, Object context, Class seiImplClass) throws Exception;
+   protected abstract Object createServiceEndpointInstance(Object context, Class seiImplClass) throws Exception;
 
    /** Invoke the instance of the SEI implementation bean */
-   protected abstract void invokeServiceEndpointInstance(ServiceEndpointInfo seInfo, Object seiImpl, EndpointInvocation epInv) throws Exception;
+   protected abstract void invokeServiceEndpointInstance(Object seiImpl, EndpointInvocation epInv) throws Exception;
 
    /** Destroy the instance of the SEI implementation bean if necessary */
-   protected abstract void destroyServiceEndpointInstance(ServiceEndpointInfo seInfo, Object seiImpl);
+   protected abstract void destroyServiceEndpointInstance(Object seiImpl);
 
-   public boolean callRequestHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   public boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
-      return handlerDelegate.callRequestHandlerChain(seInfo, type);
+      return delegate.callRequestHandlerChain(sepMetaData, type);
    }
 
-   public boolean callResponseHandlerChain(ServiceEndpointInfo seInfo, HandlerType type)
+   public boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
-      return handlerDelegate.callResponseHandlerChain(seInfo, type);
+      return delegate.callResponseHandlerChain(sepMetaData, type);
    }
 
-   public void closeHandlerChain(ServiceEndpointInfo seInfo)
+   public void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
-      handlerDelegate.closeHandlerChain(seInfo);
+      delegate.closeHandlerChain(sepMetaData, type);
    }
 
-   public boolean callFaultHandlerChain(ServiceEndpointInfo seInfo, HandlerType type, Exception ex)
+   public boolean callFaultHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type, Exception ex)
    {
-      return handlerDelegate.callFaultHandlerChain(seInfo, type, ex);
+      return delegate.callFaultHandlerChain(sepMetaData, type, ex);
    }
 
    /** Invoke the the service endpoint */
-   public SOAPMessage invoke(ServiceEndpointInfo seInfo, Object context) throws Exception
+   public SOAPMessage invoke(Object context) throws Exception
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
+      ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)msgContext.getEndpointMetaData();
       SOAPMessageImpl reqMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
 
       // Load the endpoint implementation bean
-      Class seImpl = loadServiceEndpoint(seInfo);
+      Class seImpl = loadServiceEndpoint();
 
       // Create an instance of the endpoint implementation bean
-      Object seInstance = createServiceEndpointInstance(seInfo, context, seImpl);
+      Object seInstance = createServiceEndpointInstance(context, seImpl);
 
+      // The direction of the message
+      DirectionHolder direction = new DirectionHolder(Direction.InBound);
+      
       try
       {
          boolean oneway = false;
@@ -141,7 +149,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          OperationMetaData opMetaData = null;
 
          // call the handler chain
-         boolean handlersPass = callRequestHandlerChain(seInfo, HandlerType.PRE);
+         boolean handlersPass = callRequestHandlerChain(sepMetaData, HandlerType.PRE);
 
          // Unbind the request message
          if (handlersPass)
@@ -150,7 +158,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             binding = bindingProvider.getCommonBinding();
 
             // Get the operation meta data from the SOAP message
-            opMetaData = getDispatchDestination(epMetaData, reqMessage);
+            opMetaData = getDispatchDestination(sepMetaData, reqMessage);
             msgContext.setOperationMetaData(opMetaData);
             oneway = opMetaData.isOneWay();
 
@@ -158,35 +166,31 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
          }
 
-         handlersPass = handlersPass && callRequestHandlerChain(seInfo, HandlerType.ENDPOINT);
-         handlersPass = handlersPass && callRequestHandlerChain(seInfo, HandlerType.POST);
-
-         // Check if protocol handlers modified the payload
-         if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
-         {
-            if (log.isDebugEnabled())
-               log.debug("Handler modified body payload, unbind message again");
-            epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
-         }
+         handlersPass = handlersPass && callRequestHandlerChain(sepMetaData, HandlerType.ENDPOINT);
+         handlersPass = handlersPass && callRequestHandlerChain(sepMetaData, HandlerType.POST);
 
          if (handlersPass)
          {
+            // Check if protocol handlers modified the payload
+            if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
+            {
+               log.debug("Handler modified body payload, unbind message again");
+               epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
+            }
+
             // Invoke the service endpoint
             msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
             try
             {
-               invokeServiceEndpointInstance(seInfo, seInstance, epInv);
+               invokeServiceEndpointInstance(seInstance, epInv);
             }
             finally
             {
                msgContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             }
 
-            msgContext = processPivot(msgContext);
-
-            // Set the outbound property
-            if (epMetaData.getType() == EndpointMetaData.Type.JAXWS)
-               msgContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
+            // Reverse the message direction
+            msgContext = processPivotInternal(msgContext, direction);
 
             if (binding instanceof CommonSOAPBinding)
                XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
@@ -195,50 +199,73 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             SOAPMessage resMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
             msgContext.setSOAPMessage(resMessage);
          }
+         else
+         {
+            // Reverse the message direction without calling the endpoint
+            SOAPMessage resMessage = msgContext.getSOAPMessage();
+            msgContext = processPivotInternal(msgContext, direction);
+            msgContext.setSOAPMessage(resMessage);
+         }
 
          // call the handler chain
          if (oneway == false)
          {
-            handlersPass = callResponseHandlerChain(seInfo, HandlerType.POST);
-            handlersPass = handlersPass && callResponseHandlerChain(seInfo, HandlerType.ENDPOINT);
-            handlersPass = handlersPass && callResponseHandlerChain(seInfo, HandlerType.PRE);
-            closeHandlerChain(seInfo);
+            handlersPass = callResponseHandlerChain(sepMetaData, HandlerType.POST);
+            handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, HandlerType.ENDPOINT);
+            handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, HandlerType.PRE);
          }
 
          SOAPMessage resMessage = msgContext.getSOAPMessage();
          return resMessage;
       }
-      catch (Exception ex)
+      catch (RuntimeException ex)
       {
+         // Reverse the message direction
+         processPivotInternal(msgContext, direction);
+
          try
          {
             CommonBinding binding = bindingProvider.getCommonBinding();
             binding.bindFaultMessage(ex);
 
             // call the handler chain
-            boolean handlersPass = callFaultHandlerChain(seInfo, HandlerType.POST, ex);
-            handlersPass = handlersPass && callFaultHandlerChain(seInfo, HandlerType.ENDPOINT, ex);
-            handlersPass = handlersPass && callFaultHandlerChain(seInfo, HandlerType.PRE, ex);
-            closeHandlerChain(seInfo);
+            boolean handlersPass = callFaultHandlerChain(sepMetaData, HandlerType.POST, ex);
+            handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, HandlerType.ENDPOINT, ex);
+            handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, HandlerType.PRE, ex);
          }
-         catch (Exception subEx)
+         catch (RuntimeException subEx)
          {
-            log.warn("Cannot process handlerChain.handleFault, ignoring: ", subEx);
+            log.warn("Exception while processing handleFault: ", ex);
+            ex = subEx;
          }
          throw ex;
       }
       finally
       {
-         destroyServiceEndpointInstance(seInfo, seInstance);
+         closeHandlerChain(sepMetaData, HandlerType.POST);
+         closeHandlerChain(sepMetaData, HandlerType.ENDPOINT);
+         closeHandlerChain(sepMetaData, HandlerType.PRE);
+
+         destroyServiceEndpointInstance(seInstance);
       }
    }
 
-   protected CommonMessageContext processPivot(CommonMessageContext requestContext)
+   private CommonMessageContext processPivotInternal(CommonMessageContext msgContext, DirectionHolder direction)
    {
-      if (log.isDebugEnabled())
-         log.debug("Begin response processing");
-      // TODO: implement
-      return requestContext;
+      if (direction.getDirection() == Direction.InBound)
+      {
+         EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
+         if (epMetaData.getType() == EndpointMetaData.Type.JAXRPC)
+         {
+            msgContext = MessageContextJAXRPC.processPivot(msgContext);
+         }
+         else
+         {
+            msgContext = MessageContextJAXWS.processPivot(msgContext);
+         }
+         direction.setDirection(Direction.OutBound);
+      }
+      return msgContext;
    }
 
    private OperationMetaData getDispatchDestination(EndpointMetaData epMetaData, SOAPMessageImpl reqMessage) throws SOAPException
