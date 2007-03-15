@@ -23,11 +23,19 @@ package org.jboss.ws.core;
 
 // $Id$
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.soap.SOAPFaultException;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
@@ -49,5 +57,26 @@ public abstract class CommonSOAP12Binding extends CommonSOAPBinding
       MessageFactoryImpl factory = new MessageFactoryImpl();
       factory.setEnvNamespace(Constants.NS_SOAP12_ENV);
       return factory.createMessage();
+   }
+
+   protected abstract Set<String> getRoles();
+   
+   @Override
+   protected void verifyUnderstoodHeader(SOAPHeaderElement element) throws Exception
+   {
+      QName name = new QName(element.getNamespaceURI(), element.getLocalName());
+      String actor = element.getActor();
+      Set<String> roles = getRoles();
+      
+      boolean isActor = actor == null || actor.length() == 0 || Constants.URI_SOAP11_NEXT_ACTOR.equals(actor) || roles.contains(actor);
+      if (isActor && !handlerDelegate.getHeaders().contains(name))
+      {
+         // How do we pass NotUnderstood blocks? They are not in the fault element
+         QName faultCode = SOAPConstants.SOAP_MUSTUNDERSTAND_FAULT;
+         SOAPFaultImpl fault = new SOAPFaultImpl();
+         fault.setFaultCode(faultCode);
+         fault.setFaultString("SOAP header blocks not understood");
+         throwFaultException(fault);
+      }
    }
 }

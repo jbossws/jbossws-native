@@ -25,6 +25,7 @@ package org.jboss.ws.core.jaxws.handler;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
@@ -119,6 +120,11 @@ public class HandlerDelegateJAXWS extends HandlerDelegate
       String bindingId = epMetaData.getBindingId();
       PortInfo info = new PortInfoImpl(serviceName, portName, bindingId);
       return info;
+   }
+
+   public Set<QName> getHeaders()
+   {
+      return resolver.getHeaders();
    }
 
    private HandlerChainExecutor createExecutor(ServerEndpointMetaData sepMetaData, HandlerType type)

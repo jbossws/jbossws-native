@@ -23,14 +23,18 @@ package org.jboss.ws.core;
 
 // $Id$
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
@@ -41,6 +45,7 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import org.apache.xerces.xs.XSElementDeclaration;
@@ -51,6 +56,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.server.HandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
@@ -69,6 +75,7 @@ import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
@@ -87,6 +94,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
    protected Logger log = Logger.getLogger(getClass());
 
    private boolean mtomEnabled;
+
+   protected HandlerDelegate handlerDelegate;
 
    /** A constant representing the identity of the SOAP 1.1 over HTTP binding. */
    public static final String SOAP11HTTP_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http";
@@ -800,6 +809,39 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
    abstract protected void throwFaultException(SOAPFaultImpl fault) throws Exception;
 
+   abstract protected void verifyUnderstoodHeader(SOAPHeaderElement element) throws Exception;
+   
+   public void checkMustUnderstand(OperationMetaData opMetaData) throws Exception
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext == null)
+         throw new WSException("MessageContext not available");
+            
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
+      SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
+      if (soapEnvelope == null || soapEnvelope.getHeader() == null)
+         return;
+
+      Iterator it = soapEnvelope.getHeader().examineAllHeaderElements();
+      while (it.hasNext())
+      {
+         SOAPHeaderElement soapHeaderElement = (SOAPHeaderElement)it.next();
+         Name name = soapHeaderElement.getElementName();
+         QName xmlName = new QName(name.getURI(), name.getLocalName());
+
+         ParameterMetaData paramMetaData = (opMetaData != null ? opMetaData.getParameter(xmlName) : null);
+         boolean isBoundHeader = (paramMetaData != null && paramMetaData.isInHeader());
+
+         if (!isBoundHeader && soapHeaderElement.getMustUnderstand())
+            verifyUnderstoodHeader(soapHeaderElement);
+      }                 
+   }
+   
+   public void setHandlerDelegate(HandlerDelegate delegate)
+   {
+      handlerDelegate = delegate;
+   }
+   
    private void handleException(Exception ex) throws BindingException
    {
       if (ex instanceof RuntimeException)

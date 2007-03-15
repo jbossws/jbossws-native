@@ -39,6 +39,7 @@ import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.server.HandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -171,5 +172,10 @@ public class MessageBinding implements CommonBinding, BindingExt
    public String getBindingID()
    {
       throw new NotImplementedException();
+   }
+
+   public void setHandlerDelegate(HandlerDelegate delegate)
+   {
+      // Not needed
    }
 }

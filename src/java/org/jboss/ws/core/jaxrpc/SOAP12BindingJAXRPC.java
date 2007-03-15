@@ -23,9 +23,12 @@ package org.jboss.ws.core.jaxrpc;
 
 //$Id:SOAP12BindingJAXRPC.java 1054 2006-09-26 10:33:43Z thomas.diesler@jboss.com $
 
+import java.util.Set;
+
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.CommonSOAP12Binding;
+import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
@@ -55,6 +58,15 @@ public class SOAP12BindingJAXRPC extends CommonSOAP12Binding
       return SOAPFaultHelperJAXRPC.exceptionToFaultMessage(ex);
    }
    
+   @Override
+   public Set<String> getRoles()
+   {
+      if (!(handlerDelegate instanceof HandlerDelegateJAXRPC))
+         throw new IllegalStateException("HandlerDelegateJAXRPC was not available");
+
+      return ((HandlerDelegateJAXRPC)handlerDelegate).getRoles();
+   }
+
    protected void throwFaultException(SOAPFaultImpl fault) throws Exception
    {
       throw SOAPFaultHelperJAXRPC.getSOAPFaultException(fault);

@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxrpc.handler;
 // $Id$
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +61,10 @@ public class HandlerDelegateJAXRPC extends HandlerDelegate
    private ServerHandlerChain jaxrpcHandlerChain;
    // This endpoints handler chain
    private ServerHandlerChain postHandlerChain;
+   // Set of understood headers
+   Set<QName> headers = new HashSet<QName>();
+   // Set of roles
+   Set<String> roles = new HashSet<String>();
 
    public HandlerDelegateJAXRPC(ServerEndpointMetaData sepMetaData)
    {
@@ -81,7 +86,6 @@ public class HandlerDelegateJAXRPC extends HandlerDelegate
       }
 
       boolean status = true;
-      String[] roles = null;
 
       HandlerChain handlerChain = null;
       if (type == HandlerType.PRE)
@@ -92,15 +96,8 @@ public class HandlerDelegateJAXRPC extends HandlerDelegate
          handlerChain = postHandlerChain;
       
       if (handlerChain != null)
-      {
-         roles = handlerChain.getRoles();
          status = handlerChain.handleRequest(msgContext);
-      }
 
-      // BP-1.0 R1027
-      if (type == HandlerType.POST)
-         HandlerChainBaseImpl.checkMustUnderstand(msgContext, roles);
-      
       return status;
    }
 
@@ -200,6 +197,18 @@ public class HandlerDelegateJAXRPC extends HandlerDelegate
          // what is the config for a handler chain?
          handlerChain.init(null);
       }
+      handlerChain.pullHeaders(headers);
+      Collections.addAll(roles, handlerChain.getRoles());
+   }
+   
+   public Set<String> getRoles()
+   {
+      return roles;
+   }
+
+   public Set<QName> getHeaders()
+   {
+      return headers;
    }
    
    public void update(Observable observable, Object object)

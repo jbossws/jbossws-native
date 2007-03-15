@@ -144,9 +144,10 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       try
       {
          boolean oneway = false;
-         CommonBinding binding = null;
          EndpointInvocation epInv = null;
          OperationMetaData opMetaData = null;
+         CommonBinding binding = bindingProvider.getCommonBinding();
+         binding.setHandlerDelegate(delegate);
 
          // call the handler chain
          boolean handlersPass = callRequestHandlerChain(sepMetaData, HandlerType.PRE);
@@ -154,14 +155,25 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          // Unbind the request message
          if (handlersPass)
          {
-            // Get the binding from the provideer
-            binding = bindingProvider.getCommonBinding();
-
             // Get the operation meta data from the SOAP message
             opMetaData = getDispatchDestination(sepMetaData, reqMessage);
             msgContext.setOperationMetaData(opMetaData);
             oneway = opMetaData.isOneWay();
 
+            /* 
+             * From JAX-WS 10.2.1 - "7. If the node does not understand how to process
+             * the message, then neither handlers nor the endpoint
+             * are invoked and instead the binding generates a SOAP must
+             * understand exception"
+             *
+             * Therefore, this must precede the ENDPOINT chain; however, The PRE
+             * chain still must happen first since the message may be encrypted, in which
+             * case the operation is still not known. Without knowing the operation, it 
+             * is not possible to determine what headers are understood by the endpoint.
+             */
+            if (binding instanceof CommonSOAPBinding)
+               ((CommonSOAPBinding)binding).checkMustUnderstand(opMetaData);
+            
             // Unbind the request message
             epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
          }

@@ -34,6 +34,7 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.server.HandlerDelegate;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
@@ -96,5 +97,10 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
    public String getBindingID()
    {
       throw new NotImplementedException();
+   }
+
+   public void setHandlerDelegate(HandlerDelegate delegate)
+   {
+      // Not needed
    }
 }

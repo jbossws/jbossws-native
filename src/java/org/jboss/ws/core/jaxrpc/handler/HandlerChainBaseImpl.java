@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxrpc.handler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -105,6 +106,16 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          list.add(entry.info);
       }
       return list;
+   }
+   
+   public void pullHeaders(Set<QName> headers)
+   {
+      for (HandlerEntry entry : handlers)
+      {
+         QName[] handlerHeaders = entry.handler.getHeaders();
+         if (handlerHeaders != null)
+            Collections.addAll(headers, handlerHeaders);
+      }
    }
 
    /**

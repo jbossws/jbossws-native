@@ -24,11 +24,11 @@ package org.jboss.ws.core.jaxws.handler;
 // $Id$
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +40,7 @@ import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.LogicalHandler;
 import javax.xml.ws.handler.PortInfo;
+import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
 
@@ -72,6 +73,9 @@ public class HandlerResolverImpl implements HandlerResolver
    private Map<PortInfo, List<Handler>> preHandlers = new HashMap<PortInfo, List<Handler>>();
    private Map<PortInfo, List<Handler>> jaxwsHandlers = new HashMap<PortInfo, List<Handler>>();
    private Map<PortInfo, List<Handler>> postHandlers = new HashMap<PortInfo, List<Handler>>();
+   
+   // understood headers
+   Set<QName> headers = new HashSet<QName>();
 
    public List<Handler> getHandlerChain(PortInfo info)
    {
@@ -157,7 +161,7 @@ public class HandlerResolverImpl implements HandlerResolver
 
             if (handler instanceof GenericSOAPHandler)
                ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
-            
+           
             // Inject resources 
             injectResources(handler);
             
@@ -320,6 +324,14 @@ public class HandlerResolverImpl implements HandlerResolver
          handlerMap.put(info, handlerList = new ArrayList<Handler>());
       }
       handlerList.add(handler);
+      
+      // Ask all initialized handlers for what headers they understand
+      if (handler instanceof SOAPHandler)
+      {
+         Set handlerHeaders = ((SOAPHandler)handler).getHeaders();
+         if (handlerHeaders != null)
+            headers.addAll(handlerHeaders);
+      }
 
       return true;
    }
@@ -337,5 +349,10 @@ public class HandlerResolverImpl implements HandlerResolver
          throw new IllegalArgumentException("Illegal handler type: " + type);
       
       return handlerMap;
+   }
+   
+   public Set<QName> getHeaders()
+   {
+      return headers;
    }
 }

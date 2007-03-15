@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.server.HandlerDelegate;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
@@ -53,4 +54,6 @@ public interface CommonBinding
 
    /** bind an exception to a fault message */
    Object bindFaultMessage(Exception ex);
+   
+   void setHandlerDelegate(HandlerDelegate delegate);
 }

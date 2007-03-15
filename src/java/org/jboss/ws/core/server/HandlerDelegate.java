@@ -23,6 +23,10 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
@@ -57,4 +61,6 @@ public abstract class HandlerDelegate implements Configurable
    {
       sepMetaData.setHandlersInitialized(flag);
    }
+   
+   public abstract Set<QName> getHeaders();
 }

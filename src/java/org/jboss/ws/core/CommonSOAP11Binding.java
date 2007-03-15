@@ -23,13 +23,21 @@ package org.jboss.ws.core;
 
 // $Id$
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.Use;
+import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
@@ -59,5 +67,26 @@ public abstract class CommonSOAP11Binding extends CommonSOAPBinding
       }
          
       return soapMessage;
+   }
+   
+   public abstract Set<String> getRoles();
+   
+   @Override
+   protected void verifyUnderstoodHeader(SOAPHeaderElement element) throws Exception
+   {      
+      QName name = new QName(element.getNamespaceURI(), element.getLocalName());
+      String actor = element.getActor();
+      Set<String> roles = getRoles();
+      
+      boolean isActor = actor == null || actor.length() == 0 || Constants.URI_SOAP11_NEXT_ACTOR.equals(actor) || roles.contains(actor);
+      if (isActor && !handlerDelegate.getHeaders().contains(name))
+      {
+         QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
+         String faultString = "Unprocessed 'mustUnderstand' header element: " + element.getElementName();
+         SOAPFaultImpl fault = new SOAPFaultImpl();
+         fault.setFaultCode(faultCode);
+         fault.setFaultString(faultString);
+         throwFaultException(fault);
+      }
    }
 }
