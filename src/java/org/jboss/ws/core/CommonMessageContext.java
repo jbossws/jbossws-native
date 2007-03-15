@@ -23,14 +23,19 @@ package org.jboss.ws.core;
 
 // $Id$
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.MessageContext.Scope;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.server.MessageContextPropertyHelper;
+import org.jboss.ws.core.server.PropertyCallback;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -41,12 +46,14 @@ import org.jboss.xb.binding.NamespaceRegistry;
  * @author Thomas.Diesler@jboss.org
  * @since 1-Sep-2006
  */
-public abstract class CommonMessageContext 
+public abstract class CommonMessageContext implements Map<String, Object>
 {
+   private static Logger log = Logger.getLogger(CommonMessageContext.class);
+   
    // expandToDOM in the SOAPContentElement should not happen during normal operation 
    // This property should be set the message context when it is ok to do so.
    public static String ALLOW_EXPAND_TO_DOM = "org.jboss.ws.allow.expand.dom";
-   
+
    // The serialization context for this message ctx
    private SerializationContext serContext;
    // The operation for this message ctx
@@ -55,8 +62,10 @@ public abstract class CommonMessageContext
    private OperationMetaData opMetaData;
    // The SOAPMessage in this message context
    private SOAPMessage soapMessage;
-   // The map of the properties
-   protected Map<String, Object> props = new HashMap<String, Object>();
+   // The map of scoped properties
+   protected Map<String, ScopedProperty> scopedProps = new HashMap<String, ScopedProperty>();
+   // The current property scope
+   protected Scope currentScope = Scope.APPLICATION;
 
    public CommonMessageContext()
    {
@@ -69,7 +78,18 @@ public abstract class CommonMessageContext
       this.opMetaData = msgContext.opMetaData;
       this.soapMessage = msgContext.soapMessage;
       this.serContext = msgContext.serContext;
-      this.props = msgContext.props;
+      this.scopedProps = msgContext.scopedProps;
+      this.currentScope = msgContext.currentScope;
+   }
+
+   public Scope getCurrentScope()
+   {
+      return currentScope;
+   }
+
+   public void setCurrentScope(Scope currentScope)
+   {
+      this.currentScope = currentScope;
    }
 
    public EndpointMetaData getEndpointMetaData()
@@ -113,28 +133,30 @@ public abstract class CommonMessageContext
       }
       return serContext;
    }
-   
+
    public abstract SerializationContext createSerializationContext();
-   
+
    public void setSerializationContext(SerializationContext serContext)
    {
       this.serContext = serContext;
    }
-   
+
    /** Gets the namespace registry for this message context */
    public NamespaceRegistry getNamespaceRegistry()
    {
       return getSerializationContext().getNamespaceRegistry();
    }
-   
+
+   /** Get the message context properties */
    public Map<String, Object> getProperties()
    {
+      Map<String, Object> props = new HashMap<String, Object>();
+      for (String key : keySet())
+      {
+         Object value = get(key);
+         props.put(key, value);
+      }
       return props;
-   }
-
-   public void setProperties(Map<String, Object> props)
-   {
-      this.props = props;
    }
 
    /**
@@ -142,7 +164,7 @@ public abstract class CommonMessageContext
     */
    public boolean containsProperty(String name)
    {
-      return props.containsKey(name);
+      return containsKey(name);
    }
 
    /**
@@ -150,14 +172,7 @@ public abstract class CommonMessageContext
     */
    public Object getProperty(String name)
    {
-      Object value = props.get(name);
-      
-      if (value instanceof MessageContextPropertyHelper)
-      {
-         return ((MessageContextPropertyHelper)value).get();
-      }
-      
-      return value;
+      return get(name);
    }
 
    /**
@@ -165,7 +180,7 @@ public abstract class CommonMessageContext
     */
    public Iterator getPropertyNames()
    {
-      return props.keySet().iterator();
+      return keySet().iterator();
    }
 
    /**
@@ -173,7 +188,7 @@ public abstract class CommonMessageContext
     */
    public void removeProperty(String name)
    {
-      props.remove(name);
+      remove(name);
    }
 
    /**
@@ -182,6 +197,194 @@ public abstract class CommonMessageContext
     */
    public void setProperty(String name, Object value)
    {
-      props.put(name, value);
+      put(name, value);
+   }
+
+   // Map interface
+
+   public int size()
+   {
+      return scopedProps.size();
+   }
+
+   public boolean isEmpty()
+   {
+      return scopedProps.isEmpty();
+   }
+
+   public boolean containsKey(Object key)
+   {
+      ScopedProperty prop = scopedProps.get(key);
+      return isValidInScope(prop);
+   }
+
+   private boolean isValidInScope(ScopedProperty prop)
+   {
+      // A property of scope APPLICATION is always visible
+      boolean valid = (prop != null && (prop.getScope() == Scope.APPLICATION || currentScope == Scope.HANDLER));
+      return valid;
+   }
+
+   public boolean containsValue(Object value)
+   {
+      boolean valueFound = false;
+      for (ScopedProperty prop : scopedProps.values())
+      {
+         if (prop.getValue().equals(value) && isValidInScope(prop))
+         {
+            valueFound = true;
+            break;
+         }
+      }
+      return valueFound;
+   }
+
+   public Object get(Object key)
+   {
+      Object value = null;
+
+      ScopedProperty prop = scopedProps.get(key);
+      if (isValidInScope(prop))
+         value = prop.getValue();
+
+      return value;
+   }
+
+   public Object put(String key, Object value)
+   {
+      ScopedProperty prevProp = scopedProps.get(key);
+      if (prevProp != null && !isValidInScope(prevProp))
+         throw new IllegalArgumentException("Cannot set value for HANDLER scoped property: " + key);
+
+      scopedProps.put(key, new ScopedProperty(key, value, currentScope));
+      return prevProp != null ? prevProp.getValue() : null;
+   }
+
+   public Object remove(Object key)
+   {
+      ScopedProperty prevProp = scopedProps.get(key);
+      if (prevProp != null && !isValidInScope(prevProp))
+         throw new IllegalArgumentException("Cannot set remove for HANDLER scoped property: " + key);
+
+      return scopedProps.remove(key);
+   }
+
+   public void putAll(Map<? extends String, ? extends Object> srcMap)
+   {
+      for (String key : srcMap.keySet())
+      {
+         try
+         {
+            Object value = srcMap.get(key);
+            put(key, value);
+         }
+         catch (IllegalArgumentException ex)
+         {
+            log.debug("Ignore: " + ex.getMessage());
+         }
+      }
+   }
+
+   public void clear()
+   {
+      scopedProps.clear();
+   }
+
+   public Set<String> keySet()
+   {
+      return scopedProps.keySet();
+   }
+
+   public Collection<Object> values()
+   {
+      Collection<Object> values = new HashSet<Object>();
+      for (ScopedProperty prop : scopedProps.values())
+      {
+         if (isValidInScope(prop))
+            values.add(prop.getValue());
+
+      }
+      return values;
+   }
+
+   public Set<Entry<String, Object>> entrySet()
+   {
+      Set<Entry<String, Object>> entries = new HashSet<Entry<String, Object>>();
+      for (ScopedProperty prop : scopedProps.values())
+      {
+         if (isValidInScope(prop))
+         {
+            String name = prop.getName();
+            Object value = prop.getValue();
+            Entry<String, Object> entry = new ImmutableEntry<String, Object>(name, value);
+            entries.add(entry);
+         }
+      }
+      return entries;
+   }
+
+   private static class ImmutableEntry<K, V> implements Map.Entry<K, V>
+   {
+      final K k;
+      final V v;
+
+      ImmutableEntry(K key, V value)
+      {
+         k = key;
+         v = value;
+      }
+
+      public K getKey()
+      {
+         return k;
+      }
+
+      public V getValue()
+      {
+         return v;
+      }
+
+      public V setValue(V value)
+      {
+         throw new UnsupportedOperationException();
+      }
+   }
+
+   public static class ScopedProperty
+   {
+      private Scope scope;
+      private String name;
+      private Object value;
+
+      public ScopedProperty(String name, Object value, Scope scope)
+      {
+         this.scope = scope;
+         this.name = name;
+         this.value = value;
+      }
+
+      public String getName()
+      {
+         return name;
+      }
+
+      public Scope getScope()
+      {
+         return scope;
+      }
+
+      public Object getValue()
+      {
+         Object realValue = value;
+         if (value instanceof PropertyCallback)
+            realValue = ((PropertyCallback)value).get();
+
+         return realValue;
+      }
+      
+      public String toString()
+      {
+         return scope + ":" + name + "=" + value;
+      }
    }
 }

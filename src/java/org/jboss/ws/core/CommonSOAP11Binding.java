@@ -26,16 +26,13 @@ package org.jboss.ws.core;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.Use;
-import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;

@@ -33,6 +33,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.LogicalHandler;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
@@ -296,40 +297,61 @@ public class HandlerChainExecutor
       throw new WebServiceException(ex);
    }
 
-   private boolean handleMessage(Handler currHandler, SOAPMessageContextJAXWS soapContext)
+   private boolean handleMessage(Handler currHandler, SOAPMessageContextJAXWS msgContext)
    {
-      MessageContext handlerContext = soapContext;
+      MessageContext handlerContext = msgContext;
       if (currHandler instanceof LogicalHandler)
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
 
-         handlerContext = new LogicalMessageContextImpl(soapContext);
+         handlerContext = new LogicalMessageContextImpl(msgContext);
       }
 
       if (closeHandlers.contains(currHandler) == false)
          closeHandlers.add(currHandler);
       
-      boolean doNext = currHandler.handleMessage(handlerContext);
+      
+      boolean doNext = false;
+      Scope scope = msgContext.getCurrentScope();
+      try
+      {
+         msgContext.setCurrentScope(Scope.HANDLER);
+         doNext = currHandler.handleMessage(handlerContext);
+      }
+      finally
+      {
+         msgContext.setCurrentScope(scope);
+      }
 
       return doNext;
    }
 
-   private boolean handleFault(Handler currHandler, SOAPMessageContextJAXWS soapContext)
+   private boolean handleFault(Handler currHandler, SOAPMessageContextJAXWS msgContext)
    {
-      MessageContext handlerContext = soapContext;
+      MessageContext handlerContext = msgContext;
       if (currHandler instanceof LogicalHandler)
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
          
-         handlerContext = new LogicalMessageContextImpl(soapContext);
+         handlerContext = new LogicalMessageContextImpl(msgContext);
       }
 
       if (closeHandlers.contains(currHandler) == false)
          closeHandlers.add(currHandler);
       
-      boolean doNext = currHandler.handleFault(handlerContext);
+      boolean doNext = false;
+      Scope scope = msgContext.getCurrentScope();
+      try
+      {
+         msgContext.setCurrentScope(Scope.HANDLER);
+         doNext = currHandler.handleFault(handlerContext);
+      }
+      finally
+      {
+         msgContext.setCurrentScope(scope);
+      }
 
       return doNext;
    }

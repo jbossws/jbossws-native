@@ -240,14 +240,14 @@ public abstract class CommonClient implements StubExt
       boolean oneway = forceOneway || opMetaData.isOneWay();
 
       // Associate a message context with the current thread
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      msgContext.setOperationMetaData(opMetaData);
+      CommonMessageContext reqContext = MessageContextAssociation.peekMessageContext();
+      reqContext.setOperationMetaData(opMetaData);
 
       // copy properties to the message context
       for (String key : getRequestContext().keySet())
       {
          Object value = getRequestContext().get(key);
-         msgContext.setProperty(key, value);
+         reqContext.setProperty(key, value);
       }
 
       // The direction of the message
@@ -281,7 +281,7 @@ public abstract class CommonClient implements StubExt
             String targetAddress = getTargetEndpointAddress();
 
             // Fall back to wsa:To
-            AddressingProperties addrProps = (AddressingProperties)msgContext.getProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
+            AddressingProperties addrProps = (AddressingProperties)reqContext.getProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
             if (targetAddress == null && addrProps != null && addrProps.getTo() != null)
             {
                AddressingConstantsImpl ADDR = new AddressingConstantsImpl();
@@ -318,10 +318,10 @@ public abstract class CommonClient implements StubExt
             }
 
             // at pivot the message context might be replaced
-            msgContext = processPivotInternal(msgContext, direction);
+            reqContext = processPivotInternal(reqContext, direction);
 
             // Associate response message with message context
-            msgContext.setSOAPMessage(resMessage);
+            reqContext.setSOAPMessage(resMessage);
          }
 
          setInboundContextProperties();
@@ -337,7 +337,7 @@ public abstract class CommonClient implements StubExt
             if (handlerPass)
             {
                // unbind the return values
-               SOAPMessage resMessage = msgContext.getSOAPMessage();
+               SOAPMessage resMessage = reqContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
@@ -346,13 +346,13 @@ public abstract class CommonClient implements StubExt
 
             // BP-1.0 R1027
             if (handlerPass)
-               HandlerChainBaseImpl.checkMustUnderstand(msgContext, new String[] {});
+               HandlerChainBaseImpl.checkMustUnderstand(reqContext, new String[] {});
 
             // Check if protocol handlers modified the payload
             if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
             {
-               if(log.isDebugEnabled()) log.debug("Handler modified body payload, unbind message again");
-               SOAPMessage resMessage = msgContext.getSOAPMessage();
+               log.debug("Handler modified body payload, unbind message again");
+               SOAPMessage resMessage = reqContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
@@ -364,7 +364,7 @@ public abstract class CommonClient implements StubExt
       catch (Exception ex)
       {
          // Reverse the message direction
-         processPivotInternal(msgContext, direction);
+         processPivotInternal(reqContext, direction);
          
          callFaultHandlerChain(portName, HandlerType.POST, ex);
          callFaultHandlerChain(portName, HandlerType.ENDPOINT, ex);
@@ -373,7 +373,7 @@ public abstract class CommonClient implements StubExt
       }
       finally
       {
-         resContext.putAll(msgContext.getProperties());
+         resContext.putAll(reqContext.getProperties());
          
          closeHandlerChain(portName, HandlerType.POST);
          closeHandlerChain(portName, HandlerType.ENDPOINT);

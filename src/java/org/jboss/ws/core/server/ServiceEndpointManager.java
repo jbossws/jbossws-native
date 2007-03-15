@@ -402,7 +402,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       ServerEndpointMetaData sepMetaData = wsEndpoint.getServiceEndpointInfo().getServerEndpointMetaData();
       Type type = sepMetaData.getType();
 
-      MessageContextPropertyHelper httpSession = new HttpSessionPropertyHelper(context);
+      PropertyCallback httpSessionCallback = new HttpSessionPropertyCallback(context);
       ServletContext servletContext = context.getServletContext();
       HttpServletRequest httpRequest = context.getHttpServletRequest();
       HttpServletResponse httpResponse = context.getHttpServletResponse();
@@ -416,7 +416,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          msgContext.setProperty(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
          msgContext.setProperty(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
          msgContext.setProperty(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
-         msgContext.setProperty(MessageContextJAXRPC.SERVLET_SESSION, httpSession);
+         msgContext.setProperty(MessageContextJAXRPC.SERVLET_SESSION, httpSessionCallback);
       }
       else
       {
@@ -705,12 +705,11 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       return server;
    }
    
-   public static class HttpSessionPropertyHelper implements MessageContextPropertyHelper
+   public static class HttpSessionPropertyCallback implements PropertyCallback
    {
-      
       private EndpointContext context;
       
-      public HttpSessionPropertyHelper(final EndpointContext context)
+      public HttpSessionPropertyCallback(final EndpointContext context)
       {
          this.context = context;
       }
@@ -719,6 +718,5 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       {
          return context.getHttpSession();
       }
-            
    }
 }

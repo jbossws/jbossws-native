@@ -33,9 +33,7 @@ package org.jboss.ws.core.server;
  * @author darran.lofthouse@jboss.com
  * @since Oct 22, 2006
  */
-public interface MessageContextPropertyHelper
+public interface PropertyCallback
 {
-
-   public Object get();
-   
+   Object get();
 }

@@ -39,14 +39,12 @@ public class LogicalMessageContextImpl extends MessageContextJAXWS implements Lo
    // The LogicalMessage in this message context
    private LogicalMessage logicalMessage;
 
-   /** Default ctor */
    public LogicalMessageContextImpl(SOAPMessageContextJAXWS soapContext)
    {
+      super(soapContext);
+      
       SOAPMessage soapMessage = soapContext.getMessage();
       logicalMessage = new LogicalMessageImpl(soapMessage);
-      
-      // Copy the context properties
-      setProperties(soapContext.getProperties());
    }
 
    /**

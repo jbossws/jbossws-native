@@ -24,7 +24,7 @@ package org.jboss.ws.core.jaxws.handler;
 // $Id: MessageContextImpl.java 275 2006-05-04 21:36:29Z jason.greene@jboss.com $
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,9 +56,6 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
 {
    private static Logger log = Logger.getLogger(MessageContextJAXWS.class);
 
-   // The map of property scopes
-   private HashMap<String, Scope> scopes = new HashMap<String, Scope>();
-
    public MessageContextJAXWS()
    {
    }
@@ -89,13 +86,21 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
    /** Sets the scope of a property. */
    public void setScope(String key, Scope scope)
    {
-      scopes.put(key, scope);
+      ScopedProperty prop = scopedProps.get(key);
+      if (prop == null)
+         throw new IllegalArgumentException("Cannot find scoped property: " + key);
+
+      scopedProps.put(key, new ScopedProperty(key, prop.getValue(), scope));
    }
 
    /** Gets the scope of a property. */
    public Scope getScope(String key)
    {
-      return scopes.get(key);
+      ScopedProperty prop = scopedProps.get(key);
+      if (prop == null)
+         throw new IllegalArgumentException("Cannot find scoped property: " + key);
+
+      return prop.getScope();
    }
 
    public static CommonMessageContext processPivot(CommonMessageContext reqContext)
@@ -104,14 +109,14 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
 
       // MTOM setting need to pass past pivot
       boolean mtomEnabled = XOPContext.isMTOMEnabled();
-      
+
       // Reverse the direction
       Boolean outbound = (Boolean)reqContext.getProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
       outbound = new Boolean(!outbound.booleanValue());
-      
+
       // Preserve addressing properties
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)reqContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
-      
+
       MessageContextAssociation.popMessageContext();
       SOAPMessageContextJAXWS resContext = new SOAPMessageContextJAXWS(reqContext);
       resContext.setSOAPMessage(null);
@@ -123,67 +128,5 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
       MessageContextAssociation.pushMessageContext(resContext);
 
       return resContext;
-   }
-
-   // Map interface
-
-   public int size()
-   {
-      return props.size();
-   }
-
-   public boolean isEmpty()
-   {
-      return props.isEmpty();
-   }
-
-   public boolean containsKey(Object key)
-   {
-      return props.containsKey(key);
-   }
-
-   public boolean containsValue(Object value)
-   {
-      return props.containsValue(value);
-   }
-
-   public Object get(Object key)
-   {
-      return props.get(key);
-   }
-
-   public Object put(String key, Object value)
-   {
-      return props.put(key, value);
-   }
-
-   public Object remove(Object key)
-   {
-      return props.remove(key);
-   }
-
-   public void putAll(Map<? extends String, ? extends Object> srcMap)
-   {
-      props.putAll(srcMap);
-   }
-
-   public void clear()
-   {
-      props.clear();
-   }
-
-   public Set<String> keySet()
-   {
-      return props.keySet();
-   }
-
-   public Collection<Object> values()
-   {
-      return props.values();
-   }
-
-   public Set<Entry<String, Object>> entrySet()
-   {
-      return props.entrySet();
    }
 }
