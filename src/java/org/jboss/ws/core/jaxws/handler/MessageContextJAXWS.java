@@ -102,23 +102,27 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
    {
       log.debug("Begin response processing");
 
-      // MTOM setting need to pass past pivot
-      boolean mtomEnabled = XOPContext.isMTOMEnabled();
-
-      // Reverse the direction
       Boolean outbound = (Boolean)reqContext.getProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
-      outbound = new Boolean(!outbound.booleanValue());
+      if (outbound == null)
+         throw new IllegalStateException("Cannot find property: " + MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
       // Preserve addressing properties
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)reqContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      // MTOM setting need to pass past pivot
+      boolean mtomEnabled = XOPContext.isMTOMEnabled();
+
 
       MessageContextAssociation.popMessageContext();
       SOAPMessageContextJAXWS resContext = new SOAPMessageContextJAXWS(reqContext);
       resContext.setSOAPMessage(null);
+      
+      // Reverse the direction
+      resContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, !outbound);
+      
+      /*
       resContext.clear();
 
       resContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, mtomEnabled);
-      resContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, outbound);
       resContext.setProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
 
       // Copy the handler scoped properties
@@ -140,6 +144,7 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
          reqContext.setCurrentScope(Scope.APPLICATION);
          resContext.setCurrentScope(Scope.APPLICATION);
       }
+      */
       
       MessageContextAssociation.pushMessageContext(resContext);
 

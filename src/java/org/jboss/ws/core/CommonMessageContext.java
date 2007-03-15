@@ -236,9 +236,13 @@ public abstract class CommonMessageContext implements Map<String, Object>
    {
       Object value = null;
 
-      ScopedProperty prop = scopedProps.get(key);
-      if (isValidInScope(prop))
-         value = prop.getValue();
+      ScopedProperty scopedProp = scopedProps.get(key);
+      
+      if (!("" + key).startsWith("javax.xml") && !("" + key).startsWith("org.jboss"))
+         log.info("get("+ key + "): " + scopedProp);
+      
+      if (isValidInScope(scopedProp))
+         value = scopedProp.getValue();
 
       return value;
    }
@@ -249,7 +253,11 @@ public abstract class CommonMessageContext implements Map<String, Object>
       if (prevProp != null && !isValidInScope(prevProp))
          throw new IllegalArgumentException("Cannot set value for HANDLER scoped property: " + key);
 
-      scopedProps.put(key, new ScopedProperty(key, value, currentScope));
+      ScopedProperty newProp = new ScopedProperty(key, value, currentScope);
+      if (!("" + key).startsWith("javax.xml") && !("" + key).startsWith("org.jboss"))
+         log.info("put: " + newProp);
+      
+      scopedProps.put(key, newProp);
       return prevProp != null ? prevProp.getValue() : null;
    }
 

@@ -36,12 +36,12 @@ public class HandlerMetaDataJAXWS  extends HandlerMetaData
 {
    private static final long serialVersionUID = 7631133188974299826L;
    
-   // The JAXWS protocol bindings
-   private String protocolBindings;
    // The JAXWS service name pattern
    private QName serviceNamePattern;
    // The JAXWS port name pattern
    private QName portNamePattern;
+   // The JAXWS protocol bindings
+   private String protocolBindings;
    
    public HandlerMetaDataJAXWS(EndpointMetaData epMetaData, HandlerType type)
    {

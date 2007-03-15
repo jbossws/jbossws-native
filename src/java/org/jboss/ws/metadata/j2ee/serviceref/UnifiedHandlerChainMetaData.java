@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.handler.PortInfo;
 
+import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.integration.ServiceRefElement;
 
 /** The unified metdata data for a handler chain element
@@ -42,6 +44,7 @@ public class UnifiedHandlerChainMetaData extends ServiceRefElement
    private QName portNamePattern;
    private String protocolBindings;
    private List<UnifiedHandlerMetaData> handlers = new ArrayList<UnifiedHandlerMetaData>();
+   private PortInfo portInfo;
    
    public UnifiedHandlerChainMetaData(UnifiedHandlerChainsMetaData handlerChains)
    {
@@ -90,5 +93,13 @@ public class UnifiedHandlerChainMetaData extends ServiceRefElement
    public void addHandler(UnifiedHandlerMetaData handler)
    {
       handlers.add(handler);
+   }
+
+   public PortInfo getPortInfo()
+   {
+      if (portInfo == null)
+         portInfo = new PortInfoImpl(serviceNamePattern, portNamePattern, protocolBindings);
+      
+      return portInfo;
    }
 }

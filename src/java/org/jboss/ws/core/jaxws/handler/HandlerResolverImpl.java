@@ -38,7 +38,6 @@ import javax.annotation.Resource;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.handler.LogicalHandler;
 import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.http.HTTPBinding;
@@ -50,8 +49,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
@@ -70,68 +67,44 @@ public class HandlerResolverImpl implements HandlerResolver
 {
    private static Logger log = Logger.getLogger(HandlerResolverImpl.class);
 
-   private Map<PortInfo, List<Handler>> preHandlers = new HashMap<PortInfo, List<Handler>>();
-   private Map<PortInfo, List<Handler>> jaxwsHandlers = new HashMap<PortInfo, List<Handler>>();
-   private Map<PortInfo, List<Handler>> postHandlers = new HashMap<PortInfo, List<Handler>>();
-   
+   private static final Map<String, String> protocolMap = new HashMap<String, String>();
+   static
+   {
+      protocolMap.put("##SOAP11_HTTP", SOAPBinding.SOAP11HTTP_BINDING);
+      protocolMap.put("##SOAP11_HTTP_MTOM", SOAPBinding.SOAP11HTTP_MTOM_BINDING);
+      protocolMap.put("##SOAP12_HTTP", SOAPBinding.SOAP12HTTP_BINDING);
+      protocolMap.put("##SOAP12_HTTP_MTOM", SOAPBinding.SOAP12HTTP_MTOM_BINDING);
+      protocolMap.put("##XML_HTTP", HTTPBinding.HTTP_BINDING);
+   }
+
+   private List<ScopedHandler> preHandlers = new ArrayList<ScopedHandler>();
+   private List<ScopedHandler> jaxwsHandlers = new ArrayList<ScopedHandler>();
+   private List<ScopedHandler> postHandlers = new ArrayList<ScopedHandler>();
+
    // understood headers
    Set<QName> headers = new HashSet<QName>();
+
+   public Set<QName> getHeaders()
+   {
+      return headers;
+   }
 
    public List<Handler> getHandlerChain(PortInfo info)
    {
       return getHandlerChain(info, HandlerType.ENDPOINT);
    }
-   
+
    public List<Handler> getHandlerChain(PortInfo info, HandlerType type)
    {
       log.debug("getHandlerChain: [type=" + type + ",info=" + info + "]");
 
-      List<Handler> handlerChain = new ArrayList<Handler>();
-
-      String bindingID = info.getBindingID();
-      QName serviceName = info.getServiceName();
-      QName portName = info.getPortName();
-
-      Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
-
-      if (bindingID != null)
+      List<Handler> handlers = new ArrayList<Handler>();
+      for (ScopedHandler scopedHandler : getHandlerMap(type))
       {
-         List<Handler> list = handlerMap.get(new PortInfoImpl(null, null, bindingID));
-         if (list != null)
-         {
-            log.debug("add protocol handlers: " + list);
-            handlerChain.addAll(list);
-         }
+         if (scopedHandler.matches(info))
+            handlers.add(scopedHandler.handler);
       }
-
-      if (serviceName != null)
-      {
-         List<Handler> list = handlerMap.get(new PortInfoImpl(serviceName, null, null));
-         if (list != null)
-         {
-            log.debug("add service handlers: " + list);
-            handlerChain.addAll(list);
-         }
-      }
-
-      if (portName != null)
-      {
-         List<Handler> list = handlerMap.get(new PortInfoImpl(null, portName, null));
-         if (list != null)
-         {
-            log.debug("add port handlers: " + list);
-            handlerChain.addAll(list);
-         }
-      }
-
-      List<Handler> list = handlerMap.get(new PortInfoImpl(null, null, null));
-      if (list != null)
-      {
-         log.debug("add general handlers: " + list);
-         handlerChain.addAll(list);
-      }
-
-      return Collections.unmodifiableList(handlerChain);
+      return Collections.unmodifiableList(handlers);
    }
 
    public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)
@@ -139,7 +112,7 @@ public class HandlerResolverImpl implements HandlerResolver
       log.debug("initHandlerChain: " + type);
 
       // clear all exisisting handler to avoid double registration
-      Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
+      List<ScopedHandler> handlerMap = getHandlerMap(type);
       handlerMap.clear();
 
       for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(type))
@@ -161,18 +134,14 @@ public class HandlerResolverImpl implements HandlerResolver
 
             if (handler instanceof GenericSOAPHandler)
                ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
-           
+
             // Inject resources 
             injectResources(handler);
-            
+
             // Call @PostConstruct
             callPostConstruct(handler);
 
-            List<PortInfo> infos = getPortInfos(epMetaData, jaxwsMetaData);
-            for (PortInfo info : infos)
-            {
-               addHandler(info, handler, type);
-            }
+            addHandler(jaxwsMetaData, handler, type);
          }
          catch (RuntimeException rte)
          {
@@ -207,124 +176,22 @@ public class HandlerResolverImpl implements HandlerResolver
       {
          if (method.isAnnotationPresent(PostConstruct.class))
          {
-            method.invoke(handler, new Object[]{});
+            method.invoke(handler, new Object[] {});
          }
       }
    }
 
-   private List<PortInfo> getPortInfos(EndpointMetaData epMetaData, HandlerMetaDataJAXWS handlerMetaData)
+   private boolean addHandler(HandlerMetaDataJAXWS hmd, Handler handler, HandlerType type)
    {
-      String protocols = handlerMetaData.getProtocolBindings();
-      QName services = handlerMetaData.getServiceNamePattern();
-      QName ports = handlerMetaData.getPortNamePattern();
+      log.debug("addHandler: " + hmd);
 
-      List<PortInfo> infos = new ArrayList<PortInfo>();
-      if (protocols != null)
-      {
-         for (String protocol : protocols.split("\\s"))
-         {
-            Map<String, String> protocolMap = new HashMap<String, String>();
-            protocolMap.put("##SOAP11_HTTP", SOAPBinding.SOAP11HTTP_BINDING);
-            protocolMap.put("##SOAP12_HTTP", SOAPBinding.SOAP12HTTP_BINDING);
-            protocolMap.put("##XML_HTTP", HTTPBinding.HTTP_BINDING);
+      List<ScopedHandler> handlerMap = getHandlerMap(type);
+      ScopedHandler scopedHandler = new ScopedHandler(handler);
+      scopedHandler.servicePattern = hmd.getServiceNamePattern();
+      scopedHandler.portPattern = hmd.getPortNamePattern();
+      scopedHandler.protocols = hmd.getProtocolBindings();
+      handlerMap.add(scopedHandler);
 
-            String bindingId = protocolMap.get(protocol);
-            if (bindingId != null)
-            {
-               if (bindingId.equals(epMetaData.getBindingId()))
-                  infos.add(new PortInfoImpl(null, null, bindingId));
-            }
-            else
-            {
-               log.warn("Unsuported protocol binding: " + protocol);
-            }
-         }
-      }
-      else if (services != null)
-      {
-         String namespaceURI = services.getNamespaceURI();
-         String localPattern = services.getLocalPart();
-         if (localPattern.endsWith("*"))
-         {
-            localPattern = localPattern.substring(0, localPattern.length() - 1);
-            UnifiedMetaData wsMetaData = epMetaData.getServiceMetaData().getUnifiedMetaData();
-            for (ServiceMetaData smd : wsMetaData.getServices())
-            {
-               QName qname = smd.getServiceName();
-               String nsURI = qname.getNamespaceURI();
-               String localPart = qname.getLocalPart();
-               if (nsURI.equals(namespaceURI) && localPart.startsWith(localPattern))
-               {
-                  infos.add(new PortInfoImpl(qname, null, null));
-               }
-            }
-         }
-         else
-         {
-            UnifiedMetaData wsMetaData = epMetaData.getServiceMetaData().getUnifiedMetaData();
-            for (ServiceMetaData smd : wsMetaData.getServices())
-            {
-               QName qname = smd.getServiceName();
-               if (services.equals(qname))
-               {
-                  infos.add(new PortInfoImpl(qname, null, null));
-               }
-            }
-         }
-      }
-      else if (ports != null)
-      {
-         String namespaceURI = ports.getNamespaceURI();
-         String localPattern = ports.getLocalPart();
-         if (localPattern.endsWith("*"))
-         {
-            localPattern = localPattern.substring(0, localPattern.length() - 1);
-            ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
-            for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
-            {
-               QName qname = epmd.getPortName();
-               String nsURI = qname.getNamespaceURI();
-               String localPart = qname.getLocalPart();
-               if (nsURI.equals(namespaceURI) && localPart.startsWith(localPattern))
-               {
-                  infos.add(new PortInfoImpl(null, qname, null));
-               }
-            }
-         }
-         else
-         {
-            ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
-            for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
-            {
-               QName qname = epmd.getPortName();
-               if (ports.equals(qname))
-               {
-                  infos.add(new PortInfoImpl(null, qname, null));
-               }
-            }
-         }
-      }
-      else
-      {
-         // add a general handler that is not scoped
-         infos.add(new PortInfoImpl());
-      }
-
-      return infos;
-   }
-
-   private boolean addHandler(PortInfo info, Handler handler, HandlerType type)
-   {
-      log.debug("addHandler: " + info + ":" + handler);
-
-      Map<PortInfo, List<Handler>> handlerMap = getHandlerMap(type);
-      List<Handler> handlerList = handlerMap.get(info);
-      if (handlerList == null)
-      {
-         handlerMap.put(info, handlerList = new ArrayList<Handler>());
-      }
-      handlerList.add(handler);
-      
       // Ask all initialized handlers for what headers they understand
       if (handler instanceof SOAPHandler)
       {
@@ -336,23 +203,80 @@ public class HandlerResolverImpl implements HandlerResolver
       return true;
    }
 
-   private Map<PortInfo, List<Handler>> getHandlerMap(HandlerType type)
+   private List<ScopedHandler> getHandlerMap(HandlerType type)
    {
-      Map<PortInfo, List<Handler>> handlerMap = null;
+      List<ScopedHandler> handlers = null;
       if (type == HandlerType.PRE)
-         handlerMap = preHandlers;
+         handlers = preHandlers;
       else if (type == HandlerType.ENDPOINT)
-         handlerMap = jaxwsHandlers;
+         handlers = jaxwsHandlers;
       else if (type == HandlerType.POST)
-         handlerMap = postHandlers;
-      else
-         throw new IllegalArgumentException("Illegal handler type: " + type);
-      
-      return handlerMap;
+         handlers = postHandlers;
+      else throw new IllegalArgumentException("Illegal handler type: " + type);
+
+      return handlers;
    }
-   
-   public Set<QName> getHeaders()
+
+   private class ScopedHandler
    {
-      return headers;
+      Handler handler;
+      QName servicePattern;
+      QName portPattern;
+      String protocols;
+      
+      Set<String> bindings;
+
+      ScopedHandler(Handler handler)
+      {
+         this.handler = handler;
+      }
+      
+      boolean matches(PortInfo info)
+      {
+         boolean match = true;
+         if (match && servicePattern != null)
+         {
+            QName serviceName = info.getServiceName();
+            match = matchQNamePattern(servicePattern, serviceName);
+         }
+         if (match && portPattern != null)
+         {
+            QName portName = info.getPortName();
+            match = matchQNamePattern(portPattern, portName);
+         }
+         if (match && protocols != null)
+         {
+            boolean bindingMatch = false;
+            String bindingID = info.getBindingID();
+            for (String protocol : protocols.split("\\s"))
+            {
+               String aux = protocolMap.get(protocol);
+               if (aux != null && aux.equals(bindingID))
+               {
+                  bindingMatch = true;
+                  break;
+               }
+            }
+            match = bindingMatch;
+         }
+         return match;
+      }
+
+      boolean matchQNamePattern(QName pattern, QName qname)
+      {
+         boolean match = true;
+         String nsURI = pattern.getNamespaceURI();
+         String localPart = pattern.getLocalPart();
+         if (localPart.equals("*") == false)
+         {
+            if (localPart.endsWith("*"))
+               localPart = localPart.substring(0, localPart.length() - 1);
+            
+            String qnameStr = qname.toString();
+            String patternStr = new QName(nsURI, localPart).toString();
+            match = qnameStr.startsWith(patternStr);  
+         }
+         return match;
+      }
    }
 }

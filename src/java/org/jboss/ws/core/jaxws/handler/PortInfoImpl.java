@@ -38,7 +38,7 @@ public class PortInfoImpl implements PortInfo
    private QName serviceName;
    private QName portName;
    private String bindingID;
-   
+
    public PortInfoImpl()
    {
    }
@@ -49,7 +49,7 @@ public class PortInfoImpl implements PortInfo
       this.portName = epMetaData.getPortName();
       this.bindingID = epMetaData.getBindingId();
    }
-   
+
    public PortInfoImpl(QName serviceName, QName portName, String bindingID)
    {
       this.serviceName = serviceName;
@@ -71,18 +71,19 @@ public class PortInfoImpl implements PortInfo
    {
       return serviceName;
    }
-   
+
    public int hashCode()
    {
       return toString().hashCode();
    }
-   
+
    public boolean equals(Object obj)
    {
-      if (!(obj instanceof PortInfoImpl)) return false;
+      if (!(obj instanceof PortInfoImpl))
+         return false;
       return (obj != null ? toString().equals(obj.toString()) : false);
    }
-   
+
    public String toString()
    {
       return "[service=" + serviceName + ",port=" + portName + ",binding=" + bindingID + "]";
