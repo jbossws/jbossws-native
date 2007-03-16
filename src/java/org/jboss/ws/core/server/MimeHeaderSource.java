@@ -29,7 +29,7 @@ import javax.xml.soap.MimeHeaders;
  *
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
  */
-public interface HeaderSource
+public interface MimeHeaderSource
 {
    /**
     * Gets the MIME headers from an inbound source. An implementation may

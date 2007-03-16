@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxrpc.client;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,6 +49,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.jaxrpc.SchemaGenerator;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
@@ -76,7 +78,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  * @author Thomas.Diesler@jboss.org
  * @since 10-Oct-2004
  */
-public class CallImpl extends CommonClient implements Call
+public class CallImpl extends CommonClient implements Call, RoleSource
 {
    // provide logging
    private static Logger log = Logger.getLogger(CallImpl.class);
@@ -649,5 +651,24 @@ public class CallImpl extends CommonClient implements Call
 
       // Reinitialize the client handler chain
       jaxrpcService.setupHandlerChain(epMetaData);
+   }
+
+   public Set<QName> getHeaders()
+   {
+      HandlerChainBaseImpl handlerChain = (HandlerChainBaseImpl)jaxrpcService.getHandlerChain(epMetaData.getPortName());
+
+      return (handlerChain != null) ? handlerChain.getHeaders() : new HashSet<QName>();
+   }
+
+   public Set<String> getRoles()
+   {
+      HandlerChainBaseImpl handlerChain = (HandlerChainBaseImpl)jaxrpcService.getHandlerChain(epMetaData.getPortName());
+
+      Set<String> set = new HashSet<String>();
+      String[] roles = handlerChain.getRoles();
+      if (roles != null)
+         Collections.addAll(set, roles);
+      
+      return set;
    }
 }

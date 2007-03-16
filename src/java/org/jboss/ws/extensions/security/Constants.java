@@ -21,6 +21,8 @@
 */
 package org.jboss.ws.extensions.security;
 
+import javax.xml.namespace.QName;
+
 import org.apache.xml.security.utils.EncryptionConstants;
 
 
@@ -67,4 +69,6 @@ public class Constants
    public static final String XENC_ELEMENT_TYPE = EncryptionConstants.TYPE_ELEMENT;
 
    public static final String XENC_CONTENT_TYPE = EncryptionConstants.TYPE_CONTENT;
+   
+   public static final QName WSSE_HEADER_QNAME = new QName(WSSE_NS, "Security");
 }

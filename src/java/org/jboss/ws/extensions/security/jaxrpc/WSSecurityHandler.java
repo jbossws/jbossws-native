@@ -33,6 +33,7 @@ import javax.xml.soap.SOAPException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -53,7 +54,7 @@ public abstract class WSSecurityHandler extends GenericHandler
 
    public QName[] getHeaders()
    {
-      return null;
+      return new QName[] {Constants.WSSE_HEADER_QNAME};
    }
 
    protected boolean handleInboundSecurity(MessageContext msgContext)

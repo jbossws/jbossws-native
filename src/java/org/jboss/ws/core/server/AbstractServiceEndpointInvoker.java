@@ -73,7 +73,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
    protected ServiceEndpointInfo seInfo;
    protected CommonBindingProvider bindingProvider;
-   protected HandlerDelegate delegate;
+   protected ServerHandlerDelegate delegate;
 
    /** Initialize the service endpoint */
    public void init(ServiceEndpointInfo seInfo)
@@ -147,7 +147,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          EndpointInvocation epInv = null;
          OperationMetaData opMetaData = null;
          CommonBinding binding = bindingProvider.getCommonBinding();
-         binding.setHandlerDelegate(delegate);
+         binding.setHeaderSource(delegate);
 
          // call the handler chain
          boolean handlersPass = callRequestHandlerChain(sepMetaData, HandlerType.PRE);

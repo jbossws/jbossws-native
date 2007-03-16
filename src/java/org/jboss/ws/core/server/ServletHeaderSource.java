@@ -42,7 +42,7 @@ import javax.xml.soap.MimeHeaders;
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
  * @author Thomas.Diesler@jboss.org
  */
-public class ServletHeaderSource implements HeaderSource
+public class ServletHeaderSource implements MimeHeaderSource
 {
    private HttpServletRequest req;
    private HttpServletResponse res;

@@ -71,7 +71,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 10-Oct-2004
  */
-public abstract class CommonClient implements StubExt
+public abstract class CommonClient implements StubExt, HeaderSource
 {
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
@@ -258,6 +258,7 @@ public abstract class CommonClient implements StubExt
       {
          // Get the binding from the provider
          CommonBinding binding = (CommonBinding)getCommonBindingProvider().getCommonBinding();
+         binding.setHeaderSource(this);
 
          // Create the invocation and sync the input parameters
          epInv = new EndpointInvocation(opMetaData);
@@ -330,6 +331,10 @@ public abstract class CommonClient implements StubExt
          Object retObj = null;
          if (oneway == false && handlerPass)
          {
+            // Verify 
+            if (binding instanceof CommonSOAPBinding)
+               ((CommonSOAPBinding)binding).checkMustUnderstand(opMetaData);
+            
             // Call the response handlers
             handlerPass = callResponseHandlerChain(portName, HandlerType.POST);
 
@@ -343,10 +348,6 @@ public abstract class CommonClient implements StubExt
 
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
             handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.PRE);
-
-            // BP-1.0 R1027
-            if (handlerPass)
-               HandlerChainBaseImpl.checkMustUnderstand(reqContext, new String[] {});
 
             // Check if protocol handlers modified the payload
             if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())

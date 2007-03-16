@@ -157,7 +157,7 @@ public class ServiceEndpoint
    /**
     * Handle a request to this web service endpoint
     */
-   public SOAPMessage handleRequest(HeaderSource headerSource, EndpointContext context, InputStream inputStream) throws BindingException
+   public SOAPMessage handleRequest(MimeHeaderSource headerSource, EndpointContext context, InputStream inputStream) throws BindingException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
@@ -256,7 +256,7 @@ public class ServiceEndpoint
 
    /** Set response mime headers
     */
-   private void postProcessResponse(HeaderSource headerSource, SOAPMessage resMessage)
+   private void postProcessResponse(MimeHeaderSource headerSource, SOAPMessage resMessage)
    {
       try
       {

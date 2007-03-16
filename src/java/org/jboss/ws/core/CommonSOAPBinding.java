@@ -56,7 +56,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.server.HandlerDelegate;
+import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
@@ -95,7 +95,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
    private boolean mtomEnabled;
 
-   protected HandlerDelegate handlerDelegate;
+   protected HeaderSource headerSource;
 
    /** A constant representing the identity of the SOAP 1.1 over HTTP binding. */
    public static final String SOAP11HTTP_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http";
@@ -837,9 +837,9 @@ public abstract class CommonSOAPBinding implements CommonBinding
       }                 
    }
    
-   public void setHandlerDelegate(HandlerDelegate delegate)
+   public void setHeaderSource(HeaderSource source)
    {
-      handlerDelegate = delegate;
+      headerSource = source;
    }
    
    private void handleException(Exception ex) throws BindingException

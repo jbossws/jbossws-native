@@ -25,9 +25,11 @@ package org.jboss.ws.core.jaxws.client;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
@@ -37,6 +39,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
 import javax.xml.ws.soap.SOAPBinding;
@@ -47,7 +50,6 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
@@ -56,7 +58,6 @@ import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -330,5 +331,22 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       ConfigurationProvider configProvider = (ConfigurationProvider)getEndpointMetaData();
       configProvider.setConfigName(configName, configFile);
+   }
+
+   public Set<QName> getHeaders()
+   {
+      if (handlerResolver instanceof HandlerResolverImpl)
+         return ((HandlerResolverImpl)handlerResolver).getHeaders();
+    
+      Set<QName> headers = new HashSet<QName>();
+      List<Handler> handlerChain = handlerResolver.getHandlerChain(new PortInfoImpl(epMetaData));
+      if (handlerChain != null)
+      {
+         for (Handler handler : handlerChain)
+            if (handler instanceof SOAPHandler)
+               headers.addAll(((SOAPHandler)handler).getHeaders());
+      }
+            
+      return headers;
    }
 }

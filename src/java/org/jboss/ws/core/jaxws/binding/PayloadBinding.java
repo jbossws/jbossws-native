@@ -38,10 +38,11 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.HeaderSource;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.server.HandlerDelegate;
+import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
@@ -189,7 +190,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
       throw new NotImplementedException();
    }
 
-   public void setHandlerDelegate(HandlerDelegate delegate)
+   public void setHeaderSource(HeaderSource source)
    {
       // Not neeeded
    }

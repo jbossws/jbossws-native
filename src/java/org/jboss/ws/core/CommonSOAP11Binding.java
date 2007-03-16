@@ -76,7 +76,7 @@ public abstract class CommonSOAP11Binding extends CommonSOAPBinding
       Set<String> roles = getRoles();
       
       boolean isActor = actor == null || actor.length() == 0 || Constants.URI_SOAP11_NEXT_ACTOR.equals(actor) || roles.contains(actor);
-      if (isActor && !handlerDelegate.getHeaders().contains(name))
+      if (isActor && !headerSource.getHeaders().contains(name))
       {
          QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
          String faultString = "Unprocessed 'mustUnderstand' header element: " + element.getElementName();

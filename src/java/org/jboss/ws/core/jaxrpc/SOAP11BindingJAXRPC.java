@@ -25,14 +25,10 @@ package org.jboss.ws.core.jaxrpc;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonSOAP11Binding;
+import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -71,9 +67,9 @@ public class SOAP11BindingJAXRPC extends CommonSOAP11Binding
    @Override
    public Set<String> getRoles()
    {
-      if (!(handlerDelegate instanceof HandlerDelegateJAXRPC))
-         throw new IllegalStateException("HandlerDelegateJAXRPC was not available");
+      if (!(headerSource instanceof RoleSource))
+         throw new IllegalStateException("RoleSource was not available");
 
-      return ((HandlerDelegateJAXRPC)handlerDelegate).getRoles();
+      return ((RoleSource)headerSource).getRoles();
    }
 }

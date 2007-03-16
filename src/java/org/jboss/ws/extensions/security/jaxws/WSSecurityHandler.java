@@ -24,7 +24,11 @@ package org.jboss.ws.extensions.security.jaxws;
 // $Id$
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.ws.handler.MessageContext;
 
@@ -32,6 +36,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -49,6 +54,20 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
 {
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityHandler.class);
+   
+   private static Set<QName> headers;
+   
+   static
+   {
+      HashSet<QName> set = new HashSet<QName>(); 
+      set.add(Constants.WSSE_HEADER_QNAME);
+      headers = Collections.unmodifiableSet(set);
+   }
+   
+   public Set<QName> getHeaders()
+   {
+      return headers;
+   }
 
    protected boolean handleInboundSecurity(MessageContext msgContext)
    {

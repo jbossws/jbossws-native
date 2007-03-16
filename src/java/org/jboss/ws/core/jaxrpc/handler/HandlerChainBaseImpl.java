@@ -117,6 +117,13 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
             Collections.addAll(headers, handlerHeaders);
       }
    }
+   
+   public Set<QName> getHeaders()
+   {
+      HashSet<QName> set = new HashSet<QName>();
+      pullHeaders(set);
+      return set;
+   }
 
    /**
     * Initialize the a handler chain with the given handlers infos
@@ -518,70 +525,6 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
       HandlerEntry entry = (HandlerEntry)handlers.get(pos);
       return entry.handler;
-   }
-
-   /**
-    * R1027 A RECEIVER MUST generate a "soap:MustUnderstand" fault when a
-    * message contains a mandatory header block (i.e., one that has a
-    * soap:mustUnderstand attribute with the value "1") targeted at the
-    * receiver (via soap:actor) that the receiver does not understand.
-    */
-   public static void checkMustUnderstand(CommonMessageContext msgContext, String[] roles)
-   {
-      SOAPHeaderElement mustUnderstandHeaderElement = null;
-      List roleList = (roles != null ? Arrays.asList(roles) : new ArrayList());
-      try
-      {
-         SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
-
-         // A SOAPHeaderElement is possibly bound to the endpoint operation
-         // in order to check that we need a the opMetaData
-         OperationMetaData opMetaData = msgContext.getOperationMetaData();
-         if (opMetaData == null)
-         {
-            // The security handler must have decrypted the incomming message
-            // before the dispatch target operation can be known
-            EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-            opMetaData = soapMessage.getOperationMetaData(epMetaData);
-         }
-
-         SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
-         if (soapEnvelope != null && soapEnvelope.getHeader() != null)
-         {
-            Iterator it = soapEnvelope.getHeader().examineAllHeaderElements();
-            while (it.hasNext() && mustUnderstandHeaderElement == null)
-            {
-               SOAPHeaderElement soapHeaderElement = (SOAPHeaderElement)it.next();
-               Name name = soapHeaderElement.getElementName();
-               QName xmlName = new QName(name.getURI(), name.getLocalName());
-
-               ParameterMetaData paramMetaData = (opMetaData != null ? opMetaData.getParameter(xmlName) : null);
-               boolean isBoundHeader = (paramMetaData != null && paramMetaData.isInHeader());
-
-               if (soapHeaderElement.getMustUnderstand() && isBoundHeader == false)
-               {
-                  String actor = soapHeaderElement.getActor();
-                  boolean noActor = (actor == null || actor.length() == 0);
-                  boolean nextActor = Constants.URI_SOAP11_NEXT_ACTOR.equals(actor);
-                  if (noActor || nextActor || roleList.contains(actor))
-                  {
-                     mustUnderstandHeaderElement = soapHeaderElement;
-                  }
-               }
-            }
-         }
-      }
-      catch (SOAPException ex)
-      {
-         log.error("Cannot check mustUnderstand for headers", ex);
-      }
-
-      if (mustUnderstandHeaderElement != null)
-      {
-         QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
-         String faultString = "Unprocessed 'mustUnderstand' header element: " + mustUnderstandHeaderElement.getElementName();
-         throw new SOAPFaultException(faultCode, faultString, null, null);
-      }
    }
 
    /**

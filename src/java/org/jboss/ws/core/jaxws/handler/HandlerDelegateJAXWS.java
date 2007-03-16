@@ -33,7 +33,7 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.PortInfo;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.HandlerDelegate;
+import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -45,7 +45,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public class HandlerDelegateJAXWS extends HandlerDelegate
+public class HandlerDelegateJAXWS extends ServerHandlerDelegate
 {
    // provide logging
    private static Logger log = Logger.getLogger(HandlerDelegateJAXWS.class);

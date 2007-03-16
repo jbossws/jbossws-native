@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.CommonSOAP12Binding;
+import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -61,10 +62,10 @@ public class SOAP12BindingJAXRPC extends CommonSOAP12Binding
    @Override
    public Set<String> getRoles()
    {
-      if (!(handlerDelegate instanceof HandlerDelegateJAXRPC))
-         throw new IllegalStateException("HandlerDelegateJAXRPC was not available");
+      if (!(headerSource instanceof RoleSource))
+         throw new IllegalStateException("RoleSource was not available");
 
-      return ((HandlerDelegateJAXRPC)handlerDelegate).getRoles();
+      return ((RoleSource)headerSource).getRoles();
    }
 
    protected void throwFaultException(SOAPFaultImpl fault) throws Exception

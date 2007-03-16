@@ -69,7 +69,7 @@ public abstract class CommonSOAP12Binding extends CommonSOAPBinding
       Set<String> roles = getRoles();
       
       boolean isActor = actor == null || actor.length() == 0 || Constants.URI_SOAP11_NEXT_ACTOR.equals(actor) || roles.contains(actor);
-      if (isActor && !handlerDelegate.getHeaders().contains(name))
+      if (isActor && !headerSource.getHeaders().contains(name))
       {
          // How do we pass NotUnderstood blocks? They are not in the fault element
          QName faultCode = SOAPConstants.SOAP_MUSTUNDERSTAND_FAULT;
