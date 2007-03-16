@@ -140,7 +140,11 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
       // The direction of the message
       DirectionHolder direction = new DirectionHolder(Direction.InBound);
-      
+
+      // Get the order of pre/post handlerchains 
+      HandlerType[] handlerType = delegate.getHandlerTypeOrder();
+      HandlerType[] faultType = delegate.getHandlerTypeOrder();
+
       try
       {
          boolean oneway = false;
@@ -149,8 +153,8 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          CommonBinding binding = bindingProvider.getCommonBinding();
          binding.setHeaderSource(delegate);
 
-         // call the handler chain
-         boolean handlersPass = callRequestHandlerChain(sepMetaData, HandlerType.PRE);
+         // call the request handler chain
+         boolean handlersPass = callRequestHandlerChain(sepMetaData, handlerType[0]);
 
          // Unbind the request message
          if (handlersPass)
@@ -173,13 +177,13 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
              */
             if (binding instanceof CommonSOAPBinding)
                ((CommonSOAPBinding)binding).checkMustUnderstand(opMetaData);
-            
+
             // Unbind the request message
             epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
          }
 
-         handlersPass = handlersPass && callRequestHandlerChain(sepMetaData, HandlerType.ENDPOINT);
-         handlersPass = handlersPass && callRequestHandlerChain(sepMetaData, HandlerType.POST);
+         handlersPass = handlersPass && callRequestHandlerChain(sepMetaData, handlerType[1]);
+         handlersPass = handlersPass && callRequestHandlerChain(sepMetaData, handlerType[2]);
 
          if (handlersPass)
          {
@@ -219,12 +223,15 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             msgContext.setSOAPMessage(resMessage);
          }
 
-         // call the handler chain
+         // call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
          if (oneway == false)
          {
-            handlersPass = callResponseHandlerChain(sepMetaData, HandlerType.POST);
-            handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, HandlerType.ENDPOINT);
-            handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, HandlerType.PRE);
+            handlersPass = callResponseHandlerChain(sepMetaData, handlerType[2]);
+            faultType[2] = null;
+            handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, handlerType[1]);
+            faultType[1] = null;
+            handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, handlerType[0]);
+            faultType[0] = null;
          }
 
          SOAPMessage resMessage = msgContext.getSOAPMessage();
@@ -240,10 +247,14 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             CommonBinding binding = bindingProvider.getCommonBinding();
             binding.bindFaultMessage(ex);
 
-            // call the handler chain
-            boolean handlersPass = callFaultHandlerChain(sepMetaData, HandlerType.POST, ex);
-            handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, HandlerType.ENDPOINT, ex);
-            handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, HandlerType.PRE, ex);
+            // call the fault handler chain
+            boolean handlersPass = true;
+            if (faultType[2] != null)
+               handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, faultType[2], ex);
+            if (faultType[1] != null)
+               handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, faultType[1], ex);
+            if (faultType[0] != null)
+               handlersPass = handlersPass && callFaultHandlerChain(sepMetaData, faultType[0], ex);
          }
          catch (RuntimeException subEx)
          {
@@ -254,9 +265,9 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       }
       finally
       {
-         closeHandlerChain(sepMetaData, HandlerType.POST);
-         closeHandlerChain(sepMetaData, HandlerType.ENDPOINT);
-         closeHandlerChain(sepMetaData, HandlerType.PRE);
+         closeHandlerChain(sepMetaData, handlerType[2]);
+         closeHandlerChain(sepMetaData, handlerType[1]);
+         closeHandlerChain(sepMetaData, handlerType[0]);
 
          destroyServiceEndpointInstance(seInstance);
       }

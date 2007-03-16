@@ -11,7 +11,7 @@
 
    <endpoint-config>
       <config-name>Standard WSAddressing Endpoint</config-name>
-      <pre-handler-chains>
+      <post-handler-chains>
          <javaee:handler-chain>
             <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
             <javaee:handler>
@@ -19,12 +19,12 @@
                <javaee:handler-class>org.jboss.ws.extensions.addressing.jaxws.WSAddressingServerHandler</javaee:handler-class>
             </javaee:handler>
          </javaee:handler-chain>
-      </pre-handler-chains>
+      </post-handler-chains>
    </endpoint-config>
 
    <endpoint-config>
       <config-name>Standard WSSecurity Endpoint</config-name>
-      <pre-handler-chains>
+      <post-handler-chains>
          <javaee:handler-chain>
             <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
             <javaee:handler>
@@ -32,7 +32,7 @@
                <javaee:handler-class>org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerServer</javaee:handler-class>
             </javaee:handler>
          </javaee:handler-chain>
-      </pre-handler-chains>
+      </post-handler-chains>
    </endpoint-config>
 
 </jaxws-config>

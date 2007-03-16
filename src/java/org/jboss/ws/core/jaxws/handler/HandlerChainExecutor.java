@@ -171,28 +171,6 @@ public class HandlerChainExecutor
       return doNext;
    }
 
-   private int getFirstHandler()
-   {
-      int index;
-      if (falseIndex == -1)
-      {
-         index = (isOutbound ? 0 : handlers.size() - 1);
-      }
-      else
-      {
-         index = (isOutbound ? falseIndex - 1 : falseIndex + 1);
-      }
-      return index;
-   }
-
-   private int getNextIndex(int prevIndex)
-   {
-      int nextIndex = (isOutbound ? prevIndex + 1 : prevIndex - 1);
-      if (nextIndex >= handlers.size())
-         nextIndex = -1;
-      return nextIndex;
-   }
-
    public boolean handleFault(MessageContext msgContext, Exception ex)
    {
       isOutbound = (Boolean)msgContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
@@ -228,6 +206,7 @@ public class HandlerChainExecutor
          msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
 
          int index = getFirstHandler();
+         
          Handler currHandler = null;
          try
          {
@@ -266,6 +245,28 @@ public class HandlerChainExecutor
       }
 
       return doNext;
+   }
+
+   private int getFirstHandler()
+   {
+      int index;
+      if (falseIndex == -1)
+      {
+         index = (isOutbound ? 0 : handlers.size() - 1);
+      }
+      else
+      {
+         index = getNextIndex(falseIndex);
+      }
+      return index;
+   }
+
+   private int getNextIndex(int prevIndex)
+   {
+      int nextIndex = (isOutbound ? prevIndex + 1 : prevIndex - 1);
+      if (nextIndex >= handlers.size())
+         nextIndex = -1;
+      return nextIndex;
    }
 
    // 4.14 Conformance (Exceptions During Handler Processing): Exceptions thrown during handler processing on

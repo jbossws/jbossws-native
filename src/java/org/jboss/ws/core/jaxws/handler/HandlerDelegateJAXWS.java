@@ -61,6 +61,14 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       sepMetaData.registerConfigObserver(this);
    }
 
+   /**
+    * For JAXWS PRE/POST are defined in the context of an outbound message
+    */ 
+   protected HandlerType[] getHandlerTypeOrder()
+   {
+      return new HandlerType[] { HandlerType.POST, HandlerType.ENDPOINT, HandlerType.PRE };
+   }
+
    public boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       log.debug("callRequestHandlerChain: " + type);

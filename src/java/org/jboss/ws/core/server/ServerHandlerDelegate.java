@@ -41,6 +41,9 @@ public abstract class ServerHandlerDelegate implements Configurable, HeaderSourc
       this.sepMetaData = sepMetaData;
    }
 
+   // Get the order of pre/post handlerchains 
+   protected abstract HandlerType[] getHandlerTypeOrder();
+
    public abstract boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type);
 
    public abstract boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type);

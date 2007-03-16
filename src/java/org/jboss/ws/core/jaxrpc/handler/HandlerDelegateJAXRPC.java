@@ -72,6 +72,14 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
       sepMetaData.registerConfigObserver(this);
    }
 
+   /**
+    * For JAXRPC PRE/POST are defined in the context of message origin.
+    */ 
+   protected HandlerType[] getHandlerTypeOrder()
+   {
+      return new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
+   }
+
    public boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
@@ -94,7 +102,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
          handlerChain = jaxrpcHandlerChain;
       else if (type == HandlerType.POST)
          handlerChain = postHandlerChain;
-      
+
       if (handlerChain != null)
          status = handlerChain.handleRequest(msgContext);
 
@@ -104,7 +112,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
    public boolean callResponseHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
-      
+
       HandlerChain handlerChain = null;
       if (type == HandlerType.PRE)
          handlerChain = preHandlerChain;
@@ -112,10 +120,10 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
          handlerChain = jaxrpcHandlerChain;
       else if (type == HandlerType.POST)
          handlerChain = postHandlerChain;
-      
+
       boolean status = (handlerChain != null ? handlerChain.handleResponse(msgContext) : true);
 
-      if(type == HandlerType.ENDPOINT)
+      if (type == HandlerType.ENDPOINT)
          XOPContext.visitAndRestoreXOPData();
 
       return status;
@@ -132,10 +140,10 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
          handlerChain = jaxrpcHandlerChain;
       else if (type == HandlerType.POST)
          handlerChain = postHandlerChain;
-      
+
       boolean status = (handlerChain != null ? handlerChain.handleFault(msgContext) : true);
 
-      if(type == HandlerType.ENDPOINT)
+      if (type == HandlerType.ENDPOINT)
          XOPContext.visitAndRestoreXOPData();
 
       return status;
@@ -164,16 +172,17 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
          {
             hConfig.put(param.getParamName(), param.getParamValue());
          }
-         
+
          Set<QName> headers = jaxrpcMetaData.getSoapHeaders();
          QName[] headerArr = new QName[headers.size()];
          headers.toArray(headerArr);
-         
+
          Class hClass = jaxrpcMetaData.getHandlerClass();
          hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
          HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
 
-         if(log.isDebugEnabled()) log.debug("Adding server side handler to service '" + sepMetaData.getPortName() + "': " + info);
+         if (log.isDebugEnabled())
+            log.debug("Adding server side handler to service '" + sepMetaData.getPortName() + "': " + info);
          hInfos.add(info);
       }
 
@@ -182,7 +191,8 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
 
    private void initHandlerChain(ServerEndpointMetaData sepMetaData, List<HandlerInfo> hInfos, Set<String> handlerRoles, HandlerType type)
    {
-      if(log.isDebugEnabled()) log.debug("Init handler chain with [" + hInfos.size() + "] handlers");
+      if (log.isDebugEnabled())
+         log.debug("Init handler chain with [" + hInfos.size() + "] handlers");
 
       ServerHandlerChain handlerChain = new ServerHandlerChain(hInfos, handlerRoles, type);
       if (type == HandlerType.PRE)
@@ -200,7 +210,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
       handlerChain.pullHeaders(headers);
       Collections.addAll(roles, handlerChain.getRoles());
    }
-   
+
    public Set<String> getRoles()
    {
       return roles;
@@ -210,7 +220,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
    {
       return headers;
    }
-   
+
    public void update(Observable observable, Object object)
    {
    }
