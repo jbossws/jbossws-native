@@ -79,7 +79,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    private Source payload;
    private boolean isDOMValid = true;
    private boolean isModifiedFromSource;
-   private boolean hasFault;
 
    public SOAPBodyImpl(String prefix, String namespace)
    {
@@ -157,7 +156,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       SOAPFaultImpl soapFault = new SOAPFaultImpl(getPrefix(), getNamespaceURI());
       soapFault = (SOAPFaultImpl)addChildElement(soapFault);
       soapFault.setFaultCode(soapFault.getDefaultFaultCode());
-      hasFault = true;
       return soapFault;
    }
 
@@ -172,7 +170,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault = (SOAPFaultImpl)addChildElement(soapFault);
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString);
-      hasFault = true;
       return soapFault;
    }
 
@@ -187,7 +184,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault = (SOAPFaultImpl)addChildElement(soapFault);
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString);
-      hasFault = true;
       return soapFault;
    }
 
@@ -202,7 +198,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString, locale);
       addChildElement(soapFault);
-      hasFault = true;
       return soapFault;
    }
 
@@ -217,7 +212,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       soapFault.setFaultCode(faultCode);
       soapFault.setFaultString(faultString, locale);
       addChildElement(soapFault);
-      hasFault = true;
       return soapFault;
    }
 
@@ -227,14 +221,13 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       expandToDOM(true);
       Iterator it = faultIterator();
       SOAPFault soapFault = it.hasNext() ? (SOAPFault)it.next() : null;
-      hasFault = (soapFault != null);
       return soapFault;
    }
 
    public boolean hasFault()
    {
       log.trace("hasFault");
-      return hasFault;
+      return faultIterator().hasNext();
    }
 
    private Iterator faultIterator()
