@@ -218,7 +218,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPFault getFault()
    {
       log.trace("getFault");
-      expandToDOM(true);
       Iterator it = faultIterator();
       SOAPFault soapFault = it.hasNext() ? (SOAPFault)it.next() : null;
       return soapFault;
@@ -232,6 +231,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    private Iterator faultIterator()
    {
+      expandToDOM(true);
       return getChildElements(new QName(getNamespaceURI(), "Fault"));
    }
 
@@ -335,7 +335,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
          if (msgContext != null && UnifiedMetaData.isFinalRelease() == false)
          {
             Boolean allowExpand = (Boolean)msgContext.getProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            if (handleFault == false && allowExpand == false)
+            if (handleFault == false && allowExpand != Boolean.TRUE)
                throw new WSException("Expanding content element to DOM");
          }
 
