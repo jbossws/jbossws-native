@@ -307,7 +307,8 @@ public class SOAPFaultHelperJAXWS
 
       // Get the serializer from the type mapping
       QName xmlType = faultMetaData.getXmlType();
-      Class javaType = faultMetaData.getFaultBean() != null ? faultMetaData.getFaultBean() : faultMetaData.getJavaType();
+      Class javaType = faultMetaData.getFaultBean(); 
+      serContext.setJavaType(javaType);
       SerializerFactoryBase serFactory = (SerializerFactoryBase)serContext.getTypeMapping().getSerializer(javaType, xmlType);
       if (serFactory == null)
          throw new WebServiceException("Cannot obtain serializer factory: xmlType=" + xmlType + ", javaType=" + javaType);

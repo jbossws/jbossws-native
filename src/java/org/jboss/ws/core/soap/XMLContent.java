@@ -126,6 +126,7 @@ class XMLContent extends SOAPContent
       SerializationContext serContext = msgContext.getSerializationContext();
       ParameterMetaData pmd = container.getParamMetaData();
       serContext.setProperty(ParameterMetaData.class.getName(), pmd);
+      serContext.setJavaType(javaType);
       List<Class> registeredTypes = pmd.getOperationMetaData().getEndpointMetaData().getRegisteredTypes();
       serContext.setProperty(SerializationContext.CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
 

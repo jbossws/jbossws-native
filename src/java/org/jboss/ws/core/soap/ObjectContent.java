@@ -133,6 +133,7 @@ public class ObjectContent extends SOAPContent {
 
       SerializationContext serContext = msgContext.getSerializationContext();
       serContext.setProperty(ParameterMetaData.class.getName(), container.getParamMetaData());
+      serContext.setJavaType(javaType);
 
       TypeMappingImpl typeMapping = serContext.getTypeMapping();
       XMLFragment xmlFragment = null;

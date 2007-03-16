@@ -38,8 +38,9 @@ import org.jboss.xb.binding.NamespaceRegistry;
 public abstract class SerializationContext
 {
    public static final String CONTEXT_TYPES = "org.jboss.ws.jaxrpc.binding.contextTypes";
-
-   // The type mapping that is valid for this serialization context
+   
+   private Class javaType;
+   
    private TypeMappingImpl typeMapping;
    // The namespace registry that is valid for this serialization context
    private NamespaceRegistry namespaceRegistry = new NamespaceRegistry();
@@ -69,5 +70,15 @@ public abstract class SerializationContext
    public NamespaceRegistry getNamespaceRegistry()
    {
       return namespaceRegistry;
+   }
+
+   public Class getJavaType()
+   {
+      return javaType;
+   }
+
+   public void setJavaType(Class javaType)
+   {
+      this.javaType = javaType;
    }
 }

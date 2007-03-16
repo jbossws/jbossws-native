@@ -63,10 +63,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
       Result result = null;
       try
       {
-         // The PMD contains the base type, which is needed for JAXB to marshall xsi:type correctly.
+         // The serialization context contains the base type, which is needed for JAXB to marshall xsi:type correctly.
          // This should be more efficient and accurate than searching the type mapping
-         ParameterMetaData pmd = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
-         Class expectedType = pmd.getJavaType();
+         Class expectedType = serContext.getJavaType();
          Class actualType = value.getClass();
 
          JAXBContextCache contextCache = JAXBContextCache.getContextCache();
