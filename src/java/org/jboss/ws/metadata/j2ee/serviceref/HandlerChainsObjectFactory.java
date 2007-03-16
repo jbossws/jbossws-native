@@ -23,11 +23,6 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -81,16 +76,6 @@ public class HandlerChainsObjectFactory implements ObjectModelFactory
    public void addChild(UnifiedHandlerChainsMetaData handlerConfig, UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI,
          String localName)
    {
-      // TODO: remove this CTS hack
-      QName portPattern = handlerChain.getPortNamePattern();
-      if (new QName("http://dlhandlerservice.org/wsdl", "HelloPort").equals(portPattern))
-      {
-         List<UnifiedHandlerMetaData> orgHandlers = new ArrayList<UnifiedHandlerMetaData>(handlerChain.getHandlers());
-         handlerChain.getHandlers().clear();
-         for (int i = 1; i <= orgHandlers.size(); i++)
-            handlerChain.addHandler(orgHandlers.get(orgHandlers.size() - i));
-      }
-
       handlerConfig.addHandlerChain(handlerChain);
    }
 
