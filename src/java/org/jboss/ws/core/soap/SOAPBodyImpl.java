@@ -334,7 +334,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext != null && UnifiedMetaData.isFinalRelease() == false)
          {
-            Boolean allowExpand = (Boolean)msgContext.getProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+            Boolean allowExpand = (Boolean)msgContext.get(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             if (handleFault == false && allowExpand != Boolean.TRUE)
                throw new WSException("Expanding content element to DOM");
          }

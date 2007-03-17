@@ -23,9 +23,14 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id:LogicalMessageContextImpl.java 888 2006-09-02 00:37:13Z thomas.diesler@jboss.com $
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.handler.LogicalMessageContext;
+import javax.xml.ws.handler.MessageContext;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 
@@ -34,15 +39,15 @@ import javax.xml.ws.handler.LogicalMessageContext;
  * @author Thomas.Diesler@jboss.org
  * @since 31-Aug-2006
  */
-public class LogicalMessageContextImpl extends MessageContextJAXWS implements LogicalMessageContext
+public class LogicalMessageContextImpl implements LogicalMessageContext
 {
    // The LogicalMessage in this message context
    private LogicalMessage logicalMessage;
+   private MessageContext delegate;
 
    public LogicalMessageContextImpl(SOAPMessageContextJAXWS soapContext)
    {
-      super(soapContext);
-      
+      this.delegate = soapContext;
       SOAPMessage soapMessage = soapContext.getMessage();
       logicalMessage = new LogicalMessageImpl(soapMessage);
    }
@@ -54,5 +59,87 @@ public class LogicalMessageContextImpl extends MessageContextJAXWS implements Lo
    public LogicalMessage getMessage()
    {
       return logicalMessage;
+   }
+
+   // MessageContext delegation
+   
+   public void clear()
+   {
+      delegate.clear();
+   }
+
+   public boolean containsKey(Object key)
+   {
+      return delegate.containsKey(key);
+   }
+
+   public boolean containsValue(Object value)
+   {
+      return delegate.containsValue(value);
+   }
+
+   public Set<Entry<String, Object>> entrySet()
+   {
+      return delegate.entrySet();
+   }
+
+   public boolean equals(Object o)
+   {
+      return delegate.equals(o);
+   }
+
+   public Object get(Object key)
+   {
+      return delegate.get(key);
+   }
+
+   public Scope getScope(String name)
+   {
+      return delegate.getScope(name);
+   }
+
+   public int hashCode()
+   {
+      return delegate.hashCode();
+   }
+
+   public boolean isEmpty()
+   {
+      return delegate.isEmpty();
+   }
+
+   public Set<String> keySet()
+   {
+      return delegate.keySet();
+   }
+
+   public Object put(String key, Object value)
+   {
+      return delegate.put(key, value);
+   }
+
+   public void putAll(Map<? extends String, ? extends Object> t)
+   {
+      delegate.putAll(t);
+   }
+
+   public Object remove(Object key)
+   {
+      return delegate.remove(key);
+   }
+
+   public void setScope(String name, Scope scope)
+   {
+      delegate.setScope(name, scope);
+   }
+
+   public int size()
+   {
+      return delegate.size();
+   }
+
+   public Collection<Object> values()
+   {
+      return delegate.values();
    }
 }

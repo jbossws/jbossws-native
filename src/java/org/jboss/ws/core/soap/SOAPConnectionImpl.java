@@ -131,7 +131,7 @@ public class SOAPConnectionImpl extends SOAPConnection
 
       Object timeout = null;
       String targetAddress;
-      Map callProps;
+      Map<String, Object> callProps = new HashMap<String,Object>();
 
       if (endpoint instanceof EndpointInfo)
       {
@@ -149,12 +149,10 @@ public class SOAPConnectionImpl extends SOAPConnection
       {
          EndpointReference epr = (EndpointReference)endpoint;
          targetAddress = epr.getAddress().toString();
-         callProps = null;
       }
       else
       {
          targetAddress = endpoint.toString();
-         callProps = null;
       }
 
       // enforce xop transitions
@@ -166,7 +164,7 @@ public class SOAPConnectionImpl extends SOAPConnection
          reqMessage.saveChanges();
 
       // setup remoting client
-      Map metadata = createRemotingMetaData(reqMessage, callProps);
+      Map<String, Object> metadata = createRemotingMetaData(reqMessage, callProps);
       Client client = createRemotingClient(endpoint, targetAddress, oneway);
 
       try
@@ -201,6 +199,9 @@ public class SOAPConnectionImpl extends SOAPConnection
 
          // Disconnect the remoting client
          client.disconnect();
+         
+         callProps.clear();
+         callProps.putAll(metadata);
 
          // debug the incomming response message
          if (resMessage != null && msgLog.isTraceEnabled())
@@ -279,7 +280,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       return client;
    }
 
-   private Map createRemotingMetaData(SOAPMessage reqMessage, Map callProps) throws SOAPException
+   private Map<String, Object> createRemotingMetaData(SOAPMessage reqMessage, Map callProps) throws SOAPException
    {
       // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
       // with a quoted value equal to the value of the soapAction attribute of

@@ -504,7 +504,7 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       Object retObj = null;
       try
       {
-         retObj = super.invoke(opName, inputParams, properties, forceOneway);
+         retObj = super.invoke(opName, inputParams, forceOneway);
          return retObj;
       }
       catch (SOAPFaultException ex)

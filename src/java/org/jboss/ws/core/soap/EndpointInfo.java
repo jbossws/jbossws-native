@@ -23,7 +23,6 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -43,7 +42,7 @@ public class EndpointInfo
    public EndpointInfo(EndpointMetaData epMetaData, String targetAddress, Map<String, Object> callProps)
    {
       this.targetAddress = targetAddress;
-      this.properties = new HashMap<String, Object>();
+      this.properties = callProps;
 
       // Add the service properties
       Properties serviceProps = epMetaData.getServiceMetaData().getProperties();
@@ -71,12 +70,6 @@ public class EndpointInfo
             Object val = entry.getValue();
             properties.put(key, val);
          }
-      }
-
-      // Add the call properties
-      if (callProps != null)
-      {
-         properties.putAll(callProps);
       }
    }
 

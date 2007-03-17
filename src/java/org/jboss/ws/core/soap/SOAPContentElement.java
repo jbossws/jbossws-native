@@ -576,7 +576,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
          // TODO: This property must be reset, otherwise you negate its purpose
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          if (msgContext instanceof MessageContextJAXWS)
             ((MessageContextJAXWS)msgContext).setScope(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Scope.APPLICATION);
          

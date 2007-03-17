@@ -23,18 +23,14 @@ package org.jboss.ws.core;
 
 // $Id$
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
@@ -47,6 +43,7 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.MessageContext;
 
 import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSTypeDefinition;
@@ -56,7 +53,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.server.ServerHandlerDelegate;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
@@ -75,7 +72,6 @@ import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
@@ -138,7 +134,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
    /** On the client side, generate the payload from IN parameters. */
    public Object bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("bindRequestMessage: " + opMetaData.getQName());
+      if (log.isDebugEnabled())
+         log.debug("bindRequestMessage: " + opMetaData.getQName());
 
       try
       {
@@ -149,8 +146,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          // Disable MTOM for rpc/encoded
          if (opMetaData.isRPCEncoded())
             XOPContext.setMTOMEnabled(false);
-         else
-            XOPContext.setMTOMEnabled( isMTOMEnabled() );
+         else XOPContext.setMTOMEnabled(isMTOMEnabled());
 
          // Associate current message with message context
          SOAPMessageImpl reqMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -170,7 +166,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
             QName opQName = opMetaData.getQName();
             Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
 
-            if(log.isDebugEnabled()) log.debug("Create RPC body element: " + opName);
+            if (log.isDebugEnabled())
+               log.debug("Create RPC body element: " + opName);
             soapBodyElement = new SOAPBodyElementRpc(opName);
             soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
          }
@@ -186,6 +183,14 @@ public abstract class CommonSOAPBinding implements CommonBinding
                CIDGenerator cidGenerator = reqMessage.getCidGenerator();
                AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
                reqMessage.addAttachmentPart(part);
+
+               // Add the attachment to the standard property
+               if (value instanceof DataHandler && msgContext instanceof MessageContextJAXWS)
+               {
+                  DataHandler dataHandler = (DataHandler)value;
+                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
+                  attachments.put(dataHandler.getContentType(), dataHandler);
+               }
             }
             else
             {
@@ -209,7 +214,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   xmlName = namespaceRegistry.registerQName(xmlName);
                   Name soapName = new NameImpl(xmlName.getLocalPart(), xmlName.getPrefix(), xmlName.getNamespaceURI());
 
-                  if(log.isDebugEnabled()) log.debug("Add unboundHeader element: " + soapName);
+                  if (log.isDebugEnabled())
+                     log.debug("Add unboundHeader element: " + soapName);
                   SOAPContentElement contentElement = new SOAPHeaderElementImpl(soapName);
                   contentElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
                   soapHeader.addChildElement(contentElement);
@@ -236,7 +242,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
    public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, Object payload) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("unbindRequestMessage: " + opMetaData.getQName());
+      if (log.isDebugEnabled())
+         log.debug("unbindRequestMessage: " + opMetaData.getQName());
 
       try
       {
@@ -258,7 +265,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
          // Disable MTOM for rpc/encoded
          if (opMetaData.isRPCEncoded())
-            msgContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
+            msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
 
          // Get the namespace registry
          NamespaceRegistry namespaceRegistry = msgContext.getNamespaceRegistry();
@@ -287,8 +294,16 @@ public abstract class CommonSOAPBinding implements CommonBinding
                {
                   if (paramMetaData.isSwA())
                   {
-                     Object value = getAttachmentFromMessage(paramMetaData, reqMessage);
-                     epInv.setRequestParamValue(xmlName, value);
+                     AttachmentPart part = getAttachmentFromMessage(paramMetaData, reqMessage);
+                     epInv.setRequestParamValue(xmlName, part);
+
+                     // Add the attachment to the standard property
+                     if (part.getDataHandler() != null && msgContext instanceof MessageContextJAXWS)
+                     {
+                        DataHandler dataHandler = part.getDataHandler();
+                        Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.INBOUND_MESSAGE_ATTACHMENTS);
+                        attachments.put(part.getContentId(), dataHandler);
+                     }
                   }
                   else
                   {
@@ -323,7 +338,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
    /** On the server side, generate the payload from OUT parameters. */
    public Object bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("bindResponseMessage: " + opMetaData.getQName());
+      if (log.isDebugEnabled())
+         log.debug("bindResponseMessage: " + opMetaData.getQName());
 
       try
       {
@@ -334,8 +350,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          // Disable MTOM for rpc/encoded
          if (opMetaData.isRPCEncoded())
             XOPContext.setMTOMEnabled(false);
-         else
-            XOPContext.setMTOMEnabled( isMTOMEnabled() );
+         else XOPContext.setMTOMEnabled(isMTOMEnabled());
 
          // Associate current message with message context
          SOAPMessageImpl resMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -371,15 +386,25 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (retMetaData != null)
          {
             Object value = epInv.getReturnValue();
+
             // TODO calls to ParameterWrapping should be elsewhere
             if (opMetaData.isDocumentWrapped())
                value = ParameterWrapping.wrapResponseParameters(retMetaData, value, epInv.getOutParameters());
+
             if (retMetaData.isSwA())
             {
                CIDGenerator cidGenerator = resMessage.getCidGenerator();
                AttachmentPart part = createAttachmentPart(retMetaData, value, cidGenerator);
                resMessage.addAttachmentPart(part);
                epInv.setReturnValue(part);
+
+               // Add the attachment to the standard property
+               if (part.getDataHandler() != null && msgContext instanceof MessageContextJAXWS)
+               {
+                  DataHandler dataHandler = part.getDataHandler();
+                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
+                  attachments.put(part.getContentId(), dataHandler);
+               }
             }
             else
             {
@@ -399,6 +424,14 @@ public abstract class CommonSOAPBinding implements CommonBinding
                CIDGenerator cidGenerator = resMessage.getCidGenerator();
                AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
                resMessage.addAttachmentPart(part);
+
+               // Add the attachment to the standard property
+               if (value instanceof DataHandler && msgContext instanceof MessageContextJAXWS)
+               {
+                  DataHandler dataHandler = (DataHandler)value;
+                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
+                  attachments.put(dataHandler.getContentType(), dataHandler);
+               }
             }
             else
             {
@@ -424,9 +457,10 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
    public void unbindResponseMessage(OperationMetaData opMetaData, Object payload, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
-      throws BindingException
+         throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("unbindResponseMessage: " + opMetaData.getQName());
+      if (log.isDebugEnabled())
+         log.debug("unbindResponseMessage: " + opMetaData.getQName());
 
       try
       {
@@ -455,7 +489,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
          // Disable MTOM for rpc/encoded
          if (opMetaData.isRPCEncoded())
-            msgContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
+            msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
 
          SOAPHeader soapHeader = soapEnvelope.getHeader();
          SOAPBody soapBody = soapEnvelope.getBody();
@@ -509,8 +543,16 @@ public abstract class CommonSOAPBinding implements CommonBinding
          {
             if (retMetaData.isSwA())
             {
-               Object value = getAttachmentFromMessage(retMetaData, resMessage);
-               epInv.setReturnValue(value);
+               AttachmentPart part = getAttachmentFromMessage(retMetaData, resMessage);
+               epInv.setReturnValue(part);
+
+               // Add the attachment to the standard property
+               if (part.getDataHandler() != null && msgContext instanceof MessageContextJAXWS)
+               {
+                  DataHandler dataHandler = part.getDataHandler();
+                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.INBOUND_MESSAGE_ATTACHMENTS);
+                  attachments.put(part.getContentId(), dataHandler);
+               }
             }
             else
             {
@@ -524,8 +566,16 @@ public abstract class CommonSOAPBinding implements CommonBinding
             QName xmlName = paramMetaData.getXmlName();
             if (paramMetaData.isSwA())
             {
-               Object value = getAttachmentFromMessage(paramMetaData, resMessage);
-               epInv.setResponseParamValue(xmlName, value);
+               AttachmentPart part = getAttachmentFromMessage(paramMetaData, resMessage);
+               epInv.setResponseParamValue(xmlName, part);
+
+               // Add the attachment to the standard property
+               if (part.getDataHandler() != null && msgContext instanceof MessageContextJAXWS)
+               {
+                  DataHandler dataHandler = part.getDataHandler();
+                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.INBOUND_MESSAGE_ATTACHMENTS);
+                  attachments.put(part.getContentId(), dataHandler);
+               }
             }
             else
             {
@@ -620,7 +670,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       return part;
    }
 
-   private Object getAttachmentFromMessage(ParameterMetaData paramMetaData, SOAPMessage message) throws SOAPException, BindingException
+   private AttachmentPart getAttachmentFromMessage(ParameterMetaData paramMetaData, SOAPMessage message) throws SOAPException, BindingException
    {
       QName xmlName = paramMetaData.getXmlName();
 
@@ -694,7 +744,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
          soapMessage.setXOPMessage(true);
       }
-      else if(paramMetaData.isSwaRef())
+      else if (paramMetaData.isSwaRef())
       {
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
@@ -735,7 +785,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (SOAP_ARRAY_NAME.equals(elName))
          {
             CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-            msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+            msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
             try
             {
                QName compXMLName = paramMetaData.getXmlName();
@@ -751,7 +801,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             }
             finally
             {
-               msgContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+               msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             }
          }
       }
@@ -798,7 +848,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
          soapMessage.setXOPMessage(true);
       }
-      else if(paramMetaData.isSwaRef())
+      else if (paramMetaData.isSwaRef())
       {
          SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
          soapMessage.setSWARefMessage(true);
@@ -810,13 +860,13 @@ public abstract class CommonSOAPBinding implements CommonBinding
    abstract protected void throwFaultException(SOAPFaultImpl fault) throws Exception;
 
    abstract protected void verifyUnderstoodHeader(SOAPHeaderElement element) throws Exception;
-   
+
    public void checkMustUnderstand(OperationMetaData opMetaData) throws Exception
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext == null)
          throw new WSException("MessageContext not available");
-            
+
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
       SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
       if (soapEnvelope == null || soapEnvelope.getHeader() == null)
@@ -834,14 +884,14 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
          if (!isBoundHeader && soapHeaderElement.getMustUnderstand())
             verifyUnderstoodHeader(soapHeaderElement);
-      }                 
+      }
    }
-   
+
    public void setHeaderSource(HeaderSource source)
    {
       headerSource = source;
    }
-   
+
    private void handleException(Exception ex) throws BindingException
    {
       if (ex instanceof RuntimeException)

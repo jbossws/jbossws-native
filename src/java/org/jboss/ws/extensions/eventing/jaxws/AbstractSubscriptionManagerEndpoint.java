@@ -140,7 +140,7 @@ public abstract class AbstractSubscriptionManagerEndpoint extends EventingEndpoi
    {     
       URI subscriptionId = null;
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      AddressingProperties addrProps = (AddressingProperties)msgContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
 
       if (null == addrProps)
       {

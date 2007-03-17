@@ -29,6 +29,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
@@ -45,7 +46,7 @@ class SOAPBindingJAXRPC
    
    public void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage)
    {
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      MessageContextJAXRPC msgContext = (MessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
       MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
       String soapAction = opMetaData.getSOAPAction();
 

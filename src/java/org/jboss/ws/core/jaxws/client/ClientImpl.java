@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
+import java.net.HttpURLConnection;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
 
+import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
@@ -46,6 +48,7 @@ import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
+import org.jboss.remoting.transport.http.HTTPMetadataConstants;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
@@ -128,7 +131,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
     */
    public void update(Observable observable, Object object)
    {
-      if(log.isDebugEnabled()) log.debug("Configuration change event received. Reconfigure handler chain: " + object);
+      log.debug("Configuration change event received. Reconfigure handler chain: " + object);
 
       // re-populate the binding handler chain
       resetCreateBindingHandlerChain();
@@ -138,9 +141,9 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    protected boolean callRequestHandlerChain(QName portName, HandlerType type)
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
-      HandlerChainExecutor executor =  new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
+      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
       executorMap.put(type, executor);
-      
+
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
       return executor.handleMessage(msgContext);
    }
@@ -149,7 +152,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    protected boolean callResponseHandlerChain(QName portName, HandlerType type)
    {
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      HandlerChainExecutor executor =  executorMap.get(type);
+      HandlerChainExecutor executor = executorMap.get(type);
       return (executor != null ? executor.handleMessage(msgContext) : true);
    }
 
@@ -157,7 +160,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    protected boolean callFaultHandlerChain(QName portName, HandlerType type, Exception ex)
    {
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      HandlerChainExecutor executor =  executorMap.get(type);
+      HandlerChainExecutor executor = executorMap.get(type);
       return (executor != null ? executor.handleFault(msgContext, ex) : true);
    }
 
@@ -165,16 +168,32 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    protected void closeHandlerChain(QName portName, HandlerType type)
    {
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      HandlerChainExecutor executor =  executorMap.get(type);
-      if (executor != null) executor.close(msgContext);
+      HandlerChainExecutor executor = executorMap.get(type);
+      if (executor != null)
+         executor.close(msgContext);
    }
 
    @Override
    protected void setInboundContextProperties()
    {
-      // Mark the message context as outbound
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      msgContext.setProperty(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, new Boolean(false));
+      // Get the HTTP_RESPONSE_CODE
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      Integer resposeCode = (Integer)msgContext.get(HTTPMetadataConstants.RESPONSE_CODE);
+      if (resposeCode != null)
+         msgContext.put(MessageContextJAXWS.HTTP_RESPONSE_CODE, resposeCode);
+      
+      // Map of attachments to a message for the inbound message, key is  the MIME Content-ID, value is a DataHandler
+      msgContext.put(MessageContext.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
+      
+      // Get the HTTP response headers
+      // [JBREM-728] Improve access to HTTP response headers
+      Map<String, List> headers = new HashMap<String, List>();
+      for (Map.Entry en : msgContext.entrySet())
+      {
+         if (en.getKey() instanceof String && en.getValue() instanceof List)
+            headers.put((String)en.getKey(), (List)en.getValue());
+      }
+      msgContext.put(MessageContext.HTTP_RESPONSE_HEADERS, headers);
    }
 
    @Override
@@ -182,14 +201,17 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       // Mark the message context as outbound
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      msgContext.setProperty(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, new Boolean(true));
+      msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
+      
+      // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
+      msgContext.put(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
    }
 
    // Invoked by the proxy invokation handler
    public Object invoke(QName opName, Object[] args, Map<String, Object> resContext) throws RemoteException
    {
       // Associate a message context with the current thread
-      SOAPMessageContextJAXWS msgContext = new SOAPMessageContextJAXWS();
+      CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
       MessageContextAssociation.pushMessageContext(msgContext);
 
       // The contents of the request context are used to initialize the message context (see section 9.4.1)
@@ -200,7 +222,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
       try
       {
-         Object retObj = invoke(opName, args, resContext, false);
+         Object retObj = invoke(opName, args, false);
          return retObj;
       }
       catch (Exception ex)
@@ -218,14 +240,23 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       }
       finally
       {
+         // Copy the inbound msg properties to the binding's response context
+         msgContext = MessageContextAssociation.peekMessageContext();
+         for (String key : msgContext.keySet())
+         {
+            Object value = msgContext.get(key);
+            resContext.put(key, value);
+         }
+
          // Reset the message context association
          MessageContextAssociation.popMessageContext();
       }
    }
 
-   protected CommonMessageContext processPivot(CommonMessageContext requestContext)
+   protected CommonMessageContext processPivot(CommonMessageContext reqMessageContext)
    {
-      return MessageContextJAXWS.processPivot(requestContext);
+      MessageContextJAXWS resMessageContext = MessageContextJAXWS.processPivot(reqMessageContext);
+      return resMessageContext;
    }
 
    /**
@@ -337,7 +368,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       if (handlerResolver instanceof HandlerResolverImpl)
          return ((HandlerResolverImpl)handlerResolver).getHeaders();
-    
+
       Set<QName> headers = new HashSet<QName>();
       List<Handler> handlerChain = handlerResolver.getHandlerChain(new PortInfoImpl(epMetaData));
       if (handlerChain != null)
@@ -346,7 +377,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
             if (handler instanceof SOAPHandler)
                headers.addAll(((SOAPHandler)handler).getHeaders());
       }
-            
+
       return headers;
    }
 }

@@ -26,7 +26,6 @@ package org.jboss.ws.core;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -147,59 +146,6 @@ public abstract class CommonMessageContext implements Map<String, Object>
       return getSerializationContext().getNamespaceRegistry();
    }
 
-   /** Get the message context properties */
-   public Map<String, Object> getProperties()
-   {
-      Map<String, Object> props = new HashMap<String, Object>();
-      for (String key : keySet())
-      {
-         Object value = get(key);
-         props.put(key, value);
-      }
-      return props;
-   }
-
-   /**
-    * Returns true if the MessageContext contains a property with the specified name.
-    */
-   public boolean containsProperty(String name)
-   {
-      return containsKey(name);
-   }
-
-   /**
-    * Gets the value of a specific property from the MessageContext
-    */
-   public Object getProperty(String name)
-   {
-      return get(name);
-   }
-
-   /**
-    * Returns an Iterator view of the names of the properties in this MessageContext
-    */
-   public Iterator getPropertyNames()
-   {
-      return keySet().iterator();
-   }
-
-   /**
-    * Removes a property (name-value pair) from the MessageContext
-    */
-   public void removeProperty(String name)
-   {
-      remove(name);
-   }
-
-   /**
-    * Sets the name and value of a property associated with the MessageContext.
-    * If the MessageContext contains a value of the same property, the old value is replaced.
-    */
-   public void setProperty(String name, Object value)
-   {
-      put(name, value);
-   }
-
    // Map interface
 
    public int size()
@@ -237,9 +183,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
       Object value = null;
 
       ScopedProperty scopedProp = scopedProps.get(key);
-      
-      if (!("" + key).startsWith("javax.xml") && !("" + key).startsWith("org.jboss"))
-         log.info("get("+ key + "): " + scopedProp);
+      if (log.isTraceEnabled())
+         log.trace("get("+ key + "): " + scopedProp);
       
       if (isValidInScope(scopedProp))
          value = scopedProp.getValue();
@@ -254,8 +199,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
          throw new IllegalArgumentException("Cannot set value for HANDLER scoped property: " + key);
 
       ScopedProperty newProp = new ScopedProperty(key, value, currentScope);
-      if (!("" + key).startsWith("javax.xml") && !("" + key).startsWith("org.jboss"))
-         log.info("put: " + newProp);
+      if (log.isTraceEnabled())
+         log.trace("put: " + newProp);
       
       scopedProps.put(key, newProp);
       return prevProp != null ? prevProp.getValue() : null;

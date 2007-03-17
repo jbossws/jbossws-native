@@ -23,17 +23,13 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id: MessageContextImpl.java 275 2006-05-04 21:36:29Z jason.greene@jboss.com $
 
-import javax.xml.ws.addressing.JAXWSAConstants;
-import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -47,7 +43,7 @@ import org.jboss.xb.binding.NamespaceRegistry;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Jul-2006
  */
-public class MessageContextJAXWS extends CommonMessageContext implements MessageContext
+public abstract class MessageContextJAXWS extends CommonMessageContext implements MessageContext
 {
    private static Logger log = Logger.getLogger(MessageContextJAXWS.class);
 
@@ -98,11 +94,11 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
       return prop.getScope();
    }
 
-   public static CommonMessageContext processPivot(CommonMessageContext reqContext)
+   public static MessageContextJAXWS processPivot(CommonMessageContext reqContext)
    {
       log.debug("Begin response processing");
 
-      Boolean outbound = (Boolean)reqContext.getProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+      Boolean outbound = (Boolean)reqContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
       if (outbound == null)
          throw new IllegalStateException("Cannot find property: " + MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
@@ -111,7 +107,7 @@ public class MessageContextJAXWS extends CommonMessageContext implements Message
       resContext.setSOAPMessage(null);
       
       // Reverse the direction
-      resContext.setProperty(MessageContext.MESSAGE_OUTBOUND_PROPERTY, new Boolean(!outbound));
+      resContext.put(MessageContext.MESSAGE_OUTBOUND_PROPERTY, new Boolean(!outbound));
       
       MessageContextAssociation.pushMessageContext(resContext);
 

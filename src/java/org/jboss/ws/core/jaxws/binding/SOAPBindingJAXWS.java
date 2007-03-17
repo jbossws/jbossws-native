@@ -73,10 +73,10 @@ class SOAPBindingJAXWS extends BindingImpl
       // the soapAction attribute of soapbind:operation is either not present, or
       // present with an empty string as its value.
 
-      if (msgContext.getProperty(BindingProvider.SOAPACTION_USE_PROPERTY) != null)
+      if (msgContext.get(BindingProvider.SOAPACTION_USE_PROPERTY) != null)
          log.info("Ignore BindingProvider.SOAPACTION_USE_PROPERTY because of BP-1.0 R2745, R2745");
 
-      String soapActionProperty = (String)msgContext.getProperty(BindingProvider.SOAPACTION_URI_PROPERTY);
+      String soapActionProperty = (String)msgContext.get(BindingProvider.SOAPACTION_URI_PROPERTY);
       if (soapActionProperty != null)
          soapAction = soapActionProperty;
 

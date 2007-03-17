@@ -23,6 +23,10 @@ package org.jboss.ws.core.jaxrpc.handler;
 
 // $Id$
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.xml.rpc.handler.MessageContext;
 import javax.xml.soap.SOAPMessage;
 
@@ -45,7 +49,7 @@ import org.jboss.xb.binding.NamespaceRegistry;
  * @author Thomas.Diesler@jboss.org
  * @since 06-May-2004
  */
-public class MessageContextJAXRPC extends CommonMessageContext implements MessageContext
+public abstract class MessageContextJAXRPC extends CommonMessageContext implements MessageContext
 {
    private static Logger log = Logger.getLogger(MessageContextJAXRPC.class);
 
@@ -98,4 +102,56 @@ public class MessageContextJAXRPC extends CommonMessageContext implements Messag
       return requestContext;
    }
 
+   /** Get the message context properties */
+   public Map<String, Object> getProperties()
+   {
+      Map<String, Object> props = new HashMap<String, Object>();
+      for (String key : keySet())
+      {
+         Object value = get(key);
+         props.put(key, value);
+      }
+      return props;
+   }
+
+   /**
+    * Returns true if the MessageContext contains a property with the specified name.
+    */
+   public boolean containsProperty(String name)
+   {
+      return containsKey(name);
+   }
+
+   /**
+    * Gets the value of a specific property from the MessageContext
+    */
+   public Object getProperty(String name)
+   {
+      return get(name);
+   }
+
+   /**
+    * Returns an Iterator view of the names of the properties in this MessageContext
+    */
+   public Iterator getPropertyNames()
+   {
+      return keySet().iterator();
+   }
+
+   /**
+    * Removes a property (name-value pair) from the MessageContext
+    */
+   public void removeProperty(String name)
+   {
+      remove(name);
+   }
+
+   /**
+    * Sets the name and value of a property associated with the MessageContext.
+    * If the MessageContext contains a value of the same property, the old value is replaced.
+    */
+   public void setProperty(String name, Object value)
+   {
+      put(name, value);
+   }
 }

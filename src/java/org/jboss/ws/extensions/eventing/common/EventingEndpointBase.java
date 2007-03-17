@@ -53,7 +53,7 @@ public abstract class EventingEndpointBase
    protected static AddressingProperties getAddrProperties()
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      AddressingProperties inProps = (AddressingProperties)msgContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      AddressingProperties inProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
       assertAddrProperties(inProps);
       return inProps;
    }

@@ -26,7 +26,9 @@ package org.jboss.ws.core.server;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.HashMap;
 
+import javax.activation.DataHandler;
 import javax.management.MBeanException;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.soap.SOAPFaultException;
@@ -145,6 +147,9 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       HandlerType[] handlerType = delegate.getHandlerTypeOrder();
       HandlerType[] faultType = delegate.getHandlerTypeOrder();
 
+      // Set the required inbound context properties
+      setInboundContextProperties();
+      
       try
       {
          boolean oneway = false;
@@ -195,19 +200,22 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             }
 
             // Invoke the service endpoint
-            msgContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+            msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
             try
             {
                invokeServiceEndpointInstance(seInstance, epInv);
             }
             finally
             {
-               msgContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+               msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             }
 
             // Reverse the message direction
             msgContext = processPivotInternal(msgContext, direction);
 
+            // Set the required outbound context properties
+            setOutboundContextProperties();
+            
             if (binding instanceof CommonSOAPBinding)
                XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
 
@@ -223,9 +231,9 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             msgContext.setSOAPMessage(resMessage);
          }
 
-         // call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
          if (oneway == false)
          {
+            // call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
             handlersPass = callResponseHandlerChain(sepMetaData, handlerType[2]);
             faultType[2] = null;
             handlersPass = handlersPass && callResponseHandlerChain(sepMetaData, handlerType[1]);
@@ -270,6 +278,26 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
          closeHandlerChain(sepMetaData, handlerType[0]);
 
          destroyServiceEndpointInstance(seInstance);
+      }
+   }
+
+   protected void setInboundContextProperties()
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext instanceof MessageContextJAXWS)
+      {
+         // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
+         msgContext.put(MessageContextJAXWS.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
+      }
+   }
+
+   protected void setOutboundContextProperties()
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext instanceof MessageContextJAXWS)
+      {
+         // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
+         msgContext.put(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
       }
    }
 

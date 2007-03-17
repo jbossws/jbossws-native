@@ -249,13 +249,13 @@ public class WSSecurityDispatcher
 
       if (operationConfig.getUsername() != null)
       {
-         Object user = ctx.getProperty(Stub.USERNAME_PROPERTY);
-         Object pass = ctx.getProperty(Stub.PASSWORD_PROPERTY);
+         Object user = ctx.get(Stub.USERNAME_PROPERTY);
+         Object pass = ctx.get(Stub.PASSWORD_PROPERTY);
 
          if (user != null && pass != null)
          {
             operations.add(new OperationDescription<EncodingOperation>(SendUsernameOperation.class, null, user.toString(), pass.toString(), null));
-            ctx.setProperty(StubExt.PROPERTY_AUTH_TYPE, StubExt.PROPERTY_AUTH_TYPE_WSSE);
+            ctx.put(StubExt.PROPERTY_AUTH_TYPE, StubExt.PROPERTY_AUTH_TYPE_WSSE);
          }
       }
 

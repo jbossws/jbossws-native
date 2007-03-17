@@ -137,29 +137,4 @@ public class SOAPMessageContextJAXWS extends MessageContextJAXWS implements SOAP
    {
       return roles;
    }
-
-   public boolean containsProperty(String name)
-   {
-      return containsKey(name);
-   }
-
-   public Object getProperty(String name)
-   {
-      return get(name);
-   }
-
-   public Iterator getPropertyNames()
-   {
-      return keySet().iterator();
-   }
-
-   public void removeProperty(String name)
-   {
-      remove(name);
-   }
-
-   public void setProperty(String name, Object value)
-   {
-      put(name, value);
-   }
 }

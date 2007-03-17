@@ -59,7 +59,7 @@ public class SOAPMessageDispatcher
 
       // Dispatch based on wsa:Action
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      AddressingProperties inProps = (AddressingProperties)msgContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      AddressingProperties inProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
       if (inProps != null && inProps.getAction() != null)
       {
          String wsaAction = inProps.getAction().getURI().toASCIIString();

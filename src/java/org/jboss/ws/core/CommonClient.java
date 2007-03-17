@@ -26,6 +26,7 @@ package org.jboss.ws.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,7 +48,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
 import org.jboss.ws.core.soap.EndpointInfo;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
@@ -200,8 +200,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousService"));
          wsMetaData.addService(serviceMetaData);
 
-         epMetaData = new ClientEndpointMetaData(serviceMetaData, new QName(Constants.NS_JBOSSWS_URI, "AnonymousPort"),
-               new QName(Constants.NS_JBOSSWS_URI, "Anonymous"), Type.JAXRPC);
+         QName anonQName = new QName(Constants.NS_JBOSSWS_URI, "Anonymous");
+         QName anonPort = new QName(Constants.NS_JBOSSWS_URI, "AnonymousPort");
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, anonPort, anonQName, Type.JAXRPC);
          epMetaData.setStyle(Style.RPC);
 
          serviceMetaData.addEndpoint(epMetaData);
@@ -231,7 +232,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
     * 6) unwrap the result using the BindingProvider
     * 7) return the result
     */
-   protected Object invoke(QName opName, Object[] inputParams, Map<String, Object> resContext, boolean forceOneway) throws Exception
+   protected Object invoke(QName opName, Object[] inputParams, boolean forceOneway) throws Exception
    {
       if (opName.equals(operationName) == false)
          setOperationName(opName);
@@ -240,19 +241,19 @@ public abstract class CommonClient implements StubExt, HeaderSource
       boolean oneway = forceOneway || opMetaData.isOneWay();
 
       // Associate a message context with the current thread
-      CommonMessageContext reqContext = MessageContextAssociation.peekMessageContext();
-      reqContext.setOperationMetaData(opMetaData);
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      msgContext.setOperationMetaData(opMetaData);
 
-      // copy properties to the message context
-      for (String key : getRequestContext().keySet())
-      {
-         Object value = getRequestContext().get(key);
-         reqContext.setProperty(key, value);
-      }
+      // Copy properties to the message context
+      msgContext.putAll(getRequestContext());
 
       // The direction of the message
       DirectionHolder direction = new DirectionHolder(Direction.OutBound);
-      
+
+      // Get the order of pre/post handlerchains 
+      HandlerType[] handlerType = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
+      HandlerType[] faultType = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
+
       QName portName = epMetaData.getPortName();
       try
       {
@@ -264,25 +265,26 @@ public abstract class CommonClient implements StubExt, HeaderSource
          epInv = new EndpointInvocation(opMetaData);
          epInv.initInputParams(inputParams);
 
+         // Set the required outbound properties
+         setOutboundContextProperties();
+
          // Bind the request message
          SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, unboundHeaders);
 
          // Add possible attachment parts
          addAttachmentParts(reqMessage);
 
-         setOutboundContextProperties();
-
          // Call the request handlers
-         boolean handlerPass = callRequestHandlerChain(portName, HandlerType.PRE);
-         handlerPass = handlerPass && callRequestHandlerChain(portName, HandlerType.ENDPOINT);
-         handlerPass = handlerPass && callRequestHandlerChain(portName, HandlerType.POST);
+         boolean handlerPass = callRequestHandlerChain(portName, handlerType[0]);
+         handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
+         handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
 
          if (handlerPass)
          {
             String targetAddress = getTargetEndpointAddress();
 
             // Fall back to wsa:To
-            AddressingProperties addrProps = (AddressingProperties)reqContext.getProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
+            AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
             if (targetAddress == null && addrProps != null && addrProps.getTo() != null)
             {
                AddressingConstantsImpl ADDR = new AddressingConstantsImpl();
@@ -292,12 +294,14 @@ public abstract class CommonClient implements StubExt, HeaderSource
                   try
                   {
                      URL wsaToURL = new URL(wsaTo);
-                     if(log.isDebugEnabled()) log.debug("Sending request to addressing destination: " + wsaToURL);
+                     if (log.isDebugEnabled())
+                        log.debug("Sending request to addressing destination: " + wsaToURL);
                      targetAddress = wsaToURL.toExternalForm();
                   }
                   catch (MalformedURLException ex)
                   {
-                     if(log.isDebugEnabled()) log.debug("Not a valid URL: " + wsaTo);
+                     if (log.isDebugEnabled())
+                        log.debug("Not a valid URL: " + wsaTo);
                   }
                }
             }
@@ -306,7 +310,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (targetAddress == null)
                throw new WSException("Target endpoint address not set");
 
-            EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, getRequestContext());
+            Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext()); 
+            EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
 
             SOAPMessage resMessage;
             if (oneway)
@@ -318,11 +323,14 @@ public abstract class CommonClient implements StubExt, HeaderSource
                resMessage = new SOAPConnectionImpl().call(reqMessage, epInfo);
             }
 
-            // at pivot the message context might be replaced
-            reqContext = processPivotInternal(reqContext, direction);
+            // At pivot the message context might be replaced
+            msgContext = processPivotInternal(msgContext, direction);
+            
+            // Copy the remoting meta data 
+            msgContext.putAll(callProps);
 
             // Associate response message with message context
-            reqContext.setSOAPMessage(resMessage);
+            msgContext.setSOAPMessage(resMessage);
          }
 
          setInboundContextProperties();
@@ -334,26 +342,29 @@ public abstract class CommonClient implements StubExt, HeaderSource
             // Verify 
             if (binding instanceof CommonSOAPBinding)
                ((CommonSOAPBinding)binding).checkMustUnderstand(opMetaData);
-            
-            // Call the response handlers
-            handlerPass = callResponseHandlerChain(portName, HandlerType.POST);
+
+            // Call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
+            handlerPass = callResponseHandlerChain(portName, handlerType[2]);
+            faultType[2] = null;
 
             // unbind the return values
             if (handlerPass)
             {
                // unbind the return values
-               SOAPMessage resMessage = reqContext.getSOAPMessage();
+               SOAPMessage resMessage = msgContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
-            handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.ENDPOINT);
-            handlerPass = handlerPass && callResponseHandlerChain(portName, HandlerType.PRE);
+            handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[1]);
+            faultType[1] = null;
+            handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[0]);
+            faultType[0] = null;
 
             // Check if protocol handlers modified the payload
             if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
             {
                log.debug("Handler modified body payload, unbind message again");
-               SOAPMessage resMessage = reqContext.getSOAPMessage();
+               SOAPMessage resMessage = msgContext.getSOAPMessage();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
@@ -365,20 +376,21 @@ public abstract class CommonClient implements StubExt, HeaderSource
       catch (Exception ex)
       {
          // Reverse the message direction
-         processPivotInternal(reqContext, direction);
-         
-         callFaultHandlerChain(portName, HandlerType.POST, ex);
-         callFaultHandlerChain(portName, HandlerType.ENDPOINT, ex);
-         callFaultHandlerChain(portName, HandlerType.PRE, ex);
+         processPivotInternal(msgContext, direction);
+
+         if (faultType[2] != null)
+            callFaultHandlerChain(portName, faultType[2], ex);
+         if (faultType[1] != null)
+            callFaultHandlerChain(portName, faultType[1], ex);
+         if (faultType[0] != null)
+            callFaultHandlerChain(portName, faultType[0], ex);
          throw ex;
       }
       finally
       {
-         resContext.putAll(reqContext.getProperties());
-         
-         closeHandlerChain(portName, HandlerType.POST);
-         closeHandlerChain(portName, HandlerType.ENDPOINT);
-         closeHandlerChain(portName, HandlerType.PRE);
+         closeHandlerChain(portName, handlerType[2]);
+         closeHandlerChain(portName, handlerType[1]);
+         closeHandlerChain(portName, handlerType[0]);
       }
    }
 
@@ -396,7 +408,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
    {
       for (AttachmentPart part : attachmentParts)
       {
-         if(log.isDebugEnabled()) log.debug("Adding attachment part: " + part.getContentId());
+         if (log.isDebugEnabled())
+            log.debug("Adding attachment part: " + part.getContentId());
          reqMessage.addAttachmentPart(part);
       }
    }

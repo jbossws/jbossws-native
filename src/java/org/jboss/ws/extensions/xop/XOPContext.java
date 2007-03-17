@@ -137,14 +137,14 @@ public class XOPContext
    public static boolean isMTOMEnabled()
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();     
-      Boolean mtomEnabled = (Boolean)msgContext.getProperty(StubExt.PROPERTY_MTOM_ENABLED);
+      Boolean mtomEnabled = (Boolean)msgContext.get(StubExt.PROPERTY_MTOM_ENABLED);
       return Boolean.TRUE.equals(mtomEnabled);
    }
 
    public static void setMTOMEnabled(boolean b)
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      msgContext.setProperty(StubExt.PROPERTY_MTOM_ENABLED, Boolean.valueOf(b));
+      msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, Boolean.valueOf(b));
    }
 
    /**

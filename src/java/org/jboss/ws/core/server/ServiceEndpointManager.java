@@ -413,23 +413,23 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       if (type == EndpointMetaData.Type.JAXRPC)
       {
          msgContext = new SOAPMessageContextJAXRPC();
-         msgContext.setProperty(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
-         msgContext.setProperty(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
-         msgContext.setProperty(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
-         msgContext.setProperty(MessageContextJAXRPC.SERVLET_SESSION, httpSessionCallback);
+         msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
+         msgContext.put(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
+         msgContext.put(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
+         msgContext.put(MessageContextJAXRPC.SERVLET_SESSION, httpSessionCallback);
       }
       else
       {
          msgContext = new SOAPMessageContextJAXWS();
-         msgContext.setProperty(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, new Boolean(false));
-         msgContext.setProperty(MessageContextJAXWS.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
-         msgContext.setProperty(MessageContextJAXWS.HTTP_REQUEST_HEADERS, headerSource.getHeaderMap());
-         msgContext.setProperty(MessageContextJAXWS.HTTP_REQUEST_METHOD, httpRequest.getMethod());
-         msgContext.setProperty(MessageContextJAXWS.QUERY_STRING, httpRequest.getQueryString());
-         msgContext.setProperty(MessageContextJAXWS.PATH_INFO, httpRequest.getPathInfo());
-         msgContext.setProperty(MessageContextJAXWS.SERVLET_CONTEXT, servletContext);
-         msgContext.setProperty(MessageContextJAXWS.SERVLET_REQUEST, httpRequest);
-         msgContext.setProperty(MessageContextJAXWS.SERVLET_RESPONSE, httpResponse);
+         msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, new Boolean(false));
+         msgContext.put(MessageContextJAXWS.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
+         msgContext.put(MessageContextJAXWS.HTTP_REQUEST_HEADERS, headerSource.getHeaderMap());
+         msgContext.put(MessageContextJAXWS.HTTP_REQUEST_METHOD, httpRequest.getMethod());
+         msgContext.put(MessageContextJAXWS.QUERY_STRING, httpRequest.getQueryString());
+         msgContext.put(MessageContextJAXWS.PATH_INFO, httpRequest.getPathInfo());
+         msgContext.put(MessageContextJAXWS.SERVLET_CONTEXT, servletContext);
+         msgContext.put(MessageContextJAXWS.SERVLET_REQUEST, httpRequest);
+         msgContext.put(MessageContextJAXWS.SERVLET_RESPONSE, httpResponse);
 
       }
       msgContext.setEndpointMetaData(sepMetaData);
@@ -442,11 +442,11 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          // REplace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
 
-         Map<String, List<String>> headers = (Map<String, List<String>>)msgContext.getProperty(MessageContextJAXWS.HTTP_RESPONSE_HEADERS);
+         Map<String, List<String>> headers = (Map<String, List<String>>)msgContext.get(MessageContextJAXWS.HTTP_RESPONSE_HEADERS);
          if (headers != null)
             headerSource.setHeaderMap(headers);
 
-         Integer code = (Integer)msgContext.getProperty(MessageContextJAXWS.HTTP_RESPONSE_CODE);
+         Integer code = (Integer)msgContext.get(MessageContextJAXWS.HTTP_RESPONSE_CODE);
          if (code != null)
             httpResponse.setStatus(code.intValue());
 
@@ -487,7 +487,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       String wsaTo = null;
 
       // Get the destination from the AddressingProperties
-      AddressingProperties outProps = (AddressingProperties)msgContext.getProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND);
+      AddressingProperties outProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND);
       if (outProps != null && outProps.getTo() != null)
       {
          AddressingConstantsImpl ADDR = new AddressingConstantsImpl();

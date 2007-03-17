@@ -95,7 +95,7 @@ public class HandlerChainExecutor
    public void close(MessageContext msgContext)
    {
       log.debug("close");
-      CommonMessageContext context = (CommonMessageContext)msgContext;
+      MessageContextJAXWS context = (MessageContextJAXWS)msgContext;
       for (int index = 1; index <= executedHandlers.size(); index++)
       {
          Handler currHandler = executedHandlers.get(executedHandlers.size() - index);
@@ -122,8 +122,6 @@ public class HandlerChainExecutor
       if (handlers.size() > 0)
       {
          log.debug("Enter: handle" + (isOutbound ? "Out" : "In ") + "BoundMessage");
-
-         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
 
          int index = getFirstHandler();
          Handler currHandler = null;
@@ -163,7 +161,6 @@ public class HandlerChainExecutor
             if (doNext == false)
                falseIndex = index;
 
-            msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handle" + (isOutbound ? "Out" : "In ") + "BoundMessage with status: " + doNext);
          }
       }
@@ -203,8 +200,6 @@ public class HandlerChainExecutor
             }
          }
 
-         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-
          int index = getFirstHandler();
          
          Handler currHandler = null;
@@ -239,7 +234,6 @@ public class HandlerChainExecutor
          }
          finally
          {
-            msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handle" + (isOutbound ? "Out" : "In ") + "BoundFault with status: " + doNext);
          }
       }
@@ -286,12 +280,13 @@ public class HandlerChainExecutor
    private boolean handleMessage(Handler currHandler, MessageContext msgContext)
    {
       CommonMessageContext context = (CommonMessageContext)msgContext;
-      if (currHandler instanceof LogicalHandler && msgContext instanceof SOAPMessageContextJAXWS)
+      if (currHandler instanceof LogicalHandler)
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
 
-         msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
+         if (msgContext instanceof SOAPMessageContextJAXWS)
+            msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
       }
 
       if (executedHandlers.contains(currHandler) == false)
@@ -299,24 +294,27 @@ public class HandlerChainExecutor
 
       try
       {
+         context.put(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          context.setCurrentScope(Scope.HANDLER);
          return currHandler.handleMessage(msgContext);
       }
       finally
       {
          context.setCurrentScope(Scope.APPLICATION);
+         context.remove(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM);
       }
    }
 
    private boolean handleFault(Handler currHandler, MessageContext msgContext)
    {
       CommonMessageContext context = (CommonMessageContext)msgContext;
-      if (currHandler instanceof LogicalHandler && msgContext instanceof SOAPMessageContextJAXWS)
+      if (currHandler instanceof LogicalHandler)
       {
          if (epMetaData.getStyle() == Style.RPC)
             throw new WebServiceException("Cannot use logical handler with RPC");
 
-         msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
+         if (msgContext instanceof SOAPMessageContextJAXWS)
+            msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
       }
 
       if (executedHandlers.contains(currHandler) == false)
@@ -324,12 +322,14 @@ public class HandlerChainExecutor
 
       try
       {
+         context.put(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          context.setCurrentScope(Scope.HANDLER);
          return currHandler.handleFault(msgContext);
       }
       finally
       {
          context.setCurrentScope(Scope.APPLICATION);
+         context.remove(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM);
       }
    }
 
