@@ -58,6 +58,9 @@ public class ResponseImpl implements Response
       if (delegate == null)
          throw new IllegalStateException("Future not available");
 
+      if (exception != null)
+         throw exception;
+      
       return delegate;
    }
 
@@ -87,7 +90,7 @@ public class ResponseImpl implements Response
       {
          getFuture().get();
       }
-
+      
       if (exception != null)
          throw new ExecutionException(exception);
 

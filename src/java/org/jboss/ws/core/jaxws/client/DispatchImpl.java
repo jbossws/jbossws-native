@@ -334,14 +334,16 @@ public class DispatchImpl<T> implements Dispatch<T>
             Map<String, Object> resContext = response.getContext();
             Object result = invokeInternal(payload, resContext);
             response.set(result);
-
-            // Call the handler if available
-            if (handler != null)
-               handler.handleResponse(response);
          }
          catch (Exception ex)
          {
             handleAsynInvokeException(ex);
+         }
+         finally
+         {
+            // Call the handler if available
+            if (handler != null)
+               handler.handleResponse(response);
          }
       }
       
