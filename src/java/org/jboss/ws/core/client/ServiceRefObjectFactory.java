@@ -72,9 +72,10 @@ public class ServiceRefObjectFactory
          setValue((UnifiedPortComponentRefMetaData)ref, navigator, namespaceURI, localName, value);
       else if (ref instanceof UnifiedServiceRefMetaData)
          setValue((UnifiedServiceRefMetaData)ref, navigator, namespaceURI, localName, value);
+      else if (ref instanceof UnifiedCallPropertyMetaData)
+         setValue((UnifiedCallPropertyMetaData)ref, navigator, namespaceURI, localName, value);
       else if (ref instanceof UnifiedStubPropertyMetaData)
          setValue((UnifiedStubPropertyMetaData)ref, navigator, namespaceURI, localName, value);
-      
    }
    
    private void setValue(UnifiedServiceRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)

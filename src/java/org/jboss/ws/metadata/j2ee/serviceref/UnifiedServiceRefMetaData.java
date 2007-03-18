@@ -23,24 +23,18 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.lang.reflect.AnnotatedElement;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.integration.ServiceRefMetaData;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.xb.QNameBuilder;
 import org.w3c.dom.Element;
 
 /**
@@ -70,8 +64,8 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    private String mappingFile;
    // The optional <service-qname> element
    private QName serviceQName;
-   // The LinkedHashMap<String, PortComponentRefMetaData> for <port-component-ref> elements
-   private Map<String, UnifiedPortComponentRefMetaData> portComponentRefs = new LinkedHashMap<String, UnifiedPortComponentRefMetaData>();
+   // The list <port-component-ref> elements
+   private List<UnifiedPortComponentRefMetaData> portComponentRefs = new ArrayList<UnifiedPortComponentRefMetaData>();
    // The optional <handler> elements. JAX-RPC handlers declared in the standard J2EE1.4 descriptor
    private List<UnifiedHandlerMetaData> handlers = new ArrayList<UnifiedHandlerMetaData>();
    // The optional <handler-chains> elements. JAX-WS handlers declared in the standard JavaEE5 descriptor
@@ -129,7 +123,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
             continue;
          }
 
-         UnifiedPortComponentRefMetaData targetPCRef = portComponentRefs.get(seiName);
+         UnifiedPortComponentRefMetaData targetPCRef = getPortComponentRef(seiName);
          if (targetPCRef == null)
          {
             log.warn("Cannot find port component ref with SEI name: " + seiName);
@@ -190,18 +184,24 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
 
    public Collection<UnifiedPortComponentRefMetaData> getPortComponentRefs()
    {
-      return portComponentRefs.values();
+      return portComponentRefs;
    }
 
    public UnifiedPortComponentRefMetaData getPortComponentRef(String seiName)
    {
-      UnifiedPortComponentRefMetaData ref = portComponentRefs.get(seiName);
-      return ref;
+      if (seiName == null)
+         throw new IllegalArgumentException("SEI name cannot be null");
+      for (UnifiedPortComponentRefMetaData ref : portComponentRefs)
+      {
+         if (seiName.equals(ref.getServiceEndpointInterface()))
+            return ref;
+      }
+      return null;
    }
 
    public void addPortComponentRef(UnifiedPortComponentRefMetaData pcRef)
    {
-      portComponentRefs.put(pcRef.getServiceEndpointInterface(), pcRef);
+      portComponentRefs.add(pcRef);
    }
 
    public List<UnifiedHandlerMetaData> getHandlers()
