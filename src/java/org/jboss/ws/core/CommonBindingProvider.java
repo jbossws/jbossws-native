@@ -35,6 +35,8 @@ import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
+import javax.xml.ws.soap.SOAPBinding;
+
 /**
  * Provides access to the protocol binding.
  * 
@@ -84,7 +86,6 @@ public class CommonBindingProvider implements Configurable
       {
          throw new WSException("Unsupported binding: " + bindingId);
       }
-
    }
 
    public CommonBinding getCommonBinding()

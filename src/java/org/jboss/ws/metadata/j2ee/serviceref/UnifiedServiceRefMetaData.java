@@ -119,11 +119,12 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
          String seiName = pcref.getServiceEndpointInterface();
          if (seiName == null)
          {
-            log.warn("Ignore <port-component-ref> with null <service-endpoint-interface>");
-            continue;
+            log.warn("*** Ignore <port-component-ref> with null <service-endpoint-interface>");
+            //continue;
          }
 
-         UnifiedPortComponentRefMetaData targetPCRef = getPortComponentRef(seiName);
+         UnifiedPortComponentRefMetaData targetPCRef = getPortComponentRef(seiName, pcref.getPortQName());
+
          if (targetPCRef == null)
          {
             log.warn("Cannot find port component ref with SEI name: " + seiName);
@@ -187,6 +188,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
       return portComponentRefs;
    }
 
+   @Deprecated
    public UnifiedPortComponentRefMetaData getPortComponentRef(String seiName)
    {
       if (seiName == null)
@@ -197,6 +199,21 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
             return ref;
       }
       return null;
+   }
+
+   public UnifiedPortComponentRefMetaData getPortComponentRef(String seiName, QName portName)
+   {
+      UnifiedPortComponentRefMetaData matchingRef = null;
+
+      for (UnifiedPortComponentRefMetaData ref : portComponentRefs)
+      {
+         if(ref.matches(seiName, portName))
+         {
+            matchingRef = ref;
+            break;
+         }
+      }
+      return matchingRef;
    }
 
    public void addPortComponentRef(UnifiedPortComponentRefMetaData pcRef)

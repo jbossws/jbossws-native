@@ -25,6 +25,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.*;
 
 import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
@@ -33,6 +34,7 @@ import javax.xml.ws.BindingType;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -50,6 +52,9 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 
 /**
  * A client side meta data builder.
@@ -125,6 +130,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          throw new IllegalArgumentException("Cannot obtain wsdl service: " + serviceName);
 
       // Build endpoint meta data
+
       for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
       {
          QName portName = wsdlEndpoint.getName();
@@ -140,7 +146,67 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          initEndpointEncodingStyle(epMetaData);
 
          setupOperationsFromWSDL(epMetaData, wsdlEndpoint);
+
+         // service-ref contributions
+         bufferServiceRefContributions(epMetaData);
+
       }
+   }
+
+   /**
+    * Buffer portComponent information that it can be reused
+    * when rebuild is called (actually getPort(...))
+    * @param epMetaData
+    */
+   private void bufferServiceRefContributions(EndpointMetaData epMetaData)
+   {
+      UnifiedServiceRefMetaData serviceRefMetaData = ServiceObjectFactory.getServiceRefAssociation();
+
+      if(serviceRefMetaData!=null)
+      {
+         for(UnifiedPortComponentRefMetaData portComp : serviceRefMetaData.getPortComponentRefs())
+         {
+            epMetaData.getServiceRefContrib().add(portComp);
+         }
+      }
+   }
+
+   /**
+    * ServiceRef deployment descriptor elements may override the endpoint metadata.
+    * @param epMetaData
+    */
+   private void processServiceRefContributions(EndpointMetaData epMetaData)
+   {
+
+      Iterator<UnifiedPortComponentRefMetaData> it = epMetaData.getServiceRefContrib().iterator();
+
+      while(it.hasNext())
+      {
+         UnifiedPortComponentRefMetaData portComp = it.next();
+
+         if(epMetaData.matches(portComp))
+         {
+            log.debug("Processing service-ref contribution on portType: "+epMetaData.getPortTypeName());
+
+            // process MTOM overrides
+            if(portComp.getEnableMTOM())
+            {
+               String bindingId = epMetaData.getBindingId();
+               if(bindingId.equals(Constants.SOAP11HTTP_BINDING))
+                  epMetaData.setBindingId(Constants.SOAP11HTTP_MTOM_BINDING);
+               else if(bindingId.equals(Constants.SOAP12HTTP_BINDING))
+                  epMetaData.setBindingId(Constants.SOAP12HTTP_MTOM_BINDING);
+            }
+
+            // process stub properties
+            for(UnifiedStubPropertyMetaData stubProp: portComp.getStubProperties())
+            {
+               epMetaData.getProperties().put(stubProp.getPropName(), stubProp.getPropValue());  
+            }
+         }
+
+      }
+
    }
 
    protected void setupOperationsFromWSDL(EndpointMetaData epMetaData, WSDLEndpoint wsdlEndpoint)
@@ -209,6 +275,10 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       // Set SEI name
       epMetaData.setServiceEndpointInterfaceName(wsClass.getName());
+
+      // service-ref contributions
+      processServiceRefContributions(epMetaData);
+      //epMetaData.getServiceRefContrib().clear();
 
       // Eager initialization
       epMetaData.eagerInitialize();

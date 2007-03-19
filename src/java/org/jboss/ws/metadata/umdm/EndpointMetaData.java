@@ -61,6 +61,7 @@ import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 
 /**
  * A Service component describes a set of endpoints.
@@ -128,6 +129,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private ConfigObservable configObservable = new ConfigObservable();
 
    private JAXBContextCache jaxbCache = new JAXBContextCache();
+
+   private List<UnifiedPortComponentRefMetaData> serviceRefContrib = new ArrayList<UnifiedPortComponentRefMetaData>();
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
@@ -319,7 +322,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public Properties getProperties()
    {
-      return properties;
+      if(null == this.properties)
+         this.properties = new Properties();
+      return this.properties;
    }
 
    public void setProperties(Properties properties)
@@ -708,5 +713,24 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          setChanged();
          notifyObservers(object);
       }
+   }
+
+   public List<UnifiedPortComponentRefMetaData> getServiceRefContrib()
+   {
+      return serviceRefContrib;
+   }
+
+   public boolean matches(UnifiedPortComponentRefMetaData pcRef)
+   {
+      String seiName = pcRef.getServiceEndpointInterface();
+      QName portName = pcRef.getPortQName();
+
+      boolean match;
+      if (seiName != null && portName != null)
+         match = getServiceEndpointInterfaceName().equals(seiName) && portName.equals(portName);
+      else
+         match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
+
+      return match;
    }
 }

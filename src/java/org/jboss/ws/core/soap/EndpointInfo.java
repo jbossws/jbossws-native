@@ -60,17 +60,15 @@ public class EndpointInfo
 
       // Add the endpoint properties
       Properties epProps = epMetaData.getProperties();
-      if (epProps != null)
+      Iterator it = epProps.entrySet().iterator();
+      while (it.hasNext())
       {
-         Iterator it = epProps.entrySet().iterator();
-         while (it.hasNext())
-         {
-            Map.Entry entry = (Map.Entry)it.next();
-            String key = (String)entry.getKey();
-            Object val = entry.getValue();
-            properties.put(key, val);
-         }
+         Map.Entry entry = (Map.Entry)it.next();
+         String key = (String)entry.getKey();
+         Object val = entry.getValue();
+         properties.put(key, val);
       }
+
    }
 
    public Map<String, Object> getProperties()

@@ -167,6 +167,7 @@ public class ServiceRefHandlerJAXWS
 
       // Do not use rebind, the binding should be unique
       // [JBWS-1499] - Revisit WebServiceRefHandler JNDI rebind
-      Util.rebind(encCtx, encName, new ServiceReferenceable(serviceImplClass, targetClassName, serviceRef));
+      Util.bind(encCtx, encName, new ServiceReferenceable(serviceImplClass, targetClassName, serviceRef));
+
    }
 }

@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * 
  * @author Thomas.Diesler@jboss.org
  */
-public class ServiceRefMetaDataParser 
+public class ServiceRefMetaDataParser
 {
    public void importStandardXml(Element root, UnifiedServiceRefMetaData sref)
    {
@@ -70,7 +70,7 @@ public class ServiceRefMetaDataParser
          sref.addHandler(handlerMetaData);
       }
    }
-   
+
    public void importJBossXml(Element root, UnifiedServiceRefMetaData sref)
    {
       sref.setConfigName(getOptionalElementContent(root, "config-name"));
@@ -83,18 +83,19 @@ public class ServiceRefMetaDataParser
       {
          Element pcrefElement = (Element)iterator.next();
          String seiName = getOptionalElementContent(pcrefElement, "service-endpoint-interface");
-         if (seiName != null)
+         String portNameString = getOptionalElementContent(pcrefElement, "port-qname");
+         QName portName = portNameString!=null ? QName.valueOf(portNameString) : null;
+
+         UnifiedPortComponentRefMetaData pcref = sref.getPortComponentRef(seiName, portName);
+         if (pcref == null)
          {
-            UnifiedPortComponentRefMetaData pcref = sref.getPortComponentRef(seiName);
-            if (pcref == null)
-            {
-               // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml
-               pcref = new UnifiedPortComponentRefMetaData(sref);
-               pcref.importStandardXml(pcrefElement);
-               sref.addPortComponentRef(pcref);
-            }
-            pcref.importJBossXml(pcrefElement);
+            // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml
+            pcref = new UnifiedPortComponentRefMetaData(sref);
+            pcref.importStandardXml(pcrefElement);
+            sref.addPortComponentRef(pcref);
          }
+         pcref.importJBossXml(pcrefElement);
+
       }
 
       // Parse the call-property elements
@@ -107,6 +108,7 @@ public class ServiceRefMetaDataParser
          sref.addCallProperty(new UnifiedCallPropertyMetaData(name, value));
       }
    }
+
 
    public void importStandardXml(Element root, UnifiedPortComponentRefMetaData pcref)
    {
@@ -126,7 +128,7 @@ public class ServiceRefMetaDataParser
          pcref.addCallProperty(new UnifiedCallPropertyMetaData(name, value));
       }
    }
-   
+
    public void importStandardXml(Element root, UnifiedHandlerMetaData href)
    {
       href.setHandlerName(getElementContent(root, "handler-name"));
@@ -171,21 +173,21 @@ public class ServiceRefMetaDataParser
          href.addPortName(content);
       }
    }
-   
+
    private String getElementContent(Element element, String childName)
    {
       String childValue = getOptionalElementContent(element, childName);
       if (childValue == null || childValue.length() == 0)
          throw new IllegalStateException("Invalid null element content: " + childName);
-      
+
       return childValue;
    }
-   
+
    private String getOptionalElementContent(Element element, String childName)
    {
       return getTextContent(DOMUtils.getFirstChildElement(element, childName));
    }
-   
+
    private String getTextContent(Element element)
    {
       String content = null;

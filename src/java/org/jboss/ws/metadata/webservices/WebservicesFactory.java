@@ -23,14 +23,22 @@ package org.jboss.ws.metadata.webservices;
 
 // $Id$
 
-import java.net.URL;
-
 import org.jboss.logging.Logger;
+import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.ws.WSException;
 import org.jboss.xb.binding.ObjectModelFactory;
+import org.jboss.xb.binding.Unmarshaller;
+import org.jboss.xb.binding.UnmarshallerFactory;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * A JBossXB factory for {@link WebservicesMetaData}
@@ -49,6 +57,62 @@ public class WebservicesFactory implements ObjectModelFactory
    public WebservicesFactory(URL descriptorURL)
    {
       this.descriptorURL = descriptorURL;
+   }
+
+   /**
+    * Load webservices.xml from <code>META-INF/webservices.xml</code>
+    * or <code>WEB-INF/webservices.xml</code>.
+    *
+    * @param root virtual file root
+    * @return WebservicesMetaData or <code>null</code> if it cannot be found
+    */
+   public static WebservicesMetaData loadFromVFSRoot(UnifiedVirtualFile root)
+   {
+      WebservicesMetaData webservices = null;
+
+      UnifiedVirtualFile wsdd = null;
+      try
+      {
+         wsdd = root.findChild("META-INF/webservices.xml");
+      }
+      catch (IOException e)
+      {
+         //
+      }
+
+      // Maybe a web application deployment?
+      if(null == wsdd)
+      {
+         try
+         {
+            wsdd = root.findChild("WEB-INF/webservices.xml");
+         }
+         catch (IOException e)
+         {
+            //
+         }
+      }
+
+      // the descriptor is optional
+      if(wsdd!=null)
+      {
+
+         URL wsddUrl = wsdd.toURL();
+         try
+         {
+            InputStream is = wsddUrl.openStream();
+            Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
+            ObjectModelFactory factory = new WebservicesFactory(wsddUrl);
+            webservices = (WebservicesMetaData)unmarshaller.unmarshal(is, factory, null);
+            is.close();
+         }
+         catch(Exception e)
+         {
+            throw new WSException("Failed to unmarshall webservices.xml:" +  e.getMessage());
+         }
+      }
+
+      return webservices;
    }
 
    /**
@@ -81,7 +145,7 @@ public class WebservicesFactory implements ObjectModelFactory
     * Called when parsing character is complete.
     */
    public void addChild(WebservicesMetaData webservices, WebserviceDescriptionMetaData webserviceDescription, UnmarshallingContext navigator, String namespaceURI,
-         String localName)
+                        String localName)
    {
       webservices.addWebserviceDescription(webserviceDescription);
    }
@@ -100,7 +164,7 @@ public class WebservicesFactory implements ObjectModelFactory
     * Called when parsing character is complete.
     */
    public void addChild(WebserviceDescriptionMetaData webserviceDescription, PortComponentMetaData portComponent, UnmarshallingContext navigator, String namespaceURI,
-         String localName)
+                        String localName)
    {
       webserviceDescription.addPortComponent(portComponent);
    }
@@ -112,8 +176,31 @@ public class WebservicesFactory implements ObjectModelFactory
    {
       if ("handler".equals(localName))
          return new UnifiedHandlerMetaData(null);
+      else if ("handler-chains".equals(localName))
+         return new UnifiedHandlerChainsMetaData();
       else return null;
    }
+
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(UnifiedHandlerChainsMetaData handlerChains, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if ("handler-chain".equals(localName))
+         return new UnifiedHandlerChainMetaData();
+      else return null;
+   }
+
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(UnifiedHandlerChainMetaData handlerChains, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if ("handler".equals(localName))
+         return new UnifiedHandlerMetaData();
+      else return null;
+   }
+
 
    /**
     * Called when parsing character is complete.
@@ -121,6 +208,30 @@ public class WebservicesFactory implements ObjectModelFactory
    public void addChild(PortComponentMetaData portComponent, UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       portComponent.addHandler(handler);
+   }
+
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(PortComponentMetaData portComponent, UnifiedHandlerChainsMetaData handlerChains, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      portComponent.setHandlerChains(handlerChains);
+   }
+
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(UnifiedHandlerChainsMetaData chains, UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      chains.addHandlerChain(handlerChain);
+   }
+
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(UnifiedHandlerChainMetaData chain, UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      chain.addHandler(handler);
    }
 
    /**
@@ -175,6 +286,14 @@ public class WebservicesFactory implements ObjectModelFactory
          portComponent.setEjbLink(value);
       else if (localName.equals("servlet-link"))
          portComponent.setServletLink(value);
+      else if (localName.equals("wsdl-service"))
+         portComponent.setWsdlService(navigator.resolveQName(value));
+      else if (localName.equals("protocol-binding"))
+         portComponent.setProtocolBinding(value);
+      else if (localName.equals("enable-mtom"))
+         portComponent.setEnableMtom(Boolean.valueOf(value));
+
+
    }
 
    /**
@@ -193,7 +312,7 @@ public class WebservicesFactory implements ObjectModelFactory
          handler.addSoapHeader(navigator.resolveQName(value));
       else if (localName.equals("soap-role"))
          handler.addSoapRole(value);
-       else if (localName.equals("port-name"))
+      else if (localName.equals("port-name"))
          handler.addPortName(value);
    }
 

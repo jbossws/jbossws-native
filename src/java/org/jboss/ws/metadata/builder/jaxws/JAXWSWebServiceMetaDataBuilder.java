@@ -23,10 +23,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Writer;
+import java.io.*;
 import java.net.URL;
 
 import javax.jws.HandlerChain;
@@ -40,16 +37,20 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.umdm.*;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.ws.metadata.webservices.WebservicesMetaData;
+import org.jboss.ws.metadata.webservices.WebservicesFactory;
+import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.ws.metadata.webservices.PortComponentMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
@@ -72,7 +73,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    private boolean toolMode = false;
    private File wsdlDirectory = null;
    private PrintStream messageStream = null;
-   
+
    private static class EndpointResult
    {
       private Class<?> epClass;
@@ -80,7 +81,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       private ServiceMetaData serviceMetaData;
       private URL wsdlLocation;
    }
-   
+
    public void setGenerateWsdl(boolean generateWsdl)
    {
       this.generateWsdl = generateWsdl;
@@ -140,7 +141,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
-         
+
          // process config
          processEndpointConfig(udi, sepClass, linkName, sepMetaData);
 
@@ -156,6 +157,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          else if (seiClass.isAnnotationPresent(HandlerChain.class))
             processHandlerChain(sepMetaData, seiClass);
 
+         // process webservices.xml contributions
+         processWSDDContribution(sepMetaData);
+
          // Init the endpoint address
          MetaDataBuilder.initEndpointAddress(udi, sepMetaData, linkName);
 
@@ -165,7 +169,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          MetaDataBuilder.replaceAddressLocation(sepMetaData);
          processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
-         
+
          // init service endpoint id
          ObjectName sepID = MetaDataBuilder.createServiceEndpointID(udi, sepMetaData);
          sepMetaData.setServiceEndpointID(sepID);
@@ -181,7 +185,58 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
       }
    }
-   
+
+   /**
+    * With JAX-WS the use of webservices.xml is optional since the annotations can be used
+    * to specify most of the information specified in this deployment descriptor file.
+    * The deployment descriptors are only used to override or augment the annotation member attributes.
+    * @param sepMetaData
+    */
+   private void processWSDDContribution(ServerEndpointMetaData sepMetaData)
+   {
+      WebservicesMetaData webservices = WebservicesFactory.loadFromVFSRoot(sepMetaData.getRootFile());
+      if(webservices!=null)
+      {
+         for(WebserviceDescriptionMetaData wsDesc : webservices.getWebserviceDescriptions())
+         {
+            for(PortComponentMetaData portComp : wsDesc.getPortComponents())
+            {
+               if(portComp.getWsdlPort().equals(sepMetaData.getPortName()))
+               {
+
+                  log.debug("Processing 'webservices.xml' handler contributions");
+                  UnifiedHandlerChainsMetaData chainWrapper = portComp.getHandlerChains();
+                  if(chainWrapper!=null)
+                  {
+                     for(UnifiedHandlerChainMetaData handlerChain : chainWrapper.getHandlerChains())
+                     {
+                        for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
+                        {
+                           HandlerMetaDataJAXWS handlerMetaDataJAXWS = uhmd.getHandlerMetaDataJAXWS(sepMetaData, HandlerMetaData.HandlerType.ENDPOINT);
+                           sepMetaData.addHandler(handlerMetaDataJAXWS);
+                           log.debug("Handler contribution from webservices.xml: " + handlerMetaDataJAXWS.getHandlerName());
+                        }
+                     }
+                  }
+
+                  log.debug("Processing MTOM contributions");
+                  if(portComp.isEnableMtom())
+                  {
+                     String bindingId = sepMetaData.getBindingId();
+                     if(bindingId.equals(Constants.SOAP11HTTP_BINDING))
+                        sepMetaData.setBindingId(Constants.SOAP11HTTP_MTOM_BINDING);
+                     else if(bindingId.equals(Constants.SOAP12HTTP_BINDING))
+                        sepMetaData.setBindingId(Constants.SOAP12HTTP_MTOM_BINDING);
+
+                  }
+
+               }
+            }
+         }
+
+      }
+   }
+
    private EndpointResult processWebService(UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi) throws ClassNotFoundException, IOException
    {
       WebService endpointImplAnnotation = sepClass.getAnnotation(WebService.class);
@@ -275,7 +330,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
 
             final File dir, wsdlFile;
-            
+
             if (wsdlDirectory != null)
             {
                dir = wsdlDirectory;
@@ -298,7 +353,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                   {
                      file = new File(dir, suggestedFile + ".wsdl");
                   }
-                  else 
+                  else
                   {
                      file = File.createTempFile(suggestedFile, ".wsdl", dir);
                      file.deleteOnExit();
@@ -324,7 +379,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          }
       }
    }
-   
+
    private void message(String msg)
    {
       if (messageStream != null)

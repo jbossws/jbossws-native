@@ -31,6 +31,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 
 /**
  * XML Binding and ws4ee meta-data element for
@@ -73,8 +74,17 @@ public class PortComponentMetaData
 
    // The HTTP context root
    private String contextRoot;
-   // The optional secure wsdl access 
+   // The optional secure wsdl access
    private Boolean secureWSDLAccess;
+
+   // -----------------------------------------
+   // JAX-WS additions
+
+   private boolean enableMtom;
+   private QName wsdlService;
+   private String protocolBinding;
+   private UnifiedHandlerChainsMetaData handlerChains;
+
 
    /** Construct a new PortComponentMetaData for a given WebserviceDescriptionMetaData
     */
@@ -171,6 +181,46 @@ public class PortComponentMetaData
    public void setSecureWSDLAccess(Boolean secureWSDLAccess)
    {
       this.secureWSDLAccess = secureWSDLAccess;
+   }
+
+   public boolean isEnableMtom()
+   {
+      return enableMtom;
+   }
+
+   public void setEnableMtom(boolean enableMtom)
+   {
+      this.enableMtom = enableMtom;
+   }
+
+   public QName getWsdlService()
+   {
+      return wsdlService;
+   }
+
+   public void setWsdlService(QName wsdlService)
+   {
+      this.wsdlService = wsdlService;
+   }
+
+   public String getProtocolBinding()
+   {
+      return protocolBinding;
+   }
+
+   public void setProtocolBinding(String protocolBinding)
+   {
+      this.protocolBinding = protocolBinding;
+   }
+
+   public UnifiedHandlerChainsMetaData getHandlerChains()
+   {
+      return handlerChains;
+   }
+
+   public void setHandlerChains(UnifiedHandlerChainsMetaData handlerChains)
+   {
+      this.handlerChains = handlerChains;
    }
 
    public String serialize()

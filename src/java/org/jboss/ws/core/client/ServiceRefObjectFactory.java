@@ -134,8 +134,7 @@ public class ServiceRefObjectFactory
       Object child = null;
       if (localName.equals("port-component-ref"))
       {
-         child = new UnifiedPortComponentRefMetaData(ref);
-         ref.addPortComponentRef((UnifiedPortComponentRefMetaData)child);
+         child = new UnifiedPortComponentRefMetaData(ref);         
       }
       else if (localName.equals("handler"))
       {
@@ -171,6 +170,7 @@ public class ServiceRefObjectFactory
       if (localName.equals("service-endpoint-interface"))
       {
          ref.setServiceEndpointInterface(value);
+         ref.getServiceRefMetaData().addPortComponentRef(ref);
       }
       else if (localName.equals("enable-mtom"))
       {
@@ -182,7 +182,17 @@ public class ServiceRefObjectFactory
       }
       else if (localName.equals("port-qname"))
       {
-         ref.setPortQName(QName.valueOf(value));
+         QName portQName = QName.valueOf(value);
+         ref.setPortQName(portQName);
+
+         UnifiedPortComponentRefMetaData portComponentRef = ref.getServiceRefMetaData().getPortComponentRef(
+            ref.getServiceEndpointInterface(), portQName
+         );
+
+         if(portComponentRef == null)
+            ref.getServiceRefMetaData().addPortComponentRef(ref);
+         else
+            portComponentRef.setPortQName(portQName);
       }
       else if (localName.equals("config-name"))
       {

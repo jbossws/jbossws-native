@@ -23,15 +23,12 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.integration.ServiceRefElement;
 import org.w3c.dom.Element;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
@@ -45,14 +42,14 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
    // The required <service-endpoint-interface> element
    private String serviceEndpointInterface;
    // The optional <enable-mtom> element
-   private Boolean enableMTOM;
+   private Boolean enableMTOM = Boolean.FALSE;
    // The optional <port-component-link> element
    private String portComponentLink;
    // The optional <port-qname> element
    private QName portQName;
-   // Arbitrary proxy properties given by <call-property> 
+   // Arbitrary proxy properties given by <call-property>
    private List<UnifiedCallPropertyMetaData> callProperties = new ArrayList<UnifiedCallPropertyMetaData>();
-   // Arbitrary proxy properties given by <stub-property> 
+   // Arbitrary proxy properties given by <stub-property>
    private List<UnifiedStubPropertyMetaData> stubProperties = new ArrayList<UnifiedStubPropertyMetaData>();
    // The optional JBossWS config-name
    private String configName;
@@ -70,9 +67,9 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
       configName = pcref.configName;
       configFile = pcref.configFile;
       callProperties = pcref.callProperties;
-      stubProperties = pcref.stubProperties;
+      stubProperties = pcref.stubProperties;      
    }
-   
+
    public UnifiedServiceRefMetaData getServiceRefMetaData()
    {
       return serviceRefMetaData;
@@ -187,5 +184,18 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
    public void importJBossXml(Element root)
    {
       new ServiceRefMetaDataParser().importJBossXml(root, this);
+   }
+
+   public boolean matches(String seiName, QName portName)
+   {
+      boolean match;
+      if (seiName != null && portName != null)
+         match = seiName.equals(getServiceEndpointInterface()) && portName.equals(getPortQName());
+      else if (seiName != null)
+         match = seiName.equals(getServiceEndpointInterface());
+      else
+         match = portName.equals(getPortQName());
+
+      return match;
    }
 }
