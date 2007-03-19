@@ -36,6 +36,7 @@ import javax.xml.rpc.handler.HandlerChain;
 import javax.xml.rpc.handler.HandlerInfo;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.xop.XOPContext;
@@ -50,7 +51,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public class HandlerDelegateJAXRPC extends ServerHandlerDelegate
+public class HandlerDelegateJAXRPC extends ServerHandlerDelegate implements RoleSource
 {
    // provide logging
    private static Logger log = Logger.getLogger(HandlerDelegateJAXRPC.class);
