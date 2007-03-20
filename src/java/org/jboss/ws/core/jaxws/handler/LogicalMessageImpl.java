@@ -93,7 +93,6 @@ public class LogicalMessageImpl implements LogicalMessage
 
    public void setPayload(Source source)
    {
-      soapBody.setPayload(source);
       if (setPayloadBodyChild)
       {
          try
@@ -116,6 +115,13 @@ public class LogicalMessageImpl implements LogicalMessage
             throw new WebServiceException("Cannot set xml payload", ex);
          }
       }
+      else
+      {
+         soapBody.setPayload(source);
+      }
+      
+      // The body payload has been modified 
+      soapBody.setModifiedFromSource(true);
    }
 
    public Object getPayload(JAXBContext jaxbContext)

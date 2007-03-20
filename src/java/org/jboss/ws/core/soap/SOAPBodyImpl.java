@@ -86,6 +86,11 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       return isModifiedFromSource;
    }
+   
+   public void setModifiedFromSource(boolean isModified)
+   {
+      this.isModifiedFromSource = isModified;
+   }
 
    public Source getPayload()
    {

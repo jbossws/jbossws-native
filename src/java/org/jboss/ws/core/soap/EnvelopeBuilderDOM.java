@@ -32,7 +32,6 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -132,7 +131,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
       // Add the body elements
       Element domBody = DOMUtils.getFirstChildElement(domEnv, new QName(envNS, "Body"));
-      SOAPBody soapBody = soapEnv.getBody();
+      SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnv.getBody();
 
       DOMUtils.copyAttributes(soapBody, domBody);
 
@@ -214,8 +213,10 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       return soapEnv;
    }
 
-   public void buildBodyElementDoc(SOAPBody soapBody, Element domBodyElement) throws SOAPException
+   public void buildBodyElementDoc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
    {
+      soapBody.removeContents();
+      
       Element srcElement = (Element)domBodyElement;
       registerNamespacesLocally(srcElement);
       
@@ -229,8 +230,10 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       destElement.setXMLFragment(xmlFragment);
    }
 
-   public void buildBodyElementRpc(SOAPBody soapBody, Element domBodyElement) throws SOAPException
+   public void buildBodyElementRpc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
    {
+      soapBody.removeContents();
+      
       QName beName = DOMUtils.getElementQName(domBodyElement);
       SOAPBodyElementRpc soapBodyElement = new SOAPBodyElementRpc(beName);
       soapBodyElement = (SOAPBodyElementRpc)soapBody.addChildElement(soapBodyElement);
