@@ -87,14 +87,15 @@ public class ServiceRefMetaDataParser
          QName portName = portNameString!=null ? QName.valueOf(portNameString) : null;
 
          UnifiedPortComponentRefMetaData pcref = sref.getPortComponentRef(seiName, portName);
-         if (pcref == null)
+         /*if (pcref == null)
          {
             // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml
             pcref = new UnifiedPortComponentRefMetaData(sref);
             pcref.importStandardXml(pcrefElement);
             sref.addPortComponentRef(pcref);
-         }
-         pcref.importJBossXml(pcrefElement);
+         } */
+
+         if(pcref!=null) pcref.importJBossXml(pcrefElement);
 
       }
 
