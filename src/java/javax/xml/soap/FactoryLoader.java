@@ -124,7 +124,7 @@ public class FactoryLoader
                br.close();
                if (factoryName != null)
                {
-                  if(log.isDebugEnabled()) log.debug("Load from Service API " + filename + ": " + factoryName);
+                  if(log.isTraceEnabled()) log.trace("Load from Service API " + filename + ": " + factoryName);
                   Class factoryClass = loader.loadClass(factoryName);
                   factory = factoryClass.newInstance();
                }

@@ -254,12 +254,11 @@ class XMLContent extends SOAPContent
     */
    private void expandContainerChildren()
    {
+      Element domElement = xmlFragment.toElement();
 
-      Element contentRoot = xmlFragment.toElement();
-
-      String rootLocalName = contentRoot.getLocalName();
-      String rootPrefix = contentRoot.getPrefix();
-      String rootNS = contentRoot.getNamespaceURI();
+      String rootLocalName = domElement.getLocalName();
+      String rootPrefix = domElement.getPrefix();
+      String rootNS = domElement.getNamespaceURI();
       Name contentRootName = new NameImpl(rootLocalName, rootPrefix, rootNS);
 
       // Make sure the content root element name matches this element name
@@ -267,14 +266,17 @@ class XMLContent extends SOAPContent
       if (!contentRootName.equals(name))
          throw new WSException("Content root name does not match element name: " + contentRootName + " != " + name);
 
+      // Remove all child nodes
+      container.removeContents();
+      
       // Copy attributes
-      DOMUtils.copyAttributes(container, contentRoot);
+      DOMUtils.copyAttributes(container, domElement);
 
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
 
       try
       {
-         NodeList nlist = contentRoot.getChildNodes();
+         NodeList nlist = domElement.getChildNodes();
          for (int i = 0; i < nlist.getLength(); i++)
          {
             Node child = nlist.item(i);

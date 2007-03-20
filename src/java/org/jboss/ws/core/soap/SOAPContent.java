@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.soap;
 
+// $Id: $
+
 /**
  * Represent SOAP message payload that can transition from
  * one representation to the next.
@@ -28,12 +30,14 @@ package org.jboss.ws.core.soap;
  * @see SOAPContentElement
  * 
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 05.02.2007
  */
-public abstract class SOAPContent implements SOAPContentAccess {
-
-   public enum State {OBJECT_VALID, XML_VALID, DOM_VALID}
+public abstract class SOAPContent implements SOAPContentAccess
+{
+   public enum State
+   {
+      OBJECT_VALID, XML_VALID, DOM_VALID
+   }
 
    abstract SOAPContent transitionTo(State nextState);
 
@@ -41,7 +45,8 @@ public abstract class SOAPContent implements SOAPContentAccess {
 
    protected SOAPContentElement container;
 
-   protected SOAPContent(SOAPContentElement container) {
+   protected SOAPContent(SOAPContentElement container)
+   {
       this.container = container;
    }
 

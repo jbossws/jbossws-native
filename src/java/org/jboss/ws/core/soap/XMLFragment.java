@@ -56,7 +56,6 @@ import org.w3c.dom.Element;
  */
 public class XMLFragment
 {
-
    private Source source;
    private Result result;
 

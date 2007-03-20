@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.soap;
 
+// $Id: $
+
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
@@ -33,25 +35,27 @@ import org.jboss.logging.Logger;
  * @version $Id$
  * @since 05.02.2007
  */
-public class DOMContent extends SOAPContent {
-
-   private static Logger log = Logger.getLogger(ObjectContent.class);
+public class DOMContent extends SOAPContent
+{
+   private static Logger log = Logger.getLogger(DOMContent.class);
 
    private Source payload;
 
-   protected DOMContent(SOAPContentElement container) {
+   protected DOMContent(SOAPContentElement container)
+   {
       super(container);
    }
 
-   State getState() {
-      return State.DOM_VALID; 
+   State getState()
+   {
+      return State.DOM_VALID;
    }
 
-   SOAPContent transitionTo(State nextState) {
-
+   SOAPContent transitionTo(State nextState)
+   {
       SOAPContent next = null;
 
-      if(State.XML_VALID == nextState)
+      if (State.XML_VALID == nextState)
       {
          log.debug("getXMLFragment from DOM");
          DOMSource domSource = new DOMSource(container);
@@ -62,7 +66,7 @@ public class DOMContent extends SOAPContent {
          xmlValid.setXMLFragment(fragment);
          next = xmlValid;
       }
-      else if(State.OBJECT_VALID == nextState)
+      else if (State.OBJECT_VALID == nextState)
       {
          // transition to xml valid first
          XMLFragment fragment = new XMLFragment(new DOMSource(container));
@@ -73,7 +77,7 @@ public class DOMContent extends SOAPContent {
          next = tmpState.transitionTo(State.OBJECT_VALID);
 
       }
-      else if(State.DOM_VALID == nextState)
+      else if (State.DOM_VALID == nextState)
       {
          next = this;
       }
@@ -85,27 +89,36 @@ public class DOMContent extends SOAPContent {
       return next;
    }
 
-   public Source getPayload() {
+   public Source getPayload()
+   {
       return new DOMSource(container);
    }
 
-   public void setPayload(Source source) {
+   public void setPayload(Source source)
+   {
+      if (!(source instanceof DOMSource))
+         throw new IllegalArgumentException("DOMSource expected, but got: " + source);
+      
       this.payload = source;
    }
 
-   public XMLFragment getXMLFragment() {
+   public XMLFragment getXMLFragment()
+   {
       throw new IllegalStateException("XMLFragment not available");
    }
 
-   public void setXMLFragment(XMLFragment xmlFragment) {
+   public void setXMLFragment(XMLFragment xmlFragment)
+   {
       throw new IllegalStateException("XMLFragment not available");
    }
 
-   public Object getObjectValue() {
-     throw new IllegalStateException("Object value not available");
+   public Object getObjectValue()
+   {
+      throw new IllegalStateException("Object value not available");
    }
 
-   public void setObjectValue(Object objValue) {
-     throw new IllegalStateException("Object value not available");
+   public void setObjectValue(Object objValue)
+   {
+      throw new IllegalStateException("Object value not available");
    }
 }
