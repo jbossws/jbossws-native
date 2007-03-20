@@ -211,7 +211,7 @@ public class EndpointInvocation
             // Conformance (MIME type mismatch): On receipt of a message where the MIME type of a part does not
             // match that described in the WSDL an implementation SHOULD throw a WebServiceException.
             if (mimeTypes != null && !MimeUtils.isMemberOf(mimeType, mimeTypes))
-               throw new SOAPException("Mime type " + mimeType + " not allowed for parameter " + xmlName + " allowed types are " + mimeTypes);
+               log.warn("Mime type " + mimeType + " not allowed for parameter " + xmlName + " allowed types are " + mimeTypes);
 
             retValue = part.getDataHandler();
          }
