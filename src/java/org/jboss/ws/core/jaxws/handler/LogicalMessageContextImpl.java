@@ -32,6 +32,9 @@ import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.handler.LogicalMessageContext;
 import javax.xml.ws.handler.MessageContext;
 
+import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 
  * contained message as a protocol neutral LogicalMessage.
@@ -48,8 +51,10 @@ public class LogicalMessageContextImpl implements LogicalMessageContext
    public LogicalMessageContextImpl(SOAPMessageContextJAXWS soapContext)
    {
       this.delegate = soapContext;
+      
+      Style style = soapContext.getEndpointMetaData().getStyle();
       SOAPMessage soapMessage = soapContext.getMessage();
-      logicalMessage = new LogicalMessageImpl(soapMessage);
+      logicalMessage = new LogicalMessageImpl(soapMessage, style);
    }
 
    /**

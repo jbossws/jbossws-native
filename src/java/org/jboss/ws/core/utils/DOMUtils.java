@@ -237,6 +237,16 @@ public final class DOMUtils
          if (namespaceURI.equals(""))
             throw new IllegalArgumentException("Cannot find namespace uri for: " + qualifiedName);
       }
+      else
+      {
+         Element nsElement = el;
+         while (namespaceURI.equals("") && nsElement != null)
+         {
+            namespaceURI = nsElement.getAttribute("xmlns");
+            if (namespaceURI.equals(""))
+               nsElement = getParentElement(nsElement);
+         }
+      }
 
       qname = new QName(namespaceURI, localPart, prefix);
       return qname;

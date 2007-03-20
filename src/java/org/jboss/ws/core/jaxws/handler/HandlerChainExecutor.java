@@ -38,7 +38,6 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.utils.DOMWriter;
@@ -282,9 +281,6 @@ public class HandlerChainExecutor
       CommonMessageContext context = (CommonMessageContext)msgContext;
       if (currHandler instanceof LogicalHandler)
       {
-         if (epMetaData.getStyle() == Style.RPC)
-            throw new WebServiceException("Cannot use logical handler with RPC");
-
          if (msgContext instanceof SOAPMessageContextJAXWS)
             msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
       }
@@ -310,9 +306,6 @@ public class HandlerChainExecutor
       CommonMessageContext context = (CommonMessageContext)msgContext;
       if (currHandler instanceof LogicalHandler)
       {
-         if (epMetaData.getStyle() == Style.RPC)
-            throw new WebServiceException("Cannot use logical handler with RPC");
-
          if (msgContext instanceof SOAPMessageContextJAXWS)
             msgContext = new LogicalMessageContextImpl((SOAPMessageContextJAXWS)msgContext);
       }

@@ -7,8 +7,8 @@ import javax.xml.transform.Source;
  * @version $Id$
  * @since 05.02.2007
  */
-public interface SOAPContentAccess {
-
+public interface SOAPContentAccess
+{
    Source getPayload();
 
    void setPayload(Source source);
@@ -19,5 +19,5 @@ public interface SOAPContentAccess {
 
    Object getObjectValue();
 
-   void setObjectValue(Object objValue);   
+   void setObjectValue(Object objValue);
 }

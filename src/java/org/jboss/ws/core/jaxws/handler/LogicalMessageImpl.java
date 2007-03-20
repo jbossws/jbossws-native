@@ -26,15 +26,20 @@ package org.jboss.ws.core.jaxws.handler;
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
+import org.w3c.dom.Element;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 
@@ -47,12 +52,14 @@ public class LogicalMessageImpl implements LogicalMessage
 {
    // provide logging
    private static final Logger log = Logger.getLogger(LogicalMessageImpl.class);
-   
+
+   private Style style;
    private SOAPBodyImpl soapBody;
    private boolean setPayloadBodyChild;
 
-   public LogicalMessageImpl(SOAPMessage soapMessage)
+   public LogicalMessageImpl(SOAPMessage soapMessage, Style style)
    {
+      this.style = style;
       try
       {
          soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
@@ -69,8 +76,16 @@ public class LogicalMessageImpl implements LogicalMessage
       setPayloadBodyChild = false;
       if (source == null)
       {
-         SOAPContentElement soapElement = (SOAPContentElement)soapBody.getChildElements().next();
-         source = soapElement.getPayload();
+         SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+         if (style == Style.RPC)
+         {
+            source = new DOMSource(soapElement);
+         }
+         else
+         {
+            SOAPContentElement contentElement = (SOAPContentElement)soapElement;
+            source = contentElement.getPayload();
+         }
          setPayloadBodyChild = true;
       }
       return source;
@@ -81,8 +96,25 @@ public class LogicalMessageImpl implements LogicalMessage
       soapBody.setPayload(source);
       if (setPayloadBodyChild)
       {
-         SOAPContentElement soapElement = (SOAPContentElement)soapBody.getChildElements().next();
-         soapElement.setPayload(source);
+         try
+         {
+            SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+            if (style == Style.RPC)
+            {
+               EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
+               Element domBodyElement = EnvelopeBuilderDOM.getElementFromSource(source);
+               builder.buildBodyElementRpc(soapBody, domBodyElement);
+            }
+            else
+            {
+               SOAPContentElement contentElement = (SOAPContentElement)soapElement;
+               contentElement.setPayload(source);
+            }
+         }
+         catch (SOAPException ex)
+         {
+            throw new WebServiceException("Cannot set xml payload", ex);
+         }
       }
    }
 

@@ -21,6 +21,7 @@
 */
 package org.jboss.ws.core.soap;
 
+import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 
@@ -37,6 +38,11 @@ public class SOAPBodyElementRpc extends SOAPElementImpl implements SOAPBodyEleme
    public SOAPBodyElementRpc(Name name)
    {
       super(name);
+   }
+
+   public SOAPBodyElementRpc(QName qname)
+   {
+      super(qname);
    }
 
    public SOAPBodyElementRpc(SOAPElementImpl element)

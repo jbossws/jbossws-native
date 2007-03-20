@@ -69,8 +69,8 @@ import org.w3c.dom.TypeInfo;
  * @since 13-Dec-2004
  *
  */
-public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAccess {
-
+public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAccess
+{
    // provide logging
    private static Logger log = Logger.getLogger(SOAPContentElement.class);
 
@@ -128,7 +128,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    private void transitionTo(SOAPContent.State nextState)
    {
-      if(nextState!=soapContent.getState())
+      if (nextState != soapContent.getState())
       {
          log.debug("-----------------------------------");
          log.debug("Transitioning from " + soapContent.getState() + " to " + nextState);
@@ -504,8 +504,9 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return super.replaceChild(newChild, oldChild);
    }
 
-   private void expandToDOM() {
-      if(!lockDOMExpansion)
+   private void expandToDOM()
+   {
+      if (!lockDOMExpansion)
          transitionTo(SOAPContent.State.DOM_VALID);
    }
 
@@ -532,7 +533,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    {
       // JMS transport hot fix
       // Can be removed once we got a immutabe object model
-      if(MessageContextAssociation.peekMessageContext()!=null)
+      if (MessageContextAssociation.peekMessageContext() != null)
          handleMTOMTransitions();
 
       if (soapContent instanceof DOMContent)
@@ -562,11 +563,12 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    public void handleMTOMTransitions()
    {
       // MTOM processing is only required on XOP parameters
-      if(!isXOPParameter()) return;
+      if (!isXOPParameter())
+         return;
 
       boolean domContentState = (soapContent instanceof DOMContent);
 
-      if ( !XOPContext.isMTOMEnabled() )
+      if (!XOPContext.isMTOMEnabled())
       {
          // If MTOM is disabled, we force dom expansion on XOP parameters.
          // This will inline any XOP include element and remove the attachment part.
@@ -579,10 +581,10 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
          msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          if (msgContext instanceof MessageContextJAXWS)
             ((MessageContextJAXWS)msgContext).setScope(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Scope.APPLICATION);
-         
+
          expandToDOM();
       }
-      else if ( domContentState && XOPContext.isMTOMEnabled() )
+      else if (domContentState && XOPContext.isMTOMEnabled())
       {
          // When the DOM representation is valid,
          // but MTOM is enabled we need to convert the inlined

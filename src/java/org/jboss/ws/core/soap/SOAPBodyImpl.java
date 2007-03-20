@@ -24,10 +24,7 @@ package org.jboss.ws.core.soap;
 // $Id$
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Locale;
@@ -41,10 +38,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
@@ -59,7 +52,6 @@ import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 /**
  * An object that represents the contents of the SOAP body element in a SOAP message.
@@ -102,7 +94,8 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    public void setPayload(Source payload)
    {
-      if(log.isDebugEnabled()) log.debug("setPayload: " + payload.getClass().getName());
+      if (log.isDebugEnabled())
+         log.debug("setPayload: " + payload.getClass().getName());
       removeContents();
       this.payload = payload;
       this.isDOMValid = false;
@@ -306,13 +299,11 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       expandToDOM(false);
       return super.hasChildNodes();
    }
-   
-   private static boolean needsConversionToBodyElement(Node node) 
+
+   private static boolean needsConversionToBodyElement(Node node)
    {
       // JBCTS-440 #addTextNodeTest1 appends a Text node to a SOAPBody
-      return !(node instanceof SOAPBodyElement 
-            || node instanceof DocumentFragment
-            || node instanceof Text);
+      return !(node instanceof SOAPBodyElement || node instanceof DocumentFragment || node instanceof Text);
    }
 
    private static SOAPBodyElementDoc convertToBodyElement(Node node)
@@ -369,69 +360,12 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    private Element getBodyElementFromSource()
    {
-      Element child = null;
-      try
+      Element child = EnvelopeBuilderDOM.getElementFromSource(payload);
+      if (payload instanceof StreamSource)
       {
-         if (payload instanceof StreamSource)
-         {
-            StreamSource streamSource = (StreamSource)payload;
-
-            InputStream ins = streamSource.getInputStream();
-            if (ins != null)
-            {
-               child = DOMUtils.parse(ins);
-            }
-            else
-            {
-               Reader reader = streamSource.getReader();
-               child = DOMUtils.parse(new InputSource(reader));
-            }
-
-            // reset the excausted input stream
-            String xmlStr = DOMWriter.printNode(child, false);
-            payload = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
-         }
-         else if (payload instanceof DOMSource)
-         {
-            DOMSource domSource = (DOMSource)payload;
-            Node node = domSource.getNode();
-            if (node instanceof Element)
-            {
-               child = (Element)node;
-            }
-            else if (node instanceof Document)
-            {
-               child = ((Document)node).getDocumentElement();
-            }
-            else
-            {
-               throw new WSException("Unsupported Node type: " + node.getClass().getName());
-            }
-         }
-         else if (payload instanceof SAXSource)
-         {
-            // The fact that JAXBSource derives from SAXSource is an implementation detail.
-            // Thus in general applications are strongly discouraged from accessing methods defined on SAXSource.
-            // The XMLReader object obtained by the getXMLReader method shall be used only for parsing the InputSource object returned by the getInputSource method.
-
-            TransformerFactory tf = TransformerFactory.newInstance();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-            tf.newTransformer().transform(payload, new StreamResult(baos));
-
-            child = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
-         }
-         else
-         {
-            throw new WSException("Source type not implemented: " + payload.getClass().getName());
-         }
-      }
-      catch (RuntimeException rte)
-      {
-         throw rte;
-      }
-      catch (Exception ex)
-      {
-         throw new WSException("Cannot get root element from Source" + ex);
+         // reset the excausted input stream
+         String xmlStr = DOMWriter.printNode(child, false);
+         payload = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
       }
       return child;
    }
@@ -443,7 +377,8 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       {
          Element child = getBodyElementFromSource();
          String xmlPayload = DOMWriter.printNode(child, false);
-         if(log.isDebugEnabled()) log.debug("writeElementContent from payload: " + xmlPayload);
+         if (log.isDebugEnabled())
+            log.debug("writeElementContent from payload: " + xmlPayload);
          writer.write(xmlPayload);
       }
       else
@@ -459,8 +394,8 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
       Iterator childElements = DOMUtils.getChildElements(this);
       // zero child elements?
-      if (!childElements.hasNext()) 
-         throw new SOAPException("there is no child SOAPElement of this SOAPBody");         
+      if (!childElements.hasNext())
+         throw new SOAPException("there is no child SOAPElement of this SOAPBody");
 
       SOAPElementImpl childElement = (SOAPElementImpl)childElements.next();
 
@@ -471,14 +406,14 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       if (childElement instanceof SOAPContentElement)
       {
          // cause expansion to DOM
-         SOAPContentElement contentElement = (SOAPContentElement) childElement;
+         SOAPContentElement contentElement = (SOAPContentElement)childElement;
          // TODO change visibility of SOAPContentElement.expandToDOM() to package? 
          contentElement.getPayload();
       }
 
       // child SOAPElement is removed as part of this process
       childElement.detachNode();
-      
+
       /* child element's owner document might be shared with other elements;
        * we have to create a separate document for returning to our caller
        */
