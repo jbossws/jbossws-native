@@ -42,6 +42,7 @@ import javax.xml.ws.WebServiceRefs;
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.ws.WSException;
 
 /**
  * Binds a JAXWS Service object in the client's ENC
@@ -95,11 +96,22 @@ public class ServiceRefHandlerJAXWS
 
       Class targetClass = null;
       if (anElement instanceof Field)
+      {
          targetClass = ((Field)anElement).getType();
+      }
       else if (anElement instanceof Method)
+      {
          targetClass = ((Method)anElement).getParameterTypes()[0];
+      }
+      else
+      {
+         if(null == wsref.type())
+            throw new WSException("For class annotations, the WebServiceRef.type MUST be specified.");
 
-      String targetClassName = (targetClass != null ? targetClass.getName() : null);     
+         targetClass = wsref.type();
+      }
+
+      String targetClassName = (targetClass != null ? targetClass.getName() : null);
       String externalName = encCtx.getNameInNamespace() + "/" + encName;
       log.info("setupServiceRef [jndi=" + externalName + ",target=" + targetClassName + "]");
 
