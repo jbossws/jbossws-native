@@ -100,7 +100,7 @@ public class ServiceObjectFactory implements ObjectFactory
          if (serviceImplClass == null)
             serviceImplClass = (String)ref.get(ServiceReferenceable.SERVICE_IMPL_CLASS).getContent();
 
-         // If the target defaults to javax.xml.ws.Service, user the service as the target
+         // If the target defaults to javax.xml.ws.Service, use the service as the target
          if (Service.class.getName().equals(targetClassName))
             targetClassName = serviceImplClass;
          
