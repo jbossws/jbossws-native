@@ -65,7 +65,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
    {
       if (sref.isProcessed())
       {
-         log.warn("Attempt to rebind service-ref: " + sref);
+         // Attempt to rebind service-ref
          return;
       }
       

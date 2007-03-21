@@ -188,13 +188,19 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
 
    public boolean matches(String seiName, QName portName)
    {
-      boolean match;
-      if (seiName != null && portName != null)
-         match = seiName.equals(getServiceEndpointInterface()) && portName.equals(getPortQName());
-      else if (seiName != null)
-         match = seiName.equals(getServiceEndpointInterface());
-      else
+      if(seiName==null && portName == null)
+         throw new IllegalArgumentException("Cannot match " + this + " against seiName=null && portName=null."+
+            "Looks like a broken service-ref setup");
+
+      boolean match = false;
+
+      // match against portName first
+      if(portName!=null)
          match = portName.equals(getPortQName());
+
+      // if it fails try seiName
+      if (!match)
+         match = seiName.equals(getServiceEndpointInterface());
 
       return match;
    }
