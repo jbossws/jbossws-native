@@ -153,6 +153,11 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       return portName;
    }
 
+   public void setPortName(QName portName)
+   {      
+      this.portName = portName;
+   }
+
    public QName getPortTypeName()
    {
       return portTypeName;

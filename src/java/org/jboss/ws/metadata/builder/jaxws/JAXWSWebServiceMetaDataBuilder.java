@@ -201,10 +201,28 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          {
             for(PortComponentMetaData portComp : wsDesc.getPortComponents())
             {
-               if(portComp.getWsdlPort().equals(sepMetaData.getPortName()))
+               // We match portComp's by SEI first and portQName second
+               // In the first case the portComp may override the portQName that derives from the annotation
+               String portCompSEI = portComp.getServiceEndpointInterface();
+               boolean doesMatch = portCompSEI != null ? portCompSEI.equals(sepMetaData.getServiceEndpointInterfaceName()) : false;
+               if(!doesMatch)
+               {
+                  doesMatch = portComp.getWsdlPort().equals(sepMetaData.getPortName());
+               }
+
+               if(doesMatch)
                {
 
-                  log.debug("Processing 'webservices.xml' handler contributions");
+                  log.debug("Processing 'webservices.xml' contributions on EndpointMetaData");
+
+                  // PortQName overrides
+                  if(portComp.getWsdlPort()!=null)
+                  {
+                     log.debug("Override EndpointMetaData portName " + sepMetaData.getPortName() + " with " + portComp.getWsdlPort());
+                     sepMetaData.setPortName(portComp.getWsdlPort());
+                  }                 
+
+                  // HandlerChain contributions
                   UnifiedHandlerChainsMetaData chainWrapper = portComp.getHandlerChains();
                   if(chainWrapper!=null)
                   {
@@ -214,14 +232,16 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                         {
                            HandlerMetaDataJAXWS handlerMetaDataJAXWS = uhmd.getHandlerMetaDataJAXWS(sepMetaData, HandlerMetaData.HandlerType.ENDPOINT);
                            sepMetaData.addHandler(handlerMetaDataJAXWS);
-                           log.debug("Handler contribution from webservices.xml: " + handlerMetaDataJAXWS.getHandlerName());
+                           log.debug("Contribute handler from webservices.xml: " + handlerMetaDataJAXWS.getHandlerName());
                         }
                      }
                   }
 
-                  log.debug("Processing MTOM contributions");
+                  // MTOM settings
                   if(portComp.isEnableMtom())
                   {
+                     log.debug("Enabling MTOM");
+
                      String bindingId = sepMetaData.getBindingId();
                      if(bindingId.equals(Constants.SOAP11HTTP_BINDING))
                         sepMetaData.setBindingId(Constants.SOAP11HTTP_MTOM_BINDING);
