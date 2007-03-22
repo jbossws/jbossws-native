@@ -23,6 +23,16 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.util.naming.Util;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+
+import javax.jws.HandlerChain;
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceRef;
+import javax.xml.ws.WebServiceRefs;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -31,18 +41,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jws.HandlerChain;
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebServiceRef;
-import javax.xml.ws.WebServiceRefs;
-
-import org.jboss.logging.Logger;
-import org.jboss.util.naming.Util;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.ws.WSException;
 
 /**
  * Binds a JAXWS Service object in the client's ENC
@@ -105,10 +103,8 @@ public class ServiceRefHandlerJAXWS
       }
       else
       {
-         if(null == wsref.type())
-            throw new WSException("For class annotations, the WebServiceRef.type MUST be specified.");
-
-         targetClass = wsref.type();
+         if( wsref!=null && (wsref.type() != Object.class) )
+            targetClass = wsref.type();
       }
 
       String targetClassName = (targetClass != null ? targetClass.getName() : null);
@@ -136,6 +132,7 @@ public class ServiceRefHandlerJAXWS
       // #1 Use the explicit @WebServiceRef.type 
       if (wsref != null && wsref.type() != Object.class)
          targetClassName = wsref.type().getName();
+
 
       // #2 Use the target ref type 
       if (targetClassName == null && targetClass != null && Service.class.isAssignableFrom(targetClass) == false)
