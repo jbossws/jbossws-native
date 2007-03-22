@@ -63,11 +63,7 @@ public abstract class SOAPConnection
     * @throws SOAPException if there is a SOAP error
     * @since SAAJ 1.3
     */
-   public SOAPMessage get(Object to) throws SOAPException
-   {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
-   }
+   public abstract SOAPMessage get(Object to) throws SOAPException;
    
    /** Closes this SOAPConnection object.
     *

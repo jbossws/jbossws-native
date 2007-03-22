@@ -78,7 +78,9 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
       catch (SOAPException e)
       {
          log.error("Cannot unmarshall SOAPMessage", e);
-         throw new IOException(e.toString());
+         IOException e2 = new IOException(e.toString());
+         e2.initCause(e);
+         throw e2;
       }
    }
 

@@ -23,6 +23,7 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
@@ -106,23 +107,37 @@ public class SOAPConnectionImpl extends SOAPConnection
     */
    public SOAPMessage call(SOAPMessage reqMessage, Object endpoint) throws SOAPException
    {
+      if (reqMessage == null)
+         throw new IllegalArgumentException("Given SOAPMessage cannot be null");
       return callInternal(reqMessage, endpoint, false);
    }
 
+   /**
+    * Sends an HTTP GET request to an endpoint and blocks until a SOAP message is received 
+    */
+   public SOAPMessage get(Object endpoint) throws SOAPException
+   {
+      return callInternal(null, endpoint, false);
+   }
+   
    /**
     * Sends the given message to the specified endpoint. This method is logically
     * non blocking.
     */
    public SOAPMessage callOneWay(SOAPMessage reqMessage, Object endpoint) throws SOAPException
    {
+      if (reqMessage == null)
+         throw new IllegalArgumentException("Given SOAPMessage cannot be null");
       return callInternal(reqMessage, endpoint, true);
    }
 
-   /** Sends the given message to the specified endpoint. */
+   /** 
+    * Sends the given message to the specified endpoint. 
+    * 
+    * A null reqMessage signifies a HTTP GET request.
+    */
    private SOAPMessage callInternal(SOAPMessage reqMessage, Object endpoint, boolean oneway) throws SOAPException
    {
-      if (reqMessage == null)
-         throw new IllegalArgumentException("Given SOAPMessage cannot be null");
       if (endpoint == null)
          throw new IllegalArgumentException("Given endpoint cannot be null");
 
@@ -160,7 +175,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       XOPContext.eagerlyCreateAttachments();
 
       // save object model changes
-      if (reqMessage.saveRequired())
+      if (reqMessage != null && reqMessage.saveRequired())
          reqMessage.saveChanges();
 
       // setup remoting client
@@ -170,7 +185,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       try
       {
          // debug the outgoing message
-         if (msgLog.isTraceEnabled())
+         if (reqMessage != null && msgLog.isTraceEnabled())
          {
             SOAPEnvelope soapReqEnv = reqMessage.getSOAPPart().getEnvelope();
             String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapReqEnv, true);
@@ -192,7 +207,11 @@ public class SOAPConnectionImpl extends SOAPConnection
          }
          catch (RuntimeException rte)
          {
-            if (timeout != null && rte.getCause() instanceof SocketTimeoutException)
+            Throwable cause = rte.getCause();
+            // The CTS expects only SOAPException to be thrown.
+            if (cause instanceof IOException && cause.getCause() instanceof SOAPException)
+               throw cause.getCause();
+            else if (timeout != null && cause instanceof SocketTimeoutException)
                throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
             else throw rte;
          }
@@ -282,69 +301,17 @@ public class SOAPConnectionImpl extends SOAPConnection
 
    private Map<String, Object> createRemotingMetaData(SOAPMessage reqMessage, Map callProps) throws SOAPException
    {
-      // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
-      // with a quoted value equal to the value of the soapAction attribute of
-      // soapbind:operation, if present in the corresponding WSDL description.
-
-      // R2745 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
-      // with a quoted empty string value, if in the corresponding WSDL description,
-      // the soapAction attribute of soapbind:operation is either not present, or
-      // present with an empty string as its value.
-
-      MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
-      String[] action = mimeHeaders.getHeader("SOAPAction");
-      if (action != null && action.length > 0)
-      {
-         String soapAction = action[0];
-
-         // R1109 The value of the SOAPAction HTTP header field in a HTTP request MESSAGE MUST be a quoted string.
-         if (soapAction.startsWith("\"") == false || soapAction.endsWith("\"") == false)
-            soapAction = "\"" + soapAction + "\"";
-
-         mimeHeaders.setHeader("SOAPAction", soapAction);
-      }
-      else
-      {
-         mimeHeaders.setHeader("SOAPAction", "\"\"");
-      }
-
+      
       Map<String, Object> metadata = new HashMap<String, Object>();
 
       // We need to unmarshall faults (HTTP 500)
       // metadata.put(HTTPMetadataConstants.NO_THROW_ON_ERROR, "true"); // since 2.0.0.GA
       metadata.put("NoThrowOnError", "true");
 
-      Properties props = new Properties();
-      metadata.put("HEADER", props);
-
-      Iterator i = mimeHeaders.getAllHeaders();
-      while (i.hasNext())
-      {
-         MimeHeader header = (MimeHeader)i.next();
-         String currentValue = props.getProperty(header.getName());
-
-         /*
-          * Coalesce multiple headers into one
-          *
-          * From HTTP/1.1 RFC 2616:
-          *
-          * Multiple message-header fields with the same field-name MAY be
-          * present in a message if and only if the entire field-value for that
-          * header field is defined as a comma-separated list [i.e., #(values)].
-          * It MUST be possible to combine the multiple header fields into one
-          * "field-name: field-value" pair, without changing the semantics of
-          * the message, by appending each subsequent field-value to the first,
-          * each separated by a comma.
-          */
-         if (currentValue != null)
-         {
-            props.put(header.getName(), currentValue + "," + header.getValue());
-         }
-         else
-         {
-            props.put(header.getName(), header.getValue());
-         }
-      }
+      if (reqMessage != null)
+         populateHeaders(reqMessage, metadata);
+      else 
+         metadata.put("TYPE", "GET");
 
       if (callProps != null)
       {
@@ -392,5 +359,66 @@ public class SOAPConnectionImpl extends SOAPConnection
       }
 
       return metadata;
+   }
+
+   private void populateHeaders(SOAPMessage reqMessage, Map<String, Object> metadata)
+   {
+      // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
+      // with a quoted value equal to the value of the soapAction attribute of
+      // soapbind:operation, if present in the corresponding WSDL description.
+
+      // R2745 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
+      // with a quoted empty string value, if in the corresponding WSDL description,
+      // the soapAction attribute of soapbind:operation is either not present, or
+      // present with an empty string as its value.
+
+      MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
+      String[] action = mimeHeaders.getHeader("SOAPAction");
+      if (action != null && action.length > 0)
+      {
+         String soapAction = action[0];
+
+         // R1109 The value of the SOAPAction HTTP header field in a HTTP request MESSAGE MUST be a quoted string.
+         if (soapAction.startsWith("\"") == false || soapAction.endsWith("\"") == false)
+            soapAction = "\"" + soapAction + "\"";
+
+         mimeHeaders.setHeader("SOAPAction", soapAction);
+      }
+      else
+      {
+         mimeHeaders.setHeader("SOAPAction", "\"\"");
+      }
+
+      Properties props = new Properties();
+      metadata.put("HEADER", props);
+
+      Iterator i = mimeHeaders.getAllHeaders();
+      while (i.hasNext())
+      {
+         MimeHeader header = (MimeHeader)i.next();
+         String currentValue = props.getProperty(header.getName());
+
+         /*
+          * Coalesce multiple headers into one
+          *
+          * From HTTP/1.1 RFC 2616:
+          *
+          * Multiple message-header fields with the same field-name MAY be
+          * present in a message if and only if the entire field-value for that
+          * header field is defined as a comma-separated list [i.e., #(values)].
+          * It MUST be possible to combine the multiple header fields into one
+          * "field-name: field-value" pair, without changing the semantics of
+          * the message, by appending each subsequent field-value to the first,
+          * each separated by a comma.
+          */
+         if (currentValue != null)
+         {
+            props.put(header.getName(), currentValue + "," + header.getValue());
+         }
+         else
+         {
+            props.put(header.getName(), header.getValue());
+         }
+      }
    }
 }
