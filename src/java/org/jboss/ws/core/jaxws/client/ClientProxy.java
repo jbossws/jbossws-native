@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPException;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Response;
@@ -204,12 +205,10 @@ public class ClientProxy implements InvocationHandler
       Throwable th = ex;
       if (ex instanceof SOAPFaultException)
       {
-         // The cause of a SOAPFaultException, if any, is the service specific exception
+         // Unwrap the cause if it is an Application Exception, otherwise use a protocol exception
          Throwable cause = ex.getCause();
-         if (cause != null)
-         {
+         if (cause instanceof Exception && !(cause instanceof RuntimeException) && !(cause instanceof SOAPException))
             th = cause;
-         }
       }
       throw th;
    }
