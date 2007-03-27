@@ -564,6 +564,11 @@ public class DOMWriter
                str.append("&quot;");
                break;
             }
+            case '\'':
+            {
+               str.append("&apos;");
+               break;
+            }
             case '\r':
             case '\n':
             {

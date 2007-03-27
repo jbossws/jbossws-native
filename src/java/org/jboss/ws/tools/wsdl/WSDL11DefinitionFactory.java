@@ -27,6 +27,7 @@ import java.net.URL;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.ExtensionRegistry;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 
@@ -58,6 +59,8 @@ public class WSDL11DefinitionFactory
    {
       WSDLFactory wsdlFactory = WSDLFactory.newInstance();
       wsdlReader = wsdlFactory.newWSDLReader();
+      // Allow unknown extensions (jaxws/jaxb binding elements)
+      wsdlReader.setExtensionRegistry(new ExtensionRegistry());
       wsdlReader.setFeature(WSDL11DefinitionFactory.FEATURE_VERBOSE, false);
    }
 
@@ -88,8 +91,8 @@ public class WSDL11DefinitionFactory
       // Set EntityResolver in patched version of wsdl4j-1.5.2jboss
       // [TODO] show the usecase that needs this
       // ((WSDLReaderImpl)wsdlReader).setEntityResolver(entityResolver);
-      
       Definition wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(entityResolver, wsdlLocation));
+     
       return wsdlDefinition;
    }
 }
