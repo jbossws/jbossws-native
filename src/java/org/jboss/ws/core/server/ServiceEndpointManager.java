@@ -37,11 +37,9 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.activation.DataHandler;
@@ -49,10 +47,8 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -325,20 +321,25 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          ServiceEndpointInfo seInfo = wsEndpoint.getServiceEndpointInfo();
          String displayAddress = getDisplayAddress(seInfo, requestURL);
 
-         try {
+         try
+         {
             ServiceEndpointDTO dto = new ServiceEndpointDTO();
             dto.setSepID(sepID);
             dto.setAddress(displayAddress);
             dto.setSeMetrics((ServiceEndpointMetrics)wsEndpoint.getServiceEndpointMetrics().clone());
             dto.setState(wsEndpoint.getState());
             registered.add(dto);
-         } catch (CloneNotSupportedException e) { }
+         }
+         catch (CloneNotSupportedException e)
+         {
+         }
       }
 
       return registered;
    }
 
-   private String getDisplayAddress(ServiceEndpointInfo seInfo, URL requestURL) throws MalformedURLException {
+   private String getDisplayAddress(ServiceEndpointInfo seInfo, URL requestURL) throws MalformedURLException
+   {
       String endpointAddress = seInfo.getServerEndpointMetaData().getEndpointAddress();
       URL displayURL = new URL(endpointAddress);
       String endPointPath = displayURL.getPath();
@@ -399,7 +400,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
    public void processSOAPRequest(ObjectName sepID, InputStream inStream, OutputStream outStream, EndpointContext context) throws Exception
    {
       final String SESSION_COOKIES = "org.jboss.ws.cookies";
-      
+
       ServiceEndpoint wsEndpoint = getServiceEndpointByID(sepID);
       if (wsEndpoint == null)
          throw new WSException("Cannot obtain endpoint for: " + sepID);
@@ -412,28 +413,8 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       HttpServletRequest httpRequest = context.getHttpServletRequest();
       HttpServletResponse httpResponse = context.getHttpServletResponse();
       ServletHeaderSource headerSource = new ServletHeaderSource(httpRequest, httpResponse);
-      
-      // Default to does not create a new HTTPSession 
-      Object lasySession = new HttpSessionPropertyCallback(context);
-      
-      Cookie[] cookies = httpRequest.getCookies();
-      if (cookies != null)
-      {
-         HttpSession httpSession = httpRequest.getSession(true);
-         lasySession = httpSession;
-         
-         Set<Cookie> sessionCoookies = (Set<Cookie>)httpSession.getAttribute(SESSION_COOKIES);
-         if (sessionCoookies == null)
-         {
-            sessionCoookies = new HashSet<Cookie>();
-            httpSession.setAttribute(SESSION_COOKIES, sessionCoookies);
-         }
-         for (Cookie cookie : cookies)
-         {
-            sessionCoookies.add(cookie);
-         }
-      }
-      
+      HttpSessionPropertyCallback httpSession = new HttpSessionPropertyCallback(context);
+
       // Associate a message context with the current thread
       CommonMessageContext msgContext;
       if (type == EndpointMetaData.Type.JAXRPC)
@@ -442,7 +423,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
          msgContext.put(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
          msgContext.put(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
-         msgContext.put(MessageContextJAXRPC.SERVLET_SESSION, lasySession);
+         msgContext.put(MessageContextJAXRPC.SERVLET_SESSION, httpSession);
       }
       else
       {
@@ -464,7 +445,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       try
       {
          SOAPMessage resMessage = wsEndpoint.handleRequest(headerSource, context, inStream);
-         
+
          // REplace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
 
@@ -492,15 +473,6 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
             httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
          }
 
-         // Copy the cookies to the response
-         HttpSession httpSession = httpRequest.getSession(false);
-         Set<Cookie> sessionCoookies = httpSession != null ? (Set<Cookie>)httpSession.getAttribute(SESSION_COOKIES) : null;
-         if (sessionCoookies != null)
-         {
-            for (Cookie cookie : sessionCoookies)
-               httpResponse.addCookie(cookie);
-         }
-         
          sendResponse(outStream, msgContext, isFault);
       }
       finally
@@ -739,11 +711,11 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       }
       return server;
    }
-   
+
    public static class HttpSessionPropertyCallback implements PropertyCallback
    {
       private EndpointContext context;
-      
+
       public HttpSessionPropertyCallback(final EndpointContext context)
       {
          this.context = context;

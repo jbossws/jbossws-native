@@ -179,6 +179,11 @@ public class MimeHeaders
       }
    }
 
+   public String toString()
+   {
+      return "[MimeHeaders=" + headers + "]";
+   }
+   
    private static class MatchingIterator implements Iterator
    {
       private LinkedList headers;
