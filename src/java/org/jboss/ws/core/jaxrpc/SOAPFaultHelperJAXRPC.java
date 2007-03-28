@@ -269,7 +269,7 @@ public class SOAPFaultHelperJAXRPC
                XMLFragment xmlFragment = new XMLFragment(result);
 
                SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-               Element domElement = DOMUtils.parse(xmlFragment.toStringFragment());
+               Element domElement = DOMUtils.parse(xmlFragment.resultToString());
                SOAPElement soapElement = soapFactory.createElement(domElement);
 
                detail = soapFault.addDetail();

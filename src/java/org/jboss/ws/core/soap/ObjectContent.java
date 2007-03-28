@@ -37,7 +37,6 @@ import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
 import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
 /**
  * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>
@@ -46,37 +45,40 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
  * @version $Id$
  * @since 05.02.2007
  */
-public class ObjectContent extends SOAPContent {
+public class ObjectContent extends SOAPContent
+{
 
    private static Logger log = Logger.getLogger(ObjectContent.class);
 
    // The java object content of this element.
    private Object objectValue;
 
-   protected ObjectContent(SOAPContentElement container) {
+   protected ObjectContent(SOAPContentElement container)
+   {
       super(container);
    }
 
-   State getState() {
+   State getState()
+   {
       return State.OBJECT_VALID;
    }
 
-   SOAPContent transitionTo(State nextState) {
-
+   SOAPContent transitionTo(State nextState)
+   {
       SOAPContent next = null;
 
-      if(State.XML_VALID == nextState)
+      if (State.XML_VALID == nextState)
       {
          XMLFragment fragment = marshallObjectContents();
          XMLContent xmlValid = new XMLContent(container);
          xmlValid.setXMLFragment(fragment);
          next = xmlValid;
       }
-      else if(State.OBJECT_VALID == nextState)
+      else if (State.OBJECT_VALID == nextState)
       {
          next = this;
       }
-      else if(State.DOM_VALID == nextState)
+      else if (State.DOM_VALID == nextState)
       {
          // first transition to XML valid
          XMLFragment fragment = marshallObjectContents();
@@ -94,28 +96,34 @@ public class ObjectContent extends SOAPContent {
       return next;
    }
 
-   public Source getPayload() {
+   public Source getPayload()
+   {
       throw new IllegalStateException("Payload not available");
    }
 
-   public void setPayload(Source source) {
-       throw new IllegalStateException("Payload not available");
+   public void setPayload(Source source)
+   {
+      throw new IllegalStateException("Payload cannot be set on object content");
    }
 
-   public XMLFragment getXMLFragment() {
+   public XMLFragment getXMLFragment()
+   {
 
       throw new IllegalStateException("XMLFragment not available");
    }
 
-   public void setXMLFragment(XMLFragment xmlFragment) {
+   public void setXMLFragment(XMLFragment xmlFragment)
+   {
       throw new IllegalStateException("XMLFragment not available");
    }
 
-   public Object getObjectValue() {
+   public Object getObjectValue()
+   {
       return objectValue;
    }
 
-   public void setObjectValue(Object objValue) {
+   public void setObjectValue(Object objValue)
+   {
       this.objectValue = objValue;
    }
 
@@ -149,7 +157,7 @@ public class ObjectContent extends SOAPContent {
          }
 
          Result result = ser.serialize(container, serContext);
-         
+
          xmlFragment = new XMLFragment(result);
          log.debug("xmlFragment: " + xmlFragment);
       }

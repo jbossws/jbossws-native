@@ -85,7 +85,6 @@ class XMLContent extends SOAPContent
 
    SOAPContent transitionTo(State nextState)
    {
-
       SOAPContent next;
 
       if (State.XML_VALID == nextState)
@@ -108,7 +107,7 @@ class XMLContent extends SOAPContent
       {
          throw new IllegalArgumentException("Illegal state requested: " + nextState);
       }
-
+      
       return next;
    }
 

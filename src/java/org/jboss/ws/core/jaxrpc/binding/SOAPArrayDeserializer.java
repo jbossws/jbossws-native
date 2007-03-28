@@ -58,11 +58,11 @@ public class SOAPArrayDeserializer extends DeserializerSupport
    {
       log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
-      Element soapElement = DOMUtils.sourceToElement(source);
       try
       {
          ParameterMetaData paramMetaData = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
 
+         Element soapElement = DOMUtils.sourceToElement(source);
          QName compXmlType = getComponentTypeFromAttribute(soapElement);
          paramMetaData.setSOAPArrayCompType(compXmlType);
 

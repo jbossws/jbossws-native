@@ -37,6 +37,7 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
+import org.jboss.ws.core.soap.SOAPContent.State;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -67,7 +68,6 @@ import org.w3c.dom.TypeInfo;
  * @author Thomas.Diesler@jboss.org
  * @author Heiko.Braun@jboss.org
  * @since 13-Dec-2004
- *
  */
 public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAccess
 {
@@ -126,7 +126,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return getParamMetaData().getJavaType();
    }
 
-   private void transitionTo(SOAPContent.State nextState)
+   private void transitionTo(State nextState)
    {
       if (nextState != soapContent.getState())
       {
@@ -145,8 +145,9 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
     */
    public Source getPayload()
    {
-      // expand to DOM, so the source is repeatedly readable
-      transitionTo(SOAPContent.State.DOM_VALID);
+      if (soapContent.getState() == State.OBJECT_VALID)
+         transitionTo(State.DOM_VALID);
+      
       return soapContent.getPayload();
    }
 
@@ -160,7 +161,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public XMLFragment getXMLFragment()
    {
-      transitionTo(SOAPContent.State.XML_VALID);
+      transitionTo(State.XML_VALID);
       return soapContent.getXMLFragment();
    }
 
@@ -172,7 +173,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public Object getObjectValue()
    {
-      transitionTo(SOAPContent.State.OBJECT_VALID);
+      transitionTo(State.OBJECT_VALID);
       return soapContent.getObjectValue();
    }
 
@@ -507,7 +508,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    private void expandToDOM()
    {
       if (!lockDOMExpansion)
-         transitionTo(SOAPContent.State.DOM_VALID);
+         transitionTo(State.DOM_VALID);
    }
 
    public void setValue(String value)
@@ -542,7 +543,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       }
       else
       {
-         transitionTo(SOAPContent.State.XML_VALID);
+         transitionTo(State.XML_VALID);
          soapContent.getXMLFragment().writeTo(writer);
 
       }

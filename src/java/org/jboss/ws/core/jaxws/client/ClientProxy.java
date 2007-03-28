@@ -202,22 +202,29 @@ public class ClientProxy implements InvocationHandler
     */
    private void handleException(Exception ex) throws Throwable
    {
-      Throwable th = ex;
       if (ex instanceof SOAPFaultException)
       {
          // Unwrap the cause if it is an Application Exception, otherwise use a protocol exception
          Throwable cause = ex.getCause();
          if (cause instanceof Exception)
          {
+            // Throw unwrapped WebServiceException
             if (cause instanceof WebServiceException)
-               th = cause;
-            else if (cause instanceof SOAPException)
-               th = ex;
-            else if (cause instanceof RuntimeException)
-               th = ex;
+               throw (WebServiceException)cause;
+            
+            // Throw wrapped SOAPException
+            if (cause instanceof SOAPException)
+               throw (SOAPFaultException)ex;
+            
+            // Throw wrapped RuntimeException
+            if (cause instanceof RuntimeException)
+               throw (SOAPFaultException)ex;
+            
+            // Throw all other causes
+            throw (Exception)cause;
          }
       }
-      throw th;
+      throw ex;
    }
 
    class AsyncRunnable implements Runnable

@@ -185,7 +185,7 @@ public class SOAPArraySerializer extends SerializerSupport
 
             Result result = ser.serialize(new QName("item"), xmlType, compValue, serContext, null);
             XMLFragment fragment = new XMLFragment(result);
-            buffer.append(fragment.toStringFragment());
+            buffer.append(fragment.resultToString());
          }
       }
    }

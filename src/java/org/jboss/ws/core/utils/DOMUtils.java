@@ -38,6 +38,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
@@ -69,7 +70,8 @@ public final class DOMUtils
    // All elements created by the same thread are created by the same builder and belong to the same doc
    private static ThreadLocal documentThreadLocal = new ThreadLocal();
    private static ThreadLocal builderThreadLocal = new ThreadLocal() {
-      protected Object initialValue() {
+      protected Object initialValue()
+      {
          try
          {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -522,11 +524,12 @@ public final class DOMUtils
       return doc;
    }
 
-   public static Element sourceToElement(Source source)
+   public static Element sourceToElement(Source source) throws IOException
    {
       Element elementResult = null;
 
-      try {
+      try
+      {
          if (source instanceof StreamSource)
          {
             StreamSource streamSource = (StreamSource)source;
@@ -541,10 +544,6 @@ public final class DOMUtils
                Reader reader = streamSource.getReader();
                elementResult = DOMUtils.parse(new InputSource(reader));
             }
-
-            // reset the excausted input stream
-            String xmlStr = DOMWriter.printNode(elementResult, false);
-            source = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
          }
          else if (source instanceof DOMSource)
          {
@@ -581,9 +580,11 @@ public final class DOMUtils
          }
 
       }
-      catch (Exception e)
+      catch (TransformerException ex)
       {
-         WSException.rethrow(e);
+         IOException ioex = new IOException();
+         ioex.initCause(ex);
+         throw ioex;
       }
 
       return elementResult;

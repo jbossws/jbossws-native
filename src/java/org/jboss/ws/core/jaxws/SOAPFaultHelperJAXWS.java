@@ -320,7 +320,7 @@ public class SOAPFaultHelperJAXWS
          XMLFragment fragment = new XMLFragment(result);
 
          SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-         Element domElement = DOMUtils.parse(fragment.toStringFragment());
+         Element domElement = DOMUtils.parse(fragment.resultToString());
          return soapFactory.createElement(domElement);
       }
       catch (BindingException e)
