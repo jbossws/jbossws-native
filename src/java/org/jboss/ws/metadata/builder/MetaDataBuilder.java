@@ -37,9 +37,8 @@ import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.Port;
 import javax.wsdl.Service;
-import javax.wsdl.extensions.ExtensibilityElement;
-import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.wsdl.extensions.soap.SOAPAddress;
+import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingProperties;
 
@@ -79,7 +78,6 @@ import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.w3c.dom.Element;
 
 /** An abstract meta data builder.
  *
@@ -129,7 +127,6 @@ public abstract class MetaDataBuilder
          }
       }
    }
-
 
    public static void initEndpointAddress(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String linkName)
    {
@@ -232,7 +229,6 @@ public abstract class MetaDataBuilder
       return ObjectNameFactory.create(idstr.toString());
    }
 
-
    /** Get the web service address for a given path
     */
    public static String getServiceEndpointAddress(String uriScheme, String servicePath)
@@ -299,7 +295,7 @@ public abstract class MetaDataBuilder
       }
       sepMetaData.setTransportGuarantee(transportGuarantee);
    }
-   
+
    /** Replace the address locations for a given port component.
     */
    public static void replaceAddressLocation(ServerEndpointMetaData sepMetaData)
@@ -333,7 +329,8 @@ public abstract class MetaDataBuilder
 
                if (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0)
                {
-                  if(log.isDebugEnabled()) log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");
+                  if (log.isDebugEnabled())
+                     log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");
                   wsdlEndpoint.setAddress(serviceEndpointURL);
                   sepMetaData.setEndpointAddress(serviceEndpointURL);
 
@@ -343,7 +340,8 @@ public abstract class MetaDataBuilder
                }
                else
                {
-                  if(log.isDebugEnabled()) log.debug("Don't replace service endpoint address '" + orgAddress + "'");
+                  if (log.isDebugEnabled())
+                     log.debug("Don't replace service endpoint address '" + orgAddress + "'");
                   try
                   {
                      sepMetaData.setEndpointAddress(new URL(orgAddress).toExternalForm());
@@ -393,8 +391,6 @@ public abstract class MetaDataBuilder
 
    private static Port modifySOAPAddress(String tnsURI, QName portQName, String serviceEndpointURL, Map services)
    {
-      QName SOAP12_ADDRESS = new QName(Constants.NS_SOAP12, "address");
-
       Port wsdlOneOnePort = null;
       Iterator itServices = services.values().iterator();
       while (itServices.hasNext())
@@ -411,16 +407,15 @@ public abstract class MetaDataBuilder
                List extElements = wsdlOneOnePort.getExtensibilityElements();
                for (Object extElement : extElements)
                {
-                  QName elementType = ((ExtensibilityElement)extElement).getElementType();
                   if (extElement instanceof SOAPAddress)
                   {
                      SOAPAddress address = (SOAPAddress)extElement;
                      address.setLocationURI(serviceEndpointURL);
                   }
-                  else if (SOAP12_ADDRESS.equals(elementType))
+                  if (extElement instanceof SOAP12Address)
                   {
-                     Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-                     domElement.setAttribute("location", serviceEndpointURL);
+                     SOAP12Address address = (SOAP12Address)extElement;
+                     address.setLocationURI(serviceEndpointURL);
                   }
                }
             }
@@ -461,7 +456,7 @@ public abstract class MetaDataBuilder
             // extract the root element NS
             String notificationRootElementNS = null;
             WSDLInterfaceOperation wsdlInterfaceOperation = wsdlInterface.getOperations()[0];
-            if(wsdlInterfaceOperation.getOutputs().length > 0 )
+            if (wsdlInterfaceOperation.getOutputs().length > 0)
             {
                WSDLInterfaceOperationOutput wsdlInterfaceOperationOutput = wsdlInterfaceOperation.getOutputs()[0];
                notificationRootElementNS = wsdlInterfaceOperationOutput.getElement().getNamespaceURI();
@@ -470,8 +465,7 @@ public abstract class MetaDataBuilder
             {
                // WSDL operation of an WSDL interface that is marked as an event source
                // requires to carry an output message.
-               throw new WSException("Unable to resolve eventing root element NS. No operation output found at "+
-                  wsdlInterfaceOperation.getName());
+               throw new WSException("Unable to resolve eventing root element NS. No operation output found at " + wsdlInterfaceOperation.getName());
             }
 
             EventingEpMetaExt ext = new EventingEpMetaExt(EventingConstants.NS_EVENTING);

@@ -64,6 +64,10 @@ import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap.SOAPHeader;
 import javax.wsdl.extensions.soap.SOAPOperation;
+import javax.wsdl.extensions.soap12.SOAP12Address;
+import javax.wsdl.extensions.soap12.SOAP12Binding;
+import javax.wsdl.extensions.soap12.SOAP12Body;
+import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
@@ -115,16 +119,6 @@ public class WSDL11Reader
 {
    // provide logging
    private static final Logger log = Logger.getLogger(WSDL11Reader.class);
-
-   private static QName HTTP_BINDING = new QName(Constants.NS_HTTP, "binding");
-
-   private static QName SOAP12_BINDING = new QName(Constants.NS_SOAP12, "binding");
-
-   private static QName SOAP12_BODY = new QName(Constants.NS_SOAP12, "body");
-
-   private static QName SOAP12_OPERATION = new QName(Constants.NS_SOAP12, "operation");
-
-   private static QName SOAP12_ADDRESS = new QName(Constants.NS_SOAP12, "address");
 
    private WSDLDefinitions destWsdl;
 
@@ -449,7 +443,7 @@ public class WSDL11Reader
 
          String path = parentURL.toExternalForm();
          path = path.substring(0, path.lastIndexOf("/"));
-         
+
          while (location.startsWith("../"))
          {
             path = path.substring(0, path.lastIndexOf("/"));
@@ -797,10 +791,10 @@ public class WSDL11Reader
             SOAPOperation soapOp = (SOAPOperation)extElement;
             operationStyle = soapOp.getStyle();
          }
-         else if (SOAP12_OPERATION.equals(elementType))
+         else if (extElement instanceof SOAP12Operation)
          {
-            Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-            operationStyle = getOptionalAttribute(domElement, "style");
+            SOAP12Operation soapOp = (SOAP12Operation)extElement;
+            operationStyle = soapOp.getStyle();
          }
       }
 
@@ -814,10 +808,10 @@ public class WSDL11Reader
                SOAPBinding soapBinding = (SOAPBinding)extElement;
                operationStyle = soapBinding.getStyle();
             }
-            else if (SOAP12_BINDING.equals(elementType))
+            else if (extElement instanceof SOAP12Binding)
             {
-               Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-               operationStyle = getOptionalAttribute(domElement, "style");
+               SOAP12Binding soapBinding = (SOAP12Binding)extElement;
+               operationStyle = soapBinding.getStyle();
             }
          }
       }
@@ -846,7 +840,7 @@ public class WSDL11Reader
             {
                bindingType = Constants.NS_SOAP11;
             }
-            else if (SOAP12_BINDING.equals(elementType))
+            else if (extElement instanceof SOAP12Binding)
             {
                bindingType = Constants.NS_SOAP12;
             }
@@ -883,10 +877,10 @@ public class WSDL11Reader
                SOAPBinding soapBinding = (SOAPBinding)extElement;
                bindingStyle = soapBinding.getStyle();
             }
-            else if (SOAP12_BINDING.equals(elementType))
+            else if (extElement instanceof SOAP12Binding)
             {
-               Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-               bindingStyle = getOptionalAttribute(domElement, "style");
+               SOAP12Binding soapBinding = (SOAP12Binding)extElement;
+               bindingStyle = soapBinding.getStyle();
             }
          }
 
@@ -1026,16 +1020,15 @@ public class WSDL11Reader
       List<ExtensibilityElement> extList = srcBindingOperation.getExtensibilityElements();
       for (ExtensibilityElement extElement : extList)
       {
-         QName elementType = extElement.getElementType();
          if (extElement instanceof SOAPOperation)
          {
             SOAPOperation soapOp = (SOAPOperation)extElement;
             destBindingOperation.setSOAPAction(soapOp.getSoapActionURI());
          }
-         else if (SOAP12_OPERATION.equals(elementType))
+         else if (extElement instanceof SOAP12Operation)
          {
-            Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-            destBindingOperation.setSOAPAction(getOptionalAttribute(domElement, "soapAction"));
+            SOAP12Operation soapOp = (SOAP12Operation)extElement;
+            destBindingOperation.setSOAPAction(soapOp.getSoapActionURI());
          }
       }
 
@@ -1126,24 +1119,28 @@ public class WSDL11Reader
       processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, extList, output, srcBindingOperation, cb);
    }
 
-   private void processBindingReference(Definition srcWsdl, WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation, List<ExtensibilityElement> extList,
-         WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback)
+   private void processBindingReference(Definition srcWsdl, WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation,
+         List<ExtensibilityElement> extList, WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback)
          throws WSDLException
    {
       for (ExtensibilityElement extElement : extList)
       {
-         QName elementType = extElement.getElementType();
          if (extElement instanceof SOAPBody)
          {
-            processEncodingStyle(extElement, destBindingOperation);
-            
+            SOAPBody body = (SOAPBody)extElement;
+            processEncodingStyle(body, destBindingOperation);
+
             // <soap:body use="encoded" namespace="http://MarshallTestW2J.org/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-            String namespaceURI = ((SOAPBody)extElement).getNamespaceURI();
+            String namespaceURI = body.getNamespaceURI();
             destBindingOperation.setNamespaceURI(namespaceURI);
          }
-         else if (SOAP12_BODY.equals(elementType))
+         else if (extElement instanceof SOAP12Body)
          {
-            processEncodingStyle(extElement, destBindingOperation);
+            SOAP12Body body = (SOAP12Body)extElement;
+            processEncodingStyle(body, destBindingOperation);
+            
+            String namespaceURI = body.getNamespaceURI();
+            destBindingOperation.setNamespaceURI(namespaceURI);
          }
          else if (extElement instanceof SOAPHeader)
          {
@@ -1241,7 +1238,6 @@ public class WSDL11Reader
       log.trace("processEncodingStyle");
 
       String encStyle = null;
-      QName elementType = extElement.getElementType();
       if (extElement instanceof SOAPBody)
       {
          SOAPBody body = (SOAPBody)extElement;
@@ -1257,10 +1253,10 @@ public class WSDL11Reader
             }
          }
       }
-      else if (SOAP12_BODY.equals(elementType))
+      else if (extElement instanceof SOAP12Body)
       {
-         Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-         encStyle = getOptionalAttribute(domElement, "encodingStyle");
+         SOAP12Body body = (SOAP12Body)extElement;
+         encStyle = body.getEncodingStyle();
       }
 
       if (encStyle != null)
@@ -1355,10 +1351,10 @@ public class WSDL11Reader
             soapAddress = addr.getLocationURI();
             break;
          }
-         else if (SOAP12_ADDRESS.equals(elementType))
+         else if (extElement instanceof SOAP12Address)
          {
-            Element domElement = ((UnknownExtensibilityElement)extElement).getElement();
-            soapAddress = getOptionalAttribute(domElement, "location");
+            SOAP12Address addr = (SOAP12Address)extElement;
+            soapAddress = addr.getLocationURI();
             break;
          }
          else if ("address".equals(elementType.getLocalPart()))

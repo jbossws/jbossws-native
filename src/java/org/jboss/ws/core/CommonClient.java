@@ -301,14 +301,12 @@ public abstract class CommonClient implements StubExt, HeaderSource
                   try
                   {
                      URL wsaToURL = new URL(wsaTo);
-                     if (log.isDebugEnabled())
-                        log.debug("Sending request to addressing destination: " + wsaToURL);
+                     log.debug("Sending request to addressing destination: " + wsaToURL);
                      targetAddress = wsaToURL.toExternalForm();
                   }
                   catch (MalformedURLException ex)
                   {
-                     if (log.isDebugEnabled())
-                        log.debug("Not a valid URL: " + wsaTo);
+                     log.debug("Not a valid URL: " + wsaTo);
                   }
                }
             }

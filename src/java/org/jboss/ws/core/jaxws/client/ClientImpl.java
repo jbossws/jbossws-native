@@ -37,6 +37,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.ProtocolException;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
@@ -176,24 +177,30 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    @Override
    protected void setInboundContextProperties()
    {
-      // Get the HTTP_RESPONSE_CODE
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      Map<?, ?> remotingMetadata = (Map)msgContext.get(CommonMessageContext.REMOTING_METADATA);
-      Integer resposeCode = (Integer)remotingMetadata.get(HTTPMetadataConstants.RESPONSE_CODE);
-      if (resposeCode != null)
-         msgContext.put(MessageContextJAXWS.HTTP_RESPONSE_CODE, resposeCode);
       
       // Map of attachments to a message for the inbound message, key is  the MIME Content-ID, value is a DataHandler
       msgContext.put(MessageContext.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
       
-      // [JBREM-728] Improve access to HTTP response headers
-      Map<String, List> headers = new HashMap<String, List>();
-      for (Map.Entry en : remotingMetadata.entrySet())
+      // Remoting meta data are available on successfull call completion
+      if (msgContext.containsKey(CommonMessageContext.REMOTING_METADATA))
       {
-         if (en.getKey() instanceof String && en.getValue() instanceof List)
-            headers.put((String)en.getKey(), (List)en.getValue());
+         Map<?, ?> remotingMetadata = (Map)msgContext.get(CommonMessageContext.REMOTING_METADATA);
+         
+         // Get the HTTP_RESPONSE_CODE
+         Integer resposeCode = (Integer)remotingMetadata.get(HTTPMetadataConstants.RESPONSE_CODE);
+         if (resposeCode != null)
+            msgContext.put(MessageContextJAXWS.HTTP_RESPONSE_CODE, resposeCode);
+
+         // [JBREM-728] Improve access to HTTP response headers
+         Map<String, List> headers = new HashMap<String, List>();
+         for (Map.Entry en : remotingMetadata.entrySet())
+         {
+            if (en.getKey() instanceof String && en.getValue() instanceof List)
+               headers.put((String)en.getKey(), (List)en.getValue());
+         }
+         msgContext.put(MessageContext.HTTP_RESPONSE_HEADERS, headers);
       }
-      msgContext.put(MessageContext.HTTP_RESPONSE_HEADERS, headers);
    }
 
    @Override

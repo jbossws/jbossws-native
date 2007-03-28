@@ -493,7 +493,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          }
 
          // Copy the cookies to the response
-         HttpSession httpSession = httpRequest.getSession();
+         HttpSession httpSession = httpRequest.getSession(false);
          Set<Cookie> sessionCoookies = httpSession != null ? (Set<Cookie>)httpSession.getAttribute(SESSION_COOKIES) : null;
          if (sessionCoookies != null)
          {

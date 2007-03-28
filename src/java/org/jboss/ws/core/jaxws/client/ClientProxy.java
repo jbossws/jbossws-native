@@ -207,8 +207,15 @@ public class ClientProxy implements InvocationHandler
       {
          // Unwrap the cause if it is an Application Exception, otherwise use a protocol exception
          Throwable cause = ex.getCause();
-         if (cause instanceof Exception && !(cause instanceof RuntimeException) && !(cause instanceof SOAPException))
-            th = cause;
+         if (cause instanceof Exception)
+         {
+            if (cause instanceof WebServiceException)
+               th = cause;
+            else if (cause instanceof SOAPException)
+               th = ex;
+            else if (cause instanceof RuntimeException)
+               th = ex;
+         }
       }
       throw th;
    }
