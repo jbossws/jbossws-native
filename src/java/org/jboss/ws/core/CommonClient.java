@@ -75,7 +75,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
 {
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
-
+   
+   public static String SESSION_COOKIES = "org.jboss.ws.maintain.session.cookies";
+   
    // The endpoint together with the operationName uniquely identify the call operation
    protected EndpointMetaData epMetaData;
    // The current operation name
@@ -221,6 +223,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
    protected abstract void setInboundContextProperties();
 
    protected abstract void setOutboundContextProperties();
+   
+   protected abstract boolean shouldMaintainSession();
 
    /** Call invokation goes as follows:
     *
@@ -312,6 +316,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
             Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext()); 
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
+            if (shouldMaintainSession())
+               addSessionInfo(reqMessage, callProps);
 
             SOAPMessage resMessage;
             if (oneway)
@@ -322,12 +328,15 @@ public abstract class CommonClient implements StubExt, HeaderSource
             {
                resMessage = new SOAPConnectionImpl().call(reqMessage, epInfo);
             }
+            
+            if (shouldMaintainSession())
+               saveSessionInfo(callProps, getRequestContext());
 
             // At pivot the message context might be replaced
             msgContext = processPivotInternal(msgContext, direction);
             
             // Copy the remoting meta data 
-            msgContext.putAll(callProps);
+            msgContext.put(CommonMessageContext.REMOTING_METADATA, callProps);
 
             // Associate response message with message context
             msgContext.setSOAPMessage(resMessage);
@@ -391,6 +400,56 @@ public abstract class CommonClient implements StubExt, HeaderSource
          closeHandlerChain(portName, handlerType[2]);
          closeHandlerChain(portName, handlerType[1]);
          closeHandlerChain(portName, handlerType[0]);
+      }
+   }
+   
+   private void saveSessionInfo(Map<String, Object> remotingMetadata, Map<String, Object> requestContext)
+   {
+      Map<String, String> cookies = (Map) remotingMetadata.get(SESSION_COOKIES);
+      if (cookies == null)
+      {
+         cookies = new HashMap<String, String>();
+         requestContext.put(SESSION_COOKIES, cookies);
+      }
+      
+      List<String> setCookies = new ArrayList<String>();
+      
+      List<String> setCookies1 = (List)remotingMetadata.get("Set-Cookie");
+      if (setCookies1 != null)
+         setCookies.addAll(setCookies1);
+      
+      List<String> setCookies2 = (List)remotingMetadata.get("Set-Cookie2");
+      if (setCookies2 != null)
+         setCookies.addAll(setCookies2);
+      
+      // TODO: The parsing here should be improved to be fully compliant with the RFC
+      for (String setCookie : setCookies)
+      {
+         int index = setCookie.indexOf(';');
+         if (index == -1)
+            continue;
+         
+         String pair = setCookie.substring(0, index);
+         index = pair.indexOf('=');
+         if (index == -1)
+            continue;
+         
+         String name = pair.substring(0, index);
+         String value = pair.substring(index + 1);
+         
+         cookies.put(name, value);
+      }
+   }
+
+   protected void addSessionInfo(SOAPMessage reqMessage, Map<String, Object> callProperties)
+   {
+      Map<String, String> cookies = (Map) callProperties.get(SESSION_COOKIES);
+      if (cookies != null)
+      {
+         for (Map.Entry<String, String> cookie : cookies.entrySet())
+         {
+            reqMessage.getMimeHeaders().addHeader("Cookie" , cookie.getKey() +  "=" + cookie.getValue()); 
+         }
       }
    }
 

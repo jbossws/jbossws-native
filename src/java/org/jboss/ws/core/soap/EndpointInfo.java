@@ -23,6 +23,7 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -38,7 +39,6 @@ public class EndpointInfo
 {
    private String targetAddress;
    private Map<String, Object> properties;
-
    public EndpointInfo(EndpointMetaData epMetaData, String targetAddress, Map<String, Object> callProps)
    {
       this.targetAddress = targetAddress;
@@ -80,7 +80,7 @@ public class EndpointInfo
    {
       return targetAddress;
    }
-
+   
    public boolean equals(Object obj)
    {
       if (!(obj instanceof EndpointInfo))

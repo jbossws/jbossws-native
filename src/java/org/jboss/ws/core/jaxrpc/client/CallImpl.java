@@ -671,4 +671,11 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       
       return set;
    }
+
+   @Override
+   protected boolean shouldMaintainSession()
+   {
+      Object bool = getRequestContext().get(Stub.SESSION_MAINTAIN_PROPERTY);
+      return Boolean.TRUE.equals(bool);
+   }
 }

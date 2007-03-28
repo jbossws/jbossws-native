@@ -159,6 +159,8 @@ public class SOAPConnectionImpl extends SOAPConnection
             timeout = callProps.get(StubExt.PROPERTY_CLIENT_TIMEOUT);
             targetAddress = addURLParameter(targetAddress, "timeout", timeout.toString());
          }
+         
+         
       }
       else if (endpoint instanceof EndpointReference)
       {

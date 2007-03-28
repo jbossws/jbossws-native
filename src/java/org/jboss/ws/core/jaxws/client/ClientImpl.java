@@ -77,7 +77,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 {
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);
-
+   
    private final EndpointMetaData epMetaData;
    private final HandlerResolver handlerResolver;
    private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
@@ -178,17 +178,17 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       // Get the HTTP_RESPONSE_CODE
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      Integer resposeCode = (Integer)msgContext.get(HTTPMetadataConstants.RESPONSE_CODE);
+      Map<?, ?> remotingMetadata = (Map)msgContext.get(CommonMessageContext.REMOTING_METADATA);
+      Integer resposeCode = (Integer)remotingMetadata.get(HTTPMetadataConstants.RESPONSE_CODE);
       if (resposeCode != null)
          msgContext.put(MessageContextJAXWS.HTTP_RESPONSE_CODE, resposeCode);
       
       // Map of attachments to a message for the inbound message, key is  the MIME Content-ID, value is a DataHandler
       msgContext.put(MessageContext.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
       
-      // Get the HTTP response headers
       // [JBREM-728] Improve access to HTTP response headers
       Map<String, List> headers = new HashMap<String, List>();
-      for (Map.Entry en : msgContext.entrySet())
+      for (Map.Entry en : remotingMetadata.entrySet())
       {
          if (en.getKey() instanceof String && en.getValue() instanceof List)
             headers.put((String)en.getKey(), (List)en.getValue());
@@ -379,5 +379,12 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       }
 
       return headers;
+   }
+
+   @Override
+   protected boolean shouldMaintainSession()
+   {
+      Object bool = getRequestContext().get(BindingProvider.SESSION_MAINTAIN_PROPERTY);
+      return Boolean.TRUE.equals(bool);
    }
 }
