@@ -164,29 +164,7 @@ public class XMLFragment
 
    private static String sourceToStringFragement(Source source)
    {
-
       throw new IllegalArgumentException("Source should never be converted to String");
-
-      /*new RuntimeException("sourceToStringFragement").printStackTrace(System.out);
-
-       String xmlFragment = null;
-
-       try {
-       TransformerFactory tf = TransformerFactory.newInstance();
-       ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-       tf.newTransformer().transform(source, new StreamResult(baos));
-       xmlFragment = new String(baos.toByteArray());
-       if (xmlFragment.startsWith("<?xml"))
-       {
-       int index = xmlFragment.indexOf(">");
-       xmlFragment = xmlFragment.substring(index + 1);
-       }
-       } catch (TransformerException e) {
-       WSException.rethrow(e);
-       }
-
-       return xmlFragment;
-       */
    }
 
    public void writeTo(Writer writer) throws IOException
@@ -206,9 +184,6 @@ public class XMLFragment
     */
    private void writeSource(Writer writer) throws IOException
    {
-
-      //new RuntimeException("writeSource").printStackTrace(System.out);
-
       if (source instanceof DOMSource)
       {
          DOMSource domSource = (DOMSource)source;

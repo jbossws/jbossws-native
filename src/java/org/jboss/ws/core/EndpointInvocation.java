@@ -116,7 +116,7 @@ public class EndpointInvocation
     */
    public Object[] getRequestPayload() throws SOAPException
    {
-      if(log.isDebugEnabled()) log.debug("getRequestPayload");
+      log.debug("getRequestPayload");
       List<QName> xmlNames = getRequestParamNames();
 
       Object[] payload = new Object[opMetaData.getJavaMethod().getParameterTypes().length];

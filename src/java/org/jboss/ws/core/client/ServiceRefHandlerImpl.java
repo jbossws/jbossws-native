@@ -24,8 +24,6 @@ package org.jboss.ws.core.client;
 // $Id$
 
 import java.lang.reflect.AnnotatedElement;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -107,30 +105,42 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       String serviceRefType = serviceRef.getServiceRefType();
       if (serviceRefType != null || serviceRef.getAnnotatedElement() != null)
          return Type.JAXWS;
-         
+      
+      // The mapping-file is JAXRPC specific
+      if (serviceRef.getMappingFile() != null)
+         return Type.JAXRPC;
+      
       String siName = serviceRef.getServiceInterface();
       if (siName == null)
          throw new IllegalStateException("<service-interface> cannot be null");
 
+      if (siName.equals("javax.xml.rpc.Service"))
+         return Type.JAXRPC;
+
+      log.info("Cannot determine service-ref type, assuming JAXWS");
+      return Type.JAXWS;
+
+      /* 
+       * Loading the SI like this might not work for webapp clients.
+       * 
       ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
       URL rootURL = serviceRef.getVfsRoot().toURL();
       URLClassLoader loader = new URLClassLoader(new URL[] {rootURL}, ctxLoader);
       
-      Class siClass;
       try
       {
-         siClass = loader.loadClass(siName);
+         Class siClass = loader.loadClass(siName);
+         if (javax.xml.ws.Service.class.isAssignableFrom(siClass))
+            return Type.JAXWS;
+         else if (javax.xml.rpc.Service.class.isAssignableFrom(siClass))
+            return Type.JAXRPC;
+         else
+            throw new IllegalStateException("Illegal service interface: " + siName);
       }
       catch (ClassNotFoundException e)
       {
-         throw new NamingException("Cannot load <service-interface>: " + siName);
+         throw new IllegalStateException("Cannot load <service-interface>: " + siName);
       }
-      
-      if (javax.xml.ws.Service.class.isAssignableFrom(siClass))
-         return Type.JAXWS;
-      else if (javax.xml.rpc.Service.class.isAssignableFrom(siClass))
-         return Type.JAXRPC;
-      else
-         throw new IllegalStateException("Illegal service interface: " + siName);
+      */
    }
 }

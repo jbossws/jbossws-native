@@ -382,6 +382,14 @@
     <copy todir="${tests.output.dir}/classes" file="${tests.etc.dir}/jndi.properties"/>
     <copy todir="${tests.output.dir}/classes" file="${tests.etc.dir}/log4j.xml"/>
     
+    <!-- copy handler definitions -->
+    <copy todir="${tests.output.dir}/classes">
+      <fileset dir="${tests.java.dir}">
+        <include name="**/*.xml"/>
+      </fileset>
+    </copy>
+    
+    <!-- copy non binary files -->
     <copy todir="${tests.output.dir}/resources">
       <fileset dir="${tests.resources.dir}">
         <include name="**/*.wsdl"/>

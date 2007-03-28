@@ -58,7 +58,7 @@ public class SerializationContextJAXRPC extends SerializationContext
    {
       if (jaxrpcMapping == null)
       {
-         if(log.isDebugEnabled()) log.debug("Generate jaxrpcMapping from typeMapping");
+         log.debug("Generate jaxrpcMapping from typeMapping");
 
          jaxrpcMapping = new JavaWsdlMapping();
          for (QName xmlType : getTypeMapping().getRegisteredXmlTypes())
@@ -85,7 +85,8 @@ public class SerializationContextJAXRPC extends SerializationContext
                   packageMapping.setNamespaceURI(nsURI);
                   packageMapping.setPackageType(packageName);
                   jaxrpcMapping.addPackageMapping(packageMapping);
-                  if(log.isDebugEnabled()) log.debug("Add package mapping: " + packageMapping);
+                  if (log.isDebugEnabled())
+                     log.debug("Add package mapping: " + packageMapping);
                }
 
                // Do not add mappings for array types
@@ -100,7 +101,8 @@ public class SerializationContextJAXRPC extends SerializationContext
                   xmlTypeMapping.setJavaType(javaTypeName);
                   xmlTypeMapping.setRootTypeQName(xmlType);
                   jaxrpcMapping.addJavaXmlTypeMappings(xmlTypeMapping);
-                  if(log.isDebugEnabled()) log.debug("Add type mapping: " + xmlTypeMapping);
+                  if (log.isDebugEnabled())
+                     log.debug("Add type mapping: " + xmlTypeMapping);
                }
             }
          }

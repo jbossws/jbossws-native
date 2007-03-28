@@ -30,11 +30,16 @@ import javax.xml.rpc.encoding.Deserializer;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
+import org.w3c.dom.Node;
 
 /** The base class for all Deserializers.
  *
@@ -43,6 +48,16 @@ import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
  */
 public abstract class DeserializerSupport implements Deserializer
 {
+   private static final Logger log = Logger.getLogger(DeserializerSupport.class);
+
+   public Object deserialize(SOAPContentElement soapElement, SerializationContext serContext) throws BindingException
+   {
+      QName xmlName = soapElement.getElementQName();
+      QName xmlType = soapElement.getXmlType();
+
+      Source source = soapElement.getXMLFragment().getSource();
+      return deserialize(xmlName, xmlType, source, serContext);
+   }
 
    /** Deserialize an XML fragment to an object value
     *
@@ -53,22 +68,45 @@ public abstract class DeserializerSupport implements Deserializer
     */
    public abstract Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException;
 
+   // TODO: remove when JBossXB supports unmarshall(Source)
+   // http://jira.jboss.org/jira/browse/JBXB-100
    protected static String sourceToString(Source source)
    {
       String xmlFragment = null;
-
-      try {
-         TransformerFactory tf = TransformerFactory.newInstance();
-         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-         StreamResult streamResult = new StreamResult(baos);
-         tf.newTransformer().transform(source, streamResult);         
-         xmlFragment = new String(baos.toByteArray());
-         if (xmlFragment.startsWith("<?xml"))
+      try
+      {
+         if (source instanceof DOMSource)
          {
-            int index = xmlFragment.indexOf(">");
-            xmlFragment = xmlFragment.substring(index + 1);
+            Node node = ((DOMSource)source).getNode();
+            xmlFragment = DOMWriter.printNode(node, false);
          }
-      } catch (TransformerException e) {
+         else
+         {
+            // Note, this code will not handler namespaces correctly that 
+            // are defined on a parent of the DOMSource
+            //
+            // <env:Envelope xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+            //   <env:Body>
+            //     <myMethod>
+            //       <param xsi:type='xsd:string'>Hello World!</param>
+            //     </myMethod>
+            //   </env:Body>
+            // </env:Envelope>
+            //
+            TransformerFactory tf = TransformerFactory.newInstance();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            StreamResult streamResult = new StreamResult(baos);
+            tf.newTransformer().transform(source, streamResult);
+            xmlFragment = new String(baos.toByteArray());
+            if (xmlFragment.startsWith("<?xml"))
+            {
+               int index = xmlFragment.indexOf(">");
+               xmlFragment = xmlFragment.substring(index + 1);
+            }
+         }
+      }
+      catch (TransformerException e)
+      {
          WSException.rethrow(e);
       }
 

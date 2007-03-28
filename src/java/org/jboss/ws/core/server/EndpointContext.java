@@ -51,7 +51,7 @@ public class EndpointContext
 
    public HttpSession getHttpSession()
    {
-      return request.getSession();
+      return request.getSession(true);
    }
 
    public MessageContext getMessageContext()

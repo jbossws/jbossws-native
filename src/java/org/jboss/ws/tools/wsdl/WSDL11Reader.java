@@ -444,28 +444,19 @@ public class WSDL11Reader
 
       if (locationURL == null)
       {
-         String parentProtocol = parentURL.getProtocol();
-         if (parentProtocol.indexOf("file") >= 0 && !location.startsWith("/"))
+         if (location.startsWith("/"))
+            location = location.substring(1);
+
+         String path = parentURL.toExternalForm();
+         path = path.substring(0, path.lastIndexOf("/"));
+         
+         while (location.startsWith("../"))
          {
-            String path = parentURL.toExternalForm();
             path = path.substring(0, path.lastIndexOf("/"));
-            locationURL = new URL(path + "/" + location);
+            location = location.substring(3);
          }
-         else if (parentProtocol.startsWith("http") && location.startsWith("/"))
-         {
-            String path = parentProtocol + "://" + parentURL.getHost() + ":" + parentURL.getPort();
-            locationURL = new URL(path + location);
-         }
-         else if (parentProtocol.equals("jar") && !location.startsWith("/"))
-         {
-            String path = parentURL.toExternalForm();
-            path = path.substring(0, path.lastIndexOf("/"));
-            locationURL = new URL(path + "/" + location);
-         }
-         else
-         {
-            throw new WSDLException(WSDLException.OTHER_ERROR, "Unsupported schemaLocation: " + location);
-         }
+
+         locationURL = new URL(path + "/" + location);
       }
 
       log.trace("Modified schemaLocation: " + locationURL);
@@ -504,8 +495,7 @@ public class WSDL11Reader
          WSDLInterfaceOperation destOperation = new WSDLInterfaceOperation(destInterface, srcOperation.getName());
          destOperation.setStyle(getOperationStyle(srcWsdl, srcPortType, srcOperation));
 
-         if(srcOperation.getStyle()!=null
-            && false == OperationType.NOTIFICATION.equals(srcOperation.getStyle()))
+         if (srcOperation.getStyle() != null && false == OperationType.NOTIFICATION.equals(srcOperation.getStyle()))
          {
             processOperationInput(srcWsdl, srcOperation, destOperation, srcPortType);
          }
@@ -525,7 +515,7 @@ public class WSDL11Reader
          Message srcMessage = srcInput.getMessage();
          if (srcMessage == null)
             throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find input message on operation " + srcOperation.getName() + " on port type: "
-               + srcPortType.getQName());
+                  + srcPortType.getQName());
 
          log.trace("processOperationInput: " + srcMessage.getQName());
 
@@ -586,15 +576,16 @@ public class WSDL11Reader
       }
    }
 
-   private boolean ignorePart(PortType srcPortType, Part srcPart) {
+   private boolean ignorePart(PortType srcPortType, Part srcPart)
+   {
 
       boolean canBeSkipped = false;
       QName parentName = srcPortType.getQName();
-      if(skippedSWAParts.containsKey(parentName))
+      if (skippedSWAParts.containsKey(parentName))
       {
-         if(skippedSWAParts.get(parentName).contains(srcPart.getName()))
+         if (skippedSWAParts.get(parentName).contains(srcPart.getName()))
          {
-            log.trace("Skip attachment part: " + parentName+"->"+srcPart.getName());
+            log.trace("Skip attachment part: " + parentName + "->" + srcPart.getName());
             canBeSkipped = true;
          }
       }
@@ -613,11 +604,8 @@ public class WSDL11Reader
 
       Message srcMessage = srcOutput.getMessage();
       if (srcMessage == null)
-         throw new WSDLException(
-            WSDLException.INVALID_WSDL,
-            "Cannot find output message on operation " + srcOperation.getName() +
-               " on port type: "+ srcPortType.getQName()
-         );
+         throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find output message on operation " + srcOperation.getName() + " on port type: "
+               + srcPortType.getQName());
 
       log.trace("processOperationOutput: " + srcMessage.getQName());
 
@@ -645,7 +633,8 @@ public class WSDL11Reader
       for (Part srcPart : (List<Part>)srcMessage.getOrderedParts(null))
       {
          // Skip SWA attachment parts
-         if(ignorePart(srcPortType, srcPart)) continue;
+         if (ignorePart(srcPortType, srcPart))
+            continue;
 
          if (Constants.URI_STYLE_DOCUMENT == destOperation.getStyle())
          {
@@ -913,47 +902,49 @@ public class WSDL11Reader
     * @param srcBinding
     * @param srcWsdl
     */
-   private void preProcessSWAParts(Binding srcBinding, Definition srcWsdl) {
+   private void preProcessSWAParts(Binding srcBinding, Definition srcWsdl)
+   {
 
       Iterator opIt = srcBinding.getBindingOperations().iterator();
-      while(opIt.hasNext())
+      while (opIt.hasNext())
       {
          BindingOperation bindingOperation = (BindingOperation)opIt.next();
 
          // Input
-         if(bindingOperation.getBindingInput()!=null)
-            markSWAParts( bindingOperation.getBindingInput().getExtensibilityElements() , srcBinding, srcWsdl);
+         if (bindingOperation.getBindingInput() != null)
+            markSWAParts(bindingOperation.getBindingInput().getExtensibilityElements(), srcBinding, srcWsdl);
 
          // Output
-         if(bindingOperation.getBindingOutput()!=null)
-            markSWAParts( bindingOperation.getBindingOutput().getExtensibilityElements() , srcBinding, srcWsdl);
+         if (bindingOperation.getBindingOutput() != null)
+            markSWAParts(bindingOperation.getBindingOutput().getExtensibilityElements(), srcBinding, srcWsdl);
       }
    }
 
-   private void markSWAParts(List extensions, Binding srcBinding, Definition srcWsdl) {
+   private void markSWAParts(List extensions, Binding srcBinding, Definition srcWsdl)
+   {
       Iterator extIt = extensions.iterator();
-      while(extIt.hasNext())
+      while (extIt.hasNext())
       {
          Object o = extIt.next();
-         if(o instanceof MIMEMultipartRelated)
+         if (o instanceof MIMEMultipartRelated)
          {
 
             QName portTypeName = srcBinding.getPortType().getQName();
 
-            if(log.isTraceEnabled())
+            if (log.isTraceEnabled())
                log.trace("SWA found on portType" + portTypeName);
 
             MIMEMultipartRelated mrel = (MIMEMultipartRelated)o;
             Iterator mimePartIt = mrel.getMIMEParts().iterator();
-            while(mimePartIt.hasNext())
+            while (mimePartIt.hasNext())
             {
                MIMEPart mimePartDesc = (MIMEPart)mimePartIt.next();
                List mimePartExt = mimePartDesc.getExtensibilityElements();
-               if(! mimePartExt.isEmpty() && (mimePartExt.get(0) instanceof MIMEContent))
+               if (!mimePartExt.isEmpty() && (mimePartExt.get(0) instanceof MIMEContent))
                {
                   MIMEContent mimeContent = (MIMEContent)mimePartExt.get(0);
 
-                  if(skippedSWAParts.get(portTypeName)==null)
+                  if (skippedSWAParts.get(portTypeName) == null)
                      skippedSWAParts.put(portTypeName, new ArrayList<String>());
                   skippedSWAParts.get(portTypeName).add(mimeContent.getPart());
                }
@@ -1017,18 +1008,18 @@ public class WSDL11Reader
 
    private void processBindingOperation(Definition srcWsdl, WSDLBinding destBinding, String bindingStyle, BindingOperation srcBindingOperation) throws WSDLException
    {
-      String srcBindingName = srcBindingOperation.getName();
-      log.trace("processBindingOperation: " + srcBindingName);
+      String srcOperationName = srcBindingOperation.getName();
+      log.trace("processBindingOperation: " + srcOperationName);
 
       WSDLInterface destInterface = destBinding.getInterface();
       String namespaceURI = destInterface.getName().getNamespaceURI();
 
       WSDLBindingOperation destBindingOperation = new WSDLBindingOperation(destBinding);
-      QName refQName = new QName(namespaceURI, srcBindingName);
+      QName refQName = new QName(namespaceURI, srcOperationName);
       destBindingOperation.setRef(refQName);
       destBinding.addOperation(destBindingOperation);
 
-      String opName = srcBindingName;
+      String opName = srcOperationName;
       WSDLInterfaceOperation destIntfOperation = destInterface.getOperation(opName);
 
       // Process soap:operation@soapAction, soap:operation@style
@@ -1071,11 +1062,10 @@ public class WSDL11Reader
    }
 
    private void processBindingInput(Definition srcWsdl, WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation,
-                                    final BindingOperation srcBindingOperation, BindingInput srcBindingInput) throws WSDLException
+         final BindingOperation srcBindingOperation, BindingInput srcBindingInput) throws WSDLException
    {
       log.trace("processBindingInput");
 
-      QName soap11Body = new QName(Constants.NS_SOAP11, "body");
       List<ExtensibilityElement> extList = srcBindingInput.getExtensibilityElements();
       WSDLBindingOperationInput input = new WSDLBindingOperationInput(destBindingOperation);
       destBindingOperation.addInput(input);
@@ -1100,15 +1090,14 @@ public class WSDL11Reader
          }
       };
 
-      processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, soap11Body, extList, input, srcBindingOperation, cb);
+      processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, extList, input, srcBindingOperation, cb);
    }
 
    private void processBindingOutput(Definition srcWsdl, WSDLBindingOperation destBindingOperation, final WSDLInterfaceOperation destIntfOperation,
-                                     final BindingOperation srcBindingOperation, BindingOutput srcBindingOutput) throws WSDLException
+         final BindingOperation srcBindingOperation, BindingOutput srcBindingOutput) throws WSDLException
    {
       log.trace("processBindingInput");
 
-      QName soap11Body = new QName(Constants.NS_SOAP11, "body");
       List<ExtensibilityElement> extList = srcBindingOutput.getExtensibilityElements();
       WSDLBindingOperationOutput output = new WSDLBindingOperationOutput(destBindingOperation);
       destBindingOperation.addOutput(output);
@@ -1134,16 +1123,25 @@ public class WSDL11Reader
          }
       };
 
-      processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, soap11Body, extList, output, srcBindingOperation, cb);
+      processBindingReference(srcWsdl, destBindingOperation, destIntfOperation, extList, output, srcBindingOperation, cb);
    }
 
-   private void processBindingReference(Definition srcWsdl, WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation, QName soap11Body,
-                                        List<ExtensibilityElement> extList, WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback) throws WSDLException
+   private void processBindingReference(Definition srcWsdl, WSDLBindingOperation destBindingOperation, WSDLInterfaceOperation destIntfOperation, List<ExtensibilityElement> extList,
+         WSDLBindingMessageReference reference, BindingOperation srcBindingOperation, ReferenceCallback callback)
+         throws WSDLException
    {
       for (ExtensibilityElement extElement : extList)
       {
          QName elementType = extElement.getElementType();
-         if (soap11Body.equals(elementType) || SOAP12_BODY.equals(elementType))
+         if (extElement instanceof SOAPBody)
+         {
+            processEncodingStyle(extElement, destBindingOperation);
+            
+            // <soap:body use="encoded" namespace="http://MarshallTestW2J.org/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            String namespaceURI = ((SOAPBody)extElement).getNamespaceURI();
+            destBindingOperation.setNamespaceURI(namespaceURI);
+         }
+         else if (SOAP12_BODY.equals(elementType))
          {
             processEncodingStyle(extElement, destBindingOperation);
          }

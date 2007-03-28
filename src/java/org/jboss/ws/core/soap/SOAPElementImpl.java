@@ -638,7 +638,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       Iterator it = getChildElements();
       while (it.hasNext())
       {
-         SOAPElement el = (SOAPElement)it.next();
+         Node el = (Node)it.next();
          el.detachNode();
       }
    }

@@ -106,9 +106,6 @@ public class SOAPMessageDispatcher
          else
          {
             SOAPBodyElement soapBodyElement = (SOAPBodyElement)bodyChildren.next();
-            if (bodyChildren.hasNext())
-               throw new SOAPException("SOAPBody has more than on child element");
-
             Name soapName = soapBodyElement.getElementName();
             QName xmlElementName = new QName(soapName.getURI(), soapName.getLocalName());
             opMetaData = epMetaData.getOperation(xmlElementName);

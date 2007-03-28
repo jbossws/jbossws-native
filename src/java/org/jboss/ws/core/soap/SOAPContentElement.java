@@ -103,7 +103,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       this.soapContent = new DOMContent(this);
    }
 
-   ParameterMetaData getParamMetaData()
+   public ParameterMetaData getParamMetaData()
    {
       if (paramMetaData == null)
          throw new IllegalStateException("Parameter meta data not available");

@@ -294,6 +294,18 @@ public abstract class TypeMappingImpl implements TypeMapping
       return xmlType;
    }
 
+   /** Get the QNames that was registered last for this javaType */
+   public List<QName> getXMLTypes(Class javaType)
+   {
+      List<QName> xmlTypes = new ArrayList<QName>();
+
+      for (KeyPair kPair : getKeyPairs(null, javaType))
+      {
+         xmlTypes.add(kPair.getXmlType().toQName());
+      }
+      return xmlTypes;
+   }
+
    /**
     * Get the QName that was registered last for this javaType
     * @param javaType class for which XML Type is needed

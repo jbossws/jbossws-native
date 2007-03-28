@@ -25,6 +25,8 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -34,6 +36,7 @@ import javax.xml.transform.Result;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.NamedNodeMap;
@@ -48,24 +51,37 @@ import org.w3c.dom.Node;
  */
 public abstract class SerializerSupport implements Serializer
 {
+
+   public Result serialize(SOAPContentElement soapElement, SerializationContext serContext) throws BindingException
+   {
+      QName xmlName = soapElement.getElementQName();
+      QName xmlType = soapElement.getXmlType();
+      NamedNodeMap attributes = soapElement.getAttributes();
+      Object objectValue = soapElement.getObjectValue();
+      return serialize(xmlName, xmlType, objectValue, serContext, attributes);
+   }
+
    /** Serialize an object value to an XML fragment
     *
     * @param xmlName The root element name of the resulting fragment
     * @param xmlType The associated schema type
     * @param value The value to serialize
     * @param serContext The serialization context
-    * @param attributes TODO
     * @param attributes The attributes on this element
     */
    public abstract Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException;
 
-   protected Result stringToResult(String xmlFragment) {
+   protected Result stringToResult(String xmlFragment)
+   {
       BufferedStreamResult result = null;
-      try {
+      try
+      {
          ByteArrayInputStream in = new ByteArrayInputStream(xmlFragment.getBytes());
          result = new BufferedStreamResult();
          IOUtils.copyStream(result.getOutputStream(), in);
-      } catch (IOException e) {
+      }
+      catch (IOException e)
+      {
          WSException.rethrow(e);
       }
 
@@ -74,10 +90,12 @@ public abstract class SerializerSupport implements Serializer
 
    /** Wrap the value string in a XML fragment with the given name
     */
-   protected String wrapValueStr(QName xmlName, String valueStr, NamespaceRegistry nsRegistry, Set<String> additionalNamespaces, NamedNodeMap attributes, boolean normalize)
+   protected String wrapValueStr(QName xmlName, String valueStr, NamespaceRegistry nsRegistry, Set<String> nsExtras, NamedNodeMap attributes, boolean normalize)
    {
-      String nsURI = xmlName.getNamespaceURI();
+      String xmlNameURI = xmlName.getNamespaceURI();
       String localPart = xmlName.getLocalPart();
+      
+      Map<String, String> namespaces = new HashMap<String, String>();
 
       StringBuilder nsAttr = new StringBuilder("");
       if (attributes != null)
@@ -88,45 +106,62 @@ public abstract class SerializerSupport implements Serializer
             String attrName = attr.getNodeName();
             String attrValue = attr.getNodeValue();
             nsAttr.append(" " + attrName + "='" + attrValue + "'");
+            
+            if (attrName.startsWith("xmlns:"))
+            {
+               String prefix = attrName.substring(6);
+               namespaces.put(attrValue, prefix);
+            }
          }
       }
 
       String elName;
-      if (nsURI.length() > 0)
+      if (xmlNameURI.length() > 0)
       {
          xmlName = nsRegistry.registerQName(xmlName);
          String prefix = xmlName.getPrefix();
          elName = prefix + ":" + localPart;
-
-         nsAttr.append(" xmlns:" + prefix + "='" + nsURI + "'");
+         if (namespaces.get(xmlNameURI) == null || !prefix.equals(namespaces.get(xmlNameURI)))
+         {
+            nsAttr.append(" xmlns:" + prefix + "='" + xmlNameURI + "'");
+            namespaces.put(xmlNameURI, prefix);
+         }
       }
       else
       {
          elName = localPart;
       }
 
-      if (additionalNamespaces != null)
+      if (nsExtras != null)
       {
-         for (String ns : additionalNamespaces)
+         for (String nsURI : nsExtras)
          {
-            if (ns.equals(nsURI))
-               continue;
-
-            String prefix = nsRegistry.getPrefix(ns);
-            nsAttr.append(" xmlns:" + prefix + "='" + ns + "'");
+            String prefix = nsRegistry.getPrefix(nsURI);
+            if (namespaces.get(nsURI) == null || !prefix.equals(namespaces.get(nsURI)))
+            {
+               nsAttr.append(" xmlns:" + prefix + "='" + nsURI + "'");
+               namespaces.put(nsURI, prefix);
+            }
          }
       }
 
       String xmlFragment;
       if (valueStr == null)
       {
-         String xmlns = " xmlns:" + Constants.PREFIX_XSI + "='" + Constants.NS_SCHEMA_XSI + "'";
-         xmlFragment = "<" + elName + nsAttr + " " + Constants.PREFIX_XSI + ":nil='1'" + xmlns + "/>";
+         String xsins = "";
+         if (namespaces.get(Constants.NS_SCHEMA_XSI) == null || !Constants.PREFIX_XSI.equals(namespaces.get(xmlNameURI)))
+         {
+            xsins = " xmlns:" + Constants.PREFIX_XSI + "='" + Constants.NS_SCHEMA_XSI + "'";
+            namespaces.put(Constants.NS_SCHEMA_XSI, Constants.PREFIX_XSI);
+         }
+         
+         xmlFragment = "<" + elName + nsAttr + " " + Constants.PREFIX_XSI + ":nil='1'" + xsins + "/>";
       }
       else
       {
-         if(normalize)
+         if (normalize)
             valueStr = normalize(valueStr);
+         
          xmlFragment = "<" + elName + nsAttr + ">" + valueStr + "</" + elName + ">";
       }
 

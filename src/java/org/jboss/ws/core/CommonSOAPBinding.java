@@ -52,6 +52,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -168,8 +169,17 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
             if (log.isDebugEnabled())
                log.debug("Create RPC body element: " + opName);
+
             soapBodyElement = new SOAPBodyElementRpc(opName);
             soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
+
+            // Add soap encodingStyle
+            if (opMetaData.getUse() == Use.ENCODED)
+            {
+               String envURI = soapEnvelope.getNamespaceURI();
+               String envPrefix = soapEnvelope.getPrefix();
+               soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
+            }
          }
 
          for (ParameterMetaData paramMetaData : opMetaData.getInputParameters())
@@ -308,7 +318,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   else
                   {
                      SOAPElement element = paramMetaData.isInHeader() ? soapHeader : soapBodyElement;
-                     Object value = getParameterFromMessage(paramMetaData, element, false);
+                     SOAPContentElement value = getParameterFromMessage(paramMetaData, element, false);
                      epInv.setRequestParamValue(xmlName, value);
                   }
                }
@@ -380,7 +390,16 @@ public abstract class CommonSOAPBinding implements CommonBinding
             Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
             soapBodyElement = new SOAPBodyElementRpc(opName);
             soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
+
+            // Add soap encodingStyle
+            if (opMetaData.getUse() == Use.ENCODED)
+            {
+               String envURI = soapEnvelope.getNamespaceURI();
+               String envPrefix = soapEnvelope.getPrefix();
+               soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
+            }
          }
+
          // Add the return to the message
          ParameterMetaData retMetaData = opMetaData.getReturnParameter();
          if (retMetaData != null)
@@ -556,7 +575,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             }
             else
             {
-               Object value = getParameterFromMessage(retMetaData, soapElement, false);
+               SOAPContentElement value = getParameterFromMessage(retMetaData, soapElement, false);
                epInv.setReturnValue(value);
             }
          }
@@ -580,7 +599,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             else
             {
                SOAPElement element = paramMetaData.isInHeader() ? soapHeader : soapElement;
-               Object value = getParameterFromMessage(paramMetaData, element, false);
+               SOAPContentElement value = getParameterFromMessage(paramMetaData, element, false);
                epInv.setResponseParamValue(xmlName, value);
             }
          }
@@ -703,8 +722,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
       }
 
       Name soapName = new NameImpl(xmlName.getLocalPart(), xmlName.getPrefix(), xmlName.getNamespaceURI());
-      if (paramMetaData.isSOAPArrayParam())
-         soapName = new NameImpl("Array", Constants.PREFIX_SOAP11_ENC, Constants.URI_SOAP11_ENC);
 
       SOAPContentElement contentElement;
       if (soapElement instanceof SOAPHeader)
@@ -757,7 +774,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    }
 
    /** Unmarshall a message element and add it to the parameter list */
-   private Object getParameterFromMessage(ParameterMetaData paramMetaData, SOAPElement soapElement, boolean optional) throws BindingException
+   private SOAPContentElement getParameterFromMessage(ParameterMetaData paramMetaData, SOAPElement soapElement, boolean optional) throws BindingException
    {
       Name xmlName = new NameImpl(paramMetaData.getXmlName());
 

@@ -282,10 +282,10 @@ public class WSDL11Writer extends WSDLWriter
 
    private WSDLBindingMessageReference getBindingReference(WSDLInterfaceMessageReference reference)
    {
-      WSDLInterfaceOperation operation = reference.getWsdlOperation();
-      WSDLInterface wsdlInterface = operation.getWsdlInterface();
+      WSDLInterfaceOperation wsdlOperation = reference.getWsdlOperation();
+      WSDLInterface wsdlInterface = wsdlOperation.getWsdlInterface();
       WSDLBinding binding = wsdlInterface.getWsdlDefinitions().getBindingByInterfaceName(wsdlInterface.getName());
-      WSDLBindingOperation bindingOperation = binding.getOperationByRef(operation.getName());
+      WSDLBindingOperation bindingOperation = binding.getOperationByRef(wsdlOperation.getName());
       WSDLBindingMessageReference[] bindingReferences;
 
       if (reference instanceof WSDLInterfaceOperationInput)

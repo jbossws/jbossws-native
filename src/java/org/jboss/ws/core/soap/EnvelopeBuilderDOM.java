@@ -45,6 +45,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
@@ -209,6 +210,23 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             }
          }
       }
+      
+      // Process additional soap encoded body elements
+      boolean attachHRefElements =  Constants.URI_SOAP11_ENC.equals(soapEnv.getAttributeNS(envNS, "encodingStyle"));
+      attachHRefElements =  attachHRefElements || Constants.URI_SOAP11_ENC.equals(soapBody.getAttributeNS(envNS, "encodingStyle"));
+      attachHRefElements =  attachHRefElements && itBody.hasNext();
+      while(attachHRefElements && itBody.hasNext())
+      {
+         Element srcElement = (Element)itBody.next();
+         soapBody.addChildElement(soapFactory.createElement(srcElement, true));
+      }
+      
+      // Inline all attached href elements
+      if (attachHRefElements)
+      {
+         HRefInlineHandler inlineHandler = new HRefInlineHandler(soapBody);
+         inlineHandler.processHRefs();
+      }
 
       return soapEnv;
    }
@@ -218,7 +236,6 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       soapBody.removeContents();
       
       Element srcElement = (Element)domBodyElement;
-      registerNamespacesLocally(srcElement);
       
       QName beName = DOMUtils.getElementQName(domBodyElement);
       SOAPContentElement destElement = new SOAPBodyElementDoc(beName);
@@ -244,7 +261,6 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       while (itBodyElement.hasNext())
       {
          Element srcElement = (Element)itBodyElement.next();
-         registerNamespacesLocally(srcElement);
 
          Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
          SOAPContentElement destElement = new SOAPContentElement(name);
@@ -320,21 +336,5 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          throw new WSException("Cannot get root element from Source" + ex);
       }
       return child;
-   }
-   
-   /**
-    * Register globally available namespaces on element level.
-    * This is necessary to ensure that each xml fragment is valid.    
-    */
-   private void registerNamespacesLocally(Element srcElement)
-   {
-      if (srcElement.getPrefix() == null)
-      {
-         srcElement.setAttribute("xmlns", srcElement.getNamespaceURI());
-      }
-      else
-      {
-         srcElement.setAttribute("xmlns:" + srcElement.getPrefix(), srcElement.getNamespaceURI());
-      }
    }
 }

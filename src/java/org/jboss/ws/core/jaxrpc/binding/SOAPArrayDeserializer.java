@@ -52,75 +52,64 @@ public class SOAPArrayDeserializer extends DeserializerSupport
    // provide logging
    private static final Logger log = Logger.getLogger(SOAPArrayDeserializer.class);
 
-   private DeserializerSupport compDeserializer;
+   private DeserializerSupport componentDeserializer;
 
-   public SOAPArrayDeserializer() throws BindingException
+   public Object deserialize(QName xmlName, QName xmlType, Source source, SerializationContext serContext) throws BindingException
    {
-   }
+      log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
-   public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
-      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
-   }
-
-   /**
-    */
-   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
-   {
-      if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      Element soapElement = DOMUtils.sourceToElement(source);
       try
       {
          ParameterMetaData paramMetaData = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
-         QName compXmlType = paramMetaData.getSOAPArrayCompType();
-         QName compXmlName = paramMetaData.getXmlName();
 
-         Element arrayElement = DOMUtils.parse(xmlFragment);
-         int[] arrDims = getDimensionsFromAttribute(arrayElement);
-         Class compJavaType = getComponentTypeFromAttribute(arrayElement, serContext);
+         QName compXmlType = getComponentTypeFromAttribute(soapElement);
+         paramMetaData.setSOAPArrayCompType(compXmlType);
+
+         if (compXmlType == null)
+            throw new WSException("Cannot obtain component xmlType: " + paramMetaData.getPartName());
+
+         Class compJavaType = getJavaTypeForComponentType(compXmlType, serContext);
+
+         // Get the component type deserializer factory
+         log.debug("Get component deserializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
+
+         int[] arrDims = getDimensionsFromAttribute(soapElement);
          Object[] retArray = (Object[])Array.newInstance(compJavaType, arrDims);
 
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
-         if (compXmlType == null)
-         {
-            compXmlType = typeMapping.getXMLType(compJavaType);
-            paramMetaData.setSOAPArrayCompType(compXmlType);
-         }
-
-         if (compXmlType == null)
-            throw new WSException("Cannot obtain component xmlType for: " + compJavaType);
-
-         // Get the component type deserializer factory
-         if(log.isDebugEnabled()) log.debug("Get component deserializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
          DeserializerFactoryBase compDeserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(compJavaType, compXmlType);
          if (compDeserializerFactory == null)
          {
             log.warn("Cannot obtain component deserializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
             compDeserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(null, compXmlType);
          }
+
          if (compDeserializerFactory == null)
             throw new WSException("Cannot obtain component deserializer for: " + compXmlType);
 
          // Get the component type deserializer
-         compDeserializer = (DeserializerSupport)compDeserializerFactory.getDeserializer();
+         componentDeserializer = (DeserializerSupport)compDeserializerFactory.getDeserializer();
 
          if (arrDims.length < 1 || 2 < arrDims.length)
             throw new WSException("Unsupported array dimensions: " + Arrays.asList(arrDims));
 
-         Iterator it = DOMUtils.getChildElements(arrayElement);
+         Iterator it = DOMUtils.getChildElements(soapElement);
          if (arrDims.length == 1)
          {
             Object[] subArr = retArray;
-            deserializeMemberValues(compXmlName, compXmlType, serContext, it, subArr);
+            deserializeMemberValues(compXmlType, serContext, it, subArr);
          }
          if (arrDims.length == 2)
          {
             for (int i = 0; i < arrDims[0]; i++)
             {
                Object[] subArr = (Object[])retArray[i];
-               deserializeMemberValues(compXmlName, compXmlType, serContext, it, subArr);
+               deserializeMemberValues(compXmlType, serContext, it, subArr);
             }
          }
 
-         if(log.isDebugEnabled()) log.debug("deserialized: " + retArray.getClass().getName());
+         log.debug("deserialized: " + retArray.getClass().getName());
          return retArray;
       }
       catch (RuntimeException e)
@@ -133,8 +122,10 @@ public class SOAPArrayDeserializer extends DeserializerSupport
       }
    }
 
-   private void deserializeMemberValues(QName compXmlName, QName compXmlType, SerializationContext serContext, Iterator it, Object[] subArr) throws BindingException
+   private void deserializeMemberValues(QName compXmlType, SerializationContext serContext, Iterator it, Object[] subArr) throws BindingException
    {
+      QName compXmlName = new QName("item");
+
       int dim = subArr.length;
       for (int i = 0; i < dim; i++)
       {
@@ -142,8 +133,8 @@ public class SOAPArrayDeserializer extends DeserializerSupport
          if (it.hasNext())
          {
             Element childElement = (Element)it.next();
-            Source compXMLFragment = new DOMSource(childElement);
-            compValue = compDeserializer.deserialize(compXmlName, compXmlType, compXMLFragment, serContext);
+            Source source = new DOMSource(childElement);
+            compValue = componentDeserializer.deserialize(compXmlName, compXmlType, source, serContext);
             compValue = JavaUtils.getWrapperValueArray(compValue);
          }
          subArr[i] = compValue;
@@ -169,7 +160,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
       return arrDims;
    }
 
-   private Class getComponentTypeFromAttribute(Element arrayElement, SerializationContext serContext)
+   private QName getComponentTypeFromAttribute(Element arrayElement)
    {
       QName attrQName = new QName(Constants.URI_SOAP11_ENC, "arrayType");
       QName arrayType = DOMUtils.getAttributeValueAsQName(arrayElement, attrQName);
@@ -181,6 +172,11 @@ public class SOAPArrayDeserializer extends DeserializerSupport
       int dimIndex = localPart.indexOf("[");
       QName compXmlType = new QName(nsURI, localPart.substring(0, dimIndex));
 
+      return compXmlType;
+   }
+
+   private Class getJavaTypeForComponentType(QName compXmlType, SerializationContext serContext)
+   {
       TypeMappingImpl typeMapping = serContext.getTypeMapping();
       Class javaType = typeMapping.getJavaType(compXmlType);
       if (javaType == null)

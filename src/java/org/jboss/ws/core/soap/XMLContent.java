@@ -37,6 +37,7 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -52,6 +53,7 @@ import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -125,9 +127,10 @@ class XMLContent extends SOAPContent
 
       SerializationContext serContext = msgContext.getSerializationContext();
       ParameterMetaData pmd = container.getParamMetaData();
+      OperationMetaData opMetaData = pmd.getOperationMetaData();
       serContext.setProperty(ParameterMetaData.class.getName(), pmd);
       serContext.setJavaType(javaType);
-      List<Class> registeredTypes = pmd.getOperationMetaData().getEndpointMetaData().getRegisteredTypes();
+      List<Class> registeredTypes = opMetaData.getEndpointMetaData().getRegisteredTypes();
       serContext.setProperty(SerializationContext.CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
 
       try
@@ -137,7 +140,7 @@ class XMLContent extends SOAPContent
          DeserializerFactoryBase deserializerFactory = getDeserializerFactory(typeMapping, javaType, xmlType);
          DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
 
-         obj = des.deserialize(container.getElementQName(), xmlType, xmlFragment.getSource(), serContext);
+         obj = des.deserialize(container, serContext);
          if (obj != null)
          {
             Class objType = obj.getClass();
@@ -254,7 +257,10 @@ class XMLContent extends SOAPContent
     */
    private void expandContainerChildren()
    {
+      // Do nothing if the source of the XMLFragment is the container itself
       Element domElement = xmlFragment.toElement();
+      if (domElement == container)
+         return;
 
       String rootLocalName = domElement.getLocalName();
       String rootPrefix = domElement.getPrefix();
@@ -268,7 +274,7 @@ class XMLContent extends SOAPContent
 
       // Remove all child nodes
       container.removeContents();
-      
+
       // Copy attributes
       DOMUtils.copyAttributes(container, domElement);
 

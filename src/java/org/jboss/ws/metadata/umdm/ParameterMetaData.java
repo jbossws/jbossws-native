@@ -40,8 +40,8 @@ import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
+import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
@@ -367,9 +367,15 @@ public class ParameterMetaData
       return soapArrayCompType;
    }
 
-   public void setSOAPArrayCompType(QName xmlType)
+   public void setSOAPArrayCompType(QName compXmlType)
    {
-      this.soapArrayCompType = xmlType;
+      if (compXmlType != null && !compXmlType.equals(soapArrayCompType))
+      {
+         String logmsg = "SOAPArrayCompType: [xmlType=" + xmlType + ",compType=" + compXmlType + "]";
+         log.debug((soapArrayCompType == null ? "set" : "reset") + logmsg);
+      }
+      
+      this.soapArrayCompType = compXmlType;
    }
 
 
@@ -548,13 +554,14 @@ public class ParameterMetaData
       buffer.append("\n xmlName=" + getXmlName());
       buffer.append("\n partName=" + getPartName());
       buffer.append("\n xmlType=" + getXmlType());
+      
+      if (soapArrayParam)
+         buffer.append("\n soapArrayCompType=" + soapArrayCompType);
+      
       buffer.append("\n javaType=" + getJavaTypeName());
       buffer.append("\n mode=" + getMode());
       buffer.append("\n inHeader=" + isInHeader());
       buffer.append("\n index=" + index);
-
-      if (soapArrayParam)
-         buffer.append("\n soapArrayCompType=" + soapArrayCompType);
 
       if (isSwA())
       {
@@ -562,14 +569,14 @@ public class ParameterMetaData
          buffer.append("\n mimeTypes=" + getMimeTypes());
       }
 
-      if (wrappedParameters != null)
-         buffer.append("\n wrappedParameters=" + wrappedParameters);
-
       if (isXOP())
       {
          buffer.append("\n isXOP=" + isXOP());
          buffer.append("\n mimeTypes=" + getMimeTypes());
       }
+
+      if (wrappedParameters != null)
+         buffer.append("\n wrappedParameters=" + wrappedParameters);
 
       return buffer.toString();
    }

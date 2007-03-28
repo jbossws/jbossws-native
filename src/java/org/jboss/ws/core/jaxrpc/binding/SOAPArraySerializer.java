@@ -30,6 +30,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.soap.NameImpl;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -46,10 +48,10 @@ public class SOAPArraySerializer extends SerializerSupport
    // provide logging
    private static final Logger log = Logger.getLogger(SOAPArraySerializer.class);
 
+   private ParameterMetaData paramMetaData;
    private SerializerSupport compSerializer;
    private NullValueSerializer nullSerializer;
    private boolean isArrayComponentType;
-   private boolean xsiNamespaceInserted;
    private StringBuilder buffer;
 
    public SOAPArraySerializer() throws BindingException
@@ -57,16 +59,26 @@ public class SOAPArraySerializer extends SerializerSupport
       nullSerializer = new NullValueSerializer();
    }
 
-   /**
-    */
+   public Result serialize(SOAPContentElement soapElement, SerializationContext serContext) throws BindingException
+   {
+      paramMetaData = soapElement.getParamMetaData();
+      QName xmlName = soapElement.getElementQName();
+      QName xmlType = soapElement.getXmlType();
+      Object value = soapElement.getObjectValue();
+      NamedNodeMap attributes = soapElement.getAttributes();
+      return serialize(xmlName, xmlType, value, serContext, attributes);
+   }
+
    public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + ",valueType=" + value.getClass().getName() + "]");
+      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + ",valueType=" + value.getClass().getName() + "]");
       try
       {
-         ParameterMetaData paramMetaData = (ParameterMetaData)serContext.getProperty(ParameterMetaData.class.getName());
-         QName compXmlType = paramMetaData.getSOAPArrayCompType();
+         if (paramMetaData == null)
+            throw new IllegalStateException("Use serialize(SOAPContenentElement, SerializationContext)");
+
          QName compXmlName = paramMetaData.getXmlName();
+         QName compXmlType = paramMetaData.getSOAPArrayCompType();
          Class javaType = paramMetaData.getJavaType();
 
          Class compJavaType = javaType.getComponentType();
@@ -88,7 +100,7 @@ public class SOAPArraySerializer extends SerializerSupport
             throw new WSException("Cannot obtain component xmlType for: " + compJavaType);
 
          // Get the component type serializer factory
-         if(log.isDebugEnabled()) log.debug("Get component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
+         log.debug("Get component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
          SerializerFactoryBase compSerializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(compJavaType, compXmlType);
          if (compSerializerFactory == null)
          {
@@ -105,36 +117,42 @@ public class SOAPArraySerializer extends SerializerSupport
          if (JavaUtils.isPrimitive(value.getClass()))
             value = JavaUtils.getWrapperValueArray(value);
 
-         buffer = new StringBuilder("<" + Constants.PREFIX_SOAP11_ENC + ":Array "+
-            "xmlns:"+Constants.PREFIX_SOAP11_ENC+"='http://schemas.xmlsoap.org/soap/encoding/' ");
+         String nodeName = new NameImpl(compXmlName).getQualifiedName();
 
-         if (value instanceof Object[])
-         {
-            Object[] objArr = (Object[])value;
-            String arrayDim = "" + objArr.length;
+         buffer = new StringBuilder("<" + nodeName + " xmlns:" + Constants.PREFIX_SOAP11_ENC + "='" + Constants.URI_SOAP11_ENC + "' ");
 
-            // Get multiple array dimension
-            Object[] subArr = (Object[])value;
-            while (isArrayComponentType == false && subArr.length > 0 && subArr[0] instanceof Object[])
-            {
-               subArr = (Object[])subArr[0];
-               arrayDim += "," + subArr.length;
-            }
-
-            compXmlType = serContext.getNamespaceRegistry().registerQName(compXmlType);
-            String arrayType = Constants.PREFIX_SOAP11_ENC + ":arrayType='" + compXmlType.getPrefix() + ":" + compXmlType.getLocalPart() + "[" + arrayDim + "]'";
-            String compns = " xmlns:" + compXmlType.getPrefix() + "='" + compXmlType.getNamespaceURI() + "'";
-            buffer.append(arrayType + compns + ">");
-
-            serializeArrayComponents(compXmlName, compXmlType, serContext, objArr);
-         }
-         else
-         {
+         if (!(value instanceof Object[]))
             throw new WSException("Unsupported array type: " + javaType);
-         }
-         buffer.append("</" + Constants.PREFIX_SOAP11_ENC + ":Array>");
 
-         if(log.isDebugEnabled()) log.debug("serialized: " + buffer);
+         Object[] objArr = (Object[])value;
+         String arrayDim = "" + objArr.length;
+
+         // Get multiple array dimension
+         Object[] subArr = (Object[])value;
+         while (isArrayComponentType == false && subArr.length > 0 && subArr[0] instanceof Object[])
+         {
+            subArr = (Object[])subArr[0];
+            arrayDim += "," + subArr.length;
+         }
+
+         compXmlType = serContext.getNamespaceRegistry().registerQName(compXmlType);
+         compXmlName = serContext.getNamespaceRegistry().registerQName(compXmlName);
+         String arrayType = Constants.PREFIX_SOAP11_ENC + ":arrayType='" + compXmlType.getPrefix() + ":" + compXmlType.getLocalPart() + "[" + arrayDim + "]'";
+
+         buffer.append(arrayType);
+         buffer.append(" xmlns:" + Constants.PREFIX_XSI + "='" + Constants.NS_SCHEMA_XSI + "'");
+         if (compXmlType.getNamespaceURI().equals(Constants.URI_SOAP11_ENC) == false)
+            buffer.append(" xmlns:" + compXmlType.getPrefix() + "='" + compXmlType.getNamespaceURI() + "'");
+         if (compXmlName.getNamespaceURI().length() > 0 && compXmlName.getNamespaceURI().equals(compXmlType.getNamespaceURI()) == false)
+            buffer.append(" xmlns:" + compXmlName.getPrefix() + "='" + compXmlName.getNamespaceURI() + "'");
+
+         buffer.append(">");
+
+         serializeArrayComponents(compXmlName, compXmlType, serContext, objArr);
+
+         buffer.append("</" + nodeName + ">");
+
+         log.debug("serialized: " + buffer);
          return stringToResult(buffer.toString());
       }
       catch (RuntimeException e)
@@ -147,13 +165,13 @@ public class SOAPArraySerializer extends SerializerSupport
       }
    }
 
-   private void serializeArrayComponents(QName compXmlName, QName compXmlType, SerializationContext serContext, Object[] objArr) throws BindingException
+   private void serializeArrayComponents(QName xmlName, QName xmlType, SerializationContext serContext, Object[] objArr) throws BindingException
    {
       for (Object compValue : objArr)
       {
          if (isArrayComponentType == false && compValue instanceof Object[])
          {
-            serializeArrayComponents(compXmlName, compXmlType, serContext, (Object[])compValue);
+            serializeArrayComponents(xmlName, xmlType, serContext, (Object[])compValue);
          }
          else
          {
@@ -163,15 +181,9 @@ public class SOAPArraySerializer extends SerializerSupport
             if (compValue == null)
             {
                ser = nullSerializer;
-               if (xsiNamespaceInserted == false)
-               {
-                  xsiNamespaceInserted = true;
-                  int insIndex = ("<" + Constants.PREFIX_SOAP11_ENC + ":Array ").length();
-                  buffer.insert(insIndex, "xmlns:" + Constants.PREFIX_XSI + "='" + Constants.NS_SCHEMA_XSI + "' ");
-               }
             }
 
-            Result result = ser.serialize(compXmlName, compXmlType, compValue, serContext, null);
+            Result result = ser.serialize(new QName("item"), xmlType, compValue, serContext, null);
             XMLFragment fragment = new XMLFragment(result);
             buffer.append(fragment.toStringFragment());
          }

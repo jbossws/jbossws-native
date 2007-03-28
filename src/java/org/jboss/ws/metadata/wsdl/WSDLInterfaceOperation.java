@@ -257,9 +257,6 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
          return null;
 
       WSDLBindingOperation bindingOperation = binding.getOperationByRef(getName());
-      if (bindingOperation == null)
-         return null;
-
       return bindingOperation;
    }
 

@@ -37,9 +37,11 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.activation.DataHandler;
@@ -47,8 +49,10 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -148,13 +152,13 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
    {
       if (host == null || host.trim().length() == 0)
       {
-         if(log.isDebugEnabled()) log.debug("Using undefined host: " + UNDEFINED_HOSTNAME);
+         log.debug("Using undefined host: " + UNDEFINED_HOSTNAME);
          host = UNDEFINED_HOSTNAME;
       }
       if ("0.0.0.0".equals(host))
       {
          InetAddress localHost = InetAddress.getLocalHost();
-         if(log.isDebugEnabled()) log.debug("Using local host: " + localHost.getHostName());
+         log.debug("Using local host: " + localHost.getHostName());
          host = localHost.getHostName();
       }
       this.webServiceHost = host;
@@ -394,6 +398,8 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public void processSOAPRequest(ObjectName sepID, InputStream inStream, OutputStream outStream, EndpointContext context) throws Exception
    {
+      final String SESSION_COOKIES = "org.jboss.ws.cookies";
+      
       ServiceEndpoint wsEndpoint = getServiceEndpointByID(sepID);
       if (wsEndpoint == null)
          throw new WSException("Cannot obtain endpoint for: " + sepID);
@@ -402,12 +408,32 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       ServerEndpointMetaData sepMetaData = wsEndpoint.getServiceEndpointInfo().getServerEndpointMetaData();
       Type type = sepMetaData.getType();
 
-      PropertyCallback httpSessionCallback = new HttpSessionPropertyCallback(context);
       ServletContext servletContext = context.getServletContext();
       HttpServletRequest httpRequest = context.getHttpServletRequest();
       HttpServletResponse httpResponse = context.getHttpServletResponse();
       ServletHeaderSource headerSource = new ServletHeaderSource(httpRequest, httpResponse);
-
+      
+      // Default to does not create a new HTTPSession 
+      Object lasySession = new HttpSessionPropertyCallback(context);
+      
+      Cookie[] cookies = httpRequest.getCookies();
+      if (cookies != null)
+      {
+         HttpSession httpSession = httpRequest.getSession(true);
+         lasySession = httpSession;
+         
+         Set<Cookie> sessionCoookies = (Set<Cookie>)httpSession.getAttribute(SESSION_COOKIES);
+         if (sessionCoookies == null)
+         {
+            sessionCoookies = new HashSet<Cookie>();
+            httpSession.setAttribute(SESSION_COOKIES, sessionCoookies);
+         }
+         for (Cookie cookie : cookies)
+         {
+            sessionCoookies.add(cookie);
+         }
+      }
+      
       // Associate a message context with the current thread
       CommonMessageContext msgContext;
       if (type == EndpointMetaData.Type.JAXRPC)
@@ -416,7 +442,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
          msgContext.put(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
          msgContext.put(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
-         msgContext.put(MessageContextJAXRPC.SERVLET_SESSION, httpSessionCallback);
+         msgContext.put(MessageContextJAXRPC.SERVLET_SESSION, lasySession);
       }
       else
       {
@@ -466,6 +492,15 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
             httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
          }
 
+         // Copy the cookies to the response
+         HttpSession httpSession = httpRequest.getSession();
+         Set<Cookie> sessionCoookies = httpSession != null ? (Set<Cookie>)httpSession.getAttribute(SESSION_COOKIES) : null;
+         if (sessionCoookies != null)
+         {
+            for (Cookie cookie : sessionCoookies)
+               httpResponse.addCookie(cookie);
+         }
+         
          sendResponse(outStream, msgContext, isFault);
       }
       finally
@@ -497,7 +532,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       }
       if (wsaTo != null)
       {
-         if(log.isDebugEnabled()) log.debug("Sending response to addressing destination: " + wsaTo);
+         log.debug("Sending response to addressing destination: " + wsaTo);
          new SOAPConnectionImpl().callOneWay(resMessage, wsaTo);
       }
       else
@@ -510,7 +545,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
     */
    public String processSOAPRequest(ObjectName sepID, String inMessage) throws Exception
    {
-      if(log.isDebugEnabled()) log.debug("processSOAPRequest: " + sepID);
+      log.debug("processSOAPRequest: " + sepID);
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(inMessage.getBytes("UTF-8"));
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
@@ -620,7 +655,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       // Register the endpoint with the MBeanServer
       registry.put(sepID, wsEndpoint);
 
-      if(log.isDebugEnabled()) log.debug("WebService created: " + sepID);
+      log.debug("WebService created: " + sepID);
    }
 
    /** Start a service endpoint
@@ -671,7 +706,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       registry.remove(sepID);
 
       ServiceEndpointInfo seInfo = wsEndpoint.getServiceEndpointInfo();
-      if(log.isDebugEnabled()) log.debug("WebService destroyed: " + seInfo.getServerEndpointMetaData().getEndpointAddress());
+      log.debug("WebService destroyed: " + seInfo.getServerEndpointMetaData().getEndpointAddress());
    }
 
    public void create() throws Exception
@@ -686,7 +721,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public void destroy() throws Exception
    {
-      if(log.isDebugEnabled()) log.debug("Destroy service endpoint manager");
+      log.debug("Destroy service endpoint manager");
       MBeanServer server = getJMXServer();
       if (server != null)
       {

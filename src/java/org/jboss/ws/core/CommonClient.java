@@ -283,6 +283,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
 
+         // Handlers might have replaced the message
+         reqMessage = msgContext.getSOAPMessage();
+         
          if (handlerPass)
          {
             String targetAddress = getTargetEndpointAddress();

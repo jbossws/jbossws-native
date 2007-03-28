@@ -51,6 +51,7 @@ public class JBossWSEntityResolver extends JBossEntityResolver
       registerEntity("http://java.sun.com/xml/ns/javaee", "schema/javaee_web_services_1_2.xsd");
       registerEntity("http://www.w3.org/2005/08/addressing", "schema/ws-addr.xsd");
       registerEntity("http://schemas.xmlsoap.org/ws/2004/08/eventing", "eventing.xsd");
+      registerEntity("http://www.w3.org/2002/06/soap-encoding", "soap-encoding_200206.xsd");
       registerEntity("http://schemas.xmlsoap.org/soap/encoding/", "soap-encoding_1_1.xsd");
       registerEntity("http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd", "j2ee_web_services_client_1_1.xsd");
       registerEntity("http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd", "j2ee_web_services_1_1.xsd");

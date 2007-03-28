@@ -63,16 +63,16 @@ public class FaultMetaData
    private QName xmlType;
    private String javaTypeName;
    private String faultBeanName;
-   private Class<? extends Exception> javaType;
-   private Class<?> faultBean;
+   private Class javaType;
+   private Class faultBean;
 
    private Method faultInfoMethod;
-   private Constructor<? extends Exception> serviceExceptionConstructor;
+   private Constructor serviceExceptionConstructor;
    private Method[] serviceExceptionGetters;
 
    private WrappedParameter[] faultBeanProperties;
 
-   private Class<?>[] propertyTypes;
+   private Class[] propertyTypes;
 
    public FaultMetaData(OperationMetaData operation, QName xmlName, QName xmlType, String javaTypeName)
    {
@@ -123,7 +123,7 @@ public class FaultMetaData
    /** Load the java type.
     *  It should only be cached during eager initialization.
     */
-   public Class<? extends Exception> getJavaType()
+   public Class getJavaType()
    {
       if (javaType != null)
          return javaType;
@@ -134,8 +134,9 @@ public class FaultMetaData
       try
       {
          ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
-         Class<?> genericType = JavaUtils.loadJavaType(javaTypeName, loader);
-         Class<? extends Exception> exceptionType = genericType.asSubclass(Exception.class);
+         Class exceptionType = JavaUtils.loadJavaType(javaTypeName, loader);
+         if (Exception.class.isAssignableFrom(exceptionType) == false)
+            throw new IllegalStateException("Is not assignable to exception: " + exceptionType);
 
          if (opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData().isEagerInitialized())
          {
@@ -258,7 +259,7 @@ public class FaultMetaData
 
          String[] propertyNames = xmlType.propOrder();
          int propertyCount = propertyNames.length;
-         propertyTypes = new Class<?>[propertyCount];
+         propertyTypes = new Class[propertyCount];
          faultBeanProperties = new WrappedParameter[propertyCount];
          serviceExceptionGetters = new Method[propertyCount];
 
@@ -269,7 +270,7 @@ public class FaultMetaData
             try
             {
                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(propertyName, faultBean);
-               Class<?> propertyType = propertyDescriptor.getPropertyType();
+               Class propertyType = propertyDescriptor.getPropertyType();
 
                WrappedParameter faultBeanProperty = new WrappedParameter(null, propertyType.getName(), propertyName, i);
                faultBeanProperty.setAccessor(accessorFactory.create(faultBeanProperty));
@@ -310,11 +311,11 @@ public class FaultMetaData
       }
    }
 
-   private AccessorFactory getAccessorFactory(Class<?> faultBean)
+   private AccessorFactory getAccessorFactory(Class faultBean)
    {
       // This should catch all cases due to the constraints that JAX-WS puts on the fault bean
       // However, if issues arrise then switch this to a full jaxb reflection library
-      XmlAccessorType type = faultBean.getAnnotation(XmlAccessorType.class);
+      XmlAccessorType type = (XmlAccessorType)faultBean.getAnnotation(XmlAccessorType.class);
       if (type != null && type.value() == XmlAccessType.FIELD)
          return ReflectiveFieldAccessor.FACTORY_CREATOR.create(this);
 
@@ -380,7 +381,7 @@ public class FaultMetaData
           * (i.e. does it match the pattern in JAX-WS 2.5)? */
          if (faultInfoMethod != null)
          {
-            serviceException = serviceExceptionConstructor.newInstance(message, faultBean);
+            serviceException = (Exception)serviceExceptionConstructor.newInstance(message, faultBean);
          }
          else
          {
@@ -395,7 +396,7 @@ public class FaultMetaData
                propertyValues[i] = faultBeanProperties[i].accessor().get(faultBean);
 
             log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
-            serviceException = serviceExceptionConstructor.newInstance(propertyValues);
+            serviceException = (Exception)serviceExceptionConstructor.newInstance(propertyValues);
          }
       }
       catch (InstantiationException e)

@@ -123,7 +123,6 @@ public class ObjectContent extends SOAPContent {
    {
       QName xmlType = container.getXmlType();
       Class javaType = container.getJavaType();
-      QName xmlName = container.getElementQName();
 
       log.debug("getXMLFragment from Object [xmlType=" + xmlType + ",javaType=" + javaType + "]");
 
@@ -132,7 +131,6 @@ public class ObjectContent extends SOAPContent {
          throw new WSException("MessageContext not available");
 
       SerializationContext serContext = msgContext.getSerializationContext();
-      serContext.setProperty(ParameterMetaData.class.getName(), container.getParamMetaData());
       serContext.setJavaType(javaType);
 
       TypeMappingImpl typeMapping = serContext.getTypeMapping();
@@ -150,7 +148,8 @@ public class ObjectContent extends SOAPContent {
             ser = new NullValueSerializer();
          }
 
-         Result result = ser.serialize(xmlName, xmlType, getObjectValue(), serContext, null);
+         Result result = ser.serialize(container, serContext);
+         
          xmlFragment = new XMLFragment(result);
          log.debug("xmlFragment: " + xmlFragment);
       }

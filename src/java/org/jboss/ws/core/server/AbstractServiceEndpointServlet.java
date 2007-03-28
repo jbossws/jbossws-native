@@ -106,7 +106,7 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
 
    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
    {
-      if(log.isDebugEnabled()) log.debug("doPost: " + req.getRequestURI());
+      log.debug("doPost: " + req.getRequestURI());
 
       try
       {

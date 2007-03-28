@@ -57,6 +57,8 @@ public class WSDLBindingOperation implements Comparable, Serializable
    private String encodingStyle = Constants.URI_LITERAL_ENC;
    /** WSDL-1.1, soapAction attribute from the soap:operation element */
    private String soapAction;
+   /** WSDL-1.1, namespaceURI attribute from the soap:body element */
+   private String namespaceURI;
    
    /** A OPTIONAL set of Binding Message Reference components */
    private List<WSDLBindingOperationInput> inputs = new ArrayList<WSDLBindingOperationInput>();
@@ -102,6 +104,16 @@ public class WSDLBindingOperation implements Comparable, Serializable
    public void setSOAPAction(String soapAction)
    {
       this.soapAction = soapAction;
+   }
+
+   public String getNamespaceURI()
+   {
+      return namespaceURI;
+   }
+
+   public void setNamespaceURI(String namespaceURI)
+   {
+      this.namespaceURI = namespaceURI;
    }
 
    public WSDLBindingOperationInput[] getInputs()

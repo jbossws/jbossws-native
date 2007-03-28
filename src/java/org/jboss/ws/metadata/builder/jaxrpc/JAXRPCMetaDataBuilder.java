@@ -37,6 +37,7 @@ import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.jaxrpc.EncodedTypeMapping;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
@@ -63,7 +64,6 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
@@ -160,6 +160,16 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          QName opQName = wsdlOperation.getName();
          String opName = opQName.getLocalPart();
 
+         WSDLBindingOperation wsdlBindingOperation = wsdlOperation.getBindingOperation();
+         if (wsdlBindingOperation == null)
+            log.warn("Could not locate binding operation for:" + opQName);
+
+         // Change operation according namespace defined on binding 
+         // <soap:body use="encoded" namespace="http://MarshallTestW2J.org/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+         String namespaceURI = wsdlBindingOperation.getNamespaceURI();
+         if (namespaceURI != null)
+            opQName = new QName(namespaceURI, opName);
+
          // Set java method name
          String javaName = opName.substring(0, 1).toLowerCase() + opName.substring(1);
          ServiceEndpointMethodMapping seiMethodMapping = null;
@@ -186,8 +196,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             opMetaData.setOneWay(true);
 
          // Set the operation SOAPAction
-         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
-         WSDLBindingOperation wsdlBindingOperation = wsdlBinding.getOperationByRef(opQName);
          if (wsdlBindingOperation != null)
             opMetaData.setSOAPAction(wsdlBindingOperation.getSOAPAction());
 
@@ -214,7 +222,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       }
    }
 
-   private ParameterMetaData buildInputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, String partName, QName xmlName, QName xmlType, int pos, boolean optional)
+   private ParameterMetaData buildInputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping,
+         TypeMappingImpl typeMapping, String partName, QName xmlName, QName xmlType, int pos, boolean optional)
    {
       WSDLRPCSignatureItem item = wsdlOperation.getRpcSignatureitem(partName);
       if (item != null)
@@ -276,7 +285,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       return inMetaData;
    }
 
-   private ParameterMetaData buildOutputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, int pos, String partName, QName xmlName, QName xmlType, TypeMappingImpl typeMapping, boolean optional)
+   private ParameterMetaData buildOutputParameter(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping,
+         int pos, String partName, QName xmlName, QName xmlType, TypeMappingImpl typeMapping, boolean optional)
    {
       // Default is first listed output
       boolean hasReturnMapping = opMetaData.getReturnParameter() == null;
@@ -361,10 +371,12 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          }
       }
 
+      setupSOAPArrayParameter(outMetaData);
       return outMetaData;
    }
 
-   private int processBindingParameters(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, WSDLBindingOperation bindingOperation, int wsdlPosition)
+   private int processBindingParameters(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping,
+         TypeMappingImpl typeMapping, WSDLBindingOperation bindingOperation, int wsdlPosition)
    {
       WSDLBindingOperationInput bindingInput = bindingOperation.getInputs()[0];
       for (WSDLSOAPHeader header : bindingInput.getSoapHeaders())
@@ -373,7 +385,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          QName xmlType = lookupSchemaType(wsdlOperation, xmlName);
          String partName = header.getPartName();
 
-         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, !header.isIncludeInSignature());
+         ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, !header
+               .isIncludeInSignature());
          if (pmd != null)
             pmd.setInHeader(true);
       }
@@ -391,7 +404,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       return wsdlPosition;
    }
 
-   private int processBindingOutputParameters(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, WSDLBindingOperation bindingOperation, int wsdlPosition)
+   private int processBindingOutputParameters(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping,
+         TypeMappingImpl typeMapping, WSDLBindingOperation bindingOperation, int wsdlPosition)
    {
       WSDLBindingOperationOutput bindingOutput = bindingOperation.getOutputs()[0];
       for (WSDLSOAPHeader header : bindingOutput.getSoapHeaders())
@@ -408,7 +422,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          {
             QName xmlType = lookupSchemaType(wsdlOperation, xmlName);
 
-            ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping, !header.isIncludeInSignature());
+            ParameterMetaData pmd = buildOutputParameter(opMetaData, wsdlOperation, seiMethodMapping, wsdlPosition, partName, xmlName, xmlType, typeMapping, !header
+                  .isIncludeInSignature());
             if (pmd != null)
             {
                pmd.setInHeader(true);
@@ -469,7 +484,17 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             if (xmlTypeLocalPart.indexOf("ArrayOfArrayOf") >= 0)
                compJavaType = compJavaType.getComponentType();
 
-            QName compXMLType = new LiteralTypeMapping().getXMLType(compJavaType);
+            boolean isSoapEnc = xmlTypeLocalPart.toLowerCase().indexOf("soapenc") > 0;
+            TypeMappingImpl typeMapping = isSoapEnc ? new EncodedTypeMapping() : new LiteralTypeMapping();
+            QName compXMLType = typeMapping.getXMLType(compJavaType);
+
+            if (compXMLType != null)
+            {
+               boolean isBase64 = compXMLType.getLocalPart().startsWith("base64");
+               if (isBase64 && xmlTypeLocalPart.toLowerCase().indexOf("hex") > 0)
+                  compXMLType = isSoapEnc ? Constants.TYPE_SOAP11_HEXBINARY : Constants.TYPE_LITERAL_HEXBINARY;
+            }
+            
             paramMetaData.setSOAPArrayCompType(compXMLType);
          }
          catch (ClassNotFoundException e)
@@ -490,17 +515,17 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       String ns = xmlType.getNamespaceURI() != null ? xmlType.getNamespaceURI() : "";
       XSTypeDefinition xsType = schemaModel.getTypeDefinition(localPart, ns);
       XOPScanner scanner = new XOPScanner();
-      if(scanner.findXOPTypeDef(xsType)!=null | (localPart.equals("base64Binary")&&ns.equals(Constants.NS_SCHEMA_XSD)))
+      if (scanner.findXOPTypeDef(xsType) != null | (localPart.equals("base64Binary") && ns.equals(Constants.NS_SCHEMA_XSD)))
       {
          // FIXME: read the xmime:contentType from the element declaration
          // See SchemaUtils#findXOPTypeDef(XSTypeDefinition typeDef) for details
 
          /*
-         FIXME: the classloader is not set yet
-         paramMetaData.setXopContentType(
-             MimeUtils.resolveMimeType(paramMetaData.getJavaType())
-         );
-         */
+          FIXME: the classloader is not set yet
+          paramMetaData.setXopContentType(
+          MimeUtils.resolveMimeType(paramMetaData.getJavaType())
+          );
+          */
 
          paramMetaData.setXOP(true);
 
@@ -581,7 +606,9 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       }
    }
 
-   private int processDocElement(OperationMetaData operation, WSDLInterfaceOperation wsdlOperation, WSDLBindingOperation bindingOperation, ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, List<WrappedParameter> wrappedParameters, List<WrappedParameter> wrappedResponseParameters)
+   private int processDocElement(OperationMetaData operation, WSDLInterfaceOperation wsdlOperation, WSDLBindingOperation bindingOperation,
+         ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, List<WrappedParameter> wrappedParameters,
+         List<WrappedParameter> wrappedResponseParameters)
    {
       WSDLInterfaceOperationInput input = wsdlOperation.getInputs()[0];
       WSDLBindingOperationInput bindingInput = bindingOperation.getInputs()[0];
@@ -606,7 +633,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       ParameterMetaData inMetaData = new ParameterMetaData(operation, xmlName, xmlType, javaTypeName);
       operation.addParameter(inMetaData);
 
-
       // Set the variable names
       if (inMetaData.getOperationMetaData().isDocumentWrapped())
       {
@@ -617,7 +643,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          JavaXmlTypeMapping javaXmlTypeMapping = seiMapping.getJavaWsdlMapping().getTypeMappingForQName(xmlType);
          if (javaXmlTypeMapping == null)
             throw new WSException("Cannot obtain java/xml type mapping for: " + xmlType);
-
 
          Map<String, String> variableMap = createVariableMappingMap(javaXmlTypeMapping.getVariableMappings());
          for (MethodParamPartsMapping partMapping : seiMethodMapping.getMethodParamPartsMappings())
@@ -639,17 +664,15 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             if (variable == null)
                throw new IllegalArgumentException("Could not determine variable name for element: " + elementName);
 
-            WrappedParameter wrapped = new WrappedParameter(new QName(elementName), partMapping.getParamType(), variable,
-                  partMapping.getParamPosition());
-
+            WrappedParameter wrapped = new WrappedParameter(new QName(elementName), partMapping.getParamType(), variable, partMapping.getParamPosition());
 
             String parameterMode = wsdlMessageMapping.getParameterMode();
             if (parameterMode == null || parameterMode.length() < 2)
                throw new IllegalArgumentException("Invalid parameter mode for element: " + elementName);
 
-            if (! "OUT".equals(parameterMode))
+            if (!"OUT".equals(parameterMode))
                wrappedParameters.add(wrapped);
-            if (! "IN".equals(parameterMode))
+            if (!"IN".equals(parameterMode))
             {
                wrapped.setHolder(true);
                // wrapped parameters can not be shared between request/response objects (accessors)
@@ -738,9 +761,8 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       return isWrapParameters;
    }
 
-   private int processOutputDocElement(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation,
-         ServiceEndpointMethodMapping seiMethodMapping, TypeMappingImpl typeMapping, List<WrappedParameter> wrappedResponseParameters,
-         int wsdlPosition)
+   private int processOutputDocElement(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation, ServiceEndpointMethodMapping seiMethodMapping,
+         TypeMappingImpl typeMapping, List<WrappedParameter> wrappedResponseParameters, int wsdlPosition)
    {
       WSDLInterfaceOperationOutput opOutput = wsdlOperation.getOutputs()[0];
       QName xmlName = opOutput.getElement();
@@ -828,6 +850,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          }
 
          setupXOPAttachmentParameter(wsdlOperation, outMetaData);
+         setupSOAPArrayParameter(outMetaData);
       }
 
       if (hasReturnMapping)

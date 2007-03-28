@@ -47,25 +47,26 @@ public class QNameSerializer extends SerializerSupport
 
    public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       QName qnameValue = (QName)value;
       String nsURI = qnameValue.getNamespaceURI();
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
-      Set<String> additionalNamespaces = new HashSet<String>();
+      Set<String> nsExtras = new HashSet<String>();
+      
       // Remove prefix and register again
       if (nsURI.length() > 0)
       {
          qnameValue = new QName(nsURI, qnameValue.getLocalPart());
          qnameValue = nsRegistry.registerQName(qnameValue);
-         if (!nsURI.equals(xmlName.getNamespaceURI()))
-            additionalNamespaces.add(nsURI);
+         if (nsURI.equals(xmlName.getNamespaceURI()) == false)
+            nsExtras.add(nsURI);
       }
 
       String valueStr = SimpleTypeBindings.marshalQName(qnameValue, nsRegistry);
 
-      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, additionalNamespaces, attributes, true);
+      String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, nsExtras, attributes, true);
 
       return stringToResult(xmlFragment);
    }
