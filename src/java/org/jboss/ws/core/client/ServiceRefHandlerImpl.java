@@ -53,25 +53,25 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
    private static Logger log = Logger.getLogger(ServiceRefHandlerImpl.class);
 
    private ServiceRefObjectFactory objectFactory = new ServiceRefObjectFactory();
-   
+
    public ServiceRefMetaData newServiceRefMetaData()
    {
       return new UnifiedServiceRefMetaData();
    }
 
-   public void bindServiceRef(Context encCtx, String encName, UnifiedVirtualFile vfsRoot, ServiceRefMetaData sref) throws NamingException
+   public void bindServiceRef(Context encCtx, String encName, UnifiedVirtualFile vfsRoot, ClassLoader loader, ServiceRefMetaData sref) throws NamingException
    {
       if (sref.isProcessed())
       {
-         // Attempt to rebind service-ref
+         log.debug("Attempt to rebind the service-ref: " + sref.getServiceRefName());
          return;
       }
-      
+
       UnifiedServiceRefMetaData serviceRef = (UnifiedServiceRefMetaData)sref;
       serviceRef.setVfsRoot(vfsRoot);
       try
       {
-         if (getServiceRefType(serviceRef) == Type.JAXRPC)
+         if (getServiceRefType(serviceRef, loader) == Type.JAXRPC)
          {
             ServiceRefHandlerJAXRPC handler = new ServiceRefHandlerJAXRPC();
             handler.setupServiceRef(encCtx, encName, serviceRef);
@@ -88,7 +88,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
          sref.setProcessed(true);
       }
    }
-   
+
    public Object newChild(ServiceRefElement ref, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       return objectFactory.newChild(ref, navigator, namespaceURI, localName, attrs);
@@ -99,17 +99,17 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       objectFactory.setValue(ref, navigator, namespaceURI, localName, value);
    }
 
-   private Type getServiceRefType(UnifiedServiceRefMetaData serviceRef) throws NamingException
+   private Type getServiceRefType(UnifiedServiceRefMetaData serviceRef, ClassLoader loader) throws NamingException
    {
       // The service-ref-type is JAXWS specific
       String serviceRefType = serviceRef.getServiceRefType();
       if (serviceRefType != null || serviceRef.getAnnotatedElement() != null)
          return Type.JAXWS;
-      
+
       // The mapping-file is JAXRPC specific
       if (serviceRef.getMappingFile() != null)
          return Type.JAXRPC;
-      
+
       String siName = serviceRef.getServiceInterface();
       if (siName == null)
          throw new IllegalStateException("<service-interface> cannot be null");
@@ -117,16 +117,6 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       if (siName.equals("javax.xml.rpc.Service"))
          return Type.JAXRPC;
 
-      log.info("Cannot determine service-ref type, assuming JAXWS");
-      return Type.JAXWS;
-
-      /* 
-       * Loading the SI like this might not work for webapp clients.
-       * 
-      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-      URL rootURL = serviceRef.getVfsRoot().toURL();
-      URLClassLoader loader = new URLClassLoader(new URL[] {rootURL}, ctxLoader);
-      
       try
       {
          Class siClass = loader.loadClass(siName);
@@ -134,13 +124,11 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
             return Type.JAXWS;
          else if (javax.xml.rpc.Service.class.isAssignableFrom(siClass))
             return Type.JAXRPC;
-         else
-            throw new IllegalStateException("Illegal service interface: " + siName);
+         else throw new IllegalStateException("Illegal service interface: " + siName);
       }
       catch (ClassNotFoundException e)
       {
          throw new IllegalStateException("Cannot load <service-interface>: " + siName);
       }
-      */
    }
 }
