@@ -133,7 +133,6 @@ public class XMLFragment
       {
          source = beginStreamSourceAccess(source);
          retElement = DOMUtils.sourceToElement(source);
-         source = new DOMSource(retElement);
          endStreamSourceAccess();
       }
       catch (IOException ex)
