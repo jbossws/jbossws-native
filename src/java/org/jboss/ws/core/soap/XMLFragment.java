@@ -250,7 +250,7 @@ public class XMLFragment
    {
       if (source instanceof StreamSource)
       {
-         // Do some brute force buffering
+         /* Do some brute force buffering
          try
          {
             Element element = DOMUtils.sourceToElement(source);
@@ -260,6 +260,7 @@ public class XMLFragment
          {
             throw new WSException("Cannot create DOMSource", ex);
          }
+         */
       }
       return source;
    }
