@@ -71,23 +71,6 @@ public abstract class SerializerSupport implements Serializer
     */
    public abstract Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException;
 
-   protected Result stringToResult(String xmlFragment)
-   {
-      BufferedStreamResult result = null;
-      try
-      {
-         ByteArrayInputStream in = new ByteArrayInputStream(xmlFragment.getBytes());
-         result = new BufferedStreamResult();
-         IOUtils.copyStream(result.getOutputStream(), in);
-      }
-      catch (IOException e)
-      {
-         WSException.rethrow(e);
-      }
-
-      return result;
-   }
-
    /** Wrap the value string in a XML fragment with the given name
     */
    protected String wrapValueStr(QName xmlName, String valueStr, NamespaceRegistry nsRegistry, Set<String> nsExtras, NamedNodeMap attributes, boolean normalize)

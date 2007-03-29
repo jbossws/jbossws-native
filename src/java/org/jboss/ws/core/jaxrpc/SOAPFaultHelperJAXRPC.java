@@ -23,7 +23,6 @@ package org.jboss.ws.core.jaxrpc;
 
 // $Id$
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +60,6 @@ import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -268,18 +266,14 @@ public class SOAPFaultHelperJAXRPC
                Result result = ser.serialize(xmlName, xmlType, faultCause, serContext, null);
                XMLFragment xmlFragment = new XMLFragment(result);
 
+               Element domElement = xmlFragment.toElement();
                SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-               Element domElement = DOMUtils.parse(xmlFragment.resultToString());
                SOAPElement soapElement = soapFactory.createElement(domElement);
 
                detail = soapFault.addDetail();
                detail.addChildElement(soapElement);
             }
             catch (BindingException e)
-            {
-               throw new JAXRPCException(e);
-            }
-            catch (IOException e)
             {
                throw new JAXRPCException(e);
             }

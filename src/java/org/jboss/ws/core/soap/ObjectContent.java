@@ -67,18 +67,18 @@ public class ObjectContent extends SOAPContent
    {
       SOAPContent next = null;
 
-      if (State.XML_VALID == nextState)
+      if (nextState == State.XML_VALID)
       {
          XMLFragment fragment = marshallObjectContents();
          XMLContent xmlValid = new XMLContent(container);
          xmlValid.setXMLFragment(fragment);
          next = xmlValid;
       }
-      else if (State.OBJECT_VALID == nextState)
+      else if (nextState == State.OBJECT_VALID)
       {
          next = this;
       }
-      else if (State.DOM_VALID == nextState)
+      else if (nextState == State.DOM_VALID)
       {
          // first transition to XML valid
          XMLFragment fragment = marshallObjectContents();

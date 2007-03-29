@@ -27,6 +27,7 @@ import java.io.StringWriter;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
@@ -34,6 +35,7 @@ import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshaller;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.w3c.dom.NamedNodeMap;
 
@@ -74,7 +76,7 @@ public class JBossXBSerializer extends ComplexTypeSerializer
     */
    public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       // Expect the specific JAXRPC serialization context
       SerializationContextJAXRPC jaxrpcContext = (SerializationContextJAXRPC)serContext;
@@ -101,8 +103,8 @@ public class JBossXBSerializer extends ComplexTypeSerializer
          delegate.marshal(value, strwr);
          String xmlFragment = strwr.toString();
 
-         if(log.isDebugEnabled()) log.debug("serialized: " + xmlFragment);
-         return stringToResult(xmlFragment);
+         log.debug("serialized: " + xmlFragment);
+         return new BufferedStreamResult(xmlFragment);
       }
       catch (RuntimeException rte)
       {

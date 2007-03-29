@@ -37,7 +37,6 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -87,18 +86,18 @@ class XMLContent extends SOAPContent
    {
       SOAPContent next;
 
-      if (State.XML_VALID == nextState)
+      if (nextState == State.XML_VALID)
       {
          next = this;
       }
-      else if (State.OBJECT_VALID == nextState)
+      else if (nextState == State.OBJECT_VALID)
       {
          Object obj = unmarshallObjectContents();
          SOAPContent objectValid = new ObjectContent(container);
          objectValid.setObjectValue(obj);
          next = objectValid;
       }
-      else if (State.DOM_VALID == nextState)
+      else if (nextState == State.DOM_VALID)
       {
          expandContainerChildren();
          next = new DOMContent(container);
@@ -107,10 +106,40 @@ class XMLContent extends SOAPContent
       {
          throw new IllegalArgumentException("Illegal state requested: " + nextState);
       }
-      
+
       return next;
    }
 
+   public Source getPayload()
+   {
+      return xmlFragment.getSource();
+   }
+
+   public void setPayload(Source source)
+   {
+      xmlFragment = new XMLFragment(source);
+   }
+
+   public XMLFragment getXMLFragment()
+   {
+      return xmlFragment;
+   }
+
+   public void setXMLFragment(XMLFragment xmlFragment)
+   {
+      this.xmlFragment = xmlFragment;
+   }
+
+   public Object getObjectValue()
+   {
+      throw new IllegalStateException("Object value not available");
+   }
+
+   public void setObjectValue(Object objValue)
+   {
+      throw new IllegalStateException("Object value not available");
+   }
+   
    private Object unmarshallObjectContents()
    {
 
@@ -314,36 +343,4 @@ class XMLContent extends SOAPContent
          throw new WSException("Failed to transition to DOM", e);
       }
    }
-
-   public Source getPayload()
-   {
-      throw new IllegalStateException("Payload not available");
-   }
-
-   public void setPayload(Source source)
-   {
-      throw new IllegalStateException("Payload not available");
-   }
-
-   public XMLFragment getXMLFragment()
-   {
-      return this.xmlFragment;
-   }
-
-   public void setXMLFragment(XMLFragment xmlFragment)
-   {
-
-      this.xmlFragment = xmlFragment;
-   }
-
-   public Object getObjectValue()
-   {
-      throw new IllegalStateException("Object value not available");
-   }
-
-   public void setObjectValue(Object objValue)
-   {
-      throw new IllegalStateException("Object value not available");
-   }
-
 }

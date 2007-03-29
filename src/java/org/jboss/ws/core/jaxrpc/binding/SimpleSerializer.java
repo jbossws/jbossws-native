@@ -67,6 +67,6 @@ public class SimpleSerializer extends SerializerSupport
       }
 
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      return stringToResult(xmlFragment);
+      return new BufferedStreamResult(xmlFragment);
    }
 }

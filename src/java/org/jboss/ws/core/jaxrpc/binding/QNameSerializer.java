@@ -65,9 +65,7 @@ public class QNameSerializer extends SerializerSupport
       }
 
       String valueStr = SimpleTypeBindings.marshalQName(qnameValue, nsRegistry);
-
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, nsExtras, attributes, true);
-
-      return stringToResult(xmlFragment);
+      return new BufferedStreamResult(xmlFragment);
    }
 }

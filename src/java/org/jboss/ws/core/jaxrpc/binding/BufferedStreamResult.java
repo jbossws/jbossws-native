@@ -21,43 +21,65 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
+// $Id: $
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
 import javax.xml.transform.stream.StreamResult;
 
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.IOUtils;
+
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
+ * @author Thomas.Diesler@jboss.org
  * @since 06.02.2007
  */
-public class BufferedStreamResult extends StreamResult {
-
-   ByteArrayOutputStream bout = new ByteArrayOutputStream();
+public class BufferedStreamResult extends StreamResult
+{
+   ByteArrayOutputStream bout = new ByteArrayOutputStream(1024);
 
    public BufferedStreamResult()
    {
-      super();
    }
 
-   public void setOutputStream(OutputStream outputStream)
+   public BufferedStreamResult(String xmlFragment)
    {
-      throw new IllegalArgumentException("Operation not supported");
+      try
+      {
+         IOUtils.copyStream(getOutputStream(), new ByteArrayInputStream(xmlFragment.getBytes()));
+      }
+      catch (IOException e)
+      {
+         WSException.rethrow(e);
+      }
    }
 
+   @Override
+   public Writer getWriter()
+   {
+      return null;
+   }
+   
+   @Override
    public OutputStream getOutputStream()
    {
       return bout;
    }
 
+   @Override
    public void setWriter(Writer writer)
    {
-      throw new IllegalArgumentException("Operation not supported");
+      throw new UnsupportedOperationException();
    }
 
-   public Writer getWriter()
+   @Override
+   public void setOutputStream(OutputStream outputStream)
    {
-     return null;
+      throw new UnsupportedOperationException();
    }
 }

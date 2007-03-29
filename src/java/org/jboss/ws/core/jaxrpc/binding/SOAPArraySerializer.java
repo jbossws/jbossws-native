@@ -147,13 +147,12 @@ public class SOAPArraySerializer extends SerializerSupport
             buffer.append(" xmlns:" + compXmlName.getPrefix() + "='" + compXmlName.getNamespaceURI() + "'");
 
          buffer.append(">");
-
          serializeArrayComponents(compXmlName, compXmlType, serContext, objArr);
-
          buffer.append("</" + nodeName + ">");
-
-         log.debug("serialized: " + buffer);
-         return stringToResult(buffer.toString());
+         String xmlFragment = buffer.toString();
+         
+         log.debug("serialized: " + xmlFragment);
+         return new BufferedStreamResult(xmlFragment);
       }
       catch (RuntimeException e)
       {
@@ -184,8 +183,7 @@ public class SOAPArraySerializer extends SerializerSupport
             }
 
             Result result = ser.serialize(new QName("item"), xmlType, compValue, serContext, null);
-            XMLFragment fragment = new XMLFragment(result);
-            buffer.append(fragment.resultToString());
+            buffer.append(new XMLFragment(result).toXMLString());
          }
       }
    }

@@ -14,7 +14,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -48,7 +47,6 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Element;
@@ -134,8 +132,7 @@ public class SOAPFaultHelperJAXWS
                   throw new WebServiceException(e);
                }
             }
-            else
-               log.debug("Cannot find fault meta data for: " + xmlName);
+            else log.debug("Cannot find fault meta data for: " + xmlName);
          }
       }
 
@@ -272,8 +269,7 @@ public class SOAPFaultHelperJAXWS
          SOAPElement detailEntry = toDetailEntry(faultBean, serContext, faultMetaData);
          detail.addChildElement(detailEntry);
       }
-      else
-         log.debug("Cannot obtain fault meta data for: " + exClass);
+      else log.debug("Cannot obtain fault meta data for: " + exClass);
 
       return soapMessage;
    }
@@ -307,7 +303,7 @@ public class SOAPFaultHelperJAXWS
 
       // Get the serializer from the type mapping
       QName xmlType = faultMetaData.getXmlType();
-      Class javaType = faultMetaData.getFaultBean(); 
+      Class javaType = faultMetaData.getFaultBean();
       serContext.setJavaType(javaType);
       SerializerFactoryBase serFactory = (SerializerFactoryBase)serContext.getTypeMapping().getSerializer(javaType, xmlType);
       if (serFactory == null)
@@ -317,17 +313,13 @@ public class SOAPFaultHelperJAXWS
       {
          SerializerSupport ser = serFactory.getSerializer();
          Result result = ser.serialize(xmlName, xmlType, faultObject, serContext, null);
-         XMLFragment fragment = new XMLFragment(result);
+         XMLFragment xmlFragment = new XMLFragment(result);
 
+         Element domElement = xmlFragment.toElement();
          SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-         Element domElement = DOMUtils.parse(fragment.resultToString());
          return soapFactory.createElement(domElement);
       }
       catch (BindingException e)
-      {
-         throw new WebServiceException(e);
-      }
-      catch (IOException e)
       {
          throw new WebServiceException(e);
       }

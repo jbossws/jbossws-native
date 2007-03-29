@@ -56,11 +56,11 @@ public class NullValueSerializer extends SerializerSupport
     */
    public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       nsRegistry.registerURI(Constants.NS_SCHEMA_XSI, Constants.PREFIX_XSI);
       String xmlFragment = wrapValueStr(xmlName, null, nsRegistry, null, attributes, true);
-      return stringToResult(xmlFragment);
+      return new BufferedStreamResult(xmlFragment);
    }
 }

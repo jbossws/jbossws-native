@@ -51,13 +51,13 @@ public class ElementSerializer extends SerializerSupport
    public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes)
          throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       if (value == null)
          throw new IllegalArgumentException("Element value cannot be null");
       if ((value instanceof Element) == false)
          throw new IllegalArgumentException("Value is not a Element: " + value.getClass().getName());
 
       String xmlFragment = DOMWriter.printNode((Element)value, false);
-      return stringToResult(xmlFragment);
+      return new BufferedStreamResult(xmlFragment);
    }
 }

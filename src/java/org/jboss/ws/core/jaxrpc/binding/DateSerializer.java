@@ -61,6 +61,6 @@ public class DateSerializer extends SerializerSupport
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      return stringToResult(xmlFragment);
+      return new BufferedStreamResult(xmlFragment);
    }
 }

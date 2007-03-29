@@ -526,7 +526,7 @@ public final class DOMUtils
 
    public static Element sourceToElement(Source source) throws IOException
    {
-      Element elementResult = null;
+      Element retElement = null;
 
       try
       {
@@ -537,12 +537,12 @@ public final class DOMUtils
             InputStream ins = streamSource.getInputStream();
             if (ins != null)
             {
-               elementResult = DOMUtils.parse(ins);
+               retElement = DOMUtils.parse(ins);
             }
             else
             {
                Reader reader = streamSource.getReader();
-               elementResult = DOMUtils.parse(new InputSource(reader));
+               retElement = DOMUtils.parse(new InputSource(reader));
             }
          }
          else if (source instanceof DOMSource)
@@ -551,11 +551,11 @@ public final class DOMUtils
             Node node = domSource.getNode();
             if (node instanceof Element)
             {
-               elementResult = (Element)node;
+               retElement = (Element)node;
             }
             else if (node instanceof Document)
             {
-               elementResult = ((Document)node).getDocumentElement();
+               retElement = ((Document)node).getDocumentElement();
             }
             else
             {
@@ -572,7 +572,7 @@ public final class DOMUtils
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             tf.newTransformer().transform(source, new StreamResult(baos));
 
-            elementResult = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
+            retElement = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
          }
          else
          {
@@ -587,6 +587,6 @@ public final class DOMUtils
          throw ioex;
       }
 
-      return elementResult;
+      return retElement;
    }
 }
