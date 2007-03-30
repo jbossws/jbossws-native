@@ -43,9 +43,9 @@ public class HandlerMetaDataJAXWS  extends HandlerMetaData
    // The JAXWS protocol bindings
    private String protocolBindings;
    
-   public HandlerMetaDataJAXWS(EndpointMetaData epMetaData, HandlerType type)
+   public HandlerMetaDataJAXWS(HandlerType type)
    {
-      super(epMetaData, type);
+      super(type);
    }
    
    public QName getPortNamePattern()

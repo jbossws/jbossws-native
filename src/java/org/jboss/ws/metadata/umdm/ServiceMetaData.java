@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +77,10 @@ public class ServiceMetaData
    private URL wsdlLocation;
    private String wsdlFile;
    private URL mappingLocation;
-   private String handlerChain;
    private String wsdlPublishLocation;
+   
+   // The optional service handlers
+   private List<HandlerMetaDataJAXWS> handlers = new ArrayList<HandlerMetaDataJAXWS>();
 
    // The type mapping that is maintained by this service
    private TypesMetaData types;
@@ -158,16 +161,6 @@ public class ServiceMetaData
       this.wsdlLocation = wsdlLocation;
    }
 
-   public String getHandlerChain()
-   {
-      return handlerChain;
-   }
-
-   public void setHandlerChain(String handlerChain)
-   {
-      this.handlerChain = handlerChain;
-   }
-
    public String getWsdlPublishLocation()
    {
       return wsdlPublishLocation;
@@ -191,6 +184,16 @@ public class ServiceMetaData
    public TypesMetaData getTypesMetaData()
    {
       return types;
+   }
+
+   public void addHandler(HandlerMetaDataJAXWS handler)
+   {
+      handlers.add(handler);
+   }
+   
+   public List<HandlerMetaDataJAXWS> getHandlerMetaData()
+   {
+      return Collections.unmodifiableList(handlers);
    }
 
    public List<EndpointMetaData> getEndpoints()
@@ -440,7 +443,6 @@ public class ServiceMetaData
       buffer.append("\n wsdlFile=" + wsdlFile);
       buffer.append("\n wsdlLocation=" + wsdlLocation);
       buffer.append("\n jaxrpcMapping=" + mappingLocation);
-      buffer.append("\n handlerChain=" + handlerChain);
       buffer.append("\n publishLocation=" + wsdlPublishLocation);
       buffer.append("\n securityConfig=" + (securityConfig != null ? "found" : null));
       buffer.append("\n properties=" + properties);

@@ -26,7 +26,6 @@ package org.jboss.ws.core.jaxws.handler;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +48,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
@@ -104,53 +104,74 @@ public class HandlerResolverImpl implements HandlerResolver
          if (scopedHandler.matches(info))
             handlers.add(scopedHandler.handler);
       }
-      return Collections.unmodifiableList(handlers);
+
+      log.warn("[JBCTS-544] - HandlerResolver.getHandlerChain() expected to return a modifiable list");
+      // return Collections.unmodifiableList(jaxwsHandlerChain);
+
+      return handlers;
    }
 
-   public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type)
+   public void initServiceHandlerChain(ServiceMetaData serviceMetaData)
+   {
+      log.debug("initServiceHandlerChain: " + serviceMetaData.getServiceName());
+
+      // clear all exisisting handler to avoid double registration
+      List<ScopedHandler> handlerMap = getHandlerMap(HandlerType.ENDPOINT);
+      handlerMap.clear();
+
+      ClassLoader classLoader = serviceMetaData.getUnifiedMetaData().getClassLoader();
+      for (HandlerMetaData handlerMetaData : serviceMetaData.getHandlerMetaData())
+         addHandler(classLoader, HandlerType.ENDPOINT, handlerMetaData);
+   }
+
+   public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type, boolean clearExistingHandlers)
    {
       log.debug("initHandlerChain: " + type);
 
-      // clear all exisisting handler to avoid double registration
       List<ScopedHandler> handlerMap = getHandlerMap(type);
-      handlerMap.clear();
 
+      if (clearExistingHandlers)
+         handlerMap.clear();
+
+      ClassLoader classLoader = epMetaData.getClassLoader();
       for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(type))
+         addHandler(classLoader, type, handlerMetaData);
+   }
+
+   private void addHandler(ClassLoader classLoader, HandlerType type, HandlerMetaData handlerMetaData)
+   {
+      HandlerMetaDataJAXWS jaxwsMetaData = (HandlerMetaDataJAXWS)handlerMetaData;
+      String handlerName = jaxwsMetaData.getHandlerName();
+      String className = jaxwsMetaData.getHandlerClassName();
+      Set<QName> soapHeaders = jaxwsMetaData.getSoapHeaders();
+
+      try
       {
-         HandlerMetaDataJAXWS jaxwsMetaData = (HandlerMetaDataJAXWS)handlerMetaData;
-         String handlerName = jaxwsMetaData.getHandlerName();
-         String className = jaxwsMetaData.getHandlerClassName();
-         Set<QName> soapHeaders = jaxwsMetaData.getSoapHeaders();
+         // Load the handler class using the deployments top level CL
+         Class hClass = classLoader.loadClass(className);
+         Handler handler = (Handler)hClass.newInstance();
 
-         try
-         {
-            // Load the handler class using the deployments top level CL
-            ClassLoader classLoader = epMetaData.getClassLoader();
-            Class hClass = classLoader.loadClass(className);
-            Handler handler = (Handler)hClass.newInstance();
+         if (handler instanceof GenericHandler)
+            ((GenericHandler)handler).setHandlerName(handlerName);
 
-            if (handler instanceof GenericHandler)
-               ((GenericHandler)handler).setHandlerName(handlerName);
+         if (handler instanceof GenericSOAPHandler)
+            ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
 
-            if (handler instanceof GenericSOAPHandler)
-               ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
+         // Inject resources 
+         injectResources(handler);
 
-            // Inject resources 
-            injectResources(handler);
+         // Call @PostConstruct
+         callPostConstruct(handler);
 
-            // Call @PostConstruct
-            callPostConstruct(handler);
-
-            addHandler(jaxwsMetaData, handler, type);
-         }
-         catch (RuntimeException rte)
-         {
-            throw rte;
-         }
-         catch (Exception ex)
-         {
-            throw new WSException("Cannot load handler: " + className, ex);
-         }
+         addHandler(jaxwsMetaData, handler, type);
+      }
+      catch (RuntimeException rte)
+      {
+         throw rte;
+      }
+      catch (Exception ex)
+      {
+         throw new WSException("Cannot load handler: " + className, ex);
       }
    }
 
@@ -223,18 +244,18 @@ public class HandlerResolverImpl implements HandlerResolver
       QName servicePattern;
       QName portPattern;
       String protocols;
-      
+
       Set<String> bindings;
 
       ScopedHandler(Handler handler)
       {
          this.handler = handler;
       }
-      
+
       boolean matches(PortInfo info)
       {
          boolean match = true;
-         if (match && servicePattern != null)
+         if (servicePattern != null)
          {
             QName serviceName = info.getServiceName();
             match = matchQNamePattern(servicePattern, serviceName);
@@ -271,10 +292,10 @@ public class HandlerResolverImpl implements HandlerResolver
          {
             if (localPart.endsWith("*"))
                localPart = localPart.substring(0, localPart.length() - 1);
-            
+
             String qnameStr = qname.toString();
             String patternStr = new QName(nsURI, localPart).toString();
-            match = qnameStr.startsWith(patternStr);  
+            match = qnameStr.startsWith(patternStr);
          }
          return match;
       }

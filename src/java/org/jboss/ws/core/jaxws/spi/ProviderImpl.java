@@ -58,7 +58,7 @@ public class ProviderImpl extends Provider
    @Override
    public ServiceDelegate createServiceDelegate(URL wsdlLocation, QName serviceName, Class serviceClass)
    {
-      ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName);
+      ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
       return delegate;
    }
 

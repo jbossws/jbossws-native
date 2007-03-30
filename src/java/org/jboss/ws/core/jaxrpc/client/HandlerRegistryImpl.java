@@ -109,7 +109,8 @@ public class HandlerRegistryImpl implements HandlerRegistry
       epMetaData.clearHandlers();
       for (HandlerInfo info : infos)
       {
-         HandlerMetaDataJAXRPC handler = new HandlerMetaDataJAXRPC(epMetaData, HandlerType.ENDPOINT);
+         HandlerMetaDataJAXRPC handler = new HandlerMetaDataJAXRPC(HandlerType.ENDPOINT);
+         handler.setEndpointMetaData(epMetaData);
          handler.setHandlerClassName(info.getHandlerClass().getName());
          handler.setSoapRoles(roles);
          if(log.isDebugEnabled()) log.debug("Add handler to: " + portName + handler);

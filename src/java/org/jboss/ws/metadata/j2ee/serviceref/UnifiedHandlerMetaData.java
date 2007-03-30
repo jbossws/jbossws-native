@@ -128,9 +128,9 @@ public class UnifiedHandlerMetaData extends ServiceRefElement
       portNames.add(value);
    }
 
-   public HandlerMetaDataJAXRPC getHandlerMetaDataJAXRPC (EndpointMetaData epMetaData, HandlerType type)
+   public HandlerMetaDataJAXRPC getHandlerMetaDataJAXRPC (HandlerType type)
    {
-      HandlerMetaDataJAXRPC hmd = new HandlerMetaDataJAXRPC(epMetaData, type);
+      HandlerMetaDataJAXRPC hmd = new HandlerMetaDataJAXRPC(type);
       hmd.setHandlerName(getHandlerName());
       hmd.setHandlerClassName(getHandlerClass());
       hmd.seiInitParams(getInitParams());
@@ -140,9 +140,9 @@ public class UnifiedHandlerMetaData extends ServiceRefElement
       return hmd;
    }
 
-   public HandlerMetaDataJAXWS getHandlerMetaDataJAXWS (EndpointMetaData epMetaData, HandlerType type)
+   public HandlerMetaDataJAXWS getHandlerMetaDataJAXWS (HandlerType type)
    {
-      HandlerMetaDataJAXWS hmd = new HandlerMetaDataJAXWS(epMetaData, type);
+      HandlerMetaDataJAXWS hmd = new HandlerMetaDataJAXWS(type);
       hmd.setHandlerName(getHandlerName());
       hmd.setHandlerClassName(getHandlerClass());
       hmd.seiInitParams(getInitParams());

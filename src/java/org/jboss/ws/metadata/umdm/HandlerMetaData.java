@@ -66,9 +66,8 @@ public abstract class HandlerMetaData implements Serializable
    // The cached handler class
    private Class handlerClass;
 
-   public HandlerMetaData(EndpointMetaData epMetaData, HandlerType type)
+   public HandlerMetaData(HandlerType type)
    {
-      this.epMetaData = epMetaData;
       this.handlerType = type;
    }
 
@@ -112,7 +111,7 @@ public abstract class HandlerMetaData implements Serializable
       {
          try
          {
-            ClassLoader loader = epMetaData.getClassLoader();
+            ClassLoader loader = getClassLoader();
             localClass = loader.loadClass(handlerClassName);
          }
          catch (ClassNotFoundException ex)
@@ -121,6 +120,13 @@ public abstract class HandlerMetaData implements Serializable
          }
       }
       return localClass;
+   }
+
+   private ClassLoader getClassLoader()
+   {
+      // The EndpointMetaData classloader is not availabel for a handler associaated with a JAXWS Service.handlerResolver
+      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      return (epMetaData != null ? epMetaData.getClassLoader() : ctxLoader);
    }
 
    public HandlerType getHandlerType()
@@ -156,7 +162,7 @@ public abstract class HandlerMetaData implements Serializable
       securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerServer.class.getName());
       securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerClient.class.getName());
       
-      if (securityHandlers.contains(handlerClassName))
+      if (securityHandlers.contains(handlerClassName) && epMetaData != null)
       {
          if (epMetaData.getServiceMetaData().getSecurityConfiguration() == null)
             log.warn("WS-Security requires security configuration");

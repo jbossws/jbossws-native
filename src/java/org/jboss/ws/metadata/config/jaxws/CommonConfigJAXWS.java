@@ -29,6 +29,7 @@ import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 // $Id$
@@ -81,7 +82,9 @@ public abstract class CommonConfigJAXWS extends CommonConfig
          {
             for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
             {
-               handlers.add(uhmd.getHandlerMetaDataJAXWS(epMetaData, type));
+               HandlerMetaDataJAXWS handler = uhmd.getHandlerMetaDataJAXWS(type);
+               handler.setEndpointMetaData(epMetaData);
+               handlers.add(handler);
             }
          }
       }

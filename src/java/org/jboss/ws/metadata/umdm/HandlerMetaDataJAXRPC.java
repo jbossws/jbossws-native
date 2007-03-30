@@ -42,9 +42,9 @@ public class HandlerMetaDataJAXRPC  extends HandlerMetaData
    // The optional <port-name> elements
    private Set<String> portNames = new HashSet<String>();
 
-   public HandlerMetaDataJAXRPC(EndpointMetaData epMetaData, HandlerType type)
+   public HandlerMetaDataJAXRPC(HandlerType type)
    {
-      super(epMetaData, type);
+      super(type);
    }
 
    public void setSoapRoles(Set<String> soapRoles)

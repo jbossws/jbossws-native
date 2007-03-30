@@ -82,7 +82,7 @@ public abstract class CommonConfigJAXRPC extends CommonConfig
       {
          for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
          {
-            handlers.add(uhmd.getHandlerMetaDataJAXRPC(epMetaData, type));
+            handlers.add(uhmd.getHandlerMetaDataJAXRPC(type));
          }
       }
       

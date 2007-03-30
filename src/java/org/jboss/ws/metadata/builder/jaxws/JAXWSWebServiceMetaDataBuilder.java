@@ -230,7 +230,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                      {
                         for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
                         {
-                           HandlerMetaDataJAXWS handlerMetaDataJAXWS = uhmd.getHandlerMetaDataJAXWS(sepMetaData, HandlerMetaData.HandlerType.ENDPOINT);
+                           HandlerMetaDataJAXWS handlerMetaDataJAXWS = uhmd.getHandlerMetaDataJAXWS(HandlerMetaData.HandlerType.ENDPOINT);
                            sepMetaData.addHandler(handlerMetaDataJAXWS);
                            log.debug("Contribute handler from webservices.xml: " + handlerMetaDataJAXWS.getHandlerName());
                         }

@@ -76,7 +76,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 {
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);
-   
+
    private final EndpointMetaData epMetaData;
    private final HandlerResolver handlerResolver;
    private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
@@ -89,7 +89,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       this.epMetaData = epMetaData;
       this.handlerResolver = handlerResolver;
 
-      resetCreateBindingHandlerChain();
+      initBindingHandlerChain(false);
 
       // The config may change at some later point in time
       // when applications utilize the ServiceDecorator API
@@ -100,7 +100,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    /**
     * Reset or create the client handler chain in the binding.<br>
     */
-   private void resetCreateBindingHandlerChain()
+   private void initBindingHandlerChain(boolean clearExistingHandlers)
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
       PortInfoImpl portInfo = new PortInfoImpl(epMetaData);
@@ -108,9 +108,9 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       if (handlerResolver instanceof HandlerResolverImpl)
       {
          HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
-         impl.initHandlerChain(epMetaData, HandlerType.PRE);
-         impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT);
-         impl.initHandlerChain(epMetaData, HandlerType.POST);
+         impl.initHandlerChain(epMetaData, HandlerType.PRE, clearExistingHandlers);
+         impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
+         impl.initHandlerChain(epMetaData, HandlerType.POST, clearExistingHandlers);
 
          List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
          binding.setHandlerChain(preChain, HandlerType.PRE);
@@ -133,7 +133,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       log.debug("Configuration change event received. Reconfigure handler chain: " + object);
 
       // re-populate the binding handler chain
-      resetCreateBindingHandlerChain();
+      initBindingHandlerChain(true);
    }
 
    @Override
@@ -176,15 +176,15 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    protected void setInboundContextProperties()
    {
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      
+
       // Map of attachments to a message for the inbound message, key is  the MIME Content-ID, value is a DataHandler
       msgContext.put(MessageContext.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
-      
+
       // Remoting meta data are available on successfull call completion
       if (msgContext.containsKey(CommonMessageContext.REMOTING_METADATA))
       {
          Map<?, ?> remotingMetadata = (Map)msgContext.get(CommonMessageContext.REMOTING_METADATA);
-         
+
          // Get the HTTP_RESPONSE_CODE
          Integer resposeCode = (Integer)remotingMetadata.get(HTTPMetadataConstants.RESPONSE_CODE);
          if (resposeCode != null)
@@ -207,7 +207,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       // Mark the message context as outbound
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
-      
+
       // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
       msgContext.put(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
    }

@@ -56,14 +56,20 @@ import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
+import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -86,22 +92,20 @@ public class ServiceDelegateImpl extends ServiceDelegate
    // The ServiceRefMetaData supplied by the ServiceObjectFactory 
    private UnifiedServiceRefMetaData usRef;
    // The handler resolver
-   private HandlerResolver handlerResolver = new HandlerResolverImpl();
+   private HandlerResolver handlerResolver;
    // The executor service
    private ExecutorService executor;
 
    // A list of annotated ports
    private List<QName> annotatedPorts = new ArrayList<QName>();
 
-   public ServiceDelegateImpl(URL wsdlURL, QName serviceName)
+   public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass)
    {
+      // If this Service was constructed through the ServiceObjectFactory
+      // this thread local association should be available
       usRef = ServiceObjectFactory.getServiceRefAssociation();
 
-      UnifiedVirtualFile vfsRoot;
-      if(usRef!=null)
-         vfsRoot = usRef.getVfsRoot();
-      else
-         vfsRoot = new ResourceLoaderAdapter();
+      UnifiedVirtualFile vfsRoot = (usRef != null ? usRef.getVfsRoot() : new ResourceLoaderAdapter());
 
       if (wsdlURL != null)
       {
@@ -114,15 +118,28 @@ public class ServiceDelegateImpl extends ServiceDelegate
          serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
       }
-      
-      // If this Service was constructed through the ServiceObjectFactory
-      // this thread local association should be available
 
+      handlerResolver = new HandlerResolverImpl();
+      
       if (usRef != null)
       {
          serviceMetaData.setServiceRefName(usRef.getServiceRefName());
+         
+         // Setup the service handlers
          if (usRef.getHandlerChain() != null)
-            serviceMetaData.setHandlerChain(usRef.getHandlerChain());
+         {
+            String filename = usRef.getHandlerChain();
+            UnifiedHandlerChainsMetaData handlerChainsMetaData = JAXWSMetaDataBuilder.getHandlerChainsMetaData(serviceClass, filename);
+            for (UnifiedHandlerChainMetaData UnifiedHandlerChainMetaData : handlerChainsMetaData.getHandlerChains())
+            {
+               for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
+               {
+                  HandlerMetaDataJAXWS handler = uhmd.getHandlerMetaDataJAXWS(HandlerType.ENDPOINT);
+                  serviceMetaData.addHandler(handler);
+               }
+            }
+            ((HandlerResolverImpl)handlerResolver).initServiceHandlerChain(serviceMetaData);
+         }
       }
    }
 
@@ -324,15 +341,15 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private <T> T createProxy(Class<T> seiClass, EndpointMetaData epMetaData) throws WebServiceException
    {
       try
-      {         
+      {
          ExecutorService executor = (ExecutorService)getExecutor();
          ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
          T proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, BindingProvider.class, StubExt.class }, handler);
-         
+
          // Configure the stub
          configureStub((StubExt)proxy);
-         
+
          return proxy;
       }
       catch (WebServiceException ex)
@@ -344,16 +361,17 @@ public class ServiceDelegateImpl extends ServiceDelegate
          throw new WebServiceException("Cannot create proxy", ex);
       }
    }
-   
+
    private void configureStub(StubExt stub)
    {
       EndpointMetaData epMetaData = stub.getEndpointMetaData();
       String seiName = epMetaData.getServiceEndpointInterfaceName();
       QName portName = epMetaData.getPortName();
 
-      if(usRef == null || usRef.getPortComponentRefs().size() == 0)
+      if (usRef == null || usRef.getPortComponentRefs().size() == 0)
       {
-         if(log.isDebugEnabled()) log.debug("No port configuration for: " + portName);
+         if (log.isDebugEnabled())
+            log.debug("No port configuration for: " + portName);
          return;
       }
 
@@ -370,8 +388,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          {
             if (piSEI != null && piPort != null)
                match = seiName.equals(piSEI) && portName.equals(piPort);
-            else
-               match = seiName.equals(piSEI) || portName.equals(piPort);
+            else match = seiName.equals(piSEI) || portName.equals(piPort);
          }
          if (match == true)
          {
@@ -392,9 +409,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
 
       if (match == false)
-         if(log.isDebugEnabled()) log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
+         if (log.isDebugEnabled())
+            log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
 
-      if(log.isDebugEnabled()) log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
+      if (log.isDebugEnabled())
+         log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
       if (configName != null || configFile != null)
          stub.setConfigName(configName, configFile);
    }

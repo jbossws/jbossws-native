@@ -76,9 +76,9 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       // Initialize the handler chain
       if (isInitialized() == false)
       {
-         resolver.initHandlerChain(sepMetaData, HandlerType.PRE);
-         resolver.initHandlerChain(sepMetaData, HandlerType.ENDPOINT);
-         resolver.initHandlerChain(sepMetaData, HandlerType.POST);
+         resolver.initHandlerChain(sepMetaData, HandlerType.PRE, true);
+         resolver.initHandlerChain(sepMetaData, HandlerType.ENDPOINT, true);
+         resolver.initHandlerChain(sepMetaData, HandlerType.POST, true);
          setInitialized(true);
       }
 

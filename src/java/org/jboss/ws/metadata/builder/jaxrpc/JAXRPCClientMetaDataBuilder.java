@@ -228,7 +228,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             Set<String> portNames = uhmd.getPortNames();
             if (portNames.size() == 0 || portNames.contains(portName.getLocalPart()))
             {
-               epMetaData.addHandler(uhmd.getHandlerMetaDataJAXRPC(epMetaData, HandlerType.ENDPOINT));
+               epMetaData.addHandler(uhmd.getHandlerMetaDataJAXRPC(HandlerType.ENDPOINT));
             }
          }
       }

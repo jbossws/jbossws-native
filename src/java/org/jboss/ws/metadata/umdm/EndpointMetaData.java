@@ -446,6 +446,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void addHandler(HandlerMetaData handler)
    {
+      handler.setEndpointMetaData(this);
       handlers.add(handler);
    }
 

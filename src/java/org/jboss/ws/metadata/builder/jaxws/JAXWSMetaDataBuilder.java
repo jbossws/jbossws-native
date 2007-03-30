@@ -113,7 +113,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(BindingType.class))
       {
-         if(log.isDebugEnabled()) log.debug("processBindingType on: " + wsClass.getName());
+         if (log.isDebugEnabled())
+            log.debug("processBindingType on: " + wsClass.getName());
          BindingType anBindingType = (BindingType)wsClass.getAnnotation(BindingType.class);
          epMetaData.setBindingId(anBindingType.value());
       }
@@ -123,7 +124,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(SOAPBinding.class))
       {
-         if(log.isDebugEnabled()) log.debug("processSOAPBinding on: " + wsClass.getName());
+         if (log.isDebugEnabled())
+            log.debug("processSOAPBinding on: " + wsClass.getName());
          SOAPBinding anSoapBinding = wsClass.getAnnotation(SOAPBinding.class);
 
          SOAPBinding.Style attrStyle = anSoapBinding.style();
@@ -157,17 +159,25 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (wsClass.isAnnotationPresent(SOAPMessageHandlers.class))
          throw new WSException("Cannot combine @HandlerChain with @SOAPMessageHandlers");
 
-      // The explicit handler chain on the service has priority
-      String filename = epMetaData.getServiceMetaData().getHandlerChain();
+      if (wsClass.isAnnotationPresent(HandlerChain.class))
+      {
+         HandlerChain anHandlerChain = wsClass.getAnnotation(HandlerChain.class);
+         String filename = anHandlerChain.file();
 
-      HandlerChain anHandlerChain = wsClass.getAnnotation(HandlerChain.class);
-      if (filename == null && anHandlerChain != null)
-         filename = anHandlerChain.file();
+         // Setup the endpoint handlers
+         UnifiedHandlerChainsMetaData handlerChainsMetaData = getHandlerChainsMetaData(wsClass, filename);
+         for (UnifiedHandlerChainMetaData UnifiedHandlerChainMetaData : handlerChainsMetaData.getHandlerChains())
+         {
+            for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
+            {
+               epMetaData.addHandler(uhmd.getHandlerMetaDataJAXWS(HandlerType.ENDPOINT));
+            }
+         }
+      }
+   }
 
-      // Nothing to do
-      if (filename == null)
-         return;
-
+   public static UnifiedHandlerChainsMetaData getHandlerChainsMetaData(Class<?> wsClass, String filename)
+   {
       URL fileURL = null;
       log.debug("processHandlerChain [" + filename + "] on: " + wsClass.getName());
 
@@ -199,7 +209,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Try the filename as Resource
       if (fileURL == null)
       {
-         fileURL = epMetaData.getClassLoader().getResource(filename);
+         fileURL = wsClass.getClassLoader().getResource(filename);
       }
 
       // Try the filename relative to class
@@ -214,15 +224,15 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             filepath = filepath.substring(3);
             resourcePath = packagePath + "/" + filepath;
          }
-         fileURL = epMetaData.getClassLoader().getResource(resourcePath);
+         fileURL = wsClass.getClassLoader().getResource(resourcePath);
       }
 
       if (fileURL == null)
          throw new WSException("Cannot resolve handler file '" + filename + "' on " + wsClass.getName());
 
+      UnifiedHandlerChainsMetaData handlerChainsMetaData = null;
       try
       {
-         UnifiedHandlerChainsMetaData UnifiedHandlerChainsMetaData = null;
          InputStream is = fileURL.openStream();
          try
          {
@@ -231,21 +241,13 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             unmarshaller.setSchemaValidation(true);
             unmarshaller.setEntityResolver(new JBossWSEntityResolver());
             ObjectModelFactory factory = new HandlerChainsObjectFactory();
-            UnifiedHandlerChainsMetaData = (UnifiedHandlerChainsMetaData)unmarshaller.unmarshal(is, factory, null);
+            handlerChainsMetaData = (UnifiedHandlerChainsMetaData)unmarshaller.unmarshal(is, factory, null);
          }
          finally
          {
             is.close();
          }
 
-         // Setup the endpoint handlers
-         for (UnifiedHandlerChainMetaData UnifiedHandlerChainMetaData : UnifiedHandlerChainsMetaData.getHandlerChains())
-         {
-            for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
-            {
-               epMetaData.addHandler(uhmd.getHandlerMetaDataJAXWS(epMetaData, HandlerType.ENDPOINT));
-            }
-         }
       }
       catch (RuntimeException rte)
       {
@@ -255,13 +257,15 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          throw new WSException("Cannot process handler chain: " + filename, ex);
       }
+
+      return handlerChainsMetaData;
    }
 
    private void addFault(OperationMetaData omd, Class<?> exception)
    {
       if (omd.isOneWay())
          throw new IllegalStateException("JSR-181 4.3.1 - A JSR-181 processor is REQUIRED to report an error if an operation marked "
-            + "@Oneway has a return value, declares any checked exceptions or has any INOUT or OUT parameters.");
+               + "@Oneway has a return value, declares any checked exceptions or has any INOUT or OUT parameters.");
 
       WebFault annotation = exception.getAnnotation(WebFault.class);
 
@@ -467,7 +471,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (namespace == null && (opMetaData.isDocumentBare() || header))
          namespace = opMetaData.getQName().getNamespaceURI();
 
-         // RPC body parts must have no namespace
+      // RPC body parts must have no namespace
       else if (opMetaData.isRPCLiteral() && !header)
          namespace = null;
 
@@ -502,7 +506,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (namespace == null && (opMetaData.isDocumentBare() || header))
          namespace = opMetaData.getQName().getNamespaceURI();
 
-         // RPC body parts must have no namespace
+      // RPC body parts must have no namespace
       else if (opMetaData.isRPCLiteral() && !header)
          namespace = null;
 
@@ -522,12 +526,13 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
 
       Action anAction = method.getAnnotation(Action.class);
-      if(anAction!=null)
+      if (anAction != null)
       {
          addrExt.setInboundAction(anAction.input());
          addrExt.setOutboundAction(anAction.output());
       }
-      else  // default action values
+      else
+      // default action values
       {
          // TODO: figure out a way to assign message name instead of IN and OUT
          String tns = epMetaData.getPortName().getNamespaceURI();
@@ -774,29 +779,29 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       // process SWA metadata
       WSDLDefinitions wsdlDef = epMetaData.getServiceMetaData().getWsdlDefinitions();
-      if(wsdlDef!=null)
+      if (wsdlDef != null)
       {
-         for(WSDLBinding binding : wsdlDef.getBindings())
+         for (WSDLBinding binding : wsdlDef.getBindings())
          {
-            for(WSDLBindingOperation bindingOp : binding.getOperations())
+            for (WSDLBindingOperation bindingOp : binding.getOperations())
             {
                // it might an input or output parameter
-               WSDLBindingMessageReference[] inOrOutPut =
-                  (paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) ?
-                     ( WSDLBindingMessageReference[])bindingOp.getInputs() : ( WSDLBindingMessageReference[])bindingOp.getOutputs();
+               WSDLBindingMessageReference[] inOrOutPut = (paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) ? (WSDLBindingMessageReference[])bindingOp
+                     .getInputs()
+                     : (WSDLBindingMessageReference[])bindingOp.getOutputs();
 
-               if(inOrOutPut.length > 0)
+               if (inOrOutPut.length > 0)
                {
                   // find matching operation
-                  if(bindingOp.getRef().equals( opMetaData.getQName()))
+                  if (bindingOp.getRef().equals(opMetaData.getQName()))
                   {
                      WSDLBindingMessageReference bindingInput = inOrOutPut[0];
                      for (WSDLMIMEPart mimePart : bindingInput.getMimeParts())
                      {
                         String partName = mimePart.getPartName();
-                        if(paramMetaData.getPartName().equals(partName))
+                        if (paramMetaData.getPartName().equals(partName))
                         {
-                           log.debug("Identified 'mime:content' binding: " + partName + ", mimeTypes=" +mimePart.getMimeTypes());
+                           log.debug("Identified 'mime:content' binding: " + partName + ", mimeTypes=" + mimePart.getMimeTypes());
                            paramMetaData.setSwA(true);
                            paramMetaData.setMimeTypes(mimePart.getMimeTypes());
                            break;
@@ -851,8 +856,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Use the dynamic generator by default. Otherwise reset the last
       if (wrapperGenerator == null)
          wrapperGenerator = new DynamicWrapperGenerator(loader);
-      else
-         wrapperGenerator.reset(loader);
+      else wrapperGenerator.reset(loader);
    }
 
    protected void resetMetaDataBuilder(ClassLoader loader)
@@ -868,7 +872,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       try
       {
          String targetNS = epMetaData.getPortTypeName().getNamespaceURI().intern();
-         if(log.isDebugEnabled()) log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
+         if (log.isDebugEnabled())
+            log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
          jaxbCtx = JAXBRIContext.newInstance(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false);
       }
       catch (JAXBException ex)
