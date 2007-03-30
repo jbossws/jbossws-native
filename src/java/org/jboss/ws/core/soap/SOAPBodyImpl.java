@@ -38,6 +38,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
@@ -372,12 +373,9 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    private Element getBodyElementFromSource()
    {
       Element child = EnvelopeBuilderDOM.getElementFromSource(source);
-      if (source instanceof StreamSource)
-      {
-         // reset the excausted input stream
-         String xmlStr = DOMWriter.printNode(child, false);
-         source = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
-      }
+      // Allow multiple writing
+      source = new DOMSource(child);
+
       return child;
    }
 
