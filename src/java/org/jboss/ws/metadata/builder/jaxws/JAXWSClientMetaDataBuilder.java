@@ -203,6 +203,10 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
             {
                epMetaData.getProperties().put(stubProp.getPropName(), stubProp.getPropValue());  
             }
+
+            // process port-component-uri
+            
+
          }
 
       }

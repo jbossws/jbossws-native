@@ -84,7 +84,7 @@ public class ServiceRefMetaDataParser
          Element pcrefElement = (Element)iterator.next();
          String seiName = getOptionalElementContent(pcrefElement, "service-endpoint-interface");
          String portNameString = getOptionalElementContent(pcrefElement, "port-qname");
-         QName portName = portNameString!=null ? QName.valueOf(portNameString) : null;
+         QName portName = portNameString!=null ? QName.valueOf(portNameString) : null;   // TODO: unifiy QName parsing
 
          UnifiedPortComponentRefMetaData pcref = sref.getPortComponentRef(seiName, portName);
          /*if (pcref == null)

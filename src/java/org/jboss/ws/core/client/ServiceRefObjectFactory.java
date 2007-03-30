@@ -103,7 +103,10 @@ public class ServiceRefObjectFactory
       }
       else if (localName.equals("service-qname"))
       {
-         ref.setServiceQName(QName.valueOf(value));
+         if(value.indexOf("{") != -1)
+            ref.setServiceQName(QName.valueOf(value));
+         else
+            ref.setServiceQName(navigator.resolveQName(value));
       }
 
       /* JBoss properties */
