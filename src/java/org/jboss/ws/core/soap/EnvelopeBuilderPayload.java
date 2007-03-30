@@ -105,7 +105,7 @@ public class EnvelopeBuilderPayload implements EnvelopeBuilder
       if (itBody.hasNext())
       {
          Element domBodyElement = (Element)itBody.next();
-         soapBody.setPayload(new DOMSource(domBodyElement));
+         soapBody.setSource(new DOMSource(domBodyElement));
       }
       
       return soapEnv;

@@ -24,11 +24,17 @@ package org.jboss.ws.core.jaxrpc.binding;
 // $Id$
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 import javax.xml.transform.stream.StreamSource;
+
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.IOUtils;
 
 /**
  * A StreamSource that can be read repeatedly. 
@@ -39,6 +45,39 @@ import javax.xml.transform.stream.StreamSource;
 public class BufferedStreamSource extends StreamSource
 {
    private byte[] bytes;
+   private char[] chars;
+
+   public BufferedStreamSource(StreamSource source)
+   {
+      try
+      {
+         InputStream ins = source.getInputStream();
+         if (ins != null)
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            IOUtils.copyStream(baos, ins);
+            bytes = baos.toByteArray();
+         }
+
+         Reader rd = source.getReader();
+         if (ins == null && rd != null)
+         {
+            char[] auxbuf = new char[1024]; 
+            CharArrayWriter wr = new CharArrayWriter(auxbuf.length);
+            int r = rd.read(auxbuf);
+            while (r > 0)
+            {
+               wr.write(auxbuf, 0, r);
+               r = rd.read(auxbuf);
+            }
+            chars = wr.toCharArray();
+         }
+      }
+      catch (IOException ex)
+      {
+         WSException.rethrow(ex);
+      }
+   }
 
    public BufferedStreamSource(byte[] bytes)
    {
@@ -48,13 +87,13 @@ public class BufferedStreamSource extends StreamSource
    @Override
    public InputStream getInputStream()
    {
-      return new ByteArrayInputStream(bytes);
+      return (bytes != null ? new ByteArrayInputStream(bytes) : null);
    }
 
    @Override
    public Reader getReader()
    {
-      return new InputStreamReader(new ByteArrayInputStream(bytes));
+      return (chars != null ? new CharArrayReader(chars) : null);
    }
 
    @Override

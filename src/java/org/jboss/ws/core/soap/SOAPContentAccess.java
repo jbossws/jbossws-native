@@ -33,8 +33,6 @@ public interface SOAPContentAccess
 {
    Source getPayload();
 
-   void setPayload(Source source);
-
    XMLFragment getXMLFragment();
 
    void setXMLFragment(XMLFragment xmlFragment);

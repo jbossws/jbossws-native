@@ -90,7 +90,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
 
          SOAPMessage reqMessage = (SOAPMessage)payload;
          SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
-         Source source = soapBody.getPayload();
+         Source source = soapBody.getSource();
          epInv.setRequestParamValue(xmlName, source);
 
          return epInv;
@@ -121,7 +121,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
 
          Source payload = (Source)epInv.getReturnValue();
          SOAPBodyImpl soapBody = (SOAPBodyImpl)resMessage.getSOAPBody();
-         soapBody.setPayload(payload);
+         soapBody.setSource(payload);
 
          return resMessage;
       }

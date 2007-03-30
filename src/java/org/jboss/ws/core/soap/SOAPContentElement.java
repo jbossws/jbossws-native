@@ -151,14 +151,6 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return soapContent.getPayload();
    }
 
-   /** Set the payload as source 
-    */
-   public void setPayload(Source source)
-   {
-      soapContent = new XMLContent(this);
-      soapContent.setXMLFragment(new XMLFragment(source));
-   }
-
    public XMLFragment getXMLFragment()
    {
       transitionTo(State.XML_VALID);

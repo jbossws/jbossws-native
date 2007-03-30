@@ -43,6 +43,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxrpc.binding.BufferedStreamSource;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -68,7 +69,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    private static Logger log = Logger.getLogger(SOAPBodyImpl.class);
 
    // Generic JAXWS payload
-   private Source payload;
+   private Source source;
    private boolean isDOMValid = true;
    private boolean isModifiedFromSource;
 
@@ -92,17 +93,22 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       this.isModifiedFromSource = isModified;
    }
 
-   public Source getPayload()
+   public Source getSource()
    {
-      return payload;
+      // Do the buffering
+      if (source instanceof StreamSource && !(source instanceof BufferedStreamSource))
+         source = new BufferedStreamSource((StreamSource)source);
+      
+      return source;
    }
 
-   public void setPayload(Source payload)
+   public void setSource(Source source)
    {
-      if (log.isDebugEnabled())
-         log.debug("setPayload: " + payload.getClass().getName());
+      log.debug("setPayload: " + source);
+      
       removeContents();
-      this.payload = payload;
+      
+      this.source = source;
       this.isDOMValid = false;
    }
 
@@ -343,7 +349,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
             Element child = getBodyElementFromSource();
             SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
             addChildElement(soapFactory.createElement(child));
-            payload = null;
+            source = null;
          }
          catch (RuntimeException rte)
          {
@@ -365,12 +371,12 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    private Element getBodyElementFromSource()
    {
-      Element child = EnvelopeBuilderDOM.getElementFromSource(payload);
-      if (payload instanceof StreamSource)
+      Element child = EnvelopeBuilderDOM.getElementFromSource(source);
+      if (source instanceof StreamSource)
       {
          // reset the excausted input stream
          String xmlStr = DOMWriter.printNode(child, false);
-         payload = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
+         source = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes()));
       }
       return child;
    }
@@ -378,7 +384,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    @Override
    public void writeElementContent(Writer writer) throws IOException
    {
-      if (payload != null)
+      if (source != null)
       {
          Element child = getBodyElementFromSource();
          String xmlPayload = DOMWriter.printNode(child, false);

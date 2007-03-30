@@ -23,7 +23,6 @@ package org.jboss.ws.core.soap;
 
 // $Id: $
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -78,7 +77,7 @@ public class XMLFragment
 
    public XMLFragment(String xmlString)
    {
-      source = new StreamSource(new ByteArrayInputStream(xmlString.getBytes()));
+      source = new BufferedStreamSource(xmlString.getBytes());
    }
 
    public XMLFragment(Result result)
@@ -202,20 +201,10 @@ public class XMLFragment
 
    private Source beginStreamSourceAccess(Source source)
    {
+      // Buffer the source content
       if (source instanceof StreamSource && !(source instanceof BufferedStreamSource))
-      {
-         /* Do some brute force buffering
-          try
-          {
-          Element element = DOMUtils.sourceToElement(source);
-          source = new DOMSource(element);
-          }
-          catch (IOException ex)
-          {
-          throw new WSException("Cannot create DOMSource", ex);
-          }
-          */
-      }
+         source = new BufferedStreamSource((StreamSource)source);
+      
       return source;
    }
 

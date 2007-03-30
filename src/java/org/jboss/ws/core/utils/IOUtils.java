@@ -73,6 +73,8 @@ public final class IOUtils
       }
    }
 
+   /** Copy the reader to the output stream
+    */
    public static void copyReader(OutputStream outs, Reader reader) throws IOException
    {
       OutputStreamWriter writer = new OutputStreamWriter(outs);

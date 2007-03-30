@@ -231,7 +231,7 @@ public class DispatchImpl<T> implements Dispatch<T>
             {
                reqMsg = factory.createMessage();
                SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
-               soapBody.setPayload(source);
+               soapBody.setSource(source);
             }
             if (mode == Mode.MESSAGE)
             {
@@ -251,7 +251,7 @@ public class DispatchImpl<T> implements Dispatch<T>
             reqMsg = factory.createMessage();
             SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
             StreamSource source = new StreamSource(new ByteArrayInputStream(baos.toByteArray()));
-            soapBody.setPayload(source);
+            soapBody.setSource(source);
          }
       }
       catch (RuntimeException rte)

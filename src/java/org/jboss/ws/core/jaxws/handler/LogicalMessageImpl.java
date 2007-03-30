@@ -31,14 +31,17 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.jaxrpc.binding.BufferedStreamSource;
 import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.w3c.dom.Element;
 
 /**
@@ -72,7 +75,7 @@ public class LogicalMessageImpl implements LogicalMessage
 
    public Source getPayload()
    {
-      Source source = soapBody.getPayload();
+      Source source = soapBody.getSource();
       setPayloadBodyChild = false;
       if (source == null)
       {
@@ -107,7 +110,7 @@ public class LogicalMessageImpl implements LogicalMessage
             else
             {
                SOAPContentElement contentElement = (SOAPContentElement)soapElement;
-               contentElement.setPayload(source);
+               contentElement.setXMLFragment(new XMLFragment(source));
             }
          }
          catch (SOAPException ex)
@@ -117,7 +120,7 @@ public class LogicalMessageImpl implements LogicalMessage
       }
       else
       {
-         soapBody.setPayload(source);
+         soapBody.setSource(source);
       }
       
       // The body payload has been modified 
