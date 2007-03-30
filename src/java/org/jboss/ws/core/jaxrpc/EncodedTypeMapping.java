@@ -78,7 +78,7 @@ public class EncodedTypeMapping extends TypeMappingImpl
       registerStandardLiteralTypes();
       registerStandardSOAP11EncodedTypes();
 
-      // register mapping for xsd:anyType
+      // register mapping for soap11-enc:anyType
       register(SOAPElement.class, Constants.TYPE_SOAP11_ANYTYPE, new SOAPElementSerializerFactory(), new SOAPElementDeserializerFactory());
       register(Element.class, Constants.TYPE_SOAP11_ANYTYPE, new ElementSerializerFactory(), new ElementDeserializerFactory());
    }
