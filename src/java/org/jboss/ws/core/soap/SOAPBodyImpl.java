@@ -344,9 +344,9 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
             Boolean allowExpand = (Boolean)msgContext.get(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             if (allowExpand != Boolean.TRUE)
             {
-               log.warn("*****************************");
-               log.warn("* Expanding SOAPBody to DOM *");
-               log.warn("*****************************");
+               log.warn("******************************************");
+               log.warn("* Unexpectedly expanding SOAPBody to DOM *");
+               log.warn("******************************************");
             }
          }
 

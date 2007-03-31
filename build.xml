@@ -177,6 +177,11 @@
       </zipfileset>
     </jar>
     
+    <!-- Build jbossws-core-src.zip -->
+    <zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip" >
+      <fileset dir="${core.java.dir}"/>
+    </zip>
+    
   </target>
   
   <!-- ================================================================== -->
