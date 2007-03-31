@@ -57,7 +57,7 @@ public abstract class SAAJMetaFactory
    static SAAJMetaFactory getInstance() throws SOAPException
    {
       String propertyName = "javax.xml.soap.MetaFactory";
-      String defaultImpl = "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl";
+      String defaultImpl = "org.jboss.ws.core.soap.SAAJMetaFactoryImpl";
       SAAJMetaFactory factory = (SAAJMetaFactory)FactoryLoader.loadFactory(propertyName, defaultImpl);
       
       if (factory == null)
