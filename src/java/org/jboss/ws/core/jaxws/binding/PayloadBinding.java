@@ -91,6 +91,10 @@ public class PayloadBinding implements CommonBinding, BindingExt
          SOAPMessage reqMessage = (SOAPMessage)payload;
          SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
          Source source = soapBody.getSource();
+         
+         if (source == null)
+            throw new IllegalStateException ("Payload cannot be null");
+         
          epInv.setRequestParamValue(xmlName, source);
 
          return epInv;

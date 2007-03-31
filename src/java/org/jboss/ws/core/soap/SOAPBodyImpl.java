@@ -37,6 +37,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -91,7 +92,21 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    public Source getSource()
    {
-      return (xmlFragment != null ? xmlFragment.getSource() : null);
+      Source source;
+      if (xmlFragment != null)
+      {
+         source = xmlFragment.getSource();
+      }
+      else if (isDOMValid == true)
+      {
+         Element child = (Element)getFirstChild();
+         source = (child != null ? new DOMSource(child) : null);
+      }
+      else
+      {
+         throw new IllegalStateException("SOAPBody must be DOM valid or have a Source attached");
+      }
+      return source;
    }
 
    public void setSource(Source source)
