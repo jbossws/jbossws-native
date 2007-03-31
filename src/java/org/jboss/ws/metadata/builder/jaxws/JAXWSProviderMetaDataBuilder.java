@@ -126,6 +126,9 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
          serviceMetaData.setWsdlLocation(wsdlURL);
       }
 
+      // process handler chain
+      processHandlerChain(sepMetaData, sepClass);
+
       // process config
       processEndpointConfig(udi, sepClass, linkName, sepMetaData);
 
