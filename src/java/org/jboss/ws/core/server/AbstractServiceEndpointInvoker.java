@@ -192,18 +192,18 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
          if (handlersPass)
          {
-            // Check if protocol handlers modified the payload
-            SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
-            if (soapBody.isModifiedFromSource())
-            {
-               log.debug("Handler modified body payload, unbind message again");
-               epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
-            }
-
-            // Invoke the service endpoint
             msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
             try
             {
+               // Check if protocol handlers modified the payload
+               SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
+               if (soapBody.isModifiedFromSource())
+               {
+                  log.debug("Handler modified body payload, unbind message again");
+                  epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
+               }
+
+               // Invoke the service endpoint
                invokeServiceEndpointInstance(seInstance, epInv);
             }
             finally
