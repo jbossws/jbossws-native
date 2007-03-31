@@ -60,9 +60,6 @@ public class BindingImpl implements BindingExt
       if (handlerType == HandlerType.POST || handlerType == HandlerType.ALL)
          handlerChain.addAll(postHandlerChain);
       
-      log.warn("[JBCTS-544] - Binding.getHandlerChain() expected to return a modifyable list");
-      // return Collections.unmodifiableList(handlerChain);
-      
       return handlerChain;
    }
 
@@ -89,9 +86,6 @@ public class BindingImpl implements BindingExt
 
    public List<Handler> getHandlerChain()
    {
-      log.warn("[JBCTS-544] - Binding.getHandlerChain() expected to return a modifiable list");
-      // return Collections.unmodifiableList(jaxwsHandlerChain);
-      
       return new ArrayList<Handler>(jaxwsHandlerChain);
    }
 

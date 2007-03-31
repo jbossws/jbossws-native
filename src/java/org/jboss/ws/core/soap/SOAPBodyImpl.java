@@ -23,7 +23,6 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
@@ -38,15 +37,11 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.binding.BufferedStreamSource;
 import org.jboss.ws.core.utils.DOMUtils;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -70,7 +65,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    private static Logger log = Logger.getLogger(SOAPBodyImpl.class);
 
    // Generic JAXWS payload
-   private Source source;
+   private XMLFragment xmlFragment;
    private boolean isDOMValid = true;
    private boolean isModifiedFromSource;
 
@@ -88,7 +83,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       return isModifiedFromSource;
    }
-   
+
    public void setModifiedFromSource(boolean isModified)
    {
       this.isModifiedFromSource = isModified;
@@ -96,21 +91,15 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
    public Source getSource()
    {
-      // Do the buffering
-      if (source instanceof StreamSource && !(source instanceof BufferedStreamSource))
-         source = new BufferedStreamSource((StreamSource)source);
-      
-      return source;
+      return (xmlFragment != null ? xmlFragment.getSource() : null);
    }
 
    public void setSource(Source source)
    {
       log.debug("setPayload: " + source);
-      
       removeContents();
-      
-      this.source = source;
-      this.isDOMValid = false;
+      xmlFragment = new XMLFragment(source);
+      isDOMValid = false;
    }
 
    /** Convert the child into a SOAPBodyElement */
@@ -347,10 +336,10 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
          isDOMValid = true;
          try
          {
-            Element child = getBodyElementFromSource();
+            Element child = xmlFragment.toElement();
             SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
             addChildElement(soapFactory.createElement(child));
-            source = null;
+            xmlFragment = null;
          }
          catch (RuntimeException rte)
          {
@@ -370,25 +359,13 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       }
    }
 
-   private Element getBodyElementFromSource()
-   {
-      Element child = EnvelopeBuilderDOM.getElementFromSource(source);
-      // Allow multiple writing
-      source = new DOMSource(child);
-
-      return child;
-   }
-
    @Override
    public void writeElementContent(Writer writer) throws IOException
    {
-      if (source != null)
+      if (xmlFragment != null)
       {
-         Element child = getBodyElementFromSource();
-         String xmlPayload = DOMWriter.printNode(child, false);
-         if (log.isDebugEnabled())
-            log.debug("writeElementContent from payload: " + xmlPayload);
-         writer.write(xmlPayload);
+         log.debug("writeElementContent from payload: " + xmlFragment);
+         xmlFragment.writeTo(writer);
       }
       else
       {

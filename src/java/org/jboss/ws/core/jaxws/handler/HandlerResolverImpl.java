@@ -104,10 +104,6 @@ public class HandlerResolverImpl implements HandlerResolver
          if (scopedHandler.matches(info))
             handlers.add(scopedHandler.handler);
       }
-
-      log.warn("[JBCTS-544] - HandlerResolver.getHandlerChain() expected to return a modifiable list");
-      // return Collections.unmodifiableList(jaxwsHandlerChain);
-
       return handlers;
    }
 

@@ -23,11 +23,8 @@ package org.jboss.ws.core.soap;
 
 //$Id$
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -37,23 +34,15 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 /**
  * A SOAPEnvelope builder for JAXRPC based on DOM 
@@ -210,17 +199,17 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             }
          }
       }
-      
+
       // Process additional soap encoded body elements
-      boolean attachHRefElements =  Constants.URI_SOAP11_ENC.equals(soapEnv.getAttributeNS(envNS, "encodingStyle"));
-      attachHRefElements =  attachHRefElements || Constants.URI_SOAP11_ENC.equals(soapBody.getAttributeNS(envNS, "encodingStyle"));
-      attachHRefElements =  attachHRefElements && itBody.hasNext();
-      while(attachHRefElements && itBody.hasNext())
+      boolean attachHRefElements = Constants.URI_SOAP11_ENC.equals(soapEnv.getAttributeNS(envNS, "encodingStyle"));
+      attachHRefElements = attachHRefElements || Constants.URI_SOAP11_ENC.equals(soapBody.getAttributeNS(envNS, "encodingStyle"));
+      attachHRefElements = attachHRefElements && itBody.hasNext();
+      while (attachHRefElements && itBody.hasNext())
       {
          Element srcElement = (Element)itBody.next();
          soapBody.addChildElement(soapFactory.createElement(srcElement, true));
       }
-      
+
       // Inline all attached href elements
       if (attachHRefElements)
       {
@@ -234,9 +223,9 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
    public void buildBodyElementDoc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
    {
       soapBody.removeContents();
-      
+
       Element srcElement = (Element)domBodyElement;
-      
+
       QName beName = DOMUtils.getElementQName(domBodyElement);
       SOAPContentElement destElement = new SOAPBodyElementDoc(beName);
       destElement = (SOAPContentElement)soapBody.addChildElement(destElement);
@@ -250,7 +239,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
    public void buildBodyElementRpc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
    {
       soapBody.removeContents();
-      
+
       QName beName = DOMUtils.getElementQName(domBodyElement);
       SOAPBodyElementRpc soapBodyElement = new SOAPBodyElementRpc(beName);
       soapBodyElement = (SOAPBodyElementRpc)soapBody.addChildElement(soapBodyElement);
@@ -271,70 +260,5 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
          destElement.setXMLFragment(xmlFragment);
       }
-   }
-
-   public static Element getElementFromSource(Source payload)
-   {
-      Element child = null;
-      try
-      {
-         if (payload instanceof StreamSource)
-         {
-            StreamSource streamSource = (StreamSource)payload;
-
-            InputStream ins = streamSource.getInputStream();
-            if (ins != null)
-            {
-               child = DOMUtils.parse(ins);
-            }
-            else
-            {
-               Reader reader = streamSource.getReader();
-               child = DOMUtils.parse(new InputSource(reader));
-            }
-         }
-         else if (payload instanceof DOMSource)
-         {
-            DOMSource domSource = (DOMSource)payload;
-            Node node = domSource.getNode();
-            if (node instanceof Element)
-            {
-               child = (Element)node;
-            }
-            else if (node instanceof Document)
-            {
-               child = ((Document)node).getDocumentElement();
-            }
-            else
-            {
-               throw new WSException("Unsupported Node type: " + node.getClass().getName());
-            }
-         }
-         else if (payload instanceof SAXSource)
-         {
-            // The fact that JAXBSource derives from SAXSource is an implementation detail.
-            // Thus in general applications are strongly discouraged from accessing methods defined on SAXSource.
-            // The XMLReader object obtained by the getXMLReader method shall be used only for parsing the InputSource object returned by the getInputSource method.
-
-            TransformerFactory tf = TransformerFactory.newInstance();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-            tf.newTransformer().transform(payload, new StreamResult(baos));
-
-            child = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
-         }
-         else
-         {
-            throw new WSException("Source type not implemented: " + payload.getClass().getName());
-         }
-      }
-      catch (RuntimeException rte)
-      {
-         throw rte;
-      }
-      catch (Exception ex)
-      {
-         throw new WSException("Cannot get root element from Source" + ex);
-      }
-      return child;
    }
 }

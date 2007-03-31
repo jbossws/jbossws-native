@@ -36,6 +36,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
@@ -101,8 +102,8 @@ public class XMLFragment
 
    public Source getSource()
    {
-      source = beginStreamSourceAccess(source);
-      endStreamSourceAccess();
+      source = beginSourceAccess(source);
+      endSourceAccess();
       return source;
    }
 
@@ -127,18 +128,16 @@ public class XMLFragment
    public Element toElement()
    {
       Element retElement = null;
-
       try
       {
-         source = beginStreamSourceAccess(source);
+         source = beginSourceAccess(source);
          retElement = DOMUtils.sourceToElement(source);
-         endStreamSourceAccess();
+         endSourceAccess();
       }
       catch (IOException ex)
       {
-         handleStreamSourceAccessException(ex);
+         handleSourceAccessException(ex);
       }
-
       return retElement;
    }
 
@@ -157,17 +156,17 @@ public class XMLFragment
     */
    private void writeSourceInternal(Writer writer) throws IOException
    {
-      if (source instanceof DOMSource)
+      try
       {
-         DOMSource domSource = (DOMSource)source;
-         new DOMWriter(writer).print(domSource.getNode());
-      }
-      else if (source instanceof StreamSource)
-      {
-         try
-         {
-            source = beginStreamSourceAccess(source);
+         source = beginSourceAccess(source);
 
+         if (source instanceof DOMSource)
+         {
+            DOMSource domSource = (DOMSource)source;
+            new DOMWriter(writer).print(domSource.getNode());
+         }
+         else if (source instanceof StreamSource || source instanceof SAXSource)
+         {
             StreamSource streamSource = (StreamSource)source;
 
             Reader reader = streamSource.getReader();
@@ -185,30 +184,44 @@ public class XMLFragment
                writer.write(cbuf, 0, r);
                r = reader.read(cbuf);
             }
-
-            endStreamSourceAccess();
          }
-         catch (IOException ex)
+         else
          {
-            handleStreamSourceAccessException(ex);
+            throw new IllegalArgumentException("Unsupported source type: " + source);
          }
+
+         endSourceAccess();
       }
-      else
+      catch (IOException ex)
       {
-         throw new IllegalArgumentException("Unable to process source: " + source);
+         handleSourceAccessException(ex);
       }
    }
 
-   private Source beginStreamSourceAccess(Source source)
+   private Source beginSourceAccess(Source source)
    {
       // Buffer the source content
       if (source instanceof StreamSource && !(source instanceof BufferedStreamSource))
+      {
          source = new BufferedStreamSource((StreamSource)source);
-      
+      }
+      else
+      {
+         try
+         {
+            Element element = DOMUtils.sourceToElement(source);
+            source = new DOMSource(element);
+         }
+         catch (IOException ex)
+         {
+            WSException.rethrow(ex);
+         }
+      }
+
       return source;
    }
 
-   private void endStreamSourceAccess()
+   private void endSourceAccess()
    {
       // Create the marker exception
       if (source instanceof StreamSource)
@@ -217,7 +230,7 @@ public class XMLFragment
       }
    }
 
-   private void handleStreamSourceAccessException(IOException ex)
+   private void handleSourceAccessException(IOException ex)
    {
       if (source instanceof StreamSource && streamSourceAccessMarker != null)
       {

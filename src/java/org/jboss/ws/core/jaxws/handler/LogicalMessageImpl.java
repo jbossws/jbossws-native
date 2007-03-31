@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id$
 
+import java.io.IOException;
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;
@@ -31,17 +32,17 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.jaxrpc.binding.BufferedStreamSource;
 import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.core.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -103,9 +104,16 @@ public class LogicalMessageImpl implements LogicalMessage
             SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
             if (style == Style.RPC)
             {
-               EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
-               Element domBodyElement = EnvelopeBuilderDOM.getElementFromSource(source);
-               builder.buildBodyElementRpc(soapBody, domBodyElement);
+               try
+               {
+                  EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
+                  Element domBodyElement = DOMUtils.sourceToElement(source);
+                  builder.buildBodyElementRpc(soapBody, domBodyElement);
+               }
+               catch (IOException ex)
+               {
+                  WSException.rethrow(ex);
+               }
             }
             else
             {
@@ -122,7 +130,7 @@ public class LogicalMessageImpl implements LogicalMessage
       {
          soapBody.setSource(source);
       }
-      
+
       // The body payload has been modified 
       soapBody.setModifiedFromSource(true);
    }

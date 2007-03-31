@@ -571,7 +571,6 @@ public final class DOMUtils
             TransformerFactory tf = TransformerFactory.newInstance();
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             tf.newTransformer().transform(source, new StreamResult(baos));
-
             retElement = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
          }
          else
