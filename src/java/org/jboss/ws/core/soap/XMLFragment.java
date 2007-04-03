@@ -67,6 +67,8 @@ public class XMLFragment
 
    private Source source;
 
+   private final static String XML_PROC = "<?xml";
+
    // An exception that is created when a client 
    // accesses a StreamSource that can only be read once
    private RuntimeException streamSourceAccessMarker;
@@ -148,7 +150,10 @@ public class XMLFragment
 
    public void writeTo(OutputStream out) throws IOException
    {
-      writeSourceInternal(new PrintWriter(out));
+      PrintWriter printWriter = new PrintWriter(out);
+      writeSourceInternal(printWriter);
+      printWriter.flush();
+      printWriter.close();
    }
 
    /**
@@ -170,18 +175,45 @@ public class XMLFragment
             StreamSource streamSource = (StreamSource)source;
 
             Reader reader = streamSource.getReader();
+            {
             if (reader == null)
                reader = new InputStreamReader(streamSource.getInputStream());
+            }
 
-            char[] cbuf = new char[1024];
+            char[] cbuf = new char[5];
             int r = reader.read(cbuf);
+            int xmlProc = -1; 
 
             if (r == -1)
                throw new IOException("StreamSource already exhausted");
 
             while (r > 0)
             {
-               writer.write(cbuf, 0, r);
+               if(xmlProc<0 && new String(cbuf).equals(XML_PROC))  // new fragment
+               {
+                  xmlProc = 0;
+               }
+               else if(xmlProc<0) // no processing instruction
+               {
+                  xmlProc = 1;
+               }
+               else if(xmlProc==0) // within processing instruction
+               {
+                  String tmp = new String(cbuf);
+                  int i = tmp.indexOf(">");
+                  if(i!=-1)
+                  {
+                     if(i<tmp.length()) writer.write(tmp.substring(i+1));
+                     xmlProc=1;
+                     r = reader.read(cbuf);
+                     continue;
+                  }
+
+               }
+
+               // regular contents
+               if(xmlProc>0)
+                  writer.write(cbuf, 0, r);
                r = reader.read(cbuf);
             }
          }
@@ -200,8 +232,12 @@ public class XMLFragment
 
    private Source beginSourceAccess(Source source)
    {
+
+      if(source instanceof BufferedStreamSource)
+         return source; // no need to buffer those
+
       // Buffer the source content
-      if (source instanceof StreamSource && !(source instanceof BufferedStreamSource))
+      if (source instanceof StreamSource)
       {
          source = new BufferedStreamSource((StreamSource)source);
       }
