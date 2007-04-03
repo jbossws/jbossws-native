@@ -282,7 +282,7 @@ public class ServiceEndpoint
       }
       catch (Exception ex)
       {
-         throw new JAXRPCException("Faild to post process response message", ex);
+         throw new JAXRPCException("Failed to post process response message", ex);
       }
    }
 
