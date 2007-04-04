@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxrpc.handler;
 // $Id$
 
 import javax.xml.rpc.handler.soap.SOAPMessageContext;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.CommonMessageContext;
 
@@ -44,6 +45,16 @@ public class SOAPMessageContextJAXRPC extends MessageContextJAXRPC implements SO
    public SOAPMessageContextJAXRPC(CommonMessageContext msgContext)
    {
       super(msgContext);
+   }
+
+   public SOAPMessage getMessage()
+   {
+      return getSOAPMessage();
+   }
+
+   public void setMessage(SOAPMessage message)
+   {
+      setSOAPMessage(message);
    }
 
    /**
