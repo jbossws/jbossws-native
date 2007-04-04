@@ -37,7 +37,7 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -47,6 +47,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.DirectionHolder;
 import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
@@ -54,7 +55,6 @@ import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerDelegateJAXWS;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
@@ -128,11 +128,11 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
    }
 
    /** Invoke the the service endpoint */
-   public SOAPMessage invoke(Object context) throws Exception
+   public MessageAbstraction invoke(Object context) throws Exception
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)msgContext.getEndpointMetaData();
-      SOAPMessageImpl reqMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
+      MessageAbstraction reqMessage = msgContext.getMessageAbstraction();
 
       // Load the endpoint implementation bean
       Class seImpl = loadServiceEndpoint();
@@ -149,7 +149,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
       // Set the required inbound context properties
       setInboundContextProperties();
-      
+
       try
       {
          boolean oneway = false;
@@ -196,10 +196,9 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             try
             {
                // Check if protocol handlers modified the payload
-               SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
-               if (soapBody.isModifiedFromSource())
+               if (reqMessage.isModified())
                {
-                  log.debug("Handler modified body payload, unbind message again");
+                  log.debug("Handler modified payload, unbind message again");
                   epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
                }
 
@@ -216,20 +215,20 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
 
             // Set the required outbound context properties
             setOutboundContextProperties();
-            
+
             if (binding instanceof CommonSOAPBinding)
                XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
 
             // Bind the response message
-            SOAPMessage resMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
-            msgContext.setSOAPMessage(resMessage);
+            MessageAbstraction resMessage = binding.bindResponseMessage(opMetaData, epInv);
+            msgContext.setMessageAbstraction(resMessage);
          }
          else
          {
             // Reverse the message direction without calling the endpoint
-            SOAPMessage resMessage = msgContext.getSOAPMessage();
+            MessageAbstraction resMessage = msgContext.getMessageAbstraction();
             msgContext = processPivotInternal(msgContext, direction);
-            msgContext.setSOAPMessage(resMessage);
+            msgContext.setMessageAbstraction(resMessage);
          }
 
          if (oneway == false)
@@ -243,7 +242,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             faultType[0] = null;
          }
 
-         SOAPMessage resMessage = msgContext.getSOAPMessage();
+         MessageAbstraction resMessage = msgContext.getMessageAbstraction();
          return resMessage;
       }
       catch (RuntimeException ex)
@@ -320,38 +319,53 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
       return msgContext;
    }
 
-   private OperationMetaData getDispatchDestination(EndpointMetaData epMetaData, SOAPMessageImpl reqMessage) throws SOAPException
+   private OperationMetaData getDispatchDestination(EndpointMetaData epMetaData, MessageAbstraction reqMessage) throws SOAPException
    {
-      OperationMetaData opMetaData = reqMessage.getOperationMetaData(epMetaData);
-      SOAPHeader soapHeader = reqMessage.getSOAPHeader();
+      OperationMetaData opMetaData;
 
-      // Report a MustUnderstand fault
-      if (opMetaData == null)
+      String bindingID = epMetaData.getBindingId();
+      if (HTTPBinding.HTTP_BINDING.equals(bindingID))
       {
-         String faultString;
-         SOAPBody soapBody = reqMessage.getSOAPBody();
-         if (soapBody.getChildElements().hasNext())
-         {
-            SOAPBodyElement soapBodyElement = (SOAPBodyElement)soapBody.getChildElements().next();
-            Name soapName = soapBodyElement.getElementName();
-            faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for: " + soapName;
-         }
-         else
-         {
-            faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for empty soap body";
-         }
+         if (epMetaData.getOperations().size() != 1)
+            throw new IllegalStateException("Multiple operations not supported for HTTP binding");
 
-         // R2724 If an INSTANCE receives a message that is inconsistent with its WSDL description, it SHOULD generate a soap:Fault
-         // with a faultcode of "Client", unless a "MustUnderstand" or "VersionMismatch" fault is generated.
-         if (soapHeader != null && soapHeader.examineMustUnderstandHeaderElements(Constants.URI_SOAP11_NEXT_ACTOR).hasNext())
+         opMetaData = epMetaData.getOperations().get(0);
+      }
+      else
+      {
+         SOAPMessageImpl soapMessage = (SOAPMessageImpl)reqMessage;
+
+         opMetaData = soapMessage.getOperationMetaData(epMetaData);
+         SOAPHeader soapHeader = soapMessage.getSOAPHeader();
+
+         // Report a MustUnderstand fault
+         if (opMetaData == null)
          {
-            QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
-            throw new SOAPFaultException(faultCode, faultString, null, null);
-         }
-         else
-         {
-            QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
-            throw new SOAPFaultException(faultCode, faultString, null, null);
+            String faultString;
+            SOAPBody soapBody = soapMessage.getSOAPBody();
+            if (soapBody.getChildElements().hasNext())
+            {
+               SOAPBodyElement soapBodyElement = (SOAPBodyElement)soapBody.getChildElements().next();
+               Name soapName = soapBodyElement.getElementName();
+               faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for: " + soapName;
+            }
+            else
+            {
+               faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for empty soap body";
+            }
+
+            // R2724 If an INSTANCE receives a message that is inconsistent with its WSDL description, it SHOULD generate a soap:Fault
+            // with a faultcode of "Client", unless a "MustUnderstand" or "VersionMismatch" fault is generated.
+            if (soapHeader != null && soapHeader.examineMustUnderstandHeaderElements(Constants.URI_SOAP11_NEXT_ACTOR).hasNext())
+            {
+               QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
+               throw new SOAPFaultException(faultCode, faultString, null, null);
+            }
+            else
+            {
+               QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+               throw new SOAPFaultException(faultCode, faultString, null, null);
+            }
          }
       }
       return opMetaData;

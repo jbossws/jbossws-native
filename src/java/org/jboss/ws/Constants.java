@@ -25,6 +25,8 @@ package org.jboss.ws;
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.ws.http.HTTPBinding;
+import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.ws.core.soap.NameImpl;
 
@@ -72,27 +74,17 @@ public interface Constants
    static final String NS_XML_MIME = "http://www.w3.org/2005/05/xmlmime";
    /** The namespace for XOP. */
    static final String NS_XOP = "http://www.w3.org/2004/08/xop/include";   
-   /**
-    * A constant representing the identity of the SOAP 1.1 over HTTP binding.
-    */
-   public static final String SOAP11HTTP_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http";
-
-   /**
-    * A constant representing the identity of the SOAP 1.2 over HTTP binding.
-    */
-   public static final String SOAP12HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
-
-   /**
-    * A constant representing the identity of the SOAP 1.1 over HTTP binding
-    * with MTOM enabled by default.
-    */
-   public static final String SOAP11HTTP_MTOM_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http?mtom=true";
-
-   /**
-    * A constant representing the identity of the SOAP 1.2 over HTTP binding
-    * with MTOM enabled by default.
-    */
-   public static final String SOAP12HTTP_MTOM_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/?mtom=true";
+   
+   /** A constant representing the identity of the SOAP 1.1 over HTTP binding. */
+   public static final String SOAP11HTTP_BINDING = SOAPBinding.SOAP11HTTP_BINDING;
+   /** A constant representing the identity of the SOAP 1.2 over HTTP binding. */
+   public static final String SOAP12HTTP_BINDING = SOAPBinding.SOAP12HTTP_BINDING;
+   /** A constant representing the identity of the SOAP 1.1 over HTTP binding with MTOM enabled by default. */
+   public static final String SOAP11HTTP_MTOM_BINDING = SOAPBinding.SOAP11HTTP_MTOM_BINDING;
+   /** A constant representing the identity of the SOAP 1.2 over HTTP binding with MTOM enabled by default. */
+   public static final String SOAP12HTTP_MTOM_BINDING = SOAPBinding.SOAP12HTTP_MTOM_BINDING;
+   /** A constant representing the identity of the XML/HTTP binding. */
+   public static final String HTTP_BINDING = HTTPBinding.HTTP_BINDING;
    
    /** SOAP-1.1 encoding URI */
    static final String URI_SOAP11_ENC = SOAPConstants.URI_NS_SOAP_ENCODING;

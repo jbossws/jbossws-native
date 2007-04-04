@@ -24,7 +24,6 @@ package org.jboss.ws.core.jaxws.handler;
 // $Id$
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.soap.SOAPElement;
@@ -36,7 +35,10 @@ import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.HTTPMessageImpl;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
@@ -58,102 +60,148 @@ public class LogicalMessageImpl implements LogicalMessage
    private static final Logger log = Logger.getLogger(LogicalMessageImpl.class);
 
    private Style style;
-   private SOAPBodyImpl soapBody;
+   private MessageAbstraction message;
    private boolean setPayloadBodyChild;
 
-   public LogicalMessageImpl(SOAPMessage soapMessage, Style style)
+   public LogicalMessageImpl(MessageAbstraction message, Style style)
    {
       this.style = style;
-      try
-      {
-         soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
-      }
-      catch (SOAPException ex)
-      {
-         throw new WebServiceException("Cannot obtain xml payload", ex);
-      }
+      this.message = message;
    }
 
    public Source getPayload()
    {
-      Source source = soapBody.getSource();
-      setPayloadBodyChild = false;
-      if (source == null)
+      Source source = null;
+      if (message instanceof SOAPMessage)
       {
-         SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
-         if (style == Style.RPC)
+         SOAPMessage soapMessage = (SOAPMessage)message;
+         SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
+
+         source = soapBody.getSource();
+         setPayloadBodyChild = false;
+         if (source == null)
          {
-            source = new DOMSource(soapElement);
+            SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+            if (style == Style.RPC)
+            {
+               source = new DOMSource(soapElement);
+            }
+            else
+            {
+               SOAPContentElement contentElement = (SOAPContentElement)soapElement;
+               source = contentElement.getPayload();
+            }
+            setPayloadBodyChild = true;
          }
-         else
-         {
-            SOAPContentElement contentElement = (SOAPContentElement)soapElement;
-            source = contentElement.getPayload();
-         }
-         setPayloadBodyChild = true;
+      }
+      else if (message instanceof HTTPMessageImpl)
+      {
+         HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
+         source = httpMessage.getXmlFragment().getSource();
       }
       return source;
    }
 
    public void setPayload(Source source)
    {
-      if (setPayloadBodyChild)
+      if (message instanceof SOAPMessage)
       {
-         try
-         {
-            SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
-            if (style == Style.RPC)
-            {
-               try
-               {
-                  EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
-                  Element domBodyElement = DOMUtils.sourceToElement(source);
-                  builder.buildBodyElementRpc(soapBody, domBodyElement);
-               }
-               catch (IOException ex)
-               {
-                  WSException.rethrow(ex);
-               }
-            }
-            else
-            {
-               SOAPContentElement contentElement = (SOAPContentElement)soapElement;
-               contentElement.setXMLFragment(new XMLFragment(source));
-            }
-         }
-         catch (SOAPException ex)
-         {
-            throw new WebServiceException("Cannot set xml payload", ex);
-         }
-      }
-      else
-      {
-         soapBody.setSource(source);
-      }
+         SOAPMessage soapMessage = (SOAPMessage)message;
+         SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
 
-      // The body payload has been modified 
-      soapBody.setModifiedFromSource(true);
+         if (setPayloadBodyChild)
+         {
+            try
+            {
+               SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+               if (style == Style.RPC)
+               {
+                  try
+                  {
+                     EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
+                     Element domBodyElement = DOMUtils.sourceToElement(source);
+                     builder.buildBodyElementRpc(soapBody, domBodyElement);
+                  }
+                  catch (IOException ex)
+                  {
+                     WSException.rethrow(ex);
+                  }
+               }
+               else
+               {
+                  SOAPContentElement contentElement = (SOAPContentElement)soapElement;
+                  contentElement.setXMLFragment(new XMLFragment(source));
+               }
+            }
+            catch (SOAPException ex)
+            {
+               throw new WebServiceException("Cannot set xml payload", ex);
+            }
+         }
+         else
+         {
+            soapBody.setSource(source);
+         }
+      }
+      else if (message instanceof HTTPMessageImpl)
+      {
+         HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
+         httpMessage.setXmlFragment(new XMLFragment(source));
+      }
+      message.setModified(true);
    }
 
    public Object getPayload(JAXBContext jaxbContext)
    {
       Object payload = null;
-      Iterator it = soapBody.getChildElements();
-      if (it.hasNext())
+      if (message instanceof SOAPMessage)
       {
-         SOAPContentElement bodyElement = (SOAPContentElement)it.next();
-         payload = bodyElement.getObjectValue();
+         SOAPMessage soapMessage = (SOAPMessage)message;
+         SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
+
+         SOAPContentElement bodyElement = (SOAPContentElement)soapBody.getFirstChild();
+         if (bodyElement != null)
+         {
+            payload = bodyElement.getObjectValue();
+         }
+      }
+      else if (message instanceof HTTPMessageImpl)
+      {
+         throw new NotImplementedException();
       }
       return payload;
    }
 
    public void setPayload(Object payload, JAXBContext jaxbContext)
    {
-      Iterator it = soapBody.getChildElements();
-      if (it.hasNext())
+      if (message instanceof SOAPMessage)
       {
-         SOAPContentElement bodyElement = (SOAPContentElement)it.next();
-         bodyElement.setObjectValue(payload);
+         SOAPMessage soapMessage = (SOAPMessage)message;
+         SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
+
+         SOAPContentElement bodyElement = (SOAPContentElement)soapBody.getFirstChild();
+         if (bodyElement != null)
+         {
+            bodyElement.setObjectValue(payload);
+         }
       }
+      else if (message instanceof HTTPMessageImpl)
+      {
+         throw new NotImplementedException();
+      }
+   }
+
+   private SOAPBodyImpl getSOAPBody(SOAPMessage soapMessage)
+   {
+      SOAPBodyImpl soapBody = null;
+      try
+      {
+         soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
+      }
+      catch (SOAPException ex)
+      {
+         WSException.rethrow(ex);
+      }
+      return soapBody;
    }
 }

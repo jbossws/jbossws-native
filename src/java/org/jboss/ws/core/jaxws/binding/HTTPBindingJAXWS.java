@@ -27,16 +27,24 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.http.HTTPBinding;
 
+import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.HeaderSource;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
@@ -47,33 +55,80 @@ import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
  */
 public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
 {
+   // provide logging
+   private static final Logger log = Logger.getLogger(HTTPBindingJAXWS.class);
+
    private BindingImpl delegate = new BindingImpl();
-   
-   public Object bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
+
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+         throws BindingException
    {
       throw new NotImplementedException();
    }
 
-   public Object bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException
+   {
+      log.debug("unbindRequestMessage: " + opMetaData.getQName());
+      try
+      {
+         // Construct the endpoint invocation object
+         EndpointInvocation epInv = new EndpointInvocation(opMetaData);
+
+         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+         if (msgContext == null)
+            throw new WSException("MessageContext not available");
+
+         ParameterMetaData paramMetaData = opMetaData.getParameters().get(0);
+         QName xmlName = paramMetaData.getXmlName();
+
+         HTTPMessageImpl httpMessage = (HTTPMessageImpl)reqMessage;
+         Source source = httpMessage.getXmlFragment().getSource();
+
+         epInv.setRequestParamValue(xmlName, source);
+
+         return epInv;
+      }
+      catch (Exception e)
+      {
+         handleException(e);
+         return null;
+      }
+   }
+
+   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   {
+      log.debug("bindResponseMessage: " + opMetaData.getQName());
+      try
+      {
+         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+         if (msgContext == null)
+            throw new WSException("MessageContext not available");
+
+         // Associate current message with message context
+         Source source = (Source)epInv.getReturnValue();
+         HTTPMessageImpl resMessage = new HTTPMessageImpl(source);
+         msgContext.setMessageAbstraction(resMessage);
+
+         return resMessage;
+      }
+      catch (Exception e)
+      {
+         handleException(e);
+         return null;
+      }
+   }
+
+   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+         throws BindingException
    {
       throw new NotImplementedException();
    }
 
-   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, Object reqMessage) throws BindingException
+   public MessageAbstraction bindFaultMessage(Exception ex)
    {
       throw new NotImplementedException();
    }
 
-   public void unbindResponseMessage(OperationMetaData opMetaData, Object resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
-   {
-      throw new NotImplementedException();
-   }
-
-   public Object bindFaultMessage(Exception ex)
-   {
-      throw new NotImplementedException();
-   }
-   
    public List<Handler> getHandlerChain()
    {
       return delegate.getHandlerChain();
@@ -93,14 +148,25 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
    {
       delegate.setHandlerChain(handlerChain, handlerType);
    }
-   
+
    public String getBindingID()
    {
-      throw new NotImplementedException();
+      return HTTPBinding.HTTP_BINDING;
    }
 
    public void setHeaderSource(HeaderSource source)
    {
       // Not needed
+   }
+
+   private void handleException(Exception ex) throws BindingException
+   {
+      if (ex instanceof RuntimeException)
+         throw (RuntimeException)ex;
+
+      if (ex instanceof BindingException)
+         throw (BindingException)ex;
+
+      throw new BindingException(ex);
    }
 }

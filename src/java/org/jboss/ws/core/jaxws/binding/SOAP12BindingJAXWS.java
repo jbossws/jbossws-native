@@ -34,7 +34,9 @@ import javax.xml.ws.handler.Handler;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonSOAP12Binding;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -120,6 +122,6 @@ public class SOAP12BindingJAXWS extends CommonSOAP12Binding implements BindingEx
 
    public String getBindingID()
    {
-      throw new NotImplementedException();
+      return isMTOMEnabled() ? SOAPBinding.SOAP12HTTP_MTOM_BINDING : SOAPBinding.SOAP12HTTP_BINDING;
    }
 }

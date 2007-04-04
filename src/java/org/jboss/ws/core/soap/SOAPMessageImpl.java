@@ -42,6 +42,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.SOAPMessageAbstraction;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
@@ -59,7 +60,7 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
  */
-public class SOAPMessageImpl extends SOAPMessage
+public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstraction
 {
    private boolean saveRequired = true;
    private MimeHeaders mimeHeaders = new MimeHeaders();
@@ -68,6 +69,7 @@ public class SOAPMessageImpl extends SOAPMessage
    private boolean isXOPMessage;
    private boolean isSWARefMessage;
    private SOAPPartImpl soapPart;
+   private boolean modified;
    private MultipartRelatedEncoder multipartRelatedEncoder;
 
    // Cache the associated operation meta data
@@ -251,7 +253,6 @@ public class SOAPMessageImpl extends SOAPMessage
             }
 
             mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, contentType);
-
          }
          catch (MessagingException ex)
          {
@@ -278,26 +279,33 @@ public class SOAPMessageImpl extends SOAPMessage
       return saveRequired;
    }
 
-   public void writeTo(OutputStream outs) throws SOAPException, IOException
+   public void writeTo(OutputStream outs) throws IOException
    {
-      // Save all changes
-      saveChanges();
+      try
+      {
+         // Save all changes
+         saveChanges();
 
-      // If there are attachments then we delegate encoding to MultipartRelatedEncoder
-      if (attachments.size() > 0)
-      {
-         multipartRelatedEncoder.writeTo(outs);
-      }
-      else
-      {
-         SOAPEnvelope soapEnv = getSOAPPart().getEnvelope();
-         if (soapEnv != null)
+         // If there are attachments then we delegate encoding to MultipartRelatedEncoder
+         if (attachments.size() > 0)
          {
-            boolean writeXML = isWriteXMLDeclaration();
-            String charsetEncoding = getCharSetEncoding();
-            SOAPElementWriter writer = new SOAPElementWriter(outs, charsetEncoding);
-            writer.setWriteXMLDeclaration(writeXML).writeElement((SOAPEnvelopeImpl)soapEnv);
+            multipartRelatedEncoder.writeTo(outs);
          }
+         else
+         {
+            SOAPEnvelope soapEnv = getSOAPPart().getEnvelope();
+            if (soapEnv != null)
+            {
+               boolean writeXML = isWriteXMLDeclaration();
+               String charsetEncoding = getCharSetEncoding();
+               SOAPElementWriter writer = new SOAPElementWriter(outs, charsetEncoding);
+               writer.setWriteXMLDeclaration(writeXML).writeElement((SOAPEnvelopeImpl)soapEnv);
+            }
+         }
+      }
+      catch (SOAPException ex)
+      {
+         WSException.rethrow(ex);
       }
    }
 
@@ -497,5 +505,15 @@ public class SOAPMessageImpl extends SOAPMessage
       Iterator attachmentItr = new MimeMatchingAttachmentsIterator(headers, attachments);
       while (attachmentItr.next() != null)
          attachmentItr.remove();
+   }
+
+   public boolean isModified()
+   {
+      return modified;
+   }
+
+   public void setModified(boolean modifiedInHandler)
+   {
+      this.modified = modifiedInHandler;
    }
 }

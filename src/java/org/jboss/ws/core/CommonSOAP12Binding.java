@@ -52,11 +52,11 @@ public abstract class CommonSOAP12Binding extends CommonSOAPBinding
    }
 
    /** Create the SOAP-1.1 message */
-   protected SOAPMessage createMessage(OperationMetaData opMetaData) throws SOAPException
+   protected MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException
    {
       MessageFactoryImpl factory = new MessageFactoryImpl();
       factory.setEnvNamespace(Constants.NS_SOAP12_ENV);
-      return factory.createMessage();
+      return (MessageAbstraction)factory.createMessage();
    }
 
    protected abstract Set<String> getRoles();

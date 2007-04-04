@@ -39,10 +39,10 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.HeaderSource;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
@@ -64,24 +64,24 @@ public class PayloadBinding implements CommonBinding, BindingExt
 
    // Delegate to JAXWS binding
    private BindingImpl delegate = new BindingImpl();
-   
+
    /** On the client side, generate the payload from IN parameters. */
-   public Object bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+         throws BindingException
    {
       throw new NotImplementedException();
    }
 
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
-   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, Object payload) throws BindingException
+   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction payload) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("unbindRequestMessage: " + opMetaData.getQName());
-
+      log.debug("unbindRequestMessage: " + opMetaData.getQName());
       try
       {
          // Construct the endpoint invocation object
          EndpointInvocation epInv = new EndpointInvocation(opMetaData);
 
-         SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
+         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
             throw new WSException("MessageContext not available");
 
@@ -91,10 +91,10 @@ public class PayloadBinding implements CommonBinding, BindingExt
          SOAPMessage reqMessage = (SOAPMessage)payload;
          SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
          Source source = soapBody.getSource();
-         
+
          if (source == null)
-            throw new IllegalStateException ("Payload cannot be null");
-         
+            throw new IllegalStateException("Payload cannot be null");
+
          epInv.setRequestParamValue(xmlName, source);
 
          return epInv;
@@ -107,9 +107,10 @@ public class PayloadBinding implements CommonBinding, BindingExt
    }
 
    /** On the server side, generate the payload from OUT parameters. */
-   public Object bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("bindResponseMessage: " + opMetaData.getQName());
+      if (log.isDebugEnabled())
+         log.debug("bindResponseMessage: " + opMetaData.getQName());
 
       try
       {
@@ -121,7 +122,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
          MessageFactoryImpl factory = new MessageFactoryImpl();
          factory.setEnvNamespace(Constants.NS_SOAP11_ENV);
          SOAPMessageImpl resMessage = (SOAPMessageImpl)factory.createMessage();
-         msgContext.setMessage(resMessage);
+         msgContext.setSOAPMessage(resMessage);
 
          Source payload = (Source)epInv.getReturnValue();
          SOAPBodyImpl soapBody = (SOAPBodyImpl)resMessage.getSOAPBody();
@@ -137,15 +138,15 @@ public class PayloadBinding implements CommonBinding, BindingExt
    }
 
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
-   public void unbindResponseMessage(OperationMetaData opMetaData, Object resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       throw new NotImplementedException();
    }
 
-   public Object bindFaultMessage(Exception ex)
+   public MessageAbstraction bindFaultMessage(Exception ex)
    {
-      SOAPMessage faultMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
+      SOAPMessageImpl faultMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext != null)
       {
@@ -172,12 +173,12 @@ public class PayloadBinding implements CommonBinding, BindingExt
    {
       delegate.setHandlerChain(handlerChain);
    }
-   
+
    public void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType)
    {
       delegate.setHandlerChain(handlerChain, handlerType);
    }
-   
+
    private void handleException(Exception ex) throws BindingException
    {
       if (ex instanceof RuntimeException)

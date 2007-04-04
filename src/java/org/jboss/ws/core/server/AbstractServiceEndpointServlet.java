@@ -111,7 +111,7 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
       try
       {
          EndpointContext context = new EndpointContext(getServletContext(), req, res);
-         epManager.processSOAPRequest(sepId, req.getInputStream(), res.getOutputStream(), context);
+         epManager.processRequest(sepId, req.getInputStream(), res.getOutputStream(), context);
       }
       catch (Exception ex)
       {

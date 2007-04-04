@@ -38,7 +38,6 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 
@@ -46,12 +45,11 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.DirectionHolder.Direction;
+import org.jboss.ws.core.client.EndpointInfo;
+import org.jboss.ws.core.client.SOAPRemotingConnection;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.soap.EndpointInfo;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.SOAPBodyImpl;
-import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
@@ -75,9 +73,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
 {
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
-   
+
    public static String SESSION_COOKIES = "org.jboss.ws.maintain.session.cookies";
-   
+
    // The endpoint together with the operationName uniquely identify the call operation
    protected EndpointMetaData epMetaData;
    // The current operation name
@@ -223,7 +221,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    protected abstract void setInboundContextProperties();
 
    protected abstract void setOutboundContextProperties();
-   
+
    protected abstract boolean shouldMaintainSession();
 
    /** Call invokation goes as follows:
@@ -273,7 +271,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          setOutboundContextProperties();
 
          // Bind the request message
-         SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, unboundHeaders);
+         MessageAbstraction reqMessage = binding.bindRequestMessage(opMetaData, epInv, unboundHeaders);
 
          // Add possible attachment parts
          addAttachmentParts(reqMessage);
@@ -284,8 +282,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
 
          // Handlers might have replaced the message
-         reqMessage = msgContext.getSOAPMessage();
-         
+         reqMessage = msgContext.getMessageAbstraction();
+
          if (handlerPass)
          {
             String targetAddress = getTargetEndpointAddress();
@@ -315,32 +313,25 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (targetAddress == null)
                throw new WSException("Target endpoint address not set");
 
-            Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext()); 
+            Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
             if (shouldMaintainSession())
                addSessionInfo(reqMessage, callProps);
 
-            SOAPMessage resMessage;
-            if (oneway)
-            {
-               resMessage = new SOAPConnectionImpl().callOneWay(reqMessage, epInfo);
-            }
-            else
-            {
-               resMessage = new SOAPConnectionImpl().call(reqMessage, epInfo);
-            }
-            
+            SOAPRemotingConnection remotingConnection = new SOAPRemotingConnection();
+            MessageAbstraction resMessage = remotingConnection.invoke(reqMessage, epInfo, oneway);
+
             if (shouldMaintainSession())
                saveSessionInfo(callProps, getRequestContext());
 
             // At pivot the message context might be replaced
             msgContext = processPivotInternal(msgContext, direction);
-            
+
             // Copy the remoting meta data 
             msgContext.put(CommonMessageContext.REMOTING_METADATA, callProps);
 
             // Associate response message with message context
-            msgContext.setSOAPMessage(resMessage);
+            msgContext.setMessageAbstraction(resMessage);
          }
 
          setInboundContextProperties();
@@ -361,7 +352,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (handlerPass)
             {
                // unbind the return values
-               SOAPMessage resMessage = msgContext.getSOAPMessage();
+               MessageAbstraction resMessage = msgContext.getMessageAbstraction();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
@@ -371,10 +362,10 @@ public abstract class CommonClient implements StubExt, HeaderSource
             faultType[0] = null;
 
             // Check if protocol handlers modified the payload
-            if (((SOAPBodyImpl)reqMessage.getSOAPBody()).isModifiedFromSource())
+            if (reqMessage.isModified())
             {
                log.debug("Handler modified body payload, unbind message again");
-               SOAPMessage resMessage = msgContext.getSOAPMessage();
+               MessageAbstraction resMessage = msgContext.getMessageAbstraction();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
@@ -403,53 +394,53 @@ public abstract class CommonClient implements StubExt, HeaderSource
          closeHandlerChain(portName, handlerType[0]);
       }
    }
-   
+
    private void saveSessionInfo(Map<String, Object> remotingMetadata, Map<String, Object> requestContext)
    {
-      Map<String, String> cookies = (Map) remotingMetadata.get(SESSION_COOKIES);
+      Map<String, String> cookies = (Map)remotingMetadata.get(SESSION_COOKIES);
       if (cookies == null)
       {
          cookies = new HashMap<String, String>();
          requestContext.put(SESSION_COOKIES, cookies);
       }
-      
+
       List<String> setCookies = new ArrayList<String>();
-      
+
       List<String> setCookies1 = (List)remotingMetadata.get("Set-Cookie");
       if (setCookies1 != null)
          setCookies.addAll(setCookies1);
-      
+
       List<String> setCookies2 = (List)remotingMetadata.get("Set-Cookie2");
       if (setCookies2 != null)
          setCookies.addAll(setCookies2);
-      
+
       // TODO: The parsing here should be improved to be fully compliant with the RFC
       for (String setCookie : setCookies)
       {
          int index = setCookie.indexOf(';');
          if (index == -1)
             continue;
-         
+
          String pair = setCookie.substring(0, index);
          index = pair.indexOf('=');
          if (index == -1)
             continue;
-         
+
          String name = pair.substring(0, index);
          String value = pair.substring(index + 1);
-         
+
          cookies.put(name, value);
       }
    }
 
-   protected void addSessionInfo(SOAPMessage reqMessage, Map<String, Object> callProperties)
+   protected void addSessionInfo(MessageAbstraction reqMessage, Map<String, Object> callProperties)
    {
-      Map<String, String> cookies = (Map) callProperties.get(SESSION_COOKIES);
+      Map<String, String> cookies = (Map)callProperties.get(SESSION_COOKIES);
       if (cookies != null)
       {
          for (Map.Entry<String, String> cookie : cookies.entrySet())
          {
-            reqMessage.getMimeHeaders().addHeader("Cookie" , cookie.getKey() +  "=" + cookie.getValue()); 
+            reqMessage.getMimeHeaders().addHeader("Cookie", cookie.getKey() + "=" + cookie.getValue());
          }
       }
    }
@@ -464,12 +455,11 @@ public abstract class CommonClient implements StubExt, HeaderSource
       return msgContext;
    }
 
-   protected void addAttachmentParts(SOAPMessage reqMessage)
+   protected void addAttachmentParts(MessageAbstraction reqMessage)
    {
       for (AttachmentPart part : attachmentParts)
       {
-         if (log.isDebugEnabled())
-            log.debug("Adding attachment part: " + part.getContentId());
+         log.debug("Adding attachment part: " + part.getContentId());
          reqMessage.addAttachmentPart(part);
       }
    }

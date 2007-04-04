@@ -86,7 +86,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
    /** Invoke an instance of the SEI implementation bean */
    public void invokeServiceEndpointInstance(Object seiImpl, EndpointInvocation epInv) throws SOAPFaultException, Exception
    {
-      if(log.isDebugEnabled()) log.debug("invokeServiceEndpoint: " + epInv.getJavaMethod().getName());
+      log.debug("invokeServiceEndpoint: " + epInv.getJavaMethod().getName());
       try
       {
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();

@@ -35,6 +35,7 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.server.PropertyCallback;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -61,8 +62,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
    private EndpointMetaData epMetaData;
    // The operation for this message ctx
    private OperationMetaData opMetaData;
-   // The SOAPMessage in this message context
-   private SOAPMessage soapMessage;
+   // The Message in this message context
+   private MessageAbstraction message;
    // The map of scoped properties
    protected Map<String, ScopedProperty> scopedProps = new HashMap<String, ScopedProperty>();
    // The current property scope
@@ -77,7 +78,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    {
       this.epMetaData = msgContext.epMetaData;
       this.opMetaData = msgContext.opMetaData;
-      this.soapMessage = msgContext.soapMessage;
+      this.message = msgContext.message;
       this.serContext = msgContext.serContext;
       this.scopedProps = new HashMap<String, ScopedProperty>(msgContext.scopedProps);
       this.currentScope = msgContext.currentScope;
@@ -118,12 +119,22 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
    public SOAPMessage getSOAPMessage()
    {
-      return soapMessage;
+      return (SOAPMessage)message;
    }
 
    public void setSOAPMessage(SOAPMessage soapMessage)
    {
-      this.soapMessage = soapMessage;
+      this.message = (MessageAbstraction)soapMessage;
+   }
+
+   public MessageAbstraction getMessageAbstraction()
+   {
+      return message;
+   }
+
+   public void setMessageAbstraction(MessageAbstraction message)
+   {
+      this.message = message;
    }
 
    public SerializationContext getSerializationContext()

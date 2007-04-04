@@ -68,7 +68,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    // Generic JAXWS payload
    private XMLFragment xmlFragment;
    private boolean isDOMValid = true;
-   private boolean isModifiedFromSource;
 
    public SOAPBodyImpl(String prefix, String namespace)
    {
@@ -78,16 +77,6 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public boolean isDOMValid()
    {
       return isDOMValid;
-   }
-
-   public boolean isModifiedFromSource()
-   {
-      return isModifiedFromSource;
-   }
-
-   public void setModifiedFromSource(boolean isModified)
-   {
-      this.isModifiedFromSource = isModified;
    }
 
    public Source getSource()
@@ -372,7 +361,8 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
          }
          finally
          {
-            isModifiedFromSource = true;
+            // Mark the message as modified
+            
             log.trace("END expandToDOM");
          }
       }

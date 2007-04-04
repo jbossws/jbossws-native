@@ -23,26 +23,14 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
@@ -51,14 +39,16 @@ import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.client.HTTPRemotingConnection;
+import org.jboss.ws.core.client.RemotingConnection;
+import org.jboss.ws.core.client.SOAPRemotingConnection;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.soap.SOAPBodyImpl;
-import org.jboss.ws.core.soap.SOAPConnectionImpl;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 /**
@@ -82,7 +72,7 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, Class<T> type, Mode mode)
    {
-      this.bindingProvider = new BindingProviderImpl(epMetaData.getBindingId());
+      this.bindingProvider = new BindingProviderImpl(epMetaData);
       this.epMetaData = epMetaData;
       this.executor = executor;
       this.type = type;
@@ -92,7 +82,7 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, JAXBContext jbc, Mode mode)
    {
-      this.bindingProvider = new BindingProviderImpl(epMetaData.getBindingId());
+      this.bindingProvider = new BindingProviderImpl(epMetaData);
       this.epMetaData = epMetaData;
       this.executor = executor;
       this.type = Object.class;
@@ -115,13 +105,31 @@ public class DispatchImpl<T> implements Dispatch<T>
       return retObj;
    }
 
-   private Object invokeInternal(Object obj, Map<String, Object> resContext) throws SOAPException
+   private Object invokeInternal(Object obj, Map<String, Object> resContext) throws IOException
    {
-      SOAPMessage reqMsg = getRequestMessage(obj);
+      MessageAbstraction reqMsg = getRequestMessage(obj);
       String targetAddress = epMetaData.getEndpointAddress();
-      SOAPMessage resMsg = new SOAPConnectionImpl().call(reqMsg, targetAddress);
+      MessageAbstraction resMsg = getRemotingConnection().invoke(reqMsg, targetAddress, false);
       Object retObj = getReturnObject(resMsg);
       return retObj;
+   }
+
+   private RemotingConnection getRemotingConnection()
+   {
+      String bindingID = bindingProvider.getBinding().getBindingID();
+      if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
+         throw new IllegalStateException("Unsupported binding: " + bindingID);
+
+      RemotingConnection remotingConnection;
+      if (HTTPBinding.HTTP_BINDING.equals(bindingID))
+      {
+         remotingConnection = new HTTPRemotingConnection();
+      }
+      else
+      {
+         remotingConnection = new SOAPRemotingConnection();
+      }
+      return remotingConnection;
    }
 
    public Response<T> invokeAsync(T msg)
@@ -144,11 +152,11 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    public void invokeOneWay(T msg)
    {
-      SOAPMessage reqMsg = getRequestMessage(msg);
+      MessageAbstraction reqMsg = getRequestMessage(msg);
       try
       {
          String targetAddress = epMetaData.getEndpointAddress();
-         new SOAPConnectionImpl().callOneWay(reqMsg, targetAddress);
+         getRemotingConnection().invoke(reqMsg, targetAddress, true);
       }
       catch (Exception ex)
       {
@@ -169,7 +177,7 @@ public class DispatchImpl<T> implements Dispatch<T>
       {
          throw (WebServiceException)ex;
       }
-      
+
       String msg = "Cannot dispatch message";
       log.error(msg, ex);
       throw new WebServiceException(msg, ex);
@@ -210,106 +218,46 @@ public class DispatchImpl<T> implements Dispatch<T>
       }
    }
 
-   private SOAPMessage getRequestMessage(Object obj)
+   private MessageAbstraction getRequestMessage(Object obj)
    {
       // jaxws/api/javax_xml_ws/Dispatch/Client.java#invokeTestJAXBNull
       if (obj == null)
          throw new SOAPFaultException("Request object cannot be null");
-      
-      SOAPMessage reqMsg = null;
-      try
-      {
-         MessageFactory factory = MessageFactory.newInstance();
-         if (SOAPMessage.class.isAssignableFrom(type))
-         {
-            reqMsg = (SOAPMessage)obj;
-         }
-         else if (Source.class.isAssignableFrom(type))
-         {
-            Source source = (Source)obj;
-            if (mode == Mode.PAYLOAD)
-            {
-               reqMsg = factory.createMessage();
-               SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
-               soapBody.setSource(source);
-            }
-            if (mode == Mode.MESSAGE)
-            {
-               TransformerFactory tf = TransformerFactory.newInstance();
-               ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-               tf.newTransformer().transform(source, new StreamResult(baos));
-               reqMsg = factory.createMessage(null, new ByteArrayInputStream(baos.toByteArray()));
-            }
-         }
-         else if (jaxbContext != null)
-         {
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-            marshaller.marshal(obj, baos);
 
-            reqMsg = factory.createMessage();
-            SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
-            StreamSource source = new StreamSource(new ByteArrayInputStream(baos.toByteArray()));
-            soapBody.setSource(source);
-         }
-      }
-      catch (RuntimeException rte)
-      {
-         throw rte;
-      }
-      catch (Exception ex)
-      {
-         throw new WebServiceException("Cannot create request message", ex);
-      }
+      String bindingID = bindingProvider.getBinding().getBindingID();
+      if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
+         throw new IllegalStateException("Unsupported binding: " + bindingID);
 
-      if (reqMsg == null)
-         throw new WebServiceException("Cannot create request message for: " + obj);
-
-      return reqMsg;
+      MessageAbstraction message;
+      if (HTTPBinding.HTTP_BINDING.equals(bindingID))
+      {
+         DispatchHTTPBinding helper = new DispatchHTTPBinding(mode, type, jaxbContext);
+         message = helper.getRequestMessage(obj);
+      }
+      else
+      {
+         DispatchSOAPBinding helper = new DispatchSOAPBinding(mode, type, jaxbContext);
+         message = helper.getRequestMessage(obj);
+      }
+      return message;
    }
 
-   private Object getReturnObject(SOAPMessage resMsg)
+   private Object getReturnObject(MessageAbstraction resMsg)
    {
-      Object retObj = null;
-      try
-      {
-         if (SOAPMessage.class.isAssignableFrom(type))
-         {
-            retObj = resMsg;
-         }
-         else if (Source.class.isAssignableFrom(type))
-         {
-            if (mode == Mode.PAYLOAD)
-            {
-               SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
-               SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
-               retObj = new DOMSource(soapElement);
-            }
-            if (mode == Mode.MESSAGE)
-            {
-               SOAPEnvelope soapEnvelope = resMsg.getSOAPPart().getEnvelope();
-               String xmlMessage = DOMWriter.printNode(soapEnvelope, false);
-               retObj = new StreamSource(new StringReader(xmlMessage));
-            }
-         }
-         else if (jaxbContext != null)
-         {
-            SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
-            SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+      String bindingID = bindingProvider.getBinding().getBindingID();
+      if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
+         throw new IllegalStateException("Unsupported binding: " + bindingID);
 
-            if(log.isDebugEnabled()) log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            retObj = unmarshaller.unmarshal(soapElement);
-         }
-      }
-      catch (RuntimeException rte)
+      Object retObj = null;
+      if (HTTPBinding.HTTP_BINDING.equals(bindingID))
       {
-         throw rte;
+         DispatchHTTPBinding helper = new DispatchHTTPBinding(mode, type, jaxbContext);
+         retObj = helper.getReturnObject(resMsg);
       }
-      catch (Exception ex)
+      else
       {
-         throw new WebServiceException("Cannot process response message", ex);
+         DispatchSOAPBinding helper = new DispatchSOAPBinding(mode, type, jaxbContext);
+         retObj = helper.getReturnObject(resMsg);
       }
       return retObj;
    }
@@ -346,7 +294,7 @@ public class DispatchImpl<T> implements Dispatch<T>
                handler.handleResponse(response);
          }
       }
-      
+
       // 4.18 Conformance (Failed Dispatch.invokeAsync): When an operation is invoked using an invokeAsync
       // method, an implementation MUST throw a WebServiceException if there is any error in the configuration 
       // of the Dispatch instance. Errors that occur during the invocation are reported when the client
@@ -355,7 +303,7 @@ public class DispatchImpl<T> implements Dispatch<T>
       {
          String msg = "Cannot dispatch message";
          log.error(msg, ex);
-         
+
          WebServiceException wsex;
          if (ex instanceof WebServiceException)
          {

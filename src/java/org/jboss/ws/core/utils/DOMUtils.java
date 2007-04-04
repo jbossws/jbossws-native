@@ -37,7 +37,9 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -570,7 +572,10 @@ public final class DOMUtils
 
             TransformerFactory tf = TransformerFactory.newInstance();
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-            tf.newTransformer().transform(source, new StreamResult(baos));
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.transform(source, new StreamResult(baos));
             retElement = DOMUtils.parse(new ByteArrayInputStream(baos.toByteArray()));
          }
          else

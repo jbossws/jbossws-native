@@ -113,8 +113,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(BindingType.class))
       {
-         if (log.isDebugEnabled())
-            log.debug("processBindingType on: " + wsClass.getName());
+         log.debug("processBindingType on: " + wsClass.getName());
          BindingType anBindingType = (BindingType)wsClass.getAnnotation(BindingType.class);
          epMetaData.setBindingId(anBindingType.value());
       }
@@ -124,8 +123,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       if (wsClass.isAnnotationPresent(SOAPBinding.class))
       {
-         if (log.isDebugEnabled())
-            log.debug("processSOAPBinding on: " + wsClass.getName());
+         log.debug("processSOAPBinding on: " + wsClass.getName());
          SOAPBinding anSoapBinding = wsClass.getAnnotation(SOAPBinding.class);
 
          SOAPBinding.Style attrStyle = anSoapBinding.style();

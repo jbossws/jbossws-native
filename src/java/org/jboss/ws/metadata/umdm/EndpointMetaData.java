@@ -28,10 +28,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
@@ -60,8 +62,8 @@ import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * A Service component describes a set of endpoints.
@@ -77,6 +79,16 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public enum Type
    {
       JAXRPC, JAXWS
+   }
+
+   public static final Set<String> SUPPORTED_BINDINGS = new HashSet<String>();
+   static
+   {
+      SUPPORTED_BINDINGS.add(Constants.SOAP11HTTP_BINDING);
+      SUPPORTED_BINDINGS.add(Constants.SOAP12HTTP_BINDING);
+      SUPPORTED_BINDINGS.add(Constants.SOAP11HTTP_MTOM_BINDING);
+      SUPPORTED_BINDINGS.add(Constants.SOAP12HTTP_MTOM_BINDING);
+      SUPPORTED_BINDINGS.add(Constants.HTTP_BINDING);
    }
 
    // The parent meta data.
@@ -154,7 +166,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    }
 
    public void setPortName(QName portName)
-   {      
+   {
       this.portName = portName;
    }
 
@@ -180,11 +192,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void setBindingId(String bindingId)
    {
-      if (!Constants.SOAP11HTTP_BINDING.equals(bindingId) && !Constants.SOAP12HTTP_BINDING.equals(bindingId) && !Constants.SOAP11HTTP_MTOM_BINDING.equals(bindingId)
-            && !Constants.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
-      {
+      if (SUPPORTED_BINDINGS.contains(bindingId) == false)
          throw new WSException("Unsupported binding: " + bindingId);
-      }
 
       this.bindingId = bindingId;
    }
@@ -327,7 +336,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public Properties getProperties()
    {
-      if(null == this.properties)
+      if (null == this.properties)
          this.properties = new Properties();
       return this.properties;
    }
@@ -734,8 +743,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       boolean match;
       if (seiName != null && portName != null)
          match = getServiceEndpointInterfaceName().equals(seiName) && portName.equals(portName);
-      else
-         match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
+      else match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
 
       return match;
    }

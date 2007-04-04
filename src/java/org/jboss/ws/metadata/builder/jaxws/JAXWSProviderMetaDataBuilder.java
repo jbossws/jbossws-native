@@ -38,6 +38,7 @@ import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.JavaUtils;
@@ -109,9 +110,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
       sepMetaData.setServiceEndpointInterfaceName(sepClass.getName());
 
       ServiceMode anServiceMode = sepClass.getAnnotation(ServiceMode.class);
-      if (anServiceMode != null)
-         sepMetaData.setServiceMode(anServiceMode.value());
-      else sepMetaData.setServiceMode(Mode.PAYLOAD);
+      sepMetaData.setServiceMode(anServiceMode != null ? anServiceMode.value() : Mode.PAYLOAD);
 
       serviceMetaData.addEndpoint(sepMetaData);
 
@@ -126,6 +125,9 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
          serviceMetaData.setWsdlLocation(wsdlURL);
       }
 
+      // process binding type
+      processBindingType(sepMetaData, sepClass);
+      
       // process handler chain
       processHandlerChain(sepMetaData, sepClass);
 
@@ -156,10 +158,8 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
       OperationMetaData opMetaData = new OperationMetaData(epMetaData, new QName(targetNS, javaName), javaName);
       epMetaData.addOperation(opMetaData);
 
-      Mode serviceMode = epMetaData.getServiceMode();
-      Class paramType = (serviceMode == Mode.MESSAGE ? SOAPMessage.class : Source.class);
-
       // Setup invoke param
+      Class paramType = Source.class;
       QName xmlName = new QName("invokeParam");
       QName xmlType = Constants.TYPE_LITERAL_ANYTYPE;
       ParameterMetaData pmd = new ParameterMetaData(opMetaData, xmlName, xmlType, paramType.getName());

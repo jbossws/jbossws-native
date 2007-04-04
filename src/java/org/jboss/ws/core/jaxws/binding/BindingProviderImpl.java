@@ -32,7 +32,6 @@ import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.http.HTTPBinding;
-import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
@@ -50,12 +49,12 @@ public class BindingProviderImpl extends CommonBindingProvider implements Bindin
 {
    private Map<String, Object> requestContext = new HashMap<String, Object>();
    private Map<String, Object> responseContext = new HashMap<String, Object>();
-   
+
    public BindingProviderImpl(EndpointMetaData epMetaData)
    {
       super(epMetaData);
    }
-   
+
    public BindingProviderImpl(String bindingId)
    {
       super(bindingId, Type.JAXWS);
@@ -64,38 +63,23 @@ public class BindingProviderImpl extends CommonBindingProvider implements Bindin
    @Override
    protected void initBinding(String bindingId, Type type)
    {
-      if (epMetaData != null && epMetaData.getServiceMode() == Mode.MESSAGE)
+      super.initBinding(bindingId, type);
+      
+      if (HTTPBinding.HTTP_BINDING.equals(bindingId) == false)
       {
-         binding = new MessageBinding();
+         Mode serviceMode = (epMetaData != null ?  epMetaData.getServiceMode() : null);
+         if (serviceMode == Mode.MESSAGE)
+         {
+            binding = new MessageBinding();
+         }
+         else if (serviceMode == Mode.PAYLOAD)
+         {
+            binding = new PayloadBinding();
+         }
       }
-      else if (epMetaData != null && epMetaData.getServiceMode() == Mode.PAYLOAD)
-      {
-         binding = new PayloadBinding();
-      }
-      else if (SOAPBinding.SOAP11HTTP_BINDING.equals(bindingId))
-      {
-         binding = new SOAP11BindingJAXWS();
-      }
-      else if (SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(bindingId))
-      {
-         binding = new SOAP11BindingJAXWS(true);
-      }
-      else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
-      {
-         binding = new SOAP12BindingJAXWS();
-      }
-      else if (SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
-      {
-         binding = new SOAP12BindingJAXWS(true);
-      }
-      else if (HTTPBinding.HTTP_BINDING.equals(bindingId))
-      {
-         binding = new HTTPBindingJAXWS();
-      }
-      else
-      {
+      
+      if (binding == null)
          throw new WebServiceException("Unsupported binding: " + bindingId);
-      }
    }
 
    public Map<String, Object> getRequestContext()

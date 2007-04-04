@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.Handler;
 
 import org.jboss.logging.Logger;
@@ -37,11 +36,12 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.HeaderSource;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -61,16 +61,15 @@ public class MessageBinding implements CommonBinding, BindingExt
    private BindingImpl delegate = new BindingImpl();
    
    /** On the client side, generate the payload from IN parameters. */
-   public SOAPMessage bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
    {
       throw new NotImplementedException();
    }
 
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
-   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, Object reqMessage) throws BindingException
+   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("unbindRequestMessage: " + opMetaData.getQName());
-
+      log.debug("unbindRequestMessage: " + opMetaData.getQName());
       try
       {
          // Construct the endpoint invocation object
@@ -94,10 +93,9 @@ public class MessageBinding implements CommonBinding, BindingExt
    }
 
    /** On the server side, generate the payload from OUT parameters. */
-   public Object bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
-      if(log.isDebugEnabled()) log.debug("bindResponseMessage: " + opMetaData.getQName());
-
+      log.debug("bindResponseMessage: " + opMetaData.getQName());
       try
       {
          SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
@@ -105,8 +103,8 @@ public class MessageBinding implements CommonBinding, BindingExt
             throw new WSException("MessageContext not available");
 
          // Associate current message with message context
-         SOAPMessage resMessage = (SOAPMessage)epInv.getReturnValue();
-         msgContext.setMessage(resMessage);
+         MessageAbstraction resMessage = (MessageAbstraction)epInv.getReturnValue();
+         msgContext.setMessageAbstraction(resMessage);
 
          return resMessage;
       }
@@ -118,15 +116,15 @@ public class MessageBinding implements CommonBinding, BindingExt
    }
 
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
-   public void unbindResponseMessage(OperationMetaData opMetaData, Object resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       throw new NotImplementedException();
    }
 
-   public Object bindFaultMessage(Exception ex)
+   public MessageAbstraction bindFaultMessage(Exception ex)
    {
-      SOAPMessage faultMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
+      SOAPMessageImpl faultMessage = SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext != null)
       {
@@ -159,6 +157,16 @@ public class MessageBinding implements CommonBinding, BindingExt
       delegate.setHandlerChain(handlerChain, handlerType);
    }
    
+   public String getBindingID()
+   {
+      throw new NotImplementedException();
+   }
+
+   public void setHeaderSource(HeaderSource source)
+   {
+      // Not needed
+   }
+
    private void handleException(Exception ex) throws BindingException
    {
       if (ex instanceof RuntimeException)
@@ -168,15 +176,5 @@ public class MessageBinding implements CommonBinding, BindingExt
          throw (BindingException)ex;
 
       throw new BindingException(ex);
-   }
-
-   public String getBindingID()
-   {
-      throw new NotImplementedException();
-   }
-
-   public void setHeaderSource(HeaderSource source)
-   {
-      // Not needed
    }
 }

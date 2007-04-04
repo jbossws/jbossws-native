@@ -25,17 +25,18 @@ package org.jboss.ws.core;
 
 import java.util.Observable;
 
+import javax.xml.ws.http.HTTPBinding;
+import javax.xml.ws.soap.SOAPBinding;
+
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.SOAP11BindingJAXRPC;
 import org.jboss.ws.core.jaxrpc.SOAP12BindingJAXRPC;
+import org.jboss.ws.core.jaxws.binding.HTTPBindingJAXWS;
 import org.jboss.ws.core.jaxws.binding.SOAP11BindingJAXWS;
 import org.jboss.ws.core.jaxws.binding.SOAP12BindingJAXWS;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-
-import javax.xml.ws.soap.SOAPBinding;
 
 /**
  * Provides access to the protocol binding.
@@ -74,17 +75,25 @@ public class CommonBindingProvider implements Configurable
 
    protected void initBinding(String bindingId, Type type)
    {
-      if (CommonSOAPBinding.SOAP11HTTP_BINDING.equals(bindingId) || CommonSOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(bindingId))
+      if (SOAPBinding.SOAP11HTTP_BINDING.equals(bindingId))
       {
          binding = (type == Type.JAXWS ? new SOAP11BindingJAXWS() : new SOAP11BindingJAXRPC());
       }
-      else if (CommonSOAPBinding.SOAP12HTTP_BINDING.equals(bindingId) || CommonSOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+      else if (SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(bindingId))
+      {
+         binding = (type == Type.JAXWS ? new SOAP11BindingJAXWS(true) : new SOAP11BindingJAXRPC(true));
+      }
+      else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
       {
          binding = (type == Type.JAXWS ? new SOAP12BindingJAXWS() : new SOAP12BindingJAXRPC());
       }
-      else
+      else if (SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
       {
-         throw new WSException("Unsupported binding: " + bindingId);
+         binding = (type == Type.JAXWS ? new SOAP12BindingJAXWS(true) : new SOAP12BindingJAXRPC(true));
+      }
+      else if (HTTPBinding.HTTP_BINDING.equals(bindingId))
+      {
+         binding = new HTTPBindingJAXWS();
       }
    }
 

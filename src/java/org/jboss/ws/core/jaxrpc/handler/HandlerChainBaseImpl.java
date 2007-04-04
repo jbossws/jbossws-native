@@ -284,7 +284,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getMessage().getSOAPPart();
+                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
                      lastMessageTrace = traceSOAPPart("BEFORE handleRequest - " + currHandler, soapPart, lastMessageTrace);
                   }
 
@@ -292,7 +292,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getMessage().getSOAPPart();
+                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
                      lastMessageTrace = traceSOAPPart("AFTER handleRequest - " + currHandler, soapPart, lastMessageTrace);
                   }
                }
@@ -366,7 +366,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getMessage().getSOAPPart();
+                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
                      lastMessageTrace = traceSOAPPart("BEFORE handleResponse - " + currHandler, soapPart, lastMessageTrace);
                   }
 
@@ -374,7 +374,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getMessage().getSOAPPart();
+                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
                      lastMessageTrace = traceSOAPPart("AFTER handleResponse - " + currHandler, soapPart, lastMessageTrace);
                   }
                }

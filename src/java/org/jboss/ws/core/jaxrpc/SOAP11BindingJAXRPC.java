@@ -29,7 +29,6 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.CommonSOAP11Binding;
 import org.jboss.ws.core.RoleSource;
-import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
@@ -44,9 +43,14 @@ public class SOAP11BindingJAXRPC extends CommonSOAP11Binding
    // Delegate to JAXWS SOAP binding
    private SOAPBindingJAXRPC delegate = new SOAPBindingJAXRPC();
 
-   public SOAP11BindingJAXRPC() {
-      super();
+   public SOAP11BindingJAXRPC()
+   {
       setMTOMEnabled(false);
+   }
+
+   public SOAP11BindingJAXRPC(boolean mtomEnabled)
+   {
+      setMTOMEnabled(mtomEnabled);
    }
 
    public void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage)
@@ -58,7 +62,7 @@ public class SOAP11BindingJAXRPC extends CommonSOAP11Binding
    {
       return SOAPFaultHelperJAXRPC.exceptionToFaultMessage(ex);
    }
-   
+
    protected void throwFaultException(SOAPFaultImpl fault) throws Exception
    {
       throw SOAPFaultHelperJAXRPC.getSOAPFaultException(fault);

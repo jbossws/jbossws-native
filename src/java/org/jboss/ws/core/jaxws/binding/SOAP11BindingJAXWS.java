@@ -27,18 +27,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.soap.SOAPBinding;
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonSOAP11Binding;
-import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -57,12 +51,11 @@ public class SOAP11BindingJAXWS extends CommonSOAP11Binding implements BindingEx
 
    public SOAP11BindingJAXWS()
    {
-      super();
       setMTOMEnabled(false);
    }
 
-   public SOAP11BindingJAXWS(boolean mtomEnabled) {
-      super();
+   public SOAP11BindingJAXWS(boolean mtomEnabled)
+   {
       setMTOMEnabled(mtomEnabled);
    }
 
@@ -105,12 +98,12 @@ public class SOAP11BindingJAXWS extends CommonSOAP11Binding implements BindingEx
    {
       delegate.setHandlerChain(handlerChain, handlerType);
    }
-   
+
    public SOAPMessage createFaultMessageFromException(Exception ex)
    {
       return SOAPFaultHelperJAXWS.exceptionToFaultMessage(ex);
    }
-   
+
    protected void throwFaultException(SOAPFaultImpl fault) throws Exception
    {
       throw SOAPFaultHelperJAXWS.getSOAPFaultException(fault);
@@ -118,6 +111,6 @@ public class SOAP11BindingJAXWS extends CommonSOAP11Binding implements BindingEx
 
    public String getBindingID()
    {
-      throw new NotImplementedException();
+      return isMTOMEnabled() ? SOAPBinding.SOAP11HTTP_MTOM_BINDING : SOAPBinding.SOAP11HTTP_BINDING;
    }
 }

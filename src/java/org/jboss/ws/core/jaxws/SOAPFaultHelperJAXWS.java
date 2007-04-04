@@ -36,6 +36,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
@@ -46,6 +47,7 @@ import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -140,13 +142,13 @@ public class SOAPFaultHelperJAXWS
    }
 
    /** Translate the request exception into a SOAPFault message. */
-   public static SOAPMessage exceptionToFaultMessage(Exception reqEx)
+   public static SOAPMessageImpl exceptionToFaultMessage(Exception reqEx)
    {
       log.error("SOAP request exception", reqEx);
 
       try
       {
-         SOAPMessage faultMessage;
+         SOAPMessageImpl faultMessage;
          if (reqEx instanceof SOAPFaultException)
          {
             faultMessage = toSOAPMessage((SOAPFaultException)reqEx);
@@ -171,10 +173,10 @@ public class SOAPFaultHelperJAXWS
       }
    }
 
-   private static SOAPMessage toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
+   private static SOAPMessageImpl toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
    {
       MessageFactory factory = MessageFactory.newInstance();
-      SOAPMessage soapMessage = factory.createMessage();
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
       populateSOAPFault(soapBody, faultEx);
@@ -227,10 +229,10 @@ public class SOAPFaultHelperJAXWS
          targetFault.setFaultActor(faultActor);
    }
 
-   private static SOAPMessage toSOAPMessage(Exception ex) throws SOAPException
+   private static SOAPMessageImpl toSOAPMessage(Exception ex) throws SOAPException
    {
       MessageFactory factory = MessageFactory.newInstance();
-      SOAPMessage soapMessage = factory.createMessage();
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
       SOAPFault soapFault;

@@ -19,27 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.soap;
+package org.jboss.ws.core.jaxws.binding;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.InvocationRequest;
 import org.jboss.remoting.invocation.OnewayInvocation;
 import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.ws.core.HTTPMessageImpl;
+import org.jboss.ws.core.utils.DOMWriter;
+import org.w3c.dom.Element;
 
 /**
  * @author Thomas.Diesler@jboss.org
  * @since 25-Nov-2004
  */
-public class SOAPMessageMarshaller implements Marshaller
+public class HTTPMessageMarshaller implements Marshaller
 {
    // Provide logging
-   private static Logger log = Logger.getLogger(SOAPMessageMarshaller.class);
+   private static Logger log = Logger.getLogger(HTTPMessageMarshaller.class);
 
    /**
     * Marshaller will need to take the dataObject and convert
@@ -58,15 +58,23 @@ public class SOAPMessageMarshaller implements Marshaller
       if (dataObject instanceof OnewayInvocation)
          dataObject = ((OnewayInvocation)dataObject).getParameters()[0];
 
-      if ((dataObject instanceof SOAPMessage) == false)
-         throw new IllegalArgumentException("Not a SOAPMessage: " + dataObject);
+      if ((dataObject instanceof HTTPMessageImpl) == false)
+         throw new IllegalArgumentException("Not a HTTPMessage: " + dataObject);
 
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)dataObject;
-      soapMessage.writeTo(output);
+      HTTPMessageImpl httpMessage = (HTTPMessageImpl)dataObject;
+      Element root = httpMessage.getXmlFragment().toElement();
+
+      // debug the outgoing message
+      if (log.isTraceEnabled())
+      {
+         log.trace("Outgoing Message\n" + DOMWriter.printNode(root, true));
+      }
+
+      new DOMWriter(output).print(root);
    }
 
    public Marshaller cloneMarshaller() throws CloneNotSupportedException
    {
-      return new SOAPMessageMarshaller();
+      return new HTTPMessageMarshaller();
    }
 }

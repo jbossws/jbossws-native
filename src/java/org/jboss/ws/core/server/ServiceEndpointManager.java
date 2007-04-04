@@ -59,6 +59,7 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
@@ -397,7 +398,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       wsEndpoint.handleWSDLRequest(outStream, requestURL, resourcePath);
    }
 
-   public void processSOAPRequest(ObjectName sepID, InputStream inStream, OutputStream outStream, EndpointContext context) throws Exception
+   public void processRequest(ObjectName sepID, InputStream inStream, OutputStream outStream, EndpointContext context) throws Exception
    {
       final String SESSION_COOKIES = "org.jboss.ws.cookies";
 
@@ -444,9 +445,9 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       MessageContextAssociation.pushMessageContext(msgContext);
       try
       {
-         SOAPMessage resMessage = wsEndpoint.handleRequest(headerSource, context, inStream);
+         MessageAbstraction resMessage = wsEndpoint.processRequest(headerSource, context, inStream);
 
-         // REplace the message context with the response context
+         // Replace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
 
          Map<String, List<String>> headers = (Map<String, List<String>>)msgContext.get(MessageContextJAXWS.HTTP_RESPONSE_HEADERS);
@@ -457,20 +458,24 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          if (code != null)
             httpResponse.setStatus(code.intValue());
 
-         SOAPPart part = resMessage.getSOAPPart();
-         if (part == null)
-            throw new SOAPException("Cannot obtain SOAPPart from response message");
-
-         // R1126 An INSTANCE MUST return a "500 Internal Server Error" HTTP status code
-         // if the response envelope is a Fault.
-         //
-         // Also, a one-way operation must show up as empty content, and can be detected
-         // by a null envelope.
-         SOAPEnvelope soapEnv = part.getEnvelope();
-         boolean isFault = soapEnv != null && soapEnv.getBody().hasFault();
-         if (isFault && httpResponse != null)
+         boolean isFault = false;
+         if (resMessage instanceof SOAPMessage)
          {
-            httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            SOAPPart part = ((SOAPMessage)resMessage).getSOAPPart();
+            if (part == null)
+               throw new SOAPException("Cannot obtain SOAPPart from response message");
+
+            // R1126 An INSTANCE MUST return a "500 Internal Server Error" HTTP status code
+            // if the response envelope is a Fault.
+            //
+            // Also, a one-way operation must show up as empty content, and can be detected
+            // by a null envelope.
+            SOAPEnvelope soapEnv = part.getEnvelope();
+            isFault = soapEnv != null && soapEnv.getBody().hasFault();
+            if (isFault && httpResponse != null)
+            {
+               httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
          }
 
          sendResponse(outStream, msgContext, isFault);
@@ -490,7 +495,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    private void sendResponse(OutputStream outputStream, CommonMessageContext msgContext, boolean isFault) throws SOAPException, IOException
    {
-      SOAPMessage resMessage = msgContext.getSOAPMessage();
+      MessageAbstraction resMessage = msgContext.getMessageAbstraction();
       String wsaTo = null;
 
       // Get the destination from the AddressingProperties
@@ -505,7 +510,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       if (wsaTo != null)
       {
          log.debug("Sending response to addressing destination: " + wsaTo);
-         new SOAPConnectionImpl().callOneWay(resMessage, wsaTo);
+         new SOAPConnectionImpl().callOneWay((SOAPMessage)resMessage, wsaTo);
       }
       else
       {
@@ -515,14 +520,14 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    /** Process the given SOAPRequest and return the corresponding SOAPResponse
     */
-   public String processSOAPRequest(ObjectName sepID, String inMessage) throws Exception
+   public String processRequest(ObjectName sepID, String inMessage) throws Exception
    {
       log.debug("processSOAPRequest: " + sepID);
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(inMessage.getBytes("UTF-8"));
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream(512);
 
-      processSOAPRequest(sepID, inputStream, outputStream, null);
+      processRequest(sepID, inputStream, outputStream, null);
 
       String outMsg = new String(outputStream.toByteArray());
       return outMsg;

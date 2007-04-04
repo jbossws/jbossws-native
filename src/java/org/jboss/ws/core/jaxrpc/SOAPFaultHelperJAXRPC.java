@@ -48,6 +48,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
 import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
@@ -59,6 +60,7 @@ import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -171,7 +173,7 @@ public class SOAPFaultHelperJAXRPC
 
    /** Translate the request exception into a SOAPFault message.
     */
-   public static SOAPMessage exceptionToFaultMessage(Exception reqEx)
+   public static SOAPMessageImpl exceptionToFaultMessage(Exception reqEx)
    {
       // Get or create the SOAPFaultException
       SOAPFaultException faultEx;
@@ -192,7 +194,7 @@ public class SOAPFaultHelperJAXRPC
 
       try
       {
-         SOAPMessage faultMessage = toSOAPMessage(faultEx);
+         SOAPMessageImpl faultMessage = toSOAPMessage(faultEx);
          return faultMessage;
       }
       catch (RuntimeException rte)
@@ -206,7 +208,7 @@ public class SOAPFaultHelperJAXRPC
       }
    }
 
-   private static SOAPMessage toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
+   private static SOAPMessageImpl toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
    {
       assertFaultCode(faultEx.getFaultCode());
 
@@ -215,7 +217,7 @@ public class SOAPFaultHelperJAXRPC
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
 
       MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessage soapMessage = factory.createMessage();
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
 
       SOAPEnvelopeImpl soapEnvelope = (SOAPEnvelopeImpl)soapMessage.getSOAPPart().getEnvelope();
       SOAPBody soapBody = soapEnvelope.getBody();

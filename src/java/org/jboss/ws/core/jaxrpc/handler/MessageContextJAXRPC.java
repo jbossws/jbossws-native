@@ -74,7 +74,7 @@ public abstract class MessageContextJAXRPC extends CommonMessageContext implemen
 
    public void setMessage(SOAPMessage message)
    {
-      setSOAPMessage(message);
+      setMessage(message);
    }
 
    /** Create the serialization context

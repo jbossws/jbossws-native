@@ -19,22 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.client;
 
 // $Id$
 
-import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.jaxws.binding.HTTPMessageMarshaller;
+import org.jboss.ws.core.jaxws.binding.HTTPMessageUnMarshaller;
 
-/** An implementation handles invocations on the endpoint
- *
- * @author Thomas.Diesler@jboss.org
- * @since 19-Jan-2005
+/**
+ * @since 02-Apr-2007
  */
-public interface ServiceEndpointInvoker
+public class HTTPRemotingConnection extends RemotingConnectionImpl
 {
-   /** Initialize the invoker */
-   void init(ServiceEndpointInfo seInfo);
-   
-   /** Invoke the the service endpoint */
-   MessageAbstraction invoke(Object endpointContext) throws Exception;
+   protected UnMarshaller getUnmarshaller()
+   {
+      return new HTTPMessageUnMarshaller();
+   }
+
+   protected Marshaller getMarshaller()
+   {
+      return new HTTPMessageMarshaller();
+   }
 }

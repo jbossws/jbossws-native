@@ -27,13 +27,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.handler.LogicalMessageContext;
 import javax.xml.ws.handler.MessageContext;
 
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 
@@ -48,13 +47,13 @@ public class LogicalMessageContextImpl implements LogicalMessageContext
    private LogicalMessage logicalMessage;
    private MessageContext delegate;
 
-   public LogicalMessageContextImpl(SOAPMessageContextJAXWS soapContext)
+   public LogicalMessageContextImpl(MessageContextJAXWS msgContext)
    {
-      this.delegate = soapContext;
-      
-      Style style = soapContext.getEndpointMetaData().getStyle();
-      SOAPMessage soapMessage = soapContext.getMessage();
-      logicalMessage = new LogicalMessageImpl(soapMessage, style);
+      this.delegate = msgContext;
+
+      Style style = msgContext.getEndpointMetaData().getStyle();
+      MessageAbstraction message = msgContext.getMessageAbstraction();
+      logicalMessage = new LogicalMessageImpl(message, style);
    }
 
    /**
@@ -67,7 +66,7 @@ public class LogicalMessageContextImpl implements LogicalMessageContext
    }
 
    // MessageContext delegation
-   
+
    public void clear()
    {
       delegate.clear();

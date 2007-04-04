@@ -40,19 +40,19 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 public interface CommonBinding
 {
    /** On the client side, generate the Object from IN parameters. */
-   Object bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
+   MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
 
    /** On the server side, extract the IN parameters from the Object and populate an Invocation object */
-   EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, Object reqMessage) throws BindingException;
+   EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException;
 
    /** On the server side, generate the Object from OUT parameters in the Invocation object. */
-   Object bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException;
+   MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException;
 
    /** On the client side, extract the OUT parameters from the Object and return them to the client. */
-   void unbindResponseMessage(OperationMetaData opMetaData, Object resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
+   void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
 
    /** bind an exception to a fault message */
-   Object bindFaultMessage(Exception ex);
+   MessageAbstraction bindFaultMessage(Exception ex);
    
    void setHeaderSource(HeaderSource source);
 }

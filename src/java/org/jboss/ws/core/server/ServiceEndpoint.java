@@ -30,22 +30,23 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.HTTPMessageImpl;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.SOAPElementImpl;
-import org.jboss.ws.core.soap.SOAPElementWriter;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.xop.XOPContext;
@@ -64,7 +65,6 @@ public class ServiceEndpoint
 {
    // provide logging
    private static Logger log = Logger.getLogger(ServiceEndpoint.class);
-   private static Logger msgLog = Logger.getLogger("jbossws.SOAPMessage");
 
    /** Endpoint type enum */
    public enum State
@@ -88,7 +88,7 @@ public class ServiceEndpoint
    {
       return seInfo.getState();
    }
-   
+
    public ServiceEndpointInfo getServiceEndpointInfo()
    {
       return seInfo;
@@ -110,7 +110,7 @@ public class ServiceEndpoint
       ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
       UnifiedMetaData wsMetaData = epMetaData.getServiceMetaData().getUnifiedMetaData();
       wsMetaData.eagerInitialize();
-      
+
       seMetrics.start();
       seInfo.setState(State.STARTED);
    }
@@ -119,7 +119,8 @@ public class ServiceEndpoint
    {
       seMetrics.stop();
       seInfo.setState(State.STOPED);
-      if(log.isDebugEnabled()) log.debug("Stop Endpoint" + seMetrics);
+      if (log.isDebugEnabled())
+         log.debug("Stop Endpoint" + seMetrics);
    }
 
    public void destroy()
@@ -143,7 +144,8 @@ public class ServiceEndpoint
       {
          wsdlHost = epManager.getWebServiceHost();
       }
-      if(log.isDebugEnabled()) log.debug("WSDL request, using host: " + wsdlHost);
+      if (log.isDebugEnabled())
+         log.debug("WSDL request, using host: " + wsdlHost);
 
       WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
@@ -157,10 +159,10 @@ public class ServiceEndpoint
    /**
     * Handle a request to this web service endpoint
     */
-   public SOAPMessage handleRequest(MimeHeaderSource headerSource, EndpointContext context, InputStream inputStream) throws BindingException
+   public MessageAbstraction processRequest(MimeHeaderSource headerSource, EndpointContext context, InputStream inputStream) throws BindingException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
+      ServerEndpointMetaData sepMetaData = seInfo.getServerEndpointMetaData();
 
       long beginProcessing = 0;
       ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
@@ -174,34 +176,40 @@ public class ServiceEndpoint
             throw new SOAPFaultException(faultCode, faultString, null, null);
          }
 
-         if(log.isDebugEnabled()) log.debug("BEGIN handleRequest: " + seInfo.getServiceEndpointID());
+         log.debug("BEGIN handleRequest: " + seInfo.getServiceEndpointID());
          beginProcessing = seMetrics.processRequestMessage();
 
-         MessageFactoryImpl msgFactory = new MessageFactoryImpl();
-         msgFactory.setServiceMode(epMetaData.getServiceMode());
-         msgFactory.setStyle(epMetaData.getStyle());
-
          MimeHeaders headers = (headerSource != null ? headerSource.getMimeHeaders() : null);
-         SOAPMessageImpl reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
 
-         // Associate current message with message context
-         msgContext.setSOAPMessage(reqMessage);
-
-         // debug the incomming message
-         if (msgLog.isTraceEnabled())
+         MessageAbstraction reqMessage;
+         
+         String bindingID = sepMetaData.getBindingId();
+         if (HTTPBinding.HTTP_BINDING.equals(bindingID))
          {
-            SOAPEnvelope soapEnv = reqMessage.getSOAPPart().getEnvelope();
-            String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, true);
-            msgLog.trace("Incoming SOAPMessage\n" + envStr);
+            reqMessage = new HTTPMessageImpl(headers, inputStream);
+         }
+         else
+         {
+            MessageFactoryImpl msgFactory = new MessageFactoryImpl();
+            msgFactory.setServiceMode(sepMetaData.getServiceMode());
+            msgFactory.setStyle(sepMetaData.getStyle());
+
+            reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
          }
 
+         // Associate current message with message context
+         msgContext.setMessageAbstraction(reqMessage);
+
+         // debug the incomming message
+         MessageTrace.traceMessage("Incoming Request Message", reqMessage);
+
          // Set the thread context class loader
-         ClassLoader classLoader = epMetaData.getClassLoader();
+         ClassLoader classLoader = sepMetaData.getClassLoader();
          Thread.currentThread().setContextClassLoader(classLoader);
 
          // Invoke the service endpoint
          ServiceEndpointInvoker seInvoker = seInfo.getInvoker();
-         SOAPMessage resMessage = seInvoker.invoke(context);
+         MessageAbstraction resMessage = seInvoker.invoke(context);
 
          if (resMessage != null)
             postProcessResponse(headerSource, resMessage);
@@ -210,15 +218,15 @@ public class ServiceEndpoint
       }
       catch (Exception ex)
       {
-         SOAPMessage resMessage = msgContext.getSOAPMessage();
+         MessageAbstraction resMessage = msgContext.getMessageAbstraction();
 
          // In case we have an exception before the invoker is called
          // we create the fault message here.
-         if (resMessage == null || ((SOAPMessageImpl)resMessage).isFaultMessage() == false)
+         if (resMessage == null || resMessage.isFaultMessage() == false)
          {
             CommonBindingProvider bindingProvider = getCommonBindingProvider();
             CommonBinding binding = bindingProvider.getCommonBinding();
-            resMessage = (SOAPMessage)binding.bindFaultMessage(ex);
+            resMessage = binding.bindFaultMessage(ex);
          }
 
          if (resMessage != null)
@@ -230,10 +238,10 @@ public class ServiceEndpoint
       {
          try
          {
-            SOAPMessage soapMessage = msgContext.getSOAPMessage();
-            if (soapMessage != null && soapMessage.getSOAPPart().getEnvelope() != null)
+            MessageAbstraction resMessage = msgContext.getMessageAbstraction();
+            if (resMessage != null)
             {
-               if (soapMessage.getSOAPPart().getEnvelope().getBody().hasFault())
+               if (resMessage.isFaultMessage())
                {
                   seMetrics.processFaultMessage(beginProcessing);
                }
@@ -250,39 +258,31 @@ public class ServiceEndpoint
 
          // Reset the thread context class loader
          Thread.currentThread().setContextClassLoader(ctxClassLoader);
-         if(log.isDebugEnabled()) log.debug("END handleRequest: " + seInfo.getServiceEndpointID());
+         if (log.isDebugEnabled())
+            log.debug("END handleRequest: " + seInfo.getServiceEndpointID());
       }
    }
 
    /** Set response mime headers
     */
-   private void postProcessResponse(MimeHeaderSource headerSource, SOAPMessage resMessage)
+   private void postProcessResponse(MimeHeaderSource headerSource, MessageAbstraction resMessage)
    {
       try
       {
          // Set the outbound headers
-         if (headerSource != null)
+         if (headerSource != null && resMessage instanceof SOAPMessage)
          {
             XOPContext.eagerlyCreateAttachments();
-            resMessage.saveChanges();
+            ((SOAPMessage)resMessage).saveChanges();
             headerSource.setMimeHeaders(resMessage.getMimeHeaders());
          }
 
          // debug the outgoing message
-         if (msgLog.isTraceEnabled())
-         {
-            resMessage.saveChanges();
-            SOAPEnvelope soapEnv = resMessage.getSOAPPart().getEnvelope();
-            if (soapEnv != null)
-            {
-               String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, true);
-               msgLog.trace("Outgoing SOAPMessage\n" + envStr);
-            }
-         }
+         MessageTrace.traceMessage("Outgoing Response Message", resMessage);
       }
       catch (Exception ex)
       {
-         throw new JAXRPCException("Failed to post process response message", ex);
+         WSException.rethrow("Faild to post process response message", ex);
       }
    }
 
