@@ -31,7 +31,7 @@ public class MimeConstants
    // Header constants
    public static final String CONTENT_TYPE = "Content-Type";
    public static final String CONTENT_LOCATION = "Content-Location";
-   public static final String CONTENT_ID = "Content-Id";
+   public static final String CONTENT_ID = "Content-ID";
    public static final String CONTENT_DESCRIPTION = "Content-Description";
    public static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
 
