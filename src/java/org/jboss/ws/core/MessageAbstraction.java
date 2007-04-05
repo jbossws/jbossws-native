@@ -39,11 +39,7 @@ public interface MessageAbstraction
 
    void writeTo(OutputStream outputStream) throws IOException;
 
-   boolean isFaultMessage();
-
-   boolean isModified();
-
-   void setModified(boolean flag);
+   boolean isFaultMessage();      
    
    void addAttachmentPart(AttachmentPart part);
 

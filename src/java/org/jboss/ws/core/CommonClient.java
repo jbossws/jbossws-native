@@ -362,7 +362,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
             faultType[0] = null;
 
             // Check if protocol handlers modified the payload
-            if (reqMessage.isModified())
+            if (msgContext.isModified())
             {
                log.debug("Handler modified body payload, unbind message again");
                MessageAbstraction resMessage = msgContext.getMessageAbstraction();

@@ -40,10 +40,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
-import org.jboss.ws.core.soap.SOAPBodyImpl;
-import org.jboss.ws.core.soap.SOAPContentElement;
-import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.core.soap.*;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.w3c.dom.Element;
 
@@ -133,7 +130,9 @@ public class LogicalMessageImpl implements LogicalMessage
          HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
          httpMessage.setXmlFragment(new XMLFragment(source));
       }
-      message.setModified(true);
+      
+      MessageContextAssociation.peekMessageContext().setModified(true);
+      
    }
 
    public Object getPayload(JAXBContext jaxbContext)
@@ -168,6 +167,7 @@ public class LogicalMessageImpl implements LogicalMessage
          if (bodyElement != null)
          {
             bodyElement.setObjectValue(payload);
+            MessageContextAssociation.peekMessageContext().setModified(true);
          }
       }
       else if (message instanceof HTTPMessageImpl)

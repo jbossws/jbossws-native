@@ -196,7 +196,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
             try
             {
                // Check if protocol handlers modified the payload
-               if (reqMessage.isModified())
+               if (msgContext.isModified())
                {
                   log.debug("Handler modified payload, unbind message again");
                   reqMessage = msgContext.getMessageAbstraction();

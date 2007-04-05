@@ -293,6 +293,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                elQName = namespaceRegistry.registerQName(elQName);
             }
 
+            int numParameters = 0;
             for (ParameterMetaData paramMetaData : opMetaData.getParameters())
             {
                QName xmlName = paramMetaData.getXmlName();
@@ -317,12 +318,19 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   }
                   else
                   {
-                     SOAPElement element = paramMetaData.isInHeader() ? soapHeader : soapBodyElement;
+                     boolean isHeader = paramMetaData.isInHeader();
+                     SOAPElement element = isHeader ? soapHeader : soapBodyElement;
+                     if(!isHeader) numParameters++;
+                     
                      SOAPContentElement value = getParameterFromMessage(paramMetaData, element, false);
                      epInv.setRequestParamValue(xmlName, value);
                   }
                }
             }
+
+            // TCK: verify the numer of parameters matches the actual message payload
+            int numChildren = soapBodyElement.getChildNodes().getLength();
+            if(numChildren!=numParameters) throw new WSException("Invalid number of payload elements: " + numChildren);
          }
 
          // Generic message endpoint

@@ -55,6 +55,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 
 /**
  * A client side meta data builder.
@@ -204,9 +205,12 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
                epMetaData.getProperties().put(stubProp.getPropName(), stubProp.getPropValue());  
             }
 
-            // process port-component-uri
+            // process call properties
+            for(UnifiedCallPropertyMetaData callProp: portComp.getCallProperties())
+            {
+               epMetaData.getProperties().put(callProp.getPropName(), callProp.getPropValue());
+            }
             
-
          }
 
       }

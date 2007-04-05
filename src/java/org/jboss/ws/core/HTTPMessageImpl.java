@@ -44,8 +44,7 @@ import org.jboss.ws.core.soap.attachment.MimeConstants;
 public class HTTPMessageImpl implements HTTPMessageAbstraction
 {
    private MimeHeaders mimeHeaders;
-   private XMLFragment xmlFragment;
-   private boolean modified;
+   private XMLFragment xmlFragment;   
 
    public HTTPMessageImpl(MimeHeaders mimeHeaders, InputStream inputStream)
    {
@@ -111,15 +110,4 @@ public class HTTPMessageImpl implements HTTPMessageAbstraction
    {
       throw new NotImplementedException();
    }
-
-   public boolean isModified()
-   {
-      return modified;
-   }
-
-   public void setModified(boolean modifiedInHandler)
-   {
-      this.modified = modifiedInHandler;
-   }
-
 }

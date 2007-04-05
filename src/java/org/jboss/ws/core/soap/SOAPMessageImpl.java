@@ -23,35 +23,22 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.SOAPMessageAbstraction;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.soap.attachment.*;
+import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+
+import javax.mail.MessagingException;
+import javax.xml.soap.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.mail.MessagingException;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.SOAPMessageAbstraction;
-import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
-import org.jboss.ws.core.soap.attachment.CIDGenerator;
-import org.jboss.ws.core.soap.attachment.MimeConstants;
-import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
-import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
-import org.jboss.ws.core.soap.attachment.MultipartRelatedXOPEncoder;
-import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
  * The root class for all SOAP messages. As transmitted on the "wire", a SOAP message is an XML document or a
@@ -68,8 +55,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    private CIDGenerator cidGenerator = new CIDGenerator();
    private boolean isXOPMessage;
    private boolean isSWARefMessage;
-   private SOAPPartImpl soapPart;
-   private boolean modified;
+   private SOAPPartImpl soapPart;   
    private MultipartRelatedEncoder multipartRelatedEncoder;
 
    // Cache the associated operation meta data
@@ -272,6 +258,9 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
 
          saveRequired = false;
       }
+
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if(msgContext!=null) msgContext.setModified(true);
    }
 
    public boolean saveRequired()
@@ -505,15 +494,5 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
       Iterator attachmentItr = new MimeMatchingAttachmentsIterator(headers, attachments);
       while (attachmentItr.next() != null)
          attachmentItr.remove();
-   }
-
-   public boolean isModified()
-   {
-      return modified;
-   }
-
-   public void setModified(boolean modifiedInHandler)
-   {
-      this.modified = modifiedInHandler;
    }
 }

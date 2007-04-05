@@ -36,6 +36,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.server.PropertyCallback;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -68,6 +69,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
    protected Map<String, ScopedProperty> scopedProps = new HashMap<String, ScopedProperty>();
    // The current property scope
    protected Scope currentScope = Scope.APPLICATION;
+
+   private boolean isModified;
 
    public CommonMessageContext()
    {
@@ -125,6 +128,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    public void setSOAPMessage(SOAPMessage soapMessage)
    {
       this.message = (MessageAbstraction)soapMessage;
+      this.setModified(true);
    }
 
    public MessageAbstraction getMessageAbstraction()
@@ -247,6 +251,28 @@ public abstract class CommonMessageContext implements Map<String, Object>
    public void clear()
    {
       scopedProps.clear();
+   }
+
+
+   public boolean isModified()
+   {
+      return isModified;
+   }
+
+   /**
+    * Mark a message as 'modified' when the SAAJ model becomes stale.    
+    * This may be the case when:
+    * <ul>
+    * <li>the complete message is replaced at MessageContext level
+    * <li>the payload is set on a LogicalMessage
+    * <li>The SAAJ model is changed though the DOM or SAAJ API (handler)
+    * </ul>
+    *
+    * In any of these cases another 'unbind' invocation is required.
+    */
+   public void setModified(boolean modified)
+   {
+      isModified = modified;
    }
 
    public Set<String> keySet()
