@@ -80,8 +80,7 @@ public class MessageFactoryImpl extends MessageFactory
          envNamespace = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
       else if (SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
          dynamic = true;
-      else
-         throw new SOAPException("Unknown protocol: " + protocol);
+      else throw new SOAPException("Unknown protocol: " + protocol);
    }
 
    /**
@@ -152,7 +151,7 @@ public class MessageFactoryImpl extends MessageFactory
    {
       if (dynamic)
          throw new UnsupportedOperationException();
-      
+
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
       new SOAPEnvelopeImpl(soapPart, envNamespace);
@@ -197,7 +196,8 @@ public class MessageFactoryImpl extends MessageFactory
       }
 
       ContentType contentType = getContentType(mimeHeaders);
-      if(log.isDebugEnabled()) log.debug("createMessage: [contentType=" + contentType + "]");
+      if (log.isDebugEnabled())
+         log.debug("createMessage: [contentType=" + contentType + "]");
 
       // Debug the incoming message
       if (log.isTraceEnabled())
@@ -248,15 +248,7 @@ public class MessageFactoryImpl extends MessageFactory
          soapMessage.setAttachments(attachments);
 
       // Get the SOAPEnvelope builder
-      EnvelopeBuilder envBuilder;
-      if (serviceMode == Mode.PAYLOAD)
-      {
-         envBuilder = new EnvelopeBuilderPayload();
-      }
-      else
-      {
-         envBuilder = new EnvelopeBuilderDOM(getStyle());
-      }
+      EnvelopeBuilder envBuilder = new EnvelopeBuilderDOM(getStyle());
 
       // Build the payload
       envBuilder.build(soapMessage, ins, ignoreParseError);

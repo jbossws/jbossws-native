@@ -45,9 +45,12 @@ import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.SOAPBodyElementDoc;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
@@ -89,8 +92,9 @@ public class PayloadBinding implements CommonBinding, BindingExt
          QName xmlName = paramMetaData.getXmlName();
 
          SOAPMessage reqMessage = (SOAPMessage)payload;
-         SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMessage.getSOAPBody();
-         Source source = soapBody.getSource();
+         SOAPBodyImpl body = (SOAPBodyImpl)reqMessage.getSOAPBody();
+         SOAPContentElement bodyElement = (SOAPContentElement)body.getFirstChild();
+         Source source = bodyElement.getXMLFragment().getSource();
 
          if (source == null)
             throw new IllegalStateException("Payload cannot be null");
@@ -109,8 +113,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
    /** On the server side, generate the payload from OUT parameters. */
    public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
-      if (log.isDebugEnabled())
-         log.debug("bindResponseMessage: " + opMetaData.getQName());
+      log.debug("bindResponseMessage: " + opMetaData.getQName());
 
       try
       {
@@ -124,9 +127,14 @@ public class PayloadBinding implements CommonBinding, BindingExt
          SOAPMessageImpl resMessage = (SOAPMessageImpl)factory.createMessage();
          msgContext.setSOAPMessage(resMessage);
 
-         Source payload = (Source)epInv.getReturnValue();
+         ParameterMetaData retParameter = opMetaData.getReturnParameter();
+         QName xmlName = retParameter.getXmlName();
          SOAPBodyImpl soapBody = (SOAPBodyImpl)resMessage.getSOAPBody();
-         soapBody.setSource(payload);
+         SOAPContentElement bodyElement = new SOAPBodyElementDoc(xmlName);
+         bodyElement = (SOAPContentElement)soapBody.addChildElement(bodyElement);
+
+         Source payload = (Source)epInv.getReturnValue();
+         bodyElement.setXMLFragment(new XMLFragment(payload));
 
          return resMessage;
       }

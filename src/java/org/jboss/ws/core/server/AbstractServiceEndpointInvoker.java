@@ -199,6 +199,7 @@ public abstract class AbstractServiceEndpointInvoker implements ServiceEndpointI
                if (reqMessage.isModified())
                {
                   log.debug("Handler modified payload, unbind message again");
+                  reqMessage = msgContext.getMessageAbstraction();
                   epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
                }
 

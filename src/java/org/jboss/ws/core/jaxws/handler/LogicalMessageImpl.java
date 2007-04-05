@@ -61,7 +61,6 @@ public class LogicalMessageImpl implements LogicalMessage
 
    private Style style;
    private MessageAbstraction message;
-   private boolean setPayloadBodyChild;
 
    public LogicalMessageImpl(MessageAbstraction message, Style style)
    {
@@ -76,22 +75,16 @@ public class LogicalMessageImpl implements LogicalMessage
       {
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
+         SOAPElement bodyElement = (SOAPElement)soapBody.getFirstChild();
 
-         source = soapBody.getSource();
-         setPayloadBodyChild = false;
-         if (source == null)
+         if (style == Style.RPC)
          {
-            SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
-            if (style == Style.RPC)
-            {
-               source = new DOMSource(soapElement);
-            }
-            else
-            {
-               SOAPContentElement contentElement = (SOAPContentElement)soapElement;
-               source = contentElement.getPayload();
-            }
-            setPayloadBodyChild = true;
+            source = new DOMSource(bodyElement);
+         }
+         else
+         {
+            SOAPContentElement contentElement = (SOAPContentElement)bodyElement;
+            source = contentElement.getXMLFragment().getSource();
          }
       }
       else if (message instanceof HTTPMessageImpl)
@@ -108,39 +101,31 @@ public class LogicalMessageImpl implements LogicalMessage
       {
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
-
-         if (setPayloadBodyChild)
+         SOAPElement bodyElement = (SOAPElement)soapBody.getFirstChild();
+         try
          {
-            try
+            if (style == Style.RPC)
             {
-               SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
-               if (style == Style.RPC)
+               try
                {
-                  try
-                  {
-                     EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
-                     Element domBodyElement = DOMUtils.sourceToElement(source);
-                     builder.buildBodyElementRpc(soapBody, domBodyElement);
-                  }
-                  catch (IOException ex)
-                  {
-                     WSException.rethrow(ex);
-                  }
+                  EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
+                  Element domBodyElement = DOMUtils.sourceToElement(source);
+                  builder.buildBodyElementRpc(soapBody, domBodyElement);
                }
-               else
+               catch (IOException ex)
                {
-                  SOAPContentElement contentElement = (SOAPContentElement)soapElement;
-                  contentElement.setXMLFragment(new XMLFragment(source));
+                  WSException.rethrow(ex);
                }
             }
-            catch (SOAPException ex)
+            else
             {
-               throw new WebServiceException("Cannot set xml payload", ex);
+               SOAPContentElement contentElement = (SOAPContentElement)bodyElement;
+               contentElement.setXMLFragment(new XMLFragment(source));
             }
          }
-         else
+         catch (SOAPException ex)
          {
-            soapBody.setSource(source);
+            throw new WebServiceException("Cannot set xml payload", ex);
          }
       }
       else if (message instanceof HTTPMessageImpl)

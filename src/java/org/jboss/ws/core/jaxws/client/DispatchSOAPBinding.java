@@ -30,6 +30,7 @@ import java.io.StringReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
@@ -45,8 +46,11 @@ import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.soap.SOAPBodyElementDoc;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.utils.DOMWriter;
 
 /**
@@ -88,7 +92,9 @@ public class DispatchSOAPBinding
             {
                reqMsg = (SOAPMessageImpl)factory.createMessage();
                SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
-               soapBody.setSource(source);
+               SOAPContentElement bodyElement = new SOAPBodyElementDoc(new QName("DispatchSOAPBodyElement"));
+               bodyElement = (SOAPContentElement)soapBody.addChildElement(bodyElement);
+               bodyElement.setXMLFragment(new XMLFragment(source));
             }
             if (mode == Mode.MESSAGE)
             {
@@ -107,8 +113,10 @@ public class DispatchSOAPBinding
 
             reqMsg = (SOAPMessageImpl)factory.createMessage();
             SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
+            SOAPContentElement bodyElement = new SOAPBodyElementDoc(new QName("DispatchSOAPBodyElement"));
+            bodyElement = (SOAPContentElement)soapBody.addChildElement(bodyElement);
             StreamSource source = new StreamSource(new ByteArrayInputStream(baos.toByteArray()));
-            soapBody.setSource(source);
+            bodyElement.setXMLFragment(new XMLFragment(source));
          }
       }
       catch (RuntimeException rte)
