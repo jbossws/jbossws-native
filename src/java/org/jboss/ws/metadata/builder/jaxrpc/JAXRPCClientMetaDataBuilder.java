@@ -26,7 +26,6 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
-import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
@@ -35,7 +34,8 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.ws.metadata.j2ee.serviceref.*;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
@@ -65,7 +65,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
    /** Build from WSDL and jaxrpc-mapping.xml
     */
    public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, URL mappingURL, URL securityURL,
-                                        UnifiedServiceRefMetaData serviceRefMetaData, ClassLoader loader)
+         UnifiedServiceRefMetaData serviceRefMetaData, ClassLoader loader)
    {
       try
       {
@@ -97,7 +97,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
    /** Build from WSDL and jaxrpc-mapping.xml
     */
    public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, JavaWsdlMapping javaWsdlMapping, WSSecurityConfiguration securityConfig,
-                                        UnifiedServiceRefMetaData usrMetaData, ClassLoader loader)
+         UnifiedServiceRefMetaData usrMetaData, ClassLoader loader)
    {
       if(log.isDebugEnabled()) log.debug("START buildMetaData: [service=" + serviceQName + "]");
       try
@@ -149,7 +149,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
    }
 
    private void buildMetaDataInternal(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions, JavaWsdlMapping javaWsdlMapping,
-                                      UnifiedServiceRefMetaData serviceRefMetaData) throws IOException
+         UnifiedServiceRefMetaData serviceRefMetaData) throws IOException
    {
       QName serviceQName = serviceMetaData.getServiceName();
 
@@ -209,32 +209,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             else
             {
                log.warn("Cannot obtain the SEI mapping for: " + portType);
-            }
-         }
-
-         if(serviceRefMetaData!=null)
-         {           
-            Iterator<UnifiedPortComponentRefMetaData> it = serviceRefMetaData.getPortComponentRefs().iterator();
-            while(it.hasNext())
-            {
-               UnifiedPortComponentRefMetaData portComp = it.next();
-
-               if(epMetaData.matches(portComp))
-               {
-                  log.debug("Processing service-ref contribution on portType: "+epMetaData.getPortTypeName());
-
-                  // process stub properties
-                  for(UnifiedStubPropertyMetaData stubProp: portComp.getStubProperties())
-                  {
-                     epMetaData.getProperties().put(stubProp.getPropName(), stubProp.getPropValue());
-                  }
-
-                  // process call properties
-                  for(UnifiedCallPropertyMetaData callProp: portComp.getCallProperties())
-                  {
-                     epMetaData.getProperties().put(callProp.getPropName(), callProp.getPropValue());
-                  }
-               }
             }
          }
 
