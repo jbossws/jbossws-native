@@ -53,31 +53,15 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    {
       super("Header", prefix, namespace);
    }
-   
-   private static boolean needsConversionToHeaderElement(Node newChild) 
-   {
-      // JBCTS-440 #addTextNodeTest2 appends a Text node to a SOAPHeader
-      return !(newChild instanceof SOAPHeaderElementImpl 
-            || newChild instanceof DocumentFragment
-            || newChild instanceof Text);
-   }
 
-   private static SOAPHeaderElementImpl convertToHeaderElement(Node node)
-   {
-      if (!(node instanceof SOAPElementImpl))
-         throw new IllegalArgumentException("SOAPElement expected");
-
-      SOAPElementImpl element = (SOAPElementImpl)node;
-
-      // convert to SOAPHeaderElement
-      element.detachNode();
-      return new SOAPHeaderElementImpl(element);
-   }
-   
    /** Add a SOAPHeaderElement as a child of this SOAPHeader instance.
     */
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
+      QName qname = child.getElementQName();
+      if (qname == null || qname.getNamespaceURI().length() == 0 || qname.getPrefix().length() == 0)
+         throw new SOAPException("Invalid SOAPHeaderElement name: " + qname);
+
       // Check that we get a SOAPHeaderElement
       if ((child instanceof SOAPHeaderElement) == false)
          child = convertToHeaderElement(child);
@@ -93,7 +77,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
       // JBCTS-440 #addTextNodeTest2 adds a text node to a SOAPHeader and expects a SOAPException
       if (Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
          throw new SOAPException("Attaching a Text node to this SOAP 1.2 Element is not legal: " + getLocalName());
-      
+
       return super.addTextNode(value);
    }
 
@@ -107,16 +91,16 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
       return addHeaderElement(((NameImpl)name).toQName());
    }
 
-   public SOAPHeaderElement addHeaderElement(QName name) throws SOAPException
+   public SOAPHeaderElement addHeaderElement(QName qname) throws SOAPException
    {
-      if (name == null || name.getNamespaceURI().length() == 0 || name.getPrefix().length() == 0)
-         throw new SOAPException("Invalid SOAPHeaderElement name: " + name);
+      if (qname == null || qname.getNamespaceURI().length() == 0 || qname.getPrefix().length() == 0)
+         throw new SOAPException("Invalid SOAPHeaderElement name: " + qname);
 
-      SOAPHeaderElementImpl headerElement = new SOAPHeaderElementImpl(name);
+      SOAPHeaderElementImpl headerElement = new SOAPHeaderElementImpl(qname);
       addChildElement(headerElement);
       return headerElement;
    }
-   
+
    /** Returns an Iterator over all the SOAPHeaderElement objects in this SOAPHeader object.
     */
    public Iterator examineAllHeaderElements()
@@ -281,7 +265,25 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    {
       if (supportedSoapUri == null)
          throw new SOAPException("supported URI cannot be null");
-      
+
       return addUpgradeHeaderElement(Collections.singletonList(supportedSoapUri).iterator());
+   }
+
+   private static boolean needsConversionToHeaderElement(Node newChild)
+   {
+      // JBCTS-440 #addTextNodeTest2 appends a Text node to a SOAPHeader
+      return !(newChild instanceof SOAPHeaderElementImpl || newChild instanceof DocumentFragment || newChild instanceof Text);
+   }
+
+   private static SOAPHeaderElementImpl convertToHeaderElement(Node node)
+   {
+      if (!(node instanceof SOAPElementImpl))
+         throw new IllegalArgumentException("SOAPElement expected");
+
+      SOAPElementImpl element = (SOAPElementImpl)node;
+
+      // convert to SOAPHeaderElement
+      element.detachNode();
+      return new SOAPHeaderElementImpl(element);
    }
 }

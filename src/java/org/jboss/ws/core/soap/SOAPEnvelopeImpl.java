@@ -64,7 +64,7 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       String prefix = getPrefix();
       String namespaceURI = getNamespaceURI();
       String localName = getLocalName();
-      
+
       if ("Envelope".equals(localName) == false)
          throw new IllegalArgumentException("Cannot create SOAP envelope from: " + element.getElementQName());
 
@@ -72,8 +72,10 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       addNamespaceDeclaration(prefix, namespaceURI);
 
       // the Element source might already contain a Header and Body declaration
-      if(null == soapPart.getEnvelope().getHeader()) addHeader();
-      if(null == soapPart.getEnvelope().getBody()) addBody();
+      if (null == soapPart.getEnvelope().getHeader())
+         addHeader();
+      if (null == soapPart.getEnvelope().getBody())
+         addBody();
    }
 
    /** Construct a SOAP envelope for the given SOAP version URI.
@@ -90,16 +92,6 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
 
       addHeader();
       addBody();
-   }
-
-   private void assertEnvelopeNamespace(String namespaceURI)
-   {
-      if (!Constants.NS_SOAP12_ENV.equals(namespaceURI) && !Constants.NS_SOAP11_ENV.equals(namespaceURI))
-      {
-         QName faultCode = Constants.SOAP11_FAULT_CODE_VERSION_MISMATCH;
-         String faultString = "Invalid SOAP envelope namespace: " + namespaceURI;
-         throw new SOAPFaultException(faultCode, faultString, null, null);
-      }
    }
 
    public SOAPMessage getSOAPMessage()
@@ -128,11 +120,22 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       return (SOAPHeader)addChildElement(header);
    }
 
+   @Override
+   public SOAPElement addAttribute(Name name, String value) throws SOAPException
+   {
+      String envNamespace = getNamespaceURI();
+      if (Constants.NS_SOAP12_ENV.equals(envNamespace) && name.equals(new NameImpl("encodingStyle", Constants.PREFIX_ENV, envNamespace)))
+         throw new SOAPException("Cannot set encodingStyle on: " + getElementQName());
+
+      return super.addAttribute(name, value);
+   }
+
    /** Make sure the child is either a SOAPHeader or SOAPBody */
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
-      if ((child instanceof SOAPHeader) == false && (child instanceof SOAPBody) == false)
-         throw new IllegalArgumentException("SOAPHeader or SOAPBody expected");
+      String envNamespace = getNamespaceURI();
+      if (Constants.NS_SOAP12_ENV.equals(envNamespace) && !(child instanceof SOAPHeader) && !(child instanceof SOAPBody))
+         throw new SOAPException("SOAPHeader or SOAPBody expected");
 
       return super.addChildElement(child);
    }
@@ -182,5 +185,15 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
    public Document getOwnerDocument()
    {
       return soapPart;
+   }
+
+   private void assertEnvelopeNamespace(String namespaceURI)
+   {
+      if (!Constants.NS_SOAP12_ENV.equals(namespaceURI) && !Constants.NS_SOAP11_ENV.equals(namespaceURI))
+      {
+         QName faultCode = Constants.SOAP11_FAULT_CODE_VERSION_MISMATCH;
+         String faultString = "Invalid SOAP envelope namespace: " + namespaceURI;
+         throw new SOAPFaultException(faultCode, faultString, null, null);
+      }
    }
 }

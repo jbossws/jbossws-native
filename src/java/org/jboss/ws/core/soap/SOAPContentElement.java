@@ -406,11 +406,6 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       super.setAttributeNS(namespaceURI, qualifiedName, value);
    }
 
-   public void setEncodingStyle(String encodingStyle) throws SOAPException
-   {
-      super.setEncodingStyle(encodingStyle);
-   }
-
    public void setIdAttribute(String name, boolean isId) throws DOMException
    {
       log.trace("setIdAttribute: [name=" + name + ",value=" + isId + "]");

@@ -69,11 +69,6 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    private Element element;
    // The element name
    private Name elementName;
-   // The element's encoding style
-   /* JBCTS-440 #getEncodingStyleTest1 expects the initial value of the 
-    * encodingStyle property to be null
-    */
-   private String encodingStyle = null;
 
    /** Called by SOAPFactory */
    public SOAPElementImpl(String localPart)
@@ -533,16 +528,6 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    }
 
    /**
-    * Returns the encoding style for this SOAPElement object.
-    *
-    * @return a String giving the encoding style
-    */
-   public String getEncodingStyle()
-   {
-      return encodingStyle;
-   }
-
-   /**
     * Returns an Iterator over the namespace prefix Strings declared by this element.
     * <p/>
     * The prefixes returned by this iterator can be passed to the method getNamespaceURI to retrieve the URI of each namespace.
@@ -657,7 +642,21 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    }
 
    /**
+    * Returns the encoding style for this SOAPElement object.
+    * @return a String giving the encoding style
+    */
+   public String getEncodingStyle()
+   {
+      // JBCTS-440 #getEncodingStyleTest1 expects the initial value of the encodingStyle property to be null
+      String encodingStyle = getAttribute(Constants.PREFIX_ENV + ":encodingStyle");
+      return (encodingStyle.length() > 0 ? encodingStyle : null);
+   }
+
+   /**
     * Sets the encoding style for this SOAPElement object to one specified.
+    * 
+    * @see http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383495
+    * @see http://www.w3.org/TR/soap12-part1/#soapencattr
     *
     * @param encodingStyle a String giving the encoding style
     * @throws IllegalArgumentException if there was a problem in the encoding style being set.
@@ -665,16 +664,9 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public void setEncodingStyle(String encodingStyle) throws SOAPException
    {
-      if (Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
-         throw new SOAPException("Setting the encodingStyle is invalid for this SOAP 1.2 Element: " + getLocalName());
-
-      /* JBCTS-440 #getEncodingStyleTest1 expects the initial value of the 
-       * encodingStyle property to be null, hence null is a legal argument
-       */
-      if (!Constants.URI_LITERAL_ENC.equals(encodingStyle) && !Constants.URI_SOAP11_ENC.equals(encodingStyle) && encodingStyle != null)
-         throw new IllegalArgumentException("Unsupported encodingStyle: " + encodingStyle);
-
-      this.encodingStyle = encodingStyle;
+      String namespaceURI = getNamespaceURI(Constants.PREFIX_ENV);
+      NameImpl name = new NameImpl("encodingStyle", Constants.PREFIX_ENV, namespaceURI);
+      addAttribute(name, encodingStyle);
    }
 
    public String getTagName()
