@@ -36,6 +36,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -207,20 +208,14 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       return super.replaceChild(newChild, oldChild);
    }
 
-   private static boolean needsConversionToBodyElement(Node node)
+   @Override
+   public SOAPElement addAttribute(Name name, String value) throws SOAPException
    {
-      // JBCTS-440 #addTextNodeTest1 appends a Text node to a SOAPBody
-      return !(node instanceof SOAPBodyElement || node instanceof DocumentFragment || node instanceof Text);
-   }
+      String envNamespace = getNamespaceURI();
+      if (Constants.NS_SOAP12_ENV.equals(envNamespace) && name.equals(new NameImpl("encodingStyle", Constants.PREFIX_ENV, envNamespace)))
+         throw new SOAPException("Cannot set encodingStyle on: " + getElementQName());
 
-   private static SOAPBodyElementDoc convertToBodyElement(Node node)
-   {
-      if (!(node instanceof SOAPElementImpl))
-         throw new IllegalArgumentException("SOAPElement expected");
-
-      SOAPElementImpl element = (SOAPElementImpl)node;
-      element.detachNode();
-      return new SOAPBodyElementDoc(element);
+      return super.addAttribute(name, value);
    }
 
    public Document extractContentAsDocument() throws SOAPException
@@ -257,5 +252,21 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       newDocument.appendChild(adoptedElement);
 
       return newDocument;
+   }
+
+   private static boolean needsConversionToBodyElement(Node node)
+   {
+      // JBCTS-440 #addTextNodeTest1 appends a Text node to a SOAPBody
+      return !(node instanceof SOAPBodyElement || node instanceof DocumentFragment || node instanceof Text);
+   }
+
+   private static SOAPBodyElementDoc convertToBodyElement(Node node)
+   {
+      if (!(node instanceof SOAPElementImpl))
+         throw new IllegalArgumentException("SOAPElement expected");
+
+      SOAPElementImpl element = (SOAPElementImpl)node;
+      element.detachNode();
+      return new SOAPBodyElementDoc(element);
    }
 }
