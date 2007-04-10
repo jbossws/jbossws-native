@@ -23,23 +23,6 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.jws.soap.SOAPBinding.ParameterStyle;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.Service.Mode;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -55,15 +38,20 @@ import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
 import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
+import org.jboss.ws.core.jaxws.client.DispatchBinding;
+import org.jboss.ws.core.jaxws.client.DispatchSOAPBinding;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.ws.metadata.config.CommonConfig;
-import org.jboss.ws.metadata.config.Configurable;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.config.EndpointFeature;
-import org.jboss.ws.metadata.config.JBossWSConfigFactory;
+import org.jboss.ws.metadata.config.*;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+
+import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.Service.Mode;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A Service component describes a set of endpoints.
@@ -632,6 +620,11 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             log.debug("Enable MTOM on endpoint " + getPortName());
          }
       }
+      else if (configurable instanceof DispatchBinding)
+      {
+         DispatchSOAPBinding dpb = (DispatchSOAPBinding)configurable;
+         dpb.setValidateDispatch(config.hasFeature(EndpointFeature.VALIDATE_DISPATCH));
+      }      
    }
 
    public UnifiedVirtualFile getRootFile()

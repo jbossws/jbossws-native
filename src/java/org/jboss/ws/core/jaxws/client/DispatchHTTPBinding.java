@@ -23,20 +23,17 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import java.io.ByteArrayOutputStream;
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.HTTPMessageImpl;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.ws.WebServiceException;
 import javax.xml.ws.Service.Mode;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.core.HTTPMessageImpl;
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
+import javax.xml.ws.WebServiceException;
 
 /**
  * The Dispatch interface provides support for the dynamic invocation of a service endpoint operations. 
@@ -45,7 +42,7 @@ import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class DispatchHTTPBinding
+public class DispatchHTTPBinding extends DispatchBinding
 {
    // provide logging
    private final Logger log = Logger.getLogger(DispatchHTTPBinding.class);
@@ -70,6 +67,8 @@ public class DispatchHTTPBinding
          {
             Source source = (Source)obj;
             reqMsg = new HTTPMessageImpl(source);
+            if(validateDispatch)
+               reqMsg.doValidate();
          }
          else if (jaxbContext != null)
          {

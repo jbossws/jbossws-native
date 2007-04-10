@@ -68,6 +68,13 @@ public class HTTPMessageImpl implements HTTPMessageAbstraction
       initDefaultMimeHeaders();
    }
 
+   // TCL requirement
+   public boolean doValidate()
+   {
+      this.xmlFragment.toElement();
+      return true;
+   }
+
    private void initDefaultMimeHeaders()
    {
       mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_XML_UTF8);

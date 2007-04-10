@@ -19,23 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config;
+package org.jboss.ws.core.jaxws.client;
 
-/**
- * @author Heiko.Braun@jboss.org
- * @version $Id$
- * @since 14.12.2006
- */
-public class EndpointFeature {
+import org.jboss.ws.metadata.config.Configurable;
 
-   /**
-    * Enable MTOM per endpoint.
-    */
-   public final static String MTOM = "http://org.jboss.ws/mtom";
+import java.util.Observable;
 
-   /**
-    * Validate the XML stream upon dispatch.
-    * Introduces an additional parsing overhead and could be disabled.
-    */
-   public final static String VALIDATE_DISPATCH = "http://org.jboss.ws/dispatch/validate";
+public abstract class DispatchBinding implements Configurable
+{
+   protected boolean validateDispatch;
+
+   public boolean isValidateDispatch()
+   {
+      return validateDispatch;
+   }
+
+   public void setValidateDispatch(boolean validateDispatch)
+   {
+      this.validateDispatch = validateDispatch;
+   }
+
+
+   public void update(Observable o, Object arg)
+   {
+      // todo
+   }
 }

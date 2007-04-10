@@ -7,6 +7,7 @@
 
    <client-config>
       <config-name>Standard Client</config-name>
+      <feature>http://org.jboss.ws/dispatch/validate</feature>
    </client-config>
 
    <client-config>
