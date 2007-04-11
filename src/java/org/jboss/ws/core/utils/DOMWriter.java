@@ -67,7 +67,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jboss.logging.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -83,7 +82,6 @@ import org.w3c.dom.NodeList;
  */
 public class DOMWriter
 {
-   private static Logger log = Logger.getLogger(DOMWriter.class);
    // Print writer
    private PrintWriter out;
    // True, if canonical output
@@ -102,6 +100,8 @@ public class DOMWriter
    private Node rootNode;
    // True if we want namespace completion
    private boolean completeNamespaces = true;
+   // The current default namespace
+   private String currentDefaultNamespace;
 
    public DOMWriter(Writer w)
    {
@@ -290,6 +290,9 @@ public class DOMWriter
                String atName = attr.getNodeName();
                String atValue = normalize(attr.getNodeValue(), canonical);
 
+               if (atName.equals("xmlns"))
+                  currentDefaultNamespace = atValue;
+
                if (atPrefix != null && !atPrefix.equals("xmlns") && !atPrefix.equals("xml"))
                {
                   String nsURI = getNamespaceURI(atPrefix, element, rootNode);
@@ -332,9 +335,16 @@ public class DOMWriter
 
             // The SAX ContentHandler will by default not add the namespace declaration 
             // <Hello xmlns='http://somens'>World</Hello>
-            if (elPrefix == null && elNamespaceURI != null && element.getAttribute("xmlns").length() == 0)
-               out.print(" xmlns='" + elNamespaceURI + "'");
-            
+            if (elPrefix == null && elNamespaceURI != null)
+            {
+               String defaultNamespace = element.getAttribute("xmlns");
+               if (defaultNamespace.length() == 0 && !elNamespaceURI.equals(currentDefaultNamespace))
+               {
+                  out.print(" xmlns='" + elNamespaceURI + "'");
+                  currentDefaultNamespace = elNamespaceURI;
+               }
+            }
+
             if (hasChildNodes)
             {
                out.print('>');
