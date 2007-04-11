@@ -139,6 +139,11 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) || Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
          throw new SOAPException("Changing the name of this SOAP Element is not allowed: " + getLocalName());
 
+      return setElementQNameInternal(qname);
+   }
+
+   public SOAPElement setElementQNameInternal(QName qname) throws SOAPException
+   {     
       elementName = new NameImpl(qname);
 
       Document owner = domNode.getOwnerDocument();
@@ -147,6 +152,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
       return this.completeNamespaceDeclaration();
    }
+
 
    /**
     * Adds an attribute with the specified name and value to this SOAPElement object.

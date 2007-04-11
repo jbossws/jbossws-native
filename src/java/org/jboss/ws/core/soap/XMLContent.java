@@ -23,21 +23,6 @@ package org.jboss.ws.core.soap;
 
 // $Id: $
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.xml.namespace.QName;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.transform.Source;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -57,6 +42,20 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.xml.namespace.QName;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.transform.Source;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Represents the XML_VALID state of an {@link SOAPContentElement}.<br>
@@ -297,17 +296,41 @@ class XMLContent extends SOAPContent
 
       // Make sure the content root element name matches this element name
       Name name = container.getElementName();
-      if (!contentRootName.equals(name))
+      QName qname = container.getElementQName();
+      boolean artificalElement = (SOAPContentElement.PROVIDER_PARAM_NAME.equals(qname) || SOAPContentElement.PROVIDER_RETURN_VALUE_NAME.equals(qname));
+      
+      if ( !artificalElement && !contentRootName.equals(name) )
          throw new WSException("Content root name does not match element name: " + contentRootName + " != " + name);
 
       // Remove all child nodes
       container.removeContents();
 
+
+      try
+      {
+         // In some cases we are using artifical element names
+         // These need to be replaced (costly!)
+         if(artificalElement)
+         {
+            QName tmp = null;
+            if (rootPrefix != null)
+               tmp = new QName(rootNS, rootLocalName, rootPrefix);
+            else
+               tmp = new QName(rootNS, rootLocalName);
+            container.setElementQNameInternal(tmp);
+         }
+      }
+      catch (SOAPException e)
+      {
+         WSException.rethrow(e);
+      }
+
+
       // Copy attributes
       DOMUtils.copyAttributes(container, domElement);
 
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-
+      
       try
       {
          NodeList nlist = domElement.getChildNodes();

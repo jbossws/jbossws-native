@@ -39,6 +39,7 @@ import javax.xml.ws.Service.Mode;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.JavaUtils;
@@ -160,13 +161,13 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       // Setup invoke param
       Class paramType = Source.class;
-      QName xmlName = new QName("invokeParam");
+      QName xmlName = SOAPContentElement.PROVIDER_PARAM_NAME;
       QName xmlType = Constants.TYPE_LITERAL_ANYTYPE;
       ParameterMetaData pmd = new ParameterMetaData(opMetaData, xmlName, xmlType, paramType.getName());
       opMetaData.addParameter(pmd);
 
       // Setup invoke return
-      xmlName = new QName("invokeReturn");
+      xmlName = SOAPContentElement.PROVIDER_RETURN_VALUE_NAME;
       ParameterMetaData retMetaData = new ParameterMetaData(opMetaData, xmlName, xmlType, paramType.getName());
       opMetaData.setReturnParameter(retMetaData);
    }

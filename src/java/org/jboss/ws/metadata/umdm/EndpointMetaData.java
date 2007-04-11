@@ -39,7 +39,6 @@ import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
-import org.jboss.ws.core.jaxws.client.DispatchSOAPBinding;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.*;
@@ -622,7 +621,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       }
       else if (configurable instanceof DispatchBinding)
       {
-         DispatchSOAPBinding dpb = (DispatchSOAPBinding)configurable;
+         DispatchBinding dpb = (DispatchBinding)configurable;
          dpb.setValidateDispatch(config.hasFeature(EndpointFeature.VALIDATE_DISPATCH));
       }      
    }

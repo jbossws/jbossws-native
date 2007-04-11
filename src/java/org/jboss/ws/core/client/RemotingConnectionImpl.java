@@ -179,15 +179,13 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
          return resMessage;
       }
-      catch(SocketTimeoutException se)
-      {
-         if(timeout!=null)
-            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
-         else
-            throw new IOException(se.getMessage());
-      }
       catch (Throwable th)
-      {        
+      {
+         if(timeout!=null && (th.getCause() instanceof SocketTimeoutException))
+         {
+            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));            
+         }
+
          IOException io = new IOException("Could not transmit message");
          io.initCause(th);
          throw io;

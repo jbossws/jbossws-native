@@ -83,6 +83,9 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    // while transitioning DOM expansion needs to be locked
    private boolean lockDOMExpansion = false;
 
+   public static final QName PROVIDER_RETURN_VALUE_NAME = new QName("invokeReturn");
+   public static final QName PROVIDER_PARAM_NAME = new QName("invokeParam");
+
    /** Construct a SOAPContentElement
     */
    public SOAPContentElement(Name name)
