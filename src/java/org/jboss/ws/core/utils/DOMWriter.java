@@ -332,7 +332,7 @@ public class DOMWriter
 
             // The SAX ContentHandler will by default not add the namespace declaration 
             // <Hello xmlns='http://somens'>World</Hello>
-            if (elPrefix == null && elNamespaceURI != null && !elNamespaceURI.equals(element.getAttribute("xmlns")))
+            if (elPrefix == null && elNamespaceURI != null && element.getAttribute("xmlns").length() == 0)
                out.print(" xmlns='" + elNamespaceURI + "'");
             
             if (hasChildNodes)
