@@ -274,6 +274,11 @@ public class DispatchImpl<T> implements Dispatch<T>
 
       public AsyncRunnable(ResponseImpl response, AsyncHandler handler, Object payload)
       {
+         if (response == null)
+            throw new IllegalArgumentException("Async response cannot be null");
+         if (payload == null)
+            throw new IllegalArgumentException("Async payload cannot be null");
+         
          this.response = response;
          this.handler = handler;
          this.payload = payload;

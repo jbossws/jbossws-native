@@ -25,6 +25,7 @@ package org.jboss.ws.core.soap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -43,6 +44,7 @@ import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 /**
  * A SOAPEnvelope builder for JAXRPC based on DOM 
@@ -70,6 +72,26 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       try
       {
          domEnv = DOMUtils.parse(ins);
+      }
+      catch (IOException ex)
+      {
+         if (ignoreParseError)
+         {
+            return null;
+         }
+         throw ex;
+      }
+
+      return build(soapMessage, domEnv);
+   }
+
+   public SOAPEnvelope build(SOAPMessage soapMessage, Reader reader, boolean ignoreParseError) throws IOException, SOAPException
+   {
+      // Parse the XML input stream
+      Element domEnv = null;
+      try
+      {
+         domEnv = DOMUtils.parse(new InputSource(reader));
       }
       catch (IOException ex)
       {

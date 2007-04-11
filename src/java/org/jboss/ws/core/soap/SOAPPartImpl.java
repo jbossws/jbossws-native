@@ -24,11 +24,18 @@ package org.jboss.ws.core.soap;
 // $Id$
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.soap.*;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
@@ -174,7 +181,12 @@ public class SOAPPartImpl extends SOAPPart
          {
             StreamSource streamSource = (StreamSource)source;
             EnvelopeBuilderDOM envBuilder = new EnvelopeBuilderDOM(Style.DOCUMENT);
-            envBuilder.build(soapMessage, streamSource.getInputStream(), false);
+            InputStream stream = streamSource.getInputStream();
+            Reader reader = streamSource.getReader();
+            if (stream != null)
+               envBuilder.build(soapMessage, stream, false);
+            else if (reader != null)
+               envBuilder.build(soapMessage, reader, false);
          }
          catch (IOException e)
          {
