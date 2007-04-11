@@ -57,9 +57,9 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    /** Add a SOAPHeaderElement as a child of this SOAPHeader instance.
     */
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
-   {
+   {      
       QName qname = child.getElementQName();
-      if (qname == null || qname.getNamespaceURI().length() == 0 || qname.getPrefix().length() == 0)
+      if (qname == null || qname.getNamespaceURI().length() == 0)
          throw new SOAPException("Invalid SOAPHeaderElement name: " + qname);
 
       // Check that we get a SOAPHeaderElement
