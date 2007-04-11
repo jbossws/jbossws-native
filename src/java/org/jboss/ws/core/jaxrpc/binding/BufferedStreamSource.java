@@ -107,4 +107,14 @@ public class BufferedStreamSource extends StreamSource
    {
       throw new UnsupportedOperationException();
    }
+   
+   public String toString()
+   {
+      String retStr = null;
+      if (bytes != null)
+         retStr = new String(bytes);
+      else if (chars != null)
+         retStr = new String(chars);
+      return "" + retStr;
+   }
 }

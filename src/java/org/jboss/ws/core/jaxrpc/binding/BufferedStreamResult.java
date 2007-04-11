@@ -41,7 +41,7 @@ import org.jboss.ws.core.utils.IOUtils;
  */
 public class BufferedStreamResult extends StreamResult
 {
-   ByteArrayOutputStream bout = new ByteArrayOutputStream(1024);
+   ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
 
    public BufferedStreamResult()
    {
@@ -68,7 +68,7 @@ public class BufferedStreamResult extends StreamResult
    @Override
    public OutputStream getOutputStream()
    {
-      return bout;
+      return baos;
    }
 
    @Override
@@ -81,5 +81,10 @@ public class BufferedStreamResult extends StreamResult
    public void setOutputStream(OutputStream outputStream)
    {
       throw new UnsupportedOperationException();
+   }
+   
+   public String toString()
+   {
+      return baos.toString();
    }
 }

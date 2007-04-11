@@ -176,45 +176,36 @@ public class XMLFragment
 
             Reader reader = streamSource.getReader();
             {
-            if (reader == null)
-               reader = new InputStreamReader(streamSource.getInputStream());
+               if (reader == null)
+                  reader = new InputStreamReader(streamSource.getInputStream());
             }
 
-            char[] cbuf = new char[5];
-            int r = reader.read(cbuf);
-            int xmlProc = -1; 
+            char[] cbuf = new char[1024];
+            int len = reader.read(cbuf);
+            int off = 0;
 
-            if (r == -1)
+            if (len == -1)
                throw new IOException("StreamSource already exhausted");
 
-            while (r > 0)
+            // Remove XML processing instruction
+            String xmlProc = new String(cbuf, 0, XML_PROC.length());
+            if (XML_PROC.equals(xmlProc))
             {
-               if(xmlProc<0 && new String(cbuf).equals(XML_PROC))  // new fragment
-               {
-                  xmlProc = 0;
-               }
-               else if(xmlProc<0) // no processing instruction
-               {
-                  xmlProc = 1;
-               }
-               else if(xmlProc==0) // within processing instruction
-               {
-                  String tmp = new String(cbuf);
-                  int i = tmp.indexOf(">");
-                  if(i!=-1)
-                  {
-                     if(i<tmp.length()) writer.write(tmp.substring(i+1));
-                     xmlProc=1;
-                     r = reader.read(cbuf);
-                     continue;
-                  }
+               off = XML_PROC.length();
+               while (cbuf[off] != '>' && off < len)
+                  off++;
 
-               }
+               if (cbuf[off] != '>')
+                  throw new IllegalStateException("Cannot find end of XML processing instruction");
 
-               // regular contents
-               if(xmlProc>0)
-                  writer.write(cbuf, 0, r);
-               r = reader.read(cbuf);
+               off++;
+            }
+
+            while (len > 0)
+            {
+               writer.write(cbuf, off, len);
+               len = reader.read(cbuf);
+               off = 0;
             }
          }
          else
@@ -232,9 +223,9 @@ public class XMLFragment
 
    private Source beginSourceAccess(Source source)
    {
-
-      if(source instanceof BufferedStreamSource)
-         return source; // no need to buffer those
+      // no need to buffer those
+      if (source instanceof BufferedStreamSource || source instanceof DOMSource)
+         return source;
 
       // Buffer the source content
       if (source instanceof StreamSource)

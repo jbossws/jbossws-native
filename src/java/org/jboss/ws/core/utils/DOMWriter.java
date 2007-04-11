@@ -235,7 +235,7 @@ public class DOMWriter
          out.print("?>");
          if (prettyprint)
             out.println();
-         
+
          wroteXMLDeclaration = true;
       }
 
@@ -275,6 +275,7 @@ public class DOMWriter
 
             Map nsMap = new HashMap();
             String elPrefix = node.getPrefix();
+            String elNamespaceURI = node.getNamespaceURI();
             if (elPrefix != null)
             {
                String nsURI = getNamespaceURI(elPrefix, element, rootNode);
@@ -294,7 +295,7 @@ public class DOMWriter
                   String nsURI = getNamespaceURI(atPrefix, element, rootNode);
                   nsMap.put(atPrefix, nsURI);
                   // xsi:type='ns1:SubType', xsi:type='xsd:string'
-                  if (atName.equals(atPrefix + ":type")  && atValue.indexOf(":") > 0)
+                  if (atName.equals(atPrefix + ":type") && atValue.indexOf(":") > 0)
                   {
                      // xsi defined on the envelope
                      if (nsURI == null)
@@ -312,7 +313,8 @@ public class DOMWriter
                out.print(" " + atName + "='" + atValue + "'");
             }
 
-            // Add missing namespace declaration
+            // Add namespace declaration for prefixes 
+            // that are defined further up the tree
             if (completeNamespaces)
             {
                Iterator itPrefix = nsMap.keySet().iterator();
@@ -325,6 +327,11 @@ public class DOMWriter
                      nsURI = getNamespaceURI(prefix, element, null);
                      out.print(" xmlns:" + prefix + "='" + nsURI + "'");
                   }
+               }
+
+               if (elPrefix == null && elNamespaceURI != null && !elNamespaceURI.equals(element.getAttribute("xmlns")))
+               {
+                  out.print(" xmlns='" + elNamespaceURI + "'");
                }
             }
 
