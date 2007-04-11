@@ -29,7 +29,6 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.Provider;
 import javax.xml.ws.ServiceMode;
@@ -38,10 +37,9 @@ import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -128,7 +126,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       // process binding type
       processBindingType(sepMetaData, sepClass);
-      
+
       // process handler chain
       processHandlerChain(sepMetaData, sepClass);
 
@@ -161,13 +159,13 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       // Setup invoke param
       Class paramType = Source.class;
-      QName xmlName = SOAPContentElement.PROVIDER_PARAM_NAME;
+      QName xmlName = SOAPContentElement.GENERIC_PARAM_NAME;
       QName xmlType = Constants.TYPE_LITERAL_ANYTYPE;
       ParameterMetaData pmd = new ParameterMetaData(opMetaData, xmlName, xmlType, paramType.getName());
       opMetaData.addParameter(pmd);
 
       // Setup invoke return
-      xmlName = SOAPContentElement.PROVIDER_RETURN_VALUE_NAME;
+      xmlName = SOAPContentElement.GENERIC_RETURN_NAME;
       ParameterMetaData retMetaData = new ParameterMetaData(opMetaData, xmlName, xmlType, paramType.getName());
       opMetaData.setReturnParameter(retMetaData);
    }
