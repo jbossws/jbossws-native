@@ -23,26 +23,34 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.soap.*;
-import org.jboss.ws.core.utils.DOMWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
-import javax.xml.soap.*;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.Service.Mode;
 import javax.xml.ws.WebServiceException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
+import javax.xml.ws.Service.Mode;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.soap.SOAPBodyElementDoc;
+import org.jboss.ws.core.soap.SOAPBodyImpl;
+import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.core.utils.DOMWriter;
 
 /**
  * A helper that 
@@ -57,14 +65,14 @@ public class DispatchSOAPBinding extends DispatchBinding
 
    private JAXBContext jaxbContext;
    private Class type;
-   private Mode mode;   
-   
+   private Mode mode;
+
    public DispatchSOAPBinding(Mode mode, Class type, JAXBContext jaxbContext)
    {
       this.mode = mode;
       this.type = type;
       this.jaxbContext = jaxbContext;
-   }  
+   }
 
    public MessageAbstraction getRequestMessage(Object obj)
    {
@@ -83,18 +91,18 @@ public class DispatchSOAPBinding extends DispatchBinding
             {
                reqMsg = (SOAPMessageImpl)factory.createMessage();
                SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
-               SOAPContentElement bodyElement = new SOAPBodyElementDoc(new QName("DispatchSOAPBodyElement"));
+               SOAPContentElement bodyElement = new SOAPBodyElementDoc(SOAPBodyElementDoc.GENERIC_PARAM_NAME);
                bodyElement = (SOAPContentElement)soapBody.addChildElement(bodyElement);
                XMLFragment xmlFragment = new XMLFragment(source);
                bodyElement.setXMLFragment(xmlFragment);
 
                // validate payload if necessary
-               if(validateDispatch)
+               if (validateDispatch)
                {
                   // expand to DOM will validate the contents
-                  xmlFragment.toElement();                      
+                  xmlFragment.toElement();
                }
-               
+
             }
             if (mode == Mode.MESSAGE)
             {
@@ -113,7 +121,7 @@ public class DispatchSOAPBinding extends DispatchBinding
 
             reqMsg = (SOAPMessageImpl)factory.createMessage();
             SOAPBodyImpl soapBody = (SOAPBodyImpl)reqMsg.getSOAPBody();
-            SOAPContentElement bodyElement = new SOAPBodyElementDoc(new QName("DispatchSOAPBodyElement"));
+            SOAPContentElement bodyElement = new SOAPBodyElementDoc(SOAPBodyElementDoc.GENERIC_PARAM_NAME);
             bodyElement = (SOAPContentElement)soapBody.addChildElement(bodyElement);
             StreamSource source = new StreamSource(new ByteArrayInputStream(baos.toByteArray()));
             bodyElement.setXMLFragment(new XMLFragment(source));
@@ -137,7 +145,7 @@ public class DispatchSOAPBinding extends DispatchBinding
    public Object getReturnObject(MessageAbstraction message)
    {
       SOAPMessage resMsg = (SOAPMessage)message;
-      
+
       Object retObj = null;
       try
       {

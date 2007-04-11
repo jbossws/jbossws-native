@@ -74,6 +74,9 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    // provide logging
    private static Logger log = Logger.getLogger(SOAPContentElement.class);
 
+   public static final QName GENERIC_PARAM_NAME = new QName("genericParam");
+   public static final QName GENERIC_RETURN_NAME = new QName("genericReturn");
+   
    // The associated parameter
    private ParameterMetaData paramMetaData;
 
@@ -82,9 +85,6 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    // while transitioning DOM expansion needs to be locked
    private boolean lockDOMExpansion = false;
-
-   public static final QName PROVIDER_RETURN_VALUE_NAME = new QName("invokeReturn");
-   public static final QName PROVIDER_PARAM_NAME = new QName("invokeParam");
 
    /** Construct a SOAPContentElement
     */

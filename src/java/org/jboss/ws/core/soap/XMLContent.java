@@ -23,6 +23,21 @@ package org.jboss.ws.core.soap;
 
 // $Id: $
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.xml.namespace.QName;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.transform.Source;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -42,20 +57,6 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.xml.namespace.QName;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.transform.Source;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Represents the XML_VALID state of an {@link SOAPContentElement}.<br>
@@ -98,7 +99,14 @@ class XMLContent extends SOAPContent
       }
       else if (nextState == State.DOM_VALID)
       {
-         expandContainerChildren();
+         try
+         {
+            expandContainerChildren();
+         }
+         catch (SOAPException ex)
+         {
+            throw new WSException("Cannot expand container children", ex);
+         }
          next = new DOMContent(container);
       }
       else
@@ -138,7 +146,7 @@ class XMLContent extends SOAPContent
    {
       throw new IllegalStateException("Object value not available");
    }
-   
+
    private Object unmarshallObjectContents()
    {
 
@@ -282,7 +290,7 @@ class XMLContent extends SOAPContent
     * Turn the xml fragment into a DOM repersentation and append
     * all children to the container.
     */
-   private void expandContainerChildren()
+   private void expandContainerChildren() throws SOAPException
    {
       // Do nothing if the source of the XMLFragment is the container itself
       Element domElement = xmlFragment.toElement();
@@ -292,78 +300,58 @@ class XMLContent extends SOAPContent
       String rootLocalName = domElement.getLocalName();
       String rootPrefix = domElement.getPrefix();
       String rootNS = domElement.getNamespaceURI();
-      Name contentRootName = new NameImpl(rootLocalName, rootPrefix, rootNS);
+      NameImpl contentRootName = new NameImpl(rootLocalName, rootPrefix, rootNS);
 
       // Make sure the content root element name matches this element name
       Name name = container.getElementName();
       QName qname = container.getElementQName();
-      boolean artificalElement = (SOAPContentElement.PROVIDER_PARAM_NAME.equals(qname) || SOAPContentElement.PROVIDER_RETURN_VALUE_NAME.equals(qname));
-      
-      if ( !artificalElement && !contentRootName.equals(name) )
+      boolean artificalElement = (SOAPContentElement.GENERIC_PARAM_NAME.equals(qname) || SOAPContentElement.GENERIC_RETURN_NAME.equals(qname));
+
+      if (!artificalElement && !contentRootName.equals(name))
          throw new WSException("Content root name does not match element name: " + contentRootName + " != " + name);
 
       // Remove all child nodes
       container.removeContents();
 
-
-      try
+      // In case of dispatch and provider we use artifical element names
+      // These need to be replaced (costly!)
+      if (artificalElement)
       {
-         // In some cases we are using artifical element names
-         // These need to be replaced (costly!)
-         if(artificalElement)
-         {
-            QName tmp = null;
-            if (rootPrefix != null)
-               tmp = new QName(rootNS, rootLocalName, rootPrefix);
-            else
-               tmp = new QName(rootNS, rootLocalName);
-            container.setElementQNameInternal(tmp);
-         }
+         QName xmlName = contentRootName.toQName();
+         container.setElementQNameInternal(xmlName);
       }
-      catch (SOAPException e)
-      {
-         WSException.rethrow(e);
-      }
-
 
       // Copy attributes
       DOMUtils.copyAttributes(container, domElement);
 
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-      
-      try
+
+      NodeList nlist = domElement.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
       {
-         NodeList nlist = domElement.getChildNodes();
-         for (int i = 0; i < nlist.getLength(); i++)
+         Node child = nlist.item(i);
+         short childType = child.getNodeType();
+         if (childType == Node.ELEMENT_NODE)
          {
-            Node child = nlist.item(i);
-            short childType = child.getNodeType();
-            if (childType == Node.ELEMENT_NODE)
-            {
-               SOAPElement soapElement = soapFactory.createElement((Element)child);
-               container.addChildElement(soapElement);
-               if (Constants.NAME_XOP_INCLUDE.equals(name) || container.isXOPParameter())
-                  XOPContext.inlineXOPData(soapElement);
-            }
-            else if (childType == Node.TEXT_NODE)
-            {
-               String nodeValue = child.getNodeValue();
-               container.addTextNode(nodeValue);
-            }
-            else if (childType == Node.CDATA_SECTION_NODE)
-            {
-               String nodeValue = child.getNodeValue();
-               container.addTextNode(nodeValue);
-            }
-            else
-            {
-               log.trace("Ignore child type: " + childType);
-            }
+            SOAPElement soapElement = soapFactory.createElement((Element)child);
+            container.addChildElement(soapElement);
+            if (Constants.NAME_XOP_INCLUDE.equals(name) || container.isXOPParameter())
+               XOPContext.inlineXOPData(soapElement);
          }
-      }
-      catch (SOAPException e)
-      {
-         throw new WSException("Failed to transition to DOM", e);
+         else if (childType == Node.TEXT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            container.addTextNode(nodeValue);
+         }
+         else if (childType == Node.CDATA_SECTION_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            container.addTextNode(nodeValue);
+         }
+         else
+         {
+            log.trace("Ignore child type: " + childType);
+         }
       }
    }
 }
