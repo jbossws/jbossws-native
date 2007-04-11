@@ -105,11 +105,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       {
          MessageAbstraction resMessage = remotingConnection.invoke((SOAPMessageImpl)reqMessage, endpoint, oneway);
          return resMessage;
-      }
-      catch (RuntimeException rte)
-      {
-         throw rte;
-      }
+      }    
       catch (Exception ex)
       {
          Throwable cause = ex.getCause();

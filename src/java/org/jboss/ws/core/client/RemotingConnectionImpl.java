@@ -23,6 +23,22 @@ package org.jboss.ws.core.client;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.remoting.Client;
+import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.marshal.MarshalFactory;
+import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.core.WSTimeoutException;
+
+import javax.xml.rpc.Stub;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.addressing.EndpointReference;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -30,24 +46,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.xml.rpc.Stub;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.addressing.EndpointReference;
-
-import org.jboss.logging.Logger;
-import org.jboss.remoting.Client;
-import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.marshal.MarshalFactory;
-import org.jboss.remoting.marshal.Marshaller;
-import org.jboss.remoting.marshal.UnMarshaller;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.MessageTrace;
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.WSTimeoutException;
 
 /**
  * SOAPConnection implementation
@@ -121,7 +119,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          throw new IllegalArgumentException("Given endpoint cannot be null");
 
       if (closed)
-         throw new WSException("Connection is already closed");
+         throw new IOException("Connection is already closed");
 
       Object timeout = null;
       String targetAddress;
@@ -160,23 +158,14 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
 
          MessageAbstraction resMessage = null;
-         try
+
+         if (oneway == true)
          {
-            if (oneway == true)
-            {
-               client.invokeOneway(reqMessage, metadata, false);
-            }
-            else
-            {
-               resMessage = (MessageAbstraction)client.invoke(reqMessage, metadata);
-            }
+            client.invokeOneway(reqMessage, metadata, false);
          }
-         catch (RuntimeException rte)
+         else
          {
-            Throwable cause = rte.getCause();
-            if (timeout != null && cause instanceof SocketTimeoutException)
-               throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
-            else throw rte;
+            resMessage = (MessageAbstraction)client.invoke(reqMessage, metadata);
          }
 
          // Disconnect the remoting client
@@ -190,12 +179,15 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
          return resMessage;
       }
-      catch (RuntimeException rte)
+      catch(SocketTimeoutException se)
       {
-         throw rte;
+         if(timeout!=null)
+            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
+         else
+            throw new IOException(se.getMessage());
       }
       catch (Throwable th)
-      {
+      {        
          IOException io = new IOException("Could not transmit message");
          io.initCause(th);
          throw io;
