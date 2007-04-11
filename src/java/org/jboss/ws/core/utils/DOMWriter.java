@@ -328,13 +328,13 @@ public class DOMWriter
                      out.print(" xmlns:" + prefix + "='" + nsURI + "'");
                   }
                }
-
-               if (elPrefix == null && elNamespaceURI != null && !elNamespaceURI.equals(element.getAttribute("xmlns")))
-               {
-                  out.print(" xmlns='" + elNamespaceURI + "'");
-               }
             }
 
+            // The SAX ContentHandler will by default not add the namespace declaration 
+            // <Hello xmlns='http://somens'>World</Hello>
+            if (elPrefix == null && elNamespaceURI != null && !elNamespaceURI.equals(element.getAttribute("xmlns")))
+               out.print(" xmlns='" + elNamespaceURI + "'");
+            
             if (hasChildNodes)
             {
                out.print('>');
