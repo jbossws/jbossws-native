@@ -154,6 +154,9 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
       try
       {
+         if (log.isDebugEnabled())
+            log.debug("Remoting metadata: " + metadata);
+         
          // debug the outgoing message
          MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
 
