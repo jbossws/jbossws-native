@@ -128,6 +128,39 @@ public class ServiceRefMetaDataParser
          String value = getElementContent(propElement, "prop-value");
          pcref.addCallProperty(new UnifiedCallPropertyMetaData(name, value));
       }
+
+      // Look for stub-property elements
+      iterator = DOMUtils.getChildElements(root, "stub-property");
+      while (iterator.hasNext())
+      {
+         Element propElement = (Element)iterator.next();
+         String name = getElementContent(propElement, "prop-name");
+         String value = getElementContent(propElement, "prop-value");
+         UnifiedStubPropertyMetaData propMetaData = new UnifiedStubPropertyMetaData();
+         propMetaData.setPropName(name);
+         propMetaData.setPropValue(value);
+         pcref.addStubProperty(propMetaData);
+      }
+
+      // portQName
+      Element portQName = DOMUtils.getFirstChildElement(root, "port-qname");
+      if(portQName!=null)
+         pcref.setPortQName(QName.valueOf(getTextContent(portQName)));
+
+      // config
+      Element configName = DOMUtils.getFirstChildElement(root, "config-name");
+      if(configName!=null)
+         pcref.setConfigName(getTextContent(configName));
+
+      Element configFile = DOMUtils.getFirstChildElement(root, "config-file");
+      if(configFile!=null)
+         pcref.setConfigFile(getTextContent(configFile));
+
+      // service-endpoint-interface
+      Element sei = DOMUtils.getFirstChildElement(root, "service-endpoint-interface");
+      if(sei!=null)
+         pcref.setServiceEndpointInterface(getTextContent(sei));
+
    }
 
    public void importStandardXml(Element root, UnifiedHandlerMetaData href)

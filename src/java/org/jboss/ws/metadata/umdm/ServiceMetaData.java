@@ -206,6 +206,11 @@ public class ServiceMetaData
       return endpoints.get(portName);
    }
 
+   public EndpointMetaData removeEndpoint(QName portName)
+   {
+      return endpoints.remove(portName);
+   }
+
    public EndpointMetaData getEndpointByServiceEndpointInterface(String seiName)
    {
       EndpointMetaData epMetaData = null;

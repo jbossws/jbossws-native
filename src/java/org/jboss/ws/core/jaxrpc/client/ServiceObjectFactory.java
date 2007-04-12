@@ -24,32 +24,6 @@ package org.jboss.ws.core.jaxrpc.client;
 
 // $Id$
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.rmi.Remote;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Properties;
-
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
-import javax.wsdl.Definition;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
-import javax.xml.rpc.Service;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -65,6 +39,20 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.tools.wsdl.WSDL11DefinitionFactory;
+
+import javax.naming.*;
+import javax.naming.spi.ObjectFactory;
+import javax.wsdl.Definition;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
+import javax.xml.rpc.Service;
+import java.io.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.rmi.Remote;
+import java.util.*;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service
@@ -217,6 +205,8 @@ public class ServiceObjectFactory implements ObjectFactory
             }
          }
 
+         narrowPortSelection(serviceRef, serviceMetaData);
+
          /********************************************************
           * Setup the Proxy that implements the service-interface
           ********************************************************/
@@ -245,6 +235,78 @@ public class ServiceObjectFactory implements ObjectFactory
       {
          log.error("Cannot create service", ex);
          throw ex;
+      }
+   }
+
+   /**
+    * Narrow port selection tries to nail down available endpoints
+    * by <port-component-ref> declarations. A selection base upon
+    * Service.getPort(SEI) later on needs to be distinct to an endpoint, or in this case EndpointMetaData.
+    * 
+    * @param serviceRef
+    * @param serviceMetaData
+    */
+   private void narrowPortSelection(UnifiedServiceRefMetaData serviceRef, ServiceMetaData serviceMetaData)
+   {
+      Map<String, List<UnifiedPortComponentRefMetaData>> seiGroups = new HashMap<String, List<UnifiedPortComponentRefMetaData>>();
+      for(UnifiedPortComponentRefMetaData pcref : serviceRef.getPortComponentRefs())
+      {
+         String sei = pcref.getServiceEndpointInterface();
+         if(null==seiGroups.get(sei))
+            seiGroups.put(sei, new ArrayList<UnifiedPortComponentRefMetaData>());
+         List<UnifiedPortComponentRefMetaData> group = seiGroups.get(sei);
+         group.add(pcref);
+
+         // Constraint#1: within a service-ref it's not allowed to use a SEI across different pcref's
+         if(group.size()>1)
+            throw new WSException("Within a <service-ref> it's not allowed to use a SEI across different <port-component-ref>'s: "+group);
+      }
+
+      // Constraint#2: A pcref may only match one EndpointMetaData
+      for( String sei : seiGroups.keySet())
+      {
+         // Narrow available endpoints by port-component-ref declaration
+         List<QName> narrowedEndpoints = new ArrayList<QName>();
+
+         List<UnifiedPortComponentRefMetaData> group = seiGroups.get(sei);
+         UnifiedPortComponentRefMetaData pcref = group.get(0); // distinct, see above Constraint#1
+
+         // Constraint#3: Port selection only applies when both SEI and QName are given
+         if(pcref.getServiceEndpointInterface()!=null && pcref.getPortQName()!=null)
+         {
+            List<QName> pcRef2EndpointMapping = new ArrayList<QName>();
+            for(EndpointMetaData epMeta : serviceMetaData.getEndpoints())
+            {
+               if(pcref.getServiceEndpointInterface().equals(epMeta.getServiceEndpointInterfaceName()))
+               {
+                  pcRef2EndpointMapping.add(epMeta.getPortName());
+               }
+
+            }
+
+            for(QName q : pcRef2EndpointMapping)
+            {
+               EndpointMetaData mappedEndpoint = serviceMetaData.getEndpoint(q);
+               if(! pcref.getPortQName().equals( mappedEndpoint.getPortName()) )
+                  narrowedEndpoints.add(q);
+            }
+
+            // Constraint: Dont exclude all of them ;)
+            if(pcRef2EndpointMapping.size()>0 && (pcRef2EndpointMapping.size() == narrowedEndpoints.size()))
+               throw new WSException("Failed to narrow available endpoints by <port-component-ref> declaration");
+
+            for(QName q : narrowedEndpoints)
+            {
+               EndpointMetaData removed = serviceMetaData.removeEndpoint(q);
+               log.debug("Narrowed endpoint " + q + "("+removed+")");
+            }
+         }
+         else
+         {
+            // TODO: In case there is more then one EMPD this should cause an exception
+            log.warn("Unable to narrow port selection for "+ pcref);
+         }
+
       }
    }
 
@@ -300,4 +362,5 @@ public class ServiceObjectFactory implements ObjectFactory
       }
       return wsdlDefinition;
    }
+
 }

@@ -734,7 +734,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       boolean match;
       if (seiName != null && portName != null)
-         match = getServiceEndpointInterfaceName().equals(seiName) && portName.equals(portName);
+         match = getServiceEndpointInterfaceName().equals(seiName) && getPortName().equals(portName);
       else match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
 
       return match;
