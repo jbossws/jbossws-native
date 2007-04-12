@@ -288,27 +288,32 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
     */
    private void handleRemoteException(OperationMetaData opMetaData, Exception ex)
    {
+      WebServiceException wsEx;
       String bindingId = opMetaData.getEndpointMetaData().getBindingId();
       if (bindingId.startsWith(SOAPBinding.SOAP11HTTP_BINDING) || bindingId.startsWith(SOAPBinding.SOAP12HTTP_BINDING))
       {
          if (ex instanceof SOAPFaultException)
          {
-            throw (SOAPFaultException)ex;
+            wsEx = (SOAPFaultException)ex;
          }
          else
          {
-            throw new SOAPFaultException(ex);
+            wsEx = new WebServiceException(ex);
          }
       }
       else if (HTTPBinding.HTTP_BINDING.equals(bindingId))
       {
          // FIXME: provide actual status code
-         throw new HTTPException(-1);
+         wsEx = new HTTPException(-1);
+         wsEx.initCause(ex);
       }
       else
       {
          throw new WebServiceException("Unsuported binding: " + bindingId, ex);
       }
+
+      // Throw the web service exception
+      throw wsEx;
    }
 
    @Override
