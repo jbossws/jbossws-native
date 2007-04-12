@@ -23,12 +23,13 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
-import org.jboss.ws.integration.ServiceRefElement;
-import org.w3c.dom.Element;
-
-import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.jboss.ws.integration.ServiceRefElement;
+import org.w3c.dom.Element;
 
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
@@ -67,7 +68,7 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
       configName = pcref.configName;
       configFile = pcref.configFile;
       callProperties = pcref.callProperties;
-      stubProperties = pcref.stubProperties;      
+      stubProperties = pcref.stubProperties;
    }
 
    public UnifiedServiceRefMetaData getServiceRefMetaData()
@@ -140,7 +141,7 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
    {
       callProperties.add(callProp);
    }
-   
+
    public List<UnifiedStubPropertyMetaData> getStubProperties()
    {
       return stubProperties;
@@ -155,7 +156,7 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
    {
       stubProperties.add(stubProp);
    }
-   
+
    public String getConfigFile()
    {
       return configFile;
@@ -188,23 +189,22 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
 
    public boolean matches(String seiName, QName portName)
    {
-      if(seiName==null && portName == null)
-         throw new IllegalArgumentException("Cannot match " + this + " against seiName=null && portName=null."+
-            "Looks like a broken service-ref setup");
+      if (seiName == null && portName == null)
+         throw new IllegalArgumentException("Cannot match against seiName=null && portName=null.");
 
       boolean match = false;
 
       // match against portName first
-      if(portName!=null)
+      if (portName != null)
          match = portName.equals(getPortQName());
 
       // if it fails try seiName
-      if (!match)
+      if (match == false)
          match = seiName.equals(getServiceEndpointInterface());
 
       return match;
    }
-   
+
    public String toString()
    {
       StringBuilder str = new StringBuilder();

@@ -103,9 +103,7 @@ public class ServiceRefObjectFactory
       }
       else if (localName.equals("service-qname"))
       {
-         if (value.indexOf("{") != -1)
-            ref.setServiceQName(QName.valueOf(value));
-         else ref.setServiceQName(navigator.resolveQName(value));
+         ref.setServiceQName(getQNameValue(navigator, value));
       }
 
       /* JBoss properties */
@@ -137,6 +135,7 @@ public class ServiceRefObjectFactory
       if (localName.equals("port-component-ref"))
       {
          child = new UnifiedPortComponentRefMetaData(ref);
+         ref.addPortComponentRef((UnifiedPortComponentRefMetaData)child);
       }
       else if (localName.equals("handler"))
       {
@@ -169,11 +168,9 @@ public class ServiceRefObjectFactory
 
    private void setValue(UnifiedPortComponentRefMetaData pcref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
-      UnifiedServiceRefMetaData srefMetaData = pcref.getServiceRefMetaData();
       if (localName.equals("service-endpoint-interface"))
       {
          pcref.setServiceEndpointInterface(value);
-         srefMetaData.addPortComponentRef(pcref);
       }
       else if (localName.equals("enable-mtom"))
       {
@@ -185,16 +182,7 @@ public class ServiceRefObjectFactory
       }
       else if (localName.equals("port-qname"))
       {
-         QName portQName = QName.valueOf(value);
-         pcref.setPortQName(portQName);
-
-         String seiName = pcref.getServiceEndpointInterface();
-         UnifiedPortComponentRefMetaData portComponentRef = srefMetaData.getPortComponentRef(seiName, portQName);
-
-         if (portComponentRef == null)
-            srefMetaData.addPortComponentRef(pcref);
-         else 
-            portComponentRef.setPortQName(portQName);
+         pcref.setPortQName(getQNameValue(navigator, value));
       }
       else if (localName.equals("config-name"))
       {
@@ -226,11 +214,11 @@ public class ServiceRefObjectFactory
    {
       if (localName.equals("service-name-pattern"))
       {
-         ref.setServiceNamePattern(QName.valueOf(value));
+         ref.setServiceNamePattern(getQNameValue(navigator, value));
       }
       else if (localName.equals("port-name-pattern"))
       {
-         ref.setPortNamePattern(QName.valueOf(value));
+         ref.setPortNamePattern(getQNameValue(navigator, value));
       }
       else if (localName.equals("protocol-binding"))
       {
@@ -250,7 +238,7 @@ public class ServiceRefObjectFactory
       }
       else if (localName.equals("soap-header"))
       {
-         ref.addSoapHeader(navigator.resolveQName(value));
+         ref.addSoapHeader(getQNameValue(navigator, value));
       }
       else if (localName.equals("soap-role"))
       {
@@ -307,5 +295,11 @@ public class ServiceRefObjectFactory
       {
          ref.setPropValue(value);
       }
+   }
+
+   private QName getQNameValue(UnmarshallingContext navigator, String value)
+   {
+      QName qname = (value.startsWith("{") ? QName.valueOf(value) : navigator.resolveQName(value));
+      return qname;
    }
 }
