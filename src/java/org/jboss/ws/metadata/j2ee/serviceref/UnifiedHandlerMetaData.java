@@ -31,7 +31,6 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.integration.ServiceRefElement;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
@@ -45,7 +44,7 @@ import org.w3c.dom.Element;
 public class UnifiedHandlerMetaData extends ServiceRefElement
 {
    private UnifiedHandlerChainMetaData handlerChain;
-   
+
    // The required <handler-name> element
    private String handlerName;
    // The required <handler-class> element
@@ -128,7 +127,7 @@ public class UnifiedHandlerMetaData extends ServiceRefElement
       portNames.add(value);
    }
 
-   public HandlerMetaDataJAXRPC getHandlerMetaDataJAXRPC (HandlerType type)
+   public HandlerMetaDataJAXRPC getHandlerMetaDataJAXRPC(HandlerType type)
    {
       HandlerMetaDataJAXRPC hmd = new HandlerMetaDataJAXRPC(type);
       hmd.setHandlerName(getHandlerName());
@@ -140,7 +139,7 @@ public class UnifiedHandlerMetaData extends ServiceRefElement
       return hmd;
    }
 
-   public HandlerMetaDataJAXWS getHandlerMetaDataJAXWS (HandlerType type)
+   public HandlerMetaDataJAXWS getHandlerMetaDataJAXWS(HandlerType type)
    {
       HandlerMetaDataJAXWS hmd = new HandlerMetaDataJAXWS(type);
       hmd.setHandlerName(getHandlerName());
@@ -158,5 +157,18 @@ public class UnifiedHandlerMetaData extends ServiceRefElement
    public void importStandardXml(Element root)
    {
       new ServiceRefMetaDataParser().importStandardXml(root, this);
+   }
+   
+   public String toString()
+   {
+      StringBuilder str = new StringBuilder();
+      str.append("\nUnifiedHandlerMetaData");
+      str.append("\n handlerName=" + handlerName);
+      str.append("\n handlerClass=" + handlerClass);
+      str.append("\n soapHeaders=" + soapHeaders);
+      str.append("\n soapRoles=" + soapRoles);
+      str.append("\n portNames=" + portNames);
+      str.append("\n initParams=" + initParams);
+      return str.toString();
    }
 }

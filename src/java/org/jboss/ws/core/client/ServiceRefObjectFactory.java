@@ -77,7 +77,7 @@ public class ServiceRefObjectFactory
       else if (ref instanceof UnifiedStubPropertyMetaData)
          setValue((UnifiedStubPropertyMetaData)ref, navigator, namespaceURI, localName, value);
    }
-   
+
    private void setValue(UnifiedServiceRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       /* Standard properties */
@@ -103,10 +103,9 @@ public class ServiceRefObjectFactory
       }
       else if (localName.equals("service-qname"))
       {
-         if(value.indexOf("{") != -1)
+         if (value.indexOf("{") != -1)
             ref.setServiceQName(QName.valueOf(value));
-         else
-            ref.setServiceQName(navigator.resolveQName(value));
+         else ref.setServiceQName(navigator.resolveQName(value));
       }
 
       /* JBoss properties */
@@ -137,7 +136,7 @@ public class ServiceRefObjectFactory
       Object child = null;
       if (localName.equals("port-component-ref"))
       {
-         child = new UnifiedPortComponentRefMetaData(ref);         
+         child = new UnifiedPortComponentRefMetaData(ref);
       }
       else if (localName.equals("handler"))
       {
@@ -168,42 +167,42 @@ public class ServiceRefObjectFactory
       return child;
    }
 
-   private void setValue(UnifiedPortComponentRefMetaData ref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   private void setValue(UnifiedPortComponentRefMetaData pcref, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
+      UnifiedServiceRefMetaData srefMetaData = pcref.getServiceRefMetaData();
       if (localName.equals("service-endpoint-interface"))
       {
-         ref.setServiceEndpointInterface(value);
-         ref.getServiceRefMetaData().addPortComponentRef(ref);
+         pcref.setServiceEndpointInterface(value);
+         srefMetaData.addPortComponentRef(pcref);
       }
       else if (localName.equals("enable-mtom"))
       {
-         ref.setEnableMTOM(Boolean.valueOf(value));
+         pcref.setEnableMTOM(Boolean.valueOf(value));
       }
       else if (localName.equals("port-component-link"))
       {
-         ref.setPortComponentLink(value);
+         pcref.setPortComponentLink(value);
       }
       else if (localName.equals("port-qname"))
       {
          QName portQName = QName.valueOf(value);
-         ref.setPortQName(portQName);
+         pcref.setPortQName(portQName);
 
-         UnifiedPortComponentRefMetaData portComponentRef = ref.getServiceRefMetaData().getPortComponentRef(
-            ref.getServiceEndpointInterface(), portQName
-         );
+         String seiName = pcref.getServiceEndpointInterface();
+         UnifiedPortComponentRefMetaData portComponentRef = srefMetaData.getPortComponentRef(seiName, portQName);
 
-         if(portComponentRef == null)
-            ref.getServiceRefMetaData().addPortComponentRef(ref);
-         else
+         if (portComponentRef == null)
+            srefMetaData.addPortComponentRef(pcref);
+         else 
             portComponentRef.setPortQName(portQName);
       }
       else if (localName.equals("config-name"))
       {
-         ref.setConfigName(value);
+         pcref.setConfigName(value);
       }
       else if (localName.equals("config-file"))
       {
-         ref.setConfigFile(value);
+         pcref.setConfigFile(value);
       }
    }
 

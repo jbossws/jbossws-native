@@ -49,7 +49,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    private static Logger log = Logger.getLogger(UnifiedServiceRefMetaData.class);
 
    private UnifiedVirtualFile vfsRoot;
-   
+
    // Standard properties 
 
    // The required <service-ref-name> element
@@ -188,26 +188,13 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
       return portComponentRefs;
    }
 
-   @Deprecated
-   public UnifiedPortComponentRefMetaData getPortComponentRef(String seiName)
-   {
-      if (seiName == null)
-         throw new IllegalArgumentException("SEI name cannot be null");
-      for (UnifiedPortComponentRefMetaData ref : portComponentRefs)
-      {
-         if (seiName.equals(ref.getServiceEndpointInterface()))
-            return ref;
-      }
-      return null;
-   }
-
    public UnifiedPortComponentRefMetaData getPortComponentRef(String seiName, QName portName)
    {
       UnifiedPortComponentRefMetaData matchingRef = null;
 
       for (UnifiedPortComponentRefMetaData ref : portComponentRefs)
       {
-         if(ref.matches(seiName, portName))
+         if (ref.matches(seiName, portName))
          {
             matchingRef = ref;
             break;
@@ -302,7 +289,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
             }
          }
       }
-      
+
       if (wsdlLocation == null && wsdlFile != null)
       {
          try
@@ -314,7 +301,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
             throw new WSException("Cannot find wsdl-file: " + wsdlFile, e);
          }
       }
-      
+
       return wsdlLocation;
    }
 
@@ -386,7 +373,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    public Object getAnnotatedElement()
    {
       return anElement;
-      
+
    }
 
    public boolean isProcessed()
@@ -398,7 +385,7 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    {
       this.processed = flag;
    }
-   
+
    public void setAnnotatedElement(Object anElement)
    {
       this.anElement = anElement;
@@ -409,10 +396,36 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
    {
       new ServiceRefMetaDataParser().importStandardXml(root, this);
    }
-   
+
    @Override
    public void importJBossXml(Element root)
    {
       new ServiceRefMetaDataParser().importJBossXml(root, this);
+   }
+
+   public String toString()
+   {
+      StringBuilder str = new StringBuilder();
+      str.append("\nUnifiedServiceRef");
+      str.append("\n serviceRefName=" + serviceRefName);
+      str.append("\n serviceInterface=" + serviceInterface);
+      str.append("\n serviceImplClass=" + serviceImplClass);
+      str.append("\n serviceRefType=" + serviceRefType);
+      str.append("\n serviceQName=" + serviceQName);
+      str.append("\n anElement=" + anElement);
+      str.append("\n wsdlFile=" + wsdlFile);
+      str.append("\n wsdlOverride=" + wsdlOverride);
+      str.append("\n mappingFile=" + mappingFile);
+      str.append("\n configName=" + configName);
+      str.append("\n configFile=" + configFile);
+      str.append("\n callProperties=" + callProperties);
+      str.append("\n processed=" + processed);
+      str.append("\n handlerChains=" + handlerChains);
+      str.append("\n handlerChain=" + handlerChain);
+      for (UnifiedHandlerMetaData uhmd : handlers)
+         str.append(uhmd.toString());
+      for (UnifiedPortComponentRefMetaData pcref : portComponentRefs)
+         str.append(pcref.toString());
+      return str.toString();
    }
 }

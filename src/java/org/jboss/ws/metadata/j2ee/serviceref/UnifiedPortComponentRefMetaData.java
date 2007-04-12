@@ -204,4 +204,19 @@ public class UnifiedPortComponentRefMetaData extends ServiceRefElement
 
       return match;
    }
+   
+   public String toString()
+   {
+      StringBuilder str = new StringBuilder();
+      str.append("\nUnifiedPortComponentRef");
+      str.append("\n serviceEndpointInterface=" + serviceEndpointInterface);
+      str.append("\n portQName=" + portQName);
+      str.append("\n enableMTOM=" + enableMTOM);
+      str.append("\n portComponentLink=" + portComponentLink);
+      str.append("\n callProperties=" + callProperties);
+      str.append("\n stubProperties=" + stubProperties);
+      str.append("\n configName=" + configName);
+      str.append("\n configFile=" + configFile);
+      return str.toString();
+   }
 }

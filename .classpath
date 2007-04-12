@@ -13,7 +13,7 @@
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-j2ee.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-log4j.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-logging-spi.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/jboss-remoting.jar" sourcepath="/home/tdiesler/cvs/JBossRemoting/tags/remoting_2_2_0_Alpha7/src/main"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-remoting.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-xml-binding.jar" sourcepath="/build/thirdparty/jboss-xml-binding-sources.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/xmlsec.jar"/>
