@@ -199,6 +199,7 @@ public class XMLFragment
                   throw new IllegalStateException("Cannot find end of XML processing instruction");
 
                off++;
+               len -= off;
             }
 
             while (len > 0)
