@@ -35,11 +35,9 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.server.PropertyCallback;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.xb.binding.NamespaceRegistry;
 
 /**
@@ -51,11 +49,11 @@ import org.jboss.xb.binding.NamespaceRegistry;
 public abstract class CommonMessageContext implements Map<String, Object>
 {
    private static Logger log = Logger.getLogger(CommonMessageContext.class);
-   
+
    // expandToDOM in the SOAPContentElement should not happen during normal operation 
    // This property should be set the message context when it is ok to do so.
    public static String ALLOW_EXPAND_TO_DOM = "org.jboss.ws.allow.expand.dom";
-   
+
    public static String REMOTING_METADATA = "org.jboss.ws.remoting.metadata";
 
    // The serialization context for this message ctx
@@ -202,8 +200,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
       ScopedProperty scopedProp = scopedProps.get(key);
       if (log.isTraceEnabled())
-         log.trace("get("+ key + "): " + scopedProp);
-      
+         log.trace("get(" + key + "): " + scopedProp);
+
       if (isValidInScope(scopedProp))
          value = scopedProp.getValue();
 
@@ -219,7 +217,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
       ScopedProperty newProp = new ScopedProperty(key, value, currentScope);
       if (log.isTraceEnabled())
          log.trace("put: " + newProp);
-      
+
       scopedProps.put(key, newProp);
       return prevProp != null ? prevProp.getValue() : null;
    }
@@ -254,11 +252,10 @@ public abstract class CommonMessageContext implements Map<String, Object>
       scopedProps.clear();
    }
 
-
    public boolean isModified()
    {
       // skip changes from XOP handler interactions
-      if(XOPContext.isXOPEncodedRequest() && !XOPContext.isXOPMessage())
+      if (XOPContext.isXOPEncodedRequest() && !XOPContext.isXOPMessage())
       {
          log.debug("Disregard changes from XOP/Handler interactions");
          return false;
@@ -385,7 +382,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
          return realValue;
       }
-      
+
       public String toString()
       {
          return scope + ":" + name + "=" + value;

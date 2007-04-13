@@ -120,11 +120,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
 
       handlerResolver = new HandlerResolverImpl();
-      
+
       if (usRef != null)
       {
          serviceMetaData.setServiceRefName(usRef.getServiceRefName());
-         
+
          // Setup the service handlers
          if (usRef.getHandlerChain() != null)
          {
@@ -368,54 +368,37 @@ public class ServiceDelegateImpl extends ServiceDelegate
       String seiName = epMetaData.getServiceEndpointInterfaceName();
       QName portName = epMetaData.getPortName();
 
-      if (usRef == null || usRef.getPortComponentRefs().size() == 0)
+      if (usRef == null)
       {
-         if (log.isDebugEnabled())
-            log.debug("No port configuration for: " + portName);
+         log.debug("No port configuration for: " + portName);
          return;
       }
 
       String configFile = usRef.getConfigFile();
       String configName = usRef.getConfigName();
 
-      boolean match = false;
-      for (UnifiedPortComponentRefMetaData pi : usRef.getPortComponentRefs())
+      UnifiedPortComponentRefMetaData pcref = usRef.getPortComponentRef(seiName, portName);
+      if (pcref != null)
       {
-         String piSEI = pi.getServiceEndpointInterface();
-         QName piPort = pi.getPortQName();
-         match = (piSEI == null && piPort == null);
-         if (match == false)
-         {
-            if (piSEI != null && piPort != null)
-               match = seiName.equals(piSEI) && portName.equals(piPort);
-            else match = seiName.equals(piSEI) || portName.equals(piPort);
-         }
-         if (match == true)
-         {
-            if (pi.getConfigFile() != null)
-               configFile = pi.getConfigFile();
-            if (pi.getConfigName() != null)
-               configName = pi.getConfigName();
+         if (pcref.getConfigFile() != null)
+            configFile = pcref.getConfigFile();
+         if (pcref.getConfigName() != null)
+            configName = pcref.getConfigName();
 
-            BindingProvider bp = (BindingProvider)stub;
-            Map<String, Object> reqCtx = bp.getRequestContext();
-            for (UnifiedStubPropertyMetaData prop : pi.getStubProperties())
-            {
-               log.debug("Set stub property: " + prop);
-               reqCtx.put(prop.getPropName(), prop.getPropValue());
-            }
-            break;
+         BindingProvider bp = (BindingProvider)stub;
+         Map<String, Object> reqCtx = bp.getRequestContext();
+         for (UnifiedStubPropertyMetaData prop : pcref.getStubProperties())
+         {
+            log.debug("Set stub property: " + prop);
+            reqCtx.put(prop.getPropName(), prop.getPropValue());
          }
       }
 
-      if (match == false)
-         if (log.isDebugEnabled())
-            log.debug("No matching port configuration for: [portName=" + portName + ",seiName=" + seiName + "]");
-
-      if (log.isDebugEnabled())
-         log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
       if (configName != null || configFile != null)
+      {
+         log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
          stub.setConfigName(configName, configFile);
+      }
    }
 
    @Override
