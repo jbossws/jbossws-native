@@ -50,6 +50,7 @@ import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
@@ -404,13 +405,29 @@ public class ServiceImpl implements ServiceExt
    private Remote createProxy(Class seiClass, EndpointMetaData epMetaData) throws Exception
    {
       CallImpl call = new CallImpl(this, epMetaData);
-      initCallProperties(call, seiClass.getName());
+      initStubProperties(call, seiClass.getName());
 
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
 
       return proxy;
+   }
+
+   private void initStubProperties(CallImpl call, String seiName)
+   {
+      // nothing to do
+      if (usrMetaData == null)
+         return;
+
+      for (UnifiedPortComponentRefMetaData upcRef : usrMetaData.getPortComponentRefs())
+      {
+         if (seiName.equals(upcRef.getServiceEndpointInterface()))
+         {
+            for (UnifiedStubPropertyMetaData prop : upcRef.getStubProperties())
+               call.setProperty(prop.getPropName(), prop.getPropValue());
+         }
+      }
    }
 
    private void initCallProperties(CallImpl call, String seiName)

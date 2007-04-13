@@ -23,13 +23,14 @@ package org.jboss.ws.metadata.j2ee.serviceref;
 
 // $Id$
 
+import java.util.Iterator;
+
+import javax.xml.namespace.QName;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.xb.QNameBuilder;
 import org.w3c.dom.Element;
-
-import javax.xml.namespace.QName;
-import java.util.Iterator;
 
 /**
  * The metdata data from service-ref element in web.xml, ejb-jar.xml, and
@@ -85,20 +86,20 @@ public class ServiceRefMetaDataParser
       {
          Element pcrefElement = (Element)iterator.next();
          String seiName = getOptionalElementContent(pcrefElement, "service-endpoint-interface");
-         String portNameString = getOptionalElementContent(pcrefElement, "port-qname");
-         QName portName = portNameString!=null ? QName.valueOf(portNameString) : null;   // TODO: unify QName parsing
+         QName portName = getOptionalElementContentAsQName(pcrefElement, "port-qname");
 
          UnifiedPortComponentRefMetaData pcref = sref.getPortComponentRef(seiName, portName);
-         if (pcref == null && seiName!=null)
+         if (pcref == null && seiName != null)
          {
             // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml
             // if it has at least a SEI declared
             pcref = new UnifiedPortComponentRefMetaData(sref);
+            pcref.importStandardXml(pcrefElement);
             sref.addPortComponentRef(pcref);
-         }        
+         }
 
-         if(pcref!=null) pcref.importJBossXml(pcrefElement);
-
+         if (pcref != null)
+            pcref.importJBossXml(pcrefElement);
       }
 
       // Parse the call-property elements
@@ -120,9 +121,6 @@ public class ServiceRefMetaDataParser
 
    public void importJBossXml(Element root, UnifiedPortComponentRefMetaData pcref)
    {
-      // update or set SEI. It may be null when no std. DD is used.
-      pcref.setServiceEndpointInterface(getOptionalElementContent(root, "service-endpoint-interface"));
-      
       // Look for call-property elements
       Iterator iterator = DOMUtils.getChildElements(root, "call-property");
       while (iterator.hasNext())
@@ -147,22 +145,22 @@ public class ServiceRefMetaDataParser
       }
 
       // portQName
-      Element portQName = DOMUtils.getFirstChildElement(root, "port-qname");
-      if(portQName!=null)
-         pcref.setPortQName(QName.valueOf(getTextContent(portQName)));
+      QName portQName = getOptionalElementContentAsQName(root, "port-qname");
+      if (portQName != null)
+         pcref.setPortQName(portQName);
 
       // config
       Element configName = DOMUtils.getFirstChildElement(root, "config-name");
-      if(configName!=null)
+      if (configName != null)
          pcref.setConfigName(getTextContent(configName));
 
       Element configFile = DOMUtils.getFirstChildElement(root, "config-file");
-      if(configFile!=null)
+      if (configFile != null)
          pcref.setConfigFile(getTextContent(configFile));
 
       // service-endpoint-interface
       Element sei = DOMUtils.getFirstChildElement(root, "service-endpoint-interface");
-      if(sei!=null)
+      if (sei != null)
          pcref.setServiceEndpointInterface(getTextContent(sei));
 
    }
@@ -189,7 +187,7 @@ public class ServiceRefMetaDataParser
       {
          Element headerElement = (Element)iterator.next();
          String content = getTextContent(headerElement);
-         QName qname = QNameBuilder.buildQName(headerElement, content);
+         QName qname = DOMUtils.resolveQName(headerElement, content);
          href.addSoapHeader(qname);
       }
 
@@ -224,6 +222,17 @@ public class ServiceRefMetaDataParser
    private String getOptionalElementContent(Element element, String childName)
    {
       return getTextContent(DOMUtils.getFirstChildElement(element, childName));
+   }
+
+   private QName getOptionalElementContentAsQName(Element element, String childName)
+   {
+      QName qname = null;
+      String value = getOptionalElementContent(element, childName);
+      if (value != null)
+      {
+         qname = (value.startsWith("{") ? QName.valueOf(value) : DOMUtils.resolveQName(element, value));
+      }
+      return qname;
    }
 
    private String getTextContent(Element element)

@@ -205,7 +205,7 @@ public class ServiceObjectFactory implements ObjectFactory
             }
          }
 
-         narrowPortSelection(serviceRef, serviceMetaData);
+         //narrowPortSelection(serviceRef, serviceMetaData);
 
          /********************************************************
           * Setup the Proxy that implements the service-interface

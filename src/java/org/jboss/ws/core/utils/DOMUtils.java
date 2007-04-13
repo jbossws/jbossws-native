@@ -208,7 +208,7 @@ public final class DOMUtils
       return resolveQName(el, qualifiedName);
    }
 
-   /** Transform the giveen qualified name into a QName
+   /** Transform the given qualified name into a QName
     */
    public static QName resolveQName(Element el, String qualifiedName)
    {
