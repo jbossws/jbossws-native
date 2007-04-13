@@ -123,7 +123,11 @@ public class UnifiedServiceRefMetaData extends ServiceRefMetaData
          if (targetPCRef == null)
          {
             log.warn("Cannot find port component ref: [sei=" + seiName + ",port=" + portQName + "]");
-            addPortComponentRef(pcref);
+            if(seiName!=null)
+               addPortComponentRef(pcref);
+            else
+               log.warn("Ingore port component ref without SEI declaration: " + pcref);
+
             targetPCRef = pcref;
          }
 

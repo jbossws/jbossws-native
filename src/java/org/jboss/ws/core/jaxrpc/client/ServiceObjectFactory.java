@@ -233,7 +233,7 @@ public class ServiceObjectFactory implements ObjectFactory
       }
       catch (Exception ex)
       {
-         log.error("Cannot create service", ex);
+         log.error("Cannot create service", ex);         
          throw ex;
       }
    }
