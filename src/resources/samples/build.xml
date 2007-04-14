@@ -40,7 +40,7 @@
   </condition>
   
   <!-- Use -Ddebug=true for remote debugging -->
-  <condition property="remote.debug.line" value="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006">
+  <condition property="remote.debug.line" value="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005">
     <isset property="debug"/>
   </condition>
   <condition property="remote.debug.line" value="">
@@ -48,10 +48,10 @@
       <isset property="debug"/>
     </not>
   </condition>
-  
+
   <!-- Available integration target -->
   <property name="integration.target.${jbossws.integration.target}" value="true"/>
-  
+
   <!-- Define jboss.home -->
   <condition property="jboss.home" value="${jboss50.home}">
     <equals arg1="${jbossws.integration.target}" arg2="jboss50"/>
@@ -62,7 +62,7 @@
   <condition property="jboss.home" value="${jboss40.home}">
     <equals arg1="${jbossws.integration.target}" arg2="jboss40"/>
   </condition>
-  
+
   <!-- Integration Target Server -->
   <condition property="jbossws.integration.target.jboss">
     <isset property="jboss.home"/>
@@ -70,13 +70,13 @@
   <condition property="jbossws.integration.target.tomcat">
     <equals arg1="${jbossws.integration.target}" arg2="tomcat"/>
   </condition>
-  
+
   <property name="jboss.client" value="${jboss.home}/client"/>
   <property name="jboss.lib" value="${jboss.home}/lib"/>
   <property name="jboss.server" value="${jboss.home}/server/${jboss.server.instance}"/>
   <property name="jboss.server.lib" value="${jboss.server}/lib"/>
   <property name="jboss.server.deploy" value="${jboss.server}/deploy"/>
-  
+
   <!-- Java Endorsed -->
   <condition property="endorsed.dirs" value="${jboss.home}/lib/endorsed">
     <isset property="jbossws.integration.target.jboss"/>
@@ -84,7 +84,7 @@
   <condition property="endorsed.dirs" value="${tomcat.home}/common/endorsed">
     <isset property="jbossws.integration.target.tomcat"/>
   </condition>
-  
+
   <!-- Set a hostname property based on COMPUTERNAME for win32, HOSTNAME
   otherwise and initialize the node0/node1 cluster hostnames to localhost
   and ${hostname} by default. If you cannot route multicast traffic between
@@ -101,26 +101,26 @@
       <os family="windows"/>
     </not>
   </condition>
-  
+
   <!-- node0 defaults -->
   <property name="node0" value="localhost"/>
   <property name="node0.http.url" value="http://${node0}:8080"/>
   <property name="node0.jndi.url" value="jnp://${node0}:1099"/>
   <property name="node0.hajndi.url" value="jnp://${node0}:1100"/>
-  
+
   <!-- ================================================================== -->
   <!-- Initialization                                                     -->
   <!-- ================================================================== -->
-  
+
   <target name="prepare">
-    
+
     <mkdir dir="${tests.output.dir}/log"/>
     <touch file="${tests.output.dir}/log/test.log"/>
-    
+
     <tstamp>
       <format property="build.id" pattern="yyyyMMddHHmm"/>
     </tstamp>
-    
+
     <!-- Define excluded tests -->
     <condition property="excludes-short-name" value="tests-${jbossws.integration.target}-excludes.txt">
       <or>
@@ -130,7 +130,7 @@
     </condition>
     <property name="excludes-short-name" value="tests-${jbossws.integration.target}-noejb3-excludes.txt"/>
     <property name="excludesfile" value="${tests.resources.dir}/${excludes-short-name}"/>
-    
+
     <echo/>
     <echo message="-----------------------------------------------"/>
     <echo message="jboss.home   = ${jboss.home}"/>
@@ -139,14 +139,14 @@
     <echo message="endorsed     = ${endorsed.dirs}"/>
     <echo message="excludesfile = ${excludes-short-name}"/>
     <echo message="-----------------------------------------------"/>
-    
+
   </target>
-  
+
   <!--
   Init the various classpaths
   -->
   <target name="init" depends="prepare,jboss-classpath,tomcat-classpath"/>
-  
+
   <target name="common-classpath" depends="prepare,thirdparty">
     
     <path id="jbossws.classpath">
@@ -177,9 +177,9 @@
       <pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
     </path>
   </target>
-  
+
   <target name="jboss-classpath" depends="common-classpath" if="jbossws.integration.target.jboss">
-    
+
     <!-- The test client classpath -->
     <path id="test.client.classpath">
       <path refid="jbossws.classpath"/>
@@ -191,25 +191,25 @@
       <pathelement location="${jboss.client}/jbossretro-rt.jar"/>
       <pathelement location="${jboss.client}/log4j.jar"/>
       <pathelement location="${jboss.client}/jbossall-client.jar"/>
+      <pathelement location="${jboss.lib}/jboss-aop-jdk50.jar"/>
       <pathelement location="${jboss.lib}/jboss-vfs.jar"/>
       <pathelement location="${jboss.server.lib}/hibernate3.jar"/>
       <pathelement location="${jboss.server.lib}/jboss.jar"/>
       <pathelement location="${jboss.server.lib}/jbosssx.jar"/>
       <pathelement location="${jboss.server.lib}/jbosssx.jar"/>
-      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi.jar"/> 
-      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi-saaj.jar"/> 
-      <pathelement location="${jboss.server.deploy}/juddi-service.sar/scout.jar"/> 
+      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi.jar"/>
+      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi-saaj.jar"/>
+      <pathelement location="${jboss.server.deploy}/juddi-service.sar/scout.jar"/>
       <path refid="javac.classpath"/>
     </path>
-    
+
     <!-- The jBPM BPEL classpath -->
     <path id="jbpm.bpel.classpath">
       <path refid="jbossws.classpath"/>
       <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar"/>
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar"/>
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar"/>
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jaxen.jar"/>
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
       <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
       <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
       <pathelement location="${thirdparty.dir}/dom4j.jar"/>
@@ -222,22 +222,22 @@
       -->
     </path>
   </target>
-  
+
   <target name="tomcat-classpath" depends="common-classpath" if="jbossws.integration.target.tomcat">
     <fail message="jdk-1.5 is required for Tomcat integration" unless="HAVE_JDK_1.5"/>
     <path id="test.client.classpath">
       <path refid="jbossws.classpath"/>
-      <pathelement location="${tomcat.home}/common/lib/jbossws-thirdparty.jar"/>
+      <pathelement location="${tomcat.common.lib}/jbossws-thirdparty.jar"/>
       <path refid="javac.classpath"/>
     </path>
   </target>
-  
+
   <!-- ================================================================== -->
   <!-- Generating sources                                                 -->
   <!-- ================================================================== -->
-  
+
   <target name="wsconsume" depends="init" description="Consume JAX-WS contracts" if="HAVE_JDK_1.5">
-	
+
     <!-- Define the JAX-WS wsconsume task -->
     <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
       <classpath refid="core.classpath"/>
@@ -248,7 +248,7 @@
     
     <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
   </target>
-  
+
   <!--
     Generate BPEL sources
   -->
@@ -269,7 +269,7 @@
       outputdir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF/wsdl"
       bindingfile="hello-binding-.wsdl" servicefile="hello-service.wsdl" />
   </target>
-  
+
   <!--
     Generate JAX-RPC sources
   -->
@@ -303,7 +303,7 @@
     <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
     <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
     <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${tests.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
-    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/wstools-config.xml" />
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/wstools-config.xml"/>
     <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
     <move todir="${tests.output.dir}/wstools/java">
       <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
@@ -352,9 +352,9 @@
   <!-- ================================================================== -->
   <!-- Compiling                                                          -->
   <!-- ================================================================== -->
-  
+
   <target name="compile" depends="wsconsume,compile14,compile15" description="Compile sources"/>
-  
+
   <target name="compile14" depends="init" unless="HAVE_JDK_1.5">
     <mkdir dir="${tests.output.dir}/classes"/>
     <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
@@ -428,24 +428,28 @@
   <target name="tests" depends="main" description="Run all unit tests and generate a report">
     <antcall target="tests-main">
       <param name="include.wildcard" value="org/jboss/test/ws/**/*TestCase.class"/>
+      <param name="exclude.wildcard" value="no-wildcard-exclude-see-excludesfile"/>
+      <param name="haltonfailure" value="false"/>
     </antcall>
     <antcall target="tests-report"/>
   </target>
   
   <!--
-  Run a collection of unit tests.
-  ant -Dtest=tools test
+     Run a collection of unit tests.
+     ant -Dtest=tools test
   -->
   <target name="test" depends="init" if="test" description="Run all unit tests in a given directory">
     <antcall target="tests-main">
       <param name="include.wildcard" value="org/jboss/test/ws/${test}/**/*TestCase.class"/>
+      <param name="exclude.wildcard" value="no-wildcard-exclude-see-excludesfile"/>
+      <param name="haltonfailure" value="false"/>
     </antcall>
   </target>
   
   <!-- Common test target -->
   <target name="tests-main" depends="init">
     <mkdir dir="${tests.output.dir}/reports"/>
-    <junit printsummary="yes" showoutput="yes" dir="${tests.output.dir}">
+    <junit printsummary="yes" showoutput="yes" dir="${tests.output.dir}" haltonfailure="${haltonfailure}">
       <jvmarg value="-Djava.security.manager"/>
       <sysproperty key="build.testlog" value="${tests.output.dir}/log"/>
       <sysproperty key="client.scenario" value="${client.scenario}"/>
@@ -472,14 +476,14 @@
       <formatter type="plain" usefile="true"/>
       <formatter type="xml" usefile="true"/>
       <batchtest todir="${tests.output.dir}/reports" fork="true">
-        <fileset dir="${tests.output.dir}/classes" includes="${include.wildcard}" excludesfile="${excludesfile}"/>
+        <fileset dir="${tests.output.dir}/classes" includes="${include.wildcard}" excludes="${exclude.wildcard}" excludesfile="${excludesfile}"/>
       </batchtest>
     </junit>
   </target>
   
   <!--
-  Run a single unit test.
-  ant -Dtest=org.jboss.test.ws.jaxrpc.samples.jsr109pojo.RpcJSETestCase one-test
+     Run a single unit test.
+     ant -Dtest=org.jboss.test.ws.jaxrpc.samples.jsr109pojo.RpcJSETestCase one-test
   -->
   <target name="one-test" depends="init" if="test" description="Run a single unit test">
     <mkdir dir="${tests.output.dir}/reports"/>
