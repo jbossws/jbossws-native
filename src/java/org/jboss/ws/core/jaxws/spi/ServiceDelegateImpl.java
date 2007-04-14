@@ -23,6 +23,8 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
@@ -70,6 +73,7 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.wsdl.WSDLUtils;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -101,11 +105,34 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass)
    {
+      UnifiedVirtualFile vfsRoot;
+
       // If this Service was constructed through the ServiceObjectFactory
       // this thread local association should be available
       usRef = ServiceObjectFactory.getServiceRefAssociation();
+      if (usRef != null)
+      {
+         vfsRoot = usRef.getVfsRoot();
 
-      UnifiedVirtualFile vfsRoot = (usRef != null ? usRef.getVfsRoot() : new ResourceLoaderAdapter());
+         // Verify wsdl access if this is not a generic Service
+         if (wsdlURL != null && serviceClass != Service.class)
+         {
+            try
+            {
+               InputStream is = wsdlURL.openStream();
+               is.close();
+            }
+            catch (IOException e)
+            {
+               log.warn("Cannot access wsdlURL: " + wsdlURL);
+               wsdlURL = null;
+            }
+         }
+      }
+      else
+      {
+         vfsRoot = new ResourceLoaderAdapter();
+      }
 
       if (wsdlURL != null)
       {
@@ -157,12 +184,35 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-         throw new WebServiceException("Cannot get port meta data for: " + portName);
+      {
+         log.warn("Cannot get port meta data for: " + portName);
+
+         if (!seiClass.isAnnotationPresent(WebService.class))
+            throw new IllegalArgumentException("Cannot find @WebService on: " + seiClass.getName());
+
+         QName portType = getPortTypeName(seiClass);
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
+      }
 
       String seiClassName = seiClass.getName();
       epMetaData.setServiceEndpointInterfaceName(seiClassName);
 
       return getPortInternal(epMetaData, seiClass);
+   }
+
+   private <T> QName getPortTypeName(Class<T> seiClass)
+   {
+      WebService anWebService = seiClass.getAnnotation(WebService.class);
+      String localPart = anWebService.name();
+      if (localPart.length() == 0)
+         localPart = WSDLUtils.getJustClassName(seiClass);
+
+      String nsURI = anWebService.targetNamespace();
+      if (nsURI.length() == 0)
+         nsURI = WSDLUtils.getTypeNamespace(seiClass);
+
+      QName portType = new QName(nsURI, localPart);
+      return portType;
    }
 
    @Override

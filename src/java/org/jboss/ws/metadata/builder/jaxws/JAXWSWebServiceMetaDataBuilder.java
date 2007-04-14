@@ -259,36 +259,36 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
    private EndpointResult processWebService(UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi) throws ClassNotFoundException, IOException
    {
-      WebService wsAnnotation = sepClass.getAnnotation(WebService.class);
-      if (wsAnnotation == null)
+      WebService anWebService = sepClass.getAnnotation(WebService.class);
+      if (anWebService == null)
          throw new WSException("Cannot obtain @WebService annotation from: " + sepClass.getName());
 
       Class<?> seiClass = null;
       String seiName;
       WSDLUtils wsdlUtils = WSDLUtils.getInstance();
 
-      String name = wsAnnotation.name();
+      String name = anWebService.name();
       if (name.length() == 0)
          name = WSDLUtils.getJustClassName(sepClass);
 
-      String serviceName = wsAnnotation.serviceName();
+      String serviceName = anWebService.serviceName();
       if (serviceName.length() == 0)
          serviceName = name + "Service";
 
-      String serviceNS = wsAnnotation.targetNamespace();
+      String serviceNS = anWebService.targetNamespace();
       if (serviceNS.length() == 0)
          serviceNS = wsdlUtils.getTypeNamespace(sepClass);
 
-      String portName = wsAnnotation.portName();
+      String portName = anWebService.portName();
       if (portName.length() == 0)
          portName = name + "Port";
 
-      String wsdlLocation = wsAnnotation.wsdlLocation();
+      String wsdlLocation = anWebService.wsdlLocation();
       String interfaceNS = serviceNS; // the default, but a SEI annotation may override this
 
-      if (wsAnnotation.endpointInterface().length() > 0)
+      if (anWebService.endpointInterface().length() > 0)
       {
-         seiName = wsAnnotation.endpointInterface();
+         seiName = anWebService.endpointInterface();
          seiClass = udi.classLoader.loadClass(seiName);
          WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 

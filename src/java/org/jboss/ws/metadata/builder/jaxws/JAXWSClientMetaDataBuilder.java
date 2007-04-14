@@ -71,7 +71,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       if (wsdlURL == null)
          throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
 
-      if(log.isDebugEnabled()) log.debug("START buildMetaData: [service=" + serviceName + "]");
+      log.debug("START buildMetaData: [service=" + serviceName + "]");
       try
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
@@ -89,7 +89,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
 
-         if(log.isDebugEnabled()) log.debug("END buildMetaData: " + wsMetaData);
+         log.debug("END buildMetaData: " + wsMetaData);
          return serviceMetaData;
       }
       catch (RuntimeException rte)

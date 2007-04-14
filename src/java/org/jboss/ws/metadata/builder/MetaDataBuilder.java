@@ -159,7 +159,10 @@ public abstract class MetaDataBuilder
          String wsContextRoot = applMetaData.getWebServiceContextRoot();
          if (wsContextRoot != null)
             contextRoot = wsContextRoot;
-
+         
+         String ejbClass = beanMetaData.getEjbClass();
+         String ejbClassName = WSDLUtils.getJustClassName(ejbClass);
+         
          UnifiedEjbPortComponentMetaData ejbpcMetaData = beanMetaData.getPortComponent();
          if (ejbpcMetaData != null && ejbpcMetaData.getPortComponentURI() != null)
          {
@@ -177,12 +180,11 @@ public abstract class MetaDataBuilder
                }
             }
          }
-
+         
+         if (contextRoot == null)
+            contextRoot = ejbClassName + "Service";
          if (urlPattern == null)
-         {
-            String ejbClass = beanMetaData.getEjbClass();
-            urlPattern = ejbClass.substring(ejbClass.lastIndexOf(".") + 1);
-         }
+            urlPattern = ejbClassName;
       }
 
       // If not, derive the context root from the deployment

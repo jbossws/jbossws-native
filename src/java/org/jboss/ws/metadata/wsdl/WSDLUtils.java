@@ -701,11 +701,10 @@ public class WSDLUtils
    public String getPackageName(String typeNS)
    {
       String pkgname = Util.xmlNamespaceToJavaPackage(typeNS);
-      int len = pkgname.length();
       return pkgname;
    }
 
-   public String getTypeNamespace(Class javaType)
+   public static String getTypeNamespace(Class javaType)
    {
       return getTypeNamespace(JavaUtils.getPackageName(javaType));
    }
@@ -713,10 +712,8 @@ public class WSDLUtils
    /**
     * Extracts the typeNS given the package name
     * Algorithm is based on the one specified in JAWS v2.0 spec
-    * @param packageName
-    * @return  the type namespace
     */
-   public String getTypeNamespace(String packageName)
+   public static String getTypeNamespace(String packageName)
    {
       StringBuilder sb = new StringBuilder("http://");
 
