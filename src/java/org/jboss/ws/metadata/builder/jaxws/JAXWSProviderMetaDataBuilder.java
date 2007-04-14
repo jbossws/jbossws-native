@@ -137,7 +137,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
       processWebContext(udi, sepClass, linkName, sepMetaData);
 
       // Init the endpoint address
-      MetaDataBuilder.initEndpointAddress(udi, sepMetaData, linkName);
+      initEndpointAddress(udi, sepMetaData, linkName);
 
       // A provider may not have a WSDL file
       if (sepMetaData.getServiceMetaData().getWsdlLocation() != null)

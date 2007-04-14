@@ -88,9 +88,10 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext.contextRoot().length() > 0)
       {
          if (isJSEEndpoint)
+         {
             log.warn("@WebContext.contextRoot is only valid on EJB endpoints");
-
-         if (isJSEEndpoint == false)
+         }
+         else
          {
             String contextRoot = anWebContext.contextRoot();
             if (contextRoot.startsWith("/") == false)
@@ -104,9 +105,10 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext.urlPattern().length() > 0)
       {
          if (isJSEEndpoint)
+         {
             log.warn("@WebContext.urlPattern is only valid on EJB endpoints");
-
-         if (isJSEEndpoint == false)
+         }
+         else
          {
             String urlPattern = anWebContext.urlPattern();
             sepMetaData.setURLPattern(urlPattern);
@@ -117,9 +119,10 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext.authMethod().length() > 0)
       {
          if (isJSEEndpoint)
+         {
             log.warn("@WebContext.authMethod is only valid on EJB endpoints");
-
-         if (isJSEEndpoint == false)
+         }
+         else
          {
             String authMethod = anWebContext.authMethod();
             sepMetaData.setAuthMethod(authMethod);
@@ -130,9 +133,10 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext.transportGuarantee().length() > 0)
       {
          if (isJSEEndpoint)
+         {
             log.warn("@WebContext.transportGuarantee is only valid on EJB endpoints");
-
-         if (isJSEEndpoint == false)
+         }
+         else
          {
             String transportGuarantee = anWebContext.transportGuarantee();
             sepMetaData.setTransportGuarantee(transportGuarantee);
@@ -148,6 +152,5 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       {
          sepMetaData.setVirtualHosts(virtualHosts);
       }
-
    }
 }

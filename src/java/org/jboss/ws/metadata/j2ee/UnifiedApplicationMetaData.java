@@ -117,9 +117,7 @@ public class UnifiedApplicationMetaData
 
    public String getWsdlPublishLocationByName(String name)
    {
-      String publishLocation = null;
-      if (publishLocationAdapter != null)
-         publishLocation = publishLocationAdapter.getWsdlPublishLocationByName(name);
+      String publishLocation = (publishLocationAdapter != null ? publishLocationAdapter.getWsdlPublishLocationByName(name) : null);
       return publishLocation;
 
    }

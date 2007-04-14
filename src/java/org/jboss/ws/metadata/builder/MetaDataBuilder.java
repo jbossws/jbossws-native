@@ -128,8 +128,9 @@ public abstract class MetaDataBuilder
       }
    }
 
-   public static void initEndpointAddress(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String linkName)
+   protected void initEndpointAddress(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String linkName)
    {
+      // For JAXWS these may have been set by @WebContext attributes
       String contextRoot = sepMetaData.getContextRoot();
       String urlPattern = sepMetaData.getURLPattern();
 

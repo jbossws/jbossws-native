@@ -161,7 +161,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processWSDDContribution(sepMetaData);
 
          // Init the endpoint address
-         MetaDataBuilder.initEndpointAddress(udi, sepMetaData, linkName);
+         initEndpointAddress(udi, sepMetaData, linkName);
 
          // Process an optional @SOAPMessageHandlers annotation
          if (sepClass.isAnnotationPresent(SOAPMessageHandlers.class) || seiClass.isAnnotationPresent(SOAPMessageHandlers.class))
