@@ -407,6 +407,10 @@ public class ServiceImpl implements ServiceExt
       CallImpl call = new CallImpl(this, epMetaData);
       initStubProperties(call, seiClass.getName());
 
+      // JBoss-4.0.x does not support <stub-properties>
+      if (initCallProperties(call, seiClass.getName()) > 0)
+         log.info("Deprecated use of <call-properties> on JAXRPC Stub. Use <stub-properties>");
+      
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
@@ -414,31 +418,41 @@ public class ServiceImpl implements ServiceExt
       return proxy;
    }
 
-   private void initStubProperties(CallImpl call, String seiName)
+   private int initStubProperties(CallImpl call, String seiName)
    {
       // nothing to do
       if (usrMetaData == null)
-         return;
+         return 0;
 
+      int propCount = 0;
       for (UnifiedPortComponentRefMetaData upcRef : usrMetaData.getPortComponentRefs())
       {
          if (seiName.equals(upcRef.getServiceEndpointInterface()))
          {
             for (UnifiedStubPropertyMetaData prop : upcRef.getStubProperties())
+            {
                call.setProperty(prop.getPropName(), prop.getPropValue());
+               propCount++;
+            }
          }
       }
+      return propCount;
    }
 
-   private void initCallProperties(CallImpl call, String seiName)
+   private int initCallProperties(CallImpl call, String seiName)
    {
       // nothing to do
       if (usrMetaData == null)
-         return;
+         return 0;
+      
+      int propCount = 0;
 
       // General properties
       for (UnifiedCallPropertyMetaData prop : usrMetaData.getCallProperties())
+      {
          call.setProperty(prop.getPropName(), prop.getPropValue());
+         propCount++;
+      }
 
       if (seiName != null)
       {
@@ -447,10 +461,15 @@ public class ServiceImpl implements ServiceExt
             if (seiName.equals(upcRef.getServiceEndpointInterface()))
             {
                for (UnifiedCallPropertyMetaData prop : upcRef.getCallProperties())
+               {
                   call.setProperty(prop.getPropName(), prop.getPropValue());
+                  propCount++;
+               }
             }
          }
       }
+      
+      return propCount;
    }
 
    /**
