@@ -53,9 +53,6 @@ public class ServiceEndpointDeployer
    // default bean name
    public static final String BEAN_NAME = "ServiceEndpointDeployer";
 
-   // The servlet init param in web.xml that is the service endpoint class
-   public static final String INIT_PARAM_SERVICE_ENDPOINT_IMPL = "ServiceEndpointImpl";
-
    // The ServiceEndpointManger injected by the kernel
    private ServiceEndpointManager epManager;
 

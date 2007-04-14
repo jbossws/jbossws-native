@@ -2,9 +2,9 @@
 #
 
 # Required JBoss Home
-jboss50.home=/home/tdiesler/svn/jbossas/trunk/build/output/jboss-5.0.0.Beta2
-jboss42.home=/home/tdiesler/svn/jbossas/branches/Branch_4_2/build/output/jboss-4.2.0.CR2
-jboss40.home=/home/tdiesler/svn/jbossas/branches/Branch_4_0/build/output/jboss-4.0.5.SP1-ejb3
+jboss50.home=@jboss50.home@
+jboss42.home=@jboss42.home@
+jboss40.home=@jboss40.home@
 
 # The JBoss server under test. This can be [jboss50|jboss42|jboss40|tomcat]
 jbossws.integration.target=jboss42
@@ -18,7 +18,7 @@ tomcat.manager.username=manager
 tomcat.manager.password=manager
 
 # JBoss Repository
-jboss.repository=http://repository.jboss.com
+jboss.repository=@jboss.repository@
 
 # Force thirdparty HTTP get
 #force.thirdparty.get=true

@@ -117,6 +117,16 @@ public class ServerEndpointMetaData extends EndpointMetaData
       this.sepID = endpointID;
    }
 
+   public String[] getVirtualHosts()
+   {
+      return virtualHosts;
+   }
+
+   public void setVirtualHosts(String[] virtualHosts)
+   {
+      this.virtualHosts = virtualHosts;
+   }
+
    public String getContextRoot()
    {
       return contextRoot;
@@ -128,16 +138,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
          throw new IllegalArgumentException("context root should start with '/'");
 
       this.contextRoot = contextRoot;
-   }
-
-   public String[] getVirtualHosts()
-   {
-      return virtualHosts;
-   }
-
-   public void setVirtualHosts(String[] virtualHosts)
-   {
-      this.virtualHosts = virtualHosts;
    }
 
    public String getURLPattern()

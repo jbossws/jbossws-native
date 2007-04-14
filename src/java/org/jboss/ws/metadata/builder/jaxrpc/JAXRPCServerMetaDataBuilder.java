@@ -137,7 +137,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointEncodingStyle(sepMetaData);
 
-               initEndpointAddress(udi, sepMetaData, linkName);
+               initEndpointAddress(udi, sepMetaData);
 
                if (udi.metaData instanceof UnifiedApplicationMetaData)
                {
@@ -177,8 +177,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                         Boolean secureWSDLAccess = bpcMetaData.getSecureWSDLAccess();
                         sepMetaData.setSecureWSDLAccess(secureWSDLAccess);
                      }
-
-                     sepMetaData.setURLPattern(bpcMetaData.getURLPattern());
                   }
                }
                else if (udi.metaData instanceof UnifiedWebMetaData)

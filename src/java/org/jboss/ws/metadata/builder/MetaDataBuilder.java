@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.management.ObjectName;
 import javax.wsdl.Definition;
@@ -128,11 +129,12 @@ public abstract class MetaDataBuilder
       }
    }
 
-   protected void initEndpointAddress(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String linkName)
+   protected void initEndpointAddress(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
    {
       // For JAXWS these may have been set by @WebContext attributes
       String contextRoot = sepMetaData.getContextRoot();
       String urlPattern = sepMetaData.getURLPattern();
+      String linkName = sepMetaData.getLinkName();
 
       if (udi.metaData instanceof UnifiedWebMetaData)
       {
@@ -163,7 +165,23 @@ public abstract class MetaDataBuilder
          {
             String pcUrlPattern = ejbpcMetaData.getPortComponentURI();
             if (pcUrlPattern != null)
+            {
                urlPattern = pcUrlPattern;
+               StringTokenizer st = new StringTokenizer(urlPattern, "/");
+               if (contextRoot == null && st.countTokens() > 1)
+               {
+                  contextRoot = st.nextToken();
+                  urlPattern = st.nextToken();
+                  while (st.hasMoreTokens())
+                     urlPattern += "/" + st.nextToken();
+               }
+            }
+         }
+
+         if (urlPattern == null)
+         {
+            String ejbClass = beanMetaData.getEjbClass();
+            urlPattern = ejbClass.substring(ejbClass.lastIndexOf(".") + 1);
          }
       }
 
@@ -184,8 +202,6 @@ public abstract class MetaDataBuilder
 
       if (contextRoot.startsWith("/") == false)
          contextRoot = "/" + contextRoot;
-      if (urlPattern == null)
-         urlPattern = "/" + linkName;
       if (urlPattern.startsWith("/") == false)
          urlPattern = "/" + urlPattern;
 
