@@ -227,7 +227,7 @@
     <fail message="jdk-1.5 is required for Tomcat integration" unless="HAVE_JDK_1.5"/>
     <path id="test.client.classpath">
       <path refid="jbossws.classpath"/>
-      <pathelement location="${tomcat.common.lib}/jbossws-thirdparty.jar"/>
+        <pathelement location="${tomcat.home}/common/lib/jbossws-thirdparty.jar"/>
       <path refid="javac.classpath"/>
     </path>
   </target>
