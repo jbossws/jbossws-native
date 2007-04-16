@@ -23,8 +23,6 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +39,6 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
-import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
@@ -54,7 +51,7 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
-import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
+import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
@@ -105,34 +102,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass)
    {
-      UnifiedVirtualFile vfsRoot;
-
       // If this Service was constructed through the ServiceObjectFactory
       // this thread local association should be available
-      usRef = ServiceObjectFactory.getServiceRefAssociation();
-      if (usRef != null)
-      {
-         vfsRoot = usRef.getVfsRoot();
-
-         // Verify wsdl access if this is not a generic Service
-         if (wsdlURL != null && serviceClass != Service.class)
-         {
-            try
-            {
-               InputStream is = wsdlURL.openStream();
-               is.close();
-            }
-            catch (IOException e)
-            {
-               log.warn("Cannot access wsdlURL: " + wsdlURL);
-               wsdlURL = null;
-            }
-         }
-      }
-      else
-      {
-         vfsRoot = new ResourceLoaderAdapter();
-      }
+      usRef = ServiceObjectFactoryJAXWS.getServiceRefAssociation();
+      UnifiedVirtualFile vfsRoot = (usRef != null ? vfsRoot = usRef.getVfsRoot() : new ResourceLoaderAdapter());
 
       if (wsdlURL != null)
       {
@@ -182,17 +155,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
       if (serviceMetaData == null)
          throw new WebServiceException("Service meta data not available");
 
+      // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service
+      // GetPort1NegTest1WithWsdl_from_wsappclient
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-      {
-         log.warn("Cannot get port meta data for: " + portName);
-
-         if (!seiClass.isAnnotationPresent(WebService.class))
-            throw new IllegalArgumentException("Cannot find @WebService on: " + seiClass.getName());
-
-         QName portType = getPortTypeName(seiClass);
-         epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
-      }
+         throw new WebServiceException("Cannot get port meta data for: " + portName);
 
       String seiClassName = seiClass.getName();
       epMetaData.setServiceEndpointInterfaceName(seiClassName);
@@ -215,11 +182,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
       return portType;
    }
 
-   @Override
    /**
     * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
     * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
     */
+   @Override
    public <T> T getPort(Class<T> seiClass)
    {
       assertSEIConstraints(seiClass);
@@ -237,18 +204,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
       else
       {
-         // resolve PortType by name
-         WebService ws = seiClass.getAnnotation(WebService.class);
-         String ns = ws.targetNamespace();
-         String name = ws.name();
-
-         // TODO: default name mapping when annotations not used
-         QName portTypeName = new QName(ns, name);
-
+         QName portTypeName = getPortTypeName(seiClass);
          for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
          {
-            QName interfaceQName = epmd.getPortTypeName(); // skip namespaces here
-            if (interfaceQName.getLocalPart().equals(portTypeName.getLocalPart()))
+            if (portTypeName.equals(epmd.getPortTypeName()))
             {
                epmd.setServiceEndpointInterfaceName(seiClass.getName());
                epMetaData = epmd;

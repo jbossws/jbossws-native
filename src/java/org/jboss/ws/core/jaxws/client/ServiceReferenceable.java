@@ -71,7 +71,7 @@ public class ServiceReferenceable implements Referenceable
     */
    public Reference getReference() throws NamingException
    {
-      Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactory.class.getName(), null);
+      Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactoryJAXWS.class.getName(), null);
 
       myRef.add(new StringRefAddr(SERVICE_IMPL_CLASS, serviceImplClass));
       myRef.add(new StringRefAddr(TARGET_CLASS_NAME, targetClassName));

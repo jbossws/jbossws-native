@@ -45,6 +45,7 @@ import javax.xml.ws.Service;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
+import org.jboss.ws.core.client.ServiceObjectFactory;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
@@ -54,10 +55,10 @@ import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 24-Oct-2004
  */
-public class ServiceObjectFactory implements ObjectFactory
+public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(ServiceObjectFactory.class);
+   private static final Logger log = Logger.getLogger(ServiceObjectFactoryJAXWS.class);
 
    // The ServiceRefMetaData association
    private static ThreadLocal<UnifiedServiceRefMetaData> serviceRefAssociation = new ThreadLocal<UnifiedServiceRefMetaData>();

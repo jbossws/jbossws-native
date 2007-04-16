@@ -34,7 +34,7 @@ import javax.xml.ws.BindingType;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.jaxws.client.ServiceObjectFactory;
+import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -161,7 +161,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
     */
    private void bufferServiceRefContributions(EndpointMetaData epMetaData)
    {
-      UnifiedServiceRefMetaData serviceRefMetaData = ServiceObjectFactory.getServiceRefAssociation();
+      UnifiedServiceRefMetaData serviceRefMetaData = ServiceObjectFactoryJAXWS.getServiceRefAssociation();
 
       if(serviceRefMetaData!=null)
       {

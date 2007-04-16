@@ -83,7 +83,7 @@ public class ServiceReferenceable implements Referenceable
     */
    public Reference getReference() throws NamingException
    {
-      Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactory.class.getName(), null);
+      Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactoryJAXRPC.class.getName(), null);
 
       // Add a reference to the ServiceRefMetaData and WSDLDefinitions
       myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshallServiceRef()));
