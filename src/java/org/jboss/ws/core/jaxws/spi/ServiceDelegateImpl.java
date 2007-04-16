@@ -23,8 +23,11 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +42,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
@@ -107,6 +111,21 @@ public class ServiceDelegateImpl extends ServiceDelegate
       usRef = ServiceObjectFactoryJAXWS.getServiceRefAssociation();
       UnifiedVirtualFile vfsRoot = (usRef != null ? vfsRoot = usRef.getVfsRoot() : new ResourceLoaderAdapter());
 
+      // Verify wsdl access if this is not a generic Service
+      if (wsdlURL != null && serviceClass != Service.class)
+      {
+         try
+         {
+            InputStream is = wsdlURL.openStream();
+            is.close();
+         }
+         catch (IOException e)
+         {
+            log.warn("Cannot access wsdlURL: " + wsdlURL);
+            wsdlURL = null;
+         }
+      }
+      
       if (wsdlURL != null)
       {
          JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
@@ -155,31 +174,24 @@ public class ServiceDelegateImpl extends ServiceDelegate
       if (serviceMetaData == null)
          throw new WebServiceException("Service meta data not available");
 
-      // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service
-      // GetPort1NegTest1WithWsdl_from_wsappclient
+      // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service#GetPort1NegTest1WithWsdl
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
-      if (epMetaData == null)
+      if (serviceMetaData.getEndpoints().size() > 0 && epMetaData == null)
          throw new WebServiceException("Cannot get port meta data for: " + portName);
 
+      // This is the case when the service could not be created from wsdl
+      if (serviceMetaData.getEndpoints().size() == 0)
+      {
+         log.warn("Cannot get port meta data for: " + portName);
+
+         QName portType = getPortTypeName(seiClass);
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
+      }
+      
       String seiClassName = seiClass.getName();
       epMetaData.setServiceEndpointInterfaceName(seiClassName);
 
       return getPortInternal(epMetaData, seiClass);
-   }
-
-   private <T> QName getPortTypeName(Class<T> seiClass)
-   {
-      WebService anWebService = seiClass.getAnnotation(WebService.class);
-      String localPart = anWebService.name();
-      if (localPart.length() == 0)
-         localPart = WSDLUtils.getJustClassName(seiClass);
-
-      String nsURI = anWebService.targetNamespace();
-      if (nsURI.length() == 0)
-         nsURI = WSDLUtils.getTypeNamespace(seiClass);
-
-      QName portType = new QName(nsURI, localPart);
-      return portType;
    }
 
    /**
@@ -220,6 +232,24 @@ public class ServiceDelegateImpl extends ServiceDelegate
          throw new WebServiceException("Cannot get port meta data for: " + seiClassName);
 
       return getPortInternal(epMetaData, seiClass);
+   }
+
+   private <T> QName getPortTypeName(Class<T> seiClass)
+   {
+      if (!seiClass.isAnnotationPresent(WebService.class))
+         throw new IllegalArgumentException("Cannot find @WebService on: " + seiClass.getName());
+
+      WebService anWebService = seiClass.getAnnotation(WebService.class);
+      String localPart = anWebService.name();
+      if (localPart.length() == 0)
+         localPart = WSDLUtils.getJustClassName(seiClass);
+
+      String nsURI = anWebService.targetNamespace();
+      if (nsURI.length() == 0)
+         nsURI = WSDLUtils.getTypeNamespace(seiClass);
+
+      QName portType = new QName(nsURI, localPart);
+      return portType;
    }
 
    private <T> T getPortInternal(EndpointMetaData epMetaData, Class<T> seiClass)
@@ -349,12 +379,26 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
    private <T> T createProxy(Class<T> seiClass, EndpointMetaData epMetaData) throws WebServiceException
    {
+      if (seiClass == null)
+         throw new IllegalArgumentException("SEI class cannot be null");
+      
       try
       {
          ExecutorService executor = (ExecutorService)getExecutor();
          ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
-         T proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, BindingProvider.class, StubExt.class }, handler);
+         
+         T proxy;
+         try 
+         {
+            proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, BindingProvider.class, StubExt.class }, handler);
+         }
+         catch (RuntimeException rte)
+         {
+            URL codeLocation = seiClass.getProtectionDomain().getCodeSource().getLocation();
+            log.error("Cannot create proxy for SEI " + seiClass.getName() + " from: " + codeLocation);
+            throw rte;
+         }
 
          // Configure the stub
          configureStub((StubExt)proxy);
