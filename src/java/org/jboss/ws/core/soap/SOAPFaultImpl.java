@@ -24,8 +24,10 @@ package org.jboss.ws.core.soap;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
@@ -72,11 +74,29 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
    private SOAPElement faultnode;
    private Detail detail;
 
+   public final static Set<QName> soap11FaultCodes = new HashSet<QName>();
+   static
+   {
+      soap11FaultCodes.add(Constants.SOAP11_FAULT_CODE_CLIENT);
+      soap11FaultCodes.add(Constants.SOAP11_FAULT_CODE_SERVER);
+      soap11FaultCodes.add(Constants.SOAP11_FAULT_CODE_VERSION_MISMATCH);
+      soap11FaultCodes.add(Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND);
+   }
+   public final static Set<QName> soap12FaultCodes = new HashSet<QName>();
+   static
+   {
+      soap12FaultCodes.add(SOAPConstants.SOAP_VERSIONMISMATCH_FAULT);
+      soap12FaultCodes.add(SOAPConstants.SOAP_MUSTUNDERSTAND_FAULT);
+      soap12FaultCodes.add(SOAPConstants.SOAP_DATAENCODINGUNKNOWN_FAULT);
+      soap12FaultCodes.add(SOAPConstants.SOAP_SENDER_FAULT);
+      soap12FaultCodes.add(SOAPConstants.SOAP_RECEIVER_FAULT);
+   }
+
    public SOAPFaultImpl() throws SOAPException
    {
       this(Constants.PREFIX_ENV, Constants.NS_SOAP11_ENV);
    }
-   
+
    public SOAPFaultImpl(String prefix, String namespace) throws SOAPException
    {
       super(new NameImpl("Fault", prefix, namespace));
@@ -164,11 +184,29 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 
    public void setFaultCode(QName faultCode) throws SOAPException
    {
-      String nsURI = faultCode.getNamespaceURI();
-      if (nsURI.length() == 0)
-         throw new SOAPException("code must be namespace qualified: " + faultCode);
+      boolean isSOAP11 = Constants.NS_SOAP11_ENV.equals(getNamespaceURI());
+      
+      String faultCodeNS = faultCode.getNamespaceURI();
+      if (faultCodeNS.length() == 0)
+         throw new SOAPException("Fault code '" + faultCode + "' must be namespace qualified");
+      
+      /* JUDDI uses unqualified fault codes
+      // Fix the namespace for SOAP1.1, if it is not a standard fault code
+      if (isSOAP11 && faultCodeNS.length() == 0)
+      {
+         String localPart = faultCode.getLocalPart();
+         for (QName soap11Fault : soap11FaultCodes)
+         {
+            if (soap11Fault.equals(localPart))
+               throw new SOAPException("Fault code '" + faultCode + "' must be namespace qualified");
+         }
+         QName newFaultCode = new QName("http://unknown-namespace-uri", localPart);
+         log.warn("Fault code '" + faultCode + "' must be namespace qualified, assuming: " + newFaultCode);
+         faultCode = newFaultCode;
+      }
+      */
 
-      if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()))
+      if (isSOAP11)
       {
          if (faultcode == null)
          {
@@ -180,11 +218,7 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
       }
       else
       {
-         if (!(SOAPConstants.SOAP_DATAENCODINGUNKNOWN_FAULT.equals(faultCode) ||
-               SOAPConstants.SOAP_MUSTUNDERSTAND_FAULT.equals(faultCode) ||
-               SOAPConstants.SOAP_RECEIVER_FAULT.equals(faultCode) ||
-               SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode) ||
-               SOAPConstants.SOAP_VERSIONMISMATCH_FAULT.equals(faultCode)))
+         if (soap12FaultCodes.contains(faultCode) == false)
             throw new SOAPException(faultCode + " is not a standard SOAP 1.2 Code value");
 
          if (faultcode == null)
@@ -649,8 +683,7 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
       {
          if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()))
             findSoap11DetailElement();
-         else 
-            findSoap12DetailElement();
+         else findSoap12DetailElement();
       }
       return detail;
    }
@@ -711,12 +744,9 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 
       QName elementName = element.getElementQName();
       SOAPFaultElement faultElement;
-      if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) ? 
-            Constants.SOAP11_DETAIL.equals(elementName) :
-            Constants.SOAP12_DETAIL.equals(elementName))
+      if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()) ? Constants.SOAP11_DETAIL.equals(elementName) : Constants.SOAP12_DETAIL.equals(elementName))
          faultElement = new DetailImpl(element);
-      else
-         faultElement = new SOAPFaultElementImpl(element);
+      else faultElement = new SOAPFaultElementImpl(element);
 
       log.trace("convertToFaultElement : " + faultElement);
       return faultElement;
