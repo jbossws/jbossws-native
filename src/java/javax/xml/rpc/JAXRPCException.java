@@ -21,7 +21,6 @@
  */
 package javax.xml.rpc;
 
-import org.jboss.util.id.SerialVersion;
 
 /**
  * @author Scott.Stark@jboss.org
@@ -29,15 +28,6 @@ import org.jboss.util.id.SerialVersion;
  */
 public class JAXRPCException extends RuntimeException
 {
-   /** @since 4.0.2 */
-   static final long serialVersionUID;
-   static
-   {
-      if (SerialVersion.version == SerialVersion.LEGACY)
-         serialVersionUID = 2012915834079496799L;
-      else serialVersionUID = 5213579554532711730L;
-   }
-
    public JAXRPCException()
    {
    }

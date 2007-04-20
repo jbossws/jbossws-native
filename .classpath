@@ -20,7 +20,7 @@
 	<classpathentry kind="lib" path="/build/thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/ejb3.deployer/jboss-ejb3x.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jaxb-xjc.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/jboss-dependency.jar"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jboss-dependency.jar" sourcepath="/build/thirdparty/jboss-dependency-src.zip"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-microcontainer.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/servlet-api.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/stax-api.jar"/>

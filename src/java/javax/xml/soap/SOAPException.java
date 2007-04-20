@@ -21,7 +21,6 @@
  */
 package javax.xml.soap;
 
-import org.jboss.util.id.SerialVersion;
 
 /**
  * @author Scott.Stark@jboss.org
@@ -29,15 +28,6 @@ import org.jboss.util.id.SerialVersion;
  */
 public class SOAPException extends Exception
 {
-   /** @since 4.0.2 */
-   static final long serialVersionUID;
-   static
-   {
-      if (SerialVersion.version == SerialVersion.LEGACY)
-         serialVersionUID = -4385552115225336830L;
-      else serialVersionUID = 5083961510786058130L;
-   }
-
    public SOAPException()
    {
    }

@@ -21,7 +21,6 @@
  */
 package javax.xml.rpc;
 
-import org.jboss.util.id.SerialVersion;
 
 /**
  * @author Scott.Stark@jboss.org
@@ -29,15 +28,6 @@ import org.jboss.util.id.SerialVersion;
  */
 public class ServiceException extends Exception
 {
-   /** @since 4.0.2 */
-   static final long serialVersionUID;
-   static
-   {
-      if (SerialVersion.version == SerialVersion.LEGACY)
-         serialVersionUID = -4042547292194127311L;
-      else serialVersionUID = -6582148924441189775L;
-   }
-
    public ServiceException()
    {
    }
