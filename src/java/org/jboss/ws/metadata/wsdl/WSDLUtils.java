@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsdl;
 
 import java.io.File;
@@ -92,10 +92,10 @@ public class WSDLUtils
 
    private final Map primitiveMap = new HashMap();
 
-   private final static Map<String,Class> schemaBasicTypes = new HashMap<String,Class>();
+   private final static Map<String, Class> schemaBasicTypes = new HashMap<String, Class>();
 
-   private final static Map<Class,Class> holderTypes = new HashMap<Class,Class>();
-   private final static Map<Class,Class> reverseHolderTypes = new HashMap<Class,Class>();
+   private final static Map<Class, Class> holderTypes = new HashMap<Class, Class>();
+   private final static Map<Class, Class> reverseHolderTypes = new HashMap<Class, Class>();
 
    // Skip these methods when generating wsdl operations
    private List<String> ignoredMethods;
@@ -119,54 +119,53 @@ public class WSDLUtils
 
    static
    {
-      holderTypes.put(BigDecimal.class,BigDecimalHolder.class);
-      holderTypes.put(BigInteger.class,BigIntegerHolder.class);
-      holderTypes.put(boolean.class,BooleanHolder.class);
-      holderTypes.put(Boolean.class,BooleanWrapperHolder.class);
-      holderTypes.put(byte.class,ByteHolder.class);
-      holderTypes.put(Byte.class,ByteWrapperHolder.class);
-      holderTypes.put(Byte[].class,ByteArrayHolder.class);
-      holderTypes.put(Calendar.class,CalendarHolder.class);
-      holderTypes.put(double.class,DoubleHolder.class);
-      holderTypes.put(Double.class,DoubleWrapperHolder.class);
+      holderTypes.put(BigDecimal.class, BigDecimalHolder.class);
+      holderTypes.put(BigInteger.class, BigIntegerHolder.class);
+      holderTypes.put(boolean.class, BooleanHolder.class);
+      holderTypes.put(Boolean.class, BooleanWrapperHolder.class);
+      holderTypes.put(byte.class, ByteHolder.class);
+      holderTypes.put(Byte.class, ByteWrapperHolder.class);
+      holderTypes.put(Byte[].class, ByteArrayHolder.class);
+      holderTypes.put(Calendar.class, CalendarHolder.class);
+      holderTypes.put(double.class, DoubleHolder.class);
+      holderTypes.put(Double.class, DoubleWrapperHolder.class);
       holderTypes.put(float.class, FloatHolder.class);
       holderTypes.put(Float.class, FloatWrapperHolder.class);
-      holderTypes.put(int.class,IntHolder.class);
-      holderTypes.put(Integer.class,IntegerWrapperHolder.class);
-      holderTypes.put(long.class,LongHolder.class);
-      holderTypes.put(Long.class,LongWrapperHolder.class);
-      holderTypes.put(Object.class,ObjectHolder.class);
-      holderTypes.put(QName.class,QNameHolder.class);
-      holderTypes.put(short.class,ShortHolder.class);
-      holderTypes.put(Short.class,ShortWrapperHolder.class);
-      holderTypes.put(String.class,StringHolder.class);
+      holderTypes.put(int.class, IntHolder.class);
+      holderTypes.put(Integer.class, IntegerWrapperHolder.class);
+      holderTypes.put(long.class, LongHolder.class);
+      holderTypes.put(Long.class, LongWrapperHolder.class);
+      holderTypes.put(Object.class, ObjectHolder.class);
+      holderTypes.put(QName.class, QNameHolder.class);
+      holderTypes.put(short.class, ShortHolder.class);
+      holderTypes.put(Short.class, ShortWrapperHolder.class);
+      holderTypes.put(String.class, StringHolder.class);
    }
 
    static
    {
-      reverseHolderTypes.put(BigDecimalHolder.class , BigDecimal.class);
-      reverseHolderTypes.put(BigIntegerHolder.class , BigInteger.class);
-      reverseHolderTypes.put(BooleanHolder.class , boolean.class);
+      reverseHolderTypes.put(BigDecimalHolder.class, BigDecimal.class);
+      reverseHolderTypes.put(BigIntegerHolder.class, BigInteger.class);
+      reverseHolderTypes.put(BooleanHolder.class, boolean.class);
       reverseHolderTypes.put(BooleanWrapperHolder.class, Boolean.class);
       reverseHolderTypes.put(ByteArrayHolder.class, Byte[].class);
       reverseHolderTypes.put(ByteHolder.class, byte.class);
-      reverseHolderTypes.put(ByteWrapperHolder.class,Byte.class );
-      reverseHolderTypes.put(CalendarHolder.class,Calendar.class);
-      reverseHolderTypes.put(DoubleHolder.class,double.class );
-      reverseHolderTypes.put(DoubleWrapperHolder.class,Double.class);
-      reverseHolderTypes.put(FloatHolder.class,float.class);
+      reverseHolderTypes.put(ByteWrapperHolder.class, Byte.class);
+      reverseHolderTypes.put(CalendarHolder.class, Calendar.class);
+      reverseHolderTypes.put(DoubleHolder.class, double.class);
+      reverseHolderTypes.put(DoubleWrapperHolder.class, Double.class);
+      reverseHolderTypes.put(FloatHolder.class, float.class);
       reverseHolderTypes.put(FloatWrapperHolder.class, Float.class);
-      reverseHolderTypes.put(IntHolder.class,int.class );
-      reverseHolderTypes.put(IntegerWrapperHolder.class,Integer.class );
+      reverseHolderTypes.put(IntHolder.class, int.class);
+      reverseHolderTypes.put(IntegerWrapperHolder.class, Integer.class);
       reverseHolderTypes.put(LongHolder.class, long.class);
-      reverseHolderTypes.put(LongWrapperHolder.class,Long.class);
-      reverseHolderTypes.put(ObjectHolder.class,Object.class);
-      reverseHolderTypes.put(QNameHolder.class,QName.class);
-      reverseHolderTypes.put(ShortHolder.class,short.class);
-      reverseHolderTypes.put(ShortWrapperHolder.class,Short.class);
-      reverseHolderTypes.put(StringHolder.class,String.class);
+      reverseHolderTypes.put(LongWrapperHolder.class, Long.class);
+      reverseHolderTypes.put(ObjectHolder.class, Object.class);
+      reverseHolderTypes.put(QNameHolder.class, QName.class);
+      reverseHolderTypes.put(ShortHolder.class, short.class);
+      reverseHolderTypes.put(ShortWrapperHolder.class, Short.class);
+      reverseHolderTypes.put(StringHolder.class, String.class);
    }
-
 
    /**
     * Singleton - Only way to get an instance
@@ -220,8 +219,7 @@ public class WSDLUtils
       //Check baseType is xsd:anyType
       if (baseType != null)
       {
-         if (baseType.getNamespace() == Constants.NS_SCHEMA_XSD &&
-             baseType.getName().equals("anyType"))
+         if (baseType.getNamespace() == Constants.NS_SCHEMA_XSD && baseType.getName().equals("anyType"))
             bool = true; //Ignore this baseType
       }
       if (XSComplexTypeDefinition.CONTENTTYPE_SIMPLE == t.getContentType())
@@ -233,7 +231,6 @@ public class WSDLUtils
 
    }
 
-
    /**
     * Check if the class is a Java standard class
     * @param cls
@@ -241,13 +238,14 @@ public class WSDLUtils
     */
    public boolean checkIgnoreClass(Class cls)
    {
-      if(cls == null)
+      if (cls == null)
          throw new IllegalArgumentException("Illegal null argument:cls");
       //if (cls.isArray()) cls = cls.getComponentType();
       if (!cls.isArray())
       {
          String pkgname = cls.getPackage() != null ? cls.getPackage().getName() : null;
-         if (pkgname != null && pkgname.startsWith("java")) return true;
+         if (pkgname != null && pkgname.startsWith("java"))
+            return true;
 
          if (ParameterWrapping.WrapperType.class.isAssignableFrom(cls))
             return true;
@@ -255,7 +253,6 @@ public class WSDLUtils
       }
       return false;
    }
-
 
    /** Check if this method should be ignored
     */
@@ -287,7 +284,6 @@ public class WSDLUtils
       return ignoreMethod;
    }
 
-
    /**
     * Chop "PortType" at the end of the String
     * @param name
@@ -296,7 +292,8 @@ public class WSDLUtils
    public String chopPortType(String name)
    {
       int index = name.lastIndexOf("PortType");
-      if (index > 0) return name.substring(0, index);
+      if (index > 0)
+         return name.substring(0, index);
 
       return name;
    }
@@ -310,7 +307,8 @@ public class WSDLUtils
    public String chop(String name, String chopstr)
    {
       int index = name.lastIndexOf(chopstr);
-      if (index > 0) return name.substring(0, index);
+      if (index > 0)
+         return name.substring(0, index);
 
       return name;
    }
@@ -321,9 +319,9 @@ public class WSDLUtils
     */
    public File createPackage(String path, String packageName)
    {
-      if(packageName == null )
+      if (packageName == null)
          throw new IllegalArgumentException("Illegal Null Argument: packageName");
-      if(path == null)
+      if (path == null)
          throw new IllegalArgumentException("Illegal Null Argument: path");
       String pac = packageName.replace('.', '/');
       File dir = new File(path + "/" + pac);
@@ -338,22 +336,21 @@ public class WSDLUtils
     * @return
     * @throws IOException  Problem creating the file
     */
-   public File createPhysicalFile(File loc, String fname)
-       throws IOException
+   public File createPhysicalFile(File loc, String fname) throws IOException
    {
-      if(loc == null )
+      if (loc == null)
          throw new IllegalArgumentException("Illegal Null Argument: loc");
-      if(fname == null)
+      if (fname == null)
          throw new IllegalArgumentException("Illegal Null Argument: fname");
-      File sei = new File(loc.getAbsolutePath() + "/" + fname + ".java");
-      //Delete the sei if already exists
-      if (sei.exists()) sei.delete();
-      boolean boolCreate = sei.createNewFile();
+      File javaFile = new File(loc.getAbsolutePath() + "/" + fname + ".java");
+      //Delete the javaFile if already exists
+      if (javaFile.exists())
+         javaFile.delete();
+      boolean boolCreate = javaFile.createNewFile();
       if (!boolCreate)
-         throw new WSException("SEI " + fname + ".java cannot be created");
-      return sei;
+         throw new WSException(fname + ".java cannot be created");
+      return javaFile;
    }
-
 
    /**
     * Create the basic template of a class
@@ -363,10 +360,7 @@ public class WSDLUtils
     * @param importList  Strings representing imports
     * @return
     */
-   public StringBuilder createClassBasicStructure(String pkgname,
-                                                  String fname,
-                                                  XSTypeDefinition type,
-                                                  List importList, String baseName)
+   public StringBuilder createClassBasicStructure(String pkgname, String fname, XSTypeDefinition type, List importList, String baseName)
    {
       StringBuilder buf = new StringBuilder();
       writeJbossHeader(buf);
@@ -393,8 +387,7 @@ public class WSDLUtils
          //Check baseType is xsd:anyType
          if (baseType != null)
          {
-            if (baseType.getNamespace() == Constants.NS_SCHEMA_XSD &&
-                baseType.getName().equals("anyType"))
+            if (baseType.getNamespace() == Constants.NS_SCHEMA_XSD && baseType.getName().equals("anyType"))
                baseType = null; //Ignore this baseType
          }
          if (XSComplexTypeDefinition.CONTENTTYPE_SIMPLE == t.getContentType())
@@ -404,9 +397,9 @@ public class WSDLUtils
       }
 
       buf.append("public class  " + fname);
-      if(baseName == null && baseType != null)
+      if (baseName == null && baseType != null)
          baseName = baseType.getName();
-      if(baseName != null)
+      if (baseName != null)
          buf.append(" extends " + baseName);
       buf.append(newline);
       buf.append("{");
@@ -421,7 +414,7 @@ public class WSDLUtils
     * @param name  Field name to check
     * @return true - if public field exists, false-otherwise
     */
-   public boolean doesPublicFieldExist( Class javaType, String name)
+   public boolean doesPublicFieldExist(Class javaType, String name)
    {
       Field fld = null;
       try
@@ -441,7 +434,6 @@ public class WSDLUtils
          return true;
       return false;
    }
-
 
    /**
     * Ensure that the first alphabet is uppercase
@@ -470,10 +462,11 @@ public class WSDLUtils
     */
    public int getArrayDimension(Class arr)
    {
-      if(arr == null || arr.isArray() == false)
+      if (arr == null || arr.isArray() == false)
          throw new IllegalArgumentException("Illegal null or array arg:arr");
       int counter = 0;
-      while(arr.isArray()) {
+      while (arr.isArray())
+      {
          counter += 1;
          arr = arr.getComponentType();
       }
@@ -499,13 +492,11 @@ public class WSDLUtils
     */
    public Class getJavaTypeForHolder(Class cls)
    {
-      if(Holder.class.isAssignableFrom(cls))
+      if (Holder.class.isAssignableFrom(cls))
          return HolderUtils.getValueType(cls);
-      else
-         return cls;
+      else return cls;
       //return reverseHolderTypes.get(cls);
    }
-
 
    /**
     * An input of "HelloObjArray"  is converted into arrayOfHelloObj
@@ -536,7 +527,8 @@ public class WSDLUtils
 
    public static String getJustClassName(Class cls)
    {
-      if (cls == null) return null;
+      if (cls == null)
+         return null;
       if (cls.isArray())
       {
          Class c = cls.getComponentType();
@@ -557,8 +549,7 @@ public class WSDLUtils
       int index = classname.lastIndexOf(".");
       if (index < 0)
          index = 0;
-      else
-         index = index + 1;
+      else index = index + 1;
       return classname.substring(index);
    }
 
@@ -619,7 +610,8 @@ public class WSDLUtils
     */
    public Class getJavaType(QName xmlType)
    {
-      if (xmlType == null) return null;
+      if (xmlType == null)
+         return null;
       String localPart = xmlType.getLocalPart();
       return (Class)schemaBasicTypes.get(localPart);
    }
@@ -634,13 +626,12 @@ public class WSDLUtils
       if (str == null || str.length() == 0)
          throw new IllegalArgumentException("String passed to WSDLUtils.getMixedCase is null");
 
-      if (str.length() == 1) return str.toUpperCase();
+      if (str.length() == 1)
+         return str.toUpperCase();
       char[] charr = str.toCharArray();
       charr[0] = Character.toUpperCase(charr[0]);
       return new String(charr);
    }
-
-
 
    /**
     * Given a QName, provide a string that is prefix:localpart
@@ -654,7 +645,8 @@ public class WSDLUtils
       StringBuilder sb = new StringBuilder();
       String prefix = qn.getPrefix();
       String localpart = qn.getLocalPart();
-      if (prefix == null || prefix == "") prefix = Constants.PREFIX_TNS;
+      if (prefix == null || prefix == "")
+         prefix = Constants.PREFIX_TNS;
       sb.append(prefix + ":");
       sb.append(localpart);
 
@@ -666,22 +658,21 @@ public class WSDLUtils
     * @param formattedStr string that is prefix:localpart
     * @return QName
     */
-   public QName getQName( String formattedStr)
+   public QName getQName(String formattedStr)
    {
       QName qn = null;
       int ind = formattedStr.lastIndexOf(":");
-      if(ind < 0)
+      if (ind < 0)
          throw new IllegalArgumentException("Formatted String is not of format prefix:localpart");
-      String prefix = formattedStr.substring(0,ind);
+      String prefix = formattedStr.substring(0, ind);
       String nsuri = null;
-      if(Constants.PREFIX_XSD.equals(prefix))  nsuri = Constants.NS_SCHEMA_XSD;
-      if(nsuri == null)
-         qn = new QName( formattedStr.substring(ind+1) );
-      else
-         qn = new QName( nsuri,formattedStr.substring(ind+1),prefix);
+      if (Constants.PREFIX_XSD.equals(prefix))
+         nsuri = Constants.NS_SCHEMA_XSD;
+      if (nsuri == null)
+         qn = new QName(formattedStr.substring(ind + 1));
+      else qn = new QName(nsuri, formattedStr.substring(ind + 1), prefix);
       return qn;
    }
-
 
    /**
     * Return the primitive for a wrapper equivalent (Integer -> int)
@@ -718,19 +709,20 @@ public class WSDLUtils
       StringBuilder sb = new StringBuilder("http://");
 
       //Generate tokens with '.' as delimiter
-      StringTokenizer st = new StringTokenizer(packageName,".");
+      StringTokenizer st = new StringTokenizer(packageName, ".");
 
       //Have a LIFO queue for the tokens
       Stack<String> stk = new Stack<String>();
-      while(st != null && st.hasMoreTokens())
+      while (st != null && st.hasMoreTokens())
       {
          stk.push(st.nextToken());
       }
 
       String next;
-      while(!stk.isEmpty() && (next=stk.pop())!=null)
+      while (!stk.isEmpty() && (next = stk.pop()) != null)
       {
-         if(sb.toString().equals("http://") == false) sb.append(".");
+         if (sb.toString().equals("http://") == false)
+            sb.append(".");
          sb.append(next);
       }
 
@@ -751,26 +743,25 @@ public class WSDLUtils
       WSDLInterface wi = wsdl.getInterfaces()[0];
       WSDLInterfaceOperation wio = wi.getOperations()[0];
       String style = wio.getStyle();
-      if(style == null || style.equals(Constants.URI_STYLE_RPC) || "rpc".equalsIgnoreCase(style))
+      if (style == null || style.equals(Constants.URI_STYLE_RPC) || "rpc".equalsIgnoreCase(style))
          return Constants.RPC_LITERAL;
-      else
-         return Constants.DOCUMENT_LITERAL;
+      else return Constants.DOCUMENT_LITERAL;
    }
 
    public static JBossXSModel getSchemaModel(WSDLTypes types)
    {
       if (types instanceof XSModelTypes)
-         return ((XSModelTypes) types).getSchemaModel();
+         return ((XSModelTypes)types).getSchemaModel();
 
       throw new WSException("WSDLTypes is not an XSModelTypes");
    }
 
    public static void addSchemaModel(WSDLTypes types, String namespace, JBossXSModel model)
    {
-      if (! (types instanceof XSModelTypes))
+      if (!(types instanceof XSModelTypes))
          throw new WSException("WSDLTypes is not an XSModelTypes");
 
-      XSModelTypes modelTypes = (XSModelTypes) types;
+      XSModelTypes modelTypes = (XSModelTypes)types;
       modelTypes.addSchemaModel(namespace, model);
    }
 
@@ -782,10 +773,10 @@ public class WSDLUtils
     */
    public boolean isStandardHolder(Class cls)
    {
-      if(Holder.class.isAssignableFrom(cls) == false)
-         return false;  //Not even a holder
+      if (Holder.class.isAssignableFrom(cls) == false)
+         return false; //Not even a holder
       //It is a holder.  Is it a standard holder?
-      if(cls.getPackage().getName().startsWith("javax.xml.rpc"))
+      if (cls.getPackage().getName().startsWith("javax.xml.rpc"))
          return true;
       return false;
    }
@@ -861,8 +852,10 @@ public class WSDLUtils
 
       switch (outputs.length)
       {
-         case 0: return null;
-         case 1: return outputs[0];
+         case 0:
+            return null;
+         case 1:
+            return outputs[0];
       }
 
       throw new WSException("Only Request-Only and Request-Response MEPs are allowed");
@@ -876,8 +869,10 @@ public class WSDLUtils
 
       switch (inputs.length)
       {
-         case 0: return null;
-         case 1: return inputs[0];
+         case 0:
+            return null;
+         case 1:
+            return inputs[0];
       }
 
       throw new WSException("Only Request-Only and Request-Response MEPs are allowed");

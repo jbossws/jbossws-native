@@ -80,7 +80,6 @@ public class WSDLToJava implements WSDLToJavaIntf
 {
    private String newline = "\n";
 
-   //protected LiteralTypeMapping typeMapping = new LiteralTypeMapping();
    protected LiteralTypeMapping typeMapping = null;
 
    protected WSDLDefinitions wsdl = null;
@@ -90,14 +89,12 @@ public class WSDLToJava implements WSDLToJavaIntf
     */
    protected WSDLUtils utils = WSDLUtils.getInstance();
 
-   //protected XSDToJavaIntf xsdJava = new XSDToJava();
-
    //Feature Set
    protected boolean annotate = false;
 
    protected Map<String, String> namespacePackageMap = null;
 
-   //private String wsdlStyle = Constants.RPC_LITERAL;
+   protected HolderWriter holderWriter = new HolderWriter();
 
    private String seiPkgName = "";
 
@@ -378,12 +375,12 @@ public class WSDLToJava implements WSDLToJavaIntf
       boolean holder = false;
       if (input != null && input.getElement() != null)
       {
-         QName xmlName = input.getElement();         
+         QName xmlName = input.getElement();
          holder = output != null && xmlName.equals(output.getElement());
-         
+
          appendParameters(paramBuffer, input, output, xmlName.getLocalPart());
       }
-      
+
       if (!holder && output != null && output.getElement() != null)
       {
          QName xmlName = output.getElement();
@@ -569,7 +566,14 @@ public class WSDLToJava implements WSDLToJavaIntf
          if (className.charAt(0) == '>')
             className = className.substring(1);
          className = utils.firstLetterUpperCase(className);
-         buf.append(seiPkgName + "." + className + arraySuffix);
+         className = seiPkgName + "." + className + arraySuffix;
+
+         if (holder)
+         {
+            className = holderWriter.getOrCreateHolder(className, getLocationForJavaGeneration());
+         }
+
+         buf.append(className);
 
          if (xt instanceof XSComplexTypeDefinition)
             generateJavaSource((XSComplexTypeDefinition)xt, xsmodel, containingElement);

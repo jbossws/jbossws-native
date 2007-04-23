@@ -134,7 +134,7 @@ public class XSDToJava implements XSDToJavaIntf
             String nsuri = elmtype.getNamespace();
             String tname = elmtype.getName();
             if (tname != null) continue;   //Consider only anon complex types
-            //xsdJava.createJavaFile(ctype, dirloc, packageName, xsmodel, elmname);
+            
             createJavaFile(ctype, dirloc, packageName, xsmodel, elmname);
          }
       }
@@ -159,7 +159,6 @@ public class XSDToJava implements XSDToJavaIntf
          throw new IllegalArgumentException(str);
       checkXSDTypeToJava();
       xsdJava.createJavaFile(type,outerElementName, loc,pkgname,schema, false);
-      //createJavaFile(type, schema);
    }
    
    private void checkXSDTypeToJava()
