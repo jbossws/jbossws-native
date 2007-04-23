@@ -34,6 +34,7 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
+import javax.xml.soap.Node;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
@@ -133,7 +134,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
    protected abstract MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException;
 
    /** On the client side, generate the payload from IN parameters. */
-   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+         throws BindingException
    {
       if (log.isDebugEnabled())
          log.debug("bindRequestMessage: " + opMetaData.getQName());
@@ -320,17 +322,26 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   {
                      boolean isHeader = paramMetaData.isInHeader();
                      SOAPElement element = isHeader ? soapHeader : soapBodyElement;
-                     if(!isHeader) numParameters++;
-                     
+                     if (!isHeader)
+                        numParameters++;
+
                      SOAPContentElement value = getParameterFromMessage(paramMetaData, element, false);
                      epInv.setRequestParamValue(xmlName, value);
                   }
                }
             }
 
-            // TCK: verify the numer of parameters matches the actual message payload
-            int numChildren = soapBodyElement.getChildNodes().getLength();
-            if(numChildren!=numParameters) throw new WSException("Invalid number of payload elements: " + numChildren);
+            // Verify the numer of parameters matches the actual message payload
+            int numChildElements = 0;
+            Iterator itElements = soapBodyElement.getChildElements();
+            while (itElements.hasNext())
+            {
+               Node node = (Node)itElements.next();
+               if (node instanceof SOAPElement)
+                  numChildElements++;
+            }
+            if (numChildElements != numParameters)
+               throw new WSException("Invalid number of payload elements: " + numChildElements);
          }
 
          // Generic message endpoint

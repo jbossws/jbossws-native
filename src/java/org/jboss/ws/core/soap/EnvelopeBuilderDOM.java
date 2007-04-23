@@ -26,10 +26,11 @@ package org.jboss.ws.core.soap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -42,7 +43,10 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.utils.DOMUtils;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -58,10 +62,12 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
    // provide logging
    private static Logger log = Logger.getLogger(EnvelopeBuilderDOM.class);
 
-   private Style style = Style.DOCUMENT;
+   private SOAPFactoryImpl soapFactory;
+   private Style style;
 
    public EnvelopeBuilderDOM(Style style)
    {
+      this.soapFactory = new SOAPFactoryImpl();
       this.style = style;
    }
 
@@ -107,29 +113,71 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
    public SOAPEnvelope build(SOAPMessage soapMessage, Element domEnv) throws SOAPException
    {
-      String envNS = domEnv.getNamespaceURI();
-      String envPrefix = domEnv.getPrefix();
-
       // Construct the envelope
-      SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
-      SOAPEnvelopeImpl soapEnv = new SOAPEnvelopeImpl(soapPart, soapFactory.createElement(domEnv, false));
+      SOAPEnvelopeImpl soapEnv = new SOAPEnvelopeImpl(soapPart, soapFactory.createElement(domEnv, false), false);
 
+      Document ownerDoc = soapEnv.getOwnerDocument();
       DOMUtils.copyAttributes(soapEnv, domEnv);
 
-      // Add the header elements
-      Element domHeader = DOMUtils.getFirstChildElement(domEnv, new QName(envNS, "Header"));
-      if (domHeader != null)
+      NodeList envChildNodes = domEnv.getChildNodes();
+      for (int i = 0; i < envChildNodes.getLength(); i++)
       {
-         SOAPHeader soapHeader = soapEnv.getHeader();
-
-         DOMUtils.copyAttributes(soapHeader, domHeader);
-
-         Iterator it = DOMUtils.getChildElements(domHeader);
-         while (it.hasNext())
+         Node child = envChildNodes.item(i);
+         short childType = child.getNodeType();
+         if (childType == Node.ELEMENT_NODE)
          {
-            Element srcElement = (Element)it.next();
-            //registerNamespacesLocally(srcElement);
+            String elName = child.getLocalName();
+            if ("Header".equals(elName))
+            {
+               buildSOAPHeader(soapEnv, (Element)child);
+            }
+            else if ("Body".equals(elName))
+            {
+               buildSOAPBody(soapEnv, (Element)child);
+            }
+            else
+            {
+               log.warn("Ignore envelope chile element: " + elName);
+            }
+         }
+         else if (childType == Node.COMMENT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            Comment comment = ownerDoc.createComment(nodeValue);
+            soapEnv.appendChild(comment);
+         }
+         else if (childType == Node.TEXT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            soapEnv.addTextNode(nodeValue);
+         }
+         else
+         {
+            log.warn("Ignore child type: " + childType);
+         }
+      }
+
+      return soapEnv;
+   }
+
+   private SOAPHeader buildSOAPHeader(SOAPEnvelopeImpl soapEnv, Element domHeader) throws SOAPException
+   {
+      SOAPHeader soapHeader = soapEnv.getHeader();
+      if (soapHeader == null)
+         soapHeader = soapEnv.addHeader();
+
+      Document ownerDoc = soapEnv.getOwnerDocument();
+      DOMUtils.copyAttributes(soapHeader, domHeader);
+
+      NodeList headerChildNodes = domHeader.getChildNodes();
+      for (int i = 0; i < headerChildNodes.getLength(); i++)
+      {
+         Node child = headerChildNodes.item(i);
+         short childType = child.getNodeType();
+         if (childType == Node.ELEMENT_NODE)
+         {
+            Element srcElement = (Element)child;
             XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
 
             Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
@@ -139,97 +187,73 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             DOMUtils.copyAttributes(destElement, srcElement);
             destElement.setXMLFragment(xmlFragment);
          }
-      }
-
-      // Add the body elements
-      Element domBody = DOMUtils.getFirstChildElement(domEnv, new QName(envNS, "Body"));
-      SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnv.getBody();
-
-      DOMUtils.copyAttributes(soapBody, domBody);
-
-      Iterator itBody = DOMUtils.getChildElements(domBody);
-      if (itBody.hasNext())
-      {
-         Element domBodyElement = (Element)itBody.next();
-
-         String localName = domBodyElement.getLocalName();
-         String prefix = domBodyElement.getPrefix();
-         String nsURI = domBodyElement.getNamespaceURI();
-         Name beName = new NameImpl(localName, prefix, nsURI);
-
-         // Process a <env:Fault> message
-         if (beName.equals(new NameImpl("Fault", envPrefix, envNS)))
+         else if (childType == Node.COMMENT_NODE)
          {
-            SOAPFaultImpl soapFault = new SOAPFaultImpl(envPrefix, envNS);
-            soapBody.addChildElement(soapFault);
-
-            DOMUtils.copyAttributes(soapFault, domBodyElement);
-
-            // copy everything and let soapFault discover child elements itself
-            XMLFragment xmlFragment = new XMLFragment(new DOMSource(domBodyElement));
-            soapFault.setXMLFragment(xmlFragment);
+            String nodeValue = child.getNodeValue();
+            Comment comment = ownerDoc.createComment(nodeValue);
+            soapHeader.appendChild(comment);
          }
-
-         // Process and RPC or DOCUMENT style message
+         else if (childType == Node.TEXT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            soapHeader.addTextNode(nodeValue);
+         }
          else
          {
-
-            if (style == Style.RPC)
-            {
-               buildBodyElementRpc(soapBody, domBodyElement);
-            }
-            else if (style == Style.DOCUMENT)
-            {
-               buildBodyElementDoc(soapBody, domBodyElement);
-            }
-            else if (style == null)
-            {
-               SOAPBodyElementMessage soapBodyElement = new SOAPBodyElementMessage(beName);
-               soapBodyElement = (SOAPBodyElementMessage)soapBody.addChildElement(soapBodyElement);
-
-               DOMUtils.copyAttributes(soapBodyElement, domBodyElement);
-
-               NodeList nlist = domBodyElement.getChildNodes();
-               for (int i = 0; i < nlist.getLength(); i++)
-               {
-                  org.w3c.dom.Node child = nlist.item(i);
-                  short childType = child.getNodeType();
-                  if (childType == org.w3c.dom.Node.ELEMENT_NODE)
-                  {
-                     SOAPElement soapElement = soapFactory.createElement((Element)child);
-                     soapBodyElement.addChildElement(soapElement);
-                  }
-                  else if (childType == org.w3c.dom.Node.TEXT_NODE)
-                  {
-                     String nodeValue = child.getNodeValue();
-                     soapBodyElement.addTextNode(nodeValue);
-                  }
-                  else if (childType == org.w3c.dom.Node.CDATA_SECTION_NODE)
-                  {
-                     String nodeValue = child.getNodeValue();
-                     soapBodyElement.addTextNode(nodeValue);
-                  }
-                  else
-                  {
-                     log.warn("Ignore child type: " + childType);
-                  }
-               }
-            }
-            else
-            {
-               throw new WSException("Unsupported message style: " + style);
-            }
+            log.warn("Ignore child type: " + childType);
          }
       }
 
-      // Process additional soap encoded body elements
+      return soapHeader;
+   }
+
+   private SOAPBody buildSOAPBody(SOAPEnvelopeImpl soapEnv, Element domBody) throws SOAPException
+   {
+      String envNS = soapEnv.getNamespaceURI();
+
+      SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnv.getBody();
+      if (soapBody == null)
+         soapBody = (SOAPBodyImpl)soapEnv.addBody();
+
+      Document ownerDoc = soapBody.getOwnerDocument();
+      DOMUtils.copyAttributes(soapBody, domBody);
+
+      SOAPBodyElement soapBodyElement = null;
       boolean attachHRefElements = Constants.URI_SOAP11_ENC.equals(soapEnv.getAttributeNS(envNS, "encodingStyle"));
-      attachHRefElements = attachHRefElements || Constants.URI_SOAP11_ENC.equals(soapBody.getAttributeNS(envNS, "encodingStyle"));
-      attachHRefElements = attachHRefElements && itBody.hasNext();
-      while (attachHRefElements && itBody.hasNext())
+
+      NodeList bodyChildNodes = domBody.getChildNodes();
+      for (int i = 0; i < bodyChildNodes.getLength(); i++)
       {
-         Element srcElement = (Element)itBody.next();
-         soapBody.addChildElement(soapFactory.createElement(srcElement, true));
+         Node child = bodyChildNodes.item(i);
+         short childType = child.getNodeType();
+         if (childType == Node.ELEMENT_NODE)
+         {
+            if (soapBodyElement == null)
+            {
+               soapBodyElement = buildSOAPBodyElement(soapEnv, (Element)child);
+               attachHRefElements = attachHRefElements || Constants.URI_SOAP11_ENC.equals(soapBody.getAttributeNS(envNS, "encodingStyle"));
+            }
+            else if (attachHRefElements)
+            {
+               // Process additional soap encoded body elements
+               soapBody.addChildElement(soapFactory.createElement((Element)child, true));
+            }
+         }
+         else if (childType == Node.COMMENT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            Comment comment = ownerDoc.createComment(nodeValue);
+            soapBody.appendChild(comment);
+         }
+         else if (childType == Node.TEXT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            soapBody.addTextNode(nodeValue);
+         }
+         else
+         {
+            log.warn("Ignore child type: " + childType);
+         }
       }
 
       // Inline all attached href elements
@@ -239,48 +263,158 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          inlineHandler.processHRefs();
       }
 
-      return soapEnv;
+      return soapBody;
+   }
+
+   private SOAPBodyElement buildSOAPBodyElement(SOAPEnvelopeImpl soapEnv, Element domBodyElement) throws SOAPException
+   {
+      String envNS = soapEnv.getNamespaceURI();
+      String envPrefix = soapEnv.getPrefix();
+
+      SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnv.getBody();
+      QName beName = DOMUtils.getElementQName(domBodyElement);
+
+      SOAPBodyElement soapBodyElement = null;
+
+      // Process a <env:Fault> message
+      if (beName.equals(new QName(envNS, "Fault")))
+      {
+         SOAPFaultImpl soapFault = new SOAPFaultImpl(envPrefix, envNS);
+         soapBody.addChildElement(soapFault);
+         soapBodyElement = soapFault;
+
+         DOMUtils.copyAttributes(soapFault, domBodyElement);
+
+         // copy everything and let soapFault discover child elements itself
+         XMLFragment xmlFragment = new XMLFragment(new DOMSource(domBodyElement));
+         soapFault.setXMLFragment(xmlFragment);
+      }
+
+      // Process and RPC or DOCUMENT style message
+      else
+      {
+         if (style == Style.DOCUMENT)
+         {
+            buildBodyElementDoc(soapBody, domBodyElement);
+         }
+         else if (style == Style.RPC)
+         {
+            soapBodyElement = buildBodyElementRpc(soapBody, domBodyElement);
+         }
+         else if (style == null)
+         {
+            buildBodyElementDefault(soapBody, domBodyElement);
+         }
+         else
+         {
+            throw new WSException("Unsupported message style: " + style);
+         }
+      }
+
+      return soapBodyElement;
    }
 
    public void buildBodyElementDoc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
    {
-      soapBody.removeContents();
-
       Element srcElement = (Element)domBodyElement;
 
       QName beName = DOMUtils.getElementQName(domBodyElement);
-      SOAPContentElement destElement = new SOAPBodyElementDoc(beName);
-      destElement = (SOAPContentElement)soapBody.addChildElement(destElement);
+      SOAPContentElement contentElement = new SOAPBodyElementDoc(beName);
+      contentElement = (SOAPContentElement)soapBody.addChildElement(contentElement);
 
-      DOMUtils.copyAttributes(destElement, srcElement);
+      DOMUtils.copyAttributes(contentElement, srcElement);
 
       XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
-      destElement.setXMLFragment(xmlFragment);
+      contentElement.setXMLFragment(xmlFragment);
    }
 
-   public void buildBodyElementRpc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
+   public SOAPBodyElement buildBodyElementRpc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
    {
-      soapBody.removeContents();
-
       QName beName = DOMUtils.getElementQName(domBodyElement);
       SOAPBodyElementRpc soapBodyElement = new SOAPBodyElementRpc(beName);
       soapBodyElement = (SOAPBodyElementRpc)soapBody.addChildElement(soapBodyElement);
 
+      Document ownerDoc = soapBody.getOwnerDocument();
       DOMUtils.copyAttributes(soapBodyElement, domBodyElement);
 
-      Iterator itBodyElement = DOMUtils.getChildElements(domBodyElement);
-      while (itBodyElement.hasNext())
+      NodeList nlist = domBodyElement.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
       {
-         Element srcElement = (Element)itBodyElement.next();
+         Node child = nlist.item(i);
+         short childType = child.getNodeType();
+         if (childType == Node.ELEMENT_NODE)
+         {
+            Element srcElement = (Element)child;
+            Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
+            SOAPContentElement destElement = new SOAPContentElement(name);
+            destElement = (SOAPContentElement)soapBodyElement.addChildElement(destElement);
 
-         Name name = new NameImpl(srcElement.getLocalName(), srcElement.getPrefix(), srcElement.getNamespaceURI());
-         SOAPContentElement destElement = new SOAPContentElement(name);
-         destElement = (SOAPContentElement)soapBodyElement.addChildElement(destElement);
+            DOMUtils.copyAttributes(destElement, srcElement);
 
-         DOMUtils.copyAttributes(destElement, srcElement);
-
-         XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
-         destElement.setXMLFragment(xmlFragment);
+            XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
+            destElement.setXMLFragment(xmlFragment);
+         }
+         else if (childType == Node.COMMENT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            Comment comment = ownerDoc.createComment(nodeValue);
+            soapBodyElement.appendChild(comment);
+         }
+         else if (childType == Node.TEXT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            soapBodyElement.addTextNode(nodeValue);
+         }
+         else
+         {
+            log.warn("Ignore child type: " + childType);
+         }
       }
+
+      return soapBodyElement;
+   }
+
+   public SOAPBodyElement buildBodyElementDefault(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
+   {
+      QName beName = DOMUtils.getElementQName(domBodyElement);
+      SOAPBodyElement soapBodyElement = new SOAPBodyElementMessage(beName);
+      soapBodyElement = (SOAPBodyElementMessage)soapBody.addChildElement(soapBodyElement);
+
+      Document ownerDoc = soapBody.getOwnerDocument();
+      DOMUtils.copyAttributes(soapBodyElement, domBodyElement);
+
+      NodeList nlist = domBodyElement.getChildNodes();
+      for (int i = 0; i < nlist.getLength(); i++)
+      {
+         Node child = nlist.item(i);
+         short childType = child.getNodeType();
+         if (childType == Node.ELEMENT_NODE)
+         {
+            SOAPElement soapElement = soapFactory.createElement((Element)child);
+            soapBodyElement.addChildElement(soapElement);
+         }
+         else if (childType == Node.COMMENT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            Comment comment = ownerDoc.createComment(nodeValue);
+            soapBodyElement.appendChild(comment);
+         }
+         else if (childType == Node.TEXT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            soapBodyElement.addTextNode(nodeValue);
+         }
+         else if (childType == Node.CDATA_SECTION_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            soapBodyElement.addTextNode(nodeValue);
+         }
+         else
+         {
+            log.warn("Ignore child type: " + childType);
+         }
+      }
+
+      return soapBodyElement;
    }
 }

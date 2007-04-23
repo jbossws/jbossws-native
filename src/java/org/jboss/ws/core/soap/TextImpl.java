@@ -42,8 +42,7 @@ public class TextImpl extends NodeImpl implements javax.xml.soap.Text
     */
    public boolean isComment()
    {
-      String value = getNodeValue().trim();
-      return value.startsWith("<!--") && value.endsWith("-->");
+      return domNode.getNodeType() == org.w3c.dom.Node.COMMENT_NODE;
    }
 
    public String getValue()

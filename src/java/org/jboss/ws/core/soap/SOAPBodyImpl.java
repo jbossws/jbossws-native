@@ -38,6 +38,7 @@ import javax.xml.soap.Text;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.DOMUtils;
+import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
@@ -254,10 +255,14 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       return newDocument;
    }
 
-   private static boolean needsConversionToBodyElement(Node node)
+   private static boolean needsConversionToBodyElement(Node newChild)
    {
       // JBCTS-440 #addTextNodeTest1 appends a Text node to a SOAPBody
-      return !(node instanceof SOAPBodyElement || node instanceof DocumentFragment || node instanceof Text);
+      boolean validChild = newChild instanceof SOAPBodyElement;
+      validChild = validChild || newChild instanceof DocumentFragment;
+      validChild = validChild || newChild instanceof Text;
+      validChild = validChild || newChild instanceof Comment;
+      return validChild == false;
    }
 
    private static SOAPBodyElementDoc convertToBodyElement(Node node)

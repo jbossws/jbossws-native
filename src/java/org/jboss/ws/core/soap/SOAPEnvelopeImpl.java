@@ -54,7 +54,7 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
 
    /** Construct a SOAP envelope for the given SOAP version URI prefix, etc.
     */
-   public SOAPEnvelopeImpl(SOAPPartImpl soapPart, SOAPElement element) throws SOAPException
+   public SOAPEnvelopeImpl(SOAPPartImpl soapPart, SOAPElement element, boolean addHeaderAndBody) throws SOAPException
    {
       super((SOAPElementImpl)element);
 
@@ -71,16 +71,16 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       assertEnvelopeNamespace(namespaceURI);
       addNamespaceDeclaration(prefix, namespaceURI);
 
-      // the Element source might already contain a Header and Body declaration
-      if (null == soapPart.getEnvelope().getHeader())
+      if (addHeaderAndBody)
+      {
          addHeader();
-      if (null == soapPart.getEnvelope().getBody())
          addBody();
+      }
    }
 
    /** Construct a SOAP envelope for the given SOAP version URI.
     */
-   SOAPEnvelopeImpl(SOAPPartImpl soapPart, String namespace) throws SOAPException
+   SOAPEnvelopeImpl(SOAPPartImpl soapPart, String namespace, boolean addHeaderAndBody) throws SOAPException
    {
       super("Envelope", Constants.PREFIX_ENV, namespace);
 
@@ -90,8 +90,11 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       assertEnvelopeNamespace(namespace);
       addNamespaceDeclaration(getPrefix(), namespace);
 
-      addHeader();
-      addBody();
+      if (addHeaderAndBody)
+      {
+         addHeader();
+         addBody();
+      }
    }
 
    public SOAPMessage getSOAPMessage()
@@ -156,7 +159,7 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       while (it.hasNext())
       {
          Node node = (Node)it.next();
-         if (node.getLocalName().equals("Body"))
+         if ("Body".equals(node.getLocalName()))
             return (SOAPBody)node;
       }
       return null;
@@ -168,7 +171,7 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       while (it.hasNext())
       {
          Node node = (Node)it.next();
-         if (node.getLocalName().equals("Header"))
+         if ("Header".equals(node.getLocalName()))
             return (SOAPHeader)node;
       }
       return null;
@@ -179,7 +182,10 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
     */
    public SOAPElement addTextNode(String value) throws SOAPException
    {
-      throw new SOAPException("Cannot add Text node to SOAPEnvelope");
+      if (value.trim().length() > 0)
+         throw new SOAPException("Cannot add Text node to SOAPEnvelope");
+
+      return super.addTextNode(value);
    }
 
    public Document getOwnerDocument()

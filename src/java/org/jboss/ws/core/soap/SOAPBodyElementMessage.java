@@ -23,8 +23,8 @@ package org.jboss.ws.core.soap;
 
 import java.io.Writer;
 
+import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
-import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 
 import org.jboss.ws.core.utils.DOMWriter;
@@ -39,7 +39,7 @@ import org.jboss.ws.core.utils.DOMWriter;
  */
 public class SOAPBodyElementMessage extends SOAPElementImpl implements SOAPBodyElement
 {
-   public SOAPBodyElementMessage(Name name)
+   public SOAPBodyElementMessage(QName name)
    {
       super(name);
    }

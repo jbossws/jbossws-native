@@ -120,7 +120,7 @@ public interface Constants
    static final String PREFIX_XML = "xml";
 
    /** XOP Include */
-   static final Name NAME_XOP_INCLUDE = new NameImpl("Include", PREFIX_XOP, NS_XOP);
+   static final QName NAME_XOP_INCLUDE = new QName(NS_XOP, "Include", PREFIX_XOP);
    
    /** SOAP-1.1 roles */
    static final String URI_SOAP11_NEXT_ACTOR = "http://schemas.xmlsoap.org/soap/actor/next";

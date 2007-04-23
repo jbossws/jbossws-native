@@ -154,7 +154,7 @@ public class MessageFactoryImpl extends MessageFactory
 
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
-      new SOAPEnvelopeImpl(soapPart, envNamespace);
+      new SOAPEnvelopeImpl(soapPart, envNamespace, true);
       return soapMessage;
    }
 

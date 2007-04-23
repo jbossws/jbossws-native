@@ -105,6 +105,7 @@ public class LogicalMessageImpl implements LogicalMessage
             {
                try
                {
+                  soapBody.removeContents();
                   EnvelopeBuilderDOM builder = new EnvelopeBuilderDOM(style);
                   Element domBodyElement = DOMUtils.sourceToElement(source);
                   builder.buildBodyElementRpc(soapBody, domBodyElement);

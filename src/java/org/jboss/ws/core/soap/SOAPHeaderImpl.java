@@ -36,6 +36,7 @@ import javax.xml.soap.Text;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.SAAJUtils;
+import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -272,7 +273,11 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    private static boolean needsConversionToHeaderElement(Node newChild)
    {
       // JBCTS-440 #addTextNodeTest2 appends a Text node to a SOAPHeader
-      return !(newChild instanceof SOAPHeaderElementImpl || newChild instanceof DocumentFragment || newChild instanceof Text);
+      boolean validChild = newChild instanceof SOAPHeaderElementImpl;
+      validChild = validChild || newChild instanceof DocumentFragment;
+      validChild = validChild || newChild instanceof Text;
+      validChild = validChild || newChild instanceof Comment;
+      return validChild == false;
    }
 
    private static SOAPHeaderElementImpl convertToHeaderElement(Node node)

@@ -256,7 +256,7 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
       if (Part.ENVELOPE == currentPart)
       {
          // setup envelope impl
-         soapEnv = new SOAPEnvelopeImpl(soapPart, qName.getNamespaceURI());
+         soapEnv = new SOAPEnvelopeImpl(soapPart, qName.getNamespaceURI(), false);
          destElement = soapEnv; // soapEnv becomes current
       }
       else if (Part.HEADER == currentPart)

@@ -33,7 +33,6 @@ import java.util.List;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.xml.namespace.QName;
-import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
@@ -54,6 +53,8 @@ import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -297,18 +298,13 @@ class XMLContent extends SOAPContent
       if (domElement == container)
          return;
 
-      String rootLocalName = domElement.getLocalName();
-      String rootPrefix = domElement.getPrefix();
-      String rootNS = domElement.getNamespaceURI();
-      NameImpl contentRootName = new NameImpl(rootLocalName, rootPrefix, rootNS);
-
       // Make sure the content root element name matches this element name
-      Name name = container.getElementName();
       QName qname = container.getElementQName();
+      QName contentRootName = DOMUtils.getElementQName(domElement);
       boolean artificalElement = (SOAPContentElement.GENERIC_PARAM_NAME.equals(qname) || SOAPContentElement.GENERIC_RETURN_NAME.equals(qname));
 
-      if (!artificalElement && !contentRootName.equals(name))
-         throw new WSException("Content root name does not match element name: " + contentRootName + " != " + name);
+      if (!artificalElement && !contentRootName.equals(qname))
+         throw new WSException("Content root name does not match element name: " + contentRootName + " != " + qname);
 
       // Remove all child nodes
       container.removeContents();
@@ -317,11 +313,10 @@ class XMLContent extends SOAPContent
       // These need to be replaced (costly!)
       if (artificalElement)
       {
-         QName xmlName = contentRootName.toQName();
-         container.setElementQNameInternal(xmlName);
+         container.setElementQNameInternal(contentRootName);
       }
 
-      // Copy attributes
+      Document ownerDoc = container.getOwnerDocument();
       DOMUtils.copyAttributes(container, domElement);
 
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
@@ -335,13 +330,19 @@ class XMLContent extends SOAPContent
          {
             SOAPElement soapElement = soapFactory.createElement((Element)child);
             container.addChildElement(soapElement);
-            if (Constants.NAME_XOP_INCLUDE.equals(name) || container.isXOPParameter())
+            if (Constants.NAME_XOP_INCLUDE.equals(qname) || container.isXOPParameter())
                XOPContext.inlineXOPData(soapElement);
          }
          else if (childType == Node.TEXT_NODE)
          {
             String nodeValue = child.getNodeValue();
             container.addTextNode(nodeValue);
+         }
+         else if (childType == Node.COMMENT_NODE)
+         {
+            String nodeValue = child.getNodeValue();
+            Comment comment = ownerDoc.createComment(nodeValue);
+            container.appendChild(comment);
          }
          else if (childType == Node.CDATA_SECTION_NODE)
          {

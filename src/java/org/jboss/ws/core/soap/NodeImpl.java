@@ -552,6 +552,10 @@ public class NodeImpl implements javax.xml.soap.Node
       {
          retNode = new TextImpl(node);
       }
+      else if (node instanceof org.w3c.dom.Comment)
+      {
+         retNode = new TextImpl(node);
+      }
       else
       {
          throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Operation not supported on this type of node: " + node);
