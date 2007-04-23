@@ -378,13 +378,12 @@ public class WSDLToJava implements WSDLToJavaIntf
       boolean holder = false;
       if (input != null && input.getElement() != null)
       {
-         QName xmlName = input.getElement();
-         QName xmlType = input.getXMLType();
-         JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
-         XSTypeDefinition xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
-
+         QName xmlName = input.getElement();         
+         holder = output != null && xmlName.equals(output.getElement());
+         
          appendParameters(paramBuffer, input, output, xmlName.getLocalPart());
       }
+      
       if (!holder && output != null && output.getElement() != null)
       {
          QName xmlName = output.getElement();

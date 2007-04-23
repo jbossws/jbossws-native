@@ -227,8 +227,13 @@ public class MappingFileGeneratorHelper
    private void constructDOCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop)
    {
       WSDLInterfaceOperationInput win = WSDLUtils.getWsdl11Input(wiop);
+      WSDLInterfaceOperationOutput output = WSDLUtils.getWsdl11Output(wiop);
+
       JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
       MethodParamPartsMapping mpin = null;
+
+      boolean holder = false;
+
       if (win != null)
       {
          QName xmlName = win.getElement();
@@ -248,14 +253,19 @@ public class MappingFileGeneratorHelper
          {
             if (xt instanceof XSSimpleTypeDefinition)
                xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
+            String paramMode = "IN";
+            holder = output != null && xmlName.equals(output.getElement());
+            if (holder == true)
+            {
+               paramMode = "INOUT";
+            }
 
-            mpin = getMethodParamPartsMapping(semm, xmlName, xmlType, 0, wsdlMessageName, "IN", partName, false, true);
+            mpin = getMethodParamPartsMapping(semm, xmlName, xmlType, 0, wsdlMessageName, paramMode, partName, false, true);
             semm.addMethodParamPartsMapping(mpin);
          }
       }
 
-      WSDLInterfaceOperationOutput output = WSDLUtils.getWsdl11Output(wiop);
-      if (output != null)
+      if (holder == false && output != null)
       {
          QName xmlName = output.getElement();
          QName xmlType = output.getXMLType();
@@ -755,8 +765,10 @@ public class MappingFileGeneratorHelper
 
       if (javaType == null)
       {
-         if(log.isDebugEnabled()) log.debug("Typemapping lookup failed for " + xmlName);
-         if(log.isDebugEnabled()) log.debug("Falling back to identifier generation");
+         if (log.isDebugEnabled())
+            log.debug("Typemapping lookup failed for " + xmlName);
+         if (log.isDebugEnabled())
+            log.debug("Falling back to identifier generation");
          String className = xmlType.getLocalPart();
          if (className.charAt(0) == '>')
             className = className.substring(1);
