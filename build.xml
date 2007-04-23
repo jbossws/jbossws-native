@@ -71,7 +71,7 @@
   <!--
   | Build all jar files.
   -->
-  <target name="core-jars" depends="core-compile,core-module-jars" description="Builds all jar files.">
+  <target name="core-jars" depends="core-compile,core-module-jars,integration-jars" description="Builds all jar files.">
   </target>
   
   <!--
