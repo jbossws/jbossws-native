@@ -59,7 +59,7 @@ public abstract class AbstractServiceEndpointPublisher
    public static final String BEAN_NAME = "ServiceEndpointPublisher";
 
    // The configured service endpoint servlet
-   private String servletName;
+   private String servletClass;
 
    // The results of the URL rewriting
    public class RewriteResults
@@ -70,14 +70,14 @@ public abstract class AbstractServiceEndpointPublisher
       public Map<String, String> sepTargetMap = new HashMap<String, String>();
    }
 
-   public String getServiceEndpointServlet()
+   public String getServletClass()
    {
-      return servletName;
+      return servletClass;
    }
 
-   public void setServiceEndpointServlet(String servletName)
+   public void setServletClass(String servletClass)
    {
-      this.servletName = servletName;
+      this.servletClass = servletClass;
    }
 
    public String publishServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception
@@ -160,19 +160,19 @@ public abstract class AbstractServiceEndpointPublisher
          if (classElement == null)
             continue;
 
-         String servletClassName = DOMUtils.getTextContent(classElement).trim();
+         String orgServletClassName = DOMUtils.getTextContent(classElement).trim();
 
          // Get the servlet class
-         Class servletClass = null;
+         Class orgServletClass = null;
          if (loader != null)
          {
             try
             {
-               servletClass = loader.loadClass(servletClassName);
+               orgServletClass = loader.loadClass(orgServletClassName);
             }
             catch (ClassNotFoundException ex)
             {
-               log.warn("Cannot load servlet class: " + servletClassName);
+               log.warn("Cannot load servlet class: " + orgServletClassName);
             }
          }
 
@@ -196,14 +196,14 @@ public abstract class AbstractServiceEndpointPublisher
          else
          {
             // Check if it is a real servlet that we can ignore
-            if (servletClass != null && JavaUtils.isAssignableFrom(Servlet.class, servletClass))
+            if (orgServletClass != null && JavaUtils.isAssignableFrom(Servlet.class, orgServletClass))
             {
-               log.info("Ignore servlet: " + servletClassName);
+               log.info("Ignore servlet: " + orgServletClassName);
                continue;
             }
-            else if (servletClassName.endsWith("Servlet"))
+            else if (orgServletClassName.endsWith("Servlet"))
             {
-               log.info("Ignore <servlet-class> that ends with 'Servlet': " + servletClassName);
+               log.info("Ignore <servlet-class> that ends with 'Servlet': " + orgServletClassName);
                continue;
             }
 
@@ -228,19 +228,19 @@ public abstract class AbstractServiceEndpointPublisher
 
             // replace the class name
             classElement = (Element)DOMUtils.createElement("servlet-class");
-            classElement.appendChild(DOMUtils.createTextNode(servletName));
+            classElement.appendChild(DOMUtils.createTextNode(servletClass));
             classElement = (Element)servletElement.getOwnerDocument().importNode(classElement, true);
             servletElement.appendChild(classElement);
 
             // add additional init params
-            if (servletClassName.equals(servletName) == false)
+            if (orgServletClassName.equals(servletClass) == false)
             {
                Element paramElement = DOMUtils.createElement("init-param");
                paramElement.appendChild(DOMUtils.createElement("param-name")).appendChild(DOMUtils.createTextNode(Endpoint.SEPID_DOMAIN_ENDPOINT));
-               paramElement.appendChild(DOMUtils.createElement("param-value")).appendChild(DOMUtils.createTextNode(servletClassName));
+               paramElement.appendChild(DOMUtils.createElement("param-value")).appendChild(DOMUtils.createTextNode(orgServletClassName));
                paramElement = (Element)servletElement.getOwnerDocument().importNode(paramElement, true);
                servletElement.appendChild(paramElement);
-               targetBeanName = servletClassName;
+               targetBeanName = orgServletClassName;
             }
 
             // reattach the elements
