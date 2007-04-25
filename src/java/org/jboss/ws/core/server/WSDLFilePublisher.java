@@ -42,7 +42,6 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
@@ -72,9 +71,14 @@ public class WSDLFilePublisher
    {
       this.udi = udi;
 
-      if (udi.type == DeploymentType.JAXRPC_JSE || udi.type == DeploymentType.JAXWS_JSE)
+      if (udi.type.toString().endsWith("_JSE"))
+      {
          expLocation = "WEB-INF/wsdl/";
-      else expLocation = "META-INF/wsdl/";
+      }
+      else
+      {
+         expLocation = "META-INF/wsdl/";
+      }
    }
 
    /** Publish the deployed wsdl file to the data directory
@@ -101,7 +105,7 @@ public class WSDLFilePublisher
 
             // udpate the wsdl file location 
             serviceMetaData.setWsdlLocation(wsdlFile.toURL());
-            
+
             // Process the wsdl imports
             Definition wsdl11Definition = wsdlDefinitions.getWsdlOneOneDefinition();
             if (wsdl11Definition != null)
@@ -155,7 +159,8 @@ public class WSDLFilePublisher
                wsdlWriter.writeWSDL(subdef, fw);
                fw.close();
 
-               if(log.isDebugEnabled()) log.debug("WSDL import published to: " + targetURL);
+               if (log.isDebugEnabled())
+                  log.debug("WSDL import published to: " + targetURL);
 
                // recursivly publish imports
                publishWsdlImports(targetURL, subdef);
@@ -209,7 +214,8 @@ public class WSDLFilePublisher
                   fos.close();
                   is.close();
 
-                  if(log.isDebugEnabled()) log.debug("XMLSchema import published to: " + xsdURL);
+                  if (log.isDebugEnabled())
+                     log.debug("XMLSchema import published to: " + xsdURL);
 
                   // recursivly publish imports
                   Element subdoc = DOMUtils.parse(xsdURL.openStream());
@@ -274,8 +280,9 @@ public class WSDLFilePublisher
       if (wsdlLocation == null)
          throw new IllegalStateException("Cannot obtain wsdl location for: " + serviceMetaData.getServiceName());
 
-      if(log.isDebugEnabled()) log.debug("Publish WSDL file: " + wsdlLocation);
-      
+      if (log.isDebugEnabled())
+         log.debug("Publish WSDL file: " + wsdlLocation);
+
       // Only file URLs are supported in <wsdl-publish-location>
       String publishLocation = serviceMetaData.getWsdlPublishLocation();
       boolean predefinedLocation = publishLocation != null && publishLocation.startsWith("file:");
@@ -313,7 +320,7 @@ public class WSDLFilePublisher
       {
          throw new WSException("Invalid wsdlFile '" + wsdlLocation + "', expected in: " + expLocation);
       }
-      
+
       return wsdlFile;
    }
 }

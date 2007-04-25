@@ -159,7 +159,7 @@ public class ServiceEndpoint
    /**
     * Handle a request to this web service endpoint
     */
-   public MessageAbstraction processRequest(MimeHeaderSource headerSource, EndpointContext context, InputStream inputStream) throws BindingException
+   public MessageAbstraction processRequest(MimeHeaderSource headerSource, ServletRequestContext context, InputStream inputStream) throws BindingException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData sepMetaData = seInfo.getServerEndpointMetaData();

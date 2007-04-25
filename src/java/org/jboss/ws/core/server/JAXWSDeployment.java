@@ -21,9 +21,9 @@
  */
 package org.jboss.ws.core.server;
 
+//$Id$
 
-
-// $Id$
+import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 
 /**
  * The container independent deployment info.

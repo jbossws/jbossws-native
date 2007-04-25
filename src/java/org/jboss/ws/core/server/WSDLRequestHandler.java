@@ -74,6 +74,8 @@ public class WSDLRequestHandler
       
       // The WSDLFilePublisher should set the location to an URL 
       URL wsdlLocation = epMetaData.getServiceMetaData().getWsdlLocation();
+      if (wsdlLocation == null)
+         throw new IllegalStateException("Cannot obtain wsdl location");
       
       // get the root wsdl
       if (resPath == null)

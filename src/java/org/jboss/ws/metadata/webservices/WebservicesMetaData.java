@@ -24,7 +24,6 @@ package org.jboss.ws.metadata.webservices;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.jboss.ws.Constants;
 
@@ -94,25 +93,5 @@ public class WebservicesMetaData
       buf.append(" xmlns:xsi='").append(Constants.NS_SCHEMA_XSI).append('\'');
       buf.append(" xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd'");
       buf.append(" version='1.1'>");
-   }
-
-   private String createAlternatePrefix(String prefix, Map<String, String> namespaces)
-   {
-      // allocate working buffer
-      StringBuilder altPrefixBuilder = new StringBuilder(prefix);
-      // remember original length
-      int baseLength = prefix.length();
-
-      for (int i = 2; i < Integer.MAX_VALUE; i++)
-      {
-         // append a natural number to the original prefix
-         String altPrefix = altPrefixBuilder.append(i).toString();
-         // if the alternate prefix does not match an existing one, we're done
-         if (!namespaces.containsKey(altPrefix))
-            return altPrefix;
-         // truncate buffer to original length
-         altPrefixBuilder.setLength(baseLength);
-      }
-      throw new IllegalArgumentException("could not create alternate prefix from: " + prefix);
    }
 }

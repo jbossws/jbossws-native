@@ -28,6 +28,7 @@ import javax.management.ObjectName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCDeployment;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
@@ -71,22 +72,22 @@ public class ServiceEndpointDeployer
       try
       {
          UnifiedMetaData wsMetaData;
-         if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXRPC_JSE)
+         if (udi.type == DeploymentType.JAXRPC_JSE)
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
             wsMetaData = builder.buildMetaData((JAXRPCDeployment)udi);
          }
-         else if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXRPC_EJB21)
+         else if (udi.type == DeploymentType.JAXRPC_EJB21)
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
             wsMetaData = builder.buildMetaData((JAXRPCDeployment)udi);
          }
-         else if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXWS_JSE)
+         else if (udi.type == DeploymentType.JAXWS_JSE)
          {
             JAXWSMetaDataBuilderJSE builder = new JAXWSMetaDataBuilderJSE();
             wsMetaData = builder.buildMetaData(udi);
          }
-         else if (udi.type == UnifiedDeploymentInfo.DeploymentType.JAXWS_EJB3)
+         else if (udi.type == DeploymentType.JAXWS_EJB3)
          {
             JAXWSMetaDataBuilderEJB3 builder = new JAXWSMetaDataBuilderEJB3();
             wsMetaData = builder.buildMetaData(udi);

@@ -36,13 +36,13 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
  *
  * @author Thomas.Diesler@jboss.org
  */
-public class EndpointContext 
+public class ServletRequestContext 
 {
    private ServletContext context;
    private HttpServletRequest request;
    private HttpServletResponse response;
 
-   public EndpointContext(ServletContext context, HttpServletRequest request, HttpServletResponse response)
+   public ServletRequestContext(ServletContext context, HttpServletRequest request, HttpServletResponse response)
    {
       this.context = context;
       this.request = request;

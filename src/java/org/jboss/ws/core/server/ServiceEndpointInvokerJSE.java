@@ -72,7 +72,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
          try
          {
             ServiceLifecycle serviceLifecycle = ((ServiceLifecycle)seiImpl);
-            ServletEndpointContext servletEndpointContext = new ServletEndpointContextImpl((EndpointContext)context);
+            ServletEndpointContext servletEndpointContext = new ServletEndpointContextImpl((ServletRequestContext)context);
             serviceLifecycle.init(servletEndpointContext);
          }
          catch (ServiceException ex)

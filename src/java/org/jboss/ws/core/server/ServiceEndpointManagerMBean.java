@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.management.ObjectName;
 
-import org.jboss.ws.core.utils.ObjectNameFactory;
+import org.jboss.ws.integration.ObjectNameFactory;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 
 /**

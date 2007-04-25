@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.rpc.handler.MessageContext;
 import javax.xml.rpc.server.ServletEndpointContext;
 
-import org.jboss.ws.core.server.EndpointContext;
+import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 
 /**
@@ -46,7 +46,7 @@ public class ServletEndpointContextImpl implements ServletEndpointContext
    private HttpServletRequest request;
    private HttpServletResponse response;
 
-   public ServletEndpointContextImpl(EndpointContext context)
+   public ServletEndpointContextImpl(ServletRequestContext context)
    {
       this.context = context.getServletContext();
       this.request = context.getHttpServletRequest();

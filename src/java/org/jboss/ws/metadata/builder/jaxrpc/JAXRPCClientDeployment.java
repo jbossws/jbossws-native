@@ -21,10 +21,10 @@
  */
 package org.jboss.ws.metadata.builder.jaxrpc;
 
+//$Id$
+
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-
-
-// $Id$
+import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 
 /**
  * The container independent deployment info. 

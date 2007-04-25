@@ -398,10 +398,8 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       wsEndpoint.handleWSDLRequest(outStream, requestURL, resourcePath);
    }
 
-   public void processRequest(ObjectName sepID, InputStream inStream, OutputStream outStream, EndpointContext context) throws Exception
+   public void processRequest(ObjectName sepID, InputStream inStream, OutputStream outStream, ServletRequestContext context) throws Exception
    {
-      final String SESSION_COOKIES = "org.jboss.ws.cookies";
-
       ServiceEndpoint wsEndpoint = getServiceEndpointByID(sepID);
       if (wsEndpoint == null)
          throw new WSException("Cannot obtain endpoint for: " + sepID);
@@ -719,9 +717,9 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
 
    public static class HttpSessionPropertyCallback implements PropertyCallback
    {
-      private EndpointContext context;
+      private ServletRequestContext context;
 
-      public HttpSessionPropertyCallback(final EndpointContext context)
+      public HttpSessionPropertyCallback(final ServletRequestContext context)
       {
          this.context = context;
       }

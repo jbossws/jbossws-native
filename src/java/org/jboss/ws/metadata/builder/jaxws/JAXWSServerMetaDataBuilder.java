@@ -29,7 +29,7 @@ import javax.xml.ws.WebServiceProvider;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.annotation.WebContext;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
+import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 

@@ -76,7 +76,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate implements Role
    /**
     * For JAXRPC PRE/POST are defined in the context of message origin.
     */ 
-   protected HandlerType[] getHandlerTypeOrder()
+   public HandlerType[] getHandlerTypeOrder()
    {
       return new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
    }

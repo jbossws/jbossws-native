@@ -50,7 +50,7 @@ import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.server.ServiceEndpointManager;
 import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-import org.jboss.ws.core.utils.ObjectNameFactory;
+import org.jboss.ws.integration.ObjectNameFactory;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.eventing.EventingConstants;

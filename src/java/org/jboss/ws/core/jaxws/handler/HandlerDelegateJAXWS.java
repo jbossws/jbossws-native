@@ -64,7 +64,7 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
    /**
     * For JAXWS PRE/POST are defined in the context of an outbound message
     */ 
-   protected HandlerType[] getHandlerTypeOrder()
+   public HandlerType[] getHandlerTypeOrder()
    {
       return new HandlerType[] { HandlerType.POST, HandlerType.ENDPOINT, HandlerType.PRE };
    }

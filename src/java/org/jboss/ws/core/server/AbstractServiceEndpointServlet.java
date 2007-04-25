@@ -37,7 +37,7 @@ import javax.xml.rpc.JAXRPCException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.ObjectNameFactory;
+import org.jboss.ws.integration.ObjectNameFactory;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 
 /**
@@ -110,7 +110,7 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
 
       try
       {
-         EndpointContext context = new EndpointContext(getServletContext(), req, res);
+         ServletRequestContext context = new ServletRequestContext(getServletContext(), req, res);
          epManager.processRequest(sepId, req.getInputStream(), res.getOutputStream(), context);
       }
       catch (Exception ex)

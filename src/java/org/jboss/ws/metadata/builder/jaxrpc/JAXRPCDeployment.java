@@ -27,6 +27,7 @@ import java.net.URL;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.webservices.WebservicesFactory;
 import org.jboss.ws.metadata.webservices.WebservicesMetaData;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -43,7 +44,13 @@ import org.jboss.xb.binding.UnmarshallerFactory;
  */
 public class JAXRPCDeployment extends UnifiedDeploymentInfo
 {
-   private WebservicesMetaData jsr109MetaData;
+   private WebservicesMetaData wsMetaData;
+
+   public JAXRPCDeployment(DeploymentType type, WebservicesMetaData wsMetaData)
+   {
+      super(type);
+      this.wsMetaData = wsMetaData;
+   }
 
    public JAXRPCDeployment(DeploymentType type, UnifiedVirtualFile vfWebservices)
    {
@@ -58,7 +65,7 @@ public class JAXRPCDeployment extends UnifiedDeploymentInfo
          {
             Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
             ObjectModelFactory factory = new WebservicesFactory(webservicesURL);
-            jsr109MetaData = (WebservicesMetaData)unmarshaller.unmarshal(is, factory, null);
+            wsMetaData = (WebservicesMetaData)unmarshaller.unmarshal(is, factory, null);
          }
          finally
          {
@@ -73,6 +80,6 @@ public class JAXRPCDeployment extends UnifiedDeploymentInfo
 
    public WebservicesMetaData getWebservicesMetaData()
    {
-      return jsr109MetaData;
+      return wsMetaData;
    }
 }

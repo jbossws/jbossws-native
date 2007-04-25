@@ -21,9 +21,6 @@
 */
 package org.jboss.ws.tools.jaxws.impl;
 
-import static org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType.JAXWS_EJB3;
-import static org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType.JAXWS_JSE;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -34,8 +31,8 @@ import javax.ejb.Stateless;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo.DeploymentType;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
@@ -72,7 +69,7 @@ final class WSContractProviderImpl extends WSContractProvider
 
    private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
    {
-      DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
+      DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? DeploymentType.JAXWS_EJB3 : DeploymentType.JAXWS_JSE;
       UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(type)
       {
          @Override
