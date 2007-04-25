@@ -56,7 +56,6 @@ public abstract class MessageContextJAXRPC extends CommonMessageContext implemen
    public static final String SERVLET_CONTEXT = "javax.xml.ws.servlet.context";
    public static final String SERVLET_REQUEST = "javax.xml.ws.servlet.request";
    public static final String SERVLET_RESPONSE = "javax.xml.ws.servlet.response";
-   public static final String SERVLET_SESSION = "javax.xml.ws.servlet.session";
 
    public MessageContextJAXRPC()
    {

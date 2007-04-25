@@ -34,7 +34,6 @@ import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.server.PropertyCallback;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -376,11 +375,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
       public Object getValue()
       {
-         Object realValue = value;
-         if (value instanceof PropertyCallback)
-            realValue = ((PropertyCallback)value).get();
-
-         return realValue;
+         return value;
       }
 
       public String toString()

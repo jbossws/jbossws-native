@@ -35,11 +35,13 @@ import java.util.Map;
 import javax.servlet.Servlet;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.integration.Endpoint;
 import org.w3c.dom.Element;
 
 /**
@@ -55,8 +57,6 @@ public abstract class AbstractServiceEndpointPublisher
 
    // The default bean name
    public static final String BEAN_NAME = "ServiceEndpointPublisher";
-   // The servlet init param in web.xml that is the service endpoint class
-   public static final String INIT_PARAM_SERVICE_ENDPOINT_IMPL = "ServiceEndpointImpl";
 
    // The configured service endpoint servlet
    private String servletName;
@@ -80,9 +80,15 @@ public abstract class AbstractServiceEndpointPublisher
       this.servletName = servletName;
    }
 
-   public abstract String publishServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception;
+   public String publishServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception
+   {
+      throw new NotImplementedException("Subclass should overwrite this method");
+   }
 
-   public abstract String destroyServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception;
+   public String destroyServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception
+   {
+      throw new NotImplementedException("Subclass should overwrite this method");
+   }
 
    public RewriteResults rewriteWebXml(UnifiedDeploymentInfo udi)
    {
@@ -181,7 +187,7 @@ public abstract class AbstractServiceEndpointPublisher
                Element elParam = (Element)itParams.next();
                Element elParamName = DOMUtils.getFirstChildElement(elParam, "param-name");
                Element elParamValue = DOMUtils.getFirstChildElement(elParam, "param-value");
-               if (INIT_PARAM_SERVICE_ENDPOINT_IMPL.equals(DOMUtils.getTextContent(elParamName)))
+               if (Endpoint.SEPID_DOMAIN_ENDPOINT.equals(DOMUtils.getTextContent(elParamName)))
                {
                   targetBeanName = DOMUtils.getTextContent(elParamValue);
                }
@@ -230,7 +236,7 @@ public abstract class AbstractServiceEndpointPublisher
             if (servletClassName.equals(servletName) == false)
             {
                Element paramElement = DOMUtils.createElement("init-param");
-               paramElement.appendChild(DOMUtils.createElement("param-name")).appendChild(DOMUtils.createTextNode(INIT_PARAM_SERVICE_ENDPOINT_IMPL));
+               paramElement.appendChild(DOMUtils.createElement("param-name")).appendChild(DOMUtils.createTextNode(Endpoint.SEPID_DOMAIN_ENDPOINT));
                paramElement.appendChild(DOMUtils.createElement("param-value")).appendChild(DOMUtils.createTextNode(servletClassName));
                paramElement = (Element)servletElement.getOwnerDocument().importNode(paramElement, true);
                servletElement.appendChild(paramElement);
@@ -264,7 +270,7 @@ public abstract class AbstractServiceEndpointPublisher
       {
          Element elParam = (Element)itParams.next();
          Element elParamName = DOMUtils.getFirstChildElement(elParam, "param-name");
-         if (INIT_PARAM_SERVICE_ENDPOINT_IMPL.equals(DOMUtils.getTextContent(elParamName)))
+         if (Endpoint.SEPID_DOMAIN_ENDPOINT.equals(DOMUtils.getTextContent(elParamName)))
             return true;
       }
       return false;

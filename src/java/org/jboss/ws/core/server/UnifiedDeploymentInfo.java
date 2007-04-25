@@ -65,11 +65,22 @@ public class UnifiedDeploymentInfo
    public Object metaData;
    /** The deployment classloader **/
    public ClassLoader classLoader;
-   /** An arbitrary map of state associated with the deployment */
-   public Map<String, Object> context = new HashMap<String, Object>();
    /** An optional ObjectName of the deployed object */
    public ObjectName deployedObject;
 
+   /** An arbitrary map of state associated with the deployment */
+   private Map<Class, Object> attachments = new HashMap<Class, Object>();
+   
+   public <T> T getAttachment(Class<T> key)
+   {
+      return (T)attachments.get(key);
+   }
+   
+   public <T> T addAttachment(Class<T> key, T value)
+   {
+      return (T)attachments.put(key, value);
+   }
+   
    /** The sortName concatenated with the canonical names of all parents. */
    public String getCanonicalName()
    {

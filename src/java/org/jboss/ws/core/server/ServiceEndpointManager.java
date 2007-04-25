@@ -49,6 +49,7 @@ import javax.management.ObjectName;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -412,7 +413,7 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       HttpServletRequest httpRequest = context.getHttpServletRequest();
       HttpServletResponse httpResponse = context.getHttpServletResponse();
       ServletHeaderSource headerSource = new ServletHeaderSource(httpRequest, httpResponse);
-      HttpSessionPropertyCallback httpSession = new HttpSessionPropertyCallback(context);
+      HttpSession httpSession = context.getHttpSession();
 
       // Associate a message context with the current thread
       CommonMessageContext msgContext;
@@ -422,7 +423,6 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
          msgContext.put(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
          msgContext.put(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
-         msgContext.put(MessageContextJAXRPC.SERVLET_SESSION, httpSession);
       }
       else
       {
@@ -436,7 +436,6 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          msgContext.put(MessageContextJAXWS.SERVLET_CONTEXT, servletContext);
          msgContext.put(MessageContextJAXWS.SERVLET_REQUEST, httpRequest);
          msgContext.put(MessageContextJAXWS.SERVLET_RESPONSE, httpResponse);
-
       }
       msgContext.setEndpointMetaData(sepMetaData);
 
@@ -713,20 +712,5 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
          server = (MBeanServer)servers.get(0);
       }
       return server;
-   }
-
-   public static class HttpSessionPropertyCallback implements PropertyCallback
-   {
-      private ServletRequestContext context;
-
-      public HttpSessionPropertyCallback(final ServletRequestContext context)
-      {
-         this.context = context;
-      }
-
-      public Object get()
-      {
-         return context.getHttpSession();
-      }
    }
 }

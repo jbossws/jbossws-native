@@ -30,13 +30,14 @@ import javax.servlet.http.HttpSession;
 import javax.xml.rpc.handler.MessageContext;
 
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.integration.invocation.InvocationContext;
 
 /**
  * Implementation of ServletEndpointContext
  *
  * @author Thomas.Diesler@jboss.org
  */
-public class ServletRequestContext 
+public class ServletRequestContext implements InvocationContext
 {
    private ServletContext context;
    private HttpServletRequest request;
@@ -51,7 +52,7 @@ public class ServletRequestContext
 
    public HttpSession getHttpSession()
    {
-      return request.getSession(true);
+      return request.getSession(false);
    }
 
    public MessageContext getMessageContext()
