@@ -226,10 +226,13 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   xmlName = namespaceRegistry.registerQName(xmlName);
                   Name soapName = new NameImpl(xmlName.getLocalPart(), xmlName.getPrefix(), xmlName.getNamespaceURI());
 
-                  if (log.isDebugEnabled())
-                     log.debug("Add unboundHeader element: " + soapName);
+                  log.debug("Add unboundHeader element: " + soapName);
                   SOAPContentElement contentElement = new SOAPHeaderElementImpl(soapName);
                   contentElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
+                  
+                  if (soapHeader == null)
+                     soapHeader = soapEnvelope.addHeader();
+                  
                   soapHeader.addChildElement(contentElement);
                   contentElement.setObjectValue(value);
                }
@@ -542,7 +545,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             throwFaultException((SOAPFaultImpl)soapBodyElement);
 
          // Extract unbound OUT headers
-         if (unboundHeaders != null)
+         if (unboundHeaders != null && soapHeader != null)
          {
             Map<QName, UnboundHeader> outHeaders = new HashMap<QName, UnboundHeader>();
             Iterator itHeaderElements = soapHeader.getChildElements();

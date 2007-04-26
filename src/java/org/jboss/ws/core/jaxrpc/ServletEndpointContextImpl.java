@@ -53,9 +53,22 @@ public class ServletEndpointContextImpl implements ServletEndpointContext
       this.response = context.getHttpServletResponse();
    }
 
+   /**
+    * The getHttpSession method returns the current HTTP session (as a javax.servlet.http.HTTPSession).
+    * When invoked by the service endpoint within a remote method implementation, the getHttpSession returns the HTTP
+    * session associated currently with this method invocation. This method returns null if there is no HTTP session
+    * currently active and associated with this service endpoint. An endpoint class should not rely on an active HTTP
+    * session being always there; the underlying JAX-RPC runtime system is responsible for managing whether or not there
+    * is an active HTTP session.
+    *
+    * The getHttpSession method throws JAXRPCException if invoked by an non HTTP bound endpoint.
+    *
+    * @return The HTTP session associated with the current invocation or null if there is no active session.
+    */
    public HttpSession getHttpSession()
    {
-      return request.getSession();
+      // [JBWS-1619] ServletEndpointContext.getHttpSession has an incorrect implementation
+      return request.getSession(false);
    }
 
    public MessageContext getMessageContext()
