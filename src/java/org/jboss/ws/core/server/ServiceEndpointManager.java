@@ -49,7 +49,6 @@ import javax.management.ObjectName;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -413,7 +412,6 @@ public class ServiceEndpointManager implements ServiceEndpointManagerMBean
       HttpServletRequest httpRequest = context.getHttpServletRequest();
       HttpServletResponse httpResponse = context.getHttpServletResponse();
       ServletHeaderSource headerSource = new ServletHeaderSource(httpRequest, httpResponse);
-      HttpSession httpSession = context.getHttpSession();
 
       // Associate a message context with the current thread
       CommonMessageContext msgContext;

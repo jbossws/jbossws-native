@@ -182,7 +182,7 @@ public class ServiceEndpoint
          MimeHeaders headers = (headerSource != null ? headerSource.getMimeHeaders() : null);
 
          MessageAbstraction reqMessage;
-         
+
          String bindingID = sepMetaData.getBindingId();
          if (HTTPBinding.HTTP_BINDING.equals(bindingID))
          {
