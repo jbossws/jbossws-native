@@ -119,11 +119,10 @@ public abstract class ServiceEndpointGeneratorEJB
          servletName.appendChild(DOMUtils.createTextNode(ejbName));
          
          Element servletClass = (Element)servlet.appendChild(DOMUtils.createElement("servlet-class"));
-         String servletClassName = sepMetaData.getServiceEndpointImplName();
-         if (servletClassName == null)
-            throw new IllegalStateException("Cannot obtain endpoint bean name");
-         
-         servletClass.appendChild(DOMUtils.createTextNode(servletClassName));
+         String implName = sepMetaData.getServiceEndpointImplName();
+         String seiName = sepMetaData.getServiceEndpointInterfaceName();
+         String endpointTarget = (implName != null ? implName : seiName);
+         servletClass.appendChild(DOMUtils.createTextNode(endpointTarget));
       }
 
       /*
