@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core;
+package org.jboss.ws.core.server.legacy;
 
 // $Id$
 
@@ -35,8 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.ServiceEndpointDTO;
-import org.jboss.ws.core.server.ServiceEndpointManager;
 
 /**
  * The servlet that that is associated with context /jbossws

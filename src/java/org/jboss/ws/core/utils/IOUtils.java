@@ -38,8 +38,8 @@ import javax.activation.DataHandler;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.ServerConfig;
-import org.jboss.ws.core.server.ServerConfigFactory;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 
 /**
  * IO utilites

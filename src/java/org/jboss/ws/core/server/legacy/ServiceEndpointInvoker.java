@@ -19,40 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
-import org.jboss.ws.integration.KernelLocator;
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.logging.Logger;
+// $Id$
 
-// $Id: ServiceEndpointManagerFactory.java 293 2006-05-08 16:31:50Z thomas.diesler@jboss.com $
+import org.jboss.ws.core.MessageAbstraction;
 
-/**
- * Factory to container independent config 
+/** An implementation handles invocations on the endpoint
  *
  * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * @since 19-Jan-2005
  */
-public class ServerConfigFactory
+public interface ServiceEndpointInvoker
 {
-   // provide logging
-   private static final Logger log = Logger.getLogger(ServerConfigFactory.class);
-
-   private static ServerConfigFactory instance = new ServerConfigFactory();
-
-   // Hide ctor
-   protected ServerConfigFactory()
-   {
-   }
-
-   public static ServerConfigFactory getInstance()
-   {
-      return instance;
-   }
-
-   public ServerConfig getServerConfig()
-   {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      return (ServerConfig)registry.getEntry(ServerConfig.BEAN_NAME).getTarget();
-   }
+   /** Initialize the invoker */
+   void init(ServiceEndpointInfo seInfo);
+   
+   /** Invoke the the service endpoint */
+   MessageAbstraction invoke(Object endpointContext) throws Exception;
 }

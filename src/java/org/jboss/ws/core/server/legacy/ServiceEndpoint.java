@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
 // $Id$
 
@@ -45,6 +45,10 @@ import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.server.MimeHeaderSource;
+import org.jboss.ws.core.server.ServiceEndpointMetrics;
+import org.jboss.ws.core.server.ServletRequestContext;
+import org.jboss.ws.core.server.WSDLRequestHandler;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;

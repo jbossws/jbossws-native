@@ -142,7 +142,7 @@ public class ServiceEndpointMetrics implements Serializable, Cloneable
    {
       return totalProcessingTime;
    }
-   
+
    public long getRequestCount()
    {
       return requestCount;
@@ -158,22 +158,8 @@ public class ServiceEndpointMetrics implements Serializable, Cloneable
       return responseCount;
    }
 
-   public String toString()
+   public Object clone() throws CloneNotSupportedException
    {
-      StringBuilder buffer = new StringBuilder("\nEndpoint Metrics: " + endpointID);
-      buffer.append("\n  startTime=" + startTime);
-      buffer.append("\n  stopTime=" + stopTime);
-      buffer.append("\n  requestCount=" + requestCount);
-      buffer.append("\n  responseCount=" + responseCount);
-      buffer.append("\n  faultCount=" + faultCount);
-      buffer.append("\n  maxProcessingTime=" + maxProcessingTime);
-      buffer.append("\n  minProcessingTime=" + minProcessingTime);
-      buffer.append("\n  avgProcessingTime=" + avgProcessingTime);
-      buffer.append("\n  totalProcessingTime=" + totalProcessingTime);
-      return buffer.toString();
-   }
-
-   protected Object clone() throws CloneNotSupportedException {
       ServiceEndpointMetrics sem = new ServiceEndpointMetrics(this.endpointID);
 
       sem.avgProcessingTime = this.avgProcessingTime;
@@ -189,5 +175,20 @@ public class ServiceEndpointMetrics implements Serializable, Cloneable
       sem.totalProcessingTime = this.totalProcessingTime;
 
       return sem;
+   }
+   
+   public String toString()
+   {
+      StringBuilder buffer = new StringBuilder("\nEndpoint Metrics: " + endpointID);
+      buffer.append("\n  startTime=" + startTime);
+      buffer.append("\n  stopTime=" + stopTime);
+      buffer.append("\n  requestCount=" + requestCount);
+      buffer.append("\n  responseCount=" + responseCount);
+      buffer.append("\n  faultCount=" + faultCount);
+      buffer.append("\n  maxProcessingTime=" + maxProcessingTime);
+      buffer.append("\n  minProcessingTime=" + minProcessingTime);
+      buffer.append("\n  avgProcessingTime=" + avgProcessingTime);
+      buffer.append("\n  totalProcessingTime=" + totalProcessingTime);
+      return buffer.toString();
    }
 }

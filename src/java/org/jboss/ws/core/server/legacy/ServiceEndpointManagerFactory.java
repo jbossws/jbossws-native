@@ -19,52 +19,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
-import javax.management.ObjectName;
+import org.jboss.ws.integration.KernelLocator;
+import org.jboss.kernel.spi.registry.KernelRegistry;
+import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+
+// $Id$
 
 /**
- * @author Heiko.Braun@jboss.org
- * @version $Id$
- * @since 02.02.2007
+ * Factory to the singleton instance of the ServiceEndpointManager 
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 08-May-2006
  */
-public class ServiceEndpointDTO {
+public class ServiceEndpointManagerFactory
+{
+   private static ServiceEndpointManagerFactory instance = new ServiceEndpointManagerFactory();
 
-   private ServiceEndpointMetrics seMetrics;
-   private ServiceEndpoint.State state;
-   private ObjectName sepID;
-   private String address;
-
-   public ServiceEndpointMetrics getSeMetrics() {
-      return seMetrics;
+   // Hide ctor
+   private ServiceEndpointManagerFactory()
+   {
    }
 
-   public void setSeMetrics(ServiceEndpointMetrics seMetrics) {
-      this.seMetrics = seMetrics;
+   public static ServiceEndpointManagerFactory getInstance()
+   {
+      return instance;
    }
 
-   public ServiceEndpoint.State getState() {
-      return state;
+   public ServiceEndpointManager getServiceEndpointManager()
+   {
+      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
+      KernelRegistryEntry entry = registry.getEntry(ServiceEndpointManager.BEAN_NAME);
+      return (ServiceEndpointManager)entry.getTarget();
    }
-
-   public void setState(ServiceEndpoint.State state) {
-      this.state = state;
-   }
-
-   public ObjectName getSepID() {
-      return sepID;
-   }
-
-   public void setSepID(ObjectName sepID) {
-      this.sepID = sepID;
-   }
-
-   public String getAddress() {
-      return address;
-   }
-
-   public void setAddress(String address) {
-      this.address = address;
-   }
-
 }

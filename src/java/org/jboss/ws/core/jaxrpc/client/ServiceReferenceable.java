@@ -36,9 +36,11 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.ServiceEndpointManager;
-import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
 import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
@@ -101,10 +103,10 @@ public class ServiceReferenceable implements Referenceable
             myRef.add(new StringRefAddr(PORT_COMPONENT_LINK, pcLink));
             try
             {
-               ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
-               ServiceEndpointManager epManager = factory.getServiceEndpointManager();
-               String host = epManager.getWebServiceHost();
-               int port = epManager.getWebServicePort();
+               ServerConfigFactory factory = ServerConfigFactory.getInstance();
+               ServerConfig config = factory.getServerConfig();
+               String host = config.getWebServiceHost();
+               int port = config.getWebServicePort();
 
                String servletURL = "http://" + host + ":" + port + "/jbossws/pclink";
                myRef.add(new StringRefAddr(PORT_COMPONENT_LINK_SERVLET, servletURL));

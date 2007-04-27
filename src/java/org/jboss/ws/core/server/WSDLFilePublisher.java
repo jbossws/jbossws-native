@@ -45,6 +45,8 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;

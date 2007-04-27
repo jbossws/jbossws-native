@@ -47,10 +47,12 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Use;
-import org.jboss.ws.core.server.ServiceEndpointManager;
-import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
 import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
 import org.jboss.ws.integration.ObjectNameFactory;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.eventing.EventingConstants;
@@ -261,12 +263,12 @@ public abstract class MetaDataBuilder
       if (uriScheme == null)
          uriScheme = "http";
 
-      ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
-      ServiceEndpointManager epManager = factory.getServiceEndpointManager();
-      String host = epManager.getWebServiceHost();
-      int port = epManager.getWebServicePort();
+      ServerConfigFactory factory = ServerConfigFactory.getInstance();
+      ServerConfig config = factory.getServerConfig();
+      String host = config.getWebServiceHost();
+      int port = config.getWebServicePort();
       if ("https".equals(uriScheme))
-         port = epManager.getWebServiceSecurePort();
+         port = config.getWebServiceSecurePort();
 
       String urlStr = uriScheme + "://" + host + ":" + port + servicePath;
       try
@@ -342,9 +344,9 @@ public abstract class MetaDataBuilder
                String servicePath = sepMetaData.getContextRoot() + sepMetaData.getURLPattern();
                String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath);
 
-               ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
-               ServiceEndpointManager epManager = factory.getServiceEndpointManager();
-               boolean alwaysModify = epManager.isAlwaysModifySOAPAddress();
+               ServerConfigFactory factory = ServerConfigFactory.getInstance();
+               ServerConfig config = factory.getServerConfig();
+               boolean alwaysModify = config.isModifySOAPAddress();
 
                if (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0)
                {

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
 // $Id: AbstractServiceEndpointServlet.java 396 2006-05-23 09:48:45Z thomas.diesler@jboss.com $
 
@@ -37,6 +37,7 @@ import javax.xml.rpc.JAXRPCException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.integration.ObjectNameFactory;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 

@@ -1,8 +1,8 @@
 package org.jboss.ws.extensions.eventing.deployment;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.ServiceEndpoint;
-import org.jboss.ws.core.server.ServiceEndpointInfo;
+import org.jboss.ws.core.server.legacy.ServiceEndpoint;
+import org.jboss.ws.core.server.legacy.ServiceEndpointInfo;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerFactory;

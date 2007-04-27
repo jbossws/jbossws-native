@@ -19,22 +19,54 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
-// $Id$
+import javax.management.ObjectName;
 
-import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.server.ServiceEndpointMetrics;
 
-/** An implementation handles invocations on the endpoint
- *
- * @author Thomas.Diesler@jboss.org
- * @since 19-Jan-2005
+/**
+ * @author Heiko.Braun@jboss.org
+ * @version $Id$
+ * @since 02.02.2007
  */
-public interface ServiceEndpointInvoker
-{
-   /** Initialize the invoker */
-   void init(ServiceEndpointInfo seInfo);
-   
-   /** Invoke the the service endpoint */
-   MessageAbstraction invoke(Object endpointContext) throws Exception;
+public class ServiceEndpointDTO {
+
+   private ServiceEndpointMetrics seMetrics;
+   private ServiceEndpoint.State state;
+   private ObjectName sepID;
+   private String address;
+
+   public ServiceEndpointMetrics getSeMetrics() {
+      return seMetrics;
+   }
+
+   public void setSeMetrics(ServiceEndpointMetrics seMetrics) {
+      this.seMetrics = seMetrics;
+   }
+
+   public ServiceEndpoint.State getState() {
+      return state;
+   }
+
+   public void setState(ServiceEndpoint.State state) {
+      this.state = state;
+   }
+
+   public ObjectName getSepID() {
+      return sepID;
+   }
+
+   public void setSepID(ObjectName sepID) {
+      this.sepID = sepID;
+   }
+
+   public String getAddress() {
+      return address;
+   }
+
+   public void setAddress(String address) {
+      this.address = address;
+   }
+
 }

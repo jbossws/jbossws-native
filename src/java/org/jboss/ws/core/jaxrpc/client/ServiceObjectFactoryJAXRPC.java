@@ -52,9 +52,9 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.client.ServiceObjectFactory;
-import org.jboss.ws.core.server.ServiceEndpoint;
-import org.jboss.ws.core.server.ServiceEndpointManager;
-import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
+import org.jboss.ws.core.server.legacy.ServiceEndpoint;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
@@ -175,8 +175,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
          if (pcLinkRef != null)
          {
             String pcLink = (String)pcLinkRef.getContent();
-            if (log.isDebugEnabled())
-               log.debug("Resolving port-component-link: " + pcLink);
+            log.debug("Resolving port-component-link: " + pcLink);
 
             // First try to obtain the endpoint address loacally
             String endpointAddress = null;

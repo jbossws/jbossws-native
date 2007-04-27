@@ -19,27 +19,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
-// $Id: ServiceEndpointManagerFactory.java 293 2006-05-08 16:31:50Z thomas.diesler@jboss.com $
+import java.net.UnknownHostException;
+import java.util.List;
 
-import java.io.File;
+import javax.management.ObjectName;
+
+import org.jboss.ws.integration.ObjectNameFactory;
+import org.jboss.ws.metadata.umdm.HandlerMetaData;
 
 /**
- * Interface to container independent config 
- *
- * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
+ * MBean interface.
+ * @since 15-April-2004
  */
-public interface ServerConfig
+public interface ServiceEndpointManagerMBean
 {
-   static final String BEAN_NAME = "ServerConfig";
-
-   File getServerTempDir();
-
-   File getServerDataDir();
+   // default object name
+   static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=ServiceEndpointManager");
+   
+   String getImplementationVersion();
+   
+   String getWebServiceHost();
+   void setWebServiceHost(String host) throws UnknownHostException;
 
    int getWebServicePort();
-   
+   void setWebServicePort(int port);
+
    int getWebServiceSecurePort();
+   void setWebServiceSecurePort(int port);
+
+   boolean isAlwaysModifySOAPAddress();
+   void setAlwaysModifySOAPAddress(boolean modify);
+
+   public List<HandlerMetaData> getHandlerMetaData(ObjectName sepID);
+   public void setHandlerMetaData(ObjectName sepID, List<HandlerMetaData> handlers);
+
+   void startServiceEndpoint(ObjectName sepID) throws Exception;
+   void stopServiceEndpoint(ObjectName sepID) throws Exception;
 }

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.server.legacy;
 
 // $Id$
 
@@ -64,10 +64,17 @@ import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.server.ServiceEndpointMetrics;
+import org.jboss.ws.core.server.ServletHeaderSource;
+import org.jboss.ws.core.server.ServletRequestContext;
+import org.jboss.ws.core.server.legacy.ServiceEndpoint.State;
+import org.jboss.ws.core.server.legacy.ServiceEndpointInfo.EndpointType;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;

@@ -43,7 +43,9 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.server.HttpContext;
 import org.jboss.ws.core.server.HttpServer;
-import org.jboss.ws.core.server.ServiceEndpointManagerFactory;
+import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -151,8 +153,8 @@ public class EndpointImpl extends Endpoint
       boolean isStandalone;
       try
       {
-         ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
-         factory.getServiceEndpointManager();
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         factory.getServerConfig();
          isStandalone = false;
       }
       catch (Exception ex)
