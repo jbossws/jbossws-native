@@ -35,7 +35,6 @@ import java.util.Map;
 import javax.servlet.Servlet;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
@@ -50,10 +49,10 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2006
  */
-public abstract class AbstractServiceEndpointPublisher
+public class ServiceEndpointPublisher
 {
    // logging support
-   private static Logger log = Logger.getLogger(AbstractServiceEndpointPublisher.class);
+   private static Logger log = Logger.getLogger(ServiceEndpointPublisher.class);
 
    // The default bean name
    public static final String BEAN_NAME = "ServiceEndpointPublisher";
@@ -78,16 +77,6 @@ public abstract class AbstractServiceEndpointPublisher
    public void setServletClass(String servletClass)
    {
       this.servletClass = servletClass;
-   }
-
-   public String publishServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception
-   {
-      throw new NotImplementedException("Subclass should overwrite this method");
-   }
-
-   public String destroyServiceEndpoint(UnifiedDeploymentInfo udi) throws Exception
-   {
-      throw new NotImplementedException("Subclass should overwrite this method");
    }
 
    public RewriteResults rewriteWebXml(UnifiedDeploymentInfo udi)
