@@ -19,9 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.deployment;
 
-// $Id$
+// $Id: UnifiedDeploymentInfo.java 2923 2007-04-25 14:23:29Z thomas.diesler@jboss.com $
 
 import java.io.IOException;
 import java.net.MalformedURLException;

@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 

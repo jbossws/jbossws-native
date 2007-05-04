@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.deployment;
 
 // $Id$
 
@@ -73,7 +73,7 @@ public class WSDLFilePublisher
    {
       this.udi = udi;
 
-      if (udi.type.toString().endsWith("_JSE"))
+      if (udi.type.toString().endsWith("JSE"))
       {
          expLocation = "WEB-INF/wsdl/";
       }

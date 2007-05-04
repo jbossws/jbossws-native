@@ -34,7 +34,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.*;

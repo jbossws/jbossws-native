@@ -19,24 +19,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.builder.jaxrpc;
+package org.jboss.ws.core.server;
 
-//$Id$
+//$Id: LifecycleHandlerImpl.java 2923 2007-04-25 14:23:29Z thomas.diesler@jboss.com $
 
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
+import org.jboss.ws.integration.Endpoint;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 
 /**
- * The container independent deployment info. 
- *
+ * A lifecycle handler
+ * 
  * @author Thomas.Diesler@jboss.org
- * @since 05-May-2006
+ * @since 25-Apr-2007
  */
-public class JAXRPCClientDeployment extends UnifiedDeploymentInfo
+public class LifecycleHandlerImpl extends org.jboss.ws.integration.LifecycleHandlerImpl
 {
-
-   public JAXRPCClientDeployment(DeploymentType type)
+   public void start(Endpoint endpoint)
    {
-      super(type);
+      super.start(endpoint);
+      log.info("WebService started: " + getEndpointAddress(endpoint));
+   }
+
+   public void stop(Endpoint endpoint)
+   {
+      super.stop(endpoint);
+      log.info("WebService stoped: " + getEndpointAddress(endpoint));
+   }
+
+   private String getEndpointAddress(Endpoint ep)
+   {
+      ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+      if (sepMetaData == null)
+         throw new IllegalStateException("Cannot obtain endpoint meta data");
+
+      return sepMetaData.getEndpointAddress();
    }
 }

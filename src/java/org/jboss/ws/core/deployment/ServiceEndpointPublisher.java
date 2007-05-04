@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.deployment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,9 +53,6 @@ public class ServiceEndpointPublisher
 {
    // logging support
    private static Logger log = Logger.getLogger(ServiceEndpointPublisher.class);
-
-   // The default bean name
-   public static final String BEAN_NAME = "ServiceEndpointPublisher";
 
    // The configured service endpoint servlet
    private String servletClass;

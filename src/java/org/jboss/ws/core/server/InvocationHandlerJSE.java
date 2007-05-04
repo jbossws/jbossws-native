@@ -19,9 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server.legacy;
+package org.jboss.ws.core.server;
 
-// $Id: $
+// $Id$
 
 import java.lang.reflect.Method;
 
@@ -39,33 +39,36 @@ import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
 import org.jboss.ws.core.jaxws.WebServiceContextInjector;
 import org.jboss.ws.core.jaxws.WebServiceContextJSE;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.integration.invocation.InvocationContext;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 
 /**
  * Handles invocations on JSE endpoints.
  *
  * @author Thomas.Diesler@jboss.org
- * @since 19-Jan-2005
+ * @since 25-Apr-2007
  */
-public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker implements ServiceEndpointInvoker
+public class InvocationHandlerJSE extends AbstractInvocationHandler
 {
    // provide logging
-   private Logger log = Logger.getLogger(ServiceEndpointInvokerJSE.class);
+   private static final Logger log = Logger.getLogger(InvocationHandlerJSE.class);
 
    /** Load the SEI implementation bean if necessary */
    public Class loadServiceEndpoint() throws ClassNotFoundException
    {
-      ServerEndpointMetaData epMetaData = seInfo.getServerEndpointMetaData();
-      ClassLoader cl = epMetaData.getClassLoader();
-      String seiImplName = epMetaData.getServiceEndpointImplName();
+      ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+      if (sepMetaData == null)
+         throw new IllegalStateException("Cannot obtain endpoint meta data");
+
+      ClassLoader cl = sepMetaData.getClassLoader();
+      String seiImplName = sepMetaData.getServiceEndpointImplName();
       Class seiImplClass = cl.loadClass(seiImplName);
       return seiImplClass;
    }
 
    /** Create an instance of the SEI implementation bean if necessary */
-   public Object createServiceEndpointInstance(Object context, Class seiImplClass) throws IllegalAccessException, InstantiationException
+   public Object createServiceEndpointInstance(Class seiImplClass, InvocationContext context) throws IllegalAccessException, InstantiationException
    {
       Object seiImpl = seiImplClass.newInstance();
       if (seiImpl instanceof ServiceLifecycle && context != null)
@@ -96,7 +99,7 @@ public class ServiceEndpointInvokerJSE extends AbstractServiceEndpointInvoker im
             WebServiceContext wsContext = new WebServiceContextJSE((SOAPMessageContextJAXWS)msgContext);
             new WebServiceContextInjector().injectContext(seiImpl, wsContext);
          }
-         
+
          Class implClass = seiImpl.getClass();
          Method seiMethod = epInv.getJavaMethod();
          Method implMethod = getImplMethod(implClass, seiMethod);

@@ -33,7 +33,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.integration.management.ServerConfig;

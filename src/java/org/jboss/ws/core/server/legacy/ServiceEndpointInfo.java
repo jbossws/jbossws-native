@@ -26,7 +26,7 @@ package org.jboss.ws.core.server.legacy;
 import javax.management.ObjectName;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
+import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;

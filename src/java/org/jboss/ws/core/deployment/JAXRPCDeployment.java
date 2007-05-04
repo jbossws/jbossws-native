@@ -19,13 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.builder.jaxrpc;
+package org.jboss.ws.core.deployment;
 
 import java.io.InputStream;
 import java.net.URL;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.webservices.WebservicesFactory;

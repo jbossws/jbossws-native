@@ -19,21 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.ws.core.deployment;
 
 //$Id$
 
 import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 
 /**
- * The container independent deployment info.
+ * The container independent deployment info. 
  *
  * @author Thomas.Diesler@jboss.org
- * @since 29-Jun-2006
+ * @since 05-May-2006
  */
-public class JAXWSDeployment extends UnifiedDeploymentInfo
+public class JAXRPCClientDeployment extends UnifiedDeploymentInfo
 {
-   public JAXWSDeployment(DeploymentType type)
+
+   public JAXRPCClientDeployment(DeploymentType type)
    {
       super(type);
    }

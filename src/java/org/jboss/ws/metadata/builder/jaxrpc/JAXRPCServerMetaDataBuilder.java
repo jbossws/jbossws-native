@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.deployment.JAXRPCDeployment;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
