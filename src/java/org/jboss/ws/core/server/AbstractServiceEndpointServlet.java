@@ -85,15 +85,27 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
       if (req.getParameter("wsdl") != null || req.getParameter("WSDL") != null)
       {
          res.setContentType("text/xml");
+         ServletOutputStream out = res.getOutputStream();
          try
          {
             RequestHandler requestHandler = endpoint.getRequestHandler();
             ServletRequestContext context = new ServletRequestContext(getServletContext(), req, res);
-            requestHandler.handleWSDLRequest(endpoint, res.getOutputStream(), context);
+            requestHandler.handleWSDLRequest(endpoint, out, context);
          }
          catch (Exception ex)
          {
             handleException(ex);
+         }
+         finally
+         {
+            try
+            {
+               out.close();
+            }
+            catch (IOException ioex)
+            {
+               log.error("Cannot close output stream");
+            }
          }
       }
       else
@@ -102,7 +114,6 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
          res.setContentType("text/plain");
          Writer out = res.getWriter();
          out.write("HTTP GET not supported");
-         out.flush();
          out.close();
       }
    }
@@ -111,13 +122,13 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
    {
       log.debug("doPost: " + req.getRequestURI());
 
-      ServletInputStream inputStream = req.getInputStream();
-      ServletOutputStream outputStream = res.getOutputStream();
+      ServletInputStream in = req.getInputStream();
+      ServletOutputStream out = res.getOutputStream();
       try
       {
          RequestHandler requestHandler = endpoint.getRequestHandler();
          ServletRequestContext context = new ServletRequestContext(getServletContext(), req, res);
-         requestHandler.handleRequest(endpoint, inputStream, outputStream, context);
+         requestHandler.handleRequest(endpoint, in, out, context);
       }
       catch (Exception ex)
       {
@@ -127,14 +138,12 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
       {
          try
          {
-            outputStream.flush();
-            outputStream.close();
+            out.close();
          }
          catch (IOException ioex)
          {
-            log.error("Cannot flush output stream");
+            log.error("Cannot close output stream");
          }
-         
       }
    }
 

@@ -396,8 +396,6 @@ public class RequestHandlerImpl implements RequestHandler
 
          OutputStreamWriter writer = new OutputStreamWriter(outputStream);
          new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
-         outputStream.flush();
-         outputStream.close();
       }
       catch (RuntimeException rte)
       {
