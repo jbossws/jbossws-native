@@ -110,7 +110,8 @@ public class SOAPFactoryImpl extends SOAPFactory
       if (domElement == null)
          throw new IllegalArgumentException("Source node cannot be null");
 
-      if (domElement instanceof SOAPElement)
+      // Can only use this optimization if we are doing a deep copy.
+      if (domElement instanceof SOAPElement && deep==true)
          return (SOAPElement)domElement;
 
       String localName = domElement.getLocalName();
