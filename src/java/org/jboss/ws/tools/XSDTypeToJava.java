@@ -63,6 +63,7 @@ public class XSDTypeToJava
    protected LiteralTypeMapping typeMapping = null;
    protected WSDLUtils utils = WSDLUtils.getInstance();
    protected SchemaUtils schemautils = SchemaUtils.getInstance();
+   protected WSDLUtils wsdlUtils = WSDLUtils.getInstance();
 
    protected JavaWriter jwriter = new JavaWriter();
 
@@ -600,6 +601,7 @@ public class XSDTypeToJava
       }
       else
       {
+         String temp = this.fname;
          // Unwrap any array wrappers
          if (SchemaUtils.isWrapperArrayType(xstypedef))
          {
@@ -620,8 +622,6 @@ public class XSDTypeToJava
          {
             qn = new QName(xstypedef.getNamespace(), xstypename);
          }
-
-         String temp = this.fname;
 
          if (xstypename != null && xstypedef instanceof XSComplexTypeDefinition)
          {
@@ -648,15 +648,15 @@ public class XSDTypeToJava
          if (tempqn != null)
             qn = tempqn;
       }
-      String clname = "";
+      String qualifiedClassName = "";
       Class cls = typeMapping.getJavaType(qn);
       VAR v = null;
       if (cls != null)
       {
-         clname = JavaUtils.getSourceName(cls);
-         String primitive = utils.getPrimitive(clname);
+         qualifiedClassName = JavaUtils.getSourceName(cls);
+         String primitive = utils.getPrimitive(qualifiedClassName);
          if ((!elem.getNillable()) && primitive != null)
-            clname = primitive;
+            qualifiedClassName = primitive;
       }
       else
       {
@@ -669,14 +669,15 @@ public class XSDTypeToJava
          {
             String nsuri = typename.getNamespaceURI();
             if (!nsuri.equals(Constants.NS_SCHEMA_XSD))
-               clname = pkgname + ".";
-            clname += typename.getLocalPart();
+               qualifiedClassName = pkgname + ".";
+            String className = wsdlUtils.firstLetterUpperCase(typename.getLocalPart());
+            qualifiedClassName += className;
          }
          else if (qn != null)
-            clname = qn.getLocalPart();
+            qualifiedClassName = qn.getLocalPart();
       }
 
-      v = new VAR(Introspector.decapitalize(varstr), clname, arrayType);
+      v = new VAR(Introspector.decapitalize(varstr), qualifiedClassName, arrayType);
       return v;
    }
 

@@ -403,7 +403,7 @@ public class MappingFileGeneratorHelper
                if (isDocStyle())
                {
                   XSTypeDefinition xt = getXSType(input);
-                  addJavaXMLTypeMap(xt, input.getElement().getLocalPart(), "", "", jwm, !isDocStyle());
+                  addJavaXMLTypeMap(xt, input.getElement().getLocalPart(), "", "", jwm, !isWrapped());
                }
                else
                {
@@ -417,7 +417,7 @@ public class MappingFileGeneratorHelper
                if (isDocStyle())
                {
                   XSTypeDefinition xt = getXSType(output);
-                  addJavaXMLTypeMap(xt, output.getElement().getLocalPart(), "", "", jwm, false);
+                  addJavaXMLTypeMap(xt, output.getElement().getLocalPart(), "", "", jwm, !isWrapped());
                }
                else
                {
@@ -721,7 +721,7 @@ public class MappingFileGeneratorHelper
                tempContainingType = containingType;
             }
 
-            addJavaXMLTypeMap(typeDefinition, xe.getName(), tempContainingElement, tempContainingType, jwm, !isDocStyle());
+            addJavaXMLTypeMap(typeDefinition, xe.getName(), tempContainingElement, tempContainingType, jwm, !isWrapped());
          }
       }
    }
