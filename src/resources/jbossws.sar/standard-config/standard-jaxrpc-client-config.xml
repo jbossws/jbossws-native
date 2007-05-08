@@ -11,7 +11,7 @@
   
    <client-config>
       <config-name>Standard MTOM client</config-name>
-       <feature>http://org.jboss.ws/mtom</feature>   
+      <feature>http://org.jboss.ws/mtom</feature>   
    </client-config>
 
    <client-config>
