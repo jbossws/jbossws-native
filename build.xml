@@ -15,7 +15,6 @@
   
   <import file="${basedir}/../build/ant-import/build-thirdparty.xml"/>
   <import file="${basedir}/../build/ant-import/build-setup.xml"/>
-  <import file="${basedir}/../integration/build.xml"/>
   
   <property name="core.src.dir" value="${core.dir}/src"/>
   <property name="core.java.dir" value="${core.src.dir}/java"/>
@@ -24,6 +23,7 @@
   <property name="core.output.dir" value="${core.dir}/output"/>
   <property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
   <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
+  <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
   <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
   
   <target name="core-init" depends="prepare, thirdparty">
@@ -45,23 +45,44 @@
     description="Compile all source files."/>
   
   <!-- Compile java sources -->
-  <target name="core-compile-classes" depends="core-init,integration-compile-classes">
+  <target name="core-compile-classes" depends="core-init">
   
+    <!-- Compile interfaces with jdk1.4 -->
+    <mkdir dir="${core.output.classes14.dir}"/>
+    <javac srcdir="${core.java.dir}" destdir="${core.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
+      failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
+      <include name="javax/xml/rpc/**"/>
+      <include name="javax/xml/soap/**"/>
+      <classpath refid="core.classpath"/>
+    </javac>
+    
     <!-- Compile core classes with jdk1.5 -->
     <mkdir dir="${core.output.classes.dir}"/>
     <javac srcdir="${core.java.dir}" sourcepath="" destdir="${core.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
       deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}" source="1.5" target="1.5">
+      <include name="javax/annotation/**"/>
+      <include name="javax/xml/ws/**"/>
+      <include name="javax/jws/**"/>
       <include name="org/jboss/annotation/**"/>
       <include name="org/jboss/ws/**"/>
+      <classpath path="${core.output.classes14.dir}"/>
       <classpath refid="core.classpath"/>
-      <classpath path="${api.output.classes14.dir}"/>
-      <classpath path="${api.output.classes.dir}"/>
-      <classpath path="${integration.output.classes.dir}"/>
     </javac>
   </target>
   
   <!-- Compile etc files (manifests and such) -->
-  <target name="core-compile-etc" depends="core-init,integration-compile-etc">
+  <target name="core-compile-etc" depends="core-init">
+    <mkdir dir="${build.etc.dir}"/>
+    <copy todir="${build.etc.dir}" filtering="yes" overwrite="yes">
+      <fileset dir="${build.dir}/etc"/>
+      <filterset>
+        <filter token="java.vm.version" value="${java.vm.version}"/>
+        <filter token="java.vm.vendor" value="${java.vm.vendor}"/>
+        <filter token="build.id" value="${build.id}"/>
+        <filter token="implementation.version" value="jbossws-${version.id}"/>
+        <filtersfile file="${build.dir}/version.properties"/>
+      </filterset>
+    </copy>
   </target>
   
   <!-- ================================================================== -->
@@ -71,13 +92,41 @@
   <!--
   | Build all jar files.
   -->
-  <target name="core-jars" depends="core-compile,core-module-jars,integration-jars" description="Builds all jar files.">
+  <target name="core-jars" depends="core-compile,core-module-jars" description="Builds all jar files.">
   </target>
   
   <!--
   |  Build all jar files.
   -->
   <target name="core-module-jars">
+    
+    <!-- Build jboss-jaxrpc.jar -->
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${build.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
+        <include name="javax/xml/rpc/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- Build jboss-saaj.jar -->
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${build.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
+        <include name="javax/xml/soap/**"/>
+      </fileset>
+      <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
+    </jar>
+    
+    <!-- Build jboss-jaxws.jar -->
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${build.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
+        <include name="javax/annotation/**"/>
+        <include name="javax/jws/**"/>
+        <include name="javax/xml/ws/**"/>
+      </fileset>
+      <metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
+    </jar>
     
     <!-- Build jbossws-core.jar -->
     <mkdir dir="${core.output.lib.dir}"/>

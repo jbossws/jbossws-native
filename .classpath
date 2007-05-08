@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/integration"/>
 	<classpathentry kind="lib" path="/build/thirdparty/ant.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/activation.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/commons-logging.jar"/>
@@ -32,6 +31,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/wstx.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/getopt.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-common-core.jar" sourcepath="/build/thirdparty/jboss-common-core-sources.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jbossws-api"/>
+	<classpathentry kind="lib" path="/build/thirdparty/jbossws-spi.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>
