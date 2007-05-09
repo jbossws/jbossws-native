@@ -60,9 +60,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
    public Object read(InputStream inputStream, Map metadata) throws IOException, ClassNotFoundException
    {
       if (log.isTraceEnabled())
-      {
          log.trace("Read input stream with metadata=" + metadata);
-      }
 
       try
       {
@@ -73,6 +71,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
 
          MimeHeaders mimeHeaders = getMimeHeaders(metadata);
          SOAPMessage soapMsg = new MessageFactoryImpl().createMessage(mimeHeaders, inputStream, true);
+
          return soapMsg;
       }
       catch (SOAPException e)

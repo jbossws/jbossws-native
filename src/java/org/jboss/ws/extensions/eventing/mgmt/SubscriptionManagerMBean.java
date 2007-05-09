@@ -27,8 +27,11 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
+import javax.management.ObjectName;
+
+import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
+import org.jboss.ws.integration.ObjectNameFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -37,7 +40,9 @@ import org.w3c.dom.Element;
  */
 public interface SubscriptionManagerMBean
 {
-   public static final String BEAN_NAME = "SubscriptionManager";
+   static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=SubscriptionManager,module=eventing");
+
+   static final String BEAN_NAME = "WSSubscriptionManager";
 
    /**
     * Returns the core number of threads.
@@ -92,7 +97,7 @@ public interface SubscriptionManagerMBean
    // notification API
    void dispatch(URI eventSourceNS, Element payload);
 
-   void registerEventSource(EventingEndpointDI deploymentInfo);
+   void registerEventSource(EventingEndpointDeployment deploymentInfo);
 
    void removeEventSource(URI eventSourceNS);
 

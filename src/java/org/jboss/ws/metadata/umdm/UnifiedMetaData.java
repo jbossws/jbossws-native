@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
+import org.jboss.ws.core.server.ManagedEndpointRegistry;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -186,7 +186,8 @@ public class UnifiedMetaData
    {
       if (eagerInitialized == false)
       {
-         if(log.isDebugEnabled()) log.debug("Eagerly initialize the meta data model");
+         if (log.isDebugEnabled())
+            log.debug("Eagerly initialize the meta data model");
          for (ServiceMetaData service : services)
          {
             service.eagerInitialize();
@@ -199,7 +200,7 @@ public class UnifiedMetaData
    {
       if (implementationVersion == null)
       {
-         implementationVersion = ServiceEndpointManager.class.getPackage().getImplementationVersion();
+         implementationVersion = ManagedEndpointRegistry.class.getPackage().getImplementationVersion();
          if (implementationVersion != null)
             isFinalRelease = new StringTokenizer(implementationVersion).nextToken().endsWith(".GA");
       }

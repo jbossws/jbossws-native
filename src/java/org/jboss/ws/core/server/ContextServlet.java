@@ -19,15 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server.legacy;
+package org.jboss.ws.core.server;
 
 // $Id$
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.List;
+import java.util.Set;
 
+import javax.management.ObjectName;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.integration.Endpoint;
+import org.jboss.ws.integration.management.EndpointRegistry;
+import org.jboss.ws.integration.management.EndpointRegistryFactory;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 
 /**
  * The servlet that that is associated with context /jbossws
@@ -42,20 +47,18 @@ import org.jboss.logging.Logger;
  * @author Thomas.Diesler@jboss.org
  * @since 21-Mar-2005
  */
-public abstract class CommonContextServlet extends HttpServlet
+public class ContextServlet extends HttpServlet
 {
    // provide logging
-   protected final Logger log = Logger.getLogger(CommonContextServlet.class);
+   protected final Logger log = Logger.getLogger(ContextServlet.class);
 
-   protected ServiceEndpointManager epManager;
+   protected EndpointRegistry epRegistry;
 
    public void init(ServletConfig config) throws ServletException
    {
       super.init(config);
-      initServiceEndpointManager();
+      epRegistry = EndpointRegistryFactory.getEndpointRegistry();
    }
-
-   protected abstract void initServiceEndpointManager();
 
    /** Process GET requests.
     */
@@ -78,66 +81,71 @@ public abstract class CommonContextServlet extends HttpServlet
       writer.print("<table>");
 
       // begin iteration
-      List<ServiceEndpointDTO> endpoints = epManager.getRegisteredEndpoints(requestURL);
+      Set<ObjectName> endpoints = epRegistry.getEndpoints();
 
-      if(endpoints.isEmpty())
+      if (endpoints.isEmpty())
       {
          writer.print("<tr>");
-         writer.print("	<td><h3>There are currently no endpoints deployed</h3></td>");                           
+         writer.print("	<td><h3>There are currently no endpoints deployed</h3></td>");
          writer.print("</tr>");
       }
 
-      for(ServiceEndpointDTO ep : endpoints)
+      for (ObjectName oname : endpoints)
       {
+         Endpoint ep = epRegistry.getEndpoint(oname);
+         ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+
          writer.print("<tr>");
          writer.print("	<td>ServiceEndpointID</td>");
-         writer.print("	<td>"+ep.getSepID()+"</td>");
+         writer.print("	<td>" + ep.getName() + "</td>");
          writer.print("</tr>");
          writer.print("<tr>");
          writer.print("	<td>ServiceEndpointAddress</td>");
-         writer.print("	<td><a href='"+ep.getAddress()+"?wsdl'>"+ep.getAddress()+"?wsdl</a></td>");
+         writer.print("	<td><a href='" + sepMetaData.getEndpointAddress() + "?wsdl'>" + sepMetaData.getEndpointAddress() + "?wsdl</a></td>");
          writer.print("</tr>");
          writer.print("<tr>");
          writer.print("	<td colspan=2>");
          writer.print("	");
          writer.print("");
-         writer.print("<table class='metrics'>");
-         writer.print("<tr>");
-         writer.print("	<td>StartTime</td>");
-         writer.print("	<td>StopTime</td>");
-         writer.print("	<td></td>");
-         writer.print("</tr>");
-         writer.print("<tr>");
-         writer.print("	<td>"+ep.getSeMetrics().getStartTime()+"</td>");
+         /*
+          writer.print("<table class='metrics'>");
+          writer.print("<tr>");
+          writer.print("	<td>StartTime</td>");
+          writer.print("	<td>StopTime</td>");
+          writer.print("	<td></td>");
+          writer.print("</tr>");
+          writer.print("<tr>");
+          writer.print("	<td>" + ep.getSeMetrics().getStartTime() + "</td>");
 
-         String stopTime = ep.getSeMetrics().getStopTime() != null ? ep.getSeMetrics().getStopTime().toString() : "";
-         writer.print("	<td>"+stopTime+"</td>");
-         writer.print("	<td></td>");
-         writer.print("</tr>");
-         writer.print("<tr>");
+          String stopTime = ep.getSeMetrics().getStopTime() != null ? ep.getSeMetrics().getStopTime().toString() : "";
+          writer.print("	<td>" + stopTime + "</td>");
+          writer.print("	<td></td>");
+          writer.print("</tr>");
+          writer.print("<tr>");
 
-         writer.print("	<td>RequestCount</td>");
-         writer.print("	<td>ResponseCount</td>");
-         writer.print("	<td>FaultCount</td>");
-         writer.print("</tr>");
-         writer.print("<tr>");
-         writer.print("	<td>"+ep.getSeMetrics().getRequestCount()+"</td>");
-         writer.print("	<td>"+ep.getSeMetrics().getResponseCount()+"</td>");
-         writer.print("	<td>"+ep.getSeMetrics().getFaultCount()+"</td>");
-         writer.print("</tr>");
-         writer.print("<tr>");
-         writer.print("	<td>MinProcessingTime</td>");
-         writer.print("	<td>MaxProcessingTime</td>");
-         writer.print("	<td>AvgProcessingTime</td>");
-         writer.print("</tr>");
-         writer.print("<tr>");
-         writer.print("	<td>"+ep.getSeMetrics().getMinProcessingTime()+"</td>");
-         writer.print("	<td>"+ep.getSeMetrics().getMaxProcessingTime()+"</td>");
-         writer.print("	<td>"+ep.getSeMetrics().getAverageProcessingTime()+"</td>");
-         writer.print("</tr>");
-         writer.print("");
-         writer.print("");
-         writer.print("</table>");
+          writer.print("	<td>RequestCount</td>");
+          writer.print("	<td>ResponseCount</td>");
+          writer.print("	<td>FaultCount</td>");
+          writer.print("</tr>");
+          writer.print("<tr>");
+          writer.print("	<td>" + ep.getSeMetrics().getRequestCount() + "</td>");
+          writer.print("	<td>" + ep.getSeMetrics().getResponseCount() + "</td>");
+          writer.print("	<td>" + ep.getSeMetrics().getFaultCount() + "</td>");
+          writer.print("</tr>");
+          writer.print("<tr>");
+          writer.print("	<td>MinProcessingTime</td>");
+          writer.print("	<td>MaxProcessingTime</td>");
+          writer.print("	<td>AvgProcessingTime</td>");
+          writer.print("</tr>");
+          writer.print("<tr>");
+          writer.print("	<td>" + ep.getSeMetrics().getMinProcessingTime() + "</td>");
+          writer.print("	<td>" + ep.getSeMetrics().getMaxProcessingTime() + "</td>");
+          writer.print("	<td>" + ep.getSeMetrics().getAverageProcessingTime() + "</td>");
+          writer.print("</tr>");
+          writer.print("");
+          writer.print("");
+          writer.print("</table>");
+          */
          writer.print("");
          writer.print("	</td>");
          writer.print("</tr>");
@@ -150,7 +158,6 @@ public abstract class CommonContextServlet extends HttpServlet
       writer.print("</fieldset>");
       writer.print("</div>");
 
-
       writer.print("</body>");
       writer.print("</html>");
       writer.close();
@@ -161,7 +168,7 @@ public abstract class CommonContextServlet extends HttpServlet
       Package wsPackage = Package.getPackage("org.jboss.ws");
       writer.println("<head>");
       writer.println("<meta http-equiv='Content-Type content='text/html; charset=iso-8859-1'>");
-      writer.println("<title>JBossWS / "+wsPackage.getImplementationVersion()+"</title>");
+      writer.println("<title>JBossWS / " + wsPackage.getImplementationVersion() + "</title>");
       writer.println("<link rel='stylesheet' href='./styles.css'>");
       writer.println("</head>");
    }

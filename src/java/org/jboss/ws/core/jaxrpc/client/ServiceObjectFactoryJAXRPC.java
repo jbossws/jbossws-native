@@ -52,15 +52,16 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.client.ServiceObjectFactory;
-import org.jboss.ws.core.server.legacy.ServiceEndpoint;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
+import org.jboss.ws.integration.Endpoint;
+import org.jboss.ws.integration.management.EndpointRegistry;
+import org.jboss.ws.integration.management.EndpointRegistryFactory;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 
@@ -181,13 +182,13 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
             String endpointAddress = null;
             try
             {
-               ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
-               ServiceEndpointManager epManager = factory.getServiceEndpointManager();
-               ServiceEndpoint serviceEndpoint = epManager.resolvePortComponentLink(pcLink);
-               if (serviceEndpoint == null)
+               EndpointRegistry epRegistry = EndpointRegistryFactory.getEndpointRegistry();
+               Endpoint endpoint = epRegistry.resolvePortComponentLink(pcLink);
+               if (endpoint == null)
                   throw new WSException("Cannot resolve port-component-link: " + pcLink);
 
-               endpointAddress = serviceEndpoint.getServiceEndpointInfo().getServerEndpointMetaData().getEndpointAddress();
+               ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+               endpointAddress = sepMetaData.getEndpointAddress();
             }
             catch (Throwable ex)
             {

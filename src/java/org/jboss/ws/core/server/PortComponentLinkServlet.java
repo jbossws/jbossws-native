@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server.legacy;
+package org.jboss.ws.core.server;
 
 // $Id$
 
@@ -34,6 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.integration.Endpoint;
+import org.jboss.ws.integration.management.EndpointRegistry;
+import org.jboss.ws.integration.management.EndpointRegistryFactory;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 
 /**
  * A servlet that reports the serviceURL for a given service ID.
@@ -55,13 +59,12 @@ public class PortComponentLinkServlet extends HttpServlet
    // provide logging
    private static final Logger log = Logger.getLogger(PortComponentLinkServlet.class);
 
-   protected ServiceEndpointManager epManager;
+   protected EndpointRegistry epRegistry;
 
    public void init(ServletConfig config) throws ServletException
    {
       super.init(config);
-      ServiceEndpointManagerFactory factory = ServiceEndpointManagerFactory.getInstance();
-      epManager = factory.getServiceEndpointManager();
+      epRegistry = EndpointRegistryFactory.getEndpointRegistry();
    }
 
    /**
@@ -73,15 +76,15 @@ public class PortComponentLinkServlet extends HttpServlet
       if (pcLink == null)
          throw new IllegalArgumentException("Cannot obtain request parameter 'pcLink'");
 
-      ServiceEndpoint serviceEndpoint = epManager.resolvePortComponentLink(pcLink);
-      ;
-      if (serviceEndpoint == null)
+      Endpoint endpoint = epRegistry.resolvePortComponentLink(pcLink);
+      if (endpoint == null)
          throw new WSException("Cannot resolve port-component-link: " + pcLink);
 
       res.setContentType("text/plain");
       PrintWriter out = res.getWriter();
 
-      String endpointAddress = serviceEndpoint.getServiceEndpointInfo().getServerEndpointMetaData().getEndpointAddress();
+      ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+      String endpointAddress = sepMetaData.getEndpointAddress();
       out.println(endpointAddress);
 
       log.debug("Resolved " + pcLink + " to: " + endpointAddress);

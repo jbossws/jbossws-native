@@ -48,17 +48,14 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.core.jaxrpc.Use;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
-import org.jboss.ws.integration.ObjectNameFactory;
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.EventingUtils;
-import org.jboss.ws.extensions.eventing.deployment.EventingEndpoint;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
+import org.jboss.ws.integration.ObjectNameFactory;
+import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
@@ -161,10 +158,10 @@ public abstract class MetaDataBuilder
          String wsContextRoot = applMetaData.getWebServiceContextRoot();
          if (wsContextRoot != null)
             contextRoot = wsContextRoot;
-         
+
          String ejbClass = beanMetaData.getEjbClass();
          String ejbClassName = WSDLUtils.getJustClassName(ejbClass);
-         
+
          UnifiedEjbPortComponentMetaData ejbpcMetaData = beanMetaData.getPortComponent();
          if (ejbpcMetaData != null && ejbpcMetaData.getPortComponentURI() != null)
          {
@@ -182,7 +179,7 @@ public abstract class MetaDataBuilder
                }
             }
          }
-         
+
          if (contextRoot == null)
             contextRoot = ejbClassName + "Service";
          if (urlPattern == null)
@@ -493,9 +490,7 @@ public abstract class MetaDataBuilder
             ext.setEventSourceNS(eventSourceNS);
             ext.setNotificationSchema(notificationSchema);
             ext.setNotificationRootElementNS(notificationRootElementNS);
-
             sepMetaData.addExtension(ext);
-            sepMetaData.setManagedEndpointBean(EventingEndpoint.class.getName());
          }
       }
    }

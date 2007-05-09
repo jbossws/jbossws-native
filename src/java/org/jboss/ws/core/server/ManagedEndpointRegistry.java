@@ -27,9 +27,12 @@ import java.util.ArrayList;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
+import javax.management.ObjectName;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.integration.Endpoint;
 import org.jboss.ws.integration.management.BasicEndpointRegistry;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 
 /**
@@ -46,6 +49,44 @@ public class ManagedEndpointRegistry extends BasicEndpointRegistry implements Ma
    public String getImplementationVersion()
    {
       return UnifiedMetaData.getImplementationVersion();
+   }
+
+   /** Resolve a port-component-link, like:
+    *
+    *    [deployment.war]#PortComponentName
+    *    [deployment.jar]#PortComponentName
+    *
+    */
+   public Endpoint resolvePortComponentLink(String pcLink)
+   {
+      String pcName = pcLink;
+      int hashIndex = pcLink.indexOf("#");
+      if (hashIndex > 0)
+      {
+         pcName = pcLink.substring(hashIndex + 1);
+      }
+
+      Endpoint endpoint = null;
+      for (ObjectName sepID : getEndpoints())
+      {
+         Endpoint auxEndpoint = getEndpoint(sepID);
+         ServerEndpointMetaData sepMetaData = auxEndpoint.getMetaData(ServerEndpointMetaData.class);
+         if (pcName.equals(sepMetaData.getPortComponentName()))
+         {
+            if (endpoint != null)
+            {
+               log.warn("Multiple service endoints found for: " + pcLink);
+               endpoint = null;
+               break;
+            }
+            endpoint = auxEndpoint;
+         }
+      }
+
+      if (endpoint == null)
+         log.warn("No ServiceEndpoint found for pcLink: " + pcLink);
+
+      return endpoint;
    }
 
    public void create() throws Exception

@@ -179,7 +179,7 @@ public class MessageFactoryImpl extends MessageFactory
       return createMessage(mimeHeaders, ins, false);
    }
 
-   public SOAPMessage createMessage(MimeHeaders mimeHeaders, InputStream ins, boolean ignoreParseError) throws IOException, SOAPException
+   public SOAPMessage createMessage(MimeHeaders mimeHeaders, InputStream inputStream, boolean ignoreParseError) throws IOException, SOAPException
    {
       if (mimeHeaders == null)
       {
@@ -196,62 +196,64 @@ public class MessageFactoryImpl extends MessageFactory
       }
 
       ContentType contentType = getContentType(mimeHeaders);
-      if (log.isDebugEnabled())
-         log.debug("createMessage: [contentType=" + contentType + "]");
-
-      // Debug the incoming message
-      if (log.isTraceEnabled())
-      {
-         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-         IOUtils.copyStream(baos, ins);
-         byte[] bytes = baos.toByteArray();
-
-         log.trace("createMessage\n" + new String(bytes));
-         ins = new ByteArrayInputStream(bytes);
-      }
-
-      Collection<AttachmentPart> attachments = null;
-      if (isMultipartRelatedContent(contentType))
-      {
-         MultipartRelatedDecoder decoder;
-         try
-         {
-            decoder = new MultipartRelatedDecoder(contentType);
-            decoder.decodeMultipartRelatedMessage(ins);
-         }
-         catch (RuntimeException rte)
-         {
-            throw rte;
-         }
-         catch (IOException ex)
-         {
-            throw ex;
-         }
-         catch (Exception ex)
-         {
-            throw new SOAPException("Cannot decode multipart related message", ex);
-         }
-
-         ins = decoder.getRootPart().getDataHandler().getInputStream();
-         attachments = decoder.getRelatedParts();
-      }
-      else if (isSoapContent(contentType) == false)
-      {
-         throw new SOAPException("Unsupported content type: " + contentType);
-      }
+      log.debug("createMessage: [contentType=" + contentType + "]");
 
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
-      if (mimeHeaders != null)
-         soapMessage.setMimeHeaders(mimeHeaders);
+      if (inputStream != null)
+      {
+         // Debug the incoming message
+         if (log.isTraceEnabled())
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+            IOUtils.copyStream(baos, inputStream);
+            byte[] bytes = baos.toByteArray();
 
-      if (attachments != null)
-         soapMessage.setAttachments(attachments);
+            log.trace("createMessage\n" + new String(bytes));
+            inputStream = new ByteArrayInputStream(bytes);
+         }
 
-      // Get the SOAPEnvelope builder
-      EnvelopeBuilder envBuilder = new EnvelopeBuilderDOM(getStyle());
+         Collection<AttachmentPart> attachments = null;
+         if (isMultipartRelatedContent(contentType))
+         {
+            MultipartRelatedDecoder decoder;
+            try
+            {
+               decoder = new MultipartRelatedDecoder(contentType);
+               decoder.decodeMultipartRelatedMessage(inputStream);
+            }
+            catch (RuntimeException rte)
+            {
+               throw rte;
+            }
+            catch (IOException ex)
+            {
+               throw ex;
+            }
+            catch (Exception ex)
+            {
+               throw new SOAPException("Cannot decode multipart related message", ex);
+            }
 
-      // Build the payload
-      envBuilder.build(soapMessage, ins, ignoreParseError);
+            inputStream = decoder.getRootPart().getDataHandler().getInputStream();
+            attachments = decoder.getRelatedParts();
+         }
+         else if (isSoapContent(contentType) == false)
+         {
+            throw new SOAPException("Unsupported content type: " + contentType);
+         }
+
+         if (mimeHeaders != null)
+            soapMessage.setMimeHeaders(mimeHeaders);
+
+         if (attachments != null)
+            soapMessage.setAttachments(attachments);
+
+         // Get the SOAPEnvelope builder
+         EnvelopeBuilder envBuilder = new EnvelopeBuilderDOM(getStyle());
+
+         // Build the payload
+         envBuilder.build(soapMessage, inputStream, ignoreParseError);
+      }
 
       return soapMessage;
    }

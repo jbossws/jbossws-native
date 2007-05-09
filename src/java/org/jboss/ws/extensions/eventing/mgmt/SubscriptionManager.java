@@ -57,7 +57,7 @@ import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.extensions.eventing.EventingConstants;
-import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
+import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.jboss.ws.extensions.eventing.jaxws.ReferenceParametersType;
@@ -96,8 +96,6 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 {
 
    private static final Logger log = Logger.getLogger(SubscriptionManager.class);
-
-   public static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=SubscriptionManager,module=eventing");
 
    /**
     * Maps event source namespaces to event source instances.
@@ -214,7 +212,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    /**
     * A two phase deployment process.
     */
-   public void registerEventSource(EventingEndpointDI deploymentInfo)
+   public void registerEventSource(EventingEndpointDeployment deploymentInfo)
    {
       // workaround for JBWS-1006
       lazyBindEventDispatcher();
@@ -263,7 +261,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
     * @param deploymentInfo
     * @param eventSource
     */
-   private static void updateManagerAddress(EventingEndpointDI deploymentInfo, EventSource eventSource)
+   private static void updateManagerAddress(EventingEndpointDeployment deploymentInfo, EventSource eventSource)
    {
       String addr = null;
       if(deploymentInfo.getPortName().getLocalPart().equals("SubscriptionManagerPort"))

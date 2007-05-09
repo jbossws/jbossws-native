@@ -36,8 +36,6 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManager;
-import org.jboss.ws.core.server.legacy.ServiceEndpointManagerFactory;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.integration.management.ServerConfig;
 import org.jboss.ws.integration.management.ServerConfigFactory;

@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.extensions.eventing.EventingConstants;
-import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDI;
+import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 
 /**
  * @author Heiko Braun, <heiko@openj.net>
@@ -20,7 +20,7 @@ public class EventingBuilder {
       return new EventingBuilder();
    }
 
-   public EventSource newEventSource(EventingEndpointDI desc) {
+   public EventSource newEventSource(EventingEndpointDeployment desc) {
       URI eventSourceNS = newEventSourceURI(desc.getName());
       EventSource eventSource = new EventSource(desc.getName(), eventSourceNS, desc.getSchema(), desc.getNotificationRootElementNS());
       eventSource.getSupportedFilterDialects().add(EventingConstants.getDefaultFilterDialect());

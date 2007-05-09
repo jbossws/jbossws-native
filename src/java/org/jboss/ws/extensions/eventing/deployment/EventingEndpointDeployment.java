@@ -8,8 +8,8 @@ import javax.xml.namespace.QName;
  * @author Heiko Braun, <heiko@openj.net>
  * @since 18-Jan-2006
  */
-public class EventingEndpointDI {
-
+public class EventingEndpointDeployment
+{
    /* event source URI */
    private String name;
 
@@ -23,41 +23,50 @@ public class EventingEndpointDI {
 
    private String notificationRootElementNS;
 
-   public EventingEndpointDI(String name, String[] schema, String notificationRootElementNS) {
+   public EventingEndpointDeployment(String name, String[] schema, String notificationRootElementNS)
+   {
       this.name = name;
       this.schema = schema;
       this.notificationRootElementNS = notificationRootElementNS;
    }
 
-   public QName getPortName() {
+   public QName getPortName()
+   {
       return portName;
    }
 
-   public void setPortName(QName portName) {
+   public void setPortName(QName portName)
+   {
       this.portName = portName;
    }
 
-   public String getName() {
+   public String getName()
+   {
       return name;
    }
 
-   public String[] getSchema() {
+   public String[] getSchema()
+   {
       return schema;
    }
 
-   public String getEndpointAddress() {
+   public String getEndpointAddress()
+   {
       return endpointAddress;
    }
 
-   public void setEndpointAddress(String endpointAddress) {
+   public void setEndpointAddress(String endpointAddress)
+   {
       this.endpointAddress = endpointAddress;
    }
 
-   public String getNotificationRootElementNS() {
+   public String getNotificationRootElementNS()
+   {
       return notificationRootElementNS;
    }
 
-   public void setNotificationRootElementNS(String notificationRootElementNS) {
+   public void setNotificationRootElementNS(String notificationRootElementNS)
+   {
       this.notificationRootElementNS = notificationRootElementNS;
    }
 
