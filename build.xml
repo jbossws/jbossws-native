@@ -146,14 +146,14 @@
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/ws/**"/>
       </fileset>
-      <fileset dir="${core.resources.dir}/standard-config">
-        <include name="standard-jaxrpc-client-config.xml"/>
-        <include name="standard-jaxws-client-config.xml"/>
-      </fileset>
       <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
         <include name="dtd/**"/>
       </fileset>
+      <metainf dir="${core.resources.dir}/standard-config">
+        <include name="standard-jaxrpc-client-config.xml"/>
+        <include name="standard-jaxws-client-config.xml"/>
+      </metainf>
     </jar>
     
     <!-- Build jbossws-resources.zip -->
