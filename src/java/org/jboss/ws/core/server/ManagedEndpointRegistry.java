@@ -29,7 +29,7 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.integration.management.EndpointRegistryImpl;
+import org.jboss.ws.integration.management.BasicEndpointRegistry;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 
 /**
@@ -38,10 +38,10 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 04-May-2007
  */
-public class ServiceEndpointRegistry extends EndpointRegistryImpl implements ServiceEndpointRegistryMBean
+public class ManagedEndpointRegistry extends BasicEndpointRegistry implements ManagedEndpointRegistryMBean
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(ServiceEndpointRegistry.class);
+   private static final Logger log = Logger.getLogger(ManagedEndpointRegistry.class);
 
    public String getImplementationVersion()
    {

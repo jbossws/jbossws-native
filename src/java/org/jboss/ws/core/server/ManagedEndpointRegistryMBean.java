@@ -24,15 +24,16 @@ package org.jboss.ws.core.server;
 import javax.management.ObjectName;
 
 import org.jboss.ws.integration.ObjectNameFactory;
+import org.jboss.ws.integration.management.EndpointRegistry;
 
 /**
  * MBean interface.
  * @since 15-April-2004
  */
-public interface ServiceEndpointRegistryMBean
+public interface ManagedEndpointRegistryMBean extends EndpointRegistry
 {
    // default object name
-   static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=ServiceEndpointRegistry");
+   static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=EndpointRegistry");
 
    String getImplementationVersion();
 }

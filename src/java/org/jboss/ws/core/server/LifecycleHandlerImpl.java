@@ -32,7 +32,7 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class LifecycleHandlerImpl extends org.jboss.ws.integration.LifecycleHandlerImpl
+public class LifecycleHandlerImpl extends org.jboss.ws.integration.BasicLifecycleHandler
 {
    public void start(Endpoint endpoint)
    {
