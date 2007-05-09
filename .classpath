@@ -31,6 +31,6 @@
 	<classpathentry kind="lib" path="/build/thirdparty/wstx.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/getopt.jar"/>
 	<classpathentry kind="lib" path="/build/thirdparty/jboss-common-core.jar" sourcepath="/build/thirdparty/jboss-common-core-sources.jar"/>
-	<classpathentry kind="lib" path="/build/thirdparty/jbossws-spi.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jbossws-spi"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>
