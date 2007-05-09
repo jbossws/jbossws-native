@@ -146,20 +146,26 @@
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/ws/**"/>
       </fileset>
-      <fileset dir="${core.resources.dir}/jbossws.sar">
-        <include name="META-INF/standard-jaxrpc-client-config.xml"/>
-        <include name="META-INF/standard-jaxws-client-config.xml"/>
+      <fileset dir="${core.resources.dir}/standard-config">
+        <include name="standard-jaxrpc-client-config.xml"/>
+        <include name="standard-jaxws-client-config.xml"/>
       </fileset>
       <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
         <include name="dtd/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- Build jbossws-resources.zip -->
+    <zip zipfile="${core.output.lib.dir}/jbossws-resources.zip" >
+      <fileset dir="${core.resources.dir}/standard-config">
+        <include name="standard-*-config.xml"/>
       </fileset>
       <fileset dir="${build.etc.dir}">
         <include name="wsprovide.bat"/>
         <include name="wsconsume.bat"/>
         <include name="wsrunclient.bat"/>
         <include name="wstools.bat"/>
-        <include name="wstools-log4j.xml"/>
       </fileset>
       <zipfileset dir="${build.etc.dir}" filemode="755">
         <include name="wsprovide.sh"/>
@@ -167,7 +173,7 @@
         <include name="wsrunclient.sh"/>
         <include name="wstools.sh"/>
       </zipfileset>
-    </jar>
+    </zip>
     
     <!-- Build jbossws-core-src.zip -->
     <zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip" >
