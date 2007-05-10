@@ -23,6 +23,7 @@ package org.jboss.ws.core.server;
 
 //$Id: LifecycleHandlerImpl.java 2923 2007-04-25 14:23:29Z thomas.diesler@jboss.com $
 
+import org.jboss.ws.integration.BasicLifecycleHandler;
 import org.jboss.ws.integration.Endpoint;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 
@@ -32,7 +33,7 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class LifecycleHandlerImpl extends org.jboss.ws.integration.BasicLifecycleHandler
+public class LifecycleHandlerImpl extends BasicLifecycleHandler
 {
    public void start(Endpoint endpoint)
    {
