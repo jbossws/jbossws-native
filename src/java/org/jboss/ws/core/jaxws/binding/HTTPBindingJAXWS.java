@@ -43,9 +43,9 @@ import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.UnboundHeader;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * The HTTPBinding interface is an abstraction for the XML/HTTP binding. 

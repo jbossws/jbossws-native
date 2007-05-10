@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import org.jboss.ws.integration.deployment.AbstractDeployer;
 import org.jboss.ws.integration.deployment.Deployment;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.deployment.WSDeploymentException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 

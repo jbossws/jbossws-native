@@ -37,10 +37,10 @@ import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;

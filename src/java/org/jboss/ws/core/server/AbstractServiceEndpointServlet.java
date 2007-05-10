@@ -39,10 +39,10 @@ import javax.xml.rpc.JAXRPCException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.ObjectNameFactory;
 import org.jboss.ws.integration.RequestHandler;
 import org.jboss.ws.integration.management.EndpointRegistry;
 import org.jboss.ws.integration.management.EndpointRegistryFactory;
+import org.jboss.ws.utils.ObjectNameFactory;
 
 /**
  * A servlet that is installed for every web service endpoint.

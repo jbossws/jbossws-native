@@ -25,6 +25,9 @@ package org.jboss.ws.metadata.umdm;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * The JAXWS metdata data for a handler element
@@ -32,22 +35,38 @@ import javax.xml.namespace.QName;
  * @author Thomas.Diesler@jboss.org
  * @since 05-May-2006
  */
-public class HandlerMetaDataJAXWS  extends HandlerMetaData
+public class HandlerMetaDataJAXWS extends HandlerMetaData
 {
    private static final long serialVersionUID = 7631133188974299826L;
-   
+
    // The JAXWS service name pattern
    private QName serviceNamePattern;
    // The JAXWS port name pattern
    private QName portNamePattern;
    // The JAXWS protocol bindings
    private String protocolBindings;
-   
+
+   public static HandlerMetaDataJAXWS newInstance(UnifiedHandlerMetaData uhmd, HandlerType type)
+   {
+      HandlerMetaDataJAXWS hmd = new HandlerMetaDataJAXWS(type);
+      hmd.setHandlerName(uhmd.getHandlerName());
+      hmd.setHandlerClassName(uhmd.getHandlerClass());
+      hmd.seiInitParams(uhmd.getInitParams());
+      UnifiedHandlerChainMetaData handlerChain = uhmd.getHandlerChain();
+      if (handlerChain != null)
+      {
+         hmd.setProtocolBindings(handlerChain.getProtocolBindings());
+         hmd.setServiceNamePattern(handlerChain.getServiceNamePattern());
+         hmd.setPortNamePattern(handlerChain.getPortNamePattern());
+      }
+      return hmd;
+   }
+
    public HandlerMetaDataJAXWS(HandlerType type)
    {
       super(type);
    }
-   
+
    public QName getPortNamePattern()
    {
       return portNamePattern;
@@ -77,7 +96,7 @@ public class HandlerMetaDataJAXWS  extends HandlerMetaData
    {
       this.serviceNamePattern = serviceNamePattern;
    }
-   
+
    public String toString()
    {
       StringBuffer buffer = new StringBuffer("\nHandlerMetaDataJAXWS:");

@@ -51,9 +51,9 @@ import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /** A BindingProvider for a JAXWS payload 
  *

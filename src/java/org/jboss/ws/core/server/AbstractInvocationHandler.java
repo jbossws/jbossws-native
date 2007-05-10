@@ -61,10 +61,10 @@ import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.integration.Endpoint;
 import org.jboss.ws.integration.invocation.InvocationContext;
 import org.jboss.ws.integration.invocation.InvocationHandler;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /** An implementation handles invocations on the endpoint
  *

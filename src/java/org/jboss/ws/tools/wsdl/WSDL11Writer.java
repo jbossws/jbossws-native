@@ -33,7 +33,6 @@ import javax.xml.namespace.QName;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
@@ -55,6 +54,7 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

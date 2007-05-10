@@ -40,11 +40,6 @@ import javax.xml.rpc.handler.Handler;
 import javax.xml.rpc.handler.HandlerChain;
 import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.handler.MessageContext;
-import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPPart;
 
 import org.jboss.logging.Logger;
@@ -53,11 +48,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPElementWriter;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Represents a list of handlers. All elements in the

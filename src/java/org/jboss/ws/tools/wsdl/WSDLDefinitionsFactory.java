@@ -38,11 +38,11 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;

@@ -29,8 +29,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /** 

@@ -24,8 +24,6 @@ package org.jboss.ws.core.jaxws.handler;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.PortInfo;
 
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-
 /**
  * The PortInfo interface is used by a HandlerResolver to query information about the 
  * port it is being asked to create a handler chain for.
@@ -41,13 +39,6 @@ public class PortInfoImpl implements PortInfo
 
    public PortInfoImpl()
    {
-   }
-
-   public PortInfoImpl(EndpointMetaData epMetaData)
-   {
-      this.serviceName = epMetaData.getServiceMetaData().getServiceName();
-      this.portName = epMetaData.getPortName();
-      this.bindingID = epMetaData.getBindingId();
    }
 
    public PortInfoImpl(QName serviceName, QName portName, String bindingID)

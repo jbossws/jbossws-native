@@ -33,15 +33,15 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.management.ServerConfig;
 import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

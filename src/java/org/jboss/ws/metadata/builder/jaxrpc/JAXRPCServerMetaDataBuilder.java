@@ -29,19 +29,20 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.deployment.JAXRPCDeployment;
+import org.jboss.ws.integration.deployment.JAXRPCDeployment;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.webservices.PortComponentMetaData;
 import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -226,7 +227,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   Set<String> portNames = uhmd.getPortNames();
                   if (portNames.size() == 0 || portNames.contains(portName.getLocalPart()))
                   {
-                     sepMetaData.addHandler(uhmd.getHandlerMetaDataJAXRPC(HandlerType.ENDPOINT));
+                     HandlerMetaDataJAXRPC hmd = HandlerMetaDataJAXRPC.newInstance(uhmd, HandlerType.ENDPOINT);
+                     sepMetaData.addHandler(hmd);
                   }
                }
             }

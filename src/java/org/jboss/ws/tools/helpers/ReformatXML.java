@@ -25,8 +25,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 

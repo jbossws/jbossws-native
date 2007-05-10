@@ -23,7 +23,10 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Writer;
 import java.net.URL;
 
 import javax.jws.HandlerChain;
@@ -34,23 +37,28 @@ import javax.xml.namespace.QName;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.core.utils.IOUtils;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
-import org.jboss.ws.metadata.umdm.*;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.ws.metadata.webservices.PortComponentMetaData;
+import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.ws.metadata.webservices.WebservicesFactory;
+import org.jboss.ws.metadata.webservices.WebservicesMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-import org.jboss.ws.metadata.webservices.WebservicesMetaData;
-import org.jboss.ws.metadata.webservices.WebservicesFactory;
-import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
-import org.jboss.ws.metadata.webservices.PortComponentMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
@@ -230,9 +238,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                      {
                         for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
                         {
-                           HandlerMetaDataJAXWS handlerMetaDataJAXWS = uhmd.getHandlerMetaDataJAXWS(HandlerMetaData.HandlerType.ENDPOINT);
-                           sepMetaData.addHandler(handlerMetaDataJAXWS);
-                           log.debug("Contribute handler from webservices.xml: " + handlerMetaDataJAXWS.getHandlerName());
+                           log.debug("Contribute handler from webservices.xml: " + uhmd.getHandlerName());
+                           HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
+                           sepMetaData.addHandler(hmd);
                         }
                      }
                   }

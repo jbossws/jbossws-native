@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,13 +66,13 @@ import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 
 /**
@@ -153,8 +152,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
             {
                for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
                {
-                  HandlerMetaDataJAXWS handler = uhmd.getHandlerMetaDataJAXWS(HandlerType.ENDPOINT);
-                  serviceMetaData.addHandler(handler);
+                  HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
+                  serviceMetaData.addHandler(hmd);
                }
             }
             ((HandlerResolverImpl)handlerResolver).initServiceHandlerChain(serviceMetaData);

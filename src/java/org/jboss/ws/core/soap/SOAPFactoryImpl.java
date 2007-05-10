@@ -33,7 +33,7 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

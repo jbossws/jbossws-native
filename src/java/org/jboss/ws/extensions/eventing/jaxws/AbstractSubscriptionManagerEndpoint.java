@@ -41,10 +41,10 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

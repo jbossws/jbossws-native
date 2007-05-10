@@ -46,14 +46,13 @@ import javax.xml.ws.addressing.AddressingProperties;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.EventingUtils;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
-import org.jboss.ws.integration.ObjectNameFactory;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.management.ServerConfig;
 import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
@@ -78,6 +77,7 @@ import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
+import org.jboss.ws.utils.ObjectNameFactory;
 
 /** An abstract meta data builder.
  *

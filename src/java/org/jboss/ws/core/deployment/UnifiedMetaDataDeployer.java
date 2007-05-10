@@ -25,6 +25,8 @@ package org.jboss.ws.core.deployment;
 
 import org.jboss.ws.integration.deployment.AbstractDeployer;
 import org.jboss.ws.integration.deployment.Deployment;
+import org.jboss.ws.integration.deployment.JAXRPCDeployment;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;

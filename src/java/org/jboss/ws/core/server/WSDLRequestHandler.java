@@ -29,8 +29,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

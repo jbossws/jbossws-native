@@ -26,7 +26,7 @@ import java.util.List;
 import javax.xml.ws.Binding;
 import javax.xml.ws.handler.Handler;
 
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 // $Id$
 

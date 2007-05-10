@@ -36,11 +36,12 @@ import javax.servlet.Servlet;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.integration.Endpoint;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

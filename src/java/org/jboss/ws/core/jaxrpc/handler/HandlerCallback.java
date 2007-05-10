@@ -23,7 +23,7 @@ package org.jboss.ws.core.jaxrpc.handler;
 
 // $Id$
 
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * A handler callback for the EJB21 Invoker

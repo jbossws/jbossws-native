@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

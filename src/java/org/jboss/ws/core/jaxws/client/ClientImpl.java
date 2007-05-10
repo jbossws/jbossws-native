@@ -40,6 +40,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
@@ -62,9 +63,9 @@ import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * Provides support for the dynamic invocation of a service endpoint.
@@ -103,7 +104,8 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    private void initBindingHandlerChain(boolean clearExistingHandlers)
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
-      PortInfoImpl portInfo = new PortInfoImpl(epMetaData);
+
+      PortInfo portInfo = getPortInfo(epMetaData);
 
       if (handlerResolver instanceof HandlerResolverImpl)
       {
@@ -381,7 +383,8 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
          return ((HandlerResolverImpl)handlerResolver).getHeaders();
 
       Set<QName> headers = new HashSet<QName>();
-      List<Handler> handlerChain = handlerResolver.getHandlerChain(new PortInfoImpl(epMetaData));
+      PortInfo portInfo = getPortInfo(epMetaData);
+      List<Handler> handlerChain = handlerResolver.getHandlerChain(portInfo);
       if (handlerChain != null)
       {
          for (Handler handler : handlerChain)
@@ -397,5 +400,14 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       Object bool = getRequestContext().get(BindingProvider.SESSION_MAINTAIN_PROPERTY);
       return Boolean.TRUE.equals(bool);
+   }
+   
+   private PortInfo getPortInfo(EndpointMetaData epMetaData)
+   {
+      QName serviceName = epMetaData.getServiceMetaData().getServiceName();
+      QName portName = epMetaData.getPortName();
+      String bindingID = epMetaData.getBindingId();
+      PortInfo portInfo = new PortInfoImpl(serviceName, portName, bindingID);
+      return portInfo;
    }
 }

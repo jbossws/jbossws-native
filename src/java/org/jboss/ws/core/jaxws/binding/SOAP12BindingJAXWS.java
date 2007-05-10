@@ -33,14 +33,11 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.soap.SOAPBinding;
 
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonSOAP12Binding;
-import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 
 /**
  * The SOAP11Binding

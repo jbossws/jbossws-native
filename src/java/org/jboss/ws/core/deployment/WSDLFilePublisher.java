@@ -42,15 +42,16 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
+import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.integration.management.ServerConfig;
 import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

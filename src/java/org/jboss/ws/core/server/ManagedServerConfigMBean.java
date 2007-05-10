@@ -23,8 +23,8 @@ package org.jboss.ws.core.server;
 
 import javax.management.ObjectName;
 
-import org.jboss.ws.integration.ObjectNameFactory;
 import org.jboss.ws.integration.management.ServerConfig;
+import org.jboss.ws.utils.ObjectNameFactory;
 
 /**
  * MBean interface.

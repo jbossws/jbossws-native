@@ -23,8 +23,8 @@ package org.jboss.ws.extensions.policy;
 
 //$Id$
 
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

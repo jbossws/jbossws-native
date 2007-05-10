@@ -26,6 +26,8 @@ package org.jboss.ws.metadata.umdm;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * The JAXRPC metdata data for a handler element
@@ -33,14 +35,26 @@ import java.util.Set;
  * @author Thomas.Diesler@jboss.org
  * @since 05-May-2006
  */
-public class HandlerMetaDataJAXRPC  extends HandlerMetaData
+public class HandlerMetaDataJAXRPC extends HandlerMetaData
 {
    private static final long serialVersionUID = -5232305815202943509L;
-   
+
    // The optional <soap-role> elements
    private Set<String> soapRoles = new HashSet<String>();
    // The optional <port-name> elements
    private Set<String> portNames = new HashSet<String>();
+
+   public static HandlerMetaDataJAXRPC newInstance(UnifiedHandlerMetaData uhmd, HandlerType type)
+   {
+      HandlerMetaDataJAXRPC hmd = new HandlerMetaDataJAXRPC(type);
+      hmd.setHandlerName(uhmd.getHandlerName());
+      hmd.setHandlerClassName(uhmd.getHandlerClass());
+      hmd.seiInitParams(uhmd.getInitParams());
+      hmd.setSoapHeaders(uhmd.getSoapHeaders());
+      hmd.setSoapRoles(uhmd.getSoapRoles());
+      hmd.setPortNames(uhmd.getPortNames());
+      return hmd;
+   }
 
    public HandlerMetaDataJAXRPC(HandlerType type)
    {

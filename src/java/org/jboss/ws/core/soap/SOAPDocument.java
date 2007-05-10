@@ -21,7 +21,7 @@
 */
 package org.jboss.ws.core.soap;
 
-import org.jboss.ws.core.utils.DOMUtils;
+import org.jboss.ws.utils.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;

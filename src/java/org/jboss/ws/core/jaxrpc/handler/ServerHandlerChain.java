@@ -26,10 +26,9 @@ package org.jboss.ws.core.jaxrpc.handler;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.MessageContext;
 
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Represents a list of handlers. All elements in the

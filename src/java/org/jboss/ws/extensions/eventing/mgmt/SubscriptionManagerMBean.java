@@ -31,7 +31,7 @@ import javax.management.ObjectName;
 
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
-import org.jboss.ws.integration.ObjectNameFactory;
+import org.jboss.ws.utils.ObjectNameFactory;
 import org.w3c.dom.Element;
 
 /**

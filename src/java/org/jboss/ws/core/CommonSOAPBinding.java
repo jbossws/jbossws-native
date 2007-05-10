@@ -70,13 +70,13 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
-import org.jboss.ws.core.utils.DOMUtils;
 import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
+import org.jboss.ws.utils.DOMUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Element;
 

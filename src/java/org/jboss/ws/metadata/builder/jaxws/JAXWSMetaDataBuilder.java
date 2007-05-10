@@ -73,14 +73,15 @@ import org.jboss.ws.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.metadata.umdm.HandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
@@ -168,7 +169,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          {
             for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
             {
-               epMetaData.addHandler(uhmd.getHandlerMetaDataJAXWS(HandlerType.ENDPOINT));
+               HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
+               epMetaData.addHandler(hmd);
             }
          }
       }
