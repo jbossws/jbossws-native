@@ -46,6 +46,11 @@ public class ManagedEndpointRegistry extends BasicEndpointRegistry implements Ma
    // provide logging
    private static final Logger log = Logger.getLogger(ManagedEndpointRegistry.class);
 
+   public String getImplementationTitle()
+   {
+      return getClass().getPackage().getImplementationTitle();
+   }
+
    public String getImplementationVersion()
    {
       return UnifiedMetaData.getImplementationVersion();
@@ -91,7 +96,8 @@ public class ManagedEndpointRegistry extends BasicEndpointRegistry implements Ma
 
    public void create() throws Exception
    {
-      log.info(UnifiedMetaData.getImplementationVersion());
+      log.info(getImplementationTitle());
+      log.info(getImplementationVersion());
       MBeanServer server = getMBeanServer();
       if (server != null)
       {

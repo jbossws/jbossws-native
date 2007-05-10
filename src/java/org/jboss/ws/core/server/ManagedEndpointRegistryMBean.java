@@ -32,8 +32,7 @@ import org.jboss.ws.utils.ObjectNameFactory;
  */
 public interface ManagedEndpointRegistryMBean extends EndpointRegistry
 {
-   // default object name
-   static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=EndpointRegistry");
-
+   String getImplementationTitle();
+   
    String getImplementationVersion();
 }
