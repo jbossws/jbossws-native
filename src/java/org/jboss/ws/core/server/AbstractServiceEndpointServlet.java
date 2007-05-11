@@ -24,19 +24,14 @@ package org.jboss.ws.core.server;
 // $Id$
 
 import java.io.IOException;
-import java.io.Writer;
 
 import javax.management.ObjectName;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.rpc.JAXRPCException;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.integration.Endpoint;
 import org.jboss.ws.integration.RequestHandler;
@@ -52,9 +47,6 @@ import org.jboss.ws.utils.ObjectNameFactory;
  */
 public abstract class AbstractServiceEndpointServlet extends HttpServlet
 {
-   // provide logging
-   private static final Logger log = Logger.getLogger(AbstractServiceEndpointServlet.class);
-
    protected Endpoint endpoint;
    protected EndpointRegistry epRegistry;
 
@@ -64,11 +56,6 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
       epRegistry = EndpointRegistryFactory.getEndpointRegistry();
    }
 
-   public void destroy()
-   {
-      super.destroy();
-   }
-
    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
    {
       if (endpoint == null)
@@ -76,85 +63,9 @@ public abstract class AbstractServiceEndpointServlet extends HttpServlet
          String contextPath = req.getContextPath();
          initServiceEndpoint(contextPath);
       }
-      super.service(req, res);
-   }
 
-   public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-   {
-      // Process a WSDL request
-      if (req.getParameter("wsdl") != null || req.getParameter("WSDL") != null)
-      {
-         res.setContentType("text/xml");
-         ServletOutputStream out = res.getOutputStream();
-         try
-         {
-            RequestHandler requestHandler = endpoint.getRequestHandler();
-            ServletRequestContext context = new ServletRequestContext(getServletContext(), req, res);
-            requestHandler.handleWSDLRequest(endpoint, out, context);
-         }
-         catch (Exception ex)
-         {
-            handleException(ex);
-         }
-         finally
-         {
-            try
-            {
-               out.close();
-            }
-            catch (IOException ioex)
-            {
-               log.error("Cannot close output stream");
-            }
-         }
-      }
-      else
-      {
-         res.setStatus(405);
-         res.setContentType("text/plain");
-         Writer out = res.getWriter();
-         out.write("HTTP GET not supported");
-         out.close();
-      }
-   }
-
-   public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-   {
-      log.debug("doPost: " + req.getRequestURI());
-
-      ServletInputStream in = req.getInputStream();
-      ServletOutputStream out = res.getOutputStream();
-      try
-      {
-         RequestHandler requestHandler = endpoint.getRequestHandler();
-         ServletRequestContext context = new ServletRequestContext(getServletContext(), req, res);
-         requestHandler.handleRequest(endpoint, in, out, context);
-      }
-      catch (Exception ex)
-      {
-         handleException(ex);
-      }
-      finally 
-      {
-         try
-         {
-            out.close();
-         }
-         catch (IOException ioex)
-         {
-            log.error("Cannot close output stream");
-         }
-      }
-   }
-
-   private void handleException(Exception ex) throws ServletException
-   {
-      log.error("Error processing web service request", ex);
-
-      if (ex instanceof JAXRPCException)
-         throw (JAXRPCException)ex;
-
-      throw new ServletException(ex);
+      RequestHandler requestHandler = (RequestHandler)endpoint.getRequestHandler();
+      requestHandler.handleHttpRequest(endpoint, req, res, getServletContext());
    }
 
    /** Initialize the service endpoint

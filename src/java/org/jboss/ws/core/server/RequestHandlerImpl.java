@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +35,13 @@ import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPEnvelope;
@@ -92,7 +97,90 @@ public class RequestHandlerImpl implements RequestHandler
    // provide logging
    private static final Logger log = Logger.getLogger(RequestHandlerImpl.class);
 
-   public void handleRequest(Endpoint endpoint, InputStream inputStream, OutputStream outputStream, InvocationContext context)
+   public void handleHttpRequest(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
+   {
+      String method = req.getMethod();
+      if (method.equals("POST"))
+      {
+         doPost(endpoint, req, res, context);
+      }
+      else if (method.equals("GET"))
+      {
+         doGet(endpoint, req, res, context);
+      }
+      else
+      {
+         throw new WSException("Unsupported method: " + method);
+      }
+   }
+
+   private void doGet(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
+   {
+      // Process a WSDL request
+      if (req.getParameter("wsdl") != null || req.getParameter("WSDL") != null)
+      {
+         res.setContentType("text/xml");
+         ServletOutputStream out = res.getOutputStream();
+         try
+         {
+            ServletRequestContext reqContext = new ServletRequestContext(context, req, res);
+            handleWSDLRequest(endpoint, out, reqContext);
+         }
+         catch (Exception ex)
+         {
+            handleException(ex);
+         }
+         finally
+         {
+            try
+            {
+               out.close();
+            }
+            catch (IOException ioex)
+            {
+               log.error("Cannot close output stream");
+            }
+         }
+      }
+      else
+      {
+         res.setStatus(405);
+         res.setContentType("text/plain");
+         Writer out = res.getWriter();
+         out.write("HTTP GET not supported");
+         out.close();
+      }
+   }
+
+   private void doPost(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
+   {
+      log.debug("doPost: " + req.getRequestURI());
+
+      ServletInputStream in = req.getInputStream();
+      ServletOutputStream out = res.getOutputStream();
+      try
+      {
+         ServletRequestContext reqContext = new ServletRequestContext(context, req, res);
+         handleRequest(endpoint, in, out, reqContext);
+      }
+      catch (Exception ex)
+      {
+         handleException(ex);
+      }
+      finally
+      {
+         try
+         {
+            out.close();
+         }
+         catch (IOException ioex)
+         {
+            log.error("Cannot close output stream");
+         }
+      }
+   }
+
+   public void handleRequest(Endpoint endpoint, InputStream inStream, OutputStream outStream, InvocationContext context)
    {
       log.debug("handleRequest: " + endpoint.getName());
 
@@ -139,7 +227,7 @@ public class RequestHandlerImpl implements RequestHandler
 
       try
       {
-         MessageAbstraction resMessage = processRequest(endpoint, headerSource, reqContext, inputStream);
+         MessageAbstraction resMessage = processRequest(endpoint, headerSource, reqContext, inStream);
 
          // Replace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
@@ -172,7 +260,7 @@ public class RequestHandlerImpl implements RequestHandler
             }
          }
 
-         sendResponse(outputStream, msgContext, isFault);
+         sendResponse(outStream, msgContext, isFault);
       }
       catch (Exception ex)
       {
@@ -405,5 +493,15 @@ public class RequestHandlerImpl implements RequestHandler
       {
          throw new WSException(ex);
       }
+   }
+
+   private void handleException(Exception ex) throws ServletException
+   {
+      log.error("Error processing web service request", ex);
+
+      if (ex instanceof JAXRPCException)
+         throw (JAXRPCException)ex;
+
+      throw new ServletException(ex);
    }
 }
