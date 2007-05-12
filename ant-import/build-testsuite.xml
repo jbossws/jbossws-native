@@ -21,7 +21,7 @@
   <!--
     Init the various classpaths
   -->
-  <target name="tests-init" depends="tests-prepare,thirdparty-classpath">
+  <target name="tests-init" depends="tests-prepare,core-thirdparty-classpath">
 
     <path id="jbossws.classpath">
       <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
@@ -34,8 +34,8 @@
 
     <!-- The combined compile classpath -->
     <path id="javac.classpath">
-      <path refid="core.classpath"/>
       <path refid="jbossws.classpath"/>
+      <path refid="core.thirdparty.classpath"/>
       <pathelement location="${thirdparty.dir}/jboss-vfs.jar"/>
       <pathelement location="${thirdparty.dir}/junit.jar"/>
       <pathelement location="${thirdparty.dir}/qdox.jar"/>

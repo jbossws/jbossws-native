@@ -31,7 +31,7 @@
   <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
   <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
   
-  <target name="core-init" depends="prepare, thirdparty">
+  <target name="core-init" depends="prepare,core-thirdparty">
   </target>
   
   <!-- ================================================================== -->
@@ -58,7 +58,7 @@
       failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
       <include name="javax/xml/rpc/**"/>
       <include name="javax/xml/soap/**"/>
-      <classpath refid="core.classpath"/>
+      <classpath refid="core.thirdparty.classpath"/>
     </javac>
     
     <!-- Compile core classes with jdk1.5 -->
@@ -71,7 +71,7 @@
       <include name="org/jboss/annotation/**"/>
       <include name="org/jboss/ws/**"/>
       <classpath path="${core.output.classes14.dir}"/>
-      <classpath refid="core.classpath"/>
+      <classpath refid="core.thirdparty.classpath"/>
     </javac>
   </target>
   
@@ -86,7 +86,6 @@
         <filter token="build.id" value="${build.id}"/>
         <filter token="implementation.version" value="jbossws-${version.id}"/>
         <filtersfile file="${build.dir}/version.properties"/>
-        <filtersfile file="${basedir}/version.properties"/>
       </filterset>
     </copy>
   </target>
