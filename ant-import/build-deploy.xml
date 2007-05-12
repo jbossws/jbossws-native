@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project>
+
+  <!-- ================================================================== -->
+  <!-- Deployment  JBoss50                                                -->
+  <!-- ================================================================== -->
+  
+  <!-- Deploy jbossws to jboss50 -->
+  <target name="deploy-jboss50" depends="prepare" description="Deploy jbossws">
+    <ant antfile="${jbws.jboss50.dir}/build.xml" target="deploy" inheritall="false"/>
+  </target>
+  
+</project>

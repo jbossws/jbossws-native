@@ -25,22 +25,23 @@
   <target name="core-thirdparty-init" depends="prepare">
     
     <property name="core.thirdparty.dir" value="${core.dir}/thirdparty"/>
-    <checksum file="${core.dir}/version.properties" fileext=".md5" verifyproperty="checksum.ok"/>
+    <checksum file="${core.dir}/version.properties" fileext=".md5" verifyproperty="core.checksum.ok"/>
     <condition property="core.force.thirdparty">
       <or>
         <not>
           <available file="${core.thirdparty.dir}" type="dir"/>
         </not>
-        <isfalse value="${checksum.ok}"/>
+        <isfalse value="${core.checksum.ok}"/>
         <isset property="force.thirdparty.get"/>
       </or>
     </condition>
+    <echo message="checksum.ok = ${core.checksum.ok}"/>
   </target>
   
   <!-- 
     thirdpartry-get
   -->
-  <target name="core-thirdparty-get" if="core.force.thirdparty" 
+  <target name="core-thirdparty-get" depends="core-thirdparty-init" if="core.force.thirdparty" 
     description="Gets the thirdparty libraries">
 
     <mkdir dir="${core.thirdparty.dir}"/>

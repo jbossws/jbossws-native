@@ -16,6 +16,7 @@
   <import file="${basedir}/../build/ant-import/build-setup.xml"/>
 
   <import file="${spi.dir}/build.xml"/>
+  <import file="${core.dir}/ant-import/build-deploy.xml"/>
   <import file="${core.dir}/ant-import/build-thirdparty.xml"/>
   <import file="${core.dir}/ant-import/build-testsuite.xml"/>
   
