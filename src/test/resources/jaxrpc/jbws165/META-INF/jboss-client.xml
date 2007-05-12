@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE jboss-client PUBLIC
+   "-//JBoss//DTD Application Client 4.0//EN"
+   "http://www.jboss.org/j2ee/dtd/jboss-client_4_0.dtd">
+
+<jboss-client>
+  <jndi-name>jbossws-client</jndi-name>
+
+  <service-ref>
+    <service-ref-name>service/HelloNone</service-ref-name>
+    <wsdl-override>http://@jbosstest.host.name@:8080/HelloEJBService/HelloEJB?wsdl</wsdl-override>
+  </service-ref>
+
+  <service-ref>
+    <service-ref-name>service/HelloPCOne</service-ref-name>
+    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Path/HelloPCOne?wsdl</wsdl-override>
+  </service-ref>
+
+  <service-ref>
+    <service-ref-name>service/HelloPCTwo</service-ref-name>
+    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Path/HelloPCTwo?wsdl</wsdl-override>
+  </service-ref>
+
+  <service-ref>
+    <service-ref-name>service/HelloContextRoot</service-ref-name>
+    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Context/HelloEJB?wsdl</wsdl-override>
+  </service-ref>
+
+  <service-ref>
+    <service-ref-name>service/HelloBoth</service-ref-name>
+    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Both/Explicit/Path?wsdl</wsdl-override>
+  </service-ref>
+
+</jboss-client>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="TestService"
+             targetNamespace="http://example.org/impl"
+             xmlns:tns="http://example.org/impl"
+             xmlns:t2="http://example.org/sei"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+   <import location='wsdl1.wsdl' namespace='http://example.org/sei'/>
+
+   <service name="TestService">
+      <port name="EndpointInterfacePort" binding="t2:EndpointInterfaceBinding">
+         <soap:address location="http://@jbosstest.host.name@:8080/jaxws-metadata"/>
+      </port>
+   </service>
+</definitions>

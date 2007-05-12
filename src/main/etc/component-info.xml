@@ -1,0 +1,53 @@
+<project name="jboss/jbossws">
+  
+  <component id="jboss/jbossws" 
+    description="JBossWS an implementation of J2EE Web Services"
+    version="@repository.id@" 
+    licenseType="lgpl">
+    
+    <artifact id="jbossws-client.jar"/>
+    <artifact id="jbossws-core.jar"/>
+    <artifact id="jboss-jaxrpc.jar"/>
+    <artifact id="jboss-jaxws.jar"/>
+    <artifact id="jboss-saaj.jar"/>
+    <artifact id="jbossws-core-src.zip"/>
+    <artifact id="jbossws-resources.zip"/>
+
+    <import componentref="apache-xmlsec">
+      <compatible version="@apache-xmlsec@"/>
+      <compatible version="@apache-xmlsec@-brew"/>
+    </import>
+    <import componentref="ibm-wsdl4j">
+      <compatible version="@ibm-wsdl4j@"/>
+      <compatible version="@ibm-wsdl4j@-brew"/>
+    </import>
+    <import componentref="javassist">
+      <compatible version="@javassist@"/>
+      <compatible version="@javassist@-brew"/>
+    </import>
+    <import componentref="jbpm/bpel">
+      <compatible version="@jbpm-bpel@"/>
+    </import>
+    <import componentref="jboss/jbossws-spi">
+      <compatible version="@jbossws-spi@"/>
+    </import>
+    <import componentref="jboss/jbossws-wsconsume-impl">
+      <compatible version="@jbossws-wsconsume-impl@"/>
+    </import>
+    <import componentref="stax-api">
+      <compatible version="@stax-api@"/>
+    </import>
+    <import componentref="sun-jaxb">
+      <compatible version="@sun-jaxb@"/>
+    </import>
+    
+    <export>
+      <include input="jbossws-core.jar"/>
+      <include input="jboss-jaxrpc.jar"/>
+      <include input="jboss-jaxws.jar"/>
+      <include input="jboss-saaj.jar"/>
+    </export>
+    
+  </component>
+  
+</project>

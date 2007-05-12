@@ -1,0 +1,62 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.jboss.test.ws.jaxws.samples.xop.doclit;
+
+import java.io.IOException;
+
+import javax.activation.DataHandler;
+import javax.jws.WebService;
+
+import org.jboss.ws.WSException;
+
+@WebService(name = "MTOMEndpoint", serviceName = "MTOMService", endpointInterface = "org.jboss.test.ws.jaxws.samples.xop.doclit.MTOMEndpoint")
+public class MTOMEndpointBean implements MTOMEndpoint
+{
+
+   public DHResponse echoDataHandler(DHRequest request)
+   {
+
+      DataHandler dataHandler = request.getDataHandler();
+
+      try
+      {
+         System.out.println("Recv " + dataHandler.getContentType());
+         System.out.println("Content is " + dataHandler.getContent());
+      }
+      catch (IOException e)
+      {
+         throw new WSException(e);
+      }
+
+      return new DHResponse(request.getDataHandler());
+   }
+
+   public ImageResponse echoImage(ImageRequest request)
+   {
+      return new ImageResponse(request.getData());
+   }
+
+   public SourceResponse echoSource(SourceRequest request)
+   {
+      return new SourceResponse(request.getData());
+   }
+}

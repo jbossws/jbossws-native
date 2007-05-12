@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id$ -->
+
+<jaxrpc-config xmlns="urn:jboss:jaxrpc-config:2.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
+  xsi:schemaLocation="urn:jboss:jaxrpc-config:2.0 jaxrpc-config_2_0.xsd">
+  
+  <client-config>
+    <config-name>Addressing Client</config-name>
+    <post-handler-chain>
+      <handler-chain-name>PostHandlerChain</handler-chain-name>
+      <handler>
+        <j2ee:handler-name>SOAPClientHandler</j2ee:handler-name>
+        <j2ee:handler-class>org.jboss.ws.extensions.addressing.jaxrpc.WSAddressingClientHandler</j2ee:handler-class>
+      </handler>
+    </post-handler-chain>
+  </client-config>
+  
+</jaxrpc-config>

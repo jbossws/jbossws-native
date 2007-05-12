@@ -1,0 +1,48 @@
+<definitions name='TestService' targetNamespace='http://org.jboss.ws/samples/jsr181pojo/docwrapped' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://org.jboss.ws/samples/jsr181pojo/docwrapped' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+ <types>
+  <schema elementFormDefault='qualified' targetNamespace='http://org.jboss.ws/samples/jsr181pojo/docwrapped' xmlns='http://www.w3.org/2001/XMLSchema' xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:tns='http://org.jboss.ws/samples/jsr181pojo/docwrapped' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+   <complexType name='concat'>
+    <sequence>
+     <element name='String_1' nillable='true' type='string'/>
+     <element name='long_1' type='long'/>
+    </sequence>
+   </complexType>
+   <complexType name='concatResponse'>
+    <sequence>
+     <element name='result' nillable='true' type='string'/>
+    </sequence>
+   </complexType>
+   <element name='concat' type='tns:concat'/>
+   <element name='concatResponse' type='tns:concatResponse'/>
+  </schema>
+ </types>
+ <message name='EndpointInterface_concat'>
+  <part element='tns:concat' name='parameters'/>
+ </message>
+ <message name='EndpointInterface_concatResponse'>
+  <part element='tns:concatResponse' name='result'/>
+ </message>
+ <portType name='EndpointInterface'>
+  <operation name='concat'>
+   <input message='tns:EndpointInterface_concat'/>
+   <output message='tns:EndpointInterface_concatResponse'/>
+  </operation>
+ </portType>
+ <binding name='EndpointInterfaceBinding' type='tns:EndpointInterface'>
+  <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='concat'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+ </binding>
+ <service name='TestService'>
+  <port binding='tns:EndpointInterfaceBinding' name='EndpointInterfacePort'>
+   <soap:address location='http://draught:8080/jaxws-samples-jsr181pojo-docwrapped/TestService'/>
+  </port>
+ </service>
+</definitions>

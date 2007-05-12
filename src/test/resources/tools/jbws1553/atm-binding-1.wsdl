@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="urn:samples:frontend"
+  xmlns:tns="urn:samples:frontend"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+  <import namespace="urn:samples:frontend" location="interface/frontend.wsdl" />
+
+  <binding name="FrontEndBinding" type="tns:FrontEnd">
+
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+
+    <operation name="connect">
+      <soap:operation soapAction="urn:samples:frontend:connect" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </output>
+    </operation>
+
+    <operation name="disconnect">
+      <soap:operation soapAction="urn:samples:frontend:disconnect" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+    </operation>
+
+    <operation name="status">
+      <soap:operation soapAction="urn:samples:frontend:status" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </output>
+    </operation>
+
+    <operation name="logOn">
+      <soap:operation soapAction="urn:samples:frontend:logOn" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </output>
+      <fault name="unauthorizedAccess">
+        <soap:fault name="unauthorizedAccess" use="literal" />
+      </fault>
+    </operation>
+
+    <operation name="logOff">
+      <soap:operation soapAction="urn:samples:frontend:logOff" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+    </operation>
+
+    <operation name="getBalance">
+      <soap:operation soapAction="urn:samples:frontend:getBalance" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </output>
+    </operation>
+
+    <operation name="deposit">
+      <soap:operation soapAction="urn:samples:frontend:deposit" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </output>
+    </operation>
+
+    <operation name="withdraw">
+      <soap:operation soapAction="urn:samples:frontend:withdraw" />
+      <input>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:samples:frontend" />
+      </output>
+      <fault name="insufficientFunds">
+        <soap:fault name="insufficientFunds" use="literal" />
+      </fault>
+    </operation>
+
+  </binding>
+
+</definitions>

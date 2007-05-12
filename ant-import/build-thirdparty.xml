@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project>
+
+  <!-- ========= -->
+  <!-- Libraries -->
+  <!-- ========= -->
+
+  <target name="thirdparty" depends="prepare,thirdparty-get,thirdparty-classpath">
+  </target>
+  
+  <!-- 
+    thirdpartry-get
+  -->
+  <target name="thirdparty-get" if="force.thirdparty.get" 
+    description="Gets the thirdparty libraries">
+
+    <mkdir dir="${thirdparty.dir}"/>
+    <get src="${jboss.repository}/apache-ant/${apache-ant}/lib/ant.jar" dest="${thirdparty.dir}/ant.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-collections/${apache-collections}/lib/commons-collections.jar" dest="${thirdparty.dir}/commons-collections.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-log4j/${apache-log4j}/lib/log4j.jar" dest="${thirdparty.dir}/log4j.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-logging/${apache-logging}/lib/commons-logging.jar" dest="${thirdparty.dir}/commons-logging.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-xalan/${apache-xalan}/lib/serializer.jar" dest="${thirdparty.dir}/serializer.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-xalan/${apache-xalan}/lib/xalan.jar" dest="${thirdparty.dir}/xalan.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-xerces/${apache-xerces}/lib/resolver.jar" dest="${thirdparty.dir}/resolver.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-xerces/${apache-xerces}/lib/xercesImpl.jar" dest="${thirdparty.dir}/xercesImpl.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-xerces/${apache-xerces}/lib/xml-apis.jar" dest="${thirdparty.dir}/xml-apis.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/apache-xmlsec/${apache-xmlsec}/lib/xmlsec.jar" dest="${thirdparty.dir}/xmlsec.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/dom4j/${dom4j}/lib/dom4j.jar" dest="${thirdparty.dir}/dom4j.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/gnu-getopt/${gnu-getopt}/lib/getopt.jar" dest="${thirdparty.dir}/getopt.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/hibernate/${hibernate}/lib/hibernate3.jar" dest="${thirdparty.dir}/hibernate3.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/ibm-wsdl4j/${ibm-wsdl4j}/lib/wsdl4j.jar" dest="${thirdparty.dir}/wsdl4j.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/ibm-wsdl4j/${ibm-wsdl4j}/lib/wsdl4j-src.jar" dest="${thirdparty.dir}/wsdl4j-src.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jaxen/${jaxen}/lib/jaxen.jar" dest="${thirdparty.dir}/jaxen.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/javassist/${javassist}/lib/javassist.jar" dest="${thirdparty.dir}/javassist.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/backport-concurrent/${jboss-backport-concurrent}/lib/jboss-backport-concurrent.jar" dest="${thirdparty.dir}/jboss-backport-concurrent.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-core/${jboss-common-core}/lib/jboss-common-core.jar" dest="${thirdparty.dir}/jboss-common-core.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-core/${jboss-common-core}/lib/jboss-common-core-sources.jar" dest="${thirdparty.dir}/jboss-common-core-sources.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-logging-log4j/${jboss-common-logging-log4j}/lib/jboss-logging-log4j.jar" dest="${thirdparty.dir}/jboss-logging-log4j.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/common-logging-spi/${jboss-common-logging-spi}/lib/jboss-logging-spi.jar" dest="${thirdparty.dir}/jboss-logging-spi.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/ejb3/${jboss-ejb3}/bin/ejb3.deployer" dest="${thirdparty.dir}/ejb3.deployer.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jaxr/${jboss-jaxr}/lib/juddi-service.sar" dest="${thirdparty.dir}/juddi-service.sar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs.jar" dest="${thirdparty.dir}/jboss-vfs.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs-sources.jar" dest="${thirdparty.dir}/jboss-vfs-sources.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossretro/${jboss-jbossretro}/lib/jbossretro.jar" dest="${thirdparty.dir}/jbossretro.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossretro/${jboss-jbossretro}/lib/jbossretro-rt.jar" dest="${thirdparty.dir}/jbossretro-rt.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42.jar" dest="${thirdparty.dir}/jbossws-jboss42.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss50/${jbossws-jboss50}/lib/jbossws-jboss50.jar" dest="${thirdparty.dir}/jbossws-jboss50.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-wsconsume-impl/${jbossws-wsconsume-impl}/lib/jbossws-wsconsume-impl.jar" dest="${thirdparty.dir}/jbossws-wsconsume-impl.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-container.jar" dest="${thirdparty.dir}/jboss-container.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-dependency.jar" dest="${thirdparty.dir}/jboss-dependency.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-deployers.jar" dest="${thirdparty.dir}/jboss-deployers.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-microcontainer.jar" dest="${thirdparty.dir}/jboss-microcontainer.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-dependency-src.zip" dest="${thirdparty.dir}/jboss-dependency-src.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-deployers-src.zip" dest="${thirdparty.dir}/jboss-deployers-src.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-microcontainer-src.zip" dest="${thirdparty.dir}/jboss-microcontainer-src.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/remoting/${jboss-remoting}/lib/jboss-remoting.jar" dest="${thirdparty.dir}/jboss-remoting.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-client.jar" dest="${thirdparty.dir}/jbosssx-client.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-src.zip" dest="${thirdparty.dir}/jbosssx-src.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jbossas/core-libs/${jbossas-core-libs}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jbpm/bpel/${jbpm-bpel}/lib/jbpm-bpel.sar" dest="${thirdparty.dir}/jbpm-bpel.sar" usetimestamp="true" verbose="true" />    
+    <get src="${jboss.repository}/junit/${junit}/lib/junit.jar" dest="${thirdparty.dir}/junit.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/oswego-concurrent/${oswego-concurrent}/lib/concurrent.jar" dest="${thirdparty.dir}/concurrent.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/qdox/${qdox}/lib/qdox.jar" dest="${thirdparty.dir}/qdox.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/stax-api/${stax-api}/lib/stax-api.jar" dest="${thirdparty.dir}/stax-api.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaf/${sun-jaf}/lib/activation.jar" dest="${thirdparty.dir}/activation.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-javamail/${sun-javamail}/lib/mail.jar" dest="${thirdparty.dir}/mail.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-api.jar" dest="${thirdparty.dir}/jaxb-api.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-impl.jar" dest="${thirdparty.dir}/jaxb-impl.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-xjc.jar" dest="${thirdparty.dir}/jaxb-xjc.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/xmlunit-xmlunit/${xmlunit}/lib/xmlunit1.0.jar" dest="${thirdparty.dir}/xmlunit1.0.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/wscommons-policy/${wscommons-policy}/lib/policy.jar" dest="${thirdparty.dir}/policy.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/woodstox/${woodstox}/lib/wstx.jar" dest="${thirdparty.dir}/wstx.jar" usetimestamp="true" verbose="true"/>
+
+    <mkdir dir="${thirdparty.dir}/jbpm-bpel"/>
+    <unzip dest="${thirdparty.dir}/jbpm-bpel" src="${thirdparty.dir}/jbpm-bpel.sar"/>
+    <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
+  </target>
+  
+  <target name="thirdparty-classpath" >
+    
+    <!-- The compile classpath for jbossws core -->
+    <path id="core.classpath">
+      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
+      
+      <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
+      <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
+      <pathelement location="${thirdparty.dir}/activation.jar"/>
+      <pathelement location="${thirdparty.dir}/getopt.jar"/>
+      <pathelement location="${thirdparty.dir}/javassist.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxb-api.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxb-impl.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxb-xjc.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-common-core.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-dependency.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-j2ee.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-logging-spi.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-microcontainer.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-remoting.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
+      <pathelement location="${thirdparty.dir}/jbosssx-client.jar"/>
+      <pathelement location="${thirdparty.dir}/mail.jar"/>
+      <pathelement location="${thirdparty.dir}/servlet-api.jar"/>
+      <pathelement location="${thirdparty.dir}/stax-api.jar"/>
+      <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
+      <pathelement location="${thirdparty.dir}/wstx.jar"/>
+      <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
+      <pathelement location="${thirdparty.dir}/xercesImpl.jar"/>
+      <pathelement location="${thirdparty.dir}/xalan.jar"/>
+    </path>
+
+  </target>
+
+</project>
