@@ -105,12 +105,12 @@
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>
   
-  <target name="core-thirdparty-classpath" depends="core-thirdparty-init,spi-thirdparty-classpath">
+  <target name="core-thirdparty-classpath" depends="core-thirdparty-init,spi-jars">
     
     <!-- The compile classpath for jbossws core -->
     <path id="core.thirdparty.classpath">
       <path refid="spi.thirdparty.classpath"/>
-      <pathelement location="${spi.dir}/output/classes"/>
+      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
       <pathelement location="${core.thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
       <pathelement location="${core.thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
       <pathelement location="${core.thirdparty.dir}/activation.jar"/>
