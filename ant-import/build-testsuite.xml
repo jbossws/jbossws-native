@@ -248,43 +248,14 @@
     </javac>
   </target>
   
-  <!-- Copy resources -->
-  <target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
-    <copy todir="${tests.output.dir}/classes" file="${testsuite.dir}/src/etc/jndi.properties"/>
-    <copy todir="${tests.output.dir}/classes" file="${testsuite.dir}/src/etc/log4j.xml"/>
-    
-    <!-- copy handler definitions -->
-    <copy todir="${tests.output.dir}/classes">
-      <fileset dir="${tests.java.dir}">
-        <include name="**/*.xml"/>
-      </fileset>
-    </copy>
-    
-    <!-- copy non binary files -->
-    <copy todir="${tests.output.dir}/resources">
-      <fileset dir="${tests.resources.dir}">
-        <include name="**/*.wsdl"/>
-        <include name="**/*.xml"/>
-        <exclude name="jaxrpc/samples-override/**"/>
-      </fileset>
-      <filterset>
-        <filter token="jbosstest.host.name" value="${node0}"/>
-        <filter token="wsdl-publish-location" value="${tests.output.dir}/wsdl-publish"/>
-      </filterset>
-    </copy>
-    
-    <!-- Copy binary files -->
-    <copy todir="${tests.output.dir}/resources">
-      <fileset dir="${tests.resources.dir}">
-        <exclude name="**/*.wsdl"/>
-        <exclude name="**/*.xml"/>
-      </fileset>
-    </copy>
-  </target>
-  
   <!-- ================================================================== -->
   <!-- Building                                                           -->
   <!-- ================================================================== -->
+  
+  <!-- Copy resources -->
+  <target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
+    <copy-test-resources srcdir="${basedir}/src/test"/>
+  </target>
   
   <target name="tests-main" depends="wsconsume,tests-compile,tests-copy-resources,tests-generate-resources" description="Build the deployments.">
     <ant antfile="${core.dir}/ant-import/build-jars-jaxrpc.xml" target="build-jars-jaxrpc" inheritall="true"/>
