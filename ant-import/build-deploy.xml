@@ -22,4 +22,9 @@
     <ant antfile="${jbws.jboss50.dir}/build.xml" target="deploy" inheritall="false"/>
   </target>
   
+  <!-- Deploy jbossws to jboss42 -->
+  <target name="deploy-jboss42" depends="prepare" description="Deploy jbossws">
+    <ant antfile="${jbws.jboss42.dir}/build.xml" target="deploy" inheritall="false"/>
+  </target>
+  
 </project>
