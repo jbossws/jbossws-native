@@ -50,7 +50,7 @@ public class ComplexTypeUnmarshallerTestCase extends WSToolsTest
    /** Get the URL to the defining schema */
    protected XSModel getSchemaModel(QName xmlType, Class javaType) throws Exception
    {
-      File xsdFile = new File("../src/resources/common/jbossxb/ComplexTypesService_RPC.xsd");
+      File xsdFile = new File("../src/test/resources/common/jbossxb/ComplexTypesService_RPC.xsd");
       assertTrue(xsdFile.exists());
 
       return new JavaToXSD().parseSchema(xsdFile.toURL());
