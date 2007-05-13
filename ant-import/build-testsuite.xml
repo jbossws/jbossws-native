@@ -17,17 +17,6 @@
   <!-- Available integration target -->
   <property name="integration.target.${jbossws.integration.target}" value="true"/>
 
-  <!-- Define jboss.home -->
-  <condition property="jboss.home" value="${jboss50.home}">
-    <equals arg1="${jbossws.integration.target}" arg2="jboss50"/>
-  </condition>
-  <condition property="jboss.home" value="${jboss42.home}">
-    <equals arg1="${jbossws.integration.target}" arg2="jboss42"/>
-  </condition>
-  <condition property="jboss.home" value="${jboss40.home}">
-    <equals arg1="${jbossws.integration.target}" arg2="jboss40"/>
-  </condition>
-
   <!-- Define excluded tests -->
   <property name="excludes-short-name" value="tests-${jbossws.integration.target}-excludes.txt"/>
   <property name="excludesfile" value="${tests.resources.dir}/${excludes-short-name}"/>
