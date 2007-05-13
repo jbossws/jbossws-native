@@ -81,6 +81,9 @@
     <mkdir dir="${core.output.etc.dir}"/>
     <copy todir="${core.output.etc.dir}" filtering="yes" overwrite="yes">
       <fileset dir="${core.etc.dir}"/>
+      <fileset dir="${build.dir}/etc">
+        <include name="default.mf"/>
+  	  </fileset>
       <filterset>
         <filter token="java.vm.version" value="${java.vm.version}"/>
         <filter token="java.vm.vendor" value="${java.vm.vendor}"/>
