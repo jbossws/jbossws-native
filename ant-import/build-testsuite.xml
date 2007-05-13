@@ -28,14 +28,6 @@
     <equals arg1="${jbossws.integration.target}" arg2="jboss40"/>
   </condition>
 
-  <!-- Integration Target Server -->
-  <condition property="jbossws.integration.target.jboss">
-    <isset property="jboss.home"/>
-  </condition>
-  <condition property="jbossws.integration.target.tomcat">
-    <equals arg1="${jbossws.integration.target}" arg2="tomcat"/>
-  </condition>
-
   <!-- Define excluded tests -->
   <property name="excludes-short-name" value="tests-${jbossws.integration.target}-excludes.txt"/>
   <property name="excludesfile" value="${tests.resources.dir}/${excludes-short-name}"/>
@@ -52,6 +44,7 @@
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
       <pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
       <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
+      <pathelement location="${core.dir}/../jbws-${jbossws.integration.target}/output/lib/jbossws-${jbossws.integration.target}.jar"/>
     </path>
 
     <!-- The combined compile classpath -->
