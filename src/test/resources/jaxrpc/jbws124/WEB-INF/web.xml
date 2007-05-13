@@ -8,9 +8,9 @@
   <!-- Test that we can deploy an already modified web.xml -->
   <servlet>
     <servlet-name>Hello</servlet-name>
-    <servlet-class>org.jboss.ws.integration.jboss42.JBossServiceEndpointServlet</servlet-class>
+    <servlet-class>org.jboss.ws.core.server.ServiceEndpointServlet</servlet-class>
     <init-param>
-      <param-name>ServiceEndpointImpl</param-name>
+      <param-name>jboss.ws.endpoint</param-name>
       <param-value>org.jboss.test.ws.jaxrpc.jbws124.HelloJavaBean</param-value>
     </init-param>
   </servlet>

@@ -54,8 +54,11 @@ public class UnifiedMetaDataAssociationDeployer extends AbstractDeployer
          if (sepMetaData == null)
          {
             sepMetaData = getEndpointMetaData(umd, ep.getName());
-            sepMetaData.setServiceEndpointImplName(ep.getEndpointImpl().getName());
             ep.addMetaData(ServerEndpointMetaData.class, sepMetaData);
+            
+            Class targetBean = ep.getEndpointImpl();
+            if (targetBean != null)
+               sepMetaData.setServiceEndpointImplName(targetBean.getName());
          }
       }
    }

@@ -63,7 +63,7 @@ public class ServiceEndpointPublisher
    {
       // The URL to the rewrittn web.xml
       public URL webXML;
-      // Map<servlet-name, servlet-class> the servlet-class enties are the implementation beans 
+      // Maps the servlet name to the target bean 
       public Map<String, String> sepTargetMap = new HashMap<String, String>();
    }
 
