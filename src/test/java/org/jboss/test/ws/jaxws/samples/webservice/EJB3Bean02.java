@@ -30,7 +30,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 import org.jboss.annotation.ejb.RemoteBinding;
-import org.jboss.wsintegration.spi.annotation.WebContext;
+import org.jboss.wsf.spi.annotation.WebContext;
 
 /**
  * Test the JSR-181 javax.jws.WebService annotation on an EJB3 endpoint.

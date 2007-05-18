@@ -24,7 +24,7 @@ package org.jboss.ws.metadata.config.jaxws;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 
 /** 
  * A JBossWS handler chains configuration 

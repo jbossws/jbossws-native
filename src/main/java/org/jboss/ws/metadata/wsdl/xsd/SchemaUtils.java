@@ -56,8 +56,8 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSErrorHandler;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSSimpleTypeDefinition;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSStringList;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSTypeDefinition;
-import org.jboss.wsintegration.spi.management.ServerConfig;
-import org.jboss.wsintegration.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 
 /**
  *  Util class that deals with XML Schema

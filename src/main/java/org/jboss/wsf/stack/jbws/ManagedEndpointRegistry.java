@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.wsf.stack.jbws;
 
 // $Id$
 
@@ -32,8 +32,8 @@ import javax.management.ObjectName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.management.BasicEndpointRegistry;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.management.BasicEndpointRegistry;
 
 /**
  * A Service Endpoint Registry

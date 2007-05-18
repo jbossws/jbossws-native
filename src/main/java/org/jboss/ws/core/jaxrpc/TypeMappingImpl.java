@@ -54,7 +54,7 @@ import org.jboss.ws.core.jaxrpc.binding.QNameSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
 import org.jboss.ws.core.utils.HashCodeUtil;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
  * This is the representation of a type mapping.

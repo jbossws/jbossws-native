@@ -67,13 +67,13 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.

@@ -37,9 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.management.EndpointRegistry;
-import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.management.EndpointRegistry;
+import org.jboss.wsf.spi.management.EndpointRegistryFactory;
 
 /**
  * The servlet that that is associated with context /jbossws

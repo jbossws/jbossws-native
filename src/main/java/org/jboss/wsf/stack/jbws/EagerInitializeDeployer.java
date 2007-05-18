@@ -19,45 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsintegration.stack.jbws.deployment;
+package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
-import java.io.IOException;
-
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
-import org.jboss.wsintegration.spi.deployment.Deployment;
-import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsintegration.spi.deployment.WSDeploymentException;
+import org.jboss.wsf.spi.deployment.AbstractDeployer;
+import org.jboss.wsf.spi.deployment.Deployment;
 
 /**
- * A deployer that publishes the wsdl 
+ * A deployer that initializes the UMDM 
  *
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class PublishContractDeployer extends AbstractDeployer
+public class EagerInitializeDeployer extends AbstractDeployer
 {
    @Override
    public void create(Deployment dep)
    {
-      UnifiedDeploymentInfo udi = dep.getContext().getAttachment(UnifiedDeploymentInfo.class);
-      if (udi == null)
-         throw new IllegalStateException("Cannot obtain unified deployement info");
-
       UnifiedMetaData umd = dep.getContext().getAttachment(UnifiedMetaData.class);
       if (umd == null)
          throw new IllegalStateException("Cannot obtain unified meta data");
-
-      try
-      {
-         WSDLFilePublisher publisher = new WSDLFilePublisher(udi);
-         publisher.publishWsdlFiles(umd);
-      }
-      catch (IOException ex)
-      {
-         throw new WSDeploymentException(ex);
-      }
+      
+      umd.eagerInitialize();
    }
 }

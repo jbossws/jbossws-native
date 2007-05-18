@@ -19,36 +19,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsintegration.stack.jbws.deployment;
+package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
-import javax.management.ObjectName;
+import java.io.IOException;
 
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
-import org.jboss.wsintegration.spi.deployment.Deployment;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.spi.deployment.AbstractDeployer;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.deployment.WSDeploymentException;
 
 /**
- * A deployer that assigns the complete name to the Endpoint 
+ * A deployer that publishes the wsdl 
  *
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class EndpointNameDeployer extends AbstractDeployer
+public class PublishContractDeployer extends AbstractDeployer
 {
    @Override
    public void create(Deployment dep)
    {
-      for (Endpoint ep : dep.getService().getEndpoints())
-      {
-         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
-         if (sepMetaData == null)
-            throw new IllegalStateException("Cannot obtain endpoint meta data");
+      UnifiedDeploymentInfo udi = dep.getContext().getAttachment(UnifiedDeploymentInfo.class);
+      if (udi == null)
+         throw new IllegalStateException("Cannot obtain unified deployement info");
 
-         ObjectName sepID = sepMetaData.getServiceEndpointID();
-         ep.setName(sepID);
+      UnifiedMetaData umd = dep.getContext().getAttachment(UnifiedMetaData.class);
+      if (umd == null)
+         throw new IllegalStateException("Cannot obtain unified meta data");
+
+      try
+      {
+         WSDLFilePublisher publisher = new WSDLFilePublisher(udi);
+         publisher.publishWsdlFiles(umd);
+      }
+      catch (IOException ex)
+      {
+         throw new WSDeploymentException(ex);
       }
    }
 }

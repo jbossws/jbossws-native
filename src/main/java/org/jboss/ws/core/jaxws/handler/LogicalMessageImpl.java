@@ -41,7 +41,7 @@ import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.*;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

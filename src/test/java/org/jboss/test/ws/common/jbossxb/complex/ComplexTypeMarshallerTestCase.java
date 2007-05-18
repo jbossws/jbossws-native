@@ -34,7 +34,7 @@ import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 
 /**
  * Test the JAXB marshalling of complex types

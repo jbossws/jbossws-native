@@ -38,7 +38,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
  * The serialization context for JAXRPC endpoints/clients

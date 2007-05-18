@@ -31,7 +31,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**
  * A JBossWS test helper that deals with test deployment/undeployment, etc.

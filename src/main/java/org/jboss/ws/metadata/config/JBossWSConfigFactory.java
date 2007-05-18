@@ -34,7 +34,7 @@ import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;

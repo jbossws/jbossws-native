@@ -54,16 +54,16 @@ import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
-import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.wsintegration.spi.metadata.webservices.PortComponentMetaData;
-import org.jboss.wsintegration.spi.metadata.webservices.WebserviceDescriptionMetaData;
-import org.jboss.wsintegration.spi.metadata.webservices.WebservicesFactory;
-import org.jboss.wsintegration.spi.metadata.webservices.WebservicesMetaData;
-import org.jboss.wsintegration.spi.utils.IOUtils;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
+import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
+import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
+import org.jboss.wsf.spi.utils.IOUtils;
 
 /**
  * An abstract annotation meta data builder.

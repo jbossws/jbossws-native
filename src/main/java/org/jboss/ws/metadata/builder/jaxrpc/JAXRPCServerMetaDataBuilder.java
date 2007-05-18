@@ -42,15 +42,15 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-import org.jboss.wsintegration.spi.deployment.JAXRPCDeployment;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedBeanMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.wsintegration.spi.metadata.webservices.PortComponentMetaData;
-import org.jboss.wsintegration.spi.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.wsf.spi.deployment.JAXRPCDeployment;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
+import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
 
 /**
  * A server side meta data builder that is based on webservices.xml.

@@ -75,8 +75,8 @@ import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Element;
 

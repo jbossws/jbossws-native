@@ -36,7 +36,7 @@ import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.SecurityDecoder;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.Util;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

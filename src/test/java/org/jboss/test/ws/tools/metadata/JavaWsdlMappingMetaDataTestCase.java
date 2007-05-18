@@ -37,7 +37,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointMethodMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceInterfaceMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlMessageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlReturnValueMapping;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

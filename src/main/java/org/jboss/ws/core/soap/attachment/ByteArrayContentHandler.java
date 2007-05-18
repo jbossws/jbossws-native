@@ -33,7 +33,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 
 import org.jboss.ws.core.utils.MimeUtils;
-import org.jboss.wsintegration.spi.utils.IOUtils;
+import org.jboss.wsf.spi.utils.IOUtils;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>

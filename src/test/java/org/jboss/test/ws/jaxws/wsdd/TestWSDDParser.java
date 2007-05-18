@@ -22,12 +22,13 @@
 package org.jboss.test.ws.jaxws.wsdd;
 
 import junit.framework.TestCase;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsintegration.spi.metadata.webservices.PortComponentMetaData;
-import org.jboss.wsintegration.spi.metadata.webservices.WebserviceDescriptionMetaData;
-import org.jboss.wsintegration.spi.metadata.webservices.WebservicesFactory;
-import org.jboss.wsintegration.spi.metadata.webservices.WebservicesMetaData;
+
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
+import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
+import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;

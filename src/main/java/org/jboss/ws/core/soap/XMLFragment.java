@@ -43,8 +43,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
 import org.jboss.ws.core.jaxrpc.binding.BufferedStreamSource;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

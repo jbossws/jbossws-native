@@ -52,10 +52,10 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 
 /**
  * A client side meta data builder.

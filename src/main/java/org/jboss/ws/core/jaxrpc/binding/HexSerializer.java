@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.NamedNodeMap;

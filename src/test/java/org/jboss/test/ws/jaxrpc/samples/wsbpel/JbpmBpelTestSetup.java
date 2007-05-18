@@ -28,7 +28,7 @@ import junit.framework.Test;
 import org.jboss.logging.Logger;
 import org.jboss.test.ws.JBossWSTestHelper;
 import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**
  * A test setup that deploys process archives.

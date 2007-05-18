@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsintegration.stack.jbws.deployment;
+package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
@@ -29,9 +29,9 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
-import org.jboss.wsintegration.spi.deployment.Deployment;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.AbstractDeployer;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
  * A deployer that assigns the EndpointMetaData to the Endpoint 

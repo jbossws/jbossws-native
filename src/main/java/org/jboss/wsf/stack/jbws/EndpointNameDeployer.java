@@ -19,44 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.wsf.stack.jbws;
 
-// $Id$
+//$Id$
 
-import javax.servlet.ServletContext;
+import javax.management.ObjectName;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.spi.deployment.AbstractDeployer;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
- * A servlet that is installed for every web service endpoint.
+ * A deployer that assigns the complete name to the Endpoint 
  *
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class ServiceEndpointServlet extends AbstractServiceEndpointServlet
+public class EndpointNameDeployer extends AbstractDeployer
 {
-   // provide logging
-   private static final Logger log = Logger.getLogger(ServiceEndpointServlet.class);
-
-   /** Initialize the service endpoint
-    */
-   protected void initServiceEndpoint(String contextPath)
+   @Override
+   public void create(Deployment dep)
    {
-      super.initServiceEndpoint(contextPath);
-
-      // read the config name/file from web.xml
-      ServletContext ctx = getServletContext();
-      String configName = ctx.getInitParameter("jbossws-config-name");
-      String configFile = ctx.getInitParameter("jbossws-config-file");
-      if (configName != null || configFile != null)
+      for (Endpoint ep : dep.getService().getEndpoints())
       {
-         ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
-         if (epMetaData == null)
+         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
+         if (sepMetaData == null)
             throw new IllegalStateException("Cannot obtain endpoint meta data");
 
-         log.debug("Updating service endpoint config\n  config-name: " + configName + "\n  config-file: " + configFile);
-         epMetaData.setConfigName(configName, configFile);
+         ObjectName sepID = sepMetaData.getServiceEndpointID();
+         ep.setName(sepID);
       }
    }
 }

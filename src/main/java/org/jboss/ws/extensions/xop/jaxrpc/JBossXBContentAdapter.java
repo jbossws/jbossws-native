@@ -37,7 +37,7 @@ import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.wsintegration.spi.utils.IOUtils;
+import org.jboss.wsf.spi.utils.IOUtils;
 import org.jboss.xb.binding.sunday.marshalling.MarshallingContext;
 import org.jboss.xb.binding.sunday.marshalling.TermBeforeMarshallingCallback;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;

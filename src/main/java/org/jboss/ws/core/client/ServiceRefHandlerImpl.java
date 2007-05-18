@@ -36,7 +36,7 @@ import org.jboss.ws.integration.ServiceRefHandler;
 import org.jboss.ws.integration.ServiceRefMetaData;
 import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 

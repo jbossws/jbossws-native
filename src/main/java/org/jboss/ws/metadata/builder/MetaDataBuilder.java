@@ -67,17 +67,17 @@ import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsintegration.spi.management.ServerConfig;
-import org.jboss.wsintegration.spi.management.ServerConfigFactory;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedBeanMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
-import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
+import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /** An abstract meta data builder.
  *

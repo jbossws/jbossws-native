@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsintegration.stack.jbws.deployment;
+package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
@@ -27,11 +27,11 @@ import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
-import org.jboss.wsintegration.spi.deployment.Deployment;
-import org.jboss.wsintegration.spi.deployment.JAXRPCDeployment;
-import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsintegration.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.deployment.AbstractDeployer;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.JAXRPCDeployment;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 
 /**
  * A deployer that builds the UnifiedDeploymentInfo 

@@ -29,7 +29,7 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

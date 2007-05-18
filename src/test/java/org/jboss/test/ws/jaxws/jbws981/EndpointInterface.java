@@ -12,7 +12,7 @@ package org.jboss.test.ws.jaxws.jbws981;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
-import org.jboss.wsintegration.spi.annotation.WebContext;
+import org.jboss.wsf.spi.annotation.WebContext;
 
 @WebService(targetNamespace = "http://www.jboss.org/test/ws/jaxws/jbws981")
 @SOAPBinding(style = SOAPBinding.Style.RPC)

@@ -46,7 +46,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
-import org.jboss.wsintegration.spi.utils.IOUtils;
+import org.jboss.wsf.spi.utils.IOUtils;
 
 /**
  * MessageFactory implementation

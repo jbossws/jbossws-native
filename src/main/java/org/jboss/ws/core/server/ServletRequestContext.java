@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.jboss.wsintegration.spi.invocation.BasicInvocationContext;
+import org.jboss.wsf.spi.invocation.BasicInvocationContext;
 
 /**
  * Implementation of ServletEndpointContext

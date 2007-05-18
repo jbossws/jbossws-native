@@ -64,10 +64,10 @@ import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.interfaces.WebservicesXMLCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
-import org.jboss.wsintegration.spi.utils.IOUtils;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
  *  Helper class used by the command line tool "jbossws"

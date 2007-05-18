@@ -31,9 +31,9 @@ import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedBeanMetaData;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations

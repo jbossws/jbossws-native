@@ -34,8 +34,8 @@ import java.io.Writer;
 import javax.xml.soap.SOAPEnvelope;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMWriter;
 
 /**
  * Writes a SAAJ elements to an output stream.

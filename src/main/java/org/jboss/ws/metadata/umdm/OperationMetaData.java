@@ -39,7 +39,7 @@ import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

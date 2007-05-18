@@ -34,8 +34,8 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsintegration.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 
 /**
  * The provided implementation of a WSContractProvider.

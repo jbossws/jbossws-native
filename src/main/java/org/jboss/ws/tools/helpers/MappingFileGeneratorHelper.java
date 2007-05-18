@@ -77,7 +77,7 @@ import org.jboss.ws.tools.RPCSignature;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

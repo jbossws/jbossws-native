@@ -34,8 +34,8 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.WSDLToJava;
 import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

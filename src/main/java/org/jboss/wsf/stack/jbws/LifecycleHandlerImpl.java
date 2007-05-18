@@ -19,29 +19,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsintegration.stack.jbws.deployment;
+package org.jboss.wsf.stack.jbws;
 
-//$Id$
+//$Id: LifecycleHandlerImpl.java 2923 2007-04-25 14:23:29Z thomas.diesler@jboss.com $
 
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
-import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.spi.deployment.BasicLifecycleHandler;
+import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
- * A deployer that initializes the UMDM 
- *
+ * A lifecycle handler
+ * 
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class EagerInitializeDeployer extends AbstractDeployer
+public class LifecycleHandlerImpl extends BasicLifecycleHandler
 {
-   @Override
-   public void create(Deployment dep)
+   public void start(Endpoint endpoint)
    {
-      UnifiedMetaData umd = dep.getContext().getAttachment(UnifiedMetaData.class);
-      if (umd == null)
-         throw new IllegalStateException("Cannot obtain unified meta data");
-      
-      umd.eagerInitialize();
+      super.start(endpoint);
+      log.info("WebService started: " + getEndpointAddress(endpoint));
+   }
+
+   public void stop(Endpoint endpoint)
+   {
+      super.stop(endpoint);
+      log.info("WebService stoped: " + getEndpointAddress(endpoint));
+   }
+
+   private String getEndpointAddress(Endpoint ep)
+   {
+      ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
+      if (sepMetaData == null)
+         throw new IllegalStateException("Cannot obtain endpoint meta data");
+
+      return sepMetaData.getEndpointAddress();
    }
 }

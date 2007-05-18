@@ -30,7 +30,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPElementWriter;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

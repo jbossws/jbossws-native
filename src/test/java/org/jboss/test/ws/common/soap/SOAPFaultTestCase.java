@@ -38,7 +38,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 
 /**
  * Test the SOAPFault

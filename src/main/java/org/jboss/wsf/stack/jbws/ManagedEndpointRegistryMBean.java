@@ -19,12 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.wsf.stack.jbws;
 
-import javax.management.ObjectName;
-
-import org.jboss.wsintegration.spi.management.EndpointRegistry;
-import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.spi.management.EndpointRegistry;
 
 /**
  * MBean interface.
@@ -33,6 +30,6 @@ import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
 public interface ManagedEndpointRegistryMBean extends EndpointRegistry
 {
    String getImplementationTitle();
-   
+
    String getImplementationVersion();
 }

@@ -28,7 +28,7 @@ import javax.xml.soap.FactoryLoader;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
-import org.jboss.wsintegration.spi.invocation.SecurityAssociationAdaptor;
+import org.jboss.wsf.spi.invocation.SecurityAssociationAdaptor;
 import org.w3c.dom.Document;
 
 public class ReceiveUsernameOperation implements TokenOperation

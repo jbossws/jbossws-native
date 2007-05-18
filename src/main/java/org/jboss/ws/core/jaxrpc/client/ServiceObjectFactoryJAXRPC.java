@@ -58,12 +58,12 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.management.EndpointRegistry;
-import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.management.EndpointRegistry;
+import org.jboss.wsf.spi.management.EndpointRegistryFactory;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service

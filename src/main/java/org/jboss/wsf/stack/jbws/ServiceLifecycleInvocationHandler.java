@@ -19,17 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxrpc;
+package org.jboss.wsf.stack.jbws;
 
 // $Id$
 
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.invocation.EndpointInvocation;
-import org.jboss.wsintegration.spi.invocation.InvocationContext;
-import org.jboss.wsintegration.spi.invocation.InvocationHandlerJSE;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.invocation.EndpointInvocation;
+import org.jboss.wsf.spi.invocation.InvocationContext;
+import org.jboss.wsf.spi.invocation.InvocationHandlerJSE;
 
 /**
  * Handles invocations on JSE endpoints.

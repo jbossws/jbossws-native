@@ -50,7 +50,7 @@ import org.jboss.ws.extensions.security.Target;
 import org.jboss.ws.extensions.security.TimestampOperation;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.WsuIdTarget;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

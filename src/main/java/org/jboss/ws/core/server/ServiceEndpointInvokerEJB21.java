@@ -25,11 +25,11 @@ package org.jboss.ws.core.server;
 
 import org.jboss.ws.core.ServiceEndpointInvocation;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.invocation.EndpointInvocation;
-import org.jboss.wsintegration.spi.invocation.HandlerCallback;
-import org.jboss.wsintegration.spi.invocation.InvocationContext;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.invocation.EndpointInvocation;
+import org.jboss.wsf.spi.invocation.HandlerCallback;
+import org.jboss.wsf.spi.invocation.InvocationContext;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Handles invocations on EJB21 endpoints.

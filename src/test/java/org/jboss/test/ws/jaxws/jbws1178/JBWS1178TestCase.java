@@ -35,7 +35,7 @@ import junit.framework.Test;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
-import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**
  * [JBWS-1178] Multiple virtual host and soap:address problem

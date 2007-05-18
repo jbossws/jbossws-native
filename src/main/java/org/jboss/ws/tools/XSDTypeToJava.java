@@ -52,7 +52,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 
 /** Class that converts a XSD Type into Java class
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana

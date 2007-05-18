@@ -21,7 +21,7 @@
 */
 package org.jboss.test.ws.interop;
 
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.test.ws.interop.ClientScenario;
 import org.w3c.dom.Element;
 

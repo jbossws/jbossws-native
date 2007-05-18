@@ -53,12 +53,12 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.jboss.wsintegration.stack.jbws.deployment;
+package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsintegration.spi.deployment.BasicDeployment;
+import org.jboss.wsf.spi.deployment.BasicDeployment;
 
 /**
  * A deployment that injects the ClassLoader into the UnifiedMetaDataModel 

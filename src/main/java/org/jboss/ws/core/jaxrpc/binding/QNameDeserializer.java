@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Element;

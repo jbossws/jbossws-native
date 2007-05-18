@@ -54,12 +54,12 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Service class acts as a factory for:

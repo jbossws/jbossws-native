@@ -32,7 +32,7 @@ import javax.jws.soap.SOAPBinding;
 
 import org.jboss.annotation.ejb.RemoteBinding;
 import org.jboss.annotation.security.SecurityDomain;
-import org.jboss.wsintegration.spi.annotation.WebContext;
+import org.jboss.wsf.spi.annotation.WebContext;
 
 /**
  * Test the JSR-181 annotation: javax.jws.WebService

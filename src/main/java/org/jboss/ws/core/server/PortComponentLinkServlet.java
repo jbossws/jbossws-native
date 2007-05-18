@@ -35,9 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.management.EndpointRegistry;
-import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.management.EndpointRegistry;
+import org.jboss.wsf.spi.management.EndpointRegistryFactory;
 
 /**
  * A servlet that reports the serviceURL for a given service ID.

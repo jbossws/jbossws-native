@@ -32,7 +32,7 @@ import org.jboss.test.ws.tools.sei.Derived;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSTypeDefinition;
 import org.jboss.ws.tools.schema.SchemaTypeCreator;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

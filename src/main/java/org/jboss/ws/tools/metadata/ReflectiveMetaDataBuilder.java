@@ -44,7 +44,7 @@ import org.jboss.ws.metadata.umdm.WrappedParameter;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.Configuration.OperationConfig;
-import org.jboss.wsintegration.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
  * Builds the Tools Endpoint Meta Data using Java Reflection

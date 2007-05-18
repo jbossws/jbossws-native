@@ -46,7 +46,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
 import org.jboss.ws.core.client.ServiceObjectFactory;
-import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.ws.Service

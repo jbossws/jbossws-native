@@ -43,7 +43,7 @@ import junit.framework.Test;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.soap.NameImpl;
-import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

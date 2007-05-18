@@ -37,7 +37,7 @@ import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.jaxrpc.client.ServiceExt;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**
  * Test dynamic handlers

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
@@ -66,6 +66,11 @@ import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.server.MimeHeaderSource;
+import org.jboss.ws.core.server.ServiceEndpointInvoker;
+import org.jboss.ws.core.server.ServletHeaderSource;
+import org.jboss.ws.core.server.ServletRequestContext;
+import org.jboss.ws.core.server.WSDLRequestHandler;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
@@ -76,13 +81,13 @@ import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsintegration.spi.deployment.Endpoint;
-import org.jboss.wsintegration.spi.deployment.Endpoint.EndpointState;
-import org.jboss.wsintegration.spi.invocation.InvocationContext;
-import org.jboss.wsintegration.spi.invocation.RequestHandler;
-import org.jboss.wsintegration.spi.management.ServerConfig;
-import org.jboss.wsintegration.spi.management.ServerConfigFactory;
-import org.jboss.wsintegration.spi.utils.DOMWriter;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
+import org.jboss.wsf.spi.invocation.InvocationContext;
+import org.jboss.wsf.spi.invocation.RequestHandler;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 
 /**
