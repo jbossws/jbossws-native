@@ -42,8 +42,6 @@ import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.SchemaBindingBuilder;
-import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -52,6 +50,8 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
 
 /**

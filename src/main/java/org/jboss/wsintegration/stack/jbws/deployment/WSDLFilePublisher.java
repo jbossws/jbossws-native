@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 // $Id$
 
@@ -42,16 +42,16 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.ResourceURL;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -86,6 +86,7 @@ import javax.xml.rpc.holders.ShortWrapperHolder;
 import javax.xml.rpc.holders.StringHolder;
 
 import org.jboss.logging.Logger;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * HolderUtils provides static utility functions for both JAX-RPC

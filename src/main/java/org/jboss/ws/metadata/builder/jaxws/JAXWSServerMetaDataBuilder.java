@@ -27,11 +27,11 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceProvider;
 
 import org.jboss.ws.annotation.EndpointConfig;
-import org.jboss.ws.annotation.WebContext;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.annotation.WebContext;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.deployment.Deployment.DeploymentType;
 
 /**
  * Builds ServiceEndpointMetaData for a JAX-WS endpoint.

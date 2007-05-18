@@ -44,9 +44,9 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * Util class for the JBossWS Tools project

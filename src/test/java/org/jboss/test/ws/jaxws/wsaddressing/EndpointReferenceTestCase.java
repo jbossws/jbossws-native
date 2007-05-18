@@ -25,7 +25,7 @@ package org.jboss.test.ws.jaxws.wsaddressing;
 
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.extensions.addressing.EndpointReferenceImpl;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /** 

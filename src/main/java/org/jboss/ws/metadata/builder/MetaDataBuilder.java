@@ -52,16 +52,6 @@ import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.EventingUtils;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
-import org.jboss.ws.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedBeanMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedEjbPortComponentMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedMessageDrivenMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedWebSecurityMetaData;
-import org.jboss.ws.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -77,7 +67,17 @@ import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.utils.ObjectNameFactory;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedApplicationMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedBeanMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
+import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
 
 /** An abstract meta data builder.
  *

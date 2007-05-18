@@ -29,7 +29,7 @@ import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

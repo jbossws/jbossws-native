@@ -30,7 +30,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 
 public class ServerHandler extends GenericHandler
 {

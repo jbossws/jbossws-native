@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.JavassistUtils;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -52,6 +51,7 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 {

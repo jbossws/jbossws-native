@@ -30,8 +30,8 @@ import org.jboss.ws.metadata.config.jaxws.CommonConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.HandlerChainsConfigJAXWS;
-import org.jboss.ws.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 

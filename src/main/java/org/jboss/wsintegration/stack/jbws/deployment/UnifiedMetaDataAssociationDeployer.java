@@ -19,19 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
 import javax.management.ObjectName;
 
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.deployment.AbstractDeployer;
-import org.jboss.ws.integration.deployment.Deployment;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
 
 /**
  * A deployer that assigns the EndpointMetaData to the Endpoint 
@@ -50,13 +50,13 @@ public class UnifiedMetaDataAssociationDeployer extends AbstractDeployer
 
       for (Endpoint ep : dep.getService().getEndpoints())
       {
-         ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
          if (sepMetaData == null)
          {
             sepMetaData = getEndpointMetaData(umd, ep.getName());
-            ep.addMetaData(ServerEndpointMetaData.class, sepMetaData);
+            ep.addAttachment(ServerEndpointMetaData.class, sepMetaData);
             
-            Class targetBean = ep.getEndpointImpl();
+            Class targetBean = ep.getTargetBean();
             if (targetBean != null)
                sepMetaData.setServiceEndpointImplName(targetBean.getName());
          }

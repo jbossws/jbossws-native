@@ -44,7 +44,6 @@ import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
 import org.jboss.ws.core.jaxrpc.Use;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPScanner;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
@@ -84,6 +83,7 @@ import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * A meta data builder that is based on webservices.xml.

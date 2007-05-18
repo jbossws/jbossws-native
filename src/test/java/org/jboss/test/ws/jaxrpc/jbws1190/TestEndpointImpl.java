@@ -25,12 +25,12 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
 
 /**
  * 

@@ -33,8 +33,8 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.Text;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

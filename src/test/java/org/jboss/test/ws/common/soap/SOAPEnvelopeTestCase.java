@@ -33,7 +33,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

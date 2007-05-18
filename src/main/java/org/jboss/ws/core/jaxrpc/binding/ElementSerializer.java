@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 

@@ -28,8 +28,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
 
 /** 
  * @author darran.lofthouse@jboss.com

@@ -51,7 +51,7 @@ public class ServiceEndpointServlet extends AbstractServiceEndpointServlet
       String configFile = ctx.getInitParameter("jbossws-config-file");
       if (configName != null || configFile != null)
       {
-         ServerEndpointMetaData epMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+         ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
          if (epMetaData == null)
             throw new IllegalStateException("Cannot obtain endpoint meta data");
 

@@ -34,7 +34,7 @@ import java.io.Reader;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.IOUtils;
+import org.jboss.wsintegration.spi.utils.IOUtils;
 
 /**
  * A StreamSource that can be read repeatedly. 

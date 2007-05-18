@@ -34,7 +34,7 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 

@@ -35,8 +35,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
-import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -52,10 +50,12 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 
 /**
  * A client side meta data builder.

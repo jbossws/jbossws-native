@@ -30,10 +30,10 @@ import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.management.BasicEndpointRegistry;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.management.BasicEndpointRegistry;
 
 /**
  * A Service Endpoint Registry
@@ -75,7 +75,7 @@ public class ManagedEndpointRegistry extends BasicEndpointRegistry implements Ma
       for (ObjectName sepID : getEndpoints())
       {
          Endpoint auxEndpoint = getEndpoint(sepID);
-         ServerEndpointMetaData sepMetaData = auxEndpoint.getMetaData(ServerEndpointMetaData.class);
+         ServerEndpointMetaData sepMetaData = auxEndpoint.getAttachment(ServerEndpointMetaData.class);
          if (pcName.equals(sepMetaData.getPortComponentName()))
          {
             if (endpoint != null)

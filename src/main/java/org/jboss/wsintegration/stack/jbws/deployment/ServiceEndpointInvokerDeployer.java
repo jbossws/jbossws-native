@@ -19,36 +19,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
-import javax.management.ObjectName;
-
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.deployment.AbstractDeployer;
-import org.jboss.ws.integration.deployment.Deployment;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.ws.core.server.ServiceEndpointInvoker;
+import org.jboss.ws.core.server.ServiceEndpointInvokerEJB21;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.deployment.Deployment.DeploymentType;
 
 /**
- * A deployer that assigns the complete name to the Endpoint 
+ * A deployer that associates the ServiceEndpointInvoker with the endpoint 
  *
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class EndpointNameDeployer extends AbstractDeployer
+public class ServiceEndpointInvokerDeployer extends AbstractDeployer
 {
    @Override
    public void create(Deployment dep)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
-         ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
-         if (sepMetaData == null)
-            throw new IllegalStateException("Cannot obtain endpoint meta data");
-
-         ObjectName sepID = sepMetaData.getServiceEndpointID();
-         ep.setName(sepID);
+         ServiceEndpointInvoker epInvoker = ep.getAttachment(ServiceEndpointInvoker.class);
+         if (epInvoker == null)
+         {
+            DeploymentType depType = ep.getService().getDeployment().getType();
+            if (depType == DeploymentType.JAXRPC_EJB21)
+            {
+               epInvoker = new ServiceEndpointInvokerEJB21();
+            }
+            else
+            {
+               epInvoker = new ServiceEndpointInvoker();
+            }
+            ep.addAttachment(ServiceEndpointInvoker.class, epInvoker);
+            epInvoker.init(ep);
+         }
       }
    }
 }

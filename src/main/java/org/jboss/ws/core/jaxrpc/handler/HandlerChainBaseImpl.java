@@ -48,7 +48,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPElementWriter;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Represents a list of handlers. All elements in the

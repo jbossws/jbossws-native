@@ -52,18 +52,18 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.client.ServiceObjectFactory;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.management.EndpointRegistry;
-import org.jboss.ws.integration.management.EndpointRegistryFactory;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.management.EndpointRegistry;
+import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service
@@ -187,7 +187,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
                if (endpoint == null)
                   throw new WSException("Cannot resolve port-component-link: " + pcLink);
 
-               ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+               ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
                endpointAddress = sepMetaData.getEndpointAddress();
             }
             catch (Throwable ex)

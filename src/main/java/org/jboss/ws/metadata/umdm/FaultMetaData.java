@@ -39,10 +39,10 @@ import javax.xml.ws.WebServiceException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.acessor.ReflectiveFieldAccessor;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * A Fault component describes a fault that a given operation supports.

@@ -40,8 +40,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 
 /**
  * Executes a list of JAXWS handlers.

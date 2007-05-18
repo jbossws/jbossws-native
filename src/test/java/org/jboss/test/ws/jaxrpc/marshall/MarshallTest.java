@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean;
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean2;
-import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * Test standard JAX-RPC types.

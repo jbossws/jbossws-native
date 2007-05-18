@@ -38,7 +38,7 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.core.utils.UUIDGenerator;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 
 /**
  * A client side handler for the ws-addressing

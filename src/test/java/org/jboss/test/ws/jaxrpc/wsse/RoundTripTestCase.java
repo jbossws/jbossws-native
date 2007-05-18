@@ -35,7 +35,6 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.EncryptionOperation;
 import org.jboss.ws.extensions.security.OperationDescription;
@@ -51,6 +50,7 @@ import org.jboss.ws.extensions.security.Target;
 import org.jboss.ws.extensions.security.TimestampOperation;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.WsuIdTarget;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

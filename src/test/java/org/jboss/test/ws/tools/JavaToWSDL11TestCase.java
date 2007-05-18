@@ -35,13 +35,13 @@ import org.jboss.test.ws.tools.sei.ServiceException;
 import org.jboss.test.ws.tools.sei.StandardJavaTypes;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.JavaToWSDL;
 import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.IOUtils;
 import org.w3c.dom.Element;
 
 /**

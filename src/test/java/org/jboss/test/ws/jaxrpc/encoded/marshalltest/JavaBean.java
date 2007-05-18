@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 public class JavaBean
 {

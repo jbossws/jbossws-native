@@ -29,8 +29,8 @@ import java.net.URL;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 
 /**
  * Create a WSSecurityConfiguration

@@ -35,11 +35,11 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.annotation.security.SecurityDomain;
-import org.jboss.ws.annotation.WebContext;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxws.WebServiceContextEJB;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.wsintegration.spi.annotation.WebContext;
+import org.jboss.wsintegration.spi.invocation.WebServiceContextEJB;
 
 @WebService(name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/jaxws/context")
 @SOAPBinding(style = Style.RPC)

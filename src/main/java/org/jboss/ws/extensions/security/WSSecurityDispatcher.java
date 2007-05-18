@@ -37,7 +37,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.wsse.Config;
@@ -51,6 +50,7 @@ import org.jboss.ws.metadata.wsse.Requires;
 import org.jboss.ws.metadata.wsse.Sign;
 import org.jboss.ws.metadata.wsse.Timestamp;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 public class WSSecurityDispatcher

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.server;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
@@ -31,31 +31,64 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.SecurityRolesHandler;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**
- * Generate a web deployment for EJB endpoints 
- * 
+ * A deployer that generates a webapp for an EJB endpoint 
+ *
  * @author Thomas.Diesler@jboss.org
- * @since 12-May-2006
+ * @since 25-Apr-2007
  */
-public abstract class ServiceEndpointGeneratorEJB
+public class WebAppGeneratorDeployer extends AbstractDeployer
 {
-   // logging support
-   protected Logger log = Logger.getLogger(ServiceEndpointGeneratorEJB.class);
+   private SecurityRolesHandler securityRolesHandlerEJB21;
+   private SecurityRolesHandler securityRolesHandlerEJB3;
 
-   public URL generatWebDeployment(UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi)
+   public void setSecurityRolesHandlerEJB21(SecurityRolesHandler securityRolesHandlerEJB21)
+   {
+      this.securityRolesHandlerEJB21 = securityRolesHandlerEJB21;
+   }
+
+   public void setSecurityRolesHandlerEJB3(SecurityRolesHandler securityRolesHandlerEJB3)
+   {
+      this.securityRolesHandlerEJB3 = securityRolesHandlerEJB3;
+   }
+
+   @Override
+   public void create(Deployment dep)
+   {
+      UnifiedDeploymentInfo udi = dep.getContext().getAttachment(UnifiedDeploymentInfo.class);
+      if (udi == null)
+         throw new IllegalStateException("Cannot obtain unified deployement info");
+
+      UnifiedMetaData umd = dep.getContext().getAttachment(UnifiedMetaData.class);
+      if (umd == null)
+         throw new IllegalStateException("Cannot obtain unified meta data");
+
+      if (dep.getType().toString().endsWith("EJB21"))
+      {
+         udi.webappURL = generatWebDeployment(umd, udi, securityRolesHandlerEJB21);
+      }
+      else if (dep.getType().toString().endsWith("EJB3"))
+      {
+         udi.webappURL = generatWebDeployment(umd, udi, securityRolesHandlerEJB3);
+      }
+   }
+
+   private URL generatWebDeployment(UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, SecurityRolesHandler securityHandler)
    {
       // Collect the list of ServerEndpointMetaData
       List<ServerEndpointMetaData> sepMetaDataList = new ArrayList<ServerEndpointMetaData>();
@@ -67,7 +100,7 @@ public abstract class ServiceEndpointGeneratorEJB
          }
       }
 
-      Element webDoc = createWebAppDescriptor(sepMetaDataList, udi);
+      Element webDoc = createWebAppDescriptor(sepMetaDataList, udi, securityHandler);
       Element jbossDoc = createJBossWebAppDescriptor(sepMetaDataList);
 
       File tmpWar = null;
@@ -101,7 +134,7 @@ public abstract class ServiceEndpointGeneratorEJB
       }
    }
 
-   private Element createWebAppDescriptor(List<ServerEndpointMetaData> sepMetaDataList, UnifiedDeploymentInfo udi)
+   private Element createWebAppDescriptor(List<ServerEndpointMetaData> sepMetaDataList, UnifiedDeploymentInfo udi, SecurityRolesHandler securityHandler)
    {
       Element webApp = DOMUtils.createElement("web-app");
 
@@ -117,7 +150,7 @@ public abstract class ServiceEndpointGeneratorEJB
          Element servlet = (Element)webApp.appendChild(DOMUtils.createElement("servlet"));
          Element servletName = (Element)servlet.appendChild(DOMUtils.createElement("servlet-name"));
          servletName.appendChild(DOMUtils.createTextNode(ejbName));
-         
+
          Element servletClass = (Element)servlet.appendChild(DOMUtils.createElement("servlet-class"));
          String implName = sepMetaData.getServiceEndpointImplName();
          String seiName = sepMetaData.getServiceEndpointInterfaceName();
@@ -147,7 +180,7 @@ public abstract class ServiceEndpointGeneratorEJB
          }
 
          if (urlPatters.contains(urlPattern))
-            throw new IllegalArgumentException("Cannot use the same url-pattern with different endpoints, " + "check your <port-component-uri> in jboss.xml");
+            throw new IllegalArgumentException("Cannot use the same url-pattern with different endpoints, check your <port-component-uri> in jboss.xml");
 
          urlPatternElement.appendChild(DOMUtils.createTextNode(urlPattern));
          urlPatters.add(urlPattern);
@@ -220,7 +253,7 @@ public abstract class ServiceEndpointGeneratorEJB
          Element realm = (Element)loginConfig.appendChild(DOMUtils.createElement("realm-name"));
          realm.appendChild(DOMUtils.createTextNode("EJBServiceEndpointServlet Realm"));
 
-         addEJBSecurityRoles(webApp, udi);
+         securityHandler.addSecurityRoles(webApp, udi);
       }
 
       return webApp;
@@ -300,8 +333,4 @@ public abstract class ServiceEndpointGeneratorEJB
 
       return jbossWeb;
    }
-
-   /** Add the roles from ejb-jar.xml to the security roles
-    */
-   protected abstract void addEJBSecurityRoles(Element webApp, UnifiedDeploymentInfo udi);
 }

@@ -25,9 +25,9 @@ package org.jboss.ws.metadata.umdm;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * The JAXWS metdata data for a handler element

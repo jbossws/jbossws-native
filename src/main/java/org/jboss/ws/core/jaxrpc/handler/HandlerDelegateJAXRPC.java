@@ -40,11 +40,11 @@ import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** Delegates to JAXRPC handlers
  *

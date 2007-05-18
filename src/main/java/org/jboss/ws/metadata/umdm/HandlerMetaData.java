@@ -33,8 +33,8 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * The common metdata data for a handler element

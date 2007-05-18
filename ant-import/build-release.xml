@@ -14,7 +14,7 @@
 <project>
 
   <!-- Release to jboss.local.repository -->
-  <target name="release" depends="core-jars" 
+  <target name="release" depends="jars" 
     description="Release to jboss.local.repository">
 
     <!-- jboss/jbossws -->
@@ -31,7 +31,7 @@
         <include name="jbossws-resources.zip"/>
       </fileset>
     </copy>
-    <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${build.etc.dir}/component-info.xml" filtering="true" overwrite="true">
+    <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info.xml" filtering="true" overwrite="true">
       <filterset>
         <filtersfile file="${build.dir}/version.properties"/>
       </filterset>

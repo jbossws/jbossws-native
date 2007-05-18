@@ -28,6 +28,7 @@ import javax.xml.soap.FactoryLoader;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.wsintegration.spi.invocation.SecurityAssociationAdaptor;
 import org.w3c.dom.Document;
 
 public class ReceiveUsernameOperation implements TokenOperation
@@ -44,12 +45,12 @@ public class ReceiveUsernameOperation implements TokenOperation
    public void process(Document message, Token token) throws WSSecurityException
    {
       UsernameToken user = (UsernameToken)token;
-      String propName = SecurityAssociationAdaptorFactory.class.getName();
-      SecurityAssociationAdaptorFactory factory = (SecurityAssociationAdaptorFactory)FactoryLoader.loadFactory(propName, null);
-      if (factory == null)
+      String propName = SecurityAssociationAdaptor.class.getName();
+      
+      SecurityAssociationAdaptor securityAdaptor = (SecurityAssociationAdaptor)FactoryLoader.loadFactory(propName, null);
+      if (securityAdaptor == null)
          throw new WSSecurityException("Cannot load: " + propName);
       
-      SecurityAssociationAdaptor securityAdaptor = factory.getSecurityAssociationAdaptor();
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }

@@ -32,13 +32,13 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * The serialization context for JAXRPC endpoints/clients

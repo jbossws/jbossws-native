@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlAttachmentRef;
 import javax.xml.transform.Source;
 
-import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * Scans data types for MTOM and swaRef declarations.

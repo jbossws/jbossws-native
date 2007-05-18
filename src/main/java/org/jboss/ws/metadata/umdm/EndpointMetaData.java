@@ -56,15 +56,15 @@ import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
-import org.jboss.ws.core.utils.JavaUtils;
-import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * A Service component describes a set of endpoints.

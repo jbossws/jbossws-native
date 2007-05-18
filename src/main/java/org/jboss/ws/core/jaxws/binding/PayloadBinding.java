@@ -37,7 +37,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.ServiceEndpointInvocation;
 import org.jboss.ws.core.HeaderSource;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
@@ -51,9 +51,9 @@ import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** A BindingProvider for a JAXWS payload 
  *
@@ -69,20 +69,20 @@ public class PayloadBinding implements CommonBinding, BindingExt
    private BindingImpl delegate = new BindingImpl();
 
    /** On the client side, generate the payload from IN parameters. */
-   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       throw new NotImplementedException();
    }
 
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
-   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction payload) throws BindingException
+   public ServiceEndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction payload) throws BindingException
    {
       log.debug("unbindRequestMessage: " + opMetaData.getQName());
       try
       {
          // Construct the endpoint invocation object
-         EndpointInvocation epInv = new EndpointInvocation(opMetaData);
+         ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
@@ -111,7 +111,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
    }
 
    /** On the server side, generate the payload from OUT parameters. */
-   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv) throws BindingException
    {
       log.debug("bindResponseMessage: " + opMetaData.getQName());
 
@@ -146,7 +146,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
    }
 
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
-   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       throw new NotImplementedException();

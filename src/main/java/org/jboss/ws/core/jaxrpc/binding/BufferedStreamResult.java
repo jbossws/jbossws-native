@@ -32,7 +32,7 @@ import java.io.Writer;
 import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.IOUtils;
+import org.jboss.wsintegration.spi.utils.IOUtils;
 
 /**
  * @author Heiko.Braun@jboss.org

@@ -32,8 +32,8 @@ import javax.activation.DataContentHandler;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 
-import org.jboss.ws.core.utils.IOUtils;
 import org.jboss.ws.core.utils.MimeUtils;
+import org.jboss.wsintegration.spi.utils.IOUtils;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>

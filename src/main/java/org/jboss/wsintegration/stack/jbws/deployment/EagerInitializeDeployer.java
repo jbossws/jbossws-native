@@ -19,46 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxws;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
-// $Id$
+//$Id$
 
-import java.security.Principal;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.handler.MessageContext;
-
-import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
 
 /**
- * A WebServiceContext implementation that delegates to the HttpServletRequest.
+ * A deployer that initializes the UMDM 
  *
  * @author Thomas.Diesler@jboss.org
- * @since 23-Jan-2007
+ * @since 25-Apr-2007
  */
-public class WebServiceContextJSE extends AbstractWebServiceContext
+public class EagerInitializeDeployer extends AbstractDeployer
 {
-   private HttpServletRequest httpRequest;
-
-   public WebServiceContextJSE(MessageContext messageContext)
-   {
-      super(messageContext);
-      httpRequest = (HttpServletRequest)messageContext.get(MessageContextJAXWS.SERVLET_REQUEST);
-      if (httpRequest == null)
-         throw new IllegalStateException("Cannot obtain HTTPServletRequest from message context");
-   }
-
    @Override
-   public Principal getUserPrincipal()
+   public void create(Deployment dep)
    {
-      Principal principal = httpRequest.getUserPrincipal();
-      return principal;
-   }
-
-   @Override
-   public boolean isUserInRole(String role)
-   {
-      boolean isUserInRole = httpRequest.isUserInRole(role);
-      return isUserInRole;
+      UnifiedMetaData umd = dep.getContext().getAttachment(UnifiedMetaData.class);
+      if (umd == null)
+         throw new IllegalStateException("Cannot obtain unified meta data");
+      
+      umd.eagerInitialize();
    }
 }

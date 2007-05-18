@@ -19,17 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
 import java.io.IOException;
 
-import org.jboss.ws.integration.deployment.AbstractDeployer;
-import org.jboss.ws.integration.deployment.Deployment;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.deployment.WSDeploymentException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.deployment.WSDeploymentException;
 
 /**
  * A deployer that publishes the wsdl 

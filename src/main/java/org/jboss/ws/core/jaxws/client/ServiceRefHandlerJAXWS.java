@@ -25,7 +25,7 @@ package org.jboss.ws.core.jaxws.client;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 import javax.jws.HandlerChain;
 import javax.naming.Context;

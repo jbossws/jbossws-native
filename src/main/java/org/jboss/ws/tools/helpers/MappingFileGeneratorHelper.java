@@ -45,7 +45,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
@@ -78,6 +77,7 @@ import org.jboss.ws.tools.RPCSignature;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

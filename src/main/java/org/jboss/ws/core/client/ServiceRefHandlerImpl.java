@@ -35,8 +35,8 @@ import org.jboss.ws.integration.ServiceRefElement;
 import org.jboss.ws.integration.ServiceRefHandler;
 import org.jboss.ws.integration.ServiceRefMetaData;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 
@@ -58,7 +58,7 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
    {
       return new UnifiedServiceRefMetaData();
    }
-
+   
    public void bindServiceRef(Context encCtx, String encName, UnifiedVirtualFile vfsRoot, ClassLoader loader, ServiceRefMetaData sref) throws NamingException
    {
       if (sref.isProcessed())

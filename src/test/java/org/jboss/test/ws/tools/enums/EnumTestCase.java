@@ -25,7 +25,7 @@ import java.io.FileInputStream;
 
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.tools.WSTools;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

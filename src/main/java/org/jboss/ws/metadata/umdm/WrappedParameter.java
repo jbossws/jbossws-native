@@ -23,7 +23,7 @@ package org.jboss.ws.metadata.umdm;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * WrappedParameter represents a document/literal wrapped parameter.

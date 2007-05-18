@@ -10,7 +10,8 @@
 
 <project>
   
-  <property name="tests.dir" value="${basedir}/src/test"/>
+  <property name="tests.dir" value="${core.dir}/src/test"/>
+  <property name="tests.output.dir" value="${core.dir}/output-tests"/>
   
   <import file="${build.dir}/ant-import/build-testsuite.xml"/>
   
@@ -24,10 +25,10 @@
   <!--
     Init the various classpaths
   -->
-  <target name="tests-init" depends="tests-prepare,core-thirdparty-classpath">
+  <target name="tests-init" depends="jars,tests-prepare">
 
     <path id="jbossws.classpath">
-      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
+      <pathelement location="${spi.dir}/output/lib/jbossws-integration.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
@@ -39,12 +40,12 @@
     <!-- The combined compile classpath -->
     <path id="javac.classpath">
       <path refid="jbossws.classpath"/>
-      <path refid="core.thirdparty.classpath"/>
-      <pathelement location="${core.thirdparty.dir}/jboss-vfs.jar"/>
-      <pathelement location="${core.thirdparty.dir}/junit.jar"/>
-      <pathelement location="${core.thirdparty.dir}/qdox.jar"/>
-      <pathelement location="${core.thirdparty.dir}/policy.jar"/>
-      <pathelement location="${core.thirdparty.dir}/xmlunit1.0.jar"/>
+      <path refid="thirdparty.classpath"/>
+      <pathelement location="${thirdparty.dir}/jboss-vfs.jar"/>
+      <pathelement location="${thirdparty.dir}/junit.jar"/>
+      <pathelement location="${thirdparty.dir}/qdox.jar"/>
+      <pathelement location="${thirdparty.dir}/policy.jar"/>
+      <pathelement location="${thirdparty.dir}/xmlunit1.0.jar"/>
       <pathelement location="${jboss.home}/client/jboss-ejb3-client.jar"/>
     </path>
 
@@ -73,18 +74,18 @@
     <!-- The jBPM BPEL classpath -->
     <path id="jbpm.bpel.classpath">
       <path refid="jbossws.classpath"/>
-      <pathelement location="${core.thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
-      <pathelement location="${core.thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
-      <pathelement location="${core.thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
-      <pathelement location="${core.thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
-      <pathelement location="${core.thirdparty.dir}/commons-collections.jar"/>
-      <pathelement location="${core.thirdparty.dir}/commons-logging.jar"/>
-      <pathelement location="${core.thirdparty.dir}/dom4j.jar"/>
-      <pathelement location="${core.thirdparty.dir}/jaxen.jar"/>
-      <pathelement location="${core.thirdparty.dir}/wsdl4j.jar"/>
-      <pathelement location="${core.thirdparty.dir}/jboss-logging-log4j.jar"/>
+      <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
+      <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
+      <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
+      <pathelement location="${thirdparty.dir}/dom4j.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxen.jar"/>
+      <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-logging-log4j.jar"/>
       <!--
-      <pathelement location="${core.thirdparty.dir}/log4j.jar"/>
+      <pathelement location="${thirdparty.dir}/log4j.jar"/>
       <pathelement location="${tests.etc.dir}"/>
       -->
     </path>
@@ -95,13 +96,13 @@
   <!-- Generating sources                                                 -->
   <!-- ================================================================== -->
 
-  <target name="wsconsume" depends="tests-init" description="Consume JAX-WS contracts" if="HAVE_JDK_1.5">
+  <target name="wsconsume" depends="tests-init" description="Consume JAX-WS contracts">
 
     <!-- Define the JAX-WS wsconsume task -->
     <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
       <classpath refid="jbossws.classpath"/>
-      <classpath location="${core.thirdparty.dir}/jbossws-wsconsume-impl.jar"/>
-      <classpath location="${core.thirdparty.dir}/jaxb-xjc.jar"/>
+      <classpath location="${thirdparty.dir}/jbossws-wsconsume-impl.jar"/>
+      <classpath location="${thirdparty.dir}/jaxb-xjc.jar"/>
     </taskdef>
 
     <wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
@@ -123,7 +124,7 @@
       <fileset dir="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/bpel" />
     </zip>
     <!-- Copy the BPEL sar -->
-    <copy file="${core.thirdparty.dir}/jbpm-bpel.sar" todir="${tests.output.dir}/libs"/>
+    <copy file="${thirdparty.dir}/jbpm-bpel.sar" todir="${tests.output.dir}/libs"/>
 
 	  <!-- generate wsdl binding and service definitions for bpel processes -->
     <taskdef name="servicegen" classname="org.jbpm.bpel.ant.ServiceGeneratorTask">
@@ -142,10 +143,10 @@
     <!-- Define the JAX-RPC tools task -->
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath refid="jbossws.classpath"/>
-      <classpath refid="core.thirdparty.classpath"/>
-      <classpath location="${core.thirdparty.dir}/jbossretro-rt.jar"/>
-      <classpath location="${core.thirdparty.dir}/jboss-backport-concurrent.jar"/>
-      <classpath location="${core.thirdparty.dir}/concurrent.jar"/>
+      <classpath refid="thirdparty.classpath"/>
+      <classpath location="${thirdparty.dir}/jbossretro-rt.jar"/>
+      <classpath location="${thirdparty.dir}/jboss-backport-concurrent.jar"/>
+      <classpath location="${thirdparty.dir}/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
       <classpath location="${tests.output.dir}"/>
     </taskdef>    
@@ -192,14 +193,13 @@
   <!--
     Generate JAX-WS sources
   -->
-  <target name="wsprovide" depends="tests-compile" 
-    description="Provide the JAX-WS contracts." if="HAVE_JDK_1.5">
+  <target name="wsprovide" depends="tests-compile" description="Provide the JAX-WS contracts.">
 	
     <!-- Define the JAX-WS wsprovide task -->
     <taskdef name="wsprovide" classname="org.jboss.ws.tools.jaxws.ant.wsprovide">
       <classpath refid="jbossws.classpath"/>
-      <classpath refid="core.thirdparty.classpath"/>
-      <classpath location="${core.thirdparty.dir}/concurrent.jar"/>
+      <classpath refid="thirdparty.classpath"/>
+      <classpath location="${thirdparty.dir}/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
     </taskdef>    
     
@@ -218,9 +218,7 @@
   <!-- Compiling                                                          -->
   <!-- ================================================================== -->
 
-  <target name="tests-compile" depends="wsconsume,tests-compile15" description="Compile sources"/>
-
-  <target name="tests-compile15" depends="tests-init" if="HAVE_JDK_1.5">
+  <target name="tests-compile" depends="wsconsume" description="Compile sources">
     <mkdir dir="${tests.output.dir}/classes"/>
     <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
       failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
@@ -236,14 +234,16 @@
   
   <!-- Copy resources -->
   <target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
-    <copy-test-resources srcdir="${basedir}/src/test"/>
+    <copy-test-resources srcdir="${tests.dir}"/>
   </target>
   
-  <target name="tests-main" depends="wsconsume,tests-compile,tests-copy-resources,tests-generate-resources" description="Build the deployments.">
-    <ant antfile="${core.dir}/ant-import/build-jars-jaxrpc.xml" target="build-jars-jaxrpc" inheritall="true"/>
-    <ant antfile="${core.dir}/ant-import/build-samples-jaxrpc.xml" target="build-samples-jaxrpc" inheritall="true"/>
-    <ant antfile="${core.dir}/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" inheritall="true"/>
-    <ant antfile="${core.dir}/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws" inheritall="true"/>
+  <target name="tests-jars" depends="wsconsume,tests-compile,tests-copy-resources,tests-generate-resources" description="Build the deployments.">
+    <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
   </target>
 
+  <target name="tests-main" depends="tests-jars" description="Build the deployments."/>
+    
 </project>

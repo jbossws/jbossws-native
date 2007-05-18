@@ -26,7 +26,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import org.jboss.test.ws.JBossWSTest;
-import org.jboss.ws.utils.ObjectNameFactory;
+import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
 
 /**
  * Auto discover HTTP(S) port configuration from Tomcat

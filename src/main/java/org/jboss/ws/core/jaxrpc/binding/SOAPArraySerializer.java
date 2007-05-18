@@ -33,8 +33,8 @@ import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.w3c.dom.NamedNodeMap;
 
 /**

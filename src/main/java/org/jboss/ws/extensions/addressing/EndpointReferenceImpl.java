@@ -40,9 +40,9 @@ import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingBuilderImpl;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /** 

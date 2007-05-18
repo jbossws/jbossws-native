@@ -36,10 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.management.EndpointRegistry;
-import org.jboss.ws.integration.management.EndpointRegistryFactory;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.management.EndpointRegistry;
+import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
 
 /**
  * The servlet that that is associated with context /jbossws
@@ -93,7 +93,7 @@ public class ContextServlet extends HttpServlet
       for (ObjectName oname : endpoints)
       {
          Endpoint ep = epRegistry.getEndpoint(oname);
-         ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
 
          writer.print("<tr>");
          writer.print("	<td>ServiceEndpointID</td>");

@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.soap.SOAPBodyElement;
 
-import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 
 /**
  * An abstract implemenation of the SOAPBodyElement

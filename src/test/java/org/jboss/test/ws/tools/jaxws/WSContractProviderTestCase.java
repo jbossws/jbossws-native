@@ -30,9 +30,9 @@ import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.jaxws.samples.soapbinding.DocWrappedServiceImpl;
 import org.jboss.test.ws.jaxws.samples.soapbinding.PurchaseOrder;
 import org.jboss.test.ws.jaxws.samples.soapbinding.PurchaseOrderAck;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * Tests the WSContractProvider API.

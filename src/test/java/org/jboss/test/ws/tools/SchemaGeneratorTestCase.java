@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
 import org.jboss.test.ws.common.jbossxb.complex.Base;
 import org.jboss.test.ws.common.jbossxb.complex.Composite;
 import org.jboss.test.ws.common.jbossxb.complex.Derived;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 /** Test the XSD schema generator

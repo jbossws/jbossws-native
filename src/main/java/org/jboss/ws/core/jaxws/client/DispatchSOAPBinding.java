@@ -50,7 +50,7 @@ import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 
 /**
  * A helper that 

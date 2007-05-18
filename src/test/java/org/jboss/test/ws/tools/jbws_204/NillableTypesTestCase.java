@@ -34,7 +34,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.WSSchemaUtils;
 import org.jboss.ws.tools.JavaToXSD;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
 

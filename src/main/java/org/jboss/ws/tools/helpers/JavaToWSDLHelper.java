@@ -38,7 +38,6 @@ import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
@@ -70,6 +69,7 @@ import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.ws.tools.interfaces.JavaToXSDIntf;
 import org.jboss.ws.tools.interfaces.SchemaCreatorIntf;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  *  Java To WSDL Helper which uses UnifiedMetaData

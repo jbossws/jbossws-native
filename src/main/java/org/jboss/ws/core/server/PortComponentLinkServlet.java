@@ -34,10 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.management.EndpointRegistry;
-import org.jboss.ws.integration.management.EndpointRegistryFactory;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.management.EndpointRegistry;
+import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
 
 /**
  * A servlet that reports the serviceURL for a given service ID.
@@ -83,7 +83,7 @@ public class PortComponentLinkServlet extends HttpServlet
       res.setContentType("text/plain");
       PrintWriter out = res.getWriter();
 
-      ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+      ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       String endpointAddress = sepMetaData.getEndpointAddress();
       out.println(endpointAddress);
 

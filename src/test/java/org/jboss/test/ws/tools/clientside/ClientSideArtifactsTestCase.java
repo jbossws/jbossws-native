@@ -29,13 +29,13 @@ import org.jboss.test.ws.tools.WSToolsTest;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.WSDLToJava;
 import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

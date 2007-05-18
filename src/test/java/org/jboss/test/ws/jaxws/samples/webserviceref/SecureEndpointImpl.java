@@ -30,7 +30,7 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.WebContext;
+import org.jboss.wsintegration.spi.annotation.WebContext;
 
 @WebService(name = "SecureEndpoint", targetNamespace = "http://org.jboss.ws/wsref")
 @Stateless(name = "SecureEndpoint")

@@ -19,19 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
-import org.jboss.ws.integration.deployment.AbstractDeployer;
-import org.jboss.ws.integration.deployment.Deployment;
-import org.jboss.ws.integration.deployment.JAXRPCDeployment;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.integration.deployment.Deployment.DeploymentType;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.JAXRPCDeployment;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.deployment.Deployment.DeploymentType;
 
 /**
  * A deployer that builds the UnifiedDeploymentInfo 
@@ -49,7 +49,7 @@ public class UnifiedMetaDataDeployer extends AbstractDeployer
       {
          UnifiedDeploymentInfo udi = dep.getContext().getAttachment(UnifiedDeploymentInfo.class);
          if (udi == null)
-            throw new IllegalStateException("Cannot obtain unified deployement info");
+            throw new IllegalStateException("Cannot obtain unified deployment info");
          
          if (udi.type == DeploymentType.JAXRPC_JSE)
          {

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
@@ -28,10 +28,10 @@ import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerFactory;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerMBean;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.deployment.AbstractDeployer;
-import org.jboss.ws.integration.deployment.Deployment;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
 
 /**
  * A deployer that creates event sources and register them with the 
@@ -47,7 +47,7 @@ public class EventingDeployer extends AbstractDeployer
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
-         ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
          if (sepMetaData == null)
             throw new IllegalStateException("Cannot obtain endpoint meta data");
 
@@ -76,7 +76,7 @@ public class EventingDeployer extends AbstractDeployer
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
-         ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
          if (sepMetaData == null)
             throw new IllegalStateException("Cannot obtain endpoint meta data");
 

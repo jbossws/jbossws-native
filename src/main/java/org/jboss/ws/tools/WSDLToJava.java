@@ -44,7 +44,6 @@ import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
@@ -60,6 +59,7 @@ import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
 import org.jboss.ws.tools.helpers.ReturnTypeUnwrapper;
 import org.jboss.ws.tools.interfaces.WSDLToJavaIntf;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

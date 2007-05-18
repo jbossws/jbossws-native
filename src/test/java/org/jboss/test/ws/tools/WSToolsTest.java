@@ -39,7 +39,6 @@ import org.jboss.test.ws.tools.validation.WSDL11Validator;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.JavaToWSDL;
@@ -48,7 +47,8 @@ import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

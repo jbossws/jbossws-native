@@ -36,7 +36,7 @@ import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
 import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
-import org.jboss.ws.core.utils.JavaUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>

@@ -40,8 +40,8 @@ import javax.xml.soap.SOAPFaultElement;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.SAAJUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.jboss.xb.QNameBuilder;
 import org.w3c.dom.Attr;
 

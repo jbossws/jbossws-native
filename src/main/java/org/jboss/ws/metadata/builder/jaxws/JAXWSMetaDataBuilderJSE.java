@@ -26,9 +26,9 @@ import java.util.Map;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
-import org.jboss.ws.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.metadata.j2ee.UnifiedWebMetaData;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations

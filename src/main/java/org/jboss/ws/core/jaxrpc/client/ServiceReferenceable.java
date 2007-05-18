@@ -37,12 +37,12 @@ import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * A JNDI reference to a javax.xml.rpc.Service

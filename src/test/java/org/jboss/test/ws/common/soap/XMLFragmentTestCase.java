@@ -23,8 +23,8 @@ package org.jboss.test.ws.common.soap;
 
 import junit.framework.TestCase;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 import javax.xml.transform.dom.DOMSource;

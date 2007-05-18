@@ -43,7 +43,7 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.server.HttpContext;
 import org.jboss.ws.core.server.HttpServer;
-import org.jboss.ws.integration.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
 
 /**

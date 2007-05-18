@@ -71,8 +71,8 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.jboss.xb.binding.Util;
 
 /**

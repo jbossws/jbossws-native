@@ -38,10 +38,10 @@ import org.apache.xpath.XPathAPI;
 import org.apache.xpath.objects.XObject;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

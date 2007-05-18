@@ -19,29 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.deployment;
+package org.jboss.wsintegration.stack.jbws.deployment;
 
 //$Id$
 
-import org.jboss.ws.integration.deployment.AbstractDeployer;
-import org.jboss.ws.integration.deployment.Deployment;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import javax.management.ObjectName;
+
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsintegration.spi.deployment.AbstractDeployer;
+import org.jboss.wsintegration.spi.deployment.Deployment;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
 
 /**
- * A deployer that initializes the UMDM 
+ * A deployer that assigns the complete name to the Endpoint 
  *
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class EagerInitializeDeployer extends AbstractDeployer
+public class EndpointNameDeployer extends AbstractDeployer
 {
    @Override
    public void create(Deployment dep)
    {
-      UnifiedMetaData umd = dep.getContext().getAttachment(UnifiedMetaData.class);
-      if (umd == null)
-         throw new IllegalStateException("Cannot obtain unified meta data");
-      
-      umd.eagerInitialize();
+      for (Endpoint ep : dep.getService().getEndpoints())
+      {
+         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
+         if (sepMetaData == null)
+            throw new IllegalStateException("Cannot obtain endpoint meta data");
+
+         ObjectName sepID = sepMetaData.getServiceEndpointID();
+         ep.setName(sepID);
+      }
    }
 }

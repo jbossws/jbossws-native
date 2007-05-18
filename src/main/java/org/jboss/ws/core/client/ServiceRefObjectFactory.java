@@ -26,14 +26,14 @@ package org.jboss.ws.core.client;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.integration.ServiceRefElement;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 

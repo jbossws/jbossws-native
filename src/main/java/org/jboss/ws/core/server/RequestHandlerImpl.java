@@ -70,20 +70,19 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.RequestHandler;
-import org.jboss.ws.integration.Endpoint.EndpointState;
-import org.jboss.ws.integration.invocation.InvocationContext;
-import org.jboss.ws.integration.invocation.InvocationHandler;
-import org.jboss.ws.integration.management.ServerConfig;
-import org.jboss.ws.integration.management.ServerConfigFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.deployment.Endpoint.EndpointState;
+import org.jboss.wsintegration.spi.invocation.InvocationContext;
+import org.jboss.wsintegration.spi.invocation.RequestHandler;
+import org.jboss.wsintegration.spi.management.ServerConfig;
+import org.jboss.wsintegration.spi.management.ServerConfigFactory;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 
 /**
@@ -184,7 +183,7 @@ public class RequestHandlerImpl implements RequestHandler
    {
       log.debug("handleRequest: " + endpoint.getName());
 
-      ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+      ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 
@@ -304,12 +303,12 @@ public class RequestHandlerImpl implements RequestHandler
    /**
     * Handle a request to this web service endpoint
     */
-   private MessageAbstraction processRequest(Endpoint endpoint, MimeHeaderSource headerSource, ServletRequestContext reqContext, InputStream inputStream)
+   private MessageAbstraction processRequest(Endpoint ep, MimeHeaderSource headerSource, ServletRequestContext reqContext, InputStream inputStream)
          throws BindingException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
 
-      ServerEndpointMetaData sepMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+      ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 
@@ -317,7 +316,7 @@ public class RequestHandlerImpl implements RequestHandler
       ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
       try
       {
-         EndpointState state = endpoint.getState();
+         EndpointState state = ep.getState();
          if (state != EndpointState.STARTED)
          {
             QName faultCode = Constants.SOAP11_FAULT_CODE_SERVER;
@@ -325,8 +324,8 @@ public class RequestHandlerImpl implements RequestHandler
             throw new SOAPFaultException(faultCode, faultString, null, null);
          }
 
-         log.debug("BEGIN handleRequest: " + endpoint.getName());
-         beginProcessing = initRequestMetrics(endpoint);
+         log.debug("BEGIN handleRequest: " + ep.getName());
+         beginProcessing = initRequestMetrics(ep);
 
          MimeHeaders headers = (headerSource != null ? headerSource.getMimeHeaders() : null);
 
@@ -356,9 +355,13 @@ public class RequestHandlerImpl implements RequestHandler
          ClassLoader classLoader = sepMetaData.getClassLoader();
          Thread.currentThread().setContextClassLoader(classLoader);
 
+         // Get the Invoker
+         ServiceEndpointInvoker epInvoker = ep.getAttachment(ServiceEndpointInvoker.class);
+         if (epInvoker == null)
+            throw new IllegalStateException("Cannot obtain ServiceEndpointInvoker");
+
          // Invoke the service endpoint
-         InvocationHandler invoker = endpoint.getInvocationHandler();
-         invoker.invoke(reqContext);
+         epInvoker.invoke(reqContext);
 
          // Get the response message context
          msgContext = MessageContextAssociation.peekMessageContext();
@@ -397,11 +400,11 @@ public class RequestHandlerImpl implements RequestHandler
             {
                if (resMessage.isFaultMessage())
                {
-                  processFaultMetrics(endpoint, beginProcessing);
+                  processFaultMetrics(ep, beginProcessing);
                }
                else
                {
-                  processResponseMetrics(endpoint, beginProcessing);
+                  processResponseMetrics(ep, beginProcessing);
                }
             }
          }
@@ -412,7 +415,7 @@ public class RequestHandlerImpl implements RequestHandler
 
          // Reset the thread context class loader
          Thread.currentThread().setContextClassLoader(ctxClassLoader);
-         log.debug("END handleRequest: " + endpoint.getName());
+         log.debug("END handleRequest: " + ep.getName());
       }
    }
 
@@ -456,7 +459,7 @@ public class RequestHandlerImpl implements RequestHandler
    {
       log.debug("handleWSDLRequest: " + endpoint.getName());
 
-      ServerEndpointMetaData epMetaData = endpoint.getMetaData(ServerEndpointMetaData.class);
+      ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (epMetaData == null)
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 

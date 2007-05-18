@@ -36,10 +36,10 @@ import javax.xml.rpc.handler.HandlerRegistry;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.handler.ClientHandlerChain;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** 
  * Provides support for the programmatic configuration of

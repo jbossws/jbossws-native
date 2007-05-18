@@ -70,13 +70,13 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Element;
 
@@ -134,7 +134,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    protected abstract MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException;
 
    /** On the client side, generate the payload from IN parameters. */
-   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       if (log.isDebugEnabled())
@@ -255,7 +255,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    public abstract void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage);
 
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
-   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction payload) throws BindingException
+   public ServiceEndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction payload) throws BindingException
    {
       if (log.isDebugEnabled())
          log.debug("unbindRequestMessage: " + opMetaData.getQName());
@@ -272,7 +272,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          verifySOAPVersion(opMetaData, soapEnvelope);
 
          // Construct the endpoint invocation object
-         EndpointInvocation epInv = new EndpointInvocation(opMetaData);
+         ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
@@ -368,7 +368,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    }
 
    /** On the server side, generate the payload from OUT parameters. */
-   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv) throws BindingException
    {
       if (log.isDebugEnabled())
          log.debug("bindResponseMessage: " + opMetaData.getQName());
@@ -497,7 +497,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    }
 
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
-   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction payload, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction payload, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       if (log.isDebugEnabled())

@@ -54,7 +54,6 @@ import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -62,6 +61,7 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Provides support for the dynamic invocation of a service endpoint.
@@ -81,7 +81,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    // The current operation name
    protected QName operationName;
    // Output parameters
-   protected EndpointInvocation epInv;
+   protected ServiceEndpointInvocation epInv;
    // The binding provider
    protected CommonBindingProvider bindingProvider;
    // A Map<QName,UnboundHeader> of header entries
@@ -264,7 +264,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          binding.setHeaderSource(this);
 
          // Create the invocation and sync the input parameters
-         epInv = new EndpointInvocation(opMetaData);
+         epInv = new ServiceEndpointInvocation(opMetaData);
          epInv.initInputParams(inputParams);
 
          // Set the required outbound properties
@@ -479,7 +479,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
    /** Synchronize the operation paramters with the call output parameters.
     */
-   private Object syncOutputParams(Object[] inParams, EndpointInvocation epInv) throws SOAPException
+   private Object syncOutputParams(Object[] inParams, ServiceEndpointInvocation epInv) throws SOAPException
    {
       Object retValue = null;
 

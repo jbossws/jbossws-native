@@ -35,8 +35,8 @@ import junit.framework.Test;
 
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.utils.DOMWriter;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.core;
 
 // $Id$
@@ -42,11 +42,11 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 import org.w3c.dom.Element;
 
 /** A web service invocation.
@@ -54,10 +54,10 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.org
  * @since 16-Oct-2004
  */
-public class EndpointInvocation
+public class ServiceEndpointInvocation
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(EndpointInvocation.class);
+   private static final Logger log = Logger.getLogger(ServiceEndpointInvocation.class);
 
    // The operation meta data for this invocation
    private OperationMetaData opMetaData;
@@ -70,7 +70,7 @@ public class EndpointInvocation
    // Map of output parameters, key being the parameter index in the method signature
    private Map<Integer, Object> outParameters = new HashMap<Integer, Object>();
 
-   public EndpointInvocation(OperationMetaData opMetaData)
+   public ServiceEndpointInvocation(OperationMetaData opMetaData)
    {
       this.opMetaData = opMetaData;
    }
@@ -99,22 +99,31 @@ public class EndpointInvocation
 
    public void setRequestParamValue(QName xmlName, Object value)
    {
-      if(log.isDebugEnabled()) log.debug("setRequestParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
+      if (log.isDebugEnabled())
+         log.debug("setRequestParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
       reqPayload.put(xmlName, value);
    }
 
-   public Object getRequestParamValue(QName xmlName) throws SOAPException
+   public Object getRequestParamValue(QName xmlName)
    {
-      if(log.isDebugEnabled()) log.debug("getRequestParamValue: " + xmlName);
+      if (log.isDebugEnabled())
+         log.debug("getRequestParamValue: " + xmlName);
       Object paramValue = reqPayload.get(xmlName);
       ParameterMetaData paramMetaData = opMetaData.getParameter(xmlName);
-      paramValue = transformPayloadValue(paramMetaData, paramValue);
+      try
+      {
+         paramValue = transformPayloadValue(paramMetaData, paramValue);
+      }
+      catch (SOAPException ex)
+      {
+         throw new WSException(ex);
+      }
       return paramValue;
    }
 
    /** Returns the payload that can be passed on to the endpoint implementation
     */
-   public Object[] getRequestPayload() throws SOAPException
+   public Object[] getRequestPayload()
    {
       log.debug("getRequestPayload");
       List<QName> xmlNames = getRequestParamNames();
@@ -141,13 +150,15 @@ public class EndpointInvocation
 
    public void setResponseParamValue(QName xmlName, Object value)
    {
-      if(log.isDebugEnabled()) log.debug("setResponseParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
+      if (log.isDebugEnabled())
+         log.debug("setResponseParamValue: [name=" + xmlName + ",value=" + getTypeName(value) + "]");
       resPayload.put(xmlName, value);
    }
 
    public Object getResponseParamValue(QName xmlName) throws SOAPException
    {
-      if(log.isDebugEnabled()) log.debug("getResponseParamValue: " + xmlName);
+      if (log.isDebugEnabled())
+         log.debug("getResponseParamValue: " + xmlName);
       Object paramValue = resPayload.get(xmlName);
       ParameterMetaData paramMetaData = opMetaData.getParameter(xmlName);
       paramValue = transformPayloadValue(paramMetaData, paramValue);
@@ -168,18 +179,27 @@ public class EndpointInvocation
       if (value != null && retMetaData == null)
          throw new WSException("Operation does not have a return value: " + opMetaData.getQName());
 
-      if(log.isDebugEnabled()) log.debug("setReturnValue: " + getTypeName(value));
+      if (log.isDebugEnabled())
+         log.debug("setReturnValue: " + getTypeName(value));
       this.returnValue = value;
    }
 
-   public Object getReturnValue() throws SOAPException
+   public Object getReturnValue()
    {
-      if(log.isDebugEnabled()) log.debug("getReturnValue");
+      if (log.isDebugEnabled())
+         log.debug("getReturnValue");
       Object paramValue = returnValue;
       ParameterMetaData paramMetaData = opMetaData.getReturnParameter();
       if (paramMetaData != null)
       {
-         paramValue = transformPayloadValue(paramMetaData, paramValue);
+         try
+         {
+            paramValue = transformPayloadValue(paramMetaData, paramValue);
+         }
+         catch (SOAPException ex)
+         {
+            throw new WSException(ex);
+         }
       }
       return paramValue;
    }
@@ -237,14 +257,15 @@ public class EndpointInvocation
          // the content element as is.
          // Note, that it is possible for a Java type to be bound to an any
          // type, so checking the xml type is not sufficient.
-         if (! Element.class.isAssignableFrom(javaType))
+         if (!Element.class.isAssignableFrom(javaType))
          {
             SOAPContentElement soapElement = (SOAPContentElement)paramValue;
             retValue = soapElement.getObjectValue();
          }
       }
 
-      if(log.isDebugEnabled()) log.debug("transformPayloadValue: " + getTypeName(paramValue) + " -> " + getTypeName(retValue));
+      if (log.isDebugEnabled())
+         log.debug("transformPayloadValue: " + getTypeName(paramValue) + " -> " + getTypeName(retValue));
       return retValue;
    }
 
@@ -307,7 +328,7 @@ public class EndpointInvocation
       Method method = opMetaData.getJavaMethod();
       Class[] targetParameterTypes = method.getParameterTypes();
 
-      if (opMetaData.isDocumentWrapped() && !paramMetaData.isInHeader()&& !paramMetaData.isSwA() && !paramMetaData.isMessageType())
+      if (opMetaData.isDocumentWrapped() && !paramMetaData.isInHeader() && !paramMetaData.isSwA() && !paramMetaData.isMessageType())
       {
          outParameters = ParameterWrapping.unwrapRequestParameters(paramMetaData, paramValue, payload);
          syncOutWrappedParameters(targetParameterTypes, payload);
@@ -336,7 +357,8 @@ public class EndpointInvocation
                retValue = JavaUtils.syncArray(retValue, targetParameterType);
          }
 
-         if(log.isDebugEnabled()) log.debug("syncEndpointInputParam: " + getTypeName(paramValue) + " -> " + getTypeName(retValue) + "(" + index + ")");
+         if (log.isDebugEnabled())
+            log.debug("syncEndpointInputParam: " + getTypeName(paramValue) + " -> " + getTypeName(retValue) + "(" + index + ")");
          payload[index] = retValue;
       }
    }

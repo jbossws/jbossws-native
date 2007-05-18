@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry excluding="org/jboss/test/ws/jaxrpc/samples/jmstransport/" kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="output-tests/wsconsume/java"/>
-	<classpathentry excluding="org/jboss/test/ws/benchmark/|org/jboss/test/ws/interop/|org/jboss/test/ws/jaxrpc/samples/jmstransport/OrganizationJMSEndpoint.java" kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>
 	<classpathentry kind="lib" path="thirdparty/activation.jar"/>
 	<classpathentry kind="lib" path="thirdparty/getopt.jar"/>
 	<classpathentry kind="lib" path="thirdparty/javassist.jar"/>
@@ -27,12 +26,12 @@
 	<classpathentry kind="lib" path="thirdparty/xalan.jar"/>
 	<classpathentry kind="lib" path="thirdparty/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="thirdparty/xmlsec.jar"/>
-	<classpathentry kind="lib" path="thirdparty/qdox.jar"/>
 	<classpathentry kind="lib" path="thirdparty/ant.jar"/>
+	<classpathentry kind="lib" path="thirdparty/qdox.jar"/>
+	<classpathentry kind="lib" path="thirdparty/xmlunit1.0.jar"/>
 	<classpathentry kind="lib" path="thirdparty/policy.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jboss-5.0.x"/>
-	<classpathentry kind="lib" path="thirdparty/xmlunit1.0.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jbossws-spi"/>
-	<classpathentry kind="lib" path="/jbossws-spi/thirdparty/junit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/integration-spi"/>
+	<classpathentry kind="lib" path="/integration-spi/thirdparty/junit.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>

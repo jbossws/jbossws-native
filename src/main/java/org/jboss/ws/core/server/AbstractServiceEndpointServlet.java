@@ -33,11 +33,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.integration.Endpoint;
-import org.jboss.ws.integration.RequestHandler;
-import org.jboss.ws.integration.management.EndpointRegistry;
-import org.jboss.ws.integration.management.EndpointRegistryFactory;
-import org.jboss.ws.utils.ObjectNameFactory;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
+import org.jboss.wsintegration.spi.invocation.RequestHandler;
+import org.jboss.wsintegration.spi.management.EndpointRegistry;
+import org.jboss.wsintegration.spi.management.EndpointRegistryFactory;
+import org.jboss.wsintegration.spi.utils.ObjectNameFactory;
 
 /**
  * A servlet that is installed for every web service endpoint.

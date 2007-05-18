@@ -37,7 +37,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -45,6 +44,7 @@ import org.jboss.ws.metadata.umdm.WrappedParameter;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.Configuration.OperationConfig;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * Builds the Tools Endpoint Meta Data using Java Reflection

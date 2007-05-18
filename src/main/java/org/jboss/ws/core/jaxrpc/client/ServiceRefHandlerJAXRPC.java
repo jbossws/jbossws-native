@@ -28,7 +28,7 @@ import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * Binds a JAXRPC Service object in the client's ENC for every service-ref element in the

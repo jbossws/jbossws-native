@@ -35,7 +35,7 @@ import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.MarshalException;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
-import org.jboss.ws.utils.DOMUtils;
+import org.jboss.wsintegration.spi.utils.DOMUtils;
 
 /**
  * Test the JAXB marshalling of a SimpleUserType

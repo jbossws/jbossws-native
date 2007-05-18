@@ -37,8 +37,8 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.SOAPContentElement;
-import org.jboss.ws.core.utils.DOMWriter;
 import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Node;
 
 /** The base class for all Deserializers.

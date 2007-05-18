@@ -23,9 +23,9 @@ package org.jboss.ws.core.server;
 
 //$Id: LifecycleHandlerImpl.java 2923 2007-04-25 14:23:29Z thomas.diesler@jboss.com $
 
-import org.jboss.ws.integration.BasicLifecycleHandler;
-import org.jboss.ws.integration.Endpoint;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsintegration.spi.deployment.BasicLifecycleHandler;
+import org.jboss.wsintegration.spi.deployment.Endpoint;
 
 /**
  * A lifecycle handler
@@ -49,7 +49,7 @@ public class LifecycleHandlerImpl extends BasicLifecycleHandler
 
    private String getEndpointAddress(Endpoint ep)
    {
-      ServerEndpointMetaData sepMetaData = ep.getMetaData(ServerEndpointMetaData.class);
+      ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 

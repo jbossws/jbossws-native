@@ -32,8 +32,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.ws.core.utils.JavaUtils;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
+import org.jboss.wsintegration.spi.utils.JavaUtils;
 
 /**
  * wsprovide is a command line tool that generates portable JAX-WS artifacts

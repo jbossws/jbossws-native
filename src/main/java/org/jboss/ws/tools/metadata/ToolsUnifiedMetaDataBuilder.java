@@ -33,11 +33,11 @@ import javax.xml.namespace.QName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.Configuration.OperationConfig;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
 
 /**
  *  Builder class that builds the Tools Meta Data

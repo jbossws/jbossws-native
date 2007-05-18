@@ -29,7 +29,7 @@ import org.jboss.remoting.InvocationRequest;
 import org.jboss.remoting.invocation.OnewayInvocation;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.ws.core.HTTPMessageImpl;
-import org.jboss.ws.core.utils.DOMWriter;
+import org.jboss.wsintegration.spi.utils.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

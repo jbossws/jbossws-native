@@ -15,17 +15,12 @@
 
   <!-- Deploy jbossws to jboss50 -->
   <target name="deploy-jboss50" depends="prepare" description="Deploy jbossws">
-    <ant antfile="${jbws.jboss50.dir}/build.xml" target="deploy" inheritall="false"/>
+    <ant antfile="${int.jbws.dir}/build.xml" target="deploy-jboss50" inheritall="false"/>
   </target>
   
   <!-- Deploy jbossws to jboss42 -->
   <target name="deploy-jboss42" depends="prepare" description="Deploy jbossws">
-    <ant antfile="${jbws.jboss42.dir}/build.xml" target="deploy" inheritall="false"/>
-  </target>
-  
-  <!-- Deploy jbossws to jboss40 -->
-  <target name="deploy-jboss40" depends="prepare" description="Deploy jbossws">
-    <ant antfile="${jbws.jboss40.dir}/build.xml" target="deploy" inheritall="false"/>
+    <ant antfile="${int.jbws.dir}/build.xml" target="deploy-jboss42" inheritall="false"/>
   </target>
   
 </project>

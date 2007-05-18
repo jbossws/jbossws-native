@@ -37,22 +37,12 @@ import javax.xml.namespace.QName;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.IOUtils;
-import org.jboss.ws.integration.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.ws.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.webservices.PortComponentMetaData;
-import org.jboss.ws.metadata.webservices.WebserviceDescriptionMetaData;
-import org.jboss.ws.metadata.webservices.WebservicesFactory;
-import org.jboss.ws.metadata.webservices.WebservicesMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
@@ -64,6 +54,16 @@ import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
+import org.jboss.wsintegration.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsintegration.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsintegration.spi.metadata.webservices.PortComponentMetaData;
+import org.jboss.wsintegration.spi.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.wsintegration.spi.metadata.webservices.WebservicesFactory;
+import org.jboss.wsintegration.spi.metadata.webservices.WebservicesMetaData;
+import org.jboss.wsintegration.spi.utils.IOUtils;
 
 /**
  * An abstract annotation meta data builder.
