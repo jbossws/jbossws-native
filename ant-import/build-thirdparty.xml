@@ -106,7 +106,7 @@
     
     <!-- The compile classpath for jbossws core -->
     <path id="thirdparty.classpath">
-      <pathelement location="${spi.dir}/output/lib/jbossws-integration.jar"/>
+      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
       <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
       <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
       <pathelement location="${thirdparty.dir}/activation.jar"/>

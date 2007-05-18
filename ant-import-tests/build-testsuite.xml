@@ -28,7 +28,7 @@
   <target name="tests-init" depends="jars,tests-prepare">
 
     <path id="jbossws.classpath">
-      <pathelement location="${spi.dir}/output/lib/jbossws-integration.jar"/>
+      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>

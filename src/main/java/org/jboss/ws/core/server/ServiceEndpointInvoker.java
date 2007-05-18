@@ -204,7 +204,7 @@ public class ServiceEndpointInvoker
                // Invoke an instance of the SEI implementation bean 
                EndpointInvocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
-               invHandler.invoke(endpoint, inv);
+               invHandler.invoke(endpoint, null, inv);
             }
             finally
             {
