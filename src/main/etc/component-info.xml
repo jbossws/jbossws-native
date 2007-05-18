@@ -29,7 +29,7 @@
       <compatible version="@jbpm-bpel@"/>
     </import>
     <import componentref="jboss/jbossws-spi">
-      <compatible version="@jbossws-spi@"/>
+      <compatible version="@repository.id@"/>
     </import>
     <import componentref="jboss/jbossws-wsconsume-impl">
       <compatible version="@jbossws-wsconsume-impl@"/>
