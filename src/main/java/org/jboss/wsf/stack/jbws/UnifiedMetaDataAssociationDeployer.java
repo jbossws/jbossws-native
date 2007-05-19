@@ -23,8 +23,6 @@ package org.jboss.wsf.stack.jbws;
 
 //$Id$
 
-import javax.management.ObjectName;
-
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -53,27 +51,27 @@ public class UnifiedMetaDataAssociationDeployer extends AbstractDeployer
          ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
          if (sepMetaData == null)
          {
-            sepMetaData = getEndpointMetaData(umd, ep.getName());
+            sepMetaData = getEndpointMetaData(umd, ep);
             ep.addAttachment(ServerEndpointMetaData.class, sepMetaData);
-            
-            Class targetBean = ep.getTargetBean();
+
+            String targetBean = ep.getTargetBean();
             if (targetBean != null)
-               sepMetaData.setServiceEndpointImplName(targetBean.getName());
+               sepMetaData.setServiceEndpointImplName(targetBean);
          }
       }
    }
 
-   private ServerEndpointMetaData getEndpointMetaData(UnifiedMetaData umd, ObjectName epName)
+   private ServerEndpointMetaData getEndpointMetaData(UnifiedMetaData umd, Endpoint ep)
    {
-      String propEndpoint = epName.getKeyProperty(Endpoint.SEPID_PROPERTY_ENDPOINT);
-
+      String epName = ep.getShortName();
+      
       ServerEndpointMetaData epMetaData = null;
       for (ServiceMetaData serviceMetaData : umd.getServices())
       {
          for (EndpointMetaData aux : serviceMetaData.getEndpoints())
          {
             String linkName = ((ServerEndpointMetaData)aux).getLinkName();
-            if (propEndpoint.equals(linkName))
+            if (epName.equals(linkName))
             {
                epMetaData = (ServerEndpointMetaData)aux;
                break;

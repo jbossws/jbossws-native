@@ -289,7 +289,7 @@ public class ServiceEndpointInvoker
       {
          invContext.addAttachment(javax.xml.rpc.handler.MessageContext.class, msgContext);
       }
-      if (ServiceLifecycle.class.isAssignableFrom(ep.getTargetBean()) && invContext instanceof ServletRequestContext)
+      if (ServiceLifecycle.class.isAssignableFrom(ep.getTargetBeanClass()) && invContext instanceof ServletRequestContext)
       {
          ServletEndpointContext servletEndpointContext = new ServletEndpointContextImpl((ServletRequestContext)invContext);
          invContext.addAttachment(ServletEndpointContext.class, servletEndpointContext);
@@ -304,7 +304,7 @@ public class ServiceEndpointInvoker
 
    protected Method getImplMethod(Endpoint endpoint, ServiceEndpointInvocation sepInv) throws ClassNotFoundException, NoSuchMethodException
    {
-      Class implClass = endpoint.getTargetBean();
+      Class implClass = endpoint.getTargetBeanClass();
       Method seiMethod = sepInv.getJavaMethod();
 
       String methodName = seiMethod.getName();
