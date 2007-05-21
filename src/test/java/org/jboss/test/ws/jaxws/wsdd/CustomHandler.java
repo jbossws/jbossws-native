@@ -21,9 +21,9 @@
  */
 package org.jboss.test.ws.jaxws.wsdd;
 
-import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.core.soap.TextImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.wsf.spi.handler.GenericSOAPHandler;
 
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;

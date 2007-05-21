@@ -57,7 +57,6 @@
       <pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
       <pathelement location="${jboss.client}/jboss-aop-jdk50-client.jar"/>
       <pathelement location="${jboss.client}/jboss-aspect-jdk50-client.jar"/>
-      <pathelement location="${jboss.client}/jbossretro-rt.jar"/>
       <pathelement location="${jboss.client}/log4j.jar"/>
       <pathelement location="${jboss.client}/jbossall-client.jar"/>
       <pathelement location="${jboss.lib}/jboss-aop-jdk50.jar"/>
@@ -241,7 +240,6 @@
     <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
     <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
     <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
-    <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
   </target>
 
   <target name="tests-main" depends="tests-jars" description="Build the deployments."/>

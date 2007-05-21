@@ -33,8 +33,8 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
+import org.jboss.wsf.spi.handler.GenericSOAPHandler;
 
 /**
  * A client side handler that reads/writes the addressing properties

@@ -34,10 +34,10 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.wsf.spi.handler.GenericSOAPHandler;
 
 /**
  * A server side handler that reads/writes the addressing properties
