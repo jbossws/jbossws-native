@@ -233,7 +233,8 @@
     <!-- jaxws metadata -->
     <war warfile="${tests.output.dir}/libs/jaxws-metadata.war" webxml="${tests.output.dir}/resources/jaxws/metadata/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/metadata/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/metadata/EndpointBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/metadata/EndpointInterface.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxws/metadata/WEB-INF">
         <include name="jboss-web.xml"/>

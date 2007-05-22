@@ -21,32 +21,20 @@
  */
 package org.jboss.test.ws.jaxws.metadata;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
 import javax.jws.WebService;
 
 /**
- * Tes namespace differences at service and portType levels
+ * Test namespace differences at service and portType levels
  *
  * @author Thomas.Diesler@jboss.org
  * @since 29-Apr-2005
  */
-@WebService(
-   endpointInterface = "org.jboss.test.ws.jaxws.metadata.EndpointInterface",
-   targetNamespace = "http://example.org/impl",
-   serviceName = "TestService",
-   portName = "EndpointInterfacePort",
-   wsdlLocation = "/WEB-INF/wsdl/TestService.wsdl"
-)
+@WebService(endpointInterface = "org.jboss.test.ws.jaxws.metadata.EndpointInterface", targetNamespace = "http://example.org/impl")
 public class EndpointBean implements EndpointInterface
 {
-   @WebMethod
-   @WebResult(name = "EchoResponse", targetNamespace = "http://example.org/sei")
-   public EchoResponse echo(@WebParam(name="EchoMessage", targetNamespace = "http://example.org/sei") Echo request)
+   public String echo(String message)
    {
-      String message = request.getMessage();
       System.out.println(message);
-      return new EchoResponse(message);
+      return message;
    }
 }

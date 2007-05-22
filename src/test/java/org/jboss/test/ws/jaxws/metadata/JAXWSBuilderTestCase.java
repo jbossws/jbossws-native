@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxws.metadata;
 
 // $Id: $
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -49,36 +48,25 @@ public class JAXWSBuilderTestCase extends JBossWSTest
    }
 
    /**
-    * If the @WebService.targetNamespace
-    * annotation is on a service implementation
-    * bean that does NOT reference a service
-    * endpoint interface (through the
-    * endpointInterface annotation element),
-    * the targetNamespace is used for both the
-    * wsdl:portType and the wsdl:service (and
-    * associated XML elements).
+    * If the @WebService.targetNamespace annotation is on a service implementation bean that does NOT reference a service
+    * endpoint interface (through the endpointInterface annotation element), the targetNamespace is used for both the
+    * wsdl:portType and the wsdl:service (and associated XML elements).
     *
-    * If the @WebService.targetNamespace
-    * annotation is on a service implementation
-    * bean that does reference a service endpoint
-    * interface (through the endpointInterface
-    * annotation element), the targetNamespace is
-    * used for only the wsdl:service (and
+    * If the @WebService.targetNamespace annotation is on a service implementation bean that does reference a service endpoint
+    * interface (through the endpointInterface annotation element), the targetNamespace is used for only the wsdl:service (and
     * associated XML elements).
-    *
-    * @throws Exception
     */
    public void testSEIDerivedNamespaces() throws Exception
    {
       // Create the port
-      URL wsdlURL = new File("resources/jaxws/metadata/WEB-INF/wsdl/TestService.wsdl").toURL();
-      QName qname = new QName("http://example.org/impl", "TestService");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-metadata?wsdl");
+      QName qname = new QName("http://example.org/impl", "EndpointBeanService");
       Service service = Service.create(wsdlURL, qname);
       EndpointInterface port = service.getPort(EndpointInterface.class);
 
       String helloWorld = "Hello world!";
-      EchoResponse response = port.echo(new Echo(helloWorld));
-      assertEquals(helloWorld, response.getMessage());
+      String response = port.echo(helloWorld);
+      assertEquals(helloWorld, response);
 
    }
 }

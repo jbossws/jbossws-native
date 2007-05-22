@@ -28,17 +28,16 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 /**
- * Test the JSR-181 annotation: javax.jws.WebService
- * This interface is only used in the client deployment.
+ * This interface is only uses a namespace different from the impl bean.
  *
  * @author Thomas.Diesler@jboss.org
  * @since 29-Apr-2005
  */
 @WebService(targetNamespace = "http://example.org/sei")
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface EndpointInterface
 {
    @WebMethod
-   @WebResult(name = "EchoResponse", targetNamespace = "http://example.org/sei")
-   EchoResponse echo(@WebParam(name="EchoMessage", targetNamespace = "http://example.org/sei") Echo request);
+   @WebResult(name = "return")
+   String echo(@WebParam(name = "message") String message);
 }
