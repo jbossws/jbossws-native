@@ -34,7 +34,6 @@
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
       <pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
       <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
-      <pathelement location="${core.dir}/../jbws-${jbossws.integration.target}/output/lib/jbossws-${jbossws.integration.target}.jar"/>
     </path>
 
     <!-- The combined compile classpath -->
@@ -64,6 +63,7 @@
       <pathelement location="${jboss.server.lib}/hibernate3.jar"/>
       <pathelement location="${jboss.server.lib}/jboss.jar"/>
       <pathelement location="${jboss.server.lib}/jbosssx.jar"/>
+      <pathelement location="${jboss.server.lib}/jbossws-${jbossws.integration.target}.jar"/>
       <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi.jar"/>
       <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi-saaj.jar"/>
       <pathelement location="${jboss.server.deploy}/juddi-service.sar/scout.jar"/>

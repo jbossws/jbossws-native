@@ -26,8 +26,9 @@ package org.jboss.ws.core.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.soap.FactoryLoader;
 import javax.xml.ws.Endpoint;
+
+import org.jboss.wsf.spi.utils.FactoryLoader;
 
 /**
  * An abstract HTTP Server

@@ -26,7 +26,6 @@ package javax.xml.ws.spi;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.FactoryLoader;
 import javax.xml.transform.Source;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
@@ -34,6 +33,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
+import org.jboss.wsf.spi.utils.FactoryLoader;
 import org.w3c.dom.Element;
 
 /**
