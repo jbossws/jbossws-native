@@ -27,9 +27,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.jaxws.samples.soapbinding.DocWrappedServiceImpl;
-import org.jboss.test.ws.jaxws.samples.soapbinding.PurchaseOrder;
-import org.jboss.test.ws.jaxws.samples.soapbinding.PurchaseOrderAck;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.spi.utils.JavaUtils;
@@ -62,8 +59,8 @@ public class WSContractProviderTestCase extends JBossWSTest
 
    private void checkWrapperSource(File outputDir, boolean shouldExist)
    {
-      File file1 = new File(outputDir, "org/jboss/test/ws/jaxws/samples/soapbinding/jaxws/SubmitPO.java");
-      File file2 = new File(outputDir, "org/jboss/test/ws/jaxws/samples/soapbinding/jaxws/SubmitPOResponse.java");
+      File file1 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/SubmitPO.java");
+      File file2 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/SubmitPOResponse.java");
       assertEquals(shouldExist, file1.exists());
       assertEquals(shouldExist, file2.exists());
    }
@@ -74,12 +71,12 @@ public class WSContractProviderTestCase extends JBossWSTest
       URLClassLoader classLoader = new URLClassLoader(new URL[]{outputDir.toURL()}, Thread.currentThread().getContextClassLoader());
       
       // Check request wrapper
-      Class wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.jaxws.samples.soapbinding.jaxws.SubmitPO", classLoader);      
+      Class wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.SubmitPO", classLoader);      
       wrapper.getMethod("setPurchaseOrder", PurchaseOrder.class);
       assertEquals(PurchaseOrder.class.getName(), wrapper.getMethod("getPurchaseOrder").getReturnType().getName());
       
       // Check response wrapper
-      wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.jaxws.samples.soapbinding.jaxws.SubmitPOResponse", classLoader);
+      wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.SubmitPOResponse", classLoader);
       wrapper.getMethod("setPurchaseOrderAck", PurchaseOrderAck.class);
       assertEquals(PurchaseOrderAck.class.getName(), wrapper.getMethod("getPurchaseOrderAck").getReturnType().getName());
    }

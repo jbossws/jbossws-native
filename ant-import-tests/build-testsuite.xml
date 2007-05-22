@@ -110,7 +110,6 @@
     <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
     <wsconsume wsdl="${tests.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
     <wsconsume wsdl="${tests.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
   </target>
 
   <!--
@@ -202,7 +201,6 @@
       <classpath location="${tests.output.dir}/classes"/>
     </taskdef>    
     
-    <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
   </target>
   
   <target name="tests-generate-resources" depends="servicegen,wstools,wsprovide">
