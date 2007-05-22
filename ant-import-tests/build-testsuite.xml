@@ -238,6 +238,7 @@
     <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
     <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
     <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
   </target>
 
   <target name="tests-main" depends="tests-jars" description="Build the deployments."/>
