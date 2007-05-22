@@ -50,7 +50,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.DirectionHolder;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.ServiceEndpointInvocation;
+import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
@@ -69,7 +69,7 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.BasicEndpointInvocation;
-import org.jboss.wsf.spi.invocation.EndpointInvocation;
+import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
 import org.jboss.wsf.spi.invocation.WebServiceContextJSE;
@@ -151,7 +151,7 @@ public class ServiceEndpointInvoker
       try
       {
          boolean oneway = false;
-         ServiceEndpointInvocation sepInv = null;
+         EndpointInvocation sepInv = null;
          OperationMetaData opMetaData = null;
          CommonBinding binding = bindingProvider.getCommonBinding();
          binding.setHeaderSource(delegate);
@@ -202,7 +202,7 @@ public class ServiceEndpointInvoker
                }
 
                // Invoke an instance of the SEI implementation bean 
-               EndpointInvocation inv = setupInvocation(endpoint, sepInv, invContext);
+               Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
                invHandler.invoke(endpoint, null, inv);
             }
@@ -277,7 +277,7 @@ public class ServiceEndpointInvoker
       }
    }
 
-   protected EndpointInvocation setupInvocation(Endpoint ep, ServiceEndpointInvocation sepInv, InvocationContext invContext) throws Exception
+   protected Invocation setupInvocation(Endpoint ep, EndpointInvocation sepInv, InvocationContext invContext) throws Exception
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof SOAPMessageContextJAXWS)
@@ -295,14 +295,14 @@ public class ServiceEndpointInvoker
          invContext.addAttachment(ServletEndpointContext.class, servletEndpointContext);
       }
 
-      EndpointInvocation inv = new DelegatingInvocation(sepInv);
+      Invocation inv = new DelegatingInvocation(sepInv);
       inv.setInvocationContext(invContext);
       inv.setJavaMethod(getImplMethod(endpoint, sepInv));
 
       return inv;
    }
 
-   protected Method getImplMethod(Endpoint endpoint, ServiceEndpointInvocation sepInv) throws ClassNotFoundException, NoSuchMethodException
+   protected Method getImplMethod(Endpoint endpoint, EndpointInvocation sepInv) throws ClassNotFoundException, NoSuchMethodException
    {
       Class implClass = endpoint.getTargetBeanClass();
       Method seiMethod = sepInv.getJavaMethod();
@@ -426,9 +426,9 @@ public class ServiceEndpointInvoker
 
    class DelegatingInvocation extends BasicEndpointInvocation
    {
-      private ServiceEndpointInvocation sepInv;
+      private EndpointInvocation sepInv;
 
-      public DelegatingInvocation(ServiceEndpointInvocation sepInv)
+      public DelegatingInvocation(EndpointInvocation sepInv)
       {
          this.sepInv = sepInv;
       }

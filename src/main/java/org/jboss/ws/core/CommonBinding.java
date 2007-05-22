@@ -40,16 +40,16 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 public interface CommonBinding
 {
    /** On the client side, generate the Object from IN parameters. */
-   MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
+   MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
 
    /** On the server side, extract the IN parameters from the Object and populate an Invocation object */
-   ServiceEndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException;
+   EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException;
 
    /** On the server side, generate the Object from OUT parameters in the Invocation object. */
-   MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv) throws BindingException;
+   MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException;
 
    /** On the client side, extract the OUT parameters from the Object and return them to the client. */
-   void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
+   void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
 
    /** bind an exception to a fault message */
    MessageAbstraction bindFaultMessage(Exception ex);

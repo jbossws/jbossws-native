@@ -27,7 +27,7 @@ import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.invocation.EndpointInvocation;
+import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandlerJSE;
 
@@ -39,7 +39,7 @@ import org.jboss.wsf.spi.invocation.InvocationHandlerJSE;
  */
 public class ServiceLifecycleInvocationHandler extends InvocationHandlerJSE
 {
-   public void invoke(Endpoint ep, Object beanInstance, EndpointInvocation epInv) throws Exception
+   public void invoke(Endpoint ep, Object beanInstance, Invocation epInv) throws Exception
    {
       try
       {

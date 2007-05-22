@@ -36,7 +36,7 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.ServiceEndpointInvocation;
+import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.HeaderSource;
 import org.jboss.ws.core.MessageAbstraction;
@@ -60,19 +60,19 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
 
    private BindingImpl delegate = new BindingImpl();
 
-   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       throw new NotImplementedException();
    }
 
-   public ServiceEndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException
+   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException
    {
       log.debug("unbindRequestMessage: " + opMetaData.getQName());
       try
       {
          // Construct the endpoint invocation object
-         ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+         EndpointInvocation epInv = new EndpointInvocation(opMetaData);
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
@@ -95,7 +95,7 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
       }
    }
 
-   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, ServiceEndpointInvocation epInv) throws BindingException
+   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
       log.debug("bindResponseMessage: " + opMetaData.getQName());
       try
@@ -118,7 +118,7 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
       }
    }
 
-   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, ServiceEndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
       throw new NotImplementedException();

@@ -44,7 +44,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonSOAPBinding;
-import org.jboss.ws.core.ServiceEndpointInvocation;
+import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -150,7 +150,7 @@ public class GenericAttachmentTestCase extends JBossWSTest
       CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP11HTTP_BINDING, Type.JAXRPC);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.initInputParams(new Object[]{"Hello World!", "hi"});
       
       SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);

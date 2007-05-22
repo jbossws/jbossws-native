@@ -54,10 +54,10 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.org
  * @since 16-Oct-2004
  */
-public class ServiceEndpointInvocation
+public class EndpointInvocation
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(ServiceEndpointInvocation.class);
+   private static final Logger log = Logger.getLogger(EndpointInvocation.class);
 
    // The operation meta data for this invocation
    private OperationMetaData opMetaData;
@@ -70,7 +70,7 @@ public class ServiceEndpointInvocation
    // Map of output parameters, key being the parameter index in the method signature
    private Map<Integer, Object> outParameters = new HashMap<Integer, Object>();
 
-   public ServiceEndpointInvocation(OperationMetaData opMetaData)
+   public EndpointInvocation(OperationMetaData opMetaData)
    {
       this.opMetaData = opMetaData;
    }

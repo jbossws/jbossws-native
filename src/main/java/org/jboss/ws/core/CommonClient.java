@@ -81,7 +81,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    // The current operation name
    protected QName operationName;
    // Output parameters
-   protected ServiceEndpointInvocation epInv;
+   protected EndpointInvocation epInv;
    // The binding provider
    protected CommonBindingProvider bindingProvider;
    // A Map<QName,UnboundHeader> of header entries
@@ -264,7 +264,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          binding.setHeaderSource(this);
 
          // Create the invocation and sync the input parameters
-         epInv = new ServiceEndpointInvocation(opMetaData);
+         epInv = new EndpointInvocation(opMetaData);
          epInv.initInputParams(inputParams);
 
          // Set the required outbound properties
@@ -479,7 +479,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
    /** Synchronize the operation paramters with the call output parameters.
     */
-   private Object syncOutputParams(Object[] inParams, ServiceEndpointInvocation epInv) throws SOAPException
+   private Object syncOutputParams(Object[] inParams, EndpointInvocation epInv) throws SOAPException
    {
       Object retValue = null;
 

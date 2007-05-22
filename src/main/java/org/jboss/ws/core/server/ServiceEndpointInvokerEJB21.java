@@ -23,10 +23,10 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
-import org.jboss.ws.core.ServiceEndpointInvocation;
+import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.invocation.EndpointInvocation;
+import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.HandlerCallback;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
@@ -40,9 +40,9 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 public class ServiceEndpointInvokerEJB21 extends ServiceEndpointInvoker
 {
    @Override
-   protected EndpointInvocation setupInvocation(Endpoint ep, ServiceEndpointInvocation epInv, InvocationContext invContext) throws Exception
+   protected Invocation setupInvocation(Endpoint ep, EndpointInvocation epInv, InvocationContext invContext) throws Exception
    {
-      EndpointInvocation inv = super.setupInvocation(ep, epInv, invContext);
+      Invocation inv = super.setupInvocation(ep, epInv, invContext);
 
       // Attach the handler callback
       ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);

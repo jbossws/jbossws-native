@@ -40,7 +40,7 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
-import org.jboss.ws.core.ServiceEndpointInvocation;
+import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -176,7 +176,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.initInputParams(new Object[]{"Hello World!"});
 
       SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
@@ -202,7 +202,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       paramMetaData.setInHeader(true);
       paramMetaData.setIndex(1);
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.initInputParams(new Object[]{"Hello World!", "IN header message"});
 
       SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
@@ -229,7 +229,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       Map headers = new HashMap();
       headers.put(xmlName, header);
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.initInputParams(new Object[]{"Hello World!"});
 
       SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, headers);
@@ -256,7 +256,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(reqMessage);
 
-      ServiceEndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
+      EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
       assertNotNull(epInv);
 
       Object[] args = epInv.getRequestPayload();
@@ -285,7 +285,7 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
-      ServiceEndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
+      EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
       assertNotNull(epInv);
 
       Object[] args = epInv.getRequestPayload();
@@ -308,7 +308,7 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
-      ServiceEndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
+      EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
       assertNotNull(epInv);
 
       Object[] args = epInv.getRequestPayload();
@@ -323,7 +323,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.setReturnValue("Hello World!");
 
       SOAPMessage resMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
@@ -350,7 +350,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(resMessage);
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
       assertEquals("Hello World!", epInv.getReturnValue());
    }
@@ -378,7 +378,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       paramMetaData.setIndex(1);
       opMetaData.addParameter(paramMetaData);
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
       assertEquals("Hello World!", epInv.getReturnValue());
 
@@ -407,7 +407,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       Map headers = new HashMap();
       headers.put(xmlName, header);
 
-      ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       binding.unbindResponseMessage(opMetaData, resMessage, epInv, headers);
       assertEquals("Hello World!", epInv.getReturnValue());
 
@@ -431,7 +431,7 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       try
       {
-         ServiceEndpointInvocation epInv = new ServiceEndpointInvocation(opMetaData);
+         EndpointInvocation epInv = new EndpointInvocation(opMetaData);
          binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
          fail("SOAPFaultException expected");
       }
