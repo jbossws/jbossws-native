@@ -79,6 +79,7 @@
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-microcontainer-src.zip" dest="${thirdparty.dir}/jboss-microcontainer-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/remoting/${jboss-remoting}/lib/jboss-remoting.jar" dest="${thirdparty.dir}/jboss-remoting.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-client.jar" dest="${thirdparty.dir}/jbosssx-client.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx.jar" dest="${thirdparty.dir}/jbosssx.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-src.zip" dest="${thirdparty.dir}/jbosssx-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbossas/core-libs/${jbossas-core-libs}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbpm/bpel/${jbpm-bpel}/lib/jbpm-bpel.sar" dest="${thirdparty.dir}/jbpm-bpel.sar" usetimestamp="true" verbose="true" />    
@@ -123,7 +124,7 @@
       <pathelement location="${thirdparty.dir}/jboss-microcontainer.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-remoting.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
-      <pathelement location="${thirdparty.dir}/jbosssx-client.jar"/>
+      <pathelement location="${thirdparty.dir}/jbosssx.jar"/>
       <pathelement location="${thirdparty.dir}/mail.jar"/>
       <pathelement location="${thirdparty.dir}/servlet-api.jar"/>
       <pathelement location="${thirdparty.dir}/stax-api.jar"/>

@@ -31,8 +31,6 @@ import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.security.SecurityAssociation;
-import org.jboss.security.SimplePrincipal;
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -55,39 +53,6 @@ public class JBWS723TestCase extends JBossWSTest
    public static Test suite() throws Exception
    {
       return JBossWSTestSetup.newTestSetup(JBWS723TestCase.class, "jaxrpc-jbws723.jar, jaxrpc-jbws723-client.jar");
-   }
-
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      SecurityAssociation.setPrincipal(null);
-      SecurityAssociation.setCredential(null);
-   }
-
-   /** Test required principal/credential for this bean
-    */
-   public void testRoleSecuredSLSB() throws Exception
-   {
-      InitialContext iniCtx = getInitialContext();
-      OrganizationHome home = (OrganizationHome)iniCtx.lookup("ejb/RoleSecuredSLSB");
-
-      OrganizationRemote bean = null;
-      try
-      {
-         bean = home.create();
-         fail("Security exception expected");
-      }
-      catch (Exception e)
-      {
-         // all cool, now try again with valid credentials
-         SecurityAssociation.setPrincipal(new SimplePrincipal(USERNAME));
-         SecurityAssociation.setCredential(PASSWORD);
-         //bean = home.create();
-      }
-
-      System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-      //String info = bean.getContactInfo("mafia");
-      //assertEquals("The 'mafia' boss is currently out of office, please call again.", info);
    }
 
    public void testRoleSecuredWSDLAccess() throws Exception
