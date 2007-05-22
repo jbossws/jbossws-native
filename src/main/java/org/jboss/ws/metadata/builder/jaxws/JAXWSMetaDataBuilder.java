@@ -360,7 +360,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Conformance 3.18, the default value must be the same as the method name
       if (requestWrapperType == null)
       {
-         String packageName = JavaUtils.getPackageName(method.getDeclaringClass()) + ".jaxws";
+         String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
          requestWrapperType = packageName + "." + JavaUtils.capitalize(method.getName());
       }
 
@@ -393,7 +393,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       if (responseWrapperType == null)
       {
-         String packageName = JavaUtils.getPackageName(method.getDeclaringClass()) + ".jaxws";
+         String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
          responseWrapperType = packageName + "." + JavaUtils.capitalize(method.getName()) + "Response";
       }
 

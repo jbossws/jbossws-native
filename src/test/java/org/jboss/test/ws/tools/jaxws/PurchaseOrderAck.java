@@ -28,10 +28,10 @@ import javax.xml.bind.annotation.XmlType;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PurchaseOrderAckType", namespace="http://soapbinding.samples.jaxws.ws.test.jboss.org/", propOrder = { "product" })
+@XmlType(name = "PurchaseOrderAckType", namespace="http://jaxws.tools.ws.test.jboss.org/", propOrder = { "product" })
 public class PurchaseOrderAck
 {
-   @XmlElement(namespace="http://soapbinding.samples.jaxws.ws.test.jboss.org/",  required = true)
+   @XmlElement(namespace="http://jaxws.tools.ws.test.jboss.org/",  required = true)
    private String product;
 
    public PurchaseOrderAck()

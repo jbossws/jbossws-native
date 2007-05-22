@@ -34,6 +34,9 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.tools.jaxws.api.WSContractProvider;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.wsf.spi.deployment.BasicDeployment;
+import org.jboss.wsf.spi.deployment.BasicEndpoint;
+import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 
@@ -112,7 +115,14 @@ final class WSContractProviderImpl extends WSContractProvider
          messageStream.println("Generating WSDL:");
 
       UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
-      builder.buildWebServiceMetaData(umd, udi, endpointClass, null);
+      
+      Deployment dep = new BasicDeployment();
+      dep.getContext().addAttachment(UnifiedDeploymentInfo.class, udi);
+      BasicEndpoint ep = new BasicEndpoint();
+      ep.setTargetBean(endpointClass.getName());
+      dep.getService().addEndpoint(ep);
+      
+      builder.buildWebServiceMetaData(dep, umd, udi, endpointClass, null);
       try
       {
          generator.write();

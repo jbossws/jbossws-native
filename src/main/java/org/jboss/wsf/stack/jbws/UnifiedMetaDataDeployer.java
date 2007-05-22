@@ -54,22 +54,22 @@ public class UnifiedMetaDataDeployer extends AbstractDeployer
          if (udi.type == DeploymentType.JAXRPC_JSE)
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
-            umd = builder.buildMetaData((JAXRPCDeployment)udi);
+            umd = builder.buildMetaData(dep, (JAXRPCDeployment)udi);
          }
          else if (udi.type == DeploymentType.JAXRPC_EJB21)
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
-            umd = builder.buildMetaData((JAXRPCDeployment)udi);
+            umd = builder.buildMetaData(dep, (JAXRPCDeployment)udi);
          }
          else if (udi.type == DeploymentType.JAXWS_JSE)
          {
             JAXWSMetaDataBuilderJSE builder = new JAXWSMetaDataBuilderJSE();
-            umd = builder.buildMetaData(udi);
+            umd = builder.buildMetaData(dep, udi);
          }
          else if (udi.type == DeploymentType.JAXWS_EJB3)
          {
             JAXWSMetaDataBuilderEJB3 builder = new JAXWSMetaDataBuilderEJB3();
-            umd = builder.buildMetaData(udi);
+            umd = builder.buildMetaData(dep, udi);
          }
          else
          {

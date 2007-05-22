@@ -42,6 +42,7 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.JAXRPCDeployment;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
@@ -66,7 +67,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
    /**
     * Build from webservices.xml
     */
-   public UnifiedMetaData buildMetaData(JAXRPCDeployment udi)
+   public UnifiedMetaData buildMetaData(Deployment dep, JAXRPCDeployment udi)
    {
       log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
@@ -139,7 +140,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointEncodingStyle(sepMetaData);
 
-               initEndpointAddress(udi, sepMetaData);
+               initEndpointAddress(dep, udi, sepMetaData);
 
                if (udi.metaData instanceof UnifiedApplicationMetaData)
                {

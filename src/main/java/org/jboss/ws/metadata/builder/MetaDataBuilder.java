@@ -31,13 +31,11 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.management.ObjectName;
 import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.Port;
-import javax.wsdl.Service;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.xml.namespace.QName;
@@ -67,12 +65,13 @@ import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
@@ -128,78 +127,35 @@ public abstract class MetaDataBuilder
       }
    }
 
-   protected void initEndpointAddress(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
+   protected void initEndpointAddress(Deployment dep, UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
    {
-      // For JAXWS these may have been set by @WebContext attributes
-      String contextRoot = sepMetaData.getContextRoot();
-      String urlPattern = sepMetaData.getURLPattern();
+      String contextRoot = dep.getService().getContextRoot();
+      String urlPattern = null;
+
+      // Get the URL pattern from the endpoint
       String linkName = sepMetaData.getLinkName();
-
-      if (udi.metaData instanceof UnifiedWebMetaData)
+      if (linkName != null && dep.getService().getEndpointByName(linkName) != null)
       {
-         UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.metaData;
-         String jbwebContextRoot = webMetaData.getContextRoot();
-         if (jbwebContextRoot != null)
-            contextRoot = jbwebContextRoot;
-
-         Map<String, String> servletMappings = webMetaData.getServletMappings();
-         urlPattern = (String)servletMappings.get(linkName);
-         if (urlPattern == null)
-            throw new WSException("Cannot obtain url pattern for servlet name: " + linkName);
-      }
-
-      if (udi.metaData instanceof UnifiedApplicationMetaData)
-      {
-         UnifiedApplicationMetaData applMetaData = (UnifiedApplicationMetaData)udi.metaData;
-         UnifiedBeanMetaData beanMetaData = (UnifiedBeanMetaData)applMetaData.getBeanByEjbName(linkName);
-         if (beanMetaData == null)
-            throw new WSException("Cannot obtain meta data for ejb link: " + linkName);
-
-         String wsContextRoot = applMetaData.getWebServiceContextRoot();
-         if (wsContextRoot != null)
-            contextRoot = wsContextRoot;
-
-         String ejbClass = beanMetaData.getEjbClass();
-         String ejbClassName = WSDLUtils.getJustClassName(ejbClass);
-
-         UnifiedEjbPortComponentMetaData ejbpcMetaData = beanMetaData.getPortComponent();
-         if (ejbpcMetaData != null && ejbpcMetaData.getPortComponentURI() != null)
-         {
-            String pcUrlPattern = ejbpcMetaData.getPortComponentURI();
-            if (pcUrlPattern != null)
-            {
-               urlPattern = pcUrlPattern;
-               StringTokenizer st = new StringTokenizer(urlPattern, "/");
-               if (contextRoot == null && st.countTokens() > 1)
-               {
-                  contextRoot = st.nextToken();
-                  urlPattern = st.nextToken();
-                  while (st.hasMoreTokens())
-                     urlPattern += "/" + st.nextToken();
-               }
-            }
-         }
-
-         if (contextRoot == null)
-            contextRoot = ejbClassName + "Service";
-         if (urlPattern == null)
-            urlPattern = ejbClassName;
+         Endpoint endpoint = dep.getService().getEndpointByName(linkName);
+         urlPattern = endpoint.getURLPattern();
       }
 
       // If not, derive the context root from the deployment
       if (contextRoot == null)
       {
-         contextRoot = "/";
+         String simpleName = udi.simpleName;
+         contextRoot = simpleName.substring(0, simpleName.indexOf('.'));
          if (udi.parent != null)
          {
-            String shortName = udi.parent.simpleName;
-            shortName = shortName.substring(0, shortName.indexOf('.'));
-            contextRoot += shortName + "-";
+            simpleName = udi.parent.simpleName;
+            simpleName = simpleName.substring(0, simpleName.indexOf('.'));
+            contextRoot = simpleName + "-" + contextRoot;
          }
-         String shortName = udi.simpleName;
-         shortName = shortName.substring(0, shortName.indexOf('.'));
-         contextRoot += shortName;
       }
+
+      // Default to "/*" 
+      if (urlPattern == null)
+         urlPattern = "/*";
 
       if (contextRoot.startsWith("/") == false)
          contextRoot = "/" + contextRoot;
@@ -413,7 +369,7 @@ public abstract class MetaDataBuilder
       Iterator itServices = services.values().iterator();
       while (itServices.hasNext())
       {
-         Service wsdlOneOneService = (Service)itServices.next();
+         javax.wsdl.Service wsdlOneOneService = (javax.wsdl.Service)itServices.next();
          Map wsdlOneOnePorts = wsdlOneOneService.getPorts();
          Iterator itPorts = wsdlOneOnePorts.keySet().iterator();
          while (itPorts.hasNext())

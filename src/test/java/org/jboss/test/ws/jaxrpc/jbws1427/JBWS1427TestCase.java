@@ -66,7 +66,7 @@ public class JBWS1427TestCase extends JBossWSTest
          QName serviceName = new QName("http://za.co.testws.interfaces", "ProcessClaim");
          Service service = factory.createService(wsdlURL, serviceName , mappingURL);
          port = (RequestService)service.getPort(RequestService.class);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/RequestServiceEJBService/RequestServiceEJB");
+         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1427/SubmitRequestEJB");
       }
    }
 

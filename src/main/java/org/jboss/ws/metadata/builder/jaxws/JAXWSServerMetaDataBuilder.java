@@ -30,6 +30,7 @@ import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 
@@ -41,17 +42,17 @@ import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
  */
 public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
 {
-   static void setupProviderOrWebService(UnifiedMetaData umd, UnifiedDeploymentInfo udi, Class<?> beanClass, String beanName) throws Exception
+   static void setupProviderOrWebService(Deployment dep, UnifiedMetaData umd, UnifiedDeploymentInfo udi, Class<?> beanClass, String beanName) throws Exception
    {
       if (beanClass.isAnnotationPresent(WebService.class))
       {
          JAXWSWebServiceMetaDataBuilder builder = new JAXWSWebServiceMetaDataBuilder();
-         builder.buildWebServiceMetaData(umd, udi, beanClass, beanName);
+         builder.buildWebServiceMetaData(dep, umd, udi, beanClass, beanName);
       }
       else if (beanClass.isAnnotationPresent(WebServiceProvider.class))
       {
          JAXWSProviderMetaDataBuilder builder = new JAXWSProviderMetaDataBuilder();
-         builder.buildProviderMetaData(umd, udi, beanClass, beanName);
+         builder.buildProviderMetaData(dep, umd, udi, beanClass, beanName);
       }
    }
 
