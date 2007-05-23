@@ -230,15 +230,14 @@
       </metainf>
     </jar>
 
-    <!-- jaxws metadata -->
-    <war warfile="${tests.output.dir}/libs/jaxws-metadata.war" webxml="${tests.output.dir}/resources/jaxws/metadata/WEB-INF/web.xml">
+    <!-- jaxws namespace -->
+    <war warfile="${tests.output.dir}/libs/jaxws-namespace.war" webxml="${tests.output.dir}/resources/jaxws/namespace/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/metadata/EndpointBean.class"/>
-        <include name="org/jboss/test/ws/jaxws/metadata/EndpointInterface.class"/>
+        <include name="org/jboss/test/ws/jaxws/namespace/EndpointBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/namespace/EndpointInterface.class"/>
       </classes>
-      <webinf dir="${tests.output.dir}/resources/jaxws/metadata/WEB-INF">
+      <webinf dir="${tests.output.dir}/resources/jaxws/namespace/WEB-INF">
         <include name="jboss-web.xml"/>
-        <include name="wsdl/*"/>
       </webinf>
     </war>
 

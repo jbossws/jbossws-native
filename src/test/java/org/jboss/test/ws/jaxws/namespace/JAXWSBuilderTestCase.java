@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.metadata;
+package org.jboss.test.ws.jaxws.namespace;
 
 // $Id: $
 
@@ -44,7 +44,7 @@ public class JAXWSBuilderTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JAXWSBuilderTestCase.class, "jaxws-metadata.war");
+      return JBossWSTestSetup.newTestSetup(JAXWSBuilderTestCase.class, "jaxws-namespace.war");
    }
 
    /**
@@ -59,7 +59,7 @@ public class JAXWSBuilderTestCase extends JBossWSTest
    public void testSEIDerivedNamespaces() throws Exception
    {
       // Create the port
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-metadata?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-namespace?wsdl");
       QName qname = new QName("http://example.org/impl", "EndpointBeanService");
       Service service = Service.create(wsdlURL, qname);
       EndpointInterface port = service.getPort(EndpointInterface.class);
