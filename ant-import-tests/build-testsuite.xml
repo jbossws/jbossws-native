@@ -27,8 +27,7 @@
   -->
   <target name="tests-init" depends="jars,tests-prepare">
 
-    <path id="jbossws.classpath">
-      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
+    <path id="ws.stack.classpath">
       <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
@@ -36,43 +35,19 @@
       <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
     </path>
 
-    <!-- The combined compile classpath -->
-    <path id="javac.classpath">
-      <path refid="jbossws.classpath"/>
-      <path refid="thirdparty.classpath"/>
-      <pathelement location="${thirdparty.dir}/jboss-vfs.jar"/>
-      <pathelement location="${thirdparty.dir}/junit.jar"/>
-      <pathelement location="${thirdparty.dir}/qdox.jar"/>
-      <pathelement location="${thirdparty.dir}/policy.jar"/>
-      <pathelement location="${thirdparty.dir}/xmlunit1.0.jar"/>
-      <pathelement location="${jboss.home}/client/jboss-ejb3-client.jar"/>
-    </path>
-
-    <!-- The test client classpath -->
-    <path id="tests.client.classpath">
-      <path refid="jbossws.classpath"/>
-      <pathelement location="${jboss.client}/commons-logging.jar"/>
-      <pathelement location="${jboss.client}/jboss-backport-concurrent.jar"/>
-      <pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
-      <pathelement location="${jboss.client}/jboss-aop-jdk50-client.jar"/>
-      <pathelement location="${jboss.client}/jboss-aspect-jdk50-client.jar"/>
-      <pathelement location="${jboss.client}/log4j.jar"/>
-      <pathelement location="${jboss.client}/jbossall-client.jar"/>
-      <pathelement location="${jboss.lib}/jboss-aop-jdk50.jar"/>
-      <pathelement location="${jboss.lib}/jboss-vfs.jar"/>
-      <pathelement location="${jboss.server.lib}/hibernate3.jar"/>
-      <pathelement location="${jboss.server.lib}/jboss.jar"/>
-      <pathelement location="${jboss.server.lib}/jbosssx.jar"/>
-      <pathelement location="${jboss.server.lib}/jbossws-${jbossws.integration.target}.jar"/>
-      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi.jar"/>
-      <pathelement location="${jboss.server.deploy}/juddi-service.sar/juddi-saaj.jar"/>
-      <pathelement location="${jboss.server.deploy}/juddi-service.sar/scout.jar"/>
-      <path refid="javac.classpath"/>
+    <path id="tests.extra.classpath">
+      <pathelement location="${core.dir}/thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>
+      <pathelement location="${core.dir}/thirdparty/ejb3.deployer/jboss-ejb3.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-remoting.jar"/>
+      <pathelement location="${core.dir}/thirdparty/policy.jar"/>
+      <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
     </path>
 
     <!-- The jBPM BPEL classpath -->
     <path id="jbpm.bpel.classpath">
-      <path refid="jbossws.classpath"/>
+      <path refid="ws.stack.classpath"/>
       <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
       <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
       <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
@@ -99,7 +74,7 @@
 
     <!-- Define the JAX-WS wsconsume task -->
     <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
-      <classpath refid="jbossws.classpath"/>
+      <classpath refid="ws.stack.classpath"/>
       <classpath location="${thirdparty.dir}/jbossws-wsconsume-impl.jar"/>
       <classpath location="${thirdparty.dir}/jaxb-xjc.jar"/>
     </taskdef>
@@ -141,7 +116,7 @@
 	
     <!-- Define the JAX-RPC tools task -->
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
-      <classpath refid="jbossws.classpath"/>
+      <classpath refid="ws.stack.classpath"/>
       <classpath refid="thirdparty.classpath"/>
       <classpath location="${thirdparty.dir}/jbossretro-rt.jar"/>
       <classpath location="${thirdparty.dir}/jboss-backport-concurrent.jar"/>
@@ -196,7 +171,7 @@
 	
     <!-- Define the JAX-WS wsprovide task -->
     <taskdef name="wsprovide" classname="org.jboss.ws.tools.jaxws.ant.wsprovide">
-      <classpath refid="jbossws.classpath"/>
+      <classpath refid="ws.stack.classpath"/>
       <classpath refid="thirdparty.classpath"/>
       <classpath location="${thirdparty.dir}/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
@@ -206,25 +181,16 @@
   </target>
   
   <target name="tests-generate-resources" depends="servicegen,wstools,wsprovide">
-    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}">
-      <src path="${tests.output.dir}/wstools/java"/>
-      <exclude name="org/jboss/test/ws/interop/**"/>
-      <classpath refid="javac.classpath"/>
-    </javac>
+    <macro-compile-classes srcdir="${tests.output.dir}/wstools/java"/>
   </target>
   
   <!-- ================================================================== -->
   <!-- Compiling                                                          -->
   <!-- ================================================================== -->
 
-  <target name="tests-compile" depends="wsconsume" description="Compile sources">
-    <mkdir dir="${tests.output.dir}/classes"/>
-    <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
-      failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
-      <src path="${tests.java.dir}"/>
-      <src path="${tests.output.dir}/wsconsume/java"/>
-      <classpath refid="javac.classpath"/>
-    </javac>
+  <target name="tests-compile" depends="wsconsume,tests-classpath" description="Compile sources">
+    <macro-compile-classes srcdir="${tests.output.dir}/wsconsume/java"/>
+    <macro-compile-classes srcdir="${tests.java.dir}"/>
   </target>
   
   <!-- ================================================================== -->
@@ -233,7 +199,7 @@
   
   <!-- Copy resources -->
   <target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
-    <copy-test-resources srcdir="${tests.dir}"/>
+    <macro-copy-resources srcdir="${tests.dir}"/>
   </target>
   
   <target name="tests-jars" depends="wsconsume,tests-compile,tests-copy-resources,tests-generate-resources" description="Build the deployments.">

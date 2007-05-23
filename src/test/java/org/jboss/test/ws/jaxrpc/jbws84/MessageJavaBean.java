@@ -22,7 +22,6 @@
 package org.jboss.test.ws.jaxrpc.jbws84;
 
 import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
 import java.rmi.RemoteException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,9 +35,8 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
-
-import com.ibm.wsdl.util.xml.DOM2Writer;
 
 /**
  * @author Thomas.Diesler@jboss.org
@@ -53,9 +51,8 @@ public class MessageJavaBean implements Message
     */
    public SOAPElement processSOAPElement(SOAPElement reqElement) throws RemoteException
    {
-      StringWriter swr = new StringWriter();
-      DOM2Writer.serializeAsXML(reqElement, swr);
-      log.info("processSOAPElement: " + swr);
+      String msgStr = DOMWriter.printNode(reqElement, true);
+      log.info("processSOAPElement: " + msgStr);
 
       try
       {

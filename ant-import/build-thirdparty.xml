@@ -92,7 +92,7 @@
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-impl.jar" dest="${thirdparty.dir}/jaxb-impl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-xjc.jar" dest="${thirdparty.dir}/jaxb-xjc.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/xmlunit-xmlunit/${xmlunit}/lib/xmlunit1.0.jar" dest="${thirdparty.dir}/xmlunit1.0.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/xmlunit-xmlunit/${xmlunit}/lib/xmlunit1.0.jar" dest="${thirdparty.dir}/xmlunit.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/wscommons-policy/${wscommons-policy}/lib/policy.jar" dest="${thirdparty.dir}/policy.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/woodstox/${woodstox}/lib/wstx.jar" dest="${thirdparty.dir}/wstx.jar" usetimestamp="true" verbose="true"/>
 

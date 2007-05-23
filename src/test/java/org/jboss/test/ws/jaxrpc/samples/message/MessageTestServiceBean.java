@@ -22,7 +22,6 @@
 package org.jboss.test.ws.jaxrpc.samples.message;
 
 import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
 import java.rmi.RemoteException;
 
 import javax.xml.namespace.QName;
@@ -37,11 +36,10 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import com.ibm.wsdl.util.xml.DOM2Writer;
 
 /**
  * @author Thomas.Diesler@jboss.org
@@ -56,9 +54,8 @@ public class MessageTestServiceBean implements MessageTestService
     */
    public SOAPElement processElement(SOAPElement msg) throws RemoteException
    {
-      StringWriter swr = new StringWriter();
-      DOM2Writer.serializeAsXML(msg, swr);
-      log.info("processElement: " + swr);
+      String msgStr = DOMWriter.printNode(msg, true);
+      log.info("processElement: " + msgStr);
 
       try
       {
@@ -122,7 +119,7 @@ public class MessageTestServiceBean implements MessageTestService
          TransformerFactory factory = TransformerFactory.newInstance();
          Transformer transformer = factory.newTransformer();
          transformer.transform(new DOMSource(doc), new DOMResult(parent));
-         return (SOAPElement) parent.getChildElements().next();
+         return (SOAPElement)parent.getChildElements().next();
       }
       catch (RuntimeException e)
       {
