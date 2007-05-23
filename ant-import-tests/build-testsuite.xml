@@ -25,7 +25,7 @@
   <!--
     Init the various classpaths
   -->
-  <target name="tests-init" depends="jars,tests-prepare">
+  <target name="tests-init" depends="thirdparty-classpath,tests-classpath">
 
     <path id="ws.stack.classpath">
       <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
@@ -48,18 +48,18 @@
     <!-- The jBPM BPEL classpath -->
     <path id="jbpm.bpel.classpath">
       <path refid="ws.stack.classpath"/>
-      <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
-      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
-      <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
-      <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
-      <pathelement location="${thirdparty.dir}/dom4j.jar"/>
-      <pathelement location="${thirdparty.dir}/jaxen.jar"/>
-      <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
-      <pathelement location="${thirdparty.dir}/jboss-logging-log4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel/jbpm-bpel.jar" />
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel/jbpm-jpdl.jar" />
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel/commons-lang.jar" />
+      <pathelement location="${core.dir}/thirdparty/commons-collections.jar"/>
+      <pathelement location="${core.dir}/thirdparty/commons-logging.jar"/>
+      <pathelement location="${core.dir}/thirdparty/dom4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jaxen.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-logging-log4j.jar"/>
       <!--
-      <pathelement location="${thirdparty.dir}/log4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/log4j.jar"/>
       <pathelement location="${tests.etc.dir}"/>
       -->
     </path>
@@ -75,8 +75,8 @@
     <!-- Define the JAX-WS wsconsume task -->
     <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
       <classpath refid="ws.stack.classpath"/>
-      <classpath location="${thirdparty.dir}/jbossws-wsconsume-impl.jar"/>
-      <classpath location="${thirdparty.dir}/jaxb-xjc.jar"/>
+      <classpath location="${core.dir}/thirdparty/jbossws-wsconsume-impl.jar"/>
+      <classpath location="${core.dir}/thirdparty/jaxb-xjc.jar"/>
     </taskdef>
 
     <wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
@@ -98,7 +98,7 @@
       <fileset dir="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/bpel" />
     </zip>
     <!-- Copy the BPEL sar -->
-    <copy file="${thirdparty.dir}/jbpm-bpel.sar" todir="${tests.output.dir}/libs"/>
+    <copy file="${core.dir}/thirdparty/jbpm-bpel.sar" todir="${tests.output.dir}/libs"/>
 
 	  <!-- generate wsdl binding and service definitions for bpel processes -->
     <taskdef name="servicegen" classname="org.jbpm.bpel.ant.ServiceGeneratorTask">
@@ -118,9 +118,7 @@
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath refid="ws.stack.classpath"/>
       <classpath refid="thirdparty.classpath"/>
-      <classpath location="${thirdparty.dir}/jbossretro-rt.jar"/>
-      <classpath location="${thirdparty.dir}/jboss-backport-concurrent.jar"/>
-      <classpath location="${thirdparty.dir}/concurrent.jar"/>
+      <classpath location="${core.dir}/thirdparty/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
       <classpath location="${tests.output.dir}"/>
     </taskdef>    
@@ -173,7 +171,7 @@
     <taskdef name="wsprovide" classname="org.jboss.ws.tools.jaxws.ant.wsprovide">
       <classpath refid="ws.stack.classpath"/>
       <classpath refid="thirdparty.classpath"/>
-      <classpath location="${thirdparty.dir}/concurrent.jar"/>
+      <classpath location="${core.dir}/thirdparty/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
     </taskdef>    
     

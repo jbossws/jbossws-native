@@ -26,8 +26,9 @@ package org.jboss.wsf.stack.jbws;
 import javax.servlet.ServletContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.server.AbstractServiceEndpointServlet;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.invocation.EndpointServlet;
 
 /**
  * A servlet that is installed for every web service endpoint.
@@ -35,16 +36,17 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class ServiceEndpointServlet extends AbstractServiceEndpointServlet
+public class ServiceEndpointServlet extends EndpointServlet
 {
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceEndpointServlet.class);
 
    /** Initialize the service endpoint
     */
-   protected void initServiceEndpoint(String contextPath)
+   @Override
+   protected Endpoint initServiceEndpoint(String contextPath)
    {
-      super.initServiceEndpoint(contextPath);
+      Endpoint endpoint = super.initServiceEndpoint(contextPath);
 
       // read the config name/file from web.xml
       ServletContext ctx = getServletContext();
@@ -59,5 +61,7 @@ public class ServiceEndpointServlet extends AbstractServiceEndpointServlet
          log.debug("Updating service endpoint config\n  config-name: " + configName + "\n  config-file: " + configFile);
          epMetaData.setConfigName(configName, configFile);
       }
+      
+      return endpoint;
    }
 }

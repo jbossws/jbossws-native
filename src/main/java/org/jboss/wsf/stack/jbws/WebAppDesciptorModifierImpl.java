@@ -90,7 +90,7 @@ public class WebAppDesciptorModifierImpl implements WebAppDesciptorModifier
          // Nothing to do if we have an <init-param>
          if (isAlreadyModified(servlet))
          {
-            for (Iterator itParam = servlet.elementIterator("init-param"); it.hasNext();)
+            for (Iterator itParam = servlet.elementIterator("init-param"); itParam.hasNext();)
             {
                Element elParam = (Element)itParam.next();
                String paramName = elParam.element("param-name").getTextTrim();
@@ -121,7 +121,7 @@ public class WebAppDesciptorModifierImpl implements WebAppDesciptorModifier
             if (orgServletClassName.equals(servletClass) == false)
             {
                targetBeanName = orgServletClassName;
-               Element paramElement = classElement.addElement("init-param");
+               Element paramElement = servlet.addElement("init-param");
                paramElement.addElement("param-name").addText(Endpoint.SEPID_DOMAIN_ENDPOINT);
                paramElement.addElement("param-value").addText(targetBeanName);
             }

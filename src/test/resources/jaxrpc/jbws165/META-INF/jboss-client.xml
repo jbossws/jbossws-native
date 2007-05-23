@@ -9,22 +9,22 @@
 
   <service-ref>
     <service-ref-name>service/HelloNone</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/HelloEJBService/HelloEJB?wsdl</wsdl-override>
+    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws165-jaxrpc-jbws165-none/HelloNone?wsdl</wsdl-override>
   </service-ref>
 
   <service-ref>
     <service-ref-name>service/HelloPCOne</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Path/HelloPCOne?wsdl</wsdl-override>
+    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws165-jaxrpc-jbws165-pcuri/Explicit/Path/HelloPCOne?wsdl</wsdl-override>
   </service-ref>
 
   <service-ref>
     <service-ref-name>service/HelloPCTwo</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Path/HelloPCTwo?wsdl</wsdl-override>
+    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws165-jaxrpc-jbws165-pcuri/Explicit/Path/HelloPCTwo?wsdl</wsdl-override>
   </service-ref>
 
   <service-ref>
     <service-ref-name>service/HelloContextRoot</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Context/HelloEJB?wsdl</wsdl-override>
+    <wsdl-override>http://@jbosstest.host.name@:8080/Explicit/Context/HelloContextRoot?wsdl</wsdl-override>
   </service-ref>
 
   <service-ref>
