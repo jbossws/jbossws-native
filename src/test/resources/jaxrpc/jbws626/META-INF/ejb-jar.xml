@@ -7,7 +7,7 @@
   <enterprise-beans>
   
     <session>
-      <ejb-name>JBWS626TestBean</ejb-name>
+      <ejb-name>DemoBean</ejb-name>
       <service-endpoint>org.jboss.test.ws.jaxrpc.jbws626.DemoEndpoint</service-endpoint>
       <ejb-class>org.jboss.test.ws.jaxrpc.jbws626.DemoBean</ejb-class>
       <session-type>Stateless</session-type>

@@ -19,7 +19,7 @@
      <namespaces target-namespace="http://org.jboss.test.webservice/jbws626"
                  type-namespace="http://org.jboss.test.webservice/jbws626/types" />
      <mapping file="jaxrpc-mapping.xml"/>
-     <webservices  ejb-link="JBWS626TestBean"/>
+     <webservices  ejb-link="DemoBean"/>
    </java-wsdl>  
 </configuration>
 

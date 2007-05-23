@@ -8,7 +8,7 @@
    <wsdl-port>impl:DemoEndpointPort</wsdl-port>
    <service-endpoint-interface>org.jboss.test.ws.jaxrpc.jbws626.DemoEndpoint</service-endpoint-interface>
    <service-impl-bean>
-    <ejb-link>JBWS626TestBean</ejb-link>
+    <ejb-link>DemoBean</ejb-link>
    </service-impl-bean>
    <!-- Manual -->
    <handler>

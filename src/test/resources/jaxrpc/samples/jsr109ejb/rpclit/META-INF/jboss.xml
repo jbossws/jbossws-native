@@ -5,6 +5,7 @@
 <jboss>
 
   <webservices>
+    <context-root>/jaxrpc-samples-jsr109ejb-rpc</context-root>
     <webservice-description>
       <webservice-description-name>TestService</webservice-description-name>
       <wsdl-publish-location>file:@wsdl-publish-location@/jsr109ejb</wsdl-publish-location>
@@ -16,7 +17,7 @@
       <ejb-name>TestService</ejb-name>
       <port-component>
         <port-component-name>TestServicePort</port-component-name>
-        <port-component-uri>/jaxrpc-samples-jsr109ejb-rpc/*</port-component-uri>
+        <port-component-uri>/*</port-component-uri>
       </port-component>
     </session>
   </enterprise-beans>
