@@ -23,6 +23,7 @@ package org.jboss.ws.metadata.wsse;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -104,6 +105,28 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
    }
 
+   
+   public WSSecurityConfiguration parse(String xmlString) throws JBossXBException
+   {
+      if (xmlString == null)
+         throw new IllegalArgumentException("Security config xml String cannot be null");
+
+      Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
+      WSSecurityConfiguration configuration = (WSSecurityConfiguration) unmarshaller.unmarshal(xmlString, this, null);
+      return configuration;
+      
+   }
+   
+   public WSSecurityConfiguration parse(StringReader strReader) throws JBossXBException
+   {
+      if (strReader == null)
+         throw new IllegalArgumentException("Security InputStream cannot be null");
+
+      Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
+      WSSecurityConfiguration configuration = (WSSecurityConfiguration) unmarshaller.unmarshal(strReader, this, null);
+      return configuration;
+   }
+   
    /**
     * This method is called on the factory by the object model builder when the
     * parsing starts.

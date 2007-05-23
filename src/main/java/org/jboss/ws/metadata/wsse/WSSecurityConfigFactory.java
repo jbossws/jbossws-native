@@ -72,27 +72,32 @@ public class WSSecurityConfigFactory
          log.debug("createConfiguration from: " + configLocation);
          config = WSSecurityOMFactory.newInstance().parse(configLocation);
          
-         // Get and set deployment path to the keystore file
-         URL keystoreLocation = null;
-         if (config.getKeyStoreFile() != null)
-         {
-            keystoreLocation = getResource(vfsRoot, config.getKeyStoreFile(), true);
-            log.debug("Add keystore: " + keystoreLocation);
-            config.setKeyStoreURL(keystoreLocation);
-         }
-
-         URL truststoreLocation = null;
-         if (config.getTrustStoreFile() != null)
-         {
-            truststoreLocation = getResource(vfsRoot, config.getTrustStoreFile(), true);
-            log.debug("Add truststore: " + truststoreLocation);
-            config.setTrustStoreURL(truststoreLocation);
-         }
+         initKeystorePath(vfsRoot, config);
       }
       
       return config;
    }
+   
+   public void initKeystorePath(UnifiedVirtualFile vfsRoot, WSSecurityConfiguration config)
+   {
+      // Get and set deployment path to the keystore file
+      URL keystoreLocation = null;
+      if (config.getKeyStoreFile() != null)
+      {
+         keystoreLocation = getResource(vfsRoot, config.getKeyStoreFile(), true);
+         log.debug("Add keystore: " + keystoreLocation);
+         config.setKeyStoreURL(keystoreLocation);
+      }
 
+      URL truststoreLocation = null;
+      if (config.getTrustStoreFile() != null)
+      {
+         truststoreLocation = getResource(vfsRoot, config.getTrustStoreFile(), true);
+         log.debug("Add truststore: " + truststoreLocation);
+         config.setTrustStoreURL(truststoreLocation);
+      }
+   }
+   
    private URL getResource(UnifiedVirtualFile vfsRoot, String resource, boolean failOnNotFound)
    {
       URL resourceURL = null;

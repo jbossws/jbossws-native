@@ -37,6 +37,8 @@ import javax.xml.namespace.QName;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
+import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
@@ -51,6 +53,7 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
+import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
@@ -89,6 +92,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       private ServerEndpointMetaData sepMetaData;
       private ServiceMetaData serviceMetaData;
       private URL wsdlLocation;
+      private URL policyLocation;
    }
 
    public void setGenerateWsdl(boolean generateWsdl)
@@ -136,6 +140,13 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Initialize types
          createJAXBContext(sepMetaData);
          populateXmlTypes(sepMetaData);
+         
+         //Process an optional @PolicyAttachment annotation
+         if (sepClass.isAnnotationPresent(PolicyAttachment.class))
+         {
+            PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getServerSidePolicyMetaDataBuilder(toolMode);
+            policyBuilder.processPolicyAnnotations(sepMetaData, sepClass, udi);
+         }
 
          // The server must always generate WSDL
          if (generateWsdl || !toolMode)
@@ -341,72 +352,84 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
    private void processOrGenerateWSDL(Class wsClass, ServiceMetaData serviceMetaData, URL wsdlLocation, EndpointMetaData epMetaData)
    {
-      if (wsdlLocation != null)
+      PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getServerSidePolicyMetaDataBuilder(toolMode);
+      try
       {
-         serviceMetaData.setWsdlLocation(wsdlLocation);
+         WSDLGenerator generator = new JAXBWSDLGenerator(jaxbCtx);
+         WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
+         if (wsdlLocation != null)
+         {
+            //we can no longer use the user provided wsdl without parsing it right now, since we
+            //need to look for policies and eventually choose the supported policy alternatives
+            WSDLDefinitions wsdlDefinitions = factory.parse(wsdlLocation);
+            policyBuilder.processPolicyExtensions(epMetaData, wsdlDefinitions);
+            //now we have the UMDM containing policy data; anyway we can't write a new wsdl file with
+            //the supported alternatives and so on, since we need to publish the file the user provided
+            serviceMetaData.setWsdlLocation(wsdlLocation);
+         }
+         else
+         {
+               WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
+               writeWsdl(serviceMetaData,wsdlDefinitions,epMetaData);
+         }
+      }
+      catch (RuntimeException rte)
+      {
+         throw rte;
+      }
+      catch (IOException e)
+      {
+         throw new WSException("Cannot write generated wsdl", e);
+      }
+   }
+   
+   
+   private void writeWsdl(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions, EndpointMetaData epMetaData) throws IOException
+   {
+      // The RI uses upper case, and the TCK expects it, so we just mimic this even though we don't really have to
+      String wsdlName =  ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
+      // Ensure that types are only in the interface qname
+      wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
+
+      final File dir, wsdlFile;
+
+      if (wsdlDirectory != null)
+      {
+         dir = wsdlDirectory;
+         wsdlFile = new File(dir, wsdlName + ".wsdl");
       }
       else
       {
-         try
+         dir =  IOUtils.createTempDirectory();
+         wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
+         wsdlFile.deleteOnExit();
+      }
+
+      message(wsdlFile.getName());
+      Writer writer = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
+      new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver() {
+         public WSDLWriterResolver resolve(String suggestedFile) throws IOException
          {
-            // The RI uses upper case, and the TCK expects it, so we just mimic this even though we don't really have to
-            String wsdlName =  ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
-
-            WSDLGenerator generator = new JAXBWSDLGenerator(jaxbCtx);
-            WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
-
-            // Ensure that types are only in the interface qname
-            wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
-
-            final File dir, wsdlFile;
-
+            File file;
             if (wsdlDirectory != null)
             {
-               dir = wsdlDirectory;
-               wsdlFile = new File(dir, wsdlName + ".wsdl");
+               file = new File(dir, suggestedFile + ".wsdl");
             }
             else
             {
-               dir =  IOUtils.createTempDirectory();
-               wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
-               wsdlFile.deleteOnExit();
+               file = File.createTempFile(suggestedFile, ".wsdl", dir);
+               file.deleteOnExit();
             }
+            actualFile = file.getName();
+            message(actualFile);
+            charset = Constants.DEFAULT_XML_CHARSET;
+            writer = IOUtils.getCharsetFileWriter(file, Constants.DEFAULT_XML_CHARSET);
+            return this;
+         }
+      });
+      writer.close();
 
-            message(wsdlFile.getName());
-            Writer writer = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
-            new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver() {
-               public WSDLWriterResolver resolve(String suggestedFile) throws IOException
-               {
-                  File file;
-                  if (wsdlDirectory != null)
-                  {
-                     file = new File(dir, suggestedFile + ".wsdl");
-                  }
-                  else
-                  {
-                     file = File.createTempFile(suggestedFile, ".wsdl", dir);
-                     file.deleteOnExit();
-                  }
-                  actualFile = file.getName();
-                  message(actualFile);
-                  charset = Constants.DEFAULT_XML_CHARSET;
-                  writer = IOUtils.getCharsetFileWriter(file, Constants.DEFAULT_XML_CHARSET);
-                  return this;
-               }
-            });
-            writer.close();
-
-            serviceMetaData.setWsdlLocation(wsdlFile.toURL());
-         }
-         catch (RuntimeException rte)
-         {
-            throw rte;
-         }
-         catch (IOException e)
-         {
-            throw new WSException("Cannot write generated wsdl", e);
-         }
-      }
+      serviceMetaData.setWsdlLocation(wsdlFile.toURL());
    }
 
    private void message(String msg)

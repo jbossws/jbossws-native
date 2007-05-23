@@ -26,6 +26,8 @@ package org.jboss.ws.metadata.wsdl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.logging.Logger;
@@ -43,6 +45,7 @@ public abstract class Extendable implements Serializable
    
    private Map features = new LinkedHashMap();
    private Map properties = new LinkedHashMap();
+   private Map<String,List<WSDLExtensibilityElement>> extElements = new LinkedHashMap<String,List<WSDLExtensibilityElement>>();
 
    public WSDLFeature[] getFeatures()
    {
@@ -82,5 +85,34 @@ public abstract class Extendable implements Serializable
    {
       WSDLProperty property = (WSDLProperty)properties.get(uri);
       return property;
+   }
+   
+   public void addExtensibilityElement(WSDLExtensibilityElement extElement)
+   {
+      log.trace("addExtensibilityElement: " + extElement);
+      String uri = extElement.getUri();
+      List<WSDLExtensibilityElement> list = extElements.get(uri);
+      if (list == null)
+      {
+         list = new LinkedList<WSDLExtensibilityElement>();
+         extElements.put(uri,list);
+      }
+      list.add(extElement);
+   }
+
+   public List<WSDLExtensibilityElement> getExtensibilityElements(String uri)
+   {
+      List<WSDLExtensibilityElement> list = extElements.get(uri);
+      return list == null ? new ArrayList<WSDLExtensibilityElement>() : list;
+   }
+   
+   public List<WSDLExtensibilityElement> getAllExtensibilityElements()
+   {
+      List<WSDLExtensibilityElement> list = new LinkedList<WSDLExtensibilityElement>();
+      for (String k : extElements.keySet())
+      {
+         list.addAll(extElements.get(k));
+      }
+      return list;
    }
 }

@@ -43,6 +43,7 @@
       <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
       <pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
       <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
     </path>
 
     <!-- The jBPM BPEL classpath -->
@@ -85,6 +86,8 @@
     <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
     <wsconsume wsdl="${tests.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
     <wsconsume wsdl="${tests.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
+  	<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
+  	<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
     <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
   </target>
 
@@ -172,10 +175,13 @@
       <classpath refid="ws.stack.classpath"/>
       <classpath refid="thirdparty.classpath"/>
       <classpath location="${core.dir}/thirdparty/concurrent.jar"/>
+	  <classpath location="${thirdparty.dir}/commons-logging.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
+      <classpath location="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
     </taskdef>    
     
-    <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
+  	<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
+  	<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"/>
   </target>
   
   <target name="tests-generate-resources" depends="servicegen,wstools,wsprovide">

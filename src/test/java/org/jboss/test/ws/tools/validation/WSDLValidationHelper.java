@@ -21,24 +21,34 @@
   */
 package org.jboss.test.ws.tools.validation;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
+import org.jboss.ws.metadata.wsdl.Extendable;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
+import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInfault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
+import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
+import org.jboss.wsf.spi.utils.DOMUtils;
+import org.w3c.dom.Element;
 
 /**
  *  WSDL Validator Helper class
@@ -47,6 +57,9 @@ import org.jboss.ws.tools.exceptions.JBossWSToolsException;
  */ 
 public class WSDLValidationHelper
 {
+   
+   private final static Logger log = Logger.getLogger(WSDLValidationHelper.class);
+   
    /**
     * Validate the WSDLBinding objects
     * @param w1 WSDLDefinitions object for the first wsdl
@@ -56,7 +69,7 @@ public class WSDLValidationHelper
     */
    public static boolean validateBindings(WSDLDefinitions w1, WSDLDefinitions w2) 
    throws JBossWSToolsException
-   {  boolean bool = false;
+   {  boolean bool = true;
       WSDLBinding[] bindings1 = w1.getBindings();
       WSDLBinding[] bindings2 = w2.getBindings();
       if (bindings1 == null || bindings1.length == 0)
@@ -74,7 +87,8 @@ public class WSDLValidationHelper
       {
          WSDLBinding binding1 = bindings1[i];
          WSDLBinding binding2 = bindings2[i];
-         bool = validateBindingOperations(binding1.getOperations(),binding2.getOperations());
+         bool = bool && validateExtensibilityElements(binding1, binding2);
+         bool = bool && validateBindingOperations(binding1.getOperations(),binding2.getOperations());
       }
       return bool;
    }
@@ -120,6 +134,103 @@ public class WSDLValidationHelper
          }
       }
       return bool;
+   }
+   
+   /**
+    * Validates the extensibility elements contained into the specified Extendable
+    * objects.
+    * @param w1
+    * @param w2
+    * @return
+    * @throws JBossWSToolsException
+    */
+   public static boolean validateExtensibilityElements(Extendable ext1, Extendable ext2)
+   throws JBossWSToolsException
+   {
+      boolean bool = true;
+      //add validation of further extensibility element types below
+      if (bool) bool = validatePolicyElements(ext1,ext2);
+      
+      return bool;
+   }
+   
+   
+   private static boolean validatePolicyElements(Extendable ext1, Extendable ext2)
+   throws JBossWSToolsException
+   {
+      //policies
+      List<WSDLExtensibilityElement> pol1 = new ArrayList<WSDLExtensibilityElement>(
+            ext1.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY));
+      List<WSDLExtensibilityElement> pol2 = new ArrayList<WSDLExtensibilityElement>(
+            ext2.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY));
+      //check whether lists are the same size
+      if (pol1.size() != pol2.size())
+         throw new JBossWSToolsException("Policy WSDLExtensibilityElement mismatch!");
+      //check equality
+      for (WSDLExtensibilityElement el1 : pol1)
+      {
+         boolean done = false;
+         Iterator it = pol2.iterator();
+         WSDLExtensibilityElement el2 = null;
+         while (it.hasNext() && !done)
+         {
+            el2 = (WSDLExtensibilityElement)it.next();
+            done = (el1.isRequired() == el2.isRequired()) &&
+               checkElementEquality(el1.getElement(), el2.getElement());
+         }
+         if (!done)
+         {
+            log.error("Failing policy validation on policy on: "+ext1+" and "+ext2);
+            return false;
+         }
+         pol2.remove(el2);
+      }
+      //policy references
+      List<WSDLExtensibilityElement> polRef1 = new ArrayList<WSDLExtensibilityElement>(
+            ext1.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE));
+      List<WSDLExtensibilityElement> polRef2 = new ArrayList<WSDLExtensibilityElement>(
+            ext2.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE));
+      //check whether lists are the same size
+      if (polRef1.size() != polRef2.size())
+         throw new JBossWSToolsException("Policy ref WSDLExtensibilityElement mismatch!");
+      //check equality
+      for (WSDLExtensibilityElement el1 : polRef1)
+      {
+         boolean done = false;
+         Iterator it = polRef2.iterator();
+         WSDLExtensibilityElement el2 = null;
+         while (it.hasNext() && !done)
+         {
+            el2 = (WSDLExtensibilityElement)it.next();
+            done = (el1.isRequired() == el2.isRequired()) &&
+               checkElementEquality(el1.getElement(), el2.getElement());
+         }
+         if (!done)
+         {
+            log.error("Failing policy validation on policy ref on: "+ext1+" and "+ext2);
+            return false;
+         }
+         polRef2.remove(el2);
+      }
+      //check properties
+      WSDLProperty prop1 = ext1.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
+      WSDLProperty prop2 = ext2.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
+      if (prop1 != null || prop2 != null)
+      {
+         if (prop1 == null || prop2 == null || prop1.isRequired() != prop2.isRequired())
+            throw new JBossWSToolsException("Policy prop WSDLExtensibilityElement mismatch!");
+         String value1 = prop1.getValue();
+         String value2 = prop2.getValue();
+         if (value1 != null || value2 != null)
+         {
+            if (value1 == null || value2 == null || !value1.equalsIgnoreCase(value2))
+            {
+               log.error("Failing policy validation on policy uri prop on: "+ext1+" and "+ext2);
+               return false;
+            }
+         }
+      }
+      return true;
    }
    
    /**
@@ -215,9 +326,10 @@ public class WSDLValidationHelper
          bool = checkQNameEquality(s1.getName(),s2.getName());
          if(bool)
          {
+            bool = validateExtensibilityElements(s1, s2);
             WSDLEndpoint[] we1 = s1.getEndpoints();
             WSDLEndpoint[] we2 = s2.getEndpoints();
-            bool = validateWSDLEndpoints(we1, we2);
+            bool = bool && validateWSDLEndpoints(we1, we2);
          }
       }
       return bool;
@@ -238,11 +350,46 @@ public class WSDLValidationHelper
      return true;
    }
    
+   /**
+    * Compare two Element (s) for equality (this cares about child elements and attributes only)
+    * @param el1
+    * @param el2
+    * @return
+    */
+   private static boolean checkElementEquality(Element el1, Element el2)
+   {
+      QName qName1 = DOMUtils.getElementQName(el1);
+      QName qName2 = DOMUtils.getElementQName(el2);
+      if (!checkQNameEquality(qName1,qName2)) return false;
+      Map attributes1 = DOMUtils.getAttributes(el1); //map <QName, String>
+      Map attributes2 = DOMUtils.getAttributes(el2);
+      if (attributes1.size()!=attributes2.size()) return false;
+      for (Iterator it = attributes1.keySet().iterator(); it.hasNext(); )
+      {
+         QName key = (QName)it.next();
+         if (key.getPrefix().startsWith("xmlns")) continue;
+         if (!attributes2.containsKey(key)) return false;
+         String value1 = (String)attributes1.get(key);
+         String value2 = (String)attributes2.get(key);
+         if (!value1.equals(value2)) return false;
+      }
+      for (Iterator it = DOMUtils.getChildElements(el1); it.hasNext(); )
+      {
+         Element child1 = (Element)it.next();
+         Iterator it2 = DOMUtils.getChildElements(el2, DOMUtils.getElementQName(child1));
+         if (!it2.hasNext()) return false;
+         Element child2 = (Element)it2.next();
+         if (it2.hasNext() || !checkElementEquality(child1, child2)) return false;
+      }
+      return true;
+   }
+   
    private static boolean validateInterfaceOperation(WSDLInterfaceOperation w1,
                                  WSDLInterfaceOperation w2) throws JBossWSToolsException
    
    {
       boolean bool = checkQNameEquality(w1.getName(),w2.getName());
+      bool = bool && validateExtensibilityElements(w1, w2);
       if(bool)
       {
             //validate the inputs
@@ -323,6 +470,9 @@ public class WSDLValidationHelper
       bool = checkQNameEquality(xmlName1,xmlName2);
       if(bool == false)
          throw new JBossWSToolsException(xmlName1 + " & " + xmlName2 + " mismatch");
+      bool = validateExtensibilityElements(i1, i2);
+      if(bool == false)
+         throw new JBossWSToolsException("WSDLExtensibilityElement mismatch");
       return bool;
    }
    
@@ -374,6 +524,7 @@ public class WSDLValidationHelper
          WSDLBindingOperationInput bindin1 = wb1[i];
          WSDLBindingOperationInput bindin2 = wb2[i]; 
          bool = checkStringEquality(bindin1.getMessageLabel(),bindin2.getMessageLabel());
+         bool = bool & validateExtensibilityElements(bindin1, bindin2);
          if(!bool) return bool;
       }
       
@@ -390,6 +541,7 @@ public class WSDLValidationHelper
          WSDLBindingOperationOutput bindout2 = wboutarr2[i]; 
          bool = checkStringEquality(bindout1.getMessageLabel(),bindout2.getMessageLabel());
       }
+      bool = bool & validateExtensibilityElements(b1, b2);
       return bool;
    }
    
@@ -416,6 +568,7 @@ public class WSDLValidationHelper
          bool = checkQNameEquality(e1.getName(),e2.getName()); 
          if(bool == false) 
             throw new JBossWSToolsException("Endpoint Names do not match"); 
+         bool = bool && validateExtensibilityElements(e1, e2);
       }
       return bool;
    }

@@ -40,7 +40,7 @@ import org.jboss.ws.WSException;
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  * @since 10-Oct-2004
  */
-public class WSDLBinding implements Serializable
+public class WSDLBinding extends Extendable implements Serializable
 {
    private static final long serialVersionUID = -7699953670233209811L;
 

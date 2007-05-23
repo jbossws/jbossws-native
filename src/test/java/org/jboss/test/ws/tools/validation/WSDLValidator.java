@@ -100,6 +100,8 @@ public  class WSDLValidator
    {
       boolean bool = false;
       bool =  WSDLValidationHelper.validateNSDefinitions(wsdlExp,wsdlAct);
+      if ( bool )
+         bool = WSDLValidationHelper.validateExtensibilityElements(wsdlExp,wsdlAct);
       if( bool)
          bool = WSDLValidationHelper.validateBindings(wsdlExp,wsdlAct);
       if( bool)

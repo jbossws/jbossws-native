@@ -133,7 +133,7 @@
       <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
       <pathelement location="${thirdparty.dir}/xercesImpl.jar"/>
       <pathelement location="${thirdparty.dir}/xalan.jar"/>
-      
+      <pathelement location="${thirdparty.dir}/policy.jar"/>
     </path>
 
   </target>

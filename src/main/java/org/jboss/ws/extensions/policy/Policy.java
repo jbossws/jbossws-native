@@ -115,6 +115,11 @@ public class Policy
    {
       return new ArrayList<PolicyAlternative>(alternatives);
    }
+   
+   public void clearPolicyAlternatives()
+   {
+      alternatives.clear();
+   }
 
    public Element toElement()
    {

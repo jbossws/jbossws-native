@@ -34,7 +34,7 @@ import java.util.List;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public abstract class WSDLBindingMessageReference
+public abstract class WSDLBindingMessageReference extends Extendable
 {
    // The parent WSDL binding operation
    private WSDLBindingOperation wsdlBindingOperation;

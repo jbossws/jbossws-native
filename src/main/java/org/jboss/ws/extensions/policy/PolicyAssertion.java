@@ -52,11 +52,13 @@ import org.w3c.dom.Element;
 public class PolicyAssertion
 {
    private Element assertionElement;
+   private String nameSpace;
 
    PolicyAssertion(Element element)
    {
       Document doc = DOMUtils.getOwnerDocument();
       this.assertionElement = (Element)doc.adoptNode(element);
+      this.nameSpace = assertionElement.getNamespaceURI();
    }
 
    public Element getElement()
@@ -72,5 +74,10 @@ public class PolicyAssertion
    public String toString()
    {
       return toXMLString(true);
+   }
+   
+   public String getNameSpace()
+   {
+      return nameSpace;
    }
 }

@@ -163,6 +163,38 @@
       </webinf>
     </war>
     
+    <!-- jaxws-samples-wssecurityAnnotatedpolicy-encrypt -->
+    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurityAnnotatedpolicy-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/HelloJavaBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/UserType.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy">
+        <include name="wsse.keystore"/>
+        <include name="wsse.truststore"/>
+      </webinf>
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy/WEB-INF">
+        <include name="Policy.xml"/>
+      </webinf>
+    </war>
+  	
+  	<!-- jaxws-samples-wssecuritypolicy-encrypt -->
+    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecuritypolicy-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/HelloJavaBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/UserType.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy">
+        <include name="wsse.keystore"/>
+        <include name="wsse.truststore"/>
+      </webinf>
+	  <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy/WEB-INF">
+		<include name="wsdl/**"/>
+	  </webinf>
+    </war>
+  	  	
     <!-- Please add alphabetically -->
     
   </target>

@@ -35,6 +35,7 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
+import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -84,6 +85,13 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions);
 
+         //Setup policies for each endpoint
+         for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
+         {
+            PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getClientSidePolicyMetaDataBuilder();
+            policyBuilder.processPolicyExtensions(epMetaData, wsdlDefinitions);
+         }
+         
          // Read the WSDL and initialize the schema model
          // This should only be needed for debuging purposes of the UMDM
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());

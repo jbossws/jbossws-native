@@ -41,7 +41,7 @@ import org.jboss.ws.Constants;
  * @author Anil.Saldhana@jboss.org
  * @since 10-Oct-2004
  */
-public class WSDLBindingOperation implements Comparable, Serializable
+public class WSDLBindingOperation extends Extendable implements Comparable, Serializable
 {
    private static final long serialVersionUID = -1986624862746844610L;
 

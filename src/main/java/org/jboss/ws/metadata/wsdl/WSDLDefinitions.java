@@ -47,7 +47,7 @@ import org.w3c.dom.Document;
  * @author Thomas.Diesler@jboss.org
  * @since 10-Oct-2004
  */
-public class WSDLDefinitions implements Serializable
+public class WSDLDefinitions extends Extendable implements Serializable
 {
    private static final long serialVersionUID = 1643422922694990226L;
 
