@@ -24,7 +24,7 @@ package javax.xml.soap;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jboss.wsf.spi.utils.FactoryLoader;
+import org.jboss.ws.integration.FactoryLoader;
 
 /**
  A factory for creating SOAPMessage objects.

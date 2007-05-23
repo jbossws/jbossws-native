@@ -33,7 +33,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
-import org.jboss.wsf.spi.utils.FactoryLoader;
+import org.jboss.ws.integration.FactoryLoader;
 import org.w3c.dom.Element;
 
 /**

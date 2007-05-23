@@ -28,7 +28,7 @@ import java.util.Map;
 
 import javax.xml.ws.Endpoint;
 
-import org.jboss.wsf.spi.utils.FactoryLoader;
+import org.jboss.ws.integration.FactoryLoader;
 
 /**
  * An abstract HTTP Server

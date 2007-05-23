@@ -21,7 +21,7 @@
  */
 package javax.xml.soap;
 
-import org.jboss.wsf.spi.utils.FactoryLoader;
+import org.jboss.ws.integration.FactoryLoader;
 
 
 // $Id$
