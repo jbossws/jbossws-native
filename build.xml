@@ -198,7 +198,7 @@
     </zip>
     
     <!-- Build jbossws-src.zip -->
-    <zip zipfile="${core.output.lib.dir}/jbossws-src.zip" >
+    <zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip" >
       <fileset dir="${core.java.dir}"/>
     </zip>
     
