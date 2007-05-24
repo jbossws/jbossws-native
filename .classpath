@@ -28,11 +28,11 @@
 	<classpathentry kind="lib" path="thirdparty/xmlsec.jar"/>
 	<classpathentry kind="lib" path="thirdparty/ant.jar"/>
 	<classpathentry kind="lib" path="thirdparty/qdox.jar"/>
-	<classpathentry kind="lib" path="thirdparty/xmlunit1.0.jar"/>
 	<classpathentry kind="lib" path="thirdparty/policy.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jboss-5.0.x"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/integration-spi"/>
 	<classpathentry kind="lib" path="/integration-spi/thirdparty/junit.jar"/>
 	<classpathentry kind="lib" path="thirdparty/dom4j.jar"/>
+	<classpathentry kind="lib" path="thirdparty/xmlunit.jar"/>
 	<classpathentry kind="output" path="output-eclipse"/>
 </classpath>
