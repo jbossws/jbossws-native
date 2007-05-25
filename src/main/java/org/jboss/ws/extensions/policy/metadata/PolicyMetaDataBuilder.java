@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.policy.metadata;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PolicyReference;
@@ -44,6 +45,7 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
+import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 
 /**
@@ -177,12 +179,25 @@ public class PolicyMetaDataBuilder
       WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(epMetaData.getPortTypeName());
       if (wsdlInterface != null)
       {
-         List<WSDLExtensibilityElement> portTypePolicyRefList = wsdlInterface.getExtensibilityElements(Constants.WSDL_PROPERTY_POLICYURIS);
-         processPolicies(portTypePolicyRefList, PolicyScopeLevel.WSDL_PORT_TYPE, localPolicyRegistry, epMetaData);
+         WSDLProperty portTypePolicyProp = wsdlInterface.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
+         processPolicies(portTypePolicyProp, PolicyScopeLevel.WSDL_PORT_TYPE, localPolicyRegistry, epMetaData);
       }
       else
       {
          log.warn("Cannot get portType '"+epMetaData.getPortTypeName()+"' from the given wsdl definitions! Eventual policies attached to this portType won't be considered.");
+      }
+   }
+   
+   private void processPolicies(WSDLProperty policyProp, PolicyScopeLevel scope, PolicyRegistry localPolicies, ExtensibleMetaData extMetaData)
+   {
+      if (policyProp!=null && policyProp.getValue()!=null)
+      {
+         StringTokenizer st = new StringTokenizer(policyProp.getValue(), " ", false);
+         while (st.hasMoreTokens())
+         {
+            PolicyReference policyRef = new PolicyReference(st.nextToken());
+            deployPolicy(resolvePolicyReference(policyRef, localPolicies), scope, extMetaData);
+         }
       }
    }
    
@@ -194,20 +209,24 @@ public class PolicyMetaDataBuilder
          for (WSDLExtensibilityElement element : policyReferences)
          {
             PolicyReference policyRef = reader.readPolicyReference(element.getElement());
-            Policy normPolicy;
-            try
-            {
-               normPolicy = (Policy)policyRef.normalize(localPolicies);
-            }
-            catch (RuntimeException e)
-            {
-               //TODO!!! not a local policy: get the policy definition and create the policy
-               normPolicy = null;
-            }
-            deployPolicy(normPolicy, scope, extMetaData);
-            
+            deployPolicy(resolvePolicyReference(policyRef, localPolicies), scope, extMetaData);
          }
       }
+   }
+   
+   private Policy resolvePolicyReference(PolicyReference policyRef, PolicyRegistry localPolicies)
+   {
+      Policy normPolicy;
+      try
+      {
+         normPolicy = (Policy)policyRef.normalize(localPolicies);
+      }
+      catch (RuntimeException e)
+      {
+         //TODO!!! not a local policy: get the policy definition and create the policy
+         normPolicy = null;
+      }
+      return normPolicy;
    }
    
    private void deployPolicy(Policy policy, PolicyScopeLevel scope, ExtensibleMetaData extMetaData)

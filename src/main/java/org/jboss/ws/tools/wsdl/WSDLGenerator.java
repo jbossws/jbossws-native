@@ -177,7 +177,17 @@ public abstract class WSDLGenerator
    protected void addPolicyURIAttribute(Policy policy, Extendable extendable)
    {
       //TODO!! we need to understand if the policy is local or not...
-      extendable.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_POLICYURIS, policy.getPolicyURI()));
+      WSDLProperty prop = extendable.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
+      if (prop == null)
+      {
+         extendable.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_POLICYURIS, policy.getPolicyURI()));
+      }
+      else
+      {
+         //PolicyURIs ships a comma separated list of URIs...
+         prop.setValue(prop.getValue() + "," + policy.getPolicyURI());
+      }
+      
    }
 
    protected void processOperation(WSDLInterface wsdlInterface, WSDLBinding wsdlBinding, OperationMetaData operation)

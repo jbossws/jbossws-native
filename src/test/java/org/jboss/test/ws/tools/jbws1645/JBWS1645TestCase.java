@@ -123,6 +123,60 @@ public class JBWS1645TestCase extends JBossWSTest
       validateGeneratedWSDL(new File(wsdlPath), new File(fixturefile));
       
    }
+
+   
+   
+   public void testWSDLGeneratorWithMultiplePolicies() throws Exception
+   {
+      Class seiClass = StandardJavaTypes.class;
+      String fixturefile = "resources/tools/jbws1645/StandardJavaTypesServiceJBWS1645-Multiple.wsdl";
+      
+      File wsdlDir = new File("./tools/jbws1645");
+      wsdlDir.mkdirs();
+      
+      String sname = WSDLUtils.getJustClassName(seiClass) + "Service-Multiple";
+      String wsdlPath = wsdlDir + "/" + sname + "JBWS1645-Multiple.wsdl";
+      String targetNamespace = "http://org.jboss.ws";
+      Style style = Style.DOCUMENT;
+      JavaToWSDL jwsdl = new JavaToWSDL(Constants.NS_WSDL11);
+      jwsdl.setServiceName(sname);
+      jwsdl.setTargetNamespace(targetNamespace);
+      jwsdl.addFeature(WSToolsConstants.WSTOOLS_FEATURE_RESTRICT_TO_TARGET_NS, true);
+      jwsdl.setStyle(style);
+      
+      //manually generate the umd using tools
+      UnifiedMetaData umd = new ToolsUnifiedMetaDataBuilder(seiClass, targetNamespace,
+            null, sname, style, null, null).getUnifiedMetaData();
+      jwsdl.setUmd(umd);
+      
+      //manually add policies to the umd
+      ServiceMetaData serviceMetaData = umd.getServices().get(0);
+      EndpointMetaData epMetaData = serviceMetaData.getEndpoints().get(0);
+      addPolicy(new File("resources/tools/jbws1645/PortPolicy.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
+      addPolicy(new File("resources/tools/jbws1645/PortPolicy2.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
+      addPolicy(new File("resources/tools/jbws1645/PortTypePolicy2.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
+      addPolicy(new File("resources/tools/jbws1645/PortTypePolicy.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
+      addPolicy(new File("resources/tools/jbws1645/BindingPolicy.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
+      addPolicy(new File("resources/tools/jbws1645/BindingPolicy2.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
+      
+      //generate the wsdl definitions and write the wsdl file
+      WSDLDefinitions wsdl = jwsdl.generate(seiClass);
+      
+      //performe some trivial checks on wsdl definitions
+      assertEquals(2, wsdl.getServices()[0].getEndpoints()[0].getExtensibilityElements(
+            Constants.WSDL_ELEMENT_POLICYREFERENCE).size());
+      assertNotNull(wsdl.getInterfaces()[0].getProperty(Constants.WSDL_PROPERTY_POLICYURIS));
+      assertEquals(2, wsdl.getBindings()[0].getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE).size());
+      assertEquals(6, wsdl.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY).size());
+      
+      Writer fw = IOUtils.getCharsetFileWriter(new File(wsdlPath), Constants.DEFAULT_XML_CHARSET);
+      new WSDLWriter(wsdl).write(fw, Constants.DEFAULT_XML_CHARSET);
+      fw.close();
+      
+      //validate the generated WSDL
+      validateGeneratedWSDL(new File(wsdlPath), new File(fixturefile));
+      
+   }
    
    private void addPolicy(File sourceFile, PolicyScopeLevel scope, ExtensibleMetaData extMetaData) throws Exception
    {
