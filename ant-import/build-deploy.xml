@@ -18,9 +18,19 @@
     <ant antfile="${int.native.dir}/build.xml" target="deploy-jboss50" inheritall="false"/>
   </target>
   
+  <!-- Undeploy jbossws to jboss50 -->
+  <target name="undeploy-jboss50" depends="prepare" description="Undeploy jbossws">
+    <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>
+  </target>
+  
   <!-- Deploy jbossws to jboss42 -->
   <target name="deploy-jboss42" depends="prepare" description="Deploy jbossws">
     <ant antfile="${int.native.dir}/build.xml" target="deploy-jboss42" inheritall="false"/>
+  </target>
+  
+  <!-- Undeploy jbossws to jboss42 -->
+  <target name="undeploy-jboss42" depends="prepare" description="Undeploy jbossws">
+    <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
   </target>
   
 </project>
