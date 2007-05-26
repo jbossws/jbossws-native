@@ -79,7 +79,6 @@
       <include name="javax/xml/ws/**"/>
       <include name="javax/jws/**"/>
       <include name="org/jboss/annotation/**"/>
-      <include name="org/jboss/wsf/**"/>
       <include name="org/jboss/ws/**"/>
       <classpath path="${core.output.classes14.dir}"/>
       <classpath refid="thirdparty.classpath"/>
@@ -153,7 +152,6 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/annotation/**"/>
-        <include name="org/jboss/wsf/**"/>
         <include name="org/jboss/ws/**"/>
       </fileset>
       <fileset dir="${core.resources.dir}">
