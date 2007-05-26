@@ -11,16 +11,14 @@
 <project>
   
   <property name="tests.dir" value="${core.dir}/src/test"/>
+  <property name="tests.resources.dir" value="${tests.dir}/resources"/>
   <property name="tests.output.dir" value="${core.dir}/output-tests"/>
   
   <import file="${build.dir}/ant-import/build-testsuite.xml"/>
   
-  <!-- Available integration target -->
-  <property name="integration.target.${jbossws.integration.target}" value="true"/>
-
   <!-- Define excluded tests -->
   <property name="excludes-short-name" value="tests-${jbossws.integration.target}-excludes.txt"/>
-  <property name="excludesfile" value="${tests.resources.dir}/${excludes-short-name}"/>
+  <property name="excludesfile" value="${core.dir}/src/test/resources/${excludes-short-name}"/>
   
   <!--
     Init the various classpaths
@@ -184,8 +182,8 @@
   	<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"/>
   </target>
   
-  <target name="tests-generate-resources" depends="servicegen,wstools,wsprovide">
-    <macro-compile-classes srcdir="${tests.output.dir}/wstools/java"/>
+  <target name="tests-compile-generated-resources" depends="servicegen,wstools,wsprovide">
+    <macro-compile-classes srcdir="${tests.output.dir}/wstools/java" excludesfile="${excludesfile}"/>
   </target>
   
   <!-- ================================================================== -->
@@ -193,8 +191,9 @@
   <!-- ================================================================== -->
 
   <target name="tests-compile" depends="wsconsume,tests-classpath" description="Compile sources">
-    <macro-compile-classes srcdir="${tests.output.dir}/wsconsume/java"/>
-    <macro-compile-classes srcdir="${tests.java.dir}"/>
+    <macro-compile-classes srcdir="${tests.output.dir}/wsconsume/java" excludesfile="${excludesfile}"/>
+    <macro-compile-classes srcdir="${testsuite.dir}/src/java" excludesfile="${excludesfile}"/>
+    <macro-compile-classes srcdir="${core.dir}/src/test/java" excludesfile="${excludesfile}"/>
   </target>
   
   <!-- ================================================================== -->
@@ -203,14 +202,16 @@
   
   <!-- Copy resources -->
   <target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
+    <macro-copy-resources srcdir="${testsuite.dir}/src"/>
     <macro-copy-resources srcdir="${tests.dir}"/>
   </target>
   
-  <target name="tests-jars" depends="wsconsume,tests-compile,tests-copy-resources,tests-generate-resources" description="Build the deployments.">
+  <target name="tests-jars" depends="wsconsume,tests-compile,tests-copy-resources,tests-compile-generated-resources" description="Build the deployments.">
     <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
     <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
     <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
     <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
+    <ant antfile="${testsuite.dir}/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws"/>
   </target>
 
   <target name="tests-main" depends="tests-jars" description="Build the deployments."/>

@@ -45,13 +45,13 @@ import org.jboss.test.ws.JBossWSTestSetup;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @author Thomas.Diesler@jboss.com
  */
-public class JSR181ComplexTestCase extends JBossWSTest
+public class ComplexTestCase extends JBossWSTest
 {
    private Registration port;
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JSR181ComplexTestCase.class, "jaxws-complex.war");
+      return JBossWSTestSetup.newTestSetup(ComplexTestCase.class, "jaxws-complex.war");
    }
 
    protected void setUp() throws Exception
