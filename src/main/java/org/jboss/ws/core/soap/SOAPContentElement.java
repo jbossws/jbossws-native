@@ -79,12 +79,12 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    
    // The associated parameter
    private ParameterMetaData paramMetaData;
-
-   // content soapContent
+   // SOAP content
    private SOAPContent soapContent;
-
-   // while transitioning DOM expansion needs to be locked
-   private boolean lockDOMExpansion = false;
+   // While transitioning DOM expansion
+   private boolean lockDOMExpansion;
+   // While transitioning MTOM expansion
+   private boolean lockMTOMTransition;
 
    /** Construct a SOAPContentElement
     */
@@ -498,7 +498,10 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    private void expandToDOM()
    {
       if (!lockDOMExpansion)
+      {
+         handleMTOMTransitions();
          transitionTo(State.DOM_VALID);
+      }
    }
 
    public void setValue(String value)
@@ -522,10 +525,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public void writeElement(Writer writer) throws IOException
    {
-      // JMS transport hot fix
-      // Can be removed once we got a immutabe object model
-      if (MessageContextAssociation.peekMessageContext() != null)
-         handleMTOMTransitions();
+      handleMTOMTransitions();
 
       if (soapContent instanceof DOMContent)
       {
@@ -553,36 +553,48 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
     */
    public void handleMTOMTransitions()
    {
+      // JMS transport hot fix. Can be removed once we got a immutabe object model
+      if (MessageContextAssociation.peekMessageContext() == null)
+         return;
+         
       // MTOM processing is only required on XOP parameters
-      if (!isXOPParameter())
+      if (lockMTOMTransition || !isXOPParameter())
          return;
 
-      boolean domContentState = (soapContent instanceof DOMContent);
-
-      if (!XOPContext.isMTOMEnabled())
+      try
       {
-         // If MTOM is disabled, we force dom expansion on XOP parameters.
-         // This will inline any XOP include element and remove the attachment part.
-         // See SOAPFactoryImpl for details.
+         lockMTOMTransition = true;
+         boolean domContentState = (soapContent instanceof DOMContent);
 
-         log.debug("MTOM disabled: Force inline XOP data");
+         if (!XOPContext.isMTOMEnabled())
+         {
+            // If MTOM is disabled, we force dom expansion on XOP parameters.
+            // This will inline any XOP include element and remove the attachment part.
+            // See SOAPFactoryImpl for details.
 
-         // TODO: This property must be reset, otherwise you negate its purpose
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-         if (msgContext instanceof MessageContextJAXWS)
-            ((MessageContextJAXWS)msgContext).setScope(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Scope.APPLICATION);
+            log.debug("MTOM disabled: Force inline XOP data");
 
-         expandToDOM();
+            // TODO: This property must be reset, otherwise you negate its purpose
+            CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+            msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+            if (msgContext instanceof MessageContextJAXWS)
+               ((MessageContextJAXWS)msgContext).setScope(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Scope.APPLICATION);
+
+            expandToDOM();
+         }
+         else if (domContentState && XOPContext.isMTOMEnabled())
+         {
+            // When the DOM representation is valid,
+            // but MTOM is enabled we need to convert the inlined
+            // element back to an xop:Include element and create the attachment part
+
+            log.debug("MTOM enabled: Restore XOP data");
+            XOPContext.restoreXOPDataDOM(this);
+         }
       }
-      else if (domContentState && XOPContext.isMTOMEnabled())
+      finally
       {
-         // When the DOM representation is valid,
-         // but MTOM is enabled we need to convert the inlined
-         // element back to an xop:Include element and create the attachment part
-
-         log.debug("MTOM enabled: Restore XOP data");
-         XOPContext.restoreXOPDataDOM(this);
+         lockMTOMTransition = false;
       }
    }
 
