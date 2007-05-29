@@ -293,7 +293,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       String serviceName = anWebService.serviceName();
       if (serviceName.length() == 0)
-         serviceName = name + "Service";
+         serviceName = WSDLUtils.getJustClassName(sepClass) + "Service";
 
       String serviceNS = anWebService.targetNamespace();
       if (serviceNS.length() == 0)
