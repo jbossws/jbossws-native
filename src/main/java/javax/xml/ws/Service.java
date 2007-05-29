@@ -710,7 +710,7 @@ public class Service
     * The specified WSDL document location and service qualified name MUST
     * uniquely identify a <code>wsdl:service</code> element.
     *
-    * @param wsdlDocumentLocation URL for the WSDL document location
+    * @param wsdlLocation URL for the WSDL document location
     *                             for the service
     * @param serviceName QName for the service
     * @throws WebServiceException If any error in creation of the
