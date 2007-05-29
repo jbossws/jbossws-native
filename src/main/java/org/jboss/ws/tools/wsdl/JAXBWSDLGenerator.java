@@ -19,25 +19,22 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.tools.jaxws;
+package org.jboss.ws.tools.wsdl;
 
-import java.io.IOException;
+import com.sun.xml.bind.api.JAXBRIContext;
+import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
+import org.jboss.ws.extensions.security.Util;
+import org.jboss.ws.metadata.wsdl.DOMTypes;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
-
-import org.jboss.ws.Constants;
-import org.jboss.ws.WSException;
-import org.jboss.ws.extensions.security.Util;
-import org.jboss.ws.metadata.wsdl.DOMTypes;
-import org.jboss.ws.tools.wsdl.WSDLGenerator;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.sun.xml.bind.api.JAXBRIContext;
+import java.io.IOException;
 
 /**
  * JAXBWSDLGenerator provides a JAXB based WSDLGenerator.
@@ -54,6 +51,9 @@ public class JAXBWSDLGenerator extends WSDLGenerator
       this.ctx = ctx;
    }
 
+   /**
+    * Delegate schema generation to JAXB RI
+    */
    protected void processTypes()
    {
       // Register namespaces

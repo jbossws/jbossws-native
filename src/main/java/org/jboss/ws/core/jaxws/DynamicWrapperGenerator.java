@@ -35,11 +35,7 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.ConstPool;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
@@ -112,7 +108,12 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 
          for (WrappedParameter parameter : wrappedParameters)
          {
-            addProperty(clazz, parameter.getType(), parameter.getName(), parameter.getVariable(), parameter.getTypeArguments());
+            addProperty(
+                  clazz, parameter.getType(),
+                  parameter.getName(), parameter.getVariable(),
+                  parameter.getTypeArguments(),
+                  new boolean[] {parameter.isSwaRef(), parameter.isXop()} 
+            );
          }
          clazz.stopPruning(!prune);
          pool.toClass(clazz, loader);
@@ -146,7 +147,11 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
          addClassAnnotations(clazz, fmd.getXmlName(), fmd.getXmlType(), propertyOrder);
 
          for (String property : propertyOrder)
-            addProperty(clazz, properties.get(property).getName(), new QName(property), property, null);
+            addProperty(
+                  clazz, properties.get(property).getName(),
+                  new QName(property), property, null,
+                  new boolean[] {false, false}
+            );
          
          clazz.stopPruning(!prune);
          pool.toClass(clazz, loader);
@@ -188,7 +193,9 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       return "(" + type + ")V";
    }
 
-   private void addProperty(CtClass clazz, String typeName, QName name, String variable, String[] typeArguments)
+   private void addProperty(CtClass clazz, String typeName,
+                            QName name, String variable, String[] typeArguments,
+                            boolean[] attachments)
          throws CannotCompileException, NotFoundException
    {
       ConstPool constPool = clazz.getClassFile().getConstPool();
@@ -210,6 +217,19 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
          annotation.addParameter("namespace", name.getNamespaceURI());
       annotation.addParameter("name", name.getLocalPart());
       annotation.markField(field);
+      // @XmlAttachmentRef
+      if(attachments[0])
+      {
+         annotation = JavassistUtils.createAnnotation(XmlAttachmentRef.class, constPool);         
+         annotation.markField(field);
+      }
+      // @XmlMimeType
+      if(attachments[1])
+      {
+         annotation = JavassistUtils.createAnnotation(XmlMimeType.class, constPool);
+         annotation.addParameter("value", "application/octet-stream"); // TODO: default mime 
+         annotation.markField(field);
+      }
       clazz.addField(field);
 
       // Add accessor methods

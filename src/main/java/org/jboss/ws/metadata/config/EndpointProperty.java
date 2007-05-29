@@ -32,6 +32,11 @@ public class EndpointProperty
 {
    public final static String MTOM_THRESHOLD = "http://org.jboss.ws/mtom#threshold";
 
+   /**
+    * Set to 0 in order to disable chunked encoding
+    */
+   public final static String CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
+   
    public URI name;
    public String value;
 

@@ -91,6 +91,10 @@
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-api.jar" dest="${thirdparty.dir}/jaxb-api.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-impl.jar" dest="${thirdparty.dir}/jaxb-impl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxb/${sun-jaxb}/lib/jaxb-xjc.jar" dest="${thirdparty.dir}/jaxb-xjc.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/jaxws-rt.jar" dest="${thirdparty.dir}/jaxws-rt.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/jaxws-tools.jar" dest="${thirdparty.dir}/jaxws-tools.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/streambuffer.jar" dest="${thirdparty.dir}/streambuffer.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/xmlunit-xmlunit/${xmlunit}/lib/xmlunit1.0.jar" dest="${thirdparty.dir}/xmlunit.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/wscommons-policy/${wscommons-policy}/lib/policy.jar" dest="${thirdparty.dir}/policy.jar" usetimestamp="true" verbose="true"/>
@@ -134,6 +138,8 @@
       <pathelement location="${thirdparty.dir}/xercesImpl.jar"/>
       <pathelement location="${thirdparty.dir}/xalan.jar"/>
       <pathelement location="${thirdparty.dir}/policy.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxws-rt.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxws-tools.jar"/>
     </path>
 
   </target>

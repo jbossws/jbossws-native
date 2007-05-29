@@ -52,7 +52,7 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.ws.tools.ToolsUtils;
-import org.jboss.ws.tools.jaxws.JAXBWSDLGenerator;
+import org.jboss.ws.tools.wsdl.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;

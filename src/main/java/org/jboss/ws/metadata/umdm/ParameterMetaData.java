@@ -489,7 +489,7 @@ public class ParameterMetaData
       if (epType == Type.JAXWS)
       {
          ReflectiveAttachmentRefScanner scanner = new ReflectiveAttachmentRefScanner();
-         AttachmentScanResult scanResult = scanner.scan(javaType);
+         AttachmentScanResult scanResult = scanner.scanBean(javaType);
          if (scanResult != null)
          {
             if(log.isDebugEnabled()) log.debug("Identified attachment reference: " + xmlName + ", type="+scanResult.getType());

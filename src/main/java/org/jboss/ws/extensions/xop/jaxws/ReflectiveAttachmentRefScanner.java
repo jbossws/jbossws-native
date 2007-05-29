@@ -21,33 +21,31 @@
 */
 package org.jboss.ws.extensions.xop.jaxws;
 
-import java.awt.Image;
+import org.jboss.wsf.spi.utils.JavaUtils;
+
+import javax.activation.DataHandler;
+import javax.xml.bind.annotation.XmlAttachmentRef;
+import javax.xml.bind.annotation.XmlMimeType;
+import javax.xml.transform.Source;
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.activation.DataHandler;
-import javax.xml.bind.annotation.XmlMimeType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlAttachmentRef;
-import javax.xml.transform.Source;
-
-import org.jboss.wsf.spi.utils.JavaUtils;
-
 /**
- * Scans data types for MTOM and swaRef declarations.
+ * Scans java beans for MTOM and swaRef declarations.<br>
  * It basically searches for
  * <ul>
  * <li><code>@XmlMimeType</code>
  * <li><code>@XmlAttachmentRef</code>
  * </ul>
- * and returns the appropriate mimetype. 
+ * and returns the appropriate mimetype.<br> 
  * In order to re-use an instance of this class you need to invoke <code>reset()</code>
  * in between scans.
  *
- * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
+ * @author Heiko Braun <heiko.braun@jboss.com> 
  * @since 04.12.2006
  *
  */
@@ -73,10 +71,9 @@ public class ReflectiveAttachmentRefScanner {
     * @param xmlRoot
     * @return the first matching XmlMimeType#value() or <code>null</code> if none found
     */
-   public AttachmentScanResult scan(Class xmlRoot)
+   public AttachmentScanResult scanBean(Class xmlRoot)
    {
-      if( isJDKType(xmlRoot) )
-         return null;
+      if( isJDKType(xmlRoot) )  return null;
 
       AttachmentScanResult result = null;
 
@@ -106,9 +103,7 @@ public class ReflectiveAttachmentRefScanner {
 
             if(null == result) // try getter methods
             {
-               String mimeType = scanGetterAnnotation(xmlRoot, field);
-               if(mimeType!=null)
-                  result = new AttachmentScanResult(mimeType, AttachmentScanResult.Type.XOP);
+               result = scanGetterAnnotation(xmlRoot, field);
             }
 
             // avoid recursive loops
@@ -117,10 +112,89 @@ public class ReflectiveAttachmentRefScanner {
 
             // drill down if none found so far
             if(null == result)
-               result = scan(type);
+               result = scanBean(type);
 
          }
 
+      }
+
+      return result;
+   }
+
+   public static List<AttachmentScanResult> scanMethod(Method method)
+   {
+      List<AttachmentScanResult> results = new ArrayList<AttachmentScanResult>();
+
+      // return type
+      if(method.getReturnType() != void.class)
+      {
+
+         AttachmentScanResult result = null;
+
+         if(method.isAnnotationPresent(XmlAttachmentRef.class))
+         {
+            result = new AttachmentScanResult("application/octet-stream", AttachmentScanResult.Type.SWA_REF);
+         }
+         else if (method.isAnnotationPresent(XmlMimeType.class))
+         {
+            XmlMimeType mimeTypeDecl = method.getAnnotation(XmlMimeType.class);
+            result = new AttachmentScanResult(mimeTypeDecl.value(), AttachmentScanResult.Type.XOP);
+         }
+
+         if(result!=null)
+         {
+            result.setIndex(-1); // default for return values
+            results.add(result);
+         }
+
+      }
+
+      // method parameter
+      int index = 0;
+      for (Annotation[] parameterAnnotations : method.getParameterAnnotations())
+      {
+         if (parameterAnnotations!=null)
+         {
+            for (Annotation annotation : parameterAnnotations)
+            {
+               AttachmentScanResult paramResult = null;
+
+               if(XmlAttachmentRef.class == annotation.annotationType())
+               {
+                  paramResult = new AttachmentScanResult("application/octet-stream", AttachmentScanResult.Type.SWA_REF);
+               }
+               else if(XmlMimeType.class == annotation.annotationType())
+               {
+                  XmlMimeType mimeTypeDecl = method.getAnnotation(XmlMimeType.class);
+                  paramResult = new AttachmentScanResult(mimeTypeDecl.value(), AttachmentScanResult.Type.XOP);
+               }
+
+               if(paramResult!=null)
+               {
+                  paramResult.setIndex(index);
+                  index++;
+                  results.add(paramResult);
+
+               }
+            }
+         }
+      }
+
+
+      return results;
+   }
+
+   public static AttachmentScanResult getResultByIndex(List<AttachmentScanResult> results, int index)
+   {
+      AttachmentScanResult result = null;
+
+      for(AttachmentScanResult asr : results)
+      {
+         if(asr.getIndex() == index)
+         {
+            result = asr;
+            break;
+         }
       }
 
       return result;
@@ -155,19 +229,25 @@ public class ReflectiveAttachmentRefScanner {
 
    private static boolean isJDKType(Class clazz)
    {
-      return clazz.getPackage()!= null ? clazz.getPackage().getName().startsWith("java") : true;
+      return clazz.getCanonicalName().startsWith("java") || clazz.isPrimitive();
    }
 
-   private static String scanGetterAnnotation(Class owner, Field field)
+   private static AttachmentScanResult scanGetterAnnotation(Class owner, Field field)
    {
       String getterMethodName = "get"+field.getName();
       for(Method method : owner.getDeclaredMethods())
       {
-         if(method.getName().equalsIgnoreCase(getterMethodName)
-            && method.isAnnotationPresent(XmlMimeType.class))
+         if(method.getName().equalsIgnoreCase(getterMethodName))
          {
-            XmlMimeType mimeTypeDecl = method.getAnnotation(XmlMimeType.class);
-            return mimeTypeDecl.value();
+            if(method.isAnnotationPresent(XmlMimeType.class))
+            {
+               XmlMimeType mimeTypeDecl = method.getAnnotation(XmlMimeType.class);
+               return new AttachmentScanResult(mimeTypeDecl.value(), AttachmentScanResult.Type.XOP);
+            }
+            else if(method.isAnnotationPresent(XmlAttachmentRef.class))
+            {
+               return new AttachmentScanResult("application/octet-stream", AttachmentScanResult.Type.SWA_REF);
+            }
          }
       }
 

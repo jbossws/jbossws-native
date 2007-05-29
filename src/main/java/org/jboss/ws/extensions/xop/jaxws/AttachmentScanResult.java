@@ -33,6 +33,9 @@ public final class AttachmentScanResult {
    private String mimeType;
    private Type type;
 
+   // distinguish return value and method parameters 
+   private int index = -1;
+   
    public AttachmentScanResult(String mimeType, Type type)
    {
       this.mimeType = mimeType;
@@ -47,5 +50,26 @@ public final class AttachmentScanResult {
    public Type getType()
    {
       return type;
+   }
+
+   /**
+    * <code>
+    * <pre>
+    * -1 - return value
+    * 0 - 1st method parameter
+    * n - n'th method parameter
+    * </pre>
+    * </code>
+    * 
+    * @return
+    */
+   public int getIndex()
+   {
+      return index;
+   }
+
+   public void setIndex(int index)
+   {
+      this.index = index;
    }
 }

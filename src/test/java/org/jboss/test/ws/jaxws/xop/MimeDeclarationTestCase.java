@@ -51,20 +51,20 @@ public class MimeDeclarationTestCase extends TestCase {
 
    public void testFieldAnnotation() throws Exception
    {
-      AttachmentScanResult mimeType = SCANNER.scan(FieldAnnotation.class);
+      AttachmentScanResult mimeType = SCANNER.scanBean(FieldAnnotation.class);
       assertNotNull("Unable to find xop declaration", mimeType);
       assertEquals("text/xml", mimeType.getMimeType());
    }
 
    public void testMethodAnnotation() throws Exception
    {
-      AttachmentScanResult  mimeType = SCANNER.scan(MethodAnnotation.class);
+      AttachmentScanResult  mimeType = SCANNER.scanBean(MethodAnnotation.class);
       assertNotNull("Unable to find xop declaration", mimeType);
    }
 
    public void testAnnotationMissing() throws Exception
    {
-      AttachmentScanResult  mimeType = SCANNER.scan(NoAnnotation.class);
+      AttachmentScanResult  mimeType = SCANNER.scanBean(NoAnnotation.class);
       assertNull("There should be no mimeType available", mimeType);
    }
 
@@ -82,20 +82,20 @@ public class MimeDeclarationTestCase extends TestCase {
 
       System.out.println(m.getParameterAnnotations().length);
 
-      AttachmentScanResult  mimeType = SCANNER.scan( m.getParameterTypes()[0]);
+      AttachmentScanResult  mimeType = SCANNER.scanBean( m.getParameterTypes()[0]);
       assertNotNull("Unable to find xop declaration", mimeType);
       assertEquals("text/xml", mimeType.getMimeType());
    }
 
    public void testSimpleRecursion() throws Exception
    {
-      AttachmentScanResult  mimeType = SCANNER.scan(SimpleRecursion.class);
+      AttachmentScanResult  mimeType = SCANNER.scanBean(SimpleRecursion.class);
       assertNull(mimeType);
    }
 
    public void testComplexRecursion() throws Exception
    {
-      AttachmentScanResult  mimeType = SCANNER.scan(ComplexRecursion.class);
+      AttachmentScanResult  mimeType = SCANNER.scanBean(ComplexRecursion.class);
       assertNotNull("Unable to find xop declaration", mimeType);
       assertEquals("text/plain", mimeType.getMimeType());
    }

@@ -152,7 +152,7 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/annotation/**"/>
-        <include name="org/jboss/ws/**"/>
+        <include name="org/jboss/ws/**"/>        
       </fileset>
       <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
@@ -175,7 +175,7 @@
         <include name="standard-jaxws-client-config.xml"/>
       </metainf>
     </jar>
-    
+
     <!-- Build jbossws-resources.zip -->
     <zip zipfile="${core.output.lib.dir}/jbossws-resources.zip" >
       <fileset dir="${core.resources.dir}/standard-config">

@@ -31,7 +31,7 @@
       <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
       <pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
-      <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
+      <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>      
     </path>
 
     <path id="tests.extra.classpath">
@@ -72,22 +72,30 @@
 
   <target name="wsconsume" depends="tests-init" description="Consume JAX-WS contracts">
 
-    <!-- Define the JAX-WS wsconsume task -->
-    <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
-      <classpath refid="ws.stack.classpath"/>
-      <classpath location="${core.dir}/thirdparty/jbossws-wsconsume-impl.jar"/>
-      <classpath location="${core.dir}/thirdparty/jaxb-xjc.jar"/>
-    </taskdef>
+     <!-- Define the JAX-WS wsconsume task -->
+     <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.wsconsume">
+        <classpath refid="ws.stack.classpath"/>
+        <classpath location="${spi.dir}/output/lib/jbossws-spi.jar"/>
+        
+        <classpath location="${core.dir}/thirdparty/jaxb-xjc.jar"/>
+        <classpath location="${core.dir}/thirdparty/jaxb-impl.jar"/>
+        <classpath location="${core.dir}/thirdparty/jaxws-rt.jar"/>
+        <classpath location="${core.dir}/thirdparty/jaxws-tools.jar"/>
+        <classpath location="${core.dir}/thirdparty/stax-api.jar"/>
+        <classpath location="${core.dir}/thirdparty/stax-ex.jar"/>
+        <classpath location="${core.dir}/thirdparty/streambuffer.jar"/>
+        <classpath location="${core.dir}/thirdparty/wstx.jar"/>
+     </taskdef>
 
     <wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-    <wsconsume wsdl="${tests.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-    <wsconsume wsdl="${tests.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-  	<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-  	<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
-    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+  	 <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+  	 <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
   </target>
 
   <!--
@@ -168,18 +176,19 @@
     Generate JAX-WS sources
   -->
   <target name="wsprovide" depends="tests-compile" description="Provide the JAX-WS contracts.">
-	
-    <!-- Define the JAX-WS wsprovide task -->
-    <taskdef name="wsprovide" classname="org.jboss.ws.tools.jaxws.ant.wsprovide">
-      <classpath refid="ws.stack.classpath"/>
-      <classpath refid="thirdparty.classpath"/>
-      <classpath location="${core.dir}/thirdparty/concurrent.jar"/>
-	  <classpath location="${thirdparty.dir}/commons-logging.jar"/>
-      <classpath location="${tests.output.dir}/classes"/>
-      <classpath location="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
-    </taskdef>    
-    
-  	<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
+
+     <!-- Define the JAX-WS wsprovide task -->
+     <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.wsprovide">
+        <classpath refid="ws.stack.classpath"/>
+        <classpath refid="thirdparty.classpath"/>
+        <classpath location="${core.dir}/thirdparty/concurrent.jar"/>
+        <classpath location="${thirdparty.dir}/commons-logging.jar"/>
+        <classpath location="${tests.output.dir}/classes"/>
+        <classpath location="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
+        <classpath location="${core.dir}/output/lib/jbossws-integration-tools.jar"/>
+     </taskdef>
+
+     <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
   	<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"/>
   </target>
   

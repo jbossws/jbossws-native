@@ -57,6 +57,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
+import org.jboss.ws.annotation.EndpointConfig;
 
 /**
  * A client side meta data builder.
@@ -277,6 +278,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          processSOAPBinding(epMetaData, wsClass);
 
       // process config, this will as well setup the handler
+      processEndpointConfig(epMetaData, wsClass);
       epMetaData.initEndpointConfig();
 
       // Process an optional @HandlerChain annotation
@@ -300,5 +302,19 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       epMetaData.eagerInitialize();
 
       if(log.isDebugEnabled()) log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
+   }
+
+   /**
+    * Process config contribution through service endpoint interfaces
+    * @param epMetaData
+    * @param wsClass -  the service endpoint interface
+    */
+   private void processEndpointConfig(EndpointMetaData epMetaData, Class<?> wsClass)
+   {      
+      if (wsClass.isAnnotationPresent(EndpointConfig.class))
+      {
+         EndpointConfig anConfig = wsClass.getAnnotation(EndpointConfig.class);
+         epMetaData.setConfigName(anConfig.configName(), anConfig.configFile());
+      }
    }
 }

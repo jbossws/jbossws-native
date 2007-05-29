@@ -1,3 +1,24 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.extensions.xop.jaxws;
 
 import javax.activation.DataHandler;
@@ -13,6 +34,21 @@ import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.extensions.xop.XOPContext;
 
+/**
+ * Enable JAXB marshalling to optimize storage of binary data.<br>
+ * This API enables an efficient cooperative creation of optimized binary data formats between a JAXB marshalling process
+ * and a MIME-based package processor. A JAXB implementation marshals the root body of a MIME-based package,
+ * delegating the creation of referenceable MIME parts to the MIME-based package processor
+ * that implements this abstraction.<p>
+ * XOP processing is enabled when <code>isXOPPackage()</code> is true.
+ * See <code>addMtomAttachment(DataHandler, String, String)</code> for details.
+ * <p>
+ * WS-I Attachment Profile 1.0 is supported by <code>addSwaRefAttachment(DataHandler)</code>
+ * being called by the marshaller for each JAXB property related to {http://ws-i.org/profiles/basic/1.1/xsd}swaRef.
+ *
+ * @author <a href="heiko.braun@jboss.com">Heiko Braun</a>
+ * @version $Revision: 3220 $
+ */
 public class AttachmentMarshallerImpl extends AttachmentMarshaller
 {
    // provide logging

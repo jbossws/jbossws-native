@@ -19,25 +19,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools.jaxws.spi;
+package org.jboss.ws.tools.jaxws.impl;
 
-import org.jboss.ws.tools.jaxws.api.WSContractProvider;
+import org.jboss.wsf.spi.tools.api.WSContractProvider;
+import org.jboss.wsf.spi.tools.spi.WSContractProviderFactory;
 
 /**
- * WSContractProviderFactory defines the contract for a WSContractProvider factory.
- * 
- * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * Creates a JBossWS WSContractProvider implementation.
+ * @see org.jboss.ws.tools.jaxws.impl.JBossWSProviderImpl
  */
-public interface WSContractProviderFactory
+public class JBossWSProviderFactoryImpl implements WSContractProviderFactory
 {
-   /**
-    * Create a new WSContractProvider. There are no restrictions on how this
-    * should be performed. The passed ClassLoader is the one used in
-    * {@link WSContractProvider#newInstance(ClassLoader)}. This loader
-    * should be made available to the generated WSContractProvider.
-    * 
-    * @param loader the ClassLoader for type discovery
-    * @return a new WSContractProvider
-    */
-   public WSContractProvider createProvider(ClassLoader loader);
+   public WSContractProvider createProvider(ClassLoader loader)
+   {
+      JBossWSProviderImpl impl = new JBossWSProviderImpl();
+      impl.setClassLoader(loader);
+      return impl;
+   }
 }

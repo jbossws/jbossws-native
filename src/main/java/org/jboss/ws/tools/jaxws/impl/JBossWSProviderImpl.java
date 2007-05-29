@@ -21,31 +21,30 @@
 */
 package org.jboss.ws.tools.jaxws.impl;
 
+import org.jboss.ws.WSException;       
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.deployment.BasicDeployment;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
+import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_EJB3;
+import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_JSE;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.wsf.spi.tools.api.WSContractProvider;
+import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+
+import javax.ejb.Stateless;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import javax.ejb.Stateless;
-
-import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.tools.jaxws.api.WSContractProvider;
-import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.wsf.spi.deployment.BasicDeployment;
-import org.jboss.wsf.spi.deployment.BasicEndpoint;
-import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
-
 /**
- * The provided implementation of a WSContractProvider.
+ * The default WSContractProvider implementation.
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  */
-final class WSContractProviderImpl extends WSContractProvider
+final class JBossWSProviderImpl extends WSContractProvider
 {
    private ClassLoader loader;
    private boolean generateWsdl = false;
@@ -72,7 +71,7 @@ final class WSContractProviderImpl extends WSContractProvider
 
    private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
    {
-      DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? DeploymentType.JAXWS_EJB3 : DeploymentType.JAXWS_JSE;
+      DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
       UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(type)
       {
          @Override
@@ -115,14 +114,7 @@ final class WSContractProviderImpl extends WSContractProvider
          messageStream.println("Generating WSDL:");
 
       UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
-      
-      Deployment dep = new BasicDeployment();
-      dep.getContext().addAttachment(UnifiedDeploymentInfo.class, udi);
-      BasicEndpoint ep = new BasicEndpoint();
-      ep.setTargetBean(endpointClass.getName());
-      dep.getService().addEndpoint(ep);
-      
-      builder.buildWebServiceMetaData(dep, umd, udi, endpointClass, null);
+      builder.buildWebServiceMetaData(new BasicDeployment(), umd, udi, endpointClass, null);   
       try
       {
          generator.write();

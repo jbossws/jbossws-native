@@ -29,10 +29,9 @@ import org.jboss.remoting.InvokerLocator;
 import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.MessageTrace;
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.WSTimeoutException;
+import org.jboss.ws.core.*;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.config.EndpointProperty;
 
 import javax.xml.rpc.Stub;
 import javax.xml.soap.MimeHeader;
@@ -48,7 +47,12 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * SOAPConnection implementation
+ * SOAPConnection implementation.
+ * <p/>
+ *
+ * Per default HTTP 1.1 chunked encoding is used.
+ * This may be ovverriden through {@link org.jboss.ws.metadata.config.EndpointProperty#CHUNKED_ENCODING_SIZE}.
+ * A chunksize value of zero disables chunked encoding.
  *
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
@@ -96,6 +100,10 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       // HTTPClientInvoker conect sends gratuitous POST
       // http://jira.jboss.com/jira/browse/JBWS-711
       clientConfig.put(Client.ENABLE_LEASE, false);
+
+      // Enable chunked encoding
+      // This is the default size. May be overridden through endpoint config
+      clientConfig.put("chunkedLength", "1024");
    }
 
    public boolean isClosed()
@@ -148,7 +156,10 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          targetAddress = endpoint.toString();
       }
 
-      // setup remoting client
+      // remoting props may come from client config as well
+      mergeConfigContribution();
+
+      // setup remoting client            
       Map<String, Object> metadata = createRemotingMetaData(reqMessage, callProps);
       Client client = createRemotingClient(endpoint, targetAddress, oneway);
 
@@ -192,6 +203,25 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          IOException io = new IOException("Could not transmit message");
          io.initCause(th);
          throw io;
+      }
+   }
+
+   private void mergeConfigContribution()
+   {
+      // check for config property contribution
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if(msgContext!=null)
+      {
+         Properties epmdProps = msgContext.getEndpointMetaData().getProperties();
+
+         // chunksize settings
+         String chunkSizeValue = epmdProps.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
+         int chunkSize = chunkSizeValue!=null ? Integer.valueOf(chunkSizeValue) : -1;
+         if(chunkSize>0)
+            clientConfig.put(EndpointProperty.CHUNKED_ENCODING_SIZE, chunkSizeValue);
+         else
+            clientConfig.remove("chunkedLength");
+
       }
    }
 

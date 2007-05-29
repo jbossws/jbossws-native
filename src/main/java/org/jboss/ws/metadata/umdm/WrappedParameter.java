@@ -41,6 +41,8 @@ public class WrappedParameter
    private boolean holder = false;
    private int index = -2;
    private Accessor accessor;
+   private boolean swaRef;
+   private boolean xop;
 
    public WrappedParameter(WrappedParameter wrapped)
    {
@@ -129,6 +131,26 @@ public class WrappedParameter
    void setAccessor(Accessor accessor)
    {
       this.accessor = accessor;
+   }
+
+   public boolean isSwaRef()
+   {
+      return swaRef;
+   }
+
+   public void setSwaRef(boolean swaRef)
+   {
+      this.swaRef = swaRef;
+   }
+
+   public boolean isXop()
+   {
+      return xop;
+   }
+
+   public void setXOP(boolean xop)
+   {
+      this.xop = xop;
    }
 
    public String toString()

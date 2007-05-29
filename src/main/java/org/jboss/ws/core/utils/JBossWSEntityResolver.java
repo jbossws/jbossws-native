@@ -56,6 +56,7 @@ public class JBossWSEntityResolver extends JBossEntityResolver
       registerEntity("http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd", "j2ee_web_services_client_1_1.xsd");
       registerEntity("http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd", "j2ee_web_services_1_1.xsd");
       registerEntity("http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd", "j2ee_jaxrpc_mapping_1_1.xsd");
+      registerEntity("http://ws-i.org/profiles/basic/1.1/swaref.xsd", "schema/swaref.xsd");
    }
 
    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
