@@ -22,12 +22,14 @@
 package org.jboss.test.ws.jaxws.handlerlifecycle;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
@@ -186,8 +188,32 @@ public abstract class LifecycleHandler implements SOAPHandler
       String testMethod;
       try
       {
-         SOAPElement soapElement = (SOAPElement)((SOAPMessageContext)msgContext).getMessage().getSOAPBody().getChildElements().next();
-         soapElement = (SOAPElement)soapElement.getChildElements().next();
+
+         SOAPMessage message = ((SOAPMessageContext)msgContext).getMessage();
+         SOAPElement soapElement = null;
+         Iterator it = message.getSOAPBody().getChildElements();
+
+         while (soapElement == null && it.hasNext())
+         {
+            Object current = it.next();
+            if (current instanceof SOAPElement)
+            {
+               soapElement = (SOAPElement)current;
+            }
+         }
+
+         it = soapElement.getChildElements();
+         soapElement = null;
+
+         while (soapElement == null && it.hasNext())
+         {
+            Object current = it.next();
+            if (current instanceof SOAPElement)
+            {
+               soapElement = (SOAPElement)current;
+            }
+         }
+
          testMethod = soapElement.getValue();
       }
       catch (SOAPException e)

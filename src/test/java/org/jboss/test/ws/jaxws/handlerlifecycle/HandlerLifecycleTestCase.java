@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -51,7 +52,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HandlerLifecycleTestCase.class, "jaxws-handlerlifecycle.war");
+      return JBossWSTestSetup.newTestSetup(HandlerLifecycleTestCase.class, "jaxws-handlerlifecycle.war, jaxws-handlerlifecycle-client.jar");
    }
 
    public void setUp() throws Exception
@@ -85,25 +86,43 @@ public class HandlerLifecycleTestCase extends JBossWSTest
     * All handlers return true 
     */
    public void testHandleMessageTrue() throws Exception
-   {
-      System.out.println("FIXME: [JBWS-1579] @EndpointConfig ignored on SEI");
-      
+   {      
       String testResponse = port.runTest(getName());
 
       String trackerMessages = HandlerTracker.getListMessages();
       List<String> expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:PostConstruct");
+      expMessages.add("PreClientHandler2:PostConstruct");
       expMessages.add("ClientHandler1:PostConstruct");
       expMessages.add("ClientHandler2:PostConstruct");
       expMessages.add("ClientHandler3:PostConstruct");
+      expMessages.add("PostClientHandler1:PostConstruct");
+      expMessages.add("PostClientHandler2:PostConstruct");
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");            
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Message:InBound");
       expMessages.add("ClientHandler2:Message:InBound");
       expMessages.add("ClientHandler1:Message:InBound");
+      expMessages.add("PreClientHandler2:Message:InBound");
+      expMessages.add("PreClientHandler1:Message:InBound");
+
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = trackerPort.getListMessages();
@@ -159,10 +178,18 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
       String trackerMessages = HandlerTracker.getListMessages();
       List<String> expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound:false");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+      
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = trackerPort.getListMessages();
@@ -170,6 +197,20 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       assertEquals(expMessages.toString(), trackerMessages);
 
       assertNull(testResponse);
+   }
+
+   private void dumpTracker(String trackerMessages)
+   {
+      StringTokenizer tok = new StringTokenizer(trackerMessages, ",");
+      while(tok.hasMoreTokens())
+      {
+         System.out.print("expMessages.add(\"");
+         String s = tok.nextToken().trim();
+         if(s.startsWith("[")) s = s.substring(1);
+         if(s.endsWith("]")) s = s.substring(0, s.length()-1);
+         System.out.print(s);
+         System.out.print("\");\n");
+      }
    }
 
    /**
@@ -190,11 +231,25 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
       String trackerMessages = HandlerTracker.getListMessages();
       List<String> expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound:ErrorInClientHandler2");
+
+      expMessages.add("PostClientHandler2:Fault:InBound");
+      expMessages.add("PostClientHandler1:Fault:InBound");
       expMessages.add("ClientHandler1:Fault:InBound");
+      expMessages.add("PreClientHandler2:Fault:InBound");
+      expMessages.add("PreClientHandler1:Fault:InBound");
+
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = trackerPort.getListMessages();
@@ -224,19 +279,34 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       expMessages.add("ServerHandler3:Close");
       expMessages.add("PostServerHandler1:Close");
       expMessages.add("PostServerHandler2:Close");
+
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = HandlerTracker.getListMessages();
       expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Message:InBound");
       expMessages.add("ClientHandler2:Message:InBound");
       expMessages.add("ClientHandler1:Message:InBound");
+      expMessages.add("PreClientHandler2:Message:InBound");
+      expMessages.add("PreClientHandler1:Message:InBound");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+          
       assertEquals(expMessages.toString(), trackerMessages);
       
       assertEquals("testServerHandler2Response", testResponse);
@@ -271,19 +341,34 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       expMessages.add("ServerHandler3:Close");
       expMessages.add("PostServerHandler1:Close");
       expMessages.add("PostServerHandler2:Close");
+
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = HandlerTracker.getListMessages();
       expMessages = new ArrayList<String>();
+      
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Fault:InBound");
       expMessages.add("ClientHandler2:Fault:InBound");
       expMessages.add("ClientHandler1:Fault:InBound");
+      expMessages.add("PreClientHandler2:Fault:InBound");
+      expMessages.add("PreClientHandler1:Fault:InBound");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+
       assertEquals(expMessages.toString(), trackerMessages);
       
       assertEquals("ErrorInServerHandler2", testResponse);
@@ -320,15 +405,29 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
       trackerMessages = HandlerTracker.getListMessages();
       expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Message:InBound");
       expMessages.add("ClientHandler2:Message:InBound");
       expMessages.add("ClientHandler1:Message:InBound");
+      expMessages.add("PreClientHandler2:Message:InBound");
+      expMessages.add("PreClientHandler1:Message:InBound");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+    
       assertEquals(expMessages.toString(), trackerMessages);
       
       assertEquals(getName() + "Response", testResponse);
@@ -377,15 +476,29 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
       trackerMessages = HandlerTracker.getListMessages();
       expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Fault:InBound");
       expMessages.add("ClientHandler2:Fault:InBound");
       expMessages.add("ClientHandler1:Fault:InBound");
+      expMessages.add("PreClientHandler2:Fault:InBound");
+      expMessages.add("PreClientHandler1:Fault:InBound");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+
       assertEquals(expMessages.toString(), trackerMessages);
       
       assertEquals("ErrorInServerHandler2", testResponse);
@@ -400,14 +513,26 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
       String trackerMessages = HandlerTracker.getListMessages();
       List<String> expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Message:InBound");
       expMessages.add("ClientHandler2:Message:InBound:false");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+            
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = trackerPort.getListMessages();
@@ -456,15 +581,29 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
       String trackerMessages = HandlerTracker.getListMessages();
       List<String> expMessages = new ArrayList<String>();
+
+      expMessages.add("PreClientHandler1:Message:OutBound");
+      expMessages.add("PreClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler1:Message:OutBound");
       expMessages.add("ClientHandler2:Message:OutBound");
       expMessages.add("ClientHandler3:Message:OutBound");
+      expMessages.add("PostClientHandler1:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:OutBound");
+      expMessages.add("PostClientHandler2:Message:InBound");
+      expMessages.add("PostClientHandler1:Message:InBound");
       expMessages.add("ClientHandler3:Message:InBound");
       expMessages.add("ClientHandler2:Message:InBound:ErrorInClientHandler2");
       expMessages.add("ClientHandler1:Fault:InBound");
+      expMessages.add("PreClientHandler2:Fault:InBound");
+      expMessages.add("PreClientHandler1:Fault:InBound");
+      expMessages.add("PostClientHandler2:Close");
+      expMessages.add("PostClientHandler1:Close");
       expMessages.add("ClientHandler3:Close");
       expMessages.add("ClientHandler2:Close");
       expMessages.add("ClientHandler1:Close");
+      expMessages.add("PreClientHandler2:Close");
+      expMessages.add("PreClientHandler1:Close");
+      
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = trackerPort.getListMessages();

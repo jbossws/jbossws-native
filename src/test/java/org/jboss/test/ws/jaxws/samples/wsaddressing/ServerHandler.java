@@ -61,7 +61,7 @@ public class ServerHandler extends GenericSOAPHandler
 
       String clientid = null;
       EndpointReference replyTo = addrProps.getReplyTo();
-      ReferenceParameters refParams = replyTo.getReferenceParameters();
+      ReferenceParameters refParams = replyTo!=null ? replyTo.getReferenceParameters() : null;
       if (refParams != null)
       {
          for (Object obj : refParams.getElements())

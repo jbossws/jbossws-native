@@ -41,7 +41,6 @@ import org.jboss.ws.annotation.EndpointConfig;
  */
 @WebService(name = "StatefulEndpoint", targetNamespace = "http://org.jboss.ws/samples/wsaddressing", serviceName = "TestService")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
 public interface StatefulEndpoint extends Remote
 {
    @WebMethod
