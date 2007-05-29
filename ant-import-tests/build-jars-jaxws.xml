@@ -103,7 +103,13 @@
       </webinf>
     </war>
 
-    <!-- jaxws-handlerscope -->
+     <jar jarfile="${tests.output.dir}/libs/jaxws-handlerlifecycle-client.jar">
+     <metainf dir="${tests.output.dir}/resources/jaxws/handlerlifecycle/META-INF">
+        <include name="*.xml"/>
+     </metainf>
+     </jar>
+
+     <!-- jaxws-handlerscope -->
     <war warfile="${tests.output.dir}/libs/jaxws-handlerscope.war" webxml="${tests.output.dir}/resources/jaxws/handlerscope/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/handlerscope/SOAPEndpointBean.class"/>
