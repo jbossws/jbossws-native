@@ -158,6 +158,7 @@
         <include name="schema/**"/>
         <include name="dtd/**"/>
       </fileset>
+      <metainf dir="${core.resources.dir}/jbossws-core.jar"/>        
     </jar>
     
     <!-- Build jbossws-client.jar -->
