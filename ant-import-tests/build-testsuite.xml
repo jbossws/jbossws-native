@@ -27,7 +27,6 @@
   <target name="tests-init" depends="thirdparty-classpath,tests-classpath">
 
     <path id="ws.stack.classpath">
-      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
       <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
@@ -36,6 +35,7 @@
     </path>
 
     <path id="tests.extra.classpath">
+      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
       <pathelement location="${core.dir}/thirdparty/ejb3.deployer/jboss-annotations-ejb3.jar"/>
       <pathelement location="${core.dir}/thirdparty/ejb3.deployer/jboss-ejb3.jar"/>
       <pathelement location="${core.dir}/thirdparty/jboss-remoting.jar"/>
