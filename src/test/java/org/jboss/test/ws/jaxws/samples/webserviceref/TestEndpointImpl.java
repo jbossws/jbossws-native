@@ -28,7 +28,7 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.jboss.logging.Logger;
 
-@WebService(name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/wsref")
+@WebService(name = "TestEndpoint", serviceName = "TestEndpointService", targetNamespace = "http://org.jboss.ws/wsref")
 @SOAPBinding(style = Style.RPC)
 public class TestEndpointImpl
 {
