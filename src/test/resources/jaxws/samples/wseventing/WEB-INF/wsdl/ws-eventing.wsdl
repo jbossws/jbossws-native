@@ -122,10 +122,10 @@
 
    <wsdl:service name="EventingService">
       <wsdl:port name="EventSourcePort" binding="wse:EventSourceBinding">
-         <soap:address location="http://@jbosstest.host.name@:8080/jaxws-samples-wseventing/subscribe"/>
+         <soap:address location="http://@jboss.bind.address@:8080/jaxws-samples-wseventing/subscribe"/>
       </wsdl:port>
       <wsdl:port name="SubscriptionManagerPort" binding="wse:SubscriptionManagerBinding">
-         <soap:address location="http://@jbosstest.host.name@:8080/jaxws-samples-wseventing/manage"/>
+         <soap:address location="http://@jboss.bind.address@:8080/jaxws-samples-wseventing/manage"/>
       </wsdl:port>
    </wsdl:service>
 

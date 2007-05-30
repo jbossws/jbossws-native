@@ -21,7 +21,7 @@
         <prop-value>thefrog</prop-value>
       </stub-property>
     </port-component-ref>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxws-samples-webserviceref-secure/SecureEndpointImpl?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxws-samples-webserviceref-secure/SecureEndpointImpl?wsdl</wsdl-override>
   </service-ref>
   
   <service-ref>
@@ -37,7 +37,7 @@
         <prop-value>thefrog</prop-value>
       </stub-property>
     </port-component-ref>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxws-samples-webserviceref-secure/SecureEndpointImpl?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxws-samples-webserviceref-secure/SecureEndpointImpl?wsdl</wsdl-override>
   </service-ref>
   
   <service-ref>
@@ -53,7 +53,7 @@
         <prop-value>thefrog</prop-value>
       </stub-property>
     </port-component-ref>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxws-samples-webserviceref-secure/SecureEndpointImpl?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxws-samples-webserviceref-secure/SecureEndpointImpl?wsdl</wsdl-override>
   </service-ref>
   
 </jboss-client>

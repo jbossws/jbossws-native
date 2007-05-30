@@ -7,11 +7,11 @@
 
   <service-ref>
     <service-ref-name>service/DocumentTranslator</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws775/document?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws775/document?wsdl</wsdl-override>
   </service-ref>
   <service-ref>
     <service-ref-name>service/TextTranslator</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws775/text?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws775/text?wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>

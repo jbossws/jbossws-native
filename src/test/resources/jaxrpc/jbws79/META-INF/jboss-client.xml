@@ -9,11 +9,11 @@
 
   <service-ref>
     <service-ref-name>service/HelloOneService</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws79/HelloOne?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws79/HelloOne?wsdl</wsdl-override>
   </service-ref>
   <service-ref>
     <service-ref-name>service/HelloTwoService</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-jbws79/HelloTwo?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws79/HelloTwo?wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>

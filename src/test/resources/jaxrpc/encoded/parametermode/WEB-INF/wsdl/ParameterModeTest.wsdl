@@ -814,7 +814,7 @@
   
   <service name="ParameterModeTestService">
     <port name="ParameterModeTestPort" binding="tns:ParameterModeTestBinding">
-      <soap:address location="http://@jbosstest.host.name@:8000/W2JParameterModeTest/ws4ee"/>
+      <soap:address location="http://@jboss.bind.address@:8000/W2JParameterModeTest/ws4ee"/>
     </port>
   </service>
 </definitions>

@@ -13,7 +13,7 @@
   <service-ref>
     <service-ref-name>service/HelloService</service-ref-name>
     <config-name>Standard WSSecurity Client</config-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-wsse-rpc/Hello?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-wsse-rpc/Hello?wsdl</wsdl-override>
   </service-ref>
   
 </jboss-web>

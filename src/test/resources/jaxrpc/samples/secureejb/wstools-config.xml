@@ -19,10 +19,10 @@
 <!--
  <service name="OrganizationService">
   <port name="BasicSecuredPort" binding="tns:OrganizationServiceBinding">
-   <soap:address location="http://@jbosstest.host.name@:8080/jaxrpc-samples-ejb/BasicSecured"/>
+   <soap:address location="http://@jboss.bind.address@:8080/jaxrpc-samples-ejb/BasicSecured"/>
   </port>
   <port name="RoleSecuredPort" binding="tns:OrganizationServiceBinding">
-   <soap:address location="http://@jbosstest.host.name@:8080/jaxrpc-samples-ejb/RoleSecured"/>
+   <soap:address location="http://@jboss.bind.address@:8080/jaxrpc-samples-ejb/RoleSecured"/>
   </port>
  </service>
 -->

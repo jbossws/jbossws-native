@@ -9,7 +9,7 @@ $Id$
   <import namespace="http://types.complex.jaxws.ws.test.jboss.org/" location="Registration_PortType.wsdl"/>
   <service name="RegistrationService">
     <port name="RegistrationPort" binding="ns1:RegistrationBinding">
-      <soap:address location="http://@jbosstest.host.name@:8080/jaxws-complex/RegistrationService"/>
+      <soap:address location="http://@jboss.bind.address@:8080/jaxws-complex/RegistrationService"/>
     </port>
   </service>
 </definitions>

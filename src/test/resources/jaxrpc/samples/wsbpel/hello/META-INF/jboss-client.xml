@@ -11,7 +11,7 @@
     <!-- service-ref element to configure -->
     <service-ref-name>service/BpelHello</service-ref-name>
     <!-- published WSDL document -->
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-samples-wsbpel-hello/greeter?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-samples-wsbpel-hello/greeter?wsdl</wsdl-override>
   </service-ref>
   
 </jboss-client>

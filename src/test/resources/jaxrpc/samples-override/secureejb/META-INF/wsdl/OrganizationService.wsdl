@@ -27,13 +27,13 @@
  </binding>
  <service name="OrganizationService">
   <port name="BasicSecuredPort" binding="tns:OrganizationServiceBinding">
-   <soap:address location="http://@jbosstest.host.name@:8080/jaxrpc-samples-ejb/BasicSecured"/>
+   <soap:address location="http://@jboss.bind.address@:8080/jaxrpc-samples-ejb/BasicSecured"/>
   </port>
   <port name="RoleSecuredPort" binding="tns:OrganizationServiceBinding">
-   <soap:address location="http://@jbosstest.host.name@:8080/jaxrpc-samples-ejb/RoleSecured"/>
+   <soap:address location="http://@jboss.bind.address@:8080/jaxrpc-samples-ejb/RoleSecured"/>
   </port>
   <port name="ConfidentialPort" binding="tns:OrganizationServiceBinding">
-   <soap:address location="https://@jbosstest.host.name@:8443/jaxrpc-samples-ejb/ConfidentialSecured"/>
+   <soap:address location="https://@jboss.bind.address@:8443/jaxrpc-samples-ejb/ConfidentialSecured"/>
   </port>
  </service>
 </definitions>

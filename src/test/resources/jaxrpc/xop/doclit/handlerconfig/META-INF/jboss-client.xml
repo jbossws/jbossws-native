@@ -9,7 +9,7 @@
 
   <service-ref>
     <service-ref-name>service/XOPHandlerTestCase</service-ref-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-xop-doclit_handler?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-xop-doclit_handler?wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>

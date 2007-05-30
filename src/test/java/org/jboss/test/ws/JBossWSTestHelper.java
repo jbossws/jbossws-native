@@ -99,12 +99,12 @@ public class JBossWSTestHelper
    }
    
    /**
-    * Get the JBoss server host from system property "jbosstest.host.name"
+    * Get the JBoss server host from system property "jboss.bind.address"
     * This defaults to "localhost"
     */
    public static String getServerHost()
    {
-      String hostName = System.getProperty("jbosstest.host.name", "localhost");
+      String hostName = System.getProperty("jboss.bind.address", "localhost");
       return hostName;
    }
 

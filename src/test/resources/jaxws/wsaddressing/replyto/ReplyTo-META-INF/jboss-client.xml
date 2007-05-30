@@ -7,6 +7,6 @@
   <service-ref>
     <service-ref-name>service/ReplyToService</service-ref-name>
     <config-name>Standard WSAddressing Client</config-name>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxws-wsaddressing-replyto/ReplyToService?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxws-wsaddressing-replyto/ReplyToService?wsdl</wsdl-override>
   </service-ref>
 </jboss-client>

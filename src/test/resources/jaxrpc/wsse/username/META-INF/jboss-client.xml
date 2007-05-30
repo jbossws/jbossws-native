@@ -20,7 +20,7 @@
         <prop-value>thefrog</prop-value>
       </call-property>
     </port-component-ref>
-    <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-wsse-username?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-wsse-username?wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>

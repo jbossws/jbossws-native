@@ -123,10 +123,10 @@
 
    <wsdl:service name="EventingService">
       <wsdl:port name="EventSourcePort" binding="wse:EventSourceBinding">
-         <soap:address location="http://@jbosstest.host.name@:8080/jbossws-test-eventing/ws4ee/EventSourcePortType"/>
+         <soap:address location="http://@jboss.bind.address@:8080/jbossws-test-eventing/ws4ee/EventSourcePortType"/>
       </wsdl:port>
       <wsdl:port name="SubscriptionManagerPort" binding="wse:SubscriptionManagerBinding">
-         <soap:address location="http://@jbosstest.host.name@:8080/jbossws-test-eventing/ws4ee/SubscriptionManagerPortType"/>
+         <soap:address location="http://@jboss.bind.address@:8080/jbossws-test-eventing/ws4ee/SubscriptionManagerPortType"/>
       </wsdl:port>
    </wsdl:service>
    

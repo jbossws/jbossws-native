@@ -48,7 +48,7 @@
   </binding>
   <service name="ActionRpcService">
     <port name="ActionEndpointPort" binding="tns:ActionEndpointBinding">
-      <soap:address location="http://@jbosstest.host.name@:8080/jaxws-wsaddressing-action-rpc/ActionRpcService"/>
+      <soap:address location="http://@jboss.bind.address@:8080/jaxws-wsaddressing-action-rpc/ActionRpcService"/>
     </port>
   </service>
 </definitions>

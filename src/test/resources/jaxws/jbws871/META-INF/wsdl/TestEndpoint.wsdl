@@ -35,7 +35,7 @@
  </binding>
  <service name='RpcArrayEndpointService'>
   <port binding='tns:RpcArrayEndpointBinding' name='RpcArrayEndpointPort'>
-   <soap:address location='http://@jbosstest.host.name@:8080/jaxws-jbws871-rpc/TestEndpoint'/>
+   <soap:address location='http://@jboss.bind.address@:8080/jaxws-jbws871-rpc/TestEndpoint'/>
   </port>
  </service>
 </definitions>

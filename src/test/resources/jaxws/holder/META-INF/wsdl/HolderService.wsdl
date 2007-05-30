@@ -193,7 +193,7 @@
  </binding>
  <service name='HolderService'>
   <port binding='tns:HolderBinding' name='HolderPort'>
-   <soap:address location='http://@jbosstest.host.name@:8080/jaxws-holder/HolderService'/>
+   <soap:address location='http://@jboss.bind.address@:8080/jaxws-holder/HolderService'/>
   </port>
  </service>
 </definitions>

@@ -29,7 +29,7 @@
   </binding>
   <service name="TestService">
     <port name="EndpointInterfacePort" binding="tns:EndpointInterfaceBinding">
-      <soap:address location="http://@jbosstest.host.name@:8080/jaxws-endpoint"/>
+      <soap:address location="http://@jboss.bind.address@:8080/jaxws-endpoint"/>
     </port>
   </service>
 </definitions>

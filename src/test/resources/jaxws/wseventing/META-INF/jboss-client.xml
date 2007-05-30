@@ -7,7 +7,7 @@
 
     <service-ref>
         <service-ref-name>service/EventingService</service-ref-name>
-        <wsdl-override>http://@jbosstest.host.name@:8080/jaxrpc-wseventing/subscribe?wsdl</wsdl-override>
+        <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-wseventing/subscribe?wsdl</wsdl-override>
     </service-ref>
 
 </jboss-client>
