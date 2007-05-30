@@ -27,13 +27,12 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.annotation.Policy;
 import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 
 
-@WebService(name = "Hello", targetNamespace = "http://org.jboss.ws/samples/wssecurityAnnotatedpolicy")
+@WebService(name = "Hello", serviceName = "HelloService", targetNamespace = "http://org.jboss.ws/samples/wssecurityAnnotatedpolicy")
 @PolicyAttachment({@Policy( policyFileLocation="WEB-INF/Policy.xml", scope = PolicyScopeLevel.WSDL_PORT ) })
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class HelloJavaBean
