@@ -236,17 +236,17 @@
   <!-- Generating sources                                                 -->
   <!-- ================================================================== -->
 
-  <target name="wsconsume" depends="init" description="Consume JAX-WS contracts" if="HAVE_JDK_1.5">
+  <target name="WSConsumeTask" depends="init" description="Consume JAX-WS contracts" if="HAVE_JDK_1.5">
 
-    <!-- Define the JAX-WS wsconsume task -->
-    <taskdef name="wsconsume" classname="org.jboss.ws.tools.jaxws.ant.wsconsume">
+    <!-- Define the JAX-WS WSConsumeTask task -->
+    <taskdef name="WSConsumeTask" classname="org.jboss.ws.tools.jaxws.ant.WSConsumeTask">
       <classpath refid="core.classpath"/>
       <classpath refid="jbossws.classpath"/>
-      <classpath location="${thirdparty.dir}/jbossws-wsconsume-impl.jar"/>
+      <classpath location="${thirdparty.dir}/jbossws-WSConsumeTask-impl.jar"/>
       <classpath location="${thirdparty.dir}/jaxb-xjc.jar"/>
     </taskdef>    
     
-    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/WSConsumeTask/java" keep="true"/>
   </target>
 
   <!--
@@ -328,17 +328,17 @@
   <!--
     Generate JAX-WS sources
   -->
-  <target name="wsprovide" depends="compile" description="Provide the JAX-WS contracts." if="HAVE_JDK_1.5">
+  <target name="WSProvideTask" depends="compile" description="Provide the JAX-WS contracts." if="HAVE_JDK_1.5">
 	
-    <!-- Define the JAX-WS wsprovide task -->
-    <taskdef name="wsprovide" classname="org.jboss.ws.tools.jaxws.ant.wsprovide">
+    <!-- Define the JAX-WS WSProvideTask task -->
+    <taskdef name="WSProvideTask" classname="org.jboss.ws.tools.jaxws.ant.WSProvideTask">
       <classpath refid="core.classpath"/>
       <classpath refid="jbossws.classpath"/>
       <classpath location="${thirdparty.dir}/concurrent.jar"/>
       <classpath location="${tests.output.dir}/classes"/>
     </taskdef>    
     
-    <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
+    <wsprovide resourcedestdir="${tests.output.dir}/WSProvideTask/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
   </target>
   
   <target name="generate-resources" depends="servicegen,wstools,wsprovide">
@@ -372,7 +372,7 @@
     <javac destdir="${tests.output.dir}/classes" debug="${javac.debug}" encoding="utf-8" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
       failonerror="${javac.fail.onerror}" excludesfile="${excludesfile}">
       <src path="${tests.java.dir}"/>
-      <src path="${tests.output.dir}/wsconsume/java"/>
+      <src path="${tests.output.dir}/WSConsumeTask/java"/>
       <classpath refid="javac.classpath"/>
     </javac>
   </target>

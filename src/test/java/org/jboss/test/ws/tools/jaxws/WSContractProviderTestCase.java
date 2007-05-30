@@ -42,7 +42,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testBasic() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/wsprovide/basic/out");
+      File outputDir = new File("tools/WSProvideTask/basic/out");
       gen.setOutputDirectory(outputDir);
       gen.provide(DocWrappedServiceImpl.class);
       
@@ -84,7 +84,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testSource() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/wsprovide/source/out");
+      File outputDir = new File("tools/WSProvideTask/source/out");
       gen.setOutputDirectory(outputDir);
       gen.setGenerateSource(true);
       gen.provide(DocWrappedServiceImpl.class);
@@ -96,8 +96,8 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testSourceDir() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/wsprovide/sourcedir/out");
-      File sourceDir = new File("tools/wsprovide/sourcedir/source");
+      File outputDir = new File("tools/WSProvideTask/sourcedir/out");
+      File sourceDir = new File("tools/WSProvideTask/sourcedir/source");
       
       gen.setOutputDirectory(outputDir);
       gen.setSourceDirectory(sourceDir);
@@ -112,7 +112,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testWsdl() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/wsprovide/wsdl/out");
+      File outputDir = new File("tools/WSProvideTask/wsdl/out");
       gen.setOutputDirectory(outputDir);
       gen.setGenerateWsdl(true);
       gen.provide(DocWrappedServiceImpl.class);
@@ -130,8 +130,8 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testResourceDir() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/wsprovide/resourcedir/out");
-      File wsdlDir = new File("tools/wsprovide/resourcedir/wsdl");
+      File outputDir = new File("tools/WSProvideTask/resourcedir/out");
+      File wsdlDir = new File("tools/WSProvideTask/resourcedir/wsdl");
       gen.setOutputDirectory(outputDir);
       gen.setResourceDirectory(wsdlDir);
       gen.setGenerateWsdl(true);

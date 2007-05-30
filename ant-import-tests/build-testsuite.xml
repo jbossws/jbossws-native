@@ -74,7 +74,7 @@
   <target name="wsconsume" depends="tests-init" description="Consume JAX-WS contracts">
 
     <!-- Define the JAX-WS wsconsume task -->
-    <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.wsconsume">
+    <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">
        <classpath refid="ws.stack.classpath"/>
        <classpath location="${spi.dir}/output/lib/jbossws-spi.jar"/>
         
@@ -179,7 +179,7 @@
   <target name="wsprovide" depends="tests-compile" description="Provide the JAX-WS contracts.">
 
      <!-- Define the JAX-WS wsprovide task -->
-     <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.wsprovide">
+     <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.WSProvideTask">
         <classpath refid="ws.stack.classpath"/>
         <classpath refid="thirdparty.classpath"/>
         <classpath location="${core.dir}/thirdparty/concurrent.jar"/>

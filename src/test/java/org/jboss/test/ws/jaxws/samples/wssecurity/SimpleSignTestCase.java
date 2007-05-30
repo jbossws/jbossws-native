@@ -64,7 +64,7 @@ public class SimpleSignTestCase extends JBossWSTest
 
    private Hello getPort() throws Exception
    {
-      URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurity/HelloService.wsdl").toURL();
+      URL wsdlURL = new File("WSProvideTask/resources/jaxws/samples/wssecurity/HelloService.wsdl").toURL();
       URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-sign/META-INF/jboss-wsse-client.xml").toURL();
       QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
 

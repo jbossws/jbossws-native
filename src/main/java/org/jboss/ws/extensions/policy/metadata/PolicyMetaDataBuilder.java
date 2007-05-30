@@ -70,7 +70,7 @@ public class PolicyMetaDataBuilder
    /**
     * Creates a new PolicyMetaDataBuilder for server side policy processing.
     * 
-    * @param toolMode   True if running wsprovide (no policy deployments)
+    * @param toolMode   True if running WSProvideTask (no policy deployments)
     * @return
     */
    public static PolicyMetaDataBuilder getServerSidePolicyMetaDataBuilder(boolean toolMode) {

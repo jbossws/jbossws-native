@@ -46,7 +46,7 @@ public class WSTools
    private static Logger log = Logger.getLogger(WSTools.class);
 
    /**
-    * Entry point for the command line scripts.
+    * Entry point for the cmd line scripts.
     * Just passes the arguments to
     * @see generate(String)
     * @param args

@@ -33,8 +33,6 @@ import junit.framework.Test;
 
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.client.ServiceExt;
 
 /**
  * Test WS-Security with RPC/Literal
@@ -68,7 +66,7 @@ public class SimpleEncryptTestCase extends JBossWSTest
 
    private Hello getPort() throws Exception
    {
-      URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy/HelloService.wsdl").toURL();
+      URL wsdlURL = new File("WSProvideTask/resources/jaxws/samples/wssecurityAnnotatedpolicy/HelloService.wsdl").toURL();
       QName serviceName = new QName("http://org.jboss.ws/samples/wssecurityAnnotatedpolicy", "HelloService");
 
 

@@ -70,7 +70,7 @@ import org.jboss.wsf.spi.utils.IOUtils;
 import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
- *  Helper class used by the command line tool "jbossws"
+ *  Helper class used by the cmd line tool "jbossws"
  *  and ant task "wstools"
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Aug 19, 2005

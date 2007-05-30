@@ -203,7 +203,7 @@ public class SecurityStore
 
    private String execPasswordCmd(String keyStorePasswordCmd) throws WSSecurityException
    {
-      if(log.isDebugEnabled()) log.debug("Executing command: " + keyStorePasswordCmd);
+      if(log.isDebugEnabled()) log.debug("Executing cmd: " + keyStorePasswordCmd);
       try
       {
          Runtime rt = Runtime.getRuntime();
@@ -218,7 +218,7 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems executing password command: " + keyStorePasswordCmd, e);
+         throw new WSSecurityException("Problems executing password cmd: " + keyStorePasswordCmd, e);
       }
    }
 
