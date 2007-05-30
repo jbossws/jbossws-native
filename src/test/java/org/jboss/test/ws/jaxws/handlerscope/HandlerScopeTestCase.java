@@ -49,7 +49,7 @@ public class HandlerScopeTestCase extends JBossWSTest
    public void testClientAccess() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-handlerscope?wsdl");
-      QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerscope", "SOAPEndpointBeanService");
+      QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerscope", "SOAPEndpointService");
       Service service = Service.create(wsdlURL, serviceName);
       SOAPEndpoint port = (SOAPEndpoint)service.getPort(SOAPEndpoint.class);
 

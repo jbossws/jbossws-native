@@ -32,7 +32,7 @@ import javax.xml.ws.BindingType;
 
 import org.jboss.logging.Logger;
 
-@WebService(name = "SOAPEndpoint", targetNamespace = "http://org.jboss.ws/jaxws/handlerscope")
+@WebService(name = "SOAPEndpoint", serviceName = "SOAPEndpointService", targetNamespace = "http://org.jboss.ws/jaxws/handlerscope")
 @BindingType(value = "http://www.w3.org/2003/05/soap/bindings/HTTP/") // SOAP-1.2
 @HandlerChain(file = "jaxws-server-handlers.xml")
 @SOAPBinding(style = Style.RPC)
