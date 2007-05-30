@@ -29,7 +29,7 @@ import javax.jws.soap.SOAPBinding;
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
 
-@WebService(name = "Hello", targetNamespace = "http://org.jboss.ws/samples/wssecurity")
+@WebService(name = "Hello", serviceName = "HelloService", targetNamespace = "http://org.jboss.ws/samples/wssecurity")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class HelloJavaBean
