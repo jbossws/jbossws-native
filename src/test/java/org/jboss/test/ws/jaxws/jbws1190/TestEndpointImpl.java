@@ -42,7 +42,7 @@ import org.jboss.wsf.spi.management.ServerConfigFactory;
  * @author darran.lofthouse@jboss.com
  * @since 19-October-2006
  */
-@WebService(endpointInterface = "org.jboss.test.ws.jaxws.jbws1190.TestEndpoint", targetNamespace = "http://org.jboss/test/ws/jbws1190", name = "Test")
+@WebService(name = "Test", serviceName = "TestService", targetNamespace = "http://org.jboss/test/ws/jbws1190", endpointInterface = "org.jboss.test.ws.jaxws.jbws1190.TestEndpoint")
 public class TestEndpointImpl implements TestEndpoint
 {
 

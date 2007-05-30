@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.wrapped.accessor;
 
 import javax.jws.WebService;
 
-@WebService(endpointInterface="org.jboss.test.ws.jaxws.wrapped.accessor.Accessor", name="Accessor")
+@WebService(name="Accessor", serviceName="AccessorService", endpointInterface="org.jboss.test.ws.jaxws.wrapped.accessor.Accessor")
 public class AccessorImpl implements Accessor
 {
    public String fieldAccessor(String one, int two)

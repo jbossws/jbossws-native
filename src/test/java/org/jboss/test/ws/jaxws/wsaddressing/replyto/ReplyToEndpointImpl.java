@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
  * @since 24-Nov-2005
  */
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-@WebService(name = "ReplyToEndpoint", targetNamespace = "http://org.jboss.ws/addressing/replyto")
+@WebService(name = "ReplyToEndpoint", serviceName = "ReplyToEndpointService", targetNamespace = "http://org.jboss.ws/addressing/replyto")
 public class ReplyToEndpointImpl implements ReplyToEndpoint
 {
    // provide logging

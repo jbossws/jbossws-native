@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.jbws1357;
 
 import javax.jws.WebService;
 
-@WebService(endpointInterface="org.jboss.test.ws.jaxws.jbws1357.JBWS1357", name="JBWS1357")
+@WebService(name="JBWS1357", serviceName="JBWS1357Service", endpointInterface="org.jboss.test.ws.jaxws.jbws1357.JBWS1357")
 public class JBWS1357Impl implements JBWS1357
 {
    public String echo(String message)

@@ -54,7 +54,7 @@ public class SOAPBindingTestCase extends JBossWSTest
    public void testClientAccess() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-binding?wsdl");
-      QName qname = new QName("http://org.jboss.ws/jaxws/binding", "SOAPEndpointService");
+      QName qname = new QName("http://org.jboss.ws/jaxws/binding", "SOAPEndpointBeanService");
       Service service = Service.create(wsdlURL, qname);
       SOAPEndpoint port = (SOAPEndpoint)service.getPort(SOAPEndpoint.class);
       

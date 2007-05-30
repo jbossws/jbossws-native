@@ -60,7 +60,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       if (trackerPort == null)
       {
          URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-handlerlifecycle/tracker?wsdl");
-         QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerlifecycle", "TrackerEndpointService");
+         QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerlifecycle", "TrackerEndpointBeanService");
          Service service = Service.create(wsdlURL, serviceName);
          trackerPort = (TrackerEndpoint)service.getPort(TrackerEndpoint.class);
       }
@@ -68,7 +68,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       if (port == null)
       {
          URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-handlerlifecycle/soap?wsdl");
-         QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerlifecycle", "SOAPEndpointService");
+         QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerlifecycle", "SOAPEndpointBeanService");
          Service service = Service.create(wsdlURL, serviceName);
          port = (SOAPEndpoint)service.getPort(SOAPEndpoint.class);
       }

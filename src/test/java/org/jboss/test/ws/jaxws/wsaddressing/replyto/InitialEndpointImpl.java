@@ -40,7 +40,7 @@ import org.jboss.ws.annotation.EndpointConfig;
  * @since 24-Nov-2005
  */
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-@WebService(name = "InitialEndpoint", targetNamespace = "http://org.jboss.ws/addressing/replyto")
+@WebService(name = "InitialEndpoint", serviceName = "InitialEndpointService", targetNamespace = "http://org.jboss.ws/addressing/replyto")
 @EndpointConfig(configName = "Standard WSAddressing Endpoint")
 public class InitialEndpointImpl implements InitialEndpoint
 {

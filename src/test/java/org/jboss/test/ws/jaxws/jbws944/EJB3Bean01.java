@@ -31,7 +31,7 @@ import javax.jws.soap.SOAPBinding;
 import org.jboss.annotation.ejb.RemoteBinding;
 import org.jboss.wsf.spi.annotation.WebContext;
 
-@WebService(name = "EJB3Bean", targetNamespace = "http://org.jboss.ws/jbws944")
+@WebService(name = "EJB3Bean", serviceName = "EJB3BeanService", targetNamespace = "http://org.jboss.ws/jbws944")
 @WebContext(contextRoot = "/jaxws-jbws944", urlPattern = "/FooBean01")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @Remote(EJB3RemoteInterface.class)

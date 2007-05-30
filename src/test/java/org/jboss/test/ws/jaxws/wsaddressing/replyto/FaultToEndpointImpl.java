@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
  * @since 24-Nov-2005
  */
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.BARE)
-@WebService(name = "FaultToEndpoint", targetNamespace = "http://org.jboss.ws/addressing/replyto")
+@WebService(name = "FaultToEndpoint", serviceName = "FaultToEndpointService", targetNamespace = "http://org.jboss.ws/addressing/replyto")
 public class FaultToEndpointImpl
 {
    // provide logging

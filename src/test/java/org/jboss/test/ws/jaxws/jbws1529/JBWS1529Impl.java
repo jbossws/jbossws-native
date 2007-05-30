@@ -25,7 +25,7 @@ import javax.jws.WebService;
 
 // An endpoint implementation that does not define a target namespace 
 // does NOT inherit the namespace from the referrenced SEI
-@WebService(endpointInterface="org.jboss.test.ws.jaxws.jbws1529.JBWS1529", name="JBWS1529")
+@WebService(name="JBWS1529", serviceName="JBWS1529Service", endpointInterface="org.jboss.test.ws.jaxws.jbws1529.JBWS1529")
 public class JBWS1529Impl implements JBWS1529
 {
    public String echo(String message) throws UserException
