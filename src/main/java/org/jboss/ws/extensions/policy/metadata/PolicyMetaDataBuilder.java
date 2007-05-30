@@ -61,10 +61,21 @@ public class PolicyMetaDataBuilder
    private static final Logger log = Logger.getLogger(PolicyMetaDataBuilder.class);
    private boolean serverSide = true;
    private boolean toolMode = false;
+   private PolicyDeployer customDeployer;
    
    public PolicyMetaDataBuilder()
    {
       
+   }
+   
+   /**
+    * To be used for tests or whenever a custom deployer is required
+    * 
+    * @param customDeployer
+    */
+   public PolicyMetaDataBuilder(PolicyDeployer customDeployer)
+   {
+      this.customDeployer = customDeployer;
    }
    
    /**
@@ -192,7 +203,7 @@ public class PolicyMetaDataBuilder
    {
       if (policyProp!=null && policyProp.getValue()!=null)
       {
-         StringTokenizer st = new StringTokenizer(policyProp.getValue(), " ", false);
+         StringTokenizer st = new StringTokenizer(policyProp.getValue(), ", ", false);
          while (st.hasMoreTokens())
          {
             PolicyReference policyRef = new PolicyReference(st.nextToken());
@@ -232,7 +243,11 @@ public class PolicyMetaDataBuilder
    private void deployPolicy(Policy policy, PolicyScopeLevel scope, ExtensibleMetaData extMetaData)
    {
       PolicyDeployer deployer;
-      if (toolMode)
+      if (customDeployer != null)
+      {
+         deployer = customDeployer;
+      }
+      else if (toolMode)
       {
          deployer = PolicyDeployer.newInstanceForTools();
       }

@@ -32,6 +32,7 @@ import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
 import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.AssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.WSSecurityAssertionDeployer;
@@ -90,12 +91,13 @@ public class PolicyDeployer
    @SuppressWarnings("unchecked")
    public Policy deployServerside(Policy policy, ExtensibleMetaData extMetaData) throws UnsupportedPolicy
    {
-         
+      if (policy == null) throw new WSException("Cannot deploy null policy!");
+      
       List<Assertion> returnedPolicyTerms = new LinkedList<Assertion>();
       
       if (! policy.isNormalized())
       {
-         policy.normalize();
+         policy = (Policy)policy.normalize();
       }
       
       //in normal form we have just one wsp:ExactlyOne element containg unbounded wsp:All (alternative)
@@ -141,9 +143,11 @@ public class PolicyDeployer
    @SuppressWarnings("unchecked")
    public void deployClientSide(Policy policy, ExtensibleMetaData extMetaData) throws UnsupportedPolicy
    {
+      if (policy == null) throw new WSException("Cannot deploy null policy!");
+      
       if (! policy.isNormalized())
       {
-         policy.normalize();
+         policy = (Policy)policy.normalize();
       }
       //in normal form we have just one wsp:ExactlyOne element containg unbounded wsp:All (alternative)
       XorCompositeAssertion exactlyOne = (XorCompositeAssertion) policy.getTerms().get(0);
