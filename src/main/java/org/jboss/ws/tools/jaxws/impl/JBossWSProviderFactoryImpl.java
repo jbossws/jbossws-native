@@ -21,8 +21,8 @@
  */
 package org.jboss.ws.tools.jaxws.impl;
 
-import org.jboss.wsf.spi.tools.api.WSContractProvider;
-import org.jboss.wsf.spi.tools.spi.WSContractProviderFactory;
+import org.jboss.wsf.spi.tools.WSContractProvider;
+import org.jboss.wsf.spi.tools.WSContractProviderFactory;
 
 /**
  * Creates a JBossWS WSContractProvider implementation.

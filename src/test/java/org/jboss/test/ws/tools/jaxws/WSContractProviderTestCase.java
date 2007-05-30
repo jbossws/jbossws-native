@@ -28,7 +28,7 @@ import java.net.URLClassLoader;
 
 import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.tools.api.WSContractProvider;
+import org.jboss.wsf.spi.tools.WSContractProvider;
 import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**

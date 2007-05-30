@@ -28,7 +28,7 @@ import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_EJB3;
 import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_JSE;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.wsf.spi.tools.api.WSContractProvider;
+import org.jboss.wsf.spi.tools.WSContractProvider;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 

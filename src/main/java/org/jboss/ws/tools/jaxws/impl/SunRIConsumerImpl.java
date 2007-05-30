@@ -22,7 +22,7 @@
 package org.jboss.ws.tools.jaxws.impl;
 
 import com.sun.tools.ws.wscompile.WsimportTool;
-import org.jboss.wsf.spi.tools.api.WSContractConsumer;
+import org.jboss.wsf.spi.tools.WSContractConsumer;
 
 import java.io.File;
 import java.io.PrintStream;
