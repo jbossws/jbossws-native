@@ -27,9 +27,9 @@ import javax.xml.rpc.Call;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.jaxrpc.samples.wsbpel.JbpmBpelTestSetup;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test business process behavior based on web services.
@@ -49,15 +49,8 @@ public class BpelHelloTestCase extends JBossWSTest
 
    protected void setUp() throws Exception
    {
-      if (isTargetJBoss())
-      {
-         InitialContext iniCtx = getInitialContext();
-         helloService = (HelloWorldService)iniCtx.lookup("java:comp/env/service/BpelHello");
-      }
-      else
-      {
-         throw new IllegalStateException("Unsupported target server");
-      }
+      InitialContext iniCtx = getInitialContext();
+      helloService = (HelloWorldService)iniCtx.lookup("java:comp/env/service/BpelHello");
    }
 
    public void testSayHelloProxy() throws Exception

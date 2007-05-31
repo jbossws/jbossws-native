@@ -26,12 +26,12 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.tools.jbws_161.customexceptions.UserException;
 import org.jboss.test.ws.tools.sei.Derived;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSTypeDefinition;
 import org.jboss.ws.tools.schema.SchemaTypeCreator;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 

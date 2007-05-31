@@ -30,9 +30,9 @@ import javax.xml.rpc.ServiceFactory;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Attributes of type xsd:QName incorrectly serialized

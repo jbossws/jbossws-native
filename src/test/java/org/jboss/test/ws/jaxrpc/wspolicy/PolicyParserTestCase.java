@@ -29,7 +29,7 @@ import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyWriter;
-import org.jboss.test.ws.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Test the WS-Policy parser

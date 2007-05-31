@@ -30,11 +30,11 @@ import org.apache.ws.policy.AndCompositeAssertion;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.WSException;
 import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * @author Alessio Soldano, <mailto:alessio.soldano@javalinux.it>

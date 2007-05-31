@@ -32,10 +32,10 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test the Dynamic Invocation Interface (DII) on the Call

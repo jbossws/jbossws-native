@@ -21,10 +21,11 @@
 */
 package org.jboss.test.ws.interop.soapwsdl.baserpclit;
 
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.interop.soapwsdl.BaseDataTypesSupport;
 import org.jboss.test.ws.interop.soapwsdl.BaseDataTypesSEI;
 import org.jboss.test.ws.interop.soapwsdl.BaseDataTypesProxy;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
+
 import junit.framework.Test;
 
 import javax.xml.ws.BindingProvider;

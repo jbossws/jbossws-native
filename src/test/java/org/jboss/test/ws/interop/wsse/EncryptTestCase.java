@@ -22,7 +22,8 @@
 package org.jboss.test.ws.interop.wsse;
 
 import junit.framework.Test;
-import org.jboss.test.ws.JBossWSTestSetup;
+
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>

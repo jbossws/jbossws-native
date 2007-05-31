@@ -24,7 +24,6 @@ package org.jboss.test.ws.tools;
 import java.io.File;
 import java.io.Writer;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.common.jbossxb.complex.ComplexTypes;
 import org.jboss.test.ws.tools.sei.ArrayInterface;
 import org.jboss.test.ws.tools.sei.CustomInterface;
@@ -40,6 +39,7 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.JavaToWSDL;
 import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.IOUtils;
 import org.w3c.dom.Element;

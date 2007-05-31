@@ -31,7 +31,7 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.test.ws.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Element;

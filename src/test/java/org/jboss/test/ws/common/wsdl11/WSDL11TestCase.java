@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
 import org.jboss.ws.Constants;
 import org.jboss.ws.extensions.eventing.EventingConstants;
@@ -46,6 +45,7 @@ import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.IOUtils;
 import org.w3c.dom.Element;
 

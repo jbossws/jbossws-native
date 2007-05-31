@@ -21,19 +21,13 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.oneway;
 
-import java.io.File;
-import java.net.URL;
-
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test JSE test case for onway operations.
@@ -56,22 +50,9 @@ public class OneWayTestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-            port = (OneWayTestService)service.getPort(OneWayTestService.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/oneway/WEB-INF/wsdl/TestService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/oneway/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.ws/samples/oneway", "TestService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (OneWayTestService)service.getPort(OneWayTestService.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-oneway");
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         port = (OneWayTestService)service.getPort(OneWayTestService.class);
       }
    }
 

@@ -54,8 +54,6 @@ import javax.xml.rpc.holders.StringHolder;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.ArrayOfBookHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.ArrayOfQNameHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.ArrayOfbooleanHolder;
@@ -79,6 +77,8 @@ import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumIntegerHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumLongHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumShortHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumStringHolder;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test soap encoded parameters

@@ -31,10 +31,10 @@ import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.ws.tools.WSTools;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Attachment parts with doclit message

@@ -26,7 +26,6 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.jaxrpcmapping.MethodParamPartsMapping;
@@ -37,6 +36,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointMethodMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceInterfaceMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlMessageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlReturnValueMapping;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 

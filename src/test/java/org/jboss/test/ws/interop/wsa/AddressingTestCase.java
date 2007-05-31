@@ -22,10 +22,10 @@
 package org.jboss.test.ws.interop.wsa;
 
 import junit.framework.Test;
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 

@@ -21,23 +21,18 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.handler;
 
-import java.io.File;
-import java.net.URL;
-
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 import javax.xml.rpc.holders.StringHolder;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test bound and unbound headers
@@ -62,22 +57,9 @@ public class HeaderClientTestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-            port = (HeaderTestService)service.getPort(HeaderTestService.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/handler/WEB-INF/wsdl/TestService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/handler/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.ws/samples/handler", "TestService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (HeaderTestService)service.getPort(HeaderTestService.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-handler");
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         port = (HeaderTestService)service.getPort(HeaderTestService.class);
       }
    }
 

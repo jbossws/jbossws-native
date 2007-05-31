@@ -24,11 +24,11 @@ package org.jboss.test.ws.common.wsdl11;
 import java.io.File;
 
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * The WSDL may contain or import XSD schema definitions.

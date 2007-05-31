@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
@@ -34,6 +33,7 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.WSDLToJava;
 import org.jboss.ws.tools.interfaces.WSDLToJavaIntf;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  *  Test case that tests the WSDLTypes

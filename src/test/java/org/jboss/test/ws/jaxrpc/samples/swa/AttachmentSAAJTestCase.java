@@ -47,9 +47,9 @@ import javax.xml.soap.SOAPPart;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.soap.SOAPBodyElementRpc;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test SOAP with Attachements (SwA) through the SAAJ layer.

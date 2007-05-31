@@ -36,10 +36,10 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Element;

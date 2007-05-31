@@ -23,23 +23,19 @@ package org.jboss.test.ws.jaxrpc.samples.mtom;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStreamReader;
-import java.net.URL;
 
 import javax.activation.DataHandler;
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.Stub;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test SOAP with XOP through the JAXRPC dynamic proxy layer.
@@ -64,23 +60,9 @@ public class MTOMTestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/XOPTestService");
-            port = (EmployeeRecords)service.getPort(EmployeeRecords.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/mtom/WEB-INF/wsdl/EmployeeService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/mtom/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.ws/samples/mtom", "EmployeeService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (EmployeeRecords)service.getPort(EmployeeRecords.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-mtom");
-         }
-
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/XOPTestService");
+         port = (EmployeeRecords)service.getPort(EmployeeRecords.class);
       }
    }
 

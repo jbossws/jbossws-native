@@ -25,8 +25,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileReader;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.tools.WSTools;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 

@@ -22,20 +22,17 @@
 package org.jboss.test.ws.jaxrpc.jbws1093;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Deploying a war that also contains normal servlets the web.xml is modified as if they are all endpoints
@@ -60,21 +57,9 @@ public class JBWS1093TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-            port = (TestEndpoint)service.getPort(TestEndpoint.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/jbws1093/WEB-INF/wsdl/TestService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/jbws1093/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.test.ws/jbws1093", "TestService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (TestEndpoint)service.getPort(TestEndpoint.class);
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         port = (TestEndpoint)service.getPort(TestEndpoint.class);
       }
    }
 

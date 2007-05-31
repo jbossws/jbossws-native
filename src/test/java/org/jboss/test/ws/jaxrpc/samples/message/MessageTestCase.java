@@ -22,7 +22,6 @@
 package org.jboss.test.ws.jaxrpc.samples.message;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.net.URL;
 
 import javax.naming.InitialContext;
@@ -31,7 +30,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConnection;
@@ -48,9 +46,8 @@ import javax.xml.transform.dom.DOMSource;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -132,24 +129,10 @@ public class MessageTestCase extends JBossWSTest
 
    private MessageTestService getPort() throws Exception
    {
-      if (isTargetJBoss())
-      {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/MessageService");
-         MessageTestService port = (MessageTestService)service.getPort(MessageTestService.class);
-         return port;
-      }
-      else
-      {
-         ServiceFactoryImpl factory = new ServiceFactoryImpl();
-         URL wsdlURL = new File("resources/jaxrpc/samples/message/WEB-INF/wsdl/MessageService.wsdl").toURL();
-         URL mappingURL = new File("resources/jaxrpc/samples/message/WEB-INF/jaxrpc-mapping.xml").toURL();
-         QName qname = new QName("http://org.jboss.ws/samples/message", "MessageService");
-         Service service = factory.createService(wsdlURL, qname, mappingURL);
-         MessageTestService port = (MessageTestService)service.getPort(MessageTestService.class);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-message");
-         return port;
-      }
+      InitialContext iniCtx = getInitialContext();
+      Service service = (Service)iniCtx.lookup("java:comp/env/service/MessageService");
+      MessageTestService port = (MessageTestService)service.getPort(MessageTestService.class);
+      return port;
    }
 
    private SOAPElement convertToSOAPElement(Element reqElement) throws TransformerException, SOAPException

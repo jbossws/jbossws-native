@@ -21,19 +21,13 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jsr109pojo;
 
-import java.io.File;
-import java.net.URL;
-
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test JSE endpoint for a document style service.
@@ -56,22 +50,9 @@ public class DocJSETestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");
-            port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF/wsdl/TestService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.ws/samples/jsr109pojo", "TestService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-jsr109pojo-doc");
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");
+         port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
       }
    }
 

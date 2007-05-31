@@ -26,8 +26,8 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * The type associated with a message part references a complex schema type and not a schema element that uses the schema type.

@@ -26,10 +26,10 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.jaxrpc.jbws663.holders.ResponseInfoHolder;
 import org.jboss.test.ws.jaxrpc.jbws663.holders.SubscriptionInfoHolder;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Multiple bindings are not supported

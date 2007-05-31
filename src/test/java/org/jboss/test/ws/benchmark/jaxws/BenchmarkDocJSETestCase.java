@@ -21,12 +21,12 @@
  */
 package org.jboss.test.ws.benchmark.jaxws;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.benchmark.jaxws.doclit.BenchmarkService;
 import junit.framework.Test;
 
 import org.jboss.test.ws.benchmark.jaxws.doclit.*;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 import javax.xml.ws.Service;
 import javax.xml.ws.BindingProvider;

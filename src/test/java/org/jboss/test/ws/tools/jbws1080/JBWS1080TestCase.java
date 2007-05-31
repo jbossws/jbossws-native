@@ -23,8 +23,8 @@ package org.jboss.test.ws.tools.jbws1080;
 
 import java.io.IOException;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.tools.WSTools;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * 

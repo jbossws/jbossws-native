@@ -22,8 +22,6 @@
 package org.jboss.test.ws.jaxrpc.samples.exception;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.net.URL;
 import java.rmi.RemoteException;
 
 import javax.naming.InitialContext;
@@ -31,7 +29,6 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
-import javax.xml.rpc.Stub;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Detail;
 import javax.xml.soap.MessageFactory;
@@ -46,9 +43,8 @@ import javax.xml.soap.SOAPPart;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test user exception propagation.
@@ -67,24 +63,10 @@ public class ExceptionTestCase extends JBossWSTest
 
    private ExceptionServiceInterface getPort() throws Exception
    {
-      if (isTargetJBoss())
-      {
-         InitialContext iniCtx = getInitialContext();
-         ExceptionService service = (ExceptionService)iniCtx.lookup("java:comp/env/service/ExceptionService");
-         ExceptionServiceInterface port = service.getPort();
-         return port;
-      }
-      else
-      {
-         ServiceFactoryImpl factory = new ServiceFactoryImpl();
-         URL wsdlURL = new File("resources/jaxrpc/samples/exception/WEB-INF/wsdl/ExceptionService.wsdl").toURL();
-         URL mappingURL = new File("resources/jaxrpc/samples/exception/WEB-INF/jaxrpc-mapping.xml").toURL();
-         QName qname = new QName("http://org.jboss.ws/samples/exception", "ExceptionService");
-         Service service = factory.createService(wsdlURL, qname, mappingURL);
-         ExceptionServiceInterface port = (ExceptionServiceInterface)service.getPort(ExceptionServiceInterface.class);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-exception");
-         return port;
-      }
+      InitialContext iniCtx = getInitialContext();
+      ExceptionService service = (ExceptionService)iniCtx.lookup("java:comp/env/service/ExceptionService");
+      ExceptionServiceInterface port = service.getPort();
+      return port;
    }
 
    /** Test creation of a SOAPFault */

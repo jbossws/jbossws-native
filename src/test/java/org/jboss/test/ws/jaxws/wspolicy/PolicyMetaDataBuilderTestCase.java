@@ -30,7 +30,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.policy.Policy;
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
@@ -43,6 +42,7 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * @author Alessio Soldano, <mailto:alessio.soldano@javalinux.it>

@@ -30,9 +30,9 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 

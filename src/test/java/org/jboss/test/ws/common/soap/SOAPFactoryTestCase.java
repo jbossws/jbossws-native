@@ -26,7 +26,7 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPFactory;
 
-import org.jboss.test.ws.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Test the SOAPFactory

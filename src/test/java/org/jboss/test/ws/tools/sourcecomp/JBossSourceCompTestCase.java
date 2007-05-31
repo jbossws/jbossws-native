@@ -24,8 +24,8 @@ package org.jboss.test.ws.tools.sourcecomp;
 import java.io.File;
 
 import org.jboss.logging.Logger;
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /** Checks the fixture for Java Source Code Comparison
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana

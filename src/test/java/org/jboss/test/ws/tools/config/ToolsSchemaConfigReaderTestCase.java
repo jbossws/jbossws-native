@@ -24,13 +24,13 @@ package org.jboss.test.ws.tools.config;
 import java.io.IOException;
 import java.util.List;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.tools.Configuration;
 import org.jboss.ws.tools.WSTools;
 import org.jboss.ws.tools.Configuration.JavaToWSDLConfig;
 import org.jboss.ws.tools.Configuration.OperationConfig;
 import org.jboss.ws.tools.Configuration.WSDLToJavaConfig;
 import org.jboss.ws.tools.config.ToolsSchemaConfigReader;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  *  TestCase that tests the parsing of the xml configuration file

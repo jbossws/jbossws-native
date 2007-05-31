@@ -26,8 +26,8 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /** Test that we can deploy an already modified web.xml
  *  This also allows for redeployment of an expanded *.war

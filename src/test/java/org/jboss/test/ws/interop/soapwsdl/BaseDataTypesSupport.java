@@ -21,9 +21,9 @@
  */
 package org.jboss.test.ws.interop.soapwsdl;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.interop.ClientScenario;
 import org.jboss.test.ws.interop.InteropConfigFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;

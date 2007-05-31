@@ -23,10 +23,10 @@ package org.jboss.test.ws.tools.assertions;
 
 import java.io.File;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.WSDLToJava;
 import org.jboss.ws.tools.interfaces.WSDLToJavaIntf;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /** Testcase that tests WSDL 2.0 Assertions for the JBossWS Tools project
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana

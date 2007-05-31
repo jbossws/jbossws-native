@@ -30,12 +30,12 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.SecurityDecoder;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.Util;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

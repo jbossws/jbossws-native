@@ -31,12 +31,12 @@ import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.test.ws.jaxrpc.jbws1427.interfaces.RequestService;
 import org.jboss.test.ws.jaxrpc.jbws1427.services.Message;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * [JBWS-1427] - Handling of invalid binding port type ref and doc/lit message parts

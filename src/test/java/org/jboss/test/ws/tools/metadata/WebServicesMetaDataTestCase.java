@@ -27,11 +27,11 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;

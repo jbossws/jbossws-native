@@ -29,11 +29,11 @@ import javax.xml.rpc.Service;
 import javax.xml.rpc.Stub;
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * This test simulates the usage of a jboss-ws-security keystore and truststore use cases
@@ -56,7 +56,7 @@ public class StorePassEncryptTestCase extends JBossWSTest
    {
       if (port == null)
       {
-         if (isTargetJBoss42() || isTargetJBoss40())
+         if (isTargetJBoss42())
          {
             InitialContext iniCtx = getInitialContext();
             Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");

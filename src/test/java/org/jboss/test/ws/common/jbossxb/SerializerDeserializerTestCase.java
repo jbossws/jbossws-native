@@ -34,7 +34,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
@@ -45,6 +44,7 @@ import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
 import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.xb.binding.NamespaceRegistry;
 
 /**

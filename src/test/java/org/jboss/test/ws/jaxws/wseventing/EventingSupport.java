@@ -35,7 +35,6 @@ import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.EndpointReference;
 import javax.xml.ws.addressing.JAXWSAConstants;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
@@ -50,6 +49,7 @@ import org.jboss.ws.extensions.eventing.jaxws.SubscribeResponse;
 import org.jboss.ws.extensions.eventing.jaxws.SubscriptionManagerEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Eventing test case support.

@@ -25,7 +25,7 @@ import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.jboss.test.ws.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**

@@ -23,7 +23,7 @@ package org.jboss.test.ws.tools.sourcecomp;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.jboss.test.ws.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  *  Test case that uses XMLUnit to compare two xml files

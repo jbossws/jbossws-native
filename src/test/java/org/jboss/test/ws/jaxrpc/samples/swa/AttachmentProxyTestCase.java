@@ -31,16 +31,13 @@ import javax.activation.DataHandler;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test SOAP with Attachements (SwA) through the JAXRPC dynamic proxy layer.
@@ -65,22 +62,9 @@ public class AttachmentProxyTestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/AttachmentService");
-            port = (Attachment)service.getPort(Attachment.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/swa/WEB-INF/wsdl/Attachment.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/swa/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.ws/samples/swa", "Attachment");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (Attachment)service.getPort(Attachment.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-swa");
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/AttachmentService");
+         port = (Attachment)service.getPort(Attachment.class);
       }
    }
 

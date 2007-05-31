@@ -30,10 +30,10 @@ import java.net.URL;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Investigate "Is Not A Servlet" error with multiple servlets in the web.xml

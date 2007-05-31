@@ -39,7 +39,6 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
@@ -53,6 +52,7 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * TODO

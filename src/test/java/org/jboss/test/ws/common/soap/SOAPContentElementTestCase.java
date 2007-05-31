@@ -32,10 +32,10 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.Text;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Test the SOAPContentElement

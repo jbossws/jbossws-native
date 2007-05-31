@@ -21,21 +21,13 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.wssecurity;
 
-import java.io.File;
-import java.net.URL;
-
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
-import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test WS-Security with RPC/Literal
@@ -68,29 +60,9 @@ public class SimpleSignTestCase extends JBossWSTest
 
    private Hello getPort() throws Exception
    {
-      if (isTargetJBoss())
-      {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-         Hello port = (Hello)service.getPort(Hello.class);
-         return port;
-      }
-      else
-      {
-         ServiceFactoryImpl factory = new ServiceFactoryImpl();
-         URL wsdlURL = new File("resources/jaxrpc/samples/wssecurity/WEB-INF/wsdl/HelloService.wsdl").toURL();
-         URL mappingURL = new File("resources/jaxrpc/samples/wssecurity/WEB-INF/jaxrpc-mapping.xml").toURL();
-         URL securityURL = new File("resources/jaxrpc/samples/wssecurity/simple-sign/META-INF/jboss-wsse-client.xml").toURL();
-         
-         QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
-         ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, serviceName, mappingURL, securityURL);
-         
-         Hello port = (Hello)service.getPort(Hello.class);
-         
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-wssecurity-sign");
-         ((StubExt)port).setConfigName("Standard WSSecurity Client");
-         
-         return port;
-      }
+      InitialContext iniCtx = getInitialContext();
+      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+      Hello port = (Hello)service.getPort(Hello.class);
+      return port;
    }
 }

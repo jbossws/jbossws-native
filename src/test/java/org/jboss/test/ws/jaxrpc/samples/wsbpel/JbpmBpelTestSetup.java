@@ -26,8 +26,8 @@ import javax.management.ObjectName;
 import junit.framework.Test;
 
 import org.jboss.logging.Logger;
-import org.jboss.test.ws.JBossWSTestHelper;
-import org.jboss.test.ws.JBossWSTestSetup;
+import org.jboss.wsf.spi.test.JBossWSTestHelper;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**

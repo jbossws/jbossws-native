@@ -33,10 +33,10 @@ import javax.xml.rpc.handler.HandlerRegistry;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.jaxrpc.client.ServiceExt;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 import org.jboss.wsf.spi.utils.ObjectNameFactory;
 
 /**

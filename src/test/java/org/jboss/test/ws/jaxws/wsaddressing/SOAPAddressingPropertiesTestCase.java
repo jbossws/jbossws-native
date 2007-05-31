@@ -34,8 +34,8 @@ import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.util.xml.DOMUtils;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Test the SOAPAddressingProperties

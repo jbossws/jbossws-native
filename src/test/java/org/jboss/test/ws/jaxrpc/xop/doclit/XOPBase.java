@@ -28,7 +28,6 @@ import javax.activation.DataHandler;
 import javax.xml.rpc.Stub;
 import javax.xml.transform.Source;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.jaxrpc.xop.XOPTestSupport;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingDataHandler;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingDataHandlerResponse;
@@ -39,6 +38,7 @@ import org.jboss.test.ws.jaxrpc.xop.shared.PingMsgResponse;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingSource;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingSourceResponse;
 import org.jboss.ws.core.StubExt;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.IOUtils;
 
 /**

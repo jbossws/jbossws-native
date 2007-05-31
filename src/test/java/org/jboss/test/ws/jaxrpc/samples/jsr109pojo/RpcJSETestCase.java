@@ -31,9 +31,9 @@ import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test JSE test case for an rpc style service.
@@ -56,7 +56,7 @@ public class RpcJSETestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss42() || isTargetJBoss40())
+         if (isTargetJBoss42())
          {
             InitialContext iniCtx = getInitialContext();
             Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");

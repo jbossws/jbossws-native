@@ -24,10 +24,10 @@ package org.jboss.test.ws.tools.jbws1534;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Test case to test WSDL to Java where the element names in the

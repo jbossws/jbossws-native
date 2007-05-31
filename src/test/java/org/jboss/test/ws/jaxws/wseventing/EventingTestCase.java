@@ -30,7 +30,6 @@ import javax.xml.ws.addressing.AddressingProperties;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTestSetup;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.jaxws.DeliveryType;
@@ -41,6 +40,7 @@ import org.jboss.ws.extensions.eventing.jaxws.RenewResponse;
 import org.jboss.ws.extensions.eventing.jaxws.Subscribe;
 import org.jboss.ws.extensions.eventing.jaxws.SubscribeResponse;
 import org.jboss.ws.extensions.eventing.jaxws.Unsubscribe;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test the eventing endpoints.

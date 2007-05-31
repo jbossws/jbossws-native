@@ -23,9 +23,9 @@ package org.jboss.test.ws.jaxrpc.jbws1068;
 
 import java.io.File;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Cannot handle xsd:import of xml schema

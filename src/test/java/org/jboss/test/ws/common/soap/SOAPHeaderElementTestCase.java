@@ -31,9 +31,9 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 
 /**

@@ -32,8 +32,8 @@ import javax.xml.soap.SOAPFactory;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;

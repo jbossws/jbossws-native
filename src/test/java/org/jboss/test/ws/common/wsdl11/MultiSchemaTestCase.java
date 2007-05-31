@@ -23,11 +23,11 @@ package org.jboss.test.ws.common.wsdl11;
 
 import java.io.File;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * Test the XSModel, and how it handles multiple schemas

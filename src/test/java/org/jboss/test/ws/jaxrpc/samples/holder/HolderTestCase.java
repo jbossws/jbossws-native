@@ -21,16 +21,13 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.holder;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URL;
 import java.util.GregorianCalendar;
 
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 import javax.xml.rpc.holders.BigDecimalHolder;
 import javax.xml.rpc.holders.BigIntegerHolder;
 import javax.xml.rpc.holders.BooleanHolder;
@@ -54,9 +51,8 @@ import javax.xml.rpc.holders.StringHolder;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Test Holders
@@ -79,22 +75,9 @@ public class HolderTestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-            port = (HolderTestService)service.getPort(HolderTestService.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/holder/WEB-INF/wsdl/TestService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/holder/WEB-INF/jaxrpc-mapping.xml").toURL();
-            QName qname = new QName("http://org.jboss.ws/samples/holder", "TestService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (HolderTestService)service.getPort(HolderTestService.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-holder");
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         port = (HolderTestService)service.getPort(HolderTestService.class);
       }
    }
 

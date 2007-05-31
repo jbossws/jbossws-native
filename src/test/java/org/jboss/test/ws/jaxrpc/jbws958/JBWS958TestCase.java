@@ -24,9 +24,9 @@ package org.jboss.test.ws.jaxrpc.jbws958;
 import java.io.File;
 import java.net.URL;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 
 /**
  * XML entity usage in wsdl contained schema

@@ -33,7 +33,6 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMapping;
 
 import org.apache.xerces.xs.XSModel;
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.WSDL11Validator;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
@@ -47,6 +46,7 @@ import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.JavaUtils;
 import org.w3c.dom.Element;

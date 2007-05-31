@@ -29,9 +29,9 @@ import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean;
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean2;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**

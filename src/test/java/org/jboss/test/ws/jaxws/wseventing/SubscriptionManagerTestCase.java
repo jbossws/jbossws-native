@@ -28,7 +28,6 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.JBossWSTest;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
@@ -36,6 +35,7 @@ import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.jboss.ws.extensions.eventing.mgmt.Filter;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionTicket;
+import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Element;
 
