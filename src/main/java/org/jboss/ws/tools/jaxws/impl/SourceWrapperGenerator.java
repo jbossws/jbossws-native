@@ -143,7 +143,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
       JMethod method = clazz.method(JMod.PUBLIC, type, getterPrefix(type) + JavaUtils.capitalize(variable));
       method.body()._return(JExpr._this().ref(variable));
 
-      method = clazz.method(JMod.PUBLIC, type, "set" + JavaUtils.capitalize(variable));
+      method = clazz.method(JMod.PUBLIC, void.class, "set" + JavaUtils.capitalize(variable));
       method.body().assign(JExpr._this().ref(variable), method.param(type, variable));
    }
 

@@ -43,10 +43,10 @@ public class JBossWSTestHelper
 {
    // provide logging
    private static Logger log = Logger.getLogger(JBossWSTestHelper.class);
-   
+
    private static MBeanServerConnection server;
    private static String integrationTarget;
-   
+
    /** Deploy the given archive
     */
    public void deploy(String archive) throws Exception
@@ -97,7 +97,7 @@ public class JBossWSTestHelper
       String target = getIntegrationTarget();
       return "jboss40".equals(target);
    }
-   
+
    /**
     * Get the JBoss server host from system property "jboss.bind.address"
     * This defaults to "localhost"
@@ -108,7 +108,7 @@ public class JBossWSTestHelper
       return hostName;
    }
 
-   public static MBeanServerConnection getServer() 
+   public static MBeanServerConnection getServer()
    {
       if (server == null)
       {
@@ -127,20 +127,7 @@ public class JBossWSTestHelper
 
    private TestDeployer getDeployer()
    {
-      if (isTargetJBoss())
-      {
-         return new TestDeployerJBoss(getServer());
-      }
-      else if (isTargetTomcat())
-      {
-         String username = System.getProperty("tomcat.manager.username");
-         String password = System.getProperty("tomcat.manager.password");
-         return new TestDeployerTomcat(username, password);
-      }
-      else
-      {
-         throw new IllegalStateException("Unsupported integration target: " + getIntegrationTarget());
-      }
+      return new TestDeployerJBoss(getServer());
    }
 
    private static String getIntegrationTarget()
@@ -148,7 +135,7 @@ public class JBossWSTestHelper
       if (integrationTarget == null)
       {
          integrationTarget = System.getProperty("jbossws.integration.target");
-         
+
          // Read the JBoss SpecificationVersion
          try
          {
@@ -160,9 +147,8 @@ public class JBossWSTestHelper
                jbossVersion = "jboss42";
             else if (jbossVersion.startsWith("4.0"))
                jbossVersion = "jboss40";
-            else
-               throw new RuntimeException("Unsupported jboss version: " + jbossVersion);
-            
+            else throw new RuntimeException("Unsupported jboss version: " + jbossVersion);
+
             if (jbossVersion.equals(integrationTarget) == false)
             {
                log.warn("Integration target mismatch, using: " + jbossVersion);

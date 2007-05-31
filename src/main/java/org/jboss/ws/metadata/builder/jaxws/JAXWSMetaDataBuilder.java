@@ -305,7 +305,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
 
       if (faultBeanName == null)
-         faultBeanName = JavaUtils.getPackageName(omd.getEndpointMetaData().getServiceEndpointInterface()) + "." + exception.getSimpleName() + "Bean";
+         faultBeanName = JavaUtils.getPackageName(omd.getEndpointMetaData().getServiceEndpointInterface()) + ".jaxws." + exception.getSimpleName() + "Bean";
 
       QName xmlName = new QName(namespace, name);
 
@@ -364,7 +364,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (requestWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
-         requestWrapperType = packageName + "." + JavaUtils.capitalize(method.getName());
+         requestWrapperType = packageName + ".jaxws." + JavaUtils.capitalize(method.getName());
       }
 
       // JAX-WS p.37 pg.1, the annotation only affects the element name, not the type name
@@ -397,7 +397,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (responseWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
-         responseWrapperType = packageName + "." + JavaUtils.capitalize(method.getName()) + "Response";
+         responseWrapperType = packageName + ".jaxws." + JavaUtils.capitalize(method.getName()) + "Response";
       }
 
       ParameterMetaData retMetaData = new ParameterMetaData(operation, xmlName, xmlType, responseWrapperType);
