@@ -97,12 +97,12 @@ abstract public class EnvEntryHandler extends GenericHandler
    abstract public InitialContext getInitialContext() throws NamingException;
 
    /**
-    * Get the JBoss server host from system property "jbosstest.server.host"
+    * Get the JBoss server host from system property "jboss.bind.address"
     * This defaults to "" + getServerHost() + ""
     */
    public String getServerHost()
    {
-      String hostName = System.getProperty("jbosstest.server.host", "localhost");
+      String hostName = System.getProperty("jboss.bind.address", "localhost");
       return hostName;
    }
 }

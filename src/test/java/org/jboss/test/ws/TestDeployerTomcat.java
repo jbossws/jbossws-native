@@ -111,7 +111,7 @@ public class TestDeployerTomcat implements TestDeployer
 
    private String getManagerPath() throws MalformedURLException
    {
-      String hostName = System.getProperty("jbosstest.server.host", "localhost");
+      String hostName = System.getProperty("jboss.bind.address", "localhost");
       return "http://" + hostName + ":8080/manager";
    }
 
