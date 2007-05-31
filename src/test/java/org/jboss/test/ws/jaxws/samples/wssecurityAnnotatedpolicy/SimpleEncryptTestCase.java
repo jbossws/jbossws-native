@@ -66,7 +66,7 @@ public class SimpleEncryptTestCase extends JBossWSTest
 
    private Hello getPort() throws Exception
    {
-      URL wsdlURL = new File("WSProvideTask/resources/jaxws/samples/wssecurityAnnotatedpolicy/HelloService.wsdl").toURL();
+      URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy/HelloService.wsdl").toURL();
       QName serviceName = new QName("http://org.jboss.ws/samples/wssecurityAnnotatedpolicy", "HelloService");
 
 

@@ -1,12 +1,10 @@
 package org.jboss.ws.extensions.eventing.mgmt;
 
 import java.net.URI;
-import java.util.Properties;
 
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerInvocationHandler;
 import javax.management.ObjectName;
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -62,11 +60,8 @@ public class DispatcherDelegate implements EventDispatcher, Referenceable
          try
          {
             ObjectName objectName = SubscriptionManager.OBJECT_NAME;
-            subscriptionManager = (SubscriptionManagerMBean)
-                MBeanServerInvocationHandler.newProxyInstance(
-                    getServer(), objectName,
-                    SubscriptionManagerMBean.class, false
-                );
+            subscriptionManager = (SubscriptionManagerMBean)MBeanServerInvocationHandler.newProxyInstance(getServer(), objectName, SubscriptionManagerMBean.class,
+                  false);
          }
          catch (Exception e)
          {
@@ -80,18 +75,9 @@ public class DispatcherDelegate implements EventDispatcher, Referenceable
    private MBeanServerConnection getServer() throws NamingException
    {
       // todo: bypass rmi adapter when used locally
-      InitialContext iniCtx = getInitialContext();
+      InitialContext iniCtx = new InitialContext();
       MBeanServerConnection server = (MBeanServerConnection)iniCtx.lookup("jmx/invoker/RMIAdaptor");
       return server;
-   }
-
-   private InitialContext getInitialContext() throws NamingException
-   {
-      Properties env = new Properties();
-      env.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
-      env.setProperty(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
-      env.setProperty(Context.PROVIDER_URL, "jnp://"+hostname+":1099");
-      return new InitialContext(env);
    }
 
    void setHostname(String hostname)

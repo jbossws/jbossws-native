@@ -316,6 +316,8 @@ public class SOAPFaultHelperJAXWS
          SerializerSupport ser = serFactory.getSerializer();
          Result result = ser.serialize(xmlName, xmlType, faultObject, serContext, null);
          XMLFragment xmlFragment = new XMLFragment(result);
+         String xmlStr = xmlFragment.toXMLString();
+         log.debug("Fault detail: " + xmlStr);
 
          Element domElement = xmlFragment.toElement();
          SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();

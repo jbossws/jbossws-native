@@ -66,6 +66,8 @@ import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
+import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
+import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.metadata.acessor.JAXBAccessor;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -93,9 +95,6 @@ import org.jboss.xb.binding.UnmarshallerFactory;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.TypeReference;
-
-import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
-import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 
 /**
  * Abstract class that represents a JAX-WS metadata builder.
@@ -264,53 +263,48 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       return handlerChainsMetaData;
    }
 
-   private void addFault(OperationMetaData omd, Class<?> exception)
+   private void addFault(OperationMetaData opMetaData, Class<?> exception)
    {
-      if (omd.isOneWay())
+      if (opMetaData.isOneWay())
          throw new IllegalStateException("JSR-181 4.3.1 - A JSR-181 processor is REQUIRED to report an error if an operation marked "
                + "@Oneway has a return value, declares any checked exceptions or has any INOUT or OUT parameters.");
 
-      WebFault annotation = exception.getAnnotation(WebFault.class);
-
-      String name;
-      String namespace;
-      String faultBeanName = null;
+      WebFault anWebFault = exception.getAnnotation(WebFault.class);
 
       // Only the element name is effected by @WebFault, the type uses the same convention
-      QName xmlType = new QName(omd.getQName().getNamespaceURI(), exception.getSimpleName());
+      QName xmlType = new QName(opMetaData.getQName().getNamespaceURI(), exception.getSimpleName());
+
+      String name = xmlType.getLocalPart();
+      String namespace = xmlType.getNamespaceURI();
+
+      String faultBean = null;
+      Class faultBeanClass = getFaultInfo(exception);
+      if (faultBeanClass != null)
+         faultBean = faultBeanClass.getName();
 
       /*
        * If @WebFault is present, and the exception contains getFaultInfo, the
        * return value should be used. Otherwise we need to generate the bean.
        */
-      boolean generate = true;
-      if (annotation != null)
+      if (anWebFault != null)
       {
-         name = annotation.name();
-         namespace = annotation.targetNamespace();
-         if (namespace.length() == 0)
-            namespace = omd.getQName().getNamespaceURI();
+         if (anWebFault.name().length() > 0)
+            name = anWebFault.name();
 
-         Class<?> faultBean = getFaultInfo(exception);
-         if (faultBean != null)
-         {
-            generate = false;
-            faultBeanName = faultBean.getName();
-         }
-      }
-      else
-      {
-         name = xmlType.getLocalPart();
-         namespace = xmlType.getNamespaceURI();
+         if (anWebFault.targetNamespace().length() > 0)
+            namespace = anWebFault.targetNamespace();
+
+         if (anWebFault.faultBean().length() > 0)
+            faultBean = anWebFault.faultBean();
       }
 
-      if (faultBeanName == null)
-         faultBeanName = JavaUtils.getPackageName(omd.getEndpointMetaData().getServiceEndpointInterface()) + ".jaxws." + exception.getSimpleName() + "Bean";
+      if (faultBean == null)
+         faultBean = JavaUtils.getPackageName(opMetaData.getEndpointMetaData().getServiceEndpointInterface()) + ".jaxws." + exception.getSimpleName() + "Bean";
 
       QName xmlName = new QName(namespace, name);
 
-      FaultMetaData fmd = new FaultMetaData(omd, xmlName, xmlType, exception.getName());
-      fmd.setFaultBeanName(faultBeanName);
+      FaultMetaData fmd = new FaultMetaData(opMetaData, xmlName, xmlType, exception.getName());
+      fmd.setFaultBeanName(faultBean);
 
       if (fmd.loadFaultBean() == null)
          wrapperGenerator.generate(fmd);
@@ -318,7 +312,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       javaTypes.add(fmd.getFaultBean());
       typeRefs.add(new TypeReference(fmd.getXmlName(), fmd.getFaultBean()));
 
-      omd.addFault(fmd);
+      opMetaData.addFault(fmd);
    }
 
    private String convertToVariable(String localName)
@@ -407,12 +401,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       return retMetaData;
    }
 
-   private Class<?> getFaultInfo(Class<?> exception)
+   private Class getFaultInfo(Class exception)
    {
       try
       {
          Method method = exception.getMethod("getFaultInfo");
-         Class<?> returnType = method.getReturnType();
+         Class returnType = method.getReturnType();
          if (returnType == void.class)
             return null;
 
@@ -590,7 +584,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Build parameter meta data
       // Attachment annotations on SEI parameters
       List<AttachmentScanResult> scanResult = ReflectiveAttachmentRefScanner.scanMethod(method);
-      
+
       Class[] parameterTypes = method.getParameterTypes();
       Type[] genericTypes = method.getGenericParameterTypes();
       Annotation[][] parameterAnnotations = method.getParameterAnnotations();
@@ -715,8 +709,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
             // insert at the beginning just for prettiness
             wrappedOutputParameters.add(0, wrapped);
-            
-			processAttachmentAnnotationsWrapped(scanResult, -1, wrapped);
+
+            processAttachmentAnnotationsWrapped(scanResult, -1, wrapped);
          }
          else
          {
@@ -796,12 +790,11 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    private void processAttachmentAnnotationsWrapped(List<AttachmentScanResult> scanResult, int i, WrappedParameter wrappedParameter)
    {
       AttachmentScanResult asr = ReflectiveAttachmentRefScanner.getResultByIndex(scanResult, i);
-      if(asr!=null)
+      if (asr != null)
       {
-         if(AttachmentScanResult.Type.SWA_REF == asr.getType())
+         if (AttachmentScanResult.Type.SWA_REF == asr.getType())
             wrappedParameter.setSwaRef(true);
-         else
-            wrappedParameter.setXOP(true);
+         else wrappedParameter.setXOP(true);
       }
    }
 
@@ -814,12 +807,11 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    private void processAttachmentAnnotations(List<AttachmentScanResult> scanResult, int i, ParameterMetaData parameter)
    {
       AttachmentScanResult asr = ReflectiveAttachmentRefScanner.getResultByIndex(scanResult, i);
-      if(asr!=null)
+      if (asr != null)
       {
-         if(AttachmentScanResult.Type.SWA_REF == asr.getType())
+         if (AttachmentScanResult.Type.SWA_REF == asr.getType())
             parameter.setSwaRef(true);
-         else
-            parameter.setXOP(true);
+         else parameter.setXOP(true);
       }
    }
 

@@ -26,8 +26,10 @@ package org.jboss.ws.extensions.eventing.mgmt;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.bind.JAXBElement;
@@ -61,7 +62,6 @@ import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.jboss.ws.extensions.eventing.jaxws.ReferenceParametersType;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.DOMWriter;
-import org.jboss.wsf.spi.utils.ObjectNameFactory;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -94,56 +94,60 @@ import org.xml.sax.SAXParseException;
  */
 public class SubscriptionManager implements SubscriptionManagerMBean, EventDispatcher
 {
-
    private static final Logger log = Logger.getLogger(SubscriptionManager.class);
 
-   /**
-    * Maps event source namespaces to event source instances.
-    */
+   // Maps event source namespaces to event source instances.
    private ConcurrentMap<URI, EventSource> eventSourceMapping = new ConcurrentHashMap<URI, EventSource>();
-
-   /**
-    * Maps subscriptions to event sources
-    */
+   // Maps subscriptions to event sources
    private ConcurrentMap<URI, List<Subscription>> subscriptionMapping = new ConcurrentHashMap<URI, List<Subscription>>();
-
-   /**
-    * Buffers notifications. FIFO ordering.
-    */
+   // Buffers notifications. FIFO ordering.
    private BlockingQueue<Runnable> eventQueue = new LinkedBlockingQueue<Runnable>();
-
-   /**
-    * Event dispatcher thread pool.
-    */
+   // Event dispatcher thread pool.
    private ThreadPoolExecutor threadPool;
-
-   private boolean isDispatcherBound = false;
-
-   /**
-    * subscription watchdog that maintains expirations
-    */
+   // True force validation of every notification message against its schema
+   private boolean validateNotifications = false;
+   // subscription watchdog that maintains expirations
    private WatchDog watchDog;
+   // True if dispatcher is bound to JNDI
+   private boolean isDispatcherBound = false;
+   // List containing all errors occured during notification since service startup
+   // TODO: save this list and made possible to resend failed notification using jms instead of list
+   private List<NotificationFailure> notificationFailures = new ArrayList<NotificationFailure>();
+   // The host that the dispatcher is bound to
+   private String bindAddress;
 
    private static EventingBuilder builder = EventingBuilder.createEventingBuilder();
 
+   public String getBindAddress()
+   {
+      if (bindAddress == null)
+      {
+         try
+         {
+            InetAddress localHost = InetAddress.getLocalHost();
+            log.debug("BindAddress not set, using host: " + localHost.getHostName());
+            bindAddress = localHost.getHostName();
+         }
+         catch (UnknownHostException e)
+         {
+            log.debug("BindAddress not set, using: 'localhost'");
+            bindAddress = "localhost";
+         }
+      }
+      return bindAddress;
+   }
 
-   /**
-    * List containing all errors occured during notification since service startup
-    * todo: save this list and made possible to resend failed notification using jms instead of list
-    */
-   private List<NotificationFailure> notificationFailures = new ArrayList<NotificationFailure>();
-
-   /**
-    * True force validation of every notification message against its schema
-    */
-   private boolean validateNotifications = false;
+   public void setBindAddress(String bindAddress)
+   {
+      this.bindAddress = bindAddress;
+   }
 
    public void create() throws Exception
    {
       MBeanServer server = getJMXServer();
       if (server != null)
       {
-         if(log.isDebugEnabled()) log.debug("Create subscription manager");
+         log.debug("Create subscription manager");
          server.registerMBean(this, OBJECT_NAME);
       }
    }
@@ -153,19 +157,19 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       MBeanServer server = getJMXServer();
       if (server != null)
       {
-         if(log.isDebugEnabled()) log.debug("Destroy subscription manager");
+         log.debug("Destroy subscription manager");
          server.unregisterMBean(OBJECT_NAME);
       }
    }
 
    public void start() throws Exception
    {
-      if(log.isDebugEnabled()) log.debug("Start subscription manager");
+      log.debug("Start subscription manager");
 
       // setup thread pool
       threadPool = new ThreadPoolExecutor(5, 15, // core/max num threads
-         5000, TimeUnit.MILLISECONDS, // 5 seconds keepalive
-         eventQueue);
+            5000, TimeUnit.MILLISECONDS, // 5 seconds keepalive
+            eventQueue);
 
       // start the subscription watchdog
       watchDog = new WatchDog(subscriptionMapping);
@@ -174,7 +178,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
    public void stop()
    {
-      if(log.isDebugEnabled()) log.debug("Stop subscription manager");
+      log.debug("Stop subscription manager");
       try
       {
          // remove event dispatcher
@@ -224,7 +228,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
          updateManagerAddress(deploymentInfo, eventSource);
 
          eventSource.setState(EventSource.State.CREATED);
-         if(log.isDebugEnabled()) log.debug("Created: " + eventSource);
+         log.debug("Created: " + eventSource);
       }
       else
       {
@@ -233,18 +237,18 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
          subscriptionMapping.put(eventSource.getNameSpace(), new CopyOnWriteArrayList<Subscription>());
 
          eventSource.setState(EventSource.State.STARTED);
-         if(log.isDebugEnabled()) log.debug("Started: " + eventSource);
+         log.debug("Started: " + eventSource);
       }
    }
 
    private void lazyBindEventDispatcher()
    {
-      if(!isDispatcherBound)
+      if (!isDispatcherBound)
       {
          try
          {
             // bind dispatcher to JNDI
-            Util.rebind(new InitialContext(), EventingConstants.DISPATCHER_JNDI_NAME, new DispatcherDelegate("localhost"));
+            Util.rebind(new InitialContext(), EventingConstants.DISPATCHER_JNDI_NAME, new DispatcherDelegate(getBindAddress()));
             log.info("Bound event dispatcher to java:/" + EventingConstants.DISPATCHER_JNDI_NAME);
             isDispatcherBound = true;
          }
@@ -264,10 +268,10 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    private static void updateManagerAddress(EventingEndpointDeployment deploymentInfo, EventSource eventSource)
    {
       String addr = null;
-      if(deploymentInfo.getPortName().getLocalPart().equals("SubscriptionManagerPort"))
+      if (deploymentInfo.getPortName().getLocalPart().equals("SubscriptionManagerPort"))
          addr = deploymentInfo.getEndpointAddress();
 
-      if(addr!=null)
+      if (addr != null)
          eventSource.setManagerAddress(addr);
    }
 
@@ -283,17 +287,17 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
          subscriptions.clear();
          eventSourceMapping.remove(eventSourceNS);
-         if(log.isDebugEnabled()) log.debug("Event source " + eventSourceNS + " removed");
+         log.debug("Event source " + eventSourceNS + " removed");
       }
    }
 
    /**
     * Subscribe to an event source.
     */
-   public SubscriptionTicket subscribe(URI eventSourceNS, EndpointReferenceType notifyTo, EndpointReferenceType endTo, Date expires, Filter filter) throws SubscriptionError
+   public SubscriptionTicket subscribe(URI eventSourceNS, EndpointReferenceType notifyTo, EndpointReferenceType endTo, Date expires, Filter filter)
+         throws SubscriptionError
    {
-
-      if(log.isDebugEnabled()) log.debug("Subscription request for " + eventSourceNS);
+      log.debug("Subscription request for " + eventSourceNS);
 
       EventSource eventSource = eventSourceMapping.get(eventSourceNS);
       if (null == eventSource)
@@ -337,17 +341,15 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       attrURI.setValue(eventSource.getManagerAddress().toString());
       epr.setAddress(attrURI);
       ReferenceParametersType refParam = new ReferenceParametersType();
-      JAXBElement idqn = new JAXBElement(
-         new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "Identifier"),
-         String.class, generateSubscriptionID().toString()
-      );
+      JAXBElement idqn = new JAXBElement(new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "Identifier"), String.class, generateSubscriptionID().toString());
       refParam.getAny().add(idqn);
       epr.setReferenceParameters(refParam);
 
       Subscription subscription = new Subscription(eventSource.getNameSpace(), epr, notifyTo, endTo, expires, filter);
 
       subscriptionMapping.get(eventSourceNS).add(subscription);
-      if(log.isDebugEnabled()) log.debug("Registered subscription " + subscription.getIdentifier());
+
+      log.debug("Registered subscription " + subscription.getIdentifier());
 
       return new SubscriptionTicket(epr, subscription.getExpires());
    }
@@ -412,7 +414,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
             if (identifier.equals(s.getIdentifier()))
             {
                subscriptions.remove(s);
-               if(log.isDebugEnabled()) log.debug("Removed subscription " + s);
+               log.debug("Removed subscription " + s);
                break;
             }
          }
@@ -484,7 +486,8 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    public void dispatch(URI eventSourceNS, Element payload)
    {
       DispatchJob dispatchJob = new DispatchJob(eventSourceNS, payload, subscriptionMapping);
-      if (validateNotifications && !this.validateMessage(DOMWriter.printNode(payload,false),eventSourceNS)) {
+      if (validateNotifications && !this.validateMessage(DOMWriter.printNode(payload, false), eventSourceNS))
+      {
          throw new DispatchException("Notification message validation failed!");
       }
       threadPool.execute(dispatchJob);
@@ -500,18 +503,20 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       return notificationFailures;
    }
 
-   private boolean validateMessage(String msg, URI eventSourceNS) {
+   private boolean validateMessage(String msg, URI eventSourceNS)
+   {
       try
       {
          EventSource es = eventSourceMapping.get(eventSourceNS);
-         log.info(new StringBuffer("Validating message: \n\n").append(msg)
-            .append("\n\nagainst the following schema(s): \n").toString());
-         for (int i=0;i<es.getNotificationSchema().length;i++) {
+         log.info(new StringBuffer("Validating message: \n\n").append(msg).append("\n\nagainst the following schema(s): \n").toString());
+         for (int i = 0; i < es.getNotificationSchema().length; i++)
+         {
             log.info(es.getNotificationSchema()[i]);
          }
          Element rootElement = DOMUtils.parse(msg);
-         if (!es.getNotificationRootElementNS().equalsIgnoreCase(rootElement.getNamespaceURI())) {
-            log.error("Root element expected namespace: "+es.getNotificationRootElementNS());
+         if (!es.getNotificationRootElementNS().equalsIgnoreCase(rootElement.getNamespaceURI()))
+         {
+            log.error("Root element expected namespace: " + es.getNotificationRootElementNS());
             return false;
          }
          DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -521,8 +526,9 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
          String[] notificationSchemas = es.getNotificationSchema();
          InputSource[] is = new InputSource[notificationSchemas.length];
-         for (int i=0; i<notificationSchemas.length; i++) {
-            is[i] = new InputSource(new StringReader(notificationSchemas[notificationSchemas.length-1-i]));
+         for (int i = 0; i < notificationSchemas.length; i++)
+         {
+            is[i] = new InputSource(new StringReader(notificationSchemas[notificationSchemas.length - 1 - i]));
             //is[i] = new InputSource(new StringReader(notificationSchemas[i]));
          }
 
@@ -534,7 +540,8 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
          log.info("Document validated!");
          return true;
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          log.error(e);
          log.info("Cannot validate and/or parse the document!");
          return false;
@@ -585,11 +592,13 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       threadPool.setKeepAliveTime(millies, TimeUnit.MILLISECONDS);
    }
 
-   public boolean isValidateNotifications() {
+   public boolean isValidateNotifications()
+   {
       return this.validateNotifications;
    }
 
-   public void setValidateNotifications(boolean validateNotifications) {
+   public void setValidateNotifications(boolean validateNotifications)
+   {
       this.validateNotifications = validateNotifications;
    }
 
@@ -660,14 +669,21 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
 
    }
 
-   private class Validator extends DefaultErrorHandler {
-      public void error(SAXParseException exception) throws SAXException {
+   private class Validator extends DefaultErrorHandler
+   {
+      public void error(SAXParseException exception) throws SAXException
+      {
          throw new SAXException(exception);
       }
-      public void fatalError(SAXParseException exception) throws SAXException {
+
+      public void fatalError(SAXParseException exception) throws SAXException
+      {
          throw new SAXException(exception);
       }
-      public void warning(SAXParseException exception) throws SAXException { }
+
+      public void warning(SAXParseException exception) throws SAXException
+      {
+      }
    }
 
 }

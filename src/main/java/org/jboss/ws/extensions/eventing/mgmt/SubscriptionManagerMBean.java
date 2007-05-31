@@ -44,38 +44,32 @@ public interface SubscriptionManagerMBean
 
    static final String BEAN_NAME = "WSSubscriptionManager";
 
+   String getBindAddress();
+
+   void setBindAddress(String bindAddress);
+   
    /**
     * Returns the core number of threads.
-    *
-    * @return long
     */
    int getCorePoolSize();
 
    /**
     * Returns the maximum allowed number of threads.
-    *
-    * @return int
     */
    int getMaximumPoolSize();
 
    /**
     * Returns the largest number of threads that have ever simultaneously been in the pool.
-    *
-    * @return int
     */
    int getLargestPoolSize();
 
    /**
     * Returns the approximate number of threads that are actively executing tasks.
-    *
-    * @return int
     */
    int getActiveCount();
 
    /**
     * Returns the approximate total number of tasks that have completed execution.
-    *
-    * @return long
     */
    long getCompletedTaskCount();
 
