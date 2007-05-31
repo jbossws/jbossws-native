@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @since 16-Oct-2005
  */
 
-@WebService(endpointInterface = "org.jboss.test.ws.tools.jaxws.DocWrapped", name="DocWrapped")
+@WebService(name="DocWrapped", serviceName="DocWrappedService", endpointInterface = "org.jboss.test.ws.tools.jaxws.DocWrapped")
 public class DocWrappedServiceImpl implements DocWrapped
 {
    // Provide logging
