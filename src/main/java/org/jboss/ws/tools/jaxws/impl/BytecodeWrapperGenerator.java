@@ -71,7 +71,14 @@ public class BytecodeWrapperGenerator extends DynamicWrapperGenerator implements
 
    public void write(File directory) throws IOException
    {
-      stream.println("Writing Classes:");
+
+		if(typeNames.isEmpty())
+		{
+			System.out.println("No Classes to generate...");
+			return;
+		}
+
+		stream.println("Writing Classes:");
       for (String name : typeNames)
       {
          try
