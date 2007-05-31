@@ -168,7 +168,7 @@
     <copy todir="${tests.output.dir}/resources/jaxrpc/samples" overwrite="true">
       <fileset dir="${tests.resources.dir}/jaxrpc/samples-override"/>
       <filterset>
-        <filter token="jbosstest.host.name" value="${node0}"/>
+        <filter token="jboss.bind.address" value="${node0}"/>
       </filterset>
     </copy>
   </target>
