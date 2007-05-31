@@ -305,7 +305,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
 
       if (faultBeanName == null)
-         faultBeanName = JavaUtils.getPackageName(omd.getEndpointMetaData().getServiceEndpointInterface()) + ".jaxws." + exception.getSimpleName() + "Bean";
+         faultBeanName = JavaUtils.getPackageName(omd.getEndpointMetaData().getServiceEndpointInterface()) + "." + exception.getSimpleName() + "Bean";
 
       QName xmlName = new QName(namespace, name);
 
