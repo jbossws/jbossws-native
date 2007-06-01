@@ -105,4 +105,47 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
             ("uselessPortTypePolicy".equalsIgnoreCase(id4) && "uselessPortTypePolicy2".equalsIgnoreCase(id3)));
    }
    
+   
+   public void testAnnotationEndpointScopePolicies() throws Exception
+   {
+      Map<String,Class> map = new HashMap<String,Class>();
+      map.put("http://www.fabrikam123.example.com/stock", NopAssertionDeployer.class);
+      PolicyDeployer deployer = PolicyDeployer.newInstance(map);
+      PolicyMetaDataBuilder builder = new PolicyMetaDataBuilder(deployer);
+      builder.setToolMode(true);
+      
+      EndpointMetaData epMetaData = new ServerEndpointMetaData(null, new QName("dummyPortName"),
+            new QName("dummyPortTypeName"), Type.JAXWS);
+      builder.processPolicyAnnotations(epMetaData, TestMultipleEndpointPolicy.class, null);
+      
+      PolicyMetaExtension policyExt = (PolicyMetaExtension)epMetaData.getExtension(Constants.URI_WS_POLICY);
+      
+      Collection<Policy> portPolicies = policyExt.getPolicies(PolicyScopeLevel.WSDL_PORT);
+      assertNotNull(portPolicies);
+      assertEquals(2, portPolicies.size());
+      Iterator<Policy> portPoliciesIterator = portPolicies.iterator();
+      String id1 = portPoliciesIterator.next().getId();
+      String id2 = portPoliciesIterator.next().getId();
+      assertTrue(("uselessPortPolicy".equalsIgnoreCase(id1) && "uselessPortPolicy2".equalsIgnoreCase(id2)) ||
+            ("uselessPortPolicy".equalsIgnoreCase(id2) && "uselessPortPolicy2".equalsIgnoreCase(id1)));
+      
+      Collection<Policy> portTypePolicies = policyExt.getPolicies(PolicyScopeLevel.WSDL_PORT_TYPE);
+      assertNotNull(portTypePolicies);
+      assertEquals(2, portTypePolicies.size());
+      Iterator<Policy> portTypePoliciesIterator = portTypePolicies.iterator();
+      String id3 = portTypePoliciesIterator.next().getId();
+      String id4 = portTypePoliciesIterator.next().getId();
+      assertTrue(("uselessPortTypePolicy".equalsIgnoreCase(id3) && "uselessPortTypePolicy2".equalsIgnoreCase(id4)) ||
+            ("uselessPortTypePolicy".equalsIgnoreCase(id4) && "uselessPortTypePolicy2".equalsIgnoreCase(id3)));
+      
+      Collection<Policy> bindingPolicies = policyExt.getPolicies(PolicyScopeLevel.WSDL_BINDING);
+      assertNotNull(bindingPolicies);
+      assertEquals(2, bindingPolicies.size());
+      Iterator<Policy> bindingPoliciesIterator = bindingPolicies.iterator();
+      String id5 = bindingPoliciesIterator.next().getId();
+      String id6 = bindingPoliciesIterator.next().getId();
+      assertTrue(("uselessBindingPolicy".equalsIgnoreCase(id5) && "uselessBindingPolicy2".equalsIgnoreCase(id6)) ||
+            ("uselessBindingPolicy".equalsIgnoreCase(id6) && "uselessBindingPolicy2".equalsIgnoreCase(id5)));
+   }
+   
 }

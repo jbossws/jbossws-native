@@ -281,10 +281,7 @@ public class PolicyMetaDataBuilder
       }
       catch (UnsupportedPolicy e)
       {
-         if (log.isDebugEnabled()) 
-         {
-            log.debug("Policy Not supported:" + policy.getPolicyURI());
-         }
+         log.warn("Policy Not supported:" + policy.getPolicyURI());
       }
    }
    
