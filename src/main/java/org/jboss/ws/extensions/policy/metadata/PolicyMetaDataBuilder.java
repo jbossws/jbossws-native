@@ -33,11 +33,11 @@ import org.apache.ws.policy.util.PolicyRegistry;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
@@ -47,6 +47,7 @@ import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 
 /**
  * A meta data builder for policies; handles checks for policy support
@@ -62,12 +63,12 @@ public class PolicyMetaDataBuilder
    private boolean serverSide = true;
    private boolean toolMode = false;
    private PolicyDeployer customDeployer;
-   
+
    public PolicyMetaDataBuilder()
    {
-      
+
    }
-   
+
    /**
     * To be used for tests or whenever a custom deployer is required
     * 
@@ -77,77 +78,85 @@ public class PolicyMetaDataBuilder
    {
       this.customDeployer = customDeployer;
    }
-   
+
    /**
     * Creates a new PolicyMetaDataBuilder for server side policy processing.
     * 
     * @param toolMode   True if running WSProvideTask (no policy deployments)
     * @return
     */
-   public static PolicyMetaDataBuilder getServerSidePolicyMetaDataBuilder(boolean toolMode) {
+   public static PolicyMetaDataBuilder getServerSidePolicyMetaDataBuilder(boolean toolMode)
+   {
       PolicyMetaDataBuilder builder = new PolicyMetaDataBuilder();
       builder.setServerSide(true);
       builder.setToolMode(toolMode);
       return builder;
    }
-   
+
    /**
     * Creates a new PolicyMetaDataBuilder for client side policy processing.
     * 
     * @return
     */
-   public static PolicyMetaDataBuilder getClientSidePolicyMetaDataBuilder() {
+   public static PolicyMetaDataBuilder getClientSidePolicyMetaDataBuilder()
+   {
       PolicyMetaDataBuilder builder = new PolicyMetaDataBuilder();
       builder.setServerSide(false);
       return builder;
    }
-   
+
    public void processPolicyAnnotations(EndpointMetaData epMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi)
    {
-      for (org.jboss.ws.extensions.policy.annotation.Policy policy : sepClass.getAnnotation(PolicyAttachment.class).value())
+      UnifiedVirtualFile vfRoot = epMetaData.getServiceMetaData().getUnifiedMetaData().getRootFile();
+      for (org.jboss.ws.extensions.policy.annotation.Policy anPolicy : sepClass.getAnnotation(PolicyAttachment.class).value())
       {
          InputStream is = null;
          try
          {
-            DOMPolicyReader reader = (DOMPolicyReader) PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
-            if (toolMode)
-            {
-               is = Thread.currentThread().getContextClassLoader().getResourceAsStream(policy.policyFileLocation());
-            } else
-            {
-               is = udi.getMetaDataFileURL(policy.policyFileLocation()).openStream();
-            }
+            String policyFileLocation = anPolicy.policyFileLocation();
+            if (policyFileLocation.length() == 0)
+               throw new IllegalStateException("Cannot obtain @Policy.policyFileLocation");
+            
+            // The root virtual file is the uniform way to obtain resources
+            // It should work in all containers, server/client side
+            UnifiedVirtualFile vfPolicyFile = vfRoot.findChild(policyFileLocation);
+            is = vfPolicyFile.toURL().openStream();
+            
+            DOMPolicyReader reader = (DOMPolicyReader)PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
             Policy unnormalizedPolicy = reader.readPolicy(is);
             Policy normPolicy = (Policy)unnormalizedPolicy.normalize();
-            log.info("Deploying Annotated Policy = "+policy.policyFileLocation());
-            PolicyScopeLevel scope = policy.scope();
-            if (PolicyScopeLevel.WSDL_PORT.equals(scope) || PolicyScopeLevel.WSDL_PORT_TYPE.equals(scope) ||
-                  PolicyScopeLevel.WSDL_BINDING.equals(scope))
+            log.info("Deploying Annotated Policy = " + policyFileLocation);
+            PolicyScopeLevel scope = anPolicy.scope();
+            if (PolicyScopeLevel.WSDL_PORT.equals(scope) || PolicyScopeLevel.WSDL_PORT_TYPE.equals(scope) || PolicyScopeLevel.WSDL_BINDING.equals(scope))
             {
                deployPolicy(normPolicy, scope, epMetaData);
             }
             else
             {
-               throw new WSException("Policy scope "+scope+" not supported yet!");
+               throw new WSException("Policy scope " + scope + " not supported yet!");
             }
          }
          catch (Exception e)
          {
-            e.printStackTrace();
-         } finally
+            log.error(e);
+         }
+         finally
          {
-            try 
+            try
             {
                is.close();
-            } catch (Exception e) {}
+            }
+            catch (Exception e)
+            {
+            }
          }
       }
    }
-   
+
    public void processPolicyExtensions(EndpointMetaData epMetaData, WSDLDefinitions wsdlDefinitions)
    {
       //Collect all policies defined in our wsdl definitions
-      DOMPolicyReader reader = (DOMPolicyReader) PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
+      DOMPolicyReader reader = (DOMPolicyReader)PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       PolicyRegistry localPolicyRegistry = new PolicyRegistry();
       for (WSDLExtensibilityElement policyElement : wsdlDefinitions.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY))
       {
@@ -166,14 +175,17 @@ public class PolicyMetaDataBuilder
          }
          else
          {
-            log.warn("Cannot get port '"+epMetaData.getPortName()+"' from the given wsdl definitions! Eventual policies attached to this port won't be considered.");
+            log
+                  .warn("Cannot get port '" + epMetaData.getPortName()
+                        + "' from the given wsdl definitions! Eventual policies attached to this port won't be considered.");
          }
       }
       else
       {
-         log.warn("Cannot get service '"+epMetaData.getServiceMetaData().getServiceName()+"' from the given wsdl definitions!  Eventual policies attached to this service won't be considered.");
+         log.warn("Cannot get service '" + epMetaData.getServiceMetaData().getServiceName()
+               + "' from the given wsdl definitions!  Eventual policies attached to this service won't be considered.");
       }
-      
+
       //Binding scope
       WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(epMetaData.getPortTypeName());
       if (wsdlBinding != null)
@@ -183,9 +195,10 @@ public class PolicyMetaDataBuilder
       }
       else
       {
-         log.warn("Cannot get binding for portType '"+epMetaData.getPortTypeName()+"' from the given wsdl definitions!  Eventual policies attached to this binding won't be considered.");
+         log.warn("Cannot get binding for portType '" + epMetaData.getPortTypeName()
+               + "' from the given wsdl definitions!  Eventual policies attached to this binding won't be considered.");
       }
-      
+
       //PortType scope
       WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(epMetaData.getPortTypeName());
       if (wsdlInterface != null)
@@ -195,13 +208,14 @@ public class PolicyMetaDataBuilder
       }
       else
       {
-         log.warn("Cannot get portType '"+epMetaData.getPortTypeName()+"' from the given wsdl definitions! Eventual policies attached to this portType won't be considered.");
+         log.warn("Cannot get portType '" + epMetaData.getPortTypeName()
+               + "' from the given wsdl definitions! Eventual policies attached to this portType won't be considered.");
       }
    }
-   
+
    private void processPolicies(WSDLProperty policyProp, PolicyScopeLevel scope, PolicyRegistry localPolicies, ExtensibleMetaData extMetaData)
    {
-      if (policyProp!=null && policyProp.getValue()!=null)
+      if (policyProp != null && policyProp.getValue() != null)
       {
          StringTokenizer st = new StringTokenizer(policyProp.getValue(), ", ", false);
          while (st.hasMoreTokens())
@@ -211,12 +225,12 @@ public class PolicyMetaDataBuilder
          }
       }
    }
-   
+
    private void processPolicies(List<WSDLExtensibilityElement> policyReferences, PolicyScopeLevel scope, PolicyRegistry localPolicies, ExtensibleMetaData extMetaData)
    {
       if (policyReferences != null && policyReferences.size() != 0)
       {
-         DOMPolicyReader reader = (DOMPolicyReader) PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER); 
+         DOMPolicyReader reader = (DOMPolicyReader)PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
          for (WSDLExtensibilityElement element : policyReferences)
          {
             PolicyReference policyRef = reader.readPolicyReference(element.getElement());
@@ -224,7 +238,7 @@ public class PolicyMetaDataBuilder
          }
       }
    }
-   
+
    private Policy resolvePolicyReference(PolicyReference policyRef, PolicyRegistry localPolicies)
    {
       Policy normPolicy;
@@ -239,7 +253,7 @@ public class PolicyMetaDataBuilder
       }
       return normPolicy;
    }
-   
+
    private void deployPolicy(Policy policy, PolicyScopeLevel scope, ExtensibleMetaData extMetaData)
    {
       PolicyDeployer deployer;
@@ -264,8 +278,7 @@ public class PolicyMetaDataBuilder
          deployPolicyClientSide(policy, scope, extMetaData, deployer);
       }
    }
-   
-   
+
    private void deployPolicyServerSide(Policy policy, PolicyScopeLevel scope, ExtensibleMetaData extMetaData, PolicyDeployer deployer)
    {
       PolicyMetaExtension ext = (PolicyMetaExtension)extMetaData.getExtension(Constants.URI_WS_POLICY);
@@ -277,15 +290,14 @@ public class PolicyMetaDataBuilder
       try
       {
          Policy deployedPolicy = deployer.deployServerside(policy, extMetaData);
-         ext.addPolicy(scope,deployedPolicy);
+         ext.addPolicy(scope, deployedPolicy);
       }
       catch (UnsupportedPolicy e)
       {
          log.warn("Policy Not supported:" + policy.getPolicyURI());
       }
    }
-   
-   
+
    private void deployPolicyClientSide(Policy policy, PolicyScopeLevel scope, ExtensibleMetaData extMetaData, PolicyDeployer deployer)
    {
       PolicyMetaExtension ext = (PolicyMetaExtension)extMetaData.getExtension(Constants.URI_WS_POLICY);
@@ -301,7 +313,7 @@ public class PolicyMetaDataBuilder
       }
       catch (UnsupportedPolicy e)
       {
-         if (log.isDebugEnabled()) 
+         if (log.isDebugEnabled())
          {
             log.debug("Policy Not supported:" + policy.getPolicyURI());
          }
