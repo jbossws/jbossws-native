@@ -54,22 +54,13 @@ import org.jboss.wsf.spi.test.JBossWSTest;
  */
 public class PolicyMetaDataBuilderTestCase extends JBossWSTest
 {
-
-   private WSDLDefinitions readWsdl(String filename) throws Exception
-   {
-      File wsdlFile = new File(filename);
-      assertTrue(wsdlFile.exists());
-      WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
-      assertNotNull(wsdlDefinitions);
-      return wsdlDefinitions;
-   }
-
    public void testEndpointScopePolicies() throws Exception
    {
-      WSDLDefinitions wsdlDefinitions = readWsdl("resources/jaxws/wspolicy/TestService.wsdl");
+      UnifiedVirtualFile vfRoot = new URLLoaderAdapter(new File("resources/jaxws/wspolicy").toURL());
+      UnifiedMetaData umd = new UnifiedMetaData(vfRoot);
+      
       QName serviceName = new QName("http://org.jboss.ws/jaxws/endpoint", "TestService");
-      ServiceMetaData serviceMetaData = new ServiceMetaData(null, serviceName);
+      ServiceMetaData serviceMetaData = new ServiceMetaData(umd, serviceName);
       QName portName = new QName("http://org.jboss.ws/jaxws/endpoint", "EndpointInterfacePort");
       QName portTypeName = new QName("http://org.jboss.ws/jaxws/endpoint", "EndpointInterface");
       EndpointMetaData epMetaData = new ServerEndpointMetaData(serviceMetaData, portName, portTypeName, Type.JAXWS);
@@ -81,6 +72,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       PolicyDeployer deployer = PolicyDeployer.newInstance(map);
       PolicyMetaDataBuilder builder = new PolicyMetaDataBuilder(deployer);
 
+      WSDLDefinitions wsdlDefinitions = readWsdl("resources/jaxws/wspolicy/TestService.wsdl");
       builder.processPolicyExtensions(epMetaData, wsdlDefinitions);
 
       PolicyMetaExtension policyExt = (PolicyMetaExtension)epMetaData.getExtension(Constants.URI_WS_POLICY);
@@ -155,4 +147,13 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
             || ("uselessBindingPolicy".equalsIgnoreCase(id6) && "uselessBindingPolicy2".equalsIgnoreCase(id5)));
    }
 
+   private WSDLDefinitions readWsdl(String filename) throws Exception
+   {
+      File wsdlFile = new File(filename);
+      assertTrue(wsdlFile.exists());
+      WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      assertNotNull(wsdlDefinitions);
+      return wsdlDefinitions;
+   }
 }
