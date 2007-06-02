@@ -21,6 +21,9 @@
 */
 package org.jboss.ws.core.soap;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Text;
 
@@ -55,6 +58,15 @@ public class TextImpl extends NodeImpl implements javax.xml.soap.Text
       setNodeValue(value);
    }
 
+   public void writeNode(Writer out) throws IOException
+   {
+      String nodeValue = getNodeValue();
+      if (isComment() && !nodeValue.startsWith("<!--"))
+         out.write("<!--" + nodeValue + "-->");
+      else
+         out.write(nodeValue);
+   }
+   
    /**
     * Breaks this node into two nodes at the specified <code>offset</code>, keeping both in the tree as siblings.
     * <p/>
@@ -322,5 +334,4 @@ public class TextImpl extends NodeImpl implements javax.xml.soap.Text
    {
       return null;
    }
-
 }

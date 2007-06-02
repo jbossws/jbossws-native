@@ -21,15 +21,16 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1647;
 
-import java.io.ByteArrayOutputStream;
-
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.GenericHandler;
 import javax.xml.rpc.handler.MessageContext;
 import javax.xml.rpc.handler.soap.SOAPMessageContext;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.utils.DOMWriter;
 
 /**
  * 
@@ -38,49 +39,39 @@ import org.jboss.logging.Logger;
  */
 public abstract class AbstractHandler extends GenericHandler
 {
-
    private static final Logger log = Logger.getLogger(AbstractHandler.class);
 
-   public abstract String getExpectedMessage();
+   public abstract String getMessageBody();
 
    public boolean handleRequest(MessageContext msgContext)
    {
       log.info("handleRequest");
-      
-      boolean valid = false;
 
       SOAPMessageContext messageContext = (SOAPMessageContext)msgContext;
-
       SOAPMessage soapMessage = messageContext.getMessage();
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-      String receivedMessage = "";
       try
       {
-         soapMessage.writeTo(baos);
-         receivedMessage = baos.toString();
+         SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
+         String wasEnv = DOMWriter.printNode(soapEnv, false);
+         String wasBody = wasEnv.substring(wasEnv.indexOf("<env:Body>"));
+         wasBody = wasBody.substring(0, wasBody.indexOf("</env:Envelope>"));
+         if (wasBody.equals(getMessageBody()) == false)
+         {
+            log.error("Exp Body: " + getMessageBody());
+            log.error("Was Body: " + wasBody);
+            throw new RuntimeException("Received message does not contain expected soap body.");
+         }
       }
       catch (Exception e)
       {
          throw new RuntimeException("Unable to process SOAPMessage", e);
       }
-
-      valid = getExpectedMessage().equals(receivedMessage);
-      if (valid == false)
-      {
-         log.error("Received message does not equal expected message.");
-         log.info("EXP - " + getExpectedMessage());
-         log.info("ACT - " + receivedMessage);
-
-         throw new RuntimeException("Received message does not equal expected message.");
-      }
-
-      return valid;
+      return true;
    }
 
    public QName[] getHeaders()
    {
       return null;
    }
-
 }

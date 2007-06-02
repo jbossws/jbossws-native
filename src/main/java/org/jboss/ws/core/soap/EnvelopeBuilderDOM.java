@@ -144,16 +144,8 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             }
             else
             {
-               log.warn("Ignore envelope chile element: " + elName);
+               log.warn("Ignore envelope child: " + elName);
             }
-         }
-         else if (childType == Node.COMMENT_NODE)
-         {
-            appendCommentNode(soapEnv, child);
-         }
-         else if (childType == Node.TEXT_NODE)
-         {
-            appendTextNode(soapEnv, child);
          }
          else
          {
@@ -188,14 +180,6 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
             DOMUtils.copyAttributes(destElement, srcElement);
             destElement.setXMLFragment(xmlFragment);
-         }
-         else if (childType == Node.COMMENT_NODE)
-         {
-            appendCommentNode(soapHeader, child);
-         }
-         else if (childType == Node.TEXT_NODE)
-         {
-            appendTextNode(soapHeader, child);
          }
          else
          {

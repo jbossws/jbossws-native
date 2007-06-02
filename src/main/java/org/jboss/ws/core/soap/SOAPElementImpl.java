@@ -465,9 +465,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
          }
          else if (node instanceof Text)
          {
-            String value = node.getNodeValue();
-            if (value.trim().length() > 0)
-               list.add(node);
+            list.add(node);
          }
       }
       return list.iterator();
@@ -835,7 +833,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
             }
             else if (node instanceof TextImpl)
             {
-               out.write(node.getValue());
+               ((TextImpl)node).writeNode(out);
             }
             else
             {

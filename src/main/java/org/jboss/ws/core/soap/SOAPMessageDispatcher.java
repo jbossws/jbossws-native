@@ -68,7 +68,7 @@ public class SOAPMessageDispatcher
             if (wsaAction.equals(opAux.getSOAPAction()))
             {
                opMetaData = opAux;
-               if(log.isDebugEnabled()) log.debug("Use wsa:Action dispatch: " + wsaAction);
+               log.debug("Use wsa:Action dispatch: " + wsaAction);
                break;
             }
          }
@@ -86,8 +86,18 @@ public class SOAPMessageDispatcher
       {
          SOAPBody soapBody = soapMessage.getSOAPBody();
 
+         SOAPBodyElement soapBodyElement = null;
          Iterator bodyChildren = soapBody.getChildElements();
-         if (bodyChildren.hasNext() == false)
+         while (bodyChildren.hasNext() && soapBodyElement == null)
+         {
+            Object childNode = bodyChildren.next();
+            if (childNode instanceof SOAPBodyElement)
+            {
+               soapBodyElement = (SOAPBodyElement)childNode;
+            }
+         }
+
+         if (soapBodyElement == null)
          {
             if (epMetaData.getStyle() == Style.RPC)
                throw new SOAPException("Empty SOAP body with no child element not supported for RPC");
@@ -97,7 +107,7 @@ public class SOAPMessageDispatcher
             {
                if (opAux.getParameters().size() == 0)
                {
-                  if(log.isDebugEnabled()) log.debug ("Dispatching empty SOAP body");
+                  log.debug ("Dispatching empty SOAP body");
                   opMetaData = opAux;
                   break;
                }
@@ -105,7 +115,6 @@ public class SOAPMessageDispatcher
          }
          else
          {
-            SOAPBodyElement soapBodyElement = (SOAPBodyElement)bodyChildren.next();
             Name soapName = soapBodyElement.getElementName();
             QName xmlElementName = new QName(soapName.getURI(), soapName.getLocalName());
             opMetaData = epMetaData.getOperation(xmlElementName);
@@ -119,14 +128,14 @@ public class SOAPMessageDispatcher
          {
             if (opAux.isMessageEndpoint())
             {
-               if(log.isDebugEnabled()) log.debug("Use generic message style dispatch");
+               log.debug("Use generic message style dispatch");
                opMetaData = opAux;
                break;
             }
          }
       }
 
-      if(log.isDebugEnabled()) log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
+      log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
       return opMetaData;
    }
 }

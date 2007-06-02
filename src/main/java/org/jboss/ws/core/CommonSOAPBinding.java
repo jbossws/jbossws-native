@@ -288,14 +288,25 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (opMetaData.isMessageEndpoint() == false)
          {
             Style style = opMetaData.getStyle();
-            SOAPElement soapBodyElement = soapBody;
+            SOAPElement payloadParent = soapBody;
             if (style == Style.RPC)
             {
-               soapBodyElement = (SOAPBodyElement)soapBody.getChildElements().next();
-               Name elName = soapBodyElement.getElementName();
-
-               QName elQName = new QName(elName.getURI(), elName.getLocalName(), elName.getPrefix());
-               elQName = namespaceRegistry.registerQName(elQName);
+               payloadParent = null;
+               Iterator it = soapBody.getChildElements();
+               while (payloadParent == null && it.hasNext())
+               {
+                  Object childNode = it.next();
+                  if (childNode instanceof SOAPElement)
+                  {
+                     payloadParent = (SOAPElement)childNode;
+                  }
+               }
+               
+               if (payloadParent == null)
+                  throw new SOAPException("Cannot find RPC element in");
+               
+               QName elName = payloadParent.getElementQName();
+               elName = namespaceRegistry.registerQName(elName);
             }
 
             int numParameters = 0;
@@ -324,7 +335,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   else
                   {
                      boolean isHeader = paramMetaData.isInHeader();
-                     SOAPElement element = isHeader ? soapHeader : soapBodyElement;
+                     SOAPElement element = isHeader ? soapHeader : payloadParent;
                      if (!isHeader)
                         numParameters++;
 
@@ -336,7 +347,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
             // Verify the numer of parameters matches the actual message payload
             int numChildElements = 0;
-            Iterator itElements = soapBodyElement.getChildElements();
+            Iterator itElements = payloadParent.getChildElements();
             while (itElements.hasNext())
             {
                Node node = (Node)itElements.next();
@@ -804,43 +815,46 @@ public abstract class CommonSOAPBinding implements CommonBinding
       Iterator childElements = soapElement.getChildElements();
       while (childElements.hasNext())
       {
-         SOAPElementImpl childElement = (SOAPElementImpl)childElements.next();
-
-         // If this message was manipulated by a handler the child may not be a content element
-         if (!(childElement instanceof SOAPContentElement))
-            childElement = (SOAPContentElement)soapElement.replaceChild(new SOAPContentElement(childElement), childElement);
-
-         // The parameters are expected to be lazy
-         SOAPContentElement aux = (SOAPContentElement)childElement;
-         Name elName = aux.getElementName();
-
-         if (xmlName.equals(elName))
+         Object childNode = childElements.next();
+         if (childNode instanceof SOAPElement)
          {
-            soapContentElement = aux;
-            soapContentElement.setParamMetaData(paramMetaData);
-            break;
-         }
+            SOAPElementImpl childElement = (SOAPElementImpl)childNode;
+            // If this message was manipulated by a handler the child may not be a content element
+            if (!(childElement instanceof SOAPContentElement))
+               childElement = (SOAPContentElement)soapElement.replaceChild(new SOAPContentElement(childElement), childElement);
 
-         if (SOAP_ARRAY_NAME.equals(elName))
-         {
-            CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-            msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-            try
+            // The parameters are expected to be lazy
+            SOAPContentElement aux = (SOAPContentElement)childElement;
+            Name elName = aux.getElementName();
+
+            if (xmlName.equals(elName))
             {
-               QName compXMLName = paramMetaData.getXmlName();
-               Element compElement = DOMUtils.getFirstChildElement(aux);
-               // NPE when the soap encoded array size is 0 on the return path
-               // http://jira.jboss.org/jira/browse/JBWS-1285
-               if (compElement == null || compElement.getNodeName().equals(compXMLName.getLocalPart()))
-               {
-                  soapContentElement = aux;
-                  soapContentElement.setParamMetaData(paramMetaData);
-                  break;
-               }
+               soapContentElement = aux;
+               soapContentElement.setParamMetaData(paramMetaData);
+               break;
             }
-            finally
+
+            if (SOAP_ARRAY_NAME.equals(elName))
             {
-               msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+               CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+               msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
+               try
+               {
+                  QName compXMLName = paramMetaData.getXmlName();
+                  Element compElement = DOMUtils.getFirstChildElement(aux);
+                  // NPE when the soap encoded array size is 0 on the return path
+                  // http://jira.jboss.org/jira/browse/JBWS-1285
+                  if (compElement == null || compElement.getNodeName().equals(compXMLName.getLocalPart()))
+                  {
+                     soapContentElement = aux;
+                     soapContentElement.setParamMetaData(paramMetaData);
+                     break;
+                  }
+               }
+               finally
+               {
+                  msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+               }
             }
          }
       }

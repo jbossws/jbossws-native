@@ -33,7 +33,7 @@ import junit.framework.Test;
  * @author darran.lofthouse@jboss.com
  * @since 15 May 2007
  */
-public class JBWS1647DocumentTestCase extends TestCaseBase
+public class JBWS1647DocumentTestCase extends JBWS1647TestBase
 {
 
    public static Test suite() throws Exception
@@ -43,10 +43,10 @@ public class JBWS1647DocumentTestCase extends TestCaseBase
 
    public String getMessage()
    {
-      return DocumentHandler.MESSAGE;
+      return "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + DocumentHandler.MESSAGE_BODY + "</env:Envelope>";
    }
 
-   public String getToUrl()
+   public String getEndpointAddress()
    {
       return "http://" + getServerHost() + ":8080/jaxrpc-jbws1647-doclit/TestEndpoint";
    }

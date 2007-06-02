@@ -29,26 +29,20 @@ package org.jboss.test.ws.jaxrpc.jbws1647;
 public class DocumentHandler extends AbstractHandler
 {
 
-   public static final String MESSAGE = 
-      "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:typ='http://org.jboss.test.ws/jbws1647/types'>" +
-      "  <!-- Comment Before Header -->" +
-      "  <soapenv:Header></soapenv:Header>" +
-      "    <!-- Comment After Header, Before Body -->" +
-      "    <soapenv:Body>" +
-      "      <!-- Comment After Body -->" +
-      "      <typ:echoMessage xmlns:typ='http://org.jboss.test.ws/jbws1647/types'>" +
-      "        <!-- Comment After Wrapper -->" +
-      "        <String_1>My Message</String_1>" +
-      "        <!-- Comment After Parameter -->" +
-      "      </typ:echoMessage>" +
-      "      <!-- Comment Before Close Body -->" +
-      "    </soapenv:Body>" +
-      "  <!-- Comment Before Close Envelope -->" +
-      "</soapenv:Envelope>";
+   public static final String MESSAGE_BODY = 
+      "<env:Body>" +
+      "  <!-- Comment After Body -->" +
+      "  <typ:echoMessage xmlns:typ='http://org.jboss.test.ws/jbws1647/types'>" +
+      "    <!-- Comment After Wrapper -->" +
+      "    <String_1>My Message</String_1>" +
+      "    <!-- Comment After Parameter -->" +
+      "  </typ:echoMessage>" +
+      "  <!-- Comment Before Close Body -->" +
+      "</env:Body>";
       
-   public String getExpectedMessage()
+   public String getMessageBody()
    {
-      return MESSAGE;
+      return MESSAGE_BODY;
    }
 
 }

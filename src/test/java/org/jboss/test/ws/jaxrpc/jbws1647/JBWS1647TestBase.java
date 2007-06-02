@@ -36,11 +36,11 @@ import org.jboss.wsf.spi.test.JBossWSTest;
  * @author darran.lofthouse@jboss.com
  * @since 15 May 2007
  */
-public abstract class TestCaseBase extends JBossWSTest
+public abstract class JBWS1647TestBase extends JBossWSTest
 {
    public abstract String getMessage();
 
-   public abstract String getToUrl();
+   public abstract String getEndpointAddress();
 
    public void testCall() throws Exception
    {
@@ -49,7 +49,7 @@ public abstract class TestCaseBase extends JBossWSTest
 
       SOAPConnectionFactory conFactory = SOAPConnectionFactory.newInstance();
       SOAPConnection con = conFactory.createConnection();
-      SOAPMessage resMessage = con.call(soapMessage, getToUrl());
+      SOAPMessage resMessage = con.call(soapMessage, getEndpointAddress());
 
       SOAPElement soapElement = (SOAPElement)resMessage.getSOAPBody().getChildElements().next();
       assertEquals("echoMessageResponse", soapElement.getElementName().getLocalName());

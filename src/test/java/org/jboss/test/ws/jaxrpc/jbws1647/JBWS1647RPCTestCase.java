@@ -21,9 +21,9 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1647;
 
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-
 import junit.framework.Test;
+
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * Text Node Preservation For Messages Sent Across The Wire
@@ -33,7 +33,7 @@ import junit.framework.Test;
  * @author darran.lofthouse@jboss.com
  * @since 14 May 2007
  */
-public class JBWS1647RPCTestCase extends TestCaseBase
+public class JBWS1647RPCTestCase extends JBWS1647TestBase
 {
 
    public static Test suite() throws Exception
@@ -43,10 +43,10 @@ public class JBWS1647RPCTestCase extends TestCaseBase
 
    public String getMessage()
    {
-      return RpcHandler.MESSAGE;
+      return "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + RpcHandler.MESSAGE_BODY + "</env:Envelope>";
    }
 
-   public String getToUrl()
+   public String getEndpointAddress()
    {
       return "http://" + getServerHost() + ":8080/jaxrpc-jbws1647-rpclit/TestEndpoint";
    }
