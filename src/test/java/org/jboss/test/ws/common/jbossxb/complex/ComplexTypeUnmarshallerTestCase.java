@@ -1,24 +1,24 @@
 /*
-  * JBoss, Home of Professional Open Source
-  * Copyright 2005, JBoss Inc., and individual contributors as indicated
-  * by the @authors tag. See the copyright.txt in the distribution for a
-  * full listing of individual contributors.
-  *
-  * This is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU Lesser General Public License as
-  * published by the Free Software Foundation; either version 2.1 of
-  * the License, or (at your option) any later version.
-  *
-  * This software is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  * Lesser General Public License for more details.
-  *
-  * You should have received a copy of the GNU Lesser General Public
-  * License along with this software; if not, write to the Free
-  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-  */
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.test.ws.common.jbossxb.complex;
 
 import java.io.ByteArrayInputStream;
@@ -50,16 +50,15 @@ public class ComplexTypeUnmarshallerTestCase extends WSToolsTest
    /** Get the URL to the defining schema */
    protected XSModel getSchemaModel(QName xmlType, Class javaType) throws Exception
    {
-      File xsdFile = new File("../src/test/resources/common/jbossxb/ComplexTypesService_RPC.xsd");
+      File xsdFile = new File("resources/common/jbossxb/ComplexTypesService_RPC.xsd");
       assertTrue(xsdFile.exists());
 
       return new JavaToXSD().parseSchema(xsdFile.toURL());
    }
 
-
    public void testBaseType() throws Exception
    {
-      String xmlStr = "" + "<ns1:Base_1 xmlns:ns1='" + TARGET_NAMESPACE + "'>" + " <a>100</a>" + " <b>200</b>" + "</ns1:Base_1>";
+      String xmlStr = "<ns1:Base_1 xmlns:ns1='" + TARGET_NAMESPACE + "'><a>100</a><b>200</b></ns1:Base_1>";
 
       QName xmlName = new QName(TARGET_NAMESPACE, "Base_1");
       QName xmlType = new QName(TARGET_NAMESPACE, "Base");
@@ -83,8 +82,7 @@ public class ComplexTypeUnmarshallerTestCase extends WSToolsTest
 
    public void testDerivedType() throws Exception
    {
-      String xmlStr = "<ns1:Derived_1 xmlns:ns1='" + TARGET_NAMESPACE + "'>" + " <a>100</a>" + " <b>200</b>" + " <x>300</x>"
-            + "</ns1:Derived_1>";
+      String xmlStr = "<ns1:Derived_1 xmlns:ns1='" + TARGET_NAMESPACE + "'><a>100</a><b>200</b><x>300</x></ns1:Derived_1>";
 
       Derived exp = new Derived();
       exp.a = 100;
@@ -111,18 +109,18 @@ public class ComplexTypeUnmarshallerTestCase extends WSToolsTest
    public void testCompositeType() throws Exception
    {
       String xmlStr = 
-         "<ns1:CompositeType_1 xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
-         " <composite>" +
-         "  <composite xsi:nil='1'/>" +
-         "  <dateTime xsi:nil='1'/>" +
-         "  <integer>200</integer>" +
-         "  <qname xsi:nil='1'/>" +
-         "  <string>Hello Sub World!</string>" +
-         " </composite>" +
-         " <dateTime xsi:nil='1'/>" +
-         " <integer>100</integer>" +
-         " <qname xsi:nil='1'/>" +
-         " <string>Hello World!</string>" +
+         "<ns1:CompositeType_1 xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
+         " <composite>" + 
+         "  <composite xsi:nil='1'/>" + 
+         "  <dateTime xsi:nil='1'/>" + 
+         "  <integer>200</integer>" + 
+         "  <qname xsi:nil='1'/>" + 
+         "  <string>Hello Sub World!</string>" + 
+         " </composite>" + 
+         " <dateTime xsi:nil='1'/>" + 
+         " <integer>100</integer>" + 
+         " <qname xsi:nil='1'/>" + 
+         " <string>Hello World!</string>" + 
          "</ns1:CompositeType_1>";
 
       QName xmlName = new QName(TARGET_NAMESPACE, "CompositeType_1", "ns1");
