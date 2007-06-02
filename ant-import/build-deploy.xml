@@ -33,4 +33,14 @@
     <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
   </target>
   
+  <!-- Deploy jbossws to jboss40 -->
+  <target name="deploy-jboss40" depends="prepare" description="Deploy jbossws">
+    <ant antfile="${int.native.dir}/build.xml" target="deploy-jboss40" inheritall="false"/>
+  </target>
+  
+  <!-- Undeploy jbossws to jboss40 -->
+  <target name="undeploy-jboss40" depends="prepare" description="Undeploy jbossws">
+    <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss40" inheritall="false"/>
+  </target>
+  
 </project>

@@ -52,7 +52,7 @@
       </metainf>
     </jar>
     
-     <!-- jaxrpc-benchmark -->
+    <!-- jaxrpc-benchmark -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-benchmark-rpclit.war" webxml="${tests.output.dir}/resources/benchmark/jaxrpc/rpclit/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/benchmark/jaxrpc/**"/>
@@ -1257,7 +1257,7 @@
         <include name="org/jboss/test/ws/jaxrpc/jbws434/TestServiceEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws434/TestServiceEndpointImpl.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws434/ArrayOfAny*.class"/>
-         <include name="org/jboss/test/ws/jaxrpc/jbws434/TypeOfAny*.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws434/TypeOfAny*.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws434/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
@@ -2004,7 +2004,7 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-     
+    
     <!-- jaxrpc-jbws1011 -->
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1011.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -2031,7 +2031,7 @@
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
         <include name="jaxrpc-mapping.xml"/>
-        <include name="wsdl/**"/>         
+        <include name="wsdl/**"/>
       </metainf>
     </jar>
     
@@ -2039,15 +2039,15 @@
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1093.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1093/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1093/ServletTest.class"/>
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1093/TestEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1093/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1093/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1093/TestEndpointImpl.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1093/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
-    </war>  	
+      </webinf>
+    </war>
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1093-client.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jbws1093/TestEndpoint.class"/>
@@ -2065,15 +2065,15 @@
     <!-- jaxrpc-jbws1107 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1107.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1107/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1107/TestEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1107/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1107/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1107/TestEndpointImpl.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1107/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
-    </war>  	
+      </webinf>
+    </war>
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1107-client.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1107/TestEndpoint.class"/>
@@ -2087,7 +2087,7 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-        
+    
     <!-- jaxrpc-jbws1121 -->
     <war destfile="${tests.output.dir}/libs/jaxrpc-jbws1121.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1121/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -2121,10 +2121,9 @@
       <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws1121">
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
-      </metainf>      
+      </metainf>
     </jar>
-    <ear destfile="${tests.output.dir}/libs/jaxrpc-jbws1121.ear"
-         appxml="${tests.output.dir}/resources/jaxrpc/jbws1121/META-INF/application.xml">
+    <ear destfile="${tests.output.dir}/libs/jaxrpc-jbws1121.ear" appxml="${tests.output.dir}/resources/jaxrpc/jbws1121/META-INF/application.xml">
       <fileset dir="${tests.output.dir}/libs">
         <include name="jaxrpc-jbws1121-client.jar"/>
         <include name="jaxrpc-jbws1121.war"/>
@@ -2147,8 +2146,8 @@
     </copy>
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1124one.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpointImpl.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF">
         <include name="webservices.xml"/>
@@ -2156,8 +2155,8 @@
         <include name="test-resource.txt"/>
         <include name="jboss-web.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
-    </war>  	
+      </webinf>
+    </war>
     <!-- jaxrpc-jbws1124two -->
     <copy todir="${tests.output.dir}/resources" overwrite="true">
       <fileset dir="${tests.resources.dir}">
@@ -2171,8 +2170,8 @@
     </copy>
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1124two.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpointImpl.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF">
         <include name="webservices.xml"/>
@@ -2180,9 +2179,9 @@
         <include name="test-resource.txt"/>
         <include name="jboss-web.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
-    </war>  	
-        
+      </webinf>
+    </war>
+    
     <!-- jaxrpc-jbws1125 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1125.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1125/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -2195,7 +2194,7 @@
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
+      </webinf>
     </war>
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1125-client.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -2224,7 +2223,7 @@
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
+      </webinf>
     </war>
     <jar jarfile="${tests.output.dir}/libs/jaxrpc-jbws1148-client.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -2238,7 +2237,7 @@
       <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws1148/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
-    </jar>    
+    </jar>
     
     <!-- jbossws-jbws1179 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1179.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1179/WEB-INF/web.xml">
@@ -2250,7 +2249,7 @@
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
+      </webinf>
     </war>
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1179-client.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -2278,15 +2277,15 @@
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
+      </webinf>
     </war>
-
+    
     <!-- jaxrpc-jbws1190 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1190.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1190/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1190/TestEndpointImpl.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1190/TestEndpoint.class"/>
-      <include name="org/jboss/test/ws/jaxrpc/jbws1190/TestEndpointImpl$1.class"/>        
+        <include name="org/jboss/test/ws/jaxrpc/jbws1190/TestEndpointImpl$1.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1190/ConfidentialEndpointImpl.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1190/ConfidentialEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1190/JBWS1190Exception.class"/>
@@ -2296,7 +2295,7 @@
         <include name="test-mapping.xml"/>
         <include name="confidential-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
+      </webinf>
     </war>
     <jar jarfile="${tests.output.dir}/libs/jaxrpc-jbws1190-client.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -2309,7 +2308,7 @@
       <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws1190/WEB-INF">
         <include name="test-mapping.xml"/>
       </metainf>
-    </jar> 
+    </jar>
     
     <!-- jaxrpcws-jbws1205 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1205-simple.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1205/SimpleEndpoint/WEB-INF/web.xml">
@@ -2328,7 +2327,7 @@
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1205-test.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1205/TestEndpoint/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1205/TestEndpointImpl.class"/>
-        <include name="org/jboss/test/ws/jaxrpc/jbws1205/TestEndpointImpl$*.class"/>        
+        <include name="org/jboss/test/ws/jaxrpc/jbws1205/TestEndpointImpl$*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1205/TestEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1205/TestException.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1205/SimpleEndpoint.class"/>
@@ -2339,12 +2338,12 @@
         <include name="webservices.xml"/>
         <include name="test-mapping.xml"/>
         <include name="wsdl/**"/>
-      	<include name="jboss-web.xml"/>
-      </webinf>    	
+        <include name="jboss-web.xml"/>
+      </webinf>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1205/SimpleEndpoint/WEB-INF">
         <include name="simple-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>      
+      </webinf>
     </war>
     <jar jarfile="${tests.output.dir}/libs/jaxrpc-jbws1205-client.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -2358,7 +2357,7 @@
       <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws1205/TestEndpoint/WEB-INF">
         <include name="test-mapping.xml"/>
       </metainf>
-    </jar>  
+    </jar>
     
     <!-- jaxrpc-jbws1303 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1303.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1303/WEB-INF/web.xml">
@@ -2456,15 +2455,15 @@
     <!-- jbossws-jbws1619 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1619.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1619/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1619/TestEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxrpc/jbws1619/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1619/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1619/TestEndpointImpl.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1619/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
-      </webinf>    	
-    </war>  	
+      </webinf>
+    </war>
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1619-client.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jbws1619/TestEndpoint.class"/>
@@ -2479,6 +2478,36 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
+    
+    <!-- jbossws-jbws1647 -->
+    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1647-rpclit.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1647/rpclit/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/AbstractHandler.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/RpcHandler.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1647/rpclit/WEB-INF">
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
+    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1647-doclit.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1647/doclit/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/AbstractHandler.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/DocumentHandler.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/TestEndpoint_echoMessage_RequestStruct.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1647/TestEndpoint_echoMessage_ResponseStruct.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1647/doclit/WEB-INF">
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
     
     <!-- jaxrpc-marshall-doclit.war -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-marshall-doclit.war" webxml="${tests.output.dir}/resources/jaxrpc/marshall-doclit/WEB-INF/web.xml">
@@ -2631,7 +2660,7 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-   
+    
     <!-- jaxrpc-utf16 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-utf16.war" webxml="${tests.output.dir}/resources/jaxrpc/utf16/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -2848,7 +2877,7 @@
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
     </jar>
-
+    
     <!-- jaxrpc-wsse-sign-encrypt-fault.war -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-wsse-sign-encrypt-fault.war" webxml="${tests.output.dir}/resources/jaxrpc/wsse/rpc/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -2889,7 +2918,7 @@
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
     </jar>
-
+    
     <!-- jaxrpc-wsse-store-pass-encrypt-class-cmd.war -->
     <replace file="${tests.output.dir}/resources/jaxrpc/wsse/store-pass-encrypt-class-cmd/jboss-wsse-server.xml" token="${buildpath}" value="${tests.output.dir}"/>
     <war warfile="${tests.output.dir}/libs/jaxrpc-wsse-store-pass-encrypt-class-cmd.war" webxml="${tests.output.dir}/resources/jaxrpc/wsse/rpc/WEB-INF/web.xml">

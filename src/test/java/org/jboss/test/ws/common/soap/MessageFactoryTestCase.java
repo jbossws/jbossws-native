@@ -187,18 +187,17 @@ public class MessageFactoryTestCase extends JBossWSTest
    {
       String expMsg = 
          "<soapenv:Envelope xmlns:ns1='http://somens.org' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-         " <!-- header -->" +
          " <soapenv:Header>" +
-         "  <!-- header element -->" +
          "  <ns1:header>kermit</ns1:header>" +
          " </soapenv:Header>" +
-         " <!-- body -->" +
          " <soapenv:Body>" +
-         "  <!-- body element -->" +
+         "  <!-- pre body element -->" +
          "  <Hello>" +
-         "   <!-- element -->" +
+         "   <!-- pre element -->" +
          "   <argument>kermit</argument>" +
+         "   <!-- post element -->" +
          "  </Hello>" +
+         "  <!-- post body element -->" +
          " </soapenv:Body>" +
          "</soapenv:Envelope>";
       

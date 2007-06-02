@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="output/tests/wsconsume/java"/>
 	<classpathentry excluding="org/jboss/test/ws/jaxrpc/samples/jmstransport/" kind="src" path="src/test/java"/>
-	<classpathentry kind="src" path="output-tests/wsconsume/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="thirdparty/activation.jar"/>
 	<classpathentry kind="lib" path="thirdparty/getopt.jar"/>
@@ -36,5 +36,5 @@
 	<classpathentry kind="lib" path="thirdparty/xmlunit.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jaxws-tools.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jaxws-rt.jar"/>
-	<classpathentry kind="output" path="output-eclipse"/>
+	<classpathentry kind="output" path="output/eclipse"/>
 </classpath>
