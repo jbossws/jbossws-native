@@ -35,8 +35,8 @@ import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.jaxrpc.Use;
+import org.jboss.ws.core.soap.Style;
+import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.wsf.spi.utils.JavaUtils;

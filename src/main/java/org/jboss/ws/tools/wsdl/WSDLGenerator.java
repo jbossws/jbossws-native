@@ -33,7 +33,7 @@ import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyWriter;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaExtension;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;

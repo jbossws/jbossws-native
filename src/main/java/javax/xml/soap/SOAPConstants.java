@@ -30,16 +30,16 @@ import javax.xml.namespace.QName;
  */
 public interface SOAPConstants
 {
-   /** The default protocol: SOAP 1.1 for backwards compatibility. */
-   String DEFAULT_SOAP_PROTOCOL = "SOAP 1.1 Protocol";
-   /** Used to create MessageFactory instances that create SOAPMessages whose concrete type is based on the Content-Type MIME header passed to the createMessage method. */
-   String DYNAMIC_SOAP_PROTOCOL = "Dynamic Protocol";
-   /** The media type of the Content-Type MIME header in SOAP 1.1. */
-   String SOAP_1_1_CONTENT_TYPE = "text/xml";
    /** Used to create MessageFactory instances that create SOAPMessages whose behavior supports the SOAP 1.1 specification */
    String SOAP_1_1_PROTOCOL = "SOAP 1.1 Protocol";
    /** The media type of the Content-Type MIME header in SOAP 1.2. */
    String SOAP_1_2_CONTENT_TYPE = "application/soap+xml";
+   /** The default protocol: SOAP 1.1 for backwards compatibility. */
+   String DEFAULT_SOAP_PROTOCOL = SOAP_1_1_PROTOCOL;
+   /** Used to create MessageFactory instances that create SOAPMessages whose concrete type is based on the Content-Type MIME header passed to the createMessage method. */
+   String DYNAMIC_SOAP_PROTOCOL = "Dynamic Protocol";
+   /** The media type of the Content-Type MIME header in SOAP 1.1. */
+   String SOAP_1_1_CONTENT_TYPE = "text/xml";
    /** Used to create MessageFactory instances that create SOAPMessages whose behavior supports the SOAP 1.2 specification */
    String SOAP_1_2_PROTOCOL = "SOAP 1.2 Protocol";
    /** The default namespace prefix for http://www.w3.org/2003/05/soap-envelope */

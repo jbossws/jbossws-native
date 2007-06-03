@@ -73,7 +73,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.Extendable;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;

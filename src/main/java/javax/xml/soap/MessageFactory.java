@@ -83,7 +83,7 @@ public abstract class MessageFactory
       if (factory == null)
       {
          SAAJMetaFactory saajFactory = SAAJMetaFactory.getInstance();
-         factory = saajFactory.newMessageFactory(SOAPConstants.DYNAMIC_SOAP_PROTOCOL);
+         factory = saajFactory.newMessageFactory(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
       }
       
       if (factory == null)

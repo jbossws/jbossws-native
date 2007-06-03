@@ -32,10 +32,10 @@ import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**

@@ -31,7 +31,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
@@ -157,8 +156,8 @@ public class DispatchSOAPBinding extends DispatchBinding
          {
             if (mode == Mode.PAYLOAD)
             {
-               SOAPBody soapBody = resMsg.getSOAPBody();
-               SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+               SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
+               SOAPElement soapElement = soapBody.getBodyElement();
                retObj = new DOMSource(soapElement);
             }
             if (mode == Mode.MESSAGE)
@@ -171,7 +170,7 @@ public class DispatchSOAPBinding extends DispatchBinding
          else if (jaxbContext != null)
          {
             SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
-            SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+            SOAPElement soapElement = soapBody.getBodyElement();
 
             log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

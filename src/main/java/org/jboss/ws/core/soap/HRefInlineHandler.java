@@ -26,7 +26,6 @@ package org.jboss.ws.core.soap;
 import java.util.Iterator;
 
 import javax.xml.soap.Node;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -51,9 +50,9 @@ public class HRefInlineHandler
    private static Logger log = Logger.getLogger(HRefInlineHandler.class);
 
    private SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
-   private SOAPBody soapBody;
+   private SOAPBodyImpl soapBody;
 
-   public HRefInlineHandler(SOAPBody soapBody)
+   public HRefInlineHandler(SOAPBodyImpl soapBody)
    {
       this.soapBody = soapBody;
    }
@@ -63,16 +62,21 @@ public class HRefInlineHandler
       String bodyStr = DOMWriter.printNode(soapBody, true);
       log.debug("Begin processHRefs:\n" + bodyStr);
 
-      SOAPBodyElement bodyElement = (SOAPBodyElement)soapBody.getChildElements().next();
-      processElement(bodyElement);
+      SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
+      processElement(soapBodyElement);
       
+      // Process elements after SOAPBodyElement
       Iterator it = soapBody.getChildElements();
       while (it.hasNext())
       {
-         // Remove id elements
-         SOAPElement soapElement = (SOAPElement)it.next();
-         if ((soapElement instanceof SOAPBodyElement) == false)
-            soapBody.removeChild(soapElement);
+         Object next = it.next();
+         if (next instanceof SOAPElement)
+         {
+            // Remove id elements
+            SOAPElement soapElement = (SOAPElement)next;
+            if ((soapElement instanceof SOAPBodyElement) == false)
+               soapBody.removeChild(soapElement);
+         }
       }
 
       bodyStr = DOMWriter.printNode(soapBody, true);
@@ -105,11 +109,15 @@ public class HRefInlineHandler
       Iterator it = soapBody.getChildElements();
       while (it.hasNext())
       {
-         SOAPElement auxElement = (SOAPElement)it.next();
-         if (href.equals("#" + auxElement.getAttribute("id")))
+         Object next = it.next();
+         if (next instanceof SOAPElement)
          {
-            idElement = (SOAPElement)auxElement;
-            break;
+            SOAPElement auxElement = (SOAPElement)next;
+            if (href.equals("#" + auxElement.getAttribute("id")))
+            {
+               idElement = (SOAPElement)auxElement;
+               break;
+            }
          }
       }
 

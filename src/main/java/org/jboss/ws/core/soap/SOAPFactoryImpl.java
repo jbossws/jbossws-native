@@ -160,8 +160,7 @@ public class SOAPFactoryImpl extends SOAPFactory
    @Override
    public Detail createDetail() throws SOAPException
    {
-      if (envNamespace == null)
-         throw new UnsupportedOperationException("the specified protocol was DYNAMIC_SOAP_PROTOCOL");
+      assertEnvNamespace();
 
       return SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(envNamespace) ? new DetailImpl() :
          new DetailImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
@@ -182,8 +181,7 @@ public class SOAPFactoryImpl extends SOAPFactory
    @Override
    public SOAPFault createFault(String reasonText, QName faultCode) throws SOAPException
    {
-      if (envNamespace == null)
-         throw new UnsupportedOperationException("the specified protocol was DYNAMIC_SOAP_PROTOCOL");
+      assertEnvNamespace();
 
       SOAPFaultImpl soapFault = new SOAPFaultImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
       soapFault.setFaultCode(faultCode);
@@ -194,11 +192,16 @@ public class SOAPFactoryImpl extends SOAPFactory
    @Override
    public SOAPFault createFault() throws SOAPException
    {
-      if (envNamespace == null)
-         throw new UnsupportedOperationException("the specified protocol was DYNAMIC_SOAP_PROTOCOL");
+      assertEnvNamespace();
 
       SOAPFaultImpl soapFault = new SOAPFaultImpl(SOAPConstants.SOAP_ENV_PREFIX, envNamespace);
       soapFault.setFaultCode(soapFault.getDefaultFaultCode());
       return soapFault;
+   }
+
+   private void assertEnvNamespace()
+   {
+      if (envNamespace == null)
+         throw new UnsupportedOperationException("Envelope namespace not specified, use one of the SOAP protocols");
    }
 }

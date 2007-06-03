@@ -31,7 +31,6 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
-import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -42,7 +41,6 @@ import javax.xml.transform.dom.DOMSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -63,14 +61,16 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
    // provide logging
    private static Logger log = Logger.getLogger(EnvelopeBuilderDOM.class);
 
-   private SOAPFactoryImpl soapFactory;
-   private String envNamespace;
-   private boolean isSOAP11;
+   private SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
    private Style style;
 
-   public EnvelopeBuilderDOM(Style style)
+   public Style getStyle()
    {
-      this.soapFactory = new SOAPFactoryImpl();
+      return style;
+   }
+
+   public void setStyle(Style style)
+   {
       this.style = style;
    }
 
@@ -119,10 +119,6 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       // Construct the envelope
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
       SOAPEnvelopeImpl soapEnv = new SOAPEnvelopeImpl(soapPart, soapFactory.createElement(domEnv, false), false);
-
-      // Get the envelope namespace
-      envNamespace = soapEnv.getNamespaceURI();
-      isSOAP11 = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(envNamespace);
 
       DOMUtils.copyAttributes(soapEnv, domEnv);
 
@@ -305,7 +301,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
       XMLFragment xmlFragment = new XMLFragment(new DOMSource(srcElement));
       contentElement.setXMLFragment(xmlFragment);
-      
+
       return soapBodyElement;
    }
 
@@ -393,21 +389,15 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
    private void appendCommentNode(SOAPElement soapElement, Node child)
    {
-      if (isSOAP11)
-      {
-         String nodeValue = child.getNodeValue();
-         Document ownerDoc = soapElement.getOwnerDocument();
-         Comment comment = ownerDoc.createComment(nodeValue);
-         soapElement.appendChild(comment);
-      }
+      String nodeValue = child.getNodeValue();
+      Document ownerDoc = soapElement.getOwnerDocument();
+      Comment comment = ownerDoc.createComment(nodeValue);
+      soapElement.appendChild(comment);
    }
 
    private void appendTextNode(SOAPElement soapElement, Node child) throws SOAPException
    {
-      if (isSOAP11)
-      {
-         String nodeValue = child.getNodeValue();
-         soapElement.addTextNode(nodeValue);
-      }
+      String nodeValue = child.getNodeValue();
+      soapElement.addTextNode(nodeValue);
    }
 }

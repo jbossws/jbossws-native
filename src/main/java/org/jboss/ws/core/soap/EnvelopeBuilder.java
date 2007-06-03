@@ -25,10 +25,15 @@ package org.jboss.ws.core.soap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
+import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+
+import org.w3c.dom.Element;
+
 
 /**
  * @author Heiko Braun, <heiko.braun@jboss.com>
@@ -37,5 +42,17 @@ import javax.xml.soap.SOAPMessage;
  */
 public interface EnvelopeBuilder
 {
+   Style getStyle();
+   
+   void setStyle(Style style);
+   
    SOAPEnvelope build(SOAPMessage soapMessage, InputStream in, boolean ignoreParseError) throws IOException, SOAPException;
+   
+   SOAPEnvelope build(SOAPMessage soapMessage, Reader reader, boolean ignoreParseError) throws IOException, SOAPException;
+   
+   SOAPEnvelope build(SOAPMessage soapMessage, Element domEnv) throws SOAPException;
+   
+   SOAPBodyElement buildBodyElementDoc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException;
+
+   SOAPBodyElement buildBodyElementRpc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException;
 }

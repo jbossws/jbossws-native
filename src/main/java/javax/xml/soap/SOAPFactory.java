@@ -73,7 +73,7 @@ public abstract class SOAPFactory
          if (soapFactory == null)
          {
             SAAJMetaFactory saajFactory = SAAJMetaFactory.getInstance();
-            soapFactory = saajFactory.newSOAPFactory(SOAPConstants.DYNAMIC_SOAP_PROTOCOL);
+            soapFactory = saajFactory.newSOAPFactory(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
          }
          
          if (soapFactory == null)

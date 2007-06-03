@@ -32,7 +32,7 @@ import javax.xml.ws.handler.LogicalMessageContext;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.Style;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 

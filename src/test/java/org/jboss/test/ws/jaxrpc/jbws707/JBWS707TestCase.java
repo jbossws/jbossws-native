@@ -28,13 +28,13 @@ import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import junit.framework.Test;
 
+import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
 import org.w3c.dom.Node;
@@ -184,8 +184,8 @@ public class JBWS707TestCase extends JBossWSTest
       mimeHeaders.addHeader("Content-Type", "text/xml; charset=UTF-8");
 
       SOAPMessage soapMessage = mf.createMessage(mimeHeaders, new ByteArrayInputStream(xmlStr.getBytes()));
-      SOAPBody soapBody = soapMessage.getSOAPBody();
-      SOAPElement soapElement = (SOAPElement)soapBody.getChildElements().next();
+      SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
+      SOAPElement soapElement = soapBody.getBodyElement();
       
       StringBuffer builder = new StringBuffer();
       NodeList nlist = soapElement.getChildNodes();

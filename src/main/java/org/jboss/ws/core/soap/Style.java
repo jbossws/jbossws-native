@@ -19,56 +19,44 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.core.jaxrpc;
-
-import org.jboss.ws.Constants;
+package org.jboss.ws.core.soap;
 
 // $Id$
 
-/** A type-safe enumeration for encoding use.
+/** A type-safe enumeration for encoding style.
  *  
  * @author Thomas.Diesler@jboss.org
- * @since 16-Oct-2005
+ * @since 14-Oct-2004
  */
-public class Use
+public class Style
 {
-   private String use;
+   private String style;
 
-   public static final Use LITERAL = new Use("literal");
-   public static final Use ENCODED = new Use("encoded");
+   public static final Style RPC = new Style("rpc");
+   public static final Style DOCUMENT = new Style("document");
 
-   private Use(String use)
+   private Style(String style)
    {
-      this.use = use;
+      this.style = style;
    }
 
-   public static Use getDefaultUse()
+   public static Style getDefaultStyle()
    {
-      return LITERAL;
+      return DOCUMENT;
    }
 
-   public static Use valueOf(String encodingStyle)
+   public static Style valueOf(String style)
    {
-      if (Constants.URI_LITERAL_ENC.equals(encodingStyle) || LITERAL.use.equals(encodingStyle))
-         return LITERAL;
-      if (Constants.URI_SOAP11_ENC.equals(encodingStyle) || ENCODED.use.equals(encodingStyle))
-         return ENCODED;
+      if (RPC.style.equals(style))
+         return RPC;
+      if (DOCUMENT.style.equals(style))
+         return DOCUMENT;
       
-      throw new IllegalArgumentException("Unsupported encoding style: " + encodingStyle);
+      throw new IllegalArgumentException("Unsupported style: " + style);
    }
 
-   public String toURI()
-   {
-      String encURI = null;
-      if (this == LITERAL)
-         encURI = Constants.URI_LITERAL_ENC;
-      else if (this == ENCODED)
-         encURI = Constants.URI_SOAP11_ENC;
-      return encURI;
-   }
-   
    public String toString()
    {
-      return use;
+      return style;
    }
 }

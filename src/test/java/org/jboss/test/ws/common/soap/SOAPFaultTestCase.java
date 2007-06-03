@@ -23,6 +23,7 @@ package org.jboss.test.ws.common.soap;
 
 import java.io.ByteArrayInputStream;
 
+import javax.xml.namespace.QName;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
@@ -49,19 +50,20 @@ import org.jboss.wsf.spi.utils.DOMUtils;
  */
 public class SOAPFaultTestCase extends JBossWSTest
 {
-   private String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + 
-   " <env:Header/>" + 
-   " <env:Body>" + 
-   "  <env:Fault>" + 
-   "   <faultcode>env:Client</faultcode>" + 
-   "   <faultstring>Some fault message</faultstring>" + 
-   "   <faultactor>Some fault actor</faultactor>" + 
-   "   <detail>" + 
-   "     <ns1:name xmlns:ns1='http://somens'>Kermit</ns1:name>" + 
-   "   </detail>" + 
-   "  </env:Fault>" + 
-   " </env:Body>" + 
-   "</env:Envelope>";
+   private String envStr = 
+      "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + 
+      " <env:Header/>" + 
+      " <env:Body>" + 
+      "  <env:Fault>" + 
+      "   <faultcode>env:Client</faultcode>" + 
+      "   <faultstring>Some fault message</faultstring>" + 
+      "   <faultactor>Some fault actor</faultactor>" + 
+      "   <detail>" + 
+      "     <ns1:name xmlns:ns1='http://somens'>Kermit</ns1:name>" + 
+      "   </detail>" + 
+      "  </env:Fault>" + 
+      " </env:Body>" + 
+      "</env:Envelope>";
 
    public void testExceptionToFault() throws Exception
    {
@@ -76,7 +78,7 @@ public class SOAPFaultTestCase extends JBossWSTest
       MessageFactory factory = MessageFactory.newInstance();
       SOAPMessage soapMessage = factory.createMessage(null, new ByteArrayInputStream(envStr.getBytes()));
       SOAPBody soapBody = soapMessage.getSOAPBody();
-      SOAPFault soapFault = (SOAPFault)soapBody.getChildElements().next();
+      SOAPFault soapFault = (SOAPFault)soapBody.getChildElements(new QName("http://schemas.xmlsoap.org/soap/envelope/", "Fault")).next();
       assertEquals("env:Client", soapFault.getFaultCode());
       assertEquals("Some fault message", soapFault.getFaultString());
       assertEquals("Some fault actor", soapFault.getFaultActor());

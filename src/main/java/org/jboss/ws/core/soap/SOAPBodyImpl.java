@@ -182,6 +182,19 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       return getChildElements(new QName(getNamespaceURI(), "Fault"));
    }
 
+   public SOAPBodyElement getBodyElement()
+   {
+      SOAPBodyElement bodyElement = null;
+      Iterator it = getChildElements();
+      while (bodyElement == null && it.hasNext())
+      {
+         Object next = it.next();
+         if (next instanceof SOAPBodyElement)
+            bodyElement = (SOAPBodyElement)next;
+      }
+      return bodyElement;
+   }
+   
    public Node appendChild(Node newChild) throws DOMException
    {
       log.trace("appendChild: " + newChild.getNodeName());
@@ -274,4 +287,5 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       element.detachNode();
       return new SOAPBodyElementDoc(element);
    }
+
 }

@@ -43,9 +43,9 @@ import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
+import org.jboss.ws.integration.FactoryLoader;
 import org.jboss.wsf.spi.utils.IOUtils;
 
 /**
@@ -150,7 +150,7 @@ public class MessageFactoryImpl extends MessageFactory
    public SOAPMessage createMessage() throws SOAPException
    {
       if (dynamic)
-         throw new UnsupportedOperationException();
+         throw new UnsupportedOperationException("Cannot create default message when protocol is dynamic");
 
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
@@ -249,7 +249,8 @@ public class MessageFactoryImpl extends MessageFactory
             soapMessage.setAttachments(attachments);
 
          // Get the SOAPEnvelope builder
-         EnvelopeBuilder envBuilder = new EnvelopeBuilderDOM(getStyle());
+         EnvelopeBuilder envBuilder = (EnvelopeBuilder)FactoryLoader.loadFactory(EnvelopeBuilder.class.getName(), null);
+         envBuilder.setStyle(getStyle());
 
          // Build the payload
          envBuilder.build(soapMessage, inputStream, ignoreParseError);

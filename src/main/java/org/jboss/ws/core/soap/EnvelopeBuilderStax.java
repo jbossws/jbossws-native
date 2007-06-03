@@ -26,10 +26,12 @@ package org.jboss.ws.core.soap;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
@@ -40,6 +42,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 
+import org.jboss.util.NotImplementedException;
 import org.w3c.dom.Element;
 
 import com.ctc.wstx.stax.WstxInputFactory;
@@ -468,5 +471,35 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
       }
 
       return builder.toString();
+   }
+
+   public SOAPEnvelope build(SOAPMessage soapMessage, Reader reader, boolean ignoreParseError) throws IOException, SOAPException
+   {
+      throw new NotImplementedException();
+   }
+
+   public SOAPEnvelope build(SOAPMessage soapMessage, Element domEnv) throws SOAPException
+   {
+      throw new NotImplementedException();
+   }
+
+   public SOAPBodyElement buildBodyElementDoc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
+   {
+      throw new NotImplementedException();
+   }
+
+   public SOAPBodyElement buildBodyElementRpc(SOAPBodyImpl soapBody, Element domBodyElement) throws SOAPException
+   {
+      throw new NotImplementedException();
+   }
+
+   public Style getStyle()
+   {
+      throw new NotImplementedException();
+   }
+
+   public void setStyle(Style style)
+   {
+      throw new NotImplementedException();
    }
 }

@@ -32,7 +32,7 @@ import org.apache.ws.policy.util.PolicyReader;
 import org.jboss.test.ws.tools.sei.StandardJavaTypes;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.IOUtils;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;

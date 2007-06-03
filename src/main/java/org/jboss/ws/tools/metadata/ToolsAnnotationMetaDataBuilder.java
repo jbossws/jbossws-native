@@ -36,7 +36,7 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.holders.Holder;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;

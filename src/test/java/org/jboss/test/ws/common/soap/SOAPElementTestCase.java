@@ -107,9 +107,9 @@ public class SOAPElementTestCase extends JBossWSTest
    {
       String xml = 
          "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'>" +
-         " <soap:Body>" + 
-         "  <np:bear name='ted' zoo:species='ursus maritimus' xmlns:np='http://northpole.net' xmlns:zoo='http://zoofan.net'/>" + 
-         " </soap:Body>" + 
+         "<soap:Body>" + 
+         "<np:bear name='ted' zoo:species='ursus maritimus' xmlns:np='http://northpole.net' xmlns:zoo='http://zoofan.net'/>" + 
+         "</soap:Body>" + 
          "</soap:Envelope>";
 
       SOAPMessage soapMessage = MessageFactory.newInstance().createMessage(null, new ByteArrayInputStream(xml.getBytes()));

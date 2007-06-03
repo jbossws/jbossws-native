@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
@@ -33,12 +34,13 @@ import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.Text;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.jaxrpc.Style;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.DOMWriter;
@@ -82,7 +84,10 @@ public class MessageFactoryTestCase extends JBossWSTest
       assertEquals("env:Envelope", env.getNodeName());
       assertEquals(Constants.NS_SOAP11_ENV, env.getNamespaceURI());
       
-      SOAPBodyElement soapBodyElement = (SOAPBodyElement)env.getBody().getChildElements().next();
+      Iterator it = env.getBody().getChildElements();
+      Text text = (Text)it.next();
+      assertEquals("  ", text.getValue());
+      SOAPBodyElement soapBodyElement = (SOAPBodyElement)it.next();
       assertEquals("urn:uddi-org:api_v2", soapBodyElement.getNamespaceURI());
    }
 
@@ -186,11 +191,11 @@ public class MessageFactoryTestCase extends JBossWSTest
    public void testPreserveComments() throws Exception
    {
       String expMsg = 
-         "<soapenv:Envelope xmlns:ns1='http://somens.org' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-         " <soapenv:Header>" +
+         "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/' xmlns:ns1='http://somens.org'>" +
+         " <env:Header>" +
          "  <ns1:header>kermit</ns1:header>" +
-         " </soapenv:Header>" +
-         " <soapenv:Body>" +
+         " </env:Header>" +
+         " <env:Body>" +
          "  <!-- pre body element -->" +
          "  <Hello>" +
          "   <!-- pre element -->" +
@@ -198,8 +203,8 @@ public class MessageFactoryTestCase extends JBossWSTest
          "   <!-- post element -->" +
          "  </Hello>" +
          "  <!-- post body element -->" +
-         " </soapenv:Body>" +
-         "</soapenv:Envelope>";
+         " </env:Body>" +
+         "</env:Envelope>";
       
       // Verify that DOM parse/write do not modify the message
       Element expEnv = DOMUtils.parse(expMsg);
@@ -220,8 +225,13 @@ public class MessageFactoryTestCase extends JBossWSTest
       SOAPEnvelope wasEnv = soapMsg.getSOAPPart().getEnvelope();
       
       String wasXML = DOMWriter.printNode(wasEnv, false);
-      //System.out.println(expXML);
-      //System.out.println(wasXML);
-      assertEquals(expXML, wasXML);
+      String wasBody = wasXML.substring(wasXML.indexOf("<env:Body>"));
+      wasBody = wasBody.substring(0, wasBody.indexOf("</env:Body>") + 11);
+      
+      String expBody = expXML.substring(expXML.indexOf("<env:Body>"));
+      expBody = expBody.substring(0, expBody.indexOf("</env:Body>") + 11);
+      //System.out.println(expBody);
+      //System.out.println(wasBody);
+      assertEquals(expBody, wasBody);
    }
 }

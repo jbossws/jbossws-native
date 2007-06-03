@@ -25,6 +25,7 @@ package org.jboss.ws.core.server;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -62,6 +63,7 @@ import org.jboss.ws.core.jaxws.handler.HandlerDelegateJAXWS;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -395,10 +397,11 @@ public class ServiceEndpointInvoker
          if (opMetaData == null)
          {
             String faultString;
-            SOAPBody soapBody = soapMessage.getSOAPBody();
-            if (soapBody.getChildElements().hasNext())
+            
+            SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
+            SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
+            if (soapBodyElement != null)
             {
-               SOAPBodyElement soapBodyElement = (SOAPBodyElement)soapBody.getChildElements().next();
                Name soapName = soapBodyElement.getElementName();
                faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for: " + soapName;
             }

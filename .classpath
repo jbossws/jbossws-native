@@ -36,5 +36,6 @@
 	<classpathentry kind="lib" path="thirdparty/xmlunit.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jaxws-tools.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jaxws-rt.jar"/>
+	<classpathentry kind="lib" path="thirdparty/concurrent.jar"/>
 	<classpathentry kind="output" path="output/eclipse"/>
 </classpath>

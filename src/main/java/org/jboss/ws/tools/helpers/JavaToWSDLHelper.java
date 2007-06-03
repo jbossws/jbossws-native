@@ -37,7 +37,7 @@ import javax.xml.rpc.holders.Holder;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;

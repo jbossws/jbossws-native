@@ -42,7 +42,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.jaxrpc.Style;
+import org.jboss.ws.integration.FactoryLoader;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -172,7 +172,8 @@ public class SOAPPartImpl extends SOAPPart
          else
             throw new SOAPException("Unsupported DOMSource node: " + node);
 
-         EnvelopeBuilderDOM envBuilder = new EnvelopeBuilderDOM(Style.DOCUMENT);
+         EnvelopeBuilder envBuilder = (EnvelopeBuilder)FactoryLoader.loadFactory(EnvelopeBuilder.class.getName(), null);
+         envBuilder.setStyle(Style.DOCUMENT);
          envBuilder.build(soapMessage, domElement);
       }
       else if (source instanceof StreamSource)
@@ -180,7 +181,8 @@ public class SOAPPartImpl extends SOAPPart
          try
          {
             StreamSource streamSource = (StreamSource)source;
-            EnvelopeBuilderDOM envBuilder = new EnvelopeBuilderDOM(Style.DOCUMENT);
+            EnvelopeBuilder envBuilder = (EnvelopeBuilder)FactoryLoader.loadFactory(EnvelopeBuilder.class.getName(), null);
+            envBuilder.setStyle(Style.DOCUMENT);
             InputStream stream = streamSource.getInputStream();
             Reader reader = streamSource.getReader();
             if (stream != null)

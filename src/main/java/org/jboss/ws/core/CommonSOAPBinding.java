@@ -52,8 +52,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
-import org.jboss.ws.core.jaxrpc.Style;
-import org.jboss.ws.core.jaxrpc.Use;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -61,13 +59,16 @@ import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPBodyElementDoc;
 import org.jboss.ws.core.soap.SOAPBodyElementRpc;
+import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.core.soap.SOAPHeaderElementImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.UnboundHeader;
+import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.utils.MimeUtils;
@@ -544,12 +545,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
             msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
 
          SOAPHeader soapHeader = soapEnvelope.getHeader();
-         SOAPBody soapBody = soapEnvelope.getBody();
-         Iterator bodyChildren = soapBody.getChildElements();
-
-         SOAPBodyElement soapBodyElement = null;
-         if (bodyChildren.hasNext() != false)
-            soapBodyElement = (SOAPBodyElement)bodyChildren.next();
+         SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnvelope.getBody();
+         SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
 
          // Translate the SOAPFault to an exception and throw it
          if (soapBodyElement instanceof SOAPFaultImpl)
