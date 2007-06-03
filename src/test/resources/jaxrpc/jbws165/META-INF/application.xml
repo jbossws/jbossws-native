@@ -19,9 +19,6 @@
   <module>
     <java>jaxrpc-jbws165-both.jar</java>
   </module>
-  <module>
-    <java>jaxrpc-jbws165-client.jar</java>
-  </module>
 
 </application>
 

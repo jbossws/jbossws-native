@@ -21,12 +21,18 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws165;
 
+import java.io.File;
+import java.net.URL;
+
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
+import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
@@ -48,8 +54,10 @@ public class JBWS165TestCase extends JBossWSTest
 
    public void testNone() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service) iniCtx.lookup("java:comp/env/service/HelloNone");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws165-jaxrpc-jbws165-none/HelloNone?wsdl");
+      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServiceNone");
+      Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       Hello port = (Hello) service.getPort(Hello.class);
       String retObj = port.hello(getName());
       assertEquals(getName(), retObj);
@@ -57,8 +65,15 @@ public class JBWS165TestCase extends JBossWSTest
    
    public void testPortComponentURIOne() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service) iniCtx.lookup("java:comp/env/service/HelloPCOne");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws165-jaxrpc-jbws165-pcuri/Explicit/Path/HelloPCOne?wsdl");
+      
+      // In JBoss40 the context-root is derived from the first token in port-component-uri
+      if (isTargetJBoss40())
+         wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCOne?wsdl");
+      
+      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServicePcURI");
+      Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       QName portName = new QName("http://org.jboss.test.webservice/jbws165", "HelloPortOne");
       Hello port = (Hello) service.getPort(portName, Hello.class);
       String retObj = port.hello(getName());
@@ -67,8 +82,15 @@ public class JBWS165TestCase extends JBossWSTest
    
    public void testPortComponentURITwo() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service) iniCtx.lookup("java:comp/env/service/HelloPCTwo");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws165-jaxrpc-jbws165-pcuri/Explicit/Path/HelloPCTwo?wsdl");
+      
+      // In JBoss40 the context-root is derived from the first token in port-component-uri
+      if (isTargetJBoss40())
+         wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCTwo?wsdl");
+      
+      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServicePcURI");
+      Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       QName portName = new QName("http://org.jboss.test.webservice/jbws165", "HelloPortTwo");
       Hello port = (Hello) service.getPort(portName, Hello.class);
       String retObj = port.hello(getName());
@@ -77,8 +99,10 @@ public class JBWS165TestCase extends JBossWSTest
    
    public void testContextRoot() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service) iniCtx.lookup("java:comp/env/service/HelloContextRoot");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Context/HelloContextRoot?wsdl");
+      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServiceCtxRoot");
+      Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       Hello port = (Hello) service.getPort(Hello.class);
       String retObj = port.hello(getName());
       assertEquals(getName(), retObj);
@@ -86,8 +110,10 @@ public class JBWS165TestCase extends JBossWSTest
    
    public void testBoth() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service) iniCtx.lookup("java:comp/env/service/HelloBoth");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Both/Explicit/Path?wsdl");
+      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServiceBoth");
+      Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       Hello port = (Hello) service.getPort(Hello.class);
       String retObj = port.hello(getName());
       assertEquals(getName(), retObj);

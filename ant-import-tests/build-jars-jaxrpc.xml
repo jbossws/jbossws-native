@@ -717,23 +717,12 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-    <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws165-client.jar">
-      <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxrpc/jbws165/Hello.class"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws165/META-INF">
-        <include name="application-client.xml"/>
-        <include name="jboss-client.xml"/>
-        <include name="jaxrpc-mapping.xml"/>
-      </metainf>
-    </jar>
     <ear destfile="${tests.output.dir}/libs/jaxrpc-jbws165.ear" appxml="${tests.output.dir}/resources/jaxrpc/jbws165/META-INF/application.xml">
       <fileset dir="${tests.output.dir}/libs">
         <include name="jaxrpc-jbws165-none.jar"/>
         <include name="jaxrpc-jbws165-pcuri.jar"/>
         <include name="jaxrpc-jbws165-ctxroot.jar"/>
         <include name="jaxrpc-jbws165-both.jar"/>
-        <include name="jaxrpc-jbws165-client.jar"/>
       </fileset>
     </ear>
     
