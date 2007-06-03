@@ -82,14 +82,11 @@
 		<mkdir dir="${core.output.etc.dir}"/>
 		<copy todir="${core.output.etc.dir}" filtering="yes">
 			<fileset dir="${core.etc.dir}"/>
-			<fileset dir="${build.dir}/etc">
-				<include name="default.mf"/>
-			</fileset>
 			<filterset>
 				<filter token="java.vm.version" value="${java.vm.version}"/>
 				<filter token="java.vm.vendor" value="${java.vm.vendor}"/>
 				<filter token="build.id" value="${build.id}"/>
-				<filter token="implementation.version" value="jbossws-${version.id}"/>
+				<filter token="implementation.version" value="jbossws-native-${version.id}"/>
 				<filtersfile file="${build.dir}/version.properties"/>
 				<filtersfile file="${core.dir}/version.properties"/>
 			</filterset>
