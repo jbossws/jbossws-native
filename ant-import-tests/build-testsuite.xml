@@ -18,7 +18,7 @@
   <property name="tests.resources.dir" value="${tests.dir}/resources"/>
   
   <!-- Define excluded tests -->
-  <property name="excludes-short-name" value="tests-${jbossws.integration.target}-excludes.txt"/>
+  <property name="excludes-short-name" value="test-excludes-${jbossws.integration.target}.txt"/>
   <property name="excludesfile" value="${core.dir}/src/test/resources/${excludes-short-name}"/>
   
   <!--
