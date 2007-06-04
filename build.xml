@@ -92,7 +92,7 @@
 			</filterset>
 		</copy>
 	</target>
-
+	
 	<!-- ================================================================== -->
 	<!-- Archives                                                           -->
 	<!-- ================================================================== -->
@@ -205,11 +205,11 @@
 
 		<mkdir dir="${core.output.apidocs.dir}"/>
 		<javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">
-			<classpath refid="core.classpath"/>
+			<classpath refid="thirdparty.classpath"/>
 			<packageset dir="${core.java.dir}" defaultexcludes="yes">
 				<include name="org/jboss/ws/**"/>
 			</packageset>
-			<doctitle><![CDATA[<h1>JBossWS</h1>]]></doctitle>
+			<doctitle><![CDATA[<h1>JBossWS Native</h1>]]></doctitle>
 			<tag name="todo" scope="all" description="To do:"/>
 			<group title="Core" packages="org.jboss.ws.core*"/>
 			<group title="Metadata" packages="org.jboss.ws.metadata*"/>
