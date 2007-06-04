@@ -31,9 +31,6 @@
     <import componentref="jboss/jbossws-spi">
       <compatible version="@repository.id@"/>
     </import>
-    <import componentref="jboss/jbossws-wsconsume-impl">
-      <compatible version="@jbossws-wsconsume-impl@"/>
-    </import>
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>
     </import>

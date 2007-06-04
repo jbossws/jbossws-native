@@ -67,7 +67,6 @@
     <get src="${jboss.repository}/jboss/jaxr/${jboss-jaxr}/lib/juddi-service.sar" dest="${thirdparty.dir}/juddi-service.sar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs.jar" dest="${thirdparty.dir}/jboss-vfs.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs-sources.jar" dest="${thirdparty.dir}/jboss-vfs-sources.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-wsconsume-impl/${jbossws-wsconsume-impl}/lib/jbossws-wsconsume-impl.jar" dest="${thirdparty.dir}/jbossws-wsconsume-impl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-container.jar" dest="${thirdparty.dir}/jboss-container.jar" usetimestamp="true" verbose="true"/>
