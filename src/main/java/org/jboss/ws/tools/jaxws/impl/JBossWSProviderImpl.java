@@ -21,18 +21,15 @@
 */
 package org.jboss.ws.tools.jaxws.impl;
 
-import org.jboss.ws.WSException;       
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsf.spi.deployment.BasicDeployment;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
-import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_EJB3;
-import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_JSE;
+import org.jboss.ws.WSException;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.wsf.spi.tools.WSContractProvider;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.spi.deployment.BasicDeployment;
+import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_JSE;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.tools.WSContractProvider;
 
-import javax.ejb.Stateless;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -71,8 +68,8 @@ final class JBossWSProviderImpl extends WSContractProvider
 
    private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
    {
-      DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
-      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(type)
+      //DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
+      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(JAXWS_JSE)
       {
          @Override
          public URL getMetaDataFileURL(String resourcePath) throws IOException
