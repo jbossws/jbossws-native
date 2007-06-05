@@ -58,6 +58,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.VariableMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlMessageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlReturnValueMapping;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
+import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
@@ -68,11 +69,13 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLRPCPart;
+import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
+import org.jboss.ws.tools.HeaderUtil;
 import org.jboss.ws.tools.RPCSignature;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.WSToolsConstants;
@@ -216,15 +219,22 @@ public class MappingFileGeneratorHelper
          semm.setWsdlOperation(opname);
          semm.setWrappedElement(isWrapped());
 
+         WSDLBindingOperation bindingOperation = HeaderUtil.getWSDLBindingOperation(wsdlDefinitions, wiop);
+
          if (isDocStyle())
-            constructDOCParameters(semm, wiop);
-         else constructRPCParameters(semm, wiop);
+         {
+            constructDOCParameters(semm, wiop, bindingOperation);
+         }
+         else
+         {
+            constructRPCParameters(semm, wiop, bindingOperation);
+         }
 
          seim.addServiceEndpointMethodMapping(semm);
       }
    }
 
-   private void constructDOCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop)
+   private void constructDOCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop, WSDLBindingOperation bindingOperation)
    {
       WSDLInterfaceOperationInput win = WSDLUtils.getWsdl11Input(wiop);
       WSDLInterfaceOperationOutput output = WSDLUtils.getWsdl11Output(wiop);
@@ -301,24 +311,90 @@ public class MappingFileGeneratorHelper
             }
          }
 
-         //Check it is a holder. If it is, return
-         if (wiop.getInputByPartName(xmlName.getLocalPart()) != null)
-            return;
+         //Check it is a holder.
+         if (wiop.getInputByPartName(xmlName.getLocalPart()) == null)
+         {
 
-         if (xt instanceof XSSimpleTypeDefinition)
-            xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
+            if (xt instanceof XSSimpleTypeDefinition)
+               xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
 
-         String javaType = getJavaTypeAsString(xmlName, xmlType, array, primitive);
+            String javaType = getJavaTypeAsString(xmlName, xmlType, array, primitive);
 
-         if (isDocStyle() == false && "void".equals(javaType))
-            return;
-
-         WsdlReturnValueMapping wrvm = new WsdlReturnValueMapping(semm);
-         wrvm.setMethodReturnValue(javaType);
-         wrvm.setWsdlMessage(messageName);
-         wrvm.setWsdlMessagePartName(partName);
-         semm.setWsdlReturnValueMapping(wrvm);
+            if ((isDocStyle() == false && "void".equals(javaType)) == false)
+            {
+               WsdlReturnValueMapping wrvm = new WsdlReturnValueMapping(semm);
+               wrvm.setMethodReturnValue(javaType);
+               wrvm.setWsdlMessage(messageName);
+               wrvm.setWsdlMessagePartName(partName);
+               semm.setWsdlReturnValueMapping(wrvm);
+            }
+         }
       }
+
+      if (bindingOperation != null)
+      {
+         constructHeaderParameters(semm, wiop, bindingOperation);
+      }
+   }
+
+   private void constructHeaderParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop, WSDLBindingOperation bindingOperation)
+   {
+      WSDLSOAPHeader[] inputHeaders = HeaderUtil.getSignatureHeaders(bindingOperation.getInputs());
+      WSDLSOAPHeader[] outputHeaders = HeaderUtil.getSignatureHeaders(bindingOperation.getOutputs());
+
+      String wsdlMessageName = bindingOperation.getWsdlBinding().getInterface().getName().getLocalPart();
+      int paramPosition = 1;
+
+      for (WSDLSOAPHeader currentInput : inputHeaders)
+      {
+         boolean inOutput = HeaderUtil.containsMatchingPart(outputHeaders, currentInput);
+         String mode = getMode(true, inOutput);
+
+         constructHeaderParameter(semm, currentInput, paramPosition++, wsdlMessageName, mode);
+      }
+
+      for (WSDLSOAPHeader currentOutput : outputHeaders)
+      {
+         boolean inInput = HeaderUtil.containsMatchingPart(inputHeaders, currentOutput);
+
+         if (inInput == true)
+            continue;
+
+         constructHeaderParameter(semm, currentOutput, paramPosition++, wsdlMessageName, "OUT");
+      }
+   }
+
+   private void constructHeaderParameter(ServiceEndpointMethodMapping semm, WSDLSOAPHeader header, int paramPosition, String wsdlMessageName, String mode)
+   {
+      QName elementName = header.getElement();
+
+      JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
+      XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
+      XSTypeDefinition xt = xe.getTypeDefinition();
+      QName xmlType = new QName(xt.getNamespace(), xt.getName());
+
+      String partName = header.getPartName();
+
+      MethodParamPartsMapping mpin = getMethodParamPartsMapping(semm, elementName, xmlType, paramPosition, wsdlMessageName, mode, partName, false, true);
+      semm.addMethodParamPartsMapping(mpin);
+   }
+
+   private String getMode(final boolean input, final boolean output)
+   {
+      if (input == true & output == true)
+      {
+         return "INOUT";
+      }
+      else if (input == true)
+      {
+         return "IN";
+      }
+      else if (output == true)
+      {
+         return "OUT";
+      }
+
+      return "";
    }
 
    private String getMode(WSDLInterfaceOperation op, String name)
@@ -341,7 +417,7 @@ public class MappingFileGeneratorHelper
       return "IN";
    }
 
-   private void constructRPCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop)
+   private void constructRPCParameters(ServiceEndpointMethodMapping semm, WSDLInterfaceOperation wiop, WSDLBindingOperation bindingOperation)
    {
       WSDLInterfaceOperationInput win = WSDLUtils.getWsdl11Input(wiop);
       if (win == null)
@@ -384,6 +460,11 @@ public class MappingFileGeneratorHelper
          wrvm.setWsdlMessagePartName(partName);
          semm.setWsdlReturnValueMapping(wrvm);
       }
+      
+      if (bindingOperation != null)
+      {
+         constructHeaderParameters(semm, wiop, bindingOperation);
+      }      
    }
 
    public void constructJavaXmlTypeMapping(JavaWsdlMapping jwm)
@@ -447,7 +528,29 @@ public class MappingFileGeneratorHelper
                   jwm.addExceptionMappings(exceptionMapping);
                }
             }
+
+            WSDLBindingOperation bindingOperation = HeaderUtil.getWSDLBindingOperation(wsdlDefinitions, op);
+            if (bindingOperation != null)
+            {
+               constructHeaderJavaXmlTypeMapping(jwm, HeaderUtil.getSignatureHeaders(bindingOperation.getInputs()));
+               constructHeaderJavaXmlTypeMapping(jwm, HeaderUtil.getSignatureHeaders(bindingOperation.getOutputs()));
+            }
+
          }//end for
+      }
+   }
+
+   public void constructHeaderJavaXmlTypeMapping(JavaWsdlMapping jwm, WSDLSOAPHeader[] headers)
+   {
+      for (WSDLSOAPHeader current : headers)
+      {
+         QName elementName = current.getElement();
+
+         JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
+         XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
+         XSTypeDefinition xt = xe.getTypeDefinition();
+
+         addJavaXMLTypeMap(xt, elementName.getLocalPart(), "", "", jwm, true);
       }
    }
 
@@ -761,14 +864,12 @@ public class MappingFileGeneratorHelper
        */
       if (xmlType.getNamespaceURI().equals(Constants.NS_SCHEMA_XSD) && "anyType".equals(xmlType.getLocalPart()) && javaType == Element.class)
          javaType = SOAPElement.class;
-      javaType = this.makeCustomDecisions(javaType, xmlName, xmlType);
+      javaType = this.makeCustomDecisions(javaType, xmlType);
 
       if (javaType == null)
       {
-         if (log.isDebugEnabled())
-            log.debug("Typemapping lookup failed for " + xmlName);
-         if (log.isDebugEnabled())
-            log.debug("Falling back to identifier generation");
+         log.debug("Typemapping lookup failed for " + xmlName);
+         log.debug("Falling back to identifier generation");
          String className = xmlType.getLocalPart();
          if (className.charAt(0) == '>')
             className = className.substring(1);
@@ -833,7 +934,7 @@ public class MappingFileGeneratorHelper
     * @param xmlName
     * @param xmlType
     */
-   private Class makeCustomDecisions(Class javaType, QName xmlName, QName xmlType)
+   private Class makeCustomDecisions(Class javaType, QName xmlType)
    {
       if (javaType != null && xmlType != null)
       {

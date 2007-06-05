@@ -1196,7 +1196,7 @@ public class WSDL11Reader
          {
             WSDLInterfaceOperationOutput destIntfOutput = destIntfOperation.getOutput(element);
             if (destIntfOutput != null)
-               destIntfOperation.removeInput(element);
+               destIntfOperation.removeOutput(element);
          }
 
          public void removeRPCPart(String partName)

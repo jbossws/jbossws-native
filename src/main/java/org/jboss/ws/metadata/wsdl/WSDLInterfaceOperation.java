@@ -189,6 +189,11 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
       WSDLInterfaceOperationOutput opOutput = (WSDLInterfaceOperationOutput)outputs.get(qname);
       return opOutput;
    }
+   
+   public void removeOutput(QName element)
+   {
+      outputs.remove(element);
+   }
 
    public WSDLInterfaceOperationOutput getOutputByPartName(String partName)
    {

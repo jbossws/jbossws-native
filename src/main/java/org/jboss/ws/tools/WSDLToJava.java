@@ -44,6 +44,7 @@ import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
+import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
@@ -53,6 +54,7 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLRPCPart;
+import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
@@ -195,7 +197,7 @@ public class WSDLToJava implements WSDLToJavaIntf
    public void setNamespacePackageMap(Map<String, String> map)
    {
       //Lets convert the package->namespace map to namespace->package map
-      Set keys = map.keySet();
+      Set<String> keys = map.keySet();
       Iterator<String> iter = keys.iterator();
       while (iter != null && iter.hasNext())
       {
@@ -271,10 +273,12 @@ public class WSDLToJava implements WSDLToJavaIntf
          throw new IllegalArgumentException("Interface " + itfname + " doesn't have operations");
       int len = ops != null ? ops.length : 0;
 
-      // FIXME - Add support for headers
       for (int i = 0; i < len; i++)
       {
          WSDLInterfaceOperation op = ops[i];
+
+         WSDLBindingOperation bindingOperation = HeaderUtil.getWSDLBindingOperation(wsdl, op);
+
          //TODO: Take care of multiple outputs
          String returnType = null;
 
@@ -284,11 +288,11 @@ public class WSDLToJava implements WSDLToJavaIntf
          WSDLInterfaceOperationOutput output = WSDLUtils.getWsdl11Output(op);
          if (isDocument())
          {
-            returnType = appendDocParameters(paramBuffer, input, output);
+            returnType = appendDocParameters(paramBuffer, input, output, bindingOperation);
          }
          else
          {
-            returnType = appendRpcParameters(paramBuffer, op, output);
+            returnType = appendRpcParameters(paramBuffer, op, output, bindingOperation);
          }
 
          if (returnType == null)
@@ -334,7 +338,8 @@ public class WSDLToJava implements WSDLToJavaIntf
       }
    }
 
-   private String appendRpcParameters(StringBuilder paramBuffer, WSDLInterfaceOperation op, WSDLInterfaceOperationOutput output) throws IOException
+   private String appendRpcParameters(StringBuilder paramBuffer, WSDLInterfaceOperation op, WSDLInterfaceOperationOutput output, WSDLBindingOperation bindingOperation)
+         throws IOException
    {
       String returnType = null;
       boolean first = true;
@@ -366,10 +371,16 @@ public class WSDLToJava implements WSDLToJavaIntf
          returnType = getReturnType(xmlName, xmlType, xt);
       }
 
+      if (bindingOperation != null)
+      {
+         appendHeaderParameters(paramBuffer, bindingOperation);
+      }
+
       return returnType;
    }
 
-   private String appendDocParameters(StringBuilder paramBuffer, WSDLInterfaceOperationInput input, WSDLInterfaceOperationOutput output) throws IOException
+   private String appendDocParameters(StringBuilder paramBuffer, WSDLInterfaceOperationInput input, WSDLInterfaceOperationOutput output,
+         WSDLBindingOperation bindingOperation) throws IOException
    {
       String returnType = null;
       boolean holder = false;
@@ -391,7 +402,53 @@ public class WSDLToJava implements WSDLToJavaIntf
          returnType = getReturnType(xmlName, xmlType, xt);
       }
 
+      if (bindingOperation != null)
+      {
+         appendHeaderParameters(paramBuffer, bindingOperation);
+      }
+
       return returnType;
+   }
+
+   private void appendHeaderParameters(StringBuilder buf, WSDLBindingOperation bindingOperation) throws IOException
+   {
+      WSDLSOAPHeader[] inputHeaders = HeaderUtil.getSignatureHeaders(bindingOperation.getInputs());
+      WSDLSOAPHeader[] outputHeaders = HeaderUtil.getSignatureHeaders(bindingOperation.getOutputs());
+
+      // Process Inputs First
+      for (WSDLSOAPHeader currentInput : inputHeaders)
+      {
+         boolean holder = HeaderUtil.containsMatchingPart(outputHeaders, currentInput);
+         appendHeaderParameter(buf, currentInput, holder);
+      }
+
+      for (WSDLSOAPHeader currentOutput : outputHeaders)
+      {
+         boolean input = HeaderUtil.containsMatchingPart(inputHeaders, currentOutput);
+
+         if (input == true)
+            continue;
+
+         appendHeaderParameter(buf, currentOutput, true);
+      }
+   }
+
+   private void appendHeaderParameter(StringBuilder buf, WSDLSOAPHeader header, boolean holder) throws IOException
+   {
+      QName elementName = header.getElement();
+
+      JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
+      XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
+      XSTypeDefinition xt = xe.getTypeDefinition();
+      QName xmlType = new QName(xt.getNamespace(), xt.getName());
+
+      if (buf.length() > 0)
+      {
+         buf.append(", ");
+      }
+
+      generateParameter(buf, "", xmlType, xsmodel, xt, false, true, holder);
+      buf.append(" ").append(header.getPartName());
    }
 
    private void appendParameters(StringBuilder buf, WSDLInterfaceOperationInput in, WSDLInterfaceOperationOutput output, String containingElement) throws IOException
@@ -778,4 +835,5 @@ public class WSDLToJava implements WSDLToJavaIntf
    {
       this.parameterStyle = paramStyle;
    }
+
 }
