@@ -481,7 +481,9 @@ public class ParameterMetaData
 
    /**
     * Identify MTOM and SWA:Ref parameter as these require special treatment.
-    * This only affects JAX-WS endpoints
+    * This only affects JAX-WS endpoints.
+	 *
+	 * Note: For SEI parameter annotations this happens within the metadata builder. 
     * @param epType
     */
    private void initializeAttachmentParameter(Type epType)
