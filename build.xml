@@ -162,6 +162,8 @@
 			</fileset>
 			<fileset dir="${core.etc.dir}">
 				<include name="log4j.properties"/>
+				<include name="ws*.bat"/>
+				<include name="ws*.sh"/>
 			</fileset>
 			<metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
 			<metainf dir="${core.resources.dir}/standard-config">
