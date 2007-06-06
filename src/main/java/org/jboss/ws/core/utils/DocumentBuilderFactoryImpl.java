@@ -52,8 +52,8 @@ public class DocumentBuilderFactoryImpl extends DocumentBuilderFactory
          delegate = (DocumentBuilderFactory)clazz.newInstance();
 
          // namespace aware by default
-         delegate.setNamespaceAware(true);
-      }
+         delegate.setNamespaceAware(true);			
+		}
       catch (Exception ex)
       {
          throw new IllegalStateException("Cannot create delegate document builder factory: " + XERCES_DOCUMENT_BUILDER_FACTORY, ex);
@@ -73,7 +73,8 @@ public class DocumentBuilderFactoryImpl extends DocumentBuilderFactory
    public DocumentBuilder newDocumentBuilder() throws ParserConfigurationException
    {
       DocumentBuilder builder = delegate.newDocumentBuilder();
-      return builder;
+		builder.setEntityResolver( new JBossWSEntityResolver() );
+		return builder;
    }
 
    public void setAttribute(String name, Object value) throws IllegalArgumentException
