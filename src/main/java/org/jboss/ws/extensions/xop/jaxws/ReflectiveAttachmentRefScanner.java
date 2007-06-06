@@ -173,6 +173,7 @@ public class ReflectiveAttachmentRefScanner {
                {
                   paramResult.setIndex(index);                  
                   results.add(paramResult);
+
                }
 				}
          }
