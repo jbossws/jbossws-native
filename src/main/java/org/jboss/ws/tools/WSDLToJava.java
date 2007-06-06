@@ -327,7 +327,7 @@ public class WSDLToJava implements WSDLToJavaIntf
             if (cl == null)
             {
                String faultTypeName = (!xt.getAnonymous()) ? faultXMLType.getLocalPart() : faultXMLName.getLocalPart();
-               buf.append(seiPkgName + "." + cleanUpFaultName(faultTypeName));
+               buf.append(seiPkgName + "." + JavaUtils.capitalize(faultTypeName));
             }
             else buf.append(cl.getName());
             buf.append(",");
@@ -441,10 +441,10 @@ public class WSDLToJava implements WSDLToJavaIntf
       XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
       XSTypeDefinition xt = xe.getTypeDefinition();
       QName xmlType = new QName(xt.getNamespace(), xt.getName());
-      
+
       // Replace the xt with the real type from the schema.
       xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
-      
+
       if (buf.length() > 0)
       {
          buf.append(", ");
@@ -752,33 +752,6 @@ public class WSDLToJava implements WSDLToJavaIntf
       if (cls.isArray())
          return JavaUtils.getSourceName(cls);
       return cls.getName() + arraySuffix;
-   }
-
-   /**
-    * WSDL may have appended the Faults with 'Fault' or 'Error'
-    * @param faultname
-    * @return
-    */
-   private String cleanUpFaultName(String faultname)
-   {
-      //Clean up the faultname from Error and Fault
-      boolean endsfault = faultname.endsWith("Fault");
-
-      if (endsfault)
-      {
-         int index = faultname.lastIndexOf("Fault");
-         faultname = faultname.substring(0, index);
-      }
-      else
-      {
-         boolean endsError = faultname.endsWith("Error");
-         if (endsError)
-         {
-            int index = faultname.lastIndexOf("Error");
-            faultname = faultname.substring(0, index);
-         }
-      }
-      return JavaUtils.capitalize(faultname);
    }
 
    private void checkTypeMapping()
