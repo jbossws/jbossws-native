@@ -441,7 +441,10 @@ public class WSDLToJava implements WSDLToJavaIntf
       XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
       XSTypeDefinition xt = xe.getTypeDefinition();
       QName xmlType = new QName(xt.getNamespace(), xt.getName());
-
+      
+      // Replace the xt with the real type from the schema.
+      xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
+      
       if (buf.length() > 0)
       {
          buf.append(", ");

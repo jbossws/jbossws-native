@@ -373,6 +373,11 @@ public class MappingFileGeneratorHelper
       XSTypeDefinition xt = xe.getTypeDefinition();
       QName xmlType = new QName(xt.getNamespace(), xt.getName());
 
+      // Replace the xt with the real type from the schema.
+      xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
+      if (xt instanceof XSSimpleTypeDefinition)
+         xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
+      
       String partName = header.getPartName();
 
       MethodParamPartsMapping mpin = getMethodParamPartsMapping(semm, elementName, xmlType, paramPosition, wsdlMessageName, mode, partName, false, true);
@@ -460,11 +465,11 @@ public class MappingFileGeneratorHelper
          wrvm.setWsdlMessagePartName(partName);
          semm.setWsdlReturnValueMapping(wrvm);
       }
-      
+
       if (bindingOperation != null)
       {
          constructHeaderParameters(semm, wiop, bindingOperation);
-      }      
+      }
    }
 
    public void constructJavaXmlTypeMapping(JavaWsdlMapping jwm)
