@@ -206,7 +206,14 @@
       </classes>
     </war>
 
-    <!-- jaxws-jbws1581 -->
+	  <!-- jaxws-samples-jbws1566-->
+	  <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1566.jar">
+		  <fileset dir="${tests.output.dir}/classes">
+			  <include name="org/jboss/test/ws/jaxws/jbws1566/**/*.class"/>
+		  </fileset>		 
+	  </jar>
+
+	 <!-- jaxws-jbws1581 -->
     <war warfile="${tests.output.dir}/libs/jaxws-jbws1581.war" webxml="${tests.output.dir}/resources/jaxws/jbws1581/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1581/EndpointBean.class"/>
