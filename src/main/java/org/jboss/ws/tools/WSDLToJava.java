@@ -183,7 +183,6 @@ public class WSDLToJava implements WSDLToJavaIntf
 
       File dirloc = utils.createPackage(dir.getAbsolutePath(), packageName);
       createSEI(dirloc, wsdl);
-      //xsdJava.generateJavaSource(wsdl.getTypes().getSchemaModel(), dir, packageName, true);
    }
 
    public Map<String, String> getNamespacePackageMap()
@@ -665,7 +664,9 @@ public class WSDLToJava implements WSDLToJavaIntf
       //Check if the portType name conflicts with a service name
       if (wsdl.getService(seiName) != null)
          seiName += "_PortType";
-
+      
+      seiName = JavaUtils.capitalize(seiName);
+      
       return seiName;
    }
 
