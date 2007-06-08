@@ -206,7 +206,7 @@
       </classes>
     </war>
 
-	  <!-- jaxws-samples-jbws1566-->
+	  <!-- jaxws-jbws1566-->
 	  <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1566.jar">
 		  <fileset dir="${tests.output.dir}/classes">
 			  <include name="org/jboss/test/ws/jaxws/jbws1566/**/*.class"/>
