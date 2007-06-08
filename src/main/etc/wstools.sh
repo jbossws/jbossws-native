@@ -52,10 +52,10 @@ WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/activation.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/javassist.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossall-client.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossretro-rt.jar"
-WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jboss-backport-concurrent.jar"
-WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws14-client.jar"
+WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jboss-backport-concurrent.jar"	
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws-client.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/log4j.jar"
+WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/wsdl4j.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/mail.jar"
 
 # For Cygwin, switch paths to Windows format before running java
