@@ -46,6 +46,7 @@ import org.w3c.dom.NodeList;
  * For a discussion of this topic.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author mageshbk@jboss.com
  * @since 23-Mar-2005
  */
 public class WSDLRequestHandler
@@ -136,10 +137,10 @@ public class WSDLRequestHandler
 
                      if (! (wsdlHost.startsWith("http://") || wsdlHost.startsWith("https://")) )
                      {
-	                     String reqProtocol = reqURL.getProtocol();
-	                     int reqPort = reqURL.getPort();
-	                     String hostAndPort = wsdlHost + (reqPort > 0 ? ":" + reqPort : "");
-	                     completeHost = reqProtocol + "://" + hostAndPort;
+                        String reqProtocol = reqURL.getProtocol();
+                        int reqPort = reqURL.getPort();
+                        String hostAndPort = wsdlHost + (reqPort > 0 ? ":" + reqPort : "");
+                        completeHost = reqProtocol + "://" + hostAndPort;
                      }
 
                      String newLocation = completeHost + reqPath + "?wsdl&resource=" + newResourcePath;
@@ -159,25 +160,12 @@ public class WSDLRequestHandler
                   String orgLocation = locationAttr.getNodeValue();
                   
                   URL locURL = new URL(orgLocation);
-                  String locProtocol = locURL.getProtocol();
                   String locPath = locURL.getPath();
 
-                  if (reqURL.getProtocol().equals(locProtocol) && reqURL.getPath().equals(locPath))
-                  {
-                     String completeHost = wsdlHost;
-                	 if (! (completeHost.startsWith("http://") || completeHost.startsWith("https://")) )
-                     {
-	                	 int locPort = locURL.getPort();
-	                     String hostAndPort = wsdlHost + (locPort > 0 ? ":" + locPort : "");
+                  String newLocation = wsdlHost  + locPath;
+                  locationAttr.setNodeValue(newLocation);
 
-	                     completeHost = locProtocol + "://" + hostAndPort;
-                     }
-
-                     String newLocation = completeHost  + locPath;
-                     locationAttr.setNodeValue(newLocation);
-
-                     log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
-                  }
+                  log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
                }
             }
             else

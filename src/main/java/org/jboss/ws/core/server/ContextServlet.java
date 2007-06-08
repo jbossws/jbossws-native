@@ -40,11 +40,14 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.EndpointRegistry;
 import org.jboss.wsf.spi.management.EndpointRegistryFactory;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 
 /**
  * The servlet that that is associated with context /jbossws
  *
  * @author Thomas.Diesler@jboss.org
+ * @author mageshbk@jboss.com
  * @since 21-Mar-2005
  */
 public class ContextServlet extends HttpServlet
@@ -94,6 +97,9 @@ public class ContextServlet extends HttpServlet
       {
          Endpoint ep = epRegistry.getEndpoint(oname);
          ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
+         ServerConfigFactory factory = ServerConfigFactory.getInstance();
+         ServerConfig config = factory.getServerConfig();
+         String displayAddress = config.getDisplayAddress(sepMetaData.getEndpointAddress(),requestURL);
 
          writer.print("<tr>");
          writer.print("	<td>ServiceEndpointID</td>");
@@ -101,7 +107,7 @@ public class ContextServlet extends HttpServlet
          writer.print("</tr>");
          writer.print("<tr>");
          writer.print("	<td>ServiceEndpointAddress</td>");
-         writer.print("	<td><a href='" + sepMetaData.getEndpointAddress() + "?wsdl'>" + sepMetaData.getEndpointAddress() + "?wsdl</a></td>");
+         writer.print("	<td><a href='" + displayAddress + "?wsdl'>" + displayAddress + "?wsdl</a></td>");
          writer.print("</tr>");
          writer.print("<tr>");
          writer.print("	<td colspan=2>");
