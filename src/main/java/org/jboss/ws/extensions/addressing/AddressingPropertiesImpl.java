@@ -80,7 +80,9 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
 
    private Map<QName, AddressingType> addrTypes = new HashMap<QName, AddressingType>();
 
-   public AttributedURI getTo()
+	private boolean initialized = false;
+	
+	public AttributedURI getTo()
    {
       return to;
    }
@@ -166,10 +168,12 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
     */
    public void initializeAsDestination(EndpointReference epr)
    {
-      if (epr == null)
+		if(initialized) return;
+		
+		if (epr == null)
          throw new IllegalArgumentException("Invalid null endpoint reference");
 
-      this.to = epr.getAddress();
+		this.to = epr.getAddress();
       
       ReferenceParameters srcParams = epr.getReferenceParameters();
       for (Object obj : srcParams.getElements())
@@ -178,7 +182,9 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
          soapElement.setAttributeNS(getNamespaceURI(), "wsa:IsReferenceParameter", "true");
          addElement(soapElement);
       }
-   }
+
+		this.initialized = true;
+	}
 
    /**
     * Initialize this <code>AddressingProperties</code> as a reply to the 
@@ -193,7 +199,9 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
     */
    public void initializeAsReply(AddressingProperties props, boolean isFault)
    {
-      EndpointReference epr = (isFault ? props.getFaultTo() : null);
+		if(initialized) return;
+		
+		EndpointReference epr = (isFault ? props.getFaultTo() : null);
       if (epr == null)
       {
          epr = props.getReplyTo();
@@ -216,7 +224,9 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
          Relationship rel = builder.newRelationship(props.getMessageID().getURI());
          this.relatesTo = new Relationship[] { rel };
       }
-   }
+
+		this.initialized = true;
+	}
 
    // Map interface ****************************************************************
 
