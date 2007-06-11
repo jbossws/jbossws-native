@@ -19,12 +19,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1505;
+package org.jboss.test.ws.jaxws.jbws1422;
 
 import junit.framework.Test;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
-import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
@@ -33,21 +31,22 @@ import javax.xml.ws.Service;
 import java.net.URL;
 
 /**
- * Verify wsdl gerneration on SEI inheritance.
- * 
- * http://jira.jboss.org/jira/browse/JBWS-1505
+ * If @WebParam.name starts with one lower-case character followed
+ * by an upper-case character a NPE is thrown on deployment.
+ *
+ * http://jira.jboss.org/jira/browse/JBWS-1422
  *
  * @version $Revision:1370 $
  */
-public class JBWS1505TestCase extends JBossWSTest
+public class JBWS1422TestCase extends JBossWSTest
 {
-   private String targetNS = "http://org.jboss.test.ws/jbws1505";
-   private Interface2 port;
+   private String targetNS = "http://org.jboss.test.ws/jbws1422";
+   private IWebsvc port;
 	private URL wsdlURL;
 
 	public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1505TestCase.class, "jaxws-jbws1505.jar");
+      return JBossWSTestSetup.newTestSetup(JBWS1422TestCase.class, "jaxws-jbws1422.jar");
    }
 
    @Override
@@ -55,45 +54,24 @@ public class JBWS1505TestCase extends JBossWSTest
    {
       super.setUp();
 
-      QName serviceName = new QName(targetNS, "JBWS1505Service");
-      wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1505/JBWS1505EndpointImpl?wsdl");
+      QName serviceName = new QName(targetNS, "JBWS1422Service");
+      wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1422/IWebsvcImpl?wsdl");
 
       Service service = Service.create(wsdlURL, serviceName);
-      port = service.getPort(Interface2.class);
+      port = service.getPort(IWebsvc.class);
    }
 
-	/**
-	 * All methods on the SEI should be mapped.
-	 * 
+	/**	 
+	 *
 	 * @throws Exception
 	 */
-	public void testWSDLGeneration() throws Exception
+	public void testDeployment() throws Exception
 	{
 		try
       {
-         WSDLDefinitions wsdl = WSDLDefinitionsFactory.newInstance().parse(wsdlURL);
-         assertTrue(wsdl.getInterfaces().length == 1); 							// a single port
-			assertTrue(wsdl.getInterfaces()[0].getOperations().length == 5); 	// with five op's
-		}
-      catch (Exception ex)
-      {
-         WSException.rethrow(ex);
-      }
-	}
-
-	/**
-	 * Complex types that inherit from a SEI hirarchy shold expose
-	 * all members in xml schema.
-	 * 
-	 * @throws Exception
-	 */
-	public void testTypeInheritance() throws Exception
-	{
-		try
-      {
-         CustomType ct = port.getCustomType();
-			assertTrue(ct.getMember1() == 1);
-			assertTrue(ct.getMember2() == 2);
+         String result = port.cancel("myFooBar");
+			assertNotNull(result);
+			assertEquals("Cancelled", result);
 		}
       catch (Exception ex)
       {
