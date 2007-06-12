@@ -55,11 +55,11 @@ public class BaseDataTypesDocLitWTestCase extends BaseDataTypesSupport {
       if (targetPort == null)
       {
          URL wsdlLocation = new File("resources/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl").toURL();
-         Service service = Service.create(wsdlLocation, new QName("", "BaseDataTypesDocLitWService") );
+         Service service = Service.create(wsdlLocation, new QName("http://tempuri.org/", "BaseDataTypesDocLitWService") );
          BaseDataTypesDocLitWTestCase.targetPort = service.getPort(IBaseDataTypesDocLitW.class);
          ((BindingProvider)BaseDataTypesDocLitWTestCase.targetPort).getRequestContext().put(
             BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            "http://jbossws.demo.jboss.com:8080/basedoclitw/endpoint");
+            "http://"+getServerHost()+":8080/basedoclitw/endpoint");
          BaseDataTypesDocLitWTestCase.proxy = (BaseDataTypesSEI) BaseDataTypesProxy.newInstance(BaseDataTypesDocLitWTestCase.targetPort);
       }
    }

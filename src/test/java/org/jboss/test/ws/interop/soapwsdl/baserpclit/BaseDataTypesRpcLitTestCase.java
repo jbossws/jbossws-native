@@ -57,11 +57,11 @@ public class BaseDataTypesRpcLitTestCase extends BaseDataTypesSupport {
       if (targetPort == null)
       {
          URL wsdlLocation = new File("resources/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl").toURL();
-         Service service = Service.create(wsdlLocation, new QName("", "BaseDataTypesRpcLitService") );
+         Service service = Service.create(wsdlLocation, new QName("http://tempuri.org/", "BaseDataTypesRpcLitService") );
          targetPort = service.getPort(IBaseDataTypesRpcLit.class);
          ((BindingProvider)targetPort).getRequestContext().put(
             BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            "http://jbossws.demo.jboss.com:8080/baserpclit/endpoint");
+            "http://"+getServerHost()+":8080/baserpclit/endpoint");
          proxy = (BaseDataTypesSEI)BaseDataTypesProxy.newInstance(targetPort);
       }
    }

@@ -1,5 +1,5 @@
 # Always exclude
-org/jboss/test/ws/interop/**
+#org/jboss/test/ws/interop/**
 org/jboss/test/ws/benchmark/**
 
 # Fix before JBoss50 goes final

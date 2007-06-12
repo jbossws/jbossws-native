@@ -39,9 +39,12 @@ import java.math.BigInteger;
  * @since 29.01.2007
  */
 @WebService(
-   endpointInterface = "org.jboss.test.ws.interop.soapwsdl.basedoclitw.IBaseDataTypesDocLitW"
+		endpointInterface = "org.jboss.test.ws.interop.soapwsdl.basedoclitw.IBaseDataTypesDocLitW",
+		serviceName = "BaseDataTypesDocLitWService",
+		targetNamespace = "http://tempuri.org/"
 )
-public class ServiceImpl implements IBaseDataTypesDocLitW {
+public class ServiceImpl implements IBaseDataTypesDocLitW
+{
    @WebMethod(operationName = "RetBool", action = "http://tempuri.org/IBaseDataTypesDocLitW/RetBool")
    @WebResult(name = "RetBoolResult", targetNamespace = "http://tempuri.org/")
    @RequestWrapper(localName = "RetBool", targetNamespace = "http://tempuri.org/", className = "org.jboss.test.ws.interop.soapwsdl.basedoclitw.RetBool")
