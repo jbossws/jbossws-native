@@ -100,7 +100,6 @@ public class AddressingReplyToTestCase extends JBossWSTest
 
    /** This sends a fault message to the FaultTo endpoint and verfies whether we can read it of again.
     */
-
 	public void testFaultToMessage() throws Exception
    {
       String reqEnv =
