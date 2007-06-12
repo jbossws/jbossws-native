@@ -100,7 +100,8 @@ public class AddressingReplyToTestCase extends JBossWSTest
 
    /** This sends a fault message to the FaultTo endpoint and verfies whether we can read it of again.
     */
-   public void testFaultToMessage() throws Exception
+
+	public void testFaultToMessage() throws Exception
    {
       String reqEnv =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
@@ -141,15 +142,15 @@ public class AddressingReplyToTestCase extends JBossWSTest
    public void testFaultTo() throws Exception
    {
       String lastFault = faultto.getLastFault();
-      
+
       /* JAX-WS 10.2.2.3: the fields of the fault message are populated according to
-       * the following rules of precedence: 
-       * 
+       * the following rules of precedence:
+       *
        * faultstring
        * 1. SOAPFaultException.getFault().getFaultString()
        * 2. Exception.getMessage()
-       * 3. Exception.toString() 
-       * 
+       * 3. Exception.toString()
+       *
        * this test used to expect the value returned by toString() */
       assertEquals("Invalid Value", lastFault);
    }
