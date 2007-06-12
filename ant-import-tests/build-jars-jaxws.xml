@@ -451,22 +451,6 @@
 			</fileset>
 		</war>
 
-		<!-- BaseDataTypesDocLitB client -->
-		<jar jarfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesDocLitB-client.jar">
-			<fileset dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/interop/*.class"/>
-				<include name="org/jboss/test/ws/interop/soapwsdl/basedoclitb/**/*.class"/>
-			</fileset>
-			<metainf dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF">
-				<include name="wsdl/**.*"/>
-			</metainf>
-			<metainf dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitB/META-INF">
-				<include name="application-client.xml"/>
-				<include name="jboss-client.xml"/>
-				<include name="scenarios.xml"/>
-			</metainf>
-		</jar>
-
 		<!-- BaseDataTypesDocLitB.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesDocLitB.war"
 			  webxml="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/web.xml">
@@ -484,23 +468,6 @@
 			</fileset>
 		</war>
 
-		<!-- BaseDataTypesDocLitW client -->
-		<jar jarfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesDocLitW-client.jar">
-			<fileset dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/interop/soapwsdl/basedoclitw/**/*.class"/>
-				<include name="org/jboss/test/ws/interop/*.class"/>
-			</fileset>
-			<metainf dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF">
-				<include name="jaxrpc-mapping.xml"/>
-				<include name="wsdl/**"/>
-			</metainf>
-			<metainf dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitW/META-INF">
-				<include name="application-client.xml"/>
-				<include name="jboss-client.xml"/>
-				<include name="scenarios.xml"/>
-			</metainf>
-		</jar>
-
 		<!-- BaseDataTypesDocLitW.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesDocLitW.war"
 			  webxml="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/web.xml">
@@ -517,23 +484,6 @@
 				<include name="*.*"/>
 			</fileset>
 		</war>
-		
-		<!-- BaseDataTypesRpcLit client -->
-		<jar jarfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesRpcLit-client.jar">
-			<fileset dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/interop/soapwsdl/baserpclit/**/*.class"/>
-				<include name="org/jboss/test/ws/interop/*.class"/>
-			</fileset>
-			<metainf dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF">
-				<include name="jaxrpc-mapping.xml"/>
-				<include name="wsdl/**"/>
-			</metainf>
-			<metainf dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesRpcLit/META-INF">
-				<include name="application-client.xml"/>
-				<include name="jboss-client.xml"/>
-				<include name="scenarios.xml"/>
-			</metainf>
-		</jar>
 
 		<!-- BaseDataTypesRpcLit.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesRpcLit.war"
@@ -551,8 +501,6 @@
 				<include name="*.*"/>
 			</fileset>
 		</war>
-
-
 
 	</target>
 
