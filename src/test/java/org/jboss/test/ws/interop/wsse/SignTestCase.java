@@ -33,12 +33,12 @@ public class SignTestCase extends AbstractWSSEBase {
 
    public static Test suite()
    {
-      prepareClientClasspath("jbossws-interop-wsse10Sign-client.jar");
+      addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar");
       return JBossWSTestSetup.newTestSetup(SignTestCase.class, "jbossws-interop-wsse10Sign.war");
    }
 
    String getEndpointURL() {
-      return "http://jbossws.demo.jboss.com:8080/wsse10Sign/endpoint";
+      return "http://"+getServerHost()+":8080/wsse10Sign/endpoint";
    }
 
    // Scenario 3.2. X509 Mutual Authentication, Sign Only

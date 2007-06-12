@@ -519,6 +519,60 @@
 			</fileset>
 		</war>
 
+		<!-- jbossws-interop-wsse10Encrypt.war -->
+		<war warfile="${tests.output.dir}/libs/jbossws-interop-wsse10Encrypt.war"
+			  webxml="${tests.output.dir}/resources/interop/wsse/encrypt/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/classes">
+				<include name="org/jboss/test/ws/interop/wsse/**/*.class"/>
+				<include name="org/jboss/test/ws/interop/*.class"/>
+			</classes>
+
+			<webinf dir="${tests.output.dir}/resources/interop/wsse/encrypt/WEB-INF">				
+				<include name="wsdl/**.*"/>
+				<include name="jboss-wsse-server.xml"/>
+				<include name="jboss-web.xml"/>
+			</webinf>
+			<webinf dir="${tests.output.dir}/resources/interop/wsse/shared/META-INF">
+				<include name="alice.jks"/>
+				<include name="wsse10.truststore"/>
+			</webinf>
+
+			<fileset dir="${tests.output.dir}/resources/interop/wsse/">
+				<include name="*.*"/>
+			</fileset>
+		</war>
+	   <!-- jbossws-interop-wsse10Encrypt-client.jar -->
+		<jar destfile="${tests.output.dir}/libs/jbossws-interop-wsse10Encrypt-client.jar">
+			<metainf dir="${tests.output.dir}/resources/interop/wsse/encrypt/META-INF"/>
+		</jar>
+
+		<!-- jbossws-interop-wsse10Sign.war -->
+		<war warfile="${tests.output.dir}/libs/jbossws-interop-wsse10Sign.war"
+			  webxml="${tests.output.dir}/resources/interop/wsse/sign/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/classes">
+				<include name="org/jboss/test/ws/interop/wsse/**/*.class"/>
+				<include name="org/jboss/test/ws/interop/*.class"/>
+			</classes>
+
+			<webinf dir="${tests.output.dir}/resources/interop/wsse/sign/WEB-INF">
+				<include name="wsdl/**.*"/>
+				<include name="jboss-wsse-server.xml"/>
+				<include name="jboss-web.xml"/>
+			</webinf>
+			<webinf dir="${tests.output.dir}/resources/interop/wsse/shared/META-INF">
+				<include name="alice.jks"/>
+				<include name="wsse10.truststore"/>
+			</webinf>
+
+			<fileset dir="${tests.output.dir}/resources/interop/wsse/">
+				<include name="*.*"/>
+			</fileset>
+		</war>
+	   <!-- jbossws-interop-wsse10Sign-client.jar -->
+		<jar destfile="${tests.output.dir}/libs/jbossws-interop-wsse10Sign-client.jar">
+			<metainf dir="${tests.output.dir}/resources/interop/wsse/sign/META-INF"/>
+		</jar>
+
 	</target>
 
 </project>

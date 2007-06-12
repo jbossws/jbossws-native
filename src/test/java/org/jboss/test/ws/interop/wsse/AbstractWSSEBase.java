@@ -93,10 +93,10 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
       */
    }
 
-   protected static void prepareClientClasspath(String s) {
+   protected static void addClientConfToClasspath(String s) {
       try
       {
-         // wrap the classload upfront to allow inclusion of the client.jar
+         // wrap the classloader upfront to allow inclusion of the client.jar
          JBossWSTestHelper helper = new JBossWSTestHelper();
          ClassLoader parent = Thread.currentThread().getContextClassLoader();
          URLClassLoader replacement = new URLClassLoader(new URL[] {helper.getArchiveURL(s)}, parent);

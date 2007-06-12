@@ -41,7 +41,7 @@ import org.jboss.ws.integration.UnifiedVirtualFile;
 public class WSSecurityConfigFactory
 {
    // provide logging
-   final Logger log = Logger.getLogger(JAXRPCServerMetaDataBuilder.class);
+   final Logger log = Logger.getLogger(WSSecurityConfigFactory.class);
 
    public static WSSecurityConfigFactory newInstance()
    {
@@ -74,8 +74,13 @@ public class WSSecurityConfigFactory
          
          initKeystorePath(vfsRoot, config);
       }
-      
-      return config;
+		else
+		{
+			// an exception might be better here...
+			log.warn("Unable to load ws-security config ("+resourceName+"). Security processing will be disabled");
+		}		
+
+		return config;
    }
    
    public void initKeystorePath(UnifiedVirtualFile vfsRoot, WSSecurityConfiguration config)

@@ -34,12 +34,12 @@ public class EncryptTestCase extends AbstractWSSEBase  {
 
    public static Test suite()
    {
-      prepareClientClasspath("jbossws-interop-wsse10Encrypt-client.jar");
+      addClientConfToClasspath("jbossws-interop-wsse10Encrypt-client.jar");
       return JBossWSTestSetup.newTestSetup(EncryptTestCase.class, "jbossws-interop-wsse10Encrypt.war");
    }
 
-   String getEndpointURL() {
-      return "http://jbossws.demo.jboss.com:8080/wsse10Encrypt/endpoint";
+	String getEndpointURL() {
+      return "http://"+getServerHost()+":8080/wsse10Encrypt/endpoint";
    }
 
    // Scenario 3.3. X509 Mutual Authentication, Sign Then Encrypt
