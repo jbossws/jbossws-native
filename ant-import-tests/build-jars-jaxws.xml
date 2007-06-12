@@ -451,7 +451,7 @@
 			</fileset>
 		</war>
 
-		<!-- BaseDataTypesDocLitB.war -->
+		<!-- jbossws-interop-BaseDataTypesDocLitB.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesDocLitB.war"
 			  webxml="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/classes">
@@ -468,7 +468,7 @@
 			</fileset>
 		</war>
 
-		<!-- BaseDataTypesDocLitW.war -->
+		<!-- jbossws-interop-BaseDataTypesDocLitW.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesDocLitW.war"
 			  webxml="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/classes">
@@ -485,7 +485,7 @@
 			</fileset>
 		</war>
 
-		<!-- BaseDataTypesRpcLit.war -->
+		<!-- jbossws-interop-BaseDataTypesRpcLit.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-BaseDataTypesRpcLit.war"
 			  webxml="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/classes">
@@ -498,6 +498,23 @@
 				<include name="scenarios.xml"/>
 			</webinf>
 			<fileset dir="${tests.output.dir}/resources/interop/soapwsdl/BaseDataTypesRpcLit">
+				<include name="*.*"/>
+			</fileset>
+		</war>
+
+		<!-- jbossws-interop-wsa10.war -->
+		<war warfile="${tests.output.dir}/libs/jbossws-interop-wsa10.war"
+			  webxml="${tests.output.dir}/resources/interop/wsa/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/classes">
+				<include name="org/jboss/test/ws/interop/wsa/**/*.class"/>
+				<include name="org/jboss/test/ws/interop/*.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/resources/interop/wsa/WEB-INF">
+				<include name="wsdl/**"/>
+				<include name="jboss-web.xml"/>
+				<include name="scenarios.xml"/>
+			</webinf>
+			<fileset dir="${tests.output.dir}/resources/interop/wsa">
 				<include name="*.*"/>
 			</fileset>
 		</war>

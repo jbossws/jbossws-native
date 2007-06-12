@@ -1,5 +1,5 @@
 # Always exclude
-org/jboss/test/ws/interop/**
+#org/jboss/test/ws/interop/**
 org/jboss/test/ws/benchmark/**
 
 # EJB3/Injection excludes

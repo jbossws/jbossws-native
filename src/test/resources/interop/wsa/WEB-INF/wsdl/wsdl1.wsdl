@@ -1,70 +1,9 @@
 <wsdl:definitions targetNamespace='http://example.org/' xmlns:i0='http://example.org/notify' xmlns:i1='http://example.org/echo' xmlns:msc='http://schemas.microsoft.com/ws/2005/12/wsdl/contract' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:soap12='http://schemas.xmlsoap.org/wsdl/soap12/' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:tns='http://example.org/' xmlns:wsa='http://schemas.xmlsoap.org/ws/2004/08/addressing' xmlns:wsa10='http://www.w3.org/2005/08/addressing' xmlns:wsap='http://schemas.xmlsoap.org/ws/2004/08/addressing/policy' xmlns:wsaw='http://www.w3.org/2006/05/addressing/wsdl' xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' xmlns:wsp='http://schemas.xmlsoap.org/ws/2004/09/policy' xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd' xmlns:wsx='http://schemas.xmlsoap.org/ws/2004/09/mex' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
- <wsp:Policy wsu:Id='CustomBinding_Notify_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Notify1_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Echo_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Echo1_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Echo2_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Echo3_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Echo4_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <cdp:CompositeDuplex xmlns:cdp='http://schemas.microsoft.com/net/2006/06/duplex'/>
-    <ow:OneWay xmlns:ow='http://schemas.microsoft.com/ws/2005/05/routing/policy'/>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
- <wsp:Policy wsu:Id='CustomBinding_Echo5_policy'>
-  <wsp:ExactlyOne>
-   <wsp:All>
-    <cdp:CompositeDuplex xmlns:cdp='http://schemas.microsoft.com/net/2006/06/duplex'/>
-    <ow:OneWay xmlns:ow='http://schemas.microsoft.com/ws/2005/05/routing/policy'/>
-    <wsaw:UsingAddressing/>
-   </wsp:All>
-  </wsp:ExactlyOne>
- </wsp:Policy>
  <wsdl:import location='wsdl0.wsdl' namespace='http://example.org/notify'/>
  <wsdl:import location='wsdl2.wsdl' namespace='http://example.org/echo'/>
  <wsdl:types/>
 
- <wsdl:binding name='CustomBinding_Notify' type='i0:Notify'>
-  <wsp:PolicyReference URI='#CustomBinding_Notify_policy'/>
+ <wsdl:binding name='CustomBinding_Notify' type='i0:Notify'>  
   <soap:binding transport='http://schemas.xmlsoap.org/soap/http'/>
   <wsdl:operation name='Notify'>
    <soap:operation soapAction='http://example.org/action/notify' style='document'/>
@@ -84,7 +23,6 @@
   </wsdl:operation>
  </wsdl:binding-->
  <wsdl:binding name='CustomBinding_Echo' type='i1:EchoPortType'>
-  <wsp:PolicyReference URI='#CustomBinding_Echo_policy'/>
   <soap:binding transport='http://schemas.xmlsoap.org/soap/http'/>
   <wsdl:operation name='EchoOp'>
    <soap:operation soapAction='http://example.org/action/echoIn' style='document'/>
@@ -110,7 +48,6 @@
   </wsdl:operation>
  </wsdl:binding-->
  <wsdl:binding name='CustomBinding_Echo2' type='i1:EchoPortType'>
-  <wsp:PolicyReference URI='#CustomBinding_Echo2_policy'/>
   <soap:binding transport='http://schemas.xmlsoap.org/soap/http'/>
   <wsdl:operation name='EchoOp'>
    <soap:operation soapAction='http://example.org/action/echoIn' style='document'/>
@@ -136,7 +73,6 @@
   </wsdl:operation>
  </wsdl:binding-->
  <wsdl:binding name='CustomBinding_Echo4' type='i1:EchoPortType'>
-  <wsp:PolicyReference URI='#CustomBinding_Echo4_policy'/>
   <soap:binding transport='http://schemas.xmlsoap.org/soap/http'/>
   <wsdl:operation name='EchoOp'>
    <soap:operation soapAction='http://example.org/action/echoIn' style='document'/>

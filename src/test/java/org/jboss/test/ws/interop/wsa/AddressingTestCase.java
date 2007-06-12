@@ -60,8 +60,8 @@ public class AddressingTestCase extends JBossWSTest {
 
    static
    {
-      org.jboss.test.ws.interop.wsa.AddressingTestCase.BUILDER = AddressingBuilder.getAddressingBuilder();
-      org.jboss.test.ws.interop.wsa.AddressingTestCase.CONSTANTS = org.jboss.test.ws.interop.wsa.AddressingTestCase.BUILDER.newAddressingConstants();
+      AddressingTestCase.BUILDER = AddressingBuilder.getAddressingBuilder();
+      AddressingTestCase.CONSTANTS = AddressingTestCase.BUILDER.newAddressingConstants();
    }
 
    private Element customerParam;
@@ -72,7 +72,7 @@ public class AddressingTestCase extends JBossWSTest {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(AddressingTestCase.class, "jbossws-interop-wsa10-service.war");
+      return JBossWSTestSetup.newTestSetup(AddressingTestCase.class, "jbossws-interop-wsa10.war");
    }
 
    protected void setUp() throws Exception
@@ -89,8 +89,15 @@ public class AddressingTestCase extends JBossWSTest {
          ((StubExt)echoPort).setConfigName("Standard WSAddressing Client");
          ((StubExt)notifyPort).setConfigName("Standard WSAddressing Client");
 
-         ((BindingProvider)echoPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/wsa10/echo");
-         ((BindingProvider)notifyPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/wsa10/notify");
+         ((BindingProvider)echoPort).getRequestContext().put(
+					BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+					"http://"+getServerHost()+":8080/wsa10/echo"
+			);
+
+			((BindingProvider)notifyPort).getRequestContext().put(
+					BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+					"http://"+getServerHost()+":8080/wsa10/notify"
+			);
 
          configureClient();
       }
@@ -106,11 +113,11 @@ public class AddressingTestCase extends JBossWSTest {
    private void configureClient() {
 
       ((BindingProvider)echoPort).getRequestContext().put(
-         BindingProvider.ENDPOINT_ADDRESS_PROPERTY,"http://jbossws.demo.jboss.com:8080/wsa10/echo"         
+         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/wsa10/echo"         
       );
 
       ((BindingProvider)notifyPort).getRequestContext().put(
-         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://jbossws.demo.jboss.com:8080/wsa10/notify"
+         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/wsa10/notify"
       );
 
       /*
