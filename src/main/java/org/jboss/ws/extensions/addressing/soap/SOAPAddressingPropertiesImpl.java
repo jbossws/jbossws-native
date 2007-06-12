@@ -68,17 +68,17 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 	private String getRequiredHeaderContent(SOAPHeader soapHeader, QName qname)
 	{
 		Element element = DOMUtils.getFirstChildElement(soapHeader, qname);
-		if(null == element) throw new IllegalArgumentException("Required element "+qname+" is missing");
+		if(null == element) throw new AddressingException("Required element "+qname+" is missing");
 
 		String value = DOMUtils.getTextContent(element);
-		if(null == value || value.equals("")) throw new IllegalArgumentException("Required element "+qname+" is missing");
+		if(null == value || value.equals("")) throw new AddressingException("Required element "+qname+" is missing");
 		
 		return value;
 	}
 
 	private String getOptionalHeaderContent(SOAPHeader soapHeader, QName qname)
 	{
-		Element element = DOMUtils.getFirstChildElement(soapHeader, ADDR.getMessageIDQName());
+		Element element = DOMUtils.getFirstChildElement(soapHeader, qname);
 		if (element != null)
 		{
 			return DOMUtils.getTextContent(element);
