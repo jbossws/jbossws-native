@@ -78,11 +78,17 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);
 
-   private final EndpointMetaData epMetaData;
-   private final HandlerResolver handlerResolver;
-   private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
+	// the associated endpoint meta data
+	private final EndpointMetaData epMetaData;
 
-   public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
+	// Keep a handle on the resolver so that updateConfig calls may revisit the associated chains
+	private final HandlerResolver handlerResolver;
+	
+	private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
+
+	private static HandlerType[] HANDLER_TYPES = new HandlerType[] {HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST};
+	
+	public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
    {
       super(epMetaData);
       setTargetEndpointAddress(epMetaData.getEndpointAddress());
@@ -105,26 +111,31 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
 
-      PortInfo portInfo = getPortInfo(epMetaData);
+		PortInfo portInfo = getPortInfo(epMetaData);
 
-      if (handlerResolver instanceof HandlerResolverImpl)
-      {
-         HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
-         impl.initHandlerChain(epMetaData, HandlerType.PRE, clearExistingHandlers);
-         impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
-         impl.initHandlerChain(epMetaData, HandlerType.POST, clearExistingHandlers);
+		if (handlerResolver != null)
+		{
 
-         List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
-         binding.setHandlerChain(preChain, HandlerType.PRE);
-         List<Handler> postChain = impl.getHandlerChain(portInfo, HandlerType.POST);
-         binding.setHandlerChain(postChain, HandlerType.POST);
-      }
+			boolean jbossHandlerResolver = handlerResolver instanceof HandlerResolverImpl;
+			
+			if (jbossHandlerResolver) // knows about PRE and POST handlers
+			{
+				HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
+				impl.initHandlerChain(epMetaData, HandlerType.PRE, clearExistingHandlers);
+				impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
+				impl.initHandlerChain(epMetaData, HandlerType.POST, clearExistingHandlers);
 
-      if (handlerResolver != null)
-      {
-         List<Handler> epChain = handlerResolver.getHandlerChain(portInfo);
-         binding.setHandlerChain(epChain);
-      }
+				List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
+				List<Handler> postChain = impl.getHandlerChain(portInfo, HandlerType.POST);
+				
+				binding.setHandlerChain(postChain, HandlerType.POST);
+				binding.setHandlerChain(preChain, HandlerType.PRE);
+			}
+
+			// The regular handler chain
+			List<Handler> endpointChain = handlerResolver.getHandlerChain(portInfo);
+			binding.setHandlerChain(endpointChain);
+		}
    }
 
    /**
@@ -377,34 +388,23 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
       configProvider.setConfigName(configName, configFile);
    }
 
-   public Set<QName> getHeaders()
+	/**
+	 * Retrieve header names that can be processed by this binding
+	 * @return
+	 */
+	public Set<QName> getHeaders()
    {
 		Set<QName> headers = new HashSet<QName>();
 
-		if (handlerResolver instanceof HandlerResolverImpl)
-		{
-			// From resolver
-			Set resolverHeaders = ((HandlerResolverImpl)handlerResolver).getHeaders();
-			headers.addAll(resolverHeaders);			
-		}
-		else
-		{
-			PortInfo portInfo = getPortInfo(epMetaData);
-			List<Handler> handlerChain = handlerResolver.getHandlerChain(portInfo);
-			if (handlerChain != null)
-			{
-				for (Handler handler : handlerChain)
-					if (handler instanceof SOAPHandler)
-						headers.addAll(((SOAPHandler)handler).getHeaders());
-			}
-		}
+		BindingExt binding = (BindingExt)getBinding();
 
-		// Add the binding headers as well
-		// I.e. client calls Binding.setHandlerCain(...)
-		for(Handler bindingHandler : getBinding().getHandlerChain())
+		for(HandlerType type : HANDLER_TYPES)
 		{
-			if(bindingHandler instanceof SOAPHandler)
-				headers.addAll( ((SOAPHandler)bindingHandler).getHeaders());
+			for(Handler bindingHandler : binding.getHandlerChain(type))
+			{
+				if(bindingHandler instanceof SOAPHandler)
+					headers.addAll( ((SOAPHandler)bindingHandler).getHeaders());
+			}
 		}
 		
 		return headers;
