@@ -439,7 +439,7 @@
 	</target>
 
 	<target name="build-interop-jars">
-
+		
 		<!-- Root.war -->
 		<war warfile="${tests.output.dir}/libs/jbossws-interop-root.war"
 			  webxml="${tests.output.dir}/resources/interop/root/WEB-INF/web.xml">
@@ -572,6 +572,11 @@
 		<jar destfile="${tests.output.dir}/libs/jbossws-interop-wsse10Sign-client.jar">
 			<metainf dir="${tests.output.dir}/resources/interop/wsse/sign/META-INF"/>
 		</jar>
+
+		<!-- wrap up in an *.ear for easier deployment -->
+		<ear destfile="${tests.output.dir}/libs/jbossws-interop.ear" appxml="${tests.output.dir}/resources/interop/root/META-INF/application.xml">
+			<fileset dir="${tests.output.dir}/libs" includes="*interop*.war"/>
+		</ear>
 
 	</target>
 
