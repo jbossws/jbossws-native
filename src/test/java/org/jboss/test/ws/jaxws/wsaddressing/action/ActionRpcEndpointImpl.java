@@ -40,7 +40,11 @@ import org.jboss.ws.annotation.EndpointConfig;
  * @since 24-Nov-2005
  */
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-@WebService(name = "ActionEndpoint", targetNamespace = "http://org.jboss.ws/addressing/action", wsdlLocation = "WEB-INF/wsdl/ActionRpcService.wsdl")
+@WebService(
+		name = "ActionEndpoint",
+		targetNamespace = "http://org.jboss.ws/addressing/action",		
+		endpointInterface = "org.jboss.test.ws.jaxws.wsaddressing.action.ActionEndpoint"
+)
 @EndpointConfig(configName = "Standard WSAddressing Endpoint")
 public class ActionRpcEndpointImpl implements ActionEndpoint
 {

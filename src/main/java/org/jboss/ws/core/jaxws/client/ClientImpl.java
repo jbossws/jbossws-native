@@ -379,20 +379,35 @@ public class ClientImpl extends CommonClient implements BindingProvider, Configu
 
    public Set<QName> getHeaders()
    {
-      if (handlerResolver instanceof HandlerResolverImpl)
-         return ((HandlerResolverImpl)handlerResolver).getHeaders();
+		Set<QName> headers = new HashSet<QName>();
 
-      Set<QName> headers = new HashSet<QName>();
-      PortInfo portInfo = getPortInfo(epMetaData);
-      List<Handler> handlerChain = handlerResolver.getHandlerChain(portInfo);
-      if (handlerChain != null)
-      {
-         for (Handler handler : handlerChain)
-            if (handler instanceof SOAPHandler)
-               headers.addAll(((SOAPHandler)handler).getHeaders());
-      }
+		if (handlerResolver instanceof HandlerResolverImpl)
+		{
+			// From resolver
+			Set resolverHeaders = ((HandlerResolverImpl)handlerResolver).getHeaders();
+			headers.addAll(resolverHeaders);			
+		}
+		else
+		{
+			PortInfo portInfo = getPortInfo(epMetaData);
+			List<Handler> handlerChain = handlerResolver.getHandlerChain(portInfo);
+			if (handlerChain != null)
+			{
+				for (Handler handler : handlerChain)
+					if (handler instanceof SOAPHandler)
+						headers.addAll(((SOAPHandler)handler).getHeaders());
+			}
+		}
 
-      return headers;
+		// Add the binding headers as well
+		// I.e. client calls Binding.setHandlerCain(...)
+		for(Handler bindingHandler : getBinding().getHandlerChain())
+		{
+			if(bindingHandler instanceof SOAPHandler)
+				headers.addAll( ((SOAPHandler)bindingHandler).getHeaders());
+		}
+		
+		return headers;
    }
 
    @Override

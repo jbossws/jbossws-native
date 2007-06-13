@@ -36,6 +36,10 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
+import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A client side handler that reads/writes the addressing properties
@@ -49,27 +53,27 @@ public class WSAddressingClientHandler extends GenericHandler
    // Provide logging
    private static Logger log = Logger.getLogger(WSAddressingClientHandler.class);
 
-   // addressing builder & constants
-   private AddressingBuilder addrBuilder;
+   private static AddressingBuilder ADDR_BUILDER;
+   private static AddressingConstantsImpl ADDR_CONSTANTS;
+	private static QName[] HEADERS = new QName[2];
 
-   // should the request be normalized according to the specifications
-   private boolean normalize;
-
-   public WSAddressingClientHandler()
+	static
    {
-      addrBuilder = AddressingBuilder.getAddressingBuilder();
-   }
+      ADDR_CONSTANTS = new AddressingConstantsImpl();
+      ADDR_BUILDER = AddressingBuilder.getAddressingBuilder();
 
-   public QName[] getHeaders()
+		HEADERS[0] = ADDR_CONSTANTS.getActionQName();
+		HEADERS[1] = ADDR_CONSTANTS.getToQName();
+	}
+	
+	public QName[] getHeaders()
    {
-      return new QName[] {};
+      return HEADERS;
    }
 
    public void init(HandlerInfo handlerInfo)
    {
-      super.init(handlerInfo);
-      normalize = "true".equals(handlerInfo.getHandlerConfig().get("normalize"));
-
+      super.init(handlerInfo);     
    }
 
    public boolean handleRequest(MessageContext msgContext)
@@ -79,30 +83,18 @@ public class WSAddressingClientHandler extends GenericHandler
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)msgContext.getProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
 
       if (addrProps != null)
-      {
-         if (normalize)
-            normalizeRequest(msgContext, addrProps);
-
+      {       
          SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
          addrProps.writeHeaders(soapMessage);
       }
       else
       {
          // supply default addressing properties
-         addrProps = (SOAPAddressingPropertiesImpl)addrBuilder.newAddressingProperties();
+         addrProps = (SOAPAddressingPropertiesImpl)ADDR_BUILDER.newAddressingProperties();
          msgContext.setProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
-
-         if (normalize)
-            normalizeRequest(msgContext, addrProps);
       }
 
       return true;
-   }
-
-   /* supply the default addressing properties in case elements are missing */
-   private void normalizeRequest(MessageContext msgContext, SOAPAddressingProperties addrProps)
-   {
-      // TODO: supply default header
    }
 
    public boolean handleResponse(MessageContext msgContext)

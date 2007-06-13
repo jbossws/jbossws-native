@@ -51,6 +51,7 @@ public class SOAPAddressingPropertiesTestCase extends JBossWSTest
 
 	private String reqEnvStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>"
 			+ "  <env:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>"
+			+ "    <wsa:Action>http://fabrikam123.example/SubmitPO</wsa:Action>"
 			+ "    <wsa:To>http://fabrikam123.example/Purchasing</wsa:To>"
 			+ "    <wsa:ReplyTo>"
 			+ "      <wsa:Address>http://business456.example/client1</wsa:Address>"
@@ -58,7 +59,6 @@ public class SOAPAddressingPropertiesTestCase extends JBossWSTest
 			+ "        <ns1:sessionid xmlns:ns1='http://somens'>someuniqueid</ns1:sessionid>"
 			+ "      </wsa:ReferenceParameters>"
 			+ "    </wsa:ReplyTo>"
-			+ "    <wsa:Action>http://fabrikam123.example/SubmitPO</wsa:Action>"
 			+ "    <wsa:MessageID>uuid:6B29FC40-CA47-1067-B31D-00DD010662DA</wsa:MessageID>"
 			+ "  </env:Header>"
 			+ "  <env:Body/>"
@@ -66,8 +66,8 @@ public class SOAPAddressingPropertiesTestCase extends JBossWSTest
 
 	private String resEnvStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
 			"  <env:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>" +
-			"    <wsa:To>http://business456.example/client1</wsa:To>" +
 			"    <wsa:Action>http://fabrikam123.example/ReplyPO</wsa:Action>" +
+			"    <wsa:To>http://business456.example/client1</wsa:To>" +
 			"    <wsa:RelatesTo>uuid:6B29FC40-CA47-1067-B31D-00DD010662DA</wsa:RelatesTo>" +
 			"    <ns1:sessionid wsa:IsReferenceParameter='true' xmlns:ns1='http://somens'>someuniqueid</ns1:sessionid>" +
 			"  </env:Header>" +

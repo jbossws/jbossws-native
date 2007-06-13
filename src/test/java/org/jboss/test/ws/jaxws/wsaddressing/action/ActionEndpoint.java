@@ -23,6 +23,7 @@ package org.jboss.test.ws.jaxws.wsaddressing.action;
 
 //$Id$
 
+import javax.jws.WebService;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -33,9 +34,10 @@ import java.rmi.RemoteException;
  *
  * @since 24-Nov-2005
  */
-public interface ActionEndpoint extends Remote
+@WebService(targetNamespace = "http://org.jboss.ws/addressing/action")
+public interface ActionEndpoint
 {
-   String foo(String item) throws RemoteException;
+   String foo(String item);
    
-   String bar(String item) throws RemoteException;
+   String bar(String item);
 }

@@ -37,10 +37,7 @@ import org.w3c.dom.NamedNodeMap;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.*;
-import javax.xml.ws.addressing.AddressingConstants;
-import javax.xml.ws.addressing.AddressingException;
-import javax.xml.ws.addressing.ReferenceParameters;
-import javax.xml.ws.addressing.Relationship;
+import javax.xml.ws.addressing.*;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import java.lang.reflect.Array;
@@ -65,6 +62,8 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 
 	private NamespaceRegistry nsRegistry = new NamespaceRegistry();
 
+	private boolean mustunderstand;
+
 	private String getRequiredHeaderContent(SOAPHeader soapHeader, QName qname)
 	{
 		Element element = DOMUtils.getFirstChildElement(soapHeader, qname);
@@ -86,7 +85,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 
 		return null;
 	}
-	
+		
 	public void readHeaders(SOAPMessage message) throws AddressingException
 	{
 		try
@@ -221,22 +220,21 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 		try
 		{
 			SOAPFactoryImpl factory = (SOAPFactoryImpl)SOAPFactory.newInstance();
+			SOAPHeader soapHeader = message.getSOAPHeader();			
 
-			SOAPHeader soapHeader = message.getSOAPHeader();
-
+			// Assert on REQUIRED elements wsa:Action and wsa:To
 			if (getAction() == null)
-				throw new AddressingException("Required addressing property wsa:Action");
+				throw new AddressingException("Required addressing header missing: " + ADDR.getActionQName());
+			if (getTo() == null)
+				throw new AddressingException("Required addressing header missing: " + ADDR.getToQName());
 
 			// Add the xmlns:wsa declaration
 			soapHeader.addNamespaceDeclaration(ADDR.getNamespacePrefix(), ADDR.getNamespaceURI());
 
-			// Write wsa:To
-			if (getTo() != null)
-			{
-				SOAPElement wsaTo = soapHeader.addChildElement(new NameImpl(ADDR.getToQName()));
-				wsaTo.addTextNode(getTo().getURI().toString());
-			}
-
+			// Write REQUIRED wsa:Action and wsa:To
+			appendRequiredHeader(soapHeader, ADDR.getActionQName(), getAction());
+			appendRequiredHeader(soapHeader, ADDR.getToQName(), getTo());
+			
 			// Write wsa:From
 			if (getFrom() != null)
 			{
@@ -267,12 +265,12 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 				soapHeader.addChildElement(soapElement);
 			}
 
-			// Write wsa:Action
-			SOAPElement wsaAction = soapHeader.addChildElement(new NameImpl(ADDR.getActionQName()));
-			wsaAction.addTextNode(getAction().getURI().toString());
-
 			// Write wsa:MessageID
-			if (getMessageID() != null)
+			if( (getReplyTo()!=null || getFaultTo()!=null) && null==getMessageID())
+			{
+				throw new AddressingException("Required addressing header missing:" + ADDR.getMessageIDQName());
+			}
+			else if (getMessageID() != null)
 			{
 				SOAPElement wsaMessageId = soapHeader.addChildElement(new NameImpl(ADDR.getMessageIDQName()));
 				wsaMessageId.addTextNode(getMessageID().getURI().toString());
@@ -309,9 +307,23 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 		}
 	}
 
+	private void appendRequiredHeader(SOAPHeader soapHeader, QName name, AttributedURI value) throws SOAPException
+	{
+		SOAPElement element = soapHeader.addChildElement(new NameImpl(name));
+		element.addTextNode(value.getURI().toString());
+
+		if(mustunderstand)
+		{
+			// add soap:mustUnderstand=1
+			String envNS = soapHeader.getParentElement().getNamespaceURI();
+			element.addNamespaceDeclaration("soap", envNS);
+			element.addAttribute(new QName(envNS, "mustUnderstand", "soap"), "1");
+		}
+	}
+
 	public void setMu(boolean mu)
 	{
-		throw new NotImplementedException();
+		this.mustunderstand = mu;
 	}
 
 	private void appendAttributes(SOAPElement soapElement, Map<QName, String> attributes)

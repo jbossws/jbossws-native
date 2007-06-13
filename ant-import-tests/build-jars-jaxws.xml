@@ -356,19 +356,7 @@
 			<webinf dir="${tests.output.dir}/resources/jaxws/wsaddressing/action/META-INF">
 				<include name="wsdl/**"/>
 			</webinf>
-		</war>
-		<jar destfile="${tests.output.dir}/libs/jaxws-wsaddressing-action-rpc-client.jar">
-			<fileset dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/action/ActionEndpoint.class"/>
-			</fileset>
-			<metainf dir="${tests.output.dir}/resources/jaxws/wsaddressing/action/META-INF">
-				<include name="application-client.xml"/>
-				<include name="jboss-client.xml"/>
-				<include name="jbossws-client-config.xml"/>
-				<include name="jaxrpc-mapping.xml"/>
-				<include name="wsdl/**"/>
-			</metainf>
-		</jar>
+		</war>	
 
 		<!-- jaxws-wsaddressing-replyto -->
 		<war warfile="${tests.output.dir}/libs/jaxws-wsaddressing-initial.war" webxml="${tests.output.dir}/resources/jaxws/wsaddressing/replyto/Initial-WEB-INF/web.xml">

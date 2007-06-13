@@ -22,6 +22,8 @@
 package org.jboss.ws.extensions.addressing.jaxrpc;
 
 import java.net.URISyntaxException;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.GenericHandler;
@@ -52,27 +54,27 @@ public class WSAddressingServerHandler extends GenericHandler
    // Provide logging
    private static Logger log = Logger.getLogger(WSAddressingServerHandler.class);
 
-   // should the request be validated?
-   private boolean validate = true;
-
    private static AddressingBuilder ADDR_BUILDER;
    private static AddressingConstantsImpl ADDR_CONSTANTS;
-   static
+	private static QName[] HEADERS = new QName[2];
+	
+	static
    {
       ADDR_CONSTANTS = new AddressingConstantsImpl();
       ADDR_BUILDER = AddressingBuilder.getAddressingBuilder();
-   }
+
+		HEADERS[0] = ADDR_CONSTANTS.getActionQName();
+		HEADERS[1] = ADDR_CONSTANTS.getToQName();
+	}
 
    public QName[] getHeaders()
    {
-      return new QName[] {};
+      return HEADERS;
    }
 
    public void init(HandlerInfo handlerInfo)
    {
-      super.init(handlerInfo);
-      String strValidate = (String)handlerInfo.getHandlerConfig().get("validate");
-      validate = "true".equals(strValidate);
+      super.init(handlerInfo);           
    }
 
    /**
@@ -87,10 +89,6 @@ public class WSAddressingServerHandler extends GenericHandler
       SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
       addrProps.readHeaders(soapMessage);
       msgContext.setProperty(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
-
-      if (validate)
-         validateRequest(addrProps);
-
       return true;
    }
 
@@ -165,15 +163,5 @@ public class WSAddressingServerHandler extends GenericHandler
       }
 
       outProps.writeHeaders(soapMessage);
-   }
-
-   /* check wsa formal constraints */
-   private void validateRequest(SOAPAddressingProperties addrProps)
-   {
-
-      // If wsa:ReplyTo is supplied and the message lacks a [message id] property, the processor MUST fault.
-      if (addrProps.getReplyTo() != null && addrProps.getMessageID() == null)
-         throw new IllegalArgumentException("wsa:MessageId is required when wsa:ReplyTo is supplied");
-
    }
 }

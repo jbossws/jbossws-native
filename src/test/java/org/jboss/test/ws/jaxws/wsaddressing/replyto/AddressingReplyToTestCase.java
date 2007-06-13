@@ -39,6 +39,8 @@ import org.jboss.wsf.spi.test.JBossWSTestSetup;
 /**
  * Test endpoint using ws-addressing
  *
+ * NOTE: This test uses a JAX-RPC client against a JAX-WS endpoint.
+ *  
  * @author Thomas.Diesler@jboss.org
  * @since 24-Nov-2005
  */

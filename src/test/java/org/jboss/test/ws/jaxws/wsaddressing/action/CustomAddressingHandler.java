@@ -24,13 +24,15 @@ package org.jboss.test.ws.jaxws.wsaddressing.action;
 import java.net.URISyntaxException;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.handler.GenericHandler;
-import javax.xml.rpc.handler.MessageContext;
+
 import javax.xml.ws.addressing.AddressingBuilder;
-import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
+import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
+import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.handler.GenericHandler;
 
 /**
  * A client side handler for the ws-addressing
@@ -38,26 +40,21 @@ import org.jboss.logging.Logger;
  * @author Thomas.Diesler@jboss.org
  * @since 29-Nov-2005
  */
-public class ClientRpcHandler extends GenericHandler
+public class CustomAddressingHandler extends GenericHandler
 {
    // Provide logging
-   private static Logger log = Logger.getLogger(ClientRpcHandler.class);
-   
-   public QName[] getHeaders()
-   {
-      return new QName[] {};
-   }
-
-   public boolean handleRequest(MessageContext msgContext)
+   private static Logger log = Logger.getLogger(CustomAddressingHandler.class);
+     
+	protected boolean handleOutbound(MessageContext msgContext)
    {
       log.info("handleRequest" + this);
       try
       {
-         AddressingBuilder builder = AddressingBuilder.getAddressingBuilder();
-         AddressingProperties outProps = builder.newAddressingProperties();
-         outProps.setTo(builder.newURI("http://localhost:8080/jaxrpc-addressing-action-rpc/ActionService"));
+         SOAPAddressingBuilder builder = (SOAPAddressingBuilder)SOAPAddressingBuilder.getAddressingBuilder();
+		   SOAPAddressingProperties outProps = (SOAPAddressingProperties)builder.newAddressingProperties();		
+			outProps.setTo(builder.newURI("http://localhost:8080/jaxrpc-addressing-action-rpc/ActionService"));
          outProps.setAction(builder.newURI("urn:wsa-action-bar"));
-         msgContext.setProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, outProps);
+         msgContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, outProps);
       }
       catch (URISyntaxException ex)
       {
