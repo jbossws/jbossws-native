@@ -23,7 +23,6 @@ package org.jboss.ws.extensions.addressing.soap;
 
 //$Id$
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
@@ -53,6 +52,8 @@ import java.util.Map;
  * read and write the Message Addressing Properties to a <code>SOAPMessage</code>.
  * All individual properties must implement <code>SOAPAddressingElement</code>.
  *
+ * @See http://www.w3.org/TR/ws-addr-core/
+ * 
  * @author Thomas.Diesler@jboss.org
  * @since 15-Nov-2005
  */
@@ -94,21 +95,16 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 
 			SOAPAddressingBuilder builder = new SOAPAddressingBuilderImpl();
 			AddressingConstants ADDR = builder.newAddressingConstants();
-			registerNamespaces(ADDR, soapHeader);
-			
-			// required elements
-			String action = getRequiredHeaderContent(soapHeader, ADDR.getActionQName());			
-			String to = getRequiredHeaderContent(soapHeader, ADDR.getToQName());			
-
-			// wsa:Action
-			// This REQUIRED element of type xs:anyURI conveys the [action] property.
-			// The [children] of this element convey the value of this property.
-			setAction(builder.newURI(action));
+			registerNamespaces(ADDR, soapHeader);		
 
 			// wsa:To
-			// This REQUIRED element (of type xs:anyURI) provides the value for the [destination] property.
-			setTo(builder.newURI(to));
-
+			// This OPTIONAL element provides the value for the [destination] property.
+			// If this element is NOT present then the value of the [destination]
+			// property is "http://www.w3.org/2005/08/addressing/anonymous".
+			String to = getOptionalHeaderContent(soapHeader, ADDR.getToQName());			
+			if(to!=null)
+				setTo(builder.newURI(to));
+		
 			// Read wsa:From
 			// This OPTIONAL element (of type wsa:EndpointReferenceType) provides the value for the [source endpoint] property.
 			Element wsaFrom = DOMUtils.getFirstChildElement(soapHeader, ADDR.getFromQName());
@@ -119,8 +115,9 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 			}
 
 			// Read wsa:ReplyTo
-			// This OPTIONAL element (of type wsa:EndpointReferenceType) provides the value for the [reply endpoint] property.
-			// This element MUST be present if a reply is expected. If this element is present, wsa:MessageID MUST be present.
+			// This OPTIONAL element provides the value for the [reply endpoint] property.
+			// If this element is NOT present then the value of the [address] property of the [reply endpoint]
+			// EPR is "http://www.w3.org/2005/08/addressing/anonymous".
 			Element wsaReplyTo = DOMUtils.getFirstChildElement(soapHeader, ADDR.getReplyToQName());
 			if (wsaReplyTo != null)
 			{
@@ -138,25 +135,20 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 				setFaultTo(ref);
 			}
 
+			// wsa:Action
+			// This REQUIRED element of type xs:anyURI conveys the [action] property.
+			// The [children] of this element convey the value of this property.
+			String action = getRequiredHeaderContent(soapHeader, ADDR.getActionQName());
+			setAction(builder.newURI(action));
+
 			// Read wsa:MessageID
-			// This OPTIONAL element conveys the [message id] property.
-			// This element MUST be present if wsa:ReplyTo or wsa:FaultTo is present.
-			if(wsaReplyTo!=null || wsaFaultTo!=null)
-			{
-				String msgIdValue = getRequiredHeaderContent(soapHeader, ADDR.getMessageIDQName());
-				setMessageID(builder.newURI(msgIdValue));
-			}
-			else
-			{
-				String messageID = getOptionalHeaderContent(soapHeader, ADDR.getMessageIDQName());
-				if(messageID!=null) setMessageID(builder.newURI(messageID));
-			}
-			
+			// This OPTIONAL element (whose content is of type xs:anyURI) conveys the [message id] property.
+			String messageID = getOptionalHeaderContent(soapHeader, ADDR.getMessageIDQName());
+			if(messageID!=null) setMessageID(builder.newURI(messageID));
+
 			// Read wsa:RelatesTo
-			// This OPTIONAL (repeating) element information item contributes one abstract [relationship] property value,
-			// in the form of a (URI, QName) pair.
-			// The [children] property of this element (which is of type xs:anyURI) conveys the [message id]
-			// of the related message. This element MUST be present if the message is a reply.
+			// This OPTIONAL attribute conveys the relationship type as an IRI.
+			// When absent, the implied value of this attribute is "http://www.w3.org/2005/08/addressing/reply".
 			Iterator itRelatesTo = DOMUtils.getChildElements(soapHeader, ADDR.getRelatesToQName());
 			List<Relationship> relList = new ArrayList<Relationship>();
 			while (itRelatesTo.hasNext())
@@ -220,21 +212,18 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 		try
 		{
 			SOAPFactoryImpl factory = (SOAPFactoryImpl)SOAPFactory.newInstance();
-			SOAPHeader soapHeader = message.getSOAPHeader();			
-
-			// Assert on REQUIRED elements wsa:Action and wsa:To
-			if (getAction() == null)
-				throw new AddressingException("Required addressing header missing: " + ADDR.getActionQName());
-			if (getTo() == null)
-				throw new AddressingException("Required addressing header missing: " + ADDR.getToQName());
-
+			SOAPHeader soapHeader = message.getSOAPHeader();					
+			
 			// Add the xmlns:wsa declaration
 			soapHeader.addNamespaceDeclaration(ADDR.getNamespacePrefix(), ADDR.getNamespaceURI());
+						
+			// Write wsa:To
+			if (getTo() != null)
+			{
+				SOAPElement element = soapHeader.addChildElement(new NameImpl(ADDR.getToQName()));
+				element.addTextNode(getTo().getURI().toString());
+			}
 
-			// Write REQUIRED wsa:Action and wsa:To
-			appendRequiredHeader(soapHeader, ADDR.getActionQName(), getAction());
-			appendRequiredHeader(soapHeader, ADDR.getToQName(), getTo());
-			
 			// Write wsa:From
 			if (getFrom() != null)
 			{
@@ -265,6 +254,8 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 				soapHeader.addChildElement(soapElement);
 			}
 
+			appendRequiredHeader(soapHeader, ADDR.getActionQName(), getAction());
+			
 			// Write wsa:MessageID
 			if( (getReplyTo()!=null || getFaultTo()!=null) && null==getMessageID())
 			{
@@ -303,12 +294,15 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 		}
 		catch (SOAPException ex)
 		{
-			throw new AddressingException("Cannot read headers", ex);
+			throw new AddressingException("Cannot read ws-addressing headers", ex);
 		}
 	}
 
 	private void appendRequiredHeader(SOAPHeader soapHeader, QName name, AttributedURI value) throws SOAPException
 	{
+		if(null == value)
+			throw new AddressingException("Required addressing property missing: " + name);
+		
 		SOAPElement element = soapHeader.addChildElement(new NameImpl(name));
 		element.addTextNode(value.getURI().toString());
 
