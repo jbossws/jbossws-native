@@ -352,10 +352,7 @@
 			<classes dir="${tests.output.dir}/classes">
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/action/ActionRpcEndpointImpl.class"/>
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/action/ActionEndpoint.class"/>
-			</classes>
-			<webinf dir="${tests.output.dir}/resources/jaxws/wsaddressing/action/META-INF">
-				<include name="wsdl/**"/>
-			</webinf>
+			</classes>			
 		</war>	
 
 		<!-- jaxws-wsaddressing-replyto -->
