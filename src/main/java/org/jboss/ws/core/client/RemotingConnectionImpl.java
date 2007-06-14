@@ -23,21 +23,6 @@ package org.jboss.ws.core.client;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.remoting.Client;
-import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.marshal.MarshalFactory;
-import org.jboss.remoting.marshal.Marshaller;
-import org.jboss.remoting.marshal.UnMarshaller;
-import org.jboss.ws.core.*;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.config.EndpointProperty;
-
-import javax.xml.rpc.Stub;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.addressing.EndpointReference;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -45,6 +30,26 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.rpc.Stub;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.addressing.EndpointReference;
+
+import org.jboss.logging.Logger;
+import org.jboss.remoting.Client;
+import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.marshal.MarshalFactory;
+import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.core.WSTimeoutException;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.config.EndpointProperty;
 
 /**
  * SOAPConnection implementation.
@@ -100,10 +105,6 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       // HTTPClientInvoker conect sends gratuitous POST
       // http://jira.jboss.com/jira/browse/JBWS-711
       clientConfig.put(Client.ENABLE_LEASE, false);
-
-      // Enable chunked encoding
-      // This is the default size. May be overridden through endpoint config
-      clientConfig.put("chunkedLength", "1024");
    }
 
    public boolean isClosed()
@@ -156,9 +157,6 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          targetAddress = endpoint.toString();
       }
 
-      // remoting props may come from client config as well
-      mergeConfigContribution();
-
       // setup remoting client            
       Map<String, Object> metadata = createRemotingMetaData(reqMessage, callProps);
       Client client = createRemotingClient(endpoint, targetAddress, oneway);
@@ -167,7 +165,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       {
          if (log.isDebugEnabled())
             log.debug("Remoting metadata: " + metadata);
-         
+
          // debug the outgoing message
          MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
 
@@ -195,33 +193,14 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       }
       catch (Throwable th)
       {
-         if(timeout!=null && (th.getCause() instanceof SocketTimeoutException))
+         if (timeout != null && (th.getCause() instanceof SocketTimeoutException))
          {
-            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));            
+            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
          }
 
          IOException io = new IOException("Could not transmit message");
          io.initCause(th);
          throw io;
-      }
-   }
-
-   private void mergeConfigContribution()
-   {
-      // check for config property contribution
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if(msgContext!=null)
-      {
-         Properties epmdProps = msgContext.getEndpointMetaData().getProperties();
-
-         // chunksize settings
-         String chunkSizeValue = epmdProps.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
-         int chunkSize = chunkSizeValue!=null ? Integer.valueOf(chunkSizeValue) : -1;
-         if(chunkSize>0)
-            clientConfig.put(EndpointProperty.CHUNKED_ENCODING_SIZE, chunkSizeValue);
-         else
-            clientConfig.remove("chunkedLength");
-
       }
    }
 
@@ -278,6 +257,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
    private Map<String, Object> createRemotingMetaData(MessageAbstraction reqMessage, Map callProps)
    {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
 
       Map<String, Object> metadata = new HashMap<String, Object>();
 
@@ -288,6 +268,27 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       if (reqMessage != null)
       {
          populateHeaders(reqMessage, metadata);
+
+         // Enable chunked encoding. This is the default size. 
+         clientConfig.put("chunkedLength", "1024");
+         
+         // May be overridden through endpoint config
+         if (msgContext != null)
+         {
+            Properties epmdProps = msgContext.getEndpointMetaData().getProperties();
+
+            // chunksize settings
+            String chunkSizeValue = epmdProps.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
+            int chunkSize = chunkSizeValue != null ? Integer.valueOf(chunkSizeValue) : -1;
+            if (chunkSize > 0)
+            {
+               clientConfig.put(EndpointProperty.CHUNKED_ENCODING_SIZE, chunkSizeValue);
+            }
+            else
+            {
+               clientConfig.remove("chunkedLength");
+            }
+         }
       }
       else
       {
@@ -345,7 +346,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
    protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
    {
       MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
-      
+
       Properties props = new Properties();
       metadata.put("HEADER", props);
 

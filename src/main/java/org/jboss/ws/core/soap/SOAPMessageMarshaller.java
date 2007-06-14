@@ -24,7 +24,6 @@ package org.jboss.ws.core.soap;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;

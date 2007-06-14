@@ -143,7 +143,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    }
 
    public SOAPElement setElementQNameInternal(QName qname) throws SOAPException
-   {     
+   {
       elementName = new NameImpl(qname);
 
       Document owner = domNode.getOwnerDocument();
@@ -152,7 +152,6 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
       return this.completeNamespaceDeclaration();
    }
-
 
    /**
     * Adds an attribute with the specified name and value to this SOAPElement object.
@@ -325,8 +324,17 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    public SOAPElement addTextNode(String value) throws SOAPException
    {
       log.trace("addTextNode: " + value);
-      org.w3c.dom.Text domText = element.getOwnerDocument().createTextNode(value);
-      javax.xml.soap.Text soapText = new TextImpl(domText);
+      org.w3c.dom.Node domNode;
+      if (value.startsWith("<!--") && value.endsWith("-->"))
+      {
+         value = value.substring(4, value.length() - 3);
+         domNode = element.getOwnerDocument().createComment(value);
+      }
+      else
+      {
+         domNode = element.getOwnerDocument().createTextNode(value);
+      }
+      javax.xml.soap.Text soapText = new TextImpl(domNode);
       appendChild(soapText);
       return this;
    }

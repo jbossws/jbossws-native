@@ -32,7 +32,6 @@ import javax.xml.ws.Service;
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.client.ServiceExt;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
@@ -69,9 +68,9 @@ public class SimpleSignTestCase extends JBossWSTest
       QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
 
       Service service = Service.create(wsdlURL, serviceName);
-      ((ServiceExt)service).setSecurityConfig(securityURL.toExternalForm());
       
       Hello port = (Hello)service.getPort(Hello.class);
+      ((StubExt)port).setSecurityConfig(securityURL.toExternalForm());
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
 
       Map<String, Object> reqContext = ((BindingProvider)port).getRequestContext();

@@ -24,8 +24,6 @@ package javax.xml.soap;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jboss.ws.integration.FactoryLoader;
-
 /**
  A factory for creating SOAPMessage objects.
  
@@ -72,7 +70,7 @@ public abstract class MessageFactory
       try
       {
          String propertyName = "javax.xml.soap.MessageFactory";
-         factory = (MessageFactory)FactoryLoader.loadFactory(propertyName, null);
+         factory = (MessageFactory)SAAJFactoryLoader.loadFactory(propertyName, null);
       }
       catch (RuntimeException rte)
       {

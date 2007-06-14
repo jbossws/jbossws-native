@@ -23,8 +23,7 @@ package javax.xml.soap;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import org.jboss.logging.Logger;
+import java.util.logging.Logger;
 
 /** A factory for creating SOAPConnection objects. Implementation of this class
  * is optional. If SOAPConnectionFactory.newInstance() throws an
@@ -40,7 +39,7 @@ import org.jboss.logging.Logger;
 public abstract class SOAPConnectionFactory
 {
    // provide logging
-   private static Logger log = Logger.getLogger(SOAPConnectionFactory.class);
+   private static Logger log = Logger.getLogger(SOAPConnectionFactory.class.getName());
 
    private static final String DEFAULT_SOAP_CONNECTION_FACTORY = "org.jboss.ws.core.soap.SOAPConnectionFactoryImpl";
    private static final String[] alternativeFactories = new String[] { "org.jboss.webservice.soap.SOAPConnectionFactoryImpl",
@@ -81,7 +80,7 @@ public abstract class SOAPConnectionFactory
                }
                catch (ClassNotFoundException e1)
                {
-                  if(log.isDebugEnabled()) log.debug("Cannot load factory: " + factoryName);
+                  log.severe("Cannot load factory: " + factoryName);
                }
             }
          }

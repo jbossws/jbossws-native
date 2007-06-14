@@ -28,7 +28,7 @@ import java.util.Map;
 
 import javax.xml.ws.Endpoint;
 
-import org.jboss.ws.integration.FactoryLoader;
+import org.jboss.wsf.spi.utils.ServiceLoader;
 
 /**
  * An abstract HTTP Server
@@ -53,7 +53,7 @@ public abstract class HttpServer
     */
    public static HttpServer create()
    {
-      HttpServer server = (HttpServer)FactoryLoader.loadFactory(HTTP_SERVER_PROPERTY, null);
+      HttpServer server = (HttpServer)ServiceLoader.loadService(HTTP_SERVER_PROPERTY, null);
       return server;
    }
    

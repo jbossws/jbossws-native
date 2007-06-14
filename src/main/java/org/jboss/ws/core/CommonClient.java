@@ -23,6 +23,7 @@ package org.jboss.ws.core;
 
 // $Id:CommonClient.java 660 2006-08-01 16:29:43Z thomas.diesler@jboss.com $
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -61,6 +63,8 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
+import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -88,6 +92,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
    private Map<QName, UnboundHeader> unboundHeaders = new LinkedHashMap<QName, UnboundHeader>();
    // A List<AttachmentPart> of attachment parts set through the proxy
    private List<AttachmentPart> attachmentParts = new ArrayList<AttachmentPart>();
+   // The WS-Security config
+   private String securityConfig;
 
    /** Create a call that needs to be configured manually
     */
@@ -638,5 +644,35 @@ public abstract class CommonClient implements StubExt, HeaderSource
    {
       EndpointMetaData epMetaData = getEndpointMetaData();
       return epMetaData.getConfigFile();
+   }
+   
+   public String getSecurityConfig()
+   {
+      return securityConfig;
+   }
+
+   public void setSecurityConfig(String securityConfig)
+   {
+      this.securityConfig = securityConfig;
+      
+      if (securityConfig != null)
+      {
+         EndpointMetaData epMetaData = getEndpointMetaData();
+         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+         if (serviceMetaData.getSecurityConfiguration() == null)
+         {
+            try
+            {
+               WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
+               UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
+               WSSecurityConfiguration config = wsseConfFactory.createConfiguration(vfsRoot, securityConfig);
+               serviceMetaData.setSecurityConfiguration(config);
+            }
+            catch (IOException ex)
+            {
+               WSException.rethrow("Cannot set security config", ex);
+            }
+         }
+      }
    }
 }

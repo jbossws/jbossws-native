@@ -172,26 +172,19 @@
 			</metainf>			
 		</jar>
 
-		<!-- Build jbossws-resources.zip -->
-		<zip zipfile="${core.output.lib.dir}/jbossws-resources.zip" >
-			<fileset dir="${core.resources.dir}/standard-config">
-				<include name="standard-*-config.xml"/>
-			</fileset>
+		<!-- Build jbossws-core-scripts.zip -->
+		<zip zipfile="${core.output.lib.dir}/jbossws-core-scripts.zip" >
 			<fileset dir="${core.output.etc.dir}">
-				<include name="wsprovide.bat"/>
-				<include name="wsconsume.bat"/>
 				<include name="wsrunclient.bat"/>
 				<include name="wstools.bat"/>
 			</fileset>
 			<zipfileset dir="${core.output.etc.dir}" filemode="755">
-				<include name="wsprovide.sh"/>
-				<include name="wsconsume.sh"/>
 				<include name="wsrunclient.sh"/>
 				<include name="wstools.sh"/>
 			</zipfileset>
 		</zip>
 
-		<!-- Build jbossws-src.zip -->
+		<!-- Build jbossws-core-src.zip -->
 		<zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip" >
 			<fileset dir="${core.java.dir}"/>
 		</zip>

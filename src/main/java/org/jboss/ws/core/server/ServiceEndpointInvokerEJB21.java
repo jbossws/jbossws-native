@@ -23,11 +23,19 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonBinding;
+import org.jboss.ws.core.CommonBindingProvider;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.HandlerCallback;
+import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -39,6 +47,9 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ServiceEndpointInvokerEJB21 extends ServiceEndpointInvoker
 {
+   // provide logging
+   private static final Logger log = Logger.getLogger(ServiceEndpointInvokerEJB21.class);
+   
    @Override
    protected Invocation setupInvocation(Endpoint ep, EndpointInvocation epInv, InvocationContext invContext) throws Exception
    {
@@ -89,15 +100,42 @@ public class ServiceEndpointInvokerEJB21 extends ServiceEndpointInvoker
       }
 
       /** Handlers are beeing called through the HandlerCallback from the EJB interceptor */
-      public boolean callRequestHandlerChain(HandlerType type)
+      public boolean callRequestHandlerChain(Invocation wsInv, HandlerType type)
       {
-         if (type == HandlerType.PRE)
-            return true;
-         else return delegate.callRequestHandlerChain(sepMetaData, type);
+         boolean handlerPass = true;
+         if (type == HandlerType.ENDPOINT)
+         {
+            handlerPass = delegate.callRequestHandlerChain(sepMetaData, type);
+         }
+         else if (type == HandlerType.POST)
+         {
+            handlerPass = delegate.callRequestHandlerChain(sepMetaData, type);
+            
+            // Verify that the the message has not been mofified
+            CommonMessageContext messageContext = MessageContextAssociation.peekMessageContext();
+            if(handlerPass && messageContext.isModified())
+            {
+               try
+               {
+                  OperationMetaData opMetaData = messageContext.getOperationMetaData();
+                  CommonBindingProvider bindingProvider = new CommonBindingProvider(opMetaData.getEndpointMetaData());
+                  CommonBinding binding = bindingProvider.getCommonBinding();
+                  
+                  log.debug("Handler modified payload, unbind message and update invocation args");
+                  EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, messageContext.getMessageAbstraction());
+                  wsInv.getInvocationContext().addAttachment(EndpointInvocation.class, epInv);
+               }
+               catch (BindingException ex)
+               {
+                  throw new WSException(ex);
+               }
+            }
+         }
+         return handlerPass;
       }
 
       /** Handlers are beeing called through the HandlerCallback from the EJB interceptor */
-      public boolean callResponseHandlerChain(HandlerType type)
+      public boolean callResponseHandlerChain(Invocation wsInv, HandlerType type)
       {
          if (type == HandlerType.PRE)
             return true;
@@ -105,7 +143,7 @@ public class ServiceEndpointInvokerEJB21 extends ServiceEndpointInvoker
       }
 
       /** Handlers are beeing called through the HandlerCallback from the EJB interceptor */
-      public boolean callFaultHandlerChain(HandlerType type, Exception ex)
+      public boolean callFaultHandlerChain(Invocation wsInv, HandlerType type, Exception ex)
       {
          if (type == HandlerType.PRE)
             return true;

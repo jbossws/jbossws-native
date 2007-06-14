@@ -31,11 +31,17 @@
     <import componentref="jboss/jbossws-spi">
       <compatible version="@repository.id@"/>
     </import>
+    <import componentref="jboss/remoting">
+      <compatible version="@jboss-remoting@"/>
+    </import>
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>
     </import>
     <import componentref="sun-jaxb">
       <compatible version="@sun-jaxb@"/>
+    </import>
+    <import componentref="sun-jaxws">
+      <compatible version="@sun-jaxws@"/>
     </import>
     
     <export>

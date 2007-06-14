@@ -33,7 +33,6 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
-import org.jboss.ws.integration.FactoryLoader;
 import org.w3c.dom.Element;
 
 /**
@@ -88,7 +87,7 @@ public abstract class Provider
    {
       try
       {
-         return (Provider)FactoryLoader.loadFactory(JAXWSPROVIDER_PROPERTY, DEFAULT_JAXWSPROVIDER);
+         return (Provider)ProviderLoader.loadProvider(DEFAULT_JAXWSPROVIDER);
       }
       catch (WebServiceException ex)
       {

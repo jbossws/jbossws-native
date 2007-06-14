@@ -23,11 +23,11 @@ package javax.xml.rpc.soap;
 
 // $Id$
 
+import java.util.logging.Logger;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.Name;
-
-import org.jboss.logging.Logger;
 
 /** The SOAPFaultException exception represents a SOAP fault.
  * 
@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
 public class SOAPFaultException extends RuntimeException
 {
    // provide logging
-   private static Logger log = Logger.getLogger(SOAPFaultException.class);
+   private static Logger log = Logger.getLogger(SOAPFaultException.class.getName());
 
    private QName faultCode;
    private String faultString;
@@ -61,7 +61,7 @@ public class SOAPFaultException extends RuntimeException
       super(faultString);
 
       Name detailName = faultDetail != null ? faultDetail.getElementName() : null;
-      if(log.isDebugEnabled()) log.debug("new SOAPFaultException [code=" + faultCode + ",string=" + faultString + ",actor=" + faultActor + ",detail=" + detailName + "]");
+      log.fine("new SOAPFaultException [code=" + faultCode + ",string=" + faultString + ",actor=" + faultActor + ",detail=" + detailName + "]");
 
       this.faultCode = faultCode;
       this.faultString = faultString;

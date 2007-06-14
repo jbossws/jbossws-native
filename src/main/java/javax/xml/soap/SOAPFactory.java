@@ -25,7 +25,6 @@ package javax.xml.soap;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.integration.FactoryLoader;
 import org.w3c.dom.Element;
 
 /** SOAPFactory is a factory for creating various objects that exist in the SOAP XML tree.
@@ -62,7 +61,7 @@ public abstract class SOAPFactory
          try
          {
             String propertyName = "javax.xml.soap.SOAPFactory";
-            soapFactory = (SOAPFactory)FactoryLoader.loadFactory(propertyName, null);
+            soapFactory = (SOAPFactory)SAAJFactoryLoader.loadFactory(propertyName, null);
          }
          catch (RuntimeException rte)
          {

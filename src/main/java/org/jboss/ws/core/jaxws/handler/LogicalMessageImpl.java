@@ -40,13 +40,14 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.EnvelopeBuilder;
+import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.integration.FactoryLoader;
 import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.spi.utils.ServiceLoader;
 import org.w3c.dom.Element;
 
 /**
@@ -111,7 +112,7 @@ public class LogicalMessageImpl implements LogicalMessage
                try
                {
                   soapBody.removeContents();
-                  EnvelopeBuilder envBuilder = (EnvelopeBuilder)FactoryLoader.loadFactory(EnvelopeBuilder.class.getName(), null);
+                  EnvelopeBuilder envBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
                   envBuilder.setStyle(style);
                   Element domBodyElement = DOMUtils.sourceToElement(source);
                   envBuilder.buildBodyElementRpc(soapBody, domBodyElement);

@@ -109,7 +109,7 @@ public class ServiceRefHandlerJAXWS
 
       String targetClassName = (targetClass != null ? targetClass.getName() : null);
       String externalName = encCtx.getNameInNamespace() + "/" + encName;
-      log.info("setupServiceRef [jndi=" + externalName + ",target=" + targetClassName + "]");
+      log.debug("setupServiceRef [jndi=" + externalName + ",target=" + targetClassName + "]");
 
       String serviceImplClass = null;
 

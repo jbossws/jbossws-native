@@ -28,15 +28,14 @@ import static javax.xml.ws.addressing.JAXWSAConstants.DEFAULT_ADDRESSING_BUILDER
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-
-import org.jboss.logging.Logger;
 
 public abstract class AddressingBuilder implements AddressingType
 {
    // provide logging
-   private static Logger log = Logger.getLogger(AddressingBuilder.class);
+   private static Logger log = Logger.getLogger(AddressingBuilder.class.getName());
 
    protected AddressingBuilder()
    {
@@ -67,7 +66,7 @@ public abstract class AddressingBuilder implements AddressingType
       }
       catch (Exception e)
       {
-         log.warn("Could not create and instance of " + name + " trying " + DEFAULT_ADDRESSING_BUILDER);
+         log.warning("Could not create and instance of " + name + " trying " + DEFAULT_ADDRESSING_BUILDER);
       }
 
       // default builder

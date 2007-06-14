@@ -25,10 +25,9 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-
-import org.jboss.logging.Logger;
 
 /** The javax.xml.rpc.ServiceFactory is an abstract class that provides a
  * factory for the creation of instances of the type javax.xml.rpc.Service.
@@ -46,7 +45,7 @@ import org.jboss.logging.Logger;
 public abstract class ServiceFactory
 {
    // provide logging
-   private static Logger log = Logger.getLogger(ServiceFactory.class);
+   private static Logger log = Logger.getLogger(ServiceFactory.class.getName());
 
    // The singlton
    private static ServiceFactory factory;
@@ -101,7 +100,7 @@ public abstract class ServiceFactory
                   }
                   catch (ClassNotFoundException e1)
                   {
-                     if(log.isDebugEnabled()) log.debug("Cannot load factory: " + factoryName);
+                     log.severe("Cannot load factory: " + factoryName);
                   }
                }
             }

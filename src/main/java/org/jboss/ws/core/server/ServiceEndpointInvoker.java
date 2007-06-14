@@ -25,36 +25,30 @@ package org.jboss.ws.core.server;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.rpc.handler.soap.SOAPMessageContext;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.DirectionHolder;
-import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
@@ -70,7 +64,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.invocation.BasicEndpointInvocation;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
@@ -207,6 +200,9 @@ public class ServiceEndpointInvoker
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
                invHandler.invoke(endpoint, null, inv);
+               
+               // Handler processing might have replaced the endpoint invocation
+               sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
             }
             finally
             {
@@ -279,7 +275,7 @@ public class ServiceEndpointInvoker
       }
    }
 
-   protected Invocation setupInvocation(Endpoint ep, EndpointInvocation sepInv, InvocationContext invContext) throws Exception
+   protected Invocation setupInvocation(Endpoint ep, EndpointInvocation epInv, InvocationContext invContext) throws Exception
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof SOAPMessageContextJAXWS)
@@ -297,11 +293,13 @@ public class ServiceEndpointInvoker
          invContext.addAttachment(ServletEndpointContext.class, servletEndpointContext);
       }
 
-      Invocation inv = new DelegatingInvocation(sepInv);
-      inv.setInvocationContext(invContext);
-      inv.setJavaMethod(getImplMethod(endpoint, sepInv));
+      invContext.addAttachment(EndpointInvocation.class, epInv);
+      
+      Invocation wsInv = new DelegatingInvocation();
+      wsInv.setInvocationContext(invContext);
+      wsInv.setJavaMethod(getImplMethod(endpoint, epInv));
 
-      return inv;
+      return wsInv;
    }
 
    protected Method getImplMethod(Endpoint endpoint, EndpointInvocation sepInv) throws ClassNotFoundException, NoSuchMethodException
@@ -397,7 +395,7 @@ public class ServiceEndpointInvoker
          if (opMetaData == null)
          {
             String faultString;
-            
+
             SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
             SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
             if (soapBodyElement != null)
@@ -425,57 +423,5 @@ public class ServiceEndpointInvoker
          }
       }
       return opMetaData;
-   }
-
-   class DelegatingInvocation extends BasicEndpointInvocation
-   {
-      private EndpointInvocation sepInv;
-
-      public DelegatingInvocation(EndpointInvocation sepInv)
-      {
-         this.sepInv = sepInv;
-      }
-
-      @Override
-      public void setReturnValue(Object value)
-      {
-         sepInv.setReturnValue(value);
-
-         SOAPMessageContext msgContext = (SOAPMessageContext)getInvocationContext().getAttachment(javax.xml.rpc.handler.MessageContext.class);
-         if (msgContext != null && msgContext.getMessage() == null)
-         {
-            try
-            {
-               // Bind the response message
-               OperationMetaData opMetaData = sepInv.getOperationMetaData();
-               CommonBindingProvider bindingProvider = new CommonBindingProvider(opMetaData.getEndpointMetaData());
-               CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
-               SOAPMessage resMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, sepInv);
-               msgContext.setMessage(resMessage);
-            }
-            catch (BindingException ex)
-            {
-               WSException.rethrow(ex);
-            }
-         }
-      }
-
-      @Override
-      public Object[] getArgs()
-      {
-         return sepInv.getRequestPayload();
-      }
-
-      @Override
-      public Object getReturnValue()
-      {
-         return sepInv.getReturnValue();
-      }
-
-      @Override
-      public void setArgs(Object[] args)
-      {
-         throw new IllegalArgumentException("Cannot set args on this invocation");
-      }
    }
 }

@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
-import org.jboss.ws.integration.FactoryLoader;
+import org.jboss.wsf.spi.utils.ServiceLoader;
 import org.jboss.wsf.spi.utils.IOUtils;
 
 /**
@@ -249,7 +249,7 @@ public class MessageFactoryImpl extends MessageFactory
             soapMessage.setAttachments(attachments);
 
          // Get the SOAPEnvelope builder
-         EnvelopeBuilder envBuilder = (EnvelopeBuilder)FactoryLoader.loadFactory(EnvelopeBuilder.class.getName(), null);
+         EnvelopeBuilder envBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
          envBuilder.setStyle(getStyle());
 
          // Build the payload

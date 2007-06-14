@@ -60,9 +60,9 @@
 			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jboss-logging-log4j.jar"/>
 			<!--
-					<pathelement location="${core.dir}/thirdparty/log4j.jar"/>
-					<pathelement location="${tests.etc.dir}"/>
-					-->
+			<pathelement location="${core.dir}/thirdparty/log4j.jar"/>
+			<pathelement location="${tests.etc.dir}"/>
+		  -->
 		</path>
 
 	</target>

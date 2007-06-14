@@ -718,23 +718,7 @@ public class Service
     **/
    public static Service create(URL wsdlLocation, QName serviceName)
    {
-      Service service;
-      try
-      {
-         Class extClass = Class.forName("org.jboss.ws.core.jaxws.client.ServiceExt");
-         Constructor ctor = extClass.getConstructor(new Class[] { URL.class, QName.class });
-         service = (Service)ctor.newInstance(new Object[] { wsdlLocation, serviceName });
-      }
-      catch (InvocationTargetException ex)
-      {
-         Throwable target = ex.getTargetException();
-         throw new WebServiceException(target);
-      }
-      catch (Exception e)
-      {
-         service = new Service(wsdlLocation, serviceName);
-      }
-      return service;
+      return new Service(wsdlLocation, serviceName);
    }
 
    /**

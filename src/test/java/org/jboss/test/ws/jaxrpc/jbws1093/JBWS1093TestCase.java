@@ -28,11 +28,16 @@ import java.net.URL;
 
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPMessage;
 
 import junit.framework.Test;
 
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.spi.utils.DOMWriter;
 
 /**
  * Deploying a war that also contains normal servlets the web.xml is modified as if they are all endpoints
@@ -63,14 +68,14 @@ public class JBWS1093TestCase extends JBossWSTest
       }
    }
 
-   public void testAccessEnpoint() throws Exception
+   public void testEnpointAccess() throws Exception
    {
       assertEquals(ServletTest.MESSAGE, port.echoString(ServletTest.MESSAGE));
    }
 
-   public void testAccessServlet() throws Exception
+   public void testServletAccess() throws Exception
    {
-      URL servletURL = new URL("http://" + getServerHost() + ":8080" + "/jaxrpc-jbws1093/ServletTest");
+      URL servletURL = new URL("http://" + getServerHost() + ":8080" + "/jaxrpc-jbws1093/ServletTest?type=txtMessage");
 
       InputStream is = servletURL.openStream();
       InputStreamReader isr = new InputStreamReader(is);
@@ -79,5 +84,29 @@ public class JBWS1093TestCase extends JBossWSTest
       String line = br.readLine();
 
       assertEquals(ServletTest.MESSAGE, line);
+   }
+
+   /**
+    * [JBWS-1706] SOAPConnection.get fails with ProtocolException
+    * 
+    * Gets a SOAP response message from a specific endpoint
+    * and blocks until it has received the response. HTTP-GET
+    * from a valid endpoint that contains a valid webservice
+    * resource should succeed. The endpoint tested contains
+    * a valid webservice resource that must return a SOAP 
+    * response. HTTP-GET must succeed.
+    *
+    */
+   public void testSOAPConnectionGet() throws Exception
+   {
+      URL servletURL = new URL("http://" + getServerHost() + ":8080" + "/jaxrpc-jbws1093/ServletTest?type=soapMessage");
+
+      SOAPConnection con = SOAPConnectionFactory.newInstance().createConnection();
+      SOAPMessage resMessage = con.get(servletURL);
+      SOAPEnvelope env = resMessage.getSOAPPart().getEnvelope();
+
+      String envStr = DOMWriter.printNode(env, false);
+      String expStr = "<ztrade:GetLastTradePriceResponse xmlns:ztrade='http://wombat.ztrade.com'><Price>95.12</Price></ztrade:GetLastTradePriceResponse>";
+      assertTrue(envStr.contains(expStr));
    }
 }

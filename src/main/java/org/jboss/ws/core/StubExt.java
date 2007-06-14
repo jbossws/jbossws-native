@@ -126,4 +126,14 @@ public interface StubExt extends ConfigProvider
     * Creates a new empty AttachmentPart object.
     */
    AttachmentPart createAttachmentPart();
+
+   /** 
+    * Get the WS-Security configuration  
+    */
+   String getSecurityConfig();
+
+   /** 
+    * Set the WS-Security configuration  
+    */
+   void setSecurityConfig(String securityConfig);
 }
