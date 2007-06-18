@@ -58,13 +58,7 @@ public class JBWS860TestCase extends JBossWSTest
    }
 
    public void testServletAccess() throws Exception
-   {
-      if (true)
-      {
-         System.out.println("FIXME: [JBAS-4210] HTTP request dispatched to the wrong servlet");
-         return;
-      }
-      
+   {     
       HttpURLConnection con = (HttpURLConnection)new URL("http://" + getServerHost() + ":8080/test/TestServlet").openConnection();
       BufferedReader isr = new BufferedReader(new InputStreamReader(con.getInputStream()));
       assertEquals("Hello", isr.readLine());
