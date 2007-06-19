@@ -101,7 +101,6 @@ public class TestEndpointClientTwo
    public String testService2(String reqStr) throws Exception
    {
       Service service = (Service)iniCtx.lookup("java:comp/env/Service2");
-      verifyConfig((ConfigProvider)service);
 
       TestEndpoint port = service.getPort(TestEndpoint.class);
       verifyConfig((ConfigProvider)port);
