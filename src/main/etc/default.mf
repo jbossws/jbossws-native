@@ -1,4 +1,4 @@
-Manifest-Version: 1.0
+Manifest-Version: 1.2
 Created-By: @java.vm.version@ (@java.vm.vendor@)
 Specification-Title: @specification.title@
 Specification-Version: @specification.version@
@@ -9,5 +9,5 @@ Implementation-Version: @implementation.version@ (build=@build.id@)
 Implementation-Vendor: @implementation.vendor@
 Implementation-Vendor-Id: @implementation.vendor.id@
 Class-Path: jbossws-spi.jar jboss-jaxrpc.jar jboss-jaxws.jar jboss-saaj.jar 
-  jboss-xml-binding.jar javassist.jar mail.jar activation.jar 
-  jaxb-api.jar jaxb-impl.jar policy.jar wsdl4j.jar
+  activation.jar commons-logging.jar concurrent.jar javassist.jar jaxb-api.jar jaxb-impl.jar 
+  mail.jar jboss-remoting.jar jboss-xml-binding.jar  policy.jar wsdl4j.jar
