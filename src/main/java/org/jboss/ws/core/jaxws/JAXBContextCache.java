@@ -42,76 +42,67 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
  */
 public class JAXBContextCache
 {
-   private Map<Integer, JAXBContext> cache = new ConcurrentHashMap<Integer, JAXBContext>();
+    private Map<Integer, JAXBContext> cache = new ConcurrentHashMap<Integer, JAXBContext>();
 
-   private JAXBContext get(Integer id)
-   {
-      return cache.get(id);
-   }
+    public JAXBContext get(Class[] clazzes)
+    {
+        Integer id = buildId(clazzes);
+        return get(id);
+    }
 
-   private void add(Integer id, JAXBContext context)
-   {
-      cache.put(id, context);
-   }
+    public void add(Class[] clazzes, JAXBContext context)
+    {
+        Integer id = buildId(clazzes);
+        add(id, context);
+    }
 
-   /**
-    * Retrieve a cached JAXBContext instance.
-    * If no instance is cached a new one will be created and registered.
-    */
-   public JAXBContext getInstance(Class[] classes) throws JAXBException
-   {
-      Integer id = buildId(classes);
-      JAXBContext ctx = get(id);
-      if (null == ctx)
-      {
-         ctx = JAXBContext.newInstance(classes);
-         add(id, ctx);
-      }
+    private JAXBContext get(Integer id)
+    {
+        return cache.get(id);
+    }
 
-      return ctx;
-   }
+    private void add(Integer id, JAXBContext context)
+    {
+        cache.put(id, context);
+    }
 
-   /**
-    * Retrieve a cached JAXBContext instance.
-    * If no instance is cached a new one will be created and registered.
-    */
-   public JAXBContext getInstance(Class clazz) throws JAXBException
-   {
-      Integer id = buildId(clazz);
-      JAXBContext ctx = get(id);
-      if (null == ctx)
-      {
-         ctx = JAXBContext.newInstance(clazz);
-         add(id, ctx);
-      }
+    /**
+     * Retrieve a cached JAXBContext instance.
+     * If no instance is cached a new one will be created and registered.
+     */
+    public JAXBContext getInstance(Class[] classes) throws JAXBException
+    {
+        Integer id = buildId(classes);
+        JAXBContext ctx = get(id);
+        if (null == ctx)
+        {
+            ctx = JAXBContext.newInstance(classes);
+            add(id, ctx);
+        }
 
-      return ctx;
-   }
+        return ctx;
+    }
 
-   /**
-    * Access the JAXBContext cache through the message context.
-    * The actual instance is assiciated with the EndpointMetaData.
-    * @return JAXBContextCache
-    */
-   public static JAXBContextCache getContextCache()
-   {
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-      return epMetaData.getJaxbCache();
-   }
+    private static Integer buildId(Class[] classes)
+    {
+        int sum = HashCodeUtil.SEED;
+        for (Class cls : classes)
+        {
+            sum = HashCodeUtil.hash(sum, cls.getName());
+        }
+        return sum;
+    }
 
-   private static Integer buildId(Class[] classes)
-   {
-      int sum = HashCodeUtil.SEED;
-      for (Class cls : classes)
-      {
-         sum = HashCodeUtil.hash(sum, cls.getName());
-      }      
-      return new Integer(sum);
-   }
-
-   private static Integer buildId(Class clazz)
-   {
-      return buildId(new Class[] { clazz });
-   }
+    /**
+     * Access the JAXBContext cache through the message context.
+     * The actual instance is assiciated with the EndpointMetaData.
+     * @return JAXBContextCache
+     */
+    public static JAXBContextCache getContextCache()
+    {
+        CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+        EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
+        return epMetaData.getJaxbCache();
+    }
 }
+

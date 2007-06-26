@@ -23,20 +23,19 @@ package org.jboss.ws.core.jaxws;
 
 // $Id$
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
-import javax.xml.ws.WebServiceException;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.binding.ComplexTypeDeserializer;
 import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.ws.WebServiceException;
 
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.
@@ -65,12 +64,11 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
          Class javaType = typeMapping.getJavaType(xmlType);
 
-         JAXBContextCache contextCache = JAXBContextCache.getContextCache();
-         JAXBContext jaxbContext = contextCache.getInstance(javaTypes);
-         
+         JAXBContext jaxbContext = getJAXBContext(javaTypes);
+
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
          unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());
-         
+
          JAXBElement jbe = unmarshaller.unmarshal(xmlFragment, javaType);
          value = jbe.getValue();
 
@@ -84,9 +82,20 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
 
    }
 
-   private JAXBContext getJAXBContext(Class[] types) throws JAXBException {
-      JAXBContext jaxbContext = JAXBContext.newInstance(types);
-      return jaxbContext;
+   /**
+    * Retrieve JAXBContext from cache or create new one and cache it.
+    * @param types
+    * @return JAXBContext
+    */
+   private JAXBContext getJAXBContext(Class[] types){
+      JAXBContextCache cache = JAXBContextCache.getContextCache();
+      JAXBContext context = cache.get(types);
+      if(null==context)
+      {
+         context = JAXBContextFactory.newInstance().createContext(types);
+         cache.add(types, context);
+      }
+      return context;
    }
 
    // 4.21 Conformance (Marshalling failure): If an error occurs when using the supplied JAXBContext to marshall
