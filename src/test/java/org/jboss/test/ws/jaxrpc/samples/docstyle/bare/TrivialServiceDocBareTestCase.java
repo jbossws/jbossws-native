@@ -41,7 +41,7 @@ public class TrivialServiceDocBareTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(TrivialServiceDocBareTestCase.class, "jaxrpc-samples-docstyle-bare.war, jaxrpc-samples-docstyle-bare-client.jar");
+      return new JBossWSTestSetup(TrivialServiceDocBareTestCase.class, "jaxrpc-samples-docstyle-bare.war, jaxrpc-samples-docstyle-bare-client.jar");
    }
 
    protected void setUp() throws Exception

@@ -48,7 +48,7 @@ public class HeaderClientTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HeaderClientTestCase.class, "jaxrpc-samples-handler.war, jaxrpc-samples-handler-client.jar");
+      return new JBossWSTestSetup(HeaderClientTestCase.class, "jaxrpc-samples-handler.war, jaxrpc-samples-handler-client.jar");
    }
 
    protected void setUp() throws Exception

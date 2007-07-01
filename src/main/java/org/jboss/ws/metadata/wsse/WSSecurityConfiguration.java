@@ -45,6 +45,7 @@ public class WSSecurityConfiguration implements Serializable
    private URL trustStoreURL;
    private String trustStoreType;
    private String trustStorePassword;
+   private HashMap<String, String> keyPasswords = new HashMap<String, String>();
 
    public WSSecurityConfiguration()
    {
@@ -153,5 +154,15 @@ public class WSSecurityConfiguration implements Serializable
    public void setTrustStoreFile(String trustStoreFile)
    {
       this.trustStoreFile = trustStoreFile;
+   }
+
+   public HashMap<String, String> getKeyPasswords()
+   {
+      return keyPasswords;
+   }
+
+   public void setKeyPasswords(HashMap<String, String> keyPasswords)
+   {
+      this.keyPasswords = keyPasswords;
    }
 }

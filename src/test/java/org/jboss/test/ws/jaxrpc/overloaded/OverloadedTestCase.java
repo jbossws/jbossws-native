@@ -41,7 +41,7 @@ public class OverloadedTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(OverloadedTestCase.class, "jaxrpc-overloaded.war, jaxrpc-overloaded-client.jar");
+      return new JBossWSTestSetup(OverloadedTestCase.class, "jaxrpc-overloaded.war, jaxrpc-overloaded-client.jar");
    }
 
    protected void setUp() throws Exception

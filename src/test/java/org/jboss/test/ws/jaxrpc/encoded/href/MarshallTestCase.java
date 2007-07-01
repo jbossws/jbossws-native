@@ -43,7 +43,7 @@ public class MarshallTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(MarshallTestCase.class, "jaxrpc-encoded-href.war, jaxrpc-encoded-href-client.jar");
+      return new JBossWSTestSetup(MarshallTestCase.class, "jaxrpc-encoded-href.war, jaxrpc-encoded-href-client.jar");
    }
 
    protected void setUp() throws Exception

@@ -38,16 +38,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.management.EndpointMetrics;
 import org.jboss.wsf.spi.management.EndpointRegistry;
 import org.jboss.wsf.spi.management.EndpointRegistryFactory;
-import org.jboss.wsf.spi.management.ServerConfig;
-import org.jboss.wsf.spi.management.ServerConfigFactory;
 
 /**
  * The servlet that that is associated with context /jbossws
  *
  * @author Thomas.Diesler@jboss.org
- * @author mageshbk@jboss.com
  * @since 21-Mar-2005
  */
 public class ContextServlet extends HttpServlet
@@ -84,75 +82,76 @@ public class ContextServlet extends HttpServlet
       writer.print("<table>");
 
       // begin iteration
-      Set<ObjectName> endpoints = epRegistry.getEndpoints();
+      Set<ObjectName> epNames = epRegistry.getEndpoints();
 
-      if (endpoints.isEmpty())
+      if (epNames.isEmpty())
       {
          writer.print("<tr>");
          writer.print("	<td><h3>There are currently no endpoints deployed</h3></td>");
          writer.print("</tr>");
       }
 
-      for (ObjectName oname : endpoints)
+      for (ObjectName oname : epNames)
       {
          Endpoint ep = epRegistry.getEndpoint(oname);
          ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
-         ServerConfigFactory factory = ServerConfigFactory.getInstance();
-         ServerConfig config = factory.getServerConfig();
-         String displayAddress = config.getDisplayAddress(sepMetaData.getEndpointAddress(),requestURL);
 
          writer.print("<tr>");
-         writer.print("	<td>ServiceEndpointID</td>");
+         writer.print("	<td>Endpoint Name</td>");
          writer.print("	<td>" + ep.getName() + "</td>");
          writer.print("</tr>");
          writer.print("<tr>");
-         writer.print("	<td>ServiceEndpointAddress</td>");
-         writer.print("	<td><a href='" + displayAddress + "?wsdl'>" + displayAddress + "?wsdl</a></td>");
+         writer.print("	<td>Endpoint Address</td>");
+         writer.print("	<td><a href='" + sepMetaData.getEndpointAddress() + "?wsdl'>" + sepMetaData.getEndpointAddress() + "?wsdl</a></td>");
          writer.print("</tr>");
          writer.print("<tr>");
          writer.print("	<td colspan=2>");
          writer.print("	");
          writer.print("");
-         /*
-          writer.print("<table class='metrics'>");
-          writer.print("<tr>");
-          writer.print("	<td>StartTime</td>");
-          writer.print("	<td>StopTime</td>");
-          writer.print("	<td></td>");
-          writer.print("</tr>");
-          writer.print("<tr>");
-          writer.print("	<td>" + ep.getSeMetrics().getStartTime() + "</td>");
 
-          String stopTime = ep.getSeMetrics().getStopTime() != null ? ep.getSeMetrics().getStopTime().toString() : "";
-          writer.print("	<td>" + stopTime + "</td>");
-          writer.print("	<td></td>");
-          writer.print("</tr>");
-          writer.print("<tr>");
+         EndpointMetrics metrics = ep.getEndpointMetrics();
+         if (metrics != null)
+         {
+            writer.print("<table class='metrics'>");
+            writer.print("<tr>");
+            writer.print(" <td>StartTime</td>");
+            writer.print(" <td>StopTime</td>");
+            writer.print(" <td></td>");
+            writer.print("</tr>");
+            writer.print("<tr>");
+            writer.print(" <td>" + metrics.getStartTime() + "</td>");
 
-          writer.print("	<td>RequestCount</td>");
-          writer.print("	<td>ResponseCount</td>");
-          writer.print("	<td>FaultCount</td>");
-          writer.print("</tr>");
-          writer.print("<tr>");
-          writer.print("	<td>" + ep.getSeMetrics().getRequestCount() + "</td>");
-          writer.print("	<td>" + ep.getSeMetrics().getResponseCount() + "</td>");
-          writer.print("	<td>" + ep.getSeMetrics().getFaultCount() + "</td>");
-          writer.print("</tr>");
-          writer.print("<tr>");
-          writer.print("	<td>MinProcessingTime</td>");
-          writer.print("	<td>MaxProcessingTime</td>");
-          writer.print("	<td>AvgProcessingTime</td>");
-          writer.print("</tr>");
-          writer.print("<tr>");
-          writer.print("	<td>" + ep.getSeMetrics().getMinProcessingTime() + "</td>");
-          writer.print("	<td>" + ep.getSeMetrics().getMaxProcessingTime() + "</td>");
-          writer.print("	<td>" + ep.getSeMetrics().getAverageProcessingTime() + "</td>");
-          writer.print("</tr>");
-          writer.print("");
-          writer.print("");
-          writer.print("</table>");
-          */
-         writer.print("");
+            String stopTime = metrics.getStopTime() != null ? metrics.getStopTime().toString() : "";
+            writer.print(" <td>" + stopTime + "</td>");
+            writer.print(" <td></td>");
+            writer.print("</tr>");
+            writer.print("<tr>");
+
+            writer.print(" <td>RequestCount</td>");
+            writer.print(" <td>ResponseCount</td>");
+            writer.print(" <td>FaultCount</td>");
+            writer.print("</tr>");
+            writer.print("<tr>");
+            writer.print(" <td>" + metrics.getRequestCount() + "</td>");
+            writer.print(" <td>" + metrics.getResponseCount() + "</td>");
+            writer.print(" <td>" + metrics.getFaultCount() + "</td>");
+            writer.print("</tr>");
+            writer.print("<tr>");
+            writer.print(" <td>MinProcessingTime</td>");
+            writer.print(" <td>MaxProcessingTime</td>");
+            writer.print(" <td>AvgProcessingTime</td>");
+            writer.print("</tr>");
+            writer.print("<tr>");
+            writer.print(" <td>" + metrics.getMinProcessingTime() + "</td>");
+            writer.print(" <td>" + metrics.getMaxProcessingTime() + "</td>");
+            writer.print(" <td>" + metrics.getAverageProcessingTime() + "</td>");
+            writer.print("</tr>");
+            writer.print("");
+            writer.print("");
+            writer.print("</table>");
+            writer.print("");
+         }
+         
          writer.print("	</td>");
          writer.print("</tr>");
 

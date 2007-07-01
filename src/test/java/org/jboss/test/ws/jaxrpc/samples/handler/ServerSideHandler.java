@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.handler;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.handler.GenericHandler;
@@ -57,6 +59,11 @@ public class ServerSideHandler extends GenericHandler
    {
       log.info("init: " + info);
       headers = info.getHeaders();
+      Map configMap = info.getHandlerConfig();
+      String value1 = (String)configMap.get("ServerParam1");
+      String value2 = (String)configMap.get("ServerParam2");
+      if (!"value1".equals(value1) || !"value2".equals(value2))
+         throw new IllegalStateException("Invalid handler config: " + configMap);
    }
 
    public boolean handleRequest(MessageContext msgContext)

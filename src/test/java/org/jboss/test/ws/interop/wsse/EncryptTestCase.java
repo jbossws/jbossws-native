@@ -35,7 +35,7 @@ public class EncryptTestCase extends AbstractWSSEBase  {
    public static Test suite()
    {
       addClientConfToClasspath("jbossws-interop-wsse10Encrypt-client.jar");
-      return JBossWSTestSetup.newTestSetup(EncryptTestCase.class, "jbossws-interop-wsse10Encrypt.war");
+      return new JBossWSTestSetup(EncryptTestCase.class, "jbossws-interop-wsse10Encrypt.war");
    }
 
 	String getEndpointURL() {

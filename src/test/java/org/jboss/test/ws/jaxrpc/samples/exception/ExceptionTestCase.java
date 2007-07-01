@@ -58,7 +58,7 @@ public class ExceptionTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(ExceptionTestCase.class, "jaxrpc-samples-exception.war, jaxrpc-samples-exception-client.jar");
+      return new JBossWSTestSetup(ExceptionTestCase.class, "jaxrpc-samples-exception.war, jaxrpc-samples-exception-client.jar");
    }
 
    private ExceptionServiceInterface getPort() throws Exception

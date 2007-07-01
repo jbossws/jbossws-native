@@ -43,7 +43,7 @@ public class HandlerScopeTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HandlerScopeTestCase.class, "jaxws-handlerscope.war");
+      return new JBossWSTestSetup(HandlerScopeTestCase.class, "jaxws-handlerscope.war");
    }
 
    public void testClientAccess() throws Exception

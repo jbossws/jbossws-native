@@ -95,12 +95,12 @@ public class SOAPDocument implements Document
 
    public CDATASection createCDATASection(String data) throws DOMException
    {
-      return createCDATASection(data);
+      return doc.createCDATASection(data);
    }
 
    public ProcessingInstruction createProcessingInstruction(String target, String data) throws DOMException
    {
-      return createProcessingInstruction(target, data);
+      return doc.createProcessingInstruction(target, data);
    }
 
    public Attr createAttribute(String name) throws DOMException

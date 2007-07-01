@@ -53,7 +53,7 @@ public class AttachmentProxyTestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(AttachmentProxyTestCase.class, "jaxrpc-samples-swa.war, jaxrpc-samples-swa-client.jar");
+      return new JBossWSTestSetup(AttachmentProxyTestCase.class, "jaxrpc-samples-swa.war, jaxrpc-samples-swa-client.jar");
    }
 
    protected void setUp() throws Exception

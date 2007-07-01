@@ -45,7 +45,7 @@ public class JBWS1124TestCase extends JBossWSTest
 {
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1124TestCase.class, "jaxrpc-jbws1124one.war, jaxrpc-jbws1124two.war");
+      return new JBossWSTestSetup(JBWS1124TestCase.class, "jaxrpc-jbws1124one.war, jaxrpc-jbws1124two.war");
    }
 
    public void testEnpointOne() throws Exception

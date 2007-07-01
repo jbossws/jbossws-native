@@ -38,7 +38,7 @@ public class JBWS1647DocumentTestCase extends JBWS1647TestBase
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1647DocumentTestCase.class, "jaxrpc-jbws1647-doclit.war");
+      return new JBossWSTestSetup(JBWS1647DocumentTestCase.class, "jaxrpc-jbws1647-doclit.war");
    }
 
    public String getMessage()

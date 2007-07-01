@@ -21,6 +21,9 @@
 */
 package org.jboss.ws.core.jaxrpc.binding;
 
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
+
 
 // $Id$
 
@@ -29,7 +32,7 @@ package org.jboss.ws.core.jaxrpc.binding;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Dec-2004
  */
-public class QNameDeserializerFactory extends DeserializerFactoryBase
+public class QNameDeserializerFactory extends AbstractDeserializerFactory
 {
    public DeserializerSupport getDeserializer()
    {

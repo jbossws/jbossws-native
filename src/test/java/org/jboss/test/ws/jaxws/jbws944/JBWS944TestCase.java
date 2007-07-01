@@ -51,7 +51,7 @@ public class JBWS944TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS944TestCase.class, "jaxws-jbws944.jar");
+      return new JBossWSTestSetup(JBWS944TestCase.class, "jaxws-jbws944.jar");
    }
 
    public void testRemoteAccess() throws Exception

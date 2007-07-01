@@ -45,7 +45,7 @@ public class SimpleSignTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(SimpleSignTestCase.class, "jaxws-samples-wssecurity-sign.war");
+      return new JBossWSTestSetup(SimpleSignTestCase.class, "jaxws-samples-wssecurity-sign.war");
    }
 
    /**

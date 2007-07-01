@@ -21,39 +21,41 @@
  */
 package org.jboss.test.ws.tools.jbws1553;
 
+// $Id$
+
 import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import junit.framework.TestCase;
+
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
-import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 
-import junit.framework.TestCase;
-
 /**
+ * [JBWS-1553] fails to read operations for portType from different namespace
+ * 
+ * http://jira.jboss.org/jira/browse/JBWS-1553
+ * 
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public class JBWS1553TestCase extends TestCase
 {
    private WSDLDefinitions definitions;
-   private static WSDLDefinitionsFactory definitionsFactory = WSDLDefinitionsFactory.newInstance();
 
    protected void setUp() throws Exception
    {
       URL wsdlLocation = new File("resources/tools/jbws1553/atm-service.wsdl").toURL();
-      definitions = definitionsFactory.parse(wsdlLocation);
+      definitions = WSDLDefinitionsFactory.newInstance().parse(wsdlLocation);
    }
 
    public void testPortType()
    {
-      WSDLService atmService = definitions.getService("AtmFrontEndService");
-      WSDLEndpoint endpoint = atmService.getEndpoint(new QName("urn:samples:atm", "FrontEndPort"));
-      WSDLInterface _interface = endpoint.getInterface();
-      assertEquals(new QName("urn:samples:frontend", "FrontEnd"), _interface.getName());
+      WSDLService wsdlService = definitions.getService("AtmFrontEndService");
+      WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoint(new QName("urn:samples:atm", "FrontEndPort"));
+      assertEquals(new QName("urn:samples:atm2", "FrontEnd"), wsdlEndpoint.getInterface().getName());
    }
 }

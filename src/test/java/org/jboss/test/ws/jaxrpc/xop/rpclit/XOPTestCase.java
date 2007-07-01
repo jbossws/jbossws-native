@@ -42,7 +42,7 @@ public class XOPTestCase extends XOPBase {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(XOPTestCase.class, "jaxrpc-xop-rpclit.war, jaxrpc-xop-rpclit-client.jar");
+      return new JBossWSTestSetup(XOPTestCase.class, "jaxrpc-xop-rpclit.war, jaxrpc-xop-rpclit-client.jar");
    }
 
    protected void setUp() throws Exception

@@ -51,7 +51,7 @@ public class MTOMTestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(MTOMTestCase.class, "jaxrpc-samples-mtom.war, jaxrpc-samples-mtom-client.jar");
+      return new JBossWSTestSetup(MTOMTestCase.class, "jaxrpc-samples-mtom.war, jaxrpc-samples-mtom-client.jar");
    }
 
    protected void setUp() throws Exception

@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.jbws1283;
 
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.handler.GenericSOAPHandler;
+import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 import org.jboss.test.ws.jaxws.jbws1357.JBWS1357;
 import junit.framework.Test;
 
@@ -58,7 +58,7 @@ public class JBWS1283TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1283TestCase.class, "jaxws-jbws1283.jar");
+      return new JBossWSTestSetup(JBWS1283TestCase.class, "jaxws-jbws1283.jar");
    }
 
    @Override

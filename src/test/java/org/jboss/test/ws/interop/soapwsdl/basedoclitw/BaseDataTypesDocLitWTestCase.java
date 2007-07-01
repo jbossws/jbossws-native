@@ -45,7 +45,7 @@ public class BaseDataTypesDocLitWTestCase extends BaseDataTypesSupport {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(BaseDataTypesDocLitWTestCase.class, "jbossws-interop-BaseDataTypesDocLitW.war");
+      return new JBossWSTestSetup(BaseDataTypesDocLitWTestCase.class, "jbossws-interop-BaseDataTypesDocLitW.war");
    }
 
    protected void setUp() throws Exception

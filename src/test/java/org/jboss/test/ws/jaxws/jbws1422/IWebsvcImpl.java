@@ -22,25 +22,16 @@
 package org.jboss.test.ws.jaxws.jbws1422;
 
 import javax.ejb.Stateless;
-import javax.jws.WebService;
 import javax.jws.WebParam;
+import javax.jws.WebService;
 
-/**
- * @author Heiko.Braun@jboss.com
- * @version $Revision$
- */
 @Stateless
-@WebService(
-		endpointInterface = "org.jboss.test.ws.jaxws.jbws1422.IWebsvc",
-		serviceName = "JBWS1422Service",
-		targetNamespace = "http://org.jboss.test.ws/jbws1422"
-)
-
+@WebService(endpointInterface = "org.jboss.test.ws.jaxws.jbws1422.IWebsvc", serviceName = "JBWS1422Service")
 public class IWebsvcImpl implements IWebsvc
 {
 
-	public String cancel(@WebParam(name = "nBarFoo")String myfoobar)
-	{
-		return "Cancelled";
-	}
+   public String cancel(@WebParam(name = "nBarFoo") String myfoobar)
+   {
+      return "Cancelled-" + myfoobar;
+   }
 }

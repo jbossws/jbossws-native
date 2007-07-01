@@ -51,7 +51,7 @@ public class RpcDIIConfiguredCallTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(RpcDIIConfiguredCallTestCase.class, "jaxrpc-samples-jsr109ejb-rpc.jar");
+      return new JBossWSTestSetup(RpcDIIConfiguredCallTestCase.class, "jaxrpc-samples-jsr109ejb-rpc.jar");
    }
 
    protected void setUp() throws Exception

@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.AsyncHandler;
@@ -111,6 +112,31 @@ public class DispatchImpl<T> implements Dispatch<T>
    {
       MessageAbstraction reqMsg = getRequestMessage(obj);
       String targetAddress = epMetaData.getEndpointAddress();
+      
+      // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
+      // with a quoted value equal to the value of the soapAction attribute of
+      // soapbind:operation, if present in the corresponding WSDL description.
+
+      // R2745 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
+      // with a quoted empty string value, if in the corresponding WSDL description,
+      // the soapAction attribute of soapbind:operation is either not present, or
+      // present with an empty string as its value.
+      String bindingID = bindingProvider.getBinding().getBindingID();
+      if (bindingID.indexOf("soap") > 0)
+      {
+         String soapAction = null; 
+         Map<String, Object> reqContext = getRequestContext();
+         Boolean useSOAPAction = (Boolean)reqContext.get(BindingProvider.SOAPACTION_USE_PROPERTY);
+         if (Boolean.TRUE.equals(useSOAPAction))
+         {
+            soapAction = (String)reqContext.get(BindingProvider.SOAPACTION_URI_PROPERTY);
+            if (soapAction == null)
+               throw new IllegalStateException("Cannot obtain: " + BindingProvider.SOAPACTION_URI_PROPERTY);
+         }
+         MimeHeaders mimeHeaders = reqMsg.getMimeHeaders();
+         mimeHeaders.addHeader("SOAPAction", soapAction != null ? soapAction : "");
+      }
+      
       MessageAbstraction resMsg = getRemotingConnection().invoke(reqMsg, targetAddress, false);
       Object retObj = getReturnObject(resMsg);
       return retObj;

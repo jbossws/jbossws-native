@@ -51,7 +51,7 @@ public class ComplexTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(ComplexTestCase.class, "jaxws-complex.war");
+      return new JBossWSTestSetup(ComplexTestCase.class, "jaxws-complex.war");
    }
 
    protected void setUp() throws Exception

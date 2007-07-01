@@ -54,6 +54,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
    {
       validResponseCodes.add(HttpServletResponse.SC_OK);
       validResponseCodes.add(HttpServletResponse.SC_ACCEPTED);
+      validResponseCodes.add(HttpServletResponse.SC_NO_CONTENT);
       validResponseCodes.add(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
    }
 
@@ -65,12 +66,23 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
       try
       {
          Integer resCode = (Integer)metadata.get(HTTPMetadataConstants.RESPONSE_CODE);
+         if (resCode == null)
+         {
+            log.warn("No HTTP resonse code, assuming: SC_OK");
+            resCode = HttpServletResponse.SC_OK;
+         }
+         
          String resMessage = (String)metadata.get(HTTPMetadataConstants.RESPONSE_CODE_MESSAGE);
-         if (resCode != null && validResponseCodes.contains(resCode) == false)
+         if (validResponseCodes.contains(resCode) == false)
             throw new WSException("Invalid HTTP server response [" + resCode + "] - " + resMessage);
 
-         MimeHeaders mimeHeaders = getMimeHeaders(metadata);
-         SOAPMessage soapMsg = new MessageFactoryImpl().createMessage(mimeHeaders, inputStream, true);
+         // [JBWS-859] SOAPMessageUnMarshaller doesn't support HTTP server response [204] - No Content
+         SOAPMessage soapMsg = null;
+         if (resCode != HttpServletResponse.SC_NO_CONTENT)
+         {
+            MimeHeaders mimeHeaders = getMimeHeaders(metadata);
+            soapMsg = new MessageFactoryImpl().createMessage(mimeHeaders, inputStream, true);
+         }
 
          return soapMsg;
       }

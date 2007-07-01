@@ -49,7 +49,7 @@ public class JBWS1386TestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1386TestCase.class, "jaxrpc-jbws1386.war");
+      return new JBossWSTestSetup(JBWS1386TestCase.class, "jaxrpc-jbws1386.war");
    }
 
    protected void setUp() throws Exception

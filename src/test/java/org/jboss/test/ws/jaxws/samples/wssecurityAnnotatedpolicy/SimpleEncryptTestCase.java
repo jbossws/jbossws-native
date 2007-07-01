@@ -48,7 +48,7 @@ public class SimpleEncryptTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(SimpleEncryptTestCase.class, "jaxws-samples-wssecurityAnnotatedpolicy-encrypt.war");
+      return new JBossWSTestSetup(SimpleEncryptTestCase.class, "jaxws-samples-wssecurityAnnotatedpolicy-encrypt.war");
    }
 
    /**

@@ -49,7 +49,7 @@ public class JBWS163TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS163TestCase.class, "jaxrpc-jbws163.war, jaxrpc-jbws163-client.jar");
+      return new JBossWSTestSetup(JBWS163TestCase.class, "jaxrpc-jbws163.war, jaxrpc-jbws163-client.jar");
    }
 
    protected void setUp() throws Exception

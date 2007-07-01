@@ -41,7 +41,7 @@ public class RpcEJBTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(RpcEJBTestCase.class, "jaxrpc-samples-jsr109ejb-rpc.jar, jaxrpc-samples-jsr109ejb-rpc-client.jar");
+      return new JBossWSTestSetup(RpcEJBTestCase.class, "jaxrpc-samples-jsr109ejb-rpc.jar, jaxrpc-samples-jsr109ejb-rpc-client.jar");
    }
 
    protected void setUp() throws Exception

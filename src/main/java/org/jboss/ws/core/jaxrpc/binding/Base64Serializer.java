@@ -27,6 +27,10 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.BufferedStreamResult;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPMarshallerImpl;
 import org.jboss.wsf.spi.utils.JavaUtils;

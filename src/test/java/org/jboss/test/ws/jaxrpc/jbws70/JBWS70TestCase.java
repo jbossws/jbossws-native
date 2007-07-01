@@ -57,7 +57,7 @@ public class JBWS70TestCase extends JBossWSTest
       suite.addTest(new JBWS70TestCase("testSetVersion"));
       suite.addTest(new JBWS70TestCase("testGetVersion"));
       
-      return JBossWSTestSetup.newTestSetup(suite, "jaxrpc-jbws70.war, jaxrpc-jbws70-client.jar");  
+      return new JBossWSTestSetup(suite, "jaxrpc-jbws70.war, jaxrpc-jbws70-client.jar");  
    }
 
    public void setUp() throws Exception

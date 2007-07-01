@@ -41,7 +41,7 @@ public class AnonymousTypesTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(AnonymousTypesTestCase.class, "jaxrpc-anonymous.war, jaxrpc-anonymous-client.jar");
+      return new JBossWSTestSetup(AnonymousTypesTestCase.class, "jaxrpc-anonymous.war, jaxrpc-anonymous-client.jar");
    }
 
    protected void setUp() throws Exception

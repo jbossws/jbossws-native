@@ -26,7 +26,6 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
@@ -36,14 +35,14 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.CommonSOAPFaultException;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
@@ -93,7 +92,7 @@ public class SOAPFaultHelperJAXWS
                Class<?> faultBeanClass = faultMetaData.getFaultBean();
 
                // Get the deserializer from the type mapping
-               DeserializerFactoryBase desFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(faultBeanClass, xmlType);
+               AbstractDeserializerFactory desFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(faultBeanClass, xmlType);
                if (desFactory == null)
                   throw new WebServiceException("Cannot obtain deserializer factory: xmlType=" + xmlType + ", javaType=" + faultBeanClass);
 
@@ -120,7 +119,7 @@ public class SOAPFaultHelperJAXWS
                try
                {
                   Class[] types = opMetaData.getEndpointMetaData().getRegisteredTypes().toArray(new Class[0]);
-                  serContext.setProperty(SerializationContext.CONTEXT_TYPES, types);
+                  serContext.setProperty(SerializationContextJAXWS.JAXB_CONTEXT_TYPES, types);
 
                   Source source = new DOMSource(deElement);
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
@@ -153,10 +152,8 @@ public class SOAPFaultHelperJAXWS
          {
             faultMessage = toSOAPMessage((SOAPFaultException)reqEx);
          }
-         else if (reqEx instanceof javax.xml.rpc.soap.SOAPFaultException)
+         else if (reqEx instanceof CommonSOAPFaultException)
          {
-            /* this exception should not occur in JAX-WS endpoints, but JBossWS
-             * throws it to signal internal error conditions */
             faultMessage = SOAPFaultHelperJAXRPC.exceptionToFaultMessage(reqEx);
          }
          else
@@ -307,7 +304,7 @@ public class SOAPFaultHelperJAXWS
       QName xmlType = faultMetaData.getXmlType();
       Class javaType = faultMetaData.getFaultBean();
       serContext.setJavaType(javaType);
-      SerializerFactoryBase serFactory = (SerializerFactoryBase)serContext.getTypeMapping().getSerializer(javaType, xmlType);
+      AbstractSerializerFactory serFactory = (AbstractSerializerFactory)serContext.getTypeMapping().getSerializer(javaType, xmlType);
       if (serFactory == null)
          throw new WebServiceException("Cannot obtain serializer factory: xmlType=" + xmlType + ", javaType=" + javaType);
 

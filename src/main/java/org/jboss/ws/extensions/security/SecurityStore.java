@@ -45,6 +45,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -54,8 +55,8 @@ import org.jboss.logging.Logger;
  * <code>SecurityStore</code> holds and loads the keystore and truststore required for encyption and signing.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @author <a href="mailto:jason.greene@jboss.com">Magesh Kumar B</a>
- * @version $Revision$
+ * @author Magesh Kumar B
+ * @author Thomas.Diesler@jboss.com
  */
 public class SecurityStore
 {
@@ -69,22 +70,26 @@ public class SecurityStore
 
    private String trustStorePassword;
 
+   private HashMap<String, String> keyPasswords;
+   
    public SecurityStore() throws WSSecurityException
    {
-      this(null, null, null, null, null, null);
+      this(null, null, null, null, null, null, null);
    }
 
-   public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword) throws WSSecurityException
+   public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, HashMap<String, String> keyPasswords) throws WSSecurityException
    {
       loadKeyStore(keyStoreURL, keyStoreType, keyStorePassword);
       loadTrustStore(keyStoreURL, keyStoreType, keyStorePassword);
+      this.keyPasswords = keyPasswords;
    }
 
-   public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, URL trustStoreURL, String trustStoreType, String trustStorePassword)
+   public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, HashMap<String, String> keyPasswords, URL trustStoreURL, String trustStoreType, String trustStorePassword)
          throws WSSecurityException
    {
       loadKeyStore(keyStoreURL, keyStoreType, keyStorePassword);
       loadTrustStore(trustStoreURL, trustStoreType, trustStorePassword);
+      this.keyPasswords = keyPasswords;
    }
 
    private void loadKeyStore(URL keyStoreURL, String keyStoreType, String keyStorePassword) throws WSSecurityException
@@ -405,7 +410,10 @@ public class SecurityStore
       PrivateKey key;
       try
       {
-         key = (PrivateKey)keyStore.getKey(alias, decryptPassword(keyStorePassword).toCharArray());
+         String password = keyStorePassword;
+         if (keyPasswords != null && keyPasswords.containsKey(alias))
+             password = keyPasswords.get(alias);
+         key = (PrivateKey)keyStore.getKey(alias, decryptPassword(password).toCharArray());
       }
       catch (Exception e)
       {

@@ -44,7 +44,7 @@ public class AccessorTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(AccessorTestCase.class, "jaxws-wrapped-accessor.war");
+      return new JBossWSTestSetup(AccessorTestCase.class, "jaxws-wrapped-accessor.war");
    }
 
    @Override

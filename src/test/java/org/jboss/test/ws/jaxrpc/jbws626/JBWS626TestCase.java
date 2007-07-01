@@ -44,7 +44,7 @@ public class JBWS626TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS626TestCase.class, "jaxrpc-jbws626.ear");
+      return new JBossWSTestSetup(JBWS626TestCase.class, "jaxrpc-jbws626.ear");
    }
 
    protected void setUp() throws Exception

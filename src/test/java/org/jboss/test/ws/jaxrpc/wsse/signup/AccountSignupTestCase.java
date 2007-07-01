@@ -38,7 +38,7 @@ public class AccountSignupTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(AccountSignupTestCase.class, "jaxrpc-wsse-account-signup.war, jaxrpc-wsse-account-signup-client.jar");
+      return new JBossWSTestSetup(AccountSignupTestCase.class, "jaxrpc-wsse-account-signup.war, jaxrpc-wsse-account-signup-client.jar");
    }
 
    public void testEndpoint() throws Exception

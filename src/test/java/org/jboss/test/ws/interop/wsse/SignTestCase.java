@@ -34,7 +34,7 @@ public class SignTestCase extends AbstractWSSEBase {
    public static Test suite()
    {
       addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar");
-      return JBossWSTestSetup.newTestSetup(SignTestCase.class, "jbossws-interop-wsse10Sign.war");
+      return new JBossWSTestSetup(SignTestCase.class, "jbossws-interop-wsse10Sign.war");
    }
 
    String getEndpointURL() {

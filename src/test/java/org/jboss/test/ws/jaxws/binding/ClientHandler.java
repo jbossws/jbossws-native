@@ -29,7 +29,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-import org.jboss.wsf.spi.handler.GenericSOAPHandler;
+import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 
 /**
  * A client side handler

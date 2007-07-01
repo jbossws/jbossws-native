@@ -415,6 +415,9 @@ public class ServiceImpl implements ServiceExt
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
 
+      // Setup the handler chain
+      setupHandlerChain(epMetaData);
+
       return proxy;
    }
 
@@ -490,35 +493,39 @@ public class ServiceImpl implements ServiceExt
 
    void setupHandlerChain(EndpointMetaData epMetaData)
    {
-      QName portName = epMetaData.getPortName();
-      Set<String> handlerRoles = new HashSet<String>();
-      ArrayList handlerInfos = new ArrayList();
-      for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(HandlerType.ALL))
+      if (epMetaData.isHandlersInitialized() == false)
       {
-         HandlerMetaDataJAXRPC jaxrpcMetaData = (HandlerMetaDataJAXRPC)handlerMetaData;
-         handlerRoles.addAll(jaxrpcMetaData.getSoapRoles());
-
-         HashMap hConfig = new HashMap();
-         for (UnifiedInitParamMetaData param : jaxrpcMetaData.getInitParams())
+         QName portName = epMetaData.getPortName();
+         Set<String> handlerRoles = new HashSet<String>();
+         List<HandlerInfo> handlerInfos = new ArrayList<HandlerInfo>();
+         for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(HandlerType.ALL))
          {
-            hConfig.put(param.getParamName(), param.getParamValue());
-         }
+            HandlerMetaDataJAXRPC jaxrpcMetaData = (HandlerMetaDataJAXRPC)handlerMetaData;
+            handlerRoles.addAll(jaxrpcMetaData.getSoapRoles());
 
-         Set<QName> headers = jaxrpcMetaData.getSoapHeaders();
-         QName[] headerArr = new QName[headers.size()];
-         headers.toArray(headerArr);
+            HashMap hConfig = new HashMap();
+            for (UnifiedInitParamMetaData param : jaxrpcMetaData.getInitParams())
+            {
+               hConfig.put(param.getParamName(), param.getParamValue());
+            }
 
-         Class hClass = jaxrpcMetaData.getHandlerClass();
-         hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
-         HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
+            Set<QName> headers = jaxrpcMetaData.getSoapHeaders();
+            QName[] headerArr = new QName[headers.size()];
+            headers.toArray(headerArr);
 
-         if (log.isDebugEnabled())
+            Class hClass = jaxrpcMetaData.getHandlerClass();
+            hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
+            HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
+
             log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
-         handlerInfos.add(info);
-
+            handlerInfos.add(info);
+         }
+         
          // register the handlers with the client engine
          if (handlerInfos.size() > 0)
             registerHandlerChain(portName, handlerInfos, handlerRoles);
+         
+         epMetaData.setHandlersInitialized(true);
       }
    }
 }

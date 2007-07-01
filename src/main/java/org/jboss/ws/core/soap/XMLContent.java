@@ -41,11 +41,12 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.TypeMappingImpl;
+import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
@@ -167,13 +168,13 @@ class XMLContent extends SOAPContent
       serContext.setProperty(ParameterMetaData.class.getName(), pmd);
       serContext.setJavaType(javaType);
       List<Class> registeredTypes = opMetaData.getEndpointMetaData().getRegisteredTypes();
-      serContext.setProperty(SerializationContext.CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
+      serContext.setProperty(SerializationContextJAXWS.JAXB_CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
 
       try
       {
          // Get the deserializer from the type mapping
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
-         DeserializerFactoryBase deserializerFactory = getDeserializerFactory(typeMapping, javaType, xmlType);
+         AbstractDeserializerFactory deserializerFactory = getDeserializerFactory(typeMapping, javaType, xmlType);
          DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
 
          obj = des.deserialize(container, serContext);
@@ -255,9 +256,9 @@ class XMLContent extends SOAPContent
    }
 
    // Get the deserializer factory for a given javaType and xmlType
-   private static DeserializerFactoryBase getDeserializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
+   private static AbstractDeserializerFactory getDeserializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
    {
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(javaType, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(javaType, xmlType);
 
       // The type mapping might contain a mapping for the array wrapper bean
       if (deserializerFactory == null && javaType.isArray())
@@ -271,7 +272,7 @@ class XMLContent extends SOAPContent
                Class returnType = toArrayMethod.getReturnType();
                if (JavaUtils.isAssignableFrom(javaType, returnType))
                {
-                  deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(arrayWrapperType, xmlType);
+                  deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(arrayWrapperType, xmlType);
                }
             }
             catch (NoSuchMethodException e)

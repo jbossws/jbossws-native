@@ -41,7 +41,7 @@ public class EnvEntryJSETestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(EnvEntryJSETestCase.class, "jaxrpc-enventry.war, jaxrpc-enventry-client.jar");
+      return new JBossWSTestSetup(EnvEntryJSETestCase.class, "jaxrpc-enventry.war, jaxrpc-enventry-client.jar");
    }
 
    protected void setUp() throws Exception

@@ -51,7 +51,7 @@ public class HandlerMetaDataJAXWS extends HandlerMetaData
       HandlerMetaDataJAXWS hmd = new HandlerMetaDataJAXWS(type);
       hmd.setHandlerName(uhmd.getHandlerName());
       hmd.setHandlerClassName(uhmd.getHandlerClass());
-      hmd.seiInitParams(uhmd.getInitParams());
+      hmd.setInitParams(uhmd.getInitParams());
       UnifiedHandlerChainMetaData handlerChain = uhmd.getHandlerChain();
       if (handlerChain != null)
       {

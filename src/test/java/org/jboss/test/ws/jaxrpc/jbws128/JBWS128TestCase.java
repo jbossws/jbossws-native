@@ -42,7 +42,7 @@ public class JBWS128TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS128TestCase.class, "jaxrpc-jbws128.ear");
+      return new JBossWSTestSetup(JBWS128TestCase.class, "jaxrpc-jbws128.ear");
    }
 
    /**

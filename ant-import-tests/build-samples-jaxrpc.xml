@@ -488,7 +488,6 @@
     </jar>
     
     <!-- jaxrpc-samples-store-pass-encrypt.war -->
-    <replace file="${tests.output.dir}/resources/jaxrpc/samples/wssecurity/store-pass-encrypt/jboss-wsse-server.xml" token="${buildpath}" value="${tests.output.dir}"/>
     <war warfile="${tests.output.dir}/libs/jaxrpc-samples-store-pass-encrypt.war"
       webxml="${tests.output.dir}/resources/jaxrpc/samples/wssecurity/store-pass-encrypt/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

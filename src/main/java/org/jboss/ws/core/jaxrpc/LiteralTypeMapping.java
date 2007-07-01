@@ -32,6 +32,7 @@ import javax.xml.transform.Source;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.ElementDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.ElementSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;

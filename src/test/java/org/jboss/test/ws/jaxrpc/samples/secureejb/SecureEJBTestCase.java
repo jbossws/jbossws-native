@@ -49,7 +49,7 @@ public class SecureEJBTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(SecureEJBTestCase.class, "jaxrpc-samples-secureejb.jar, jaxrpc-samples-secureejb-client.jar");
+      return new JBossWSTestSetup(SecureEJBTestCase.class, "jaxrpc-samples-secureejb.jar, jaxrpc-samples-secureejb-client.jar");
    }
 
    public void testRoleSecuredWSDLAccess() throws Exception

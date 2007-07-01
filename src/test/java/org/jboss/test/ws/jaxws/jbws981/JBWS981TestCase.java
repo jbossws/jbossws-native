@@ -34,8 +34,6 @@ import org.jboss.wsf.spi.test.JBossWSTestSetup;
 /**
  * [JBWS-981] Virtual host configuration for EJB endpoints
  *
- * http://jira.jboss.org/jira/browse/JBWS-981
- *
  * @author darran.lofthouse@jboss.com
  * @since Nov 2, 2006
  */
@@ -46,7 +44,7 @@ public class JBWS981TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS981TestCase.class, "jaxws-jbws981.jar");
+      return new JBossWSTestSetup(JBWS981TestCase.class, "jaxws-jbws981.jar");
    }
 
    protected void setUp() throws Exception
@@ -65,7 +63,7 @@ public class JBWS981TestCase extends JBossWSTest
 
    public void testCall() throws Exception
    {
-      System.out.println("FIXME: [JBWS-981] Virtual host configuration for EJB endpoints (Enable once JBossAS supports virtual-host element)");
+      System.out.println("FIXME: [JBWS-981] Virtual host configuration for EJB endpoints");
       if (true) return;
 
       String message = "hello";

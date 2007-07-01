@@ -30,6 +30,9 @@ import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPUnmarshallerImpl;
 import org.jboss.wsf.spi.utils.DOMUtils;

@@ -49,7 +49,7 @@ public class HandlerMetaDataJAXRPC extends HandlerMetaData
       HandlerMetaDataJAXRPC hmd = new HandlerMetaDataJAXRPC(type);
       hmd.setHandlerName(uhmd.getHandlerName());
       hmd.setHandlerClassName(uhmd.getHandlerClass());
-      hmd.seiInitParams(uhmd.getInitParams());
+      hmd.setInitParams(uhmd.getInitParams());
       hmd.setSoapHeaders(uhmd.getSoapHeaders());
       hmd.setSoapRoles(uhmd.getSoapRoles());
       hmd.setPortNames(uhmd.getPortNames());

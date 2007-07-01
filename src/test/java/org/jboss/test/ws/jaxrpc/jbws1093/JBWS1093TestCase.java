@@ -54,7 +54,7 @@ public class JBWS1093TestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1093TestCase.class, "jaxrpc-jbws1093.war, jaxrpc-jbws1093-client.jar");
+      return new JBossWSTestSetup(JBWS1093TestCase.class, "jaxrpc-jbws1093.war, jaxrpc-jbws1093-client.jar");
    }
 
    public void setUp() throws Exception

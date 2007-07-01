@@ -33,6 +33,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
@@ -41,6 +42,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageAbstraction;
@@ -157,6 +159,11 @@ public class DispatchSOAPBinding extends DispatchBinding
             if (mode == Mode.PAYLOAD)
             {
                SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
+               
+               SOAPFault soapFault = soapBody.getFault();
+               if (soapFault != null)
+                  throw new SOAPFaultException(soapFault);
+               
                SOAPElement soapElement = soapBody.getBodyElement();
                retObj = new DOMSource(soapElement);
             }

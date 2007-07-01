@@ -21,15 +21,15 @@
  */
 package org.jboss.test.ws.jaxws.jbws1422;
 
-import javax.jws.WebService;
 import javax.jws.WebParam;
+import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import javax.ejb.Remote;
 
-@WebService(name="test")
-@SOAPBinding(style= SOAPBinding.Style.DOCUMENT, use= SOAPBinding.Use.LITERAL, parameterStyle= SOAPBinding.ParameterStyle.WRAPPED)
-@Remote
-public interface IWebsvc {
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
+public interface IWebsvc
+{
 
-	String cancel(@WebParam(name="nBarFoo") String myfoobar);
+   String cancel(@WebParam(name = "nBarFoo")
+   String myfoobar);
 }

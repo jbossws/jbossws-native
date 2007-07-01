@@ -57,7 +57,7 @@ public class JBWS801TestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS801TestCase.class, "jaxrpc-jbws801.war");
+      return new JBossWSTestSetup(JBWS801TestCase.class, "jaxrpc-jbws801.war");
    }
 
    public void testLargeFile() throws Exception

@@ -54,7 +54,7 @@ public class EndpointTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      return new TestSetup(JBossWSTestSetup.newTestSetup(EndpointTestCase.class, "jaxws-endpoint-servlet.war")) {
+      return new TestSetup(new JBossWSTestSetup(EndpointTestCase.class, "jaxws-endpoint-servlet.war")) {
 
          private Boolean useJBossWebLoader;
          

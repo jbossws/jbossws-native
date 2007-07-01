@@ -47,12 +47,13 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.WSTimeoutException;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.SchemaGenerator;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.UnqualifiedCallParameter;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
@@ -476,6 +477,15 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       if (paramMetaData != null)
          return paramMetaData.getXmlType();
       else return null;
+   }
+
+   protected CommonBindingProvider getCommonBindingProvider()
+   {
+      if (bindingProvider == null)
+      {
+         bindingProvider = new CommonBindingProvider(getEndpointMetaData());
+      }
+      return bindingProvider;
    }
 
    @Override

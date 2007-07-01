@@ -95,7 +95,7 @@ public abstract class Provider
       }
       catch (Exception ex)
       {
-         throw new WebServiceException("Unable to createEndpointReference Provider: " + ex.getMessage());
+         throw new WebServiceException("Unable to load Provider: " + ex.getMessage(), ex);
       }
 
    }

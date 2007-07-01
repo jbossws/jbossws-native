@@ -48,7 +48,7 @@ public class JBWS1190TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1190TestCase.class, ARCHIVE_NAME);
+      return new JBossWSTestSetup(JBWS1190TestCase.class, ARCHIVE_NAME);
    }
 
    protected void setUp() throws Exception

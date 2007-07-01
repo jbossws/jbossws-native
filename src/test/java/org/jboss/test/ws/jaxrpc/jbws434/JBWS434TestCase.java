@@ -39,10 +39,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 
 /**
- * Support sequences of anys
+ * [JBWS-434] Support sequences of anys
  * 
- * http://jira.jboss.org/jira/browse/JBWS-434
- *
  * @author Thomas.Diesler@jboss.org
  * @since 11-Nov-2005
  */
@@ -52,7 +50,7 @@ public class JBWS434TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS434TestCase.class, "jaxrpc-jbws434.war, jaxrpc-jbws434-client.jar");
+      return new JBossWSTestSetup(JBWS434TestCase.class, "jaxrpc-jbws434.war, jaxrpc-jbws434-client.jar");
    }
 
    protected void setUp() throws Exception
@@ -144,9 +142,6 @@ public class JBWS434TestCase extends JBossWSTest
       SOAPElement el1 = factory.createElement("knownWildcard", "ns1", "http://somens");
       el1.setValue("Kermmit");
 
-      System.out.println("FIXME: [JBWS-434] Support sequences of anys");
-      if (true) return;
-      
       TypeOfAny3 inObj = new TypeOfAny3(el1);
       TypeOfAny3 retObj = port.echo3(inObj);
 

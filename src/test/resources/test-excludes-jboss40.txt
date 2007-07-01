@@ -13,6 +13,3 @@ org/jboss/test/ws/jaxws/samples/handlerchain/HandlerChainClientTestCase*
 org/jboss/test/ws/jaxws/samples/retail/**
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/serviceref/**
-
-org/jboss/test/ws/jaxrpc/samples/jmstransport/JMSTransportTestCase.*
-org/jboss/test/ws/jaxrpc/samples/jmstransport/OrganizationJMSEndpoint.*

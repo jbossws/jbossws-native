@@ -42,7 +42,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.HeaderSource;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;

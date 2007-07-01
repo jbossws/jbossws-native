@@ -33,7 +33,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;

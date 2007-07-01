@@ -31,6 +31,10 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.BufferedStreamResult;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.NamedNodeMap;

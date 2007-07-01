@@ -24,7 +24,7 @@ package org.jboss.ws.extensions.addressing.jaxws;
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
-import org.jboss.wsf.spi.handler.GenericSOAPHandler;
+import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;

@@ -49,7 +49,7 @@ public class RpcDIIUnconfiguredCallTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(RpcDIIUnconfiguredCallTestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war");
+      return new JBossWSTestSetup(RpcDIIUnconfiguredCallTestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war");
    }
 
    public void testEchoString() throws Exception

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -142,6 +143,14 @@ public class WSDL11Reader
    // SWA handling
    private Map<QName, List<String>> skippedSWAParts = new HashMap<QName, List<String>>();
 
+   // It is generally unsafe to use the getter for a top level element on another top level element.
+   // For examples Binding.getPortType() returns a PortType which might might be undefined
+   // The lists below only contain "defined" top level elements
+   private Map<String, List<Service>> servicesByNamespace = new HashMap<String, List<Service>>();
+   private Map<String, List<Binding>> bindingsByNamespace = new HashMap<String, List<Binding>>();
+   private Map<String, List<PortType>> portTypesByNamespace = new HashMap<String, List<PortType>>();
+   private Map<String, List<Message>> messagesByNamespace = new HashMap<String, List<Message>>();
+
    /**
     * Takes a WSDL11 Definition element and converts into
     * our object graph that has been developed for WSDL20
@@ -159,6 +168,7 @@ public class WSDL11Reader
       destWsdl.setWsdlNamespace(Constants.NS_WSDL11);
 
       processNamespaces(srcWsdl);
+      processTopLevelElements(srcWsdl);
       processTypes(srcWsdl, wsdlLoc);
       processUnknownExtensibilityElements(srcWsdl, destWsdl);
       processServices(srcWsdl);
@@ -169,6 +179,77 @@ public class WSDL11Reader
       cleanupTemporaryFiles();
 
       return destWsdl;
+   }
+
+   private void processTopLevelElements(Definition srcWsdl)
+   {
+      String targetNS = srcWsdl.getTargetNamespace();
+
+      // Messages
+      Collection<Message> messages = srcWsdl.getMessages().values();
+      for (Message message : messages)
+      {
+         List<Message> list = messagesByNamespace.get(targetNS);
+         if (list == null)
+         {
+            list = new ArrayList<Message>();
+            messagesByNamespace.put(targetNS, list);
+         }
+         if (message.isUndefined() == false)
+            list.add(message);
+      }
+
+      // PortTypes
+      Collection<PortType> portTypes = srcWsdl.getPortTypes().values();
+      for (PortType portType : portTypes)
+      {
+         List<PortType> list = portTypesByNamespace.get(targetNS);
+         if (list == null)
+         {
+            list = new ArrayList<PortType>();
+            portTypesByNamespace.put(targetNS, list);
+         }
+         if (portType.isUndefined() == false)
+            list.add(portType);
+      }
+
+      // Bindings
+      Collection<Binding> bindings = srcWsdl.getBindings().values();
+      for (Binding binding : bindings)
+      {
+         List<Binding> list = bindingsByNamespace.get(targetNS);
+         if (list == null)
+         {
+            list = new ArrayList<Binding>();
+            bindingsByNamespace.put(targetNS, list);
+         }
+         if (binding.isUndefined() == false)
+            list.add(binding);
+      }
+
+      // Services
+      Collection<Service> services = srcWsdl.getServices().values();
+      for (Service service : services)
+      {
+         List<Service> list = servicesByNamespace.get(targetNS);
+         if (list == null)
+         {
+            list = new ArrayList<Service>();
+            servicesByNamespace.put(targetNS, list);
+         }
+         list.add(service);
+      }
+
+      // Imports
+      Collection<List<Import>> importLists = srcWsdl.getImports().values();
+      for (List<Import> imports : importLists)
+      {
+         for (Import imp : imports)
+         {
+            Definition impWsdl = imp.getDefinition();
+            processTopLevelElements(impWsdl);
+         }
+      }
    }
 
    private void cleanupTemporaryFiles()
@@ -214,18 +295,18 @@ public class WSDL11Reader
          destWsdl.registerNamespaceURI(nsURI, prefix);
       }
    }
-   
+
    private void processUnknownExtensibilityElements(ElementExtensible src, Extendable dest) throws WSDLException
    {
       List extElements = src.getExtensibilityElements();
-      for (int i=0; i<extElements.size(); i++)
+      for (int i = 0; i < extElements.size(); i++)
       {
          ExtensibilityElement extElement = (ExtensibilityElement)extElements.get(i);
          processPolicyElements(extElement, dest);
          //add processing of further extensibility element types below
       }
    }
-   
+
    private void processPolicyElements(ExtensibilityElement extElement, Extendable dest)
    {
       if (extElement instanceof UnknownExtensibilityElement)
@@ -238,19 +319,17 @@ public class WSDL11Reader
             copyMissingNamespaceDeclarations(element, srcElement);
             if (element.getLocalName().equals("Policy"))
             {
-               dest.addExtensibilityElement(
-                     new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICY,element));
+               dest.addExtensibilityElement(new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICY, element));
             }
             else if (element.getLocalName().equals("PolicyReference"))
             {
-               dest.addExtensibilityElement(
-                     new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICYREFERENCE,element));
+               dest.addExtensibilityElement(new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICYREFERENCE, element));
             }
-            
+
          }
       }
    }
-   
+
    private void processTypes(Definition srcWsdl, URL wsdlLoc) throws IOException, WSDLException
    {
       log.trace("BEGIN processTypes: " + wsdlLoc);
@@ -352,7 +431,7 @@ public class WSDL11Reader
          parent = parent.getParentNode();
       }
    }
-   
+
    private void copyMissingNamespaceDeclarations(Element destElement, Element srcElement)
    {
       String prefix = destElement.getPrefix();
@@ -365,24 +444,24 @@ public class WSDL11Reader
       {
          nsUri = null;
       }
-      if (prefix!=null && nsUri == null)
+      if (prefix != null && nsUri == null)
       {
-         destElement.setAttributeNS(Constants.NS_XMLNS,"xmlns:"+prefix,srcElement.lookupNamespaceURI(prefix));
-         
+         destElement.setAttributeNS(Constants.NS_XMLNS, "xmlns:" + prefix, srcElement.lookupNamespaceURI(prefix));
+
       }
-      
+
       NamedNodeMap attributes = destElement.getAttributes();
       for (int i = 0; i < attributes.getLength(); i++)
       {
          Attr attr = (Attr)attributes.item(i);
          String attrPrefix = attr.getPrefix();
-         if (attrPrefix!=null && !attr.getName().startsWith("xmlns") && destElement.lookupNamespaceURI(attrPrefix) == null)
+         if (attrPrefix != null && !attr.getName().startsWith("xmlns") && destElement.lookupNamespaceURI(attrPrefix) == null)
          {
-            destElement.setAttributeNS(Constants.NS_XMLNS,"xmlns:"+attrPrefix,srcElement.lookupNamespaceURI(attrPrefix));
+            destElement.setAttributeNS(Constants.NS_XMLNS, "xmlns:" + attrPrefix, srcElement.lookupNamespaceURI(attrPrefix));
          }
       }
       NodeList childrenList = destElement.getChildNodes();
-      for (int i=0; i<childrenList.getLength(); i++)
+      for (int i = 0; i < childrenList.getLength(); i++)
       {
          Node node = childrenList.item(i);
          if (node instanceof Element)
@@ -543,14 +622,14 @@ public class WSDL11Reader
       if (destWsdl.getInterface(qname) == null)
       {
          WSDLInterface destInterface = new WSDLInterface(destWsdl, qname);
-         
+
          //policy extensions
          QName policyURIsProp = (QName)srcPortType.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSP_POLICYURIS);
          if (policyURIsProp != null && !"".equalsIgnoreCase(policyURIsProp.getLocalPart()))
          {
             destInterface.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_POLICYURIS, policyURIsProp.getLocalPart()));
          }
-         
+
          // eventing extensions
          QName eventSourceProp = (QName)srcPortType.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSE_EVENTSOURCE);
          if (eventSourceProp != null && eventSourceProp.getLocalPart().equals(Boolean.TRUE.toString()))
@@ -914,9 +993,7 @@ public class WSDL11Reader
 
       if (destWsdl.getBinding(srcBindingQName) == null)
       {
-         PortType srcPortType = srcBinding.getPortType();
-         if (srcPortType == null)
-            throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find port type for binding: " + srcBindingQName);
+         PortType srcPortType = getDefinedPortType(srcBinding);
 
          // Get binding type
          String bindingType = null;
@@ -979,13 +1056,71 @@ public class WSDL11Reader
       return true;
    }
 
+   /** The port might reference a binding which is defined in another wsdl
+    */
+   private Binding getDefinedBinding(Port srcPort) throws WSDLException
+   {
+      Binding srcBinding = srcPort.getBinding();
+      if (srcBinding == null)
+         throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find binding for port: " + srcPort.getName());
+
+      QName srcBindingName = srcBinding.getQName();
+      if (srcBinding.isUndefined())
+      {
+         String nsURI = srcBindingName.getNamespaceURI();
+         List<Binding> bindings = bindingsByNamespace.get(nsURI);
+         if (bindings == null)
+            throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find bindings for namespace: " + nsURI);
+         
+         for (Binding auxBinding : bindings)
+         {
+            if (srcBindingName.equals(auxBinding.getQName()))
+            {
+               srcBinding = auxBinding;
+               break;
+            }
+         }
+      }
+      
+      return srcBinding;
+   }
+
+   /** The binding might reference a port type which is defined in another wsdl
+    */
+   private PortType getDefinedPortType(Binding srcBinding) throws WSDLException
+   {
+      QName srcBindingQName = srcBinding.getQName();
+
+      PortType srcPortType = srcBinding.getPortType();
+      if (srcPortType == null)
+         throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find port type for binding: " + srcBindingQName);
+
+      QName srcPortTypeName = srcPortType.getQName();
+      if (srcPortType.isUndefined())
+      {
+         String nsURI = srcPortTypeName.getNamespaceURI();
+         List<PortType> portTypes = portTypesByNamespace.get(nsURI);
+         if (portTypes == null)
+            throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot find port types for namespace: " + nsURI);
+
+         for (PortType auxPortType : portTypes)
+         {
+            if (srcPortTypeName.equals(auxPortType.getQName()))
+            {
+               srcPortType = auxPortType;
+               break;
+            }
+         }
+      }
+
+      return srcPortType;
+   }
+
    /**
     * Identify and mark message parts that belong to
     * an SWA binding and can be skipped when processing this WSDL
-    * @param srcBinding
-    * @param srcWsdl
     */
-   private void preProcessSWAParts(Binding srcBinding, Definition srcWsdl)
+   private void preProcessSWAParts(Binding srcBinding, Definition srcWsdl) throws WSDLException
    {
 
       Iterator opIt = srcBinding.getBindingOperations().iterator();
@@ -1003,7 +1138,7 @@ public class WSDL11Reader
       }
    }
 
-   private void markSWAParts(List extensions, Binding srcBinding, Definition srcWsdl)
+   private void markSWAParts(List extensions, Binding srcBinding, Definition srcWsdl) throws WSDLException
    {
       Iterator extIt = extensions.iterator();
       while (extIt.hasNext())
@@ -1012,7 +1147,7 @@ public class WSDL11Reader
          if (o instanceof MIMEMultipartRelated)
          {
 
-            QName portTypeName = srcBinding.getPortType().getQName();
+            QName portTypeName = getDefinedPortType(srcBinding).getQName();
 
             if (log.isTraceEnabled())
                log.trace("SWA found on portType" + portTypeName);
@@ -1038,13 +1173,13 @@ public class WSDL11Reader
       }
    }
 
-   private Map<QName, Binding> getPortTypeBindings(Definition srcWsdl)
+   private Map<QName, Binding> getPortTypeBindings(Definition srcWsdl) throws WSDLException
    {
       getAllDefinedBindings(srcWsdl);
       return portTypeBindings;
    }
 
-   private Map<QName, Binding> getAllDefinedBindings(Definition srcWsdl)
+   private Map<QName, Binding> getAllDefinedBindings(Definition srcWsdl) throws WSDLException
    {
       if (allBindings != null)
          return allBindings;
@@ -1057,7 +1192,7 @@ public class WSDL11Reader
       {
          Binding srcBinding = (Binding)itBinding.next();
          allBindings.put(srcBinding.getQName(), srcBinding);
-         portTypeBindings.put(srcBinding.getPortType().getQName(), srcBinding);
+         portTypeBindings.put(getDefinedPortType(srcBinding).getQName(), srcBinding);
       }
 
       // Bindings not available when pulled in through <wsdl:import>
@@ -1072,7 +1207,7 @@ public class WSDL11Reader
             Port srcPort = (Port)itPort.next();
             Binding srcBinding = srcPort.getBinding();
             allBindings.put(srcBinding.getQName(), srcBinding);
-            portTypeBindings.put(srcBinding.getPortType().getQName(), srcBinding);
+            portTypeBindings.put(getDefinedPortType(srcBinding).getQName(), srcBinding);
          }
       }
 
@@ -1229,7 +1364,7 @@ public class WSDL11Reader
          {
             SOAP12Body body = (SOAP12Body)extElement;
             processEncodingStyle(body, destBindingOperation);
-            
+
             String namespaceURI = body.getNamespaceURI();
             destBindingOperation.setNamespaceURI(namespaceURI);
          }
@@ -1415,7 +1550,7 @@ public class WSDL11Reader
    {
       log.trace("processPort: " + srcPort.getName());
 
-      Binding srcBinding = srcPort.getBinding();
+      Binding srcBinding = getDefinedBinding(srcPort);
       QName endpointName = new QName(srcWsdl.getTargetNamespace(), srcPort.getName());
       WSDLEndpoint destEndpoint = new WSDLEndpoint(destService, endpointName);
       destEndpoint.setBinding(srcBinding.getQName());

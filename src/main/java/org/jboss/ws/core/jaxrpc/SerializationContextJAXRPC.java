@@ -29,7 +29,7 @@ import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;

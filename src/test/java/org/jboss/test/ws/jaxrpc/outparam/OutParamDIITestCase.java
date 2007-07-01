@@ -71,7 +71,7 @@ public class OutParamDIITestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(OutParamDIITestCase.class, "jaxrpc-outparam.war");
+      return new JBossWSTestSetup(OutParamDIITestCase.class, "jaxrpc-outparam.war");
    }
 
    public void testEchoBigDecimal() throws Exception

@@ -38,7 +38,7 @@ import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.SchemaBindingBuilder;
 import org.jboss.ws.core.soap.Use;

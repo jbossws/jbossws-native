@@ -131,7 +131,7 @@ public class ParameterModeTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(ParameterModeTestCase.class, "jaxrpc-encoded-parametermode.war, jaxrpc-encoded-parametermode-client.jar");
+      return new JBossWSTestSetup(ParameterModeTestCase.class, "jaxrpc-encoded-parametermode.war, jaxrpc-encoded-parametermode-client.jar");
    }
 
    protected void setUp() throws Exception

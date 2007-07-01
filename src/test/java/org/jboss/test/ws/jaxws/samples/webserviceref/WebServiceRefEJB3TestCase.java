@@ -44,7 +44,7 @@ public class WebServiceRefEJB3TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(WebServiceRefEJB3TestCase.class, "jaxws-samples-webserviceref.war");
+      return new JBossWSTestSetup(WebServiceRefEJB3TestCase.class, "jaxws-samples-webserviceref.war");
    }
 
    public void testDynamicProxy() throws Exception

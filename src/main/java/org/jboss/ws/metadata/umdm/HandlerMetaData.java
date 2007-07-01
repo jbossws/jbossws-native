@@ -140,7 +140,7 @@ public abstract class HandlerMetaData implements Serializable
       return soapHeaders;
    }
 
-   public void seiInitParams(List<UnifiedInitParamMetaData> initParams)
+   public void setInitParams(List<UnifiedInitParamMetaData> initParams)
    {
       this.initParams = initParams;
    }

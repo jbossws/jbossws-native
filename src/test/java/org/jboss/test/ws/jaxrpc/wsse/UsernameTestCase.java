@@ -45,7 +45,7 @@ public class UsernameTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(UsernameTestCase.class, "jaxrpc-wsse-username.jar, jaxrpc-wsse-username-client.jar");
+      return new JBossWSTestSetup(UsernameTestCase.class, "jaxrpc-wsse-username.jar, jaxrpc-wsse-username-client.jar");
    }
 
    protected void setUp() throws Exception

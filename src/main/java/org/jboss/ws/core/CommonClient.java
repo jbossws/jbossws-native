@@ -104,6 +104,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
       {
          this.epMetaData = serviceMetaData.getEndpoints().get(0);
       }
+      
+      // Initialize the binding provider
+      this.bindingProvider = getCommonBindingProvider();
    }
 
    /** Create a call for a known WSDL endpoint.
@@ -111,6 +114,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
    protected CommonClient(EndpointMetaData epMetaData)
    {
       this.epMetaData = epMetaData;
+      
+      // Initialize the binding provider
+      this.bindingProvider = getCommonBindingProvider();
    }
 
    /** Create a call for a known WSDL endpoint.
@@ -137,6 +143,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
       {
          setOperationName(opName);
       }
+      
+      // Initialize the binding provider
+      this.bindingProvider = getCommonBindingProvider();
    }
 
    /** Gets the address of a target service endpoint.
@@ -472,14 +481,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
    protected abstract CommonMessageContext processPivot(CommonMessageContext requestContext);
 
-   protected CommonBindingProvider getCommonBindingProvider()
-   {
-      if (bindingProvider == null)
-      {
-         bindingProvider = new CommonBindingProvider(getEndpointMetaData());
-      }
-      return bindingProvider;
-   }
+   protected abstract CommonBindingProvider getCommonBindingProvider();
 
    protected abstract Map<String, Object> getRequestContext();
 

@@ -47,7 +47,7 @@ public class JBWS1505TestCase extends JBossWSTest
 
 	public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1505TestCase.class, "jaxws-jbws1505.jar");
+      return new JBossWSTestSetup(JBWS1505TestCase.class, "jaxws-jbws1505.jar");
    }
 
    @Override

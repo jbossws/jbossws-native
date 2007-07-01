@@ -27,7 +27,7 @@ import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
+import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;

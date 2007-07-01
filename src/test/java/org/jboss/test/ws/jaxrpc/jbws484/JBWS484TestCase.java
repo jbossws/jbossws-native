@@ -45,7 +45,7 @@ public class JBWS484TestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS484TestCase.class, "jaxrpc-jbws484.war, jaxrpc-jbws484-client.jar");
+      return new JBossWSTestSetup(JBWS484TestCase.class, "jaxrpc-jbws484.war, jaxrpc-jbws484-client.jar");
    }
    
    public void setUp() throws Exception

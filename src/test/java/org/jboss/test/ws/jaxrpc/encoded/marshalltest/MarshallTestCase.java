@@ -49,7 +49,7 @@ public class MarshallTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(MarshallTestCase.class, "jaxrpc-encoded-marshalltest.war, jaxrpc-encoded-marshalltest-client.jar");
+      return new JBossWSTestSetup(MarshallTestCase.class, "jaxrpc-encoded-marshalltest.war, jaxrpc-encoded-marshalltest-client.jar");
    }
 
    protected void setUp() throws Exception

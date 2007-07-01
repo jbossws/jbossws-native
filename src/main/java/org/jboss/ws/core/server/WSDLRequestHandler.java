@@ -30,6 +30,7 @@ import java.net.URL;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -46,7 +47,6 @@ import org.w3c.dom.NodeList;
  * For a discussion of this topic.
  *
  * @author Thomas.Diesler@jboss.org
- * @author mageshbk@jboss.com
  * @since 23-Mar-2005
  */
 public class WSDLRequestHandler
@@ -72,12 +72,12 @@ public class WSDLRequestHandler
    public Document getDocumentForPath(URL reqURL, String wsdlHost, String resPath) throws IOException
    {
       Document wsdlDoc;
-      
+
       // The WSDLFilePublisher should set the location to an URL 
       URL wsdlLocation = epMetaData.getServiceMetaData().getWsdlLocation();
       if (wsdlLocation == null)
          throw new IllegalStateException("Cannot obtain wsdl location");
-      
+
       // get the root wsdl
       if (resPath == null)
       {
@@ -135,7 +135,7 @@ public class WSDLRequestHandler
                      String reqPath = reqURL.getPath();
                      String completeHost = wsdlHost;
 
-                     if (! (wsdlHost.startsWith("http://") || wsdlHost.startsWith("https://")) )
+                     if (!(wsdlHost.startsWith("http://") || wsdlHost.startsWith("https://")))
                      {
                         String reqProtocol = reqURL.getProtocol();
                         int reqPort = reqURL.getPort();
@@ -145,7 +145,7 @@ public class WSDLRequestHandler
 
                      String newLocation = completeHost + reqPath + "?wsdl&resource=" + newResourcePath;
                      locationAttr.setNodeValue(newLocation);
-                     
+
                      log.trace("Mapping import from '" + orgLocation + "' to '" + newLocation + "'");
                   }
                }
@@ -158,14 +158,30 @@ public class WSDLRequestHandler
                if (locationAttr != null)
                {
                   String orgLocation = locationAttr.getNodeValue();
-                  
-                  URL locURL = new URL(orgLocation);
-                  String locPath = locURL.getPath();
 
-                  String newLocation = wsdlHost  + locPath;
-                  locationAttr.setNodeValue(newLocation);
+                  URL orgURL = new URL(orgLocation);
+                  String orgProtocol = orgURL.getProtocol();
+                  String orgHost = orgURL.getHost();
+                  int orgPort = orgURL.getPort();
+                  String orgPath = orgURL.getPath();
 
-                  log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                  if (ServerConfig.UNDEFINED_HOSTNAME.equals(orgHost))
+                  {
+                     URL newURL = new URL(wsdlHost); 
+                     String newHost = newURL.getHost();
+                     int newPort = newURL.getPort();
+                     
+                     String newLocation = orgProtocol + "://" + newHost;
+                     if (orgPort != -1)
+                        newLocation += ":" + orgPort;
+                     else if (newPort != -1)
+                        newLocation += ":" + newPort;
+                     
+                     newLocation += orgPath;
+                     locationAttr.setNodeValue(newLocation);
+
+                     log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                  }
                }
             }
             else

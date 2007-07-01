@@ -47,7 +47,7 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(SimpleSignEncryptTestCase.class, "jaxrpc-wsse-simple-sign-encrypt.war, jaxrpc-wsse-simple-sign-encrypt-client.jar");
+      return new JBossWSTestSetup(SimpleSignEncryptTestCase.class, "jaxrpc-wsse-simple-sign-encrypt.war, jaxrpc-wsse-simple-sign-encrypt-client.jar");
    }
 
    public void testEndpoint() throws Exception

@@ -42,7 +42,7 @@ public class JBWS168TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS168TestCase.class, "jaxrpc-jbws168.war, jaxrpc-jbws168-client.jar");
+      return new JBossWSTestSetup(JBWS168TestCase.class, "jaxrpc-jbws168.war, jaxrpc-jbws168-client.jar");
    }
 
    public void testEmptyProperty() throws Exception

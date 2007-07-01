@@ -32,7 +32,7 @@ import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.handler.GenericHandler;
+import org.jboss.wsf.spi.jaxws.handler.GenericHandler;
 
 /**
  * A client side handler for the ws-addressing

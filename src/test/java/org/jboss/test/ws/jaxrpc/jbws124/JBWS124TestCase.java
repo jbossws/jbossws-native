@@ -42,7 +42,7 @@ public class JBWS124TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS124TestCase.class, "jaxrpc-jbws124.war, jaxrpc-jbws124-client.jar");
+      return new JBossWSTestSetup(JBWS124TestCase.class, "jaxrpc-jbws124.war, jaxrpc-jbws124-client.jar");
    }
 
    /**

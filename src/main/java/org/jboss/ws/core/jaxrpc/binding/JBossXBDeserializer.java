@@ -30,6 +30,9 @@ import javax.xml.transform.Source;
 
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.ComplexTypeDeserializer;
+import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshaller;

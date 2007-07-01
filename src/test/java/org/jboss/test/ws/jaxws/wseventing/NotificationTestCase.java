@@ -44,7 +44,7 @@ public class NotificationTestCase extends EventingSupport
 {
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(NotificationTestCase.class, "jaxws-wseventing.war");
+      return new JBossWSTestSetup(NotificationTestCase.class, "jaxws-wseventing.war");
    }
 
    public void testNotification() throws Exception {

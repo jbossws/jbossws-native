@@ -44,7 +44,7 @@ public class JBWS1619TestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1619TestCase.class, "jaxrpc-jbws1619.war, jaxrpc-jbws1619-client.jar");
+      return new JBossWSTestSetup(JBWS1619TestCase.class, "jaxrpc-jbws1619.war, jaxrpc-jbws1619-client.jar");
    }
 
    public void setUp() throws Exception

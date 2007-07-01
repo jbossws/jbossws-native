@@ -32,6 +32,7 @@ import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 
 /**
  * This defines a registry of TypeMapping instances for encoding styles.

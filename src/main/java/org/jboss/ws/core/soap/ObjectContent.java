@@ -30,12 +30,12 @@ import javax.xml.transform.Source;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
@@ -148,7 +148,7 @@ public class ObjectContent extends SOAPContent
          SerializerSupport ser;
          if (objectValue != null)
          {
-            SerializerFactoryBase serializerFactory = getSerializerFactory(typeMapping, javaType, xmlType);
+            AbstractSerializerFactory serializerFactory = getSerializerFactory(typeMapping, javaType, xmlType);
             ser = (SerializerSupport)serializerFactory.getSerializer();
          }
          else
@@ -172,9 +172,9 @@ public class ObjectContent extends SOAPContent
    /**
     * Get the serializer factory for a given javaType and xmlType
     */
-   private SerializerFactoryBase getSerializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
+   private AbstractSerializerFactory getSerializerFactory(TypeMappingImpl typeMapping, Class javaType, QName xmlType)
    {
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(javaType, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(javaType, xmlType);
 
       // The type mapping might contain a mapping for the array wrapper bean
       if (serializerFactory == null && javaType.isArray())
@@ -188,7 +188,7 @@ public class ObjectContent extends SOAPContent
                Class returnType = toArrayMethod.getReturnType();
                if (JavaUtils.isAssignableFrom(javaType, returnType))
                {
-                  serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(arrayWrapperType, xmlType);
+                  serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(arrayWrapperType, xmlType);
                }
             }
             catch (NoSuchMethodException e)

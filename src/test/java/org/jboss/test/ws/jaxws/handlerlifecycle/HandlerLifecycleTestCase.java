@@ -52,7 +52,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HandlerLifecycleTestCase.class, "jaxws-handlerlifecycle.war, jaxws-handlerlifecycle-client.jar");
+      return new JBossWSTestSetup(HandlerLifecycleTestCase.class, "jaxws-handlerlifecycle.war, jaxws-handlerlifecycle-client.jar");
    }
 
    public void setUp() throws Exception

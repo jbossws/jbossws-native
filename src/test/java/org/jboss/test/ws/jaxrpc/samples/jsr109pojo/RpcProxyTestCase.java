@@ -48,7 +48,7 @@ public class RpcProxyTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(RpcProxyTestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war");
+      return new JBossWSTestSetup(RpcProxyTestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war");
    }
 
    protected void setUp() throws Exception

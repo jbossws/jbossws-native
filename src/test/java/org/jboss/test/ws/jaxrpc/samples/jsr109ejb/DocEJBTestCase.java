@@ -41,7 +41,7 @@ public class DocEJBTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(DocEJBTestCase.class, "jaxrpc-samples-jsr109ejb-doc.jar, jaxrpc-samples-jsr109ejb-doc-client.jar");
+      return new JBossWSTestSetup(DocEJBTestCase.class, "jaxrpc-samples-jsr109ejb-doc.jar, jaxrpc-samples-jsr109ejb-doc-client.jar");
    }
 
    protected void setUp() throws Exception

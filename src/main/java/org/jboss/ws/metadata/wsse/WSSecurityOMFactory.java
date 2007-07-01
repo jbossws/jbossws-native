@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.wsse;
 
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       try
       {
          Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-         WSSecurityConfiguration configuration = (WSSecurityConfiguration) unmarshaller.unmarshal(is, this, null);
+         WSSecurityConfiguration configuration = (WSSecurityConfiguration)unmarshaller.unmarshal(is, this, null);
          return configuration;
       }
       catch (JBossXBException e)
@@ -105,28 +105,27 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
    }
 
-   
    public WSSecurityConfiguration parse(String xmlString) throws JBossXBException
    {
       if (xmlString == null)
          throw new IllegalArgumentException("Security config xml String cannot be null");
 
       Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-      WSSecurityConfiguration configuration = (WSSecurityConfiguration) unmarshaller.unmarshal(xmlString, this, null);
+      WSSecurityConfiguration configuration = (WSSecurityConfiguration)unmarshaller.unmarshal(xmlString, this, null);
       return configuration;
-      
+
    }
-   
+
    public WSSecurityConfiguration parse(StringReader strReader) throws JBossXBException
    {
       if (strReader == null)
          throw new IllegalArgumentException("Security InputStream cannot be null");
 
       Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-      WSSecurityConfiguration configuration = (WSSecurityConfiguration) unmarshaller.unmarshal(strReader, this, null);
+      WSSecurityConfiguration configuration = (WSSecurityConfiguration)unmarshaller.unmarshal(strReader, this, null);
       return configuration;
    }
-   
+
    /**
     * This method is called on the factory by the object model builder when the
     * parsing starts.
@@ -141,18 +140,17 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       return root;
    }
 
-   public void setValue(WSSecurityConfiguration configuration, UnmarshallingContext navigator, String namespaceURI,
-         String localName, String value)
+   public void setValue(WSSecurityConfiguration configuration, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       log.trace("setValue: [obj=" + configuration + ",value=" + value + "]");
-      String method = (String) options.get(localName);
+      String method = (String)options.get(localName);
       if (method == null)
          return;
 
       // Dispatch to propper initializer
       try
       {
-         WSSecurityConfiguration.class.getMethod(method, new Class[] {String.class}).invoke(configuration, new Object[]{value});
+         WSSecurityConfiguration.class.getMethod(method, new Class[] { String.class }).invoke(configuration, new Object[] { value });
       }
       catch (Exception e)
       {
@@ -163,13 +161,18 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    /**
     * Called when parsing of a new element started.
     */
-   public Object newChild(WSSecurityConfiguration configuration, UnmarshallingContext navigator, String namespaceURI,
-         String localName, Attributes attrs)
+   public Object newChild(WSSecurityConfiguration configuration, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       log.trace("newChild: " + localName);
       if ("config".equals(localName))
       {
          return new Config();
+      }
+      if ("key-passwords".equals(localName))
+      {
+         HashMap pwds = new HashMap();
+         configuration.setKeyPasswords(pwds);
+         return pwds;
       }
       if ("port".equals(localName))
       {
@@ -179,10 +182,24 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    }
 
    /**
+    * Called when parsing the contents of the <key-password> tag.
+    */
+   public Object newChild(HashMap passwords, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      log.trace("newChild: " + localName);
+      if ("key-password".equals(localName))
+      {
+         String alias = attrs.getValue("", "alias");
+         String pwd = attrs.getValue("", "password");
+         passwords.put(alias, pwd);
+      }
+      return null;
+   }
+
+   /**
     * Called when parsing character is complete.
     */
-   public void addChild(WSSecurityConfiguration configuration, Config defaultConfig, UnmarshallingContext navigator,
-         String namespaceURI, String localName)
+   public void addChild(WSSecurityConfiguration configuration, Config defaultConfig, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + configuration + ",child=" + defaultConfig + "]");
       configuration.setDefaultConfig(defaultConfig);
@@ -191,8 +208,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(WSSecurityConfiguration configuration, Port port, UnmarshallingContext navigator, String namespaceURI,
-         String localName)
+   public void addChild(WSSecurityConfiguration configuration, Port port, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + configuration + ",child=" + port + "]");
       configuration.addPort(port);
@@ -210,7 +226,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
          Boolean include = new Boolean(true);
          String timestamp = attrs.getValue("", "includeTimestamp");
          if (timestamp != null)
-            include = (Boolean) SimpleTypeBindings.unmarshal(timestamp, SimpleTypeBindings.XS_BOOLEAN_NAME, null);
+            include = (Boolean)SimpleTypeBindings.unmarshal(timestamp, SimpleTypeBindings.XS_BOOLEAN_NAME, null);
 
          return new Sign(attrs.getValue("", "type"), attrs.getValue("", "alias"), include.booleanValue());
       }
@@ -278,7 +294,6 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       log.trace("addChild: [obj=" + config + ",child=" + requires + "]");
       config.setRequires(requires);
    }
-
 
    private Object handleTargets(Object object, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
@@ -456,8 +471,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    /**
     * Called when parsing of a new element started.
     */
-   public Object newChild(Operation operation, UnmarshallingContext navigator, String namespaceURI, String localName,
-         Attributes attrs)
+   public Object newChild(Operation operation, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       log.trace("newChild: " + localName);
       if ("config".equals(localName))

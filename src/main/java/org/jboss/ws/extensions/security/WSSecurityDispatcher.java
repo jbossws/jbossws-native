@@ -35,6 +35,7 @@ import javax.xml.soap.SOAPHeader;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -98,9 +99,9 @@ public class WSSecurityDispatcher
       return operation.getConfig();
    }
 
-   private static SOAPFaultException convertToFault(WSSecurityException e)
+   private static CommonSOAPFaultException convertToFault(WSSecurityException e)
    {
-      return new SOAPFaultException(e.getFaultCode(), e.getFaultString(), null, null);
+      return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
    }
 
    public static void handleInbound(CommonMessageContext ctx) throws SOAPException, SOAPFaultException
@@ -138,7 +139,7 @@ public class WSSecurityDispatcher
 
       try
       {
-         SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getTrustStoreURL(),
+         SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getKeyPasswords(), config.getTrustStoreURL(),
                config.getTrustStoreType(), config.getTrustStorePassword());
          SecurityDecoder decoder = new SecurityDecoder(securityStore);
 
@@ -289,7 +290,7 @@ public class WSSecurityDispatcher
 
       try
       {
-         SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getTrustStoreURL(),
+         SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getKeyPasswords() , config.getTrustStoreURL(),
                config.getTrustStoreType(), config.getTrustStorePassword());
          SecurityEncoder encoder = new SecurityEncoder(operations, securityStore);
          encoder.encode(soapMessage.getSOAPPart());

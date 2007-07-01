@@ -35,7 +35,11 @@ import javax.xml.transform.dom.DOMSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.JavaUtils;
@@ -78,11 +82,11 @@ public class SOAPArrayDeserializer extends DeserializerSupport
          Object[] retArray = (Object[])Array.newInstance(compJavaType, arrDims);
 
          TypeMappingImpl typeMapping = serContext.getTypeMapping();
-         DeserializerFactoryBase compDeserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(compJavaType, compXmlType);
+         AbstractDeserializerFactory compDeserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(compJavaType, compXmlType);
          if (compDeserializerFactory == null)
          {
             log.warn("Cannot obtain component deserializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
-            compDeserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(null, compXmlType);
+            compDeserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(null, compXmlType);
          }
 
          if (compDeserializerFactory == null)

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
@@ -104,8 +105,14 @@ public class ParameterMetaData
       this.xmlName = xmlName;
       this.opMetaData = opMetaData;
       this.mode = ParameterMode.IN;
-      this.partName = xmlName.getLocalPart();
       this.javaTypeName = javaTypeName;
+      
+      // [JBWS-771] Use part names that are friendly to .NET
+      if (opMetaData.isDocumentWrapped())
+         partName = "parameters";
+      else
+         partName = xmlName.getLocalPart();
+      
    }
 
    private static boolean matchParameter(Method method, int index, Class expectedType, Set<Integer> matches, boolean exact, boolean holder)

@@ -46,7 +46,7 @@ public class JBWS663BareBoundTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS663BareBoundTestCase.class, "jaxrpc-jbws663bb.war, jaxrpc-jbws663bb-client.jar");
+      return new JBossWSTestSetup(JBWS663BareBoundTestCase.class, "jaxrpc-jbws663bb.war, jaxrpc-jbws663bb-client.jar");
    }
 
    protected void setUp() throws Exception

@@ -45,7 +45,7 @@ public class WebServiceRefClientTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(WebServiceRefClientTestCase.class, "jaxws-samples-webserviceref.war, jaxws-samples-webserviceref-client.jar");
+      return new JBossWSTestSetup(WebServiceRefClientTestCase.class, "jaxws-samples-webserviceref.war, jaxws-samples-webserviceref-client.jar");
    }
 
    public void testGeneratedService() throws Exception

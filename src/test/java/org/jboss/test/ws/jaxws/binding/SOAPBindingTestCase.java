@@ -48,7 +48,7 @@ public class SOAPBindingTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(SOAPBindingTestCase.class, "jaxws-binding.war");
+      return new JBossWSTestSetup(SOAPBindingTestCase.class, "jaxws-binding.war");
    }
 
    public void testClientAccess() throws Exception

@@ -67,7 +67,7 @@ public class JBWS812TestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS812TestCase.class, "jaxrpc-jbws812.war, jaxrpc-jbws812-client.jar");
+      return new JBossWSTestSetup(JBWS812TestCase.class, "jaxrpc-jbws812.war, jaxrpc-jbws812-client.jar");
    }
 
    /** Send the raw bytes via an HttpURLConnection

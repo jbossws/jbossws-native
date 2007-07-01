@@ -39,7 +39,6 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
@@ -48,13 +47,13 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
+import org.jboss.ws.core.CommonSOAPFaultException;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
@@ -125,7 +124,7 @@ public class SOAPFaultHelperJAXRPC
                Class javaType = faultMetaData.getJavaType();
 
                // Get the deserializer from the type mapping
-               DeserializerFactoryBase desFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(javaType, xmlType);
+               AbstractDeserializerFactory desFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(javaType, xmlType);
                if (desFactory == null)
                   throw new JAXRPCException("Cannot obtain deserializer factory for: " + xmlType);
 
@@ -181,9 +180,18 @@ public class SOAPFaultHelperJAXRPC
       {
          faultEx = (SOAPFaultException)reqEx;
       }
+      else if (reqEx instanceof CommonSOAPFaultException)
+      {
+         CommonSOAPFaultException soapEx = (CommonSOAPFaultException)reqEx;
+         QName faultCode = soapEx.getFaultCode();
+         String faultString = soapEx.getFaultString();
+         Throwable cause = soapEx.getCause();
+         faultEx = new SOAPFaultException(faultCode, faultString, null, null);
+         faultEx.initCause(cause);
+      }
       else
       {
-         QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+         QName faultCode = Constants.SOAP11_FAULT_CODE_SERVER;
          String faultString = (reqEx.getMessage() != null ? reqEx.getMessage() : reqEx.toString());
          faultEx = new SOAPFaultException(faultCode, faultString, null, null);
          faultEx.initCause(reqEx);
@@ -258,7 +266,7 @@ public class SOAPFaultHelperJAXRPC
             xmlName = nsRegistry.registerQName(xmlName);
 
             // Get the serializer from the type mapping
-            SerializerFactoryBase serFactory = (SerializerFactoryBase)typeMapping.getSerializer(javaType, xmlType);
+            AbstractSerializerFactory serFactory = (AbstractSerializerFactory)typeMapping.getSerializer(javaType, xmlType);
             if (serFactory == null)
                throw new JAXRPCException("Cannot obtain serializer factory for: " + xmlType);
 

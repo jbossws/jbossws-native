@@ -44,7 +44,7 @@ public class XOPHandlerTestCase extends XOPBase  {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(XOPHandlerTestCase.class, "jaxrpc-xop-doclit_handler.war, jaxrpc-xop-doclit_handler-client.jar");
+      return new JBossWSTestSetup(XOPHandlerTestCase.class, "jaxrpc-xop-doclit_handler.war, jaxrpc-xop-doclit_handler-client.jar");
    }
 
    protected void setUp() throws Exception

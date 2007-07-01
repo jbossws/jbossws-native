@@ -48,7 +48,7 @@ public class AddressingActionTestCase extends JBossWSTest
 
 	public static Test suite()
 	{
-		return JBossWSTestSetup.newTestSetup(AddressingActionTestCase.class, "jaxws-wsaddressing-action-rpc.war");
+		return new JBossWSTestSetup(AddressingActionTestCase.class, "jaxws-wsaddressing-action-rpc.war");
 	}
 
 	protected void setUp() throws Exception

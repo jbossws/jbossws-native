@@ -234,4 +234,20 @@ public class MessageFactoryTestCase extends JBossWSTest
       //System.out.println(wasBody);
       assertEquals(expBody, wasBody);
    }
+   
+   // [JBWS-862] Return SOAP Fault for invalid soap messages
+   public void testBlankSOAPMessage() throws Exception
+   { 
+      try
+      {
+         String xmlMessage = " ";
+         MessageFactory factory = MessageFactory.newInstance();
+         factory.createMessage(null,new ByteArrayInputStream(xmlMessage.getBytes()));
+         fail("Exception expected");
+      }
+      catch (Exception e)
+      {
+         // ignore
+      }
+   }
 }

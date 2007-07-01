@@ -54,7 +54,7 @@ public class JBWS871TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS871TestCase.class, "jaxws-jbws871-rpc.war");
+      return new JBossWSTestSetup(JBWS871TestCase.class, "jaxws-jbws871-rpc.war");
    }
 
    protected void setUp() throws Exception

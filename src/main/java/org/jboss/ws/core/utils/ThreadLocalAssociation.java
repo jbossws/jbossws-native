@@ -37,12 +37,6 @@ import org.jboss.ws.extensions.security.SecurityStore;
  */
 public class ThreadLocalAssociation
 {
-
-   /**
-    * Handles invocations on MDB endpoints.
-    */
-   private static ThreadLocal invokerMDBAssoc = new ThreadLocal();
-
    /**
     * SOAP message context
     * @see org.jboss.ws.core.soap.MessageContextAssociation
@@ -53,11 +47,6 @@ public class ThreadLocalAssociation
     * @see org.jboss.ws.extensions.security.STRTransform
     */
    private static ThreadLocal<SecurityStore> strTransformAssoc = new ThreadLocal<SecurityStore>();
-
-   public static ThreadLocal localInvokerMDBAssoc()
-   {
-      return invokerMDBAssoc;
-   }
 
    public static ThreadLocal<Stack<CommonMessageContext>> localMsgContextAssoc()
    {
@@ -71,7 +60,6 @@ public class ThreadLocalAssociation
 
    public static void clear()
    {
-      invokerMDBAssoc.set(null);
       msgContextAssoc.set(null);
       strTransformAssoc.set(null);
    }

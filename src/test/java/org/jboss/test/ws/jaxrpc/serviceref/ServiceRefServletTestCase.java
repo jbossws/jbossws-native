@@ -50,7 +50,7 @@ public class ServiceRefServletTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(ServiceRefServletTestCase.class, "jaxrpc-serviceref.war, jaxrpc-serviceref-servlet-client.war");
+      return new JBossWSTestSetup(ServiceRefServletTestCase.class, "jaxrpc-serviceref.war, jaxrpc-serviceref-servlet-client.war");
    }
 
    public void testWSDLAccess() throws MalformedURLException
@@ -76,6 +76,12 @@ public class ServiceRefServletTestCase extends JBossWSTest
 
    public void testServletClient() throws Exception
    {
+
+      System.out.println("FIXME [JBCTS-624]: R2753 cannot parse web.xml for jsp vehicle");
+      // In order to reproduce this error, you'll need to u9ncomment that handler associated through
+      // the service-ref element in web.xml. It's actually the namespace declaration in that header block
+      // which causes jboss-web to choke
+
       URL url = new URL(TARGET_ENDPOINT_ADDRESS + "-servlet-client?echo=HelloWorld");
       BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
       String retStr = br.readLine();

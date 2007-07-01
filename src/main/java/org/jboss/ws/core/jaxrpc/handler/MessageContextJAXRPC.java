@@ -32,8 +32,8 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;

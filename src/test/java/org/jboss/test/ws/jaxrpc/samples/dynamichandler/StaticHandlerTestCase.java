@@ -43,7 +43,7 @@ public class StaticHandlerTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(StaticHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-client.jar");
+      return new JBossWSTestSetup(StaticHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-client.jar");
    }
 
    protected void setUp() throws Exception

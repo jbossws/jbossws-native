@@ -22,7 +22,7 @@ public class Jaxb20TestCase extends JBossWSTest
 
 	public static Test suite()
 	{
-		return JBossWSTestSetup.newTestSetup(Jaxb20TestCase.class, "jaxws-jbws1566.jar");
+		return new JBossWSTestSetup(Jaxb20TestCase.class, "jaxws-jbws1566.jar");
 	}
 
 	public void testWebService() throws Exception

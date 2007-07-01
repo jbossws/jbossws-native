@@ -52,7 +52,7 @@ public class JBWS1427TestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1427TestCase.class, "jaxrpc-jbws1427.jar");
+      return new JBossWSTestSetup(JBWS1427TestCase.class, "jaxrpc-jbws1427.jar");
    }
 
    protected void setUp() throws Exception

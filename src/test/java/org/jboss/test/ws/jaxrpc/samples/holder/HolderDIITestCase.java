@@ -70,7 +70,7 @@ public class HolderDIITestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HolderDIITestCase.class, "jaxrpc-samples-holder.war");
+      return new JBossWSTestSetup(HolderDIITestCase.class, "jaxrpc-samples-holder.war");
    }
 
    public void testEchoBigDecimal() throws Exception

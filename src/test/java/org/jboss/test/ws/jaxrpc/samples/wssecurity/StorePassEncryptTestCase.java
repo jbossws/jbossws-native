@@ -48,7 +48,7 @@ public class StorePassEncryptTestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(StorePassEncryptTestCase.class, "jaxrpc-samples-store-pass-encrypt.war, jaxrpc-samples-store-pass-encrypt-client.jar");
+      return new JBossWSTestSetup(StorePassEncryptTestCase.class, "jaxrpc-samples-store-pass-encrypt.war, jaxrpc-samples-store-pass-encrypt-client.jar");
    }
 
 

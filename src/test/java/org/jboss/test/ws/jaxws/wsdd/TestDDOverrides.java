@@ -43,7 +43,7 @@ public class TestDDOverrides extends JBossWSTest {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(TestDDOverrides.class, "jaxws-wsdd.war");
+      return new JBossWSTestSetup(TestDDOverrides.class, "jaxws-wsdd.war");
    }
 
    public void testHandlerChainOverride() throws Exception

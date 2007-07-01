@@ -27,7 +27,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 

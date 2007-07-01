@@ -42,7 +42,7 @@ public class JBWS383TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS383TestCase.class, "jaxrpc-jbws383.war, jaxrpc-jbws383-client.jar");
+      return new JBossWSTestSetup(JBWS383TestCase.class, "jaxrpc-jbws383.war, jaxrpc-jbws383-client.jar");
    }
 
    public void testEndpoint() throws Exception

@@ -41,7 +41,7 @@ public class JBWS153TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS153TestCase.class, "jaxrpc-jbws153.war, jaxrpc-jbws153-client.jar");
+      return new JBossWSTestSetup(JBWS153TestCase.class, "jaxrpc-jbws153.war, jaxrpc-jbws153-client.jar");
    }
 
    /**

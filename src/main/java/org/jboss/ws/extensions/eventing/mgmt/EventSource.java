@@ -36,7 +36,7 @@ class EventSource implements java.io.Serializable
 {
    enum State
    {
-      CREATED, STARTED, STOPED, DESTROYED
+      CREATED, STARTED, STOPPED, DESTROYED
    }
 
    private State state;

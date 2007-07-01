@@ -47,7 +47,7 @@ public class MarshallDocLitTestCase extends MarshallTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(MarshallDocLitTestCase.class, "jaxrpc-marshall-doclit.war, jaxrpc-marshall-doclit-client.jar");
+      return new JBossWSTestSetup(MarshallDocLitTestCase.class, "jaxrpc-marshall-doclit.war, jaxrpc-marshall-doclit-client.jar");
    }
 
    protected void setUp() throws Exception
@@ -285,6 +285,14 @@ public class MarshallDocLitTestCase extends MarshallTest
    public JavaBean javaBeanTest(JavaBean param) throws Exception
    {
       return port.javaBeanTest(param);
+   }
+
+   // [JBWS-1281] Marshalling exception with xsi:nil='1' but without xsi:type
+   public void testJBWS1281() throws Exception
+   {
+      JavaBean reqBean = new JavaBean();
+      JavaBean resBean = port.javaBeanTest(reqBean);
+      assertEquals(reqBean, resBean);
    }
 
    public JavaBean[] javaBeanArrayTest(JavaBean[] params) throws Exception

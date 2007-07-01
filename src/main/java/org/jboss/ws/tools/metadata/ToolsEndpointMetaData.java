@@ -23,10 +23,13 @@ package org.jboss.ws.tools.metadata;
 
 // $Id$
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.wsf.spi.binding.jaxb.BasicJAXBHandler;
 
 /**
  *  Tools Endpoint Metadata
@@ -40,5 +43,11 @@ public class ToolsEndpointMetaData extends EndpointMetaData
    public ToolsEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
    {
       super(service, portName, portTypeName, Type.JAXRPC);
+   }
+   
+   @Override
+   public JAXBContext getJAXBContext(Class[] javaTypes) throws JAXBException
+   {
+      return new BasicJAXBHandler().getJAXBContext(javaTypes);
    }
 }

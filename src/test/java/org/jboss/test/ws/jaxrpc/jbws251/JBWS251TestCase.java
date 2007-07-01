@@ -46,7 +46,7 @@ public class JBWS251TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS251TestCase.class, "jaxrpc-jbws251.war, jaxrpc-jbws251-client.jar");
+      return new JBossWSTestSetup(JBWS251TestCase.class, "jaxrpc-jbws251.war, jaxrpc-jbws251-client.jar");
    }
 
    public void setUp() throws Exception

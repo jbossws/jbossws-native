@@ -47,7 +47,7 @@ public class JBWS860TestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS860TestCase.class, "jaxws-jbws860.war");
+      return new JBossWSTestSetup(JBWS860TestCase.class, "jaxws-jbws860.war");
    }
 
    public void testAccessInventoryServiceWsdl() throws Exception

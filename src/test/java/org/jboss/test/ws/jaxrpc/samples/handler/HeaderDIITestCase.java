@@ -50,7 +50,7 @@ public class HeaderDIITestCase extends JBossWSTest
    private static final String HEADER_NAMESPACE_URI = "http://org.jboss.ws/samples/handler/types";
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HeaderDIITestCase.class, "jaxrpc-samples-handler.war");
+      return new JBossWSTestSetup(HeaderDIITestCase.class, "jaxrpc-samples-handler.war");
    }
 
    public void testBoundInHeader() throws Exception

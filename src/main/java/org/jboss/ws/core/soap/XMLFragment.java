@@ -41,7 +41,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.binding.BufferedStreamResult;
+import org.jboss.ws.core.binding.BufferedStreamResult;
 import org.jboss.ws.core.jaxrpc.binding.BufferedStreamSource;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.jboss.wsf.spi.utils.DOMWriter;

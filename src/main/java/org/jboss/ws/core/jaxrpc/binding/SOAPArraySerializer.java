@@ -29,7 +29,12 @@ import javax.xml.transform.Result;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.BufferedStreamResult;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
@@ -101,11 +106,11 @@ public class SOAPArraySerializer extends SerializerSupport
 
          // Get the component type serializer factory
          log.debug("Get component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
-         SerializerFactoryBase compSerializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(compJavaType, compXmlType);
+         AbstractSerializerFactory compSerializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(compJavaType, compXmlType);
          if (compSerializerFactory == null)
          {
             log.warn("Cannot obtain component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
-            compSerializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(null, compXmlType);
+            compSerializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(null, compXmlType);
          }
          if (compSerializerFactory == null)
             throw new WSException("Cannot obtain component serializer for: " + compXmlType);

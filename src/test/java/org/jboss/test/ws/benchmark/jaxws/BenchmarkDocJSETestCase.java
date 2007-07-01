@@ -48,7 +48,7 @@ public class BenchmarkDocJSETestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(BenchmarkDocJSETestCase.class, "jaxws-benchmark-doclit.war");
+      return new JBossWSTestSetup(BenchmarkDocJSETestCase.class, "jaxws-benchmark-doclit.war");
    }
 
    protected void setUp() throws Exception

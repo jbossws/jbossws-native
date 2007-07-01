@@ -45,7 +45,7 @@ public class BaseDataTypesRpcLitTestCase extends BaseDataTypesSupport {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(BaseDataTypesRpcLitTestCase.class, "jbossws-interop-BaseDataTypesRpcLit.war");
+      return new JBossWSTestSetup(BaseDataTypesRpcLitTestCase.class, "jbossws-interop-BaseDataTypesRpcLit.war");
    }
 
     protected void setUp() throws Exception

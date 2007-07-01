@@ -58,61 +58,63 @@ public abstract class ServiceObjectFactory implements ObjectFactory
     */
    protected void narrowPortSelection(UnifiedServiceRefMetaData serviceRef, ServiceMetaData serviceMetaData)
    {
-      Map<String, UnifiedPortComponentRefMetaData> pcrefs = new HashMap<String, UnifiedPortComponentRefMetaData>();
-      for (UnifiedPortComponentRefMetaData pcref : serviceRef.getPortComponentRefs())
+      if (serviceMetaData.getEndpoints().size() > 1)
       {
-         String seiName = pcref.getServiceEndpointInterface();
-
-         // Constraint#1: within a service-ref it's not allowed to use a SEI across different pcref's
-         if (pcrefs.get(seiName) != null)
-            throw new WSException("Within a <service-ref> it's not allowed to use a SEI across different <port-component-ref>'s: " + seiName);
-         
-         pcrefs.put(seiName, pcref);
-      }
-
-      // Constraint#2: A pcref may only match one EndpointMetaData
-      for (String sei : pcrefs.keySet())
-      {
-         // Narrow available endpoints by port-component-ref declaration
-         List<QName> narrowedEndpoints = new ArrayList<QName>();
-
-         UnifiedPortComponentRefMetaData pcref = pcrefs.get(sei);
-
-         // Constraint#3: Port selection only applies when both SEI and QName are given
-         if (pcref.getServiceEndpointInterface() != null && pcref.getPortQName() != null)
+         Map<String, UnifiedPortComponentRefMetaData> pcrefs = new HashMap<String, UnifiedPortComponentRefMetaData>();
+         for (UnifiedPortComponentRefMetaData pcref : serviceRef.getPortComponentRefs())
          {
-            List<QName> pcRef2EndpointMapping = new ArrayList<QName>();
-            for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
+            String seiName = pcref.getServiceEndpointInterface();
+
+            // Constraint#1: within a service-ref it's not allowed to use a SEI across different pcref's
+            if (pcrefs.get(seiName) != null)
+               throw new WSException("Within a <service-ref> it's not allowed to use a SEI across different <port-component-ref>'s: " + seiName);
+            
+            pcrefs.put(seiName, pcref);
+         }
+
+         // Constraint#2: A pcref may only match one EndpointMetaData
+         for (String sei : pcrefs.keySet())
+         {
+            // Narrow available endpoints by port-component-ref declaration
+            List<QName> narrowedEndpoints = new ArrayList<QName>();
+
+            UnifiedPortComponentRefMetaData pcref = pcrefs.get(sei);
+
+            // Constraint#3: Port selection only applies when both SEI and QName are given
+            if (pcref.getServiceEndpointInterface() != null && pcref.getPortQName() != null)
             {
-               if (pcref.getServiceEndpointInterface().equals(epMetaData.getServiceEndpointInterfaceName()))
+               List<QName> pcRef2EndpointMapping = new ArrayList<QName>();
+               for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
                {
-                  pcRef2EndpointMapping.add(epMetaData.getPortName());
+                  if (pcref.getServiceEndpointInterface().equals(epMetaData.getServiceEndpointInterfaceName()))
+                  {
+                     pcRef2EndpointMapping.add(epMetaData.getPortName());
+                  }
+               }
+
+               for (QName q : pcRef2EndpointMapping)
+               {
+                  EndpointMetaData mappedEndpoint = serviceMetaData.getEndpoint(q);
+                  if (!pcref.getPortQName().equals(mappedEndpoint.getPortName()))
+                     narrowedEndpoints.add(q);
+               }
+
+               // Constraint: Dont exclude all of them ;)
+               if (pcRef2EndpointMapping.size() > 0 && (pcRef2EndpointMapping.size() == narrowedEndpoints.size()))
+                  throw new WSException("Failed to narrow available endpoints by <port-component-ref> declaration");
+
+               for (QName q : narrowedEndpoints)
+               {
+                  EndpointMetaData removed = serviceMetaData.removeEndpoint(q);
+                  log.debug("Narrowed endpoint " + q + "(" + removed + ")");
                }
             }
-
-            for (QName q : pcRef2EndpointMapping)
+            else
             {
-               EndpointMetaData mappedEndpoint = serviceMetaData.getEndpoint(q);
-               if (!pcref.getPortQName().equals(mappedEndpoint.getPortName()))
-                  narrowedEndpoints.add(q);
-            }
-
-            // Constraint: Dont exclude all of them ;)
-            if (pcRef2EndpointMapping.size() > 0 && (pcRef2EndpointMapping.size() == narrowedEndpoints.size()))
-               throw new WSException("Failed to narrow available endpoints by <port-component-ref> declaration");
-
-            for (QName q : narrowedEndpoints)
-            {
-               EndpointMetaData removed = serviceMetaData.removeEndpoint(q);
-               log.debug("Narrowed endpoint " + q + "(" + removed + ")");
+               // TODO: In case there is more then one EMPD this should cause an exception
+               log.warn("Unable to narrow port selection for " + pcref);
             }
          }
-         else
-         {
-            // TODO: In case there is more then one EMPD this should cause an exception
-            log.warn("Unable to narrow port selection for " + pcref);
-         }
-
       }
    }
 }

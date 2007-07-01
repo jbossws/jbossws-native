@@ -41,7 +41,7 @@ public class BenchmarkRpcJSETestCase extends JBossWSTest
 
     public static Test suite()
     {
-        return JBossWSTestSetup.newTestSetup(BenchmarkRpcJSETestCase.class, "jaxrpc-benchmark-rpclit.war, jaxrpc-benchmark-rpclit-client.jar");
+        return new JBossWSTestSetup(BenchmarkRpcJSETestCase.class, "jaxrpc-benchmark-rpclit.war, jaxrpc-benchmark-rpclit-client.jar");
     }
 
     protected void setUp() throws Exception

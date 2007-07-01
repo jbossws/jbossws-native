@@ -37,6 +37,7 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.CommonSOAPFaultException;
 import org.w3c.dom.Document;
 
 /**
@@ -199,7 +200,7 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
       {
          QName faultCode = Constants.SOAP11_FAULT_CODE_VERSION_MISMATCH;
          String faultString = "Invalid SOAP envelope namespace: " + namespaceURI;
-         throw new SOAPFaultException(faultCode, faultString, null, null);
+         throw new CommonSOAPFaultException(faultCode, faultString);
       }
    }
 }

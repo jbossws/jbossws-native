@@ -189,8 +189,8 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       String gen = "tools/jbws-160/jbossws/custom/mapping/jaxrpc-mapping.xml";
 
       JaxrpcMappingValidator mv = new JaxrpcMappingValidator();
+      // [JBWS-1291] Fix JaxrpcMappingValidator
       //assertTrue(mv.validate(fix,gen));
-      System.out.println("FIXME: [JBWS-1291] Fix JaxrpcMappingValidator");
    }
 
    /**

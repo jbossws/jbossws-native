@@ -41,7 +41,7 @@ public class OneWayTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(OneWayTestCase.class, "jaxrpc-samples-oneway.war, jaxrpc-samples-oneway-client.jar");
+      return new JBossWSTestSetup(OneWayTestCase.class, "jaxrpc-samples-oneway.war, jaxrpc-samples-oneway-client.jar");
    }
 
    protected void setUp() throws Exception

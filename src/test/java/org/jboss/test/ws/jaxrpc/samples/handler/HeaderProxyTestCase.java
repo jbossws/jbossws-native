@@ -52,7 +52,7 @@ public class HeaderProxyTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HeaderProxyTestCase.class, "jaxrpc-samples-handler.war");
+      return new JBossWSTestSetup(HeaderProxyTestCase.class, "jaxrpc-samples-handler.war");
    }
 
    protected void setUp() throws Exception

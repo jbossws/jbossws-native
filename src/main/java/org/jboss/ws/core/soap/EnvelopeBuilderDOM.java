@@ -41,6 +41,7 @@ import javax.xml.transform.dom.DOMSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -88,7 +89,8 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          {
             return null;
          }
-         throw ex;
+         QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+         throw new CommonSOAPFaultException(faultCode, ex.getMessage());
       }
 
       return build(soapMessage, domEnv);
@@ -108,7 +110,8 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          {
             return null;
          }
-         throw ex;
+         QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+         throw new CommonSOAPFaultException(faultCode, ex.getMessage());
       }
 
       return build(soapMessage, domEnv);
@@ -142,10 +145,6 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             {
                log.warn("Ignore envelope child: " + elName);
             }
-         }
-         else
-         {
-            log.warn("Ignore child type: " + childType);
          }
       }
 

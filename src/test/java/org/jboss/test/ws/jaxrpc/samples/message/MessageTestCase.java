@@ -65,7 +65,7 @@ public class MessageTestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(MessageTestCase.class, "jaxrpc-samples-message.war, jaxrpc-samples-message-client.jar");
+      return new JBossWSTestSetup(MessageTestCase.class, "jaxrpc-samples-message.war, jaxrpc-samples-message-client.jar");
    }
 
    /** Use the SAAJ API to send the SOAP message.

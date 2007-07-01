@@ -30,7 +30,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.EndpointInvocation;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.spi.invocation.BasicEndpointInvocation;
 

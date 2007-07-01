@@ -36,6 +36,7 @@ import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
@@ -44,6 +45,7 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
+import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.DirectionHolder;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.MessageAbstraction;
@@ -64,9 +66,11 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
+import org.jboss.wsf.spi.invocation.WebServiceContextDummy;
 import org.jboss.wsf.spi.invocation.WebServiceContextJSE;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.utils.JavaUtils;
@@ -199,7 +203,7 @@ public class ServiceEndpointInvoker
                // Invoke an instance of the SEI implementation bean 
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
-               invHandler.invoke(endpoint, null, inv);
+               invHandler.invoke(endpoint, inv);
                
                // Handler processing might have replaced the endpoint invocation
                sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
@@ -280,7 +284,19 @@ public class ServiceEndpointInvoker
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof SOAPMessageContextJAXWS)
       {
-         invContext.addAttachment(WebServiceContext.class, new WebServiceContextJSE((SOAPMessageContextJAXWS)msgContext));
+         if (ep.getService().getDeployment().getType() == DeploymentType.JAXWS_JSE)
+         {
+            WebServiceContext wsContext;
+            if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
+            {
+               wsContext = new WebServiceContextJSE((SOAPMessageContextJAXWS)msgContext);
+            }
+            else
+            {
+               wsContext = new WebServiceContextDummy((SOAPMessageContextJAXWS)msgContext);
+            }
+            invContext.addAttachment(WebServiceContext.class, wsContext);
+         }
          invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
       }
       if (msgContext instanceof SOAPMessageContextJAXRPC)
@@ -413,12 +429,12 @@ public class ServiceEndpointInvoker
             if (soapHeader != null && soapHeader.examineMustUnderstandHeaderElements(Constants.URI_SOAP11_NEXT_ACTOR).hasNext())
             {
                QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
-               throw new SOAPFaultException(faultCode, faultString, null, null);
+               throw new CommonSOAPFaultException(faultCode, faultString);
             }
             else
             {
                QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
-               throw new SOAPFaultException(faultCode, faultString, null, null);
+               throw new CommonSOAPFaultException(faultCode, faultString);
             }
          }
       }

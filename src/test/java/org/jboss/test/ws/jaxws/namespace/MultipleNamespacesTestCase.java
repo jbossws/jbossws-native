@@ -44,7 +44,7 @@ public class MultipleNamespacesTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(MultipleNamespacesTestCase.class, "jaxws-namespace.war");
+      return new JBossWSTestSetup(MultipleNamespacesTestCase.class, "jaxws-namespace.war");
    }
 
    /**

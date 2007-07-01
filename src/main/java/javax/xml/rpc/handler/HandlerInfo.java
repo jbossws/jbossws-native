@@ -59,8 +59,9 @@ public class HandlerInfo implements Serializable
    public HandlerInfo(Class handlerClass, Map config, QName[] headers)
    {
       this.handlerClass = handlerClass;
-      this.configMap = config;
       this.headers = headers;
+      if (config != null)
+         this.configMap.putAll(config);
    }
 
    /** Gets the Handler class
@@ -97,7 +98,8 @@ public class HandlerInfo implements Serializable
    public void setHandlerConfig(Map config)
    {
       configMap.clear();
-      configMap.putAll(config);
+      if (config != null)
+         configMap.putAll(config);
    }
 
    /** Gets the header blocks processed by this Handler.

@@ -24,7 +24,10 @@ package org.jboss.ws.core.jaxrpc.client;
 // $Id$
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +42,7 @@ import org.jboss.ws.core.jaxrpc.handler.ClientHandlerChain;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** 
@@ -113,8 +117,28 @@ public class HandlerRegistryImpl implements HandlerRegistry
          handler.setEndpointMetaData(epMetaData);
          handler.setHandlerClassName(info.getHandlerClass().getName());
          handler.setSoapRoles(roles);
-         if(log.isDebugEnabled()) log.debug("Add handler to: " + portName + handler);
+
+         // copy headers
+         Set<QName> headers = new HashSet<QName>();
+         for (QName header : info.getHeaders())
+            headers.add(header);
+         handler.setSoapHeaders(headers);
+
+         // copy init params
+         List<UnifiedInitParamMetaData> initParams = new ArrayList<UnifiedInitParamMetaData>();
+         Iterator<Map.Entry> entries = info.getHandlerConfig().entrySet().iterator();
+         while (entries.hasNext())
+         {
+            Map.Entry entry = entries.next();
+            String key = (String)entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof String)
+               initParams.add(new UnifiedInitParamMetaData(key, (String)value));
+         }
+         handler.setInitParams(initParams);
+
          epMetaData.addHandler(handler);
+         log.debug("Add handler to: " + portName + handler);
       }
    }
 }

@@ -43,7 +43,7 @@ public class RpcTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(RpcTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-client.jar");
+      return new JBossWSTestSetup(RpcTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-client.jar");
    }
 
    public void testEndpoint() throws Exception

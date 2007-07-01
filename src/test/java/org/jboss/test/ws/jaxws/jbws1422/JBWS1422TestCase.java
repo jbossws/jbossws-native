@@ -21,62 +21,76 @@
  */
 package org.jboss.test.ws.jaxws.jbws1422;
 
+// $Id$
+
+import java.net.URL;
+
+import javax.wsdl.Definition;
+import javax.wsdl.Message;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
 import junit.framework.Test;
-import org.jboss.ws.WSException;
+
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import java.net.URL;
-
 /**
- * If @WebParam.name starts with one lower-case character followed
- * by an upper-case character a NPE is thrown on deployment.
- *
- * http://jira.jboss.org/jira/browse/JBWS-1422
- *
- * @version $Revision:1370 $
+ * [JBWS-1422] NPE if @WebParam.name like "mX.."
+ * [JBWS-771] Use part names that are friendly to .NET
+ * 
+ * @author Thomas.Diesler@jboss.com 
  */
 public class JBWS1422TestCase extends JBossWSTest
 {
-   private String targetNS = "http://org.jboss.test.ws/jbws1422";
-   private IWebsvc port;
-	private URL wsdlURL;
+   private static final String TARGET_NAMESPACE = "http://jbws1422.jaxws.ws.test.jboss.org/";
+   private static URL wsdlURL;
+   private static IWebsvc port;
 
-	public static Test suite()
+   public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1422TestCase.class, "jaxws-jbws1422.jar");
+      return new JBossWSTestSetup(JBWS1422TestCase.class, "jaxws-jbws1422.jar");
    }
 
    @Override
    protected void setUp() throws Exception
    {
-      super.setUp();
+      if (port == null)
+      {
+         QName serviceName = new QName(TARGET_NAMESPACE, "JBWS1422Service");
+         wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1422/IWebsvcImpl?wsdl");
 
-      QName serviceName = new QName(targetNS, "JBWS1422Service");
-      wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1422/IWebsvcImpl?wsdl");
-
-      Service service = Service.create(wsdlURL, serviceName);
-      port = service.getPort(IWebsvc.class);
+         Service service = Service.create(wsdlURL, serviceName);
+         port = service.getPort(IWebsvc.class);
+      }
    }
 
-	/**	 
-	 *
-	 * @throws Exception
-	 */
-	public void testDeployment() throws Exception
-	{
-		try
-      {
-         String result = port.cancel("myFooBar");
-			assertNotNull(result);
-			assertEquals("Cancelled", result);
-		}
-      catch (Exception ex)
-      {
-         WSException.rethrow(ex);
-      }
-	}
+   public void testDeployment() throws Exception
+   {
+      String result = port.cancel("myFooBar");
+      assertEquals("Cancelled-myFooBar", result);
+   }
+   
+   // [JBWS-771] Use part names that are friendly to .NET
+   public void testMessagePartNames() throws Exception
+   {
+      Definition wsdl = getWSDLDefinition(wsdlURL.toExternalForm());
+      
+      Message wsdlReqMessage = wsdl.getMessage(new QName(TARGET_NAMESPACE, "IWebsvc_cancel"));
+      assertNotNull("Expected part with name 'parameters' in: " + wsdlReqMessage, wsdlReqMessage.getPart("parameters"));
+      
+      Message wsdlResMessage = wsdl.getMessage(new QName(TARGET_NAMESPACE, "IWebsvc_cancelResponse"));
+      assertNotNull("Expected part with name 'parameters' in: " + wsdlResMessage, wsdlResMessage.getPart("parameters"));
+   }
+   
+   private Definition getWSDLDefinition(String wsdlLocation) throws Exception
+   {
+      WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+      WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
 
+      Definition definition = wsdlReader.readWSDL(null, wsdlLocation);
+      return definition;
+   }
 }

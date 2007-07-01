@@ -48,7 +48,7 @@ public class StubPropertyTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(StubPropertyTestCase.class, "jaxws-samples-webserviceref-secure.jar, jaxws-samples-webserviceref-secure-client.jar");
+      return new JBossWSTestSetup(StubPropertyTestCase.class, "jaxws-samples-webserviceref-secure.jar, jaxws-samples-webserviceref-secure-client.jar");
    }
 
    public void testWSDLAccess() throws MalformedURLException

@@ -35,14 +35,14 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
-import org.jboss.ws.core.jaxrpc.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
-import org.jboss.ws.core.jaxrpc.binding.SerializationContext;
-import org.jboss.ws.core.jaxrpc.binding.SerializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.SerializerSupport;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -76,12 +76,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_STRING;
       String value = "Hello World!";
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(String.class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(String.class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(String.class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(String.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       String out = (String)des.deserialize(xmlName, xmlType, source, serContext);
@@ -94,12 +94,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_DATETIME;
       Calendar value = new GregorianCalendar(2004, 10, 20, 14, 53, 25);
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(Calendar.class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(Calendar.class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(Calendar.class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(Calendar.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       Calendar out = (Calendar)des.deserialize(xmlName, xmlType, source, serContext);
@@ -113,12 +113,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_INTEGER;
       BigInteger value = new BigInteger("12345678901234567890");
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(BigInteger.class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(BigInteger.class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(BigInteger.class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(BigInteger.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       BigInteger out = (BigInteger)des.deserialize(xmlName, xmlType, source, serContext);
@@ -131,12 +131,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_DECIMAL;
       BigDecimal value = new BigDecimal("12345678901234567890");
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(BigDecimal.class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(BigDecimal.class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(BigDecimal.class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(BigDecimal.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       BigDecimal out = (BigDecimal)des.deserialize(xmlName, xmlType, source, serContext);
@@ -149,7 +149,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_QNAME;
       QName value = new QName("http://some-ns", "localPart", "ns1");
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(QName.class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(QName.class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
@@ -159,7 +159,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       assertEquals("ns1", nsRegistry.getPrefix("http://some-ns"));
       nsRegistry.unregisterURI("http://some-ns");
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(QName.class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(QName.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       QName out = (QName)des.deserialize(xmlName, xmlType, source, serContext);
@@ -172,12 +172,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_ANYURI;
       URI value = new URI("http://someURI:that:has:more:parts");
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(URI.class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(URI.class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(URI.class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(URI.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       URI out = (URI)des.deserialize(xmlName, xmlType, source, serContext);
@@ -190,12 +190,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_BASE64BINARY;
       byte[] value = new String("Some base64 binary string").getBytes();
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(byte[].class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(byte[].class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(byte[].class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(byte[].class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       byte[] out = (byte[])des.deserialize(xmlName, xmlType, source, serContext);
@@ -208,12 +208,12 @@ public class SerializerDeserializerTestCase extends JBossWSTest
       QName xmlType = Constants.TYPE_LITERAL_HEXBINARY;
       byte[] value = new String("Some hex binary string").getBytes();
 
-      SerializerFactoryBase serializerFactory = (SerializerFactoryBase)typeMapping.getSerializer(byte[].class, xmlType);
+      AbstractSerializerFactory serializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(byte[].class, xmlType);
       SerializerSupport ser = (SerializerSupport)serializerFactory.getSerializer();
       Result result = ser.serialize(xmlName, xmlType, value, serContext, null);
       assertNotNull(result);
 
-      DeserializerFactoryBase deserializerFactory = (DeserializerFactoryBase)typeMapping.getDeserializer(byte[].class, xmlType);
+      AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(byte[].class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
       Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
       byte[] out = (byte[])des.deserialize(xmlName, xmlType, source, serContext);

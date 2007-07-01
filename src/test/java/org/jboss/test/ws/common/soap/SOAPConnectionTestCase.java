@@ -52,28 +52,28 @@ public class SOAPConnectionTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(SOAPConnectionTestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war");
+      return new JBossWSTestSetup(SOAPConnectionTestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war");
    }
 
    public void testConnectString() throws Exception
    {
-      doConnect(TARGET_ENDPOINT_ADDRESS);
+      runEndpointTest(TARGET_ENDPOINT_ADDRESS);
    }
 
    public void testConnectURL() throws Exception
    {
-      doConnect(new URL(TARGET_ENDPOINT_ADDRESS));
+      runEndpointTest(new URL(TARGET_ENDPOINT_ADDRESS));
    }
 
-   private void doConnect(Object endPoint) throws Exception
+   private void runEndpointTest(Object endPoint) throws Exception
    {
-      SOAPMessage request = buildMessage();
+      SOAPMessage request = buildValidMessage();
       SOAPConnection connection = SOAPConnectionFactory.newInstance().createConnection();
       SOAPMessage response = connection.call(request, endPoint);
       validateResponse(response);
    }
 
-   private SOAPMessage buildMessage() throws Exception
+   private SOAPMessage buildValidMessage() throws Exception
    {
       SOAPMessage message = MessageFactory.newInstance().createMessage();
       SOAPPart sp = message.getSOAPPart();

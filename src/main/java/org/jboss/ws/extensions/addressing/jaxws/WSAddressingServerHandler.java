@@ -26,7 +26,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.wsf.spi.handler.GenericSOAPHandler;
+import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;

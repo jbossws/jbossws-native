@@ -43,7 +43,7 @@ public class JBWS331TestCase extends JBossWSTest
 {
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS331TestCase.class, "jaxrpc-jbws331.ear");
+      return new JBossWSTestSetup(JBWS331TestCase.class, "jaxrpc-jbws331.ear");
    }
 
    public void testEndpointAccess() throws Exception

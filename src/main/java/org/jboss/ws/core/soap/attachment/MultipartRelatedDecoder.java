@@ -25,6 +25,7 @@ package org.jboss.ws.core.soap.attachment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -89,6 +90,7 @@ public class MultipartRelatedDecoder
       String boundaryParameter = contentType.getParameter("boundary");
       String start = contentType.getParameter("start");
       byte[] boundary;
+      byte[] crlf;
 
       if (boundaryParameter == null)
          throw new IllegalArgumentException("multipart/related content type did not contain a boundary");
@@ -100,13 +102,19 @@ public class MultipartRelatedDecoder
             boundary = ("--" + boundaryParameter).getBytes("US-ASCII");
          else 
             boundary = ("\r\n--" + boundaryParameter).getBytes("US-ASCII");
+            
+            crlf = ("\r\n").getBytes("US-ASCII");
       }
       catch (UnsupportedEncodingException e)
       {
          throw new WSException("US-ASCII not supported, this should never happen");
       }
+      
+      // [JBWS-1620] - Incorrect handling of MIME boundaries in MultipartRelatedDecoder
+      PushbackInputStream pushBackStream = new PushbackInputStream(stream,2);
+      pushBackStream.unread(crlf);
 
-      BoundaryDelimitedInputStream delimitedStream = new BoundaryDelimitedInputStream(stream, boundary);
+      BoundaryDelimitedInputStream delimitedStream = new BoundaryDelimitedInputStream(pushBackStream, boundary);
 
       // Eat first inner stream since its empty
       byte[] buffer = new byte[256];

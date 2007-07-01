@@ -66,7 +66,7 @@ public class HolderTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HolderDIITestCase.class, "jaxrpc-samples-holder.war, jaxrpc-samples-holder-client.jar");
+      return new JBossWSTestSetup(HolderDIITestCase.class, "jaxrpc-samples-holder.war, jaxrpc-samples-holder-client.jar");
    }
 
    protected void setUp() throws Exception

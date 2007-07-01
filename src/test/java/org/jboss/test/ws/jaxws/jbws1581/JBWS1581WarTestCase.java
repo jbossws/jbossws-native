@@ -42,7 +42,7 @@ public class JBWS1581WarTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1581WarTestCase.class, "jaxws-jbws1581.war, jaxws-jbws1581.jar");
+      return new JBossWSTestSetup(JBWS1581WarTestCase.class, "jaxws-jbws1581.war, jaxws-jbws1581.jar");
    }
 
    public void testWSDLAccess() throws Exception

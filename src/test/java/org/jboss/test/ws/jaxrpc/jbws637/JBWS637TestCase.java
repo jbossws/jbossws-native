@@ -45,7 +45,7 @@ public class JBWS637TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS637TestCase.class, "jaxrpc-jbws637-client.jar");
+      return new JBossWSTestSetup(JBWS637TestCase.class, "jaxrpc-jbws637-client.jar");
    }
 
    protected void setUp() throws Exception

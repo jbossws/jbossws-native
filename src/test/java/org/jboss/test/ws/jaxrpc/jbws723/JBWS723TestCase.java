@@ -52,7 +52,7 @@ public class JBWS723TestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS723TestCase.class, "jaxrpc-jbws723.jar, jaxrpc-jbws723-client.jar");
+      return new JBossWSTestSetup(JBWS723TestCase.class, "jaxrpc-jbws723.jar, jaxrpc-jbws723-client.jar");
    }
 
    public void testRoleSecuredWSDLAccess() throws Exception

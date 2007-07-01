@@ -44,7 +44,7 @@ public class JBWS1011TestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1011TestCase.class, "jaxrpc-jbws1011.jar, jaxrpc-jbws1011-client.jar");
+      return new JBossWSTestSetup(JBWS1011TestCase.class, "jaxrpc-jbws1011.jar, jaxrpc-jbws1011-client.jar");
    }
 
    public void setUp() throws Exception

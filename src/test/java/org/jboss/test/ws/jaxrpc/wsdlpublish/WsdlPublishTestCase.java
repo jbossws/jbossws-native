@@ -43,7 +43,7 @@ public class WsdlPublishTestCase extends JBossWSTest
 {
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(WsdlPublishTestCase.class, "jaxrpc-wsdlpublish.war");
+      return new JBossWSTestSetup(WsdlPublishTestCase.class, "jaxrpc-wsdlpublish.war");
    }
 
    public void testClientProxy() throws Exception

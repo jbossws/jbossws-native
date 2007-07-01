@@ -60,7 +60,7 @@ public class AttachmentDIITestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(AttachmentDIITestCase.class, "jaxrpc-samples-swa.war");
+      return new JBossWSTestSetup(AttachmentDIITestCase.class, "jaxrpc-samples-swa.war");
    }
    
    /** Send a multipart message with a text/plain attachment part

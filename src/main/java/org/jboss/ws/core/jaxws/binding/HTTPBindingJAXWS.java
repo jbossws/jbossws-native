@@ -40,7 +40,7 @@ import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.HeaderSource;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;

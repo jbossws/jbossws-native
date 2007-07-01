@@ -20,11 +20,12 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 
+import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.spi.utils.DOMUtils;
+
 import junit.framework.Test;
 
-import org.jboss.test.ws.JBossWSTest;
-import org.jboss.test.ws.JBossWSTestSetup;
-import org.jboss.ws.utils.DOMUtils;
 
 /**
  * A web service client that connects to a MDB endpoint.
@@ -38,7 +39,7 @@ public class JMSTransportTestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JMSTransportTestCase.class, "jaxrpc-samples-jmstransport.sar");
+      return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxrpc-samples-jmstransport.sar");
    }
 
    /**

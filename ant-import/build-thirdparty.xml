@@ -105,6 +105,9 @@
     <unzip dest="${thirdparty.dir}/jbpm-bpel" src="${thirdparty.dir}/jbpm-bpel.sar"/>
     <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
     
+    <get src="http://snapshots.jboss.org/maven2/org/jboss/jbossxb/2.0.0-SNAPSHOT/jbossxb-2.0.0-20070620.094346-1.jar" dest="${thirdparty.dir}/jbossxb-2.0.0-20070620.094346-1.jar" usetimestamp="true" verbose="true"/>
+    <get src="http://snapshots.jboss.org/maven2/jboss/jbossxb/jbossxb/1.0.0-SNAPSHOT/jbossxb-1.0.0-20070620.100638-1.jar" dest="${thirdparty.dir}/jbossxb-1.0.0-20070620.100638-1.jar" usetimestamp="true" verbose="true"/>
+    
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>
   
@@ -115,8 +118,8 @@
         <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
-		  <pathelement location="${thirdparty.dir}/ant.jar"/>
-		  <pathelement location="${thirdparty.dir}/activation.jar"/>
+  		  <pathelement location="${thirdparty.dir}/ant.jar"/>
+		    <pathelement location="${thirdparty.dir}/activation.jar"/>
         <pathelement location="${thirdparty.dir}/dom4j.jar"/>
         <pathelement location="${thirdparty.dir}/getopt.jar"/>
         <pathelement location="${thirdparty.dir}/javassist.jar"/>
@@ -134,14 +137,14 @@
         <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
         <pathelement location="${thirdparty.dir}/jbosssx.jar"/>
         <pathelement location="${thirdparty.dir}/mail.jar"/>
+        <pathelement location="${thirdparty.dir}/policy.jar"/>
         <pathelement location="${thirdparty.dir}/servlet-api.jar"/>
         <pathelement location="${thirdparty.dir}/stax-api.jar"/>
         <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
         <pathelement location="${thirdparty.dir}/wstx.jar"/>
+        <pathelement location="${thirdparty.dir}/xalan.jar"/>
         <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
         <pathelement location="${thirdparty.dir}/xercesImpl.jar"/>
-        <pathelement location="${thirdparty.dir}/xalan.jar"/>
-        <pathelement location="${thirdparty.dir}/policy.jar"/>
      </path>
 
   </target>

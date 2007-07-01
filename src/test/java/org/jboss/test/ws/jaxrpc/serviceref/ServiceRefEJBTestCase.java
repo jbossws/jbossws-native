@@ -49,7 +49,7 @@ public class ServiceRefEJBTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(ServiceRefEJBTestCase.class, "jaxrpc-serviceref.war, jaxrpc-serviceref-ejb-client.jar");
+      return new JBossWSTestSetup(ServiceRefEJBTestCase.class, "jaxrpc-serviceref.war, jaxrpc-serviceref-ejb-client.jar");
    }
 
    public void testWSDLAccess() throws MalformedURLException

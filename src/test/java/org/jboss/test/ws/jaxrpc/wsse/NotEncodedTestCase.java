@@ -45,7 +45,7 @@ public class NotEncodedTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(NotEncodedTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-none-client.jar");
+      return new JBossWSTestSetup(NotEncodedTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-none-client.jar");
    }
 
    /**

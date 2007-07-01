@@ -27,7 +27,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.Stub;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.addressing.AddressingBuilder;
@@ -180,30 +179,6 @@ public class EventingSupport extends JBossWSTest
       filter.setDialect(EventingConstants.getDialectXPath().toString());
       filter.getContent().add("/WindReport/State/text()='FL'");
       return filter;
-   }
-
-   public static void setSubscriptionId(Stub stub, URI identifier)
-   {
-      stub._setProperty("subscriptionId", identifier);
-   }
-
-   public static URI setMessageId(Stub stub) throws Exception
-   {
-      URI messageId = new URI("http://www.example.org/eventSink/message#" + (msgId++));
-      //stub._setProperty(SOAPClientHandler.CLIENT_ADDRESSING_REQUEST_MESSAGE_ID, messageId);
-      return messageId;
-   }
-
-   protected void assertReplyAction(Stub stub, URI expectedAction) throws Exception
-   {
-      // see AddrConstraintsHandler
-      stub._setProperty("wsa:expectedReplyAction", expectedAction);
-   }
-
-   protected void assertRelatesTo(Stub stub, URI expectedRelatesTo) throws Exception
-   {
-      // see AddrConstraintsHandler
-      stub._setProperty("wsa:expectedRelatesTo", expectedRelatesTo);
    }
 
    protected void assertWSDLAccess() throws MalformedURLException

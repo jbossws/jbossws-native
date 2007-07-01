@@ -48,7 +48,7 @@ public class JBWS68TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS68TestCase.class, "jaxrpc-jbws68.war, jaxrpc-jbws68-client.jar");
+      return new JBossWSTestSetup(JBWS68TestCase.class, "jaxrpc-jbws68.war, jaxrpc-jbws68-client.jar");
    }
 
    /**

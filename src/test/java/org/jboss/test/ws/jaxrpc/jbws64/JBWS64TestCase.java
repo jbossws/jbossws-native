@@ -60,7 +60,7 @@ public class JBWS64TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS64TestCase.class, "jaxrpc-jbws64.war");
+      return new JBossWSTestSetup(JBWS64TestCase.class, "jaxrpc-jbws64.war");
    }
 
    /**

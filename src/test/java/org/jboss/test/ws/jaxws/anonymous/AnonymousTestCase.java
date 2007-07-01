@@ -44,7 +44,7 @@ public class AnonymousTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(AnonymousTestCase.class, "jaxws-anonymous.war");
+      return new JBossWSTestSetup(AnonymousTestCase.class, "jaxws-anonymous.war");
    }
 
    @Override

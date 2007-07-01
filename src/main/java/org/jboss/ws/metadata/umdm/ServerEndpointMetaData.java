@@ -24,10 +24,14 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import javax.management.ObjectName;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.wsf.spi.binding.jaxb.JAXBHandler;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -44,7 +48,10 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public static final String SEPID_DOMAIN = "jboss.ws";
    public static final String SEPID_PROPERTY_CONTEXT = "context";
    public static final String SEPID_PROPERTY_ENDPOINT = "endpoint";
-
+   
+   // The associated SPI endpoint
+   private Endpoint endpoint;
+   
    // The REQUIRED link name
    private String linkName;
    // Legacy JSR-109 port component name
@@ -73,6 +80,16 @@ public class ServerEndpointMetaData extends EndpointMetaData
          configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
       else
          configFile = ConfigurationProvider.DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE;
+   }
+
+   public Endpoint getEndpoint()
+   {
+      return endpoint;
+   }
+
+   public void setEndpoint(Endpoint endpoint)
+   {
+      this.endpoint = endpoint;
    }
 
    public String getLinkName()
@@ -169,6 +186,12 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setSecureWSDLAccess(boolean secureWSDLAccess)
    {
       this.secureWSDLAccess = secureWSDLAccess;
+   }
+   
+   @Override
+   public JAXBContext getJAXBContext(Class[] javaTypes) throws JAXBException
+   {
+      return endpoint.getJAXBHandler().getJAXBContext(javaTypes);
    }
 
    public String toString()

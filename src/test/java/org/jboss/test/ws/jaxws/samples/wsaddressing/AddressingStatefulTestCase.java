@@ -49,7 +49,7 @@ public class AddressingStatefulTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(AddressingStatefulTestCase.class, "jaxws-samples-wsaddressing.war");
+      return new JBossWSTestSetup(AddressingStatefulTestCase.class, "jaxws-samples-wsaddressing.war");
    }
 
    protected void setUp() throws Exception

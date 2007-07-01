@@ -45,7 +45,7 @@ public class HolderTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(HolderTestCase.class, "jaxws-holder.war");
+      return new JBossWSTestSetup(HolderTestCase.class, "jaxws-holder.war");
    }
 
    protected void setUp() throws Exception

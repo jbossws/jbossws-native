@@ -48,7 +48,7 @@ public class JBWS950TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS950TestCase.class, "jaxrpc-jbws950.war");
+      return new JBossWSTestSetup(JBWS950TestCase.class, "jaxrpc-jbws950.war");
    }
 
    protected void setUp() throws Exception

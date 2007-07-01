@@ -46,7 +46,7 @@ public class JBWS663WrappedUnboundTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS663WrappedUnboundTestCase.class, "jaxrpc-jbws663w.war, jaxrpc-jbws663w-client.jar");
+      return new JBossWSTestSetup(JBWS663WrappedUnboundTestCase.class, "jaxrpc-jbws663w.war, jaxrpc-jbws663w-client.jar");
    }
 
    protected void setUp() throws Exception

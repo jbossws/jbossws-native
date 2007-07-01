@@ -48,7 +48,7 @@ public class JBWS1529TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1529TestCase.class, "jaxws-jbws1529.war");
+      return new JBossWSTestSetup(JBWS1529TestCase.class, "jaxws-jbws1529.war");
    }
 
    @Override

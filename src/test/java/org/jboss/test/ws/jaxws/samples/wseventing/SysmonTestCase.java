@@ -68,7 +68,7 @@ public class SysmonTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(SysmonTestCase.class, "jaxws-samples-wseventing.war");
+      return new JBossWSTestSetup(SysmonTestCase.class, "jaxws-samples-wseventing.war");
    }
 
    protected void setUp() throws Exception
@@ -94,12 +94,6 @@ public class SysmonTestCase extends JBossWSTest
     */
    public void testSubscribe() throws Exception
    {
-      if (true)
-      {
-         System.out.println("FIXME: [JBWS-1628] Resurect Eventing tests for new deployer architecture");
-         return;
-      }
-      
       SubscribeResponse subscribeResponse = doSubscribe("/SystemStatus/HostName/text()='localhost'");
       SysmonUtil.printSubscriptionDetails(subscribeResponse);
    }
@@ -109,12 +103,6 @@ public class SysmonTestCase extends JBossWSTest
     */
    public void testUnsubscribe() throws Exception
    {
-      if (true)
-      {
-         System.out.println("FIXME: [JBWS-1628] Resurect Eventing tests for new deployer architecture");
-         return;
-      }
-      
       SubscribeResponse subscribeResponse = doSubscribe(null);
       //SysmonUtil.printSubscriptionDetails(subscribeResponse);
 

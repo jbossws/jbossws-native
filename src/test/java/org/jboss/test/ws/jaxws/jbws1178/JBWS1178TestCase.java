@@ -30,6 +30,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
 
+import junit.extensions.TestSetup;
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
@@ -46,26 +47,32 @@ import org.jboss.wsf.spi.utils.ObjectNameFactory;
  */
 public class JBWS1178TestCase extends JBossWSTest
 {
-   private final ObjectName objectName = ObjectNameFactory.create("jboss.ws:service=ServerConfig");
-   
-   String webServiceHost;
    
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1178TestCase.class, "jaxws-jbws1178.war");
+      TestSetup testSetup = new JBossWSTestSetup(JBWS1178TestCase.class, "jaxws-jbws1178.war")
+      {
+         private final ObjectName objectName = ObjectNameFactory.create("jboss.ws:service=ServerConfig");
+         private String webServiceHost;
+         
+         public void setUp() throws Exception
+         {
+            // Setting the WebServiceHost to an empty string, causes the request host to be used.  
+            // This must be done before deploy time.
+            webServiceHost = (String)getServer().getAttribute(objectName, "WebServiceHost");
+            getServer().setAttribute(objectName, new Attribute("WebServiceHost", ""));
+            super.setUp();
+         }
+
+         public void tearDown() throws Exception
+         {
+            super.tearDown();
+            getServer().setAttribute(objectName, new Attribute("WebServiceHost", webServiceHost));
+         }
+      };
+      return testSetup;
    }
 
-   public void setUp() throws Exception
-   {
-      webServiceHost = (String)getServer().getAttribute(objectName, "WebServiceHost");
-      // Setting the WebServiceHost to an empty string, causes the request host to be used  
-      getServer().setAttribute(objectName, new Attribute("WebServiceHost", ""));
-   }
-
-   public void tearDown() throws Exception
-   {
-      getServer().setAttribute(objectName, new Attribute("WebServiceHost", webServiceHost));
-   }
    
    public void testHostAddress() throws Exception
    {

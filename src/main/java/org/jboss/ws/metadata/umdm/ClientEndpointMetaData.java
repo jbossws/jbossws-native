@@ -23,9 +23,13 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.wsf.spi.binding.jaxb.JAXBContextCache;
+import org.jboss.wsf.spi.binding.jaxb.JAXBHandler;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -36,17 +40,25 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ClientEndpointMetaData extends EndpointMetaData
 {
+   private JAXBHandler jaxbHandler = new JAXBContextCache();
+   
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {
       super(service, qname, portTypeName, type);
-      super.configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
+      configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
 
       if (type == Type.JAXRPC)
-         super.configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
+         configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
       else
-         super.configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
+         configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
    }
 
+   @Override
+   public JAXBContext getJAXBContext(Class[] javaTypes) throws JAXBException
+   {
+      return jaxbHandler.getJAXBContext(javaTypes);
+   }
+   
    public String toString()
    {
       StringBuilder buffer = new StringBuilder("\nClientEndpointMetaData:");

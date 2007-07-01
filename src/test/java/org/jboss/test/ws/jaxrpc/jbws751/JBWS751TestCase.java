@@ -26,11 +26,8 @@ import javax.xml.rpc.Service;
 
 import org.jboss.wsf.spi.test.JBossWSTest;
 
-
-
 /** 
- * Multiple schema imports with the same namespace
- * http://jira.jboss.com/jira/browse/JBWS-751
+ * [JBWS-751] Multiple schema imports with the same namespace
  * 
  * @author Thomas.Diesler@jboss.org
  * @since 16-Mar-2006
@@ -39,10 +36,9 @@ public class JBWS751TestCase extends JBossWSTest
 {
    private static ITranHistory port;
 
-   /** Deploy the test */
 //   public static Test suite() throws Exception
 //   {
-//      return JBossWSTestSetup.newTestSetup(JBWS751TestCase.class, "jaxrpc-jbws751.war, jaxrpc-jbws751-client.jar");
+//      return new JBossWSTestSetup(JBWS751TestCase.class, "jaxrpc-jbws751.war, jaxrpc-jbws751-client.jar");
 //   }
 
    public void setUp() throws Exception

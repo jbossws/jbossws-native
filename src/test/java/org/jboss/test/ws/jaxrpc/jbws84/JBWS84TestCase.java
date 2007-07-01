@@ -54,7 +54,7 @@ public class JBWS84TestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS84TestCase.class, "jaxrpc-jbws84.war, jaxrpc-jbws84-client.jar");
+      return new JBossWSTestSetup(JBWS84TestCase.class, "jaxrpc-jbws84.war, jaxrpc-jbws84-client.jar");
    }
 
    /** Use the JBoss generated dynamic proxy send the SOAP message.

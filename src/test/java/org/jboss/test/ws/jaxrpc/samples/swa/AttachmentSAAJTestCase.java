@@ -70,7 +70,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(AttachmentSAAJTestCase.class, "jaxrpc-samples-swa.war");
+      return new JBossWSTestSetup(AttachmentSAAJTestCase.class, "jaxrpc-samples-swa.war");
    }
    
    /** Send a multipart message with a text/plain attachment part

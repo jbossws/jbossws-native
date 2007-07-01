@@ -55,7 +55,7 @@ public class DynamicHandlerTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(DynamicHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-client.jar");
+      return new JBossWSTestSetup(DynamicHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-client.jar");
    }
 
    protected void setUp() throws Exception
@@ -93,33 +93,5 @@ public class DynamicHandlerTestCase extends JBossWSTest
       
       String res = endpoint.testHandlers("InitalMessage");
       assertEquals("InitalMessage|ServerRequest|ServerResponse", res);
-   }
-   
-   public void testRemoveServerHandlers() throws Exception
-   {
-      if (true)
-      {
-         System.out.println("FIXME: [JBWS-1626] Resurect dynamic server handlers");
-         return;
-      }
-      
-      MBeanServerConnection server = getServer();
-      ObjectName oname = ObjectNameFactory.create("jboss.ws:service=ServiceEndpointManager");
-      ObjectName serviceID = new ObjectName("jboss.ws:context=jaxrpc-samples-dynamichandler,endpoint=TestService");
-
-      List handlers = (List)server.invoke(oname, "getHandlerMetaData", new Object[]{serviceID}, new String[]{"javax.management.ObjectName"});
-      Iterator it = handlers.iterator();
-      while (it.hasNext())
-      {
-         HandlerMetaData handlerMetaData = (HandlerMetaData)it.next();
-         if (handlerMetaData.getHandlerClassName().equals(ServerSideHandler.class.getName()))
-            it.remove();
-      }
-      server.invoke(oname, "stopServiceEndpoint", new Object[]{serviceID}, new String[]{"javax.management.ObjectName"});
-      server.invoke(oname, "setHandlerMetaData", new Object[]{serviceID, handlers}, new String[]{"javax.management.ObjectName", "java.util.List"});
-      server.invoke(oname, "startServiceEndpoint", new Object[]{serviceID}, new String[]{"javax.management.ObjectName"});
-      
-      String res = endpoint.testHandlers("InitalMessage");
-      assertEquals("InitalMessage", res);
    }
 }

@@ -52,7 +52,7 @@ public class EventingTestCase extends EventingSupport {
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(EventingTestCase.class, "jaxws-wseventing.war");
+      return new JBossWSTestSetup(EventingTestCase.class, "jaxws-wseventing.war");
    }
 
    // ----------------------------------------------------------------------------

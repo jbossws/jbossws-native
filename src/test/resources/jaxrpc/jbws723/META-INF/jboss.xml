@@ -12,7 +12,7 @@
       <jndi-name>ejb/RoleSecuredSLSB</jndi-name>
       <port-component>
         <port-component-name>RoleSecured</port-component-name>
-        <port-component-uri>/RoleSecured</port-component-uri>
+        <port-component-uri>/jaxrpc-jbws723/RoleSecured</port-component-uri>
         <auth-method>BASIC</auth-method>
         <transport-guarantee>NONE</transport-guarantee>
         <!-- default secure-wsdl-access (false for jaxrpc) -->
@@ -23,7 +23,7 @@
       <jndi-name>ejb/BasicSecuredSLSB</jndi-name>
       <port-component>
         <port-component-name>BasicSecured</port-component-name>
-        <port-component-uri>/BasicSecured</port-component-uri>
+        <port-component-uri>/jaxrpc-jbws723/BasicSecured</port-component-uri>
         <auth-method>BASIC</auth-method>
         <transport-guarantee>NONE</transport-guarantee>
         <secure-wsdl-access>true</secure-wsdl-access>
@@ -34,7 +34,7 @@
       <jndi-name>ejb/ConfidentialSLSB</jndi-name>
       <port-component>
         <port-component-name>ConfidentialSecured</port-component-name>
-        <port-component-uri>/ConfidentialSecured</port-component-uri>
+        <port-component-uri>/jaxrpc-jbws723/ConfidentialSecured</port-component-uri>
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         <secure-wsdl-access>false</secure-wsdl-access>
       </port-component>

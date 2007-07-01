@@ -40,7 +40,7 @@ public class WebClientTestCase extends JBossWSTest
 {
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(WebClientTestCase.class, "jaxrpc-wsse-web-client.war");
+      return new JBossWSTestSetup(WebClientTestCase.class, "jaxrpc-wsse-web-client.war");
    }
 
    /**

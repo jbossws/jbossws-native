@@ -21,9 +21,9 @@
 */
 package org.jboss.ws.core.jaxws;
 
-import org.jboss.ws.core.jaxrpc.binding.BindingException;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerFactoryBase;
-import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.DeserializerSupport;
 
 // $Id$
 
@@ -34,7 +34,7 @@ import org.jboss.ws.core.jaxrpc.binding.DeserializerSupport;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Dec-2004
  */
-public class JAXBDeserializerFactory extends DeserializerFactoryBase
+public class JAXBDeserializerFactory extends AbstractDeserializerFactory
 {
    public DeserializerSupport getDeserializer() throws BindingException
    {

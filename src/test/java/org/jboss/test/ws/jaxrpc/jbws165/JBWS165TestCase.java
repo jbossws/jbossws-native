@@ -49,7 +49,7 @@ public class JBWS165TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS165TestCase.class, "jaxrpc-jbws165.ear");
+      return new JBossWSTestSetup(JBWS165TestCase.class, "jaxrpc-jbws165.ear");
    }
 
    public void testNone() throws Exception
@@ -65,11 +65,7 @@ public class JBWS165TestCase extends JBossWSTest
    
    public void testPortComponentURIOne() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws165-jaxrpc-jbws165-pcuri/Explicit/Path/HelloPCOne?wsdl");
-      
-      // In JBoss40 the context-root is derived from the first token in port-component-uri
-      if (isTargetJBoss40())
-         wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCOne?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCOne?wsdl");
       
       URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServicePcURI");
@@ -82,11 +78,7 @@ public class JBWS165TestCase extends JBossWSTest
    
    public void testPortComponentURITwo() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws165-jaxrpc-jbws165-pcuri/Explicit/Path/HelloPCTwo?wsdl");
-      
-      // In JBoss40 the context-root is derived from the first token in port-component-uri
-      if (isTargetJBoss40())
-         wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCTwo?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCTwo?wsdl");
       
       URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServicePcURI");

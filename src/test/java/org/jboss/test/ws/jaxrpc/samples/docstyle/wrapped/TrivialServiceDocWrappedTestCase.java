@@ -41,7 +41,7 @@ public class TrivialServiceDocWrappedTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(TrivialServiceDocWrappedTestCase.class, "jaxrpc-samples-docstyle-wrapped.war, jaxrpc-samples-docstyle-wrapped-client.jar");
+      return new JBossWSTestSetup(TrivialServiceDocWrappedTestCase.class, "jaxrpc-samples-docstyle-wrapped.war, jaxrpc-samples-docstyle-wrapped-client.jar");
    }
 
    protected void setUp() throws Exception

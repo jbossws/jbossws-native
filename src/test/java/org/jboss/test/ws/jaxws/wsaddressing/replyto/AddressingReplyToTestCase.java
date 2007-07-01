@@ -52,7 +52,7 @@ public class AddressingReplyToTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(AddressingReplyToTestCase.class,
+      return new JBossWSTestSetup(AddressingReplyToTestCase.class,
             "jaxws-wsaddressing-initial.war,jaxws-wsaddressing-initial-client.jar," +
             "jaxws-wsaddressing-replyto.war,jaxws-wsaddressing-replyto-client.jar," +
             "jaxws-wsaddressing-faultto.war");

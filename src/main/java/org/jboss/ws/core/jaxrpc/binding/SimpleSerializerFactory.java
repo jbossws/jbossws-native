@@ -21,6 +21,9 @@
 */
 package org.jboss.ws.core.jaxrpc.binding;
 
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
+
 
 // $Id$
 
@@ -31,7 +34,7 @@ package org.jboss.ws.core.jaxrpc.binding;
  * @author Thomas.Diesler@jboss.org
  * @since 18-Oct-2004
  */
-public class SimpleSerializerFactory extends SerializerFactoryBase
+public class SimpleSerializerFactory extends AbstractSerializerFactory
 {
    public SerializerSupport getSerializer()
    {

@@ -44,7 +44,7 @@ public class JBWS772TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS772TestCase.class, "jaxrpc-jbws772.ear");
+      return new JBossWSTestSetup(JBWS772TestCase.class, "jaxrpc-jbws772.ear");
    }
 
    public void testEndpointAccess() throws Exception

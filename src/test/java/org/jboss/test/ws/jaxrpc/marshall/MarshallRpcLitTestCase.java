@@ -48,7 +48,7 @@ public class MarshallRpcLitTestCase extends MarshallTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(MarshallRpcLitTestCase.class, "jaxrpc-marshall-rpclit.war, jaxrpc-marshall-rpclit-client.jar");
+      return new JBossWSTestSetup(MarshallRpcLitTestCase.class, "jaxrpc-marshall-rpclit.war, jaxrpc-marshall-rpclit-client.jar");
    }
 
    protected void setUp() throws Exception

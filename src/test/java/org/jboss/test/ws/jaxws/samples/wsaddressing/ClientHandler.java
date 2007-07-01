@@ -37,7 +37,7 @@ import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.utils.UUIDGenerator;
-import org.jboss.wsf.spi.handler.GenericSOAPHandler;
+import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 import org.jboss.wsf.spi.utils.DOMUtils;
 
 /**

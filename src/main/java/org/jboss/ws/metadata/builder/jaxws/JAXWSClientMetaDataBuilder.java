@@ -137,7 +137,13 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          wsdlService = wsdlDefinitions.getService(serviceName);
       }
       if (wsdlService == null)
-         throw new IllegalArgumentException("Cannot obtain wsdl service: " + serviceName);
+      {
+         List<QName> serviceNames = new ArrayList<QName>();
+         for (WSDLService wsdls : wsdlDefinitions.getServices())
+            serviceNames.add(wsdls.getName());
+         
+         throw new IllegalArgumentException("Cannot obtain wsdl service: " + serviceName + " we have " + serviceNames);
+      }
 
       // Build endpoint meta data
 

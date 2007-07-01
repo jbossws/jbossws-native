@@ -1,69 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions targetNamespace="urn:samples:account"
-  xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:samples:account"
-  xmlns:typ="urn:samples:account" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://schemas.xmlsoap.org/wsdl/
-      http://schemas.xmlsoap.org/wsdl/">
-
+<definitions targetNamespace="urn:samples:account" xmlns:tns="urn:samples:account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:typ="urn:samples:account" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
-
-    <schema targetNamespace="urn:samples:account"
-      xmlns="http://www.w3.org/2001/XMLSchema">
-
+    <schema targetNamespace="urn:samples:account" xmlns="http://www.w3.org/2001/XMLSchema">
+      
       <!-- account data transfer type -->
       <complexType name="AccountOperation">
         <sequence>
-          <element name="customerName" type="xsd:string" />
-          <element name="amount" type="xsd:double" />
+          <element name="customerName" type="xsd:string"/>
+          <element name="amount" type="xsd:double"/>
         </sequence>
       </complexType>
-
+      
     </schema>
-
   </types>
-
-  <!-- customer name wrapper -->
-  <message name="customerMessage">
-    <part name="customerName" type="xsd:string" />
-  </message>
-
-  <!-- access check response -->
   <message name="accessMessage">
-    <part name="granted" type="xsd:boolean" />
+    <part name="granted" type="xsd:boolean"/>
   </message>
-
-  <!-- account balance wrapper -->
-  <message name="balanceMessage">
-    <part name="balance" type="xsd:double" />
+  <message name="customerMessage">
+    <part name="customerName" type="xsd:string"/>
   </message>
-
-  <!-- account operation request -->
   <message name="accountOperation">
-    <part name="body" type="typ:AccountOperation" />
+    <part name="body" type="tns:AccountOperation"/>
   </message>
-
-  <!-- published account functions -->
+  <message name="balanceMessage">
+    <part name="balance" type="xsd:double"/>
+  </message>
   <portType name="AccountSystem">
-
-    <!-- tell whether a customer has an active account -->
     <operation name="checkAccess">
-      <input message="tns:customerMessage" />
-      <output message="tns:accessMessage" />
+      <input message="tns:customerMessage"/>
+      <output message="tns:accessMessage"/>
     </operation>
-
-    <!-- retrieve the balance of an account -->
     <operation name="queryBalance">
-      <input message="tns:customerMessage" />
-      <output message="tns:balanceMessage" />
+      <input message="tns:customerMessage"/>
+      <output message="tns:balanceMessage"/>
     </operation>
-
-    <!-- increase/decrease the balance of an account -->
     <operation name="updateBalance">
-      <input message="tns:accountOperation" />
-      <output message="tns:balanceMessage" />
+      <input message="tns:accountOperation"/>
+      <output message="tns:balanceMessage"/>
     </operation>
-
   </portType>
-
 </definitions>

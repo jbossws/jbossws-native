@@ -40,6 +40,6 @@ public class SignFaultTestCase extends RpcTestCase
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(SignFaultTestCase.class, "jaxrpc-wsse-sign-fault.war, jaxrpc-wsse-sign-fault-client.jar");
+      return new JBossWSTestSetup(SignFaultTestCase.class, "jaxrpc-wsse-sign-fault.war, jaxrpc-wsse-sign-fault-client.jar");
    }
 }

@@ -38,7 +38,7 @@ public class JBWS1647RPCTestCase extends JBWS1647TestBase
 
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1647RPCTestCase.class, "jaxrpc-jbws1647-rpclit.war");
+      return new JBossWSTestSetup(JBWS1647RPCTestCase.class, "jaxrpc-jbws1647-rpclit.war");
    }
 
    public String getMessage()

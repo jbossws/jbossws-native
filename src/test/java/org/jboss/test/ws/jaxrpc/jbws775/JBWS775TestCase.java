@@ -50,7 +50,7 @@ public class JBWS775TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(JBWS775TestCase.class, "jaxrpc-jbws775.war, jaxrpc-jbws775-client.jar");
+      return new JBossWSTestSetup(JBWS775TestCase.class, "jaxrpc-jbws775.war, jaxrpc-jbws775-client.jar");
    }
 
    public void testEndpointAccess() throws Exception

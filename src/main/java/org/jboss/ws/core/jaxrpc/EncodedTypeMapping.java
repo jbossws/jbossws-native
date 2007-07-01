@@ -34,6 +34,7 @@ import javax.xml.soap.SOAPElement;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
+import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.Base64DeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.Base64SerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.CalendarDeserializerFactory;

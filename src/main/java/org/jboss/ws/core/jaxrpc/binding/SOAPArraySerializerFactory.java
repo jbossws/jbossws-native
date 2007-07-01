@@ -21,6 +21,10 @@
 */
 package org.jboss.ws.core.jaxrpc.binding;
 
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.SerializerSupport;
+
 
 // $Id$
 
@@ -31,7 +35,7 @@ package org.jboss.ws.core.jaxrpc.binding;
  * @author Thomas.Diesler@jboss.org
  * @since 31-Oct-2005
  */
-public class SOAPArraySerializerFactory extends SerializerFactoryBase
+public class SOAPArraySerializerFactory extends AbstractSerializerFactory
 {
    public SerializerSupport getSerializer() throws BindingException
    {

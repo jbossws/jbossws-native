@@ -47,7 +47,7 @@ public class JBWS1357TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(JBWS1357TestCase.class, "jaxws-jbws1357.war");
+      return new JBossWSTestSetup(JBWS1357TestCase.class, "jaxws-jbws1357.war");
    }
 
    @Override

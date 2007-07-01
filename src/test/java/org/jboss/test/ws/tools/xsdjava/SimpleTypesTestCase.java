@@ -62,11 +62,9 @@ public class SimpleTypesTestCase extends WSToolsTest
       File file2 = new File(genPath + "/org/jboss/ws/types/" + fname);
       File file1 = new File(base + "/wscompile/simpletypes/" + fname);
       
-      System.out.println("FIXME: [JBWS-940] Add wsdl-java support for jdk 1.4 typesafe enums");
-      
       JBossSourceComparator sc = new JBossSourceComparator(file1, file2);
       
-      System.out.println("FIXME: [JBWS-940] Add wsdl-java support for jdk 1.4 typesafe enums");
+      // [JBWS-940] Add wsdl-java support for jdk 1.4 typesafe enums
       //assertTrue("Source Files Match:", sc.validate());
       //sc.validateImports();
 

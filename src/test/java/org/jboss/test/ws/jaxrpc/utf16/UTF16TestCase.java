@@ -67,7 +67,7 @@ public class UTF16TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return JBossWSTestSetup.newTestSetup(UTF16TestCase.class, "jaxrpc-utf16.war, jaxrpc-utf16-client.jar");
+      return new JBossWSTestSetup(UTF16TestCase.class, "jaxrpc-utf16.war, jaxrpc-utf16-client.jar");
    }
 
    public void setUp() throws Exception 

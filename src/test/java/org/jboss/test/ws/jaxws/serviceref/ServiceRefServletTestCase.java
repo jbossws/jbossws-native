@@ -51,7 +51,7 @@ public class ServiceRefServletTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return JBossWSTestSetup.newTestSetup(ServiceRefServletTestCase.class, "jaxws-serviceref.war, jaxws-serviceref-servlet-client.war");
+      return new JBossWSTestSetup(ServiceRefServletTestCase.class, "jaxws-serviceref.war, jaxws-serviceref-servlet-client.war");
    }
 
    public void testWSDLAccess() throws MalformedURLException
