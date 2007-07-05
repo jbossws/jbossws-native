@@ -166,10 +166,7 @@
 				<include name="ws*.sh"/>
 			</fileset>
 			<metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
-			<metainf dir="${core.resources.dir}/standard-config">
-				<include name="standard-jaxrpc-client-config.xml"/>
-				<include name="standard-jaxws-client-config.xml"/>
-			</metainf>			
+			<metainf dir="${core.resources.dir}/standard-config"/>
 		</jar>
 
 		<!-- Build jbossws-core-scripts.zip -->

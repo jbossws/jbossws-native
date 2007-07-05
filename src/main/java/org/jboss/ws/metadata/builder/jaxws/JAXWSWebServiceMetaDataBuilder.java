@@ -111,6 +111,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          ServerEndpointMetaData sepMetaData = result.sepMetaData;
          ServiceMetaData serviceMetaData = result.serviceMetaData;
+         serviceMetaData.setWsdlLocation(result.wsdlLocation);
          Class<?> seiClass = result.epClass;
 
          sepMetaData.setLinkName(linkName);
@@ -119,9 +120,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          // Assign the WS-Security configuration,
          WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(
-            wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
-         );
+         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME);
          serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
          // Process an optional @SOAPBinding annotation
@@ -130,8 +129,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Process an optional @BindingType annotation
          processBindingType(sepMetaData, seiClass);
 
+         // process config
+         processEndpointConfig(udi, sepClass, linkName, sepMetaData);
+
          // Process web methods
-         if(result.wsdlLocation!=null) serviceMetaData.setWsdlLocation(result.wsdlLocation);
          processWebMethods(sepMetaData, seiClass);
 
          // Init the transport guarantee
@@ -140,7 +141,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Initialize types
          createJAXBContext(sepMetaData);
          populateXmlTypes(sepMetaData);
-         
+
          //Process an optional @PolicyAttachment annotation
          if (sepClass.isAnnotationPresent(PolicyAttachment.class))
          {
@@ -161,9 +162,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
-
-         // process config
-         processEndpointConfig(udi, sepClass, linkName, sepMetaData);
 
          // Note, that @WebContext needs to be defined on the endpoint not the SEI
          processWebContext(udi, sepClass, linkName, sepMetaData);
@@ -215,38 +213,38 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    private void processWSDDContribution(ServerEndpointMetaData sepMetaData)
    {
       WebservicesMetaData webservices = WebservicesFactory.loadFromVFSRoot(sepMetaData.getRootFile());
-      if(webservices!=null)
+      if (webservices != null)
       {
-         for(WebserviceDescriptionMetaData wsDesc : webservices.getWebserviceDescriptions())
+         for (WebserviceDescriptionMetaData wsDesc : webservices.getWebserviceDescriptions())
          {
-            for(PortComponentMetaData portComp : wsDesc.getPortComponents())
+            for (PortComponentMetaData portComp : wsDesc.getPortComponents())
             {
                // We match portComp's by SEI first and portQName second
                // In the first case the portComp may override the portQName that derives from the annotation
                String portCompSEI = portComp.getServiceEndpointInterface();
                boolean doesMatch = portCompSEI != null ? portCompSEI.equals(sepMetaData.getServiceEndpointInterfaceName()) : false;
-               if(!doesMatch)
+               if (!doesMatch)
                {
                   doesMatch = portComp.getWsdlPort().equals(sepMetaData.getPortName());
                }
 
-               if(doesMatch)
+               if (doesMatch)
                {
 
                   log.debug("Processing 'webservices.xml' contributions on EndpointMetaData");
 
                   // PortQName overrides
-                  if(portComp.getWsdlPort()!=null)
+                  if (portComp.getWsdlPort() != null)
                   {
                      log.debug("Override EndpointMetaData portName " + sepMetaData.getPortName() + " with " + portComp.getWsdlPort());
                      sepMetaData.setPortName(portComp.getWsdlPort());
-                  }                 
+                  }
 
                   // HandlerChain contributions
                   UnifiedHandlerChainsMetaData chainWrapper = portComp.getHandlerChains();
-                  if(chainWrapper!=null)
+                  if (chainWrapper != null)
                   {
-                     for(UnifiedHandlerChainMetaData handlerChain : chainWrapper.getHandlerChains())
+                     for (UnifiedHandlerChainMetaData handlerChain : chainWrapper.getHandlerChains())
                      {
                         for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
                         {
@@ -258,14 +256,14 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                   }
 
                   // MTOM settings
-                  if(portComp.isEnableMtom())
+                  if (portComp.isEnableMtom())
                   {
                      log.debug("Enabling MTOM");
 
                      String bindingId = sepMetaData.getBindingId();
-                     if(bindingId.equals(Constants.SOAP11HTTP_BINDING))
+                     if (bindingId.equals(Constants.SOAP11HTTP_BINDING))
                         sepMetaData.setBindingId(Constants.SOAP11HTTP_MTOM_BINDING);
-                     else if(bindingId.equals(Constants.SOAP12HTTP_BINDING))
+                     else if (bindingId.equals(Constants.SOAP12HTTP_BINDING))
                         sepMetaData.setBindingId(Constants.SOAP12HTTP_MTOM_BINDING);
 
                   }
@@ -369,8 +367,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          }
          else
          {
-               WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
-               writeWsdl(serviceMetaData,wsdlDefinitions,epMetaData);
+            WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
+            writeWsdl(serviceMetaData, wsdlDefinitions, epMetaData);
          }
       }
       catch (RuntimeException rte)
@@ -382,12 +380,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          throw new WSException("Cannot write generated wsdl", e);
       }
    }
-   
-   
+
    private void writeWsdl(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions, EndpointMetaData epMetaData) throws IOException
    {
       // The RI uses upper case, and the TCK expects it, so we just mimic this even though we don't really have to
-      String wsdlName =  ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
+      String wsdlName = ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
       // Ensure that types are only in the interface qname
       wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
 
@@ -400,14 +397,15 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
       else
       {
-         dir =  IOUtils.createTempDirectory();
+         dir = IOUtils.createTempDirectory();
          wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
          wsdlFile.deleteOnExit();
       }
 
       message(wsdlFile.getName());
       Writer writer = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
-      new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver() {
+      new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver()
+      {
          public WSDLWriterResolver resolve(String suggestedFile) throws IOException
          {
             File file;

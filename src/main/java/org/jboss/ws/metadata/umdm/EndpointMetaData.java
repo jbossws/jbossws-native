@@ -651,12 +651,21 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public String getConfigFile()
    {
-      return this.configFile;
+      return configFile;
    }
 
    public String getConfigName()
    {
-      return this.configName;
+      return configName;
+   }
+
+   public CommonConfig getConfig()
+   {
+      // Make sure we have a configuration
+      if (config == null)
+         initEndpointConfig();
+
+      return config;
    }
 
    public void setConfigName(String configName)
@@ -681,8 +690,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       {
          this.configName = configName;
 
-         if (log.isDebugEnabled())
-            log.debug("Reconfiguration forced, new config is '" + configName + "'");
+         log.debug("Reconfiguration forced, new config is '" + configName + "'");
          initEndpointConfig();
          configObservable.doNotify(configName);
       }
@@ -690,8 +698,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void initEndpointConfig()
    {
-      if (log.isDebugEnabled())
-         log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
+      log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
       config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
 
@@ -700,8 +707,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private void reconfigHandlerMetaData()
    {
-      if (log.isDebugEnabled())
-         log.debug("Configure EndpointMetaData");
+      log.debug("Configure EndpointMetaData");
 
       List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
       clearHandlers();
@@ -713,12 +719,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       addHandlers(sepHandlers);
       addHandlers(postHandlers);
 
-      if (log.isDebugEnabled())
-         log.debug("Added " + preHandlers.size() + " PRE handlers");
-      if (log.isDebugEnabled())
-         log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
-      if (log.isDebugEnabled())
-         log.debug("Added " + postHandlers.size() + " POST handlers");
+      log.debug("Added " + preHandlers.size() + " PRE handlers");
+      log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
+      log.debug("Added " + postHandlers.size() + " POST handlers");
    }
 
    public List<Class> getRegisteredTypes()
@@ -747,9 +750,13 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       boolean match;
       if (seiName != null && portName != null)
+      {
          match = getServiceEndpointInterfaceName().equals(seiName) && getPortName().equals(portName);
-      else match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
-
+      }
+      else
+      {
+         match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
+      }
       return match;
    }
 }

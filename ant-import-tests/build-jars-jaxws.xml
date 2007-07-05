@@ -119,16 +119,24 @@
 			</classes>
 		</war>
 
-		<!-- jaxws-jbws860 -->
-		<war warfile="${tests.output.dir}/libs/jaxws-jbws860.war" webxml="${tests.output.dir}/resources/jaxws/jbws860/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/jbws860/*.class"/>
-				<exclude name="org/jboss/test/ws/jaxws/jbws860/*TestCase.class"/>
-			</classes>
-			<webinf dir="${tests.output.dir}/resources/jaxws/jbws860/WEB-INF">
-				<include name="jboss-web.xml"/>
-			</webinf>
-		</war>
+	    <!-- jaxws-jbws771 -->
+	    <jar destfile="${tests.output.dir}/libs/jaxws-jbws771.jar">
+		  <fileset dir="${tests.output.dir}/classes">
+			  <include name="org/jboss/test/ws/jaxws/jbws771/*.class"/>
+              <exclude name="org/jboss/test/ws/jaxws/jbws771/*TestCase.class"/>
+		  </fileset>
+	    </jar>
+	  
+	    <!-- jaxws-jbws860 -->
+	    <war warfile="${tests.output.dir}/libs/jaxws-jbws860.war" webxml="${tests.output.dir}/resources/jaxws/jbws860/WEB-INF/web.xml">
+	      <classes dir="${tests.output.dir}/classes">
+	        <include name="org/jboss/test/ws/jaxws/jbws860/*.class"/>
+	        <exclude name="org/jboss/test/ws/jaxws/jbws860/*TestCase.class"/>
+	      </classes>
+	      <webinf dir="${tests.output.dir}/resources/jaxws/jbws860/WEB-INF">
+	        <include name="jboss-web.xml"/>
+	      </webinf>
+	    </war>
 
 		<!-- jaxws-jbws871 -->
 		<war warfile="${tests.output.dir}/libs/jaxws-jbws871-rpc.war" webxml="${tests.output.dir}/resources/jaxws/jbws871/WEB-INF-rpc/web.xml">
@@ -186,17 +194,32 @@
 			</classes>
 		</war>
 
-		<!-- jaxws-jbws1357 -->
-		<war warfile="${tests.output.dir}/libs/jaxws-jbws1357.war" webxml="${tests.output.dir}/resources/jaxws/jbws1357/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1357/JBWS1357.class"/>
-				<include name="org/jboss/test/ws/jaxws/jbws1357/JBWS1357Impl.class"/>
-			</classes>
-			<fileset dir="${tests.output.dir}/resources/jaxws/jbws1357">
-				<include name="hello.jsp"/>
-			</fileset>
-		</war>
+	    <!-- jaxws-jbws1283 -->
+        <jar destfile="${tests.output.dir}/libs/jaxws-jbws1283.jar">
+          <fileset dir="${tests.output.dir}/classes">
+            <include name="org/jboss/test/ws/jaxws/jbws1283/*.*"/>        
+          </fileset>
+        </jar>
 
+        <!-- jaxws-jbws1357 -->
+        <war warfile="${tests.output.dir}/libs/jaxws-jbws1357.war" webxml="${tests.output.dir}/resources/jaxws/jbws1357/WEB-INF/web.xml">
+          <classes dir="${tests.output.dir}/classes">
+            <include name="org/jboss/test/ws/jaxws/jbws1357/JBWS1357.class"/>
+            <include name="org/jboss/test/ws/jaxws/jbws1357/JBWS1357Impl.class"/>
+          </classes>
+          <fileset dir="${tests.output.dir}/resources/jaxws/jbws1357">
+            <include name="hello.jsp"/>
+          </fileset>
+        </war>
+
+	  <!-- jaxws-jbws1422 -->
+	  <jar destfile="${tests.output.dir}/libs/jaxws-jbws1422.jar">
+		  <fileset dir="${tests.output.dir}/classes">
+			  <include name="org/jboss/test/ws/jaxws/jbws1422/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1422/*TestCase.class"/>
+		  </fileset>
+	  </jar>
+	  
     <!-- jaxws-jbws1446 -->
     <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1446.jar">
       <fileset dir="${tests.output.dir}/classes">
@@ -204,6 +227,14 @@
       </fileset>
     </jar>
     
+	  <!-- jaxws-jbws1505 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1505.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1505/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1505/*TestCase.class"/>
+      </fileset>
+    </jar>
+
     <!-- jaxws-jbws1529 -->
     <war warfile="${tests.output.dir}/libs/jaxws-jbws1529.war" webxml="${tests.output.dir}/resources/jaxws/jbws1529/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

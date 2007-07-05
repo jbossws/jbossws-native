@@ -3,18 +3,18 @@
 <!-- $Id$ -->
 
 <jaxrpc-config xmlns="urn:jboss:jaxrpc-config:2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
-               xsi:schemaLocation="urn:jboss:jaxrpc-config:2.0 jaxrpc-config_2_0.xsd">
+  xsi:schemaLocation="urn:jboss:jaxrpc-config:2.0 jaxrpc-config_2_0.xsd">
   
   <client-config>
     <config-name>Standard Client</config-name>
   </client-config>
   
-   <client-config>
-      <config-name>Standard MTOM client</config-name>
-      <feature>http://org.jboss.ws/mtom</feature>   
-   </client-config>
-
-   <client-config>
+  <client-config>
+    <config-name>Standard MTOM client</config-name>
+    <feature>http://org.jboss.ws/mtom</feature>
+  </client-config>
+  
+  <client-config>
     <config-name>Standard WSAddressing Client</config-name>
     <post-handler-chain>
       <handler-chain-name>WSAddressing Handlers</handler-chain-name>

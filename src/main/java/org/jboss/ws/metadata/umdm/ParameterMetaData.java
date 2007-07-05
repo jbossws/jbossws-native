@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
@@ -43,6 +42,7 @@ import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
+import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.wsf.spi.utils.JavaUtils;
 
@@ -106,13 +106,7 @@ public class ParameterMetaData
       this.opMetaData = opMetaData;
       this.mode = ParameterMode.IN;
       this.javaTypeName = javaTypeName;
-      
-      // [JBWS-771] Use part names that are friendly to .NET
-      if (opMetaData.isDocumentWrapped())
-         partName = "parameters";
-      else
-         partName = xmlName.getLocalPart();
-      
+      this.partName = xmlName.getLocalPart();
    }
 
    private static boolean matchParameter(Method method, int index, Class expectedType, Set<Integer> matches, boolean exact, boolean holder)
@@ -440,7 +434,14 @@ public class ParameterMetaData
 
    public String getPartName()
    {
-      return partName;
+      // [JBWS-771] Use part names that are friendly to .NET
+      String auxPartName = partName;
+      if (opMetaData.getEndpointMetaData().getConfig().hasFeature(EndpointFeature.BINDING_WSDL_DOTNET))
+      {
+         if (opMetaData.isDocumentWrapped() && inHeader == false)
+            auxPartName = "parameters";
+      }
+      return auxPartName;
    }
 
    public void setPartName(String partName)

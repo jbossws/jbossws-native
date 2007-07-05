@@ -19,26 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config;
+package org.jboss.test.ws.jaxws.jbws771;
 
-// $Id: $
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
-/**
- * @author Heiko.Braun@jboss.org
- * @author Thomas.Diesler@jboss.org
- * @since 14.12.2006
- */
-public interface EndpointFeature
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
+public interface IWebsvc
 {
-   /** Enable MTOM per endpoint */
-   final static String MTOM = "http://org.jboss.ws/mtom";
-
-   /** 
-    * Validate the XML stream upon dispatch.
-    * Introduces an additional parsing overhead and could be disabled.
-    */
-   final static String VALIDATE_DISPATCH = "http://org.jboss.ws/dispatch/validate";
-
-   /** Generates message part names 'parameters' in WSDL for document/literal/wapped */
-   final static String BINDING_WSDL_DOTNET = "http://org.jboss.ws/binding/wsdl/dotnet";
+   public String submit(@WebParam(name = "foo") String foo);
+   
+   public String cancel(@WebParam(name = "foo") String foo, @WebParam(name = "bar", header=true) String bar);
 }

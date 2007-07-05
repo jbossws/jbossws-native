@@ -19,26 +19,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config;
+package org.jboss.test.ws.jaxws.jbws771;
 
-// $Id: $
+import javax.ejb.Stateless;
+import javax.jws.WebParam;
+import javax.jws.WebService;
 
-/**
- * @author Heiko.Braun@jboss.org
- * @author Thomas.Diesler@jboss.org
- * @since 14.12.2006
- */
-public interface EndpointFeature
+import org.jboss.ws.annotation.EndpointConfig;
+
+@Stateless
+@WebService(endpointInterface = "org.jboss.test.ws.jaxws.jbws771.IWebsvc", serviceName = "JBWS771Service")
+@EndpointConfig(configName = ".NET friendly Endpoint")
+public class IWebsvcImpl implements IWebsvc
 {
-   /** Enable MTOM per endpoint */
-   final static String MTOM = "http://org.jboss.ws/mtom";
+   public String submit(@WebParam(name = "foo") String foo)
+   {
+      return "submit-" + foo;
+   }
 
-   /** 
-    * Validate the XML stream upon dispatch.
-    * Introduces an additional parsing overhead and could be disabled.
-    */
-   final static String VALIDATE_DISPATCH = "http://org.jboss.ws/dispatch/validate";
-
-   /** Generates message part names 'parameters' in WSDL for document/literal/wapped */
-   final static String BINDING_WSDL_DOTNET = "http://org.jboss.ws/binding/wsdl/dotnet";
+   public String cancel(@WebParam(name = "foo") String foo, @WebParam(name = "bar", header = true) String bar)
+   {
+      return "cancel-" + foo + bar;
+   }
 }

@@ -22,8 +22,8 @@
 	<property name="excludesfile" value="${core.dir}/src/test/resources/${excludes-short-name}"/>
 
 	<!--
-		 Init the various classpaths
-	  -->
+	  Init the various classpaths
+	-->
 	<target name="tests-init" depends="thirdparty-classpath,tests-classpath">
 
 		<path id="ws.stack.classpath">

@@ -24,6 +24,9 @@ package org.jboss.ws.core.client;
 // $Id$
 
 import java.lang.reflect.AnnotatedElement;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.File;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -31,11 +34,9 @@ import javax.naming.NamingException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.client.ServiceRefHandlerJAXRPC;
 import org.jboss.ws.core.jaxws.client.ServiceRefHandlerJAXWS;
-import org.jboss.ws.integration.ServiceRefElement;
-import org.jboss.ws.integration.ServiceRefHandler;
-import org.jboss.ws.integration.ServiceRefMetaData;
-import org.jboss.ws.integration.UnifiedVirtualFile;
+import org.jboss.ws.integration.*;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.ws.WSException;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
@@ -65,6 +66,37 @@ public class ServiceRefHandlerImpl implements ServiceRefHandler
       {
          log.debug("Attempt to rebind the service-ref: " + sref.getServiceRefName());
          return;
+      }
+
+      // In case of an .war deployment the associated root file doesn't point to
+      // the expanded war file structure and thus breaks service-ref usage for servlet clients.
+      // This needs to be fixed in org.jboss.web.AbstractWebDeployer (JBOSS_AS/server module)
+      if(vfsRoot instanceof URLLoaderAdapter)
+      {
+         URLLoaderAdapter ula = (URLLoaderAdapter)vfsRoot;
+         URL rootURL = ula.toURL();
+         if("file".equals( rootURL.getProtocol()) && rootURL.getFile().endsWith(".war") )
+         {
+            String fileName = rootURL.getFile();
+
+            if( ! new File(fileName).exists() ) // might be an exploded directory
+            {
+               // There is a filename convention for exploded directories
+               fileName = fileName.substring(0, fileName.indexOf(".war")) + "-exp.war";
+
+               File expandedDirectory = new File(fileName);
+               if(! expandedDirectory.exists())
+                  throw new WSException("Failed to bind service-ref, the deployment root expandedDirectory doesn't exist: " + fileName);
+
+               // update the rootFile
+               try
+               {
+                  vfsRoot = new URLLoaderAdapter(expandedDirectory.toURL());
+               }
+               catch (MalformedURLException e){}
+            }
+
+         }
       }
 
       UnifiedServiceRefMetaData serviceRef = (UnifiedServiceRefMetaData)sref;

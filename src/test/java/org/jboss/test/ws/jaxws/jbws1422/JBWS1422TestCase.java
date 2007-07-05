@@ -25,10 +25,6 @@ package org.jboss.test.ws.jaxws.jbws1422;
 
 import java.net.URL;
 
-import javax.wsdl.Definition;
-import javax.wsdl.Message;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
@@ -39,7 +35,6 @@ import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 /**
  * [JBWS-1422] NPE if @WebParam.name like "mX.."
- * [JBWS-771] Use part names that are friendly to .NET
  * 
  * @author Thomas.Diesler@jboss.com 
  */
@@ -71,26 +66,5 @@ public class JBWS1422TestCase extends JBossWSTest
    {
       String result = port.cancel("myFooBar");
       assertEquals("Cancelled-myFooBar", result);
-   }
-   
-   // [JBWS-771] Use part names that are friendly to .NET
-   public void testMessagePartNames() throws Exception
-   {
-      Definition wsdl = getWSDLDefinition(wsdlURL.toExternalForm());
-      
-      Message wsdlReqMessage = wsdl.getMessage(new QName(TARGET_NAMESPACE, "IWebsvc_cancel"));
-      assertNotNull("Expected part with name 'parameters' in: " + wsdlReqMessage, wsdlReqMessage.getPart("parameters"));
-      
-      Message wsdlResMessage = wsdl.getMessage(new QName(TARGET_NAMESPACE, "IWebsvc_cancelResponse"));
-      assertNotNull("Expected part with name 'parameters' in: " + wsdlResMessage, wsdlResMessage.getPart("parameters"));
-   }
-   
-   private Definition getWSDLDefinition(String wsdlLocation) throws Exception
-   {
-      WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-      WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-
-      Definition definition = wsdlReader.readWSDL(null, wsdlLocation);
-      return definition;
    }
 }

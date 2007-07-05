@@ -10,4 +10,4 @@ Implementation-Vendor: @implementation.vendor@
 Implementation-Vendor-Id: @implementation.vendor.id@
 Class-Path: jbossws-spi.jar jboss-jaxrpc.jar jboss-jaxws.jar jboss-saaj.jar 
   activation.jar commons-logging.jar concurrent.jar javassist.jar jaxb-api.jar jaxb-impl.jar 
-  mail.jar jboss-remoting.jar jboss-xml-binding.jar  policy.jar wsdl4j.jar
+  mail.jar jboss-remoting.jar jboss-xml-binding.jar policy.jar stax-api.jar wsdl4j.jar
