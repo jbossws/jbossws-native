@@ -53,7 +53,7 @@ public class BindingCustomizationTestCase extends TestCase {
 
          fail("It should not be possible to change bindinig customizations on a started endpoint");
       }
-      catch (IllegalAccessError e)
+      catch (Exception e)
       {
          // all fine, this should happen
       }

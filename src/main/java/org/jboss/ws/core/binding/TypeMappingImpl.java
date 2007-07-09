@@ -53,7 +53,7 @@ import org.jboss.ws.core.jaxrpc.binding.QNameDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.QNameSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
-import org.jboss.wsf.spi.utils.HashCodeUtil;
+import org.jboss.ws.core.utils.HashCodeUtil;
 import org.jboss.wsf.spi.utils.JavaUtils;
 
 /**
