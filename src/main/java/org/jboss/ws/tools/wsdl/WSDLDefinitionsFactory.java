@@ -23,19 +23,6 @@ package org.jboss.ws.tools.wsdl;
 
 // $Id$
 
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.ConnectException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.wsdl.Definition;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
-import javax.xml.parsers.DocumentBuilder;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
@@ -46,6 +33,18 @@ import org.jboss.wsf.spi.utils.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;
+
+import javax.wsdl.Definition;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
+import javax.xml.parsers.DocumentBuilder;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.ConnectException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A factory that creates a <code>WSDLDefinitions</code> object from an URL.
@@ -110,7 +109,9 @@ public class WSDLDefinitionsFactory
          String defaultNamespace = getDefaultNamespace(wsdlDoc);
          if (Constants.NS_WSDL11.equals(defaultNamespace))
          {
+
             WSDLFactory wsdlFactory = WSDLFactory.newInstance(JBossWSDLFactoryImpl.class.getName());
+
             WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
             wsdlReader.setFeature("javax.wsdl.verbose", false);
 

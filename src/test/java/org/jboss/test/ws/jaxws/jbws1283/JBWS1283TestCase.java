@@ -21,27 +21,24 @@
  */
 package org.jboss.test.ws.jaxws.jbws1283;
 
+import junit.framework.Test;
+import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
-import org.jboss.test.ws.jaxws.jbws1357.JBWS1357;
-import junit.framework.Test;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.SOAPException;
-import javax.activation.DataHandler;
 import java.net.URL;
-import java.net.HttpURLConnection;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Attachment dropped on outbound messages if they have been

@@ -82,7 +82,7 @@ public class WSTools
 			usage();
 		}
 
-		for (int i = 0; i < args.length; i++)
+      for (int i = 0; i < args.length; i++)
       {
          String arg = args[i];
 
@@ -117,7 +117,7 @@ public class WSTools
          }
          else
          {
-				usage();
+            usage();
          }
       }
 
@@ -128,16 +128,16 @@ public class WSTools
 	{
 		System.out.println("Usage: wstools (-classpath|-cp) <classpath> -config <config> [-dest <destination path>]");
 		System.exit(1);
-	}
+   }
 
-	private boolean process(Configuration config, String outputDir) throws IOException
+   private boolean process(Configuration config, String outputDir) throws IOException
    {
       if (config == null)
          throw new IllegalArgumentException("Configuration is null");
-      
+
       if (outputDir == null)
          outputDir = ".";
-      
+
       ToolsHelper helper = new ToolsHelper();
       if (config.getJavaToWSDLConfig(false) != null)
       {
