@@ -21,23 +21,11 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import java.util.HashMap;
 
 /**
- * The serialization context for JAXWS endpoints/clients
- * 
- * @author Thomas.Diesler@jboss.org
- * @since 03-Jul-2006
+ * @author Heiko.Braun@jboss.com
+ *         Created: Jun 27, 2007
  */
-public class SerializationContextJAXWS extends SerializationContext
-{
-   public static final String JAXB_CONTEXT_TYPES = "org.jboss.ws.jaxb.context.types";   
+public class JAXBContextCustomisation extends HashMap {
 }

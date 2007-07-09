@@ -39,6 +39,7 @@ import junit.framework.Test;
 
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.ws.core.jaxws.JAXBContextFactory;
 
 /**
  * Arrays with JSR181 endpoints
@@ -73,8 +74,8 @@ public class JBWS871TestCase extends JBossWSTest
    public void testNullArray() throws Exception
    {
       Integer[] intArr = null;
-      
-      JAXBContext jbc = JAXBContext.newInstance(Integer[].class);
+
+      JAXBContext jbc = JAXBContextFactory.newInstance().createContext(Integer[].class);
       Marshaller m = jbc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FRAGMENT, true);
       StringWriter strw = new StringWriter();
@@ -83,7 +84,7 @@ public class JBWS871TestCase extends JBossWSTest
       String xmlFragment = strw.toString();
       // <myarr xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
       // System.out.println(xmlFragment);
-      
+
       Unmarshaller um = jbc.createUnmarshaller();
       Source source = new StreamSource(new ByteArrayInputStream(xmlFragment.getBytes()));
       JAXBElement jbel = um.unmarshal(source, Integer[].class);
@@ -93,8 +94,8 @@ public class JBWS871TestCase extends JBossWSTest
    public void testEmptyArray() throws Exception
    {
       Integer[] intArr = new Integer[0];
-      
-      JAXBContext jbc = JAXBContext.newInstance(Integer[].class);
+
+      JAXBContext jbc = JAXBContextFactory.newInstance().createContext(Integer[].class);
       Marshaller m = jbc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FRAGMENT, true);
       StringWriter strw = new StringWriter();
@@ -103,7 +104,7 @@ public class JBWS871TestCase extends JBossWSTest
       String xmlFragment = strw.toString();
       // <myarr/>
       // System.out.println(xmlFragment);
-      
+
       Unmarshaller um = jbc.createUnmarshaller();
       Source source = new StreamSource(new ByteArrayInputStream(xmlFragment.getBytes()));
       JAXBElement jbel = um.unmarshal(source, Integer[].class);
@@ -113,8 +114,8 @@ public class JBWS871TestCase extends JBossWSTest
    public void testSingleValueArray() throws Exception
    {
       Integer[] intArr = new Integer[] { new Integer(1) };
-      
-      JAXBContext jbc = JAXBContext.newInstance(Integer[].class);
+
+      JAXBContext jbc = JAXBContextFactory.newInstance().createContext(Integer[].class);
       Marshaller m = jbc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FRAGMENT, true);
       StringWriter strw = new StringWriter();
@@ -123,7 +124,7 @@ public class JBWS871TestCase extends JBossWSTest
       String xmlFragment = strw.toString();
       // <myarr><item>1</item></myarr>
       // System.out.println(xmlFragment);
-      
+
       Unmarshaller um = jbc.createUnmarshaller();
       Source source = new StreamSource(new ByteArrayInputStream(xmlFragment.getBytes()));
       JAXBElement jbel = um.unmarshal(source, Integer[].class);
@@ -133,8 +134,8 @@ public class JBWS871TestCase extends JBossWSTest
    public void testMultipleValueArray() throws Exception
    {
       Integer[] intArr = new Integer[] { new Integer(1), new Integer(2), new Integer(3) };
-      
-      JAXBContext jbc = JAXBContext.newInstance(Integer[].class);
+
+      JAXBContext jbc = JAXBContextFactory.newInstance().createContext(Integer[].class);
       Marshaller m = jbc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FRAGMENT, true);
       StringWriter strw = new StringWriter();
@@ -143,13 +144,13 @@ public class JBWS871TestCase extends JBossWSTest
       String xmlFragment = strw.toString();
       // <myarr><item>1</item><item>2</item><item>3</item></myarr>
       // System.out.println(xmlFragment);
-      
+
       Unmarshaller um = jbc.createUnmarshaller();
       Source source = new StreamSource(new ByteArrayInputStream(xmlFragment.getBytes()));
       JAXBElement jbel = um.unmarshal(source, Integer[].class);
       assertEquals(intArr, jbel.getValue());
    }
-   
+
    public void testEchoNullArray() throws Exception
    {
       Integer[] outArr = endpoint.intArr("null", null);

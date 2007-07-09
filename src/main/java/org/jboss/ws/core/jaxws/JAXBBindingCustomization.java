@@ -21,23 +21,27 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.wsf.spi.binding.BindingCustomization;
+import com.sun.xml.bind.api.JAXBRIContext;
 
 /**
- * The serialization context for JAXWS endpoints/clients
- * 
- * @author Thomas.Diesler@jboss.org
- * @since 03-Jul-2006
+ * Supported JAXB 2.1 customizations.
+ *
+ * @see org.jboss.wsf.spi.deployment.Endpoint
+ *
+ * @author Heiko.Braun@jboss.com
+ *         Created: Jun 28, 2007
  */
-public class SerializationContextJAXWS extends SerializationContext
-{
-   public static final String JAXB_CONTEXT_TYPES = "org.jboss.ws.jaxb.context.types";   
+public class JAXBBindingCustomization extends BindingCustomization {
+
+   // Use an alternative RuntimeAnnotationReader implementation
+   public final static String ANNOTATION_READER = JAXBRIContext.ANNOTATION_READER;
+
+   // Reassign the default namespace URI to something else at the runtime
+   public final static String DEFAULT_NAMESPACE_REMAP = JAXBRIContext.DEFAULT_NAMESPACE_REMAP;
+
+   // Enable the c14n marshalling support in the JAXBContext.
+   public final static String CANONICALIZATION_SUPPORT = JAXBRIContext.CANONICALIZATION_SUPPORT;
+
+
 }

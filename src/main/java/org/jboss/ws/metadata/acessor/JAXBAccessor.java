@@ -25,6 +25,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.metadata.umdm.Accessor;
 import org.jboss.ws.metadata.umdm.AccessorFactory;
 import org.jboss.ws.metadata.umdm.AccessorFactoryCreator;
@@ -60,18 +61,8 @@ public class JAXBAccessor implements Accessor
       }
 
       private AccessorFactory create(final Class clazz)
-      {
-         final JAXBRIContext ctx;
-         try
-         {
-            ctx = (JAXBRIContext)JAXBRIContext.newInstance(new Class[] { clazz });
-         }
-         catch (JAXBException e)
-         {
-            WSException ex = new WSException(e.getMessage());
-            ex.setStackTrace(e.getStackTrace());
-            throw ex;
-         }
+      {         
+         final JAXBRIContext ctx = (JAXBRIContext) JAXBContextFactory.newInstance().createContext(clazz);
 
          return new AccessorFactory()
          {

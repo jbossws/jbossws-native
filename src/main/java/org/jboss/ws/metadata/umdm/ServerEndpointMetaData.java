@@ -23,16 +23,15 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
-import javax.management.ObjectName;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.wsf.spi.binding.jaxb.JAXBHandler;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.binding.BindingCustomization;
+
+import javax.management.ObjectName;
+import javax.xml.namespace.QName;
+import java.util.List;
 
 /**
  * Client side endpoint meta data.
@@ -44,14 +43,14 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 public class ServerEndpointMetaData extends EndpointMetaData
 {
    protected static final Logger log = Logger.getLogger(ServerEndpointMetaData.class);
-   
+
    public static final String SEPID_DOMAIN = "jboss.ws";
    public static final String SEPID_PROPERTY_CONTEXT = "context";
    public static final String SEPID_PROPERTY_ENDPOINT = "endpoint";
-   
+
    // The associated SPI endpoint
    private Endpoint endpoint;
-   
+
    // The REQUIRED link name
    private String linkName;
    // Legacy JSR-109 port component name
@@ -187,11 +186,14 @@ public class ServerEndpointMetaData extends EndpointMetaData
    {
       this.secureWSDLAccess = secureWSDLAccess;
    }
-   
-   @Override
-   public JAXBContext getJAXBContext(Class[] javaTypes) throws JAXBException
+
+   /**
+    * Will be set through a deployment aspect
+    * @return List<BindingCustomization> of available customizations
+    */
+   public List<BindingCustomization> getBindingCustomizations()
    {
-      return endpoint.getJAXBHandler().getJAXBContext(javaTypes);
+      return endpoint.getBindingCustomizations();
    }
 
    public String toString()

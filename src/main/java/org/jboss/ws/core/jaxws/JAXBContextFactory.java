@@ -28,18 +28,23 @@ import javax.xml.bind.JAXBContext;
 
 /**
  * Creates JAXBContext's.<p>
- * The factory uses the WSF {@link ServiceLoader} to find
- * the actual factory that's going to be used.
  *
  * @author Heiko.Braun@jboss.com
  *         Created: Jun 26, 2007
  */
 public abstract class JAXBContextFactory {
 
-   public final static String DEFAULT_JAXB_CONTEXT_FACTORY = "org.jboss.ws.core.jaxws.DefaultJAXBContextFactory";
+   public final static String DEFAULT_JAXB_CONTEXT_FACTORY = "org.jboss.ws.core.jaxws.CustomizableJAXBContextFactory";
 
    public abstract JAXBContext createContext(Class[] clazzes) throws WSException;
 
+   public abstract JAXBContext createContext(Class clazz) throws WSException;
+
+   /**
+    * Retrieve JAXBContextFactory instance through the {@link ServiceLoader}.
+    * Defaults to {@link CustomizableJAXBContextFactory}
+    * @return JAXBContextFactory
+    */
    public static JAXBContextFactory newInstance()
    {
       return (JAXBContextFactory)ServiceLoader.loadService(

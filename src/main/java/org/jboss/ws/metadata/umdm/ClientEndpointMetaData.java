@@ -23,14 +23,10 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-
 import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.wsf.spi.binding.jaxb.JAXBContextCache;
-import org.jboss.wsf.spi.binding.jaxb.JAXBHandler;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+
+import javax.xml.namespace.QName;
 
 /**
  * Client side endpoint meta data.
@@ -40,7 +36,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ClientEndpointMetaData extends EndpointMetaData
 {
-   private JAXBHandler jaxbHandler = new JAXBContextCache();
    
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {
@@ -53,12 +48,6 @@ public class ClientEndpointMetaData extends EndpointMetaData
          configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
    }
 
-   @Override
-   public JAXBContext getJAXBContext(Class[] javaTypes) throws JAXBException
-   {
-      return jaxbHandler.getJAXBContext(javaTypes);
-   }
-   
    public String toString()
    {
       StringBuilder buffer = new StringBuilder("\nClientEndpointMetaData:");

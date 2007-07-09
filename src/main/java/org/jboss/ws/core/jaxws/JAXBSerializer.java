@@ -23,6 +23,14 @@ package org.jboss.ws.core.jaxws;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.ComplexTypeSerializer;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.BufferedStreamResult;
+import org.w3c.dom.NamedNodeMap;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -31,18 +39,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.ws.WebServiceException;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.binding.BufferedStreamResult;
-import org.jboss.ws.core.binding.ComplexTypeSerializer;
-import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.wsf.spi.binding.jaxb.JAXBContextCache;
-import org.w3c.dom.NamedNodeMap;
 
 /**
  * A Serializer that can handle complex types by delegating to JAXB.
@@ -72,8 +68,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
          // This should be more efficient and accurate than searching the type mapping
          Class expectedType = serContext.getJavaType();
          Class actualType = value.getClass();
-         Class[] javaTypes = shouldFilter(actualType) ? new Class[] { expectedType } : new Class[] { expectedType, actualType };
-         JAXBContext jaxbContext = ((SerializationContextJAXWS)serContext).getJAXBContext(javaTypes);
+
+         Class[] types = shouldFilter(actualType) ? new Class[]{expectedType} : new Class[]{expectedType, actualType};
+         JAXBContext jaxbContext = getJAXBContext(types);
 
          Marshaller marshaller = jaxbContext.createMarshaller();
 
@@ -94,6 +91,22 @@ public class JAXBSerializer extends ComplexTypeSerializer
       }
 
       return result;
+   }
+
+   /**
+    * Retrieve JAXBContext from cache or create new one and cache it.
+    * @param types
+    * @return JAXBContext
+    */
+   private JAXBContext getJAXBContext(Class[] types){
+      JAXBContextCache cache = JAXBContextCache.getContextCache();
+      JAXBContext context = cache.get(types);
+      if(null==context)
+      {
+         context = JAXBContextFactory.newInstance().createContext(types);
+         cache.add(types, context);
+      }
+      return context;
    }
 
    // Remove this when we add a XMLGregorianCalendar Serializer

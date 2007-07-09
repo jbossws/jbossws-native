@@ -23,25 +23,6 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.jws.soap.SOAPBinding.ParameterStyle;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.Service.Mode;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -52,21 +33,26 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
+import org.jboss.ws.core.jaxws.JAXBContextCache;
+import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.integration.UnifiedVirtualFile;
-import org.jboss.ws.metadata.config.CommonConfig;
-import org.jboss.ws.metadata.config.Configurable;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.config.EndpointFeature;
-import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.wsf.spi.binding.jaxb.JAXBContextCache;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
+import org.jboss.ws.metadata.config.*;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.spi.binding.BindingCustomization;
+
+import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.Service.Mode;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A Service component describes a set of endpoints.
@@ -146,6 +132,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private JAXBContextCache jaxbCache = new JAXBContextCache();
 
    private List<UnifiedPortComponentRefMetaData> serviceRefContrib = new ArrayList<UnifiedPortComponentRefMetaData>();
+
+   private JAXBContextCache jaxbCache = new JAXBContextCache();
+
+   private List<BindingCustomization> bindingCustomization = new ArrayList<BindingCustomization>();
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
@@ -327,7 +317,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       return type;
    }
 
-   public abstract JAXBContext getJAXBContext(Class[] javaTypes) throws JAXBException;
+   public List<BindingCustomization> getBindingCustomizations() {
+      return bindingCustomization;
+   }
 
    public String getAuthMethod()
    {
@@ -647,6 +639,11 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void registerConfigObserver(Configurable observer)
    {
       configObservable.addObserver(observer);
+   }
+
+   public JAXBContextCache getJaxbCache()
+   {
+      return jaxbCache;
    }
 
    public String getConfigFile()
