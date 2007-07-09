@@ -257,7 +257,11 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 			appendRequiredHeader(soapHeader, ADDR.getActionQName(), getAction());
 			
 			// Write wsa:MessageID
-			if (getMessageID() != null)
+			if( (getReplyTo()!=null || getFaultTo()!=null) && null==getMessageID())
+			{
+				throw new AddressingException("Required addressing header missing:" + ADDR.getMessageIDQName());
+			}
+			else if (getMessageID() != null)
 			{
 				SOAPElement wsaMessageId = soapHeader.addChildElement(new NameImpl(ADDR.getMessageIDQName()));
 				wsaMessageId.addTextNode(getMessageID().getURI().toString());
