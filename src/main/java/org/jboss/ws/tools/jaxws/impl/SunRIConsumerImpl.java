@@ -48,6 +48,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
    private PrintStream messageStream;
    private String wsdlLocation;
    private List<String> additionalCompilerClassPath;
+   private String target = "2.0";
 
    @Override
    public void setBindingFiles(List<File> bindingFiles)
@@ -100,6 +101,11 @@ public class SunRIConsumerImpl extends WSContractConsumer
    public void setAdditionalCompilerClassPath(List<String> additionalCompilerClassPath)
    {
       this.additionalCompilerClassPath = additionalCompilerClassPath;
+   }
+
+   public void setTarget(String target)
+   {      
+      this.target = target;
    }
 
    @Override
@@ -163,8 +169,14 @@ public class SunRIConsumerImpl extends WSContractConsumer
       // Always add the output directory and the wsdl location
       args.add("-d");
       args.add(outputDir.getAbsolutePath());
-      args.add(wsdl.toString());
 
+      // Always set the target
+      args.add("-target");
+      args.add(target);
+
+      // finally the WSDL file
+      args.add(wsdl.toString());
+      
       try
       {
          // enforce woodstox
@@ -172,10 +184,10 @@ public class SunRIConsumerImpl extends WSContractConsumer
             System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
 
          WsimportTool compileTool = new WsimportTool(stream);
-         boolean success = compileTool.run(args.toArray(new String[0]));
+         boolean success = compileTool.run(args.toArray(new String[args.size()]));
 
          if (!success)
-            throw new IllegalStateException("WsImport invocation failed");
+            throw new IllegalStateException("WsImport invocation failed. Try the verbose switch for more information");
       }
       catch (Throwable t)
       {

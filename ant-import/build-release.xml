@@ -28,7 +28,7 @@
         <include name="jboss-jaxws.jar"/>
         <include name="jboss-saaj.jar"/>
         <include name="jbossws-core-src.zip"/>
-        <include name="jbossws-resources.zip"/>
+        <include name="jbossws-core-scripts.zip"/>
       </fileset>
     </copy>
     <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${core.output.etc.dir}/component-info.xml" filtering="true" overwrite="true">

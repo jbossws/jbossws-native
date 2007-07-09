@@ -3,7 +3,7 @@
           xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
           xmlns:tns="http://jboss.org/test/ws/xop/doclit">
 
-   <s:import schemaLocation="http://www.w3.org/2005/05/xmlmime" namespace="http://www.w3.org/2005/05/xmlmime"/>
+   <s:import schemaLocation="xml-media-types.xsd" namespace="http://www.w3.org/2005/05/xmlmime"/>
 
    <s:element name="PingMsg">
       <s:complexType>
