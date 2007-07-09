@@ -76,7 +76,6 @@ public class WSTools
    {
       String configLocation = null;
       String outputDir = null;
-
 		if(args.length==0)
 		{
 			usage();
