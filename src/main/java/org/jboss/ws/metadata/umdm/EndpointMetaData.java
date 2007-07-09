@@ -129,8 +129,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private ConfigObservable configObservable = new ConfigObservable();
 
-   private JAXBContextCache jaxbCache = new JAXBContextCache();
-
    private List<UnifiedPortComponentRefMetaData> serviceRefContrib = new ArrayList<UnifiedPortComponentRefMetaData>();
 
    private JAXBContextCache jaxbCache = new JAXBContextCache();

@@ -33,7 +33,6 @@ import org.w3c.dom.NamedNodeMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -58,8 +57,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
    @Override
    public Result serialize(QName xmlName, QName xmlType, Object value, SerializationContext serContext, NamedNodeMap attributes) throws BindingException
    {
-      if (log.isDebugEnabled())
-         log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
+      if (log.isDebugEnabled()) log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       Result result = null;
       try
@@ -68,7 +66,6 @@ public class JAXBSerializer extends ComplexTypeSerializer
          // This should be more efficient and accurate than searching the type mapping
          Class expectedType = serContext.getJavaType();
          Class actualType = value.getClass();
-
          Class[] types = shouldFilter(actualType) ? new Class[]{expectedType} : new Class[]{expectedType, actualType};
          JAXBContext jaxbContext = getJAXBContext(types);
 
@@ -82,8 +79,7 @@ public class JAXBSerializer extends ComplexTypeSerializer
          result = new BufferedStreamResult();
          marshaller.marshal(new JAXBElement(xmlName, expectedType, value), result);
 
-         if (log.isDebugEnabled())
-            log.debug("serialized: " + result);
+         if (log.isDebugEnabled()) log.debug("serialized: " + result);
       }
       catch (Exception ex)
       {
