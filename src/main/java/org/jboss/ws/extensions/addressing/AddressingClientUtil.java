@@ -29,6 +29,7 @@ public class AddressingClientUtil
    public static AddressingProperties createRequestProperties()
    {
       AddressingProperties addrProps = BUILDER.newAddressingProperties();
+      addrProps.setMessageID(BUILDER.newURI(generateMessageID()));
       return addrProps;
    }
 
@@ -40,6 +41,7 @@ public class AddressingClientUtil
       try
       {
          AddressingProperties addrProps = createRequestProperties();
+         addrProps.setMessageID(BUILDER.newURI(generateMessageID()));
          addrProps.setAction(BUILDER.newURI(wsaAction));
          addrProps.setTo(BUILDER.newURI(wsaTo));
          return addrProps;
@@ -59,7 +61,6 @@ public class AddressingClientUtil
       try
       {
          AddressingProperties addrProps = createDefaultProps(wsaAction, wsaTo);
-         addrProps.setMessageID(BUILDER.newURI(generateMessageID()));
          addrProps.setReplyTo(BUILDER.newEndpointReference(new URI(CONSTANTS.getAnonymousURI())));
          return addrProps;
       }
@@ -78,7 +79,6 @@ public class AddressingClientUtil
       try
       {
          AddressingProperties addrProps = createDefaultProps(wsaAction, wsaTo);
-         addrProps.setMessageID(BUILDER.newURI(generateMessageID()));
          addrProps.setReplyTo(BUILDER.newEndpointReference(new URI(CONSTANTS.getNoneURI())));
          return addrProps;
       }
@@ -99,23 +99,22 @@ public class AddressingClientUtil
    /**
     * generate a UUID based message id.
     */
-   public static URI generateMessageID() throws URISyntaxException
+   public static URI generateMessageID()
    {
-      URI messageId = new URI("urn:uuid:" + UUIDGenerator.generateRandomUUIDString());
+      URI messageId = null;
+      try
+      {
+         messageId = new URI("urn:uuid:" + UUIDGenerator.generateRandomUUIDString());
+      }
+      catch (URISyntaxException e)
+      {
+         // Doesnt happen
+      }
       return messageId;
    }
 
    public static AttributedURI createMessageID()
    {
-      AttributedURI msgId = null;
-      try
-      {
-         msgId = BUILDER.newURI(generateMessageID());
-      }
-      catch (URISyntaxException e)
-      {
-         //
-      }
-      return msgId;
+      return BUILDER.newURI(generateMessageID());
    }
 }

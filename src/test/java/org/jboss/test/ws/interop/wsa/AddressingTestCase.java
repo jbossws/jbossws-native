@@ -72,7 +72,7 @@ public class AddressingTestCase extends JBossWSTest {
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-wsa10-service.war");
+      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-wsa10.war");
    }
 
    protected void setUp() throws Exception
