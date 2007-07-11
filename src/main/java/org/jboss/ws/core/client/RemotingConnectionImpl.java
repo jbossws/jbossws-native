@@ -40,7 +40,6 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.CommonMessageContext;
@@ -218,23 +217,13 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       {
          // Get the invoker from Remoting for a given endpoint address
          log.debug("Get locator for: " + endpoint);
-         targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "JBossWSMessage");
-         InvokerLocator locator = new InvokerLocator(targetAddress);
 
-         /* An HTTPClientInvoker may disconnect from the server and recreated by the remoting layer.
-          * In that case the new invoker does not inherit the marshaller/unmarshaller from the disconnected invoker.
-          * We therefore explicitly specify the invoker locator datatype and register the SOAP marshaller/unmarshaller
-          * with the MarshalFactory. 
-          * 
-          * This applies to remoting-1.4.5 
-          */
          Marshaller marshaller = getMarshaller();
          UnMarshaller unmarshaller = getUnmarshaller();
-         MarshalFactory.addMarshaller("JBossWSMessage", marshaller, unmarshaller);
 
+         InvokerLocator locator = new InvokerLocator(targetAddress);
          client = new Client(locator, "jbossws", clientConfig);
          client.connect();
-
          client.setMarshaller(marshaller);
 
          if (oneway == false)
