@@ -19,39 +19,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxrpc.client;
+package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import javax.naming.Context;
-import javax.naming.NamingException;
-
-import org.jboss.logging.Logger;
-import org.jboss.util.naming.Util;
+import org.jboss.wsf.spi.deployment.serviceref.CommonServiceRefBinder;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
+import javax.naming.Referenceable;
+
 /**
- * Binds a JAXRPC Service object in the client's ENC for every service-ref element in the
- * deployment descriptor.
+ * Binds a JAXWS Service object in the client's ENC
  *
  * @author Thomas.Diesler@jboss.org
- * @since 04-Nov-2006
+ * @since 17-Jan-2007
  */
-public class ServiceRefHandlerJAXRPC
+public class ServiceRefBinderJAXWS extends CommonServiceRefBinder
 {
-   // logging support
-   private static Logger log = Logger.getLogger(ServiceRefHandlerJAXRPC.class);
-
-   /**
-    * Binds a Service into the callers ENC for every service-ref element
-    */
-   public void setupServiceRef(Context encCtx, String encName, UnifiedServiceRefMetaData serviceRef) throws NamingException
+   protected Referenceable buildServiceReferenceable(
+     String serviceImplClass, String targetClassName, UnifiedServiceRefMetaData serviceRef)
    {
-      String externalName = encCtx.getNameInNamespace() + "/" + encName;
-      log.info("setupServiceRef [jndi=" + externalName + "]");
-
-      // Do not use rebind, the binding should be unique
-      ServiceReferenceable ref = new ServiceReferenceable(serviceRef);
-      Util.bind(encCtx, encName, ref);
+      return new ServiceReferenceable(serviceImplClass, targetClassName, serviceRef);      
    }
 }

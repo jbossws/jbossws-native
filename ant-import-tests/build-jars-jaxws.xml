@@ -344,51 +344,6 @@
       </webinf>
     </war>
 
-		<!-- jaxws-serviceref -->
-		<war warfile="${tests.output.dir}/libs/jaxws-serviceref.war" webxml="${tests.output.dir}/resources/jaxws/serviceref/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpointImpl.class"/>
-			</classes>
-		</war>
-		<jar destfile="${tests.output.dir}/libs/jaxws-serviceref-client.jar">
-			<fileset dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/serviceref/ApplicationClient.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpointService.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpoint.class"/>
-			</fileset>
-			<metainf dir="${tests.output.dir}/resources/jaxws/serviceref/META-INF">
-				<include name="application-client.xml"/>
-				<include name="jboss-client.xml"/>
-				<include name="wsdl/**"/>
-			</metainf>
-		</jar>
-		<war destfile="${tests.output.dir}/libs/jaxws-serviceref-servlet-client.war" webxml="${tests.output.dir}/resources/jaxws/serviceref/servlet-client/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/serviceref/ServletClient.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpointService.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpoint.class"/>
-			</classes>
-			<webinf dir="${tests.output.dir}/resources/jaxws/serviceref/META-INF">
-				<include name="wsdl/**"/>
-			</webinf>
-			<webinf dir="${tests.output.dir}/resources/jaxws/serviceref/servlet-client/WEB-INF">
-				<include name="jboss-web.xml"/>
-			</webinf>
-		</war>
-		<jar destfile="${tests.output.dir}/libs/jaxws-serviceref-ejb-client.jar">
-			<fileset dir="${tests.output.dir}/classes">
-				<include name="org/jboss/test/ws/jaxws/serviceref/EJBClient.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/EJBRemote.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpointService.class"/>
-				<include name="org/jboss/test/ws/jaxws/serviceref/TestEndpoint.class"/>
-			</fileset>
-			<metainf dir="${tests.output.dir}/resources/jaxws/serviceref/META-INF">
-				<include name="ejb-jar.xml"/>
-				<include name="jboss.xml"/>
-				<include name="wsdl/**"/>
-			</metainf>
-		</jar>
-
 		<!-- jaxws-wrapped-accessor -->
 		<war warfile="${tests.output.dir}/libs/jaxws-wrapped-accessor.war" webxml="${tests.output.dir}/resources/jaxws/wrapped/accessor/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/classes">

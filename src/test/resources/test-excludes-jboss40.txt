@@ -1,6 +1,3 @@
-# Always exclude
-org/jboss/test/ws/benchmark/**
-
 # JBossAS-4.0 excludes
 org/jboss/test/ws/jaxrpc/jbws723/**
 

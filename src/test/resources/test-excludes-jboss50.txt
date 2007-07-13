@@ -1,6 +1,3 @@
-# Always exclude
-org/jboss/test/ws/benchmark/**
-
 # Fix before JBoss50 goes final
 org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase.*
 org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase.*
