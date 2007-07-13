@@ -22,14 +22,12 @@
 // $Id$
 package org.jboss.ws.metadata.builder.jaxws;
 
-import java.util.Map;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -47,7 +45,7 @@ public class JAXWSMetaDataBuilderJSE
     */
    public UnifiedMetaData buildMetaData(Deployment dep, UnifiedDeploymentInfo udi)
    {
-      if(log.isDebugEnabled()) log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
+      log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.vfRoot);
@@ -58,23 +56,14 @@ public class JAXWSMetaDataBuilderJSE
             throw new WSException("Deployment class loader not initialized");
 
          // For every bean
-         UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.metaData;
-         Map<String, String> servletClassMap = webMetaData.getServletClassNames();
-         for (String servletName : servletClassMap.keySet())
+         for (Endpoint ep : dep.getService().getEndpoints())
          {
-            String servletClassName = servletClassMap.get(servletName);
-            try
-            {
-               Class beanClass = udi.classLoader.loadClass(servletClassName);
-               JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, udi, beanClass, servletName);
-            }
-            catch (ClassNotFoundException ex)
-            {
-               log.warn("Cannot load service endpoint class: " + servletClassName);
-            }
+            String shortName = ep.getShortName();
+            Class beanClass = ep.getTargetBeanClass();
+            JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, udi, beanClass, shortName);
          }
-
-         if(log.isDebugEnabled()) log.debug("END buildMetaData: " + wsMetaData);
+         
+         log.debug("END buildMetaData: " + wsMetaData);
          return wsMetaData;
       }
       catch (RuntimeException rte)
