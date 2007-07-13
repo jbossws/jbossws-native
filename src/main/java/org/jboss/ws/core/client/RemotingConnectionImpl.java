@@ -24,8 +24,10 @@ package org.jboss.ws.core.client;
 // $Id$
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,6 +42,8 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.Version;
+import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.CommonMessageContext;
@@ -217,13 +221,31 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       {
          // Get the invoker from Remoting for a given endpoint address
          log.debug("Get locator for: " + endpoint);
-
+         
          Marshaller marshaller = getMarshaller();
          UnMarshaller unmarshaller = getUnmarshaller();
+         
+         /** 
+          * [JBWS-1704] The Use Of Remoting Causes An Additional 'datatype' Parameter To Be Sent On All Requests
+          * 
+          * An HTTPClientInvoker may disconnect from the server and recreated by the remoting layer.
+          * In that case the new invoker does not inherit the marshaller/unmarshaller from the disconnected invoker.
+          * We therefore explicitly specify the invoker locator datatype and register the SOAP marshaller/unmarshaller
+          * with the MarshalFactory. 
+          * 
+          * This applies to remoting-1.4.5 and less
+          */
+         String version = getRemotingVersion();
+         if (version.startsWith("1.4"))
+         {
+            targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "JBossWSMessage");
+            MarshalFactory.addMarshaller("JBossWSMessage", marshaller, unmarshaller);
+         }
 
          InvokerLocator locator = new InvokerLocator(targetAddress);
          client = new Client(locator, "jbossws", clientConfig);
          client.connect();
+
          client.setMarshaller(marshaller);
 
          if (oneway == false)
@@ -238,6 +260,28 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          throw new IllegalStateException("Could not setup remoting client", e);
       }
       return client;
+   }
+
+   private String getRemotingVersion()
+   {
+      String version = null; 
+      try
+      {
+         // Access the constant dynamically, otherwise it will be the compile time value
+         Field field = Version.class.getDeclaredField("VERSION");
+         version = (String)field.get(null);
+      }
+      catch (Exception ex)
+      {
+         throw new RuntimeException("Cannot obtain remoting version", ex);
+      }
+      
+      if (version == null)
+      {
+         URL codeURL = Version.class.getProtectionDomain().getCodeSource().getLocation();
+         throw new RuntimeException("Cannot obtain remoting version from: " + codeURL);
+      }
+      return version;
    }
 
    protected abstract UnMarshaller getUnmarshaller();
