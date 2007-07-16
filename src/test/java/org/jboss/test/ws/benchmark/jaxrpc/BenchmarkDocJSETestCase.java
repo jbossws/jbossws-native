@@ -30,6 +30,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceException;
+import javax.xml.rpc.Stub;
 
 /**
  * Test Benchmark EJB Service
@@ -57,7 +58,8 @@ public class BenchmarkDocJSETestCase extends JBossWSTest
               InitialContext iniCtx = getInitialContext("benchmark-client");
               Service service = (Service)iniCtx.lookup("java:comp/env/service/BenchmarkJSE");
               endpoint = (BenchmarkService)service.getPort(BenchmarkService.class);
-              //((Stub)endpoint)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/jaxrpc-benchmark-doc/jse");
+
+             ((Stub)endpoint)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-benchmark-doc/jse");
           }
        }
        catch (NamingException e)
@@ -66,7 +68,7 @@ public class BenchmarkDocJSETestCase extends JBossWSTest
        }
        catch (ServiceException e)
        {
-          e.printStackTrace();  
+          e.printStackTrace();
        }
     }
 

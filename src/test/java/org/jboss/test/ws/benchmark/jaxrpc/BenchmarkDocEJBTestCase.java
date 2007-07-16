@@ -28,6 +28,7 @@ import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.Stub;
 
 /**
  * Test Benchmark EJB Service
@@ -37,52 +38,54 @@ import javax.xml.rpc.Service;
  */
 public class BenchmarkDocEJBTestCase extends JBossWSTest
 {
-    private static BenchmarkService endpoint;
+   private static BenchmarkService endpoint;
 
-    public static Test suite()
-    {
-        return new JBossWSTestSetup(BenchmarkDocEJBTestCase.class, "jaxrpc-benchmark-doclit.jar, jaxrpc-benchmark-doclit-client.jar");
-    }
+   public static Test suite()
+   {
+      return new JBossWSTestSetup(BenchmarkDocEJBTestCase.class, "jaxrpc-benchmark-doclit.jar, jaxrpc-benchmark-doclit-client.jar");
+   }
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
+   protected void setUp() throws Exception
+   {
+      super.setUp();
 
-        if (endpoint == null)
-        {
-            InitialContext iniCtx = getInitialContext("benchmark-client");
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/BenchmarkEJB");
-            endpoint = (BenchmarkService)service.getPort(BenchmarkService.class);            
-        }
+      if (endpoint == null)
+      {
+         InitialContext iniCtx = getInitialContext("benchmark-client");
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/BenchmarkEJB");
+         endpoint = (BenchmarkService)service.getPort(BenchmarkService.class);
+
+         ((Stub)endpoint)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-benchmark-doc-ejb");
+      }
 
 
-    }
+   }
 
-    public void testEchoSimpleType() throws Exception
-    {
-        SimpleUserType userType = new SimpleUserType(1, 1.0f, "test");
-        SimpleUserType retObj = endpoint.echoSimpleType(userType);
-        assertEquals(userType.getS()+userType.getF()+userType.getI(), retObj.getS()+retObj.getF()+retObj.getI());
-    }
+   public void testEchoSimpleType() throws Exception
+   {
+      SimpleUserType userType = new SimpleUserType(1, 1.0f, "test");
+      SimpleUserType retObj = endpoint.echoSimpleType(userType);
+      assertEquals(userType.getS()+userType.getF()+userType.getI(), retObj.getS()+retObj.getF()+retObj.getI());
+   }
 
-    public void testEchoArrayOfSimpleUserType() throws Exception
-    {
-        SimpleUserType[] array = new SimpleUserType[1];
-        array[0] = new SimpleUserType(1, 1.0f, "test");
-        SimpleUserType[] retObj = endpoint.echoArrayOfSimpleUserType(array);
-        assertEquals(array[0].getS()+array[0].getF()+array[0].getI(), retObj[0].getS()+retObj[0].getF()+retObj[0].getI());
-    }
+   public void testEchoArrayOfSimpleUserType() throws Exception
+   {
+      SimpleUserType[] array = new SimpleUserType[1];
+      array[0] = new SimpleUserType(1, 1.0f, "test");
+      SimpleUserType[] retObj = endpoint.echoArrayOfSimpleUserType(array);
+      assertEquals(array[0].getS()+array[0].getF()+array[0].getI(), retObj[0].getS()+retObj[0].getF()+retObj[0].getI());
+   }
 
-    public void testEchoSynthetic() throws Exception
-    {
-        Synthetic synthetic = new Synthetic("test", new SimpleUserType(1, 1.0f, "test"), "test".getBytes());
-        Synthetic retObj = endpoint.echoSynthetic(synthetic);
-        assertEquals(synthetic.getS()+synthetic.getSut().getS()+synthetic.getSut().getF()+synthetic.getSut().getI(), retObj.getS()+retObj.getSut().getS()+retObj.getSut().getF()+retObj.getSut().getI());
-    }
+   public void testEchoSynthetic() throws Exception
+   {
+      Synthetic synthetic = new Synthetic("test", new SimpleUserType(1, 1.0f, "test"), "test".getBytes());
+      Synthetic retObj = endpoint.echoSynthetic(synthetic);
+      assertEquals(synthetic.getS()+synthetic.getSut().getS()+synthetic.getSut().getF()+synthetic.getSut().getI(), retObj.getS()+retObj.getSut().getS()+retObj.getSut().getF()+retObj.getSut().getI());
+   }
 
-    public void testGetOrder() throws Exception
-    {
-        Order order = endpoint.getOrder(50,1);
-        assertEquals(50,order.getLineItems().length);
-    }
+   public void testGetOrder() throws Exception
+   {
+      Order order = endpoint.getOrder(50,1);
+      assertEquals(50,order.getLineItems().length);
+   }
 }
