@@ -7,11 +7,11 @@
 
   <service-ref>
     <service-ref-name>service/BenchmarkJSE</service-ref-name>
-    <wsdl-override>http://localhost:8080/jaxrpc-benchmark-rpc?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-benchmark-rpc?wsdl</wsdl-override>
   </service-ref>
   <service-ref>
     <service-ref-name>service/BenchmarkEJB</service-ref-name>
-    <wsdl-override>http://localhost:8080/jaxrpc-benchmark-rpc-ejb?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-benchmark-rpc-ejb?wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>
