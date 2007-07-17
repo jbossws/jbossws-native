@@ -19,31 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.webserviceref;
+package org.jboss.test.ws.jaxws.webserviceref;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import org.jboss.logging.Logger;
+import org.jboss.test.ws.jaxws.webserviceref.TestEndpoint;
+import org.jboss.test.ws.jaxws.webserviceref.TestEndpointService;
 
 import javax.naming.InitialContext;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceRef;
 import javax.xml.ws.WebServiceRefs;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.core.ConfigProvider;
-
-//Test on type
 @WebServiceRef(name = "Service1")
 // Test multiple on type
 @WebServiceRefs( { @WebServiceRef(name = "Service2"), @WebServiceRef(name = "Port1", type = TestEndpoint.class) })
 public class TestEndpointClientTwo
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(TestEndpointClientTwo.class);
-   
+   private static final Logger log = Logger.getLogger(org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.class);
+
    // Test on field
    @WebServiceRef(name = "Service3")
    static Service service3;
@@ -66,22 +65,22 @@ public class TestEndpointClientTwo
    public static void main(String[] args) throws Exception
    {
       String testName = args[0];
-      TestEndpointClientTwo client = new TestEndpointClientTwo();
-      Method method = TestEndpointClientTwo.class.getMethod(testName, new Class[] { String.class });
+      org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo client = new org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo();
+      Method method = org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.class.getMethod(testName, new Class[] { String.class });
       try
       {
          String retStr = (String)method.invoke(client, testName);
-         testResult.put(testName, retStr);
+         org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.testResult.put(testName, retStr);
       }
       catch (InvocationTargetException ex)
       {
-         log.error("Invocation error", ex);
-         testResult.put(testName, ex.getTargetException().toString());
+         org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.log.error("Invocation error", ex);
+         org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.testResult.put(testName, ex.getTargetException().toString());
       }
       catch (Exception ex)
       {
-         log.error("Error", ex);
-         testResult.put(testName, ex.toString());
+         org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.log.error("Error", ex);
+         org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.testResult.put(testName, ex.toString());
       }
    }
 
@@ -90,7 +89,7 @@ public class TestEndpointClientTwo
     */
    public String testService1(String reqStr) throws Exception
    {
-      TestEndpointService service = (TestEndpointService)iniCtx.lookup("java:comp/env/Service1");
+      TestEndpointService service = (TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service1");
       TestEndpoint port = service.getTestEndpointPort();
       return port.echo(reqStr);
    }
@@ -100,11 +99,11 @@ public class TestEndpointClientTwo
     */
    public String testService2(String reqStr) throws Exception
    {
-      Service service = (Service)iniCtx.lookup("java:comp/env/Service2");
+      Service service = (Service)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service2");
 
       TestEndpoint port = service.getPort(TestEndpoint.class);
-      verifyConfig((ConfigProvider)port);
-      
+      //verifyConfig((ConfigProvider)port);
+
       return port.echo(reqStr);
    }
 
@@ -113,15 +112,15 @@ public class TestEndpointClientTwo
     */
    public String testService3(String reqStr) throws Exception
    {
-      TestEndpoint port = ((TestEndpointService)service3).getTestEndpointPort();
+      TestEndpoint port = ((TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.service3).getTestEndpointPort();
       String resStr1 = port.echo(reqStr);
-      
-      TestEndpointService service = (TestEndpointService)iniCtx.lookup("java:comp/env/Service3");
+
+      TestEndpointService service = (TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service3");
       port = service.getTestEndpointPort();
-      
+
       String resStr2 = port.echo(reqStr);
-      
-      return resStr1 + resStr2; 
+
+      return resStr1 + resStr2;
    }
 
    /**
@@ -129,79 +128,79 @@ public class TestEndpointClientTwo
     */
    public String testService4(String reqStr) throws Exception
    {
-      TestEndpoint port = service4.getTestEndpointPort();
+      TestEndpoint port = org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.service4.getTestEndpointPort();
       String resStr1 = port.echo(reqStr);
-      verifyConfig((ConfigProvider)port);
-      
-      TestEndpointService service = (TestEndpointService)iniCtx.lookup("java:comp/env/Service4");
+      //verifyConfig((ConfigProvider)port);
+
+      TestEndpointService service = (TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service4");
       port = service.getTestEndpointPort();
-      verifyConfig((ConfigProvider)port);
-      
+      //verifyConfig((ConfigProvider)port);
+
       String resStr2 = port.echo(reqStr);
-      
-      return resStr1 + resStr2; 
+
+      return resStr1 + resStr2;
    }
 
    /**
-    * Customize port-info: port-qname, config-name, config-file 
+    * Customize port-info: port-qname, config-name, config-file
     */
    public String testPort1(String reqStr) throws Exception
    {
-      TestEndpoint port = (TestEndpoint)iniCtx.lookup("java:comp/env/Port1");
-      verifyConfig((ConfigProvider)port);
-      
+      TestEndpoint port = (TestEndpoint)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Port1");
+      //verifyConfig((ConfigProvider)port);
+
       return port.echo(reqStr);
    }
 
    /**
-    * Customize port-info: service-endpoint-interface, config-name, config-file 
+    * Customize port-info: service-endpoint-interface, config-name, config-file
     */
    public String testPort2(String reqStr) throws Exception
    {
-      verifyConfig((ConfigProvider)port2);
-      String resStr1 = port2.echo(reqStr);
+      //verifyConfig((ConfigProvider)port2);
+      String resStr1 = org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.port2.echo(reqStr);
 
-      TestEndpoint port = (TestEndpoint)iniCtx.lookup("java:comp/env/Port2");
-      verifyConfig((ConfigProvider)port);
-      
+      TestEndpoint port = (TestEndpoint)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Port2");
+      //verifyConfig((ConfigProvider)port);
+
       String resStr2 = port.echo(reqStr);
-      
-      return resStr1 + resStr2; 
+
+      return resStr1 + resStr2;
    }
 
    /**
-    * Customize port-info: service-endpoint-interface, port-qname, stub-property 
+    * Customize port-info: service-endpoint-interface, port-qname, stub-property
     */
    public String testPort3(String reqStr) throws Exception
    {
-      String resStr1 = port3.echo(reqStr);
-      
-      BindingProvider bp = (BindingProvider)port3;
+      String resStr1 = org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.port3.echo(reqStr);
+
+      BindingProvider bp = (BindingProvider)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.port3;
       verifyProperties(bp.getRequestContext());
 
-      TestEndpoint port = (TestEndpoint)iniCtx.lookup("java:comp/env/Port3");
+      TestEndpoint port = (TestEndpoint)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Port3");
       String resStr2 = port.echo(reqStr);
-      
-      return resStr1 + resStr2; 
+
+      return resStr1 + resStr2;
    }
 
    private void verifyProperties(Map<String, Object> ctx)
    {
       String username = (String)ctx.get(BindingProvider.USERNAME_PROPERTY);
-      if ("kermit".equals(username) == false) 
+      if ("kermit".equals(username) == false)
          throw new RuntimeException("Invalid username: " + username);
-      
+
       String password = (String)ctx.get(BindingProvider.PASSWORD_PROPERTY);
-      if ("thefrog".equals(password) == false) 
+      if ("thefrog".equals(password) == false)
          throw new RuntimeException("Invalid password: " + password);
    }
 
-   private void verifyConfig(ConfigProvider cp)
+   /*private void verifyConfig(ConfigProvider cp)
    {
       if ("Custom Client".equals(cp.getConfigName()) == false)
          throw new RuntimeException("Invalid config name: " + cp.getConfigName());
 
       if ("META-INF/jbossws-client-config.xml".equals(cp.getConfigFile()) == false)
          throw new RuntimeException("Invalid config file: " + cp.getConfigFile());
-   }
+   } */
 }

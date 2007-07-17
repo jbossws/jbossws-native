@@ -1,5 +1,5 @@
 
-package org.jboss.test.ws.jaxws.samples.webserviceref;
+package org.jboss.test.ws.jaxws.webserviceref;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

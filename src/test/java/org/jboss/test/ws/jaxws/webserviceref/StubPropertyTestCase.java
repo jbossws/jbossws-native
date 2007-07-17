@@ -19,10 +19,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.webserviceref;
+package org.jboss.test.ws.jaxws.webserviceref;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.io.InputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -31,8 +31,6 @@ import javax.xml.ws.Service;
 import junit.framework.Test;
 
 import org.jboss.ejb3.client.ClientLauncher;
-import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
-import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.spi.test.JBossWSTest;
 import org.jboss.wsf.spi.test.JBossWSTestSetup;
 
@@ -51,12 +49,12 @@ public class StubPropertyTestCase extends JBossWSTest
       return new JBossWSTestSetup(StubPropertyTestCase.class, "jaxws-samples-webserviceref-secure.jar, jaxws-samples-webserviceref-secure-client.jar");
    }
 
-   public void testWSDLAccess() throws MalformedURLException
+   public void testWSDLAccess() throws Exception
    {
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
-      WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlURL);
-      assertNotNull(wsdlDefinitions);
+      InputStream inputStream = wsdlURL.openStream();
+      assertNotNull(inputStream);
+      inputStream.close();
    }
 
    public void testDynamicProxy() throws Exception

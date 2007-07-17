@@ -19,13 +19,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.webserviceref;
+package org.jboss.test.ws.jaxws.webserviceref;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceRef;
 
 import org.jboss.logging.Logger;
+import org.jboss.test.ws.jaxws.webserviceref.SecureEndpointService;
 
 public class SecureEndpointClient
 {
@@ -58,13 +59,13 @@ public class SecureEndpointClient
 
       SecureEndpoint port = secureService1.getSecureEndpointPort();
       String retMsg = invokeEndpoint(port, reqMsg, username, password);
-      
+
       port = secureService2.getPort(SecureEndpoint.class);
       retMsg += "|" + invokeEndpoint(port, reqMsg, username, password);
-      
+
       port = securePort1;
       retMsg += "|" + invokeEndpoint(port, reqMsg, username, password);
-      
+
       retStr = retMsg;
    }
 

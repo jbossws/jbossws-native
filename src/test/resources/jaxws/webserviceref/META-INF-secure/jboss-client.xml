@@ -7,10 +7,10 @@
   
   <service-ref>
     <service-ref-name>SecureService1</service-ref-name>
-    <service-impl-class>org.jboss.test.ws.jaxws.samples.webserviceref.SecureEndpointService</service-impl-class>
+    <service-impl-class>org.jboss.test.ws.jaxws.webserviceref.SecureEndpointService</service-impl-class>
     <service-qname>{http://org.jboss.ws/wsref}SecureEndpointService</service-qname>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxws.samples.webserviceref.SecureEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxws.webserviceref.SecureEndpoint</service-endpoint-interface>
       <port-qname>{http://org.jboss.ws/wsref}SecureEndpointPort</port-qname>
       <stub-property>
         <prop-name>javax.xml.ws.security.auth.username</prop-name>
@@ -26,6 +26,7 @@
   
   <service-ref>
     <service-ref-name>SecureService2</service-ref-name>
+    <service-qname>{http://org.jboss.ws/wsref}SecureEndpointService</service-qname>
     <port-component-ref>
       <port-qname>{http://org.jboss.ws/wsref}SecureEndpointPort</port-qname>
       <stub-property>
@@ -42,8 +43,9 @@
   
   <service-ref>
     <service-ref-name>SecurePort1</service-ref-name>
+    <service-qname>{http://org.jboss.ws/wsref}SecureEndpointService</service-qname>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxws.samples.webserviceref.SecureEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxws.webserviceref.SecureEndpoint</service-endpoint-interface>
       <stub-property>
         <prop-name>javax.xml.ws.security.auth.username</prop-name>
         <prop-value>kermit</prop-value>

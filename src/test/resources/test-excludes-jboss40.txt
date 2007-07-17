@@ -2,7 +2,7 @@
 org/jboss/test/ws/jaxrpc/jbws723/**
 
 # benchmark tests
-org/jboss/test/ws/benchmark
+org/jboss/test/ws/benchmark/**
 
 # EJB3/Injection excludes
 org/jboss/test/ws/jaxws/endpoint/**

@@ -10,7 +10,7 @@
   -->
   <service-ref>
     <service-ref-name>Service1</service-ref-name>
-    <service-impl-class>org.jboss.test.ws.jaxws.samples.webserviceref.TestEndpointService</service-impl-class>
+    <service-impl-class>org.jboss.test.ws.jaxws.webserviceref.TestEndpointService</service-impl-class>
     <service-qname>{http://org.jboss.ws/wsref}TestEndpointService</service-qname>
     <wsdl-override>META-INF/wsdl/TestEndpoint.wsdl</wsdl-override>
   </service-ref>
@@ -30,7 +30,7 @@
   -->
   <service-ref>
     <service-ref-name>Service3</service-ref-name>
-    <service-impl-class>org.jboss.test.ws.jaxws.samples.webserviceref.TestEndpointService</service-impl-class>
+    <service-impl-class>org.jboss.test.ws.jaxws.webserviceref.TestEndpointService</service-impl-class>
     <service-qname>{http://org.jboss.ws/wsref}TestEndpointService</service-qname>
     <wsdl-override>META-INF/wsdl/TestEndpoint.wsdl</wsdl-override>
   </service-ref>
@@ -41,7 +41,7 @@
   <service-ref>
     <service-ref-name>Service4</service-ref-name>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxws.samples.webserviceref.TestEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxws.webserviceref.TestEndpoint</service-endpoint-interface>
       <config-name>Custom Client</config-name>
       <config-file>META-INF/jbossws-client-config.xml</config-file>
     </port-component-ref>
@@ -67,7 +67,7 @@
   <service-ref>
     <service-ref-name>Port2</service-ref-name>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxws.samples.webserviceref.TestEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxws.webserviceref.TestEndpoint</service-endpoint-interface>
       <config-name>Custom Client</config-name>
       <config-file>META-INF/jbossws-client-config.xml</config-file>
     </port-component-ref>
@@ -80,7 +80,7 @@
   <service-ref>
     <service-ref-name>Port3</service-ref-name>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxws.samples.webserviceref.TestEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxws.webserviceref.TestEndpoint</service-endpoint-interface>
       <port-qname>{http://org.jboss.ws/wsref}TestEndpointPort</port-qname>
       <stub-property>
         <prop-name>javax.xml.ws.security.auth.username</prop-name>

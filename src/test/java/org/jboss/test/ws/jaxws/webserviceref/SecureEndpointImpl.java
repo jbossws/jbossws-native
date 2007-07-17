@@ -19,21 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.webserviceref;
+package org.jboss.test.ws.jaxws.webserviceref;
 
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
+import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.annotation.WebContext;
 
-@WebService(name = "TestEndpoint", serviceName = "TestEndpointService", targetNamespace = "http://org.jboss.ws/wsref")
+@WebService(name = "SecureEndpoint", serviceName = "SecureEndpointService", targetNamespace = "http://org.jboss.ws/wsref")
+@Stateless(name = "SecureEndpoint")
 @SOAPBinding(style = Style.RPC)
-public class TestEndpointImpl
+
+@WebContext(contextRoot="/jaxws-samples-webserviceref-secure", urlPattern="/*", authMethod = "BASIC", transportGuarantee = "NONE", secureWSDLAccess = false)
+@SecurityDomain("JBossWS")
+@RolesAllowed("friend")
+public class SecureEndpointImpl
 {
    // Provide logging
-   private static Logger log = Logger.getLogger(TestEndpointImpl.class);
+   private static Logger log = Logger.getLogger(SecureEndpointImpl.class);
 
    @WebMethod
    public String echo(String input)

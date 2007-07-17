@@ -44,11 +44,11 @@ public class ServiceRefBinderJAXRPC implements ServiceRefBinder
 {
    // logging support
    private static Logger log = Logger.getLogger(ServiceRefBinderJAXRPC.class);
-
+   
    /**
     * Binds a Service into the callers ENC for every service-ref element
     */
-   public void setupServiceRef(Context encCtx, String encName, AnnotatedElement anElement, UnifiedServiceRefMetaData serviceRef)
+   public void setupServiceRef(Context encCtx, String encName, AnnotatedElement anElement, UnifiedServiceRefMetaData serviceRef, ClassLoader loader)
        throws NamingException
    {
       String externalName = encCtx.getNameInNamespace() + "/" + encName;

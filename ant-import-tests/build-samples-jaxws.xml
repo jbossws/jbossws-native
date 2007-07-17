@@ -194,8 +194,45 @@
 		<include name="wsdl/**"/>
 	  </webinf>
     </war>
-  	  	
-    <!-- Please add alphabetically -->
+
+     <!-- jaxws-webserviceref -->
+     <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-secure.jar">
+        <fileset dir="${tests.output.dir}/classes">
+           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointImpl.class"/>
+        </fileset>
+     </jar>
+     <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-secure-client.jar">
+        <fileset dir="${tests.output.dir}/classes">
+           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointClient.class"/>
+           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointService.class"/>
+           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpoint.class"/>
+        </fileset>
+        <metainf dir="${tests.output.dir}/resources/jaxws/webserviceref/META-INF-secure">
+           <include name="application-client.xml"/>
+           <include name="jboss-client.xml"/>
+        </metainf>
+        <manifest>
+           <attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.SecureEndpointClient"/>
+        </manifest>
+     </jar>
+     <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-override-client.jar">
+        <fileset dir="${tests.output.dir}/classes">
+           <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientTwo.class"/>
+           <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointService.class"/>
+           <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpoint.class"/>
+        </fileset>
+        <metainf dir="${tests.output.dir}/resources/jaxws/webserviceref/META-INF-override">
+           <include name="jbossws-client-config.xml"/>
+           <include name="application-client.xml"/>
+           <include name="jboss-client.xml"/>
+           <include name="wsdl/**"/>
+        </metainf>
+        <manifest>
+           <attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo"/>
+        </manifest>
+     </jar>
+
+     <!-- Please add alphabetically -->
     
   </target>
   
