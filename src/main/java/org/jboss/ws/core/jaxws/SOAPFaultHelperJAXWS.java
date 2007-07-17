@@ -259,9 +259,9 @@ public class SOAPFaultHelperJAXWS
 
       OperationMetaData opMetaData = msgContext.getOperationMetaData();
       Class<? extends Exception> exClass = ex.getClass();
-      if (opMetaData != null && opMetaData.getFault(exClass) != null)
+      if (opMetaData != null && opMetaData.getFaultMetaData(exClass) != null)
       {
-         FaultMetaData faultMetaData = opMetaData.getFault(exClass);
+         FaultMetaData faultMetaData = opMetaData.getFaultMetaData(exClass);
          Object faultBean = faultMetaData.toFaultBean(ex);
 
          Detail detail = soapFault.addDetail();

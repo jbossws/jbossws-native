@@ -181,12 +181,11 @@ public class UnifiedMetaData
     * allows for concurrent read-only access to a <code>UnifiedMetaData</code>
     * instance. This method, however, must be called from a single thread.
     */
-   public void eagerInitialize()
+   public synchronized void eagerInitialize()
    {
       if (eagerInitialized == false)
       {
-         if (log.isDebugEnabled())
-            log.debug("Eagerly initialize the meta data model");
+         log.debug("Eagerly initialize the meta data model");
          for (ServiceMetaData service : services)
          {
             service.eagerInitialize();

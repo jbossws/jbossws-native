@@ -375,7 +375,7 @@ return false;
       return faultMetaData;
    }
 
-   public FaultMetaData getFault(Class javaType)
+   public FaultMetaData getFaultMetaData(Class javaType)
    {
       FaultMetaData faultMetaData = null;
       for (FaultMetaData aux : faults)

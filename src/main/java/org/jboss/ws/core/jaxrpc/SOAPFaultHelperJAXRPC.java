@@ -257,9 +257,9 @@ public class SOAPFaultHelperJAXRPC
          TypeMapping typeMapping = serContext.getTypeMapping();
 
          OperationMetaData opMetaData = msgContext.getOperationMetaData();
-         if (opMetaData != null && opMetaData.getFault(javaType) != null)
+         if (opMetaData != null && opMetaData.getFaultMetaData(javaType) != null)
          {
-            FaultMetaData faultMetaData = opMetaData.getFault(javaType);
+            FaultMetaData faultMetaData = opMetaData.getFaultMetaData(javaType);
             QName xmlName = faultMetaData.getXmlName();
             QName xmlType = faultMetaData.getXmlType();
 
