@@ -56,6 +56,7 @@ import org.jboss.wsf.spi.utils.JavaUtils;
 
 /** Class that converts a XSD Type into Java class
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
+ *  @author mageshbk@jboss.com
  *  @since  Apr 4, 2005
  */
 public class XSDTypeToJava
@@ -202,7 +203,17 @@ public class XSDTypeToJava
             XSSimpleTypeDefinition xssimple = type.getSimpleType();
             QName q = new QName(xssimple.getNamespace(), xssimple.getName());
             QName qn = schemautils.patchXSDQName(q);
-            VAR v = new VAR("_value", typeMapping.getJavaType(qn).getName(), false);
+            Class javaType = typeMapping.getJavaType(qn);
+            String jtype = null;
+            if (javaType.isArray())
+            {
+               jtype = JavaUtils.getSourceName(javaType);
+            }
+            else
+            {
+               jtype = javaType.getName();
+            }
+            VAR v = new VAR("_value", jtype, false);
             vars.add(v);
          }
       }
