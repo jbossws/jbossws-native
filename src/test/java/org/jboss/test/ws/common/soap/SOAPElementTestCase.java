@@ -32,7 +32,7 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * Test the SOAPElement

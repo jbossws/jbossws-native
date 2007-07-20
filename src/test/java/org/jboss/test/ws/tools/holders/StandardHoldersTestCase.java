@@ -40,8 +40,8 @@ import org.jboss.ws.tools.exceptions.JBossWSToolsException;
 import org.jboss.ws.tools.interfaces.WSDLToJavaIntf;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsf.spi.utils.DOMUtils;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Element;
 
 

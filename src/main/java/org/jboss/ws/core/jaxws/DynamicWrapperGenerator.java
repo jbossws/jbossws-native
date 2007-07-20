@@ -47,7 +47,7 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 {
@@ -61,20 +61,20 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       super(loader);
       init(loader);
    }
-   
+
    private void init(ClassLoader loader)
    {
       pool = new ClassPool(true);
       pool.appendClassPath(new LoaderClassPath(loader));
    }
-   
+
    @Override
    public void reset(ClassLoader loader)
    {
       super.reset(loader);
       init(loader);
    }
-   
+
    /**
     * Generates a wrapper type and assigns it to the passed ParameterMetaData
     * object. This routine requires the pmd to contain completed wrappedTypes
@@ -112,7 +112,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
                   clazz, parameter.getType(),
                   parameter.getName(), parameter.getVariable(),
                   parameter.getTypeArguments(),
-                  new boolean[] {parameter.isSwaRef(), parameter.isXop()} 
+                  new boolean[] {parameter.isSwaRef(), parameter.isXop()}
             );
          }
          clazz.stopPruning(!prune);
@@ -135,7 +135,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       if(log.isDebugEnabled()) log.debug("Generating fault bean: " + faultBeanName);
 
       QName xmlType = fmd.getXmlType();
-      
+
       Class exception = fmd.getJavaType();
       try
       {
@@ -152,7 +152,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
                   new QName(property), property, null,
                   new boolean[] {false, false}
             );
-         
+
          clazz.stopPruning(!prune);
          pool.toClass(clazz, loader);
          JavaUtils.clearBlacklists(loader);
@@ -161,7 +161,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       {
          throw new WSException("Could not generate fault wrapper bean: " + faultBeanName, e);
       }
-      
+
       // Add the generated type to the types meta data
       TypesMetaData types = fmd.getOperationMetaData().getEndpointMetaData().getServiceMetaData().getTypesMetaData();
       types.addTypeMapping(new TypeMappingMetaData(types, xmlType, faultBeanName));
@@ -220,7 +220,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       // @XmlAttachmentRef
       if(attachments[0])
       {
-         annotation = JavassistUtils.createAnnotation(XmlAttachmentRef.class, constPool);         
+         annotation = JavassistUtils.createAnnotation(XmlAttachmentRef.class, constPool);
          annotation.markField(field);
       }
       // @XmlMimeType

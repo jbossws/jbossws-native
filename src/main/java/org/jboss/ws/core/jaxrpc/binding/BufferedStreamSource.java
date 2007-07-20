@@ -34,7 +34,7 @@ import java.io.Reader;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * A StreamSource that can be read repeatedly. 
@@ -62,7 +62,7 @@ public class BufferedStreamSource extends StreamSource
          Reader rd = source.getReader();
          if (ins == null && rd != null)
          {
-            char[] auxbuf = new char[1024]; 
+            char[] auxbuf = new char[1024];
             CharArrayWriter wr = new CharArrayWriter(auxbuf.length);
             int r = rd.read(auxbuf);
             while (r > 0)
@@ -107,7 +107,7 @@ public class BufferedStreamSource extends StreamSource
    {
       throw new UnsupportedOperationException();
    }
-   
+
    public String toString()
    {
       String retStr = null;

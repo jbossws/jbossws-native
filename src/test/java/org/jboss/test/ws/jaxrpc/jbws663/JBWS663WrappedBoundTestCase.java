@@ -28,8 +28,8 @@ import junit.framework.Test;
 
 import org.jboss.test.ws.jaxrpc.jbws663.holders.ResponseInfoHolder;
 import org.jboss.test.ws.jaxrpc.jbws663.holders.SubscriptionInfoHolder;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Multiple bindings are not supported

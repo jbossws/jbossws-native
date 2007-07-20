@@ -45,7 +45,7 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * @author Alessio Soldano, <mailto:alessio.soldano@javalinux.it>

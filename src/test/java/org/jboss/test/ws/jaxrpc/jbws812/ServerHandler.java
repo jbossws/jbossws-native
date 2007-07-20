@@ -30,12 +30,12 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 
 public class ServerHandler extends GenericHandler
 {
    private Logger log = Logger.getLogger(ServerHandler.class);
-   
+
    public QName[] getHeaders()
    {
       return new QName[]{};
@@ -52,7 +52,7 @@ public class ServerHandler extends GenericHandler
       catch (SOAPException ex)
       {
          throw new RuntimeException(ex);
-      }      
+      }
       return true;
    }
 
@@ -67,7 +67,7 @@ public class ServerHandler extends GenericHandler
       catch (Exception ex)
       {
          throw new RuntimeException(ex);
-      }      
+      }
       return true;
    }
 }

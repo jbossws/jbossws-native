@@ -34,7 +34,6 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
 import org.jboss.ws.core.jaxws.JAXBContextCache;
-import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
@@ -44,7 +43,7 @@ import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.*;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;

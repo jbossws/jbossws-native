@@ -42,7 +42,7 @@ import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.metadata.acessor.ReflectiveFieldAccessor;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * A Fault component describes a fault that a given operation supports.
@@ -175,7 +175,7 @@ public class FaultMetaData
       }
       return faultBean;
    }
-   
+
    public Class getFaultBean()
    {
       Class tmpFaultBean = faultBean;

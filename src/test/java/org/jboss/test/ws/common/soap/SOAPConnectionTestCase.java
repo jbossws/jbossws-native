@@ -37,8 +37,8 @@ import javax.xml.soap.SOAPPart;
 import junit.framework.Test;
 
 import org.jboss.ws.core.soap.SOAPBodyElementRpc;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /** Test call on a SOAPConnection
  *

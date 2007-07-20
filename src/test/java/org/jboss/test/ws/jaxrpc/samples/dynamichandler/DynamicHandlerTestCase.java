@@ -24,8 +24,6 @@ package org.jboss.test.ws.jaxrpc.samples.dynamichandler;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.HandlerInfo;
@@ -34,10 +32,8 @@ import javax.xml.rpc.handler.HandlerRegistry;
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.ServiceExt;
-import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test dynamic handlers
@@ -75,12 +71,12 @@ public class DynamicHandlerTestCase extends JBossWSTest
       String res = endpoint.testHandlers("InitalMessage");
       assertEquals("InitalMessage|ClientRequest|ServerRequest|ServerResponse|ClientResponse", res);
    }
-   
+
    public void testRemoveClientHandlers() throws Exception
    {
       HandlerRegistry registry = service.getDynamicHandlerRegistry();
       QName portName = new QName(TARGET_NAMESPACE, "HandlerTestServicePort");
-      
+
       List infos = registry.getHandlerChain(portName);
       Iterator it = infos.iterator();
       while (it.hasNext())
@@ -90,7 +86,7 @@ public class DynamicHandlerTestCase extends JBossWSTest
             it.remove();
       }
       registry.setHandlerChain(portName, infos);
-      
+
       String res = endpoint.testHandlers("InitalMessage");
       assertEquals("InitalMessage|ServerRequest|ServerResponse", res);
    }

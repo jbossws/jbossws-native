@@ -35,6 +35,7 @@ import javax.xml.ws.handler.MessageContext;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.integration.UnifiedVirtualFile;
@@ -42,7 +43,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
 
 /**
  * An abstract JAXWS handler that delegates to the WSSecurityDispatcher
@@ -54,16 +54,16 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
 {
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityHandler.class);
-   
+
    private static Set<QName> headers;
-   
+
    static
    {
-      HashSet<QName> set = new HashSet<QName>(); 
+      HashSet<QName> set = new HashSet<QName>();
       set.add(Constants.WSSE_HEADER_QNAME);
       headers = Collections.unmodifiableSet(set);
    }
-   
+
    public Set<QName> getHeaders()
    {
       return headers;

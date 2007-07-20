@@ -28,7 +28,7 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * The WSDL may contain or import XSD schema definitions.

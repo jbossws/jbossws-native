@@ -52,7 +52,7 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * TODO

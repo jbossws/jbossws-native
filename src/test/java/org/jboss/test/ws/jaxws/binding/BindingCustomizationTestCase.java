@@ -22,15 +22,16 @@
 package org.jboss.test.ws.jaxws.binding;
 
 import junit.framework.TestCase;
-import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.BasicEndpoint;
 import org.jboss.ws.core.jaxws.JAXBBindingCustomization;
-
-import static org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import static org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Heiko.Braun@jboss.com
@@ -38,9 +39,19 @@ import java.util.Iterator;
  */
 public class BindingCustomizationTestCase extends TestCase {
 
+   DeploymentModelFactory deploymentModelFactory;
+
+   protected void setUp() throws Exception
+   {
+      super.setUp();
+
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      deploymentModelFactory = spiProvider.getSPI(DeploymentModelFactory.class);
+   }
+
    public void testCustomizationWriteAccess() throws Exception
    {
-      Endpoint endpoint = new BasicEndpoint();
+      Endpoint endpoint = deploymentModelFactory.createEndpoint();
       JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
       jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
       endpoint.addBindingCustomization(jaxbCustomization);
@@ -61,7 +72,7 @@ public class BindingCustomizationTestCase extends TestCase {
 
    public void testCustomizationReadAccess() throws Exception
    {
-      Endpoint endpoint = new BasicEndpoint();
+      Endpoint endpoint = deploymentModelFactory.createEndpoint();
       JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
       jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
       endpoint.addBindingCustomization(jaxbCustomization);

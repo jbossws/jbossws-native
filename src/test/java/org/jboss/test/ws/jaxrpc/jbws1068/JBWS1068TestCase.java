@@ -25,7 +25,7 @@ import java.io.File;
 
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * Cannot handle xsd:import of xml schema

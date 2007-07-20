@@ -30,7 +30,7 @@ import org.jboss.ws.tools.Configuration.JavaToWSDLConfig;
 import org.jboss.ws.tools.Configuration.OperationConfig;
 import org.jboss.ws.tools.Configuration.WSDLToJavaConfig;
 import org.jboss.ws.tools.config.ToolsSchemaConfigReader;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  *  TestCase that tests the parsing of the xml configuration file

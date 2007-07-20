@@ -29,8 +29,8 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * [JBWS-1556] @WebWservice does not work with class isolation

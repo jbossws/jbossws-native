@@ -23,19 +23,19 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
+import org.jboss.wsf.spi.invocation.InvocationContext;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.jboss.wsf.spi.invocation.BasicInvocationContext;
 
 /**
  * Implementation of ServletEndpointContext
  *
  * @author Thomas.Diesler@jboss.org
  */
-public class ServletRequestContext extends BasicInvocationContext
+public class ServletRequestContext extends InvocationContext
 {
    private ServletContext context;
    private HttpServletRequest request;

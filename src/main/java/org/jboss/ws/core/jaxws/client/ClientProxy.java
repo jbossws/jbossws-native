@@ -50,7 +50,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * The dynamic proxy that delegates to the underlying client implementation
@@ -211,15 +211,15 @@ public class ClientProxy implements InvocationHandler
             // Throw unwrapped WebServiceException
             if (cause instanceof WebServiceException)
                throw (WebServiceException)cause;
-            
+
             // Throw wrapped SOAPException
             if (cause instanceof SOAPException)
                throw (SOAPFaultException)ex;
-            
+
             // Throw wrapped RuntimeException
             if (cause instanceof RuntimeException)
                throw (SOAPFaultException)ex;
-            
+
             // Throw all other causes
             throw (Exception)cause;
          }

@@ -35,7 +35,7 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Document;
 
 /**

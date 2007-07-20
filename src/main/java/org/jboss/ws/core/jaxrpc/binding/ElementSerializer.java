@@ -31,7 +31,7 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.BufferedStreamResult;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 

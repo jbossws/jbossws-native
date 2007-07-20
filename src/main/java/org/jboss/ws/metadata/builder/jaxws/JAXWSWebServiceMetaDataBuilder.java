@@ -67,7 +67,7 @@ import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * An abstract annotation meta data builder.

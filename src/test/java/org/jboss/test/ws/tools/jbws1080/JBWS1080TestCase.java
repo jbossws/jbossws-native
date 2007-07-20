@@ -24,7 +24,7 @@ package org.jboss.test.ws.tools.jbws1080;
 import java.io.IOException;
 
 import org.jboss.ws.tools.WSTools;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * 

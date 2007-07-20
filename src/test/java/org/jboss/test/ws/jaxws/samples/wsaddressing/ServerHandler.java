@@ -34,8 +34,8 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * A server side handler for the ws-addressing

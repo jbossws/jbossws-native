@@ -21,12 +21,11 @@
  */
 package org.jboss.test.ws.tools.jbws1725;
 
-import java.io.File;
-
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
-import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
+
+import java.io.File;
 
 /**
  * Test case for http://jira.jboss.com/jira/browse/JBWS-1725

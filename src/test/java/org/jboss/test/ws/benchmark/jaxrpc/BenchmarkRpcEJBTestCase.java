@@ -23,8 +23,8 @@ package org.jboss.test.ws.benchmark.jaxrpc;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;

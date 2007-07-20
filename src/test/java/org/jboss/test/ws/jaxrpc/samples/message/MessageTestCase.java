@@ -46,9 +46,9 @@ import javax.xml.transform.dom.DOMSource;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

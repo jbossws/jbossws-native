@@ -33,7 +33,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 
 import org.jboss.ws.core.utils.MimeUtils;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
@@ -60,7 +60,7 @@ public class ByteArrayContentHandler implements DataContentHandler {
    }
 
    public void writeTo(Object object, String string, OutputStream outputStream) throws IOException {
-            
+
       if(object instanceof byte[])
       {
          outputStream.write((byte[])object);

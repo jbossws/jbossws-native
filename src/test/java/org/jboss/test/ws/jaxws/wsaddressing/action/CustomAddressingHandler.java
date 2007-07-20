@@ -23,16 +23,13 @@ package org.jboss.test.ws.jaxws.wsaddressing.action;
 
 import java.net.URISyntaxException;
 
-import javax.xml.namespace.QName;
-
-import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.jaxws.handler.GenericHandler;
+import org.jboss.ws.core.jaxws.handler.GenericHandler;
 
 /**
  * A client side handler for the ws-addressing
@@ -44,15 +41,15 @@ public class CustomAddressingHandler extends GenericHandler
 {
    // Provide logging
    private static Logger log = Logger.getLogger(CustomAddressingHandler.class);
-     
-	protected boolean handleOutbound(MessageContext msgContext)
+
+   protected boolean handleOutbound(MessageContext msgContext)
    {
       log.info("handleRequest" + this);
       try
       {
          SOAPAddressingBuilder builder = (SOAPAddressingBuilder)SOAPAddressingBuilder.getAddressingBuilder();
-		   SOAPAddressingProperties outProps = (SOAPAddressingProperties)builder.newAddressingProperties();		
-			outProps.setTo(builder.newURI("http://localhost:8080/jaxrpc-addressing-action-rpc/ActionService"));
+         SOAPAddressingProperties outProps = (SOAPAddressingProperties)builder.newAddressingProperties();
+         outProps.setTo(builder.newURI("http://localhost:8080/jaxrpc-addressing-action-rpc/ActionService"));
          outProps.setAction(builder.newURI("urn:wsa-action-bar"));
          msgContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, outProps);
       }

@@ -35,8 +35,8 @@ import javax.xml.soap.SOAPMessage;
 import junit.framework.Test;
 
 import org.jboss.ws.core.soap.SOAPBodyImpl;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 

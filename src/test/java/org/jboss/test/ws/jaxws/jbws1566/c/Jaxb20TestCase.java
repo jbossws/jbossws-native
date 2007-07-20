@@ -10,8 +10,8 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 import org.jboss.test.ws.jaxws.jbws1566.a.*;
 import org.jboss.test.ws.jaxws.jbws1566.b.*;

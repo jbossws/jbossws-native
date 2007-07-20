@@ -32,7 +32,7 @@ import java.io.Writer;
 import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * @author Heiko.Braun@jboss.org
@@ -64,7 +64,7 @@ public class BufferedStreamResult extends StreamResult
    {
       return null;
    }
-   
+
    @Override
    public OutputStream getOutputStream()
    {
@@ -82,7 +82,7 @@ public class BufferedStreamResult extends StreamResult
    {
       throw new UnsupportedOperationException();
    }
-   
+
    public String toString()
    {
       return baos.toString();

@@ -39,9 +39,9 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.JavaToWSDL;
 import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Element;
 
 /**

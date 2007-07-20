@@ -40,9 +40,8 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.tools.cmd.WSConsume;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * [JBWS-771] Use part names that are friendly to .NET
@@ -79,41 +78,41 @@ public class JBWS771TestCase extends JBossWSTest
       String result = port.submit("foo");
       assertEquals("submit-foo", result);
    }
-   
+
    public void testCancel() throws Exception
    {
       String result = port.cancel("foo", "bar");
       assertEquals("cancel-foobar", result);
    }
-   
+
    public void testMessagePartNames() throws Exception
    {
       Definition wsdl = getWSDLDefinition(wsdlURL.toExternalForm());
-      
+
       Message wsdlReqMessage = wsdl.getMessage(new QName(TARGET_NAMESPACE, "IWebsvc_cancel"));
       assertNotNull("Expected part with name 'parameters' in: " + wsdlReqMessage, wsdlReqMessage.getPart("parameters"));
       assertNotNull("Expected part with name 'bar' in: " + wsdlReqMessage, wsdlReqMessage.getPart("bar"));
-      
+
       Message wsdlResMessage = wsdl.getMessage(new QName(TARGET_NAMESPACE, "IWebsvc_cancelResponse"));
       assertNotNull("Expected part with name 'parameters' in: " + wsdlResMessage, wsdlResMessage.getPart("parameters"));
-      
+
       /*
-       <binding name='IWebsvcBinding' type='tns:IWebsvc'>
-        <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
-        <operation name='cancel'>
-         <soap:operation soapAction=''/>
-         <input>
-          <soap:body parts='parameters' use='literal'/>
-          <soap:header message='tns:IWebsvc_cancel' part='bar' use='literal'></soap:header>
-         </input>
-         <output>
-          <soap:body use='literal'/>
-         </output>
-        </operation>
-       */
+      <binding name='IWebsvcBinding' type='tns:IWebsvc'>
+       <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+       <operation name='cancel'>
+        <soap:operation soapAction=''/>
+        <input>
+         <soap:body parts='parameters' use='literal'/>
+         <soap:header message='tns:IWebsvc_cancel' part='bar' use='literal'></soap:header>
+        </input>
+        <output>
+         <soap:body use='literal'/>
+        </output>
+       </operation>
+      */
       Binding wsdlBinding = wsdl.getBinding(new QName(TARGET_NAMESPACE, "IWebsvcBinding"));
       BindingOperation bindingOperation = wsdlBinding.getBindingOperation("cancel", null, null);
-      
+
       boolean foundBody = false;
       boolean foundHeader = false;
       List<ExtensibilityElement> extList = bindingOperation.getBindingInput().getExtensibilityElements();
@@ -135,13 +134,13 @@ public class JBWS771TestCase extends JBossWSTest
       assertTrue("Found soap:body", foundBody);
       assertTrue("Found soap:header", foundHeader);
    }
-   
+
    public void testWSConsume() throws Exception
    {
       System.out.println("[JBWS-1724] wsconsume cannot use part names that are friendly to .NET");
       //WSConsume.main(new String[]{"--output=tests/wsconsume", wsdlURL.toExternalForm()});
    }
-   
+
    private Definition getWSDLDefinition(String wsdlLocation) throws Exception
    {
       WSDLFactory wsdlFactory = WSDLFactory.newInstance();

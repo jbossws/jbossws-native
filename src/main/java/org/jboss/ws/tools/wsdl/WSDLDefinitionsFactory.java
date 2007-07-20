@@ -29,7 +29,7 @@ import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;

@@ -28,7 +28,7 @@ import java.util.Map;
 
 import javax.xml.ws.Endpoint;
 
-import org.jboss.wsf.spi.utils.ServiceLoader;
+import org.jboss.wsf.common.ServiceLoader;
 
 /**
  * An abstract HTTP Server
@@ -36,39 +36,39 @@ import org.jboss.wsf.spi.utils.ServiceLoader;
  * @author Thomas.Diesler@jboss.org
  * @since 07-Jul-2006
  */
-public abstract class HttpServer 
+public abstract class HttpServer
 {
    public static String HTTP_SERVER_PROPERTY = HttpServer.class.getName();
-   
+
    private Map<String, Object> properties = new HashMap<String, Object>();
-   
+
    // Hide constructor
    protected HttpServer ()
    {
    }
-   
-   /** 
+
+   /**
     * Create an instance of an HTTP server. 
     * The discovery algorithm is described in {@link FactoryFinder.find(String,String)}
     */
    public static HttpServer create()
    {
-      HttpServer server = (HttpServer)ServiceLoader.loadService(HTTP_SERVER_PROPERTY, null);
+      HttpServer server = (HttpServer) ServiceLoader.loadService(HTTP_SERVER_PROPERTY, null);
       return server;
    }
-   
+
    /** Start an instance of this HTTP server */
    public abstract void start();
-   
+
    /** Create an HTTP context */
    public abstract HttpContext createContext(String string);
-   
+
    /** Publish an JAXWS endpoint to the HTTP server */
    public abstract void publish(HttpContext context, Endpoint endpoint);
-   
+
    /** Destroys an JAXWS endpoint on the HTTP server */
    public abstract void destroy(HttpContext context, Endpoint endpoint);
-   
+
    public Map<String, Object> getProperties()
    {
       return properties;
@@ -78,12 +78,12 @@ public abstract class HttpServer
    {
       properties = map;
    }
-   
+
    public void setProperty(String key, Object value)
    {
       properties.put(key, value);
    }
-   
+
    public Object getProperty(String key)
    {
       return properties.get(key);

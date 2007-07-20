@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxrpc.jbws1647;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Text Node Preservation For Messages Sent Across The Wire

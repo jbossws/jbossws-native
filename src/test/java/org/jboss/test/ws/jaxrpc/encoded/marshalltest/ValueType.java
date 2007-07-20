@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 public class ValueType
 {
@@ -55,11 +55,11 @@ public class ValueType
    }
 
    public ValueType(BigDecimal myBigDecimal, BigDecimal[] myBigDecimalArray, BigInteger myBigInteger, BigInteger[] myBigIntegerArray, boolean myBoolean,
-         Boolean myBoolean1, Boolean[] myBoolean1Array, boolean[] myBooleanArray, byte myByte, Byte myByte1, byte[] myByteArray,
-         Calendar myCalendar, Calendar[] myCalendarArray, double myDouble, Double myDouble1, Double[] myDouble1Array,
-         double[] myDoubleArray, float myFloat, Float myFloat1, Float[] myFloat1Array, float[] myFloatArray, int myInt, Integer myInt1,
-         Integer[] myInt1Array, int[] myIntArray, long myLong, Long myLong1, Long[] myLong1Array, long[] myLongArray, short myShort,
-         Short myShort1, Short[] myShort1Array, short[] myShortArray, String myString, String[] myStringArray)
+                    Boolean myBoolean1, Boolean[] myBoolean1Array, boolean[] myBooleanArray, byte myByte, Byte myByte1, byte[] myByteArray,
+                    Calendar myCalendar, Calendar[] myCalendarArray, double myDouble, Double myDouble1, Double[] myDouble1Array,
+                    double[] myDoubleArray, float myFloat, Float myFloat1, Float[] myFloat1Array, float[] myFloatArray, int myInt, Integer myInt1,
+                    Integer[] myInt1Array, int[] myIntArray, long myLong, Long myLong1, Long[] myLong1Array, long[] myLongArray, short myShort,
+                    Short myShort1, Short[] myShort1Array, short[] myShortArray, String myString, String[] myStringArray)
    {
       this.myBigDecimal = myBigDecimal;
       this.myBigDecimalArray = myBigDecimalArray;
@@ -447,12 +447,12 @@ public class ValueType
    {
       this.myStringArray = myStringArray;
    }
-   
+
    public boolean equals(Object obj)
    {
       return toString().equals("" + obj);
    }
-   
+
    public String toString()
    {
       StringBuffer buf = new StringBuffer("[");
@@ -476,7 +476,7 @@ public class ValueType
       buf.append(",myFloat=" + myFloat);
       buf.append(",myFloat1=" + myFloat1);
       buf.append(",myFloat1Array=" + (myFloat1Array != null ? Arrays.asList(myFloat1Array) : null));
-      buf.append(",myFloatArray=" + (myFloatArray != null ? Arrays.asList((Object[])JavaUtils.getWrapperValueArray(myFloatArray)) : null));
+      buf.append(",myFloatArray=" + (myFloatArray != null ? Arrays.asList((Object[]) JavaUtils.getWrapperValueArray(myFloatArray)) : null));
       buf.append(",myInt=" + myInt);
       buf.append(",myInt1=" + myInt1);
       buf.append(",myInt1Array=" + (myInt1Array != null ? Arrays.asList(myInt1Array) : null));

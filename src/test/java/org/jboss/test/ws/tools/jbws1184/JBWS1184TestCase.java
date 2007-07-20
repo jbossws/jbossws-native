@@ -26,7 +26,7 @@ import java.io.File;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * JBWS-1184 - Test the use of wrapper jave type for generated source

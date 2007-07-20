@@ -44,7 +44,7 @@ import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * A request/response parameter that a given operation supports.
@@ -121,7 +121,7 @@ public class ParameterMetaData
          return false;
 
       boolean matchTypes;
-      
+
       if (JavaUtils.isRetro14())
       {
          matchTypes = matchTypes(classParameters[index], expectedType, exact, holder);
@@ -131,7 +131,7 @@ public class ParameterMetaData
          java.lang.reflect.Type[] genericParameters = method.getGenericParameterTypes();
          matchTypes = matchTypes(genericParameters[index], expectedType, exact, holder);
       }
-      
+
       if (matchTypes)
       {
          matches.add(index);
@@ -140,7 +140,7 @@ public class ParameterMetaData
 
       return false;
    }
-   
+
    private static boolean matchTypes(java.lang.reflect.Type actualType, Class expectedType, boolean exact, boolean holder)
    {
       if (holder && HolderUtils.isHolderType(actualType) == false)
@@ -164,7 +164,7 @@ public class ParameterMetaData
 
       return matchTypesInternal(valueClass, expectedType, exact);
    }
-   
+
    private static boolean matchTypesInternal(Class valueClass, Class expectedType, boolean exact)
    {
       // FIXME - Why do we need this hack? The method signature should _ALWAYS_ match, else we will get ambiguous or incorrect results
@@ -235,7 +235,7 @@ public class ParameterMetaData
       javaTypeName = typeName;
       javaType = null;
    }
-   
+
    public Class loadWrapperBean()
    {
       Class wrapperBean = null;
@@ -375,7 +375,7 @@ public class ParameterMetaData
          String logmsg = "SOAPArrayCompType: [xmlType=" + xmlType + ",compType=" + compXmlType + "]";
          log.debug((soapArrayCompType == null ? "set" : "reset") + logmsg);
       }
-      
+
       this.soapArrayCompType = compXmlType;
    }
 
@@ -470,7 +470,7 @@ public class ParameterMetaData
             {
                if (epType == EndpointMetaData.Type.JAXRPC)
                   throw new WSException("Autogeneration of wrapper beans not supported with JAXRPC");
-               
+
                new DynamicWrapperGenerator( getClassLoader() ).generate(this);
             }
 
@@ -490,8 +490,8 @@ public class ParameterMetaData
    /**
     * Identify MTOM and SWA:Ref parameter as these require special treatment.
     * This only affects JAX-WS endpoints.
-	 *
-	 * Note: For SEI parameter annotations this happens within the metadata builder. 
+    *
+    * Note: For SEI parameter annotations this happens within the metadata builder.
     * @param epType
     */
    private void initializeAttachmentParameter(Type epType)
@@ -564,10 +564,10 @@ public class ParameterMetaData
       buffer.append("\n xmlName=" + getXmlName());
       buffer.append("\n partName=" + getPartName());
       buffer.append("\n xmlType=" + getXmlType());
-      
+
       if (soapArrayParam)
          buffer.append("\n soapArrayCompType=" + soapArrayCompType);
-      
+
       buffer.append("\n javaType=" + getJavaTypeName());
       buffer.append("\n mode=" + getMode());
       buffer.append("\n inHeader=" + isInHeader());

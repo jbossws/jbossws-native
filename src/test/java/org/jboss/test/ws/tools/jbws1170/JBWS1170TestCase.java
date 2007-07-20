@@ -25,7 +25,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 import org.jboss.ws.tools.WSTools;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * [JBWS-1170] Test elements with illegal characters for Java identifiers

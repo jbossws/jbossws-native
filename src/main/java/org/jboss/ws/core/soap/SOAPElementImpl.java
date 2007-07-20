@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;

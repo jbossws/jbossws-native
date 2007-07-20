@@ -33,7 +33,7 @@ import org.jboss.test.ws.tools.WSToolsTest;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * Test the JAXB marshalling of array types

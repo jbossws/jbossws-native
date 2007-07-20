@@ -29,9 +29,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.spi.tools.WSContractProvider;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * Tests the WSContractProvider API.

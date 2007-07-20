@@ -32,8 +32,8 @@ import org.jboss.test.ws.common.jbossxb.simple.SimpleUserType;
 import org.jboss.ws.Constants;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.JavaToXSD;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

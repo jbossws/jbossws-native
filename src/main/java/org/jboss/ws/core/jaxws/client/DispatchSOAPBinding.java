@@ -51,7 +51,7 @@ import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 
 /**
  * A helper that 
@@ -159,11 +159,11 @@ public class DispatchSOAPBinding extends DispatchBinding
             if (mode == Mode.PAYLOAD)
             {
                SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
-               
+
                SOAPFault soapFault = soapBody.getFault();
                if (soapFault != null)
                   throw new SOAPFaultException(soapFault);
-               
+
                SOAPElement soapElement = soapBody.getBodyElement();
                retObj = new DOMSource(soapElement);
             }

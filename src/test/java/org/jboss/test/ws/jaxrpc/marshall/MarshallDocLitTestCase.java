@@ -31,7 +31,7 @@ import javax.xml.rpc.Service;
 import junit.framework.Test;
 
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test standard JAX-RPC types.

@@ -69,7 +69,7 @@ import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.ws.tools.interfaces.JavaToXSDIntf;
 import org.jboss.ws.tools.interfaces.SchemaCreatorIntf;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  *  Java To WSDL Helper which uses UnifiedMetaData
@@ -284,7 +284,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
    }
 
    private void buildParamMapping(ServiceEndpointMethodMapping methodMapping, String interfaceName, OperationMetaData operation,
-         String name, String type, String mode, boolean header, int position)
+                                  String name, String type, String mode, boolean header, int position)
    {
       MethodParamPartsMapping paramMapping = new MethodParamPartsMapping(methodMapping);
       paramMapping.setParamPosition(position);

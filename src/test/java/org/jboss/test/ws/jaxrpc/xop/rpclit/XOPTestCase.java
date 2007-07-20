@@ -29,7 +29,7 @@ import javax.xml.rpc.Service;
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  *

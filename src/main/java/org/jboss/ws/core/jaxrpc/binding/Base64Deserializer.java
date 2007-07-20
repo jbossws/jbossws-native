@@ -35,7 +35,7 @@ import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPUnmarshallerImpl;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.jboss.xb.binding.sunday.xop.XOPUnmarshaller;
 import org.w3c.dom.Element;

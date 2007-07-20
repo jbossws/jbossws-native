@@ -24,8 +24,8 @@ package org.jboss.test.ws.jaxws.webserviceref;
 import junit.framework.Test;
 
 import org.jboss.ejb3.client.ClientLauncher;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test @WebServiceRef overrides in jboss-client.xml

@@ -43,8 +43,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.utils.IOUtils;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.IOUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;

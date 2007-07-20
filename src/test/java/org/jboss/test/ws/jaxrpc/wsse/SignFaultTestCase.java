@@ -25,7 +25,7 @@ package org.jboss.test.ws.jaxrpc.wsse;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Add support for fault signing and encryption

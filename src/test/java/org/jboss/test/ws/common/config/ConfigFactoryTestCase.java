@@ -32,7 +32,7 @@ import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * Test parsing of the JBossWS config

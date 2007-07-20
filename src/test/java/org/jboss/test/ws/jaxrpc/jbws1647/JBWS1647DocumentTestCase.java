@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1647;
 
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 import junit.framework.Test;
 

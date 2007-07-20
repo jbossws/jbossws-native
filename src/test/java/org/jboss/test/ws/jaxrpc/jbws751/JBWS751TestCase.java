@@ -24,7 +24,7 @@ package org.jboss.test.ws.jaxrpc.jbws751;
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /** 
  * [JBWS-751] Multiple schema imports with the same namespace

@@ -20,9 +20,9 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.DOMUtils;
 
 import junit.framework.Test;
 

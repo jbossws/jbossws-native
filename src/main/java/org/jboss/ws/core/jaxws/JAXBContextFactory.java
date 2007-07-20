@@ -22,7 +22,7 @@
 package org.jboss.ws.core.jaxws;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.utils.ServiceLoader;
+import org.jboss.wsf.common.ServiceLoader;
 
 import javax.xml.bind.JAXBContext;
 
@@ -41,7 +41,7 @@ public abstract class JAXBContextFactory {
    public abstract JAXBContext createContext(Class clazz) throws WSException;
 
    /**
-    * Retrieve JAXBContextFactory instance through the {@link ServiceLoader}.
+    * Retrieve JAXBContextFactory instance through the {@link org.jboss.wsf.common.ServiceLoader}.
     * Defaults to {@link CustomizableJAXBContextFactory}
     * @return JAXBContextFactory
     */

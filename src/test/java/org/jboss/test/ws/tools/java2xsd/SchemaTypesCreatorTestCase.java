@@ -31,8 +31,8 @@ import org.jboss.test.ws.tools.sei.Derived;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSTypeDefinition;
 import org.jboss.ws.tools.schema.SchemaTypeCreator;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

@@ -41,8 +41,8 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.Configuration.OperationConfig;
 import org.jboss.ws.tools.metadata.ToolsUnifiedMetaDataBuilder;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsf.spi.utils.DOMUtils;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

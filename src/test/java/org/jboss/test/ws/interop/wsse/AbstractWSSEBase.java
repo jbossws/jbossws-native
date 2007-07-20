@@ -22,8 +22,8 @@
 package org.jboss.test.ws.interop.wsse;
 
 import org.jboss.ws.core.StubExt;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestHelper;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestHelper;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;

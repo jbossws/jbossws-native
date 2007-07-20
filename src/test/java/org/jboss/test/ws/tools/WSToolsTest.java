@@ -46,9 +46,9 @@ import org.jboss.ws.tools.WSToolsConstants;
 import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

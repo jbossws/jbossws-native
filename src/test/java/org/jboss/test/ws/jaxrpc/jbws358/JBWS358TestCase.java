@@ -26,7 +26,7 @@ import java.rmi.RemoteException;
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 
 

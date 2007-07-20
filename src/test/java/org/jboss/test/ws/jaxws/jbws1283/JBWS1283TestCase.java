@@ -22,9 +22,9 @@
 package org.jboss.test.ws.jaxws.jbws1283;
 
 import junit.framework.Test;
-import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.AttachmentPart;

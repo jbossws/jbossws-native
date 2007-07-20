@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.soap.SOAPBodyElement;
 
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 
 /**
  * An abstract implemenation of the SOAPBodyElement
@@ -48,7 +48,7 @@ public class SOAPBodyElementMessage extends SOAPElementImpl implements SOAPBodyE
    {
       super(element);
    }
-   
+
    public void writeElement(Writer writer) {
       try
       {

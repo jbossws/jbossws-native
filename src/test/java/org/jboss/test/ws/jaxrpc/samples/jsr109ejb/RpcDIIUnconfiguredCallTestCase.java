@@ -33,8 +33,8 @@ import junit.framework.Test;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test the Dynamic Invocation Interface (DII) on the Call

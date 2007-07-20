@@ -64,10 +64,9 @@ import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.interfaces.WebservicesXMLCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsf.spi.utils.DOMUtils;
-import org.jboss.wsf.spi.utils.DOMWriter;
-import org.jboss.wsf.spi.utils.IOUtils;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.*;
 
 /**
  *  Helper class used by the cmd line tool "jbossws"
@@ -211,7 +210,7 @@ public class ToolsHelper
    }
 
    private void createWrapperType(ParameterMetaData parameter, String name, String packageName, Map<QName, JavaXmlTypeMapping> mappingIndex, ClassLoader classLoader,
-         String outDir) throws IOException
+                                  String outDir) throws IOException
    {
       List<WrappedParameter> wrappedParameters = parameter.getWrappedParameters();
 
@@ -311,7 +310,7 @@ public class ToolsHelper
             MappingFileGenerator mgf = new MappingFileGenerator(wsdl, new LiteralTypeMapping());
             mgf.setPackageName(getPackageName(wsdl, glc));
             mgf.setServiceName(wsdl.getServices()[0].getName().getLocalPart());
-            mgf.setParameterStyle(w2jc.parameterStyle);            
+            mgf.setParameterStyle(w2jc.parameterStyle);
 
             JavaWsdlMapping jwm = mgf.generate();
             Writer writer = IOUtils.getCharsetFileWriter(new File(outDir + "/" + w2jc.mappingFileName), Constants.DEFAULT_XML_CHARSET);
@@ -342,10 +341,10 @@ public class ToolsHelper
             WSDLService wsdlService = wsdl.getService(serviceName);
             String portName = wsdlService.getEndpoints()[0].getName().getLocalPart();
             wscr.setPortName(portName);
-            
+
             String wsdlShortName = wsdlURL.getPath();
             wsdlShortName = wsdlShortName.substring(wsdlShortName.lastIndexOf("/"));
-            
+
             if (w2jc.servletLink != null)
             {
                wscr.setMappingFile("WEB-INF/" + w2jc.mappingFileName);

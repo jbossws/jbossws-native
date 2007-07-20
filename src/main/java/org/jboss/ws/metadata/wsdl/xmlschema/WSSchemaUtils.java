@@ -48,7 +48,7 @@ import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 import org.jboss.xb.binding.NamespaceRegistry;
 
 /**

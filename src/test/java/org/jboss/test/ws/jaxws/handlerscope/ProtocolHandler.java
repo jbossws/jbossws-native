@@ -28,7 +28,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
+import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 
 public class ProtocolHandler extends GenericSOAPHandler
 {
@@ -37,7 +37,7 @@ public class ProtocolHandler extends GenericSOAPHandler
    {
       return appendHandlerName(msgContext);
    }
-   
+
    @Override
    public boolean handleInbound(MessageContext msgContext)
    {
@@ -52,10 +52,10 @@ public class ProtocolHandler extends GenericSOAPHandler
          SOAPElement soapElement = (SOAPElement)soapMessage.getSOAPBody().getChildElements().next();
          soapElement = (SOAPElement)soapElement.getChildElements().next();
          String value = soapElement.getValue();
-         
+
          String handlerName = getHandlerName();
          soapElement.setValue(value + ":" + handlerName);
-         
+
          return true;
       }
       catch (SOAPException ex)

@@ -38,8 +38,8 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * Test the SOAPFault
@@ -50,19 +50,19 @@ import org.jboss.wsf.spi.utils.DOMUtils;
  */
 public class SOAPFaultTestCase extends JBossWSTest
 {
-   private String envStr = 
-      "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + 
-      " <env:Header/>" + 
-      " <env:Body>" + 
-      "  <env:Fault>" + 
-      "   <faultcode>env:Client</faultcode>" + 
-      "   <faultstring>Some fault message</faultstring>" + 
-      "   <faultactor>Some fault actor</faultactor>" + 
-      "   <detail>" + 
-      "     <ns1:name xmlns:ns1='http://somens'>Kermit</ns1:name>" + 
-      "   </detail>" + 
-      "  </env:Fault>" + 
-      " </env:Body>" + 
+   private String envStr =
+      "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
+      " <env:Header/>" +
+      " <env:Body>" +
+      "  <env:Fault>" +
+      "   <faultcode>env:Client</faultcode>" +
+      "   <faultstring>Some fault message</faultstring>" +
+      "   <faultactor>Some fault actor</faultactor>" +
+      "   <detail>" +
+      "     <ns1:name xmlns:ns1='http://somens'>Kermit</ns1:name>" +
+      "   </detail>" +
+      "  </env:Fault>" +
+      " </env:Body>" +
       "</env:Envelope>";
 
    public void testExceptionToFault() throws Exception

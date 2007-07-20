@@ -44,7 +44,7 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

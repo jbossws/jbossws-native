@@ -30,7 +30,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 
 /**
  * Test namespace differences at service and portType levels

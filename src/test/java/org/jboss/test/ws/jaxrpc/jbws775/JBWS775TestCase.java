@@ -33,9 +33,9 @@ import javax.xml.soap.SOAPMessage;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.DOMWriter;
 
 /**
  * ComplexType cannot be constructed from attributes
@@ -58,55 +58,55 @@ public class JBWS775TestCase extends JBossWSTest
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/DocumentTranslator");
       DocumentTranslator port = (DocumentTranslator)service.getPort(DocumentTranslator.class);
-      
+
       TDocumentHead tDocHead = new TDocumentHead("title", "en");
       TDocumentBody tDocBody = new TDocumentBody(new String[] {"hi", "bye"});
       TDocument tDocReq = new TDocument(tDocHead, tDocBody);
       TTranslationRequest tReq = new TTranslationRequest("es", tDocReq);
-      
+
       TDocument tDocRes = port.translate(tReq);
       assertEquals("en", tDocRes.getHead().getLanguage());
       assertEquals("title", tDocRes.getHead().getTitle());
       assertEquals("hi", tDocRes.getBody().getParagraph()[0]);
       assertEquals("bye", tDocRes.getBody().getParagraph()[1]);
    }
-   
+
    public void testSAAJAccess() throws Exception
    {
-      String reqStr = 
+      String reqStr =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
-         " <env:Body>" + 
-         "  <sns:translationRequest targetLanguage='es' xmlns:sns='http://example.com/translator/types' xmlns:vendor='http://jbpm.org/bpel'>" + 
-         "   <sns:document>" + 
-         "    <head language='en' title='title'/>" + 
-         "    <body>" + 
-         "     <paragraph>hi</paragraph>" + 
-         "     <paragraph>bye</paragraph>" + 
-         "    </body>" + 
-         "   </sns:document>" + 
-         "  </sns:translationRequest>" + 
-         " </env:Body>" + 
+         " <env:Body>" +
+         "  <sns:translationRequest targetLanguage='es' xmlns:sns='http://example.com/translator/types' xmlns:vendor='http://jbpm.org/bpel'>" +
+         "   <sns:document>" +
+         "    <head language='en' title='title'/>" +
+         "    <body>" +
+         "     <paragraph>hi</paragraph>" +
+         "     <paragraph>bye</paragraph>" +
+         "    </body>" +
+         "   </sns:document>" +
+         "  </sns:translationRequest>" +
+         " </env:Body>" +
          "</env:Envelope>";
 
-      String resStr = 
+      String resStr =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
-          "<env:Header/>" + 
-          "<env:Body>" + 
-           "<ns1:document xmlns:ns1='http://example.com/translator/types' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
-            "<head language='en' title='title'/>" + 
-            "<body>" + 
-             "<paragraph>hi</paragraph>" + 
-             "<paragraph>bye</paragraph>" + 
-            "</body>" + 
-           "</ns1:document>" + 
-          "</env:Body>" + 
+          "<env:Header/>" +
+          "<env:Body>" +
+           "<ns1:document xmlns:ns1='http://example.com/translator/types' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
+            "<head language='en' title='title'/>" +
+            "<body>" +
+             "<paragraph>hi</paragraph>" +
+             "<paragraph>bye</paragraph>" +
+            "</body>" +
+           "</ns1:document>" +
+          "</env:Body>" +
          "</env:Envelope>";
 
       SOAPMessage reqMsg = MessageFactory.newInstance().createMessage(null, new ByteArrayInputStream(reqStr.getBytes()));
       SOAPConnection con = SOAPConnectionFactory.newInstance().createConnection();
       SOAPMessage resMsg = con.call(reqMsg, "http://" + getServerHost() + ":8080/jaxrpc-jbws775/document");
       SOAPEnvelope resEnv = resMsg.getSOAPPart().getEnvelope();
-      
+
       assertEquals(resStr, DOMWriter.printNode(resEnv, false));
    }
 }

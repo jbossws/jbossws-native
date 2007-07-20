@@ -54,7 +54,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSParticle;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
 import org.jboss.ws.tools.JavaToXSD;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.xb.binding.sunday.unmarshalling.LSInputAdaptor;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBindingResolver;

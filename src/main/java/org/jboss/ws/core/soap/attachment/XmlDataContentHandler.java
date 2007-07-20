@@ -26,14 +26,13 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Reader;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataContentHandler;
 import javax.activation.DataSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * <code>XmlDataContentHandler</code> is a JAF content handler that provides

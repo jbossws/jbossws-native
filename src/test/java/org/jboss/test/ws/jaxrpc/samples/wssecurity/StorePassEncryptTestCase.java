@@ -32,8 +32,8 @@ import junit.framework.Test;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * This test simulates the usage of a jboss-ws-security keystore and truststore use cases

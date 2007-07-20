@@ -35,9 +35,9 @@ import javax.xml.soap.SOAPMessage;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.DOMWriter;
 
 /**
  * Deploying a war that also contains normal servlets the web.xml is modified as if they are all endpoints

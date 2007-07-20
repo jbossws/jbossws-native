@@ -28,8 +28,8 @@ import javax.xml.rpc.Call;
 import junit.framework.Test;
 
 import org.jboss.test.ws.jaxrpc.samples.wsbpel.JbpmBpelTestSetup;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test business process behavior based on web services.

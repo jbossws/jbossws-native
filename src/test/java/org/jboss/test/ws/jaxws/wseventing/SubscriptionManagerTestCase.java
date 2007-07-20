@@ -35,8 +35,8 @@ import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.jboss.ws.extensions.eventing.mgmt.Filter;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionTicket;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

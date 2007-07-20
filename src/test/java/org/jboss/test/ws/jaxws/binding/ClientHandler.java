@@ -29,7 +29,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-import org.jboss.wsf.spi.jaxws.handler.GenericSOAPHandler;
+import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 
 /**
  * A client side handler
@@ -46,12 +46,12 @@ public class ClientHandler extends GenericSOAPHandler
          SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
          SOAPEnvelope soapEnvelope = (SOAPEnvelope)soapMessage.getSOAPPart().getEnvelope();
          String nsURI = soapEnvelope.getNamespaceURI();
-         
+
          SOAPElement soapElement = (SOAPElement)soapMessage.getSOAPBody().getChildElements().next();
          soapElement = (SOAPElement)soapElement.getChildElements().next();
          String value = soapElement.getValue();
          soapElement.setValue(value + ":" + nsURI);
-         
+
          return true;
       }
       catch (SOAPException ex)

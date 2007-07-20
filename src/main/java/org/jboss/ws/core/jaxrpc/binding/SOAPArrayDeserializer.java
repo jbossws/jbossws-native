@@ -41,8 +41,8 @@ import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.wsf.spi.utils.DOMUtils;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

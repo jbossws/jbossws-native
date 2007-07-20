@@ -34,7 +34,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * @author Alessio Soldano, <mailto:alessio.soldano@javalinux.it>

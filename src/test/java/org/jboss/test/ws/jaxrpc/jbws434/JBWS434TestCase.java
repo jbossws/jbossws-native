@@ -28,13 +28,12 @@ import java.util.Iterator;
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPFactory;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 

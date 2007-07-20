@@ -28,7 +28,7 @@ import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.EndpointReferenceImpl;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

@@ -69,7 +69,7 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /** Provides support for the dynamic invocation of a service endpoint.
  * The javax.xml.rpc.Service interface acts as a factory for the creation of Call instances.
@@ -678,7 +678,7 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       String[] roles = handlerChain.getRoles();
       if (roles != null)
          Collections.addAll(set, roles);
-      
+
       return set;
    }
 

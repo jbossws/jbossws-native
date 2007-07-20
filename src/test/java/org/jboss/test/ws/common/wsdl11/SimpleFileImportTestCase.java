@@ -31,7 +31,7 @@ import javax.xml.rpc.ServiceFactory;
 
 import org.jboss.net.protocol.URLStreamHandlerFactory;
 import org.jboss.ws.tools.wsdl.WSDL11DefinitionFactory;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * Test a wsdl import functionality.

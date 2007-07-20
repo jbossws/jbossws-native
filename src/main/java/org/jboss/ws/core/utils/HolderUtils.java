@@ -86,7 +86,7 @@ import javax.xml.rpc.holders.ShortWrapperHolder;
 import javax.xml.rpc.holders.StringHolder;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * HolderUtils provides static utility functions for both JAX-RPC
@@ -320,9 +320,9 @@ public class HolderUtils
    {
       // For some reason the JDK 4 bytecode verifier trips up on this function if you use the ternary operator
       // The only difference between it and the working form here is the use of a goto instruction. JDK bug perhaps?
-      if (holder instanceof ParameterizedType) 
+      if (holder instanceof ParameterizedType)
         return ((ParameterizedType)holder).getActualTypeArguments()[0];
-     
+
       return Object.class;
    }
 

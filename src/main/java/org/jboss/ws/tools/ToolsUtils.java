@@ -46,7 +46,7 @@ import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * Util class for the JBossWS Tools project

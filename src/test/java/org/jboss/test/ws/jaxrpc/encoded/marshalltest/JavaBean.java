@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 public class JavaBean
 {
@@ -55,10 +55,10 @@ public class JavaBean
    }
 
    public JavaBean(BigDecimal myBigDecimal, BigDecimal[] myBigDecimalArray, BigInteger myBigInteger, BigInteger[] myBigIntegerArray, boolean myBoolean,
-         Boolean myBoolean1, Boolean[] myBoolean1Array, boolean[] myBooleanArray, byte myByte, Byte myByte1, byte[] myByteArray, Calendar myCalendar,
-         Calendar[] myCalendarArray, double myDouble, Double myDouble1, Double[] myDouble1Array, double[] myDoubleArray, float myFloat, Float myFloat1,
-         Float[] myFloat1Array, float[] myFloatArray, int myInt, Integer myInt1, Integer[] myInt1Array, int[] myIntArray, long myLong, Long myLong1,
-         Long[] myLong1Array, long[] myLongArray, short myShort, Short myShort1, Short[] myShort1Array, short[] myShortArray, String myString, String[] myStringArray)
+                   Boolean myBoolean1, Boolean[] myBoolean1Array, boolean[] myBooleanArray, byte myByte, Byte myByte1, byte[] myByteArray, Calendar myCalendar,
+                   Calendar[] myCalendarArray, double myDouble, Double myDouble1, Double[] myDouble1Array, double[] myDoubleArray, float myFloat, Float myFloat1,
+                   Float[] myFloat1Array, float[] myFloatArray, int myInt, Integer myInt1, Integer[] myInt1Array, int[] myIntArray, long myLong, Long myLong1,
+                   Long[] myLong1Array, long[] myLongArray, short myShort, Short myShort1, Short[] myShort1Array, short[] myShortArray, String myString, String[] myStringArray)
    {
       this.myBigDecimal = myBigDecimal;
       this.myBigDecimalArray = myBigDecimalArray;
@@ -483,7 +483,7 @@ public class JavaBean
       buf.append(",myLong=" + myLong);
       buf.append(",myLong1=" + myLong1);
       buf.append(",myLong1Array=" + (myLong1Array != null ? Arrays.asList(myLong1Array) : null));
-      buf.append(",myLongArray=" + (myLongArray != null ? Arrays.asList((Object[])JavaUtils.getWrapperValueArray(myLongArray)) : null));
+      buf.append(",myLongArray=" + (myLongArray != null ? Arrays.asList((Object[]) JavaUtils.getWrapperValueArray(myLongArray)) : null));
       buf.append(",myShort=" + myShort);
       buf.append(",myShort1=" + myShort1);
       buf.append(",myShort1Array=" + (myShort1Array != null ? Arrays.asList(myShort1Array) : null));

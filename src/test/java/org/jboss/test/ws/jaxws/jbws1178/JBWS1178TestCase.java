@@ -34,9 +34,9 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.ObjectNameFactory;
 
 /**
  * [JBWS-1178] Multiple virtual host and soap:address problem
@@ -47,14 +47,14 @@ import org.jboss.wsf.spi.utils.ObjectNameFactory;
  */
 public class JBWS1178TestCase extends JBossWSTest
 {
-   
+
    public static Test suite()
    {
       TestSetup testSetup = new JBossWSTestSetup(JBWS1178TestCase.class, "jaxws-jbws1178.war")
       {
          private final ObjectName objectName = ObjectNameFactory.create("jboss.ws:service=ServerConfig");
          private String webServiceHost;
-         
+
          public void setUp() throws Exception
          {
             // Setting the WebServiceHost to an empty string, causes the request host to be used.  
@@ -73,19 +73,19 @@ public class JBWS1178TestCase extends JBossWSTest
       return testSetup;
    }
 
-   
+
    public void testHostAddress() throws Exception
    {
       InetAddress inetAddr = InetAddress.getByName(getServerHost());
       URL wsdlURL = new URL("http://" + inetAddr.getHostAddress() + ":8080/jaxws-jbws1178/testpattern?wsdl");
-      
+
       ServiceFactory factory = ServiceFactory.newInstance();
       QName serviceName = new QName("http://org.jboss.ws/jbws1178", "TestEndpointService");
       QName portName = new QName("http://org.jboss.ws/jbws1178", "TestEndpointPort");
       Service service = factory.createService(wsdlURL, serviceName);
       CallImpl call = (CallImpl)service.createCall(portName);
       URL epURL = new URL(call.getEndpointMetaData().getEndpointAddress());
-      
+
       assertEquals(wsdlURL.getHost(), epURL.getHost());
    }
 
@@ -93,14 +93,14 @@ public class JBWS1178TestCase extends JBossWSTest
    {
       InetAddress inetAddr = InetAddress.getByName(getServerHost());
       URL wsdlURL = new URL("http://" + inetAddr.getHostName() + ":8080/jaxws-jbws1178/testpattern?wsdl");
-      
+
       ServiceFactory factory = ServiceFactory.newInstance();
       QName serviceName = new QName("http://org.jboss.ws/jbws1178", "TestEndpointService");
       QName portName = new QName("http://org.jboss.ws/jbws1178", "TestEndpointPort");
       Service service = factory.createService(wsdlURL, serviceName);
       CallImpl call = (CallImpl)service.createCall(portName);
       URL epURL = new URL(call.getEndpointMetaData().getEndpointAddress());
-      
+
       assertEquals(wsdlURL.getHost(), epURL.getHost());
    }
 }

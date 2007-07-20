@@ -33,8 +33,8 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * Test the SOAPHeaderElement
@@ -94,7 +94,7 @@ public class SOAPHeaderElementTestCase extends JBossWSTest
       assertTrue(shElement.getMustUnderstand());
       assertEquals("SomeOtherValue", shElement.getValue());
    }
-   
+
    /** Test access to the mustUnderstand attribute
     */
    public void testSetMustUnderstand() throws Exception
@@ -116,11 +116,11 @@ public class SOAPHeaderElementTestCase extends JBossWSTest
       SOAPHeaderElement soapHeaderElement = soapHeader.addHeaderElement(name);
       soapHeaderElement.setMustUnderstand(true);
       soapHeaderElement.addTextNode("SomeOtherValue");
-      
+
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       soapMessage.writeTo(baos);
       String wasEnv = new String(baos.toByteArray());
-      
+
       assertEquals(DOMUtils.parse(expEnv), DOMUtils.parse(wasEnv));
    }
 }

@@ -33,7 +33,7 @@ import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPMarshallerImpl;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.jboss.xb.binding.sunday.xop.XOPMarshaller;

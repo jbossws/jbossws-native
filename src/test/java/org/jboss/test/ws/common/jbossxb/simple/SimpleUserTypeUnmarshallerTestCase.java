@@ -31,7 +31,7 @@ import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * Test the JAXB unmarshalling of a SimpleUserType
@@ -49,15 +49,15 @@ public class SimpleUserTypeUnmarshallerTestCase extends WSToolsTest
       QName xmlType = new QName(TARGET_NAMESPACE, "SimpleUserType", "ns1");
       String xsdSchema = generateSchema(xmlType, SimpleUserType.class);
 
-      String exp = 
-      "<schema targetNamespace='http://org.jboss.ws/types' " + SCHEMA_NAMESPACES + " xmlns:tns='http://org.jboss.ws/types'>" + 
-      " <complexType name='SimpleUserType'>" + 
-      "  <sequence>" + 
-      "   <element name='a' type='int'/>" + 
-      "   <element name='b' type='int'/>" + 
-      "   <element name='d' nillable='true' type='dateTime'/>" + 
-      "  </sequence>" + 
-      " </complexType>" + 
+      String exp =
+      "<schema targetNamespace='http://org.jboss.ws/types' " + SCHEMA_NAMESPACES + " xmlns:tns='http://org.jboss.ws/types'>" +
+      " <complexType name='SimpleUserType'>" +
+      "  <sequence>" +
+      "   <element name='a' type='int'/>" +
+      "   <element name='b' type='int'/>" +
+      "   <element name='d' nillable='true' type='dateTime'/>" +
+      "  </sequence>" +
+      " </complexType>" +
       "</schema>";
 
       assertEquals(DOMUtils.parse(exp), DOMUtils.parse(xsdSchema));
@@ -77,11 +77,11 @@ public class SimpleUserTypeUnmarshallerTestCase extends WSToolsTest
       unmarshaller.setProperty(JBossXBConstants.JBXB_TYPE_QNAME, xmlType);
       unmarshaller.setProperty(JBossXBConstants.JBXB_JAVA_MAPPING, getJavaWSDLMapping());
 
-      String xml = 
-         "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
-         " <a>0</a>" + 
-         " <b>0</b>" + 
-         " <d xsi:nil='1'/>" + 
+      String xml =
+         "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
+         " <a>0</a>" +
+         " <b>0</b>" +
+         " <d xsi:nil='1'/>" +
          "</ns1:SimpleUser>";
 
       obj = (SimpleUserType)unmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes()));
@@ -105,11 +105,11 @@ public class SimpleUserTypeUnmarshallerTestCase extends WSToolsTest
       unmarshaller.setProperty(JBossXBConstants.JBXB_TYPE_QNAME, xmlType);
       unmarshaller.setProperty(JBossXBConstants.JBXB_JAVA_MAPPING, getJavaWSDLMapping());
 
-      String xml = 
-         "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
-         " <a>0</a>" + 
-         " <b>0</b>" + 
-         " <d xsi:nil='1'/>" + 
+      String xml =
+         "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
+         " <a>0</a>" +
+         " <b>0</b>" +
+         " <d xsi:nil='1'/>" +
          "</ns1:SimpleUser>";
 
       obj = (SimpleUserType)unmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes()));

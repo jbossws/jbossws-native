@@ -64,7 +64,7 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 

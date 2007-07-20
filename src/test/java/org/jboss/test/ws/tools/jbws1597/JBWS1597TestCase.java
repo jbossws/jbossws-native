@@ -24,7 +24,7 @@ package org.jboss.test.ws.tools.jbws1597;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;

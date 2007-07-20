@@ -77,8 +77,8 @@ import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumIntegerHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumLongHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumShortHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumStringHolder;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test soap encoded parameters

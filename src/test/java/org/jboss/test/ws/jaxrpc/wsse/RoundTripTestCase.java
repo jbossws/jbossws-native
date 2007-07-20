@@ -48,8 +48,8 @@ import org.jboss.ws.extensions.security.Target;
 import org.jboss.ws.extensions.security.TimestampOperation;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.WsuIdTarget;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

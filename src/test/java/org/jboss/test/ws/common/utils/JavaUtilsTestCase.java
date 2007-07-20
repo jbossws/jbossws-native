@@ -22,8 +22,8 @@
 package org.jboss.test.ws.common.utils;
 
 import org.jboss.test.ws.tools.jbws_161.custom.HelloObj;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  * Test the JavaUtils
@@ -47,7 +47,7 @@ public class JavaUtilsTestCase extends JBossWSTest
       Integer[][] params = (Integer[][])JavaUtils.getWrapperValueArray(primParams);
       assertNotNull("Unexpected null", params);
       assertEquals(primParams[0], (int[])JavaUtils.getPrimitiveValueArray(params[0]));
-      assertEquals(primParams[1], (int[])JavaUtils.getPrimitiveValueArray(params[1]));
+      assertEquals(primParams[1], (int[]) JavaUtils.getPrimitiveValueArray(params[1]));
       assertEquals(primParams[2], (int[])JavaUtils.getPrimitiveValueArray(params[2]));
    }
 
@@ -61,7 +61,7 @@ public class JavaUtilsTestCase extends JBossWSTest
       assertEquals(wrapParams[1], (Integer[])JavaUtils.getWrapperValueArray(params[1]));
       assertEquals(wrapParams[2], (Integer[])JavaUtils.getWrapperValueArray(params[2]));
    }
-   
+
    public void testGetPrimitiveType() throws Exception
    {
       assertEquals(int.class, JavaUtils.getPrimitiveType("int"));

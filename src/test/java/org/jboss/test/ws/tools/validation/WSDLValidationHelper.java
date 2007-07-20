@@ -47,7 +47,7 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

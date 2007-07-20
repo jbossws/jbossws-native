@@ -76,7 +76,7 @@ import org.jboss.wsf.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
-import org.jboss.wsf.spi.utils.ObjectNameFactory;
+import org.jboss.wsf.common.ObjectNameFactory;
 
 /** An abstract meta data builder.
  *

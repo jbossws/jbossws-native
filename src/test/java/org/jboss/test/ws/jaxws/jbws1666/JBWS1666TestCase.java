@@ -28,9 +28,9 @@ import java.io.InputStreamReader;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * [JBWS-1666] Simplify jbosws jar dependencies

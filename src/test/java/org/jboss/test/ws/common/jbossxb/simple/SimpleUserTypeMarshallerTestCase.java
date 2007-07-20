@@ -35,7 +35,7 @@ import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.MarshalException;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
-import org.jboss.wsf.spi.utils.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * Test the JAXB marshalling of a SimpleUserType
@@ -53,15 +53,15 @@ public class SimpleUserTypeMarshallerTestCase extends WSToolsTest
       QName xmlType = new QName(TARGET_NAMESPACE, "SimpleUserType", "ns1");
       String xsdSchema = generateSchema(xmlType, SimpleUserType.class);
 
-      String exp = 
-         "<schema targetNamespace='http://org.jboss.ws/types' " + SCHEMA_NAMESPACES + " xmlns:tns='http://org.jboss.ws/types'>" + 
-         " <complexType name='SimpleUserType'>" + 
-         "  <sequence>" + 
-         "   <element name='a' type='int'/>" + 
-         "   <element name='b' type='int'/>" + 
-         "   <element name='d' nillable='true' type='dateTime'/>" + 
-         "  </sequence>" + 
-         " </complexType>" + 
+      String exp =
+         "<schema targetNamespace='http://org.jboss.ws/types' " + SCHEMA_NAMESPACES + " xmlns:tns='http://org.jboss.ws/types'>" +
+         " <complexType name='SimpleUserType'>" +
+         "  <sequence>" +
+         "   <element name='a' type='int'/>" +
+         "   <element name='b' type='int'/>" +
+         "   <element name='d' nillable='true' type='dateTime'/>" +
+         "  </sequence>" +
+         " </complexType>" +
          "</schema>";
 
       assertEquals(DOMUtils.parse(exp), DOMUtils.parse(xsdSchema));
@@ -71,13 +71,13 @@ public class SimpleUserTypeMarshallerTestCase extends WSToolsTest
    {
       SimpleUserType obj = new SimpleUserType();
 
-      String exp = 
-         "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
-         " <a>0</a>" + 
-         " <b>0</b>" + 
-         " <d xsi:nil='1'/>" + 
+      String exp =
+         "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
+         " <a>0</a>" +
+         " <b>0</b>" +
+         " <d xsi:nil='1'/>" +
          "</ns1:SimpleUser>";
-      
+
       String was = marshalSimpleType(obj);
       assertEquals(DOMUtils.parse(exp), DOMUtils.parse(was));
    }
@@ -91,13 +91,13 @@ public class SimpleUserTypeMarshallerTestCase extends WSToolsTest
          GregorianCalendar cal = new GregorianCalendar(1968, 11, 16);
          SimpleUserType obj = new SimpleUserType(1, 2, cal.getTime());
 
-         String exp = 
-            "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
-            " <a>1</a>" + 
-            " <b>2</b>" + 
-            " <d>1968-12-16T00:00:00.000Z</d>" + 
+         String exp =
+            "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
+            " <a>1</a>" +
+            " <b>2</b>" +
+            " <d>1968-12-16T00:00:00.000Z</d>" +
             "</ns1:SimpleUser>";
-      
+
          String was = marshalSimpleType(obj);
          assertEquals(DOMUtils.parse(exp), DOMUtils.parse(was));
       }
@@ -121,7 +121,7 @@ public class SimpleUserTypeMarshallerTestCase extends WSToolsTest
             super(date);
          }
       }
-      
+
       TimeZone tz = TimeZone.getDefault();
       TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
       try
@@ -130,11 +130,11 @@ public class SimpleUserTypeMarshallerTestCase extends WSToolsTest
          UserDate userDate = new UserDate(cal.getTime().getTime());
          SimpleUserType obj = new SimpleUserType(1, 2, userDate);
 
-         String exp = 
-            "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" + 
-            " <a>1</a>" + 
-            " <b>2</b>" + 
-            " <d>1968-12-16T00:00:00.000Z</d>" + 
+         String exp =
+            "<ns1:SimpleUser xmlns:ns1='" + TARGET_NAMESPACE + "' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" +
+            " <a>1</a>" +
+            " <b>2</b>" +
+            " <d>1968-12-16T00:00:00.000Z</d>" +
             "</ns1:SimpleUser>";
 
          String was = marshalSimpleType(obj);

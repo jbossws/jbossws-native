@@ -25,10 +25,13 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsf.spi.deployment.BasicDeployment;
 import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_JSE;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
 import org.jboss.wsf.spi.tools.WSContractProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.SPIProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +114,11 @@ final class JBossWSProviderImpl extends WSContractProvider
          messageStream.println("Generating WSDL:");
 
       UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
-      builder.buildWebServiceMetaData(new BasicDeployment(), umd, udi, endpointClass, null);   
+
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      Deployment dep = spiProvider.getSPI(DeploymentModelFactory.class).createDeployment();
+
+      builder.buildWebServiceMetaData(dep, umd, udi, endpointClass, null);
       try
       {
          generator.write();

@@ -32,8 +32,8 @@ import javax.xml.rpc.Stub;
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * [JBWS-1386] - ComplexType with base64Binary property

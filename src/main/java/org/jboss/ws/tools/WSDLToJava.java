@@ -61,7 +61,7 @@ import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
 import org.jboss.ws.tools.helpers.ReturnTypeUnwrapper;
 import org.jboss.ws.tools.interfaces.WSDLToJavaIntf;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.spi.utils.JavaUtils;
+import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

@@ -29,8 +29,8 @@ import javax.xml.rpc.Call;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
 
-import org.jboss.wsf.spi.management.BasicServerConfigMBean;
-import org.jboss.wsf.spi.test.JBossWSTest;
+import org.jboss.wsf.framework.management.BasicServerConfigMBean;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * Test soap:address rewriting in the WSDL.

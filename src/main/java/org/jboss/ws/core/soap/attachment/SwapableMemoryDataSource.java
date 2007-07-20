@@ -33,7 +33,7 @@ import javax.activation.DataSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.utils.IOUtils;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * A datasource which offloads large attachments to disk.

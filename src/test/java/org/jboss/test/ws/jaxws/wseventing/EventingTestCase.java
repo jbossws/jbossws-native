@@ -40,7 +40,7 @@ import org.jboss.ws.extensions.eventing.jaxws.RenewResponse;
 import org.jboss.ws.extensions.eventing.jaxws.Subscribe;
 import org.jboss.ws.extensions.eventing.jaxws.SubscribeResponse;
 import org.jboss.ws.extensions.eventing.jaxws.Unsubscribe;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Test the eventing endpoints.

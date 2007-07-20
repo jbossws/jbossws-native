@@ -25,8 +25,8 @@ import org.jboss.test.ws.benchmark.jaxws.doclit.BenchmarkService;
 import junit.framework.Test;
 
 import org.jboss.test.ws.benchmark.jaxws.doclit.*;
-import org.jboss.wsf.spi.test.JBossWSTest;
-import org.jboss.wsf.spi.test.JBossWSTestSetup;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 import javax.xml.ws.Service;
 import javax.xml.ws.BindingProvider;

@@ -41,7 +41,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.wsf.spi.utils.DOMWriter;
+import org.jboss.wsf.common.DOMWriter;
 
 /**
  * Executes a list of JAXWS handlers.
