@@ -30,8 +30,10 @@ import javax.xml.rpc.Service;
 
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 
-/** 
+/**
  * @author darran.lofthouse@jboss.com
  * @since 21-September-2006
  */
@@ -46,9 +48,8 @@ public class TestEndpointImpl implements TestEndpoint
 
       try
       {
-         ServerConfigFactory serverConfigFactory = ServerConfigFactory.getInstance();
-         ServerConfig serverConfig = serverConfigFactory.getServerConfig();
-         File tmpDir = serverConfig.getServerTempDir();
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();File tmpDir = serverConfig.getServerTempDir();
          tmpDir = new File(tmpDir.getCanonicalPath() + "/jbossws");
 
          baseFiles = getXsdTempFiles(tmpDir);

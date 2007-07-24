@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
+import java.io.File;
 
 import javax.xml.transform.Source;
 import javax.xml.ws.Binding;
@@ -44,6 +45,9 @@ import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.server.HttpContext;
 import org.jboss.ws.core.server.HttpServer;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.w3c.dom.Element;
 
 /**
@@ -151,8 +155,8 @@ public class EndpointImpl extends Endpoint
       boolean isStandalone;
       try
       {
-         ServerConfigFactory factory = ServerConfigFactory.getInstance();
-         factory.getServerConfig();
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();File tmpDir = serverConfig.getServerTempDir();
          isStandalone = false;
       }
       catch (Exception ex)

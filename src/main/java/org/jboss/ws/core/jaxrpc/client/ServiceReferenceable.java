@@ -27,6 +27,7 @@ package org.jboss.ws.core.jaxrpc.client;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.File;
 import java.net.URL;
 
 import javax.naming.BinaryRefAddr;
@@ -43,6 +44,8 @@ import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 
 /**
  * A JNDI reference to a javax.xml.rpc.Service
@@ -57,7 +60,7 @@ public class ServiceReferenceable implements Referenceable
 {
    // provide logging
    private static Logger log = Logger.getLogger(ServiceReferenceable.class);
-   
+
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
    public static final String SECURITY_CONFIG = "SECURITY_CONFIG";
    public static final String PORT_COMPONENT_LINK = "PORT_COMPONENT_LINK";
@@ -101,8 +104,9 @@ public class ServiceReferenceable implements Referenceable
             myRef.add(new StringRefAddr(PORT_COMPONENT_LINK, pcLink));
             try
             {
-               ServerConfigFactory factory = ServerConfigFactory.getInstance();
-               ServerConfig config = factory.getServerConfig();
+               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();
+               
                String host = config.getWebServiceHost();
                int port = config.getWebServicePort();
 

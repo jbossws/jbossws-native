@@ -64,6 +64,8 @@ import org.jboss.wsf.spi.management.EndpointRegistryFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.SPIProvider;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service
@@ -182,7 +184,8 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
             String endpointAddress = null;
             try
             {
-               EndpointRegistry epRegistry = EndpointRegistryFactory.getEndpointRegistry();
+               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+               EndpointRegistry epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).createEndpointRegistry();
                Endpoint endpoint = epRegistry.resolvePortComponentLink(pcLink);
                if (endpoint == null)
                   throw new WSException("Cannot resolve port-component-link: " + pcLink);

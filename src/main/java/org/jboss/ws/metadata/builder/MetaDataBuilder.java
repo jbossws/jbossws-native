@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.builder;
 // $Id$
 
 import java.io.IOException;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -76,6 +77,8 @@ import org.jboss.wsf.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.common.ObjectNameFactory;
 
 /** An abstract meta data builder.
@@ -216,8 +219,9 @@ public abstract class MetaDataBuilder
       if (uriScheme == null)
          uriScheme = "http";
 
-      ServerConfigFactory factory = ServerConfigFactory.getInstance();
-      ServerConfig config = factory.getServerConfig();
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();
+
       String host = config.getWebServiceHost();
       int port = config.getWebServicePort();
       if ("https".equals(uriScheme))
@@ -297,8 +301,8 @@ public abstract class MetaDataBuilder
                String servicePath = sepMetaData.getContextRoot() + sepMetaData.getURLPattern();
                String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath);
 
-               ServerConfigFactory factory = ServerConfigFactory.getInstance();
-               ServerConfig config = factory.getServerConfig();
+               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();               
                boolean alwaysModify = config.isModifySOAPAddress();
 
                if (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0)

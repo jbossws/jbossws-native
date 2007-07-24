@@ -33,6 +33,8 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 
 /**
  * [JBWS-1190] - WSDL generated for JSR-181 POJO does not take 'transport-guarantee' in web.xml into account
@@ -48,9 +50,9 @@ public class TestEndpointImpl implements TestEndpoint
 
    public void testAddress(final String archive, final String service, final String scheme, final String port)
    {
-      ServerConfigFactory serverConfigFactory = ServerConfigFactory.getInstance();
-      ServerConfig serverConfig = serverConfigFactory.getServerConfig();
-
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();File tmpDir = serverConfig.getServerTempDir();
+      
       File dataDir = serverConfig.getServerDataDir();
       File wsdlDir = new File(dataDir.getAbsolutePath() + File.separator + "wsdl" + File.separator + archive);
 
