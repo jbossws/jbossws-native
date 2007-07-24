@@ -79,7 +79,7 @@ public class PortComponentLinkServlet extends HttpServlet
       if (pcLink == null)
          throw new IllegalArgumentException("Cannot obtain request parameter 'pcLink'");
 
-      Endpoint endpoint = epRegistry.resolvePortComponentLink(pcLink);
+      Endpoint endpoint = epRegistry.resolve( new PortComponentResolver(pcLink) );
       if (endpoint == null)
          throw new WSException("Cannot resolve port-component-link: " + pcLink);
 

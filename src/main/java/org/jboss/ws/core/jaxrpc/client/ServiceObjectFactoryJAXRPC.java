@@ -52,6 +52,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.client.ServiceObjectFactory;
+import org.jboss.ws.core.server.PortComponentResolver;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -186,7 +187,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
             {
                SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
                EndpointRegistry epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).createEndpointRegistry();
-               Endpoint endpoint = epRegistry.resolvePortComponentLink(pcLink);
+               Endpoint endpoint = epRegistry.resolve( new PortComponentResolver(pcLink) );
                if (endpoint == null)
                   throw new WSException("Cannot resolve port-component-link: " + pcLink);
 
