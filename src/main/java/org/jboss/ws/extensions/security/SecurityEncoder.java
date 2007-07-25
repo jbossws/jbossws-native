@@ -65,21 +65,21 @@ public class SecurityEncoder
    public void encode(Document message) throws WSSecurityException
    {
       SecurityHeader header = new SecurityHeader(message);
-      for (OperationDescription<EncodingOperation> o : operations)
+      for (OperationDescription<EncodingOperation> op : operations)
       {
          EncodingOperation operation;
 
          try
          {
-            Constructor<? extends EncodingOperation> constructor = o.getOperation().getConstructor(SecurityHeader.class, SecurityStore.class);
+            Constructor<? extends EncodingOperation> constructor = op.getOperation().getConstructor(SecurityHeader.class, SecurityStore.class);
             operation = constructor.newInstance(header, store);
          }
          catch (Exception e)
          {
-            throw new WSSecurityException("Error constructing operation: " + o.getOperation());
+            throw new WSSecurityException("Error constructing operation: " + op.getOperation());
          }
 
-         operation.process(message, o.getTargets(), o.getCertificateAlias(), o.getCredential(), o.getAlgorithm());
+         operation.process(message, op.getTargets(), op.getCertificateAlias(), op.getCredential(), op.getAlgorithm());
       }
       attachHeader(header, message);
    }

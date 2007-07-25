@@ -25,7 +25,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.integration.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import static org.jboss.wsf.spi.deployment.Deployment.DeploymentType.JAXWS_JSE;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
@@ -72,7 +71,7 @@ final class JBossWSProviderImpl extends WSContractProvider
    private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
    {
       //DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
-      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo(JAXWS_JSE)
+      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo()
       {
          @Override
          public URL getMetaDataFileURL(String resourcePath) throws IOException
@@ -80,7 +79,6 @@ final class JBossWSProviderImpl extends WSContractProvider
             return null;
          }
       };
-      udi.setClassLoader(loader);
       return udi;
    }
 

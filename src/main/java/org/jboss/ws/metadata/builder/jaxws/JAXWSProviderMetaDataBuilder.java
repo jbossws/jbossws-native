@@ -145,7 +145,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
          MetaDataBuilder.replaceAddressLocation(sepMetaData);
 
       // init service endpoint id
-      ObjectName sepID = MetaDataBuilder.createServiceEndpointID(udi, sepMetaData);
+      ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, udi, sepMetaData);
       sepMetaData.setServiceEndpointID(sepID);
 
       return sepMetaData;

@@ -75,7 +75,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
          // For every webservice-description build the ServiceMetaData
          UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
-         wsMetaData.setClassLoader(udi.getClassLoader());
+         wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
          WebserviceDescriptionMetaData[] wsDescriptionArr = udi.getWebservicesMetaData().getWebserviceDescriptions();
          for (WebserviceDescriptionMetaData wsdMetaData : wsDescriptionArr)
@@ -142,9 +142,10 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointAddress(dep, udi, sepMetaData);
 
-               if (udi.getMetaData() instanceof UnifiedApplicationMetaData)
+               UnifiedApplicationMetaData apMetaData = dep.getContext().getAttachment(UnifiedApplicationMetaData.class);
+               UnifiedWebMetaData webMetaData = dep.getContext().getAttachment(UnifiedWebMetaData.class);
+               if (apMetaData != null)
                {
-                  UnifiedApplicationMetaData apMetaData = (UnifiedApplicationMetaData)udi.getMetaData();
                   wsMetaData.setSecurityDomain(apMetaData.getSecurityDomain());
 
                   // Copy the wsdl publish location from jboss.xml
@@ -182,9 +183,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                      }
                   }
                }
-               else if (udi.getMetaData() instanceof UnifiedWebMetaData)
+               else if (webMetaData != null)
                {
-                  UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.getMetaData();
                   wsMetaData.setSecurityDomain(webMetaData.getSecurityDomain());
 
                   String targetBean = webMetaData.getServletClassNames().get(linkName);
@@ -200,11 +200,11 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   if (configName != null || configFile != null)
                      sepMetaData.setConfigName(configName, configFile);
 
-                  initTransportGuaranteeJSE(udi, sepMetaData, linkName);
+                  initTransportGuaranteeJSE(dep, udi, sepMetaData, linkName);
                }
 
                // init service endpoint id
-               ObjectName sepID = createServiceEndpointID(udi, sepMetaData);
+               ObjectName sepID = createServiceEndpointID(dep, udi, sepMetaData);
                sepMetaData.setServiceEndpointID(sepID);
 
                replaceAddressLocation(sepMetaData);

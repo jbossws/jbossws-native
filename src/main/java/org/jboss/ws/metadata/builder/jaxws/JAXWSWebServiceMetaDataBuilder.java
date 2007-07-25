@@ -57,6 +57,7 @@ import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
+import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
@@ -67,7 +68,6 @@ import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
-import org.jboss.wsf.common.IOUtils;
 
 /**
  * An abstract annotation meta data builder.
@@ -104,10 +104,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    {
       try
       {
-         EndpointResult result = processWebService(wsMetaData, sepClass, udi);
+         EndpointResult result = processWebService(dep, wsMetaData, sepClass, udi);
 
          // Clear the java types, etc.
-         resetMetaDataBuilder(udi.getClassLoader());
+         resetMetaDataBuilder(dep.getInitialClassLoader());
 
          ServerEndpointMetaData sepMetaData = result.sepMetaData;
          ServiceMetaData serviceMetaData = result.serviceMetaData;
@@ -136,7 +136,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processWebMethods(sepMetaData, seiClass);
 
          // Init the transport guarantee
-         initTransportGuaranteeJSE(udi, sepMetaData, linkName);
+         initTransportGuaranteeJSE(dep, udi, sepMetaData, linkName);
 
          // Initialize types
          createJAXBContext(sepMetaData);
@@ -189,7 +189,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
 
          // init service endpoint id
-         ObjectName sepID = MetaDataBuilder.createServiceEndpointID(udi, sepMetaData);
+         ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, udi, sepMetaData);
          sepMetaData.setServiceEndpointID(sepID);
 
          return sepMetaData;
@@ -275,7 +275,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
    }
 
-   private EndpointResult processWebService(UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi) throws ClassNotFoundException, IOException
+   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi) throws ClassNotFoundException,
+         IOException
    {
       WebService anWebService = sepClass.getAnnotation(WebService.class);
       if (anWebService == null)
@@ -307,7 +308,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       if (anWebService.endpointInterface().length() > 0)
       {
          seiName = anWebService.endpointInterface();
-         seiClass = udi.getClassLoader().loadClass(seiName);
+         seiClass = dep.getInitialClassLoader().loadClass(seiName);
          WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 
          if (seiAnnotation == null)
@@ -404,8 +405,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       message(wsdlFile.getName());
       Writer writer = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
-      new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver()
-      {
+      new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver() {
          public WSDLWriterResolver resolve(String suggestedFile) throws IOException
          {
             File file;

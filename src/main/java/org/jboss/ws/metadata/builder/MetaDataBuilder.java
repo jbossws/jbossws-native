@@ -24,7 +24,6 @@ package org.jboss.ws.metadata.builder;
 // $Id: $
 
 import java.io.IOException;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -66,6 +65,9 @@ import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
+import org.jboss.wsf.common.ObjectNameFactory;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
@@ -77,9 +79,6 @@ import org.jboss.wsf.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.common.ObjectNameFactory;
 
 /** An abstract meta data builder.
  *
@@ -172,7 +171,7 @@ public abstract class MetaDataBuilder
       sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath));
    }
 
-   public static ObjectName createServiceEndpointID(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
+   public static ObjectName createServiceEndpointID(Deployment dep, UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
    {
       String linkName = sepMetaData.getLinkName();
       String context = sepMetaData.getContextRoot();
@@ -184,14 +183,14 @@ public abstract class MetaDataBuilder
       idstr.append("," + ServerEndpointMetaData.SEPID_PROPERTY_ENDPOINT + "=" + linkName);
 
       // Add JMS destination JNDI name for MDB endpoints
-      if (udi.getMetaData() instanceof UnifiedApplicationMetaData)
+      UnifiedApplicationMetaData apMetaData = dep.getContext().getAttachment(UnifiedApplicationMetaData.class);
+      if (apMetaData != null)
       {
          String ejbName = sepMetaData.getLinkName();
          if (ejbName == null)
             throw new WSException("Cannot obtain ejb-link from port component");
 
-         UnifiedApplicationMetaData applMetaData = (UnifiedApplicationMetaData)udi.getMetaData();
-         UnifiedBeanMetaData beanMetaData = (UnifiedBeanMetaData)applMetaData.getBeanByEjbName(ejbName);
+         UnifiedBeanMetaData beanMetaData = (UnifiedBeanMetaData)apMetaData.getBeanByEjbName(ejbName);
          if (beanMetaData == null)
             throw new WSException("Cannot obtain ejb meta data for: " + ejbName);
 
@@ -241,12 +240,12 @@ public abstract class MetaDataBuilder
    /**
     * Read the transport guarantee from web.xml
     */
-   protected void initTransportGuaranteeJSE(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
+   protected void initTransportGuaranteeJSE(Deployment dep, UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
    {
       String transportGuarantee = null;
-      if (udi.getMetaData() instanceof UnifiedWebMetaData)
+      UnifiedWebMetaData webMetaData = dep.getContext().getAttachment(UnifiedWebMetaData.class);
+      if (webMetaData != null)
       {
-         UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.getMetaData();
          Map<String, String> servletMappings = webMetaData.getServletMappings();
          String urlPattern = servletMappings.get(servletLink);
 

@@ -83,7 +83,7 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext == null)
          return;
       
-      boolean isJSEEndpoint = (dep.getDeploymentType() == DeploymentType.JAXWS_JSE);
+      boolean isJSEEndpoint = (dep.getType() == DeploymentType.JAXWS_JSE);
 
       // context-root
       if (anWebContext.contextRoot().length() > 0)

@@ -273,7 +273,7 @@ public class ServiceEndpointInvoker
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof SOAPMessageContextJAXWS)
       {
-         if (ep.getService().getDeployment().getDeploymentType() == DeploymentType.JAXWS_JSE)
+         if (ep.getService().getDeployment().getType() == DeploymentType.JAXWS_JSE)
          {
             WebServiceContext wsContext;
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
