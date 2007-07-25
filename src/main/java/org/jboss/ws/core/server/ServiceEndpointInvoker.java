@@ -279,7 +279,7 @@ public class ServiceEndpointInvoker
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {
                SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               wsContext = spiProvider.getSPI(InvocationModelFactory.class).createWebServiceContext(
+               wsContext = spiProvider.getSPI(WebServiceContextFactory.class).createWebServiceContext(
                  InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext
                );
             }
@@ -288,7 +288,7 @@ public class ServiceEndpointInvoker
                // TODO: This is an ESB case, they require a custom MessageContext
                // that works independed of MessageContext.SERVLET_REQUEST
                throw new IllegalArgumentException("JBOSS-ESB? The current WebServiceContext impl. relies on HTTP.ServletRequest"+
-               "You should provide a custom spi.invocation.InvocationModelFactory");
+               "You should provide a custom spi.invocation.InvocationHandlerFactory");
             }
             invContext.addAttachment(WebServiceContext.class, wsContext);
          }
