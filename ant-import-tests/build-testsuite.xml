@@ -33,13 +33,12 @@
 			<pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
 			<pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
 			<pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
+			<pathelement location="${core.dir}/thirdparty/policy.jar"/>
+			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
 		</path>
 
 		<path id="tests.extra.classpath">
-			<pathelement location="${jboss.client}/jboss-ejb3-client.jar"/>
-			<pathelement location="${jboss.client}/policy.jar"/>
-			<pathelement location="${jboss.client}/wsdl4j.jar"/>
-      <pathelement location="${jboss.client}/wstx.jar"/>
       <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
       <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
     </path>
