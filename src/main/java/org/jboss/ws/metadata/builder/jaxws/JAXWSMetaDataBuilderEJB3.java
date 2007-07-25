@@ -57,21 +57,21 @@ public class JAXWSMetaDataBuilderEJB3
       if(log.isDebugEnabled()) log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.vfRoot);
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
-         wsMetaData.setClassLoader(udi.classLoader);
+         wsMetaData.setClassLoader(udi.getClassLoader());
 
-         if (udi.classLoader == null)
+         if (udi.getClassLoader() == null)
             throw new WSException("Deployment class loader not initialized");
 
          // The container objects below provide access to all of the ejb metadata
-         UnifiedApplicationMetaData appMetaData = (UnifiedApplicationMetaData)udi.metaData;
+         UnifiedApplicationMetaData appMetaData = (UnifiedApplicationMetaData)udi.getMetaData();
          Iterator<UnifiedBeanMetaData> it = appMetaData.getEnterpriseBeans();
          while (it.hasNext())
          {
             UnifiedBeanMetaData beanMetaData = it.next();
             String ejbClassName = beanMetaData.getEjbClass();
-            Class<?> beanClass = udi.classLoader.loadClass(ejbClassName);
+            Class<?> beanClass = udi.getClassLoader().loadClass(ejbClassName);
             if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))
             {
                String ejbLink = beanMetaData.getEjbName();

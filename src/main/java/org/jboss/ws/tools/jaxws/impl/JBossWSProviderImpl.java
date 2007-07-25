@@ -80,7 +80,7 @@ final class JBossWSProviderImpl extends WSContractProvider
             return null;
          }
       };
-      udi.classLoader = loader;
+      udi.setClassLoader(loader);
       return udi;
    }
 

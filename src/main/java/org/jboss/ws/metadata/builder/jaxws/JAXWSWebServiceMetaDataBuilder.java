@@ -107,7 +107,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          EndpointResult result = processWebService(wsMetaData, sepClass, udi);
 
          // Clear the java types, etc.
-         resetMetaDataBuilder(udi.classLoader);
+         resetMetaDataBuilder(udi.getClassLoader());
 
          ServerEndpointMetaData sepMetaData = result.sepMetaData;
          ServiceMetaData serviceMetaData = result.serviceMetaData;
@@ -164,7 +164,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
 
          // Note, that @WebContext needs to be defined on the endpoint not the SEI
-         processWebContext(udi, sepClass, linkName, sepMetaData);
+         processWebContext(dep, sepClass, linkName, sepMetaData);
 
          // setup handler chain from config
          sepMetaData.initEndpointConfig();
@@ -307,7 +307,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       if (anWebService.endpointInterface().length() > 0)
       {
          seiName = anWebService.endpointInterface();
-         seiClass = udi.classLoader.loadClass(seiName);
+         seiClass = udi.getClassLoader().loadClass(seiName);
          WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 
          if (seiAnnotation == null)

@@ -73,9 +73,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
       try
       {
          // For every webservice-description build the ServiceMetaData
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.vfRoot);
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
-         wsMetaData.setClassLoader(udi.classLoader);
+         wsMetaData.setClassLoader(udi.getClassLoader());
 
          WebserviceDescriptionMetaData[] wsDescriptionArr = udi.getWebservicesMetaData().getWebserviceDescriptions();
          for (WebserviceDescriptionMetaData wsdMetaData : wsDescriptionArr)
@@ -142,9 +142,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointAddress(dep, udi, sepMetaData);
 
-               if (udi.metaData instanceof UnifiedApplicationMetaData)
+               if (udi.getMetaData() instanceof UnifiedApplicationMetaData)
                {
-                  UnifiedApplicationMetaData apMetaData = (UnifiedApplicationMetaData)udi.metaData;
+                  UnifiedApplicationMetaData apMetaData = (UnifiedApplicationMetaData)udi.getMetaData();
                   wsMetaData.setSecurityDomain(apMetaData.getSecurityDomain());
 
                   // Copy the wsdl publish location from jboss.xml
@@ -182,9 +182,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                      }
                   }
                }
-               else if (udi.metaData instanceof UnifiedWebMetaData)
+               else if (udi.getMetaData() instanceof UnifiedWebMetaData)
                {
-                  UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.metaData;
+                  UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.getMetaData();
                   wsMetaData.setSecurityDomain(webMetaData.getSecurityDomain());
 
                   String targetBean = webMetaData.getServletClassNames().get(linkName);

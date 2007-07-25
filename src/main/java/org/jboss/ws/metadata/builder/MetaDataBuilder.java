@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.metadata.builder;
 
-// $Id$
+// $Id: $
 
 import java.io.IOException;
 import java.io.File;
@@ -146,11 +146,11 @@ public abstract class MetaDataBuilder
       // If not, derive the context root from the deployment
       if (contextRoot == null)
       {
-         String simpleName = udi.simpleName;
+         String simpleName = udi.getSimpleName();
          contextRoot = simpleName.substring(0, simpleName.indexOf('.'));
-         if (udi.parent != null)
+         if (udi.getParent() != null)
          {
-            simpleName = udi.parent.simpleName;
+            simpleName = udi.getParent().getSimpleName();
             simpleName = simpleName.substring(0, simpleName.indexOf('.'));
             contextRoot = simpleName + "-" + contextRoot;
          }
@@ -184,13 +184,13 @@ public abstract class MetaDataBuilder
       idstr.append("," + ServerEndpointMetaData.SEPID_PROPERTY_ENDPOINT + "=" + linkName);
 
       // Add JMS destination JNDI name for MDB endpoints
-      if (udi.metaData instanceof UnifiedApplicationMetaData)
+      if (udi.getMetaData() instanceof UnifiedApplicationMetaData)
       {
          String ejbName = sepMetaData.getLinkName();
          if (ejbName == null)
             throw new WSException("Cannot obtain ejb-link from port component");
 
-         UnifiedApplicationMetaData applMetaData = (UnifiedApplicationMetaData)udi.metaData;
+         UnifiedApplicationMetaData applMetaData = (UnifiedApplicationMetaData)udi.getMetaData();
          UnifiedBeanMetaData beanMetaData = (UnifiedBeanMetaData)applMetaData.getBeanByEjbName(ejbName);
          if (beanMetaData == null)
             throw new WSException("Cannot obtain ejb meta data for: " + ejbName);
@@ -244,9 +244,9 @@ public abstract class MetaDataBuilder
    protected void initTransportGuaranteeJSE(UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
    {
       String transportGuarantee = null;
-      if (udi.metaData instanceof UnifiedWebMetaData)
+      if (udi.getMetaData() instanceof UnifiedWebMetaData)
       {
-         UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.metaData;
+         UnifiedWebMetaData webMetaData = (UnifiedWebMetaData)udi.getMetaData();
          Map<String, String> servletMappings = webMetaData.getServletMappings();
          String urlPattern = servletMappings.get(servletLink);
 

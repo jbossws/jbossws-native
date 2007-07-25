@@ -48,11 +48,11 @@ public class JAXWSMetaDataBuilderJSE
       log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.vfRoot);
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
-         wsMetaData.setClassLoader(udi.classLoader);
+         wsMetaData.setClassLoader(udi.getClassLoader());
 
-         if (udi.classLoader == null)
+         if (udi.getClassLoader() == null)
             throw new WSException("Deployment class loader not initialized");
 
          // For every bean
