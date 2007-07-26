@@ -46,11 +46,11 @@ public class JAXWSMetaDataBuilderJSE
     */
    public UnifiedMetaData buildMetaData(ArchiveDeployment dep, UnifiedDeploymentInfo udi)
    {
-      log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
+      log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
-         wsMetaData.setDeploymentName(udi.getCanonicalName());
+         wsMetaData.setDeploymentName(dep.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
          // For every bean

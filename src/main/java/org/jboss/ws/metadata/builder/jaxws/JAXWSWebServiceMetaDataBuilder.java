@@ -58,6 +58,7 @@ import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
 import org.jboss.wsf.common.IOUtils;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
@@ -275,8 +276,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
    }
 
-   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi) throws ClassNotFoundException,
-         IOException
+   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi)
+         throws ClassNotFoundException, IOException
    {
       WebService anWebService = sepClass.getAnnotation(WebService.class);
       if (anWebService == null)
@@ -342,9 +343,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       result.serviceMetaData = new ServiceMetaData(wsMetaData, new QName(serviceNS, serviceName));
       result.sepMetaData = new ServerEndpointMetaData(result.serviceMetaData, portQName, portTypeQName, EndpointMetaData.Type.JAXWS);
       result.epClass = (seiClass != null ? seiClass : sepClass);
-      result.wsdlLocation = udi.getMetaDataFileURL(wsdlLocation);
       result.serviceMetaData.addEndpoint(result.sepMetaData);
       wsMetaData.addService(result.serviceMetaData);
+      
+      if (dep instanceof ArchiveDeployment)
+         result.wsdlLocation = ((ArchiveDeployment)dep).getMetaDataFileURL(wsdlLocation);
 
       return result;
    }

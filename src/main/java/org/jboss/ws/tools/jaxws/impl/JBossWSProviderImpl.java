@@ -1,42 +1,43 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.tools.jaxws.impl;
-
-import org.jboss.ws.WSException;
-import org.jboss.ws.integration.ResourceLoaderAdapter;
-import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
-import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
-import org.jboss.wsf.spi.tools.WSContractProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.SPIProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import org.jboss.ws.WSException;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
+import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
+import org.jboss.wsf.spi.tools.WSContractProvider;
 
 /**
  * The default WSContractProvider implementation.
@@ -52,17 +53,17 @@ final class JBossWSProviderImpl extends WSContractProvider
    private File resourceDir = null;
    private File sourceDir = null;
    private PrintStream messageStream = new NullPrintStream();
-   
+
    private void createDirectories(File resourceDir, File sourceDir)
    {
       if (!outputDir.exists())
          if (!outputDir.mkdirs())
             throw new WSException("Could not create directory: " + outputDir);
-      
+
       if (generateWsdl && !resourceDir.exists())
          if (!resourceDir.mkdirs())
             throw new WSException("Could not create directory: " + resourceDir);
-      
+
       if (generateSource && !sourceDir.exists())
          if (!sourceDir.mkdirs())
             throw new WSException("Could not create directory: " + sourceDir);
@@ -70,15 +71,7 @@ final class JBossWSProviderImpl extends WSContractProvider
 
    private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
    {
-      //DeploymentType type = (endpointClass.isAnnotationPresent(Stateless.class)) ? JAXWS_EJB3 : JAXWS_JSE;
-      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo()
-      {
-         @Override
-         public URL getMetaDataFileURL(String resourcePath) throws IOException
-         {
-            return null;
-         }
-      };
+      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo();
       return udi;
    }
 
@@ -88,33 +81,34 @@ final class JBossWSProviderImpl extends WSContractProvider
       // Use the output directory as the default
       File resourceDir = (this.resourceDir != null) ? this.resourceDir : outputDir;
       File sourceDir = (this.sourceDir != null) ? this.sourceDir : outputDir;
-      
+
       createDirectories(resourceDir, sourceDir);
-      
+
       // Create a dummy classloader to catch generated classes
       ClassLoader loader = new URLClassLoader(new URL[0], this.loader);
       UnifiedMetaData umd = new UnifiedMetaData(new ResourceLoaderAdapter(loader));
       umd.setClassLoader(loader);
-      
+
       ChainedWritableWrapperGenerator generator = new ChainedWritableWrapperGenerator();
       if (generateSource)
          generator.add(new SourceWrapperGenerator(loader, messageStream), sourceDir);
       generator.add(new BytecodeWrapperGenerator(loader, messageStream), outputDir);
-      
+
       JAXWSWebServiceMetaDataBuilder builder = new JAXWSWebServiceMetaDataBuilder();
       builder.setWrapperGenerator(generator);
       builder.setGenerateWsdl(generateWsdl);
       builder.setToolMode(true);
       builder.setWsdlDirectory(resourceDir);
       builder.setMessageStream(messageStream);
-      
+
       if (generateWsdl)
          messageStream.println("Generating WSDL:");
 
       UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
 
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      Deployment dep = spiProvider.getSPI(DeploymentModelFactory.class).createDeployment(loader);
+      DeploymentModelFactory factory = spiProvider.getSPI(DeploymentModelFactory.class);
+      Deployment dep = factory.createDeployment("wsprovide-deployment", loader);
 
       builder.buildWebServiceMetaData(dep, umd, udi, endpointClass, null);
       try
@@ -163,7 +157,7 @@ final class JBossWSProviderImpl extends WSContractProvider
    {
       this.generateSource = generateSource;
    }
-   
+
    @Override
    public void setResourceDirectory(File directory)
    {

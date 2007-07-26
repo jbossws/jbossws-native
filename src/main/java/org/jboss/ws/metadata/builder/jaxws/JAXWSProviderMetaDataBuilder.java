@@ -47,9 +47,9 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.common.JavaUtils;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
+import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -60,7 +60,7 @@ import org.jboss.wsf.common.JavaUtils;
  */
 public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
-   public ServerEndpointMetaData buildProviderMetaData(Deployment dep, UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName) throws IOException
+   public ServerEndpointMetaData buildProviderMetaData(ArchiveDeployment dep, UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName) throws IOException
    {
       // 5.3 Conformance (Provider implementation): A Provider based service endpoint implementation MUST
       // implement a typed Provider interface.
@@ -121,7 +121,7 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
       String wsdlLocation = anWebServiceProvider.wsdlLocation();
       if (wsdlLocation.length() > 0)
       {
-         URL wsdlURL = udi.getMetaDataFileURL(wsdlLocation);
+         URL wsdlURL = dep.getMetaDataFileURL(wsdlLocation);
          serviceMetaData.setWsdlLocation(wsdlURL);
       }
 

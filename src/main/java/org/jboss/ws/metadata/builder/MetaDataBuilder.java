@@ -68,6 +68,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
@@ -145,13 +146,16 @@ public abstract class MetaDataBuilder
       // If not, derive the context root from the deployment
       if (contextRoot == null)
       {
-         String simpleName = udi.getSimpleName();
+         String simpleName = dep.getSimpleName();
          contextRoot = simpleName.substring(0, simpleName.indexOf('.'));
-         if (udi.getParent() != null)
+         if (dep instanceof ArchiveDeployment)
          {
-            simpleName = udi.getParent().getSimpleName();
-            simpleName = simpleName.substring(0, simpleName.indexOf('.'));
-            contextRoot = simpleName + "-" + contextRoot;
+            if (((ArchiveDeployment)dep).getParent() != null)
+            {
+               simpleName = ((ArchiveDeployment)dep).getParent().getSimpleName();
+               simpleName = simpleName.substring(0, simpleName.indexOf('.'));
+               contextRoot = simpleName + "-" + contextRoot;
+            }
          }
       }
 

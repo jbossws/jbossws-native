@@ -32,7 +32,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
-import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
@@ -55,11 +54,11 @@ public class JAXWSMetaDataBuilderEJB3
     */
    public UnifiedMetaData buildMetaData(ArchiveDeployment dep, UnifiedDeploymentInfo udi)
    {
-      log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
+      log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
-         wsMetaData.setDeploymentName(udi.getCanonicalName());
+         wsMetaData.setDeploymentName(dep.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
          // The container objects below provide access to all of the ejb metadata

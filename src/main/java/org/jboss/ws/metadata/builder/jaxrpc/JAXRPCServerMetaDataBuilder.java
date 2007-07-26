@@ -70,12 +70,12 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
     */
    public UnifiedMetaData buildMetaData(ArchiveDeployment dep, JAXRPCDeployment udi)
    {
-      log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
+      log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
       {
          // For every webservice-description build the ServiceMetaData
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
-         wsMetaData.setDeploymentName(udi.getCanonicalName());
+         wsMetaData.setDeploymentName(dep.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
          WebserviceDescriptionMetaData[] wsDescriptionArr = udi.getWebservicesMetaData().getWebserviceDescriptions();
@@ -94,7 +94,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Unmarshall the jaxrpc-mapping.xml
             String mappingFile = wsdMetaData.getJaxrpcMappingFile();
-            serviceMetaData.setMappingLocation(udi.getMetaDataFileURL(mappingFile));
+            serviceMetaData.setMappingLocation(dep.getMetaDataFileURL(mappingFile));
             JavaWsdlMapping javaWsdlMapping = serviceMetaData.getJavaWsdlMapping();
             if (javaWsdlMapping == null)
                throw new WSException("jaxrpc-mapping-file not configured from webservices.xml");
