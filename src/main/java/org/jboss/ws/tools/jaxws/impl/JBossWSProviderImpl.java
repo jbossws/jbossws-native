@@ -114,7 +114,7 @@ final class JBossWSProviderImpl extends WSContractProvider
       UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
 
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      Deployment dep = spiProvider.getSPI(DeploymentModelFactory.class).createDeployment();
+      Deployment dep = spiProvider.getSPI(DeploymentModelFactory.class).createDeployment(loader);
 
       builder.buildWebServiceMetaData(dep, umd, udi, endpointClass, null);
       try
