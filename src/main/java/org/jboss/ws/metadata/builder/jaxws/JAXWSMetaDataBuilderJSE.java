@@ -25,6 +25,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
@@ -43,12 +44,12 @@ public class JAXWSMetaDataBuilderJSE
 
    /** Build from annotations
     */
-   public UnifiedMetaData buildMetaData(Deployment dep, UnifiedDeploymentInfo udi)
+   public UnifiedMetaData buildMetaData(ArchiveDeployment dep, UnifiedDeploymentInfo udi)
    {
       log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 

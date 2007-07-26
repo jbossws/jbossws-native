@@ -42,6 +42,7 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.JAXRPCDeployment;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
@@ -67,13 +68,13 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
    /**
     * Build from webservices.xml
     */
-   public UnifiedMetaData buildMetaData(Deployment dep, JAXRPCDeployment udi)
+   public UnifiedMetaData buildMetaData(ArchiveDeployment dep, JAXRPCDeployment udi)
    {
       log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
          // For every webservice-description build the ServiceMetaData
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 

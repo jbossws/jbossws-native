@@ -31,6 +31,7 @@ import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
@@ -52,12 +53,12 @@ public class JAXWSMetaDataBuilderEJB3
 
    /** Build from webservices.xml
     */
-   public UnifiedMetaData buildMetaData(Deployment dep, UnifiedDeploymentInfo udi)
+   public UnifiedMetaData buildMetaData(ArchiveDeployment dep, UnifiedDeploymentInfo udi)
    {
-      if(log.isDebugEnabled()) log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
+      log.debug("START buildMetaData: [name=" + udi.getCanonicalName() + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(udi.getVfRoot());
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(udi.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
@@ -88,7 +89,7 @@ public class JAXWSMetaDataBuilderEJB3
             }
          }
 
-         if(log.isDebugEnabled()) log.debug("END buildMetaData: " + wsMetaData);
+         log.debug("END buildMetaData: " + wsMetaData);
          return wsMetaData;
       }
       catch (RuntimeException rte)
