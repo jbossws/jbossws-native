@@ -44,7 +44,6 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.JAXRPCDeployment;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
@@ -53,6 +52,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
+import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 
 /**
  * A server side meta data builder that is based on webservices.xml.
@@ -68,7 +68,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
    /**
     * Build from webservices.xml
     */
-   public UnifiedMetaData buildMetaData(ArchiveDeployment dep, JAXRPCDeployment udi)
+   public UnifiedMetaData buildMetaData(ArchiveDeployment dep)
    {
       log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
@@ -78,7 +78,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
          wsMetaData.setDeploymentName(dep.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
-         WebserviceDescriptionMetaData[] wsDescriptionArr = udi.getWebservicesMetaData().getWebserviceDescriptions();
+         WebservicesMetaData jaxrpcMapping = dep.getContext().getAttachment(WebservicesMetaData.class);
+         WebserviceDescriptionMetaData[] wsDescriptionArr = jaxrpcMapping.getWebserviceDescriptions();
          for (WebserviceDescriptionMetaData wsdMetaData : wsDescriptionArr)
          {
             ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, null);
@@ -141,7 +142,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointEncodingStyle(sepMetaData);
 
-               initEndpointAddress(dep, udi, sepMetaData);
+               initEndpointAddress(dep, sepMetaData);
 
                UnifiedApplicationMetaData apMetaData = dep.getContext().getAttachment(UnifiedApplicationMetaData.class);
                UnifiedWebMetaData webMetaData = dep.getContext().getAttachment(UnifiedWebMetaData.class);
@@ -201,11 +202,11 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   if (configName != null || configFile != null)
                      sepMetaData.setConfigName(configName, configFile);
 
-                  initTransportGuaranteeJSE(dep, udi, sepMetaData, linkName);
+                  initTransportGuaranteeJSE(dep, sepMetaData, linkName);
                }
 
                // init service endpoint id
-               ObjectName sepID = createServiceEndpointID(dep, udi, sepMetaData);
+               ObjectName sepID = createServiceEndpointID(dep, sepMetaData);
                sepMetaData.setServiceEndpointID(sepID);
 
                replaceAddressLocation(sepMetaData);

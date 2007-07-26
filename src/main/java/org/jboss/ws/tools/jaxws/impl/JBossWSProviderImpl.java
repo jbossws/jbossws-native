@@ -33,10 +33,8 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.tools.WSContractProvider;
 
 /**
@@ -69,12 +67,6 @@ final class JBossWSProviderImpl extends WSContractProvider
             throw new WSException("Could not create directory: " + sourceDir);
    }
 
-   private UnifiedDeploymentInfo createUDI(Class<?> endpointClass, ClassLoader loader)
-   {
-      UnifiedDeploymentInfo udi = new UnifiedDeploymentInfo();
-      return udi;
-   }
-
    @Override
    public void provide(Class<?> endpointClass)
    {
@@ -104,13 +96,11 @@ final class JBossWSProviderImpl extends WSContractProvider
       if (generateWsdl)
          messageStream.println("Generating WSDL:");
 
-      UnifiedDeploymentInfo udi = createUDI(endpointClass, loader);
-
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
       DeploymentModelFactory factory = spiProvider.getSPI(DeploymentModelFactory.class);
       Deployment dep = factory.createDeployment("wsprovide-deployment", loader);
 
-      builder.buildWebServiceMetaData(dep, umd, udi, endpointClass, null);
+      builder.buildWebServiceMetaData(dep, umd, endpointClass, null);
       try
       {
          generator.write();

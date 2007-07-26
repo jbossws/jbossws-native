@@ -32,7 +32,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
 
@@ -52,7 +51,7 @@ public class JAXWSMetaDataBuilderEJB3
 
    /** Build from webservices.xml
     */
-   public UnifiedMetaData buildMetaData(ArchiveDeployment dep, UnifiedDeploymentInfo udi)
+   public UnifiedMetaData buildMetaData(ArchiveDeployment dep)
    {
       log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
@@ -72,7 +71,7 @@ public class JAXWSMetaDataBuilderEJB3
             if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))
             {
                String ejbLink = beanMetaData.getEjbName();
-               JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, udi, beanClass, ejbLink);
+               JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, beanClass, ejbLink);
 
                // setup the security domain
                if (beanClass.isAnnotationPresent(SecurityDomain.class))

@@ -115,7 +115,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       EndpointMetaData epMetaData = new ServerEndpointMetaData(serviceMetaData, new QName("dummyPortName"), new QName("dummyPortTypeName"), Type.JAXWS);
       serviceMetaData.addEndpoint(epMetaData);
       
-      builder.processPolicyAnnotations(epMetaData, TestMultipleEndpointPolicy.class, null);
+      builder.processPolicyAnnotations(epMetaData, TestMultipleEndpointPolicy.class);
 
       PolicyMetaExtension policyExt = (PolicyMetaExtension)epMetaData.getExtension(Constants.URI_WS_POLICY);
 

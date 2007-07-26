@@ -47,7 +47,6 @@ import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 
 /**
  * A meta data builder for policies; handles checks for policy support
@@ -105,7 +104,7 @@ public class PolicyMetaDataBuilder
       return builder;
    }
 
-   public void processPolicyAnnotations(EndpointMetaData epMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi)
+   public void processPolicyAnnotations(EndpointMetaData epMetaData, Class<?> sepClass)
    {
       UnifiedVirtualFile vfRoot = epMetaData.getServiceMetaData().getUnifiedMetaData().getRootFile();
       for (org.jboss.ws.extensions.policy.annotation.Policy anPolicy : sepClass.getAnnotation(PolicyAttachment.class).value())

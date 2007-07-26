@@ -71,7 +71,6 @@ import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
@@ -130,7 +129,7 @@ public abstract class MetaDataBuilder
       }
    }
 
-   protected void initEndpointAddress(Deployment dep, UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
+   protected void initEndpointAddress(Deployment dep, ServerEndpointMetaData sepMetaData)
    {
       String contextRoot = dep.getService().getContextRoot();
       String urlPattern = null;
@@ -175,7 +174,7 @@ public abstract class MetaDataBuilder
       sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath));
    }
 
-   public static ObjectName createServiceEndpointID(Deployment dep, UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData)
+   public static ObjectName createServiceEndpointID(Deployment dep, ServerEndpointMetaData sepMetaData)
    {
       String linkName = sepMetaData.getLinkName();
       String context = sepMetaData.getContextRoot();
@@ -244,7 +243,7 @@ public abstract class MetaDataBuilder
    /**
     * Read the transport guarantee from web.xml
     */
-   protected void initTransportGuaranteeJSE(Deployment dep, UnifiedDeploymentInfo udi, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
+   protected void initTransportGuaranteeJSE(Deployment dep, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
    {
       String transportGuarantee = null;
       UnifiedWebMetaData webMetaData = dep.getContext().getAttachment(UnifiedWebMetaData.class);

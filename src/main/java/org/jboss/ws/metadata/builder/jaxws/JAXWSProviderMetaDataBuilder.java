@@ -49,7 +49,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -60,7 +59,7 @@ import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
  */
 public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
-   public ServerEndpointMetaData buildProviderMetaData(ArchiveDeployment dep, UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName) throws IOException
+   public ServerEndpointMetaData buildProviderMetaData(ArchiveDeployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws IOException
    {
       // 5.3 Conformance (Provider implementation): A Provider based service endpoint implementation MUST
       // implement a typed Provider interface.
@@ -132,20 +131,20 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
       processHandlerChain(sepMetaData, sepClass);
 
       // process config
-      processEndpointConfig(udi, sepClass, linkName, sepMetaData);
+      processEndpointConfig(sepClass, linkName, sepMetaData);
 
       // Set the endpoint address
       processWebContext(dep, sepClass, linkName, sepMetaData);
 
       // Init the endpoint address
-      initEndpointAddress(dep, udi, sepMetaData);
+      initEndpointAddress(dep, sepMetaData);
 
       // A provider may not have a WSDL file
       if (sepMetaData.getServiceMetaData().getWsdlLocation() != null)
          MetaDataBuilder.replaceAddressLocation(sepMetaData);
 
       // init service endpoint id
-      ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, udi, sepMetaData);
+      ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, sepMetaData);
       sepMetaData.setServiceEndpointID(sepID);
 
       return sepMetaData;

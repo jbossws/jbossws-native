@@ -60,7 +60,6 @@ import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
@@ -101,11 +100,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       this.generateWsdl = generateWsdl;
    }
 
-   public ServerEndpointMetaData buildWebServiceMetaData(Deployment dep, UnifiedMetaData wsMetaData, UnifiedDeploymentInfo udi, Class<?> sepClass, String linkName)
+   public ServerEndpointMetaData buildWebServiceMetaData(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName)
    {
       try
       {
-         EndpointResult result = processWebService(dep, wsMetaData, sepClass, udi);
+         EndpointResult result = processWebService(dep, wsMetaData, sepClass);
 
          // Clear the java types, etc.
          resetMetaDataBuilder(dep.getInitialClassLoader());
@@ -131,13 +130,13 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processBindingType(sepMetaData, seiClass);
 
          // process config
-         processEndpointConfig(udi, sepClass, linkName, sepMetaData);
+         processEndpointConfig(sepClass, linkName, sepMetaData);
 
          // Process web methods
          processWebMethods(sepMetaData, seiClass);
 
          // Init the transport guarantee
-         initTransportGuaranteeJSE(dep, udi, sepMetaData, linkName);
+         initTransportGuaranteeJSE(dep, sepMetaData, linkName);
 
          // Initialize types
          createJAXBContext(sepMetaData);
@@ -147,7 +146,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          if (sepClass.isAnnotationPresent(PolicyAttachment.class))
          {
             PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getServerSidePolicyMetaDataBuilder(toolMode);
-            policyBuilder.processPolicyAnnotations(sepMetaData, sepClass, udi);
+            policyBuilder.processPolicyAnnotations(sepMetaData, sepClass);
          }
 
          // The server must always generate WSDL
@@ -180,7 +179,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processWSDDContribution(sepMetaData);
 
          // Init the endpoint address
-         initEndpointAddress(dep, udi, sepMetaData);
+         initEndpointAddress(dep, sepMetaData);
 
          // Process an optional @SOAPMessageHandlers annotation
          if (sepClass.isAnnotationPresent(SOAPMessageHandlers.class) || seiClass.isAnnotationPresent(SOAPMessageHandlers.class))
@@ -190,7 +189,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
 
          // init service endpoint id
-         ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, udi, sepMetaData);
+         ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, sepMetaData);
          sepMetaData.setServiceEndpointID(sepID);
 
          return sepMetaData;
@@ -276,7 +275,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
    }
 
-   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, UnifiedDeploymentInfo udi)
+   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass)
          throws ClassNotFoundException, IOException
    {
       WebService anWebService = sepClass.getAnnotation(WebService.class);

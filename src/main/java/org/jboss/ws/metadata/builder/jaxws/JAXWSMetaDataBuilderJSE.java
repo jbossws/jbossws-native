@@ -28,7 +28,6 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.UnifiedDeploymentInfo;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -44,7 +43,7 @@ public class JAXWSMetaDataBuilderJSE
 
    /** Build from annotations
     */
-   public UnifiedMetaData buildMetaData(ArchiveDeployment dep, UnifiedDeploymentInfo udi)
+   public UnifiedMetaData buildMetaData(ArchiveDeployment dep)
    {
       log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
@@ -58,7 +57,7 @@ public class JAXWSMetaDataBuilderJSE
          {
             String shortName = ep.getShortName();
             Class beanClass = ep.getTargetBeanClass();
-            JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, udi, beanClass, shortName);
+            JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, beanClass, shortName);
          }
          
          log.debug("END buildMetaData: " + wsMetaData);
