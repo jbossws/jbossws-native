@@ -371,13 +371,13 @@ public class MappingFileGeneratorHelper
       JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
       XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
       XSTypeDefinition xt = xe.getTypeDefinition();
-      QName xmlType = new QName(xt.getNamespace(), xt.getName());
+      WSDLTypes wsdlTypes = wsdlDefinitions.getWsdlTypes();
+      QName xmlType = wsdlTypes.getXMLType(header.getElement());
 
       // Replace the xt with the real type from the schema.
       xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
       if (xt instanceof XSSimpleTypeDefinition)
          xmlType = SchemaUtils.handleSimpleType((XSSimpleTypeDefinition)xt);
-      
       String partName = header.getPartName();
 
       MethodParamPartsMapping mpin = getMethodParamPartsMapping(semm, elementName, xmlType, paramPosition, wsdlMessageName, mode, partName, false, true);

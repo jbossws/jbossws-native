@@ -55,6 +55,7 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLRPCPart;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
+import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
@@ -439,7 +440,8 @@ public class WSDLToJava implements WSDLToJavaIntf
       JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
       XSElementDeclaration xe = xsmodel.getElementDeclaration(elementName.getLocalPart(), elementName.getNamespaceURI());
       XSTypeDefinition xt = xe.getTypeDefinition();
-      QName xmlType = new QName(xt.getNamespace(), xt.getName());
+      WSDLTypes wsdlTypes = wsdl.getWsdlTypes();
+      QName xmlType = wsdlTypes.getXMLType(header.getElement());
 
       // Replace the xt with the real type from the schema.
       xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
@@ -449,7 +451,7 @@ public class WSDLToJava implements WSDLToJavaIntf
          buf.append(", ");
       }
 
-      generateParameter(buf, "", xmlType, xsmodel, xt, false, true, holder);
+      generateParameter(buf, xe.getName(), xmlType, xsmodel, xt, false, true, holder);
       buf.append(" ").append(header.getPartName());
    }
 
