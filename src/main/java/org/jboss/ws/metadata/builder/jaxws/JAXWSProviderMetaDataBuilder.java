@@ -49,6 +49,7 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -99,7 +100,9 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
       // Setup the ServerEndpointMetaData
       QName portQName = new QName(targetNS, portName);
       QName portTypeQName = new QName(targetNS, name);
-      ServerEndpointMetaData sepMetaData = new ServerEndpointMetaData(serviceMetaData, portQName, portTypeQName, Type.JAXWS);
+      
+      Endpoint ep = dep.getService().getEndpointByName(linkName);
+      ServerEndpointMetaData sepMetaData = new ServerEndpointMetaData(serviceMetaData, ep, portQName, portTypeQName, Type.JAXWS);
       sepMetaData.setLinkName(linkName);
 
       sepMetaData.setStyle(Style.DOCUMENT);

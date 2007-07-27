@@ -68,14 +68,6 @@ public class OperationMetaData extends ExtensibleMetaData
    private List<FaultMetaData> faults = new ArrayList<FaultMetaData>();
    private ParameterMetaData returnParam;
 
-   public OperationMetaData(QName qname, String javaName)
-   {
-      UnifiedMetaData umd = new UnifiedMetaData(new ResourceLoaderAdapter());
-      ServiceMetaData smd = new ServiceMetaData(umd, new QName("mock-service"));
-      ServerEndpointMetaData epmd = new ServerEndpointMetaData(smd, new QName("mock-endpoint"), new QName("mock-interface"), Type.JAXRPC);
-      initOperationMetaData(epmd, qname, javaName);
-   }
-
    public OperationMetaData(EndpointMetaData epMetaData, QName qname, String javaName)
    {
       log.trace("new OperationMetaData: [xmlName=" + qname + ",javaName=" + javaName + "]");

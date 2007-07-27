@@ -60,6 +60,7 @@ import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
@@ -104,7 +105,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    {
       try
       {
-         EndpointResult result = processWebService(dep, wsMetaData, sepClass);
+         EndpointResult result = processWebService(dep, wsMetaData, sepClass, linkName);
 
          // Clear the java types, etc.
          resetMetaDataBuilder(dep.getInitialClassLoader());
@@ -275,13 +276,14 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
    }
 
-   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass)
-         throws ClassNotFoundException, IOException
+   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws ClassNotFoundException, IOException
    {
       WebService anWebService = sepClass.getAnnotation(WebService.class);
       if (anWebService == null)
          throw new WSException("Cannot obtain @WebService annotation from: " + sepClass.getName());
 
+      Endpoint ep = dep.getService().getEndpointByName(linkName);
+      
       Class<?> seiClass = null;
       String seiName;
       WSDLUtils wsdlUtils = WSDLUtils.getInstance();
@@ -340,11 +342,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       EndpointResult result = new EndpointResult();
       result.serviceMetaData = new ServiceMetaData(wsMetaData, new QName(serviceNS, serviceName));
-      result.sepMetaData = new ServerEndpointMetaData(result.serviceMetaData, portQName, portTypeQName, EndpointMetaData.Type.JAXWS);
+      result.sepMetaData = new ServerEndpointMetaData(result.serviceMetaData, ep, portQName, portTypeQName, EndpointMetaData.Type.JAXWS);
       result.epClass = (seiClass != null ? seiClass : sepClass);
       result.serviceMetaData.addEndpoint(result.sepMetaData);
       wsMetaData.addService(result.serviceMetaData);
-      
+
       if (dep instanceof ArchiveDeployment)
          result.wsdlLocation = ((ArchiveDeployment)dep).getMetaDataFileURL(wsdlLocation);
 

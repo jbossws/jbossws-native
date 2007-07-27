@@ -73,11 +73,12 @@ public class ServerEndpointMetaData extends EndpointMetaData
    // The optional secure wsdl access 
    private boolean secureWSDLAccess;
 
-   public ServerEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
+   public ServerEndpointMetaData(ServiceMetaData service, Endpoint endpoint, QName portName, QName portTypeName, Type type)
    {
       super(service, portName, portTypeName, type);
+      this.endpoint = endpoint;
+      
       super.configName = ConfigurationProvider.DEFAULT_ENDPOINT_CONFIG_NAME;
-
       if (type == Type.JAXRPC)
          configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
       else

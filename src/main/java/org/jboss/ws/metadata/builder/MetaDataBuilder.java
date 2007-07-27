@@ -138,7 +138,7 @@ public abstract class MetaDataBuilder
       String linkName = sepMetaData.getLinkName();
       if (linkName != null)
       {
-         Endpoint endpoint = getEndpointByName(dep, linkName);
+         Endpoint endpoint = dep.getService().getEndpointByName(linkName);
          if (endpoint != null)
             urlPattern = endpoint.getURLPattern();
       }
@@ -175,23 +175,6 @@ public abstract class MetaDataBuilder
       sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath));
    }
 
-   private Endpoint getEndpointByName(Deployment dep, String shortName)
-   {
-      if (shortName == null)
-         throw new IllegalArgumentException("shortName cannot be null");
-      
-      Endpoint retEndpoint = null;
-      for (Endpoint ep : dep.getService().getEndpoints())
-      {
-         if (ep.getShortName().equals(shortName))
-         {
-            retEndpoint = ep;
-            break;
-         }
-      }
-      return retEndpoint;
-   }
-   
    public static ObjectName createServiceEndpointID(Deployment dep, ServerEndpointMetaData sepMetaData)
    {
       String linkName = sepMetaData.getLinkName();

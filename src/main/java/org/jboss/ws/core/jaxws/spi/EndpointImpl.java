@@ -45,7 +45,6 @@ import org.jboss.ws.core.server.HttpContext;
 import org.jboss.ws.core.server.HttpServer;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
 
@@ -74,7 +73,7 @@ public class EndpointImpl extends Endpoint
 
    public EndpointImpl(String bindingId, Object implementor)
    {
-      if(log.isDebugEnabled()) log.debug("new EndpointImpl(bindingId=" + bindingId + ",implementor=" + implementor + ")");
+      log.debug("new EndpointImpl(bindingId=" + bindingId + ",implementor=" + implementor + ")");
 
       if (implementor == null)
          throw new IllegalArgumentException("Implementor cannot be null");
@@ -105,7 +104,7 @@ public class EndpointImpl extends Endpoint
    @Override
    public void publish(String address)
    {
-      if(log.isDebugEnabled()) log.debug("publish: " + address);
+      log.debug("publish: " + address);
 
       URI addrURI;
       try
@@ -142,7 +141,7 @@ public class EndpointImpl extends Endpoint
    @Override
    public void publish(Object context)
    {
-      if(log.isDebugEnabled()) log.debug("publish: " + context);
+      log.debug("publish: " + context);
 
       if (isDestroyed)
          throw new IllegalStateException("Endpoint already destroyed");
@@ -155,7 +154,7 @@ public class EndpointImpl extends Endpoint
       try
       {
          SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+         spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
          isStandalone = false;
       }
       catch (Exception ex)
@@ -179,8 +178,8 @@ public class EndpointImpl extends Endpoint
    @Override
    public void stop()
    {
-      if(log.isDebugEnabled()) log.debug("stop");
-      
+      log.debug("stop");
+
       if (serverContext == null || isPublished == false)
          log.error("Endpoint not published");
 
@@ -245,7 +244,6 @@ public class EndpointImpl extends Endpoint
       properties = map;
    }
 
-   
    private void checkPublishEndpointPermission()
    {
       // 5.10 Conformance (Checking publishEndpoint Permission): When any of the publish methods defined

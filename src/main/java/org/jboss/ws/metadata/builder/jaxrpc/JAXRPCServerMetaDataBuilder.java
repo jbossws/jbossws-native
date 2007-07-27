@@ -43,6 +43,7 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.EJBSecurityMetaData;
@@ -111,6 +112,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
             PortComponentMetaData[] pcMetaDataArr = wsdMetaData.getPortComponents();
             for (PortComponentMetaData pcMetaData : pcMetaDataArr)
             {
+               String linkName = pcMetaData.getEjbLink() != null ? pcMetaData.getEjbLink() : pcMetaData.getServletLink();
                QName portName = pcMetaData.getWsdlPort();
 
                // JBWS-722
@@ -131,9 +133,9 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                serviceMetaData.setServiceName(wsdlEndpoint.getWsdlService().getName());
                QName interfaceQName = wsdlEndpoint.getInterface().getName();
 
-               ServerEndpointMetaData sepMetaData = new ServerEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXRPC);
+               Endpoint ep = dep.getService().getEndpointByName(linkName);
+               ServerEndpointMetaData sepMetaData = new ServerEndpointMetaData(serviceMetaData, ep, portName, interfaceQName, Type.JAXRPC);
                sepMetaData.setPortComponentName(pcMetaData.getPortComponentName());
-               String linkName = pcMetaData.getEjbLink() != null ? pcMetaData.getEjbLink() : pcMetaData.getServletLink();
                sepMetaData.setLinkName(linkName);
                serviceMetaData.addEndpoint(sepMetaData);
 

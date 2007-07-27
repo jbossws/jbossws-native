@@ -63,7 +63,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       ServiceMetaData serviceMetaData = new ServiceMetaData(umd, serviceName);
       QName portName = new QName("http://org.jboss.ws/jaxws/endpoint", "EndpointInterfacePort");
       QName portTypeName = new QName("http://org.jboss.ws/jaxws/endpoint", "EndpointInterface");
-      EndpointMetaData epMetaData = new ServerEndpointMetaData(serviceMetaData, portName, portTypeName, Type.JAXWS);
+      EndpointMetaData epMetaData = new ServerEndpointMetaData(serviceMetaData, null, portName, portTypeName, Type.JAXWS);
 
       Map<String, Class> map = new HashMap<String, Class>();
       map.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", NopAssertionDeployer.class);
@@ -112,7 +112,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       UnifiedMetaData umd = new UnifiedMetaData(vfRoot);
       ServiceMetaData serviceMetaData = new ServiceMetaData(umd, new QName("dummyServiceName"));
       umd.addService(serviceMetaData);
-      EndpointMetaData epMetaData = new ServerEndpointMetaData(serviceMetaData, new QName("dummyPortName"), new QName("dummyPortTypeName"), Type.JAXWS);
+      EndpointMetaData epMetaData = new ServerEndpointMetaData(serviceMetaData, null, new QName("dummyPortName"), new QName("dummyPortTypeName"), Type.JAXWS);
       serviceMetaData.addEndpoint(epMetaData);
       
       builder.processPolicyAnnotations(epMetaData, TestMultipleEndpointPolicy.class);
