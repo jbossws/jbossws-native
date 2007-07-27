@@ -136,10 +136,11 @@ public abstract class MetaDataBuilder
 
       // Get the URL pattern from the endpoint
       String linkName = sepMetaData.getLinkName();
-      if (linkName != null && dep.getService().getEndpointByName(linkName) != null)
+      if (linkName != null)
       {
-         Endpoint endpoint = dep.getService().getEndpointByName(linkName);
-         urlPattern = endpoint.getURLPattern();
+         Endpoint endpoint = getEndpointByName(dep, linkName);
+         if (endpoint != null)
+            urlPattern = endpoint.getURLPattern();
       }
 
       // If not, derive the context root from the deployment
@@ -174,6 +175,23 @@ public abstract class MetaDataBuilder
       sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath));
    }
 
+   private Endpoint getEndpointByName(Deployment dep, String shortName)
+   {
+      if (shortName == null)
+         throw new IllegalArgumentException("shortName cannot be null");
+      
+      Endpoint retEndpoint = null;
+      for (Endpoint ep : dep.getService().getEndpoints())
+      {
+         if (ep.getShortName().equals(shortName))
+         {
+            retEndpoint = ep;
+            break;
+         }
+      }
+      return retEndpoint;
+   }
+   
    public static ObjectName createServiceEndpointID(Deployment dep, ServerEndpointMetaData sepMetaData)
    {
       String linkName = sepMetaData.getLinkName();

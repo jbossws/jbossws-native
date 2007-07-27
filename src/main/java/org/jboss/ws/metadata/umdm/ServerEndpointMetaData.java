@@ -31,6 +31,9 @@ import org.jboss.wsf.spi.binding.BindingCustomization;
 
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -191,9 +194,15 @@ public class ServerEndpointMetaData extends EndpointMetaData
     * Will be set through a deployment aspect
     * @return List<BindingCustomization> of available customizations
     */
-   public List<BindingCustomization> getBindingCustomizations()
+   public Collection<BindingCustomization> getBindingCustomizations()
    {
-      return endpoint.getBindingCustomizations();
+      List<BindingCustomization> list = new ArrayList<BindingCustomization>();
+      for (Object att : endpoint.getAttachments())
+      {
+         if (att instanceof BindingCustomization)
+            list.add((BindingCustomization)att);
+      }
+      return list;
    }
 
    public String toString()

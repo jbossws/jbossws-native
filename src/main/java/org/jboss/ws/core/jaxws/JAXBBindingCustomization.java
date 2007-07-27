@@ -22,6 +22,7 @@
 package org.jboss.ws.core.jaxws;
 
 import org.jboss.wsf.spi.binding.BindingCustomization;
+
 import com.sun.xml.bind.api.JAXBRIContext;
 
 /**
@@ -32,8 +33,8 @@ import com.sun.xml.bind.api.JAXBRIContext;
  * @author Heiko.Braun@jboss.com
  *         Created: Jun 28, 2007
  */
-public class JAXBBindingCustomization extends BindingCustomization {
-
+public class JAXBBindingCustomization extends BindingCustomization
+{
    // Use an alternative RuntimeAnnotationReader implementation
    public final static String ANNOTATION_READER = JAXBRIContext.ANNOTATION_READER;
 
@@ -42,6 +43,4 @@ public class JAXBBindingCustomization extends BindingCustomization {
 
    // Enable the c14n marshalling support in the JAXBContext.
    public final static String CANONICALIZATION_SUPPORT = JAXBRIContext.CANONICALIZATION_SUPPORT;
-
-
 }

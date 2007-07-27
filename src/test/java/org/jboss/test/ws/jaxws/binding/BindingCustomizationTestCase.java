@@ -22,16 +22,14 @@
 package org.jboss.test.ws.jaxws.binding;
 
 import junit.framework.TestCase;
+
 import org.jboss.ws.core.jaxws.JAXBBindingCustomization;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import static org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
-
-import java.util.Iterator;
-import java.util.List;
+import org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
 
 /**
  * @author Heiko.Braun@jboss.com
@@ -54,13 +52,13 @@ public class BindingCustomizationTestCase extends TestCase {
       Endpoint endpoint = deploymentModelFactory.createEndpoint();
       JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
       jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
-      endpoint.addBindingCustomization(jaxbCustomization);
+      endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
 
       // a started endpoint should deny customizations
       try
       {
          endpoint.setState(EndpointState.STARTED);
-         endpoint.addBindingCustomization(jaxbCustomization);
+         endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
 
          fail("It should not be possible to change bindinig customizations on a started endpoint");
       }
@@ -75,26 +73,17 @@ public class BindingCustomizationTestCase extends TestCase {
       Endpoint endpoint = deploymentModelFactory.createEndpoint();
       JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
       jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
-      endpoint.addBindingCustomization(jaxbCustomization);
+      endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
       endpoint.setState(EndpointState.STARTED);
 
       // read a single customization
-      List<BindingCustomization> customizations = endpoint.getBindingCustomizations();
-
-      BindingCustomization knownCustomization = null;
-      Iterator<BindingCustomization> it = customizations.iterator();
-      while(it.hasNext())
-      {
-         knownCustomization = it.next();
-         break;
-      }
-
+      BindingCustomization knownCustomization = endpoint.getAttachment(BindingCustomization.class);
       assertNotNull(knownCustomization);
 
       // however the iteratoion should be unmodifiable
       try
       {
-         customizations.add( new JAXBBindingCustomization() );
+         endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
          fail("Started Endpoints should only axpose read acccess to their binding customizations");
       }
       catch (Exception e)
