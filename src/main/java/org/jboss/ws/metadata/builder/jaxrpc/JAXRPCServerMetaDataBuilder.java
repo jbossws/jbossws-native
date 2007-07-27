@@ -43,11 +43,10 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
-import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedEjbPortComponentMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBSecurityMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
@@ -105,9 +104,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Assign the WS-Security configuration,
             WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-            WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(
-               wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME
-            );
+            WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME);
             serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
             // For every port-component build the EndpointMetaData
@@ -144,8 +141,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointAddress(dep, sepMetaData);
 
-               UnifiedApplicationMetaData apMetaData = dep.getAttachment(UnifiedApplicationMetaData.class);
-               UnifiedWebMetaData webMetaData = dep.getAttachment(UnifiedWebMetaData.class);
+               EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
+               JSEArchiveMetaData webMetaData = dep.getAttachment(JSEArchiveMetaData.class);
                if (apMetaData != null)
                {
                   wsMetaData.setSecurityDomain(apMetaData.getSecurityDomain());
@@ -156,8 +153,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   serviceMetaData.setWsdlPublishLocation(wsdlPublishLocation);
 
                   // Copy <port-component> meta data
-                  UnifiedBeanMetaData beanMetaData = apMetaData.getBeanByEjbName(linkName);
-                  if (beanMetaData == null)
+                  EJBMetaData bmd = apMetaData.getBeanByEjbName(linkName);
+                  if (bmd == null)
                      throw new WSException("Cannot obtain UnifiedBeanMetaData for: " + linkName);
 
                   String configName = apMetaData.getConfigName();
@@ -165,24 +162,15 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   if (configName != null || configFile != null)
                      sepMetaData.setConfigName(configName, configFile);
 
-                  UnifiedEjbPortComponentMetaData bpcMetaData = beanMetaData.getPortComponent();
-                  if (bpcMetaData != null)
+                  EJBSecurityMetaData smd = bmd.getSecurityMetaData();
+                  if (smd != null)
                   {
-                     if (bpcMetaData.getAuthMethod() != null)
-                     {
-                        String authMethod = bpcMetaData.getAuthMethod();
-                        sepMetaData.setAuthMethod(authMethod);
-                     }
-                     if (bpcMetaData.getTransportGuarantee() != null)
-                     {
-                        String transportGuarantee = bpcMetaData.getTransportGuarantee();
-                        sepMetaData.setTransportGuarantee(transportGuarantee);
-                     }
-                     if (bpcMetaData.getSecureWSDLAccess() != null)
-                     {
-                        Boolean secureWSDLAccess = bpcMetaData.getSecureWSDLAccess();
-                        sepMetaData.setSecureWSDLAccess(secureWSDLAccess);
-                     }
+                     String authMethod = smd.getAuthMethod();
+                     sepMetaData.setAuthMethod(authMethod);
+                     String transportGuarantee = smd.getTransportGuarantee();
+                     sepMetaData.setTransportGuarantee(transportGuarantee);
+                     Boolean secureWSDLAccess = smd.getSecureWSDLAccess();
+                     sepMetaData.setSecureWSDLAccess(secureWSDLAccess);
                   }
                }
                else if (webMetaData != null)

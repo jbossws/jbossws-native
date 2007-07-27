@@ -32,8 +32,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -61,11 +61,11 @@ public class JAXWSMetaDataBuilderEJB3
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
          // The container objects below provide access to all of the ejb metadata
-         UnifiedApplicationMetaData apMetaData = dep.getAttachment(UnifiedApplicationMetaData.class);
-         Iterator<UnifiedBeanMetaData> it = apMetaData.getEnterpriseBeans();
+         EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
+         Iterator<EJBMetaData> it = apMetaData.getEnterpriseBeans();
          while (it.hasNext())
          {
-            UnifiedBeanMetaData beanMetaData = it.next();
+            EJBMetaData beanMetaData = it.next();
             String ejbClassName = beanMetaData.getEjbClass();
             Class<?> beanClass = wsMetaData.getClassLoader().loadClass(ejbClassName);
             if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))

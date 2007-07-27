@@ -73,12 +73,12 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedApplicationMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedBeanMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedMessageDrivenMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.UnifiedWebSecurityMetaData.UnifiedWebResourceCollection;
+import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.MDBMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData.JSEResourceCollection;
 
 /** An abstract meta data builder.
  *
@@ -204,20 +204,20 @@ public abstract class MetaDataBuilder
       idstr.append("," + ServerEndpointMetaData.SEPID_PROPERTY_ENDPOINT + "=" + linkName);
 
       // Add JMS destination JNDI name for MDB endpoints
-      UnifiedApplicationMetaData apMetaData = dep.getAttachment(UnifiedApplicationMetaData.class);
+      EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
       if (apMetaData != null)
       {
          String ejbName = sepMetaData.getLinkName();
          if (ejbName == null)
             throw new WSException("Cannot obtain ejb-link from port component");
 
-         UnifiedBeanMetaData beanMetaData = (UnifiedBeanMetaData)apMetaData.getBeanByEjbName(ejbName);
+         EJBMetaData beanMetaData = (EJBMetaData)apMetaData.getBeanByEjbName(ejbName);
          if (beanMetaData == null)
             throw new WSException("Cannot obtain ejb meta data for: " + ejbName);
 
-         if (beanMetaData instanceof UnifiedMessageDrivenMetaData)
+         if (beanMetaData instanceof MDBMetaData)
          {
-            UnifiedMessageDrivenMetaData mdMetaData = (UnifiedMessageDrivenMetaData)beanMetaData;
+            MDBMetaData mdMetaData = (MDBMetaData)beanMetaData;
             String jndiName = mdMetaData.getDestinationJndiName();
             idstr.append(",jms=" + jndiName);
          }
@@ -264,7 +264,7 @@ public abstract class MetaDataBuilder
    protected void initTransportGuaranteeJSE(Deployment dep, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
    {
       String transportGuarantee = null;
-      UnifiedWebMetaData webMetaData = dep.getAttachment(UnifiedWebMetaData.class);
+      JSEArchiveMetaData webMetaData = dep.getAttachment(JSEArchiveMetaData.class);
       if (webMetaData != null)
       {
          Map<String, String> servletMappings = webMetaData.getServletMappings();
@@ -273,12 +273,12 @@ public abstract class MetaDataBuilder
          if (urlPattern == null)
             throw new WSException("Cannot find <url-pattern> for servlet-name: " + servletLink);
 
-         List<UnifiedWebSecurityMetaData> securityList = webMetaData.getSecurityMetaData();
-         for (UnifiedWebSecurityMetaData currentSecurity : securityList)
+         List<JSESecurityMetaData> securityList = webMetaData.getSecurityMetaData();
+         for (JSESecurityMetaData currentSecurity : securityList)
          {
             if (currentSecurity.getTransportGuarantee() != null && currentSecurity.getTransportGuarantee().length() > 0)
             {
-               for (UnifiedWebResourceCollection currentCollection : currentSecurity.getWebResources())
+               for (JSEResourceCollection currentCollection : currentSecurity.getWebResources())
                {
                   for (String currentUrlPattern : currentCollection.getUrlPatterns())
                   {
