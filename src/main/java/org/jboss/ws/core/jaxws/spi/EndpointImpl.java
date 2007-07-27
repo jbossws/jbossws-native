@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
-import java.io.File;
 
 import javax.xml.transform.Source;
 import javax.xml.ws.Binding;
@@ -44,10 +43,10 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.server.HttpContext;
 import org.jboss.ws.core.server.HttpServer;
-import org.jboss.wsf.spi.management.ServerConfigFactory;
-import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -156,7 +155,7 @@ public class EndpointImpl extends Endpoint
       try
       {
          SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();File tmpDir = serverConfig.getServerTempDir();
+         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
          isStandalone = false;
       }
       catch (Exception ex)

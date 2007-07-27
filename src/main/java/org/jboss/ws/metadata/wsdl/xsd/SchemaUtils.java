@@ -521,7 +521,7 @@ public class SchemaUtils
       try
       {
          SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();File tmpDir = serverConfig.getServerTempDir();
+         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();File tmpDir = serverConfig.getServerTempDir();
          tmpdir = serverConfig.getServerTempDir();
          tmpdir = new File(tmpdir.getCanonicalPath() + "/jbossws");
          tmpdir.mkdirs();

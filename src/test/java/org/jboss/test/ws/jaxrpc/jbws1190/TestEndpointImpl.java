@@ -45,7 +45,7 @@ public class TestEndpointImpl implements TestEndpoint
    public void testAddress(final String archive, final String service, final String scheme, final String port)
    {
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();      
+      ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();      
 
       File dataDir = serverConfig.getServerDataDir();
       File wsdlDir = new File(dataDir.getAbsolutePath() + File.separator + "wsdl" + File.separator + archive);

@@ -49,7 +49,7 @@ public class TestEndpointImpl implements TestEndpoint
       try
       {
          SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();File tmpDir = serverConfig.getServerTempDir();
+         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();File tmpDir = serverConfig.getServerTempDir();
          tmpDir = new File(tmpDir.getCanonicalPath() + "/jbossws");
 
          baseFiles = getXsdTempFiles(tmpDir);

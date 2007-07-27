@@ -240,7 +240,7 @@ public abstract class MetaDataBuilder
          uriScheme = "http";
 
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();
+      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
 
       String host = config.getWebServiceHost();
       int port = config.getWebServicePort();
@@ -322,7 +322,7 @@ public abstract class MetaDataBuilder
                String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath);
 
                SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();               
+               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();               
                boolean alwaysModify = config.isModifySOAPAddress();
 
                if (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0)

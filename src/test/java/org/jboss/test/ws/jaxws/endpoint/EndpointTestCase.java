@@ -62,7 +62,7 @@ public class EndpointTestCase extends JBossWSTest
          {
             MBeanServerConnection server = JBossWSTestHelper.getServer();
             useJBossWebLoader = (Boolean)server.getAttribute(new ObjectName("jboss.web:service=WebServer"), "UseJBossWebLoader");
-            server.setAttribute(new ObjectName("jboss.web:service=WebServer"), new Attribute("UseJBossWebLoader", new Boolean(true)));
+            server.setAttribute(new ObjectName("jboss.web:service=WebServer"), new Attribute("UseJBossWebLoader", Boolean.TRUE));
             super.setUp();
          }
 

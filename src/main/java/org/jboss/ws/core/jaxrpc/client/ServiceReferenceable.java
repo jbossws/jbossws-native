@@ -105,7 +105,7 @@ public class ServiceReferenceable implements Referenceable
             try
             {
                SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).createServerConfig();
+               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
                
                String host = config.getWebServiceHost();
                int port = config.getWebServicePort();
