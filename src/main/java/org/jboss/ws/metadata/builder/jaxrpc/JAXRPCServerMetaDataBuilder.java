@@ -78,7 +78,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
          wsMetaData.setDeploymentName(dep.getCanonicalName());
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
-         WebservicesMetaData jaxrpcMapping = dep.getContext().getAttachment(WebservicesMetaData.class);
+         WebservicesMetaData jaxrpcMapping = dep.getAttachment(WebservicesMetaData.class);
          WebserviceDescriptionMetaData[] wsDescriptionArr = jaxrpcMapping.getWebserviceDescriptions();
          for (WebserviceDescriptionMetaData wsdMetaData : wsDescriptionArr)
          {
@@ -144,8 +144,8 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                initEndpointAddress(dep, sepMetaData);
 
-               UnifiedApplicationMetaData apMetaData = dep.getContext().getAttachment(UnifiedApplicationMetaData.class);
-               UnifiedWebMetaData webMetaData = dep.getContext().getAttachment(UnifiedWebMetaData.class);
+               UnifiedApplicationMetaData apMetaData = dep.getAttachment(UnifiedApplicationMetaData.class);
+               UnifiedWebMetaData webMetaData = dep.getAttachment(UnifiedWebMetaData.class);
                if (apMetaData != null)
                {
                   wsMetaData.setSecurityDomain(apMetaData.getSecurityDomain());

@@ -186,7 +186,7 @@ public abstract class MetaDataBuilder
       idstr.append("," + ServerEndpointMetaData.SEPID_PROPERTY_ENDPOINT + "=" + linkName);
 
       // Add JMS destination JNDI name for MDB endpoints
-      UnifiedApplicationMetaData apMetaData = dep.getContext().getAttachment(UnifiedApplicationMetaData.class);
+      UnifiedApplicationMetaData apMetaData = dep.getAttachment(UnifiedApplicationMetaData.class);
       if (apMetaData != null)
       {
          String ejbName = sepMetaData.getLinkName();
@@ -246,7 +246,7 @@ public abstract class MetaDataBuilder
    protected void initTransportGuaranteeJSE(Deployment dep, ServerEndpointMetaData sepMetaData, String servletLink) throws IOException
    {
       String transportGuarantee = null;
-      UnifiedWebMetaData webMetaData = dep.getContext().getAttachment(UnifiedWebMetaData.class);
+      UnifiedWebMetaData webMetaData = dep.getAttachment(UnifiedWebMetaData.class);
       if (webMetaData != null)
       {
          Map<String, String> servletMappings = webMetaData.getServletMappings();

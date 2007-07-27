@@ -61,7 +61,7 @@ public class JAXWSMetaDataBuilderEJB3
          wsMetaData.setClassLoader(dep.getInitialClassLoader());
 
          // The container objects below provide access to all of the ejb metadata
-         UnifiedApplicationMetaData apMetaData = dep.getContext().getAttachment(UnifiedApplicationMetaData.class);
+         UnifiedApplicationMetaData apMetaData = dep.getAttachment(UnifiedApplicationMetaData.class);
          Iterator<UnifiedBeanMetaData> it = apMetaData.getEnterpriseBeans();
          while (it.hasNext())
          {
