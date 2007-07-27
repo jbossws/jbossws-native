@@ -193,12 +193,15 @@ public class ServerEndpointMetaData extends EndpointMetaData
    @Override
    public String getEndpointAddress()
    {
-      return endpoint.getAddress();
+      return endpoint != null ? endpoint.getAddress() : null;
    }
 
    @Override
    public void setEndpointAddress(String endpointAddress)
    {
+      if (endpoint == null)
+         throw new IllegalStateException("Endpoint not available");
+      
       endpoint.setAddress(endpointAddress);
    }
 
