@@ -190,6 +190,18 @@ public class ServerEndpointMetaData extends EndpointMetaData
       this.secureWSDLAccess = secureWSDLAccess;
    }
 
+   @Override
+   public String getEndpointAddress()
+   {
+      return endpoint.getAddress();
+   }
+
+   @Override
+   public void setEndpointAddress(String endpointAddress)
+   {
+      endpoint.setAddress(endpointAddress);
+   }
+
    /**
     * Will be set through a deployment aspect
     * @return List<BindingCustomization> of available customizations

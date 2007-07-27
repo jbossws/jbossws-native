@@ -37,11 +37,22 @@ import javax.xml.namespace.QName;
 public class ToolsEndpointMetaData extends EndpointMetaData
 {
    public String typeNamespace;
+   private String endpointAddress;
 
    public ToolsEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
    {
       super(service, portName, portTypeName, Type.JAXRPC);
       super.configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
       super.configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
+   }
+   
+   public String getEndpointAddress()
+   {
+      return endpointAddress;
+   }
+
+   public void setEndpointAddress(String endpointAddress)
+   {
+      this.endpointAddress = endpointAddress;
    }
 }

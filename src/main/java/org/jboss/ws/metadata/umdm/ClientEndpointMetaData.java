@@ -36,6 +36,8 @@ import javax.xml.namespace.QName;
  */
 public class ClientEndpointMetaData extends EndpointMetaData
 {
+   // The endpoint address
+   private String endpointAddress;
    
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {
@@ -46,6 +48,16 @@ public class ClientEndpointMetaData extends EndpointMetaData
          configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
       else
          configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
+   }
+
+   public String getEndpointAddress()
+   {
+      return endpointAddress;
+   }
+
+   public void setEndpointAddress(String endpointAddress)
+   {
+      this.endpointAddress = endpointAddress;
    }
 
    public String toString()

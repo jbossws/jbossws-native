@@ -110,8 +110,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    protected String configName;
    // The REQUIRED config-file
    protected String configFile;
-   // The endpoint address
-   private String endpointAddress;
    // The endpoint interface name
    private String seiName;
    // The endpoint interface
@@ -180,15 +178,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       return portTypeName;
    }
 
-   public String getEndpointAddress()
-   {
-      return endpointAddress;
-   }
+   public abstract String getEndpointAddress();
 
-   public void setEndpointAddress(String endpointAddress)
-   {
-      this.endpointAddress = endpointAddress;
-   }
+   public abstract void setEndpointAddress(String endpointAddress);
 
    public String getBindingId()
    {
