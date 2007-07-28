@@ -35,8 +35,11 @@ import javax.xml.ws.Endpoint;
 import javax.xml.ws.Service;
 import javax.xml.ws.soap.SOAPBinding;
 
-import org.jboss.ws.core.server.HttpContext;
-import org.jboss.ws.core.server.HttpServer;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.http.HttpContext;
+import org.jboss.wsf.spi.http.HttpServer;
+import org.jboss.wsf.spi.http.HttpServerFactory;
 
 /**
  * Test Endpoint deployment
@@ -58,11 +61,12 @@ public class EndpointServlet extends HttpServlet
       endpoint = Endpoint.create(SOAPBinding.SOAP11HTTP_BINDING, epImpl);
 
       // Create and start the HTTP server
-      HttpServer server = HttpServer.create();
-      server.start();
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).newHttpServer();
+      httpServer.start();
       
       // Create the context and publish the endpoint
-      HttpContext context = server.createContext("/jaxws-endpoint");
+      HttpContext context = httpServer.createContext("/jaxws-endpoint");
       endpoint.publish(context);
    }
    

@@ -29,7 +29,7 @@ import javax.xml.rpc.Call;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
 
-import org.jboss.wsf.framework.management.BasicServerConfigMBean;
+import org.jboss.wsf.framework.management.DefaultServerConfigMBean;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
@@ -51,14 +51,14 @@ public class AddressRewriteTestCase extends JBossWSTest
    {
       wsdlLocation = "http://" + getServerHost() + ":8080/jaxrpc-addressrewrite/ValidURL?wsdl";
       wsdlLocationSec = "http://" + getServerHost() + ":8080/jaxrpc-addressrewrite-sec/ValidURL?wsdl";
-      modifySOAPAddress = (Boolean)getServer().getAttribute(BasicServerConfigMBean.OBJECT_NAME, "ModifySOAPAddress");
-      webServiceHost = (String)getServer().getAttribute(BasicServerConfigMBean.OBJECT_NAME, "WebServiceHost");
+      modifySOAPAddress = (Boolean)getServer().getAttribute(DefaultServerConfigMBean.OBJECT_NAME, "ModifySOAPAddress");
+      webServiceHost = (String)getServer().getAttribute(DefaultServerConfigMBean.OBJECT_NAME, "WebServiceHost");
    }
 
    public void tearDown() throws Exception
    {
       Attribute attr = new Attribute("ModifySOAPAddress", modifySOAPAddress);
-      getServer().setAttribute(BasicServerConfigMBean.OBJECT_NAME, attr);
+      getServer().setAttribute(DefaultServerConfigMBean.OBJECT_NAME, attr);
    }
 
    public void testRewrite() throws Exception
@@ -158,6 +158,6 @@ public class AddressRewriteTestCase extends JBossWSTest
    private void setModifySOAPAddress(Boolean value) throws Exception
    {
       Attribute attr = new Attribute("ModifySOAPAddress", value);
-      getServer().setAttribute(BasicServerConfigMBean.OBJECT_NAME, attr);
+      getServer().setAttribute(DefaultServerConfigMBean.OBJECT_NAME, attr);
    }
 }

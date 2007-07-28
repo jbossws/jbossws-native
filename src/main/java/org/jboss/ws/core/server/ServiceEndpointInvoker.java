@@ -279,7 +279,7 @@ public class ServiceEndpointInvoker
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {
                SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               wsContext = spiProvider.getSPI(WebServiceContextFactory.class).createWebServiceContext(
+               wsContext = spiProvider.getSPI(WebServiceContextFactory.class).newWebServiceContext(
                  InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext
                );
             }

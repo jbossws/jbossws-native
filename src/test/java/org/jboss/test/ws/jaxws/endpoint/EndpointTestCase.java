@@ -80,7 +80,7 @@ public class EndpointTestCase extends JBossWSTest
       if (isTargetJBoss50())
       {
          System.out.println("FIXME: [JBWEB-68] Servlet.init(ServletConfig) not called");
-         return;
+         //return;
       }
       
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-endpoint?wsdl");
@@ -94,7 +94,7 @@ public class EndpointTestCase extends JBossWSTest
       if (isTargetJBoss50())
       {
          System.out.println("FIXME: [JBWEB-68] Servlet.init(ServletConfig) not called");
-         return;
+         //return;
       }
       
       // Create the port
@@ -113,7 +113,7 @@ public class EndpointTestCase extends JBossWSTest
       if (isTargetJBoss50())
       {
          System.out.println("FIXME: [JBWEB-68] Servlet.init(ServletConfig) not called");
-         return;
+         //return;
       }
 
       URL url = new URL("http://" + getServerHost() + ":8080/jaxws-endpoint-servlet?param=hello-world");

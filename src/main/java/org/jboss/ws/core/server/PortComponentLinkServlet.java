@@ -67,7 +67,7 @@ public class PortComponentLinkServlet extends HttpServlet
    {
       super.init(config);
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).createEndpointRegistry();      
+      epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).getEndpointRegistry();      
    }
 
    /**

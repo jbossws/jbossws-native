@@ -47,7 +47,7 @@ public class ReceiveUsernameOperation implements TokenOperation
    {
       UsernameToken user = (UsernameToken)token;
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).createSecurityAdapter();
+      SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }

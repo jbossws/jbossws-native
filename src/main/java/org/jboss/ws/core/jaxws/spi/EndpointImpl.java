@@ -41,10 +41,12 @@ import javax.xml.ws.WebServicePermission;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.server.HttpContext;
-import org.jboss.ws.core.server.HttpServer;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.http.HttpContext;
+import org.jboss.wsf.spi.http.HttpContextFactory;
+import org.jboss.wsf.spi.http.HttpServer;
+import org.jboss.wsf.spi.http.HttpServerFactory;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
 
@@ -120,7 +122,8 @@ public class EndpointImpl extends Endpoint
       checkPublishEndpointPermission();
 
       // Create and start the HTTP server
-      HttpServer httpServer = HttpServer.create();
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).newHttpServer();
       httpServer.setProperties(properties);
       httpServer.start();
 

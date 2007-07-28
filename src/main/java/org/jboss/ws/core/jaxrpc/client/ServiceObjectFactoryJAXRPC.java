@@ -186,7 +186,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
             try
             {
                SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               EndpointRegistry epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).createEndpointRegistry();
+               EndpointRegistry epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).getEndpointRegistry();
                Endpoint endpoint = epRegistry.resolve( new PortComponentResolver(pcLink) );
                if (endpoint == null)
                   throw new WSException("Cannot resolve port-component-link: " + pcLink);
