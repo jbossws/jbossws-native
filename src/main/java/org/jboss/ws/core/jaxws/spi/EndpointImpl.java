@@ -152,7 +152,7 @@ public class EndpointImpl extends Endpoint
       // Check with the security manger
       checkPublishEndpointPermission();
 
-      // Check if we are standalone
+      /* Check if we are standalone
       boolean isStandalone;
       try
       {
@@ -162,12 +162,13 @@ public class EndpointImpl extends Endpoint
       }
       catch (Exception ex)
       {
-         // ignore, there should be no ServiceEndpointManager in VM
+         // ignore, there should be no ServerConfigFactory in VM
          isStandalone = true;
       }
 
       if (isStandalone == false)
          throw new IllegalStateException("Cannot publish endpoint from within server");
+      */
 
       if (context instanceof HttpContext)
       {
