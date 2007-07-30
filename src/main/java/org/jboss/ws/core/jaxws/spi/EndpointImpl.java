@@ -123,7 +123,7 @@ public class EndpointImpl extends Endpoint
 
       // Create and start the HTTP server
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).newHttpServer();
+      HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).getHttpServer();
       httpServer.setProperties(properties);
       httpServer.start();
 

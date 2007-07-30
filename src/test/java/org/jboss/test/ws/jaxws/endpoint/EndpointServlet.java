@@ -62,7 +62,7 @@ public class EndpointServlet extends HttpServlet
 
       // Create and start the HTTP server
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).newHttpServer();
+      HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).getHttpServer();
       httpServer.start();
       
       // Create the context and publish the endpoint
