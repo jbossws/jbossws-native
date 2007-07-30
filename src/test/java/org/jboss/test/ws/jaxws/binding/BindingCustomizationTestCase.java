@@ -49,7 +49,7 @@ public class BindingCustomizationTestCase extends TestCase {
 
    public void testCustomizationWriteAccess() throws Exception
    {
-      Endpoint endpoint = deploymentModelFactory.newEndpoint(null, null);
+      Endpoint endpoint = deploymentModelFactory.newEndpoint(null);
       JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
       jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
       endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
@@ -70,7 +70,7 @@ public class BindingCustomizationTestCase extends TestCase {
 
    public void testCustomizationReadAccess() throws Exception
    {
-      Endpoint endpoint = deploymentModelFactory.newEndpoint(null, null);
+      Endpoint endpoint = deploymentModelFactory.newEndpoint(null);
       JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
       jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
       endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
