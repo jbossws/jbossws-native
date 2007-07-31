@@ -40,15 +40,16 @@
 		</path>
 
     <path id="wsconsume.classpath">
-      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
-      <pathelement location="${core.dir}/thirdparty/jaxb-xjc.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jaxb-impl.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jaxws-rt.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
-			<pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
-			<pathelement location="${core.dir}/thirdparty/stax-ex.jar"/>
-			<pathelement location="${core.dir}/thirdparty/streambuffer.jar"/>
-			<pathelement location="${core.dir}/thirdparty/wstx.jar"/>
+      <pathelement location="${spi.dir}/thirdparty/jaxb-xjc.jar"/>
+			<pathelement location="${spi.dir}/thirdparty/jaxb-impl.jar"/>
+			<pathelement location="${spi.dir}/thirdparty/stax-api.jar"/>
+      <pathelement location="${spi.dir}/thirdparty/stax-ex.jar"/>
+      <pathelement location="${spi.dir}/thirdparty/streambuffer.jar"/>
+
+      <pathelement location="${core.dir}/thirdparty/jaxws-rt.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
+
       <pathelement location="${env.JAVA_HOME}/lib/tools.jar"/>
     </path>
 
