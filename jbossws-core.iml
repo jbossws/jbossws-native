@@ -76,15 +76,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/thirdparty/apache-tomcat.zip!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/thirdparty/jboss-deployers.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -292,15 +283,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/thirdparty/jaxws-rt.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/thirdparty/javassist.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -400,15 +382,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/thirdparty/jbossws-wsconsume-impl.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/thirdparty/jaxen.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -490,15 +463,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/thirdparty/jaxws-tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/thirdparty/xercesImpl.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -518,15 +482,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/thirdparty/hibernate3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/thirdparty/hudson.war!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -560,7 +515,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="spi" />
-    <orderEntry type="library" name="junit" level="application" />
+    <orderEntry type="module" module-name="sunri-sources" />
     <orderEntryProperties />
   </component>
 </module>

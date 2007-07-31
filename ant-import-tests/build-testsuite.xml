@@ -10,7 +10,8 @@
 
 <project>
 
-	<property name="tests.output.dir" value="${core.dir}/output/tests"/>
+  <property environment="env"/>
+  <property name="tests.output.dir" value="${core.dir}/output/tests"/>
 	<import file="${build.dir}/ant-import/build-testsuite.xml"/>
 
 	<property name="tests.dir" value="${core.dir}/src/test"/>
@@ -38,12 +39,26 @@
       <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
 		</path>
 
-		<path id="tests.extra.classpath">
+    <path id="wsconsume.classpath">
+      <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jaxb-xjc.jar"/>
+			<pathelement location="${core.dir}/thirdparty/jaxb-impl.jar"/>
+			<pathelement location="${core.dir}/thirdparty/jaxws-rt.jar"/>
+			<pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
+			<pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
+			<pathelement location="${core.dir}/thirdparty/stax-ex.jar"/>
+			<pathelement location="${core.dir}/thirdparty/streambuffer.jar"/>
+			<pathelement location="${core.dir}/thirdparty/wstx.jar"/>
+      <pathelement location="${env.JAVA_HOME}/lib/tools.jar"/>
+    </path>
+
+    <path id="tests.extra.classpath">
+      <path refid="wsconsume.classpath"/>
       <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
       <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
     </path>
 
-		<!-- The jBPM BPEL classpath -->
+    <!-- The jBPM BPEL classpath -->
 		<path id="jbpm.bpel.classpath">
 			<path refid="ws.stack.classpath"/>
 			<pathelement location="${core.dir}/thirdparty/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
@@ -72,17 +87,8 @@
 
 		<!-- Define the JAX-WS wsconsume task -->
 		<taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">
-			<classpath refid="ws.stack.classpath"/>
-			<classpath location="${spi.dir}/output/lib/jbossws-spi.jar"/>
-
-			<classpath location="${core.dir}/thirdparty/jaxb-xjc.jar"/>
-			<classpath location="${core.dir}/thirdparty/jaxb-impl.jar"/>
-			<classpath location="${core.dir}/thirdparty/jaxws-rt.jar"/>
-			<classpath location="${core.dir}/thirdparty/jaxws-tools.jar"/>
-			<classpath location="${core.dir}/thirdparty/stax-api.jar"/>
-			<classpath location="${core.dir}/thirdparty/stax-ex.jar"/>
-			<classpath location="${core.dir}/thirdparty/streambuffer.jar"/>
-			<classpath location="${core.dir}/thirdparty/wstx.jar"/>
+			<classpath refid="ws.stack.classpath"/>			
+      <classpath refid="wsconsume.classpath"/>
 		</taskdef>
 
 		<wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
