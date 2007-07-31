@@ -28,7 +28,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.wsf.common.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.SPIProvider;

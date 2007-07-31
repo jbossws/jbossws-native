@@ -28,8 +28,8 @@ import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.ws.integration.ServiceRefBinder;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 import java.lang.reflect.AnnotatedElement;
 
