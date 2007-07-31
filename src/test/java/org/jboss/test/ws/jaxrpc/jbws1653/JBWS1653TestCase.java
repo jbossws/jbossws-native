@@ -27,10 +27,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import javax.naming.InitialContext;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.Call;
 import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
+import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -63,11 +66,58 @@ public class JBWS1653TestCase extends JBossWSTest
       assertNull(ClientHandler.message);
    }
 
+   public void testStandardConfigConfiguredDII() throws Exception
+   {
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
+      QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
+      Service service = factory.createService(wsdlURL, qname);
+
+      Call call = service.createCall();
+      call.setOperationName(new QName("http://org.jboss.test.ws/jbws1653", "echoString"));
+
+      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint");
+
+      String hello = "Hello";
+      Object retObj = call.invoke(new Object[] { hello });
+      assertEquals(hello, retObj);
+
+      assertNull(ClientHandler.message);
+   }
+
+   public void testStandardConfigFullyConfiguredDII() throws Exception
+   {
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
+      URL mappingURL = new File("resources/jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml").toURL();
+      QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
+      Service service = factory.createService(wsdlURL, qname, mappingURL);
+      TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
+
+      String retStr = port.echoString("kermit");
+      assertEquals("kermit", retStr);
+      assertNull(ClientHandler.message);
+   }
+
    public void testCustomConfig() throws Exception
    {
       ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-      URLClassLoader urlLoader = new URLClassLoader(new URL[] {}, ctxLoader)
-      {
+      URLClassLoader urlLoader = new URLClassLoader(new URL[] {}, ctxLoader) {
+         public URL findResource(String resName)
+         {
+            URL resURL = super.findResource(resName);
+            try
+            {
+               if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
+                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+            }
+            catch (MalformedURLException ex)
+            {
+               // ignore
+            }
+            return resURL;
+         }
+
          public URL getResource(String resName)
          {
             URL resURL = super.getResource(resName);
@@ -85,6 +135,9 @@ public class JBWS1653TestCase extends JBossWSTest
       };
       Thread.currentThread().setContextClassLoader(urlLoader);
 
+      URL configURL = urlLoader.findResource("META-INF/standard-jaxrpc-client-config.xml");
+      assertTrue("Invalid config url: " + configURL, configURL.toExternalForm().indexOf("jbws1653") > 0);
+
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
@@ -94,6 +147,97 @@ public class JBWS1653TestCase extends JBossWSTest
          String retStr = port.echoString("kermit");
          assertEquals("kermit", retStr);
          assertEquals("kermit", ClientHandler.message);
+      }
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(ctxLoader);
+      }
+   }
+
+   public void testCustomConfigConfiguredDII() throws Exception
+   {
+      if (true)
+      {
+         System.out.println("FIXME: [JBWS-1771] Post-handler-chain not invoked for \"Standard Client\" configuration with DII client");
+         return;
+      }
+
+      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      URLClassLoader urlLoader = new URLClassLoader(new URL[] {}, ctxLoader) {
+         public URL getResource(String resName)
+         {
+            URL resURL = super.getResource(resName);
+            try
+            {
+               if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
+                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+            }
+            catch (MalformedURLException ex)
+            {
+               // ignore
+            }
+            return resURL;
+         }
+      };
+      Thread.currentThread().setContextClassLoader(urlLoader);
+
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
+      QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
+      Service service = factory.createService(wsdlURL, qname);
+
+      Call call = service.createCall();
+      call.setOperationName(new QName("http://org.jboss.test.ws/jbws1653", "echoString"));
+
+      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint");
+
+      String hello = "Hello";
+
+      try
+      {
+         Object retObj = call.invoke(new Object[] { hello });
+         assertEquals(hello, retObj);
+         assertEquals(hello, ClientHandler.message);
+      }
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(ctxLoader);
+      }
+   }
+
+   public void testCustomConfigFullyConfiguredDII() throws Exception
+   {
+      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      URLClassLoader urlLoader = new URLClassLoader(new URL[] {}, ctxLoader) {
+         public URL getResource(String resName)
+         {
+            URL resURL = super.getResource(resName);
+            try
+            {
+               if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
+                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+            }
+            catch (MalformedURLException ex)
+            {
+               // ignore
+            }
+            return resURL;
+         }
+      };
+      Thread.currentThread().setContextClassLoader(urlLoader);
+
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
+      URL mappingURL = new File("resources/jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml").toURL();
+      QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
+      Service service = factory.createService(wsdlURL, qname, mappingURL);
+      TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
+
+      try
+      {
+         String retStr = port.echoString("thefrog");
+         assertEquals("thefrog", retStr);
+         assertEquals("thefrog", ClientHandler.message);
       }
       finally
       {
