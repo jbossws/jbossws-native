@@ -36,8 +36,6 @@ import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaExtension;
-import org.jboss.ws.integration.URLLoaderAdapter;
-import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -45,6 +43,8 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.framework.deployment.URLLoaderAdapter;
+import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**

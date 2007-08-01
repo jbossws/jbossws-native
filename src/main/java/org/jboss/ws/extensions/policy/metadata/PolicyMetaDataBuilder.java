@@ -37,7 +37,6 @@ import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
-import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
@@ -47,6 +46,7 @@ import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
+import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**
  * A meta data builder for policies; handles checks for policy support

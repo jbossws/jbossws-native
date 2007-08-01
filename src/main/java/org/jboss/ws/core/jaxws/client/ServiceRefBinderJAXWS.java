@@ -23,7 +23,7 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import org.jboss.ws.integration.CommonServiceRefBinder;
+import org.jboss.wsf.framework.serviceref.CommonServiceRefBinder;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 import javax.naming.Referenceable;

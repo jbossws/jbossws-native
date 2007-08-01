@@ -37,9 +37,9 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
