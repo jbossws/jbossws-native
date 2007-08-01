@@ -19,14 +19,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxws.client;
+package org.jboss.ws.core.client;
 
-// $Id$
+// $Id: ServiceRefBinderJAXWS.java 4049 2007-08-01 11:26:30Z thomas.diesler@jboss.com $
 
-import org.jboss.wsf.framework.serviceref.CommonServiceRefBinder;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-
-import javax.naming.Referenceable;
+import org.jboss.ws.core.jaxrpc.client.NativeServiceRefBinderJAXRPC;
+import org.jboss.ws.core.jaxws.client.NativeServiceRefBinderJAXWS;
+import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
+import org.jboss.wsf.spi.serviceref.ServiceRefBinderFactory;
+import org.jboss.wsf.spi.serviceref.ServiceRefHandler.Type;
 
 /**
  * Binds a JAXWS Service object in the client's ENC
@@ -34,11 +35,10 @@ import javax.naming.Referenceable;
  * @author Thomas.Diesler@jboss.org
  * @since 17-Jan-2007
  */
-public class ServiceRefBinderJAXWS extends CommonServiceRefBinder
+public class ServiceRefBinderFactoryImpl implements ServiceRefBinderFactory
 {
-   protected Referenceable buildServiceReferenceable(
-     String serviceImplClass, String targetClassName, UnifiedServiceRefMetaData serviceRef)
+   public ServiceRefBinder newServiceRefBinder(Type type)
    {
-      return new ServiceReferenceable(serviceImplClass, targetClassName, serviceRef);      
+      return (type == Type.JAXRPC ? new NativeServiceRefBinderJAXRPC() : new NativeServiceRefBinderJAXWS());
    }
 }

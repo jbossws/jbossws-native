@@ -23,15 +23,15 @@ package org.jboss.ws.core.jaxrpc.client;
 
 // $Id$
 
+import java.lang.reflect.AnnotatedElement;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.naming.Util;
-import org.jboss.wsf.framework.serviceref.ServiceRefBinder;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-
-import java.lang.reflect.AnnotatedElement;
+import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
 
 /**
  * Binds a JAXRPC Service object in the client's ENC for every service-ref element in the
@@ -40,16 +40,16 @@ import java.lang.reflect.AnnotatedElement;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Nov-2006
  */
-public class ServiceRefBinderJAXRPC implements ServiceRefBinder
+public class NativeServiceRefBinderJAXRPC implements ServiceRefBinder
 {
    // logging support
-   private static Logger log = Logger.getLogger(ServiceRefBinderJAXRPC.class);
-   
+   private static Logger log = Logger.getLogger(NativeServiceRefBinderJAXRPC.class);
+
    /**
     * Binds a Service into the callers ENC for every service-ref element
     */
    public void setupServiceRef(Context encCtx, String encName, AnnotatedElement anElement, UnifiedServiceRefMetaData serviceRef, ClassLoader loader)
-       throws NamingException
+         throws NamingException
    {
       String externalName = encCtx.getNameInNamespace() + "/" + encName;
       log.info("setupServiceRef [jndi=" + externalName + "]");
