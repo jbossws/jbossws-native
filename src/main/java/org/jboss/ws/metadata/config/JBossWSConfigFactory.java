@@ -28,12 +28,12 @@ import java.net.URL;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.integration.ResourceLoaderAdapter;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXWS;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
-import org.jboss.wsf.common.ResourceLoaderAdapter;
-import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.Unmarshaller;

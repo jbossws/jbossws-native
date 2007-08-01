@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.integration.UnifiedVirtualFile;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
-import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**
  * The top level meta data.
