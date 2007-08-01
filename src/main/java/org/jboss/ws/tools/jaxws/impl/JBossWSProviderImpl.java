@@ -76,6 +76,9 @@ final class JBossWSProviderImpl extends WSContractProvider
 
       createDirectories(resourceDir, sourceDir);
 
+      messageStream.println("Output directory: " + outputDir.getAbsolutePath());
+      messageStream.println("Source directory: " + sourceDir.getAbsolutePath());
+
       // Create a dummy classloader to catch generated classes
       ClassLoader loader = new URLClassLoader(new URL[0], this.loader);
       UnifiedMetaData umd = new UnifiedMetaData(new ResourceLoaderAdapter(loader));
