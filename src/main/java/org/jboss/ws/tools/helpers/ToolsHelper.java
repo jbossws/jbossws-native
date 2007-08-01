@@ -330,7 +330,7 @@ public class ToolsHelper
 
             if (wsdl.getInterfaces().length == 1)
             {
-               String seiPackage = wsdlToJava.getNamespacePackageMap().get(wsdl.getTargetNamespace());
+               String seiPackage = getPackageName(wsdl, glc);
                seiName = seiPackage + "." + wsdlToJava.getServiceEndpointInterfaceName(wsdl.getInterfaces()[0]);
             }
 
