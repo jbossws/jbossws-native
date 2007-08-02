@@ -246,13 +246,15 @@
   
   <target name="jars-jboss42" depends="jars-common" if="jboss42.home">
     
+    <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss42-resources.zip"/>
+    
     <!-- Concat jboss-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native42/jbossws.beans/META-INF/jboss-beans.xml">
       <header trimleading="yes">
         &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
       </header>
       <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${int.jboss42.dir}/src/main/resources/jbossws-jboss42-config.xml"/>
+      <fileset file="${core.output.dir}/resources/jbossws-jboss42-config.xml"/>
       <footer trimleading="yes">
         &lt;/deployment&gt;
       </footer>
@@ -283,7 +285,7 @@
       <fileset dir="${core.output.lib.dir}/jbossws-native42">
         <include name="jbossws.beans/**"/>
       </fileset>
-      <metainf dir="${int.jboss42.dir}/src/main/resources/jbossws-jboss42.sar/META-INF">
+      <metainf dir="${core.output.dir}/resources/jbossws-jboss42.sar/META-INF">
         <include name="jboss-service.xml"/>
       </metainf>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
@@ -294,13 +296,15 @@
   
   <target name="jars-jboss40" depends="jars-common" if="jboss40.home">
     
+    <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss40-resources.zip"/>
+    
     <!-- Concat jboss-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans.xml">
       <header trimleading="yes">
         &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
       </header>
       <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${int.jboss40.dir}/src/main/resources/jbossws-jboss40-config.xml"/>
+      <fileset file="${core.output.dir}/resources/jbossws-jboss40-config.xml"/>
       <footer trimleading="yes">
         &lt;/deployment&gt;
       </footer>
@@ -328,7 +332,9 @@
       <fileset dir="${core.output.lib.dir}/jbossws-native40">
         <include name="jbossws.beans/**"/>
       </fileset>
-      <metainf dir="${int.jboss40.dir}/src/main/resources/jbossws-jboss40.sar/META-INF"/>
+      <metainf dir="${core.output.dir}/resources/jbossws-jboss40.sar/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
         <include name="standard-*-config.xml"/>
       </metainf>
