@@ -38,5 +38,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/spi"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/integration-framework"/>
 	<classpathentry kind="lib" path="/integration-framework/thirdparty/junit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
 	<classpathentry kind="output" path="output/eclipse"/>
 </classpath>

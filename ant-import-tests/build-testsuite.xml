@@ -29,6 +29,8 @@
 
 		<path id="ws.stack.classpath">
 			<pathelement location="${framework.dir}/output/lib/jbossws-framework.jar"/>
+			<pathelement location="${framework.dir}/thirdparty/jbossws-common.jar"/>
+			<pathelement location="${framework.dir}/thirdparty/jbossws-spi.jar"/>
 			<pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
 			<pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
 			<pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
