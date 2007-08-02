@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id: bin-dist-deploy.xml 3576 2007-06-14 09:23:52Z thomas.diesler@jboss.com $ -->
+
+<project>
+
+	<!-- ================================================================== -->
+	<!-- Deployment                                                         -->
+	<!-- ================================================================== -->
+
+	<!-- Deploy jbossws/native to jboss50 -->
+	<target name="deploy-jboss50" depends="undeploy-jboss50,deploy-jboss50-endorsed" description="Deploy jbossws/native to jboss50">		
+		<macro-undeploy-sunri50/>
+		<macro-undeploy-xfire50/>
+		<macro-deploy-native50
+				spilibs="${lib.dir}"
+				jbosslibs="${lib.dir}"
+				corelibs="${lib.dir}"
+				stacklibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"/>
+		<macro-deploy-spi
+				spilibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"
+        jbosshome="${jboss50.home}"/>
+	</target>
+	<target name="deploy-jboss50-endorsed" depends="prepare" if="HAVE_JDK_1.6">
+		<macro-deploy-endorsed
+				jbosshome="${jboss50.home}"
+				corelibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"/>
+	</target>
+
+	<!-- Remove jbossws/native from jboss50 -->
+	<target name="undeploy-jboss50" depends="prepare" description="Remove jbossws/native from jboss50">
+		<macro-undeploy-native50/>
+		<macro-undeploy-spi jbosshome="${jboss50.home}"/>
+	</target>
+
+	<!-- Deploy jbossws/native to jboss42 -->
+	<target name="deploy-jboss42" depends="undeploy-jboss42,deploy-jboss42-endorsed" description="Deploy jbossws/native to jboss42">
+		<macro-undeploy-sunri42/>
+		<macro-undeploy-xfire42/>
+		<macro-deploy-native42
+				spilibs="${lib.dir}"
+				jbosslibs="${lib.dir}"
+				corelibs="${lib.dir}"
+				stacklibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"/>
+		<macro-deploy-spi
+				spilibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"
+        jbosshome="${jboss42.home}"/>
+	</target>
+	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
+		<macro-deploy-endorsed
+				jbosshome="${jboss42.home}"
+				corelibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"/>
+	</target>
+
+	<!-- Remove jbossws/native from jboss42 -->
+	<target name="undeploy-jboss42" depends="prepare,undeploy-jboss42-endorsed" description="Remove jbossws/native from jboss42">
+		<macro-undeploy-native42/>
+		<macro-undeploy-spi jbosshome="${jboss42.home}"/>
+	</target>
+	<target name="undeploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">		
+		<macro-undeploy-endorsed jbosshome="${jboss42.home}"/>
+	</target>
+
+	<!-- Deploy jbossws/native to jboss40 -->
+	<target name="deploy-jboss40" depends="deploy-jboss40-no-ejb3" description="Deploy jbossws/native to jboss40"/>
+
+	<target name="deploy-jboss40-ejb3" depends="undeploy-jboss40">
+		<macro-deploy-native40
+				spilibs="${lib.dir}"
+				jbosslibs="${lib.dir}"
+				corelibs="${lib.dir}"
+				stacklibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"/>
+    
+		<macro-deploy-spi
+				spilibs="${lib.dir}"
+				thirdpartylibs="${lib.dir}"
+        jbosshome="${jboss40.home}"/>
+	</target>
+
+	<target name="deploy-jboss40-no-ejb3" depends="deploy-jboss40-ejb3" unless="jboss40.ejb3.available">
+		<macro-setup-native40-no-ejb3/>
+    <echo>
+      ***********************************
+      * JBossWS EJB3 support disabled   *
+      * All EJB3 tests will fail.       *
+      ***********************************
+    </echo>
+	</target>
+
+	<!-- Remove jbossws/native from jboss40 -->
+	<target name="undeploy-jboss40" depends="prepare" description="Remove jbossws/native from jboss40">
+		<macro-undeploy-native40/>
+		<macro-undeploy-spi jbosshome="${jboss40.home}"/>
+	</target>
+
+</project>

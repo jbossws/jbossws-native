@@ -13,34 +13,116 @@
 
 <project>
 
-  <!-- Deploy jbossws to jboss50 -->
-  <target name="deploy-jboss50" depends="prepare" description="Deploy jbossws">
-    <ant antfile="${int.native.dir}/build.xml" target="deploy-jboss50" inheritall="false"/>
+	<import file="${core.dir}/ant-import/macros-deploy-native.xml"/>
+	<import file="${framework.dir}/ant-import/macros-deploy-wsf.xml"/>
+  
+	<!-- ================================================================== -->
+	<!-- Deployment  JBoss50                                                -->
+	<!-- ================================================================== -->
+
+	<!-- Deploy jbossws to jboss50 -->
+	<target name="deploy-jboss50" depends="jars-jboss50,undeploy-jboss50,deploy-jboss50-endorsed" description="Deploy jbossws to jboss50">
+		<ant antfile="${int.sunri.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>
+		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>		
+		<macro-deploy-native50
+				wsflibs="${framework.dir}/output/lib"
+				stacklibs="${core.dir}/output/lib"
+				thirdpartylibs="${core.dir}/thirdparty"/>
+		<macro-deploy-wsf
+				wsflibs="${framework.dir}/output/lib"
+				thirdpartylibs="${framework.dir}/thirdparty"
+				jbosshome="${jboss50.home}"/>
+
+    <!-- [JBWS-1617] JAXRPC doc/literal trims empty string 
+    <copy tofile="${jboss50.home}/client/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-2.0.0-20070620.094346-1.jar" overwrite="true"/>
+		<copy tofile="${jboss50.home}/lib/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-2.0.0-20070620.094346-1.jar" overwrite="true"/>
+    -->
   </target>
   
-  <!-- Undeploy jbossws to jboss50 -->
-  <target name="undeploy-jboss50" depends="prepare" description="Undeploy jbossws">
-    <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>
+	<target name="deploy-jboss50-endorsed" depends="prepare" if="HAVE_JDK_1.6">
+		<macro-deploy-endorsed
+				jbosshome="${jboss50.home}"
+				corelibs="${core.dir}/output/lib"
+				thirdpartylibs="${core.dir}/thirdparty"/>
+	</target>
+
+	<!-- Remove jbossws from jboss50 -->
+	<target name="undeploy-jboss50" depends="prepare,undeploy-jboss50-endorsed" description="Remove jbossws from jboss50">		
+		<macro-undeploy-native50/>
+		<macro-undeploy-wsf jbosshome="${jboss50.home}"/>
+	</target>
+  
+	<target name="undeploy-jboss50-endorsed" depends="prepare">		
+		<macro-undeploy-endorsed jbosshome="${jboss50.home}"/>
+	</target>
+
+	<!-- Deploy jbossws to jboss42 -->
+	<target name="deploy-jboss42" depends="jars-jboss42,undeploy-jboss42,deploy-jboss42-endorsed" description="Deploy jbossws to jboss42">
+		<ant antfile="${int.sunri.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
+		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
+		<macro-deploy-native42
+				wsflibs="${framework.dir}/output/lib"
+				jbosslibs="${int.jboss42.dir}/output/lib"
+				corelibs="${core.dir}/output/lib"
+				stacklibs="${int.native.dir}/output/lib"
+				thirdpartylibs="${core.dir}/thirdparty"/>
+		<macro-deploy-wsf
+				wsflibs="${framework.dir}/output/lib"
+				thirdpartylibs="${framework.dir}/thirdparty"
+				jbosshome="${jboss42.home}"/>
+
+    <!-- [JBWS-1617] JAXRPC doc/literal trims empty string 
+    <copy tofile="${jboss42.home}/client/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-1.0.0-20070620.100638-1.jar" overwrite="true"/>
+		<copy tofile="${jboss42.home}/lib/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-1.0.0-20070620.100638-1.jar" overwrite="true"/>
+    -->
+    
   </target>
   
-  <!-- Deploy jbossws to jboss42 -->
-  <target name="deploy-jboss42" depends="prepare" description="Deploy jbossws">
-    <ant antfile="${int.native.dir}/build.xml" target="deploy-jboss42" inheritall="false"/>
-  </target>
+	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
+		<macro-deploy-endorsed
+				jbosshome="${jboss42.home}"
+				corelibs="${core.dir}/output/lib"
+				thirdpartylibs="${core.dir}/thirdparty"/>
+	</target>
+
+	<!-- Remove jbossws from jboss42 -->
+	<target name="undeploy-jboss42" depends="prepare,undeploy-jboss42-endorsed" description="Remove jbossws from jboss42">
+		<macro-undeploy-native42/>
+		<macro-undeploy-wsf jbosshome="${jboss42.home}"/>
+	</target>
+	<target name="undeploy-jboss42-endorsed" depends="prepare">		
+		<macro-undeploy-endorsed jbosshome="${jboss42.home}"/>
+	</target>
   
-  <!-- Undeploy jbossws to jboss42 -->
-  <target name="undeploy-jboss42" depends="prepare" description="Undeploy jbossws">
-    <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
-  </target>
+	<!-- Deploy jbossws to jboss40 -->
+	<target name="deploy-jboss40" depends="jars-jboss40,undeploy-jboss40,deploy-jboss40-no-ejb3" description="Deploy jbossws to jboss40"/>
   
-  <!-- Deploy jbossws to jboss40 -->
-  <target name="deploy-jboss40" depends="prepare" description="Deploy jbossws">
-    <ant antfile="${int.native.dir}/build.xml" target="deploy-jboss40" inheritall="false"/>
-  </target>
+	<target name="deploy-jboss40-ejb3">
+		<macro-deploy-native40
+				wsflibs="${framework.dir}/output/lib"
+				jbosslibs="${int.jboss40.dir}/output/lib"
+				corelibs="${core.dir}/output/lib"
+				stacklibs="${int.native.dir}/output/lib"
+				thirdpartylibs="${core.dir}/thirdparty"/>
+		<macro-deploy-wsf
+				wsflibs="${framework.dir}/output/lib"
+				thirdpartylibs="${framework.dir}/thirdparty"
+				jbosshome="${jboss40.home}"/>
+	</target>
   
-  <!-- Undeploy jbossws to jboss40 -->
-  <target name="undeploy-jboss40" depends="prepare" description="Undeploy jbossws">
-    <ant antfile="${int.native.dir}/build.xml" target="undeploy-jboss40" inheritall="false"/>
-  </target>
+	<target name="deploy-jboss40-no-ejb3" depends="deploy-jboss40-ejb3" unless="jboss40.ejb3.available">
+		<macro-setup-native40-no-ejb3/>
+    <echo>
+      ***********************************
+      * JBossWS EJB3 support disabled   *
+      * All EJB3 tests will fail.       *
+      ***********************************
+    </echo>
+	</target>
   
+	<!-- Remove jbossws from jboss40 -->
+	<target name="undeploy-jboss40" depends="prepare" description="Remove jbossws from jboss40">
+		<macro-undeploy-native40/>
+		<macro-undeploy-wsf jbosshome="${jboss40.home}"/>
+	</target>
 </project>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<!-- $Id: build-testsuite.xml 4092 2007-08-02 11:14:11Z thomas.diesler@jboss.com $ -->
+
+<project>
+  
+  <property name="tests.output.dir" value="${int.native.dir}/output/tests"/>
+  <import file="${testsuite.dir}/ant-import/build-testsuite.xml"/>
+  
+  <property name="tests.dir" value="${testsuite.dir}/src"/>
+  <property name="tests.java.dir" value="${tests.dir}/java"/>
+  <property name="tests.resources.dir" value="${tests.dir}/resources"/>
+  
+  <!-- Define excludesfile -->
+  <property name="excludesfile" value="${int.native.dir}/src/test/resources/test-excludes-${jbossws.integration.target}.txt"/>
+
+  <!-- ================================================================== -->
+  <!-- Initialization                                                     -->
+  <!-- ================================================================== -->
+  
+  <target name="tests-init" depends="tests-classpath">
+
+    <path id="ws.stack.classpath">
+      <pathelement location="${framework.dir}/output/lib/jbossws-framework.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbossws-common.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbossws-spi.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
+      <pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
+      <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
+    </path>
+
+    <path id="tests.extra.classpath">
+      <pathelement location="${jboss.client}/policy.jar"/>
+      <pathelement location="${jboss.client}/wsdl4j.jar"/>
+    </path>
+    
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Compiling                                                          -->
+  <!-- ================================================================== -->
+
+  <target name="tests-compile" depends="tests-init" description="Compile sources">
+    <macro-compile-classes srcdir="${tests.java.dir}" excludesfile="${excludesfile}"/>
+  </target>
+  
+</project>

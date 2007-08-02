@@ -20,7 +20,7 @@
 
 	<!-- Define excluded tests -->
 	<property name="excludes-short-name" value="test-excludes-${jbossws.integration.target}.txt"/>
-  <property name="excludesfile" value="${int.native.dir}/src/test/resources/test-excludes-${jbossws.integration.target}.txt"/>
+  <property name="excludesfile" value="${core.dir}/src/test/resources/test-excludes-${jbossws.integration.target}.txt"/>
 
 	<!--
 	  Init the various classpaths

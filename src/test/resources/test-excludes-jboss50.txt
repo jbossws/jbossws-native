@@ -1,0 +1,19 @@
+# benchmark tests
+#org/jboss/test/ws/benchmark/**
+
+# Fix before JBoss50 goes final
+org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase.*
+org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase.*
+org/jboss/test/ws/jaxrpc/jbws128/JBWS128TestCase.*
+org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase.*
+org/jboss/test/ws/jaxrpc/jbws165/JBWS165TestCase.*
+org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase.*
+org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase.*
+org/jboss/test/ws/jaxrpc/jbws626/JBWS626TestCase.*
+org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase.*
+org/jboss/test/ws/jaxrpc/samples/jsr109ejb/*TestCase.*
+org/jboss/test/ws/jaxrpc/samples/jmstransport/JMSTransportTestCase.*
+org/jboss/test/ws/jaxrpc/samples/jmstransport/OrganizationJMSEndpoint.*
+org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+org/jboss/test/ws/jaxrpc/wsdlpublish/**
+
