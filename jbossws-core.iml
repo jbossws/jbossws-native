@@ -514,7 +514,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="spi" />
     <orderEntry type="module" module-name="sunri-sources" />
     <orderEntryProperties />
   </component>
