@@ -42,7 +42,7 @@
 	<target name="deploy-jboss50-endorsed" depends="prepare" if="HAVE_JDK_1.6">
 		<macro-deploy-endorsed
 				jbosshome="${jboss50.home}"
-				corelibs="${core.dir}/output/lib"
+				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
 	</target>
 
@@ -63,8 +63,7 @@
 		<macro-deploy-native42
 				wsflibs="${framework.dir}/output/lib"
 				jbosslibs="${int.jboss42.dir}/output/lib"
-				corelibs="${core.dir}/output/lib"
-				stacklibs="${int.native.dir}/output/lib"
+				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
 		<macro-deploy-wsf
 				wsflibs="${framework.dir}/output/lib"
@@ -81,7 +80,7 @@
 	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
 		<macro-deploy-endorsed
 				jbosshome="${jboss42.home}"
-				corelibs="${core.dir}/output/lib"
+				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
 	</target>
 
@@ -101,8 +100,7 @@
 		<macro-deploy-native40
 				wsflibs="${framework.dir}/output/lib"
 				jbosslibs="${int.jboss40.dir}/output/lib"
-				corelibs="${core.dir}/output/lib"
-				stacklibs="${int.native.dir}/output/lib"
+				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
 		<macro-deploy-wsf
 				wsflibs="${framework.dir}/output/lib"
