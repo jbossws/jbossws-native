@@ -33,7 +33,7 @@
 	<property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
 
 	<target name="init" depends="prepare,thirdparty-get">
-		<ant antfile="${spi.dir}/build.xml" target="jars" inheritall="false"/>
+		<ant antfile="${framework.dir}/build.xml" target="jars" inheritall="false"/>
 	</target>
 
 	<!-- ================================================================== -->

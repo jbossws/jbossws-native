@@ -82,6 +82,7 @@
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx.jar" dest="${thirdparty.dir}/jbosssx.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-src.zip" dest="${thirdparty.dir}/jbosssx-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbossas/core-libs/${jbossas-core-libs}/lib/jboss-j2ee.jar" dest="${thirdparty.dir}/jboss-j2ee.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-spi/${jbossws-spi}/lib/jbossws-spi.jar" dest="${thirdparty.dir}/jbossws-spi.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jbpm/bpel/${jbpm-bpel}/lib/jbpm-bpel.sar" dest="${thirdparty.dir}/jbpm-bpel.sar" usetimestamp="true" verbose="true" />    
     <get src="${jboss.repository}/oswego-concurrent/${oswego-concurrent}/lib/concurrent.jar" dest="${thirdparty.dir}/concurrent.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/qdox/${qdox}/lib/qdox.jar" dest="${thirdparty.dir}/qdox.jar" usetimestamp="true" verbose="true"/>
@@ -115,7 +116,7 @@
     
     <!-- The compile classpath for jbossws core -->
      <path id="thirdparty.classpath">
-        <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
+        <pathelement location="${framework.dir}/output/lib/jbossws-framework.jar"/>
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
   		  <pathelement location="${thirdparty.dir}/ant.jar"/>
@@ -136,6 +137,7 @@
         <pathelement location="${thirdparty.dir}/jboss-remoting.jar"/>
         <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
         <pathelement location="${thirdparty.dir}/jbosssx.jar"/>
+        <pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
         <pathelement location="${thirdparty.dir}/mail.jar"/>
         <pathelement location="${thirdparty.dir}/policy.jar"/>
         <pathelement location="${thirdparty.dir}/servlet-api.jar"/>

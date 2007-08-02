@@ -45,8 +45,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
-import org.jboss.wsf.common.ServiceLoader;
 import org.jboss.wsf.common.IOUtils;
+import org.jboss.wsf.spi.util.ServiceLoader;
 
 /**
  * MessageFactory implementation

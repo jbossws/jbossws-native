@@ -47,7 +47,7 @@ import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.ServiceLoader;
+import org.jboss.wsf.spi.util.ServiceLoader;
 import org.w3c.dom.Element;
 
 /**

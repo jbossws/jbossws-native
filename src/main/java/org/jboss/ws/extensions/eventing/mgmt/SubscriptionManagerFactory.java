@@ -2,7 +2,7 @@ package org.jboss.ws.extensions.eventing.mgmt;
 
 import org.jboss.kernel.spi.registry.KernelRegistry;
 import org.jboss.kernel.spi.registry.KernelRegistryEntry;
-import org.jboss.wsf.common.KernelLocator;
+import org.jboss.wsf.spi.util.KernelLocator;
 
 /**
  * @author Heiko Braun, <heiko@openj.net>
