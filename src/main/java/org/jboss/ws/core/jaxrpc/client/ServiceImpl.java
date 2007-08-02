@@ -410,7 +410,7 @@ public class ServiceImpl implements ServiceExt
       // JBoss-4.0.x does not support <stub-properties>
       if (initCallProperties(call, seiClass.getName()) > 0)
          log.info("Deprecated use of <call-properties> on JAXRPC Stub. Use <stub-properties>");
-      
+
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
@@ -444,10 +444,12 @@ public class ServiceImpl implements ServiceExt
 
    private int initCallProperties(CallImpl call, String seiName)
    {
+      setupHandlerChain(call.getEndpointMetaData());
+
       // nothing to do
       if (usrMetaData == null)
          return 0;
-      
+
       int propCount = 0;
 
       // General properties
@@ -471,7 +473,7 @@ public class ServiceImpl implements ServiceExt
             }
          }
       }
-      
+
       return propCount;
    }
 
@@ -520,11 +522,11 @@ public class ServiceImpl implements ServiceExt
             log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
             handlerInfos.add(info);
          }
-         
+
          // register the handlers with the client engine
          if (handlerInfos.size() > 0)
             registerHandlerChain(portName, handlerInfos, handlerRoles);
-         
+
          epMetaData.setHandlersInitialized(true);
       }
    }

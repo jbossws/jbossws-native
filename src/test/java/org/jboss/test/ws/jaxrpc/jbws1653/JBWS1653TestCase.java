@@ -156,7 +156,7 @@ public class JBWS1653TestCase extends JBossWSTest
 
    public void testCustomConfigConfiguredDII() throws Exception
    {
-      if (true)
+      if (false)
       {
          System.out.println("FIXME: [JBWS-1771] Post-handler-chain not invoked for \"Standard Client\" configuration with DII client");
          return;
