@@ -62,7 +62,6 @@
 		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
 		<macro-deploy-native42
 				wsflibs="${framework.dir}/output/lib"
-				jbosslibs="${int.jboss42.dir}/output/lib"
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
 		<macro-deploy-wsf
@@ -99,7 +98,6 @@
 	<target name="deploy-jboss40-ejb3">
 		<macro-deploy-native40
 				wsflibs="${framework.dir}/output/lib"
-				jbosslibs="${int.jboss40.dir}/output/lib"
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
 		<macro-deploy-wsf

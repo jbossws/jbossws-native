@@ -246,8 +246,6 @@
   
   <target name="jars-jboss42" depends="jars-common" if="jboss42.home">
     
-    <ant antfile="${int.jboss42.dir}/build.xml" target="jars" inheritall="false"/>
-    
     <!-- Concat jboss-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native42/jbossws.beans/META-INF/jboss-beans.xml">
       <header trimleading="yes">
@@ -272,10 +270,8 @@
         <include name="jboss-saaj.jar"/>
         <include name="jbossws-core.jar"/>
       </fileset>
-      <fileset dir="${int.jboss42.dir}/output/lib">
-        <include name="jbossws-jboss42.jar"/>
-      </fileset>
       <fileset dir="${core.dir}/thirdparty">
+        <include name="jbossws-jboss42.jar"/>
         <include name="jaxb-api.jar"/>
         <include name="jaxb-impl.jar"/>
         <include name="policy.jar"/>
@@ -297,8 +293,6 @@
   </target>
   
   <target name="jars-jboss40" depends="jars-common" if="jboss40.home">
-    
-    <ant antfile="${int.jboss40.dir}/build.xml" target="jars" inheritall="false"/>
     
     <!-- Concat jboss-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans.xml">

@@ -37,7 +37,7 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.Configuration.OperationConfig;
-import org.jboss.wsf.framework.deployment.ResourceLoaderAdapter;
+import org.jboss.wsf.common.ResourceLoaderAdapter;
 
 /**
  *  Builder class that builds the Tools Meta Data
