@@ -22,8 +22,6 @@
 
 	<!-- Deploy jbossws to jboss50 -->
 	<target name="deploy-jboss50" depends="jars-jboss50,undeploy-jboss50,deploy-jboss50-endorsed" description="Deploy jbossws to jboss50">
-		<ant antfile="${int.sunri.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>
-		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>		
 		<macro-deploy-native50
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
@@ -56,8 +54,6 @@
 
 	<!-- Deploy jbossws to jboss42 -->
 	<target name="deploy-jboss42" depends="jars-jboss42,undeploy-jboss42,deploy-jboss42-endorsed" description="Deploy jbossws to jboss42">
-		<ant antfile="${int.sunri.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
-		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
 		<macro-deploy-native42
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
