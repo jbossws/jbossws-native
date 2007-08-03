@@ -41,6 +41,7 @@
 		</path>
 
     <path id="tests.extra.classpath">
+			<pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
       <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
       <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
     </path>

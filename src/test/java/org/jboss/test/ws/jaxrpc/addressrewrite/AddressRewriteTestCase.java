@@ -24,12 +24,14 @@ package org.jboss.test.ws.jaxrpc.addressrewrite;
 import java.net.URL;
 
 import javax.management.Attribute;
+import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
 
-import org.jboss.wsf.framework.management.DefaultServerConfigMBean;
+import org.jboss.wsf.common.ObjectNameFactory;
+import org.jboss.wsf.common.management.DefaultServerConfigMBean;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
@@ -40,6 +42,8 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class AddressRewriteTestCase extends JBossWSTest
 {
+   private static final ObjectName SERVER_CONFIG_OBJECT_NAME = ObjectNameFactory.create("jboss.ws:service=ServerConfig");
+   
    private static String NAMESPACE = "http://test.jboss.org/addressrewrite";
    private String wsdlLocation;
    private String wsdlLocationSec;
@@ -51,14 +55,14 @@ public class AddressRewriteTestCase extends JBossWSTest
    {
       wsdlLocation = "http://" + getServerHost() + ":8080/jaxrpc-addressrewrite/ValidURL?wsdl";
       wsdlLocationSec = "http://" + getServerHost() + ":8080/jaxrpc-addressrewrite-sec/ValidURL?wsdl";
-      modifySOAPAddress = (Boolean)getServer().getAttribute(DefaultServerConfigMBean.OBJECT_NAME, "ModifySOAPAddress");
-      webServiceHost = (String)getServer().getAttribute(DefaultServerConfigMBean.OBJECT_NAME, "WebServiceHost");
+      modifySOAPAddress = (Boolean)getServer().getAttribute(SERVER_CONFIG_OBJECT_NAME, "ModifySOAPAddress");
+      webServiceHost = (String)getServer().getAttribute(SERVER_CONFIG_OBJECT_NAME, "WebServiceHost");
    }
 
    public void tearDown() throws Exception
    {
       Attribute attr = new Attribute("ModifySOAPAddress", modifySOAPAddress);
-      getServer().setAttribute(DefaultServerConfigMBean.OBJECT_NAME, attr);
+      getServer().setAttribute(SERVER_CONFIG_OBJECT_NAME, attr);
    }
 
    public void testRewrite() throws Exception
@@ -158,6 +162,6 @@ public class AddressRewriteTestCase extends JBossWSTest
    private void setModifySOAPAddress(Boolean value) throws Exception
    {
       Attribute attr = new Attribute("ModifySOAPAddress", value);
-      getServer().setAttribute(DefaultServerConfigMBean.OBJECT_NAME, attr);
+      getServer().setAttribute(SERVER_CONFIG_OBJECT_NAME, attr);
    }
 }
