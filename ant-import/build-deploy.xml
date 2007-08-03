@@ -13,8 +13,8 @@
 
 <project>
 
+	<import file="${core.dir}/ant-import/macros-deploy-framework.xml"/>
 	<import file="${core.dir}/ant-import/macros-deploy-native.xml"/>
-	<import file="${framework.dir}/ant-import/macros-deploy-wsf.xml"/>
   
 	<!-- ================================================================== -->
 	<!-- Deployment  JBoss50                                                -->
@@ -25,12 +25,10 @@
 		<ant antfile="${int.sunri.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>
 		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss50" inheritall="false"/>		
 		<macro-deploy-native50
-				wsflibs="${framework.dir}/output/lib"
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
-		<macro-deploy-wsf
-				wsflibs="${framework.dir}/output/lib"
-				thirdpartylibs="${framework.dir}/thirdparty"
+		<macro-deploy-framework
+				thirdpartylibs="${core.dir}/thirdparty"
 				jbosshome="${jboss50.home}"/>
 
     <!-- [JBWS-1617] JAXRPC doc/literal trims empty string 
@@ -49,7 +47,7 @@
 	<!-- Remove jbossws from jboss50 -->
 	<target name="undeploy-jboss50" depends="prepare,undeploy-jboss50-endorsed" description="Remove jbossws from jboss50">		
 		<macro-undeploy-native50/>
-		<macro-undeploy-wsf jbosshome="${jboss50.home}"/>
+		<macro-undeploy-framework jbosshome="${jboss50.home}"/>
 	</target>
   
 	<target name="undeploy-jboss50-endorsed" depends="prepare">		
@@ -61,12 +59,10 @@
 		<ant antfile="${int.sunri.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
 		<ant antfile="${int.xfire.dir}/build.xml" target="undeploy-jboss42" inheritall="false"/>
 		<macro-deploy-native42
-				wsflibs="${framework.dir}/output/lib"
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
-		<macro-deploy-wsf
-				wsflibs="${framework.dir}/output/lib"
-				thirdpartylibs="${framework.dir}/thirdparty"
+		<macro-deploy-framework
+				thirdpartylibs="${core.dir}/thirdparty"
 				jbosshome="${jboss42.home}"/>
 
     <!-- [JBWS-1617] JAXRPC doc/literal trims empty string 
@@ -86,7 +82,7 @@
 	<!-- Remove jbossws from jboss42 -->
 	<target name="undeploy-jboss42" depends="prepare,undeploy-jboss42-endorsed" description="Remove jbossws from jboss42">
 		<macro-undeploy-native42/>
-		<macro-undeploy-wsf jbosshome="${jboss42.home}"/>
+		<macro-undeploy-framework jbosshome="${jboss42.home}"/>
 	</target>
 	<target name="undeploy-jboss42-endorsed" depends="prepare">		
 		<macro-undeploy-endorsed jbosshome="${jboss42.home}"/>
@@ -97,12 +93,10 @@
   
 	<target name="deploy-jboss40-ejb3">
 		<macro-deploy-native40
-				wsflibs="${framework.dir}/output/lib"
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
-		<macro-deploy-wsf
-				wsflibs="${framework.dir}/output/lib"
-				thirdpartylibs="${framework.dir}/thirdparty"
+		<macro-deploy-framework
+				thirdpartylibs="${core.dir}/thirdparty"
 				jbosshome="${jboss40.home}"/>
 	</target>
   
@@ -119,6 +113,6 @@
 	<!-- Remove jbossws from jboss40 -->
 	<target name="undeploy-jboss40" depends="prepare" description="Remove jbossws from jboss40">
 		<macro-undeploy-native40/>
-		<macro-undeploy-wsf jbosshome="${jboss40.home}"/>
+		<macro-undeploy-framework jbosshome="${jboss40.home}"/>
 	</target>
 </project>

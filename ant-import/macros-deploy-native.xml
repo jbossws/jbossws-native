@@ -18,7 +18,6 @@
    <!-- ================================================================== -->
 
    <macrodef name="macro-deploy-native50">
-      <attribute name="wsflibs"/>
       <attribute name="stacklibs"/>
       <attribute name="thirdpartylibs"/>
       <sequential>
@@ -123,7 +122,6 @@
    </macrodef>
 
    <macrodef name="macro-deploy-native42">
-      <attribute name="wsflibs"/>
       <attribute name="stacklibs"/>
       <attribute name="thirdpartylibs"/>
       <sequential>
@@ -225,7 +223,6 @@
    </macrodef>
 
    <macrodef name="macro-deploy-native40">
-      <attribute name="wsflibs"/>
       <attribute name="stacklibs"/>
       <attribute name="thirdpartylibs"/>
       <sequential>

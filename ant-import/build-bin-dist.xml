@@ -51,16 +51,16 @@
 			<fileset dir="${build.dir}/ant-import">
 				<include name="build-testsuite.xml"/>
 			</fileset>
-			<fileset dir="${int.native.dir}/ant-import">
+			<fileset dir="${core.dir}/ant-import">
+				<include name="macros-deploy-framework.xml"/>
 				<include name="macros-deploy-native.xml"/>
 			</fileset>
 			<fileset dir="${int.sunri.dir}/ant-import">
+				<include name="macros-deploy-framework.xml"/>
 				<include name="macros-deploy-sunri.xml"/>
 			</fileset>
-			<fileset dir="${framework.dir}/ant-import">
-				<include name="macros-deploy-spi.xml"/>
-			</fileset>
 			<fileset dir="${int.xfire.dir}/ant-import">
+				<include name="macros-deploy-framework.xml"/>
 				<include name="macros-deploy-xfire.xml"/>
 			</fileset>
 			<fileset dir="${testsuite.dir}/ant-import">
