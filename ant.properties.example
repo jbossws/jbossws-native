@@ -15,8 +15,12 @@ jbossws.integration.target=jboss50
 jboss.server.instance=default
 jboss.bind.address=localhost
 
+# JBoss JMX invoker authentication
+#jmx.authentication.username=admin
+#jmx.authentication.password=admin
+
 # JBoss Repository
-#jboss.repository=file:/home/tdiesler/svn/repository.jboss.org
+#jboss.repository=file:/home/tdiesler/svn/jboss.local.repository
 jboss.repository=http://repository.jboss.org
 
 # JBossWS Release
