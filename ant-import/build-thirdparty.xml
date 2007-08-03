@@ -126,8 +126,8 @@
     
     <!-- The compile classpath for jbossws core -->
      <path id="thirdparty.classpath">
+        <!-- A stack MUST NOT have a compile time dependency on jbossws-framework.jar -->
         <pathelement location="${thirdparty.dir}/jbossws-common.jar"/>
-        <pathelement location="${thirdparty.dir}/jbossws-framework.jar"/>
         <pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
        
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
