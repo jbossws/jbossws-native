@@ -11,7 +11,7 @@ package org.jboss.test.ws.jaxrpc.samples.jmstransport;
 import java.rmi.RemoteException;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.framework.transport.jms.JMSTransportSupport;
+import org.jboss.wsf.common.transport.jms.JMSTransportSupport;
 
 /**
  * An example of a MDB acting as a web service endpoint.
