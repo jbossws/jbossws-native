@@ -33,7 +33,7 @@
 	<property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
 	<property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
 
-	<target name="init" depends="prepare,thirdparty-get">
+	<target name="init" depends="prepare,thirdparty">
 	</target>
 
 	<!-- ================================================================== -->

@@ -19,6 +19,9 @@
   <!-- Libraries -->
   <!-- ========= -->
 
+  <target name="thirdparty" depends="thirdparty-classpath">
+  </target>
+  
   <target name="thirdparty-init" depends="prepare">
     
     <property name="thirdparty.dir" value="${core.dir}/thirdparty"/>
