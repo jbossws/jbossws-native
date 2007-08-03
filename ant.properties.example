@@ -13,43 +13,7 @@ jbossws.integration.target=jboss50
 
 # The JBoss server instance
 jboss.server.instance=default
-
-# Optional Tomcat Home
-#tomcat.home=/usr/java/tomcat
-tomcat.manager.username=manager
-tomcat.manager.password=manager
-
-# Hudson QA Environment
-hudson.username=changeme
-hudson.password=changeme
-
-hudson.root=/home/tdiesler/workspace
-hudson.host=jbws.dyndns.org
-hudson.port=8180
-
-hudson.jdk15=/usr/java/jdk1.5
-hudson.jdk14=/usr/java/jdk1.4
-
-hudson.jbossws-spi.url=https://svn.jboss.org/repos/jbossws/projects/wsintegration/jbossws-spi/trunk
-hudson.jbws-jboss50.url=https://svn.jboss.org/repos/jbossws/projects/wsintegration/jbws-jboss50/trunk
-hudson.jbws-jboss42.url=https://svn.jboss.org/repos/jbossws/projects/wsintegration/jbws-jboss42/trunk
-hudson.jbws-jboss40.url=https://svn.jboss.org/repos/jbossws/projects/wsintegration/jbws-jboss40/trunk
-hudson.jbws-tc55.url=https://svn.jboss.org/repos/jbossws/projects/wsintegration/jbws-tc55/trunk
-
-hudson.jboss50.url=https://svn.jboss.org/repos/jbossas/trunk
-hudson.jboss50.build=jboss-5.0.0.Beta3
-hudson.jboss50.rev=HEAD
-
-hudson.jboss42.url=https://svn.jboss.org/repos/jbossas/branches/Branch_4_2
-hudson.jboss42.build=jboss-4.2.0.GA
-hudson.jboss42.rev=HEAD
-
-hudson.jboss40.url=https://svn.jboss.org/repos/jbossas/branches/Branch_4_0
-hudson.jboss40.build=jboss-4.0.5.SP1
-hudson.jboss40.rev=HEAD
-
-hudson.mail.recipients=thomas.diesler@jboss.com, heiko.braun@jboss.com, alejandro.guizar@jboss.com
-hudson.smtp.host=mail.navisite.com
+jboss.bind.address=localhost
 
 # JBoss Repository
 #jboss.repository=file:/home/tdiesler/svn/repository.jboss.org
@@ -67,8 +31,3 @@ javac.debug=yes
 javac.deprecation=yes
 javac.fail.onerror=yes
 javac.verbose=no
-
-# Use the eclipse compiler to allow for hot code swapping
-# http://www.jboss.org/index.html?module=bb&op=viewtopic&t=65783
-# build.compiler=org.eclipse.jdt.core.JDTCompilerAdapter
-

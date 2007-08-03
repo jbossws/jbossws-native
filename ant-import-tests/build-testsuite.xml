@@ -12,7 +12,7 @@
 
   <property name="tests.output.dir" value="${core.dir}/output/tests"/>
   
-	<import file="${build.dir}/ant-import/build-testsuite.xml"/>
+  <import file="${core.dir}/src/test-framework/ant-import/build-testsuite.xml"/>
 
 	<!-- Define excluded tests -->
 	<property name="excludes-short-name" value="test-excludes-${jbossws.integration.target}.txt"/>
@@ -208,7 +208,7 @@
 		<ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
 		<ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
 		<ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
-		<ant antfile="${core.dir}/src/test-framework/etc/build-jars-jaxws.xml" target="build-jars-jaxws"/>
+		<ant antfile="${core.dir}/src/test-framework/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws"/>
 	</target>
 
 	<target name="tests-main" depends="tests-jars" description="Build the deployments."/>
