@@ -10,17 +10,17 @@
 
 <project>
 
-  <property environment="env"/>
   <property name="tests.output.dir" value="${core.dir}/output/tests"/>
+  
 	<import file="${build.dir}/ant-import/build-testsuite.xml"/>
-
-	<property name="tests.dir" value="${core.dir}/src/test"/>
-	<property name="tests.java.dir" value="${tests.dir}/java"/>
-	<property name="tests.resources.dir" value="${tests.dir}/resources"/>
 
 	<!-- Define excluded tests -->
 	<property name="excludes-short-name" value="test-excludes-${jbossws.integration.target}.txt"/>
   <property name="excludesfile" value="${core.dir}/src/test/resources/test-excludes-${jbossws.integration.target}.txt"/>
+  
+	<property name="tests.dir" value="${core.dir}/src/test"/>
+	<property name="tests.java.dir" value="${tests.dir}/java"/>
+	<property name="tests.resources.dir" value="${tests.dir}/resources"/>
 
 	<!--
 	  Init the various classpaths
