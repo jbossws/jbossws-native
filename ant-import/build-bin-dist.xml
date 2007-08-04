@@ -124,6 +124,7 @@
 				<include name="stax-ex.jar"/>
 				<include name="streambuffer.jar"/>
 				<include name="wsdl4j.jar"/>
+				<include name="wstx.jar"/>
 			</fileset>
 		</copy>
 
