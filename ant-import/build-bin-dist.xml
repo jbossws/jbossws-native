@@ -14,7 +14,7 @@
 <project>
 
 	<!-- ================================================================== -->
-	<!-- Binary distribution JBossWS/XFire                                  -->
+	<!-- Binary distribution                                                -->
 	<!-- ================================================================== -->
 
 	<target name="build-bin-dist" depends="jars, javadoc" description="Build the binary distribution">
