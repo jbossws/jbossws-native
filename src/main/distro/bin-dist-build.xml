@@ -103,6 +103,7 @@
 
 		<path id="tests.extra.classpath">
 			<pathelement location="${thirdparty.dir}/policy.jar"/>
+			<pathelement location="${thirdparty.dir}/jaxws-tools.jar"/>
 		</path>
 
 	</target>
