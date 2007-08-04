@@ -346,7 +346,7 @@
 	<!-- ================================================================== -->
 
 	<!-- Generate the JavaDoc -->
-	<target name="javadoc" depends="init" description="Generate the Javadoc" unless="nojavadoc">
+	<target name="javadoc" depends="init" description="Generate the Javadoc" if="javadoc">
 
 		<mkdir dir="${core.output.apidocs.dir}"/>
 		<javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">
