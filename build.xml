@@ -16,6 +16,7 @@
 	<property name="core.dir" value="${basedir}"/>
   
 	<import file="${basedir}/ant-import/build-setup.xml"/>
+	<import file="${basedir}/ant-import/build-bin-dist.xml"/>
 	<import file="${basedir}/ant-import/build-deploy.xml"/>
 	<import file="${basedir}/ant-import/build-release.xml"/>
 	<import file="${basedir}/ant-import/build-thirdparty.xml"/>
@@ -23,9 +24,9 @@
 
 	<property name="core.src.dir" value="${core.dir}/src/main"/>
 	<property name="core.etc.dir" value="${core.src.dir}/etc"/>
+	<property name="core.distro.dir" value="${core.src.dir}/distro"/>
 	<property name="core.java.dir" value="${core.src.dir}/java"/>
 	<property name="core.resources.dir" value="${core.src.dir}/resources"/>
-	<property name="core.samples.dir" value="${core.resources.dir}/samples"/>
 	<property name="core.output.dir" value="${core.dir}/output"/>
 	<property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
 	<property name="core.output.etc.dir" value="${core.output.dir}/etc"/>
@@ -345,7 +346,7 @@
 	<!-- ================================================================== -->
 
 	<!-- Generate the JavaDoc -->
-	<target name="javadoc" depends="init" description="Generate the Javadoc">
+	<target name="javadoc" depends="init" description="Generate the Javadoc" unless="nojavadoc">
 
 		<mkdir dir="${core.output.apidocs.dir}"/>
 		<javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">

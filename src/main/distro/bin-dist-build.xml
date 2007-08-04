@@ -23,11 +23,10 @@
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="thirdparty.dir" value="${basedir}/lib"/>
 	<property name="tests.dir" value="${basedir}/tests"/>
-	<property name="tests.output.dir" value="${tests.dir}/output"/>
+	<property name="tests.output.dir" value="${basedir}/output"/>
 
 	<property file="${basedir}/ant.properties"/>
 	<property file="${basedir}/version.properties"/>
-	<property file="${build.dir}/version.properties"/>
 
 	<property name="jboss50.lib" value="${jboss50.home}/lib"/>
 	<property name="jboss50.client" value="${jboss50.home}/client"/>
@@ -67,11 +66,9 @@
   <fail message="JDK1.5 or above is required" unless="HAVE_JDK_1.5"/>
 
 	<import file="${basedir}/build/build-deploy.xml"/>
-	<import file="${basedir}/build/build-testsuite.xml"/>
-	<import file="${basedir}/build/macros-deploy-spi.xml"/>
+	<import file="${basedir}/build/macros-deploy-framework.xml"/>
 	<import file="${basedir}/build/macros-deploy-native.xml"/>
-	<import file="${basedir}/build/macros-deploy-sunri.xml"/>
-	<import file="${basedir}/build/macros-deploy-xfire.xml"/>
+	<import file="${basedir}/tests/ant-import/build-testsuite.xml"/>
 
 	<!-- ================================================================== -->
 	<!-- Initialization                                                     -->
@@ -95,7 +92,7 @@
 	<target name="tests-init" depends="prepare,tests-classpath">
 
 		<path id="ws.stack.classpath">
-			<pathelement location="${lib.dir}/jbossws-framework.jar"/>
+			<pathelement location="${lib.dir}/jbossws-common.jar"/>
 			<pathelement location="${lib.dir}/jbossws-spi.jar"/>
 			<pathelement location="${lib.dir}/jboss-jaxrpc.jar"/>
 			<pathelement location="${lib.dir}/jboss-jaxws.jar"/>
@@ -128,7 +125,7 @@
 	</target>
 
 	<target name="tests-jars" depends="tests-compile,tests-copy-resources">
-		<ant antfile="${build.dir}/build-jars-jaxws.xml" target="build-jars-jaxws" inheritall="true"/>
+		<ant antfile="${tests.dir}/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" inheritall="true"/>
 	</target>
 
 	<target name="tests-main" depends="tests-jars" description="Build the test deployments."/>
@@ -143,6 +140,7 @@
 	<!-- ================================================================== -->
 
 	<target name="clean" depends="prepare" description="Cleans up most generated files.">
+		<delete dir="${tests.output.dir}"/>
 	</target>
 
 	<target name="clobber" depends="clean" description="Cleans up all generated files.">
