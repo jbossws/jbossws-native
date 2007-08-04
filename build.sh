@@ -148,12 +148,12 @@ main() {
     # Set the max memory to 256m
     ANT_OPTS=-Xmx256m
 
-	 if [ "x$USE_JDK6" = "xtrue" ]; then
+	#if [ "x$USE_JDK6" = "xtrue" ]; then
     	ANT_OPTS="$ANT_OPTS -Djava.endorsed.dirs=$ANT_HOME/endorsed"
     	echo "--------------------------------------"
     	echo "Endorsed Directory: $ANT_HOME/endorsed"
     	echo "--------------------------------------"
-    fi
+    #fi
 
     # setup some build properties
     ANT_OPTS="$ANT_OPTS -Dbuild.script=$0"
