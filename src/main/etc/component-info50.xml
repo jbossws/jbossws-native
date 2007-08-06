@@ -7,19 +7,9 @@
     
     <artifact id="jbossws-native50.sar"/>
     
-    <import componentref="jboss/jbossws-common">
-      <compatible version="@jbossws-common@"/>
-    </import>
-    <import componentref="jboss/jbossws-framework">
-      <compatible version="@jbossws-framework@"/>
-    </import>
-    <import componentref="jboss/jbossws-spi">
-      <compatible version="@jbossws-spi@"/>
-    </import>
     <import componentref="jboss/jbossws">
       <compatible version="@repository.id@"/>
     </import>
-
     <import componentref="jboss/jbossxb">
       <compatible version="@jboss-jbossxb-jboss50@"/>
     </import>

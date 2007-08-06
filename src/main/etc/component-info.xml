@@ -13,6 +13,16 @@
     <artifact id="jbossws-core-src.zip"/>
     <artifact id="jbossws-core-scripts.zip"/>
 
+    <import componentref="jboss/jbossws-common">
+      <compatible version="@jbossws-common@"/>
+    </import>
+    <import componentref="jboss/jbossws-framework">
+      <compatible version="@jbossws-framework@"/>
+    </import>
+    <import componentref="jboss/jbossws-spi">
+      <compatible version="@jbossws-spi@"/>
+    </import>
+    
     <import componentref="apache-xmlsec">
       <compatible version="@apache-xmlsec@"/>
       <compatible version="@apache-xmlsec@-brew"/>
@@ -23,9 +33,6 @@
     </import>
     <import componentref="jbpm/bpel">
       <compatible version="@jbpm-bpel@"/>
-    </import>
-    <import componentref="jboss/jbossws-framework">
-      <compatible version="@jbossws-framework@"/>
     </import>
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>
@@ -38,6 +45,7 @@
     </import>
     <import componentref="woodstox">
       <compatible version="@woodstox@"/>
+      <compatible version="@woodstox@-brew"/>
     </import>
     <import componentref="wscommons-policy">
       <compatible version="@wscommons-policy@"/>
