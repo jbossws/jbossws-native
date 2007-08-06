@@ -77,7 +77,7 @@ public class WSSecurityConfigFactory
 		else
 		{
 			// an exception might be better here...
-			log.warn("Unable to load ws-security config ("+resourceName+"). Security processing will be disabled");
+			log.trace("Unable to load ws-security config ("+resourceName+"). Security processing will be disabled");
 		}		
 
 		return config;
