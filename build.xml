@@ -11,7 +11,7 @@
 
 <!-- $Id$ -->
 
-<project default="main" basedir=".">
+<project default="main" basedir="." name="JBossWS-Native">
 
 	<property name="core.dir" value="${basedir}"/>
   
