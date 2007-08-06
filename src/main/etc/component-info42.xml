@@ -7,6 +7,19 @@
     
     <artifact id="jbossws-native42.sar"/>
     
+    <import componentref="jboss/jbossws-common">
+      <compatible version="@jbossws-common@"/>
+    </import>
+    <import componentref="jboss/jbossws-framework">
+      <compatible version="@jbossws-framework@"/>
+    </import>
+    <import componentref="jboss/jbossws-spi">
+      <compatible version="@jbossws-spi@"/>
+    </import>
+    <import componentref="jboss/jbossws">
+      <compatible version="@repository.id@"/>
+    </import>
+
     <import componentref="jboss/jbossxb">
       <compatible version="@jboss-jbossxb-jboss42@"/>
       <compatible version="@jboss-jbossxb-jboss42@-brew"/>
@@ -14,12 +27,6 @@
     <import componentref="jboss/remoting">
       <compatible version="@jboss-remoting-jboss42@"/>
       <compatible version="@jboss-remoting-jboss42@-brew"/>
-    </import>
-    <import componentref="jboss/jbossws">
-      <compatible version="@repository.id@"/>
-    </import>
-    <import componentref="jboss/jbossws-spi">
-      <compatible version="@repository.id@"/>
     </import>
     
     <export>

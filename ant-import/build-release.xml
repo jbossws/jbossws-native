@@ -33,10 +33,52 @@
     </copy>
     <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${core.output.etc.dir}/component-info.xml" filtering="true" overwrite="true">
       <filterset>
-        <filtersfile file="${build.dir}/version.properties"/>
+        <filtersfile file="${core.dir}/version.properties"/>
       </filterset>
     </copy>
 	  
+    <!-- jboss/jbossws-native50 -->
+    <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
+    <mkdir dir="${jboss.repository.dir}/jbossws-native50/${repository.id}/lib"/>
+    <copy todir="${jboss.repository.dir}/jbossws-native50/${repository.id}/lib" overwrite="true">
+      <fileset dir="${core.dir}/output/lib">
+        <include name="jbossws-native50.sar"/>
+        <include name="jbossws-native50-deployer.zip"/>
+      </fileset>
+    </copy>
+    <copy tofile="${jboss.repository.dir}/jbossws-native50/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info50.xml" filtering="true" overwrite="true">
+      <filterset>
+        <filtersfile file="${core.dir}/version.properties"/>
+      </filterset>
+    </copy>
+    
+    <!-- jboss/jbossws-native42 -->
+    <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
+    <mkdir dir="${jboss.repository.dir}/jbossws-native42/${repository.id}/lib"/>
+    <copy todir="${jboss.repository.dir}/jbossws-native42/${repository.id}/lib" overwrite="true">
+      <fileset dir="${core.dir}/output/lib">
+        <include name="jbossws-native42.sar"/>
+      </fileset>
+    </copy>
+    <copy tofile="${jboss.repository.dir}/jbossws-native42/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info42.xml" filtering="true" overwrite="true">
+      <filterset>
+        <filtersfile file="${core.dir}/version.properties"/>
+      </filterset>
+    </copy>
+    
+    <!-- jboss/jbossws-native40 -->
+    <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
+    <mkdir dir="${jboss.repository.dir}/jbossws-native40/${repository.id}/lib"/>
+    <copy todir="${jboss.repository.dir}/jbossws-native40/${repository.id}/lib" overwrite="true">
+      <fileset dir="${core.dir}/output/lib">
+        <include name="jbossws-native40.sar"/>
+      </fileset>
+    </copy>
+    <copy tofile="${jboss.repository.dir}/jbossws-native40/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info40.xml" filtering="true" overwrite="true">
+      <filterset>
+        <filtersfile file="${core.dir}/version.properties"/>
+      </filterset>
+    </copy>
   </target>
 
 </project>

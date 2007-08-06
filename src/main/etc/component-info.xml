@@ -24,8 +24,8 @@
     <import componentref="jbpm/bpel">
       <compatible version="@jbpm-bpel@"/>
     </import>
-    <import componentref="jboss/jbossws-spi">
-      <compatible version="@repository.id@"/>
+    <import componentref="jboss/jbossws-framework">
+      <compatible version="@jbossws-framework@"/>
     </import>
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>
@@ -35,6 +35,9 @@
     </import>
     <import componentref="sun-jaxws">
       <compatible version="@sun-jaxws@"/>
+    </import>
+    <import componentref="woodstox">
+      <compatible version="@woodstox@"/>
     </import>
     <import componentref="wscommons-policy">
       <compatible version="@wscommons-policy@"/>
