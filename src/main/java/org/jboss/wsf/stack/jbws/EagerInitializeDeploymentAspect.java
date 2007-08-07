@@ -41,8 +41,12 @@ public class EagerInitializeDeploymentAspect extends DeploymentAspect
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)
          throw new IllegalStateException("Cannot obtain unified meta data");
+
+      ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+      if(null == runtimeClassLoader)
+         throw new IllegalArgumentException("Runtime classloader may not be null");
       
-      umd.setClassLoader(dep.getRuntimeClassLoader());
+      umd.setClassLoader(runtimeClassLoader);
       umd.eagerInitialize();
    }
 }

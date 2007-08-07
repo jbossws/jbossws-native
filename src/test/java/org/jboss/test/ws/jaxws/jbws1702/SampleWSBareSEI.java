@@ -26,17 +26,21 @@ import org.jboss.test.ws.jaxws.jbws1702.types.ResponseWrapperC;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
 /**
  * @author Heiko.Braun@jboss.com
  * @version $Revision$
  */
 @WebService
+@SOAPBinding(
+  style = SOAPBinding.Style.DOCUMENT,
+  use = SOAPBinding.Use.LITERAL,
+  parameterStyle = SOAPBinding.ParameterStyle.BARE
+)
 public interface SampleWSBareSEI
 {
-   @WebMethod()
    ResponseWrapperB getClassCAsClassB();
 
-   @WebMethod()
    ResponseWrapperC getClassC();
 }

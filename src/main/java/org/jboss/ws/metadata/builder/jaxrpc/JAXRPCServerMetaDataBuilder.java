@@ -76,7 +76,10 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
          // For every webservice-description build the ServiceMetaData
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(dep.getCanonicalName());
-         wsMetaData.setClassLoader(dep.getInitialClassLoader());
+         ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+         if(null == runtimeClassLoader)
+            throw new IllegalArgumentException("Runtime loader cannot be null");
+         wsMetaData.setClassLoader(runtimeClassLoader);
 
          WebservicesMetaData jaxrpcMapping = dep.getAttachment(WebservicesMetaData.class);
          WebserviceDescriptionMetaData[] wsDescriptionArr = jaxrpcMapping.getWebserviceDescriptions();

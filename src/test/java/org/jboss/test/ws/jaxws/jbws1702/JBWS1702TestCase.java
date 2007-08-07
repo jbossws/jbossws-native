@@ -51,12 +51,6 @@ public class JBWS1702TestCase extends JBossWSTest
 
    public void testInheritanceBare() throws Exception
    {
-      if (true)
-      {
-         System.out.println("FIXME: [JBWS-1702]: Type inheritance on Doclit/Bare");
-         return;
-      }
-
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jbws1702/SampleWSWithDocument_Bare?wsdl");
       QName serviceName = new QName("http://jbws1702.jaxws.ws.test.jboss.org/", "SampleWSWithDocument_BareService");
       Service service = Service.create(wsdlURL, serviceName);
@@ -68,13 +62,7 @@ public class JBWS1702TestCase extends JBossWSTest
    }
 
    public void testInheritanceWrapped() throws Exception
-   {
-      if (true)
-      {
-         System.out.println("FIXME: [JBWS-1702]: Type inheritance on Doclit/Bare");
-         return;
-      }
-
+   {      
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jbws1702/SampleWSWithDocument_Wrapped?wsdl");
       QName serviceName = new QName("http://jbws1702.jaxws.ws.test.jboss.org/", "SampleWSWithDocument_WrappedService");
       Service service = Service.create(wsdlURL, serviceName);

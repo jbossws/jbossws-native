@@ -70,26 +70,40 @@
   </bean>
   
   <bean name="WSNativeUnifiedMetaDataDeploymentAspect" class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
-    <property name="requires">ContainerMetaData, URLPattern, VFSRoot</property>
-    <property name="provides">UnifiedMetaDataModel, StackDescriptor</property>
+    <property name="requires">RuntimeLoader, ContainerMetaData, URLPattern, VFSRoot</property>
+    <property name="provides">UnifiedMetaDataModel</property>
   </bean>
   
-  <!-- Deployment aspect installers -->  
+  <!-- Deployment aspect installers -->
+  <!-- Phase 1 -->
   <bean name="WSNativeDeploymentAspectInstallerJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
     <property name="manager"><inject bean="WSDeploymentAspectManagerJSE"/></property>
     <property name="sortAspectsOnCreate">true</property>
     <property name="aspects">
       <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">
         <inject bean="WSNativeContextPropertiesDeploymentAspect"/>
+      </set>
+    </property>
+    <depends>WSDeploymentAspectInstallerJSE</depends>
+  </bean>
+  <!-- Phase 2 -->
+   <bean name="WSNativeDeploymentAspectInstallerJSE2" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
+    <property name="parent"><inject bean="WSDeploymentAspectManagerJSE"/></property>
+    <property name="manager"><inject bean="WSDeploymentAspectManagerJSE2"/></property>
+    <property name="sortAspectsOnCreate">true</property>
+    <property name="aspects">
+      <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">        
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
         <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
+        <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
       </set>
     </property>
-    <depends>WSDeploymentAspectInstallerJSE</depends>
+    <depends>WSDeploymentAspectInstallerJSE2</depends>
   </bean>
+
   <bean name="WSNativeDeploymentAspectInstallerEJB" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
     <property name="manager"><inject bean="WSDeploymentAspectManagerEJB"/></property>
     <property name="sortAspectsOnCreate">true</property>
@@ -106,6 +120,7 @@
     </property>
     <depends>WSDeploymentAspectInstallerEJB</depends>
   </bean>
+      
   <bean name="WSNativeDeploymentAspectInstallerEndpointAPI" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
     <property name="manager"><inject bean="WSDeploymentAspectManagerEndpointAPI"/></property>
     <property name="sortAspectsOnCreate">true</property>

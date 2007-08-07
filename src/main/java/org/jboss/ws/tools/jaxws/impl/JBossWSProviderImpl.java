@@ -94,7 +94,7 @@ final class JBossWSProviderImpl extends WSContractProvider
       builder.setGenerateWsdl(generateWsdl);
       builder.setToolMode(true);
       builder.setWsdlDirectory(resourceDir);
-      builder.setMessageStream(messageStream);
+      builder.setMessageStream(messageStream);      
 
       if (generateWsdl)
          messageStream.println("Generating WSDL:");
@@ -102,6 +102,7 @@ final class JBossWSProviderImpl extends WSContractProvider
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
       DeploymentModelFactory factory = spiProvider.getSPI(DeploymentModelFactory.class);
       Deployment dep = factory.newDeployment("wsprovide-deployment", loader);
+      dep.setRuntimeClassLoader(loader);
 
       builder.buildWebServiceMetaData(dep, umd, endpointClass, null);
       try

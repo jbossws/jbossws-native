@@ -58,7 +58,11 @@ public class JAXWSMetaDataBuilderEJB3
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(dep.getCanonicalName());
-         wsMetaData.setClassLoader(dep.getInitialClassLoader());
+
+         ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+         if(null == runtimeClassLoader)
+            throw new IllegalArgumentException("Runtime loader cannot be null");
+         wsMetaData.setClassLoader(runtimeClassLoader);
 
          // The container objects below provide access to all of the ejb metadata
          EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);

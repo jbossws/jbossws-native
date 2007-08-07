@@ -50,7 +50,10 @@ public class JAXWSMetaDataBuilderJSE
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(dep.getCanonicalName());
-         wsMetaData.setClassLoader(dep.getInitialClassLoader());
+         ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+         if(null == runtimeClassLoader)
+            throw new IllegalArgumentException("Runtime classloader cannot be null");
+         wsMetaData.setClassLoader(runtimeClassLoader);
 
          // For every bean
          for (Endpoint ep : dep.getService().getEndpoints())

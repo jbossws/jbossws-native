@@ -191,7 +191,7 @@ public class ParameterWrapping
 
          for (WrappedParameter param : wrappedParameters)
          {
-            Object value = (param.getIndex() < 0) ? returnValue : holderValue(outParameters.get(param.getIndex()));
+            Object value = (param.getIndex() < 0) ? returnValue : holderValue(outParameters.get(param.getIndex()));          
             param.accessor().set(resStruct, value);
          }
          return resStruct;

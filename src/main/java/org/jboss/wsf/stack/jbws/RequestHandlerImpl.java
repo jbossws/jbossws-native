@@ -170,7 +170,7 @@ public class RequestHandlerImpl implements RequestHandler
       ServletInputStream in = req.getInputStream();
       ServletOutputStream out = res.getOutputStream();
 
-      ClassLoader classLoader = endpoint.getService().getDeployment().getInitialClassLoader();
+      ClassLoader classLoader = endpoint.getService().getDeployment().getRuntimeClassLoader();
       if (classLoader == null)
          throw new IllegalStateException("Deployment has no classloader associated");
       

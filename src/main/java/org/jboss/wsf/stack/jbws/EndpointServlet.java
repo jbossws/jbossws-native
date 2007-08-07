@@ -94,7 +94,6 @@ public class EndpointServlet extends HttpServlet
    protected void initServiceEndpoint(String contextPath)
    {
       initEndpoint(contextPath, getServletName());
-      initClassLoader();
       initEndpointConfig();
       initializeAndStart();
    }
@@ -106,10 +105,9 @@ public class EndpointServlet extends HttpServlet
       {
          // Initialize the meta data model
          UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
-         if (umd.isEagerInitialized() == false)
+         if (umd.isEagerInitialized() == false)  // TODO: remove this piece
          {
-            umd.setClassLoader(dep.getRuntimeClassLoader());
-            umd.eagerInitialize();
+            throw new IllegalStateException("UMD should be initialized already");
          }
 
          // Start the endpoint
@@ -133,18 +131,7 @@ public class EndpointServlet extends HttpServlet
          log.debug("Updating service endpoint config\n  config-name: " + configName + "\n  config-file: " + configFile);
          epMetaData.setConfigName(configName, configFile);
       }
-   }
-
-   private void initClassLoader()
-   {
-      // Set the runtime classloader for JSE endpoints, this should be the tomcat classloader
-      Deployment dep = endpoint.getService().getDeployment();
-      if (dep.getType() == DeploymentType.JAXRPC_JSE || dep.getType() == DeploymentType.JAXWS_JSE)
-      {
-         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-         dep.setRuntimeClassLoader(classLoader);
-      }
-   }
+   }   
 
    private void initEndpoint(String contextPath, String servletName)
    {

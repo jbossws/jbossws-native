@@ -108,7 +108,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          EndpointResult result = processWebService(dep, wsMetaData, sepClass, linkName);
 
          // Clear the java types, etc.
-         resetMetaDataBuilder(dep.getInitialClassLoader());
+         ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+         if(null == runtimeClassLoader)
+            throw new IllegalArgumentException("Runtime loader cannot be null");
+         resetMetaDataBuilder(runtimeClassLoader);
 
          ServerEndpointMetaData sepMetaData = result.sepMetaData;
          ServiceMetaData serviceMetaData = result.serviceMetaData;
@@ -310,7 +313,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       if (anWebService.endpointInterface().length() > 0)
       {
          seiName = anWebService.endpointInterface();
-         seiClass = dep.getInitialClassLoader().loadClass(seiName);
+         ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+         if(null == runtimeClassLoader)
+            throw new IllegalArgumentException("Runtime loader cannot be null");
+         seiClass = runtimeClassLoader.loadClass(seiName);
          WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 
          if (seiAnnotation == null)
