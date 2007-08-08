@@ -38,7 +38,7 @@
     The stack specific deployment aspects
   --> 
   <bean name="WSNativeContextPropertiesDeploymentAspect" class="org.jboss.wsf.framework.deployment.ContextPropertiesDeploymentAspect">
-    <property name="provides">ContextProperties</property>
+    <property name="provides">ContextProperties, StackDescriptor</property>
     <property name="contextProperties">
       <map keyClass="java.lang.String" valueClass="java.lang.String">
         <entry><key>org.jboss.ws.webapp.ServletClass</key><value>org.jboss.wsf.stack.jbws.EndpointServlet</value></entry>
@@ -76,20 +76,19 @@
   
   <!-- Deployment aspect installers -->
   <!-- Phase 1 -->
-  <bean name="WSNativeDeploymentAspectInstallerJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
-    <property name="manager"><inject bean="WSDeploymentAspectManagerJSE"/></property>
+  <bean name="WSNativeDeploymentAspectInstallerPreJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
+    <property name="manager"><inject bean="WSDeploymentAspectManagerPreJSE"/></property>
     <property name="sortAspectsOnCreate">true</property>
     <property name="aspects">
       <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">
         <inject bean="WSNativeContextPropertiesDeploymentAspect"/>
       </set>
     </property>
-    <depends>WSDeploymentAspectInstallerJSE</depends>
+    <depends>WSDeploymentAspectInstallerPreJSE</depends>
   </bean>
   <!-- Phase 2 -->
-   <bean name="WSNativeDeploymentAspectInstallerJSE2" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
-    <property name="parent"><inject bean="WSDeploymentAspectManagerJSE"/></property>
-    <property name="manager"><inject bean="WSDeploymentAspectManagerJSE2"/></property>
+  <bean name="WSNativeDeploymentAspectInstallerPostJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
+    <property name="manager"><inject bean="WSDeploymentAspectManagerPostJSE"/></property>
     <property name="sortAspectsOnCreate">true</property>
     <property name="aspects">
       <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">        
@@ -101,7 +100,7 @@
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
       </set>
     </property>
-    <depends>WSDeploymentAspectInstallerJSE2</depends>
+    <depends>WSDeploymentAspectInstallerPostJSE</depends>
   </bean>
 
   <bean name="WSNativeDeploymentAspectInstallerEJB" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
