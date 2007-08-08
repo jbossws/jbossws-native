@@ -1,0 +1,13 @@
+#
+# This file records SVN merges to trunk that have already been done
+# using this branch. Please use the following format
+#
+#
+#  username, dd-mmm-yyyy
+#  svn merge -r start:end svn url
+# 
+#  thomas.diesler@jboss.com 14-Jun-2007
+#  svn merge -r3427:3430 https://svn.jboss.org/repos/jbossws/branches/jbossws-2.0
+#
+#  $Id: mergeinfo.txt 3833 2007-07-09 17:28:22Z heiko.braun@jboss.com $
+
