@@ -412,7 +412,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
    private void saveSessionInfo(Map<String, Object> remotingMetadata, Map<String, Object> requestContext)
    {
-      Map<String, String> cookies = (Map)remotingMetadata.get(SESSION_COOKIES);
+      Map<String, String> cookies = (Map)requestContext.get(SESSION_COOKIES);
       if (cookies == null)
       {
          cookies = new HashMap<String, String>();
