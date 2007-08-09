@@ -39,27 +39,30 @@ import org.w3c.dom.Element;
  * @author Heiko Braun, <heiko@openj.net>
  * @since 05-Jan-2006
  */
-public class EventSinkServlet extends HttpServlet {
-
-   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      doRequest(request,response);
+public class EventSinkServlet extends HttpServlet
+{
+   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+   {
+      doRequest(request, response);
    }
 
-   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      doRequest(request,response);
+   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+   {
+      doRequest(request, response);
    }
 
-   protected void doRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+   protected void doRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+   {
 
       StringBuffer sb = new StringBuffer();
       BufferedReader reader = request.getReader();
 
       String s = reader.readLine();
-      sb.append( s );
-      while(s!=null)
+      sb.append(s);
+      while (s != null)
       {
          s = reader.readLine();
-         if(s!=null)
+         if (s != null)
             sb.append(s);
       }
 
