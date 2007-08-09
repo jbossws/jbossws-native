@@ -11,3 +11,5 @@
 #
 #  $Id: mergeinfo.txt 3833 2007-07-09 17:28:22Z heiko.braun@jboss.com $
 
+thomas.diesler@jboss.com 09-Aug-2007
+svn merge -r4262:4277 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
