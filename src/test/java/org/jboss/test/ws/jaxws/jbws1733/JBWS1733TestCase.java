@@ -64,13 +64,10 @@ public class JBWS1733TestCase extends JBossWSTest
       ((BindingProvider)proxy)
         .getRequestContext()
           .put(BindingProvider.SESSION_MAINTAIN_PROPERTY,true);
-      assertTrue( proxy.getCounter() == 1);
-      assertTrue( proxy.getCounter() == 2);
-      if (true) {
-         System.out.println("FIXME [JBWS-1733]: Fix JSESSIONID cookie issue");
-         return;
+
+      for ( int i = 1; i <= 10; i++ ) {
+         assertTrue( proxy.getCounter() == i );
       }
-      assertTrue( proxy.getCounter() == 3);
    }
 
 }
