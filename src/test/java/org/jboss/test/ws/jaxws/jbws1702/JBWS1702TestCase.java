@@ -49,6 +49,17 @@ public class JBWS1702TestCase extends JBossWSTest
       return new JBossWSTestSetup(JBWS1702TestCase.class, "jaxws-jbws1702.war");
    }
 
+   public void testInheritanceRpc() throws Exception
+   {
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jbws1702/SampleWSWithRPC_Bare?wsdl");
+      QName serviceName = new QName("http://jbws1702.jaxws.ws.test.jboss.org/", "SampleWSWithRPC_BareService");
+      Service service = Service.create(wsdlURL, serviceName);
+
+      SampleWSRpcSEI port = service.getPort(SampleWSRpcSEI.class);
+      ClassB b = port.getClassCAsClassB();      
+      assertTrue("Should be an instance of ClassC, but was " + b, (b instanceof ClassC));
+   }
+
    public void testInheritanceBare() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jbws1702/SampleWSWithDocument_Bare?wsdl");

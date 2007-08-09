@@ -38,8 +38,12 @@ import javax.jws.soap.SOAPBinding;
  */
 
 @WebService()
-@SOAPBinding( style = SOAPBinding.Style.RPC, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.BARE )
-public class SampleWSWithRPC_Bare
+@SOAPBinding(
+  style = SOAPBinding.Style.RPC,
+  use = SOAPBinding.Use.LITERAL,
+  parameterStyle = SOAPBinding.ParameterStyle.BARE
+)
+public class SampleWSWithRPC_Bare implements SampleWSRpcSEI
 {
 
   /**
@@ -52,7 +56,6 @@ public class SampleWSWithRPC_Bare
    * In .NET Client (C#) the follow error occurs:
    * "The specified type was not recognized: name='classC', namespace='', at <return xmlns=''>."
    */
-  @WebMethod()
   public ClassB getClassCAsClassB() {
     ClassC classC= new ClassC();
     classC.setPropA("propA");
@@ -65,8 +68,7 @@ public class SampleWSWithRPC_Bare
    * Method that make ClassC available for all clients using this web service.
    * !! Is there another possibility to make inherited classes available? In J2EE4 styled endpoints you could
    * declare additional Classes in a seperate xml descriptor file. !!
-   */
-  @WebMethod()
+   */  
   public ClassC getClassC() {
     return new ClassC();
   }
