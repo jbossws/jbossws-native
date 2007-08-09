@@ -95,22 +95,15 @@ public class EndpointServlet extends HttpServlet
    {
       initEndpoint(contextPath, getServletName());
       initEndpointConfig();
-      initializeAndStart();
+      startEndpoint();
    }
 
-   private void initializeAndStart()
+   private void startEndpoint()
    {
+      // Start the endpoint
       Deployment dep = endpoint.getService().getDeployment();
       if (dep.getType() == DeploymentType.JAXRPC_JSE || dep.getType() == DeploymentType.JAXWS_JSE)
       {
-         // Initialize the meta data model
-         UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
-         if (umd.isEagerInitialized() == false)  // TODO: remove this piece
-         {
-            throw new IllegalStateException("UMD should be initialized already");
-         }
-
-         // Start the endpoint
          if (endpoint.getState() == EndpointState.CREATED)
             endpoint.getLifecycleHandler().start(endpoint);
       }
