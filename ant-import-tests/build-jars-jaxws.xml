@@ -333,6 +333,13 @@
       </classes>
     </war>
 
+    <!-- jaxws-jbws1694 -->
+    <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1694.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1694/**/*.class"/>        
+      </fileset>
+    </jar>
+
     <!-- jaxws-jbws1702 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1702.war" webxml="${tests.output.dir}/resources/jaxws/jbws1702/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
