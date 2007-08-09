@@ -51,7 +51,6 @@ public class SampleWSWithDocument_Wrapped implements SampleWSWrappedSEI
   /**
    * In .NET Client (C#) only the content information of ClassB is being submitted. (--> propC is unknown)
    */
-  @WebMethod()
   public ClassB getClassCAsClassB() {
     ClassC classC= new ClassC();
     classC.setPropA("propA");
@@ -64,8 +63,7 @@ public class SampleWSWithDocument_Wrapped implements SampleWSWrappedSEI
    * Method that make ClassC available for all clients using this web service.
    * !! Is there another possibility to make inherited classes available? In J2EE4 styled endpoints you could
    * declare additional Classes in a seperate xml descriptor file. !!
-   */
-  @WebMethod()
+   */  
   public ClassC getClassC() {
     return new ClassC();
   }

@@ -26,15 +26,21 @@ import org.jboss.test.ws.jaxws.jbws1702.types.ClassC;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
 /**
  * @author Heiko.Braun@jboss.com
  * @version $Revision$
  */
-@WebService
-public interface SampleWSWrappedSEI
-{
+@WebService()
+@SOAPBinding(
+  style = SOAPBinding.Style.RPC,
+  use = SOAPBinding.Use.LITERAL,
+  parameterStyle = SOAPBinding.ParameterStyle.BARE
+)
 
+public interface SampleWSRpcSEI
+{
    ClassB getClassCAsClassB();
 
    ClassC getClassC();
