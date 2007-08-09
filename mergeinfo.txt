@@ -13,3 +13,6 @@
 
 thomas.diesler@jboss.com 09-Aug-2007
 svn merge -r4262:4277 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+
+heiko 09-August-2007
+svn merge -r4281:4282 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
