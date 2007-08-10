@@ -16,3 +16,11 @@ svn merge -r4262:4277 https://svn.jboss.org/repos/jbossws/stack/native/branches/
 
 heiko 09-August-2007
 svn merge -r4281:4282 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+
+ropalka@redhat.com 10-Aug-2007
+svn merge -r4279:4280 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+svn merge -r4280:4281 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+svn merge -r4282:4283 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+svn merge -r4287:4288 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+svn merge -r4304:4305 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+svn merge -r4305:4306 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
