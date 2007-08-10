@@ -21,36 +21,39 @@
  */
 package org.jboss.test.ws.jaxws.jbws1733;
 
-import javax.jws.WebService;
 import javax.annotation.Resource;
+import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
 
-@WebService(name="JBWS1733", serviceName="JBWS1733Service", endpointInterface="org.jboss.test.ws.jaxws.jbws1733.JBWS1733")
+@WebService(name = "JBWS1733", serviceName = "JBWS1733Service", endpointInterface = "org.jboss.test.ws.jaxws.jbws1733.JBWS1733")
 public class JBWS1733Impl implements JBWS1733
 {
-   
+
    @Resource
    private WebServiceContext wsContext;
-   
+
    public int getCounter()
    {
-       MessageContext mc = wsContext.getMessageContext();
-       HttpSession session = ((HttpServletRequest)mc.get(MessageContext.SERVLET_REQUEST)).getSession();
-       // Get a session property "counter" from context
-       if (session == null)
-           throw new WebServiceException("No session in WebServiceContext");
-       Integer counter = (Integer)session.getAttribute("counter");
-       if (counter == null) {
-           counter = new Integer(0);
-           System.out.println("Starting the Session");
-       }
-       counter = new Integer(counter.intValue() + 1);
-       session.setAttribute("counter", counter);
-       return counter;
+      MessageContext mc = wsContext.getMessageContext();
+      HttpSession session = ((HttpServletRequest)mc.get(MessageContext.SERVLET_REQUEST)).getSession();
+      
+      // Get a session property "counter" from context
+      if (session == null)
+         throw new WebServiceException("No session in WebServiceContext");
+      
+      Integer counter = (Integer)session.getAttribute("counter");
+      if (counter == null)
+      {
+         counter = new Integer(0);
+         System.out.println("Starting the Session");
+      }
+      counter = new Integer(counter.intValue() + 1);
+      session.setAttribute("counter", counter);
+      return counter;
    }
 
 }

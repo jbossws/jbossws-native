@@ -24,8 +24,8 @@ package org.jboss.test.ws.jaxws.jbws1733;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
@@ -47,7 +47,7 @@ public class JBWS1733TestCase extends JBossWSTest
    {
       return new JBossWSTestSetup(JBWS1733TestCase.class, "jaxws-jbws1733.war");
    }
-   
+
    @Override
    protected void setUp() throws Exception
    {
@@ -59,14 +59,13 @@ public class JBWS1733TestCase extends JBossWSTest
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (JBWS1733)service.getPort(JBWS1733.class);
    }
-   
-   public void testIssue() throws Exception {
-      ((BindingProvider)proxy)
-        .getRequestContext()
-          .put(BindingProvider.SESSION_MAINTAIN_PROPERTY,true);
 
-      for ( int i = 1; i <= 10; i++ ) {
-         assertTrue( proxy.getCounter() == i );
+   public void testIssue() throws Exception
+   {
+      ((BindingProvider)proxy).getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
+      for (int i = 1; i <= 10; i++)
+      {
+         assertTrue(proxy.getCounter() == i);
       }
    }
 
