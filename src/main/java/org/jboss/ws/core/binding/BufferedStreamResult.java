@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import javax.xml.transform.stream.StreamResult;
@@ -51,7 +52,7 @@ public class BufferedStreamResult extends StreamResult
    {
       try
       {
-         IOUtils.copyStream(getOutputStream(), new ByteArrayInputStream(xmlFragment.getBytes()));
+         IOUtils.copyStream(getOutputStream(), new ByteArrayInputStream(xmlFragment.getBytes("UTF-8")));
       }
       catch (IOException e)
       {
@@ -85,6 +86,16 @@ public class BufferedStreamResult extends StreamResult
 
    public String toString()
    {
-      return baos.toString();
+      String result = null;
+      try
+      {
+         result = baos.toString("UTF-8");
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         WSException.rethrow(e);
+      }
+
+      return result;
    }
 }
