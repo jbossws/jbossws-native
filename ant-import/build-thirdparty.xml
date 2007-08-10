@@ -143,8 +143,8 @@
        
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
         <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
-  		  <pathelement location="${thirdparty.dir}/ant.jar"/>
-		    <pathelement location="${thirdparty.dir}/activation.jar"/>
+  		<pathelement location="${thirdparty.dir}/ant.jar"/>
+		<pathelement location="${thirdparty.dir}/activation.jar"/>
         <pathelement location="${thirdparty.dir}/dom4j.jar"/>
         <pathelement location="${thirdparty.dir}/getopt.jar"/>
         <pathelement location="${thirdparty.dir}/javassist.jar"/>
