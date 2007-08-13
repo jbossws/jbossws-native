@@ -127,9 +127,12 @@
     <unzip dest="${thirdparty.dir}/jbpm-bpel" src="${thirdparty.dir}/jbpm-bpel.sar"/>
     <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
     
-    <get src="http://snapshots.jboss.org/maven2/org/jboss/jbossxb/2.0.0-SNAPSHOT/jbossxb-2.0.0-20070620.094346-1.jar" dest="${thirdparty.dir}/jbossxb-2.0.0-20070620.094346-1.jar" usetimestamp="true" verbose="true"/>
-    <get src="http://snapshots.jboss.org/maven2/jboss/jbossxb/jbossxb/1.0.0-SNAPSHOT/jbossxb-1.0.0-20070620.100638-1.jar" dest="${thirdparty.dir}/jbossxb-1.0.0-20070620.100638-1.jar" usetimestamp="true" verbose="true"/>
-    
+    <!-- 
+      [JBWS-1617] JAXRPC doc/literal trims empty string
+    -->
+    <get src="http://snapshots.jboss.org/maven2/org/jboss/jbossxb/1.0.0-SNAPSHOT/jbossxb-1.0.0-20070810.161128-3.jar" dest="${thirdparty.dir}/jbossxb-1.0.0-snapshot.jar" usetimestamp="true" verbose="true"/>
+    <copy tofile="${thirdparty.dir}/jboss-xml-binding.jar" file="${thirdparty.dir}/jbossxb-1.0.0-snapshot.jar"/>
+      
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>
   
