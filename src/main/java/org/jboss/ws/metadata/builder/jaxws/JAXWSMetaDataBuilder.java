@@ -211,6 +211,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Try the filename as Resource
       if (fileURL == null)
       {
+         log.debug(wsClass.getProtectionDomain().getCodeSource());
+         log.debug(wsClass.getClassLoader());
          fileURL = wsClass.getClassLoader().getResource(filename);
       }
 
@@ -232,6 +234,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (fileURL == null)
          throw new WSException("Cannot resolve handler file '" + filename + "' on " + wsClass.getName());
 
+      log.debug("Loading handler chain: " + fileURL);
+      
       UnifiedHandlerChainsMetaData handlerChainsMetaData = null;
       try
       {

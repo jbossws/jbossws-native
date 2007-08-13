@@ -114,6 +114,8 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
 
          if (Service.class.isAssignableFrom(serviceClass) == false)
             throw new IllegalArgumentException("WebServiceRef type '" + serviceClass + "' is not assignable to javax.xml.ws.Service");
+         
+         log.debug("Loaded Service '" + serviceClass.getName() + "' from: " + serviceClass.getProtectionDomain().getCodeSource());
 
          // Receives either a javax.xml.ws.Service or a dynamic proxy
          Object target;
