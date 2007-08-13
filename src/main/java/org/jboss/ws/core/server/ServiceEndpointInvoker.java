@@ -78,15 +78,6 @@ public class ServiceEndpointInvoker
    protected CommonBindingProvider bindingProvider;
    protected ServerHandlerDelegate delegate;
 
-   private SPIProvider spiProvider;
-   private WebServiceContextFactory wsCtxFactory;
-
-   public ServiceEndpointInvoker()
-   {
-      spiProvider = SPIProviderResolver.getInstance().getProvider();
-      wsCtxFactory = spiProvider.getSPI(WebServiceContextFactory.class);
-   }
-
    /** Initialize the service endpoint */
    public void init(Endpoint endpoint)
    {
@@ -286,8 +277,9 @@ public class ServiceEndpointInvoker
          {
             WebServiceContext wsContext;
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
-            {               
-               wsContext = wsCtxFactory.newWebServiceContext(
+            {
+               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+               wsContext = spiProvider.getSPI(WebServiceContextFactory.class).newWebServiceContext(
                  InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext
                );
             }

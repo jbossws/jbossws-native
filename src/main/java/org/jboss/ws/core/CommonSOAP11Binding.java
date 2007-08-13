@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
@@ -45,19 +46,16 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  */
 public abstract class CommonSOAP11Binding extends CommonSOAPBinding
 {
-   private MessageFactoryImpl msgFactory;
-
    public CommonSOAP11Binding()
    {
-      msgFactory = new MessageFactoryImpl();
    }
 
    /** Create the SOAP-1.1 message */
    protected MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException
    {
-
-      msgFactory.setEnvNamespace(Constants.NS_SOAP11_ENV);
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgFactory.createMessage();
+      MessageFactoryImpl factory = new MessageFactoryImpl();
+      factory.setEnvNamespace(Constants.NS_SOAP11_ENV);
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
       
       Use encStyle = opMetaData.getEndpointMetaData().getEncodingStyle();
       if (Use.ENCODED.equals(encStyle))

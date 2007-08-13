@@ -37,15 +37,6 @@ public class ReceiveUsernameOperation implements TokenOperation
    private SecurityHeader header;
    private SecurityStore store;
 
-   private SPIProvider spiProvider;
-   private SecurityAdaptorFactory secAdapterfactory;
-
-   public ReceiveUsernameOperation()
-   {
-      spiProvider = SPIProviderResolver.getInstance().getProvider();
-      secAdapterfactory = spiProvider.getSPI(SecurityAdaptorFactory.class);
-   }
-
    public ReceiveUsernameOperation(SecurityHeader header, SecurityStore store)
    {
       this.header = header;
@@ -55,7 +46,8 @@ public class ReceiveUsernameOperation implements TokenOperation
    public void process(Document message, Token token) throws WSSecurityException
    {
       UsernameToken user = (UsernameToken)token;
-      SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }

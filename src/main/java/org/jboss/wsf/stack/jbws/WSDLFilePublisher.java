@@ -72,16 +72,10 @@ public class WSDLFilePublisher
    // The expected wsdl location in the deployment
    private String expLocation;
 
-   private SPIProvider spiProvider;
-
-   private ServerConfig serverConfig;
-
    public WSDLFilePublisher(ArchiveDeployment dep)
    {
       this.dep = dep;
-      spiProvider = SPIProviderResolver.getInstance().getProvider();
-      serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
-      
+
       if (dep.getType().toString().endsWith("JSE"))
       {
          expLocation = "WEB-INF/wsdl/";
@@ -247,8 +241,9 @@ public class WSDLFilePublisher
    public void unpublishWsdlFiles() throws IOException
    {
       String deploymentDir = (dep.getParent() != null ? dep.getParent().getSimpleName() : dep.getSimpleName());
-
-      File serviceDir = new File(serverConfig.getServerDataDir().getCanonicalPath() + "/wsdl/" + deploymentDir);
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      File serviceDir = new File(config.getServerDataDir().getCanonicalPath() + "/wsdl/" + deploymentDir);
       deleteWsdlPublishDirectory(serviceDir);
    }
 
@@ -301,7 +296,9 @@ public class WSDLFilePublisher
       File locationFile = null;
       if (predefinedLocation == false)
       {
-         locationFile = new File(serverConfig.getServerDataDir().getCanonicalPath() + "/wsdl/" + archiveName);
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+         locationFile = new File(config.getServerDataDir().getCanonicalPath() + "/wsdl/" + archiveName);
       }
       else
       {
