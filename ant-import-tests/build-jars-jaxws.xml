@@ -356,6 +356,18 @@
       </classes>
     </war>
 
+    <!-- jaxws-jbws1762 -->
+    <mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762.war"/>
+    <mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF"/>
+    <mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF/classes"/>
+    <copy file="${tests.output.dir}/resources/jaxws/jbws1762/WEB-INF/web.xml" toDir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF"/>
+    <copy toDir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF/classes">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1762/JBWS1762.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws1762/JBWS1762Impl.class"/>
+      </fileset>
+    </copy>
+
     <!-- jaxws namespace -->
     <war warfile="${tests.output.dir}/libs/jaxws-namespace.war" webxml="${tests.output.dir}/resources/jaxws/namespace/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
