@@ -26,12 +26,9 @@ package org.jboss.ws.core;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPHeaderElement;
-import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
@@ -46,17 +43,18 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  */
 public abstract class CommonSOAP12Binding extends CommonSOAPBinding
 {
-   
+   private MessageFactoryImpl msgFactory;
+
    public CommonSOAP12Binding()
    {
+      msgFactory = new MessageFactoryImpl();
+      msgFactory.setEnvNamespace(Constants.NS_SOAP12_ENV);
    }
 
    /** Create the SOAP-1.1 message */
    protected MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException
    {
-      MessageFactoryImpl factory = new MessageFactoryImpl();
-      factory.setEnvNamespace(Constants.NS_SOAP12_ENV);
-      return (MessageAbstraction)factory.createMessage();
+      return (MessageAbstraction)msgFactory.createMessage();
    }
 
    protected abstract Set<String> getRoles();

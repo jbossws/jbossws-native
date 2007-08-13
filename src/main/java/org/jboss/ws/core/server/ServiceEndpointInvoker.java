@@ -23,9 +23,31 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.server.ServiceLifecycle;
+import javax.xml.rpc.server.ServletEndpointContext;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.http.HTTPBinding;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
-import org.jboss.ws.core.*;
+import org.jboss.ws.core.CommonBinding;
+import org.jboss.ws.core.CommonBindingProvider;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.CommonSOAPBinding;
+import org.jboss.ws.core.CommonSOAPFaultException;
+import org.jboss.ws.core.DirectionHolder;
+import org.jboss.ws.core.EndpointInvocation;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
@@ -45,24 +67,14 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.invocation.*;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.invocation.Invocation;
+import org.jboss.wsf.spi.invocation.InvocationContext;
+import org.jboss.wsf.spi.invocation.InvocationHandler;
+import org.jboss.wsf.spi.invocation.InvocationType;
+import org.jboss.wsf.spi.invocation.WebServiceContextFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.server.ServiceLifecycle;
-import javax.xml.rpc.server.ServletEndpointContext;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBodyElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.http.HTTPBinding;
-import java.lang.reflect.Method;
-import java.util.HashMap;
 
 /** An implementation handles invocations on the endpoint
  *
@@ -77,6 +89,14 @@ public class ServiceEndpointInvoker
    protected Endpoint endpoint;
    protected CommonBindingProvider bindingProvider;
    protected ServerHandlerDelegate delegate;
+
+   private WebServiceContextFactory contextFactory;
+
+   public ServiceEndpointInvoker()
+   {
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      contextFactory = spiProvider.getSPI(WebServiceContextFactory.class);
+   }
 
    /** Initialize the service endpoint */
    public void init(Endpoint endpoint)
@@ -275,22 +295,15 @@ public class ServiceEndpointInvoker
       {
          if (ep.getService().getDeployment().getType() == DeploymentType.JAXWS_JSE)
          {
-            WebServiceContext wsContext;
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {
-               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               wsContext = spiProvider.getSPI(WebServiceContextFactory.class).newWebServiceContext(
-                 InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext
-               );
+               WebServiceContext wsContext = contextFactory.newWebServiceContext(InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext);
+               invContext.addAttachment(WebServiceContext.class, wsContext);
             }
             else
             {
-               // TODO: This is an ESB case, they require a custom MessageContext
-               // that works independed of MessageContext.SERVLET_REQUEST
-               throw new IllegalArgumentException("JBOSS-ESB? The current WebServiceContext impl. relies on HTTP.ServletRequest"+
-               "You should provide a custom spi.invocation.InvocationHandlerFactory");
+               log.warn("Cannot provide WebServiceContext, since the current MessageContext does not provide a ServletRequest");
             }
-            invContext.addAttachment(WebServiceContext.class, wsContext);
          }
          invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
       }
