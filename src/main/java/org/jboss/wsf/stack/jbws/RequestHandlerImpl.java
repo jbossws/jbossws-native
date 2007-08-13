@@ -104,15 +104,8 @@ public class RequestHandlerImpl implements RequestHandler
    // provide logging
    private static final Logger log = Logger.getLogger(RequestHandlerImpl.class);
 
-   private SPIProvider spiProvider;
-   private ServerConfig serverConfig;
-   private MessageFactoryImpl msgFactory;
-
    RequestHandlerImpl()
    {
-      spiProvider = SPIProviderResolver.getInstance().getProvider();
-      serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
-      msgFactory = new MessageFactoryImpl();
    }
 
    public void handleHttpRequest(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
@@ -383,7 +376,7 @@ public class RequestHandlerImpl implements RequestHandler
          }
          else
          {
-
+            MessageFactoryImpl msgFactory = new MessageFactoryImpl();
             msgFactory.setServiceMode(sepMetaData.getServiceMode());
             msgFactory.setStyle(sepMetaData.getStyle());
 
@@ -533,8 +526,10 @@ public class RequestHandlerImpl implements RequestHandler
          if (reqURL.getPort() != -1)
             wsdlHost += ":" + reqURL.getPort();
 
-         if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
-            wsdlHost = serverConfig.getWebServiceHost();
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+         if (ServerConfig.UNDEFINED_HOSTNAME.equals(config.getWebServiceHost()) == false)
+            wsdlHost = config.getWebServiceHost();
          
          log.debug("WSDL request, using host: " + wsdlHost);
 

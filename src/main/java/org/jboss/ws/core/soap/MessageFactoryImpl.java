@@ -67,23 +67,13 @@ public class MessageFactoryImpl extends MessageFactory
    // Used if the style is dynamic
    private boolean dynamic;
 
-   private EnvelopeBuilder envelopeBuilder;
-
    public MessageFactoryImpl()
    {
       envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
-      envelopeBuilder = (EnvelopeBuilder) ServiceLoader.loadService(
-        EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName()
-      );
    }
 
    public MessageFactoryImpl(String protocol) throws SOAPException
    {
-
-      envelopeBuilder = (EnvelopeBuilder) ServiceLoader.loadService(
-        EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName()
-      );
-      
       if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol) || SOAPConstants.DEFAULT_SOAP_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
       else if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
@@ -259,11 +249,11 @@ public class MessageFactoryImpl extends MessageFactory
             soapMessage.setAttachments(attachments);
 
          // Get the SOAPEnvelope builder
-
-         envelopeBuilder.setStyle(getStyle());
+         EnvelopeBuilder envBuilder = (EnvelopeBuilder) ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
+         envBuilder.setStyle(getStyle());
 
          // Build the payload
-         envelopeBuilder.build(soapMessage, inputStream, ignoreParseError);
+         envBuilder.build(soapMessage, inputStream, ignoreParseError);
       }
 
       return soapMessage;

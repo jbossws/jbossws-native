@@ -25,8 +25,5 @@ svn merge -r4287:4288 https://svn.jboss.org/repos/jbossws/stack/native/branches/
 svn merge -r4304:4305 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
 svn merge -r4305:4306 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
 
-heiko 10-August-2007
-svn merge -r4311:4313 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
-
 darran.lofthouse@jboss.com 10-August-2007
 svn merge -r4318:4319 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
