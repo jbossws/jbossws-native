@@ -129,9 +129,9 @@
     
     <!-- 
       [JBWS-1617] JAXRPC doc/literal trims empty string
-    -->
     <get src="http://snapshots.jboss.org/maven2/org/jboss/jbossxb/1.0.0-SNAPSHOT/jbossxb-1.0.0-20070810.161128-3.jar" dest="${thirdparty.dir}/jbossxb-1.0.0-snapshot.jar" usetimestamp="true" verbose="true"/>
     <copy tofile="${thirdparty.dir}/jboss-xml-binding.jar" file="${thirdparty.dir}/jbossxb-1.0.0-snapshot.jar"/>
+    -->
       
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>

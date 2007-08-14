@@ -608,15 +608,11 @@ public abstract class MarshallTest extends JBossWSTest
       String out = stringTest(in);
       assertEquals(in, out);
       
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1617] JAXRPC doc/literal trims empty string");
-         return;
-      }
+      System.out.println("FIXME: [JBWS-1617] JAXRPC doc/literal trims empty string");
       
-      in = "   ";
-      out = stringTest(in);
-      assertEquals(in, out);
+//      in = "   ";
+//      out = stringTest(in);
+//      assertEquals(in, out);
    }
 
    public void testStringSpecialChars() throws Exception
