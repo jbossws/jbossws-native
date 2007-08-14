@@ -14,7 +14,7 @@
 <project>
 
   <!-- Release to jboss.local.repository -->
-  <target name="release" depends="jars" 
+  <target name="release" depends="jars,check-svn-externals,warn-svn-externals" 
     description="Release to jboss.local.repository">
 
     <!-- jboss/jbossws -->
@@ -81,4 +81,26 @@
     </copy>
   </target>
 
+  <target name="check-svn-externals" depends="init">
+    <exec dir="${core.dir}/src/test-framework" executable="svn" failonerror="true" output="${core.dir}/output/svn-info.xml">
+      <arg line="info"/>
+      <arg line="--xml"/>
+    </exec>
+    <xmlproperty file="${core.dir}/output/svn-info.xml"/>
+    <condition property="framework.externals.ok">
+      <or>
+        <contains string="${info.entry.url}" substring="https://svn.jboss.org/repos/jbossws/framework/tags"/>
+        <equals arg1="${repository.id}" arg2="snapshot"/>
+      </or>
+    </condition>
+  </target>
+  <target name="warn-svn-externals" depends="init" unless="framework.externals.ok">
+    <echo>
+      ***********************************************
+      *  External link to framework is not tagged!  *
+      *  Run: svn pe svn:externals src              *
+      ***********************************************
+    </echo>
+  </target>
+  
 </project>
