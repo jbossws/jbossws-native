@@ -57,20 +57,12 @@ public class JBWS1762TestCase1 extends JBossWSTest
       QName serviceName = new QName(targetNS, "JBWS1762Service");
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1762/JBWS1762Service?wsdl");
 
-      if (true) {
-        System.out.println("FIXME: [JBWS-1762] Fix this issue");
-        return;
-      }
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (JBWS1762)service.getPort(JBWS1762.class);
    }
 
    public void testIssue() throws Exception
    {
-      if (true) {
-        System.out.println("FIXME: [JBWS-1762] Fix this issue");
-        return;
-      }
       assertEquals(proxy.echo("Hello!"), "Hello!");
    }
 
