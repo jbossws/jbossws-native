@@ -23,7 +23,9 @@ package org.jboss.ws.core.server;
 
 // $Id$
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 
 import javax.activation.DataHandler;
@@ -212,7 +214,17 @@ public class ServiceEndpointInvoker
                // Invoke an instance of the SEI implementation bean 
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
-               invHandler.invoke(endpoint, inv);
+               
+               try
+               {
+                  invHandler.invoke(endpoint, inv);
+               }
+               catch (InvocationTargetException th)
+               {
+                  // Unwrap the throwable raised by the service endpoint implementation
+                  Throwable targetEx = ((InvocationTargetException)th).getTargetException();
+                  throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
+               }
 
                // Handler processing might have replaced the endpoint invocation
                sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
