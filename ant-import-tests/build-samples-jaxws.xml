@@ -162,6 +162,18 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
+
+	<!-- jaxws-samples-wssecurity-username -->
+    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurity-username.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurity/simple-username/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UsernameEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecurity/simple-username/WEB-INF">
+		<include name="jboss-web.xml"/>
+        <include name="jboss-wsse-server.xml"/>
+      </webinf>
+    </war>
     
     <!-- jaxws-samples-wssecurityAnnotatedpolicy-encrypt -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurityAnnotatedpolicy-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy/WEB-INF/web.xml">
