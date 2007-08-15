@@ -626,6 +626,7 @@ public class WSDLToJava implements WSDLToJavaIntf
 
          if (className.charAt(0) == '>')
             className = className.substring(1);
+         className = ToolsUtils.convertInvalidCharacters(className);
          className = utils.firstLetterUpperCase(className);
          className = seiPkgName + "." + className + arraySuffix;
 
@@ -666,9 +667,9 @@ public class WSDLToJava implements WSDLToJavaIntf
       //Check if the portType name conflicts with a service name
       if (wsdl.getService(seiName) != null)
          seiName += "_PortType";
-      
+
       seiName = JavaUtils.capitalize(seiName);
-      
+
       return seiName;
    }
 
@@ -748,6 +749,7 @@ public class WSDLToJava implements WSDLToJavaIntf
 
          if (className.charAt(0) == '>')
             className = className.substring(1);
+         className = ToolsUtils.convertInvalidCharacters(className);
          className = utils.firstLetterUpperCase(className);
          return seiPkgName + "." + className + arraySuffix;
       }
