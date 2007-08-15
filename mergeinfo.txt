@@ -31,3 +31,6 @@ svn merge -r4318:4319 https://svn.jboss.org/repos/jbossws/stack/native/branches/
 richard.opalka@jboss.com 14-Aug-2007
 svn merge -r4326:4329 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
 svn merge -r4357:4358 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
+
+darran.lofthouse@jboss.com 15-August-2007
+svn merge -r4376:4377 https://svn.jboss.org/repos/jbossws/stack/native/branches/native-2.0
