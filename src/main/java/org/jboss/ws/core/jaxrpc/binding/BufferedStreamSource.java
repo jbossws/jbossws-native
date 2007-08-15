@@ -30,7 +30,6 @@ import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 import javax.xml.transform.stream.StreamSource;
 
@@ -113,16 +112,7 @@ public class BufferedStreamSource extends StreamSource
    {
       String retStr = null;
       if (bytes != null)
-      {
-         try
-         {
-            retStr = new String(bytes, "UTF-8");
-         }
-         catch (UnsupportedEncodingException e)
-         {
-            WSException.rethrow(e);
-         }
-      }
+         retStr = new String(bytes);
       else if (chars != null)
          retStr = new String(chars);
       return "" + retStr;

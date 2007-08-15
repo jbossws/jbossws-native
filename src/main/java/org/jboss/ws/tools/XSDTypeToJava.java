@@ -131,6 +131,8 @@ public class XSDTypeToJava
       if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
       XSTypeDefinition baseType = type.getBaseType();
+      // Ensure the characters in the name are valid
+      fname = ToolsUtils.convertInvalidCharacters(fname);
       //Ensure that the first character is uppercase
       fname = utils.firstLetterUpperCase(fname);
       List vars = new ArrayList();
@@ -535,13 +537,9 @@ public class XSDTypeToJava
       // Handle xsd:any elements
       if (xsterm instanceof XSWildcard)
       {
-         XSWildcard xsw = (XSWildcard)xsterm;
-         //         if (xsw.getConstraintType() == XSWildcard.NSCONSTRAINT_ANY)
-         //         {
          VAR v = new VAR("_any", "javax.xml.soap.SOAPElement", arrayType);
          vars.add(v);
          return vars;
-         //         }
       }
 
       // Handle xsd:group
@@ -636,7 +634,7 @@ public class XSDTypeToJava
 
          if (xstypename != null && xstypedef instanceof XSComplexTypeDefinition)
          {
-            this.fname = utils.firstLetterUpperCase(xstypename);
+            this.fname = ToolsUtils.convertInvalidCharacters(utils.firstLetterUpperCase(xstypename));
             if (!generatedFiles.contains(this.fname))
             {
                generatedFiles.add(this.fname);
@@ -681,7 +679,7 @@ public class XSDTypeToJava
             String nsuri = typename.getNamespaceURI();
             if (!nsuri.equals(Constants.NS_SCHEMA_XSD))
                qualifiedClassName = pkgname + ".";
-            String className = wsdlUtils.firstLetterUpperCase(typename.getLocalPart());
+            String className = wsdlUtils.firstLetterUpperCase(ToolsUtils.convertInvalidCharacters(typename.getLocalPart()));
             qualifiedClassName += className;
          }
          else if (qn != null)

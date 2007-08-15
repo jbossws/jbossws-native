@@ -878,6 +878,7 @@ public class MappingFileGeneratorHelper
          String className = xmlType.getLocalPart();
          if (className.charAt(0) == '>')
             className = className.substring(1);
+         className = ToolsUtils.convertInvalidCharacters(className);
          jtype = packageName + "." + utils.firstLetterUpperCase(className);
       }
       else
