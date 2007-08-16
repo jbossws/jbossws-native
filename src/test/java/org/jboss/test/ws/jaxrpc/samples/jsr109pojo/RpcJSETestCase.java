@@ -56,7 +56,7 @@ public class RpcJSETestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (isTargetJBoss42())
+         if (!isTargetJBoss50())
          {
             InitialContext iniCtx = getInitialContext();
             Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");
@@ -64,9 +64,7 @@ public class RpcJSETestCase extends JBossWSTest
          }
          else
          {
-            if (isTargetJBoss50())
-               System.out.println("FIXME: [JBWS-1397] Fix <wsdl-publish-location> for jboss-5.0.x");
-            
+            System.out.println("FIXME: [JBWS-1397] Fix <wsdl-publish-location> for jboss-5.0.x");
             ServiceFactoryImpl factory = new ServiceFactoryImpl();
             URL wsdlURL = new File("resources/jaxrpc/samples/jsr109pojo/rpclit//WEB-INF/wsdl/TestService.wsdl").toURL();
             URL mappingURL = new File("resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml").toURL();
