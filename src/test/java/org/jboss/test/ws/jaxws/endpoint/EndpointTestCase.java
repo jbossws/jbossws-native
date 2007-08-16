@@ -77,12 +77,6 @@ public class EndpointTestCase extends JBossWSTest
 
    public void testWSDLAccess() throws MalformedURLException
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWEB-1770] Fix Endpoint API for jboss-5.0.0.Beta3");
-         return;
-      }
-      
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-endpoint?wsdl");
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
       WSDLDefinitions wsdlDefinitions = factory.parse(wsdlURL);
@@ -91,12 +85,6 @@ public class EndpointTestCase extends JBossWSTest
 
    public void testClientAccess() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWEB-1770] Fix Endpoint API for jboss-5.0.0.Beta3");
-         return;
-      }
-      
       // Create the port
       URL wsdlURL = new File("resources/jaxws/endpoint/WEB-INF/wsdl/TestService.wsdl").toURL();
       QName qname = new QName("http://org.jboss.ws/jaxws/endpoint", "TestService");
@@ -110,15 +98,8 @@ public class EndpointTestCase extends JBossWSTest
 
    public void testServletAccess() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWEB-1770] Fix Endpoint API for jboss-5.0.0.Beta3");
-         return;
-      }
-
       URL url = new URL("http://" + getServerHost() + ":8080/jaxws-endpoint-servlet?param=hello-world");
       BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
       assertEquals("hello-world", br.readLine());
-
    }
 }
