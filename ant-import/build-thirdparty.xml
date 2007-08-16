@@ -117,8 +117,8 @@
     <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/jaxws-tools.jar" dest="${thirdparty.dir}/jaxws-tools.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/streambuffer.jar" dest="${thirdparty.dir}/streambuffer.jar" usetimestamp="true" verbose="true"/>
-	 <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
-	 <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/xmlunit-xmlunit/${xmlunit}/lib/xmlunit1.0.jar" dest="${thirdparty.dir}/xmlunit.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/wscommons-policy/${wscommons-policy}/lib/policy.jar" dest="${thirdparty.dir}/policy.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/woodstox/${woodstox}/lib/wstx.jar" dest="${thirdparty.dir}/wstx.jar" usetimestamp="true" verbose="true"/>
@@ -127,12 +127,6 @@
     <unzip dest="${thirdparty.dir}/jbpm-bpel" src="${thirdparty.dir}/jbpm-bpel.sar"/>
     <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
     
-    <!-- 
-      [JBWS-1617] JAXRPC doc/literal trims empty string
-    <get src="http://snapshots.jboss.org/maven2/org/jboss/jbossxb/1.0.0-SNAPSHOT/jbossxb-1.0.0-20070810.161128-3.jar" dest="${thirdparty.dir}/jbossxb-1.0.0-snapshot.jar" usetimestamp="true" verbose="true"/>
-    <copy tofile="${thirdparty.dir}/jboss-xml-binding.jar" file="${thirdparty.dir}/jbossxb-1.0.0-snapshot.jar"/>
-    -->
-      
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>
   
