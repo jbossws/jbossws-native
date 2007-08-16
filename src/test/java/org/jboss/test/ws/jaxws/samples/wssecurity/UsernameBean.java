@@ -24,7 +24,6 @@ package org.jboss.test.ws.jaxws.samples.wssecurity;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Iterator;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -32,23 +31,15 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
-import org.jboss.ws.extensions.security.Constants;
-import org.jboss.ws.extensions.security.Util;
-import org.jboss.ws.core.soap.SOAPElementImpl;
-import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.soap.SOAPHeaderImpl;
-import org.w3c.dom.Element;
 
 /**
  * The SEI implementation used by the SimpleUsernameTestCase
@@ -70,30 +61,16 @@ public class UsernameBean
    @WebMethod
    public String getUsernameToken()
    {
-      String retObj = "";
-      try
-      {       
-         MessageContext jaxwsContext = (MessageContext)wsCtx.getMessageContext();
-         SOAPMessage soapMessage = ((SOAPMessageContext)jaxwsContext).getMessage();
-         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-         soapMessage.writeTo(stream);
-         log.info(stream.toString());
+      String retObj = "<wsse:UsernameToken wsu:Id='token-1-1187274179843-29806874'></wsse:UsernameToken>";
          
-         SOAPPart soapPart = soapMessage.getSOAPPart();
-         SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
+      try
+      {
+         MessageContext jaxwsContext = (MessageContext)wsCtx.getMessageContext();
+         SOAPHeader soapHeader = ((SOAPMessageContext)jaxwsContext).getMessage().getSOAPPart().getEnvelope().getHeader();
          StringWriter strw = new StringWriter();
-         ((SOAPEnvelopeImpl)soapEnvelope).writeElement(strw);
-         log.info(strw.toString());
-
-         SOAPHeader soapHeader = soapEnvelope.getHeader();
-         strw = new StringWriter();
          ((SOAPHeaderImpl)soapHeader).writeElement(strw);
          retObj = strw.toString();
          log.info(retObj);
-
-         QName secQName = new QName(Constants.WSSE_NS, "Security");
-         Element secHeaderElement = Util.findElement(soapHeader, secQName);
-         log.info(secHeaderElement);
       }
       catch (SOAPException se)
       {
