@@ -60,7 +60,7 @@ public class SimpleUsernameTestCase extends JBossWSTest
       UsernameEndpoint username = getPort();
       String retObj = username.getUsernameToken();
       
-      System.out.println("FIXME [JBWS-1766]: UsernameToken ignores BindingProvider.USERNAME_PROPERTY");
+      System.out.println("FIXME [JBWS-1790]: UsernameToken is no longer present in Header after it is processed");
       //assertTrue(retObj.indexOf("UsernameToken") > 0);
    }
 
