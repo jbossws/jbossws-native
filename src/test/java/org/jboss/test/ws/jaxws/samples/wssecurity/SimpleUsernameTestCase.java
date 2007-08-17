@@ -39,53 +39,55 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * Test WS-Security for Username Token
  *
  * @author <a href="mailto:mageshbk@jboss.com">Magesh Kumar B</a>
+ * @author Thomas.Diesler@jboss.com
  * @since 15-Aug-2007
- * @version $Revision$
  */
 public class SimpleUsernameTestCase extends JBossWSTest
 {
-   /** Construct the test case with a given name
-    */
+   private static UsernameEndpoint port;
 
-   /** Deploy the test */
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(SimpleUsernameTestCase.class, "jaxws-samples-wssecurity-username.war");
    }
 
-   /**
-    * Test SOAP Envelope for Username Token
-    */
-   public void testUsernameToken() throws Exception
+   @Override
+   protected void setUp() throws Exception
    {
-      UsernameEndpoint username = getPort();
+      if (port == null)
+      {
+         URL wsdlURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl").toURL();
+         URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml").toURL();
+         QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "UsernameService");
 
-      String retObj = username.getUsernameToken();
-      System.out.println("FIXME [JBWS-1790]: UsernameToken is no longer present in Header after it is processed");
-      //assertTrue(retObj.indexOf("UsernameToken") > 0);
+         Service service = Service.create(wsdlURL, serviceName);
+
+         port = (UsernameEndpoint)service.getPort(UsernameEndpoint.class);
+         ((StubExt)port).setSecurityConfig(securityURL.toExternalForm());
+         ((StubExt)port).setConfigName("Standard WSSecurity Client");
+      }
    }
 
-   private UsernameEndpoint getPort() throws Exception
+   public void testUsernameTokenNegative() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl").toURL();
-      URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml").toURL();
-      QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "UsernameService");
+      try
+      {
+         port.getUsernameToken();
+         fail("Server should respond with [401] - Unauthorized");
+      }
+      catch (Exception ex)
+      {
+         // this should be ok
+      }
+   }
 
-      Service service = Service.create(wsdlURL, serviceName);
-      
-      UsernameEndpoint port = (UsernameEndpoint)service.getPort(UsernameEndpoint.class);
-      ((StubExt)port).setSecurityConfig(securityURL.toExternalForm());
-      ((StubExt)port).setConfigName("Standard WSSecurity Client");
-
+   public void testUsernameToken() throws Exception
+   {
       Map<String, Object> reqContext = ((BindingProvider)port).getRequestContext();
-	   reqContext.put(BindingProvider.USERNAME_PROPERTY, "kermit");
+      reqContext.put(BindingProvider.USERNAME_PROPERTY, "kermit");
       reqContext.put(BindingProvider.PASSWORD_PROPERTY, "thefrog");
-      // If these below parameters are set it appears in the log, but the test fails as another
-      // request for the getHeader() returns empty <env:Header></env:Header>
-      //reqContext.put("javax.xml.rpc.security.auth.username", "kermit");
-      //reqContext.put("javax.xml.rpc.security.auth.password", "thefrog");
-      reqContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxws-samples-wssecurity-username");
 
-      return port;
+      String retObj = port.getUsernameToken();
+      assertEquals("kermit", retObj);
    }
 }

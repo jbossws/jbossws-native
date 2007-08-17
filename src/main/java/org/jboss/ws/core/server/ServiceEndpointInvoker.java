@@ -92,6 +92,14 @@ public class ServiceEndpointInvoker
    protected CommonBindingProvider bindingProvider;
    protected ServerHandlerDelegate delegate;
 
+   private WebServiceContextFactory contextFactory;
+
+   public ServiceEndpointInvoker()
+   {
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      contextFactory = spiProvider.getSPI(WebServiceContextFactory.class);
+   }
+
    /** Initialize the service endpoint */
    public void init(Endpoint endpoint)
    {
@@ -206,7 +214,7 @@ public class ServiceEndpointInvoker
                // Invoke an instance of the SEI implementation bean 
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
-
+               
                try
                {
                   invHandler.invoke(endpoint, inv);
@@ -299,20 +307,15 @@ public class ServiceEndpointInvoker
       {
          if (ep.getService().getDeployment().getType() == DeploymentType.JAXWS_JSE)
          {
-            WebServiceContext wsContext;
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {
-               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               wsContext = spiProvider.getSPI(WebServiceContextFactory.class).newWebServiceContext(InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext);
+               WebServiceContext wsContext = contextFactory.newWebServiceContext(InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext);
+               invContext.addAttachment(WebServiceContext.class, wsContext);
             }
             else
             {
-               // TODO: This is an ESB case, they require a custom MessageContext
-               // that works independed of MessageContext.SERVLET_REQUEST
-               throw new IllegalArgumentException("JBOSS-ESB? The current WebServiceContext impl. relies on HTTP.ServletRequest"
-                     + "You should provide a custom spi.invocation.InvocationHandlerFactory");
+               log.warn("Cannot provide WebServiceContext, since the current MessageContext does not provide a ServletRequest");
             }
-            invContext.addAttachment(WebServiceContext.class, wsContext);
          }
          invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
       }

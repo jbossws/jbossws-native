@@ -141,12 +141,13 @@
             </fileset>
             <fileset dir="@{thirdpartylibs}">
                <include name="jbossws-jboss42.jar"/>
-               <include name="policy.jar"/>
                <include name="jaxb-api.jar"/>
                <include name="jaxb-impl.jar"/>
                <include name="jaxb-xjc.jar"/>
                <include name="jaxws-tools.jar"/>
                <include name="jaxws-rt.jar"/>
+               <include name="jboss-xml-binding.jar"/>
+               <include name="policy.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
                <include name="wsdl4j.jar"/>
@@ -154,6 +155,11 @@
          </copy>
 
          <!-- SERVER JARS -->
+         <copy todir="${jboss42.home}/lib" overwrite="true">
+            <fileset dir="@{thirdpartylibs}">
+               <include name="jboss-xml-binding.jar"/>
+            </fileset>
+         </copy>
          <copy todir="${jboss42.home}/server/${jboss.server.instance}/lib" overwrite="true">
             <fileset dir="@{thirdpartylibs}">
                <include name="jbossws-jboss42.jar"/>
@@ -232,12 +238,6 @@
          <unzip dest="${jboss40.home}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
          <chmod dir="${jboss40.home}/bin" perm="+x" includes="*.sh"/>
 
-         <copy todir="${jboss40.home}/lib" overwrite="true">
-            <fileset dir="@{thirdpartylibs}">
-               <include name="jboss-xml-binding.jar"/>
-            </fileset>
-         </copy>
-
          <!-- CLIENT JARS -->
          <copy todir="${jboss40.home}/client" overwrite="true">
             <fileset dir="@{stacklibs}">
@@ -264,6 +264,12 @@
          </copy>
 
          <!-- SERVER JARS -->
+         <copy todir="${jboss40.home}/lib" overwrite="true">
+            <fileset dir="@{thirdpartylibs}">
+               <include name="jboss-xml-binding.jar"/>
+            </fileset>
+         </copy>
+        
          <copy todir="${jboss40.home}/server/${jboss.server.instance}/lib" overwrite="true">
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
@@ -274,7 +280,6 @@
                <include name="jbossws-jboss40.jar"/>
                <include name="wsdl4j.jar"/>
             </fileset>
-
          </copy>
 
          <mkdir dir="${jboss40.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>

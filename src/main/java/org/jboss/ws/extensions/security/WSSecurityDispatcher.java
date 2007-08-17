@@ -31,6 +31,7 @@ import javax.xml.rpc.Stub;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.ws.BindingProvider;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -252,6 +253,12 @@ public class WSSecurityDispatcher
       {
          Object user = ctx.get(Stub.USERNAME_PROPERTY);
          Object pass = ctx.get(Stub.PASSWORD_PROPERTY);
+         
+         if (user == null && pass == null)
+         {
+            user = ctx.get(BindingProvider.USERNAME_PROPERTY);
+            pass = ctx.get(BindingProvider.PASSWORD_PROPERTY);
+         }
 
          if (user != null && pass != null)
          {

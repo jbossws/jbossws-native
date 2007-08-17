@@ -88,8 +88,8 @@
     <get src="${jboss.repository}/jboss/jaxr/${jboss-jaxr}/lib/juddi-service.sar" dest="${thirdparty.dir}/juddi-service.sar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs.jar" dest="${thirdparty.dir}/jboss-vfs.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs-sources.jar" dest="${thirdparty.dir}/jboss-vfs-sources.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss42}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss42}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-container.jar" dest="${thirdparty.dir}/jboss-container.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-dependency.jar" dest="${thirdparty.dir}/jboss-dependency.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-deployers.jar" dest="${thirdparty.dir}/jboss-deployers.jar" usetimestamp="true" verbose="true"/>
@@ -97,8 +97,8 @@
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-dependency-src.zip" dest="${thirdparty.dir}/jboss-dependency-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-deployers-src.zip" dest="${thirdparty.dir}/jboss-deployers-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-microcontainer-src.zip" dest="${thirdparty.dir}/jboss-microcontainer-src.zip" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/remoting/${jboss-remoting}/lib/jboss-remoting.jar" dest="${thirdparty.dir}/jboss-remoting.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/remoting/${jboss-remoting}/lib/jboss-remoting-src.jar" dest="${thirdparty.dir}/jboss-remoting-src.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/remoting/${jboss-remoting-jboss42}/lib/jboss-remoting.jar" dest="${thirdparty.dir}/jboss-remoting.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/remoting/${jboss-remoting-jboss42}/lib/jboss-remoting-src.jar" dest="${thirdparty.dir}/jboss-remoting-src.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-client.jar" dest="${thirdparty.dir}/jbosssx-client.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx.jar" dest="${thirdparty.dir}/jbosssx.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-src.zip" dest="${thirdparty.dir}/jbosssx-src.zip" usetimestamp="true" verbose="true"/>
@@ -117,8 +117,8 @@
     <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/jaxws-tools.jar" dest="${thirdparty.dir}/jaxws-tools.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/streambuffer.jar" dest="${thirdparty.dir}/streambuffer.jar" usetimestamp="true" verbose="true"/>
-	 <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
-	 <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-jaxws/${sun-jaxws}/lib/stax-ex.jar" dest="${thirdparty.dir}/stax-ex.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/sun-servlet/${sun-servlet}/lib/servlet-api.jar" dest="${thirdparty.dir}/servlet-api.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/xmlunit-xmlunit/${xmlunit}/lib/xmlunit1.0.jar" dest="${thirdparty.dir}/xmlunit.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/wscommons-policy/${wscommons-policy}/lib/policy.jar" dest="${thirdparty.dir}/policy.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/woodstox/${woodstox}/lib/wstx.jar" dest="${thirdparty.dir}/wstx.jar" usetimestamp="true" verbose="true"/>
@@ -126,9 +126,6 @@
     <mkdir dir="${thirdparty.dir}/jbpm-bpel"/>
     <unzip dest="${thirdparty.dir}/jbpm-bpel" src="${thirdparty.dir}/jbpm-bpel.sar"/>
     <unzip dest="${thirdparty.dir}" src="${thirdparty.dir}/ejb3.deployer.zip"/>
-    
-    <get src="http://snapshots.jboss.org/maven2/org/jboss/jbossxb/2.0.0-SNAPSHOT/jbossxb-2.0.0-20070620.094346-1.jar" dest="${thirdparty.dir}/jbossxb-2.0.0-20070620.094346-1.jar" usetimestamp="true" verbose="true"/>
-    <get src="http://snapshots.jboss.org/maven2/jboss/jbossxb/jbossxb/1.0.0-SNAPSHOT/jbossxb-1.0.0-20070620.100638-1.jar" dest="${thirdparty.dir}/jbossxb-1.0.0-20070620.100638-1.jar" usetimestamp="true" verbose="true"/>
     
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>

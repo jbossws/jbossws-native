@@ -29,8 +29,6 @@ import junit.framework.Test;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
-
-
 /**
  * Polymorphism in return types
  * 
@@ -58,26 +56,23 @@ public class JBWS349TestCase extends JBossWSTest
          endpoint = (ServiceFacadeEndpoint)service.getPort(ServiceFacadeEndpoint.class);
       }
 
-
    }
 
    public void testAssetCreate() throws Exception
    {
-      System.out.println("FIXME [JBWS-1738]: Regression between jbossxb 1.0.0.GA and 1.0.0.GA-brew");
-//      Event event = new AssetCreate("AssetCreate", 1, "templ");
-//      AssetCreateResult retObj = (AssetCreateResult)endpoint.processEvent(event);
-//      assertEquals("AssetCreate", retObj.getId());
+      Event event = new AssetCreate("AssetCreate", 1, "templ");
+      AssetCreateResult retObj = (AssetCreateResult)endpoint.processEvent(event);
+      assertEquals("AssetCreate", retObj.getId());
    }
 
    public void testAssetRead() throws Exception
    {
-      System.out.println("FIXME [JBWS-1738]: Regression between jbossxb 1.0.0.GA and 1.0.0.GA-brew");
-//      Event event = new AssetRead("AssetRead");
-//      AssetReadResult retObj = (AssetReadResult)endpoint.processEvent(event);
-//      assertEquals("AssetRead", retObj.getId());
-//      assertEquals("body", retObj.getBody());
+      Event event = new AssetRead("AssetRead");
+      AssetReadResult retObj = (AssetReadResult)endpoint.processEvent(event);
+      assertEquals("AssetRead", retObj.getId());
+      assertEquals("body", retObj.getBody());
    }
-   
+
    public void testEvent() throws Exception
    {
       try

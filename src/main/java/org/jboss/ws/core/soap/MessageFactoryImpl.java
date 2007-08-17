@@ -67,20 +67,26 @@ public class MessageFactoryImpl extends MessageFactory
    // Used if the style is dynamic
    private boolean dynamic;
 
+   private EnvelopeBuilder envelopeBuilder;
+
    public MessageFactoryImpl()
    {
       envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
+      envelopeBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
    }
 
    public MessageFactoryImpl(String protocol) throws SOAPException
    {
+      envelopeBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
+
       if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol) || SOAPConstants.DEFAULT_SOAP_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
       else if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE;
       else if (SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
          dynamic = true;
-      else throw new SOAPException("Unknown protocol: " + protocol);
+      else
+         throw new SOAPException("Unknown protocol: " + protocol);
    }
 
    /**
@@ -249,11 +255,11 @@ public class MessageFactoryImpl extends MessageFactory
             soapMessage.setAttachments(attachments);
 
          // Get the SOAPEnvelope builder
-         EnvelopeBuilder envBuilder = (EnvelopeBuilder) ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
-         envBuilder.setStyle(getStyle());
+
+         envelopeBuilder.setStyle(getStyle());
 
          // Build the payload
-         envBuilder.build(soapMessage, inputStream, ignoreParseError);
+         envelopeBuilder.build(soapMessage, inputStream, ignoreParseError);
       }
 
       return soapMessage;

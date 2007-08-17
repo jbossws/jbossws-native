@@ -21,32 +21,26 @@
  */
 package org.jboss.test.ws.jaxws.samples.wssecurity;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
+// $Id$
+
+import java.security.Principal;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
-import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
-import org.jboss.ws.core.soap.SOAPHeaderImpl;
 
 /**
  * The SEI implementation used by the SimpleUsernameTestCase
  *
  * @author <a href="mailto:mageshbk@jboss.com">Magesh Kumar B</a>
+ * @author Thomas.Diesler@jboss.com
  * @since 15-Aug-2007
- * @version $Revision$ 
  */
 @WebService(name = "UsernameEndpoint", serviceName = "UsernameService", targetNamespace = "http://org.jboss.ws/samples/wssecurity")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
@@ -54,32 +48,16 @@ import org.jboss.ws.core.soap.SOAPHeaderImpl;
 public class UsernameBean
 {
    private Logger log = Logger.getLogger(UsernameBean.class);
-   
+
    @Resource
    WebServiceContext wsCtx;
 
    @WebMethod
+   @WebResult(partName = "return")
    public String getUsernameToken()
    {
-      String retObj = "<wsse:UsernameToken wsu:Id='token-1-1187274179843-29806874'></wsse:UsernameToken>";
-         
-      try
-      {
-         MessageContext jaxwsContext = (MessageContext)wsCtx.getMessageContext();
-         SOAPHeader soapHeader = ((SOAPMessageContext)jaxwsContext).getMessage().getSOAPPart().getEnvelope().getHeader();
-         StringWriter strw = new StringWriter();
-         ((SOAPHeaderImpl)soapHeader).writeElement(strw);
-         retObj = strw.toString();
-         log.info(retObj);
-      }
-      catch (SOAPException se)
-      {
-         log.error(se.getMessage());
-      }
-      catch (IOException ioe)
-      {
-         log.error(ioe.getMessage());
-      }
-      return retObj;
+      Principal principal = wsCtx.getUserPrincipal();
+      log.info("getUsernameToken: " + principal);
+      return principal.toString();
    }
 }

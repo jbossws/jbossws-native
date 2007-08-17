@@ -133,6 +133,34 @@ public class DOMWriterTestCase extends JBossWSTest
       assertEquals(expStr, wasStr);
    }
    
+   /** The envelope defines a default namespace
+    */
+   public void testNamespaceCompletionDefault() throws Exception
+   {
+      String inStr = 
+         "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/' xmlns='http://somens'>" +
+          "<env:Body>" +
+           "<rpc>" +
+            "<param1/>" +
+            "<param2/>" +
+           "</rpc>" +
+          "</env:Body>" +
+         "</env:Envelope>";
+      
+      Element env = DOMUtils.parse(inStr);
+      Element body = DOMUtils.getFirstChildElement(env);
+      Element rpc = DOMUtils.getFirstChildElement(body);
+      
+      String expStr = 
+         "<rpc xmlns='http://somens'>" +
+          "<param1/>" +
+          "<param2/>" +
+         "</rpc>";
+      
+      String wasStr = DOMWriter.printNode(rpc, false);
+      assertEquals(expStr, wasStr);
+   }
+   
    /** The element does not contain the required attribute ns declaration.
     */
    public void testNamespaceCompletionAttribute() throws Exception

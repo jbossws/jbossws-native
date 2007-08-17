@@ -24,7 +24,7 @@
  </binding>
  <service name='UsernameService'>
   <port binding='tns:UsernameEndpointBinding' name='UsernameEndpointPort'>
-   <soap:address location='REPLACE_WITH_ACTUAL_URL'/>
+   <soap:address location='http://@jboss.bind.address@:8080/jaxws-samples-wssecurity-username'/>
   </port>
  </service>
 </definitions>

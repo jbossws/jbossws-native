@@ -26,28 +26,32 @@ package org.jboss.ws.extensions.security;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
-import org.jboss.wsf.spi.invocation.SecurityAdaptor;
-import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.invocation.SecurityAdaptor;
+import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
 import org.w3c.dom.Document;
 
 public class ReceiveUsernameOperation implements TokenOperation
 {
    private SecurityHeader header;
    private SecurityStore store;
+   
+   private SecurityAdaptorFactory secAdapterfactory;
 
    public ReceiveUsernameOperation(SecurityHeader header, SecurityStore store)
    {
       this.header = header;
       this.store = store;
+
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      secAdapterfactory = spiProvider.getSPI(SecurityAdaptorFactory.class);
    }
 
    public void process(Document message, Token token) throws WSSecurityException
    {
       UsernameToken user = (UsernameToken)token;
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
+      SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }
