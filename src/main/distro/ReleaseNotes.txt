@@ -27,6 +27,56 @@ What's new in jbossws-@version.id@
 
 Feature Request
 
+    * [JBWS-1736] - MTOM property at service-ref level
+
+Bug
+
+    * [JBWS-1453] - WSDL To Java - Invalid name for generated class if complex type name contains a period.
+    * [JBWS-1536] - NPE in WSDL to Java when webservices.xml requested but no global package mapping
+    * [JBWS-1617] - JAXRPC doc/literal trims empty string
+    * [JBWS-1702] - JAXWS type inheritance
+    * [JBWS-1723] - WSDL To Java - Anonymous Types Referenced As Bound Headers Not Handled Correctly
+    * [JBWS-1725] - WSDL-JAVA Derivation of a complex type from a Simple type: bas64Binary is not mapped to byte[]
+    * [JBWS-1732] - WSProvideTask throws IllegalArgumentException
+    * [JBWS-1733] - JAXWS client ignores BindingProvider.SESSION_MAINTAIN_PROPERTY
+    * [JBWS-1747] - org.jboss.wsf.container.jboss42.WebMetaDataAdapter doesn't check if there's a J2eeApplicationMetaData instance set on the DeploymentInfo parent
+    * [JBWS-1749] - JBossWS2.0.0.GA download does not contain updated jboss-xml-binding library
+    * [JBWS-1762] - web.xml modified to web.xml.org - Subsequent runs fail
+    * [JBWS-1763] - Incorrect handling of charsets when the default charset is not UTF-8
+    * [JBWS-1766] - UsernameToken ignores BindingProvider.USERNAME_PROPERTY
+    * [JBWS-1771] - Post-handler-chain not invoked for "Standard Client" configuration with DII client
+    * [JBWS-1780] - Context servlet throws NPE
+
+
+Task
+
+    * [JBWS-1729] - Create a comprehensive SPI tools test suite
+    * [JBWS-1770] - Fix Endpoint API for jboss-5.0.0.Beta3
+
+Errata
+------
+
+    FIXME: [JBCTS-540] EJB3 proxy does not implement the Home interface
+    FIXME: [JBCTS-624] R2753 cannot parse web.xml for jsp vehicle
+    FIXME: [JBWS-1460] @XmlMimeType on SEI parameter declarations
+    FIXME: [JBWS-1665] incorrect wsdl generation
+    FIXME: [JBWS-1772] WSConsume output is not correctly redirected
+    FIXME: [JBWS-1773] Verify isolated classloading with WSConsume
+    FIXME: [JBWS-1776] Verify isolated classloading with WSProvide
+    FIXME: [JBWS-751] Multiple schema imports with the same namespace
+    FIXME: [JBWS-798] Complete EventingTestCase
+    FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
+    
+Enjoy,
+The JBossWS Team
+
+Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What's new in jbossws-2.0.0
+---------------------------
+
+Feature Request
+
     * [JBWS-434] - Support sequences of anys in JAXRPC
     * [JBWS-1460] - @XmlMimeType and @XmlAttachmentRef on SEI parameter declarations
     * [JBWS-1518] - Add support for jdk-1.6
@@ -110,11 +160,6 @@ Errata
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
     
-Enjoy,
-The JBossWS Team
-
-Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 What's new in JBossWS-1.2.1
 ---------------------------
 Feature Request
