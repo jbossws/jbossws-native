@@ -94,7 +94,6 @@
                <include name="jboss-jaxws.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
-               <include name="jbossws-jboss50.jar"/>
                <include name="policy.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
