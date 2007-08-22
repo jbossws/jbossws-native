@@ -66,6 +66,9 @@ public class SOAPFaultHelperJAXWS
    /** Factory method for FaultException for a given SOAPFault */
    public static SOAPFaultException getSOAPFaultException(SOAPFault soapFault)
    {
+      if (soapFault == null)
+         throw new IllegalArgumentException("SOAPFault cannot be null");
+      
       SOAPFaultException faultEx = new SOAPFaultException(soapFault);
 
       Detail detail = soapFault.getDetail();
