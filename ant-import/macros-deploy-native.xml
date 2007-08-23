@@ -111,7 +111,7 @@
                <include name="jbossws-integration.jar"/>
             </fileset>
          </delete>
-         <delete dir="${jboss50.home}/server/${jboss.server.instance}/deployers/jbossws.deployer"/>
+        
          <delete dir="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
          <delete dir="${jboss50.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
       </sequential>
