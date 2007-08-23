@@ -29,6 +29,7 @@
 	<target name="deploy-jboss50-endorsed" depends="prepare" if="HAVE_JDK_1.6">
 		<macro-deploy-endorsed
 				jbosshome="${jboss50.home}"
+				stacklibs="${lib.dir}"
 				thirdpartylibs="${lib.dir}"/>
 	</target>
 
@@ -50,6 +51,7 @@
 	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
 		<macro-deploy-endorsed
 				jbosshome="${jboss42.home}"
+				stacklibs="${lib.dir}"
 				thirdpartylibs="${lib.dir}"/>
 	</target>
 
