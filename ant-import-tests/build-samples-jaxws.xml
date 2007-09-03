@@ -120,7 +120,7 @@
     <!-- jaxws-samples-wseventing.war -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-wseventing.war" webxml="${tests.output.dir}/resources/jaxws/samples/wseventing/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/wseventing/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wseventing/Sysmon**.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxws/samples/wseventing/WEB-INF">
         <include name="wsdl/jboss-web.xml"/>
@@ -130,6 +130,13 @@
         <include name="wsdl/ws-addr.xsd"/>
       </webinf>
     </war>
+
+     <jar destfile="${tests.output.dir}/libs/jaxws-samples-wseventing-sink.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/wseventing/EventSink*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wseventing/SystemStatus.class"/>
+      </fileset>
+    </jar>
     
     <!-- jaxws-samples-wssecurity-encrypt -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurity-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurity/WEB-INF/web.xml">

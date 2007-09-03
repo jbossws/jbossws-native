@@ -19,30 +19,37 @@
          <xs:include schemaLocation='ws-eventing.xsd'/>
       </xs:schema>
 
-      <xs:schema
-            targetNamespace="http://www.jboss.org/sysmon"
-            elementFormDefault="qualified"
-            blockDefault="#all">
+     <!--
+      Take a look at the WSDL from EventSink enedpoint, that get's deployed.
+      The schema is taken from there.
+     -->
+     <xs:schema targetNamespace='http://www.jboss.org/sysmon' version='1.0' xmlns:tns='http://www.jboss.org/sysmon' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+       <xs:element name='SystemStatus' type='tns:systemStatus'/>
+       <xs:element name='newNotification' type='tns:newNotification'/>
 
-         <xs:element name="SystemStatus">
-            <xs:complexType>
-               <xs:sequence>
-                  <xs:element name="Time " type="xs:dateTime"/>
-                  <xs:element name="HostName" type="xs:string"/>
-                  <xs:element name="HostAddress" type="xs:string"/>
-                  <xs:element name="ActiveThreadCount" type="xs:int"/>
-                  <xs:element name="FreeMemory" type="xs:string"/>
-                  <xs:element name="MaxMemory" type="xs:string"/>
-               </xs:sequence>
-            </xs:complexType>
-         </xs:element>
-         
-      </xs:schema>
+       <xs:complexType name='newNotification'>
+         <xs:sequence>
+           <xs:element minOccurs='0' name='arg0' type='tns:systemStatus'/>
+
+         </xs:sequence>
+       </xs:complexType>
+       <xs:complexType name='systemStatus'>
+         <xs:sequence>
+           <xs:element name='activeThreadCount' type='xs:int'/>
+           <xs:element minOccurs='0' name='freeMemory' type='xs:string'/>
+           <xs:element minOccurs='0' name='hostAddress' type='xs:string'/>
+           <xs:element minOccurs='0' name='hostname' type='xs:string'/>
+           <xs:element minOccurs='0' name='maxMemory' type='xs:string'/>
+
+           <xs:element minOccurs='0' name='time' type='xs:dateTime'/>
+         </xs:sequence>
+       </xs:complexType>
+     </xs:schema>
 
    </wsdl:types>
 
    <wsdl:message name='SystemInfoMsg'>
-      <wsdl:part name='body' element='tns:SystemStatus'/>
+      <wsdl:part name='body' element='tns:newNotification'/>
    </wsdl:message>
 
    <wsdl:portType name='SystemInfo' wse:EventSource='true'>

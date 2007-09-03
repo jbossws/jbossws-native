@@ -26,17 +26,20 @@ package org.jboss.test.ws.jaxws.samples.wseventing;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URI;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.addressing.AddressingProperties;
+import javax.naming.InitialContext;
 
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.eventing.EventingConstants;
+import org.jboss.ws.extensions.eventing.mgmt.EventDispatcher;
 import org.jboss.ws.extensions.eventing.jaxws.DeliveryType;
 import org.jboss.ws.extensions.eventing.jaxws.EventSourceEndpoint;
 import org.jboss.ws.extensions.eventing.jaxws.FilterType;
@@ -47,6 +50,8 @@ import org.jboss.ws.extensions.eventing.jaxws.SubscriptionManagerEndpoint;
 import org.jboss.ws.extensions.eventing.jaxws.Unsubscribe;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
+import org.jboss.wsf.common.DOMUtils;
+import org.w3c.dom.Element;
 
 /**
  * Test the eventing example service.
@@ -68,7 +73,7 @@ public class SysmonTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(SysmonTestCase.class, "jaxws-samples-wseventing.war");
+      return new JBossWSTestSetup(SysmonTestCase.class, "jaxws-samples-wseventing.war, jaxws-samples-wseventing-sink.jar");
    }
 
    protected void setUp() throws Exception
@@ -157,5 +162,37 @@ public class SysmonTestCase extends JBossWSTest
       assertEquals(reqProps.getMessageID().getURI(), resProps.getRelatesTo()[0].getID());
 
       return subscriptionTicket;
+   }
+
+   public void testNotification() throws Exception {
+
+      SubscribeResponse response = doSubscribe("/SystemStatus/HostName/text()='localhost'");
+      assertNotNull(response);
+
+      String notification =
+        "<sys:newNotification xmlns:sys=\"http://www.jboss.org/sysmon\">" +        
+        "         <arg0>" +
+        "            <activeThreadCount>12</activeThreadCount>" +
+        "            <freeMemory>60000</freeMemory>" +
+        "            <hostAddress>localhost</hostAddress>" +
+        "            <hostname>bigben</hostname>" +
+        "            <maxMemory>120000</maxMemory>" +
+        "            <time>2001-10-26T21:32:52</time>" +
+        "         </arg0>" +
+        "      </sys:newNotification>";
+
+      Element payload = DOMUtils.parse(notification);
+      try
+      {
+         InitialContext iniCtx = getInitialContext();
+         EventDispatcher delegate = (EventDispatcher)
+               iniCtx.lookup(EventingConstants.DISPATCHER_JNDI_NAME);
+         delegate.dispatch(new URI("http://www.jboss.org/sysmon/SystemInfo"), payload);
+         Thread.sleep(3000);
+      }
+      catch (Exception e)
+      {
+         throw e;
+      }
    }
 }

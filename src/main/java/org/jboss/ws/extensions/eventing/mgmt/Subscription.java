@@ -41,6 +41,7 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
+import org.jboss.ws.Constants;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 
@@ -84,7 +85,7 @@ class Subscription
 
          // notification elements need to declare their namespace locally
          StringBuilder sb = new StringBuilder();
-         sb.append("<env:Envelope xmlns:env='http://www.w3.org/2003/05/soap-envelope' ");
+         sb.append("<env:Envelope xmlns:env='"+ Constants.NS_SOAP11_ENV+"' ");
          sb.append("xmlns:wse='").append(EventingConstants.NS_EVENTING).append("' ");
          sb.append("xmlns:wsa='").append(EventingConstants.NS_ADDRESSING).append("'>");
          sb.append("<env:Header>");
