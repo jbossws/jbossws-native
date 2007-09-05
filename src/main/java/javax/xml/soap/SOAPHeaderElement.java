@@ -82,7 +82,7 @@ public interface SOAPHeaderElement extends SOAPElement
     * @throws UnsupportedOperationException if this message does not support the SOAP 1.2 concept of Fault Role
     * @since SAAJ 1.3
     */
-   public void setRole(String roleURI);
+   public void setRole(String roleURI) throws SOAPException;
 
    /** Sets the actor associated with this SOAPHeaderElement object to the specified actor.
     * The default value of an actor is: SOAPConstants.URI_SOAP_ACTOR_NEXT

@@ -77,7 +77,7 @@ public class SOAPHeaderElementImpl extends SOAPContentElement implements SOAPHea
       return roleAttr != null ? roleAttr.getValue() : null;
    }
 
-   public void setRole(String roleURI)
+   public void setRole(String roleURI) throws SOAPException
    {
       final SOAPElement header = getParentElement();
       final String headerURI = header.getNamespaceURI();
@@ -128,7 +128,16 @@ public class SOAPHeaderElementImpl extends SOAPContentElement implements SOAPHea
       if (Constants.NS_SOAP11_ENV.equals(headerURI))
          setAttributeNS(headerURI, header.getPrefix() + ":" + Constants.SOAP11_ATTR_ACTOR, actorURI);
       else
-         setRole(actorURI);
+      {
+         try
+         {
+            setRole(actorURI);
+         }
+         catch (SOAPException e)
+         {
+            throw new IllegalArgumentException("Failed to setRole: " + actorURI, e);
+         }
+      }
    }
 
    public boolean getMustUnderstand()
