@@ -797,7 +797,7 @@ public class WSDLToJava implements WSDLToJavaIntf
 
    private File getLocationForJavaGeneration()
    {
-      return new File(this.directoryToGenerate + "/" + seiPkgName.replace(".", "/"));
+      return new File(this.directoryToGenerate + "/" + seiPkgName.replace('.', '/'));
    }
 
    private void generateJavaSource(XSComplexTypeDefinition xt, JBossXSModel xsmodel, String containingElement) throws IOException
