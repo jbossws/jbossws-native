@@ -6,11 +6,11 @@
   version="2.4">
 
   <context-param>
-    <param-name>jbossws-config-name</param-name>>
+    <param-name>jbossws-config-name</param-name>
     <param-value>Custom Endpoint Config</param-value>
   </context-param>
   <context-param>
-    <param-name>jbossws-config-file</param-name>>
+    <param-name>jbossws-config-file</param-name>
     <param-value>WEB-INF/custom-endpoint-config.xml</param-value>
   </context-param>	
 	
