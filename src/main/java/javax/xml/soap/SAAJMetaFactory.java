@@ -21,8 +21,6 @@
  */
 package javax.xml.soap;
 
-import java.lang.reflect.Method;
-
 // $Id$
 
 /**
@@ -59,19 +57,8 @@ public abstract class SAAJMetaFactory
    {
       String propertyName = "javax.xml.soap.MetaFactory";
       String defaultImpl = "org.jboss.ws.core.soap.SAAJMetaFactoryImpl";
-
-      SAAJMetaFactory factory  = null;
-      try
-      {
-         Class loaderClass = Class.forName("org.jboss.ws.soap.SAAJFactoryLoader");
-         Method m = loaderClass.getMethod("loadFactory", new Class[] {String.class, String.class});
-         factory = (SAAJMetaFactory)m.invoke(null, new Object[] {propertyName, defaultImpl});
-      }
-      catch (Exception e)
-      {
-         throw new SOAPException("Failed to load org.jboss.ws.soap.SAAJFactoryLoader", e);
-      }
-
+      SAAJMetaFactory factory = (SAAJMetaFactory)SAAJFactoryLoader.loadFactory(propertyName, defaultImpl);
+      
       if (factory == null)
          throw new SOAPException("Failed to to determine the implementation class for: " + propertyName);
 

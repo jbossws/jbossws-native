@@ -23,7 +23,6 @@ package javax.xml.soap;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 
 /**
  A factory for creating SOAPMessage objects.
@@ -71,12 +70,9 @@ public abstract class MessageFactory
       try
       {
          String propertyName = "javax.xml.soap.MessageFactory";
-
-         Class loaderClass = Class.forName("org.jboss.ws.soap.SAAJFactoryLoader");         
-         Method m = loaderClass.getMethod("loadFactory", new Class[] {String.class, String.class});
-         factory = (MessageFactory)m.invoke(null, new Object[] {propertyName, null});
+         factory = (MessageFactory)SAAJFactoryLoader.loadFactory(propertyName, null);
       }
-      catch (Exception rte)
+      catch (RuntimeException rte)
       {
          throw new SOAPException(rte);
       }

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.soap;
+package javax.xml.soap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +47,7 @@ import java.util.Properties;
  * @author Thomas.Diesler@jboss.com
  * @since 14-Dec-2006
  */
-public class SAAJFactoryLoader
+class SAAJFactoryLoader
 {
    private SAAJFactoryLoader()
    {
