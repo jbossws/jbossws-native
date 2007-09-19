@@ -92,8 +92,6 @@
 				<include name="jbossws-framework.jar"/>
 				<include name="jbossws-framework-scripts.zip"/>
 				<include name="jbossws-spi.jar"/>
-				<include name="jbossws-jboss50.jar"/>
-				<include name="jbossws-jboss50-deployer.zip"/>
 				<include name="jbossws-jboss42.jar"/>
 				<include name="jbossws-jboss40.jar"/>
 			</fileset>
