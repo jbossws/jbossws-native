@@ -32,7 +32,7 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 
 /** 
- * Test mapping of primitive types in jaxrpc-mapping.xml
+ * SOAP fault inheritance
  *
  * http://jira.jboss.com/jira/browse/JBWS-251
  *
