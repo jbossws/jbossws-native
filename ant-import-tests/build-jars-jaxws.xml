@@ -119,7 +119,19 @@
 			</classes>
 		</war>
 
-	    <!-- jaxws-jbws771 -->
+    <!-- jaxws-jaxbintros -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jaxbintros.war" webxml="${tests.output.dir}/resources/jaxws/jaxbintros/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jaxbintros/**/*.class"/>
+      </classes>
+
+      <webinf dir="${tests.output.dir}/resources/jaxws/jaxbintros/WEB-INF">
+        <include name="*.xml"/>
+        <include name="**/*.wsdl"/>
+      </webinf>
+    </war>
+   
+      <!-- jaxws-jbws771 -->
 	    <jar destfile="${tests.output.dir}/libs/jaxws-jbws771.jar">
 		  <fileset dir="${tests.output.dir}/classes">
 			  <include name="org/jboss/test/ws/jaxws/jbws771/*.class"/>

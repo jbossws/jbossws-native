@@ -233,6 +233,7 @@
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
       	<include name="wstx.jar"/>
+        <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
         <include name="standard-*-config.xml"/>
@@ -281,6 +282,7 @@
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
       	<include name="wstx.jar"/>
+        <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <fileset dir="${core.output.lib.dir}/jbossws-native42">
         <include name="jbossws.beans/**"/>
@@ -328,6 +330,7 @@
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
       	<include name="wstx.jar"/>
+        <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <fileset dir="${core.output.lib.dir}/jbossws-native40">
         <include name="jbossws.beans/**"/>
