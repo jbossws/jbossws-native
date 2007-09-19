@@ -46,6 +46,7 @@
 			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
       <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
       <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-jaxb-intros.jar"/>
     </path>
 
     <!-- The jBPM BPEL classpath -->
