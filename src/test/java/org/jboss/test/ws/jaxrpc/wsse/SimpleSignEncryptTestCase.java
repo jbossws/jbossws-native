@@ -52,12 +52,6 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
 
    public void testEndpoint() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-         return;
-      }
-      
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
@@ -69,12 +63,6 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
 
    public void testEndpointNoProperties() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-         return;
-      }
-      
       Properties props = System.getProperties();
       props.remove("org.jboss.ws.wsse.keyStore");
       props.remove("org.jboss.ws.wsse.trustStore");

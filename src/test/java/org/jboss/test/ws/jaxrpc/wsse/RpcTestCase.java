@@ -48,12 +48,6 @@ public class RpcTestCase extends JBossWSTest
 
    public void testEndpoint() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-         return;
-      }
-      
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
@@ -65,12 +59,6 @@ public class RpcTestCase extends JBossWSTest
 
    public void testFault() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-         return;
-      }
-      
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);

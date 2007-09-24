@@ -48,12 +48,6 @@ public class WebClientTestCase extends JBossWSTest
     */
    public void testWebClient() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-         return;
-      }
-      
       URL url = new URL("http://" + getServerHost() + ":8080/jaxrpc-wsse-rpc/RpcTestClientServlet?input=Hello");
       BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
       String res = br.readLine();

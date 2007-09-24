@@ -43,12 +43,6 @@ public class AccountSignupTestCase extends JBossWSTest
 
    public void testEndpoint() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME: [JBWS-1330] Fix jaxrpc wsse tests for jbossws-5.0");
-         return;
-      }
-      
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/AccountSignupService");
       AccountSignup signup = (AccountSignup)service.getPort(AccountSignup.class);
