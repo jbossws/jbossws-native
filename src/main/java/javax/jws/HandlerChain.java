@@ -50,7 +50,7 @@ public @interface HandlerChain
 
    /**
     * Name of the handler chain in the configuration file
-    * @deprecated
     */
+   @Deprecated
    String name() default "";
 };
