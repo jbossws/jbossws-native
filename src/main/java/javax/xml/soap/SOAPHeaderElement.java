@@ -54,14 +54,14 @@ public interface SOAPHeaderElement extends SOAPElement
 
    /**
     * Sets the relay attribute for this SOAPHeaderElement to be either true or false.
-    * 
-    * The SOAP relay attribute is set to true to indicate that the SOAP header block must be relayed by any node that is 
-    * targeted by the header block but not actually process it. This attribute is ignored on header blocks whose mustUnderstand 
-    * attribute is set to true or that are targeted at the ultimate reciever (which is the default). 
+    *
+    * The SOAP relay attribute is set to true to indicate that the SOAP header block must be relayed by any node that is
+    * targeted by the header block but not actually process it. This attribute is ignored on header blocks whose mustUnderstand
+    * attribute is set to true or that are targeted at the ultimate reciever (which is the default).
     * The default value of this attribute is false.
     * @param relay the new value of the relay attribute
     * @throws SOAPException if there is a problem in setting the relay attribute.
-    * @throws UnsupportedOperationException if this message does not support the SOAP 1.2 concept of Relay attribute. 
+    * @throws UnsupportedOperationException if this message does not support the SOAP 1.2 concept of Relay attribute.
     * @since SAAJ 1.3
     */
    public void setRelay(boolean relay) throws SOAPException;
@@ -74,7 +74,7 @@ public interface SOAPHeaderElement extends SOAPElement
     */
    public String getRole();
 
-   /** 
+   /**
     * Sets the Role associated with this SOAPHeaderElement  object to the specified Role.
     *
     * @param roleURI the URI of the Role
@@ -82,7 +82,7 @@ public interface SOAPHeaderElement extends SOAPElement
     * @throws UnsupportedOperationException if this message does not support the SOAP 1.2 concept of Fault Role
     * @since SAAJ 1.3
     */
-   public void setRole(String roleURI);
+   public void setRole(String roleURI) throws SOAPException;
 
    /** Sets the actor associated with this SOAPHeaderElement object to the specified actor.
     * The default value of an actor is: SOAPConstants.URI_SOAP_ACTOR_NEXT
