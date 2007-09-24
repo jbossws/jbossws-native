@@ -12,9 +12,11 @@
     </import>
     <import componentref="jboss/jbossxb">
       <compatible version="@jboss-jbossxb-jboss50@"/>
+      <compatible version="@jboss-jbossxb-jboss50@-brew"/>
     </import>
     <import componentref="jboss/remoting">
       <compatible version="@jboss-remoting-jboss50@"/>
+      <compatible version="@jboss-remoting-jboss50@-brew"/>
     </import>
     
     <export>
