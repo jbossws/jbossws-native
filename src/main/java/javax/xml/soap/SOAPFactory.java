@@ -23,10 +23,9 @@ package javax.xml.soap;
 
 // $Id$
 
-import org.w3c.dom.Element;
-
 import javax.xml.namespace.QName;
-import java.lang.reflect.Method;
+
+import org.w3c.dom.Element;
 
 /** SOAPFactory is a factory for creating various objects that exist in the SOAP XML tree.
  *
@@ -62,12 +61,9 @@ public abstract class SOAPFactory
          try
          {
             String propertyName = "javax.xml.soap.SOAPFactory";
-
-            Class loaderClass = Class.forName("org.jboss.ws.soap.SAAJFactoryLoader");
-            Method m = loaderClass.getMethod("loadFactory", new Class[] {String.class, String.class});
-            soapFactory  = (SOAPFactory)m.invoke(null, new Object[] {propertyName, null});
+            soapFactory = (SOAPFactory)SAAJFactoryLoader.loadFactory(propertyName, null);
          }
-         catch (Exception rte)
+         catch (RuntimeException rte)
          {
             throw new SOAPException(rte);
          }
@@ -127,7 +123,7 @@ public abstract class SOAPFactory
     */
    public SOAPElement createElement(Element domElement) throws SOAPException
    {
-      throw new IllegalArgumentException("Should be implemented by concrete implementation of this class");
+      throw new IllegalStateException("Should be implemented by concrete implementation of this class");
    }
 
    /** Create a SOAPElement object initialized with the given local name.
@@ -168,7 +164,7 @@ public abstract class SOAPFactory
     */
    public SOAPElement createElement(QName qname) throws SOAPException
    {
-      throw new IllegalArgumentException("Should be implemented by concrete implementation of this class");
+      throw new IllegalStateException("Should be implemented by concrete implementation of this class");
    }
 
    /**

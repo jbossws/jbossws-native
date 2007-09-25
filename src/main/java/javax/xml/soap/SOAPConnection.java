@@ -63,7 +63,7 @@ public abstract class SOAPConnection
     */
    public SOAPMessage get(Object to) throws SOAPException
    {
-      throw new IllegalArgumentException("Should be implemented by concrete implementation of this class");
+      throw new IllegalStateException("Should be implemented by concrete implementation of this class");
    }
    
    /** Closes this SOAPConnection object.
