@@ -47,7 +47,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
    private String targetPackage;
    private PrintStream messageStream;
    private String wsdlLocation;
-   private List<String> additionalCompilerClassPath;
+   private List<String> additionalCompilerClassPath = new ArrayList<String>();
    private String target = "2.0";
 
    @Override
@@ -104,7 +104,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
    }
 
    public void setTarget(String target)
-   {      
+   {     
       this.target = target;
    }
 
@@ -171,6 +171,9 @@ public class SunRIConsumerImpl extends WSContractConsumer
       args.add(outputDir.getAbsolutePath());
 
       // Always set the target
+       if(!target.equals("2.0"))
+         throw new IllegalArgumentException("WSConsume (native) only supports JAX-WS 2.0");
+      
       args.add("-target");
       args.add(target);
 
