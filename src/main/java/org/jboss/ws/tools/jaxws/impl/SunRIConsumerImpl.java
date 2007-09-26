@@ -176,12 +176,25 @@ public class SunRIConsumerImpl extends WSContractConsumer
 
       // finally the WSDL file
       args.add(wsdl.toString());
-      
+
+      // See WsimportTool#compileGeneratedClasses()
+      if(!additionalCompilerClassPath.isEmpty())
+      {
+         StringBuffer javaCP = new StringBuffer();
+         for(String s : additionalCompilerClassPath)
+         {
+            javaCP.append(s).append(File.pathSeparator);
+         }
+         System.setProperty("java.class.path", javaCP.toString());
+      }
+
       try
       {
          // enforce woodstox
          if (null == System.getProperty("javax.xml.stream.XMLInputFactory"))
             System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
+
+
 
          WsimportTool compileTool = new WsimportTool(stream);
          boolean success = compileTool.run(args.toArray(new String[args.size()]));
