@@ -19,23 +19,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package javax.xml.ws.http;
+package javax.xml.ws.handler;
 
-// $Id$
-
-import javax.xml.ws.Binding;
-import javax.xml.ws.Binding21;
-
-/** The <code>HTTPBinding</code> interface is an 
- *  abstraction for the XML/HTTP binding.
- * 
- *  @since JAX-WS 2.0
-**/
-public interface HTTPBinding extends Binding
+/**
+ * @author Heiko.Braun@jboss.com
+ * @version $Revision$
+ */
+public interface MessageContext21 extends MessageContext
 {
-
-  /**
-   * A constant representing the identity of the XML/HTTP binding.
-   */
-  public static final String HTTP_BINDING = "http://www.w3.org/2004/08/wsdl/http";
+   /**
+    * Standard property: WS Addressing Reference Parameters.
+    * The list MUST include all SOAP headers marked with the
+    * wsa:IsReferenceParameter="true" attribute.
+    * <p>Type: List<Element>
+    *
+    * @since JAX-WS 2.1
+    */
+   public static final String REFERENCE_PARAMETERS = "javax.xml.ws.reference.parameters";
 }

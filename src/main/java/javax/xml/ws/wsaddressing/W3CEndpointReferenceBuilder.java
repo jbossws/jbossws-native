@@ -30,6 +30,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.spi.Provider;
+import javax.xml.ws.spi.Provider21;
 
 import org.w3c.dom.Element;
 
@@ -240,7 +241,7 @@ public final class W3CEndpointReferenceBuilder {
      *             and is not present in the specified WSDL.
      *        <li>If the <code>endpointName</code> port is not <code>null<code> and it
      *             is not present in <code>serviceName</code> service in the WSDL.
-     *        <li>If the <code>wsdlDocumentLocation</code> is NOT <code>null</code>
+     *        <li>If the <code>wsdlDocumentLocation</code> is NOT <code>null</code>   Pr
      *            and does not represent a valid WSDL.
      *     </ul>
      * @throws WebServiceException If an error occurs while creating the 
@@ -248,7 +249,7 @@ public final class W3CEndpointReferenceBuilder {
      *       
      */
     public W3CEndpointReference build() {
-        return Provider.provider().createW3CEndpointReference(address,
+        return ((Provider21)Provider.provider()).createW3CEndpointReference(address,
                 serviceName, endpointName, metadata, wsdlDocumentLocation,
                 referenceParameters);
     }

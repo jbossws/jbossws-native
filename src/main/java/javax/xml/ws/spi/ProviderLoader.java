@@ -51,7 +51,7 @@ import java.util.Properties;
  * @author Thomas.Diesler@jboss.com
  * @since 03-May-2006
  */
-public abstract class ProviderLoader
+abstract class ProviderLoader
 {
    /**
     * This method uses the algirithm described above. 

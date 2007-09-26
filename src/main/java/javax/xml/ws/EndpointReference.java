@@ -29,6 +29,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.spi.Provider;
+import javax.xml.ws.spi.Provider21;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 /**
@@ -108,7 +109,7 @@ public abstract class EndpointReference
     */
    public static EndpointReference readFrom(Source eprInfoset)
    {
-      return Provider.provider().readEndpointReference(eprInfoset);
+      return ((Provider21)Provider.provider()).readEndpointReference(eprInfoset);
    }
 
    /**
@@ -173,7 +174,7 @@ public abstract class EndpointReference
     **/
    public <T> T getPort(Class<T> serviceEndpointInterface, WebServiceFeature... features)
    {
-      return Provider.provider().getPort(this, serviceEndpointInterface, features);
+      return ((Provider21)Provider.provider()).getPort(this, serviceEndpointInterface, features);
    }
 
    /**

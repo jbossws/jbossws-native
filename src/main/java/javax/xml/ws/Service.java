@@ -28,6 +28,8 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.Provider;
 import javax.xml.ws.spi.ServiceDelegate;
+import javax.xml.ws.spi.ServiceDelegate21;
+import javax.xml.ws.spi.Provider21;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -63,7 +65,7 @@ import java.util.Iterator;
  **/
 public class Service
 {
-   protected ServiceDelegate delegate;
+   ServiceDelegate21 delegate;
 
    /**
     * The orientation of a dynamic client or service. MESSAGE provides
@@ -77,7 +79,7 @@ public class Service
 
    protected Service(java.net.URL wsdlDocumentLocation, QName serviceName)
    {
-      delegate = Provider.provider().createServiceDelegate(wsdlDocumentLocation, serviceName, this.getClass());
+      delegate = (ServiceDelegate21)Provider.provider().createServiceDelegate(wsdlDocumentLocation, serviceName, this.getClass());
    }
 
    /** 

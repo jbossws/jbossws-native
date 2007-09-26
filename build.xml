@@ -140,7 +140,13 @@
       <exclude name="javax/xml/ws/RespectBinding.class"/>
       <exclude name="javax/xml/ws/RespectBindingFeature.class"/>
       <exclude name="javax/xml/ws/WebServiceFeature.class"/>
+      <exclude name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
+      <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
+      <exclude name="javax/xml/ws/soap/AddressingFeature.class"/>              
       <exclude name="javax/xml/ws/addressing/**"/>
+      <exclude name="javax/xml/ws/soap/Addressing.class"/>
+      <exclude name="javax/xml/ws/soap/MTOM.class"/>
+      <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
       <exclude name="javax/xml/ws/wsaddressing/**"/>
       </fileset>
 			<metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
@@ -178,7 +184,14 @@
         <include name="javax/xml/ws/RespectBinding.class"/>
         <include name="javax/xml/ws/RespectBindingFeature.class"/>
         <include name="javax/xml/ws/WebServiceFeature.class"/>
+        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
+        <include name="javax/xml/ws/soap/AddressingFeature.class"/>
+        <include name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
         <include name="javax/xml/ws/addressing/**"/>
+        <include name="javax/xml/ws/soap/Addressing.class"/>
+        <include name="javax/xml/ws/soap/MTOM.class"/>
+        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
+
         <include name="javax/xml/ws/wsaddressing/**"/>
 
       </fileset>
@@ -203,7 +216,13 @@
         <include name="javax/xml/ws/RespectBinding.class"/>
         <include name="javax/xml/ws/RespectBindingFeature.class"/>
         <include name="javax/xml/ws/WebServiceFeature.class"/>
+        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
+        <include name="javax/xml/ws/soap/AddressingFeature.class"/>
+        <include name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
         <include name="javax/xml/ws/addressing/**"/>
+        <include name="javax/xml/ws/soap/Addressing.class"/>
+        <include name="javax/xml/ws/soap/MTOM.class"/>
+        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
         <include name="javax/xml/ws/wsaddressing/**"/>
         
       </fileset>

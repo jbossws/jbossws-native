@@ -64,21 +64,6 @@ public class SOAPFaultException extends javax.xml.ws.ProtocolException
       this.fault = fault;
    }
 
-   public SOAPFaultException(String message)
-   {
-      super(message);
-   }
-
-   public SOAPFaultException(String message, Exception ex)
-   {
-      super(message, ex);
-   }
-
-   public SOAPFaultException(Exception ex)
-   {
-      super(ex);
-   }
-
    /** Gets the embedded <code>SOAPFault</code> instance.
     *
     *  @return <code>javax.xml.soap.SOAPFault</code> SOAP

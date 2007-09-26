@@ -35,6 +35,7 @@ import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.Provider;
 import javax.xml.ws.spi.ServiceDelegate;
+import javax.xml.ws.spi.Provider21;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 import org.jboss.util.NotImplementedException;
@@ -46,7 +47,7 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.com
  * @since 03-May-2006
  */
-public class ProviderImpl extends Provider
+public class ProviderImpl extends Provider21
 {
    // 6.2 Conformance (Concrete javax.xml.ws.spi.Provider required): An implementation MUST provide
    // a concrete class that extends javax.xml.ws.spi.Provider. Such a class MUST have a public constructor

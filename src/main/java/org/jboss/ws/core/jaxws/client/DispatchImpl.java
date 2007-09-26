@@ -31,6 +31,9 @@ import java.util.concurrent.Future;
 import javax.xml.bind.JAXBContext;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
@@ -43,11 +46,13 @@ import javax.xml.ws.Binding21;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
+import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.ConfigProvider;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemotingConnection;
 import org.jboss.ws.core.client.SOAPRemotingConnection;
@@ -251,7 +256,19 @@ public class DispatchImpl<T> implements Dispatch<T>
    {
       // jaxws/api/javax_xml_ws/Dispatch/Client.java#invokeTestJAXBNull
       if (obj == null)
-         throw new SOAPFaultException("Request object cannot be null");
+      {
+         try
+         {
+            SOAPFactory factory = SOAPFactory.newInstance();
+            SOAPFault fault = factory.createFault("Request object cannot be null", new QName("http://org.jboss.ws", "Dispatch"));
+            fault.setFaultActor("client");            
+            throw new SOAPFaultException(fault);
+         }
+         catch (SOAPException e)
+         {
+            //
+         }
+      }
 
       String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
