@@ -97,8 +97,8 @@
 			</fileset>
 			<fileset dir="${core.dir}/output/lib">
 				<include name="jboss-jaxrpc.jar"/>
-				<include name="jboss-jaxws.jar"/>
-				<include name="jboss-saaj.jar"/>
+				<include name="jboss-jaxws.jar"/>        
+        <include name="jboss-saaj.jar"/>
 				<include name="jbossws-client.jar"/>
 				<include name="jbossws-core.jar"/>
 				<include name="jbossws-core-scripts.zip"/>

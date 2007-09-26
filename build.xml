@@ -127,23 +127,61 @@
 		</jar>
 
 		<!-- Build jboss-jaxws.jar -->
-		<mkdir dir="${core.output.lib.dir}"/>
-		<jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${core.output.etc.dir}/default.mf">
-			<fileset dir="${core.output.classes.dir}">
-				<include name="javax/annotation/**"/>
-				<include name="javax/jws/**"/>
-				<include name="javax/xml/ws/**"/>
-			</fileset>
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
+      <include name="javax/annotation/**"/>
+      <include name="javax/jws/**"/>
+      <include name="javax/xml/ws/**"/>
+      <exclude name="javax/xml/ws/**/*21.class"/>
+      <exclude name="javax/xml/ws/Action.class"/>
+      <exclude name="javax/xml/ws/EndpointReference.class"/>
+      <exclude name="javax/xml/ws/FaultAction.class"/>
+      <exclude name="javax/xml/ws/RespectBinding.class"/>
+      <exclude name="javax/xml/ws/RespectBindingFeature.class"/>
+      <exclude name="javax/xml/ws/WebServiceFeature.class"/>
+      <exclude name="javax/xml/ws/addressing/**"/>
+      <exclude name="javax/xml/ws/wsaddressing/**"/>
+      </fileset>
 			<metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
-		</jar>
+    </jar>
 
-		<!-- Build jbossws-core.jar -->
+    <!-- Build jboss-jaxws-ext.jar -->
+    <!--mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxws-ext.jar" manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
+      <include name="javax/xml/ws/**/*21.class"/>
+      <include name="javax/xml/ws/Action.class"/>
+      <include name="javax/xml/ws/EndpointReference.class"/>
+      <include name="javax/xml/ws/FaultAction.class"/>
+      <include name="javax/xml/ws/RespectBinding.class"/>
+      <include name="javax/xml/ws/RespectBindingFeature.class"/>
+      <include name="javax/xml/ws/WebServiceFeature.class"/>
+      <include name="javax/xml/ws/addressing/**"/>
+      <include name="javax/xml/ws/wsaddressing/**"/>
+      </fileset>
+			<metainf dir="${core.resources.dir}/jboss-jaxws-ext.jar/META-INF"/>
+    </jar-->
+
+    <!-- Build jbossws-core.jar -->
 		<mkdir dir="${core.output.lib.dir}"/>
 		<jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
 			<fileset dir="${core.output.classes.dir}">
 				<include name="org/jboss/annotation/**"/>
 				<include name="org/jboss/ws/**"/>
-			</fileset>
+
+        <!-- JAX-WS 2.1 extensions -->
+        <include name="javax/xml/ws/**/*21.class"/>
+        <include name="javax/xml/ws/Action.class"/>
+        <include name="javax/xml/ws/EndpointReference.class"/>
+        <include name="javax/xml/ws/FaultAction.class"/>
+        <include name="javax/xml/ws/RespectBinding.class"/>
+        <include name="javax/xml/ws/RespectBindingFeature.class"/>
+        <include name="javax/xml/ws/WebServiceFeature.class"/>
+        <include name="javax/xml/ws/addressing/**"/>
+        <include name="javax/xml/ws/wsaddressing/**"/>
+
+      </fileset>
 			<fileset dir="${core.resources.dir}">
 				<include name="schema/**"/>
 				<include name="dtd/**"/>
@@ -156,7 +194,19 @@
 			<fileset dir="${core.output.classes.dir}">
 				<include name="org/jboss/wsf/**"/>
 				<include name="org/jboss/ws/**"/>
-			</fileset>
+
+        <!-- JAX-WS 2.1 extensions -->
+        <include name="javax/xml/ws/**/*21.class"/>
+        <include name="javax/xml/ws/Action.class"/>
+        <include name="javax/xml/ws/EndpointReference.class"/>
+        <include name="javax/xml/ws/FaultAction.class"/>
+        <include name="javax/xml/ws/RespectBinding.class"/>
+        <include name="javax/xml/ws/RespectBindingFeature.class"/>
+        <include name="javax/xml/ws/WebServiceFeature.class"/>
+        <include name="javax/xml/ws/addressing/**"/>
+        <include name="javax/xml/ws/wsaddressing/**"/>
+        
+      </fileset>
 			<fileset dir="${core.resources.dir}">
 				<include name="schema/**"/>
 				<include name="dtd/**"/>

@@ -29,13 +29,14 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.Binding;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.Binding21;
 
 /** The <code>SOAPBinding</code> interface is an abstraction for
  *  the SOAP binding.
  * 
  *  @since JAX-WS 2.0
  **/
-public interface SOAPBinding extends Binding
+public interface SOAPBinding extends Binding21
 {
    /**
     * A constant representing the identity of the SOAP 1.1 over HTTP binding.

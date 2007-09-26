@@ -31,8 +31,8 @@
 			<pathelement location="${core.dir}/thirdparty/jbossws-common.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jbossws-spi.jar"/>
 			<pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
-			<pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
-			<pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
+			<pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>      
+      <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
 			<pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
 			<pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
 		</path>
@@ -81,7 +81,7 @@
       <classpath refid="tests.client.classpath"/>
     </taskdef>
 
-		<wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+		<wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="true" fork="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>

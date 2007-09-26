@@ -53,14 +53,4 @@ public interface Binding
     *          chain.
     */
    public void setHandlerChain(java.util.List<javax.xml.ws.handler.Handler> chain);
-
-   /** 
-    * Get the URI for this binding instance. 
-    *
-    * @return String The binding identifier for the port.
-    *    Never returns <code>null</code>
-    *
-    * @since JAX-WS 2.1
-    */
-   String getBindingID();
 }

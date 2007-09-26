@@ -47,7 +47,7 @@
         <include name="jbossws-client.jar"/>
         <include name="jbossws-core.jar"/>
         <include name="jboss-jaxrpc.jar"/>
-        <include name="jboss-jaxws.jar"/>
+        <include name="jboss-jaxws.jar"/>        
         <include name="jboss-saaj.jar"/>
         <include name="jbossws-core-src.zip"/>
         <include name="jbossws-core-scripts.zip"/>

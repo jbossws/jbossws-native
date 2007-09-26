@@ -23,14 +23,10 @@ package javax.xml.ws;
 
 // $Id$
 
-import java.util.List;
-import java.util.Map;
-
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.Provider;
-import javax.xml.ws.wsaddressing.W3CEndpointReference;
-
-import org.w3c.dom.Element;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A Web service endpoint.
@@ -298,77 +294,4 @@ public abstract class Endpoint
     **/
    public abstract void setProperties(Map<String, Object> properties);
 
-   /**
-    * Returns the <code>EndpointReference</code> associated with
-    * this <code>Endpoint</code> instance.
-    * <p>
-    * If the Binding for this <code>bindingProvider</code> is
-    * either SOAP1.1/HTTP or SOAP1.2/HTTP, then a
-    * <code>W3CEndpointReference</code> MUST be returned.
-    * If the returned <code>EndpointReference</code> is a
-    * <code>W3CEndpointReference</code> it MUST contain 
-    * the <code>wsaw:ServiceName</code> element and the 
-    * <code>wsaw:EndpointName</code> attribute on the 
-    * <code>wsaw:ServiceName</code>. It SHOULD contain
-    * the embedded WSDL in the <code>wsa:Metadata</code> element
-    * if there is an associated WSDL. The
-    * <code>wsaw:InterfaceName</code> MAY also be present. 
-    * <br>
-    * See <a href="http://www.w3.org/TR/2006/CR-ws-addr-wsdl-20060529/">
-    * WS-Addressing - WSDL 1.0</a>.
-    *
-    * @param referenceParameters Reference parameters to be associated with the
-    * returned <code>EndpointReference</code> instance.
-    * @return EndpointReference of this <code>Endpoint</code> instance.
-    * If the returned <code>EndpointReference</code> is of type
-    * <code>W3CEndpointReference</code> then it MUST contain the
-    * the specified <code>referenceParameters</code>.
-
-    * @throws WebServiceException If any error in the creation of
-    * the <code>EndpointReference</code> or if the <code>Endpoint</code> is 
-    * not in the published state.
-    * @throws UnsupportedOperationException If this <code>BindingProvider</code>
-    * uses the XML/HTTP binding.
-    *
-    * @see W3CEndpointReference
-    *
-    * @since JAX-WS 2.1
-    **/
-   public abstract EndpointReference getEndpointReference(Element... referenceParameters);
-
-   /**
-    * Returns the <code>EndpointReference</code> associated with
-    * this <code>Endpoint</code> instance.
-    * <p>
-    * If the returned <code>EndpointReference</code> is a
-    * <code>W3CEndpointReference</code> it MUST contain 
-    * the <code>wsaw:ServiceName</code> element and the 
-    * <code>wsaw:EndpointName</code> attribute on the 
-    * <code>wsaw:ServiceName</code>. It SHOULD contain
-    * the embedded WSDL in the <code>wsa:Metadata</code> element
-    * if there is an associated WSDL. The
-    * <code>wsaw:InterfaceName</code> MAY also be present. 
-    * <br>
-    * See <a href="http://www.w3.org/TR/2006/CR-ws-addr-wsdl-20060529/">
-    * WS-Addressing - WSDL 1.0</a>.
-    *
-    * @param referenceParameters Reference parameters to be associated with the
-    * returned <code>EndpointReference</code> instance.
-    * @return EndpointReference of type <code>clazz</code> of this 
-    * <code>Endpoint<code> instance.
-    * If the returned <code>EndpointReference</code> is of type
-    * <code>W3CEndpointReference</code> then it MUST contain the
-    * the specified <code>referenceParameters</code>.
-
-    * @throws WebServiceException If any error in the creation of
-    * the <code>EndpointReference</code> or if the <code>Endpoint</code> is 
-    * not in the published state or if the <code>clazz</code> is not a supported
-    * <code>EndpointReference</code> type.
-    * @throws UnsupportedOperationException If this <code>BindingProvider</code>
-    * uses the XML/HTTP binding.
-    *
-    *
-    * @since JAX-WS 2.1
-    **/
-   public abstract <T extends EndpointReference> T getEndpointReference(Class<T> clazz, Element... referenceParameters);
 }

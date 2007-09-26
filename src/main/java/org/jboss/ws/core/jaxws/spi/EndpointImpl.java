@@ -23,6 +23,22 @@ package org.jboss.ws.core.jaxws.spi;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.http.HttpContext;
+import org.jboss.wsf.spi.http.HttpServer;
+import org.jboss.wsf.spi.http.HttpServerFactory;
+import org.w3c.dom.Element;
+
+import javax.xml.transform.Source;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Endpoint21;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServicePermission;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -31,32 +47,13 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
 
-import javax.xml.transform.Source;
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServicePermission;
-
-import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.http.HttpContext;
-import org.jboss.wsf.spi.http.HttpContextFactory;
-import org.jboss.wsf.spi.http.HttpServer;
-import org.jboss.wsf.spi.http.HttpServerFactory;
-import org.jboss.wsf.spi.management.ServerConfigFactory;
-import org.w3c.dom.Element;
-
 /**
  * A Web service endpoint implementation.
  *  
  * @author Thomas.Diesler@jboss.com
  * @since 07-Jul-2006
  */
-public class EndpointImpl extends Endpoint
+public class EndpointImpl extends Endpoint21
 {
    // provide logging
    private final Logger log = Logger.getLogger(EndpointImpl.class);
@@ -101,7 +98,7 @@ public class EndpointImpl extends Endpoint
     * implementation using some default configuration. In order to get more control over the server configuration,
     * please use the javax.xml.ws.Endpoint#publish(Object) method instead.
     *
-    * @param URI specifying the address to use. The address must be compatible with the binding specified at the time the endpoint was created.
+    * @param address specifying the address to use. The address must be compatible with the binding specified at the time the endpoint was created.
     */
    @Override
    public void publish(String address)
@@ -139,7 +136,7 @@ public class EndpointImpl extends Endpoint
     * A server context encapsulates the server infrastructure and addressing information for a particular transport.
     * For a call to this method to succeed, the server context passed as an argument to it must be compatible with the endpoint's binding.
     *
-    * @param serverContext An object representing a server context to be used for publishing the endpoint.
+    * @param context An object representing a server context to be used for publishing the endpoint.
     */
    @Override
    public void publish(Object context)

@@ -52,7 +52,7 @@ import javax.xml.ws.WebServiceFeature;
  *      <li>{@link Service#getPort(EndpointReference,Class,WebServiceFeature...)}
  *      <li>{@link Service#createDispatch(QName,Class, 
  *           Service.Mode mode,WebServiceFeature...)}
- *      <li>{@link Service#createDispatch(EndpointReference,
+ *      <li>{@link Service21#createDispatch(EndpointReference,
  *           Class,Service.Mode, 
  *           WebServiceFeature...)}
  *      <li>{@link Service#createDispatch(QName,

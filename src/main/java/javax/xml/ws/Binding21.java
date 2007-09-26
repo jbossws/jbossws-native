@@ -19,27 +19,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxws.binding;
-
-import java.util.List;
-
-import javax.xml.ws.Binding;
-import javax.xml.ws.Binding21;
-import javax.xml.ws.handler.Handler;
-
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-
-// $Id$
+package javax.xml.ws;
 
 /**
- * Extension to JAXWS protocol bindings. 
- * 
- * @author Thomas.Diesler@jboss.com
- * @since 04-Jul-2006
+ * @author Heiko.Braun@jboss.com
+ * @version $Revision$
  */
-public interface BindingExt extends Binding21
+public interface Binding21 extends Binding
 {
-   List<Handler> getHandlerChain(HandlerType handlerType);
-   
-   void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType);
+   /**
+    * Get the URI for this binding instance.
+    *
+    * @return String The binding identifier for the port.
+    *    Never returns <code>null</code>
+    *
+    * @since JAX-WS 2.1
+    */
+   String getBindingID();
 }

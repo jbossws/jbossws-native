@@ -39,6 +39,7 @@ import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.Binding21;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -121,7 +122,7 @@ public class DispatchImpl<T> implements Dispatch<T>
       // with a quoted empty string value, if in the corresponding WSDL description,
       // the soapAction attribute of soapbind:operation is either not present, or
       // present with an empty string as its value.
-      String bindingID = bindingProvider.getBinding().getBindingID();
+      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
       if (bindingID.indexOf("soap") > 0)
       {
          String soapAction = null; 
@@ -144,7 +145,7 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    private RemotingConnection getRemotingConnection()
    {
-      String bindingID = bindingProvider.getBinding().getBindingID();
+      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
@@ -252,7 +253,7 @@ public class DispatchImpl<T> implements Dispatch<T>
       if (obj == null)
          throw new SOAPFaultException("Request object cannot be null");
 
-      String bindingID = bindingProvider.getBinding().getBindingID();
+      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
@@ -274,7 +275,7 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    private Object getReturnObject(MessageAbstraction resMsg)
    {
-      String bindingID = bindingProvider.getBinding().getBindingID();
+      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 

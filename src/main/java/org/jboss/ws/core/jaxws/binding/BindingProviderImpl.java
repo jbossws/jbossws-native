@@ -30,6 +30,7 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.wsaddressing.BindingProvider21;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.http.HTTPBinding;
 
@@ -45,7 +46,7 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class BindingProviderImpl extends CommonBindingProvider implements BindingProvider
+public class BindingProviderImpl extends CommonBindingProvider implements BindingProvider21
 {
    private Map<String, Object> requestContext = new HashMap<String, Object>();
    private Map<String, Object> responseContext = new HashMap<String, Object>();

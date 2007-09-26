@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebEndpoint;
 import javax.xml.ws.WebServiceClient;
+import javax.xml.ws.Service21;
 
 
 /**
@@ -38,7 +39,7 @@ import javax.xml.ws.WebServiceClient;
  */
 @WebServiceClient(name = "EventingService", targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing", wsdlLocation = "wind.wsdl")
 public class EventingService
-    extends Service
+    extends Service21
 {
 
     private final static URL WSDL_LOCATION;
