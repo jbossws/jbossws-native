@@ -278,6 +278,7 @@
             </fileset>
          </copy>
 
+         <delete dir="${jboss40.home}/server/${jboss.server.instance}/deploy/jbossws14.sar"/>
          <mkdir dir="${jboss40.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
          <unjar dest="${jboss40.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native40.sar"/>
          <mkdir dir="${jboss40.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>

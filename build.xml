@@ -381,6 +381,18 @@
       </footer>
     </concat>
     
+    <!-- Concat jboss-beans.xml -->
+    <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans-no-ejb3.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
+      </header>
+      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
+      <fileset file="${core.output.dir}/resources/jbossws-jboss40-config-no-ejb3.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt;
+      </footer>
+    </concat>
+    
     <!-- Build jbossws-native40.sar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-native40.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
@@ -406,6 +418,7 @@
       </fileset>
       <metainf dir="${core.output.dir}/resources/jbossws-jboss40.sar/META-INF">
         <include name="jboss-service.xml"/>
+        <include name="jboss-service-no-ejb3.xml"/>
       </metainf>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
         <include name="standard-*-config.xml"/>

@@ -97,13 +97,7 @@
 	</target>
   
 	<target name="deploy-jboss40-no-ejb3" depends="deploy-jboss40-ejb3" unless="jboss40.ejb3.available">
-		<macro-setup-native40-no-ejb3/>
-    <echo>
-      ***********************************
-      * JBossWS EJB3 support disabled   *
-      * All EJB3 tests will fail.       *
-      ***********************************
-    </echo>
+            <macro-setup-native40-no-ejb3/>
 	</target>
   
 	<!-- Remove jbossws from jboss40 -->
