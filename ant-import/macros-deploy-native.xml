@@ -32,6 +32,7 @@
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
             </fileset>
@@ -59,6 +60,7 @@
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
             </fileset>
          </copy>
@@ -92,6 +94,7 @@
                <include name="jaxws-rt.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
                <include name="policy.jar"/>
@@ -106,6 +109,7 @@
             <fileset dir="${jboss50.home}/server/${jboss.server.instance}/lib">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <!-- Remove only, do not deploy -->
                <include name="jbossws-integration.jar"/>
@@ -132,6 +136,7 @@
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
             </fileset>
@@ -191,6 +196,7 @@
                <include name="jaxws-rt.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
                <include name="jbossws-jboss42.jar"/>
@@ -214,6 +220,7 @@
                <include name="jbossws-jboss42.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <!-- Remove only, do not deploy -->
                <include name="jbossws-integration.jar"/>
@@ -239,6 +246,7 @@
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
             </fileset>
@@ -270,6 +278,7 @@
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
             </fileset>
             <fileset dir="@{thirdpartylibs}">
@@ -324,6 +333,7 @@
                <include name="jaxws-rt.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
                <include name="jbossws-jboss40.jar"/>
@@ -346,6 +356,7 @@
                <include name="jbossws-jboss40.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
             </fileset>
          </delete>
@@ -369,6 +380,7 @@
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
             </fileset>
          </copy>
@@ -384,6 +396,7 @@
                <include name="jaxb-api.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
+              <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
             </fileset>
          </delete>

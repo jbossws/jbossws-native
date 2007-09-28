@@ -13,200 +13,187 @@
 
 <project default="main" basedir="." name="JBossWS-Native">
 
-	<property name="core.dir" value="${basedir}"/>
-  
-	<import file="${basedir}/ant-import/build-setup.xml"/>
-	<import file="${basedir}/ant-import/build-bin-dist.xml"/>
-	<import file="${basedir}/ant-import/build-deploy.xml"/>
-	<import file="${basedir}/ant-import/build-release.xml"/>
-	<import file="${basedir}/ant-import/build-thirdparty.xml"/>
-	<import file="${basedir}/ant-import-tests/build-testsuite.xml"/>
+  <property name="core.dir" value="${basedir}"/>
 
-	<property name="core.src.dir" value="${core.dir}/src/main"/>
-	<property name="core.etc.dir" value="${core.src.dir}/etc"/>
-	<property name="core.distro.dir" value="${core.src.dir}/distro"/>
-	<property name="core.java.dir" value="${core.src.dir}/java"/>
-	<property name="core.resources.dir" value="${core.src.dir}/resources"/>
-	<property name="core.output.dir" value="${core.dir}/output"/>
-	<property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
-	<property name="core.output.etc.dir" value="${core.output.dir}/etc"/>
-	<property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
-	<property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
-	<property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
+  <import file="${basedir}/ant-import/build-setup.xml"/>
+  <import file="${basedir}/ant-import/build-bin-dist.xml"/>
+  <import file="${basedir}/ant-import/build-deploy.xml"/>
+  <import file="${basedir}/ant-import/build-release.xml"/>
+  <import file="${basedir}/ant-import/build-thirdparty.xml"/>
+  <import file="${basedir}/ant-import-tests/build-testsuite.xml"/>
 
-	<target name="init" depends="prepare,thirdparty">
-	</target>
+  <property name="core.src.dir" value="${core.dir}/src/main"/>
+  <property name="core.etc.dir" value="${core.src.dir}/etc"/>
+  <property name="core.distro.dir" value="${core.src.dir}/distro"/>
+  <property name="core.java.dir" value="${core.src.dir}/java"/>
+  <property name="core.resources.dir" value="${core.src.dir}/resources"/>
+  <property name="core.output.dir" value="${core.dir}/output"/>
+  <property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
+  <property name="core.output.etc.dir" value="${core.output.dir}/etc"/>
+  <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
+  <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
+  <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
 
-	<!-- ================================================================== -->
-	<!-- Compile                                                            -->
-	<!-- ================================================================== -->
+  <target name="init" depends="prepare,thirdparty">
+  </target>
 
-	<!--
-	  | Compile everything.
-	  |
-	  | This target should depend on other compile-* targets for each
-	  | different type of compile that needs to be performed, short of
-	  | documentation compiles.
-	  -->
+  <!-- ================================================================== -->
+  <!-- Compile                                                            -->
+  <!-- ================================================================== -->
 
-	<target name="compile" depends="init,compile-classes,compile-etc"
-			  description="Compile all source files."/>
+  <!--
+    | Compile everything.
+    |
+    | This target should depend on other compile-* targets for each
+    | different type of compile that needs to be performed, short of
+    | documentation compiles.
+    -->
 
-	<!-- Compile java sources -->
-	<target name="compile-classes" depends="init">
+  <target name="compile" depends="init,compile-classes,compile-etc"
+          description="Compile all source files."/>
 
-		<!-- Compile interfaces with jdk1.4 -->
-		<mkdir dir="${core.output.classes14.dir}"/>
-		<javac srcdir="${core.java.dir}" destdir="${core.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
-				 failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
-			<include name="javax/xml/rpc/**"/>
-			<include name="javax/xml/soap/**"/>
-			<classpath refid="thirdparty.classpath"/>
-		</javac>
+  <!-- Compile java sources -->
+  <target name="compile-classes" depends="init">
 
-		<!-- Compile core classes with jdk1.5 -->
-		<mkdir dir="${core.output.classes.dir}"/>
-		<javac srcdir="${core.java.dir}" sourcepath="" destdir="${core.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
-				 deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}" source="1.5" target="1.5">
-			<include name="javax/annotation/**"/>
-			<include name="javax/xml/ws/**"/>
-			<include name="javax/jws/**"/>
-			<include name="org/jboss/annotation/**"/>
-			<include name="org/jboss/ws/**"/>
+    <!-- Compile interfaces with jdk1.4 -->
+    <mkdir dir="${core.output.classes14.dir}"/>
+    <javac srcdir="${core.java.dir}" destdir="${core.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}" deprecation="${javac.deprecation}"
+           failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
+      <include name="javax/xml/rpc/**"/>
+      <include name="javax/xml/soap/**"/>
+      <classpath refid="thirdparty.classpath"/>
+    </javac>
+
+    <!-- Compile core classes with jdk1.5 -->
+    <mkdir dir="${core.output.classes.dir}"/>
+    <javac srcdir="${core.java.dir}" sourcepath="" destdir="${core.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
+           deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}" source="1.5" target="1.5">
+      <include name="javax/annotation/**"/>
+      <include name="javax/xml/ws/**"/>
+      <include name="javax/jws/**"/>
+      <include name="org/jboss/annotation/**"/>
+      <include name="org/jboss/ws/**"/>
       <include name="org/jboss/wsf/stack/jbws/**"/>
-			<classpath path="${core.output.classes14.dir}"/>
-			<classpath refid="thirdparty.classpath"/>
-		</javac>
-	</target>
+      <classpath path="${core.output.classes14.dir}"/>
+      <classpath refid="thirdparty.classpath"/>
+    </javac>
+  </target>
 
-	<!-- Compile etc files (manifests and such) -->
-	<target name="compile-etc" depends="init">
-		<mkdir dir="${core.output.etc.dir}"/>
-		<copy todir="${core.output.etc.dir}" filtering="yes" overwrite="true">
-			<fileset dir="${core.etc.dir}"/>
-			<filterset>
-				<filter token="java.vm.version" value="${java.vm.version}"/>
-				<filter token="java.vm.vendor" value="${java.vm.vendor}"/>
-				<filter token="build.id" value="${build.id}"/>
-				<filter token="implementation.version" value="jbossws-native-${version.id}"/>
-				<filtersfile file="${core.dir}/version.properties"/>
-			</filterset>
-		</copy>
-	</target>
-	
-	<!-- ================================================================== -->
-	<!-- Archives                                                           -->
-	<!-- ================================================================== -->
+  <!-- Compile etc files (manifests and such) -->
+  <target name="compile-etc" depends="init">
+    <mkdir dir="${core.output.etc.dir}"/>
+    <copy todir="${core.output.etc.dir}" filtering="yes" overwrite="true">
+      <fileset dir="${core.etc.dir}"/>
+      <filterset>
+        <filter token="java.vm.version" value="${java.vm.version}"/>
+        <filter token="java.vm.vendor" value="${java.vm.vendor}"/>
+        <filter token="build.id" value="${build.id}"/>
+        <filter token="implementation.version" value="jbossws-native-${version.id}"/>
+        <filtersfile file="${core.dir}/version.properties"/>
+      </filterset>
+    </copy>
+  </target>
 
-	<!--
-	  | Build all jar files.
-	  -->
-	<target name="jars" depends="compile,jars-jboss40,jars-jboss42,jars-jboss50" description="Builds all jar files.">
-	</target>
+  <!-- ================================================================== -->
+  <!-- Archives                                                           -->
+  <!-- ================================================================== -->
 
-	<!--
-	  |  Build all jar files.
-	  -->
-	<target name="jars-common" depends="compile">
+  <!--
+    | Build all jar files.
+    -->
+  <target name="jars" depends="compile,jars-jboss40,jars-jboss42,jars-jboss50" description="Builds all jar files.">
+  </target>
 
-		<!-- Build jboss-jaxrpc.jar -->
-		<mkdir dir="${core.output.lib.dir}"/>
-		<jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${core.output.etc.dir}/default.mf">
-			<fileset dir="${core.output.classes14.dir}">
-				<include name="javax/xml/rpc/**"/>
-			</fileset>
-		</jar>
+  <!--
+    |  Build all jar files.
+    -->
+  <target name="jars-common" depends="compile">
 
-		<!-- Build jboss-saaj.jar -->
-		<mkdir dir="${core.output.lib.dir}"/>
-		<jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${core.output.etc.dir}/default.mf">
-			<fileset dir="${core.output.classes14.dir}">
-				<include name="javax/xml/soap/**"/>
-			</fileset>
-			<metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
-		</jar>
+    <!-- Build jboss-jaxrpc.jar -->
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
+        <include name="javax/xml/rpc/**"/>
+      </fileset>
+    </jar>
 
-		<!-- Build jboss-jaxws.jar -->
+    <!-- Build jboss-saaj.jar -->
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes14.dir}">
+        <include name="javax/xml/soap/**"/>
+      </fileset>
+      <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
+    </jar>
+
+    <!-- Build jboss-jaxws.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
     <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
-      <include name="javax/annotation/**"/>
-      <include name="javax/jws/**"/>
-      <include name="javax/xml/ws/**"/>
-      <exclude name="javax/xml/ws/**/*21.class"/>
-      <exclude name="javax/xml/ws/Action.class"/>
-      <exclude name="javax/xml/ws/EndpointReference.class"/>
-      <exclude name="javax/xml/ws/FaultAction.class"/>
-      <exclude name="javax/xml/ws/RespectBinding.class"/>
-      <exclude name="javax/xml/ws/RespectBindingFeature.class"/>
-      <exclude name="javax/xml/ws/WebServiceFeature.class"/>
-      <exclude name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
-      <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
-      <exclude name="javax/xml/ws/soap/AddressingFeature.class"/>              
-      <exclude name="javax/xml/ws/addressing/**"/>
-      <exclude name="javax/xml/ws/soap/Addressing.class"/>
-      <exclude name="javax/xml/ws/soap/MTOM.class"/>
-      <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
-      <exclude name="javax/xml/ws/wsaddressing/**"/>
+        <include name="javax/annotation/**"/>
+        <include name="javax/jws/**"/>
+        <include name="javax/xml/ws/**"/>
+        <exclude name="javax/xml/ws/**/*21.class"/>
+        <exclude name="javax/xml/ws/Action.class"/>
+        <exclude name="javax/xml/ws/EndpointReference.class"/>
+        <exclude name="javax/xml/ws/FaultAction.class"/>
+        <exclude name="javax/xml/ws/RespectBinding.class"/>
+        <exclude name="javax/xml/ws/RespectBindingFeature.class"/>
+        <exclude name="javax/xml/ws/WebServiceFeature.class"/>
+        <exclude name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
+        <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
+        <exclude name="javax/xml/ws/soap/AddressingFeature.class"/>
+        <exclude name="javax/xml/ws/addressing/**"/>
+        <exclude name="javax/xml/ws/soap/Addressing.class"/>
+        <exclude name="javax/xml/ws/soap/MTOM.class"/>
+        <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
+        <exclude name="javax/xml/ws/wsaddressing/**"/>
       </fileset>
-			<metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
+      <metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
     </jar>
 
     <!-- Build jboss-jaxws-ext.jar -->
-    <!--mkdir dir="${core.output.lib.dir}"/>
+    <mkdir dir="${core.output.lib.dir}"/>
     <jar jarfile="${core.output.lib.dir}/jboss-jaxws-ext.jar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
-      <include name="javax/xml/ws/**/*21.class"/>
-      <include name="javax/xml/ws/Action.class"/>
-      <include name="javax/xml/ws/EndpointReference.class"/>
-      <include name="javax/xml/ws/FaultAction.class"/>
-      <include name="javax/xml/ws/RespectBinding.class"/>
-      <include name="javax/xml/ws/RespectBindingFeature.class"/>
-      <include name="javax/xml/ws/WebServiceFeature.class"/>
-      <include name="javax/xml/ws/addressing/**"/>
-      <include name="javax/xml/ws/wsaddressing/**"/>
-      </fileset>
-			<metainf dir="${core.resources.dir}/jboss-jaxws-ext.jar/META-INF"/>
-    </jar-->
+        <!-- JAX-WS 2.1 extensions -->
+        <include name="javax/xml/ws/**/*21.class"/>
+        <include name="javax/xml/ws/Action.class"/>
+        <include name="javax/xml/ws/EndpointReference.class"/>
+        <include name="javax/xml/ws/FaultAction.class"/>
+        <include name="javax/xml/ws/RespectBinding.class"/>
+        <include name="javax/xml/ws/RespectBindingFeature.class"/>
+        <include name="javax/xml/ws/WebServiceFeature.class"/>
+        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
+        <include name="javax/xml/ws/soap/AddressingFeature.class"/>
+        <include name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
+        <include name="javax/xml/ws/addressing/**"/>
+        <include name="javax/xml/ws/soap/Addressing.class"/>
+        <include name="javax/xml/ws/soap/MTOM.class"/>
+        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
+        <include name="javax/xml/ws/wsaddressing/**"/> </fileset>
+      <metainf dir="${core.resources.dir}/jboss-jaxws-ext.jar/META-INF"/>
+    </jar>
 
     <!-- Build jbossws-core.jar -->
-		<mkdir dir="${core.output.lib.dir}"/>
-		<jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
-			<fileset dir="${core.output.classes.dir}">
-				<include name="org/jboss/annotation/**"/>
-				<include name="org/jboss/ws/**"/>
-
-        <!-- JAX-WS 2.1 extensions -->
-        <include name="javax/xml/ws/**/*21.class"/>
-        <include name="javax/xml/ws/Action.class"/>
-        <include name="javax/xml/ws/EndpointReference.class"/>
-        <include name="javax/xml/ws/FaultAction.class"/>
-        <include name="javax/xml/ws/RespectBinding.class"/>
-        <include name="javax/xml/ws/RespectBindingFeature.class"/>
-        <include name="javax/xml/ws/WebServiceFeature.class"/>
-        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <include name="javax/xml/ws/soap/AddressingFeature.class"/>
-        <include name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
-        <include name="javax/xml/ws/addressing/**"/>
-        <include name="javax/xml/ws/soap/Addressing.class"/>
-        <include name="javax/xml/ws/soap/MTOM.class"/>
-        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
-
-        <include name="javax/xml/ws/wsaddressing/**"/>
-
+    <mkdir dir="${core.output.lib.dir}"/>
+    <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
+        <include name="org/jboss/annotation/**"/>
+        <include name="org/jboss/ws/**"/>
       </fileset>
-			<fileset dir="${core.resources.dir}">
-				<include name="schema/**"/>
-				<include name="dtd/**"/>
-			</fileset>			
-			<metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
-		</jar>
+      <fileset dir="${core.resources.dir}">
+        <include name="schema/**"/>
+        <include name="dtd/**"/>
+      </fileset>
+      <metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
+    </jar>
 
-		<!-- Build jbossws-client.jar -->
-		<jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${core.output.etc.dir}/default.mf">
-			<fileset dir="${core.output.classes.dir}">
-				<include name="org/jboss/wsf/**"/>
-				<include name="org/jboss/ws/**"/>
+    <!-- Build jbossws-client.jar -->
+    <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.classes.dir}">
+        <include name="org/jboss/wsf/**"/>
+        <include name="org/jboss/ws/**"/>
 
         <!-- JAX-WS 2.1 extensions -->
         <include name="javax/xml/ws/**/*21.class"/>
@@ -224,20 +211,20 @@
         <include name="javax/xml/ws/soap/MTOM.class"/>
         <include name="javax/xml/ws/soap/MTOMFeature.class"/>
         <include name="javax/xml/ws/wsaddressing/**"/>
-        
+
       </fileset>
-			<fileset dir="${core.resources.dir}">
-				<include name="schema/**"/>
-				<include name="dtd/**"/>
-			</fileset>
-			<fileset dir="${core.etc.dir}">
-				<include name="log4j.properties"/>
-				<include name="ws*.bat"/>
-				<include name="ws*.sh"/>
-			</fileset>
-			<metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
-			<metainf dir="${core.resources.dir}/standard-config"/>
-		</jar>
+      <fileset dir="${core.resources.dir}">
+        <include name="schema/**"/>
+        <include name="dtd/**"/>
+      </fileset>
+      <fileset dir="${core.etc.dir}">
+        <include name="log4j.properties"/>
+        <include name="ws*.bat"/>
+        <include name="ws*.sh"/>
+      </fileset>
+      <metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
+      <metainf dir="${core.resources.dir}/standard-config"/>
+    </jar>
 
     <!-- Build jbossws-native.jar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-native.jar" manifest="${core.output.etc.dir}/default.mf">
@@ -246,7 +233,7 @@
       </fileset>
       <metainf dir="${core.resources.dir}/jbossws-native.jar/META-INF"/>
     </jar>
-    
+
     <!-- Build jbossws-context.war -->
     <copy todir="${core.output.lib.dir}/jbossws-context.war">
       <fileset dir="${core.resources.dir}/jbossws-context.war">
@@ -255,28 +242,28 @@
         <include name="WEB-INF/**"/>
       </fileset>
     </copy>
-    
-		<!-- Build jbossws-core-scripts.zip -->
-		<zip zipfile="${core.output.lib.dir}/jbossws-core-scripts.zip" >
-			<fileset dir="${core.output.etc.dir}">
-				<include name="wsrunclient.bat"/>
-				<include name="wstools.bat"/>
-			</fileset>
-			<zipfileset dir="${core.output.etc.dir}" filemode="755">
-				<include name="wsrunclient.sh"/>
-				<include name="wstools.sh"/>
-			</zipfileset>
-		</zip>
 
-		<!-- Build jbossws-core-src.zip -->
-		<zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip" >
-			<fileset dir="${core.java.dir}"/>
-		</zip>
+    <!-- Build jbossws-core-scripts.zip -->
+    <zip zipfile="${core.output.lib.dir}/jbossws-core-scripts.zip" >
+      <fileset dir="${core.output.etc.dir}">
+        <include name="wsrunclient.bat"/>
+        <include name="wstools.bat"/>
+      </fileset>
+      <zipfileset dir="${core.output.etc.dir}" filemode="755">
+        <include name="wsrunclient.sh"/>
+        <include name="wstools.sh"/>
+      </zipfileset>
+    </zip>
 
-	</target>
+    <!-- Build jbossws-core-src.zip -->
+    <zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip" >
+      <fileset dir="${core.java.dir}"/>
+    </zip>
+
+  </target>
 
   <target name="jars-jboss50" depends="jars-common" if="jboss50.home">
-    
+
     <!-- Concat jbossws-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native50/jbossws-beans.xml">
       <header trimleading="yes">
@@ -287,7 +274,7 @@
         &lt;/deployment&gt;
       </footer>
     </concat>
-    
+
     <!-- Build jbossws-native50.sar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-native50.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
@@ -301,7 +288,7 @@
         <include name="policy.jar"/>
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
-      	<include name="wstx.jar"/>
+        <include name="wstx.jar"/>
         <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
@@ -311,13 +298,13 @@
         <include name="jbossws-beans.xml"/>
       </metainf>
     </jar>
-    
+
   </target>
-  
+
   <target name="jars-jboss42" depends="jars-common" if="jboss42.home">
-    
+
     <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss42-resources.zip"/>
-    
+
     <!-- Concat jboss-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native42/jbossws.beans/META-INF/jboss-beans.xml">
       <header trimleading="yes">
@@ -329,7 +316,7 @@
         &lt;/deployment&gt;
       </footer>
     </concat>
-    
+
     <!-- Build jbossws-native42.sar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-native42.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
@@ -338,6 +325,7 @@
       </fileset>
       <fileset dir="${core.dir}/output/lib">
         <include name="jboss-jaxws.jar"/>
+         <include name="jboss-jaxws-ext.jar"/>
         <include name="jboss-jaxrpc.jar"/>
         <include name="jboss-saaj.jar"/>
         <include name="jbossws-core.jar"/>
@@ -350,7 +338,7 @@
         <include name="stax-api.jar"/>
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
-      	<include name="wstx.jar"/>
+        <include name="wstx.jar"/>
         <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <fileset dir="${core.output.lib.dir}/jbossws-native42">
@@ -364,11 +352,11 @@
       </metainf>
     </jar>
   </target>
-  
+
   <target name="jars-jboss40" depends="jars-common" if="jboss40.home">
-    
+
     <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss40-resources.zip"/>
-    
+
     <!-- Concat jboss-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans.xml">
       <header trimleading="yes">
@@ -380,7 +368,7 @@
         &lt;/deployment&gt;
       </footer>
     </concat>
-    
+
     <!-- Concat jboss-beans-no-ejb3.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans-no-ejb3.xml">
       <header trimleading="yes">
@@ -401,6 +389,7 @@
       </fileset>
       <fileset dir="${core.dir}/output/lib">
         <include name="jboss-jaxws.jar"/>
+         <include name="jboss-jaxws-ext.jar"/>
         <include name="jbossws-core.jar"/>
       </fileset>
       <fileset dir="${core.dir}/thirdparty">
@@ -410,7 +399,7 @@
         <include name="stax-api.jar"/>
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
-      	<include name="wstx.jar"/>
+        <include name="wstx.jar"/>
         <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <fileset dir="${core.output.lib.dir}/jbossws-native40">
@@ -426,42 +415,42 @@
     </jar>
   </target>
 
-	<!-- ================================================================== -->
-	<!-- Documentation                                                      -->
-	<!-- ================================================================== -->
+  <!-- ================================================================== -->
+  <!-- Documentation                                                      -->
+  <!-- ================================================================== -->
 
-	<!-- Generate the JavaDoc -->
-	<target name="javadoc" depends="init" description="Generate the Javadoc" if="javadoc">
+  <!-- Generate the JavaDoc -->
+  <target name="javadoc" depends="init" description="Generate the Javadoc" if="javadoc">
 
-		<mkdir dir="${core.output.apidocs.dir}"/>
-		<javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">
-			<classpath refid="thirdparty.classpath"/>
-			<packageset dir="${core.java.dir}" defaultexcludes="yes">
-				<include name="org/jboss/ws/**"/>
-			</packageset>
-			<doctitle><![CDATA[<h1>JBossWS Native</h1>]]></doctitle>
-			<tag name="todo" scope="all" description="To do:"/>
-			<group title="Core" packages="org.jboss.ws.core*"/>
-			<group title="Metadata" packages="org.jboss.ws.metadata*"/>
-			<group title="Integration" packages="org.jboss.ws.integration*"/>
-			<group title="Extensions" packages="org.jboss.ws.extensions*"/>
-			<group title="Tools" packages="org.jboss.ws.tools*"/>
-		</javadoc>
-	</target>
+    <mkdir dir="${core.output.apidocs.dir}"/>
+    <javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">
+      <classpath refid="thirdparty.classpath"/>
+      <packageset dir="${core.java.dir}" defaultexcludes="yes">
+        <include name="org/jboss/ws/**"/>
+      </packageset>
+      <doctitle><![CDATA[<h1>JBossWS Native</h1>]]></doctitle>
+      <tag name="todo" scope="all" description="To do:"/>
+      <group title="Core" packages="org.jboss.ws.core*"/>
+      <group title="Metadata" packages="org.jboss.ws.metadata*"/>
+      <group title="Integration" packages="org.jboss.ws.integration*"/>
+      <group title="Extensions" packages="org.jboss.ws.extensions*"/>
+      <group title="Tools" packages="org.jboss.ws.tools*"/>
+    </javadoc>
+  </target>
 
-	<target name="clean" depends="prepare" description="Cleans up most generated files.">
-		<delete dir="${core.output.dir}"/>
-	</target>
+  <target name="clean" depends="prepare" description="Cleans up most generated files.">
+    <delete dir="${core.output.dir}"/>
+  </target>
 
-	<target name="clobber" depends="clean" description="Cleans up all generated files.">
-		<delete dir="${core.dir}/thirdparty"/>
-	</target>
+  <target name="clobber" depends="clean" description="Cleans up all generated files.">
+    <delete dir="${core.dir}/thirdparty"/>
+  </target>
 
-	<target name="main" description="Executes the default target (most)." depends="most"/>
+  <target name="main" description="Executes the default target (most)." depends="most"/>
 
-	<target name="most" description="Builds almost everything." depends="jars,tests-main"/>
+  <target name="most" description="Builds almost everything." depends="jars,tests-main"/>
 
-	<target name="all" description="Create a distribution zip file" depends="most">
-	</target>
+  <target name="all" description="Create a distribution zip file" depends="most">
+  </target>
 
 </project>
