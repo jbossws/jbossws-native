@@ -381,7 +381,7 @@
       </footer>
     </concat>
     
-    <!-- Concat jboss-beans.xml -->
+    <!-- Concat jboss-beans-no-ejb3.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans-no-ejb3.xml">
       <header trimleading="yes">
         &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
