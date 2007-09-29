@@ -73,8 +73,12 @@
     <property name="requires">RuntimeLoader, ContainerMetaData, URLPattern, VFSRoot</property>
     <property name="provides">UnifiedMetaDataModel</property>
   </bean>
-  
-  <!-- Deployment aspect installers -->
+
+  <bean name="WSJAXBIntroDeploymentAspect" class="org.jboss.wsf.stack.jbws.JAXBIntroDeploymentAspect">
+    <property name="requires">UnifiedMetaDataModel, RuntimeLoader</property>
+  </bean>
+
+      <!-- Deployment aspect installers -->
   <!-- Phase 1 -->
   <bean name="WSNativeDeploymentAspectInstallerPreJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
     <property name="manager"><inject bean="WSDeploymentAspectManagerPreJSE"/></property>
@@ -98,6 +102,7 @@
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
+        <inject bean="WSJAXBIntroDeploymentAspect"/>
       </set>
     </property>
     <depends>WSDeploymentAspectInstallerPostJSE</depends>
@@ -115,6 +120,7 @@
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
+        <inject bean="WSJAXBIntroDeploymentAspect"/>
       </set>
     </property>
     <depends>WSDeploymentAspectInstallerEJB</depends>
@@ -132,6 +138,7 @@
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
+        <inject bean="WSJAXBIntroDeploymentAspect"/>
       </set>
     </property>
     <depends>WSDeploymentAspectInstallerEndpointAPI</depends>
