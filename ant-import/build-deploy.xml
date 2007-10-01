@@ -96,7 +96,8 @@
 				jbosshome="${jboss40.home}"/>
 	</target>
   
-	<target name="deploy-jboss40-no-ejb3" depends="deploy-jboss40-ejb3" unless="jboss40.ejb3.available">
+	<target name="deploy-jboss40-no-ejb3" depends="jars-jboss40,undeploy-jboss40,deploy-jboss40-ejb3" unless="jboss40.ejb3.available"
+            description="Deploy jbossws to jboss40 without EJB3 support">
             <macro-setup-native40-no-ejb3/>
 	</target>
   
