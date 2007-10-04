@@ -3,11 +3,11 @@ package org.jboss.test.ws.jaxws.jbws1795.generated;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebEndpoint;
 import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceFeature;
 
 
 /**
@@ -50,17 +50,4 @@ public class TravelAgentBeanService
     public TravelAgentEndpoint getTravelAgentBeanPort() {
         return (TravelAgentEndpoint)super.getPort(new QName("http://service.jbws1795.jaxws.ws.test.jboss.org/", "TravelAgentBeanPort"), TravelAgentEndpoint.class);
     }
-
-    /**
-     * 
-     * @param features
-     *     A list of {@link javax.xml.ws.WebServiceFeature} to configure on the proxy.  Supported features not in the <code>features</code> parameter will have their default values.
-     * @return
-     *     returns TravelAgentEndpoint
-     */
-    @WebEndpoint(name = "TravelAgentBeanPort")
-    public TravelAgentEndpoint getTravelAgentBeanPort(WebServiceFeature... features) {
-        return (TravelAgentEndpoint)super.getPort(new QName("http://service.jbws1795.jaxws.ws.test.jboss.org/", "TravelAgentBeanPort"), TravelAgentEndpoint.class, features);
-    }
-
 }
