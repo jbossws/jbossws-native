@@ -29,36 +29,40 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
+import javax.xml.ws.Binding21;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.Binding21;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
-import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.ConfigProvider;
-import org.jboss.ws.core.soap.SOAPFaultImpl;
+import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemotingConnection;
 import org.jboss.ws.core.client.SOAPRemotingConnection;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
+import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**
  * The Dispatch interface provides support for the dynamic invocation of a service endpoint operations. 
@@ -67,7 +71,7 @@ import org.jboss.ws.metadata.config.ConfigurationProvider;
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class DispatchImpl<T> implements Dispatch<T>
+public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
 {
    // provide logging
    private final Logger log = Logger.getLogger(DispatchImpl.class);
@@ -76,6 +80,7 @@ public class DispatchImpl<T> implements Dispatch<T>
    private EndpointMetaData epMetaData;
    private JAXBContext jaxbContext;
    private ExecutorService executor;
+   private String securityConfig;
    private Class type;
    private Mode mode;
 
@@ -378,5 +383,54 @@ public class DispatchImpl<T> implements Dispatch<T>
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
    {
       throw new NotImplementedException();
+   }
+
+   public String getConfigFile()
+   {
+      return epMetaData.getConfigFile();
+   }
+
+   public String getConfigName()
+   {
+      return epMetaData.getConfigName();
+   }
+
+   public void setConfigName(String configName)
+   {
+      epMetaData.setConfigName(configName);
+   }
+
+   public void setConfigName(String configName, String configFile)
+   {
+      epMetaData.setConfigName(configName, configFile);
+   }
+   
+   public String getSecurityConfig()
+   {
+      return securityConfig;
+   }
+
+   public void setSecurityConfig(String securityConfig)
+   {
+      this.securityConfig = securityConfig;
+      
+      if (securityConfig != null)
+      {
+         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+         if (serviceMetaData.getSecurityConfiguration() == null)
+         {
+            try
+            {
+               WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
+               UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
+               WSSecurityConfiguration config = wsseConfFactory.createConfiguration(vfsRoot, securityConfig);
+               serviceMetaData.setSecurityConfiguration(config);
+            }
+            catch (IOException ex)
+            {
+               WSException.rethrow("Cannot set security config", ex);
+            }
+         }
+      }
    }
 }
