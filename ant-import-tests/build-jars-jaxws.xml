@@ -380,14 +380,6 @@
       </fileset>
     </copy>
 
-    <!-- jaxws-jbws1795 -->
-    <war warfile="${tests.output.dir}/libs/jaxws-jbws1795.war" webxml="${tests.output.dir}/resources/jaxws/jbws1795/WEB-INF/web.xml">
-      <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/jbws1795/service/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/jbws1795/handcoded/*.class"/>
-      </classes>
-    </war>
-
     <!-- jaxws namespace -->
     <war warfile="${tests.output.dir}/libs/jaxws-namespace.war" webxml="${tests.output.dir}/resources/jaxws/namespace/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
