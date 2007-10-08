@@ -380,6 +380,13 @@
       </fileset>
     </copy>
 
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1799.jar">
+        <fileset dir="${tests.output.dir}/classes">
+            <include name="org/jboss/test/ws/jaxws/jbws1799/*.class"/>
+            <exclude name="org/jboss/test/ws/jaxws/jbws1799/*TestCase.class"/>
+        </fileset>
+    </jar>
+
     <!-- jaxws namespace -->
     <war warfile="${tests.output.dir}/libs/jaxws-namespace.war" webxml="${tests.output.dir}/resources/jaxws/namespace/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
