@@ -61,9 +61,9 @@ public class UserAccountService implements IUserAccountService
    @TransactionAttribute(javax.ejb.TransactionAttributeType.SUPPORTS)
    public boolean authenticate
    (
-         @WebParam(name="username") String aUsername
+         @WebParam(name="username") String username
    )
    {
-       return true;
+       return "authorized".equals(username);
    }
 }

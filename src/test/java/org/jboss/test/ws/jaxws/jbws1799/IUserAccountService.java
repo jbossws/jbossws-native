@@ -22,6 +22,8 @@
 package org.jboss.test.ws.jaxws.jbws1799;
 
 import javax.ejb.Remote;
+import javax.jws.WebParam;
+import javax.jws.WebService;
 
 /**
  * First service interface
@@ -31,7 +33,11 @@ import javax.ejb.Remote;
  * @since Oct 8, 2007
  */
 @Remote
+@WebService
 public interface IUserAccountService
 {
-   public boolean authenticate(String aUsername);
+   public boolean authenticate
+   (
+         @WebParam(name="username") String username
+   );
 }

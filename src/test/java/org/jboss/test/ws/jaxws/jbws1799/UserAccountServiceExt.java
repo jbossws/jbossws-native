@@ -65,6 +65,6 @@ public class UserAccountServiceExt implements IUserAccountServiceExt
          @WebParam(name="password") String password
    )
    {
-       return true;
+      return "authorized".equals(username) && "password".equals(password);
    }
 }
