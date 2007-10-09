@@ -388,6 +388,13 @@
         </fileset>
     </jar>
 
+    <!-- jaxws-jbws1813 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1813.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1813/EndpointImpl.class"/>
+      </fileset>
+    </jar>
+
     <!-- jaxws-jbws1840 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1840.jar">
       <fileset dir="${tests.output.dir}/classes">
