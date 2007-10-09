@@ -30,6 +30,14 @@ if $cygwin ; then
         JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
 fi
 
+while [ $# -ge 1 ]; do
+   case $1 in
+       "-classpath") WSRUNCLIENT_CLASSPATH="$WSRUNCLIENT_CLASSPATH:$2"; shift;;
+       *) args="$args \"$1\"";;
+   esac
+   shift
+done
+
 # Setup JBOSS_HOME
 if [ "x$JBOSS_HOME" = "x" ]; then
     # get the full path (without any relative bits)
@@ -65,14 +73,6 @@ WSRUNCLIENT_CLASSPATH="$WSRUNCLIENT_CLASSPATH:$JBOSS_HOME/client/jboss-common-co
 
 # JBossAS-4.2 subset of jbossall-client.jar
 WSRUNCLIENT_CLASSPATH="$WSRUNCLIENT_CLASSPATH:$JBOSS_HOME/client/jboss-common-client.jar"
-
-while [ $# -ge 1 ]; do
-   case $1 in
-       "-classpath") WSRUNCLIENT_CLASSPATH="$WSRUNCLIENT_CLASSPATH:$2"; shift;;
-       *) args="$args \"$1\"";;
-   esac
-   shift
-done
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
