@@ -28,11 +28,12 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.annotation.WebContext;
 
 @WebService(name = "Endpoint", serviceName = "EndpointService", targetNamespace = "http://org.jboss.ws/jbws1813")
 @Stateless(name = "Endpoint")
 @SOAPBinding(style = Style.RPC)
-//@WebContext(contextRoot="/jaxws-jbws1813")
+@WebContext(urlPattern="/*")
 public class EndpointImpl
 {
    // Provide logging
