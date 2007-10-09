@@ -362,7 +362,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (requestWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
-         requestWrapperType = packageName + ".jaxws." + JavaUtils.capitalize(method.getName());
+         requestWrapperType = packageName + ".jaxws." + generateId(method) + "." + JavaUtils.capitalize(method.getName());
       }
 
       // JAX-WS p.37 pg.1, the annotation only affects the element name, not the type name
@@ -372,7 +372,29 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       return wrapperParameter;
    }
-
+   
+   /**
+    * Generates unique string used for package name creation
+    */
+   private static String generateId(Method method)
+   {
+      int hashCode = 17;
+      hashCode = 37 * hashCode + method.getDeclaringClass().getName().hashCode();
+      hashCode = 37 * hashCode + method.getName().hashCode(); 
+      hashCode = 37 * hashCode + generateId(method.getParameterTypes()); 
+      return ("generated_" + hashCode).replace('-', '_');
+   }
+   
+   private static int generateId(Class<?>[] args)
+   {
+      int result = 17;
+      for (int i = 0; i < args.length; i++)
+      {
+         result = 37 * result + args[i].getName().hashCode();
+      }
+      return result;
+   }
+   
    private ParameterMetaData createResponseWrapper(OperationMetaData operation, Method method)
    {
       QName operationQName = operation.getQName();
@@ -395,7 +417,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (responseWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
-         responseWrapperType = packageName + ".jaxws." + JavaUtils.capitalize(method.getName()) + "Response";
+         responseWrapperType = packageName + ".jaxws." + generateId(method) + "." + JavaUtils.capitalize(method.getName()) + "Response";
       }
 
       ParameterMetaData retMetaData = new ParameterMetaData(operation, xmlName, xmlType, responseWrapperType);
