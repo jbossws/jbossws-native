@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import java.lang.reflect.Method;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Observer;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
@@ -614,9 +616,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (config == null)
          initEndpointConfig();
 
-      // register any configurable with the ConfigProvider
-      configObservable.addObserver(configurable);
-
       // SOAPBinding configuration
       if (configurable instanceof CommonBindingProvider)
       {
@@ -733,10 +732,50 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    class ConfigObservable extends Observable
    {
+
+      private List<WeakReference<Observer>> observer = new ArrayList<WeakReference<Observer>>();
+
       public void doNotify(Object object)
       {
          setChanged();
          notifyObservers(object);
+      }
+
+      public synchronized void addObserver(Observer o)
+      {
+         observer.add( new WeakReference(o));
+      }
+
+      public synchronized void deleteObserver(Observer o)
+      {
+         for(WeakReference<Observer> w : observer)
+         {
+            Observer tmp = w.get();
+            if(tmp.equals(o))
+            {
+               observer.remove(o);
+               break;
+            }
+
+         }
+      }
+
+      public void notifyObservers()
+      {
+         notifyObservers(null);
+      }
+
+      public void notifyObservers(Object arg)
+      {
+         if(hasChanged())
+         {
+            for(WeakReference<Observer> w : observer)
+            {
+               Observer tmp = w.get();
+               tmp.update(this, arg);
+
+            }
+         }
       }
    }
 
