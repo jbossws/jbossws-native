@@ -9,6 +9,7 @@
     <artifact id="jbossws-core.jar"/>
     <artifact id="jboss-jaxrpc.jar"/>
     <artifact id="jboss-jaxws.jar"/>
+    <artifact id="jboss-jaxws-ext.jar"/>
     <artifact id="jboss-saaj.jar"/>
     <artifact id="jbossws-core-src.zip"/>
     <artifact id="jbossws-core-scripts.zip"/>
@@ -55,6 +56,7 @@
       <include input="jbossws-core.jar"/>
       <include input="jboss-jaxrpc.jar"/>
       <include input="jboss-jaxws.jar"/>
+      <include input="jboss-jaxws-ext.jar"/>
       <include input="jboss-saaj.jar"/>
     </export>
     
