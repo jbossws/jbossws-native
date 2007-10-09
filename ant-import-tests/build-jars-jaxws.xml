@@ -380,11 +380,19 @@
       </fileset>
     </copy>
 
+    <!-- jaxws-jbws1799 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1799.jar">
         <fileset dir="${tests.output.dir}/classes">
             <include name="org/jboss/test/ws/jaxws/jbws1799/*.class"/>
             <exclude name="org/jboss/test/ws/jaxws/jbws1799/*TestCase.class"/>
         </fileset>
+    </jar>
+
+    <!-- jaxws-jbws1840 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1840.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1840/SecureEndpointImpl.class"/>
+      </fileset>
     </jar>
 
     <!-- jaxws namespace -->
