@@ -40,10 +40,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * Provides access to the protocol binding.
- * <p>
- * <b>NOTE</b>: CommonBindingProvider registers with EndpointMetaData through a observer pattern.
- * Which means the  meta data model holds a strong reference to the binding provider which can
- * easily cause memory problems. Handle with care.
  *
  * @author Thomas.Diesler@jboss.com
  * @author Heiko.Braun@jboss.com
