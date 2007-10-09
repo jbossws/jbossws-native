@@ -38,7 +38,7 @@ public interface IUserAccountServiceExt
 {
    public boolean authenticate
    (
-         @WebParam(name="username") String username, 
+         @WebParam(name="username") String username,
          @WebParam(name="password") String password
    );
 }
