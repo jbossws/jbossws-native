@@ -141,7 +141,6 @@
                <include name="jbossws-client.jar"/>
             </fileset>
             <fileset dir="@{thirdpartylibs}">
-               <include name="jbossws-jboss42.jar"/>
                <include name="jaxb-api.jar"/>
                <include name="jaxb-impl.jar"/>
                <include name="jaxb-xjc.jar"/>
@@ -161,12 +160,6 @@
                <include name="jboss-xml-binding.jar"/>
             </fileset>
          </copy>
-         <copy todir="${jboss42.home}/server/${jboss.server.instance}/lib" overwrite="true">
-            <fileset dir="@{thirdpartylibs}">
-               <include name="jbossws-jboss42.jar"/>
-            </fileset>
-         </copy>
-
          <mkdir dir="${jboss42.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
          <unjar dest="${jboss42.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
          <mkdir dir="${jboss42.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
@@ -199,7 +192,6 @@
               <include name="jboss-jaxws-ext.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
-               <include name="jbossws-jboss42.jar"/>
                <include name="policy.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
@@ -217,7 +209,6 @@
                <include name="jbossws-integration.jar"/>
             </fileset>
             <fileset dir="${jboss42.home}/server/${jboss.server.instance}/lib">
-               <include name="jbossws-jboss42.jar"/>
                <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
               <include name="jboss-jaxws-ext.jar"/>

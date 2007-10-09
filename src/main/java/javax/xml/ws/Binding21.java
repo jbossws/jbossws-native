@@ -21,6 +21,8 @@
  */
 package javax.xml.ws;
 
+// $Id$
+
 /**
  * @author Heiko.Braun@jboss.com
  * @version $Revision$

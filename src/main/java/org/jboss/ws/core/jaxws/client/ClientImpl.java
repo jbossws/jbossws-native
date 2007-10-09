@@ -37,7 +37,6 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.wsaddressing.BindingProvider21;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.MessageContext;
@@ -47,6 +46,7 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
+import javax.xml.ws.wsaddressing.BindingProvider21;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.transport.http.HTTPMetadataConstants;
@@ -59,11 +59,11 @@ import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
-import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
@@ -79,22 +79,21 @@ public class ClientImpl extends CommonClient implements BindingProvider21, Confi
    // provide logging
    private static Logger log = Logger.getLogger(ClientImpl.class);
 
-	// the associated endpoint meta data
-	private final EndpointMetaData epMetaData;
+   // the associated endpoint meta data
+   private final ClientEndpointMetaData epMetaData;
 
-	// Keep a handle on the resolver so that updateConfig calls may revisit the associated chains
-	private final HandlerResolver handlerResolver;
-	
-	private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
+   // Keep a handle on the resolver so that updateConfig calls may revisit the associated chains
+   private final HandlerResolver handlerResolver;
 
-	private static HandlerType[] HANDLER_TYPES = new HandlerType[] {HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST};
-	
-	public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
+   private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
+   private static HandlerType[] HANDLER_TYPES = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
+
+   public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
    {
       super(epMetaData);
       setTargetEndpointAddress(epMetaData.getEndpointAddress());
 
-      this.epMetaData = epMetaData;
+      this.epMetaData = (ClientEndpointMetaData)epMetaData;
       this.handlerResolver = handlerResolver;
 
       initBindingHandlerChain(false);
@@ -112,31 +111,31 @@ public class ClientImpl extends CommonClient implements BindingProvider21, Confi
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
 
-		PortInfo portInfo = getPortInfo(epMetaData);
+      PortInfo portInfo = epMetaData.getPortInfo();
 
-		if (handlerResolver != null)
-		{
+      if (handlerResolver != null)
+      {
 
-			boolean jbossHandlerResolver = handlerResolver instanceof HandlerResolverImpl;
-			
-			if (jbossHandlerResolver) // knows about PRE and POST handlers
-			{
-				HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
-				impl.initHandlerChain(epMetaData, HandlerType.PRE, clearExistingHandlers);
-				impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
-				impl.initHandlerChain(epMetaData, HandlerType.POST, clearExistingHandlers);
+         boolean jbossHandlerResolver = handlerResolver instanceof HandlerResolverImpl;
 
-				List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
-				List<Handler> postChain = impl.getHandlerChain(portInfo, HandlerType.POST);
-				
-				binding.setHandlerChain(postChain, HandlerType.POST);
-				binding.setHandlerChain(preChain, HandlerType.PRE);
-			}
+         if (jbossHandlerResolver) // knows about PRE and POST handlers
+         {
+            HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
+            impl.initHandlerChain(epMetaData, HandlerType.PRE, clearExistingHandlers);
+            impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
+            impl.initHandlerChain(epMetaData, HandlerType.POST, clearExistingHandlers);
 
-			// The regular handler chain
-			List<Handler> endpointChain = handlerResolver.getHandlerChain(portInfo);
-			binding.setHandlerChain(endpointChain);
-		}
+            List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
+            List<Handler> postChain = impl.getHandlerChain(portInfo, HandlerType.POST);
+
+            binding.setHandlerChain(postChain, HandlerType.POST);
+            binding.setHandlerChain(preChain, HandlerType.PRE);
+         }
+
+         // The regular handler chain
+         List<Handler> endpointChain = handlerResolver.getHandlerChain(portInfo);
+         binding.setHandlerChain(endpointChain);
+      }
    }
 
    /**
@@ -389,26 +388,26 @@ public class ClientImpl extends CommonClient implements BindingProvider21, Confi
       configProvider.setConfigName(configName, configFile);
    }
 
-	/**
-	 * Retrieve header names that can be processed by this binding
-	 * @return
-	 */
-	public Set<QName> getHeaders()
+   /**
+    * Retrieve header names that can be processed by this binding
+    * @return
+    */
+   public Set<QName> getHeaders()
    {
-		Set<QName> headers = new HashSet<QName>();
+      Set<QName> headers = new HashSet<QName>();
 
-		BindingExt binding = (BindingExt)getBinding();
+      BindingExt binding = (BindingExt)getBinding();
 
-		for(HandlerType type : HANDLER_TYPES)
-		{
-			for(Handler bindingHandler : binding.getHandlerChain(type))
-			{
-				if(bindingHandler instanceof SOAPHandler)
-					headers.addAll( ((SOAPHandler)bindingHandler).getHeaders());
-			}
-		}
-		
-		return headers;
+      for (HandlerType type : HANDLER_TYPES)
+      {
+         for (Handler bindingHandler : binding.getHandlerChain(type))
+         {
+            if (bindingHandler instanceof SOAPHandler)
+               headers.addAll(((SOAPHandler)bindingHandler).getHeaders());
+         }
+      }
+
+      return headers;
    }
 
    @Override
@@ -416,14 +415,5 @@ public class ClientImpl extends CommonClient implements BindingProvider21, Confi
    {
       Object bool = getRequestContext().get(BindingProvider.SESSION_MAINTAIN_PROPERTY);
       return Boolean.TRUE.equals(bool);
-   }
-   
-   private PortInfo getPortInfo(EndpointMetaData epMetaData)
-   {
-      QName serviceName = epMetaData.getServiceMetaData().getServiceName();
-      QName portName = epMetaData.getPortName();
-      String bindingID = epMetaData.getBindingId();
-      PortInfo portInfo = new PortInfoImpl(serviceName, portName, bindingID);
-      return portInfo;
    }
 }

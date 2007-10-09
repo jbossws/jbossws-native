@@ -331,7 +331,6 @@
         <include name="jbossws-core.jar"/>
       </fileset>
       <fileset dir="${core.dir}/thirdparty">
-        <include name="jbossws-jboss42.jar"/>
         <include name="jaxb-api.jar"/>
         <include name="jaxb-impl.jar"/>
         <include name="policy.jar"/>

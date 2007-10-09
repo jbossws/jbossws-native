@@ -24,41 +24,61 @@ package org.jboss.ws.core.jaxws.client;
 // $Id$
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
+import javax.xml.ws.Binding21;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.Binding21;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
-import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.ConfigProvider;
-import org.jboss.ws.core.soap.SOAPFaultImpl;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemotingConnection;
 import org.jboss.ws.core.client.SOAPRemotingConnection;
+import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
+import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
+import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
+import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
+import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * The Dispatch interface provides support for the dynamic invocation of a service endpoint operations. 
@@ -67,22 +87,26 @@ import org.jboss.ws.metadata.config.ConfigurationProvider;
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class DispatchImpl<T> implements Dispatch<T>
+public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
 {
    // provide logging
    private final Logger log = Logger.getLogger(DispatchImpl.class);
 
    private BindingProvider bindingProvider;
-   private EndpointMetaData epMetaData;
+   private HandlerResolverImpl handlerResolver;
+   private ClientEndpointMetaData epMetaData;
    private JAXBContext jaxbContext;
    private ExecutorService executor;
+   private String securityConfig;
    private Class type;
    private Mode mode;
+
+   private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
 
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, Class<T> type, Mode mode)
    {
       this.bindingProvider = new BindingProviderImpl(epMetaData);
-      this.epMetaData = epMetaData;
+      this.epMetaData = (ClientEndpointMetaData)epMetaData;
       this.executor = executor;
       this.type = type;
       this.mode = mode;
@@ -92,7 +116,7 @@ public class DispatchImpl<T> implements Dispatch<T>
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, JAXBContext jbc, Mode mode)
    {
       this.bindingProvider = new BindingProviderImpl(epMetaData);
-      this.epMetaData = epMetaData;
+      this.epMetaData = (ClientEndpointMetaData)epMetaData;
       this.executor = executor;
       this.type = Object.class;
       this.jaxbContext = jbc;
@@ -114,11 +138,49 @@ public class DispatchImpl<T> implements Dispatch<T>
       return retObj;
    }
 
-   private Object invokeInternal(Object obj, Map<String, Object> resContext) throws IOException
+   private Object invokeInternal(Object obj, Map<String, Object> resContext) throws Exception
    {
-      MessageAbstraction reqMsg = getRequestMessage(obj);
-      String targetAddress = epMetaData.getEndpointAddress();
+      Object retObj = null;
+
+      BindingExt binding = (BindingExt)bindingProvider.getBinding();
       
+      String bindingID = binding.getBindingID();
+      if (bindingID.indexOf("soap") > 0)
+      {
+         // Init the handler chain
+         if (handlerResolver == null)
+         {
+            handlerResolver = new HandlerResolverImpl();
+            handlerResolver.initHandlerChain(epMetaData, HandlerType.PRE, true);
+            handlerResolver.initHandlerChain(epMetaData, HandlerType.ENDPOINT, true);
+            handlerResolver.initHandlerChain(epMetaData, HandlerType.POST, true);
+            
+            PortInfo portInfo = epMetaData.getPortInfo();
+            List<Handler> preChain = handlerResolver.getHandlerChain(portInfo, HandlerType.PRE);
+            List<Handler> epChain = handlerResolver.getHandlerChain(portInfo, HandlerType.ENDPOINT);
+            List<Handler> postChain = handlerResolver.getHandlerChain(portInfo, HandlerType.POST);
+            
+            binding.setHandlerChain(preChain, HandlerType.PRE);
+            binding.setHandlerChain(epChain, HandlerType.ENDPOINT);
+            binding.setHandlerChain(postChain, HandlerType.POST);
+         }
+         
+         retObj = invokeInternalSOAP(obj);
+      }
+      else
+      {
+         retObj = invokeInternalNonSOAP(obj);
+      }
+      return retObj;
+   }
+
+   private Object invokeInternalSOAP(Object obj) throws Exception
+   {
+      Object retObj = null;
+
+      SOAPMessageImpl reqMsg = (SOAPMessageImpl)getRequestMessage(obj);
+      String targetAddress = epMetaData.getEndpointAddress();
+
       // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
       // with a quoted value equal to the value of the soapAction attribute of
       // soapbind:operation, if present in the corresponding WSDL description.
@@ -127,22 +189,92 @@ public class DispatchImpl<T> implements Dispatch<T>
       // with a quoted empty string value, if in the corresponding WSDL description,
       // the soapAction attribute of soapbind:operation is either not present, or
       // present with an empty string as its value.
-      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
-      if (bindingID.indexOf("soap") > 0)
+      String soapAction = null;
+      Map<String, Object> reqContext = getRequestContext();
+      Boolean useSOAPAction = (Boolean)reqContext.get(BindingProvider.SOAPACTION_USE_PROPERTY);
+      if (Boolean.TRUE.equals(useSOAPAction))
       {
-         String soapAction = null; 
-         Map<String, Object> reqContext = getRequestContext();
-         Boolean useSOAPAction = (Boolean)reqContext.get(BindingProvider.SOAPACTION_USE_PROPERTY);
-         if (Boolean.TRUE.equals(useSOAPAction))
-         {
-            soapAction = (String)reqContext.get(BindingProvider.SOAPACTION_URI_PROPERTY);
-            if (soapAction == null)
-               throw new IllegalStateException("Cannot obtain: " + BindingProvider.SOAPACTION_URI_PROPERTY);
-         }
-         MimeHeaders mimeHeaders = reqMsg.getMimeHeaders();
-         mimeHeaders.addHeader("SOAPAction", soapAction != null ? soapAction : "");
+         soapAction = (String)reqContext.get(BindingProvider.SOAPACTION_URI_PROPERTY);
+         if (soapAction == null)
+            throw new IllegalStateException("Cannot obtain: " + BindingProvider.SOAPACTION_URI_PROPERTY);
       }
+      MimeHeaders mimeHeaders = reqMsg.getMimeHeaders();
+      mimeHeaders.addHeader("SOAPAction", soapAction != null ? soapAction : "");
+
+      // Get the order of pre/post handlerchains 
+      HandlerType[] handlerType = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
+      HandlerType[] faultType = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
+
+      // Associate a message context with the current thread
+      CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
+      MessageContextAssociation.pushMessageContext(msgContext);
+      msgContext.setEndpointMetaData(epMetaData);
+      msgContext.setSOAPMessage(reqMsg);
+      msgContext.putAll(reqContext);
+
+      // The contents of the request context are used to initialize the message context (see section 9.4.1)
+      // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
+      // request context is copied to the message context with a scope of HANDLER.
+      msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
       
+      QName portName = epMetaData.getPortName();
+      try
+      {
+         // Call the request handlers
+         boolean handlerPass = callRequestHandlerChain(portName, handlerType[0]);
+         handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
+         handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
+
+         // Handlers might have replaced the message
+         reqMsg = (SOAPMessageImpl)msgContext.getSOAPMessage();
+
+         MessageAbstraction resMsg = null;
+         if (handlerPass)
+         {
+            Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
+            EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
+            resMsg = getRemotingConnection().invoke(reqMsg, epInfo, false);
+
+            // Call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
+            handlerPass = callResponseHandlerChain(portName, handlerType[2]);
+            faultType[2] = null;
+            handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[1]);
+            faultType[1] = null;
+            handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[0]);
+            faultType[0] = null;
+         }
+
+         if (handlerPass)
+         {
+            retObj = getReturnObject(resMsg);
+         }
+      }
+      catch (Exception ex)
+      {
+         if (faultType[2] != null)
+            callFaultHandlerChain(portName, faultType[2], ex);
+         if (faultType[1] != null)
+            callFaultHandlerChain(portName, faultType[1], ex);
+         if (faultType[0] != null)
+            callFaultHandlerChain(portName, faultType[0], ex);
+
+         throw ex;
+      }
+      finally
+      {
+         closeHandlerChain(portName, handlerType[2]);
+         closeHandlerChain(portName, handlerType[1]);
+         closeHandlerChain(portName, handlerType[0]);
+         
+         MessageContextAssociation.popMessageContext();
+      }
+      return retObj;
+   }
+
+   private Object invokeInternalNonSOAP(Object obj) throws IOException
+   {
+      MessageAbstraction reqMsg = getRequestMessage(obj);
+      String targetAddress = epMetaData.getEndpointAddress();
       MessageAbstraction resMsg = getRemotingConnection().invoke(reqMsg, targetAddress, false);
       Object retObj = getReturnObject(resMsg);
       return retObj;
@@ -261,7 +393,7 @@ public class DispatchImpl<T> implements Dispatch<T>
          {
             SOAPFactory factory = SOAPFactory.newInstance();
             SOAPFault fault = factory.createFault("Request object cannot be null", new QName("http://org.jboss.ws", "Dispatch"));
-            fault.setFaultActor("client");            
+            fault.setFaultActor("client");
             throw new SOAPFaultException(fault);
          }
          catch (SOAPException e)
@@ -322,7 +454,7 @@ public class DispatchImpl<T> implements Dispatch<T>
             throw new IllegalArgumentException("Async response cannot be null");
          if (payload == null)
             throw new IllegalArgumentException("Async payload cannot be null");
-         
+
          this.response = response;
          this.handler = handler;
          this.payload = payload;
@@ -378,5 +510,86 @@ public class DispatchImpl<T> implements Dispatch<T>
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
    {
       throw new NotImplementedException();
+   }
+
+   public String getConfigFile()
+   {
+      return epMetaData.getConfigFile();
+   }
+
+   public String getConfigName()
+   {
+      return epMetaData.getConfigName();
+   }
+
+   public void setConfigName(String configName)
+   {
+      epMetaData.setConfigName(configName);
+   }
+
+   public void setConfigName(String configName, String configFile)
+   {
+      epMetaData.setConfigName(configName, configFile);
+   }
+
+   public String getSecurityConfig()
+   {
+      return securityConfig;
+   }
+
+   public void setSecurityConfig(String securityConfig)
+   {
+      this.securityConfig = securityConfig;
+
+      if (securityConfig != null)
+      {
+         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+         if (serviceMetaData.getSecurityConfiguration() == null)
+         {
+            try
+            {
+               WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
+               UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
+               WSSecurityConfiguration config = wsseConfFactory.createConfiguration(vfsRoot, securityConfig);
+               serviceMetaData.setSecurityConfiguration(config);
+            }
+            catch (IOException ex)
+            {
+               WSException.rethrow("Cannot set security config", ex);
+            }
+         }
+      }
+   }
+
+   private boolean callRequestHandlerChain(QName portName, HandlerType type)
+   {
+      BindingExt binding = (BindingExt)bindingProvider.getBinding();
+      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
+      executorMap.put(type, executor);
+
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      return executor.handleMessage(msgContext);
+   }
+
+   private boolean callResponseHandlerChain(QName portName, HandlerType type)
+   {
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      HandlerChainExecutor executor = executorMap.get(type);
+      return (executor != null ? executor.handleMessage(msgContext) : true);
+   }
+
+   private boolean callFaultHandlerChain(QName portName, HandlerType type, Exception ex)
+   {
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      HandlerChainExecutor executor = executorMap.get(type);
+      return (executor != null ? executor.handleFault(msgContext, ex) : true);
+   }
+
+   private void closeHandlerChain(QName portName, HandlerType type)
+   {
+      MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      HandlerChainExecutor executor = executorMap.get(type);
+      if (executor != null)
+         executor.close(msgContext);
    }
 }
