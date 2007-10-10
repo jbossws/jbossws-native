@@ -28,7 +28,12 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.binding.ComplexTypeDeserializer;
 import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.binding.BindingCustomization;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -88,11 +93,13 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
     * @return JAXBContext
     */
    private JAXBContext getJAXBContext(Class[] types){
+
       JAXBContextCache cache = JAXBContextCache.getContextCache();
       JAXBContext context = cache.get(types);
       if(null==context)
       {
-         context = JAXBContextFactory.newInstance().createContext(types);
+         BindingCustomization bindingCustomization = getBindingCustomization();
+         context = JAXBContextFactory.newInstance().createContext(types, bindingCustomization);
          cache.add(types, context);
       }
       return context;

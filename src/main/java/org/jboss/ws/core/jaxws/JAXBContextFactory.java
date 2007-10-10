@@ -23,8 +23,14 @@ package org.jboss.ws.core.jaxws;
 
 import org.jboss.ws.WSException;
 import org.jboss.wsf.spi.util.ServiceLoader;
+import org.jboss.wsf.spi.binding.BindingCustomization;
 
 import javax.xml.bind.JAXBContext;
+
+import com.sun.xml.bind.api.TypeReference;
+import com.sun.xml.bind.api.JAXBRIContext;
+
+import java.util.Collection;
 
 /**
  * Creates JAXBContext's.<p>
@@ -36,9 +42,15 @@ public abstract class JAXBContextFactory {
 
    public final static String DEFAULT_JAXB_CONTEXT_FACTORY = "org.jboss.ws.core.jaxws.CustomizableJAXBContextFactory";
 
+   public abstract JAXBContext createContext(Class[] clazzes, BindingCustomization bindingCustomization) throws WSException;
+
    public abstract JAXBContext createContext(Class[] clazzes) throws WSException;
 
    public abstract JAXBContext createContext(Class clazz) throws WSException;
+
+   public abstract JAXBRIContext createContext(
+     Class[] classes, Collection<TypeReference> typeReferences,
+     String defaultNamespaceRemap, boolean c14nSupport, BindingCustomization bindingCustomization);
 
    /**
     * Retrieve JAXBContextFactory instance through the {@link org.jboss.wsf.spi.util.ServiceLoader}.

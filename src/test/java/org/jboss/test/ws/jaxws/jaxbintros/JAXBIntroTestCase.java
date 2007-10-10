@@ -55,7 +55,7 @@ public class JAXBIntroTestCase extends JBossWSTest
    {
       return new JBossWSTestSetup(JAXBIntroTestCase.class, "jaxws-jaxbintros.war");
    }
-
+                                     
    public void testWSDLAccess() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jaxbintros/ProviderEndpoint?wsdl");

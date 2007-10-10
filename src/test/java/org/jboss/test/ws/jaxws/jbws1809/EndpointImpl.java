@@ -19,32 +19,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.binding;
+package org.jboss.test.ws.jaxws.jbws1809;
 
-import org.jboss.wsf.spi.binding.BindingCustomization;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-
-// $Id$
+import javax.ejb.Stateless;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
 /**
- * A Deserializer that can handle complex types by delegating to JAXB.
- *
- * @author Thomas.Diesler@jboss.org
- * @since 04-Dec-2004
+ * @author Heiko.Braun@jboss.com
+ * @version $Revision$
  */
-public abstract class ComplexTypeDeserializer extends DeserializerSupport
+@Stateless
+@WebService(
+  targetNamespace = "http://org.jboss.ws/jaxbintro/wsdl",
+  endpointInterface = "org.jboss.test.ws.jaxws.jbws1809.Endpoint"
+)
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.BARE)
+public class EndpointImpl implements Endpoint
 {
-
-   protected BindingCustomization getBindingCustomization()
+   public DocResponse processDocument(DocRequest req)
    {
-      BindingCustomization bindingCustomization = null;
-      EndpointMetaData epMetaData = MessageContextAssociation.peekMessageContext().getEndpointMetaData();
-      if(epMetaData instanceof ServerEndpointMetaData)
-      {
-         bindingCustomization = ((ServerEndpointMetaData)epMetaData).getEndpoint().getAttachment(BindingCustomization.class);
-      }
-      return bindingCustomization;
+      DocResponse res = new DocResponse();
+      res.setValue(req.getValue()+"Response");
+      return res;  
    }
 }

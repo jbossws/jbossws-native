@@ -21,18 +21,22 @@
  */
 package org.jboss.ws.core.jaxws;
 
+import com.sun.xml.bind.api.JAXBRIContext;
+import com.sun.xml.bind.api.TypeReference;
+import com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader;
+import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.util.Iterator;
+import java.util.Collection;
 
 /**
  * The default factory checks if a {@link JAXBBindingCustomization} exists
  * and uses it to customize the JAXBContext that will be created.
+ * <p>
+ * It uses the {@link org.jboss.wsf.spi.invocation.EndpointAssociation} to access customizations.
  *
  * @see org.jboss.wsf.spi.deployment.Endpoint
  * @see org.jboss.wsf.spi.binding.BindingCustomization
@@ -46,45 +50,54 @@ import java.util.Iterator;
  */
 public class CustomizableJAXBContextFactory extends JAXBContextFactory
 {
+   protected Logger log = Logger.getLogger(CustomizableJAXBContextFactory.class);
+
+   public JAXBContext createContext(Class clazz) throws WSException
+   {
+      return createContext(new Class[] {clazz});
+   }
+   
    public JAXBContext createContext(Class[] clazzes) throws WSException
    {
       try
       {
-         BindingCustomization customization = getCustomization();
-         if(null == customization)
-            return JAXBContext.newInstance(clazzes);
-         else
-            return JAXBContext.newInstance(clazzes, customization);
+         return JAXBContext.newInstance(clazzes);
       }
       catch (JAXBException e) {
          throw new WSException("Failed to create JAXBContext", e);
       }
    }
 
-   public JAXBContext createContext(Class clazz) throws WSException
+   public JAXBContext createContext(Class[] clazzes, BindingCustomization bindingCustomization) throws WSException
    {
-      return createContext(new Class[] {clazz});
+      try
+      {        
+         return JAXBContext.newInstance(clazzes, bindingCustomization);
+      }
+      catch (JAXBException e) {
+         throw new WSException("Failed to create JAXBContext", e);
+      }
    }
 
-   private BindingCustomization getCustomization()
+   public JAXBRIContext createContext(
+     Class[] classes, Collection<TypeReference> typeReferences,
+     String defaultNamespaceRemap, boolean c14nSupport, BindingCustomization bindingCustomization)
    {
-      BindingCustomization customization = null;
+      try
+      {         
+         RuntimeAnnotationReader runtimeAnnotations = bindingCustomization!=null ?
+           (RuntimeAnnotationReader)bindingCustomization.get(JAXBRIContext.ANNOTATION_READER) : null;
 
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if(msgContext!=null) // may not be available anytime
-      {
-         Iterator<BindingCustomization> it = msgContext.getEndpointMetaData().getBindingCustomizations().iterator();
-         while(it.hasNext())
-         {
-            BindingCustomization current = it.next();
-            if(current instanceof JAXBBindingCustomization)
-            {
-               customization = current;
-               break;
-            }
-         }
+         return JAXBRIContext.newInstance(
+           classes, typeReferences,
+           null,
+           defaultNamespaceRemap, c14nSupport ,
+           runtimeAnnotations
+         );
+
       }
-
-      return customization;
+      catch (JAXBException e) {
+         throw new WSException("Failed to create JAXBContext", e);
+      }
    }
 }

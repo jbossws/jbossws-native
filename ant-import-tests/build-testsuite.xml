@@ -179,7 +179,7 @@
 			<classpath location="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
 		</taskdef>
 
-		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"/>
+		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean" verbose="true"/>
 		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"/>
 	</target>
 
