@@ -32,7 +32,7 @@ org/jboss/test/ws/jaxws/namespace/**
 org/jboss/test/ws/jaxws/webserviceref/**
 org/jboss/test/ws/jaxws/handlerlifecycle/**
 org/jboss/test/ws/jaxws/samples/wsaddressing/**
-org/jboss/test/ws/jaxws/samples/wssecurity/**
+org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean*
 org/jboss/test/ws/jaxws/samples/wseventing/**
 org/jboss/test/ws/jaxws/samples/context/**
 org/jboss/test/ws/jaxws/binding/**
@@ -45,6 +45,7 @@ org/jboss/test/ws/jaxws/samples/handlerchain/HandlerChainTestCase*
 org/jboss/test/ws/jaxws/samples/logicalhandler/LogicalHandlerJAXBTestCase*
 org/jboss/test/ws/jaxws/samples/logicalhandler/LogicalHandlerSourceTestCase*
 org/jboss/test/ws/jaxws/samples/provider/ProviderPayloadTestCase*
+org/jboss/test/ws/jaxws/samples/wssecurity/*TestCase*
 org/jboss/test/ws/jaxws/samples/wseventing/SysmonTestCase*
 org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/SimpleEncryptTestCase*
 org/jboss/test/ws/jaxws/samples/wssecuritypolicy/SimpleEncryptTestCase*
