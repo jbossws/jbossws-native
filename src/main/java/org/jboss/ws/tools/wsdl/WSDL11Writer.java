@@ -468,7 +468,7 @@ public class WSDL11Writer extends WSDLWriter
          if (wsdlStyle.equals(Constants.DOCUMENT_LITERAL))
             style = "document";
          appendUnknownExtensibilityElements(buffer, binding);
-         buffer.append("<" + soapPrefix + ":binding transport='http://schemas.xmlsoap.org/soap/http' style='" + style + "'/>");
+         buffer.append("<" + soapPrefix + ":binding transport='" + binding.getType() + "' style='" + style + "'/>");
          appendBindingOperations(buffer, binding);
          buffer.append("</binding>");
       }
