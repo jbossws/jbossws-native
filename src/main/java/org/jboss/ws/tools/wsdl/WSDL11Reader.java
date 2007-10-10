@@ -57,6 +57,7 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.ElementExtensible;
 import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.UnknownExtensibilityElement;
+import javax.wsdl.extensions.http.HTTPBinding;
 import javax.wsdl.extensions.mime.MIMEContent;
 import javax.wsdl.extensions.mime.MIMEMultipartRelated;
 import javax.wsdl.extensions.mime.MIMEPart;
@@ -991,6 +992,8 @@ public class WSDL11Reader
       QName srcBindingQName = srcBinding.getQName();
       log.trace("processBinding: " + srcBindingQName);
 
+      boolean bindingProcessed = false;
+      
       if (destWsdl.getBinding(srcBindingQName) == null)
       {
          PortType srcPortType = getDefinedPortType(srcBinding);
@@ -1009,6 +1012,10 @@ public class WSDL11Reader
             {
                bindingType = Constants.NS_SOAP12;
             }
+            else if (extElement instanceof HTTPBinding)
+            {
+               bindingType = Constants.NS_HTTP;
+            }
             else if ("binding".equals(elementType.getLocalPart()))
             {
                log.warn("Unsupported binding: " + elementType);
@@ -1020,40 +1027,41 @@ public class WSDL11Reader
             throw new WSDLException(WSDLException.INVALID_WSDL, "Cannot obtain binding type for: " + srcBindingQName);
 
          // Ignore unknown bindings
-         if (Constants.NS_SOAP11.equals(bindingType) == false && Constants.NS_SOAP12.equals(bindingType) == false)
-            return false;
-
-         WSDLBinding destBinding = new WSDLBinding(destWsdl, srcBindingQName);
-         destBinding.setInterfaceName(srcPortType.getQName());
-         destBinding.setType(bindingType);
-         processUnknownExtensibilityElements(srcBinding, destBinding);
-         destWsdl.addBinding(destBinding);
-
-         // mark SWA Parts upfront
-         preProcessSWAParts(srcBinding, srcWsdl);
-
-         processPortType(srcWsdl, srcPortType);
-
-         String bindingStyle = Style.getDefaultStyle().toString();
-         for (ExtensibilityElement extElement : extList)
+         if (Constants.NS_SOAP11.equals(bindingType) || Constants.NS_SOAP12.equals(bindingType) || Constants.NS_HTTP.equals(bindingType))
          {
-            QName elementType = extElement.getElementType();
-            if (extElement instanceof SOAPBinding)
-            {
-               SOAPBinding soapBinding = (SOAPBinding)extElement;
-               bindingStyle = soapBinding.getStyle();
-            }
-            else if (extElement instanceof SOAP12Binding)
-            {
-               SOAP12Binding soapBinding = (SOAP12Binding)extElement;
-               bindingStyle = soapBinding.getStyle();
-            }
-         }
+            WSDLBinding destBinding = new WSDLBinding(destWsdl, srcBindingQName);
+            destBinding.setInterfaceName(srcPortType.getQName());
+            destBinding.setType(bindingType);
+            processUnknownExtensibilityElements(srcBinding, destBinding);
+            destWsdl.addBinding(destBinding);
 
-         processBindingOperations(srcWsdl, destBinding, srcBinding, bindingStyle);
+            // mark SWA Parts upfront
+            preProcessSWAParts(srcBinding, srcWsdl);
+
+            processPortType(srcWsdl, srcPortType);
+
+            String bindingStyle = Style.getDefaultStyle().toString();
+            for (ExtensibilityElement extElement : extList)
+            {
+               QName elementType = extElement.getElementType();
+               if (extElement instanceof SOAPBinding)
+               {
+                  SOAPBinding soapBinding = (SOAPBinding)extElement;
+                  bindingStyle = soapBinding.getStyle();
+               }
+               else if (extElement instanceof SOAP12Binding)
+               {
+                  SOAP12Binding soapBinding = (SOAP12Binding)extElement;
+                  bindingStyle = soapBinding.getStyle();
+               }
+            }
+
+            processBindingOperations(srcWsdl, destBinding, srcBinding, bindingStyle);
+            bindingProcessed = true;
+         }
       }
 
-      return true;
+      return bindingProcessed;
    }
 
    /** The port might reference a binding which is defined in another wsdl

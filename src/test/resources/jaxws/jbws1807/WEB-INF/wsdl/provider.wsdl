@@ -1,0 +1,59 @@
+<?xml version='1.0'?>
+<definitions name='ProviderService' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' 
+  xmlns:tns='http://ws.com/' targetNamespace='http://ws.com/'
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+  
+  <message name='m1'>
+    <part name='part1' type='xsd:binary'/>
+  </message>
+  
+  <message name='m2'>
+    <part name='response' type='xsd:binary'/>
+  </message>
+  
+  <portType name="pt1">
+    <operation name="o1">
+      <input message="tns:m1"/>
+      <output message="tns:m2"/>
+    </operation>
+  </portType>
+  <portType name='pt2'>
+    <operation name='o1'>
+      <input message='tns:echo'/>
+      <output message='tns:echoResponse'/>
+    </operation>
+  </portType>
+  
+  <binding name="b1" type="tns:pt2">
+    <http:binding verb="GET"/>
+    <operation name="o1">
+      <http:operation location="o1"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:content type="text/xml"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name='b2' type='tns:pt2'>
+    <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+    <operation name='o1'>
+      <soap:operation soapAction=''/>
+      <input>
+        <soap:body use='literal'/>
+      </input>
+      <output>
+        <soap:body use='literal'/>
+      </output>
+    </operation>
+  </binding>
+  
+  <service name="ProviderService">
+    <port name="ProviderPort" binding="tns:b1">
+      <http:address location="REPLACE_WITH_ACTUAL_URL"/>
+    </port>
+  </service>
+  
+</definitions>
