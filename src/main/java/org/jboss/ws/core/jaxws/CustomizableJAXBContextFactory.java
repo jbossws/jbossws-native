@@ -27,6 +27,8 @@ import com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.invocation.EndpointAssociation;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -36,7 +38,8 @@ import java.util.Collection;
  * The default factory checks if a {@link JAXBBindingCustomization} exists
  * and uses it to customize the JAXBContext that will be created.
  * <p>
- * It uses the {@link org.jboss.wsf.spi.invocation.EndpointAssociation} to access customizations.
+ * It uses the {@link org.jboss.wsf.spi.invocation.EndpointAssociation} to access customizations
+ * if they are not passed explicitly.
  *
  * @see org.jboss.wsf.spi.deployment.Endpoint
  * @see org.jboss.wsf.spi.binding.BindingCustomization
@@ -56,12 +59,20 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
    {
       return createContext(new Class[] {clazz});
    }
-   
+
    public JAXBContext createContext(Class[] clazzes) throws WSException
    {
       try
       {
-         return JAXBContext.newInstance(clazzes);
+         BindingCustomization customization = getCustomization();
+
+         JAXBContext jaxbCtx;         
+         if(null == customization)
+            jaxbCtx = JAXBContext.newInstance(clazzes);
+         else
+            jaxbCtx = createContext(clazzes, customization);
+
+         return jaxbCtx;
       }
       catch (JAXBException e) {
          throw new WSException("Failed to create JAXBContext", e);
@@ -71,7 +82,7 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
    public JAXBContext createContext(Class[] clazzes, BindingCustomization bindingCustomization) throws WSException
    {
       try
-      {        
+      {
          return JAXBContext.newInstance(clazzes, bindingCustomization);
       }
       catch (JAXBException e) {
@@ -84,7 +95,7 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
      String defaultNamespaceRemap, boolean c14nSupport, BindingCustomization bindingCustomization)
    {
       try
-      {         
+      {
          RuntimeAnnotationReader runtimeAnnotations = bindingCustomization!=null ?
            (RuntimeAnnotationReader)bindingCustomization.get(JAXBRIContext.ANNOTATION_READER) : null;
 
@@ -99,5 +110,11 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
       catch (JAXBException e) {
          throw new WSException("Failed to create JAXBContext", e);
       }
+   }
+
+   private BindingCustomization getCustomization()
+   {
+      Endpoint threadLocal = EndpointAssociation.getEndpoint();
+      return threadLocal!=null ? threadLocal.getAttachment(BindingCustomization.class):null;      
    }
 }
