@@ -51,8 +51,8 @@ import org.w3c.dom.Element;
 public class JBWS1815TestCase extends JBossWSTest
 {
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-jbws1815/ProviderImpl";
-   
-   private String msgString = 
+
+   private String msgString =
       "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:my=\"http://www.my-company.it/ws/my-test\">" +
       "  <soapenv:Header/>" +
       "  <soapenv:Body>" +
@@ -61,7 +61,7 @@ public class JBWS1815TestCase extends JBossWSTest
       "    </my:performTest>" +
       "  </soapenv:Body>" +
       "</soapenv:Envelope>";
-   
+
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1815TestCase.class, "jaxws-jbws1815.ejb3");
@@ -73,29 +73,23 @@ public class JBWS1815TestCase extends JBossWSTest
       Element wsdl = DOMUtils.parse(wsdlURL.openStream());
       assertNotNull(wsdl);
    }
-   
 
    public void testProviderMessage() throws Exception
    {
-      try {
-         SOAPMessage reqMsg = getRequestMessage();
-         URL epURL = new URL(TARGET_ENDPOINT_ADDRESS);
-         SOAPConnection con = SOAPConnectionFactory.newInstance().createConnection();
-         SOAPMessage resMsg = con.call(reqMsg, epURL);
-         SOAPEnvelope resEnv = resMsg.getSOAPPart().getEnvelope();
-         System.out.println("response: " + DOMWriter.printNode(resEnv, false));
-         Detail detail = resEnv.getBody().getFault().getDetail();
-//         assertNotNull(detail);
-         SOAPElement exception = (SOAPElement)detail.getDetailEntries().next();
-//         assertNotNull(exception);
-//         assertEquals(exception.getNodeName(),"MyWSException");
-         SOAPElement message = (SOAPElement)exception.getChildElements().next();
-//         assertNotNull(message);
-//         assertEquals(message.getNodeName(),"message");
-//         assertEquals(message.getValue(),"This is a faked error");
-      } catch (Exception e) {
-         System.out.println("[FIXME] JBWS-1815: Cannot add fault detail");
-      }
+      SOAPMessage reqMsg = getRequestMessage();
+      URL epURL = new URL(TARGET_ENDPOINT_ADDRESS);
+      SOAPConnection con = SOAPConnectionFactory.newInstance().createConnection();
+      SOAPMessage resMsg = con.call(reqMsg, epURL);
+      SOAPEnvelope resEnv = resMsg.getSOAPPart().getEnvelope();
+      Detail detail = resEnv.getBody().getFault().getDetail();
+      assertNotNull(detail);
+      SOAPElement exception = (SOAPElement)detail.getDetailEntries().next();
+      assertNotNull(exception);
+      assertEquals(exception.getNodeName(), "MyWSException");
+      SOAPElement message = (SOAPElement)exception.getChildElements().next();
+      assertNotNull(message);
+      assertEquals(message.getNodeName(), "message");
+      assertEquals(message.getValue(), "This is a faked error");
    }
 
    private SOAPMessage getRequestMessage() throws SOAPException, IOException

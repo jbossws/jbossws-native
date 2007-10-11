@@ -68,7 +68,7 @@ public class SOAPFaultHelperJAXWS
    {
       if (soapFault == null)
          throw new IllegalArgumentException("SOAPFault cannot be null");
-      
+
       SOAPFaultException faultEx = new SOAPFaultException(soapFault);
 
       Detail detail = soapFault.getDetail();
@@ -151,9 +151,19 @@ public class SOAPFaultHelperJAXWS
       try
       {
          SOAPMessageImpl faultMessage;
+         Throwable cause = reqEx.getCause();
          if (reqEx instanceof SOAPFaultException)
          {
             faultMessage = toSOAPMessage((SOAPFaultException)reqEx);
+         }
+         /* JAX-WS 6.4.1: When an implementation catches an exception thrown by a
+          * service endpoint implementation and the cause of that exception is an
+          * instance of the appropriate ProtocolException subclass for the protocol
+          * in use, an implementation MUST reflect the information contained in the
+          * ProtocolException subclass within the generated protocol level fault. */
+         else if (cause != null && cause instanceof SOAPFaultException)
+         {
+            faultMessage = toSOAPMessage((SOAPFaultException)cause);
          }
          else if (reqEx instanceof CommonSOAPFaultException)
          {
@@ -235,23 +245,8 @@ public class SOAPFaultHelperJAXWS
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
-      SOAPFault soapFault;
 
-      /* JAX-WS 6.4.1: When an implementation catches an exception thrown by a
-       * service endpoint implementation and the cause of that exception is an
-       * instance of the appropriate ProtocolException subclass for the protocol
-       * in use, an implementation MUST reflect the information contained in the
-       * ProtocolException subclass within the generated protocol level fault. */
-      Throwable cause = ex.getCause();
-      if (cause instanceof SOAPFaultException)
-      {
-         populateSOAPFault(soapBody, (SOAPFaultException)cause);
-         soapFault = soapBody.getFault();
-      }
-      else
-      {
-         soapFault = soapBody.addFault(getFallbackFaultCode(), getFallbackFaultString(ex));
-      }
+      SOAPFault soapFault = soapBody.addFault(getFallbackFaultCode(), getFallbackFaultString(ex));
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       SerializationContext serContext = msgContext.getSerializationContext();
