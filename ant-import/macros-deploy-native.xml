@@ -42,7 +42,6 @@
                <include name="jaxb-xjc.jar"/>
                <include name="jaxws-tools.jar"/>
                <include name="jaxws-rt.jar"/>
-               <include name="jbossws-jboss50.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
                <include name="wsdl4j.jar"/>
@@ -64,8 +63,6 @@
             </fileset>
          </copy>
 
-         <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deployers/jbossws.deployer"/>
-         <unzip dest="${jboss50.home}/server/${jboss.server.instance}/deployers/jbossws.deployer" src="@{thirdpartylibs}/jbossws-jboss50-deployer.zip"/>
          <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
          <unjar dest="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native50.sar"/>
          <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
@@ -97,7 +94,6 @@
                <include name="jboss-jaxws.jar"/>
                <include name="jboss-saaj.jar"/>
                <include name="jbossws-client.jar"/>
-               <include name="jbossws-jboss50.jar"/>
                <include name="policy.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
