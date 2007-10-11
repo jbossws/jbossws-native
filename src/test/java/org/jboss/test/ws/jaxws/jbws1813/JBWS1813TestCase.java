@@ -32,7 +32,7 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- *  endpoint using @SecurityDomain
+ * context-root in jboss.xml is ignored
  * 
  * http://jira.jboss.org/jira/browse/JBWS-1813
  *
@@ -43,30 +43,22 @@ public class JBWS1813TestCase extends JBossWSTest
 {
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/test-context";
 
-   private static Endpoint port;
-
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1813TestCase.class, "jaxws-jbws1813.ear");
    }
 
-   protected void setUp() throws Exception
-   {
-      if (port == null)
-      {
-         URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
-         QName serviceName = new QName("http://org.jboss.ws/jbws1813", "EndpointService");
-         port = Service.create(wsdlURL, serviceName).getPort(Endpoint.class);
-      }
-   }
-
-   public void testPositive()
+   public void testPositive() throws Exception
    {
       if (isTargetJBoss42())
       {
          System.out.println("FIXME: [JBWS-1813] context-root in jboss.xml is ignored");
          return;
      }
+      
+      URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
+      QName serviceName = new QName("http://org.jboss.ws/jbws1813", "EndpointService");
+      Endpoint port = Service.create(wsdlURL, serviceName).getPort(Endpoint.class);
       
       String retObj = port.echo("Hello");
       assertEquals("Hello", retObj);
