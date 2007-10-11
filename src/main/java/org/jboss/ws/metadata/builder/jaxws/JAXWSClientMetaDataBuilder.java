@@ -149,23 +149,28 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
       {
-         QName portName = wsdlEndpoint.getName();
-         QName interfaceQName = wsdlEndpoint.getInterface().getName();
-         ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXWS);
-         epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
-         serviceMetaData.addEndpoint(epMetaData);
+         QName bindingName = wsdlEndpoint.getBinding();
+         WSDLBinding wsdlBinding = wsdlEndpoint.getWsdlService().getWsdlDefinitions().getBinding(bindingName);
+         String bindingType = wsdlBinding.getType();
+         if (Constants.NS_SOAP11.equals(bindingType) || Constants.NS_SOAP12.equals(bindingType))
+         {
+            QName portName = wsdlEndpoint.getName();
+            QName interfaceQName = wsdlEndpoint.getInterface().getName();
+            ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXWS);
+            epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
+            serviceMetaData.addEndpoint(epMetaData);
 
-         // Init the endpoint binding
-         initEndpointBinding(wsdlEndpoint, epMetaData);
+            // Init the endpoint binding
+            initEndpointBinding(wsdlEndpoint, epMetaData);
 
-         // Init the service encoding style
-         initEndpointEncodingStyle(epMetaData);
+            // Init the service encoding style
+            initEndpointEncodingStyle(epMetaData);
 
-         setupOperationsFromWSDL(epMetaData, wsdlEndpoint);
+            setupOperationsFromWSDL(epMetaData, wsdlEndpoint);
 
-         // service-ref contributions
-         bufferServiceRefContributions(epMetaData);
-
+            // service-ref contributions
+            bufferServiceRefContributions(epMetaData);
+         }
       }
    }
 

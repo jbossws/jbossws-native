@@ -41,6 +41,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
@@ -177,45 +178,51 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       // Build endpoint meta data
       for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
       {
-         QName portName = wsdlEndpoint.getName();
-         QName interfaceQName = wsdlEndpoint.getInterface().getName();
-         ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXRPC);
-         epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
-         serviceMetaData.addEndpoint(epMetaData);
-
-         // config-name, config-file
-         if (serviceRefMetaData != null)
+         QName bindingName = wsdlEndpoint.getBinding();
+         WSDLBinding wsdlBinding = wsdlEndpoint.getWsdlService().getWsdlDefinitions().getBinding(bindingName);
+         String bindingType = wsdlBinding.getType();
+         if (Constants.NS_SOAP11.equals(bindingType) || Constants.NS_SOAP12.equals(bindingType))
          {
-            String configName= serviceRefMetaData.getConfigName();
-            String configFile = serviceRefMetaData.getConfigFile();
-            if (configName != null || configFile != null)
-               epMetaData.setConfigName(configName, configFile);
-         }
+            QName portName = wsdlEndpoint.getName();
+            QName interfaceQName = wsdlEndpoint.getInterface().getName();
+            ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXRPC);
+            epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
+            serviceMetaData.addEndpoint(epMetaData);
 
-         // Init the endpoint binding
-         initEndpointBinding(wsdlEndpoint, epMetaData);
-
-         // Init the service encoding style
-         initEndpointEncodingStyle(epMetaData);
-
-         ServiceEndpointInterfaceMapping seiMapping = null;
-         if (javaWsdlMapping != null)
-         {
-            QName portType = wsdlEndpoint.getInterface().getName();
-            seiMapping = javaWsdlMapping.getServiceEndpointInterfaceMappingByPortType(portType);
-            if (seiMapping != null)
+            // config-name, config-file
+            if (serviceRefMetaData != null)
             {
-               epMetaData.setServiceEndpointInterfaceName(seiMapping.getServiceEndpointInterface());
+               String configName= serviceRefMetaData.getConfigName();
+               String configFile = serviceRefMetaData.getConfigFile();
+               if (configName != null || configFile != null)
+                  epMetaData.setConfigName(configName, configFile);
             }
-            else
-            {
-               log.warn("Cannot obtain the SEI mapping for: " + portType);
-            }
-         }
 
-         processEndpointMetaDataExtensions(epMetaData, wsdlDefinitions);
-         setupOperationsFromWSDL(epMetaData, wsdlEndpoint, seiMapping);
-         setupHandlers(serviceRefMetaData, portName, epMetaData);
+            // Init the endpoint binding
+            initEndpointBinding(wsdlEndpoint, epMetaData);
+
+            // Init the service encoding style
+            initEndpointEncodingStyle(epMetaData);
+
+            ServiceEndpointInterfaceMapping seiMapping = null;
+            if (javaWsdlMapping != null)
+            {
+               QName portType = wsdlEndpoint.getInterface().getName();
+               seiMapping = javaWsdlMapping.getServiceEndpointInterfaceMappingByPortType(portType);
+               if (seiMapping != null)
+               {
+                  epMetaData.setServiceEndpointInterfaceName(seiMapping.getServiceEndpointInterface());
+               }
+               else
+               {
+                  log.warn("Cannot obtain the SEI mapping for: " + portType);
+               }
+            }
+
+            processEndpointMetaDataExtensions(epMetaData, wsdlDefinitions);
+            setupOperationsFromWSDL(epMetaData, wsdlEndpoint, seiMapping);
+            setupHandlers(serviceRefMetaData, portName, epMetaData);
+         }
       }
    }
 
