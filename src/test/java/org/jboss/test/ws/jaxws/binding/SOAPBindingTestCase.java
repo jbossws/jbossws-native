@@ -23,8 +23,6 @@ package org.jboss.test.ws.jaxws.binding;
 
 // $Id: $
 
-import static javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +40,7 @@ import javax.xml.ws.handler.Handler;
 import junit.framework.Test;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
-import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
@@ -73,14 +69,14 @@ public class SOAPBindingTestCase extends JBossWSTest
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       //Element root = DOMUtils.parse(wsdlURL.openStream());
       //System.out.println(DOMWriter.printNode(root, true));
-      
+
       WSDLDefinitions defs = WSDLDefinitionsFactory.newInstance().parse(wsdlURL);
       Definition wsdl = defs.getWsdlOneOneDefinition();
-      
+
       QName qname = new QName("http://org.jboss.ws/jaxws/binding", "SOAPEndpointBinding");
       Binding wsdlBinding = wsdl.getBinding(qname);
       assertNotNull("Cannot find: " + qname, wsdlBinding);
-      
+
       String transport = null;
       List<ExtensibilityElement> extList = wsdlBinding.getExtensibilityElements();
       for (ExtensibilityElement ext : extList)
@@ -95,7 +91,7 @@ public class SOAPBindingTestCase extends JBossWSTest
             transport = soapBinding.getTransportURI();
          }
       }
-      assertEquals("Invalid transport uri", SOAP12HTTP_BINDING, transport);
+      assertEquals("Invalid transport uri", Constants.URI_SOAP_HTTP, transport);
    }
 
    public void testClientAccess() throws Exception

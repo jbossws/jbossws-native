@@ -90,11 +90,12 @@ public interface Constants
    static final String URI_SOAP11_ENC = SOAPConstants.URI_NS_SOAP_ENCODING;
    /** SOAP-1.2 encoding URI */
    static final String URI_SOAP12_ENC = SOAPConstants.URI_NS_SOAP_1_2_ENCODING;
-      /** Literal encoding URI */
+   /** SOAP HTTP transport URI in wsdl soap binding */
+   static final String URI_SOAP_HTTP = "http://schemas.xmlsoap.org/soap/http";
+   /** Literal encoding URI */
    static final String URI_LITERAL_ENC = "";
    /** WSDL 2.0 Encoding Rules */
    static final String URI_STYLE_RPC = "http://www.w3.org/2004/03/wsdl/style/rpc";
-
    static final String URI_STYLE_DOCUMENT = "http://www.w3.org/2004/03/wsdl/style/iri";
 
     /** WS-Eventing namespace uri **/
