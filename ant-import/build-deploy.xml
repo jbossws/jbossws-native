@@ -28,11 +28,6 @@
 		<macro-deploy-framework
 				thirdpartylibs="${core.dir}/thirdparty"
 				jbosshome="${jboss50.home}"/>
-
-    <!-- [JBWS-1617] JAXRPC doc/literal trims empty string 
-    <copy tofile="${jboss50.home}/client/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-2.0.0-20070620.094346-1.jar" overwrite="true"/>
-		<copy tofile="${jboss50.home}/lib/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-2.0.0-20070620.094346-1.jar" overwrite="true"/>
-    -->
   </target>
   
 	<target name="deploy-jboss50-endorsed" depends="prepare" if="HAVE_JDK_1.6">
@@ -60,12 +55,6 @@
 		<macro-deploy-framework
 				thirdpartylibs="${core.dir}/thirdparty"
 				jbosshome="${jboss42.home}"/>
-
-    <!-- [JBWS-1617] JAXRPC doc/literal trims empty string 
-    <copy tofile="${jboss42.home}/client/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-1.0.0-20070620.100638-1.jar" overwrite="true"/>
-		<copy tofile="${jboss42.home}/lib/jboss-xml-binding.jar" file="${core.dir}/thirdparty/jbossxb-1.0.0-20070620.100638-1.jar" overwrite="true"/>
-    -->
-    
   </target>
   
 	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
