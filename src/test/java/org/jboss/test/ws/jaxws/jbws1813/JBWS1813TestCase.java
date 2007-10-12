@@ -50,7 +50,7 @@ public class JBWS1813TestCase extends JBossWSTest
 
    public void testPositive() throws Exception
    {
-      if (isTargetJBoss42())
+      if (isTargetJBoss42() || isTargetJBoss40())
       {
          System.out.println("FIXME: [JBWS-1813] context-root in jboss.xml is ignored");
          return;
