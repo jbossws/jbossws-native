@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.jaxws.impl;
 
 import com.sun.tools.ws.wscompile.WsimportTool;
+
+import org.jboss.ws.tools.io.NullPrintStream;
 import org.jboss.wsf.spi.tools.WSContractConsumer;
 
 import java.io.File;
@@ -160,7 +162,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
       }
       else
       {
-         stream = new NullPrintStream();
+         stream = NullPrintStream.getInstance();
       }
 
       if (!outputDir.exists() && !outputDir.mkdirs())

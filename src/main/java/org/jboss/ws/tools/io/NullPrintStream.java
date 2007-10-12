@@ -19,18 +19,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools.jaxws.impl;
+package org.jboss.ws.tools.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Locale;
 
-class NullPrintStream extends PrintStream
+/**
+ * Print stream singleton that does nothing
+ *
+ * @author richard.opalka@jboss.com
+ *
+ * @since Oct 12, 2007
+ */
+public final class NullPrintStream extends PrintStream
 {
-   NullPrintStream()
+   
+   private static final PrintStream instance = new NullPrintStream();
+   
+   public static PrintStream getInstance()
    {
-      // Doesn't actually do anything
+      return instance;
+   }
+   
+   private NullPrintStream()
+   {
       super(new ByteArrayOutputStream());
    }
 
@@ -206,4 +220,5 @@ class NullPrintStream extends PrintStream
    public void write(byte[] b) throws IOException
    {
    }
+
 }
