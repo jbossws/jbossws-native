@@ -4,3 +4,7 @@ org/jboss/test/ws/jaxrpc/jbws128/JBWS128TestCase.*
 org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase.*
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 org/jboss/test/ws/jaxrpc/wsdlpublish/**
+
+# EJB3 ClientLauncher not available
+org/jboss/test/ws/jaxws/samples/webserviceref/*
+org/jboss/test/ws/jaxws/webserviceref/*

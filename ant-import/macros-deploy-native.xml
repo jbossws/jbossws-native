@@ -21,54 +21,54 @@
       <attribute name="stacklibs"/>
       <attribute name="thirdpartylibs"/>
       <sequential>
-         <fail message="Not available: ${jboss50.available.file}" unless="jboss50.available"/>
-
-         <!-- BIN SCRIPTS -->
-         <unzip dest="${jboss50.home}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-         <chmod dir="${jboss50.home}/bin" perm="+x" includes="*.sh"/>
-
-         <!-- CLIENT JARS -->
-         <copy todir="${jboss50.home}/client" overwrite="true">
-            <fileset dir="@{stacklibs}">
-               <include name="jboss-jaxrpc.jar"/>
-               <include name="jboss-jaxws.jar"/>
-              <include name="jboss-jaxws-ext.jar"/>
-               <include name="jboss-saaj.jar"/>
-               <include name="jbossws-client.jar"/>
-            </fileset>
-            <fileset dir="@{thirdpartylibs}">
-               <include name="policy.jar"/>
-               <include name="jaxb-api.jar"/>
-               <include name="jaxb-impl.jar"/>
-               <include name="jaxb-xjc.jar"/>
-               <include name="jaxws-tools.jar"/>
-               <include name="jaxws-rt.jar"/>
-               <include name="stax-ex.jar"/>
-               <include name="streambuffer.jar"/>
-               <include name="wsdl4j.jar"/>
-            </fileset>
-         </copy>
-         <copy todir="${jboss50.home}/lib" overwrite="true">
-            <fileset dir="@{thirdpartylibs}">
-               <include name="jaxb-api.jar"/>
-               <include name="jaxb-impl.jar"/>
-            </fileset>
-         </copy>
-
-         <!-- SERVER JARS -->
-         <copy todir="${jboss50.home}/server/${jboss.server.instance}/lib" overwrite="true">
-            <fileset dir="@{stacklibs}">
-               <include name="jboss-jaxrpc.jar"/>
-               <include name="jboss-jaxws.jar"/>
-              <include name="jboss-jaxws-ext.jar"/>
-               <include name="jboss-saaj.jar"/>
-            </fileset>
-         </copy>
-
-         <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-         <unjar dest="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native50.sar"/>
-         <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-         <unzip dest="${jboss50.home}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
+        <fail message="Not available: ${jboss50.available.file}" unless="jboss50.available"/>
+        
+        <!-- BIN SCRIPTS -->
+        <unzip dest="${jboss50.home}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
+        <chmod dir="${jboss50.home}/bin" perm="+x" includes="*.sh"/>
+        
+        <!-- CLIENT JARS -->
+        <copy todir="${jboss50.home}/client" overwrite="true">
+          <fileset dir="@{stacklibs}">
+            <include name="jboss-jaxrpc.jar"/>
+            <include name="jboss-jaxws.jar"/>
+            <include name="jboss-jaxws-ext.jar"/>
+            <include name="jboss-saaj.jar"/>
+            <include name="jbossws-client.jar"/>
+          </fileset>
+          <fileset dir="@{thirdpartylibs}">
+            <include name="policy.jar"/>
+            <include name="jaxb-api.jar"/>
+            <include name="jaxb-impl.jar"/>
+            <include name="jaxb-xjc.jar"/>
+            <include name="jaxws-tools.jar"/>
+            <include name="jaxws-rt.jar"/>
+            <include name="stax-ex.jar"/>
+            <include name="streambuffer.jar"/>
+            <include name="wsdl4j.jar"/>
+          </fileset>
+        </copy>
+        <copy todir="${jboss50.home}/lib" overwrite="true">
+          <fileset dir="@{thirdpartylibs}">
+            <include name="jaxb-api.jar"/>
+            <include name="jaxb-impl.jar"/>
+          </fileset>
+        </copy>
+        
+        <!-- SERVER JARS -->
+        <copy todir="${jboss50.home}/server/${jboss.server.instance}/lib" overwrite="true">
+          <fileset dir="@{stacklibs}">
+            <include name="jboss-jaxrpc.jar"/>
+            <include name="jboss-jaxws.jar"/>
+            <include name="jboss-jaxws-ext.jar"/>
+            <include name="jboss-saaj.jar"/>
+          </fileset>
+        </copy>
+        
+        <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+        <unjar dest="${jboss50.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native50.sar"/>
+        <mkdir dir="${jboss50.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
+        <unzip dest="${jboss50.home}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
       </sequential>
    </macrodef>
 
