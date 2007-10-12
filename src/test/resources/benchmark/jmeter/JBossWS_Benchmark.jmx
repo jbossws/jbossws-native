@@ -21,7 +21,7 @@
       <stringProp name="TestPlan.comments"></stringProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Model1_JAXWS" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Model1_JAXWS" enabled="false">
         <longProp name="ThreadGroup.start_time">1144146988000</longProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -46,6 +46,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -55,7 +56,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -65,6 +65,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -74,7 +75,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -86,8 +86,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -95,8 +95,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -156,6 +156,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -165,7 +166,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -175,6 +175,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -184,7 +185,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -196,8 +196,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -205,8 +205,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -259,6 +259,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -271,7 +272,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -281,6 +281,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -293,7 +294,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -305,8 +305,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -314,8 +314,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -354,10 +354,10 @@
         <longProp name="ThreadGroup.start_time">1144146988000</longProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <stringProp name="LoopController.loops">2000</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
         <longProp name="ThreadGroup.end_time">1144146988000</longProp>
@@ -368,6 +368,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -380,7 +381,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -390,6 +390,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -402,7 +403,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -414,8 +414,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -423,8 +423,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -477,6 +477,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC2.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -489,7 +490,6 @@
         &lt;/ns1:echoArrayOfSimpleUserType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -499,6 +499,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC2.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -511,7 +512,6 @@
         &lt;/ns1:echoArrayOfSimpleUserType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -523,8 +523,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -532,8 +532,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -593,6 +593,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.1" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -602,7 +603,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -612,6 +612,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -621,7 +622,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -633,8 +633,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -642,8 +642,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -703,6 +703,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.1" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -712,7 +713,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -722,6 +722,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -731,7 +732,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -743,8 +743,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -752,8 +752,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -806,6 +806,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.1" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -818,7 +819,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -828,6 +828,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -840,7 +841,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -852,8 +852,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -861,8 +861,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -915,6 +915,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.1" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -927,7 +928,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -937,6 +937,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -949,7 +950,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -961,8 +961,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -970,8 +970,110 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
+        </ResponseAssertion>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
+          <objProp>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+            </value>
+            <name>saveConfig</name>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Mem" enabled="true">
+        <longProp name="ThreadGroup.start_time">1144146988000</longProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <stringProp name="LoopController.loops">2000</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+        <longProp name="ThreadGroup.end_time">1144146988000</longProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Sample" enabled="true">
+          <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
+          <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
+          <stringProp name="HTTPSamper.xml_data">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:jbw=&quot;http://org.jboss.test.webservice/jbws626&quot;&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;&lt;jbw:echoArray&gt;&lt;arrayOfValueObj_1&gt;&lt;value&gt;&lt;s1&gt;1&lt;/s1&gt;&lt;s2&gt;2&lt;/s2&gt;&lt;/value&gt;&lt;/arrayOfValueObj_1&gt;&lt;/jbw:echoArray&gt;&lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="SoapSampler.URL_DATA">http://localhost:8080/jaxrpc-jbws626/DemoBean</stringProp>
+        </SoapSampler>
+        <hashTree/>
+        <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
+          <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
+          <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
+          <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
+    &lt;env:Header/&gt;
+    &lt;env:Body&gt;
+        &lt;ns1:echoSimpleType xmlns:ns1=&apos;http://org.jboss.ws/benchmark/types&apos; xmlns:xsi=&apos;http://www.w3.org/2001/XMLSchema-instance&apos;&gt;
+            &lt;SimpleUserType_1&gt;
+                &lt;f&gt;1.0&lt;/f&gt;
+                &lt;i&gt;1&lt;/i&gt;
+                &lt;s&gt;test&lt;/s&gt;
+            &lt;/SimpleUserType_1&gt;
+        &lt;/ns1:echoSimpleType&gt;
+    &lt;/env:Body&gt;
+&lt;/env:Envelope&gt;</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="SoapSampler.URL_DATA">http://localhost:8080/benchmark-doc-ejb</stringProp>
+        </SoapSampler>
+        <hashTree/>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Code Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="49586">200</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
+        </ResponseAssertion>
+        <hashTree/>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="-1984138256">Envelope</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+          <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -1024,6 +1126,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC2.1" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1036,7 +1139,6 @@
         &lt;/ns1:echoArrayOfSimpleUserType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1046,6 +1148,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC2.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1058,7 +1161,6 @@
         &lt;/ns1:echoArrayOfSimpleUserType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1070,8 +1172,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -1079,8 +1181,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -1140,6 +1242,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1149,7 +1252,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1159,6 +1261,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1168,7 +1271,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1180,8 +1282,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -1189,8 +1291,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -1250,6 +1352,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1259,7 +1362,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1269,6 +1371,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC1.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1278,7 +1381,6 @@
         &lt;/ns1:getOrder&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1290,8 +1392,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -1299,8 +1401,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1353,6 +1455,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1365,7 +1468,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1375,6 +1477,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1387,7 +1490,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1399,8 +1501,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -1408,8 +1510,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
@@ -1462,6 +1564,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.1-JAXWS" enabled="true">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1474,7 +1577,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1484,6 +1586,7 @@
         <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="DOC3.2" enabled="false">
           <stringProp name="SoapSampler.SEND_SOAP_ACTION">false</stringProp>
           <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <stringProp name="HTTPSamper.xml_data">&lt;env:Envelope xmlns:env=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos;&gt;
     &lt;env:Header/&gt;
     &lt;env:Body&gt;
@@ -1496,7 +1599,6 @@
         &lt;/ns1:echoSimpleType&gt;
     &lt;/env:Body&gt;
 &lt;/env:Envelope&gt;</stringProp>
-          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1508,8 +1610,8 @@
             <stringProp name="49586">200</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Envelope Assertion" enabled="true">
@@ -1517,8 +1619,8 @@
             <stringProp name="-1984138256">Envelope</stringProp>
           </collectionProp>
           <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-          <intProp name="Assertion.test_type">2</intProp>
           <stringProp name="Assertion.assume_success">false</stringProp>
+          <intProp name="Assertion.test_type">2</intProp>
         </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
