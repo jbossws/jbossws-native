@@ -5,6 +5,12 @@ org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase.*
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 org/jboss/test/ws/jaxrpc/wsdlpublish/**
 
-# EJB3 ClientLauncher not available
+# [JBWS-1853] Update ClientLaucher to new metadata model
 org/jboss/test/ws/jaxws/samples/webserviceref/*
 org/jboss/test/ws/jaxws/webserviceref/*
+
+# [JBWS-1852] Failed to create a new SAX parser
+org/jboss/test/ws/jaxws/samples/wssecurity/*
+org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/*
+
+
