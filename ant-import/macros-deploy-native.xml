@@ -243,6 +243,7 @@
                <include name="jaxb-xjc.jar"/>
                <include name="jaxws-tools.jar"/>
                <include name="jaxws-rt.jar"/>
+               <include name="jboss-xml-binding.jar"/>
                <include name="stax-api.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
@@ -252,6 +253,11 @@
          </copy>
 
          <!-- SERVER JARS -->
+         <copy todir="${jboss40.home}/lib" overwrite="true">
+            <fileset dir="@{thirdpartylibs}">
+               <include name="jboss-xml-binding.jar"/>
+            </fileset>
+         </copy>
          <copy todir="${jboss40.home}/server/${jboss.server.instance}/lib" overwrite="true">
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
