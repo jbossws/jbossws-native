@@ -140,7 +140,6 @@
                <include name="jaxb-xjc.jar"/>
                <include name="jaxws-tools.jar"/>
                <include name="jaxws-rt.jar"/>
-               <include name="jboss-xml-binding.jar"/>
                <include name="policy.jar"/>
                <include name="stax-ex.jar"/>
                <include name="streambuffer.jar"/>
@@ -149,12 +148,6 @@
          </copy>
 
          <!-- SERVER JARS -->
-         <copy todir="${jboss42.home}/lib" overwrite="true">
-            <fileset dir="@{thirdpartylibs}">
-               <include name="jboss-xml-binding.jar"/>
-            </fileset>
-         </copy>
-
          <mkdir dir="${jboss42.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
          <unjar dest="${jboss42.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
          <mkdir dir="${jboss42.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
@@ -257,7 +250,6 @@
                <include name="jboss-xml-binding.jar"/>
             </fileset>
          </copy>
-        
          <copy todir="${jboss40.home}/server/${jboss.server.instance}/lib" overwrite="true">
             <fileset dir="@{stacklibs}">
                <include name="jboss-jaxrpc.jar"/>
