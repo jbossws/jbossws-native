@@ -83,8 +83,8 @@
     <get src="${jboss.repository}/jboss/jaxr/${jboss-jaxr}/lib/juddi-service.sar" dest="${thirdparty.dir}/juddi-service.sar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs.jar" dest="${thirdparty.dir}/jboss-vfs.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs-sources.jar" dest="${thirdparty.dir}/jboss-vfs-sources.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss42}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss42}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss40}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss40}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jaxbintros/${jaxbintros}/lib/jboss-jaxb-intros.jar" dest="${thirdparty.dir}/jboss-jaxb-intros.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-container.jar" dest="${thirdparty.dir}/jboss-container.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-dependency.jar" dest="${thirdparty.dir}/jboss-dependency.jar" usetimestamp="true" verbose="true"/>
