@@ -23,21 +23,24 @@ package org.jboss.ws.core;
 
 // $Id$
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext.Scope;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
+
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.MessageContext.Scope;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The common JAXRPC/JAXWS MessageContext
@@ -120,6 +123,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
    public SOAPMessage getSOAPMessage()
    {
+      if(message!=null && ((message instanceof SOAPMessage) == false))
+         throw new UnsupportedOperationException("No SOAPMessage avilable. Current message context carries " + message.getClass());
       return (SOAPMessage)message;
    }
 
@@ -321,6 +326,33 @@ public abstract class CommonMessageContext implements Map<String, Object>
       // A property of scope APPLICATION is always visible
       boolean valid = (prop != null && (prop.getScope() == Scope.APPLICATION || currentScope == Scope.HANDLER));
       return valid;
+   }
+
+   public static void cleanupAttachments(CommonMessageContext messageContext)
+   {
+      // cleanup attachments
+      MessageAbstraction msg = messageContext.getMessageAbstraction();
+
+      if(msg!=null && (msg instanceof SOAPMessage)) // in case of http binding
+      {
+         Iterator it = ((SOAPMessage)msg).getAttachments();
+         while(it.hasNext())
+         {
+            AttachmentPart attachment = (AttachmentPart)it.next();
+            try
+            {
+               if(attachment.getDataHandler().getDataSource() instanceof SwapableMemoryDataSource)
+               {
+                  SwapableMemoryDataSource swapFile = (SwapableMemoryDataSource)attachment.getDataHandler().getDataSource();
+                  swapFile.cleanup();
+               }
+            }
+            catch (SOAPException e)
+            {
+               log.warn("Failed to cleanup attachment part", e);
+            }
+         }
+      }
    }
 
    private static class ImmutableEntry<K, V> implements Map.Entry<K, V>

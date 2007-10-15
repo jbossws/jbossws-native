@@ -49,7 +49,7 @@ public class SwapableMemoryDataSource implements DataSource
 
    private static final int DEFAULT_MAX_MEMORY_SIZE = 64 * 1024;
 
-   private static final String SWAP_PREFIX = "JBossWSsattachment";
+   private static final String SWAP_PREFIX = "JBossWSattachment";
 
    private static final String SWAP_SUFFIX = ".dat";
 
@@ -119,7 +119,7 @@ public class SwapableMemoryDataSource implements DataSource
             rbaos = null;
          }
 
-         count = inputStream.read(buffer);
+            count = inputStream.read(buffer);
       }
 
       os.flush();
@@ -140,7 +140,11 @@ public class SwapableMemoryDataSource implements DataSource
    protected void finalize() throws Throwable
    {
       super.finalize();
+      cleanup();
+   }
 
+   public void cleanup()
+   {
       if (swapFile != null)
          swapFile.delete();
    }

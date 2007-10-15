@@ -311,6 +311,10 @@ public class RequestHandlerImpl implements RequestHandler
       }
       finally
       {
+
+         // Cleanup outbound attachments
+         CommonMessageContext.cleanupAttachments( MessageContextAssociation.peekMessageContext() );         
+
          // Reset the message context association
          MessageContextAssociation.popMessageContext();
 
