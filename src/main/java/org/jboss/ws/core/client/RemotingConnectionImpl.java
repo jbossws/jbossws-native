@@ -207,11 +207,11 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       }
    }
 
-   private String addURLParameter(String url, String key, String value)
+   private String addURLParameter(String urlStr, String key, String value) throws MalformedURLException
    {
-      int qmIndex = url.indexOf("?");
-      url += (qmIndex < 0 ? "?" : "&") + key + "=" + value;
-      return url;
+      URL url = new URL(urlStr);
+      urlStr += (url.getQuery() == null ? "?" : "&") + key + "=" + value;
+      return urlStr;
    }
 
    private Client createRemotingClient(Object endpoint, String targetAddress, boolean oneway)

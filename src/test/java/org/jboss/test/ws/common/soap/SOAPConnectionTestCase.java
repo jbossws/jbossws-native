@@ -31,6 +31,7 @@ import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
@@ -63,6 +64,27 @@ public class SOAPConnectionTestCase extends JBossWSTest
    public void testConnectURL() throws Exception
    {
       runEndpointTest(new URL(TARGET_ENDPOINT_ADDRESS));
+   }
+
+   // [JBWS-1802] RemotingConnectionImpl.addURLParameter() doesn't guarantee a URL as expected by the JBossRemoting InvokerLocator
+   public void testNullContext() throws Exception
+   {
+      SOAPMessage request = buildValidMessage();
+      SOAPConnection connection = SOAPConnectionFactory.newInstance().createConnection();
+      try
+      {
+         connection.call(request, "http://" + getServerHost() + ":8080");
+      }
+      catch (Exception ex)
+      {
+         while (ex != null)
+         {
+            if(ex instanceof SOAPException && ex.getMessage().equals("Unsupported content type: text/html"))
+               break;
+            else
+               ex = (Exception)ex.getCause();
+         }
+      }
    }
 
    private void runEndpointTest(Object endPoint) throws Exception
