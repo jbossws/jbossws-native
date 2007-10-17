@@ -60,8 +60,8 @@ public class WSContractProviderTestCase extends JBossWSTest
 
    private void checkWrapperSource(File outputDir, boolean shouldExist)
    {
-      File file1 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/generated_978001231/SubmitPO.java");
-      File file2 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/generated_978001231/SubmitPOResponse.java");
+      File file1 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/SubmitPO.java");
+      File file2 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/SubmitPOResponse.java");
       assertEquals(shouldExist, file1.exists());
       assertEquals(shouldExist, file2.exists());
    }
@@ -72,12 +72,12 @@ public class WSContractProviderTestCase extends JBossWSTest
       URLClassLoader classLoader = new URLClassLoader(new URL[]{outputDir.toURL()}, Thread.currentThread().getContextClassLoader());
       
       // Check request wrapper
-      Class wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.jaxws.generated_978001231.SubmitPO", classLoader);      
+      Class wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.jaxws.SubmitPO", classLoader);      
       wrapper.getMethod("setPurchaseOrder", PurchaseOrder.class);
       assertEquals(PurchaseOrder.class.getName(), wrapper.getMethod("getPurchaseOrder").getReturnType().getName());
       
       // Check response wrapper
-      wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.jaxws.generated_978001231.SubmitPOResponse", classLoader);
+      wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.jaxws.SubmitPOResponse", classLoader);
       wrapper.getMethod("setPurchaseOrderAck", PurchaseOrderAck.class);
       assertEquals(PurchaseOrderAck.class.getName(), wrapper.getMethod("getPurchaseOrderAck").getReturnType().getName());
    }
