@@ -102,7 +102,7 @@ public class WSDLRequestHandler
    /**
     * Modify the location of wsdl and schema imports
     */
-   private void modifyAddressReferences(URL reqURL, String wsdlHost, String resPath, Element element) throws MalformedURLException
+   private void modifyAddressReferences(URL reqURL, String wsdlHost, String resPath, Element element) throws IOException
    {
       // map wsdl definition imports
       NodeList nlist = element.getChildNodes();
@@ -130,8 +130,30 @@ public class WSDLRequestHandler
                      String newResourcePath = orgLocation;
 
                      if (resPath != null && resPath.indexOf("/") > 0)
-                        newResourcePath = resPath.substring(0, resPath.lastIndexOf("/") + 1) + orgLocation;
+                     {
+                        String resParent = resPath.substring(0, resPath.lastIndexOf("/"));
+                        while (orgLocation.startsWith("../")  && resParent != null)
+                        {
+                           if (resParent.indexOf("/") > 0)
+                           {
+                              resParent = resParent.substring(0, resParent.lastIndexOf("/"));
+                              orgLocation = orgLocation.substring(3);
+                              newResourcePath = resParent + "/" + orgLocation;
+                           }
+                           else
+                           {
+                              orgLocation = orgLocation.substring(3);
+                              newResourcePath = orgLocation;
+                              resParent = null;
+                           }
+                        }
+                     }
 
+                     while (newResourcePath.startsWith("./"))
+                     {
+                        newResourcePath = newResourcePath.substring(2);
+                     }
+                     
                      String reqPath = reqURL.getPath();
                      String completeHost = wsdlHost;
 
