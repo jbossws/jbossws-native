@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source
-* Copyright 2005, JBoss Inc., and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
@@ -33,6 +33,8 @@ import org.jboss.wsf.spi.annotation.WebContext;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
 
 /**
  * Builds ServiceEndpointMetaData for a JAX-WS endpoint.
@@ -56,22 +58,39 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       }
    }
 
-   protected void processEndpointConfig(Class<?> wsClass, String linkName, ServerEndpointMetaData sepMetaData)
+   protected void processEndpointConfig(Deployment dep, ServerEndpointMetaData sepMetaData, Class<?> wsClass, String linkName)
    {
-      EndpointConfig anEndpointConfig = wsClass.getAnnotation(EndpointConfig.class);
-
-      if (anEndpointConfig== null)
-         return;
-
       String configName = null;
       String configFile = null;
       
-      if (anEndpointConfig.configName().length() > 0)
-         configName = anEndpointConfig.configName();
+      EndpointConfig anEndpointConfig = wsClass.getAnnotation(EndpointConfig.class);
+      if (anEndpointConfig != null)
+      {
+         if (anEndpointConfig.configName().length() > 0)
+            configName = anEndpointConfig.configName();
 
-      if (anEndpointConfig.configFile().length() > 0)
-         configFile = anEndpointConfig.configFile();
-
+         if (anEndpointConfig.configFile().length() > 0)
+            configFile = anEndpointConfig.configFile();
+      }
+      
+      JSEArchiveMetaData jseMetaData = dep.getAttachment(JSEArchiveMetaData.class);
+      if (jseMetaData != null)
+      {
+         if (jseMetaData.getConfigName() != null)
+            configName = jseMetaData.getConfigName();
+         if (jseMetaData.getConfigFile() != null)
+            configFile = jseMetaData.getConfigFile();
+      }
+      
+      EJBArchiveMetaData ejbMetaData = dep.getAttachment(EJBArchiveMetaData.class);
+      if (ejbMetaData != null)
+      {
+         if (ejbMetaData.getConfigName() != null)
+            configName = ejbMetaData.getConfigName();
+         if (ejbMetaData.getConfigFile() != null)
+            configFile = ejbMetaData.getConfigFile();
+      }
+      
       if (configName != null || configFile != null)
          sepMetaData.setConfigName(configName, configFile);
    }
@@ -82,7 +101,7 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
 
       if (anWebContext == null)
          return;
-      
+
       boolean isJSEEndpoint = (dep.getType() == DeploymentType.JAXWS_JSE);
 
       // context-root
@@ -143,7 +162,7 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
             sepMetaData.setTransportGuarantee(transportGuarantee);
          }
       }
-      
+
       // secure wsdl access
       sepMetaData.setSecureWSDLAccess(anWebContext.secureWSDLAccess());
 

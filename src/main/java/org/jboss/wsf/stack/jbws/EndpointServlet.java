@@ -23,20 +23,7 @@ package org.jboss.wsf.stack.jbws;
 
 // $Id$
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsf.common.ObjectNameFactory;
-import org.jboss.wsf.spi.invocation.EndpointAssociation;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.invocation.RequestHandler;
-import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
-import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
-import org.jboss.wsf.spi.management.EndpointRegistry;
-import org.jboss.wsf.spi.management.EndpointRegistryFactory;
+import java.io.IOException;
 
 import javax.management.ObjectName;
 import javax.servlet.ServletConfig;
@@ -46,7 +33,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
-import java.io.IOException;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.common.ObjectNameFactory;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
+import org.jboss.wsf.spi.invocation.EndpointAssociation;
+import org.jboss.wsf.spi.invocation.RequestHandler;
+import org.jboss.wsf.spi.management.EndpointRegistry;
+import org.jboss.wsf.spi.management.EndpointRegistryFactory;
 
 /**
  * A servlet that is installed for every web service endpoint.
@@ -67,16 +67,14 @@ public class EndpointServlet extends HttpServlet
       super.init(servletConfig);
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
       epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).getEndpointRegistry();
+
+      servletConfig.getServletContext().getContextPath();
+      String contextPath = servletConfig.getServletContext().getContextPath();
+      initServiceEndpoint(contextPath);
    }
 
    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
    {
-      if (endpoint == null)
-      {
-         String contextPath = req.getContextPath();
-         initServiceEndpoint(contextPath);
-      }
-
       try
       {
          EndpointAssociation.setEndpoint(endpoint);
@@ -124,7 +122,7 @@ public class EndpointServlet extends HttpServlet
          log.debug("Updating service endpoint config\n  config-name: " + configName + "\n  config-file: " + configFile);
          epMetaData.setConfigName(configName, configFile);
       }
-   }   
+   }
 
    private void initEndpoint(String contextPath, String servletName)
    {
@@ -133,10 +131,8 @@ public class EndpointServlet extends HttpServlet
 
       if (this.endpoint == null)
       {
-         ObjectName oname = ObjectNameFactory.create(Endpoint.SEPID_DOMAIN + ":" +
-           Endpoint.SEPID_PROPERTY_CONTEXT + "=" + contextPath + "," +
-           Endpoint.SEPID_PROPERTY_ENDPOINT + "=" + getServletName()
-         );
+         ObjectName oname = ObjectNameFactory.create(Endpoint.SEPID_DOMAIN + ":" + Endpoint.SEPID_PROPERTY_CONTEXT + "=" + contextPath + ","
+               + Endpoint.SEPID_PROPERTY_ENDPOINT + "=" + getServletName());
          throw new WebServiceException("Cannot obtain endpoint for: " + oname);
       }
 
