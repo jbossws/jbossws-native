@@ -124,6 +124,10 @@ public class WSDLRequestHandler
                if (locationAttr != null)
                {
                   String orgLocation = locationAttr.getNodeValue();
+                  
+                  while (orgLocation.startsWith("./"))
+                     orgLocation = orgLocation.substring(2);
+                  
                   boolean isAbsolute = orgLocation.startsWith("http://") || orgLocation.startsWith("https://");
                   if (isAbsolute == false && orgLocation.startsWith(reqURL.getPath()) == false)
                   {
@@ -149,11 +153,6 @@ public class WSDLRequestHandler
                         }
                      }
 
-                     while (newResourcePath.startsWith("./"))
-                     {
-                        newResourcePath = newResourcePath.substring(2);
-                     }
-                     
                      String reqPath = reqURL.getPath();
                      String completeHost = wsdlHost;
 
