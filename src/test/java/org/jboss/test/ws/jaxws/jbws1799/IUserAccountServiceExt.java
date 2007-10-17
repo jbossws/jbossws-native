@@ -24,6 +24,8 @@ package org.jboss.test.ws.jaxws.jbws1799;
 import javax.ejb.Remote;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
 
 /**
  * Second service interface
@@ -36,6 +38,8 @@ import javax.jws.WebService;
 @WebService
 public interface IUserAccountServiceExt
 {
+   @RequestWrapper(className="org.jboss.test.ws.jaxws.jbws1799.jaxws.Authenticate1")
+   @ResponseWrapper(className="org.jboss.test.ws.jaxws.jbws1799.jaxws.Authenticate1Response")
    public boolean authenticate
    (
          @WebParam(name="username") String username,

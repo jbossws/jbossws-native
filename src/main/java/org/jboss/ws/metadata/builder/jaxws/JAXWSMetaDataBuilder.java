@@ -108,7 +108,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 {
 
    protected static final Logger log = Logger.getLogger(JAXWSWebServiceMetaDataBuilder.class);
-   protected List<Class> javaTypes = new ArrayList<Class>();
+   protected List<Class<?>> javaTypes = new ArrayList<Class<?>>();
    protected JAXBRIContext jaxbCtx;
    protected List<TypeReference> typeRefs = new ArrayList<TypeReference>();
    protected WrapperGenerator wrapperGenerator;
@@ -283,7 +283,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       String namespace = xmlType.getNamespaceURI();
 
       String faultBean = null;
-      Class faultBeanClass = getFaultInfo(exception);
+      Class<?> faultBeanClass = getFaultInfo(exception);
       if (faultBeanClass != null)
          faultBean = faultBeanClass.getName();
 
@@ -325,7 +325,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       return JAXBRIContext.mangleNameToVariableName(localName.intern());
    }
 
-   private String[] convertTypeArguments(Class rawType, Type type)
+   private String[] convertTypeArguments(Class<?> rawType, Type type)
    {
       if (!Collection.class.isAssignableFrom(rawType) && !Map.class.isAssignableFrom(rawType))
          return null;
@@ -363,7 +363,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (requestWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
-         requestWrapperType = packageName + ".jaxws." + generateId(method) + "." + JavaUtils.capitalize(method.getName());
+         requestWrapperType = packageName + ".jaxws." + JavaUtils.capitalize(method.getName());
       }
 
       // JAX-WS p.37 pg.1, the annotation only affects the element name, not the type name
@@ -372,28 +372,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       operation.addParameter(wrapperParameter);
 
       return wrapperParameter;
-   }
-   
-   /**
-    * Generates unique string used for package name creation
-    */
-   private static String generateId(Method method)
-   {
-      int hashCode = 17;
-      hashCode = 37 * hashCode + method.getDeclaringClass().getName().hashCode();
-      hashCode = 37 * hashCode + method.getName().hashCode(); 
-      hashCode = 37 * hashCode + generateId(method.getParameterTypes()); 
-      return ("generated_" + hashCode).replace('-', '_');
-   }
-   
-   private static int generateId(Class<?>[] args)
-   {
-      int result = 17;
-      for (int i = 0; i < args.length; i++)
-      {
-         result = 37 * result + args[i].getName().hashCode();
-      }
-      return result;
    }
    
    private ParameterMetaData createResponseWrapper(OperationMetaData operation, Method method)
@@ -418,7 +396,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (responseWrapperType == null)
       {
          String packageName = JavaUtils.getPackageName(method.getDeclaringClass());
-         responseWrapperType = packageName + ".jaxws." + generateId(method) + "." + JavaUtils.capitalize(method.getName()) + "Response";
+         responseWrapperType = packageName + ".jaxws." + JavaUtils.capitalize(method.getName()) + "Response";
       }
 
       ParameterMetaData retMetaData = new ParameterMetaData(operation, xmlName, xmlType, responseWrapperType);
@@ -428,12 +406,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       return retMetaData;
    }
 
-   private Class getFaultInfo(Class exception)
+   private Class<?> getFaultInfo(Class<?> exception)
    {
       try
       {
          Method method = exception.getMethod("getFaultInfo");
-         Class returnType = method.getReturnType();
+         Class<?> returnType = method.getReturnType();
          if (returnType == void.class)
             return null;
 
@@ -449,7 +427,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
    }
 
-   private ParameterMode getParameterMode(WebParam anWebParam, Class javaType)
+   private ParameterMode getParameterMode(WebParam anWebParam, Class<?> javaType)
    {
       if (anWebParam != null)
       {
@@ -612,7 +590,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       // Attachment annotations on SEI parameters
       List<AttachmentScanResult> scanResult = ReflectiveAttachmentRefScanner.scanMethod(method);
 
-      Class[] parameterTypes = method.getParameterTypes();
+      Class<?>[] parameterTypes = method.getParameterTypes();
       Type[] genericTypes = method.getGenericParameterTypes();
       Annotation[][] parameterAnnotations = method.getParameterAnnotations();
       ParameterMetaData wrapperParameter = null, wrapperOutputParameter = null;
@@ -640,7 +618,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       for (int i = 0; i < parameterTypes.length; i++)
       {
-         Class javaType = parameterTypes[i];
+         Class<?> javaType = parameterTypes[i];
          Type genericType = genericTypes[i];
          String javaTypeName = javaType.getName();
          WebParam anWebParam = getWebParamAnnotation(method, i);
@@ -716,7 +694,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
 
       // Build result meta data
-      Class returnType = method.getReturnType();
+      Class<?> returnType = method.getReturnType();
       Type genericReturnType = method.getGenericReturnType();
       String returnTypeName = returnType.getName();
       if (!(returnType == void.class))
@@ -781,7 +759,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          if (wrapperParameter.loadWrapperBean() == null)
             wrapperGenerator.generate(wrapperParameter);
 
-         Class wrapperClass = wrapperParameter.getJavaType();
+         Class<?> wrapperClass = wrapperParameter.getJavaType();
          javaTypes.add(wrapperClass);
 
          // In case there is no @XmlRootElement
@@ -800,7 +778,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
 
       // Add faults
-      for (Class exClass : method.getExceptionTypes())
+      for (Class<?> exClass : method.getExceptionTypes())
          if (!RemoteException.class.isAssignableFrom(exClass))
             addFault(opMetaData, exClass);
 
@@ -882,7 +860,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
    }
 
-   protected void processWebMethods(EndpointMetaData epMetaData, Class wsClass)
+   protected void processWebMethods(EndpointMetaData epMetaData, Class<?> wsClass)
    {
       epMetaData.clearOperations();
 
@@ -985,7 +963,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       QName xmlName = paramMetaData.getXmlName();
       QName xmlType = paramMetaData.getXmlType();
-      Class javaType = paramMetaData.getJavaType();
+      Class<?> javaType = paramMetaData.getJavaType();
       String javaName = paramMetaData.getJavaTypeName();
 
       if (xmlType == null)
