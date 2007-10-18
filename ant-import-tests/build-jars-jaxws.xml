@@ -369,18 +369,79 @@
     </war>
     
     <!-- jaxws-jbws1762 -->
-    <mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762.war"/>
-    <mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF"/>
-    <mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF/classes"/>
-    <copy file="${tests.output.dir}/resources/jaxws/jbws1762/WEB-INF/web.xml" toDir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF"/>
-    <copy toDir="${tests.output.dir}/libs/jaxws-jbws1762.war/WEB-INF/classes">
+    <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/jbws1762/JBWS1762.class"/>
-        <include name="org/jboss/test/ws/jaxws/jbws1762/JBWS1762Impl.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws1762/services/EJB3Bean.class"/>
       </fileset>
-    </copy>
+    </jar>
+  	
+  	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.jar"/>
+  	<unjar
+  		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.jar"
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.jar"
+  	/>
+  	
+    <war warfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war" webxml="${tests.output.dir}/resources/jaxws/jbws1762/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1762/services/POJOBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws1762/services/POJOIface.class"/>
+      </classes>
+    </war>
     
-    <!-- jaxws-jbws1797 -->
+  	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.war"/>
+  	<unwar
+  		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.war"
+  	/>
+  	
+    <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.sar">
+      <fileset dir="${tests.output.dir}/libs">
+        <include name="jaxws-jbws1762-packaged.war"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/jbws1762/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
+
+  	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar"/>
+  	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
+  	<copy
+  		file="${tests.output.dir}/resources/jaxws/jbws1762/META-INF/jboss-service.xml"
+  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
+  	<unwar
+  		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/jaxws-jbws1762-exploded.war"
+  	/>
+
+    <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.ear">
+      <fileset dir="${tests.output.dir}/libs">
+        <include name="jaxws-jbws1762-packaged.jar"/>
+        <include name="jaxws-jbws1762-packaged.war"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/jbws1762/META-INF/packaged">
+        <include name="application.xml"/>
+        <include name="jboss-app.xml"/>
+      </metainf>
+    </jar>
+
+  	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear"/>
+  	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/META-INF"/>
+  	<copy
+  		file="${tests.output.dir}/resources/jaxws/jbws1762/META-INF/exploded/application.xml"
+  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
+  	<copy
+  		file="${tests.output.dir}/resources/jaxws/jbws1762/META-INF/exploded/jboss-app.xml"
+  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
+  	<unwar
+  		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.war"
+  	/>
+  	<unjar
+  		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.jar"
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.jar"
+  	/>
+
+  	<!-- jaxws-jbws1797 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1797.war" webxml="${tests.output.dir}/resources/jaxws/jbws1797/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1797/*.class"/>
