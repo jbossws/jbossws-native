@@ -19,19 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762.services;
+package org.jboss.test.ws.jaxrpc.jbws1762.packaged_war_pojo;
 
 /**
- * POJO interface
+ * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
  *
  * @author richard.opalka@jboss.com
  *
- * @since Oct 17, 2007
+ * @since Oct 19, 2007
  */
-import javax.jws.WebService;
-
-@WebService
-public interface POJOIface
-{
-   String echo(String msg);
-}
+public class Iteration3TestCase extends Iteration2TestCase {}
