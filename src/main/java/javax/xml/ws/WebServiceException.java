@@ -31,6 +31,7 @@ package javax.xml.ws;
 
 public class WebServiceException extends java.lang.RuntimeException
 {
+   private static final long serialVersionUID = 9050257594613372011L;
 
    /** Constructs a new exception with <code>null</code> as its 
     *  detail message. The cause is not initialized.
