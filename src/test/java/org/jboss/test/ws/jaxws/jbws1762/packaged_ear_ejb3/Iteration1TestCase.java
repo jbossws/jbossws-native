@@ -42,6 +42,6 @@ public class Iteration1TestCase extends AbstractEJB3Test
    
    public String getWSDLLocation()
    {
-      return "jaxws-jbws1762-packaged/EJB3Bean?wsdl";
+      return "jaxws-jbws1762-packaged-jaxws-jbws1762-packaged/EJB3Bean?wsdl";
    }
 }

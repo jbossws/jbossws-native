@@ -428,10 +428,10 @@
   	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/META-INF"/>
   	<copy
   		file="${tests.output.dir}/resources/jaxws/jbws1762/META-INF/exploded/application.xml"
-  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
+  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/META-INF"/>
   	<copy
   		file="${tests.output.dir}/resources/jaxws/jbws1762/META-INF/exploded/jboss-app.xml"
-  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
+  		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/META-INF"/>
   	<unwar
   		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
   		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.war"
