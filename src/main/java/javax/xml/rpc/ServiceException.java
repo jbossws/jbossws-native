@@ -28,6 +28,8 @@ package javax.xml.rpc;
  */
 public class ServiceException extends Exception
 {
+   private static final long serialVersionUID = -4042547292194127311L;
+
    public ServiceException()
    {
    }
