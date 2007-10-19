@@ -262,7 +262,7 @@
 
   </target>
 
-  <target name="jars-jboss50" depends="jars-common" if="jboss500.home">
+  <target name="jars-jboss50" depends="jars-common">
 
     <!-- Concat jbossws-beans.xml -->
     <concat destfile="${core.output.lib.dir}/jbossws-native50/jbossws-beans.xml">
@@ -301,7 +301,7 @@
 
   </target>
 
-  <target name="jars-jboss42" depends="jars-common" if="jboss422.home">
+  <target name="jars-jboss42" depends="jars-common">
 
     <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss42-resources.zip"/>
 
@@ -352,7 +352,7 @@
     </jar>
   </target>
 
-  <target name="jars-jboss40" depends="jars-common" if="jboss405.home">
+  <target name="jars-jboss40" depends="jars-common">
 
     <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss40-resources.zip"/>
 
