@@ -24,11 +24,11 @@
 				thirdpartylibs="${lib.dir}"/>
 		<macro-deploy-framework
 				thirdpartylibs="${lib.dir}"
-        jbosshome="${jboss50.home}"/>
+        jbosshome="${jboss500.home}"/>
 	</target>
 	<target name="deploy-jboss50-endorsed" depends="prepare" if="HAVE_JDK_1.6">
 		<macro-deploy-endorsed
-				jbosshome="${jboss50.home}"
+				jbosshome="${jboss500.home}"
 				stacklibs="${lib.dir}"
 				thirdpartylibs="${lib.dir}"/>
 	</target>
@@ -36,7 +36,7 @@
 	<!-- Remove jbossws/native from jboss50 -->
 	<target name="undeploy-jboss50" depends="prepare" description="Remove jbossws/native from jboss50">
 		<macro-undeploy-native50/>
-		<macro-undeploy-framework jbosshome="${jboss50.home}"/>
+		<macro-undeploy-framework jbosshome="${jboss500.home}"/>
 	</target>
 
 	<!-- Deploy jbossws/native to jboss42 -->
@@ -46,11 +46,11 @@
 				thirdpartylibs="${lib.dir}"/>
 		<macro-deploy-framework
 				thirdpartylibs="${lib.dir}"
-        jbosshome="${jboss42.home}"/>
+        jbosshome="${jboss422.home}"/>
 	</target>
 	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
 		<macro-deploy-endorsed
-				jbosshome="${jboss42.home}"
+				jbosshome="${jboss422.home}"
 				stacklibs="${lib.dir}"
 				thirdpartylibs="${lib.dir}"/>
 	</target>
@@ -58,10 +58,10 @@
 	<!-- Remove jbossws/native from jboss42 -->
 	<target name="undeploy-jboss42" depends="prepare,undeploy-jboss42-endorsed" description="Remove jbossws/native from jboss42">
 		<macro-undeploy-native42/>
-		<macro-undeploy-framework jbosshome="${jboss42.home}"/>
+		<macro-undeploy-framework jbosshome="${jboss422.home}"/>
 	</target>
 	<target name="undeploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">		
-		<macro-undeploy-endorsed jbosshome="${jboss42.home}"/>
+		<macro-undeploy-endorsed jbosshome="${jboss422.home}"/>
 	</target>
 
 	<!-- Deploy jbossws/native to jboss40 -->
@@ -74,10 +74,10 @@
     
 		<macro-deploy-framework
 				thirdpartylibs="${lib.dir}"
-        jbosshome="${jboss40.home}"/>
+        jbosshome="${jboss405.home}"/>
 	</target>
 
-	<target name="deploy-jboss40-no-ejb3" depends="deploy-jboss40-ejb3" unless="jboss40.ejb3.available">
+	<target name="deploy-jboss40-no-ejb3" depends="deploy-jboss40-ejb3" unless="jboss405.ejb3.available">
 		<macro-setup-native40-no-ejb3/>
     <echo>
       ***********************************
@@ -90,7 +90,7 @@
 	<!-- Remove jbossws/native from jboss40 -->
 	<target name="undeploy-jboss40" depends="prepare" description="Remove jbossws/native from jboss40">
 		<macro-undeploy-native40/>
-		<macro-undeploy-framework jbosshome="${jboss40.home}"/>
+		<macro-undeploy-framework jbosshome="${jboss405.home}"/>
 	</target>
 
 </project>
