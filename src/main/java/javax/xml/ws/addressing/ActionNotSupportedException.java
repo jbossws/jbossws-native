@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 
 public class ActionNotSupportedException extends AddressingException
 {
+   private static final long serialVersionUID = -2281268200778671820L;
 
    static
    {
