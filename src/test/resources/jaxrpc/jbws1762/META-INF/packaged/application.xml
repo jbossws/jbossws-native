@@ -4,12 +4,12 @@
    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application_1_4.xsd"
    version="1.4">
    <module>
-      <ejb>jaxws-jbws1762-exploded.jar</ejb>
+      <ejb>jaxrpc-jbws1762-packaged.jar</ejb>
    </module>
    <module>
       <web>
-         <web-uri>jaxws-jbws1762-exploded.war</web-uri>
-         <context-root>jaxws-jbws1762-exploded</context-root>
+         <web-uri>jaxrpc-jbws1762-packaged.war</web-uri>
+         <context-root>jaxrpc-jbws1762-packaged-war</context-root>
       </web>
    </module>
 </application>

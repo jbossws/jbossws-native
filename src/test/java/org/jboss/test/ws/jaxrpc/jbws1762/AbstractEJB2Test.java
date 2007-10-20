@@ -25,11 +25,10 @@ import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.Service;
-import javax.xml.rpc.ServiceFactory;
 
-import org.jboss.test.ws.jaxrpc.jbws1762.services.POJOIface;
+import org.jboss.test.ws.jaxrpc.jbws1762.services.EJB2Iface;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
@@ -37,28 +36,28 @@ import org.jboss.wsf.test.JBossWSTest;
  *
  * @author richard.opalka@jboss.com
  *
- * @since Oct 18, 2007
+ * @since Oct 20, 2007
  */
-public abstract class AbstractPOJOTest extends JBossWSTest
+public abstract class AbstractEJB2Test extends JBossWSTest
 {
-   private POJOIface pojoProxy;
-
+   private EJB2Iface ejb2Proxy;
+   
    public void setUp() throws Exception
    {
       super.setUp();
-      ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
-      URL mappingURL = new File("resources/jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml").toURL();
-      QName serviceName = new QName("http://org.jboss.test.ws/jbws1762", "POJOBean");
-         
-      Service service = factory.createService(wsdlURL, serviceName, mappingURL);
-      pojoProxy = (POJOIface)service.getPort(POJOIface.class);
+      URL mappingURL = new File("resources/jaxrpc/jbws1762/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws1762", "EJB2Bean");
+      
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, serviceName, mappingURL);
+      ejb2Proxy = (EJB2Iface)service.getPort(EJB2Iface.class);
    }
    
    protected abstract String getWSDLLocation();
-
-   public void testPOJO() throws Exception
+   
+   public void testEJB2() throws Exception
    {
-      assertEquals(pojoProxy.echo("Hello!"), "Hello!");
+      assertEquals(ejb2Proxy.echo("Hello!"), "Hello!");
    }
 }

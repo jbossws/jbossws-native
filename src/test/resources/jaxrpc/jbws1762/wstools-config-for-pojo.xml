@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  wstools -cp classes -dest ./WEB-INF -config wstools-config.xml
+  wstools -cp classes -dest ./WEB-INF -config wstools-config-for-pojo.xml
 -->
 <configuration
    xmlns="http://www.jboss.org/jbossws-tools"
