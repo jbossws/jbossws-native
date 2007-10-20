@@ -378,8 +378,7 @@
   	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.jar"/>
   	<unjar
   		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.jar"
-  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.jar"
-  	/>
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.jar"/>
   	
     <war warfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war" webxml="${tests.output.dir}/resources/jaxws/jbws1762/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -391,8 +390,7 @@
   	<mkdir dir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.war"/>
   	<unwar
   		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
-  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.war"
-  	/>
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.war"/>
   	
     <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.sar">
       <fileset dir="${tests.output.dir}/libs">
@@ -410,8 +408,7 @@
   		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/META-INF"/>
   	<unwar
   		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
-  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/jaxws-jbws1762-exploded.war"
-  	/>
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.sar/jaxws-jbws1762-exploded.war"/>
 
     <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1762-packaged.ear">
       <fileset dir="${tests.output.dir}/libs">
@@ -434,12 +431,10 @@
   		todir="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/META-INF"/>
   	<unwar
   		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.war"
-  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.war"
-  	/>
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.war"/>
   	<unjar
   		src="${tests.output.dir}/libs/jaxws-jbws1762-packaged.jar"
-  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.jar"
-  	/>
+  		dest="${tests.output.dir}/libs/jaxws-jbws1762-exploded.ear/jaxws-jbws1762-exploded.jar"/>
 
   	<!-- jaxws-jbws1797 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1797.war" webxml="${tests.output.dir}/resources/jaxws/jbws1797/WEB-INF/web.xml">

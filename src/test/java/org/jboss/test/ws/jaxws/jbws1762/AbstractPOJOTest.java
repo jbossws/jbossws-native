@@ -46,15 +46,11 @@ public abstract class AbstractPOJOTest extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
+      QName serviceName = new QName(pojoTargetNS, pojoServiceName);
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
 
-      if (pojoProxy == null)
-      {
-         QName serviceName = new QName(pojoTargetNS, pojoServiceName);
-         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
-
-         Service service = Service.create(wsdlURL, serviceName);
-         pojoProxy = (POJOIface)service.getPort(POJOIface.class);
-      }
+      Service service = Service.create(wsdlURL, serviceName);
+      pojoProxy = (POJOIface)service.getPort(POJOIface.class);
    }
    
    protected abstract String getWSDLLocation();
