@@ -28,6 +28,7 @@ import javax.xml.ws.WebServiceException;
 
 public class AddressingException extends WebServiceException
 {
+   private static final long serialVersionUID = -4470655951999027171L;
 
    protected QName code;
 

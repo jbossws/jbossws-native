@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 
 public class InvalidMapException extends AddressingException
 {
+   private static final long serialVersionUID = 1760077070006214469L;
 
    static
    {

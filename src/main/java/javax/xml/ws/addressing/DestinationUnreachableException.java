@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 
 public class DestinationUnreachableException extends AddressingException
 {
+   private static final long serialVersionUID = 7420697131368408456L;
 
    static
    {

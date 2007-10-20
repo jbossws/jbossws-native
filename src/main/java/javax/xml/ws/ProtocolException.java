@@ -32,6 +32,8 @@ package javax.xml.ws;
  **/
 public class ProtocolException extends WebServiceException
 {
+   private static final long serialVersionUID = 6688436881502883481L;
+
    /**
     * Constructs a new protocol exception with null as its detail message. The
     * cause is not initialized, and may subsequently be initialized by a call
