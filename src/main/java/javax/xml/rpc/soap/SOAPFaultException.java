@@ -48,7 +48,7 @@ import javax.xml.soap.Name;
  */
 public class SOAPFaultException extends RuntimeException
 {
-   private static final long serialVersionUID = 2231461982722876067L;
+   private static final long serialVersionUID = -7224636940495025621L;
 
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultException.class.getName());
