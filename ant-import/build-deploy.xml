@@ -30,7 +30,7 @@
   
 	<target name="deploy-jboss405-no-ejb3" depends="jars-jboss40,undeploy-jboss405,deploy-jboss405-ejb3" unless="jboss405.ejb3.available"
             description="Deploy jbossws to jboss405 without EJB3 support">
-            <macro-setup-native40-no-ejb3/>
+            <macro-setup-native405-no-ejb3/>
 	</target>
   
 	<!-- Remove jbossws from jboss405 -->
