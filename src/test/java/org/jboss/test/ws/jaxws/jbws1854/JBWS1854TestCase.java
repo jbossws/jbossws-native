@@ -19,33 +19,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package javax.xml.soap;
+package org.jboss.test.ws.jaxws.jbws1854;
 
+import java.net.URL;
+
+import javax.jws.WebService;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
+import junit.framework.Test;
+
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * @author Scott.Stark@jboss.org
- * @version $Revision$
+ * [JBWS-1854] Cannot deploy nested JSE endpoint in SAR
+ * 
+ * http://jira.jboss.org/jira/browse/JBWS-1854
+ *
+ * @author Thomas.Diesler@jboss.com
+ * @since 13-Oct-2007
  */
-public class SOAPException extends Exception
+public class JBWS1854TestCase extends JBossWSTest
 {
-   private static final long serialVersionUID = 5083961510786058130L;
-
-   public SOAPException()
+   public static Test suite()
    {
+      return new JBossWSTestSetup(JBWS1854TestCase.class, "jaxws-jbws1854.sar");
    }
 
-   public SOAPException(String message)
+   public void testPortAccess() throws Exception
    {
-      super(message);
-   }
-
-   public SOAPException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
-
-   public SOAPException(Throwable cause)
-   {
-      super(cause);
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1854?wsdl");
+      QName serviceName = new QName("http://org.jboss.ws/jbws1854", "TestEndpointService" );
+      Service service = Service.create(wsdlURL, serviceName);
+      TestEndpoint port = service.getPort(TestEndpoint.class);
+      String retStr = port.echo("hello");
+      assertEquals("hello", retStr);
    }
 }

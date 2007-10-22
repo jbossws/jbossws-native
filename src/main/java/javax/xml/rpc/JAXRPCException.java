@@ -28,6 +28,8 @@ package javax.xml.rpc;
  */
 public class JAXRPCException extends RuntimeException
 {
+   private static final long serialVersionUID = 5213579554532711730L;
+
    public JAXRPCException()
    {
    }

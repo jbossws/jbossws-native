@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 
 public class EndpointUnavailableException extends AddressingException
 {
+   private static final long serialVersionUID = 4098776568071868541L;
 
    static
    {

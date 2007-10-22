@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2007, JBoss Inc., and individual contributors as indicated
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -19,18 +19,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.jbws1792;
+package org.jboss.test.ws.jaxws.jbws1854;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
-/**
- * @author darran.lofthouse@jboss.com
- * @since Aug 22, 2007
- */
-public interface TestEndpoint extends Remote
+@WebService(name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/jbws1854")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public interface TestEndpoint
 {
-
-   public String echoMessage(final String message) throws RemoteException;
-
+   String echo(String input);
 }

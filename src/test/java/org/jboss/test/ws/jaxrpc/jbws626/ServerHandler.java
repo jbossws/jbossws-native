@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws626;
 
+import org.jboss.ws.core.CommonMessageContext;
+
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -83,6 +85,10 @@ public class ServerHandler extends GenericHandler
             wasName = soapElement.getElementName();
             assertElementName(expName, wasName);
          }
+
+         // for testing the CommonBindingProvider memory leak. Not related to this test...
+         ((CommonMessageContext)msgContext).setModified(true);
+
       }
       catch (SOAPException ex)
       {

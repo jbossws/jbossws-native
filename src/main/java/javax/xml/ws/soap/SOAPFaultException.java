@@ -50,7 +50,8 @@ import javax.xml.soap.SOAPFault;
  **/
 public class SOAPFaultException extends javax.xml.ws.ProtocolException
 {
-
+   private static final long serialVersionUID = 3948617580148536298L;
+   
    private SOAPFault fault;
 
    /** Constructor for SOAPFaultException
