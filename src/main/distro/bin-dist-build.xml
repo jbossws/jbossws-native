@@ -28,36 +28,59 @@
 	<property file="${basedir}/ant.properties"/>
 	<property file="${basedir}/version.properties"/>
 
-	<property name="jboss500.lib" value="${jboss500.home}/lib"/>
-	<property name="jboss500.client" value="${jboss500.home}/client"/>
-	<property name="jboss500.server" value="${jboss500.home}/server/${jboss.server.instance}"/>
-	<property name="jboss500.server.lib" value="${jboss500.server}/lib"/>
-	<property name="jboss500.server.deploy" value="${jboss500.server}/deploy"/>
-	<property name="jboss500.server.deployers" value="${jboss500.server}/deployers"/>
+  <property name="jboss405.lib" value="${jboss405.home}/lib"/>
+  <property name="jboss405.client" value="${jboss405.home}/client"/>
+  <property name="jboss405.server" value="${jboss405.home}/server/${jboss.server.instance}"/>
+  <property name="jboss405.server.lib" value="${jboss405.server}/lib"/>
+  <property name="jboss405.server.deploy" value="${jboss405.server}/deploy"/>
 
-	<property name="jboss422.lib" value="${jboss422.home}/lib"/>
-	<property name="jboss422.client" value="${jboss422.home}/client"/>
-	<property name="jboss422.server" value="${jboss422.home}/server/${jboss.server.instance}"/>
-	<property name="jboss422.server.lib" value="${jboss422.server}/lib"/>
-	<property name="jboss422.server.deploy" value="${jboss422.server}/deploy"/>
+  <property name="jboss421.lib" value="${jboss421.home}/lib"/>
+  <property name="jboss421.client" value="${jboss421.home}/client"/>
+  <property name="jboss421.server" value="${jboss421.home}/server/${jboss.server.instance}"/>
+  <property name="jboss421.server.lib" value="${jboss421.server}/lib"/>
+  <property name="jboss421.server.deploy" value="${jboss421.server}/deploy"/>
 
-	<property name="jboss405.lib" value="${jboss405.home}/lib"/>
-	<property name="jboss405.client" value="${jboss405.home}/client"/>
-	<property name="jboss405.server" value="${jboss405.home}/server/${jboss.server.instance}"/>
-	<property name="jboss405.server.lib" value="${jboss405.server}/lib"/>
-	<property name="jboss405.server.deploy" value="${jboss405.server}/deploy"/>
+  <property name="jboss422.lib" value="${jboss422.home}/lib"/>
+  <property name="jboss422.client" value="${jboss422.home}/client"/>
+  <property name="jboss422.server" value="${jboss422.home}/server/${jboss.server.instance}"/>
+  <property name="jboss422.server.lib" value="${jboss422.server}/lib"/>
+  <property name="jboss422.server.deploy" value="${jboss422.server}/deploy"/>
 
-	<property name="jbossws.integration.${jbossws.integration.target}" value="true"/>
-
-	<property name="jboss500.available.file" value="${jboss500.client}/jboss-ejb3-client.jar"/>
-	<property name="jboss422.available.file" value="${jboss422.client}/jboss-client.jar"/>
-	<property name="jboss405.available.file" value="${jboss405.client}/jboss-client.jar"/>
-
-	<available property="jboss500.available" file="${jboss500.available.file}"/>
-	<available property="jboss422.available" file="${jboss422.available.file}"/>
-	<available property="jboss405.available" file="${jboss405.available.file}"/>
+  <property name="jboss500.lib" value="${jboss500.home}/lib"/>
+  <property name="jboss500.client" value="${jboss500.home}/client"/>
+  <property name="jboss500.server" value="${jboss500.home}/server/${jboss.server.instance}"/>
+  <property name="jboss500.server.lib" value="${jboss500.server}/lib"/>
+  <property name="jboss500.server.deploy" value="${jboss500.server}/deploy"/>
+  <property name="jboss500.server.deployers" value="${jboss500.server}/deployers"/>
   
+  <property name="jboss.server.instance.${jboss.server.instance}" value="true"/>
+ 
+  <property name="jboss405.available.file" value="${jboss405.client}/jboss-client.jar"/>
+  <property name="jboss421.available.file" value="${jboss421.client}/jboss-client.jar"/>
+  <property name="jboss422.available.file" value="${jboss422.client}/jboss-client.jar"/>
+  <property name="jboss500.available.file" value="${jboss500.client}/jboss-ejb3-client.jar"/>
+  
+  <available property="jboss405.available" file="${jboss405.available.file}"/>
   <available property="jboss405.ejb3.available" file="${jboss405.client}/jboss-ejb3-client.jar"/>
+  <available property="jboss421.available" file="${jboss421.available.file}"/>
+  <available property="jboss422.available" file="${jboss422.available.file}"/>
+  <available property="jboss500.available" file="${jboss500.available.file}"/>
+  
+  <condition property="jbossws.integration.jboss40" value="true">
+    <or>
+      <equals arg1="${jbossws.integration.target}" arg2="jboss405"/>
+      <equals arg1="${jbossws.integration.target}" arg2="jboss405.no.ejb3"/>
+    </or>
+  </condition>
+  <condition property="jbossws.integration.jboss42" value="true">
+    <or>
+      <equals arg1="${jbossws.integration.target}" arg2="jboss421"/>
+      <equals arg1="${jbossws.integration.target}" arg2="jboss422"/>
+    </or>
+  </condition>
+  <condition property="jbossws.integration.jboss50" value="true">
+    <equals arg1="${jbossws.integration.target}" arg2="jboss500"/>
+  </condition>
   
   <!-- JDK Detection -->
   <available classname="java.lang.Enum" property="HAVE_JDK_1.5"/>

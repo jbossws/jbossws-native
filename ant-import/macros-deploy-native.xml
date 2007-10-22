@@ -119,7 +119,7 @@
     </sequential>
   </macrodef>
   
-  <macrodef name="macro-setup-native405-no-ejb3">
+  <macrodef name="macro-deploy-native405-no-ejb3">
     <sequential>
       
       <move tofile="${jboss405.home}/server/${jboss.server.instance}/deploy/jbossws.sar/META-INF/jboss-service-ejb3.xml"
