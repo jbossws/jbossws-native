@@ -538,6 +538,9 @@
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1854/TestEndpointImpl.class"/>
       </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbws1854/WEB-INF">
+        <include name="jboss-web.xml"/>
+      </webinf>
     </war>
     <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1854.sar">
       <fileset dir="${tests.output.dir}/libs">

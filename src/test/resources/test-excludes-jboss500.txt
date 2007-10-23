@@ -8,9 +8,21 @@ org/jboss/test/ws/jaxrpc/wsdlpublish/**
 # [JBAS-4898] class-loading not found as a child of jboss-web
 org/jboss/test/ws/jaxws/jbws1581/**
 
-# [JBAS-4901] class-loading not found as a child of jboss-web
+# [JBAS-4901] Reverse paths are not allowed (containing a . or ..)
 org/jboss/test/ws/jaxws/jbws1798/**
 
 # [JBAS-4902] nested jar not deployed
 org/jboss/test/ws/jaxws/jbws1813/**
 
+# [JBAS-4890] EJBAccessException: Caller unauthorized
+org/jboss/test/ws/jaxws/jbws1840/**
+org/jboss/test/ws/jaxws/samples/context/**
+# org/jboss/test/ws/jaxws/samples/wssecurity/**
+
+# [JBAS-4895] JAXB based ServiceRef meta data
+org/jboss/test/ws/jaxws/samples/serviceref/**
+org/jboss/test/ws/jaxws/samples/webserviceref/**
+org/jboss/test/ws/jaxws/samples/wsaddressing/replyto/**
+
+# [JBAS-4903] EJB 2.1 view cannot be realized
+org/jboss/test/ws/jaxws/jbws944/**
