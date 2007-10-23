@@ -64,7 +64,7 @@ public class JBWS1815TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(JBWS1815TestCase.class, "jaxws-jbws1815.ejb3");
+      return new JBossWSTestSetup(JBWS1815TestCase.class, "jaxws-jbws1815.jar");
    }
 
    public void testWSDLAccess() throws Exception
