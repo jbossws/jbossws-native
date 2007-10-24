@@ -4,13 +4,18 @@ org/jboss/test/ws/jaxws/jbws1581/**
 # [JBAS-4901] Reverse paths are not allowed (containing a . or ..)
 org/jboss/test/ws/jaxws/jbws1798/**
 
+# [JBAS-4896] NPE in JBossMetaDataWrapper
+org/jboss/test/ws/jaxrpc/jbas897/**
+org/jboss/test/ws/jaxrpc/jbws1427/**
+
 # [JBAS-4902] nested jar not deployed
 org/jboss/test/ws/jaxws/jbws1813/**
+org/jboss/test/ws/jaxws/jbws165/**
 
 # [JBAS-4890] EJBAccessException: Caller unauthorized
 org/jboss/test/ws/jaxws/jbws1840/**
 org/jboss/test/ws/jaxws/samples/context/**
-org/jboss/test/ws/jaxws/samples/wssecurity/**
+#org/jboss/test/ws/jaxws/samples/wssecurity/**
 
 # [JBAS-4895] JAXB based ServiceRef meta data
 org/jboss/test/ws/benchmark/jaxrpc/**
@@ -73,7 +78,9 @@ org/jboss/test/ws/jaxrpc/jbws1093/**
 org/jboss/test/ws/jaxrpc/jbws1107/**
 org/jboss/test/ws/jaxrpc/jbws1121/**
 org/jboss/test/ws/jaxrpc/jbws1124/**
+org/jboss/test/ws/jaxrpc/jbws1125/**
 org/jboss/test/ws/jaxrpc/jbws1148/**
+org/jboss/test/ws/jaxrpc/jbws1179/**
 org/jboss/test/ws/jaxrpc/jbws1190/**
 org/jboss/test/ws/jaxrpc/jbws1205/**
 org/jboss/test/ws/jaxrpc/jbws1303/**
