@@ -2547,11 +2547,9 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-
-  	<!-- jaxrpc-jbws1762 -->
-    <war
-    	warfile="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.war"
-    	webxml="${tests.output.dir}/resources/jaxrpc/jbws1762/WEB-INF/web.xml">
+    
+    <!-- jaxrpc-jbws1762 -->
+    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1762/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1762/services/POJOIface.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1762/services/POJOBean.class"/>
@@ -2559,17 +2557,26 @@
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1762/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
+        <include name="jboss-web.xml"/>
         <include name="wsdl/**"/>
       </webinf>
     </war>
+    <mkdir dir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.war"/>
+    <unwar src="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.war" dest="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.war"/>
+    <jar jarfile="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.sar">
+      <fileset dir="${tests.output.dir}/libs">
+        <include name="jaxrpc-jbws1762-packaged.war"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws1762/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
+    <mkdir dir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar"/>
+    <mkdir dir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar/META-INF"/>
+    <copy file="${tests.output.dir}/resources/jaxrpc/jbws1762/META-INF/jboss-service.xml" todir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar/META-INF"/>
+    <unwar src="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.war" dest="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar/jaxrpc-jbws1762-exploded.war"/>
     
-  	<mkdir dir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.war"/>
-  	<unwar
-  		src="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.war"
-  		dest="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.war"
-  	/>
-
-  	<!-- jaxrpc-jbws1792 -->
+    <!-- jaxrpc-jbws1792 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1792.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1792/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1792/TestEndpoint.class"/>
@@ -2579,11 +2586,10 @@
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1792/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
-		<include name="custom-endpoint-config.xml"/>
+        <include name="custom-endpoint-config.xml"/>
         <include name="wsdl/**"/>
       </webinf>
     </war>
-  	
     <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws1792-client.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jbws1792/TestEndpoint.class"/>
@@ -2597,27 +2603,8 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-	  	  
-    <jar jarfile="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.sar">
-      <fileset dir="${tests.output.dir}/libs">
-        <include name="jaxrpc-jbws1762-packaged.war"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws1762/META-INF">
-        <include name="jboss-service.xml"/>
-      </metainf>
-    </jar>
-
-  	<mkdir dir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar"/>
-  	<mkdir dir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar/META-INF"/>
-  	<copy
-  		file="${tests.output.dir}/resources/jaxrpc/jbws1762/META-INF/jboss-service.xml"
-  		todir="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar/META-INF"/>
-  	<unwar
-  		src="${tests.output.dir}/libs/jaxrpc-jbws1762-packaged.war"
-  		dest="${tests.output.dir}/libs/jaxrpc-jbws1762-exploded.sar/jaxrpc-jbws1762-exploded.war"
-  	/>
-
-  	<!-- jaxrpc-marshall-doclit.war -->
+    
+    <!-- jaxrpc-marshall-doclit.war -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-marshall-doclit.war" webxml="${tests.output.dir}/resources/jaxrpc/marshall-doclit/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/marshall/StandardTypes.class"/>

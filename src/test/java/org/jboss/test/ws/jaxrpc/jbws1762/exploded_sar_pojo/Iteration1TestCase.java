@@ -42,6 +42,6 @@ public class Iteration1TestCase extends AbstractPOJOTest
    
    public String getWSDLLocation()
    {
-      return "jaxrpc-jbws1762-exploded/POJOBean?wsdl";
+      return "jaxrpc-jbws1762/POJOBean?wsdl";
    }
 }
