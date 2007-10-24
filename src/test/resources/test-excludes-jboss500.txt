@@ -45,6 +45,7 @@ org/jboss/test/ws/jaxrpc/jbws377/**
 org/jboss/test/ws/jaxrpc/jbws381/**
 org/jboss/test/ws/jaxrpc/jbws383/**
 org/jboss/test/ws/jaxrpc/jbws413/**
+org/jboss/test/ws/jaxrpc/jbws414/**
 org/jboss/test/ws/jaxrpc/jbws423/**
 org/jboss/test/ws/jaxrpc/jbws424/**
 org/jboss/test/ws/jaxrpc/jbws425/**
@@ -55,6 +56,7 @@ org/jboss/test/ws/jaxrpc/jbws464/**
 org/jboss/test/ws/jaxrpc/jbws484/**
 org/jboss/test/ws/jaxrpc/jbws626/**
 org/jboss/test/ws/jaxrpc/jbws632/**
+org/jboss/test/ws/jaxrpc/jbws637/**
 org/jboss/test/ws/jaxrpc/jbws643/**
 org/jboss/test/ws/jaxrpc/jbws663/**
 org/jboss/test/ws/jaxrpc/jbws663b/**
@@ -88,12 +90,17 @@ org/jboss/test/ws/jaxrpc/jbws1619/**
 org/jboss/test/ws/jaxrpc/jbws1653/**
 org/jboss/test/ws/jaxrpc/jbws1792/**
 org/jboss/test/ws/jaxrpc/jbws1792/**
-org/jboss/test/ws/jaxrpc/marshall-doclit/**
-org/jboss/test/ws/jaxrpc/marshall-rpclit/**
+org/jboss/test/ws/jaxrpc/marshall/**
 org/jboss/test/ws/jaxrpc/overloaded/**
+org/jboss/test/ws/jaxrpc/serviceref/**
+org/jboss/test/ws/jaxrpc/utf16/**
+org/jboss/test/ws/jaxrpc/wsse/**
+org/jboss/test/ws/jaxrpc/xop/**
 org/jboss/test/ws/jaxws/samples/serviceref/**
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/samples/wsaddressing/replyto/**
+org/jboss/test/ws/jaxws/webserviceref/**
+org/jboss/test/ws/jaxws/wsaddressing/replyto/**
 
 # [JBAS-4903] EJB 2.1 view cannot be realized
 org/jboss/test/ws/jaxws/jbws944/**
