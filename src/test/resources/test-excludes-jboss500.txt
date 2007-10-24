@@ -10,7 +10,7 @@ org/jboss/test/ws/jaxws/jbws1813/**
 # [JBAS-4890] EJBAccessException: Caller unauthorized
 org/jboss/test/ws/jaxws/jbws1840/**
 org/jboss/test/ws/jaxws/samples/context/**
-# org/jboss/test/ws/jaxws/samples/wssecurity/**
+org/jboss/test/ws/jaxws/samples/wssecurity/**
 
 # [JBAS-4895] JAXB based ServiceRef meta data
 org/jboss/test/ws/benchmark/jaxrpc/**
@@ -88,9 +88,10 @@ org/jboss/test/ws/jaxrpc/samples/docstyle/**
 org/jboss/test/ws/jaxrpc/samples/dynamichandler/**
 org/jboss/test/ws/jaxrpc/samples/exception/**
 org/jboss/test/ws/jaxrpc/samples/handler/**
-org/jboss/test/ws/jaxrpc/samples/holdler/**
+org/jboss/test/ws/jaxrpc/samples/holder/**
 org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
 org/jboss/test/ws/jaxrpc/samples/jsr109pojo/**
+org/jboss/test/ws/jaxrpc/samples/jmstransport/**
 org/jboss/test/ws/jaxrpc/samples/message/**
 org/jboss/test/ws/jaxrpc/samples/mtom/**
 org/jboss/test/ws/jaxrpc/samples/oneway/**
@@ -98,7 +99,7 @@ org/jboss/test/ws/jaxrpc/samples/rpcstyle/**
 org/jboss/test/ws/jaxrpc/samples/secureejb/**
 org/jboss/test/ws/jaxrpc/samples/swa/**
 org/jboss/test/ws/jaxrpc/samples/wsbpel/**
-org/jboss/test/ws/jaxrpc/samples/wsecurity/**
+org/jboss/test/ws/jaxrpc/samples/wssecurity/**
 org/jboss/test/ws/jaxrpc/samples/serviceref/**
 org/jboss/test/ws/jaxrpc/samples/utf16/**
 org/jboss/test/ws/jaxrpc/samples/wsdlpublish/**
