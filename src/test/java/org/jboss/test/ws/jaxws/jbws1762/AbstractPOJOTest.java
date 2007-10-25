@@ -33,6 +33,7 @@ import org.jboss.test.ws.jaxws.jbws1762.services.POJOIface;
  * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
  *
  * @author richard.opalka@jboss.com
+ * @author heiko.braun@jboss.com
  *
  * @since Oct 17, 2007
  */
