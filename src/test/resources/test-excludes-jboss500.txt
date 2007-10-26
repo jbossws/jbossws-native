@@ -1,20 +1,20 @@
 # [JBAS-4898] class-loading not found as a child of jboss-web
-org/jboss/test/ws/jaxws/jbws1581/**
+#org/jboss/test/ws/jaxws/jbws1581/**
 
 # [JBAS-4901] Reverse paths are not allowed (containing a . or ..)
-org/jboss/test/ws/jaxws/jbws1798/**
+#org/jboss/test/ws/jaxws/jbws1798/**
 
 # [JBAS-4896] NPE in JBossMetaDataWrapper
-org/jboss/test/ws/jaxrpc/jbas897/**
-org/jboss/test/ws/jaxrpc/jbws1427/**
+#org/jboss/test/ws/jaxrpc/jbas897/**
+#org/jboss/test/ws/jaxrpc/jbws1427/**
 
 # [JBAS-4902] nested jar not deployed
-org/jboss/test/ws/jaxrpc/jbws165/**
-org/jboss/test/ws/jaxws/jbws1813/**
+#org/jboss/test/ws/jaxrpc/jbws165/**
+#org/jboss/test/ws/jaxws/jbws1813/**
 
 # [JBAS-4890] EJBAccessException: Caller unauthorized
-org/jboss/test/ws/jaxws/jbws1840/**
-org/jboss/test/ws/jaxws/samples/context/**
+#org/jboss/test/ws/jaxws/jbws1840/**
+#org/jboss/test/ws/jaxws/samples/context/**
 #org/jboss/test/ws/jaxws/samples/wssecurity/**
 
 # [JBAS-4913] wsdl-override not found as a child of service-ref
@@ -97,4 +97,4 @@ org/jboss/test/ws/jaxws/wsaddressing/replyto/**
 org/jboss/test/ws/jaxws/wseventing/**
 
 # [JBAS-4903] EJB 2.1 view cannot be realized
-org/jboss/test/ws/jaxws/jbws944/**
+#org/jboss/test/ws/jaxws/jbws944/**

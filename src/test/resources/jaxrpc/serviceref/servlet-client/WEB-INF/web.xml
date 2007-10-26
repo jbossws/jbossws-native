@@ -24,8 +24,8 @@
      <handler>
         <handler-name>Handler</handler-name>
         <handler-class>org.jboss.test.ws.jaxrpc.serviceref.ExampleHandler</handler-class>
-        <!--soap-header xmlns:soap-header_ns__="http://extra-header.org">soap-header_ns__:extra-header</soap-header>
-        <soap-role>extra-header-actor</soap-role-->
+        <soap-header xmlns:ns1="http://extra-header.org">ns1:extra-header</soap-header>
+        <soap-role>extra-header-actor</soap-role>
      </handler>
   </service-ref>
 
