@@ -15,6 +15,9 @@
 
 	<import file="${core.dir}/ant-import/macros-deploy-framework.xml"/>
 	<import file="${core.dir}/ant-import/macros-deploy-native.xml"/>
+
+  <!-- Check availability of container integration -->
+  <available property="jbossws.jboss42.available" file="${jboss42.home}/server/${jboss.server.instance}/lib/jbossws-jboss42.jar"/>
   
 	<!-- ================================================================== -->
 	<!-- Deployment  JBoss50                                                -->
@@ -48,7 +51,7 @@
 	</target>
 
 	<!-- Deploy jbossws to jboss42 -->
-	<target name="deploy-jboss42" depends="jars-jboss42,undeploy-jboss42,deploy-jboss42-endorsed" description="Deploy jbossws to jboss42">
+	<target name="deploy-jboss42" depends="jars-jboss42,undeploy-jboss42,deploy-jboss42-endorsed, deploy-jboss421" description="Deploy jbossws to jboss42">
 		<macro-deploy-native42
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
@@ -62,6 +65,12 @@
 				jbosshome="${jboss42.home}"
 				stacklibs="${core.dir}/output/lib"
 				thirdpartylibs="${core.dir}/thirdparty"/>
+	</target>
+
+  <!-- Container integration is not contained in the jbossws.sar -->
+	<target name="deploy-jboss421" depends="prepare" unless="jbossws.jboss42.available">
+    <copy file="${thirdparty.dir}/jbossws-jboss421.jar" tofile="${jboss42.home}/server/${jboss.server.instance}/lib/jbossws-jboss42.jar"/>
+    <copy file="${thirdparty.dir}/jbossws-jboss421.jar" tofile="${jboss42.home}/client/jbossws-jboss42.jar"/>
 	</target>
 
 	<!-- Remove jbossws from jboss42 -->
