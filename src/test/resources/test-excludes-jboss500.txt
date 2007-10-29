@@ -1,7 +1,9 @@
 # [JBAS-4901] Reverse paths are not allowed (containing a . or ..)
 org/jboss/test/ws/jaxws/jbws1798/**
+org/jboss/test/ws/jaxrpc/jbws153/**
 
 # [JBAS-4902] nested jar not deployed
+org/jboss/test/ws/jaxrpc/jbws128/**
 org/jboss/test/ws/jaxrpc/jbws165/**
 org/jboss/test/ws/jaxws/jbws1813/**
 

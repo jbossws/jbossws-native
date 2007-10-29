@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1010;
 
+// $Id$
+
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 
@@ -30,6 +32,9 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
+ * [JBWS-1010] - Support for inherited service endpoint interfaces - JAX-RPC 5.5.4
+ * 
+ * http://jira.jboss.org/jira/browse/JBWS-1010
  * 
  * @author darran.lofthouse@jboss.com
  * @since 27-June-2006
