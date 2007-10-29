@@ -555,7 +555,7 @@ public class WSDLToJava implements WSDLToJavaIntf
 
             XSElementDeclaration element = (XSElementDeclaration)term;
             XSTypeDefinition type = element.getTypeDefinition();
-            String tempContainingElement = containingElement + element.getName();
+            String tempContainingElement = containingElement + ToolsUtils.firstLetterUpperCase(element.getName());
 
             QName xmlType = null;
             if (type.getAnonymous() == false)
@@ -711,7 +711,7 @@ public class WSDLToJava implements WSDLToJavaIntf
             if (unwrapper.xmlType != null)
                xmlType = unwrapper.xmlType;
 
-            containingElement = containingElement + unwrapper.unwrappedElement.getName();
+            containingElement = containingElement + ToolsUtils.firstLetterUpperCase(unwrapper.unwrappedElement.getName());
 
             if (unwrapper.array)
                arraySuffix = "[]";
