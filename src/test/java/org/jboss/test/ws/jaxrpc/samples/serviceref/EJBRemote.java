@@ -19,13 +19,13 @@
   * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import javax.ejb.EJBObject;
 
-public interface TestEndpoint extends Remote
+public interface EJBRemote extends EJBObject
 {
-   String echo(String arg0) throws RemoteException;
+   String echo(String input) throws RemoteException;
 }

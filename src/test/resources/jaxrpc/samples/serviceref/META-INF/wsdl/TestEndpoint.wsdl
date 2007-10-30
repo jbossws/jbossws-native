@@ -27,7 +27,7 @@
  </binding>
  <service name='TestEndpointService'>
   <port binding='tns:TestEndpointBinding' name='TestEndpointPort'>
-   <soap:address location='http://@jboss.bind.address@:8080/jaxrpc-serviceref'/>
+   <soap:address location='http://@jboss.bind.address@:8080/jaxrpc-samples-serviceref'/>
   </port>
  </service>
 </definitions>

@@ -13,17 +13,17 @@
     <wsdl-file>META-INF/wsdl/TestEndpoint.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxrpc.serviceref.TestEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxrpc.samples.serviceref.TestEndpoint</service-endpoint-interface>
     </port-component-ref>
   </service-ref>
 
   <service-ref>
     <service-ref-name>service2</service-ref-name>
-    <service-interface>org.jboss.test.ws.jaxrpc.serviceref.TestEndpointService</service-interface>
+    <service-interface>org.jboss.test.ws.jaxrpc.samples.serviceref.TestEndpointService</service-interface>
     <wsdl-file>META-INF/wsdl/TestEndpoint.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
     <port-component-ref>
-      <service-endpoint-interface>org.jboss.test.ws.jaxrpc.serviceref.TestEndpoint</service-endpoint-interface>
+      <service-endpoint-interface>org.jboss.test.ws.jaxrpc.samples.serviceref.TestEndpoint</service-endpoint-interface>
     </port-component-ref>
   </service-ref>
 

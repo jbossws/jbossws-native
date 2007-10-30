@@ -19,30 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.ejb.EJBException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
 import javax.naming.InitialContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
 
-public class EJBClient implements SessionBean
+public class ServletClient extends HttpServlet
 {
    // Provide logging
-   private static Logger log = Logger.getLogger(EJBClient.class);
+   private static Logger log = Logger.getLogger(ServletClient.class);
 
-   private SessionContext context;
-
-   public String echo(String inStr) throws RemoteException
+   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
    {
-      log.info("echo: " + inStr);
+      String inStr = req.getParameter("echo");
+      log.info("doGet: " + inStr);
 
       ArrayList ports = new ArrayList();
       try
@@ -65,29 +65,6 @@ public class EJBClient implements SessionBean
             throw new JAXRPCException("Invalid echo return: " + inStr);
       }
 
-      return inStr;
-   }
-
-   // EJB Lifecycle ----------------------------------------------------------------------
-
-   public void setSessionContext(SessionContext context) throws EJBException, RemoteException
-   {
-      this.context = context;
-   }
-
-   public void ejbCreate()
-   {
-   }
-
-   public void ejbRemove()
-   {
-   }
-
-   public void ejbActivate()
-   {
-   }
-
-   public void ejbPassivate()
-   {
+      res.getWriter().print(inStr);
    }
 }

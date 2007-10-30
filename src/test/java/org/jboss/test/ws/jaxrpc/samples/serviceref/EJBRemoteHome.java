@@ -19,19 +19,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import javax.xml.rpc.handler.GenericHandler;
-import javax.xml.namespace.QName;
+import java.rmi.RemoteException;
 
-/**
- * @author Heiko.Braun@jboss.com
- *         Created: Jun 29, 2007
- */
-public class ExampleHandler extends GenericHandler {
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
 
-   public QName[] getHeaders()
-   {
-      return new QName[] { new QName("http://extra-header.org", "extra-header")}; 
-   }
+public interface EJBRemoteHome extends EJBHome
+{
+   EJBRemote create() throws CreateException, RemoteException;
 }

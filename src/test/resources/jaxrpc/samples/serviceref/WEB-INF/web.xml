@@ -5,7 +5,7 @@
   
   <servlet>
     <servlet-name>TestEndpoint</servlet-name>
-    <servlet-class>org.jboss.test.ws.jaxrpc.serviceref.TestEndpointImpl</servlet-class>
+    <servlet-class>org.jboss.test.ws.jaxrpc.samples.serviceref.TestEndpointImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>

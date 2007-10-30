@@ -6,7 +6,7 @@
   <port-component>
    <port-component-name>TestEndpointPort</port-component-name>
    <wsdl-port>impl:TestEndpointPort</wsdl-port>
-   <service-endpoint-interface>org.jboss.test.ws.jaxrpc.serviceref.TestEndpoint</service-endpoint-interface>
+   <service-endpoint-interface>org.jboss.test.ws.jaxrpc.samples.serviceref.TestEndpoint</service-endpoint-interface>
    <service-impl-bean>
     <servlet-link>TestEndpoint</servlet-link>
    </service-impl-bean>

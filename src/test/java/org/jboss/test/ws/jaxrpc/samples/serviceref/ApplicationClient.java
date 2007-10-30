@@ -19,37 +19,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.naming.InitialContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
 
-public class ServletClient extends HttpServlet
+public class ApplicationClient
 {
    // Provide logging
-   private static Logger log = Logger.getLogger(ServletClient.class);
+   private static Logger log = Logger.getLogger(ApplicationClient.class);
 
-   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+   public static InitialContext encCtx;
+   public static String retStr;
+
+   public static void main(String[] args) throws RemoteException
    {
-      String inStr = req.getParameter("echo");
-      log.info("doGet: " + inStr);
+      String inStr = args[0];
+      log.info("echo: " + inStr);
 
       ArrayList ports = new ArrayList();
       try
       {
-         InitialContext iniCtx = new InitialContext();
-         ports.add((TestEndpoint)((Service)iniCtx.lookup("java:comp/env/service1")).getPort(TestEndpoint.class));
-         ports.add(((TestEndpointService)iniCtx.lookup("java:comp/env/service2")).getTestEndpointPort());
+         ports.add((TestEndpoint)((Service)encCtx.lookup("java:comp/env/service1")).getPort(TestEndpoint.class));
+         ports.add(((TestEndpointService)encCtx.lookup("java:comp/env/service2")).getTestEndpointPort());
       }
       catch (Exception ex)
       {
@@ -65,6 +63,6 @@ public class ServletClient extends HttpServlet
             throw new JAXRPCException("Invalid echo return: " + inStr);
       }
 
-      res.getWriter().print(inStr);
+      retStr = inStr;
    }
 }

@@ -19,13 +19,24 @@
   * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import java.rmi.RemoteException;
+import org.jboss.logging.Logger;
 
-import javax.ejb.EJBObject;
-
-public interface EJBRemote extends EJBObject
+/**
+ * Test the JAXRPC <service-ref>
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 23-Oct-2006
+ */
+public class TestEndpointImpl implements TestEndpoint
 {
-   String echo(String input) throws RemoteException;
+   // Provide logging
+   private static Logger log = Logger.getLogger(TestEndpointImpl.class);
+   
+   public String echo(String input)
+   {
+      log.info(input);
+      return input;
+   }
 }

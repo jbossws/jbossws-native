@@ -19,35 +19,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import javax.ejb.EJBException;
+import javax.ejb.SessionBean;
+import javax.ejb.SessionContext;
 import javax.naming.InitialContext;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
 
-public class ApplicationClient
+public class EJBClient implements SessionBean
 {
    // Provide logging
-   private static Logger log = Logger.getLogger(ApplicationClient.class);
+   private static Logger log = Logger.getLogger(EJBClient.class);
 
-   public static InitialContext encCtx;
-   public static String retStr;
+   private SessionContext context;
 
-   public static void main(String[] args) throws RemoteException
+   public String echo(String inStr) throws RemoteException
    {
-      String inStr = args[0];
       log.info("echo: " + inStr);
 
       ArrayList ports = new ArrayList();
       try
       {
-         ports.add((TestEndpoint)((Service)encCtx.lookup("java:comp/env/service1")).getPort(TestEndpoint.class));
-         ports.add(((TestEndpointService)encCtx.lookup("java:comp/env/service2")).getTestEndpointPort());
+         InitialContext iniCtx = new InitialContext();
+         ports.add((TestEndpoint)((Service)iniCtx.lookup("java:comp/env/service1")).getPort(TestEndpoint.class));
+         ports.add(((TestEndpointService)iniCtx.lookup("java:comp/env/service2")).getTestEndpointPort());
       }
       catch (Exception ex)
       {
@@ -63,6 +65,29 @@ public class ApplicationClient
             throw new JAXRPCException("Invalid echo return: " + inStr);
       }
 
-      retStr = inStr;
+      return inStr;
+   }
+
+   // EJB Lifecycle ----------------------------------------------------------------------
+
+   public void setSessionContext(SessionContext context) throws EJBException, RemoteException
+   {
+      this.context = context;
+   }
+
+   public void ejbCreate()
+   {
+   }
+
+   public void ejbRemove()
+   {
+   }
+
+   public void ejbActivate()
+   {
+   }
+
+   public void ejbPassivate()
+   {
    }
 }

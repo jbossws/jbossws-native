@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.serviceref;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,11 +46,11 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class ServiceRefServletTestCase extends JBossWSTest
 {
-   public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxrpc-serviceref";
+   public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxrpc-samples-serviceref";
    
    public static Test suite()
    {
-      return new JBossWSTestSetup(ServiceRefServletTestCase.class, "jaxrpc-serviceref.war, jaxrpc-serviceref-servlet-client.war");
+      return new JBossWSTestSetup(ServiceRefServletTestCase.class, "jaxrpc-samples-serviceref.war, jaxrpc-samples-serviceref-servlet-client.war");
    }
 
    public void testWSDLAccess() throws MalformedURLException
@@ -63,8 +63,8 @@ public class ServiceRefServletTestCase extends JBossWSTest
    
    public void testDynamicProxy() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxrpc/serviceref/META-INF/wsdl/TestEndpoint.wsdl").toURL();
-      URL mappingURL = new File("resources/jaxrpc/serviceref/META-INF/jaxrpc-mapping.xml").toURL();
+      URL wsdlURL = new File("resources/jaxrpc/samples/serviceref/META-INF/wsdl/TestEndpoint.wsdl").toURL();
+      URL mappingURL = new File("resources/jaxrpc/samples/serviceref/META-INF/jaxrpc-mapping.xml").toURL();
       QName qname = new QName("http://org.jboss.ws/wsref", "TestEndpointService");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, qname, mappingURL);
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
