@@ -1,3 +1,6 @@
+# Fix BPEL before AS50 goes final
+org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
 # [JBAS-4901] Reverse paths are not allowed (containing a . or ..)
 org/jboss/test/ws/jaxws/jbws1798/**
 org/jboss/test/ws/jaxrpc/jbws153/**
@@ -18,7 +21,9 @@ org/jboss/test/ws/jaxws/jbws944/**
 
 # [JBAS-4922] NPE in AssemblyDescriptorMetaData
 org/jboss/test/ws/jaxrpc/jbws723/**
+#org/jboss/test/ws/jaxrpc/samples/secureejb/**
+org/jboss/test/ws/jaxrpc/wsse/**
 
 # [JBAS-4923] No valid security context for the caller identity
-org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
+#org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
 
