@@ -309,15 +309,16 @@
   <macrodef name="macro-deploy-native422">
     <attribute name="stacklibs"/>
     <attribute name="thirdpartylibs"/>
+    <attribute name="jbosshome"/>
     <sequential>
-      <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+      
       
       <!-- BIN SCRIPTS -->
-      <unzip dest="${jboss422.home}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${jboss422.home}/bin" perm="+x" includes="*.sh"/>
+      <unzip dest="@{jbosshome}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
+      <chmod dir="@{jbosshome}/bin" perm="+x" includes="*.sh"/>
       
       <!-- CLIENT JARS -->
-      <copy todir="${jboss422.home}/client" overwrite="true">
+      <copy todir="@{jbosshome}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
           <include name="jboss-jaxrpc.jar"/>
           <include name="jboss-jaxws.jar"/>
@@ -339,20 +340,21 @@
       </copy>
       
       <!-- SERVER JARS -->
-      <mkdir dir="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <unjar dest="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
-      <mkdir dir="${jboss422.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-      <unzip dest="${jboss422.home}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
+      <mkdir dir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <unjar dest="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
+      <mkdir dir="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
+      <unzip dest="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
     </sequential>
   </macrodef>
   
   <macrodef name="macro-undeploy-native422">
+    <attribute name="jbosshome"/>
     <sequential>
-      <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+      
       <delete>
         
         <!-- BIN SCRIPTS -->
-        <fileset dir="${jboss422.home}/bin">
+        <fileset dir="@{jbosshome}/bin">
           <include name="wsconsume.*"/>
           <include name="wsprovide.*"/>
           <include name="wsrunclient.*"/>
@@ -360,7 +362,7 @@
         </fileset>
         
         <!-- CLIENT JARS -->
-        <fileset dir="${jboss422.home}/client">
+        <fileset dir="@{jbosshome}/client">
           <include name="jaxb-api.jar"/>
           <include name="jaxb-impl.jar"/>
           <include name="jaxb-xjc.jar"/>
@@ -380,14 +382,14 @@
         </fileset>
         
         <!-- SERVER JARS -->
-        <fileset dir="${jboss422.home}/lib/endorsed">
+        <fileset dir="@{jbosshome}/lib/endorsed">
           <include name="jaxb-api.jar"/>
         </fileset>
-        <fileset dir="${jboss422.home}/lib">
+        <fileset dir="@{jbosshome}/lib">
           <!-- Remove only, do not deploy -->
           <include name="jbossws-integration.jar"/>
         </fileset>
-        <fileset dir="${jboss422.home}/server/${jboss.server.instance}/lib">
+        <fileset dir="@{jbosshome}/server/${jboss.server.instance}/lib">
           <include name="jboss-jaxrpc.jar"/>
           <include name="jboss-jaxws.jar"/>
           <include name="jboss-jaxws-ext.jar"/>
@@ -396,8 +398,8 @@
           <include name="jbossws-integration.jar"/>
         </fileset>
       </delete>
-      <delete dir="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <delete dir="${jboss422.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
+      <delete dir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <delete dir="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
     </sequential>
   </macrodef>
   
