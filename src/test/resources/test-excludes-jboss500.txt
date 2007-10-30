@@ -5,6 +5,9 @@ org/jboss/test/ws/jaxrpc/jbws153/**
 # [JBAS-4902] nested jar not deployed
 org/jboss/test/ws/jaxrpc/jbws128/**
 org/jboss/test/ws/jaxrpc/jbws165/**
+org/jboss/test/ws/jaxrpc/jbws331/**
+org/jboss/test/ws/jaxrpc/jbws358/**
+org/jboss/test/ws/jaxrpc/jbws772/**
 org/jboss/test/ws/jaxws/jbws1813/**
 
 # [JBAS-4890] EJBAccessException: Caller unauthorized
@@ -12,3 +15,10 @@ org/jboss/test/ws/jaxws/samples/context/**
 
 # [JBAS-4903] EJB 2.1 view cannot be realized
 org/jboss/test/ws/jaxws/jbws944/**
+
+# [JBAS-4922] NPE in AssemblyDescriptorMetaData
+org/jboss/test/ws/jaxrpc/jbws723/**
+
+# [JBAS-4923] No valid security context for the caller identity
+org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
+
