@@ -1,6 +1,8 @@
 # EJB3/Injection excludes
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
+org/jboss/test/ws/jaxws/jbws1762/**
+org/jboss/test/ws/jaxrpc/jbws1762/**
 
 # [JBWS-1797] Setting .NET friendly Endpoint in web.xml
 org/jboss/test/ws/jaxws/jbws1797/**

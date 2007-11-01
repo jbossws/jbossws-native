@@ -9,7 +9,7 @@
    <module>
       <web>
          <web-uri>jaxws-jbws1762-packaged.war</web-uri>
-         <context-root>jaxws-jbws1762-packaged</context-root>
+         <context-root>jaxws-jbws1762</context-root>
       </web>
    </module>
 </application>

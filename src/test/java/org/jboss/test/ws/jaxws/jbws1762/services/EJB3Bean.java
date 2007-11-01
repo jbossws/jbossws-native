@@ -33,11 +33,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 @Stateless
-@WebService
-(
-      name = "JBWS1762EJB3",
-      serviceName = "JBWS1762EJB3Service"
-)
+@WebService(name = "JBWS1762EJB3", serviceName = "JBWS1762EJB3Service")
 public class EJB3Bean
 {
    @WebMethod

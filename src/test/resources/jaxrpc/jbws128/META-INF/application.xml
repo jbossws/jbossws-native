@@ -10,11 +10,13 @@
   <module>
     <web>
       <web-uri>jaxrpc-jbws128-service.war</web-uri>
+      <context-root>/jaxrpc-jbws128-service</context-root>
     </web>
   </module>
   <module>
     <web>
       <web-uri>jaxrpc-jbws128-client.war</web-uri>
+      <context-root>/jaxrpc-jbws128-client</context-root>
     </web>
   </module>
 

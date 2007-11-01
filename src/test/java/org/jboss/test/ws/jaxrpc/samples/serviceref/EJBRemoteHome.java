@@ -19,29 +19,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762.exploded_war_pojo;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import junit.framework.Test;
+import java.rmi.RemoteException;
 
-import org.jboss.test.ws.jaxws.jbws1762.AbstractPOJOTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
 
-/**
- * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
- *
- * @author richard.opalka@jboss.com
- *
- * @since Oct 17, 2007
- */
-public class Iteration1TestCase extends AbstractPOJOTest
+public interface EJBRemoteHome extends EJBHome
 {
-   public static Test suite()
-   {
-      return new JBossWSTestSetup(Iteration1TestCase.class, "jaxws-jbws1762-exploded.war");
-   }
-   
-   public String getWSDLLocation()
-   {
-      return "jaxws-jbws1762/POJOBean?wsdl";
-   }
+   EJBRemote create() throws CreateException, RemoteException;
 }

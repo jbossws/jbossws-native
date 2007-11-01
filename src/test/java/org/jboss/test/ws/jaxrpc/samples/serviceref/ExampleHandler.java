@@ -19,29 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762.exploded_war_pojo;
+package org.jboss.test.ws.jaxrpc.samples.serviceref;
 
-import junit.framework.Test;
-
-import org.jboss.test.ws.jaxws.jbws1762.AbstractPOJOTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
+import javax.xml.rpc.handler.GenericHandler;
+import javax.xml.namespace.QName;
 
 /**
- * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
- *
- * @author richard.opalka@jboss.com
- *
- * @since Oct 17, 2007
+ * @author Heiko.Braun@jboss.com
+ *         Created: Jun 29, 2007
  */
-public class Iteration1TestCase extends AbstractPOJOTest
-{
-   public static Test suite()
+public class ExampleHandler extends GenericHandler {
+
+   public QName[] getHeaders()
    {
-      return new JBossWSTestSetup(Iteration1TestCase.class, "jaxws-jbws1762-exploded.war");
-   }
-   
-   public String getWSDLLocation()
-   {
-      return "jaxws-jbws1762/POJOBean?wsdl";
+      return new QName[] { new QName("http://extra-header.org", "extra-header")}; 
    }
 }
