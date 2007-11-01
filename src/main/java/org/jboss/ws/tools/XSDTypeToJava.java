@@ -712,7 +712,7 @@ public class XSDTypeToJava
       }
 
       if (baseName == null && baseType != null)
-         baseName = baseType.getName();
+         baseName = ToolsUtils.firstLetterUpperCase(baseType.getName());
 
       return baseName;
    }
