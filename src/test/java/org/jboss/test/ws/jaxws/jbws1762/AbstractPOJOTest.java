@@ -33,7 +33,6 @@ import org.jboss.test.ws.jaxws.jbws1762.services.POJOIface;
  * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
  *
  * @author richard.opalka@jboss.com
- * @author heiko.braun@jboss.com
  *
  * @since Oct 17, 2007
  */
@@ -47,11 +46,15 @@ public abstract class AbstractPOJOTest extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      QName serviceName = new QName(pojoTargetNS, pojoServiceName);
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
 
-      Service service = Service.create(wsdlURL, serviceName);
-      pojoProxy = (POJOIface)service.getPort(POJOIface.class);
+      if (pojoProxy == null)
+      {
+         QName serviceName = new QName(pojoTargetNS, pojoServiceName);
+         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
+
+         Service service = Service.create(wsdlURL, serviceName);
+         pojoProxy = (POJOIface)service.getPort(POJOIface.class);
+      }
    }
    
    protected abstract String getWSDLLocation();

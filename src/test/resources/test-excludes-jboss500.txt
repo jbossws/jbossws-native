@@ -17,6 +17,10 @@ org/jboss/test/ws/jaxws/jbws1762/exploded_ear_pojo/**
 org/jboss/test/ws/jaxws/jbws1762/packaged_ear_ejb3/**
 org/jboss/test/ws/jaxws/jbws1762/packaged_ear_pojo/**
 
+# [JBAS-4940] Deployment.types not propagated
+org/jboss/test/ws/jaxws/jbws1762/exploded_jar_ejb3/**
+org/jboss/test/ws/jaxws/jbws1762/packaged_jar_ejb3/**
+
 # [JBAS-4890] EJBAccessException: Caller unauthorized
 org/jboss/test/ws/jaxws/samples/context/**
 

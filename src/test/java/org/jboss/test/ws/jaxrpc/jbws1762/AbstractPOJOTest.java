@@ -41,18 +41,24 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public abstract class AbstractPOJOTest extends JBossWSTest
 {
+   private String pojoTargetNS = "http://org.jboss.test.ws/jbws1762";
+   private String pojoServiceName = "POJOBean";
    private POJOIface pojoProxy;
 
    public void setUp() throws Exception
    {
       super.setUp();
-      ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
-      URL mappingURL = new File("resources/jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml").toURL();
-      QName serviceName = new QName("http://org.jboss.test.ws/jbws1762", "POJOBean");
+      
+      if (pojoProxy == null)
+      {
+         ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
+         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
+         URL mappingURL = new File("resources/jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml").toURL();
+         QName serviceName = new QName(pojoTargetNS, pojoServiceName);
          
-      Service service = factory.createService(wsdlURL, serviceName, mappingURL);
-      pojoProxy = (POJOIface)service.getPort(POJOIface.class);
+         Service service = factory.createService(wsdlURL, serviceName, mappingURL);
+         pojoProxy = (POJOIface)service.getPort(POJOIface.class);
+      }
    }
    
    protected abstract String getWSDLLocation();

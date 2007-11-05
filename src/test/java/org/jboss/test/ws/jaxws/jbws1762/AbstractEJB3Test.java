@@ -46,11 +46,15 @@ public abstract class AbstractEJB3Test extends JBossWSTest
    public void setUp() throws Exception
    {
       super.setUp();
-      QName serviceName = new QName(ejb3TargetNS, ejb3ServiceName);
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
+
+      if (ejb3Proxy == null)
+      {
+         QName serviceName = new QName(ejb3TargetNS, ejb3ServiceName);
+         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
          
-      Service service = Service.create(wsdlURL, serviceName);
-      ejb3Proxy = service.getPort(EJB3Iface.class);
+         Service service = Service.create(wsdlURL, serviceName);
+         ejb3Proxy = service.getPort(EJB3Iface.class);
+      }
    }
    
    protected abstract String getWSDLLocation();
