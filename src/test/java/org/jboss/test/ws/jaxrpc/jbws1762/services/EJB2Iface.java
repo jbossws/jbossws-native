@@ -19,29 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.jbws1762.exploded_ear_pojo;
+package org.jboss.test.ws.jaxrpc.jbws1762.services;
 
-import junit.framework.Test;
-
-import org.jboss.test.ws.jaxrpc.jbws1762.AbstractPOJOTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
- * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
+ * EJB2 interface
  *
  * @author richard.opalka@jboss.com
  *
  * @since Oct 20, 2007
  */
-public class Iteration1TestCase extends AbstractPOJOTest
+public interface EJB2Iface extends Remote
 {
-   public static Test suite() throws Exception
-   {
-      return new JBossWSTestSetup(Iteration1TestCase.class, "jaxrpc-jbws1762-exploded.ear");
-   }
-   
-   public String getWSDLLocation()
-   {
-      return "jaxrpc-jbws1762/POJOBean?wsdl";
-   }
+   String echo(String msg) throws RemoteException;
 }

@@ -19,12 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.jbws1762.exploded_ear_pojo;
+package org.jboss.test.ws.jaxrpc.jbws1762;
 
-import junit.framework.Test;
+import java.io.File;
+import java.net.URL;
 
-import org.jboss.test.ws.jaxrpc.jbws1762.AbstractPOJOTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
+import javax.xml.namespace.QName;
+
+import org.jboss.test.ws.jaxrpc.jbws1762.services.EJB2Iface;
+import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
@@ -33,15 +38,26 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  *
  * @since Oct 20, 2007
  */
-public class Iteration1TestCase extends AbstractPOJOTest
+public abstract class AbstractEJB2Test extends JBossWSTest
 {
-   public static Test suite() throws Exception
+   private EJB2Iface ejb2Proxy;
+   
+   public void setUp() throws Exception
    {
-      return new JBossWSTestSetup(Iteration1TestCase.class, "jaxrpc-jbws1762-exploded.ear");
+      super.setUp();
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
+      URL mappingURL = new File("resources/jaxrpc/jbws1762/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws1762", "EJB2Bean");
+      
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, serviceName, mappingURL);
+      ejb2Proxy = (EJB2Iface)service.getPort(EJB2Iface.class);
    }
    
-   public String getWSDLLocation()
+   protected abstract String getWSDLLocation();
+   
+   public void testEJB2() throws Exception
    {
-      return "jaxrpc-jbws1762/POJOBean?wsdl";
+      assertEquals(ejb2Proxy.echo("Hello!"), "Hello!");
    }
 }
