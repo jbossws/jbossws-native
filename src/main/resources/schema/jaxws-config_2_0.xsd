@@ -3,10 +3,11 @@
 <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
             targetNamespace="urn:jboss:jaxws-config:2.0"
             xmlns:tns="urn:jboss:jaxws-config:2.0"
-            xmlns:jbxb="http://www.jboss.org/xml/ns/jbxb"
             xmlns:javaee="http://java.sun.com/xml/ns/javaee"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1">
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="1.1">
 
    <xsd:annotation>
       <xsd:documentation>
@@ -33,7 +34,6 @@
       </xsd:complexContent>
    </xsd:complexType>
 
-   <!-- client config -->
    <xsd:complexType name="clientConfigType">
       <xsd:complexContent>
          <xsd:extension base="tns:commonConfigType"/>
@@ -43,6 +43,7 @@
    <xsd:complexType name="commonConfigType">
       <xsd:sequence>
          <xsd:element name="config-name" type="xsd:string"/>
+         <xsd:element name="reliable-messaging" type="tns:rmConfigType" minOccurs="0"/>
          <xsd:element name="pre-handler-chains" type="javaee:handler-chainsType" minOccurs="0"/>
          <xsd:element name="post-handler-chains" type="javaee:handler-chainsType" minOccurs="0"/>
          <xsd:element name="feature" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
@@ -51,17 +52,133 @@
    </xsd:complexType>
 
    <xsd:complexType name="propertyType">
-      <xsd:annotation>
-         <xsd:documentation>
-
-            A property models name value pairs.
-
-         </xsd:documentation>
-      </xsd:annotation>
       <xsd:sequence>
          <xsd:element name="property-name" type="xsd:anyURI"/>
          <xsd:element name="property-value" type="xsd:string"/>
       </xsd:sequence>
    </xsd:complexType>
+
+  <!-- WSRM configuration -->
+  <xsd:complexType name="rmConfigType">
+    <xsd:sequence>
+      <xsd:element name="delivery-assurance" type="tns:deliveryAssuranceType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Global WS-RM delivery assurance configuration that applies to all WSDL ports.
+            If there is the WS-Policy with attached WS-RM assertion in WSDL
+            associated with some port or its associated binding it
+            will always override this global configuration.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="provider" type="tns:providerType">
+        <xsd:annotation>
+          <xsd:documentation>
+            WS-RM specification version to be used for reliable messaging.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="message-store" type="tns:msgStoreType">
+        <xsd:annotation>
+          <xsd:documentation>
+            WS-RM message store to be used for reliable messaging.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="port" type="tns:portType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            WSDL port specific WS-RM delivery assurance configuration.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="msgStoreType">
+    <xsd:sequence>
+      <xsd:element name="config-file" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            Message store specific configuration file.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          Message store identifier.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="class" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+           Message store class name providing public default constructor.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="deliveryAssuranceType">
+    <xsd:attribute name="quality" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          Quality of service to be ensured.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="AtLeastOnce"/>
+          <xsd:enumeration value="AtMostOnce"/>
+          <xsd:enumeration value="ExactlyOnce"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="inOrder" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          In order quality of service to be ensured. Set this attribute to 'true' to ensure in order message delivery.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="providerType">
+    <xsd:attribute name="specVersion" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          WS-RM spec. version to be used for reliable messaging.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+          <xsd:enumeration value="http://schemas.xmlsoap.org/ws/2005/02/rm"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="portType">
+    <xsd:sequence>
+      <xsd:element name="delivery-assurance" type="tns:deliveryAssuranceType">
+        <xsd:annotation>
+          <xsd:documentation>
+            This WSDL port specific WS-RM delivery assurance configuration
+            applies to all its operations.
+            This configuration always overrides the global configuration.
+            If there is a WS-Policy with attached WS-RM assertion in WSDL
+            associated with this port or its associated binding it
+            will be always overriden this port specific configuration.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          WSDL port name specified in the form {namespace}localPart.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
 
 </xsd:schema>

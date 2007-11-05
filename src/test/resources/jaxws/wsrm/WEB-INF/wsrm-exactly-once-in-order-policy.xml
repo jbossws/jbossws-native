@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsp:Policy
+   wsu:Id="exactly_one_in_order_rm_delivery"
+   xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+   xmlns:wsrmp="http://docs.oasis-open.org/ws-rx/wsrmp/200702"
+   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+   <wsrmp:DeliveryAssurance>
+      <wsp:Policy>
+         <wsrmp:ExactlyOnce/>
+         <wsrmp:InOrder/>
+      </wsp:Policy>
+   </wsrmp:DeliveryAssurance>
+</wsp:Policy>

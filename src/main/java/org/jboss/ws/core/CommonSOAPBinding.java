@@ -72,6 +72,7 @@ import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.utils.MimeUtils;
+import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -167,21 +168,38 @@ public abstract class CommonSOAPBinding implements CommonBinding
          SOAPElement soapBodyElement = soapBody;
          if (style == Style.RPC)
          {
-            QName opQName = opMetaData.getQName();
-            Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
-
-            if (log.isDebugEnabled())
-               log.debug("Create RPC body element: " + opName);
-
-            soapBodyElement = new SOAPBodyElementRpc(opName);
-            soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
-
-            // Add soap encodingStyle
-            if (opMetaData.getUse() == Use.ENCODED)
+            boolean serialize = true;
+            
+            if (opMetaData.getEndpointMetaData().getConfig().getRMMetaData() != null)
             {
-               String envURI = soapEnvelope.getNamespaceURI();
-               String envPrefix = soapEnvelope.getPrefix();
-               soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
+               for (QName wsrmQN : RMConstant.PROTOCOL_OPERATION_QNAMES)
+               {
+                  if (wsrmQN.equals(opMetaData.getQName()))
+                  {
+                     serialize = false;
+                     break;
+                  }
+               }
+            }
+            
+            if (serialize)
+            {
+               QName opQName = opMetaData.getQName();
+               Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
+
+               if (log.isDebugEnabled())
+                  log.debug("Create RPC body element: " + opName);
+
+               soapBodyElement = new SOAPBodyElementRpc(opName);
+               soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
+
+               // Add soap encodingStyle
+               if (opMetaData.getUse() == Use.ENCODED)
+               {
+                  String envURI = soapEnvelope.getNamespaceURI();
+                  String envPrefix = soapEnvelope.getPrefix();
+                  soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
+               }
             }
          }
 

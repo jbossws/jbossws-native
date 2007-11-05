@@ -1,0 +1,19 @@
+<env:Envelope
+ xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'
+ xmlns:wsrm='http://docs.oasis-open.org/ws-rx/wsrm/200702'
+ xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+ <env:Header xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>
+  <wsa:To env:mustUnderstand="1">${addressing.to}</wsa:To>
+  <wsa:RelatesTo>${addressing.relatesto}</wsa:RelatesTo>
+  <wsa:Action env:mustUnderstand="1">${addressing.action}</wsa:Action>
+  <wsrm:SequenceAcknowledgement>
+   <wsrm:Identifier>${messaging.identifier}</wsrm:Identifier>
+   <wsrm:AcknowledgementRange Upper='${messaging.upper}' Lower='${messaging.lower}'/>
+  </wsrm:SequenceAcknowledgement>
+ </env:Header>
+ <env:Body>
+  <ns1:echoResponse xmlns:ns1='http://org.jboss.ws/jaxws/wsrm'>
+   <result>Hello World</result>
+  </ns1:echoResponse>
+ </env:Body>
+</env:Envelope>

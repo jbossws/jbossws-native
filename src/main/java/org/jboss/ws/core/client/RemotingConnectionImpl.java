@@ -54,6 +54,10 @@ import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.config.EndpointProperty;
 
+import org.jboss.ws.extensions.wsrm.RMHelper;
+import org.jboss.ws.extensions.wsrm.RMChannel;
+import org.jboss.ws.extensions.wsrm.RMMetadata;
+
 /**
  * SOAPConnection implementation.
  * <p/>
@@ -85,14 +89,6 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
    private static Map<String, String> configMap = new HashMap<String, String>();
    static
    {
-      // Remoting constants since 2.0.0.GA
-      //configMap.put(StubExt.PROPERTY_KEY_STORE, SSLSocketBuilder.REMOTING_KEY_STORE_FILE_PATH);
-      //configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, SSLSocketBuilder.REMOTING_KEY_STORE_PASSWORD);
-      //configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, SSLSocketBuilder.REMOTING_KEY_STORE_TYPE);
-      //configMap.put(StubExt.PROPERTY_TRUST_STORE, SSLSocketBuilder.REMOTING_TRUST_STORE_FILE_PATH);
-      //configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, SSLSocketBuilder.REMOTING_TRUST_STORE_PASSWORD);
-      //configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, SSLSocketBuilder.REMOTING_TRUST_STORE_TYPE);
-
       configMap.put(StubExt.PROPERTY_KEY_STORE, "org.jboss.remoting.keyStore");
       configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, "org.jboss.remoting.keyStorePassword");
       configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, "org.jboss.remoting.keyStoreType");
@@ -102,7 +98,9 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
    }
 
    private boolean closed;
-
+   
+   private static final RMChannel RM_CHANNEL = RMChannel.getInstance();
+   
    public RemotingConnectionImpl()
    {
       // HTTPClientInvoker conect sends gratuitous POST
@@ -162,68 +160,13 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
       // setup remoting client            
       Map<String, Object> metadata = createRemotingMetaData(reqMessage, callProps);
-      Client client = createRemotingClient(endpoint, targetAddress, oneway);
-
-      try
-      {
-         if (log.isDebugEnabled())
-            log.debug("Remoting metadata: " + metadata);
-
-         // debug the outgoing message
-         MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
-
-         MessageAbstraction resMessage = null;
-
-         if (oneway == true)
-         {
-            client.invokeOneway(reqMessage, metadata, false);
-         }
-         else
-         {
-            resMessage = (MessageAbstraction)client.invoke(reqMessage, metadata);
-         }
-
-         // Disconnect the remoting client
-         client.disconnect();
-
-         callProps.clear();
-         callProps.putAll(metadata);
-
-         // trace the incomming response message
-         MessageTrace.traceMessage("Incoming Response Message", resMessage);
-
-         return resMessage;
-      }
-      catch (Throwable th)
-      {
-         if (timeout != null && (th.getCause() instanceof SocketTimeoutException))
-         {
-            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
-         }
-
-         IOException io = new IOException("Could not transmit message");
-         io.initCause(th);
-         throw io;
-      }
-   }
-
-   private String addURLParameter(String urlStr, String key, String value) throws MalformedURLException
-   {
-      URL url = new URL(urlStr);
-      urlStr += (url.getQuery() == null ? "?" : "&") + key + "=" + value;
-      return urlStr;
-   }
-
-   private Client createRemotingClient(Object endpoint, String targetAddress, boolean oneway)
-   {
-      Client client;
+      Marshaller marshaller = getMarshaller();
+      UnMarshaller unmarshaller = getUnmarshaller();
+      InvokerLocator locator = null;
       try
       {
          // Get the invoker from Remoting for a given endpoint address
          log.debug("Get locator for: " + endpoint);
-         
-         Marshaller marshaller = getMarshaller();
-         UnMarshaller unmarshaller = getUnmarshaller();
          
          /** 
           * [JBWS-1704] The Use Of Remoting Causes An Additional 'datatype' Parameter To Be Sent On All Requests
@@ -242,24 +185,77 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
             MarshalFactory.addMarshaller("JBossWSMessage", marshaller, unmarshaller);
          }
 
-         InvokerLocator locator = new InvokerLocator(targetAddress);
-         client = new Client(locator, "jbossws", clientConfig);
-         client.connect();
-
-         client.setMarshaller(marshaller);
-
-         if (oneway == false)
-            client.setUnMarshaller(unmarshaller);
+         locator = new InvokerLocator(targetAddress);
       }
       catch (MalformedURLException e)
       {
          throw new IllegalArgumentException("Malformed endpoint address", e);
       }
-      catch (Exception e)
+
+      try
       {
-         throw new IllegalStateException("Could not setup remoting client", e);
+         if (RMHelper.isRMMessage(reqMessage))
+         {
+            RMMetadata rmMetadata = new RMMetadata(targetAddress, oneway, marshaller, unmarshaller, callProps, metadata, clientConfig);
+            return RM_CHANNEL.send(reqMessage, rmMetadata);
+         }
+         else 
+         {
+            Client client = new Client(locator, "jbossws", clientConfig);
+            client.connect();
+
+            client.setMarshaller(marshaller);
+
+            if (oneway == false)  
+               client.setUnMarshaller(unmarshaller);
+         
+            if (log.isDebugEnabled())
+               log.debug("Remoting metadata: " + metadata);
+
+            // debug the outgoing message
+            MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
+
+            MessageAbstraction resMessage = null;
+
+            if (oneway == true)
+            {
+               client.invokeOneway(reqMessage, metadata, false);
+            }
+            else
+            {
+               resMessage = (MessageAbstraction)client.invoke(reqMessage, metadata);
+            }
+
+            // Disconnect the remoting client
+            client.disconnect();
+ 
+            callProps.clear();
+            callProps.putAll(metadata);
+
+            // trace the incomming response message
+            MessageTrace.traceMessage("Incoming Response Message", resMessage);
+
+            return resMessage;
+         }
       }
-      return client;
+      catch (Throwable th)
+      {
+         if (timeout != null && (th.getCause() instanceof SocketTimeoutException))
+         {
+            throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
+         }
+
+         IOException io = new IOException("Could not transmit message");
+         io.initCause(th);
+         throw io;
+      }
+   }
+   
+   private String addURLParameter(String urlStr, String key, String value) throws MalformedURLException
+   {
+      URL url = new URL(urlStr);
+      urlStr += (url.getQuery() == null ? "?" : "&") + key + "=" + value;
+      return urlStr;
    }
 
    private String getRemotingVersion()

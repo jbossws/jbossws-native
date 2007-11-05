@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
+import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -41,6 +42,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 public abstract class CommonConfig
 {
    private String configName;
+   private ReliableMessagingMetaData wsrmCfg;
    private List<URI> features = new ArrayList<URI>();
    private List<EndpointProperty> properties = new ArrayList<EndpointProperty>();
 
@@ -64,7 +66,7 @@ public abstract class CommonConfig
    {
       return hasFeature(nameToURI(uri));
    }
-
+   
    public void setFeature(String type, boolean enabled) {
 
       if(enabled) {
@@ -72,6 +74,16 @@ public abstract class CommonConfig
       }
       else
          features.remove(nameToURI(type));
+   }
+
+   public void setRMMetaData(ReliableMessagingMetaData wsrmCfg)
+   {
+      this.wsrmCfg = wsrmCfg;
+   }
+   
+   public ReliableMessagingMetaData getRMMetaData()
+   {
+      return this.wsrmCfg;
    }
 
    public void addProperty(String name, String value)

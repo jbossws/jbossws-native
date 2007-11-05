@@ -64,6 +64,8 @@ import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
+import org.jboss.ws.metadata.wsrm.PortMetaData;
+import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
@@ -701,9 +703,55 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
+      List<PortMetaData> rmPortMetaData = backupRMMD();
       config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
+      propagateRMMD(rmPortMetaData);
 
       reconfigHandlerMetaData();
+   }
+
+   private List<PortMetaData> backupRMMD()
+   {
+      if ((config != null) && (config.getRMMetaData() != null))
+         return config.getRMMetaData().getPorts();
+
+      return null;
+   }
+   
+   private void propagateRMMD(List<PortMetaData> backedUpMD)
+   {
+      if ((backedUpMD != null) && (backedUpMD.size() > 0))
+      {
+         if (config.getRMMetaData() == null)
+         {
+            config.setRMMetaData(new ReliableMessagingMetaData());
+            config.getRMMetaData().getPorts().addAll(backedUpMD);
+         }
+         else 
+         {
+            // RM policy specified in config file will be always used
+            List<PortMetaData> ports = config.getRMMetaData().getPorts();
+            for (PortMetaData portMD : backedUpMD)
+            {
+               QName portName = portMD.getPortName();
+               if (!contains(ports, portName))
+               {
+                  ports.add(portMD);
+               }
+            }
+         }
+      }
+   }
+   
+   private boolean contains(List<PortMetaData> ports, QName portName)
+   {
+      for (PortMetaData pMD : ports)
+      {
+         if (pMD.getPortName().equals(portName))
+            return true;
+      }
+      
+      return false;
    }
 
    private void reconfigHandlerMetaData()

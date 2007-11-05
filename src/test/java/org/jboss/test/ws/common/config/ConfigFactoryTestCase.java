@@ -22,7 +22,13 @@
 package org.jboss.test.ws.common.config;
 
 import java.io.File;
+import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.jboss.ws.extensions.wsrm.DeliveryAssurance;
+import org.jboss.ws.extensions.wsrm.DeliveryQuality;
+import org.jboss.ws.extensions.wsrm.spi.Provider;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
@@ -30,6 +36,11 @@ import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
+import org.jboss.ws.metadata.wsrm.DeliveryAssuranceMetaData;
+import org.jboss.ws.metadata.wsrm.MessageStoreMetaData;
+import org.jboss.ws.metadata.wsrm.PortMetaData;
+import org.jboss.ws.metadata.wsrm.ProviderMetaData;
+import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.test.JBossWSTest;
@@ -116,5 +127,35 @@ public class ConfigFactoryTestCase extends JBossWSTest
       String value = epConfig.getProperty(EndpointProperty.MTOM_THRESHOLD);
       assertNotNull("Property does not exist", value);
       assertEquals("Wrong property valule", value, "5000");
+   }
+   
+   public void testWSRMConfiguration() throws Exception
+   {
+      File confFile = new File("resources/common/config/jaxws-endpoint-config.xml");
+      assertTrue(confFile.exists());
+
+      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
+      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURL());
+      EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard WSRM Endpoint");
+      ReliableMessagingMetaData wsrmConfig = epConfig.getRMMetaData();
+      assertNotNull(wsrmConfig);
+      DeliveryAssuranceMetaData deliveryAssurance = wsrmConfig.getDeliveryAssurance();
+      assertEquals(deliveryAssurance.getInOrder(), "true");
+      assertEquals(deliveryAssurance.getQuality(), "AtLeastOnce");
+      ProviderMetaData provider = wsrmConfig.getProvider();
+      assertEquals(provider.getSpecVersion(), "http://docs.oasis-open.org/ws-rx/wsrm/200702");
+      MessageStoreMetaData messageStore = wsrmConfig.getMessageStore();
+      assertEquals(messageStore.getId(), "wsrmStoreId");
+      assertEquals(messageStore.getClassName(), "custom.MessageStoreImpl");
+      assertEquals(messageStore.getConfigFile(), "META-INF/config.xml");
+      List<PortMetaData> ports = wsrmConfig.getPorts();
+      PortMetaData port1 = ports.get(0);
+      assertEquals(port1.getPortName(), new QName("http://custom/namespace/", "Port1"));
+      assertEquals(port1.getDeliveryAssurance().getInOrder(), "false");
+      assertEquals(port1.getDeliveryAssurance().getQuality(), "AtMostOnce");
+      PortMetaData port2 = ports.get(1);
+      assertEquals(port2.getPortName(), new QName("http://custom/namespace/", "Port2"));
+      assertEquals(port2.getDeliveryAssurance().getInOrder(), "true");
+      assertEquals(port2.getDeliveryAssurance().getQuality(), "ExactlyOnce");
    }
 }

@@ -41,44 +41,47 @@ import org.w3c.dom.Element;
  */
 public final class MessageTrace
 {
-   private static Logger msgLog = Logger.getLogger(MessageTrace.class);
+   private static final Logger msgLog = Logger.getLogger(MessageTrace.class);
 
-   // Hide ctor
    private MessageTrace()
    {
+      // forbidden constructor
    }
 
-   public static void traceMessage(String messagePrefix, MessageAbstraction message)
+   public static void traceMessage(String messagePrefix, Object message)
    {
-      if (msgLog.isTraceEnabled())
+      if (!msgLog.isTraceEnabled()) return;
+      
+      if (message instanceof SOAPMessage)
       {
-         if (message instanceof SOAPMessage)
+         try
          {
-            try
+            SOAPEnvelope soapEnv = ((SOAPMessage)message).getSOAPPart().getEnvelope();
+            if (soapEnv != null)
             {
-               SOAPEnvelope soapEnv = ((SOAPMessage)message).getSOAPPart().getEnvelope();
-               if (soapEnv != null)
-               {
-                  String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, true);
-                  msgLog.trace(messagePrefix + "\n" + envStr);
-               }
-            }
-            catch (SOAPException ex)
-            {
-               msgLog.error("Cannot trace SOAPMessage", ex);
+               String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, true);
+               msgLog.trace(messagePrefix + "\n" + envStr);
             }
          }
-         else if (message instanceof HTTPMessageImpl)
+         catch (SOAPException ex)
          {
-            HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
-            Element root = httpMessage.getXmlFragment().toElement();
-            String xmlString = DOMWriter.printNode(root, true);
-            msgLog.trace(messagePrefix + "\n" + xmlString);
+            msgLog.error("Cannot trace SOAPMessage", ex);
          }
-         else
-         {
-            msgLog.warn("Unsupported message type: " + message);
-         }
+      }
+      else if (message instanceof HTTPMessageImpl)
+      {
+         HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
+         Element root = httpMessage.getXmlFragment().toElement();
+         String xmlString = DOMWriter.printNode(root, true);
+         msgLog.trace(messagePrefix + "\n" + xmlString);
+      }
+      else if (message instanceof byte[])
+      {
+         msgLog.trace(messagePrefix + "\n" + String.valueOf((byte[])message));
+      }
+      else
+      {
+          msgLog.warn("Unsupported message type: " + message);
       }
    }
 }

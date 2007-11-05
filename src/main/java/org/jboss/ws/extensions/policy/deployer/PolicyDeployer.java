@@ -39,6 +39,7 @@ import org.jboss.ws.extensions.policy.deployer.domainAssertion.WSSecurityAsserti
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAlternative;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAssertion;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
+import org.jboss.ws.extensions.wsrm.policy.RMPolicyAssertionDeployer;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
 
 /**
@@ -56,6 +57,7 @@ public class PolicyDeployer
    {
       me = new PolicyDeployer();
       me.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", WSSecurityAssertionDeployer.class);
+      me.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", RMPolicyAssertionDeployer.class);
    }
 
    //hide constructor
@@ -82,6 +84,7 @@ public class PolicyDeployer
    {
       PolicyDeployer instance = new PolicyDeployer();
       instance.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", NopAssertionDeployer.class);
+      instance.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", NopAssertionDeployer.class);
       return instance;
 
    }

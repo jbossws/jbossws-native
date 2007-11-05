@@ -36,6 +36,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
+import org.jboss.ws.extensions.wsrm.spi.Provider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -109,6 +110,30 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       {
          throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
       }
+   }
+
+   private void setupRMOperations(EndpointMetaData endpointMD)
+   {
+      String rmSpecVersion = endpointMD.getConfig().getRMMetaData().getProvider().getSpecVersion();
+      Provider rmProvider = Provider.getInstance(rmSpecVersion);
+      
+      // register createSequence method
+      QName createSequenceQName = rmProvider.getConstants().getCreateSequenceQName();
+      OperationMetaData createSequenceMD = new OperationMetaData(endpointMD, createSequenceQName, "createSequence");
+      createSequenceMD.setOneWay(false);
+      endpointMD.addOperation(createSequenceMD);
+      
+      // register closeSequence method
+      QName closeSequenceQName = rmProvider.getConstants().getCloseSequenceQName();
+      OperationMetaData closeSequenceMD = new OperationMetaData(endpointMD, closeSequenceQName, "closeSequence");
+      closeSequenceMD.setOneWay(false);
+      endpointMD.addOperation(closeSequenceMD);
+      
+      // register terminateSequence method
+      QName terminateSequenceQName = rmProvider.getConstants().getTerminateSequenceQName();
+      OperationMetaData terminateSequenceMD = new OperationMetaData(endpointMD, terminateSequenceQName, "terminateSequence");
+      terminateSequenceMD.setOneWay(false);
+      endpointMD.addOperation(terminateSequenceMD);
    }
 
    /** Build from WSDL and service name
@@ -311,6 +336,12 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       // Eager initialization
       epMetaData.eagerInitialize();
+
+      // wsrm initialization
+      if (epMetaData.getConfig().getRMMetaData() != null)
+      {
+         setupRMOperations(epMetaData);
+      }
 
       if(log.isDebugEnabled()) log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
    }

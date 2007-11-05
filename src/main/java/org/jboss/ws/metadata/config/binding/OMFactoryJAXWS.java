@@ -23,6 +23,8 @@ package org.jboss.ws.metadata.config.binding;
 
 //$Id$
 
+import javax.xml.namespace.QName;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.jaxws.ClientConfigJAXWS;
@@ -30,10 +32,18 @@ import org.jboss.ws.metadata.config.jaxws.CommonConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.HandlerChainsConfigJAXWS;
+import org.jboss.ws.metadata.wsrm.DeliveryAssuranceMetaData;
+import org.jboss.ws.metadata.wsrm.MessageStoreMetaData;
+import org.jboss.ws.metadata.wsrm.PortMetaData;
+import org.jboss.ws.metadata.wsrm.ProviderMetaData;
+import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
+import org.jboss.ws.extensions.wsrm.DeliveryAssurance;
+import org.jboss.ws.extensions.wsrm.DeliveryAssuranceFactory;
+import org.jboss.ws.extensions.wsrm.spi.Provider;
 
 /**
  * ObjectModelFactory for JAXRPC configurations.
@@ -122,10 +132,117 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          commonConfig.setPostHandlerChains(postHandlerChains);
          return postHandlerChains;
       }
+      if ("reliable-messaging".equals(localName))
+      {
+         ReliableMessagingMetaData wsrmCfg = new ReliableMessagingMetaData();
+         commonConfig.setRMMetaData(wsrmCfg);
+         return wsrmCfg;
+      }
 
       return null;
    }
+   
+   public Object newChild(ReliableMessagingMetaData wsrmConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      int countOfAttributes = attrs.getLength();
 
+      if (localName.equals("delivery-assurance"))
+      {
+         DeliveryAssuranceMetaData deliveryAssurance = getDeliveryAssurance(attrs);
+         wsrmConfig.setDeliveryAssurance(deliveryAssurance);
+         return deliveryAssurance;
+      }
+      if (localName.equals("provider"))
+      {
+         String specVersion = null;
+         for (int i = 0; i < countOfAttributes; i++)
+         {
+            if (attrs.getLocalName(i).equals("specVersion"))
+            {
+               specVersion = attrs.getValue(i);
+               break;
+            }
+         }
+         ProviderMetaData provider = new ProviderMetaData();
+         provider.setSpecVersion(specVersion);
+         wsrmConfig.setProvider(provider);
+         return provider;
+      }
+      if (localName.equals("message-store"))
+      {
+         String className = null, id = null;
+         for (int i = 0; i < countOfAttributes && (className == null || id == null); i++)
+         {
+            String attrLocalName = attrs.getLocalName(i); 
+            if (attrLocalName.equals("id"))
+               id = attrs.getValue(i);
+            if (attrLocalName.equals("class"))
+               className = attrs.getValue(i);
+         }
+         
+         MessageStoreMetaData messageStore = new MessageStoreMetaData();
+         messageStore.setId(id);
+         messageStore.setClassName(className);
+         wsrmConfig.setMessageStore(messageStore);
+         return messageStore;
+      }
+      if (localName.equals("port"))
+      {
+         String portName = null;
+         for (int i = 0; i < countOfAttributes; i++)
+         {
+            if (attrs.getLocalName(i).equals("name"))
+            {
+               portName = attrs.getValue(i);
+               break;
+            }
+         }
+         PortMetaData port = new PortMetaData();
+         port.setPortName(QName.valueOf(portName));
+         wsrmConfig.getPorts().add(port);
+         return port;
+      }
+      
+      return null;
+   }
+   
+   public Object newChild(PortMetaData port, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if (localName.equals("delivery-assurance"))
+      {
+         DeliveryAssuranceMetaData deliveryAssurance = getDeliveryAssurance(attrs);
+         port.setDeliveryAssurance(deliveryAssurance);
+         return deliveryAssurance;
+      }
+      
+      return null;
+   }
+   
+   private DeliveryAssuranceMetaData getDeliveryAssurance(Attributes attrs)
+   {
+      String inOrder = null, quality = null;
+      for (int i = 0; i < attrs.getLength() && (inOrder == null || quality == null); i++)
+      {
+         String attrLocalName = attrs.getLocalName(i); 
+         if (attrLocalName.equals("inOrder"))
+            inOrder = attrs.getValue(i);
+         if (attrLocalName.equals("quality"))
+            quality = attrs.getValue(i);
+      }
+      DeliveryAssuranceMetaData deliveryAssurance = new DeliveryAssuranceMetaData();
+      deliveryAssurance.setQuality(quality);
+      deliveryAssurance.setInOrder(inOrder);
+      return deliveryAssurance;
+   }
+   
+   public void setValue(MessageStoreMetaData messageStore, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   {
+      if (localName.equals("config-file"))
+      {
+         messageStore.setConfigFile(value);
+      }
+   }
+   
    /**
     * Called when parsing of a new element started.
     */
