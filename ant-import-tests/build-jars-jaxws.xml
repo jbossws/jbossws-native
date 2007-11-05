@@ -631,6 +631,37 @@
       </webinf>
     </war>
     
+    <!-- jaxws-wsrm -->
+    <war warfile="${tests.output.dir}/libs/jaxws-wsrm.war"
+         webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/wsrm/OneWayServiceIface.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/OneWayServiceImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/ReqResServiceIface.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/ReqResServiceImpl.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF">
+        <include name="wsrm-exactly-once-in-order-policy.xml"/>
+        <include name="wsrm-jaxws-endpoint-config.xml"/>
+      </webinf>
+    </war>
+
+    <war warfile="${tests.output.dir}/libs/jaxws-wsrm-emulator.war"
+         webxml="${tests.output.dir}/resources/jaxws/wsrm/emulator/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/wsrm/emulator/**/*.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/wsrm/emulator">
+        <include name="resources/"/>
+      </webinf>
+    </war>
+
+    <jar jarfile="${tests.output.dir}/libs/jaxws-wsrm-client.jar">
+      <metainf dir="${tests.output.dir}/resources/jaxws/wsrm/META-INF">
+        <include name="wsrm-jaxws-client-config.xml"/>
+      </metainf>
+    </jar>
+
     <!-- Please add alphabetically -->
     
     <antcall target="build-interop-jars"/>
