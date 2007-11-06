@@ -11,10 +11,14 @@ org/jboss/test/ws/jaxws/samples/context/**
 # [JBAS-4903] EJB 2.1 view cannot be realized
 org/jboss/test/ws/jaxws/jbws944/**
 
+# [JBAS-4944] Ejb3AuthenticationInterceptorv2.invoke not implemented
+org/jboss/test/ws/jaxws/jbws1813/**
+
 # [JBAS-4923] No valid security context for the caller identity
 org/jboss/test/ws/jaxrpc/samples/jsr109ejb/*TestCase.*
 
 # [JBAS-4930] Cannot lookup ejb3 remote proxy
+org/jboss/test/ws/jaxrpc/jbws331/**
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefEJB3TestCase.*
 
