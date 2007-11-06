@@ -57,7 +57,7 @@ public class JBWS944TestCase extends JBossWSTest
    public void testRemoteAccess() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
-      EJB3RemoteInterface ejb3Remote = (EJB3RemoteInterface)iniCtx.lookup("/ejb3/EJB3EndpointInterface");
+      EJB3RemoteBusinessInterface ejb3Remote = (EJB3RemoteBusinessInterface)iniCtx.lookup("/ejb3/EJB3EndpointInterface");
 
       String helloWorld = "Hello world!";
       Object retObj = ejb3Remote.echo(helloWorld);
