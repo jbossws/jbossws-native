@@ -136,6 +136,8 @@ public class WSDLRequestHandler
                      if (resPath != null && resPath.indexOf("/") > 0)
                      {
                         String resParent = resPath.substring(0, resPath.lastIndexOf("/"));
+
+                        // replace parent traversal, results in resParent == null when successfully executed
                         while (orgLocation.startsWith("../")  && resParent != null)
                         {
                            if (resParent.indexOf("/") > 0)
@@ -151,6 +153,10 @@ public class WSDLRequestHandler
                               resParent = null;
                            }
                         }
+
+                        // no parent traversal happend
+                        if(resParent!=null)
+                           newResourcePath = resParent +"/"+ orgLocation;
                      }
 
                      String reqPath = reqURL.getPath();
