@@ -117,16 +117,14 @@ public final class RMClientHandler extends GenericSOAPHandler
             List<Serializable> data = new LinkedList<Serializable>();
             data.add(sequence);
             
-            if (commonMsgContext.getOperationMetaData().isOneWay() == false)
-            {
-               // TODO: ask msgStore if there are other sequences related to the same
-               // endpoint that requires ack and serialize it here
-               AckRequested ackRequested = rmFactory.newAckRequested();
-               ackRequested.setIdentifier(sequenceImpl.getId());
-               ackRequested.setMessageNumber(sequenceImpl.getLastMessageNumber());
-               ackRequested.serializeTo(soapMessage);
-               data.add(ackRequested);
-            }
+            // TODO: ask msgStore if there are other sequences related to the same
+            // endpoint that requires ack and serialize it here
+            AckRequested ackRequested = rmFactory.newAckRequested();
+            ackRequested.setIdentifier(sequenceImpl.getId());
+            ackRequested.setMessageNumber(sequenceImpl.getLastMessageNumber());
+            ackRequested.serializeTo(soapMessage);
+            data.add(ackRequested);
+
             rmRequestContext.put(RMConstant.DATA, data);
             
             return true;

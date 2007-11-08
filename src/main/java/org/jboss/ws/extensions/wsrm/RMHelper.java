@@ -1,6 +1,6 @@
 package org.jboss.ws.extensions.wsrm;
 
-import org.jboss.ws.core.MessageAbstraction;
+import java.util.Map;
 
 public final class RMHelper
 {
@@ -9,9 +9,8 @@ public final class RMHelper
       // no instances
    }
    
-   public static boolean isRMMessage(MessageAbstraction requestMessage)
+   public static boolean isRMMessage(Map<String, Object> ctx)
    {
-      // TODO: here is the most suitable place to start RM resender
-      return (new java.io.File("/home/ropalka/rm.enabled").exists()) && (requestMessage != null);
+      return (ctx != null) && (ctx.containsKey(RMConstant.DATA)); 
    }
 }
