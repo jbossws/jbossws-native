@@ -3,13 +3,13 @@
  xmlns:wsrm11='http://docs.oasis-open.org/ws-rx/wsrm/200702'
  xmlns:wsa='http://www.w3.org/2005/08/addressing'>
  <env:Header>
-  <wsa:To env:mustUnderstand="1">${addressing.to}</wsa:To>
-  <wsa:RelatesTo>${addressing.relatesto}</wsa:RelatesTo>
-  <wsa:Action env:mustUnderstand="1">${addressing.action}</wsa:Action>
+  <wsa:To env:mustUnderstand="1">${res.wsa.to}</wsa:To>
+  <wsa:RelatesTo>${res.wsa.relatesto}</wsa:RelatesTo>
+  <wsa:Action env:mustUnderstand="1">${res.wsa.action}</wsa:Action>
  </env:Header>
  <env:Body>
   <wsrm11:CreateSequenceResponse>
-   <wsrm11:Identifier>${messaging.identifier}</wsrm11:Identifier>
+   <wsrm11:Identifier>${res.wsrm.sequenceid}</wsrm11:Identifier>
   </wsrm11:CreateSequenceResponse>
  </env:Body>
 </env:Envelope>

@@ -33,7 +33,7 @@
   </binding>
   <service name="ReqResService">
     <port name="ReqResPort" binding="tns:ReqResBinding">
-      <soap:address location="http://127.0.0.1:8080/jaxws-wsrm-emulator/ReqResService"/>
+      <soap:address location="http://127.0.0.1:8080/jaxws-wsrm-req-res-emulator/ReqResService"/>
     </port>
   </service>
     <wsp:Policy wsu:Id="exactly_one_in_order_rm_delivery" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">

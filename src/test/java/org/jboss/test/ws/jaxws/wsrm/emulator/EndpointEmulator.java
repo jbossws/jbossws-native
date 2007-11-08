@@ -27,25 +27,33 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
+import java.util.StringTokenizer;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.jboss.test.ws.jaxws.wsrm.emulator.config.ObjectFactory;
+import org.jboss.test.ws.jaxws.wsrm.emulator.config.View;
+import org.jboss.test.ws.jaxws.wsrm.emulator.utils.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
- * Endpoint emulator
+ * This class represents Controller part of the MVC architectural pattern
  *
  * @author richard.opalka@jboss.com
  *
@@ -53,143 +61,248 @@ import org.w3c.dom.NodeList;
  */
 public class EndpointEmulator extends HttpServlet
 {
-   private static final String ADDR_NS = "http://www.w3.org/2005/08/addressing";
-   private static final String WSRM_NS = "http://docs.oasis-open.org/ws-rx/wsrm/200702";
-   private static final Map<String, String> wsrmActions = new HashMap<String, String>();
-   private static final String CREATE_SEQUENCE_ACTION = WSRM_NS + "/CreateSequence";
-   private static final String CREATE_SEQUENCE_RESPONSE_ACTION = WSRM_NS + "/CreateSequenceResponse";
-   private static final String CLOSE_SEQUENCE_ACTION = WSRM_NS + "/CloseSequence";
-   private static final String CLOSE_SEQUENCE_RESPONSE_ACTION = WSRM_NS + "/CloseSequenceResponse";
-   private static final String TERMINATE_SEQUENCE_ACTION = WSRM_NS + "/TerminateSequence";
-   private static final String TERMINATE_SEQUENCE_RESPONSE_ACTION = WSRM_NS + "/TerminateSequenceResponse";
-   private static final Random generator = new Random();
    
-   static
-   {
-      wsrmActions.put(CREATE_SEQUENCE_ACTION, CREATE_SEQUENCE_RESPONSE_ACTION);
-      wsrmActions.put(CLOSE_SEQUENCE_ACTION, CLOSE_SEQUENCE_RESPONSE_ACTION);
-      wsrmActions.put(TERMINATE_SEQUENCE_ACTION, TERMINATE_SEQUENCE_RESPONSE_ACTION);
-   }
+   private static final String CONFIG_FILE = "config.file";
+   private List<View> views;
    
    @Override
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-   throws ServletException, IOException
+   public void init(ServletConfig config) throws ServletException
    {
-      String pathInfo = req.getPathInfo();
-      System.out.println(pathInfo);
-      resp.setContentType("text/xml");
-      PrintWriter writer = resp.getWriter();
-      if (pathInfo.equals("/OneWayService"))
-      {
-         writer.print(getResource("WEB-INF/resources/OneWayService.wsdl"));
-      }
-      else
-      {
-         writer.print(getResource("WEB-INF/resources/ReqResService.wsdl"));
-      }
-      writer.flush();
-      writer.close();
+      super.init(config);
+      
+      // ensure there's a config.file servlet init parameter specified in web.xml
+      String configFile = config.getInitParameter(CONFIG_FILE);
+      if (configFile == null)
+         throw new RuntimeException(CONFIG_FILE + " init parameter is missing");
+      
+      // ensure this config.file points to correct resource inside war archive
+      InputStream is = config.getServletContext().getResourceAsStream(configFile);
+      if (is == null)
+         throw new RuntimeException("Resource '" + configFile + "' not found");
+      
+      Element root = getDocument(is, false).getDocumentElement();
+      views = getViews(root, getNamespaces(root)); 
+      
+      System.out.println(views);
    }
    
    @Override
    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
    throws ServletException, IOException
    {
-      resp.setContentType("text/xml");
+      handleRequest("POST", req, resp);
+   }
+
+   @Override
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+   throws ServletException, IOException
+   {
+      handleRequest("GET", req, resp);
+   }
+   
+   private static Document getDocument(InputStream is, boolean nsAware) throws ServletException
+   {
+      try 
+      {
+         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+         factory.setNamespaceAware(nsAware);
+         return factory.newDocumentBuilder().parse(is);
+      }
+      catch (SAXException se)
+      {
+         throw new ServletException(se);
+      }
+      catch (ParserConfigurationException pce)
+      {
+         throw new ServletException(pce);
+      }
+      catch (IOException ie)
+      {
+         throw new ServletException(ie);
+      }
+   }
+
+   private static Map<String, String> getNamespaces(Element root)
+   {
+      NodeList namespaces = ((Element)root.getElementsByTagName("namespaces").item(0)).getElementsByTagName("namespace");
+      Map<String, String> retVal = new HashMap<String, String>();
+      for (int i = 0; i < namespaces.getLength(); i++)
+      {
+         Element namespace = (Element)namespaces.item(i);
+         retVal.put(namespace.getAttribute("name"), namespace.getAttribute("value"));
+      }
+      return retVal;
+   }
+   
+   private static List<View> getViews(Element root, Map<String, String> namespaces)
+   {
+      List<View> retVal = new LinkedList<View>();
+      NodeList views = root.getElementsByTagName("view");
+      for (int i = 0; i < views.getLength(); i++)
+      {
+         retVal.add(ObjectFactory.getView((Element)views.item(i), namespaces));
+      }
+      return retVal;
+   }
+   
+   private void handleRequest(String httpMethod, HttpServletRequest req, HttpServletResponse resp)
+   throws ServletException, IOException
+   {
+      String requestMessage = getRequestMessage(req); 
+      View view = getView(httpMethod, requestMessage);
+      System.out.println("Handling view: " + view.getId());
+      Map<String, String> resProperties = view.getResponse().getProperties();
+      Map<String, String> reqProperties = view.getRequest().getProperties();
+      String responseMessage = getResource(view.getResponse().getResource());
+      
+      if (resProperties.size() > 0)
+      {
+         Map<String, String> initializedReqProperties = null;
+         if (reqProperties.size() > 0)
+         {
+            initializedReqProperties = initializeProperties(requestMessage, reqProperties);
+         }
+         
+         Map<String, String> replaceMap = replaceProperties(initializedReqProperties, resProperties);
+         responseMessage = modifyResponse(responseMessage, replaceMap);
+      }
+      
+      resp.setContentType(view.getResponse().getContentType());
       PrintWriter writer = resp.getWriter();
-      Properties properties = getProperties(getRequestMessage(req));
-      String response = getResource("WEB-INF/resources/echoResponse.xml");
-      if (properties.get("addressing.action").equals(CREATE_SEQUENCE_ACTION))
-         response = getResource("WEB-INF/resources/createSequenceResponse.xml");
-      if (properties.get("addressing.action").equals(TERMINATE_SEQUENCE_ACTION))
-         response = getResource("WEB-INF/resources/terminateSequenceResponse.xml");
-      response = modifyResponse(response, properties);
-      writer.print(response);
+      writer.print(responseMessage);
       writer.flush();
       writer.close();
    }
    
-   private String modifyResponse(String response, Properties props)
+   private Map<String, String> initializeProperties(String req, Map<String, String> map)
+   throws ServletException, IOException
    {
-      response = replace("${addressing.to}", props.getProperty("addressing.replyto"), response);
-      response = replace("${addressing.relatesto}", props.getProperty("addressing.messageid"), response);
-      String action = props.getProperty("addressing.action");
-      if (wsrmActions.containsKey(action))
-      {
-         if (action.equals(CREATE_SEQUENCE_ACTION))
-         {
-            String sequenceId = "http://wsrm.emulator.jboss/sequence/generated/" + generator.nextInt(Integer.MAX_VALUE);
-            response = replace("${messaging.identifier}", sequenceId, response);
-         }
-         action = wsrmActions.get(action);
-      }
-      response = replace("${messaging.identifier}", props.getProperty("messaging.identifier"), response);
-      response = replace("${messaging.upper}", props.getProperty("messaging.messagenumber"), response);
-      response = replace("${messaging.lower}", props.getProperty("messaging.messagenumber"), response);
-      response = replace("${addressing.action}", action, response);
-      return response;
-   }
-   
-   private static String replace(String oldString, String newString, String data)
-   {
-      int fromIndex = 0;
-      int index = 0;
-      StringBuffer result = new StringBuffer();
+      Document requestMessage = getDocument(new ByteArrayInputStream(req.getBytes()), true);
       
-      while ((index = data.indexOf(oldString, fromIndex)) >= 0)
+      Map<String, String> retVal = new HashMap<String, String>();
+      for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); )
       {
-         result.append(data.substring(fromIndex, index));
-         result.append(newString);
-         fromIndex = index + oldString.length();
+         String key = i.next();
+         String val = map.get(key);
+         Element e = getElement(requestMessage, val);
+         retVal.put(key, e.getTextContent());
       }
-      result.append(data.substring(fromIndex));
-      return result.toString();
+      
+      return retVal;
    }
    
-   private Properties getProperties(String message) throws IOException
+   private static Map<String, String> replaceProperties(Map<String, String> reqM, Map<String, String> resM)
    {
-      try
+      Map<String, String> retVal = new HashMap<String, String>();
+      
+      for (Iterator<String> i = resM.keySet().iterator(); i.hasNext(); )
       {
-         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-         factory.setNamespaceAware(true);
-         DocumentBuilder builder = factory.newDocumentBuilder();
-         Document document = builder.parse(new ByteArrayInputStream(message.getBytes()));
-         Properties retVal = new Properties();
-         String to = document.getElementsByTagNameNS(ADDR_NS, "To").item(0).getTextContent().trim();
-         retVal.put("addressing.to", to);
-         String messageId = document.getElementsByTagNameNS(ADDR_NS, "MessageID").item(0).getTextContent().trim();
-         retVal.put("addressing.messageid", messageId);
-         String action = document.getElementsByTagNameNS(ADDR_NS, "Action").item(0).getTextContent().trim();
-         retVal.put("addressing.action", action);
-         String replyTo = ((Element)document.getElementsByTagNameNS(ADDR_NS, "ReplyTo").item(0))
-            .getElementsByTagNameNS(ADDR_NS, "Address").item(0).getTextContent().trim();
-         retVal.put("addressing.replyto", replyTo);
-         NodeList sequence = document.getElementsByTagNameNS(WSRM_NS, "Sequence");
-         if (sequence != null && sequence.getLength() != 0)
+         String iKey = i.next();
+         String iVal = resM.get(iKey);
+         for (Iterator<String> j = reqM.keySet().iterator(); j.hasNext(); )
          {
-            String sequenceId = ((Element)sequence.item(0))
-               .getElementsByTagNameNS(WSRM_NS, "Identifier").item(0).getTextContent().trim();
-            retVal.put("messaging.identifier", replyTo);
-            String messageNumber = ((Element)sequence.item(0))
-               .getElementsByTagNameNS(WSRM_NS, "MessageNumber").item(0).getTextContent().trim(); 
-            retVal.put("messaging.messagenumber", messageNumber);
+            String jKey = j.next();
+            String jVal = reqM.get(jKey);
+            String jRef = "${" + jKey + "}";
+            if (iVal.indexOf(jRef) != -1)
+            {
+               iVal = StringUtil.replace(jRef, jVal, iVal);
+            }
          }
-         NodeList terminateSequence = document.getElementsByTagNameNS(WSRM_NS, "TerminateSequence");
-         if (terminateSequence != null && terminateSequence.getLength() != 0)
-         {
-            String sequenceId = ((Element)terminateSequence.item(0))
-               .getElementsByTagNameNS(WSRM_NS, "Identifier").item(0).getTextContent().trim();
-            retVal.put("messaging.identifier", sequenceId);
-         }
-          
-         System.out.println("Properties from message: " + retVal);
-         return retVal;
+         retVal.put(iKey, iVal);
       }
-      catch (Exception e)
+      
+      return retVal;
+   }
+   
+   private View getView(String httpMethod, String req) 
+   throws ServletException, IOException
+   {
+      boolean isPost = "POST".equalsIgnoreCase(httpMethod);
+      Document requestMessage = isPost ? getDocument(new ByteArrayInputStream(req.getBytes()), true) : null;
+      for (View view : views)
       {
-         e.printStackTrace();
-         throw new IOException(e.getMessage());
+         if (httpMethod.equalsIgnoreCase(view.getRequest().getHttpMethod()))
+         {
+            if (matches(requestMessage, view))
+            {
+               return view;
+            }
+         }
       }
+      
+      return null;
+   }
+   
+   private static boolean matches(Document req, View view)
+   {
+      List<String> matches = view.getRequest().getMatches();
+      if ((matches == null) || (matches.size() == 0))
+         return true;
+      
+      boolean match = true;
+      for (String matchString : matches)
+      {
+         match = match && elementExists(req, matchString);
+      }
+      
+      return match;
+   }
+   
+   private static boolean elementExists(Document req, String match)
+   {
+      return getElement(req, match) != null;
+   }
+   
+   private static Element getElement(Document req, String match)
+   {
+      Element e = null;
+      
+      StringTokenizer st = new StringTokenizer(match, "|");
+      while (st.hasMoreTokens())
+      {
+         String toConvert = st.nextToken();
+         QName nodeName = QName.valueOf(toConvert);
+         e = getChildElement(e != null ? e : req, nodeName);
+         if (e == null) return null;
+      }
+      
+      return e;
+   }
+   
+   private static Element getChildElement(Node e, QName nodeQName)
+   {
+      NodeList childNodes = e.getChildNodes();
+      if (childNodes == null)
+         return null;
+      
+      for (int i = 0; i < childNodes.getLength(); i++)
+      {
+         Node node = childNodes.item(i);
+         if (node.getNodeType() == Node.ELEMENT_NODE)
+         {
+            Element element = (Element)node;
+            boolean namespaceMatches = nodeQName.getNamespaceURI().equals(element.getNamespaceURI());
+            boolean nodeNameMatches = nodeQName.getLocalPart().equals(element.getLocalName());
+            if (namespaceMatches && nodeNameMatches) return element;
+         }
+      }
+      
+      return null;
+   }
+   
+   private String modifyResponse(String response, Map<String, String> replaceMap)
+   {
+      if ((replaceMap != null) && (replaceMap.size() > 0))
+      {
+         for (Iterator<String> iterator = replaceMap.keySet().iterator(); iterator.hasNext(); )
+         {
+            String key = iterator.next();
+            String val = replaceMap.get(key);
+            response = StringUtil.replace("${" + key + "}", val, response);
+         }
+      }
+      return response;
    }
    
    private String getResource(String resource) throws IOException
@@ -220,5 +333,5 @@ public class EndpointEmulator extends HttpServlet
       }
       return baos.toString();
    }
-
+   
 }

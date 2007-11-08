@@ -646,14 +646,24 @@
       </webinf>
     </war>
 
-    <war warfile="${tests.output.dir}/libs/jaxws-wsrm-emulator.war"
-         webxml="${tests.output.dir}/resources/jaxws/wsrm/emulator/WEB-INF/web.xml">
+    <war warfile="${tests.output.dir}/libs/jaxws-wsrm-one-way-emulator.war"
+         webxml="${tests.output.dir}/resources/jaxws/wsrm/emulator/oneway/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/wsrm/emulator/**/*.class"/>
       </classes>
-      <webinf dir="${tests.output.dir}/resources/jaxws/wsrm/emulator">
-        <include name="resources/"/>
-      </webinf>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/emulator/oneway/config" prefix="config"/>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/emulator/oneway/resources" prefix="resources"/>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/emulator/common/resources" prefix="resources"/>
+    </war>
+
+    <war warfile="${tests.output.dir}/libs/jaxws-wsrm-req-res-emulator.war"
+         webxml="${tests.output.dir}/resources/jaxws/wsrm/emulator/reqres/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/wsrm/emulator/**/*.class"/>
+      </classes>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/emulator/reqres/config" prefix="config"/>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/emulator/reqres/resources" prefix="resources"/>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/emulator/common/resources" prefix="resources"/>
     </war>
 
     <jar jarfile="${tests.output.dir}/libs/jaxws-wsrm-client.jar">
