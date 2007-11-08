@@ -2,6 +2,7 @@
 org/jboss/test/ws/jaxrpc/jbws723/**
 
 # EJB3 compilation excludes
+org/jboss/test/ws/jaxws/wsrm/**
 org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase*
 org/jboss/test/ws/jaxws/samples/context/EndpointEJB*
 org/jboss/test/ws/jaxws/samples/retail/**
