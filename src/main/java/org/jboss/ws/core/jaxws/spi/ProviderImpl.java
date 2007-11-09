@@ -38,6 +38,7 @@ import javax.xml.ws.spi.ServiceDelegate;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 import org.jboss.util.NotImplementedException;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -59,6 +60,7 @@ public class ProviderImpl extends Provider
    public ServiceDelegate createServiceDelegate(URL wsdlLocation, QName serviceName, Class serviceClass)
    {
       ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
+      DOMUtils.clearThreadLocals();
       return delegate;
    }
 
