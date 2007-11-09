@@ -26,7 +26,7 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 /**
- * TODO: Add comment
+ * Factory creating configuration objects
  *
  * @author richard.opalka@jboss.com
  *

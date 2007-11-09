@@ -22,7 +22,7 @@
 package org.jboss.test.ws.jaxws.wsrm.emulator.config;
 
 /**
- * TODO: Add comment
+ * Interface representing <b>/views/view</b> configuration element content
  *
  * @author richard.opalka@jboss.com
  *

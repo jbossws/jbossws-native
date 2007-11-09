@@ -24,7 +24,7 @@ package org.jboss.test.ws.jaxws.wsrm.emulator.config;
 import java.util.Map;
 
 /**
- * TODO: Add comment
+ * Interface representing <b>/views/view/response</b> configuration element content
  *
  * @author richard.opalka@jboss.com
  *

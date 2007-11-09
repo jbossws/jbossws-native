@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Add comment
+ * Interface representing <b>/views/view/request</b> configuration element content
  *
  * @author richard.opalka@jboss.com
  *

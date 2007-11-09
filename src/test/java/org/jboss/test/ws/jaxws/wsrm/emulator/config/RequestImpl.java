@@ -21,19 +21,20 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.emulator.config;
 
+import static org.jboss.test.ws.jaxws.wsrm.emulator.Constant.*;
+
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.test.ws.jaxws.wsrm.emulator.utils.StringUtil;
+import org.jboss.test.ws.jaxws.wsrm.emulator.Util;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * TODO: Add comment
+ * Immutable object implementation representing <b>/views/view/request</b> configuration element content
  *
  * @author richard.opalka@jboss.com
  *
@@ -49,33 +50,34 @@ final class RequestImpl implements Request
 
    RequestImpl(Element e, Map<String, String> namespaces)
    {
-      this.httpMethod = e.getAttribute("httpMethod");
-      this.pathInfo = e.getAttribute("pathInfo");
-      NodeList contains = e.getElementsByTagName("contains");
+      this.httpMethod = e.getAttribute(HTTP_METHOD_ATTRIBUTE);
+      this.pathInfo = e.getAttribute(PATH_INFO_ATTRIBUTE);
+      NodeList contains = e.getElementsByTagName(CONTAINS_ELEMENT);
       if ((contains != null) && (contains.getLength() == 1))
       {
-         NodeList nodes = ((Element)contains.item(0)).getElementsByTagName("node");
+         NodeList nodes = ((Element)contains.item(0)).getElementsByTagName(NODE_ELEMENT);
          List<String> toFill = new LinkedList<String>();
          this.matches = Collections.unmodifiableList(toFill);
          for (int i = 0; i < nodes.getLength(); i++)
          {
-            toFill.add(replace(((Element)nodes.item(i)).getAttribute("name"), namespaces));
+            String nameAttrValue = ((Element)nodes.item(i)).getAttribute(NAME_ATTRIBUTE);
+            toFill.add(Util.replaceAll(nameAttrValue, namespaces));
          }
       }
       else
       {
          this.matches = Collections.emptyList();
       }
-      NodeList setNodes = e.getElementsByTagName("set");
+      NodeList setNodes = e.getElementsByTagName(SET_ELEMENT);
       if ((setNodes != null) && (setNodes.getLength() > 0))
       {
          Map<String, String> toFill = new HashMap<String, String>();
          this.properties = Collections.unmodifiableMap(toFill);
          for (int i = 0; i < setNodes.getLength(); i++)
          {
-            String key = ((Element)setNodes.item(i)).getAttribute("property");
-            String val = ((Element)setNodes.item(i)).getAttribute("value");
-            toFill.put(key, replace(val, namespaces));
+            String key = ((Element)setNodes.item(i)).getAttribute(PROPERTY_ATTRIBUTE);
+            String val = ((Element)setNodes.item(i)).getAttribute(VALUE_ATTRIBUTE);
+            toFill.put(key, Util.replaceAll(val, namespaces));
          }
       }
       else
@@ -83,46 +85,35 @@ final class RequestImpl implements Request
          this.properties = Collections.emptyMap();
       }
    }
-   
-   private static String replace(String s, Map<String, String> namespaces)
-   {
-      for (Iterator<String> i = namespaces.keySet().iterator(); i.hasNext(); )
-      {
-         String key = i.next();
-         String val = namespaces.get(key);
-         s = StringUtil.replace("${" + key + "}", val, s);
-      }
-      return s;
-   }
-   
-   public String getHttpMethod()
+
+   public final String getHttpMethod()
    {
       return this.httpMethod;
    }
 
-   public List<String> getMatches()
+   public final List<String> getMatches()
    {
       return this.matches;
    }
 
-   public String getPathInfo()
+   public final String getPathInfo()
    {
       return this.pathInfo;
    }
 
-   public Map<String, String> getProperties()
+   public final Map<String, String> getProperties()
    {
       return this.properties;
    }
    
-   public String toString()
+   public final String toString()
    {
       StringBuilder sb = new StringBuilder();
-      sb.append("REQUEST {");
-      sb.append("httpMethod=" + this.httpMethod + ", ");
-      sb.append("pathInfo=" + this.pathInfo + ", ");
-      sb.append("properties=" + this.properties + ", ");
-      sb.append("matches=" + this.matches + "}");
+      sb.append(REQUEST_ELEMENT).append(EQUAL).append(LEFT_BRACKET);
+      sb.append(HTTP_METHOD_ATTRIBUTE).append(EQUAL).append(this.httpMethod).append(COMMA).append(SPACE);
+      sb.append(PATH_INFO_ATTRIBUTE).append(EQUAL).append(this.pathInfo).append(COMMA).append(SPACE);
+      sb.append(PROPERTIES).append(EQUAL).append(this.properties).append(COMMA).append(SPACE);
+      sb.append(MATCHES).append(EQUAL).append(this.matches).append(RIGHT_BRACKET);
       return sb.toString();
    }
 

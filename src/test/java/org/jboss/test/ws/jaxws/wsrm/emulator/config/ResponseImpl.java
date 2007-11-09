@@ -21,17 +21,17 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.emulator.config;
 
+import static org.jboss.test.ws.jaxws.wsrm.emulator.Constant.*;
+
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-
-import org.jboss.test.ws.jaxws.wsrm.emulator.utils.StringUtil;
+import org.jboss.test.ws.jaxws.wsrm.emulator.Util;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * TODO: Add comment
+ * Immutable object implementation representing <b>/views/view/response</b> configuration element content
  *
  * @author richard.opalka@jboss.com
  *
@@ -47,19 +47,19 @@ final class ResponseImpl implements Response
    
    ResponseImpl(Element e, Map<String, String> namespaces)
    {
-      this.resource = e.getAttribute("resource");
-      this.statusCode = e.getAttribute("statusCode");
-      this.contentType = e.getAttribute("contentType");
-      NodeList setNodes = e.getElementsByTagName("set");
+      this.resource = e.getAttribute(RESOURCE_ATTRIBUTE);
+      this.statusCode = e.getAttribute(STATUS_CODE_ATTRIBUTE);
+      this.contentType = e.getAttribute(CONTENT_TYPE_ATTRIBUTE);
+      NodeList setNodes = e.getElementsByTagName(SET_ELEMENT);
       if ((setNodes != null) && (setNodes.getLength() > 0))
       {
          Map<String, String> toFill = new HashMap<String, String>();
          this.properties = Collections.unmodifiableMap(toFill);
          for (int i = 0; i < setNodes.getLength(); i++)
          {
-            String key = ((Element)setNodes.item(i)).getAttribute("property");
-            String val = ((Element)setNodes.item(i)).getAttribute("value");
-            toFill.put(key, replace(val, namespaces));
+            String key = ((Element)setNodes.item(i)).getAttribute(PROPERTY_ATTRIBUTE);
+            String val = ((Element)setNodes.item(i)).getAttribute(VALUE_ATTRIBUTE);
+            toFill.put(key, Util.replaceAll(val, namespaces));
          }
       }
       else
@@ -68,45 +68,34 @@ final class ResponseImpl implements Response
       }
    }
 
-   private static String replace(String s, Map<String, String> namespaces)
-   {
-      for (Iterator<String> i = namespaces.keySet().iterator(); i.hasNext(); )
-      {
-         String key = i.next();
-         String val = namespaces.get(key);
-         s = StringUtil.replace("${" + key + "}", val, s);
-      }
-      return s;
-   }
-   
-   public String getContentType()
+   public final String getContentType()
    {
       return this.contentType;
    }
 
-   public Map<String, String> getProperties()
+   public final Map<String, String> getProperties()
    {
       return this.properties;
    }
 
-   public String getResource()
+   public final String getResource()
    {
       return this.resource;
    }
 
-   public String getStatusCode()
+   public final String getStatusCode()
    {
       return this.statusCode;
    }
    
-   public String toString()
+   public final String toString()
    {
       StringBuilder sb = new StringBuilder();
-      sb.append("RESPONSE {");
-      sb.append("resource=" + this.resource + ", ");
-      sb.append("statusCode=" + this.statusCode + ", ");
-      sb.append("contentType=" + this.contentType + ", ");
-      sb.append("properties=" + this.properties + "}");
+      sb.append(RESPONSE_ELEMENT).append(EQUAL).append(LEFT_BRACKET);
+      sb.append(RESOURCE_ATTRIBUTE).append(EQUAL).append(this.resource).append(COMMA).append(SPACE);
+      sb.append(STATUS_CODE_ATTRIBUTE).append(EQUAL).append(this.statusCode).append(COMMA).append(SPACE);
+      sb.append(CONTENT_TYPE_ATTRIBUTE).append(EQUAL).append(this.contentType).append(COMMA).append(SPACE);
+      sb.append(PROPERTIES).append(EQUAL).append(this.properties).append(RIGHT_BRACKET);
       return sb.toString();
    }
    

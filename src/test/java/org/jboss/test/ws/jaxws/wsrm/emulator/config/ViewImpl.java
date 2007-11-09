@@ -21,13 +21,14 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.emulator.config;
 
-import java.util.Map;
+import static org.jboss.test.ws.jaxws.wsrm.emulator.Constant.*;
 
+import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * TODO: Add comment
+ * Immutable object implementation representing <b>/views/view</b> configuration element content
  *
  * @author richard.opalka@jboss.com
  *
@@ -42,35 +43,35 @@ final class ViewImpl implements View
    
    ViewImpl(Element e, Map<String, String> namespaces)
    {
-      this.id = e.getAttribute("id");
-      NodeList response = e.getElementsByTagName("response");
-      this.res = (response == null) ? null : ObjectFactory.getResponse((Element)response.item(0), namespaces); 
-      NodeList request = e.getElementsByTagName("request");
-      this.req = (request == null) ? null : ObjectFactory.getRequest((Element)request.item(0), namespaces); 
+      this.id = e.getAttribute(ID_ATTRIBUTE);
+      NodeList response = e.getElementsByTagName(RESPONSE_ELEMENT);
+      this.res = ObjectFactory.getResponse((Element)response.item(0), namespaces); 
+      NodeList request = e.getElementsByTagName(REQUEST_ELEMENT);
+      this.req = ObjectFactory.getRequest((Element)request.item(0), namespaces); 
    }
    
-   public String getId()
+   public final String getId()
    {
       return this.id;
    }
 
-   public Request getRequest()
+   public final Request getRequest()
    {
       return this.req;
    }
 
-   public Response getResponse()
+   public final Response getResponse()
    {
       return this.res;
    }
    
-   public String toString()
+   public final String toString()
    {
       StringBuilder sb = new StringBuilder();
-      sb.append("VIEW {");
-      sb.append("id=" + id + ", ");
-      sb.append("request=" + req + ", ");
-      sb.append("response=" + res + "}");
+      sb.append(VIEW_ELEMENT).append(EQUAL).append(LEFT_BRACKET);
+      sb.append(ID_ATTRIBUTE).append(EQUAL).append(id).append(COMMA).append(SPACE);
+      sb.append(REQUEST_ELEMENT).append(EQUAL).append(req).append(COMMA).append(SPACE);
+      sb.append(RESPONSE_ELEMENT).append(EQUAL).append(res).append(RIGHT_BRACKET);
       return sb.toString();
    }
 
