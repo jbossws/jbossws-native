@@ -35,6 +35,8 @@ import org.jboss.ws.extensions.security.element.Reference;
 import org.jboss.ws.extensions.security.element.SecurityTokenReference;
 import org.jboss.ws.extensions.security.element.X509IssuerSerial;
 import org.jboss.ws.extensions.security.element.X509Token;
+import org.jboss.ws.extensions.security.exception.SecurityTokenUnavailableException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 
 

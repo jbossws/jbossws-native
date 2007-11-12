@@ -28,9 +28,9 @@ import org.jboss.ws.extensions.security.BinarySecurityTokenValidator;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.KeyResolver;
 import org.jboss.ws.extensions.security.SecurityStore;
-import org.jboss.ws.extensions.security.UnsupportedSecurityTokenException;
 import org.jboss.ws.extensions.security.Util;
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.UnsupportedSecurityTokenException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

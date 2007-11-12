@@ -19,56 +19,48 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.exception;
 
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.extensions.security.Constants;
+
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public class WSSecurityException extends Exception
+public class UnsupportedSecurityTokenException extends WSSecurityException
 {
-   private boolean internal = false;
+   public static final QName faultCode = new QName("UnsupportedSecurityToken", Constants.WSSE_PREFIX, Constants.WSSE_NS);
 
-   private QName faultCode = new QName(Constants.JBOSS_WSSE_NS, "InternalError", Constants.JBOSS_WSSE_PREFIX);
+   public static final String faultString = "An unsupported token was provided.";
 
-   private String faultString = "An internal WS-Security error occurred. See log for details";
+   public UnsupportedSecurityTokenException()
+   {
+      super(faultString);
+      setFaultCode(faultCode);
+      setFaultString(faultString);
+   }
 
-   public WSSecurityException(String message)
+   public UnsupportedSecurityTokenException(Throwable cause)
+   {
+      super(faultString);
+      setFaultCode(faultCode);
+      setFaultString(faultString);
+   }
+
+   public UnsupportedSecurityTokenException(String message)
    {
       super(message);
-      this.internal = true;
+      setFaultCode(faultCode);
+      setFaultString(message);
    }
 
-   public WSSecurityException(String message, Throwable cause)
+   public UnsupportedSecurityTokenException(String message, Throwable cause)
    {
       super(message, cause);
-      this.internal = true;
-   }
-
-   protected void setFaultCode(QName faultCode)
-   {
-      this.faultCode = faultCode;
-   }
-
-   protected void setFaultString(String faultMessage)
-   {
-      this.faultString = faultMessage;
-   }
-
-   public boolean isInternalError()
-   {
-      return internal;
-   }
-
-   public QName getFaultCode()
-   {
-      return faultCode;
-   }
-
-   public String getFaultString()
-   {
-      return faultString;
+      setFaultCode(faultCode);
+      setFaultString(message);
    }
 }

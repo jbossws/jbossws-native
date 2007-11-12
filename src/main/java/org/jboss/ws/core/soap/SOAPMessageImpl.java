@@ -23,22 +23,38 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.SOAPMessageAbstraction;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.soap.attachment.*;
-import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-
-import javax.mail.MessagingException;
-import javax.xml.soap.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.mail.MessagingException;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
+
+import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.SOAPMessageAbstraction;
+import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
+import org.jboss.ws.core.soap.attachment.CIDGenerator;
+import org.jboss.ws.core.soap.attachment.MimeConstants;
+import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
+import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
+import org.jboss.ws.core.soap.attachment.MultipartRelatedXOPEncoder;
+import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
  * The root class for all SOAP messages. As transmitted on the "wire", a SOAP message is an XML document or a
@@ -207,7 +223,25 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
 
       return new MimeMatchingAttachmentsIterator(headers, attachments);
    }
-
+   
+   private String getSOAPContentType() throws SOAPException
+   {
+      //Check binding type in the endpoint metadata
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null && Constants.SOAP12HTTP_BINDING.equalsIgnoreCase(msgContext.getEndpointMetaData().getBindingId()))
+      {
+         return SOAPConstants.SOAP_1_2_CONTENT_TYPE;
+      }
+      //Check the message envelope
+      SOAPEnvelope env = soapPart != null ? soapPart.getEnvelope() : null;
+      if (env != null && SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE.equals(env.getNamespaceURI()))
+      {
+         return SOAPConstants.SOAP_1_2_CONTENT_TYPE;
+      }
+      //Default to soap 1.1
+      return SOAPConstants.SOAP_1_1_CONTENT_TYPE;
+   }
+   
    public void saveChanges() throws SOAPException
    {
       if (saveRequired == true)
@@ -220,7 +254,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
                throw new IllegalStateException("XOP parameter not properly inlined");
 
             // default content-type
-            String contentType = MimeConstants.TYPE_SOAP11 + "; charset=" + getCharSetEncoding();
+            String contentType = getSOAPContentType() + "; charset=" + getCharSetEncoding();
 
             if (hasAttachments)
             {

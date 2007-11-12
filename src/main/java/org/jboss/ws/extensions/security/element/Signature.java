@@ -26,7 +26,7 @@ import java.security.PublicKey;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.signature.XMLSignature;
 import org.jboss.ws.extensions.security.KeyResolver;
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 
 

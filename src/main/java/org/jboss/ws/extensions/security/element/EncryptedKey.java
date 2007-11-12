@@ -22,6 +22,7 @@
 package org.jboss.ws.extensions.security.element;
 
 import java.security.PrivateKey;
+import java.util.HashMap;
 
 import javax.crypto.SecretKey;
 
@@ -29,10 +30,10 @@ import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.keys.KeyInfo;
 import org.jboss.ws.extensions.security.Constants;
-import org.jboss.ws.extensions.security.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.KeyResolver;
 import org.jboss.ws.extensions.security.Util;
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,20 +52,37 @@ public class EncryptedKey implements SecurityProcess
    private X509Token token;
 
    private ReferenceList list;
+   
+   private String wrapAlgorithm;
 
    private Element cachedElement;
-
-   public EncryptedKey(Document document, SecretKey secretKey, X509Token token)
+   
+   private String tokenRefType;
+   
+   private static HashMap<String, String> keyWrapAlgorithms;
+   private static final String DEFAULT_ALGORITHM = "rsa_15";
+   static
    {
-      this(document, secretKey, token, new ReferenceList());
+      keyWrapAlgorithms = new HashMap<String, String>(2);
+      keyWrapAlgorithms.put("rsa_15", XMLCipher.RSA_v1dot5);
+      keyWrapAlgorithms.put("rsa_oaep", XMLCipher.RSA_OAEP);
    }
 
-   public EncryptedKey(Document document, SecretKey secretKey, X509Token token, ReferenceList list)
+   public EncryptedKey(Document document, SecretKey secretKey, X509Token token, String wrap, String tokenRefType)
+   {
+      this(document, secretKey, token, new ReferenceList(), wrap, tokenRefType);
+   }
+
+   public EncryptedKey(Document document, SecretKey secretKey, X509Token token, ReferenceList list, String wrap, String tokenRefType)
    {
       this.document = document;
       this.secretKey = secretKey;
       this.token = token;
       this.list = list;
+      this.wrapAlgorithm = keyWrapAlgorithms.get(wrap);
+      if (wrapAlgorithm ==null)
+         wrapAlgorithm = keyWrapAlgorithms.get(DEFAULT_ALGORITHM);
+      this.tokenRefType = tokenRefType;
    }
 
    public EncryptedKey(Element element, KeyResolver resolver) throws WSSecurityException
@@ -154,7 +172,7 @@ public class EncryptedKey implements SecurityProcess
 
       try
       {
-         cipher = XMLCipher.getInstance(XMLCipher.RSA_v1dot5);
+         cipher = XMLCipher.getInstance(wrapAlgorithm);
          cipher.init(XMLCipher.WRAP_MODE, token.getCert().getPublicKey());
          key = cipher.encryptKey(document, secretKey);
       }
@@ -163,7 +181,7 @@ public class EncryptedKey implements SecurityProcess
          throw new WSSecurityException("Error encrypting key: " + e.getMessage(), e);
       }
 
-      SecurityTokenReference reference = new SecurityTokenReference(new DirectReference(document, token));
+      SecurityTokenReference reference = new SecurityTokenReference(Reference.getReference(tokenRefType, document, token));
       KeyInfo keyInfo = new KeyInfo(document);
       keyInfo.addUnknownElement(reference.getElement());
       key.setKeyInfo(keyInfo);

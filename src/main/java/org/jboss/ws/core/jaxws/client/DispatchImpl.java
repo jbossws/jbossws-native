@@ -318,6 +318,9 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
 
    public void invokeOneWay(T msg)
    {
+      CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
+      MessageContextAssociation.pushMessageContext(msgContext);
+      msgContext.setEndpointMetaData(epMetaData);
       try
       {
          MessageAbstraction reqMsg = getRequestMessage(msg);
@@ -327,6 +330,10 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
       catch (Exception ex)
       {
          handleInvokeException(ex);
+      }
+      finally
+      {
+         MessageContextAssociation.popMessageContext();
       }
    }
 

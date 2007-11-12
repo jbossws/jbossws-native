@@ -19,43 +19,45 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.exception;
 
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.extensions.security.Constants;
 
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public class InvalidSecurityTokenException extends WSSecurityException
+public class SecurityTokenUnavailableException extends WSSecurityException
 {
-   public static final QName faultCode = new QName(Constants.WSSE_NS, "InvlalidSecurityToken", Constants.WSSE_PREFIX);
+   public static final QName faultCode = new QName(Constants.WSSE_NS, "SecurityTokenUnavailable", Constants.WSSE_PREFIX);
 
-   public static final String faultString = "An invlaid security token was provided.";
+   public static final String faultString = "Referenced security token could not be retrieved.";
 
-   public InvalidSecurityTokenException()
+   public SecurityTokenUnavailableException()
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public InvalidSecurityTokenException(Throwable cause)
+   public SecurityTokenUnavailableException(Throwable cause)
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public InvalidSecurityTokenException(String message)
+   public SecurityTokenUnavailableException(String message)
    {
       super(message);
       setFaultCode(faultCode);
       setFaultString(message);
    }
 
-   public InvalidSecurityTokenException(String message, Throwable cause)
+   public SecurityTokenUnavailableException(String message, Throwable cause)
    {
       super(message, cause);
       setFaultCode(faultCode);

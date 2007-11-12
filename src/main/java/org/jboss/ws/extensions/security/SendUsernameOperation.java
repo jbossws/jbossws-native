@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
 public class SendUsernameOperation implements EncodingOperation
@@ -39,7 +40,7 @@ public class SendUsernameOperation implements EncodingOperation
       this.store = store;
    }
 
-   public void process(Document message, List<Target> targets, String username, String credential, String algorithm) throws WSSecurityException
+   public void process(Document message, List<Target> targets, String username, String credential, String algorithm, String keyWrapAlgorithm, String tokenRefType) throws WSSecurityException
    {
       header.addToken(new UsernameToken(username, credential, message));
    }

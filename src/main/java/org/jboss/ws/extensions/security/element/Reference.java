@@ -21,11 +21,16 @@
 */
 package org.jboss.ws.extensions.security.element;
 
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 abstract public class Reference implements SecurityElement
 {
+   public static final String DIRECT_REFERENCE = "directReference";
+   public static final String KEY_IDENTIFIER = "keyIdentifier";
+   public static final String X509ISSUER_SERIAL = "x509IssuerSerial";
+   
    public static Reference getReference(Element element) throws WSSecurityException
    {
       String name = element.getLocalName();
@@ -44,6 +49,26 @@ abstract public class Reference implements SecurityElement
       else
       {
          throw new WSSecurityException("Unkown reference element: " + name);
+      }
+   }
+   
+   public static Reference getReference(String tokenRefType, Document message, BinarySecurityToken token) throws WSSecurityException
+   {
+      if (tokenRefType == null || DIRECT_REFERENCE.equals(tokenRefType))
+      {
+         return new DirectReference(message, token);
+      }
+      else if (KEY_IDENTIFIER.equals(tokenRefType))
+      {
+         return new KeyIdentifier(message, token);
+      }
+      else if (X509ISSUER_SERIAL.equals(tokenRefType))
+      {
+         return new X509IssuerSerial(message, token);
+      }
+      else
+      {
+         throw new WSSecurityException("Unkown token reference type: " + tokenRefType);
       }
    }
 }

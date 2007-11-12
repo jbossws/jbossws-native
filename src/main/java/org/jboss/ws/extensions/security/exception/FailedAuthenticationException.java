@@ -19,43 +19,45 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.exception;
 
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.extensions.security.Constants;
 
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public class UnsupportedSecurityTokenException extends WSSecurityException
+public class FailedAuthenticationException extends WSSecurityException
 {
-   public static final QName faultCode = new QName("UnsupportedSecurityToken", Constants.WSSE_PREFIX, Constants.WSSE_NS);
+   public static final QName faultCode = new QName(Constants.WSSE_NS, "FailedAuthentication", Constants.WSSE_PREFIX);
 
-   public static final String faultString = "An unsupported token was provided.";
+   public static final String faultString = "The security token could not be authenticated or authorized.";
 
-   public UnsupportedSecurityTokenException()
+   public FailedAuthenticationException()
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public UnsupportedSecurityTokenException(Throwable cause)
+   public FailedAuthenticationException(Throwable cause)
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public UnsupportedSecurityTokenException(String message)
+   public FailedAuthenticationException(String message)
    {
       super(message);
       setFaultCode(faultCode);
       setFaultString(message);
    }
 
-   public UnsupportedSecurityTokenException(String message, Throwable cause)
+   public FailedAuthenticationException(String message, Throwable cause)
    {
       super(message, cause);
       setFaultCode(faultCode);

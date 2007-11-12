@@ -43,4 +43,5 @@ org/jboss/test/ws/jaxrpc/jbws723/**
 org/jboss/test/ws/jaxrpc/samples/secureejb/SecureEJBTestCase.*
 org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase.*
 
-
+# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
+org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*

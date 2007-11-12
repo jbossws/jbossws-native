@@ -132,8 +132,8 @@ public class RoundTripTestCase extends JBossWSTest
       targets.add(new WsuIdTarget("timestamp"));
 
       LinkedList operations = new LinkedList();
-      operations.add(new OperationDescription(TimestampOperation.class, null, null, "300", null));
-      operations.add(new OperationDescription(SignatureOperation.class, targets, "wsse", null, null));
+      operations.add(new OperationDescription(TimestampOperation.class, null, null, "300", null, null, null));
+      operations.add(new OperationDescription(SignatureOperation.class, targets, "wsse", null, null, null, null));
 
       name = new QName("http://org.jboss.ws/2004", "someHeader");
       target = new QNameTarget(name);
@@ -144,8 +144,8 @@ public class RoundTripTestCase extends JBossWSTest
       target = new QNameTarget(name, true);
       targets.add(target);
 
-      operations.add(new OperationDescription(EncryptionOperation.class, targets, "wsse", null, null));
-      operations.add(new OperationDescription(SendUsernameOperation.class, null, "hi", "there", null));
+      operations.add(new OperationDescription(EncryptionOperation.class, targets, "wsse", null, null, null, null));
+      operations.add(new OperationDescription(SendUsernameOperation.class, null, "hi", "there", null, null, null));
 
       return operations;
    }
@@ -161,8 +161,8 @@ public class RoundTripTestCase extends JBossWSTest
       targets.add(target);
       //targets.add(new WsuIdTarget("timestamp"));
       LinkedList operations = new LinkedList();
-      operations.add(new OperationDescription(RequireSignatureOperation.class, targets, null, null, null));
-      operations.add(new OperationDescription(RequireEncryptionOperation.class, targets, null, null, null));
+      operations.add(new OperationDescription(RequireSignatureOperation.class, targets, null, null, null, null, null));
+      operations.add(new OperationDescription(RequireEncryptionOperation.class, targets, null, null, null, null, null));
 
       return operations;
    }

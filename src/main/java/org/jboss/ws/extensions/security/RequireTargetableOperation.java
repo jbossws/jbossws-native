@@ -28,6 +28,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
+import org.jboss.ws.extensions.security.exception.FailedCheckException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

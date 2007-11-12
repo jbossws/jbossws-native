@@ -183,6 +183,22 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
+    <xs:attribute name="keyWrapAlgorithm">
+      <xs:annotation>
+        <xs:documentation>The algorithm to use to encrypt the symmetric secret key.  If not specified rsa_15 will be used.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="rsa_15"/>
+          <xs:enumeration value="rsa_oaep"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="tokenReference" type="tokenReferenceType" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specify the token reference type to be used; default direct reference to the token.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="signType">
     <xs:sequence>
@@ -197,7 +213,19 @@
     </xs:attribute>
     <xs:attribute name="alias" type="xs:string" use="required"/>
     <xs:attribute name="includeTimestamp" type="xs:boolean" use="optional"/>
+    <xs:attribute name="tokenReference" type="tokenReferenceType" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specify the token reference type to be used; default direct reference to the token.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
+  <xs:simpleType name="tokenReferenceType">
+  	<xs:restriction base="xs:string">
+      <xs:enumeration value="directReference"/>
+      <xs:enumeration value="keyIdentifier"/>
+      <xs:enumeration value="x509IssuerSerial"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="operationType">
     <xs:sequence>
       <xs:element name="config" type="configType">

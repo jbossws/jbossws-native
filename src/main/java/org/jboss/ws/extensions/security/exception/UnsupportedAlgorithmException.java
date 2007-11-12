@@ -19,43 +19,46 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.exception;
 
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.extensions.security.Constants;
 
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public class SecurityTokenUnavailableException extends WSSecurityException
+
+public class UnsupportedAlgorithmException extends WSSecurityException
 {
-   public static final QName faultCode = new QName(Constants.WSSE_NS, "SecurityTokenUnavailable", Constants.WSSE_PREFIX);
+   public static final QName faultCode = new QName("UnsupportedAlgorithm", Constants.WSSE_PREFIX, Constants.WSSE_NS);
 
-   public static final String faultString = "Referenced security token could not be retrieved.";
+   public static final String faultString = "An unsupported signature or encryption algorithm was used.";
 
-   public SecurityTokenUnavailableException()
+   public UnsupportedAlgorithmException()
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public SecurityTokenUnavailableException(Throwable cause)
+   public UnsupportedAlgorithmException(Throwable cause)
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public SecurityTokenUnavailableException(String message)
+   public UnsupportedAlgorithmException(String message)
    {
       super(message);
       setFaultCode(faultCode);
       setFaultString(message);
    }
 
-   public SecurityTokenUnavailableException(String message, Throwable cause)
+   public UnsupportedAlgorithmException(String message, Throwable cause)
    {
       super(message, cause);
       setFaultCode(faultCode);

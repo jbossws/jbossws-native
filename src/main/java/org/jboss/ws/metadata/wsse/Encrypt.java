@@ -37,12 +37,16 @@ public class Encrypt extends Targetable implements Serializable
    private String type;
    private String alias;
    private String algorithm;
+   private String keyWrapAlgorithm;
+   private String tokenRefType;
 
-   public Encrypt(String type, String alias, String algorithm)
+   public Encrypt(String type, String alias, String algorithm, String wrap, String tokenRefType)
    {
       this.type = type;
       this.alias = alias;
       this.algorithm = algorithm;
+      this.keyWrapAlgorithm = wrap;
+      this.tokenRefType = tokenRefType;
    }
 
    public String getAlias()
@@ -73,5 +77,25 @@ public class Encrypt extends Targetable implements Serializable
    public void setAlgorithm(String algorithm)
    {
       this.algorithm = algorithm;
+   }
+
+   public String getWrap()
+   {
+      return keyWrapAlgorithm;
+   }
+
+   public void setWrap(String wrap)
+   {
+      this.keyWrapAlgorithm = wrap;
+   }
+
+   public String getTokenRefType()
+   {
+      return tokenRefType;
+   }
+
+   public void setTokenRefType(String tokenRefType)
+   {
+      this.tokenRefType = tokenRefType;
    }
 }

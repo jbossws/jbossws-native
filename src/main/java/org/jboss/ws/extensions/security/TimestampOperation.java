@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Timestamp;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
 public class TimestampOperation implements EncodingOperation
@@ -39,7 +40,7 @@ public class TimestampOperation implements EncodingOperation
       this.store = store;
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm) throws WSSecurityException
+   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, String keyWrapAlgorithm, String tokenRefType) throws WSSecurityException
    {
       Integer ttl = null;
 

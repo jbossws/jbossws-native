@@ -27,7 +27,7 @@ import org.apache.xml.security.exceptions.Base64DecodingException;
 import org.apache.xml.security.utils.Base64;
 import org.apache.xml.security.utils.XMLUtils;
 import org.jboss.ws.extensions.security.Constants;
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -95,8 +95,8 @@ public class KeyIdentifier extends Reference
       int trunc = encoded.length - 4;
 
       byte[] identifier = new byte[trunc];
-      System.arraycopy(identifier, 4, encoded, 0, trunc);
-
+      
+      System.arraycopy(encoded, 4, identifier, 0, trunc);
       value = Base64.encode(identifier);
    }
 
@@ -139,6 +139,7 @@ public class KeyIdentifier extends Reference
       Element element = doc.createElementNS(Constants.WSSE_NS, Constants.WSSE_PREFIX + ":" + "KeyIdentifier");
       element.setAttribute("ValueType", getValueType());
       element.setAttribute("EncodingType", Constants.BASE64_ENCODING_TYPE);
+      element.appendChild(doc.createTextNode(value));
 
       cachedElement = element;
       return cachedElement;

@@ -21,11 +21,13 @@
 */
 package org.jboss.ws.extensions.security;
 
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
@@ -35,9 +37,11 @@ import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
+import org.jboss.ws.extensions.security.element.Reference;
 import org.jboss.ws.extensions.security.element.ReferenceList;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.X509Token;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -125,7 +129,7 @@ public class EncryptionOperation implements EncodingOperation
       }
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm) throws WSSecurityException
+   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, String wrap, String tokenRefType) throws WSSecurityException
    {
       if (! algorithms.containsKey(algorithm))
          algorithm = DEFAULT_ALGORITHM;
@@ -163,10 +167,41 @@ public class EncryptionOperation implements EncodingOperation
       if (token == null)
       {
          token = new X509Token(cert, message);
-         header.addToken(token);
+         if (tokenRefType == null || Reference.DIRECT_REFERENCE.equals(tokenRefType))
+            header.addToken(token);
       }
 
-      EncryptedKey eKey = new EncryptedKey(message, secretKey, token, list);
+      EncryptedKey eKey = new EncryptedKey(message, secretKey, token, list, wrap, tokenRefType);
       header.addSecurityProcess(eKey);
+   }
+   
+   
+   public static boolean probeUnlimitedCrypto() throws WSSecurityException
+   {
+      try
+      {
+         //Check AES-256
+         KeyGenerator kgen = KeyGenerator.getInstance("AES");
+         kgen.init(256);
+         SecretKey key = kgen.generateKey();
+         Cipher c = Cipher.getInstance("AES");
+         c.init(Cipher.ENCRYPT_MODE, key);
+         
+         //Check Blowfish
+         kgen = KeyGenerator.getInstance("Blowfish");
+         key = kgen.generateKey();
+         c = Cipher.getInstance("Blowfish");
+         c.init(Cipher.ENCRYPT_MODE, key);
+         
+         return true;
+      }
+      catch (InvalidKeyException e)
+      {
+         return false;
+      }
+      catch (Exception e)
+      {
+         throw new WSSecurityException("Error probing cryptographic permissions", e);
+      }
    }
 }

@@ -31,6 +31,8 @@ import org.apache.xml.security.signature.XMLSignatureException;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.SecurityProcess;
 import org.jboss.ws.extensions.security.element.Signature;
+import org.jboss.ws.extensions.security.exception.FailedCheckException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
 public class SignatureVerificationOperation implements DecodingOperation

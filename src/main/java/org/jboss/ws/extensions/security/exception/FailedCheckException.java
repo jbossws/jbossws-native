@@ -19,43 +19,45 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.exception;
 
 import javax.xml.namespace.QName;
+
+import org.jboss.ws.extensions.security.Constants;
 
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public class InvalidSecurityHeaderException extends WSSecurityException
+public class FailedCheckException extends WSSecurityException
 {
-   public static final QName faultCode = new QName(Constants.WSSE_NS, "InvalidSecurity", Constants.WSSE_PREFIX);
+   public static final QName faultCode = new QName(Constants.WSSE_NS, "FailedCheck", Constants.WSSE_PREFIX);
 
-   public static final String faultString = "An error was dicovered processing the <wsse:Security> header.";
+   public static final String faultString = "The signature or decryption was invlaid.";
 
-   public InvalidSecurityHeaderException()
+   public FailedCheckException()
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public InvalidSecurityHeaderException(Throwable cause)
+   public FailedCheckException(Throwable cause)
    {
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
    }
 
-   public InvalidSecurityHeaderException(String message)
+   public FailedCheckException(String message)
    {
       super(message);
       setFaultCode(faultCode);
       setFaultString(message);
    }
 
-   public InvalidSecurityHeaderException(String message, Throwable cause)
+   public FailedCheckException(String message, Throwable cause)
    {
       super(message, cause);
       setFaultCode(faultCode);

@@ -28,7 +28,7 @@ import java.util.TimeZone;
 import org.apache.xml.security.utils.XMLUtils;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.Util;
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

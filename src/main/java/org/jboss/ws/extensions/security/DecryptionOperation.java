@@ -32,6 +32,9 @@ import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.ReferenceList;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.SecurityProcess;
+import org.jboss.ws.extensions.security.exception.FailedCheckException;
+import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

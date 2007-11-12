@@ -38,6 +38,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.security.element.BinarySecurityToken;
 import org.jboss.ws.extensions.security.element.SecurityTokenReference;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 

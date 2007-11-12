@@ -29,7 +29,7 @@ import java.security.cert.X509Certificate;
 import org.apache.xml.security.utils.XMLUtils;
 import org.jboss.util.Base64;
 import org.jboss.ws.extensions.security.Constants;
-import org.jboss.ws.extensions.security.WSSecurityException;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -19,47 +19,58 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.exception;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.extensions.security.Constants;
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-
-public class UnsupportedAlgorithmException extends WSSecurityException
+public class WSSecurityException extends Exception
 {
-   public static final QName faultCode = new QName("UnsupportedAlgorithm", Constants.WSSE_PREFIX, Constants.WSSE_NS);
+   private boolean internal = false;
 
-   public static final String faultString = "An unsupported signature or encryption algorithm was used.";
+   private QName faultCode = new QName(Constants.JBOSS_WSSE_NS, "InternalError", Constants.JBOSS_WSSE_PREFIX);
 
-   public UnsupportedAlgorithmException()
-   {
-      super(faultString);
-      setFaultCode(faultCode);
-      setFaultString(faultString);
-   }
+   private String faultString = "An internal WS-Security error occurred. See log for details";
 
-   public UnsupportedAlgorithmException(Throwable cause)
-   {
-      super(faultString);
-      setFaultCode(faultCode);
-      setFaultString(faultString);
-   }
-
-   public UnsupportedAlgorithmException(String message)
+   public WSSecurityException(String message)
    {
       super(message);
-      setFaultCode(faultCode);
-      setFaultString(message);
+      this.internal = true;
    }
 
-   public UnsupportedAlgorithmException(String message, Throwable cause)
+   public WSSecurityException(String message, Throwable cause)
    {
       super(message, cause);
-      setFaultCode(faultCode);
-      setFaultString(message);
+      this.internal = true;
+   }
+
+   protected void setFaultCode(QName faultCode)
+   {
+      this.faultCode = faultCode;
+   }
+
+   protected void setFaultString(String faultMessage)
+   {
+      this.faultString = faultMessage;
+   }
+
+   public boolean isInternalError()
+   {
+      return internal;
+   }
+
+   public QName getFaultCode()
+   {
+      return faultCode;
+   }
+
+   public String getFaultString()
+   {
+      return faultString;
    }
 }
