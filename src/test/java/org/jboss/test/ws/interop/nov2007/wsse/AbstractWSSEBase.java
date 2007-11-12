@@ -72,14 +72,19 @@ public abstract class AbstractWSSEBase extends JBossWSTest
 
    protected void configureClient()
    {
-
+      
       InteropConfigFactory factory = InteropConfigFactory.newInstance();
       ClientScenario scenario = factory.createClientScenario(System.getProperty("client.scenario"));
       if (scenario != null)
       {
-         System.out.println("SCENARIO: "+scenario);
          log.info("Using scenario: " + scenario);
-         ((BindingProvider)port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, scenario.getTargetEndpoint().toString());
+         String targetEndpoint = scenario.getTargetEndpoint().toString();
+         if (targetEndpoint.contains("REPLACE_WITH_ACTUAL_HOST"))
+         {
+            targetEndpoint = targetEndpoint.replace("REPLACE_WITH_ACTUAL_HOST", getServerHost());
+         }
+         System.out.println("Using target endpoint: " + targetEndpoint);
+         ((BindingProvider)port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, targetEndpoint);
       }
       else
       {

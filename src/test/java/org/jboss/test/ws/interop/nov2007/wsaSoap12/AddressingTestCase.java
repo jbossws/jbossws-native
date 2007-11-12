@@ -132,25 +132,28 @@ public class AddressingTestCase extends JBossWSTest {
    
    private void configureClient() {
 
-      ((BindingProvider)echoPort).getRequestContext().put(
-         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/nov2007/wsaSoap12/echo"         
-      );
-
-      ((BindingProvider)notifyPort).getRequestContext().put(
-         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/nov2007/wsaSoap12/notify"
-      );
-
-      
      InteropConfigFactory factory = InteropConfigFactory.newInstance();
      ClientScenario scenario = factory.createClientScenario(System.getProperty("client.scenario"));
-     //ClientScenario scenario = factory.createClientScenario("msft-public");
      if(scenario!=null)
      {
         String notifyEndpoint = scenario.getTargetEndpoint().toString();
         log.info("Using scenario: " + scenario);
         log.info("Endpoint at: " + notifyEndpoint);
-
-        ((BindingProvider)echoPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, scenario.getParameter("echoPort"));
+        
+        
+        if (notifyEndpoint.contains("REPLACE_WITH_ACTUAL_HOST"))
+        {
+           notifyEndpoint = notifyEndpoint.replace("REPLACE_WITH_ACTUAL_HOST", getServerHost());
+        }
+        System.out.println("Using notify target endpoint: " + notifyEndpoint);
+        String echoEndpoint = scenario.getParameter("echoPort");
+        if (echoEndpoint.contains("REPLACE_WITH_ACTUAL_HOST"))
+        {
+           echoEndpoint = echoEndpoint.replace("REPLACE_WITH_ACTUAL_HOST", getServerHost());
+        }
+        System.out.println("... and echo target endpoint: " + echoEndpoint);
+        
+        ((BindingProvider)echoPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, echoEndpoint);
         ((BindingProvider)notifyPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, notifyEndpoint);
 
      }

@@ -1,6 +1,6 @@
 <client-scenarios>
    <scenario name="default" description="Testing local endpoint">
-      <target-endpoint>http://localhost:8080/nov2007/wsseEncrypt/endpoint</target-endpoint>
+      <target-endpoint>http://REPLACE_WITH_ACTUAL_HOST:8080/nov2007/wsseEncrypt/endpoint</target-endpoint>
    </scenario>
    <scenario name="default-munich" description="Testing Munich endpoint">
       <target-endpoint>http://jbossws.demo.jboss.com:8080/nov2007/wsseEncrypt/endpoint</target-endpoint>      

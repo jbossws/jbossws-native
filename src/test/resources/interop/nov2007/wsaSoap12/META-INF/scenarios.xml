@@ -1,7 +1,7 @@
 <client-scenarios>
    <scenario name="default" description="Testing local WSA endpoints">
-      <target-endpoint>http://localhost:8080/nov2007/wsaSoap12/notify</target-endpoint>
-      <param name="echoPort" value="http://localhost:8080/nov2007/wsaSoap12/echo"/>
+      <target-endpoint>http://REPLACE_WITH_ACTUAL_HOST:8080/nov2007/wsaSoap12/notify</target-endpoint>
+      <param name="echoPort" value="http://REPLACE_WITH_ACTUAL_HOST:8080/nov2007/wsaSoap12/echo"/>
    </scenario>
    <scenario name="default-munich" description="Testing Munich WSA endpoints">
       <target-endpoint>http://jbossws.demo.jboss.com:8080/nov2007/wsaSoap12/notify</target-endpoint>
