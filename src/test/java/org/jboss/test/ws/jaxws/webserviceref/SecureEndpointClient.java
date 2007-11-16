@@ -57,16 +57,25 @@ public class SecureEndpointClient
       if (args.length > 2)
          password = args[2];
 
-      SecureEndpoint port = secureService1.getSecureEndpointPort();
-      String retMsg = invokeEndpoint(port, reqMsg, username, password);
-
-      port = secureService2.getPort(SecureEndpoint.class);
-      retMsg += "|" + invokeEndpoint(port, reqMsg, username, password);
-
-      port = securePort1;
-      retMsg += "|" + invokeEndpoint(port, reqMsg, username, password);
-
-      retStr = retMsg;
+      if (reqMsg.equals("SecureService1"))
+      {
+         SecureEndpoint port = secureService1.getSecureEndpointPort();
+         retStr = invokeEndpoint(port, reqMsg, username, password);
+      }
+      else if (reqMsg.equals("SecureService2"))
+      {
+         SecureEndpoint port = secureService2.getPort(SecureEndpoint.class);
+         retStr = invokeEndpoint(port, reqMsg, username, password);
+      }
+      else if (reqMsg.equals("SecurePort1"))
+      {
+         SecureEndpoint port = securePort1;
+         retStr = invokeEndpoint(port, reqMsg, username, password);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Invalid req messge: " + reqMsg);
+      }
    }
 
    private static String invokeEndpoint(SecureEndpoint port, String inStr, String username, String password)

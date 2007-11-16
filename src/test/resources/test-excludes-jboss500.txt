@@ -7,5 +7,4 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefEJB3TestCase.*
 
 # [JBAS-4931] Fix ejb3 ClientLaucher
-org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
-org/jboss/test/ws/jaxws/webserviceref/**
+#org/jboss/test/ws/jaxws/webserviceref/**

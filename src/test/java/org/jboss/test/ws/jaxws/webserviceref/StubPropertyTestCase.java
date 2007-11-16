@@ -73,17 +73,45 @@ public class StubPropertyTestCase extends JBossWSTest
       assertEquals(helloWorld, retObj);
    }
 
-   public void testUnconfiguredStub() throws Throwable
+   public void testExplicitSecureService1() throws Throwable
    {
-      String reqMsg = "Hello World";
+      String reqMsg = "SecureService1";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg, "kermit", "thefrog" });
-      assertEquals("Hello World|Hello World|Hello World", SecureEndpointClient.retStr);
+      assertEquals(reqMsg, SecureEndpointClient.retStr);
    }
 
-   public void testConfiguredStub() throws Throwable
+   public void testExplicitSecureService2() throws Throwable
    {
-      String reqMsg = "Hello World";
+      String reqMsg = "SecureService2";
+      new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg, "kermit", "thefrog" });
+      assertEquals(reqMsg, SecureEndpointClient.retStr);
+   }
+
+   public void testExplicitSecurePort1() throws Throwable
+   {
+      String reqMsg = "SecurePort1";
+      new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg, "kermit", "thefrog" });
+      assertEquals(reqMsg, SecureEndpointClient.retStr);
+   }
+
+   public void testImplicitSecureService1() throws Throwable
+   {
+      String reqMsg = "SecureService1";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg });
-      assertEquals("Hello World|Hello World|Hello World", SecureEndpointClient.retStr);
+      assertEquals(reqMsg, SecureEndpointClient.retStr);
+   }
+
+   public void testImplicitSecureService2() throws Throwable
+   {
+      String reqMsg = "SecureService2";
+      new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg });
+      assertEquals(reqMsg, SecureEndpointClient.retStr);
+   }
+
+   public void testImplicitSecurePort1() throws Throwable
+   {
+      String reqMsg = "SecurePort1";
+      new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg });
+      assertEquals(reqMsg, SecureEndpointClient.retStr);
    }
 }
