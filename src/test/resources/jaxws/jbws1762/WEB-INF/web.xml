@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-    <!--
-       Rewriting the web.xml produces the following web.xml from the one listed below.
-       The *JSEDeployerHook's cannot identify those and thus reject the deployment.
-    -->
-
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-         version="2.4">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+  version="2.4">
+
   <servlet>
     <servlet-name>POJOBean</servlet-name>
-    <servlet-class>org.jboss.wsf.stack.jbws.EndpointServlet</servlet-class>
-    <init-param>
-      <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.jboss.test.ws.jaxws.jbws1762.services.POJOBean</param-value>
-    </init-param>
+    <servlet-class>org.jboss.test.ws.jaxws.jbws1762.services.POJOBean</servlet-class>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>POJOBean</servlet-name>
     <url-pattern>/POJOBean</url-pattern>
   </servlet-mapping>
-</web-app>
 
-<!--web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-   version="2.4">
-   <servlet>
-      <servlet-name>POJOBean</servlet-name>
-      <servlet-class>org.jboss.test.ws.jaxws.jbws1762.services.POJOBean</servlet-class>
-   </servlet>
-   <servlet-mapping>
-      <servlet-name>POJOBean</servlet-name>
-      <url-pattern>/POJOBean</url-pattern>
-   </servlet-mapping>
-</web-app-->
+</web-app>
