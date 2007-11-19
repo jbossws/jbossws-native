@@ -55,7 +55,21 @@
         <include name="sun-jaxws.xml"/>
       </webinf>
     </war>
+
+     <!-- esb adoption -->
+     <jar jarfile="${tests.output.dir}/libs/jaxws-benchmark-doclit.esb">
+        <metainf dir="${tests.output.dir}/resources/benchmark/jaxws/esb/META-INF">
+           <include name="*.xml"/>
+        </metainf>
+        <fileset dir="${tests.output.dir}/libs">
+           <include name="jaxws-benchmark-doclit.war"/>
+        </fileset>
+        <fileset dir="${tests.output.dir}/resources/benchmark/jaxws/esb">
+           <include name="*.xml"/>
+        </fileset>
+     </jar>
     
+
     <!-- jaxws-binding -->
     <war warfile="${tests.output.dir}/libs/jaxws-binding.war" webxml="${tests.output.dir}/resources/jaxws/binding/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
