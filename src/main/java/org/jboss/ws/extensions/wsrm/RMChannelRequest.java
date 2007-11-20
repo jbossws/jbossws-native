@@ -21,13 +21,11 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
-import static org.jboss.ws.extensions.wsrm.RMConstant.INVOCATION_CONTEXT;
-import static org.jboss.ws.extensions.wsrm.RMConstant.ONE_WAY_OPERATION;
-import static org.jboss.ws.extensions.wsrm.RMConstant.REMOTING_CONFIGURATION_CONTEXT;
-import static org.jboss.ws.extensions.wsrm.RMConstant.REMOTING_INVOCATION_CONTEXT;
-import static org.jboss.ws.extensions.wsrm.RMConstant.TARGET_ADDRESS;
+import static org.jboss.ws.extensions.wsrm.RMConstant.*;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -35,6 +33,10 @@ import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.extensions.wsrm.backchannel.RMBackPortsServer;
+import org.jboss.ws.extensions.wsrm.spi.Provider;
+import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
 
 /**
  * Represents request that goes to the RM channel
@@ -72,7 +74,15 @@ final class RMChannelRequest implements Callable<RMChannelResponse>
 
          client.setMarshaller(RMMarshaller.getInstance());
 
-         boolean oneWay = (Boolean)rmRequest.getMetadata().getContext(RMConstant.INVOCATION_CONTEXT).get(ONE_WAY_OPERATION);
+         URI backPort = RMHelper.getBackPortURI(rmRequest);
+         System.out.println("[WS-RM] backport URI is: " + backPort);
+
+         if (backPort != null)
+         {
+            RMBackPortsServer backPortsServer = RMBackPortsServer.getInstance(backPort.getScheme(), backPort.getHost(), backPort.getPort());
+            //backPortsServer.registerCallback(backPort.getPath(), this);
+         }
+         boolean oneWay = RMHelper.isOneWayOperation(rmRequest);
          if (!oneWay)  
             client.setUnMarshaller(RMUnMarshaller.getInstance());
       

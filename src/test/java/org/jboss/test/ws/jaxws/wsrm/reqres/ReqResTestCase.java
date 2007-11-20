@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.AsyncHandler;
-import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 
@@ -62,6 +61,7 @@ public class ReqResTestCase extends JBossWSTest
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
    private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
+   private final boolean addressable = Boolean.parseBoolean((String)props.get("addressable"));
    
    static
    {
@@ -179,7 +179,7 @@ public class ReqResTestCase extends JBossWSTest
       if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxyObject;
-         sequence = wsrmProvider.createSequence();
+         sequence = wsrmProvider.createSequence(addressable);
          System.out.println("Created sequence with id=" + sequence.getId());
       }
       setAddrProps(proxy, "http://useless/action", serviceURL);

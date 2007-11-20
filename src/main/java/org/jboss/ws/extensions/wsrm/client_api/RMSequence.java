@@ -25,11 +25,11 @@ import java.util.concurrent.TimeUnit;
 
 public interface RMSequence
 {
+   String getId() throws RMException;
    void discard() throws RMException;
    boolean isDiscarded() throws RMException;
    void terminate() throws RMException;
    boolean isTerminated() throws RMException;
-   String getId() throws RMException;
    boolean isCompleted() throws RMException;
    boolean isCompleted(int timeAmount, TimeUnit timeUnit) throws RMException;
 }

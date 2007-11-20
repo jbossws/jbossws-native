@@ -30,5 +30,11 @@ package org.jboss.ws.extensions.wsrm.client_api;
  */
 public interface RMProvider
 {
-   RMSequence createSequence() throws RMException;
+   /**
+    * Creates new WS-RM sequence
+    * @param addressableClient
+    * @return created sequence
+    * @throws RMException
+    */
+   RMSequence createSequence(boolean addressableClient) throws RMException;
 }

@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
+import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.handler.Handler;
@@ -103,19 +105,19 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
    // WS-RM locking utility
    private final Lock wsrmLock = new ReentrantLock();
    // WS-RM sequence associated with the proxy
-   private RMSequence wsrmSequence;
+   private RMSequenceImpl wsrmSequence;
 
    public final Lock getWSRMLock()
    {
       return this.wsrmLock;
    }
 
-   public final void setWSRMSequence(RMSequence wsrmSequence)
+   public final void setWSRMSequence(RMSequenceImpl wsrmSequence)
    {
       this.wsrmSequence = wsrmSequence;
    }
 
-   public final RMSequence getWSRMSequence()
+   public final RMSequenceImpl getWSRMSequence()
    {
       return this.wsrmSequence;
    }
@@ -277,6 +279,13 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
          {
             if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
             {
+               if (this.wsrmSequence.getBackPort() != null)
+               {
+                  // rewrite ReplyTo to use client addressable back port
+                  Map<String, Object> requestContext = getBindingProvider().getRequestContext();
+                  AddressingProperties addressingProps = (AddressingProperties)requestContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
+                  addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.wsrmSequence.getBackPort()));
+               }
                Map<String, Object> rmRequestContext = new HashMap<String, Object>();
                QName sequenceQName = Provider.get().getConstants().getSequenceQName();
                rmRequestContext.put(RMConstant.OPERATION_QNAME, sequenceQName);
@@ -475,7 +484,7 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public RMSequence createSequence() throws RMException
+   public RMSequence createSequence(boolean addressableClient) throws RMException
    {
       this.getWSRMLock().lock();
       try
@@ -488,7 +497,18 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
             // set up addressing data
             String address = getEndpointMetaData().getEndpointAddress();
             String action = RMConstant.CREATE_SEQUENCE_WSA_ACTION;
-            AddressingProperties addressingProps = AddressingClientUtil.createAnonymousProps(action, address);
+            URI backPort = null;
+            AddressingProperties addressingProps = null;
+            if (addressableClient)
+            {
+               backPort = new URI("http://localhost:8888/packports/1234567890-1234567890/1234567890-1234567890"); // TODO: use generator
+               addressingProps = AddressingClientUtil.createDefaultProps(action, address);
+               addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(backPort));
+            }
+            else
+            {
+               addressingProps = AddressingClientUtil.createAnonymousProps(action, address);
+            }
             Map requestContext = getBindingProvider().getRequestContext();
             requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
             // set up wsrm request context
@@ -501,7 +521,7 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
             // read WSRM sequence id from response context
             Map rmResponseContext = (Map)getBindingProvider().getResponseContext().get(RMConstant.RESPONSE_CONTEXT);
             String id = ((CreateSequenceResponse)((List)rmResponseContext.get(RMConstant.DATA)).get(0)).getIdentifier();
-            return this.wsrmSequence = new RMSequenceImpl(this, id);
+            return this.wsrmSequence = new RMSequenceImpl(this, id, backPort);
          }
          catch (Exception e)
          {

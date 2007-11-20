@@ -54,6 +54,7 @@ public class OneWayTestCase extends JBossWSTest
    private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
    private OneWayServiceIface proxy;
    private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
+   private final boolean addressable = Boolean.parseBoolean((String)props.get("addressable"));
    private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
    
    static
@@ -96,7 +97,7 @@ public class OneWayTestCase extends JBossWSTest
       if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxy;
-         sequence = wsrmProvider.createSequence();
+         sequence = wsrmProvider.createSequence(addressable);
          System.out.println("Created sequence with id=" + sequence.getId());
       }
       setAddrProps(proxy, "http://useless/action1", serviceURL);

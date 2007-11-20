@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +30,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 
@@ -50,6 +52,7 @@ import org.jboss.ws.extensions.wsrm.spi.Provider;
 public final class RMSequenceImpl implements RMSequence
 {
    private final String id;
+   private final URI backPort;
    private final ClientImpl client;
    // object states variables
    private boolean terminated = false;
@@ -57,11 +60,17 @@ public final class RMSequenceImpl implements RMSequence
    private AtomicLong messageNumber = new AtomicLong();
    private final Lock objectLock = new ReentrantLock();
    
-   public RMSequenceImpl(ClientImpl client, String id)
+   public RMSequenceImpl(ClientImpl client, String id, URI backPort)
    {
       super();
       this.client = client;
       this.id = id;
+      this.backPort = backPort;
+   }
+   
+   public final URI getBackPort()
+   {
+      return this.backPort;
    }
 
    public final long newMessageNumber()
@@ -133,7 +142,16 @@ public final class RMSequenceImpl implements RMSequence
                // set up addressing properties
                String address = client.getEndpointMetaData().getEndpointAddress();
                String action = RMConstant.TERMINATE_SEQUENCE_WSA_ACTION;
-               AddressingProperties props = AddressingClientUtil.createAnonymousProps(action, address);
+               AddressingProperties props = null;
+               if (this.client.getWSRMSequence().getBackPort() != null)
+               {
+                  props = AddressingClientUtil.createDefaultProps(action, address);
+                  props.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.client.getWSRMSequence().getBackPort()));
+               }
+               else
+               {
+                  props = AddressingClientUtil.createAnonymousProps(action, address);
+               }
                // prepare WS-RM request context
                QName terminateSequenceQN = Provider.get().getConstants().getTerminateSequenceQName();
                Map rmRequestContext = new HashMap();

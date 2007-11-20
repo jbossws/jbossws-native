@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.addressing.AddressingBuilder;
 
 import org.jboss.ws.extensions.wsrm.spi.Constants;
 import org.jboss.ws.extensions.wsrm.spi.Provider;
@@ -27,9 +28,12 @@ public final class RMConstant
    public static final String DATA = PREFIX + ".data";
    // WS-Addressing related actions
    public static final String CREATE_SEQUENCE_WSA_ACTION;
+   public static final String CLOSE_SEQUENCE_WSA_ACTION;
    public static final String TERMINATE_SEQUENCE_WSA_ACTION;
    
    public static final List<QName> PROTOCOL_OPERATION_QNAMES;
+   
+   public static final String WSA_ANONYMOUS_URI = AddressingBuilder.getAddressingBuilder().newAddressingConstants().getAnonymousURI();
    
    static
    {
@@ -46,6 +50,7 @@ public final class RMConstant
       temp.add(constants.getTerminateSequenceResponseQName());
       PROTOCOL_OPERATION_QNAMES = Collections.unmodifiableList(temp);
       CREATE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/CreateSequence";
+      CLOSE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/CloseSequence";
       TERMINATE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/TerminateSequence";
    }
 
