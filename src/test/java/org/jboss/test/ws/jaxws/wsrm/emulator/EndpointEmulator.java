@@ -25,7 +25,12 @@ import static org.jboss.test.ws.jaxws.wsrm.emulator.Constant.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
@@ -98,6 +103,7 @@ public class EndpointEmulator extends HttpServlet
       Map<String, String> resProperties = view.getResponse().getProperties();
       Map<String, String> reqProperties = view.getRequest().getProperties();
       String responseMessage = Util.getResourceAsString(ctx, view.getResponse().getResource());
+      String responseTo = null;
       
       if (resProperties.size() > 0)
       {
@@ -109,14 +115,34 @@ public class EndpointEmulator extends HttpServlet
          
          Map<String, String> replaceMap = Util.prepareReplaceMap(initializedReqProperties, resProperties);
          responseMessage = Util.replaceAll(responseMessage, replaceMap);
+         responseTo = replaceMap.get(RESPONSE_TO);
+         if (ADDRESSING_ANONYMOUS_URI.equals(responseTo))
+         {
+            responseTo = null;
+         }
       }
       
-      resp.setContentType(view.getResponse().getContentType());
-      resp.setStatus(Integer.valueOf(view.getResponse().getStatusCode()));
-      PrintWriter writer = resp.getWriter();
-      writer.print(responseMessage);
-      writer.flush();
-      writer.close();
+      if (responseTo == null)
+      {
+         ctx.log("Sending response through ServletResponse");
+         resp.setContentType(view.getResponse().getContentType());
+         resp.setStatus(Integer.valueOf(view.getResponse().getStatusCode()));
+         PrintWriter writer = resp.getWriter();
+         writer.print(responseMessage);
+         writer.flush();
+         writer.close();
+      }
+      else
+      {
+         ctx.log("Sending response through new socket connection");
+         URL url = new URL(responseTo);
+         Socket socket = new Socket(url.getHost(), url.getPort());
+         OutputStream out = socket.getOutputStream();
+         out.write(Util.createHTTPHeaders(url, responseMessage.length()));
+         out.write(responseMessage.getBytes());
+         out.flush();
+         out.close();
+      }
    }
    
 }

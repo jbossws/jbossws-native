@@ -66,5 +66,7 @@ public final class Constant
    public static final String VALUE_ATTRIBUTE = "value";
    public static final String HTTP_METHOD_ATTRIBUTE = "httpMethod";
    public static final String PATH_INFO_ATTRIBUTE = "pathInfo";
-   
+   // XML configuration referencable entities
+   public static final String RESPONSE_TO = PARAGRAPH + LEFT_BRACKET + "res.wsa.to" + RIGHT_BRACKET;
+   public static final String ADDRESSING_ANONYMOUS_URI = "http://www.w3.org/2005/08/addressing/anonymous";
 }
