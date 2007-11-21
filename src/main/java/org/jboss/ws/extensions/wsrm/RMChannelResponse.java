@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
+import org.jboss.ws.extensions.wsrm.backchannel.CallbackHandler;
+
 /**
  * Represents response that goes from the RM channel
  * @see org.jboss.ws.extensions.wsrm.RMChannel
@@ -30,31 +32,40 @@ final class RMChannelResponse
 {
    private final Throwable fault;
    private final RMMessage result;
+   private final CallbackHandler callback;
+   private final String messageId; // WS-Addressing: MessageID
+   
+   public RMChannelResponse(CallbackHandler callback, String messageId)
+   {
+      this(null, null, callback, messageId);
+   }
    
    public RMChannelResponse(Throwable fault)
    {
-      this(null, fault);
+      this(null, fault, null, null);
    }
    
    public RMChannelResponse(RMMessage result)
    {
-      this(result, null);
+      this(result, null, null, null);
    }
    
-   private RMChannelResponse(RMMessage result, Throwable fault)
+   private RMChannelResponse(RMMessage result, Throwable fault, CallbackHandler callback, String messageId)
    {
       super();
       this.result = result;
       this.fault = fault;
+      this.callback = callback;
+      this.messageId = messageId;
    }
    
    public Throwable getFault()
    {
-      return this.fault;
+      return (this.callback != null) ? this.callback.getFault(this.messageId) : this.fault;
    }
    
    public RMMessage getResponse()
    {
-      return this.result;
+      return (this.callback != null) ? this.callback.getMessage(this.messageId) : this.result;
    }
 }

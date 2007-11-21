@@ -21,14 +21,21 @@
  */
 package org.jboss.ws.extensions.wsrm.backchannel;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.management.MBeanServer;
 
+import org.jboss.logging.Logger;
 import org.jboss.remoting.InvocationRequest;
 import org.jboss.remoting.ServerInvocationHandler;
 import org.jboss.remoting.ServerInvoker;
 import org.jboss.remoting.callback.InvokerCallbackHandler;
 import org.jboss.remoting.transport.coyote.RequestMap;
 import org.jboss.remoting.transport.http.HTTPMetadataConstants;
+import org.jboss.ws.extensions.wsrm.client_api.RMException;
 
 /**
  * TODO: Add comment
@@ -39,46 +46,106 @@ import org.jboss.remoting.transport.http.HTTPMetadataConstants;
  */
 public final class RMBackPortsInvocationHandler implements ServerInvocationHandler
 {
+   private static final Logger LOG = Logger.getLogger(RMBackPortsInvocationHandler.class);
+   private final List<CallbackHandler> callbacks = new LinkedList<CallbackHandler>();
+   private final Lock lock = new ReentrantLock();
+   
    public RMBackPortsInvocationHandler()
    {
-      
    }
-
-   public void addListener(InvokerCallbackHandler arg0)
+   
+   public CallbackHandler getCallback(String requestPath)
    {
-      // TODO Auto-generated method stub
-      
-   }
+      this.lock.lock();
+      try
+      {
+         for (CallbackHandler handler : this.callbacks)
+         {
+            if (handler.getHandledPath().equals(requestPath))
+               return handler;
+         }
+      }
+      finally
+      {
+         this.lock.unlock();
+      }
 
-   public Object invoke(InvocationRequest arg0) throws Throwable
-   {
-      RequestMap rm = (RequestMap)arg0.getRequestPayload();
-      System.out.println("... locator ..." + arg0.getLocator());
-      System.out.println("... subsystem ..." + arg0.getSubsystem());
-      System.out.println("... parameter ..." + arg0.getParameter());
-      System.out.println("... parameter ..." + arg0.getParameter().getClass().getName());
-      System.out.println("... method ..." + rm.get(HTTPMetadataConstants.METHODTYPE));
-      System.out.println("... path ..." + rm.get(HTTPMetadataConstants.PATH));
-      System.out.println("return ..." + arg0.getReturnPayload());
       return null;
    }
 
-   public void removeListener(InvokerCallbackHandler arg0)
+   public void registerCallback(CallbackHandler callbackHandler)
    {
-      // TODO Auto-generated method stub
-      
+      this.lock.lock();
+      try
+      {
+         this.callbacks.add(callbackHandler);
+      }
+      finally
+      {
+         this.lock.unlock();
+      }
    }
 
+   public void unregisterCallback(CallbackHandler callbackHandler)
+   {
+      this.lock.lock();
+      try
+      {
+         this.callbacks.remove(callbackHandler);
+      }
+      finally
+      {
+         this.lock.unlock();
+      }
+   }
+
+   public Object invoke(InvocationRequest request) throws Throwable
+   {
+      this.lock.lock();
+      try
+      {
+         RequestMap rm = (RequestMap)request.getRequestPayload();
+         String requestPath = (String)rm.get(HTTPMetadataConstants.PATH);
+         boolean handlerExists = false;
+         for (CallbackHandler handler : this.callbacks)
+         {
+            if (handler.getHandledPath().equals(requestPath))
+            {
+               handlerExists = true;
+               LOG.debug("Handling request path: " + requestPath);
+               handler.handle(request);
+               break;
+            }
+         }
+         if (handlerExists == false)
+            LOG.warn("No callback handler registered for path: " + requestPath);
+
+         return null;
+      }
+      finally
+      {
+         this.lock.unlock();
+      }
+   }
+
+   public void addListener(InvokerCallbackHandler callbackHandler)
+   {
+      // do nothing - we're using custom callback handlers
+   }
+
+   public void removeListener(InvokerCallbackHandler callbackHandler)
+   {
+      // do nothing - we're using custom callback handlers
+   }
+   
    public void setInvoker(ServerInvoker arg0)
    {
-      // TODO Auto-generated method stub
-      
+      // do nothing
    }
 
    public void setMBeanServer(MBeanServer arg0)
    {
-      // TODO Auto-generated method stub
-      
+      // do nothing
    }
    
 }

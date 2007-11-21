@@ -90,6 +90,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)commonMsgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
       Map rmRequestContext = (Map)commonMsgContext.get(RMConstant.REQUEST_CONTEXT);
       QName operation = (QName)rmRequestContext.get(RMConstant.OPERATION_QNAME);
+      rmRequestContext.put(RMConstant.WSA_MESSAGE_ID, addrProps.getMessageID().getURI().toString());
       if (addrProps != null)
       {
          SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();

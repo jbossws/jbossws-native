@@ -26,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.callback.InvokerCallbackHandler;
 import org.jboss.remoting.transport.Connector;
 import org.jboss.ws.extensions.wsrm.client_api.RMException;
 
@@ -48,9 +49,25 @@ public final class RMBackPortsServer implements Runnable
    private final String scheme;
    private final String host;
    private final int port;
+   private RMBackPortsInvocationHandler handler;
    private boolean started;
    private boolean stopped;
    private boolean terminated;
+   
+   public final void registerCallback(CallbackHandler callbackHandler)
+   {
+      this.handler.registerCallback(callbackHandler);
+   }
+   
+   public final void unregisterCallback(CallbackHandler callbackHandler)
+   {
+      this.handler.unregisterCallback(callbackHandler);
+   }
+   
+   public final CallbackHandler getCallback(String requestPath)
+   {
+      return this.handler.getCallback(requestPath);
+   }
    
    private RMBackPortsServer(String scheme, String host, int port)
    throws RMException
@@ -62,13 +79,13 @@ public final class RMBackPortsServer implements Runnable
       try
       {
          InvokerLocator il = new InvokerLocator(this.scheme + "://" + this.host + ":" + this.port);
-         connector = new Connector();
-         connector.setInvokerLocator(il.getLocatorURI());
-         connector.create();
+         this.connector = new Connector();
+         this.connector.setInvokerLocator(il.getLocatorURI());
+         this.connector.create();
    
-         RMBackPortsInvocationHandler handler = new RMBackPortsInvocationHandler();
-         connector.addInvocationHandler("wsrmBackPortsHandler", handler);
-         connector.start();
+         this.handler = new RMBackPortsInvocationHandler();
+         this.connector.addInvocationHandler("wsrmBackPortsHandler", this.handler);
+         this.connector.start();
          LOG.debug("WS-RM Backports Server started on: " + il.getLocatorURI());
       }
       catch (Exception e)

@@ -32,8 +32,14 @@ import java.util.concurrent.Callable;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.callback.Callback;
+import org.jboss.remoting.callback.HandleCallbackException;
+import org.jboss.remoting.callback.InvokerCallbackHandler;
 import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.extensions.wsrm.backchannel.CallbackHandler;
+import org.jboss.ws.extensions.wsrm.backchannel.CallbackHandlerFactory;
 import org.jboss.ws.extensions.wsrm.backchannel.RMBackPortsServer;
+import org.jboss.ws.extensions.wsrm.backchannel.RMCallbackHandler;
 import org.jboss.ws.extensions.wsrm.spi.Provider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
@@ -43,7 +49,7 @@ import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
  * @see org.jboss.ws.extensions.wsrm.RMChannel
  * @author richard.opalka@jboss.com
  */
-final class RMChannelRequest implements Callable<RMChannelResponse>
+public final class RMChannelRequest implements Callable<RMChannelResponse>
 {
    private static final Logger log = Logger.getLogger(RMChannelRequest.class);
    private static final String JBOSSWS_SUBSYSTEM = "jbossws";
@@ -55,6 +61,15 @@ final class RMChannelRequest implements Callable<RMChannelResponse>
       this.rmRequest = rmRequest;
    }
    
+   
+   
+   public void handleCallback(Callback callback)
+   throws HandleCallbackException
+   {
+      System.out.println("Handling callback: " + callback);
+      // TODO: implement this method
+   }
+
    public RMChannelResponse call()
    {
       InvokerLocator locator = null;
@@ -75,14 +90,19 @@ final class RMChannelRequest implements Callable<RMChannelResponse>
          client.setMarshaller(RMMarshaller.getInstance());
 
          URI backPort = RMHelper.getBackPortURI(rmRequest);
+         String messageId = RMHelper.getMessageId(rmRequest);
+         
          System.out.println("[WS-RM] backport URI is: " + backPort);
+         CallbackHandler callbackHandler = null;
+         // TODO: we should remember WSA:MessageId here too
 
          if (backPort != null)
          {
-            RMBackPortsServer backPortsServer = RMBackPortsServer.getInstance(backPort.getScheme(), backPort.getHost(), backPort.getPort());
-            //backPortsServer.registerCallback(backPort.getPath(), this);
+            callbackHandler = CallbackHandlerFactory.getCallbackHandler(backPort);
+            // TODO: callback must unregister itself
+            // TODO: you must call unregister callback as well
          }
-         boolean oneWay = RMHelper.isOneWayOperation(rmRequest);
+         boolean oneWay = RMHelper.isOneWayOperation(rmRequest) && (backPort == null); // TODO: backport support
          if (!oneWay)  
             client.setUnMarshaller(RMUnMarshaller.getInstance());
       
@@ -109,6 +129,11 @@ final class RMChannelRequest implements Callable<RMChannelResponse>
          // trace the incomming response message
          if (rmResponse != null)
             MessageTrace.traceMessage("Incoming RM Response Message", rmResponse.getPayload());
+         
+         if (backPort != null) // TODO: backport support
+         {
+            return new RMChannelResponse(callbackHandler, messageId);
+         }
 
          return new RMChannelResponse(rmResponse);
       }

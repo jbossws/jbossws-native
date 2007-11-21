@@ -77,7 +77,7 @@ public final class MessageTrace
       }
       else if (message instanceof byte[])
       {
-         msgLog.trace(messagePrefix + "\n" + String.valueOf((byte[])message));
+         msgLog.trace(messagePrefix + "\n" + new String((byte[])message));
       }
       else
       {

@@ -24,6 +24,16 @@ public final class RMHelper
       return (ctx != null) && (ctx.containsKey(RMConstant.REQUEST_CONTEXT)); 
    }
    
+   public static String getMessageId(RMMessage rmRequest)
+   {
+      Map<String, Object> invocationCtx = (Map<String, Object>)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT);
+      Map<String, Object> wsrmRequestCtx = (Map<String, Object>)invocationCtx.get(REQUEST_CONTEXT);
+      String retVal = (String)wsrmRequestCtx.get(WSA_MESSAGE_ID);
+      if (retVal == null)
+         throw new RuntimeException();
+      return retVal;
+   }
+   
    public static URI getBackPortURI(RMMessage rmRequest)
    {
       Map<String, Object> invocationCtx = (Map<String, Object>)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT);

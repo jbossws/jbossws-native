@@ -34,6 +34,7 @@ public final class RMConstant
    public static final List<QName> PROTOCOL_OPERATION_QNAMES;
    
    public static final String WSA_ANONYMOUS_URI = AddressingBuilder.getAddressingBuilder().newAddressingConstants().getAnonymousURI();
+   public static final String WSA_MESSAGE_ID = PREFIX + ".wsaMessageId";
    
    static
    {
