@@ -57,7 +57,7 @@ public class JBWS944TestCase extends JBossWSTest
    public void testRemoteAccess() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
-      EJB3RemoteInterface ejb3Remote = (EJB3RemoteInterface)iniCtx.lookup("/ejb3/EJB3EndpointInterface");
+      EJB3RemoteBusinessInterface ejb3Remote = (EJB3RemoteBusinessInterface)iniCtx.lookup("/ejb3/EJB3EndpointInterface");
 
       String helloWorld = "Hello world!";
       Object retObj = ejb3Remote.echo(helloWorld);
@@ -73,6 +73,7 @@ public class JBWS944TestCase extends JBossWSTest
          System.out.println("FIXME: [JBCTS-540] EJB3 proxy does not implement the Home interface");
          return;
       }
+      
       InitialContext iniCtx = getInitialContext();
       Object obj = iniCtx.lookup("/ejb3/EJB3EndpointInterface");
       EJB3RemoteHome ejb3Home = (EJB3RemoteHome)PortableRemoteObject.narrow(obj, EJB3RemoteHome.class);

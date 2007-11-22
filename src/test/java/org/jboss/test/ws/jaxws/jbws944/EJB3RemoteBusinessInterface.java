@@ -1,6 +1,6 @@
 /*
   * JBoss, Home of Professional Open Source
-  * Copyright 2007, JBoss Inc., and individual contributors as indicated
+  * Copyright 2005, JBoss Inc., and individual contributors as indicated
   * by the @authors tag. See the copyright.txt in the distribution for a
   * full listing of individual contributors.
   *
@@ -21,15 +21,13 @@
   */
 package org.jboss.test.ws.jaxws.jbws944;
 
-import javax.ejb.EJBObject;
-
 /**
- * EJB2.1 Remote Interface
- * 
- * @author <mailto:andrew.rubinger@redhat.com>ALR</a>
- * @version $Revision$
+ * An EJB3 remote business interface
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 10-May-2005
  */
-public interface EJB3RemoteInterface extends EJBObject
+public interface EJB3RemoteBusinessInterface
 {
    String echo(String input);
 }
