@@ -13,3 +13,6 @@ svn merge -r4816:4838 https://svn.jboss.org/repos/jbossws/stack/native/branches/
 
 thomas.diesler@jboss.com 01-Nov-2007
 svn merge -r4847:4956 https://svn.jboss.org/repos/jbossws/stack/native/branches/jbossws-native-2.0.2
+
+thomas.diesler@jboss.com 22-Nov-2007
+svn merge -r4956:5087 https://svn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-2.0.2.GA
