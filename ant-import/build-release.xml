@@ -112,7 +112,7 @@
     <xmlproperty file="${core.dir}/output/svn-info.xml"/>
     <condition property="framework.externals.ok">
       <or>
-        <contains string="${info.entry.url}" substring="https://svn.jboss.org/repos/jbossws/framework/tags"/>
+        <contains string="${info.entry.url}" substring="jbossws/framework/tags"/>
         <equals arg1="${repository.id}" arg2="snapshot"/>
       </or>
     </condition>
