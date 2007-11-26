@@ -40,15 +40,21 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.ws.extensions.wsrm.client_api.RMException;
 import org.jboss.ws.extensions.wsrm.spi.Constants;
 import org.jboss.ws.extensions.wsrm.spi.MessageFactory;
 import org.jboss.ws.extensions.wsrm.spi.Provider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.AckRequested;
+import org.jboss.ws.extensions.wsrm.spi.protocol.CloseSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.CloseSequenceResponse;
 import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse;
 import org.jboss.ws.extensions.wsrm.spi.protocol.Sequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.spi.protocol.SequenceFault;
 import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
 import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequenceResponse;
 
 /**
  * TODO: add comment
@@ -63,19 +69,7 @@ public final class RMClientHandler extends GenericSOAPHandler
    private static final Logger log = Logger.getLogger(RMClientHandler.class);
    private static final MessageFactory rmFactory = Provider.get().getMessageFactory();
    private static final Constants rmConstants = Provider.get().getConstants();
-   private static final Set headers;
-
-   static
-   {
-      Set temp = new HashSet();
-      temp.add(rmConstants.getCreateSequenceQName());
-      temp.add(rmConstants.getCloseSequenceQName());
-      temp.add(rmConstants.getTerminateSequenceQName());
-      temp.add(rmConstants.getCreateSequenceResponseQName());
-      temp.add(rmConstants.getCloseSequenceResponseQName());
-      temp.add(rmConstants.getTerminateSequenceResponseQName());
-      headers = Collections.unmodifiableSet(temp);
-   }
+   private static final Set headers = RMConstant.PROTOCOL_OPERATION_QNAMES;
 
    public Set getHeaders()
    {
@@ -84,97 +78,225 @@ public final class RMClientHandler extends GenericSOAPHandler
 
    protected boolean handleOutbound(MessageContext msgContext)
    {
-      log.debug("WS-RM handleOutbound");
+      log.debug("handling outbound message");
       
       CommonMessageContext commonMsgContext = (CommonMessageContext)msgContext;
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties)commonMsgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
+      if (addrProps == null)
+         throw new RMException("WS-Addressing properties not found in message context");
+      
       Map rmRequestContext = (Map)commonMsgContext.get(RMConstant.REQUEST_CONTEXT);
-      QName operation = (QName)rmRequestContext.get(RMConstant.OPERATION_QNAME);
+      List<QName> outMsgs = (List<QName>)rmRequestContext.get(RMConstant.PROTOCOL_MESSAGES);
+      Map<QName, Serializable> data = new HashMap<QName, Serializable>();
       rmRequestContext.put(RMConstant.WSA_MESSAGE_ID, addrProps.getMessageID().getURI().toString());
-      if (addrProps != null)
+      rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
+      SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
+      
+      QName msgQName = rmConstants.getCreateSequenceQName();
+      if (outMsgs.contains(msgQName))
       {
-         SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
-         if (rmConstants.getCreateSequenceQName().equals(operation))
-         {
-            String replyTo = addrProps.getReplyTo().getAddress().getURI().toString();
-            CreateSequence createSequence = rmFactory.newCreateSequence();
-            createSequence.setAcksTo(replyTo);
-            createSequence.serializeTo(soapMessage);
-            List<Serializable> data = new LinkedList<Serializable>();
-            data.add(createSequence);
-            rmRequestContext.put(RMConstant.DATA, data);
-            
-            return true;
-         }
+         // try to serialize CreateSequence to message
+         String replyTo = addrProps.getReplyTo().getAddress().getURI().toString();
+         CreateSequence createSequence = rmFactory.newCreateSequence();
+         createSequence.setAcksTo(replyTo);
+         createSequence.serializeTo(soapMessage);
+         data.put(msgQName, createSequence);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
          
-         if (rmConstants.getSequenceQName().equals(operation))
-         {
-            RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-            Sequence sequence = rmFactory.newSequence();
-            sequence.setIdentifier(sequenceImpl.getId());
-            sequence.setMessageNumber(sequenceImpl.newMessageNumber());
-            sequence.serializeTo(soapMessage);
-            
-            List<Serializable> data = new LinkedList<Serializable>();
-            data.add(sequence);
-            
-            // TODO: ask msgStore if there are other sequences related to the same
-            // endpoint that requires ack and serialize it here
-            AckRequested ackRequested = rmFactory.newAckRequested();
-            ackRequested.setIdentifier(sequenceImpl.getId());
-            ackRequested.setMessageNumber(sequenceImpl.getLastMessageNumber());
-            ackRequested.serializeTo(soapMessage);
-            data.add(ackRequested);
+      msgQName = rmConstants.getSequenceQName();
+      if (outMsgs.contains(msgQName))
+      {
+         // try to serialize Sequence to message
+         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+         Sequence sequence = rmFactory.newSequence();
+         sequence.setIdentifier(sequenceImpl.getId());
+         sequence.setMessageNumber(sequenceImpl.newMessageNumber());
+         sequence.serializeTo(soapMessage);
+         data.put(msgQName, sequence);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
+      
+      msgQName = rmConstants.getAckRequestedQName();
+      if (outMsgs.contains(msgQName))
+      {
+         // try to serialize AckRequested to message
+         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+         AckRequested ackRequested = rmFactory.newAckRequested();
+         ackRequested.setIdentifier(sequenceImpl.getId());
+         ackRequested.setMessageNumber(sequenceImpl.getLastMessageNumber());
+         ackRequested.serializeTo(soapMessage);
+         data.put(msgQName, ackRequested);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
+         
+      msgQName = rmConstants.getCloseSequenceQName();
+      if (outMsgs.contains(msgQName))
+      {
+         // try to serialize CloseSequence to message
+         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+         CloseSequence closeSequence = rmFactory.newCloseSequence();
+         closeSequence.setIdentifier(sequenceImpl.getId());
+         closeSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
+         closeSequence.serializeTo(soapMessage);
+         data.put(msgQName, closeSequence);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
 
-            rmRequestContext.put(RMConstant.DATA, data);
-            
-            return true;
-         }
-         
-         if (rmConstants.getTerminateSequenceQName().equals(operation))
-         {
-            RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-            TerminateSequence terminateSequence = rmFactory.newTerminateSequence();
-            terminateSequence.setIdentifier(sequenceImpl.getId());
-            terminateSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
-            terminateSequence.serializeTo(soapMessage);
-            
-            List<Serializable> data = new LinkedList<Serializable>();
-            data.add(terminateSequence);
-            rmRequestContext.put(RMConstant.DATA, data);
-            
-            return true;
-         }
-      }
-      else
+      msgQName = rmConstants.getCloseSequenceResponseQName();
+      if (outMsgs.contains(msgQName))
       {
-         throw new IllegalStateException();
+         // try to serialize CloseSequenceResponse to message
+         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+         CloseSequenceResponse closeSequenceResponse = rmFactory.newCloseSequenceResponse();
+         closeSequenceResponse.setIdentifier(sequenceImpl.getId());
+         data.put(msgQName, closeSequenceResponse);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
       }
+
+      msgQName = rmConstants.getTerminateSequenceQName();
+      if (outMsgs.contains(msgQName))
+      {
+         // try to serialize TerminateSequence to message
+         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+         TerminateSequence terminateSequence = rmFactory.newTerminateSequence();
+         terminateSequence.setIdentifier(sequenceImpl.getId());
+         terminateSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
+         terminateSequence.serializeTo(soapMessage);
+         data.put(msgQName, terminateSequence);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
+
+      msgQName = rmConstants.getTerminateSequenceResponseQName();
+      if (outMsgs.contains(msgQName))
+      {
+         // try to serialize terminateSequenceResponse to message
+         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+         TerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
+         terminateSequenceResponse.setIdentifier(sequenceImpl.getId());
+         data.put(msgQName, terminateSequenceResponse);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
+      
+      // TODO: implement SequenceAcknowledgement handler part
 
       return true;
    }
 
    protected boolean handleInbound(MessageContext msgContext)
    {
-      log.debug("WS-RM handleInbound");
+      log.debug("handling inbound message");
       
       SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
-      // TODO: inspect operation type different way - don't forget on piggy-backing
-      Map rmRequestContext = (Map)msgContext.get(RMConstant.REQUEST_CONTEXT);
-      QName operation = (QName)rmRequestContext.get(RMConstant.OPERATION_QNAME);
-      if (rmConstants.getCreateSequenceQName().equals(operation))
-      {
-         CreateSequenceResponse createSequenceResponse = rmFactory.newCreateSequenceResponse();
-         createSequenceResponse.deserializeFrom(soapMessage);
-         List<Serializable> data = new LinkedList<Serializable>();
-         data.add(createSequenceResponse);
-         Map rmResponseContext = new HashMap();
-         rmResponseContext.put(RMConstant.OPERATION_QNAME, rmConstants.getCreateSequenceResponseQName());
-         rmResponseContext.put(RMConstant.DATA, data);
-         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
-         msgContext.setScope(RMConstant.RESPONSE_CONTEXT, Scope.APPLICATION);
-      }
+      Map rmResponseContext = new HashMap();
+      List<QName> messages = new LinkedList<QName>();
+      rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, messages);
+      Map<QName, Serializable> data = new HashMap<QName, Serializable>();
+      rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
+      msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+      msgContext.setScope(RMConstant.RESPONSE_CONTEXT, Scope.APPLICATION);
 
+      try
+      {
+         // try to deserialize CreateSequenceResponse from message
+         QName msgQName = rmConstants.getCreateSequenceResponseQName();
+         CreateSequenceResponse wsrmMsg = rmFactory.newCreateSequenceResponse();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      try
+      {
+         // try to deserialize AckRequested from message
+         QName msgQName = rmConstants.getAckRequestedQName();
+         AckRequested wsrmMsg = rmFactory.newAckRequested();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      try
+      {
+         // try to deserialize Sequence from message
+         QName msgQName = rmConstants.getSequenceQName();
+         Sequence wsrmMsg = rmFactory.newSequence();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      try
+      {
+         // try to deserialize SequenceAcknowledgement from message
+         QName msgQName = rmConstants.getSequenceAcknowledgementQName();
+         SequenceAcknowledgement wsrmMsg = rmFactory.newSequenceAcknowledgement();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+
+      try
+      {
+         // try to deserialize CloseSequence from message
+         QName msgQName = rmConstants.getCloseSequenceQName();
+         CloseSequence wsrmMsg = rmFactory.newCloseSequence();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      try
+      {
+         // try to deserialize CloseSequence from message
+         QName msgQName = rmConstants.getCloseSequenceResponseQName();
+         CloseSequenceResponse wsrmMsg = rmFactory.newCloseSequenceResponse();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      try
+      {
+         // try to deserialize TerminateSequence from message
+         QName msgQName = rmConstants.getTerminateSequenceQName();
+         TerminateSequence wsrmMsg = rmFactory.newTerminateSequence();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      try
+      {
+         // try to deserialize TerminateSequenceResponse from message
+         QName msgQName = rmConstants.getTerminateSequenceResponseQName();
+         TerminateSequenceResponse wsrmMsg = rmFactory.newTerminateSequenceResponse();
+         wsrmMsg.deserializeFrom(soapMessage);
+         messages.add(msgQName);
+         data.put(msgQName, wsrmMsg);
+         log.debug(msgQName.getLocalPart() + " WSRM message was deserialized from payload");
+      }
+      catch (RMException ignore) {}
+      
+      // TODO: implement SequenceFault deserialization
+      
+      if (data.size() == 0)
+         throw new RMException("RM handler was not able to find WS-RM message in the payload");
+      
       return true;
    }
 

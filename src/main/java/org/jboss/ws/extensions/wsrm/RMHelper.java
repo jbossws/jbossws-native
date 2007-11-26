@@ -6,7 +6,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.wsrm.spi.Provider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
 
@@ -38,11 +41,13 @@ public final class RMHelper
    {
       Map<String, Object> invocationCtx = (Map<String, Object>)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT);
       Map<String, Object> wsrmRequestCtx = (Map<String, Object>)invocationCtx.get(REQUEST_CONTEXT);
-      List<Serializable> wsrmMessages = (List<Serializable>)wsrmRequestCtx.get(DATA);
+      List<Serializable> outMsgs = (List<Serializable>)wsrmRequestCtx.get(PROTOCOL_MESSAGES);
+      Map<QName, Serializable> msgs = (Map<QName, Serializable>)wsrmRequestCtx.get(PROTOCOL_MESSAGES_MAPPING);
+      QName createSequenceQName = Provider.get().getConstants().getCreateSequenceQName();
       URI retVal = null;
-      if (wsrmMessages.get(0) instanceof CreateSequence)
+      if (outMsgs.contains(createSequenceQName))
       {
-         CreateSequence cs = (CreateSequence)wsrmMessages.get(0);
+         CreateSequence cs = (CreateSequence)msgs.get(createSequenceQName);
          try
          {
             retVal = RMConstant.WSA_ANONYMOUS_URI.equals(cs.getAcksTo()) ? null : new URI(cs.getAcksTo());;

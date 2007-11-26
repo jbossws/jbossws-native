@@ -27,6 +27,7 @@ import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -287,8 +288,10 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
                   addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.wsrmSequence.getBackPort()));
                }
                Map<String, Object> rmRequestContext = new HashMap<String, Object>();
-               QName sequenceQName = Provider.get().getConstants().getSequenceQName();
-               rmRequestContext.put(RMConstant.OPERATION_QNAME, sequenceQName);
+               List<QName> outMsgs = new LinkedList<QName>();
+               outMsgs.add(Provider.get().getConstants().getSequenceQName());
+               outMsgs.add(Provider.get().getConstants().getAckRequestedQName());
+               rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
                rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, wsrmSequence);
                reqContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
             }
@@ -514,13 +517,15 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
             // set up wsrm request context
             QName createSequenceQN = Provider.get().getConstants().getCreateSequenceQName();
             Map rmRequestContext = new HashMap();
-            rmRequestContext.put(RMConstant.OPERATION_QNAME, createSequenceQN);
+            List outMsgs = new LinkedList();
+            outMsgs.add(createSequenceQN);
+            rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
             requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
             // invoke stub method
             invoke(createSequenceQN, new Object[] {}, getBindingProvider().getResponseContext());
             // read WSRM sequence id from response context
             Map rmResponseContext = (Map)getBindingProvider().getResponseContext().get(RMConstant.RESPONSE_CONTEXT);
-            String id = ((CreateSequenceResponse)((List)rmResponseContext.get(RMConstant.DATA)).get(0)).getIdentifier();
+            String id = ((CreateSequenceResponse)((Map)rmResponseContext.get(RMConstant.PROTOCOL_MESSAGES_MAPPING)).get(Provider.get().getConstants().getCreateSequenceResponseQName())).getIdentifier();
             return this.wsrmSequence = new RMSequenceImpl(this, id, backPort);
          }
          catch (Exception e)

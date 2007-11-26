@@ -98,7 +98,7 @@ public class RMChannel
       Map<String, Object> invocationContext = rmMetadata.getContext(INVOCATION_CONTEXT);
       boolean oneWay = (Boolean)rmMetadata.getContext(INVOCATION_CONTEXT).get(ONE_WAY_OPERATION);
       MessageAbstraction response = null;
-      if (!oneWay)
+      //if (!oneWay)
       {
          byte[] payload = rmResponse.getPayload();
          InputStream is = payload == null ? null : new ByteArrayInputStream(rmResponse.getPayload()); 

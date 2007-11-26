@@ -68,11 +68,11 @@ public final class Util
    
    private static final String CRLF = "\r\n";
    
-   public static byte[] createHTTPHeaders(URL url, int payloadLength)
+   public static byte[] createHTTPHeaders(URL url, int payloadLength, String contentType)
    {
       StringBuilder sb = new StringBuilder();
       sb.append("POST " + url.getPath() + " HTTP/1.1" + CRLF);
-      sb.append("Content-Type: text/xml" + CRLF);
+      sb.append("Content-Type: " + contentType + CRLF);
       sb.append("Host: " + url.getHost() + ":" + url.getPort() + CRLF);
       sb.append("Content-Length: " + payloadLength + CRLF);
       sb.append(CRLF);

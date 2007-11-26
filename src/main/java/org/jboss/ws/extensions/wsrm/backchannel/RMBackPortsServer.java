@@ -185,7 +185,7 @@ public final class RMBackPortsServer implements Runnable
          {
             INSTANCE = new RMBackPortsServer(scheme, host, (port == -1) ? 80 : port);
             // forking back ports server
-            Thread t  = new Thread(INSTANCE);
+            Thread t  = new Thread(INSTANCE, "RMBackPortsServer");
             t.setDaemon(true);
             t.start();
             // registering shutdown hook

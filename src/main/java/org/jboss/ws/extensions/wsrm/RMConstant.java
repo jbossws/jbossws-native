@@ -1,8 +1,10 @@
 package org.jboss.ws.extensions.wsrm;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingBuilder;
@@ -21,35 +23,36 @@ public final class RMConstant
    public static final String SERIALIZATION_CONTEXT = PREFIX + ".serializationContext";
    public static final String REMOTING_INVOCATION_CONTEXT = PREFIX + ".remotingInvocationContext";
    public static final String REMOTING_CONFIGURATION_CONTEXT = PREFIX + ".remotingConfigurationContext";
-   public static final String OPERATION_QNAME = PREFIX + ".operationType";
    public static final String REQUEST_CONTEXT = PREFIX + ".requestContext";
    public static final String RESPONSE_CONTEXT = PREFIX + ".responseContext";
    public static final String SEQUENCE_REFERENCE = PREFIX + ".sequenceReference";
-   public static final String DATA = PREFIX + ".data";
+   public static final String PROTOCOL_MESSAGES = PREFIX + ".protocolMessages";
+   public static final String PROTOCOL_MESSAGES_MAPPING = PREFIX + ".protocolMessagesMapping";
    // WS-Addressing related actions
    public static final String CREATE_SEQUENCE_WSA_ACTION;
    public static final String CLOSE_SEQUENCE_WSA_ACTION;
    public static final String TERMINATE_SEQUENCE_WSA_ACTION;
    
-   public static final List<QName> PROTOCOL_OPERATION_QNAMES;
+   public static final Set<QName> PROTOCOL_OPERATION_QNAMES;
    
    public static final String WSA_ANONYMOUS_URI = AddressingBuilder.getAddressingBuilder().newAddressingConstants().getAnonymousURI();
    public static final String WSA_MESSAGE_ID = PREFIX + ".wsaMessageId";
    
    static
    {
-      LinkedList<QName> temp = new LinkedList<QName>();
+      Set<QName> temp = new HashSet<QName>();
       Constants constants = Provider.get().getConstants();
+      temp.add(constants.getSequenceQName());
+      temp.add(constants.getSequenceFaultQName());
+      temp.add(constants.getAcknowledgementRangeQName());
+      temp.add(constants.getAckRequestedQName());
       temp.add(constants.getCreateSequenceQName());
       temp.add(constants.getCreateSequenceResponseQName());
-      temp.add(constants.getSequenceQName());
-      temp.add(constants.getAckRequestedQName());
       temp.add(constants.getCloseSequenceQName());
-      temp.add(constants.getSequenceAcknowledgementQName());
       temp.add(constants.getCloseSequenceResponseQName());
       temp.add(constants.getTerminateSequenceQName());
       temp.add(constants.getTerminateSequenceResponseQName());
-      PROTOCOL_OPERATION_QNAMES = Collections.unmodifiableList(temp);
+      PROTOCOL_OPERATION_QNAMES = Collections.unmodifiableSet(temp);
       CREATE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/CreateSequence";
       CLOSE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/CloseSequence";
       TERMINATE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/TerminateSequence";

@@ -27,10 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
@@ -138,7 +136,7 @@ public class EndpointEmulator extends HttpServlet
          URL url = new URL(responseTo);
          Socket socket = new Socket(url.getHost(), url.getPort());
          OutputStream out = socket.getOutputStream();
-         out.write(Util.createHTTPHeaders(url, responseMessage.length()));
+         out.write(Util.createHTTPHeaders(url, responseMessage.length(), view.getResponse().getContentType()));
          out.write(responseMessage.getBytes());
          out.flush();
          out.close();

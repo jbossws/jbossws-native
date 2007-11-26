@@ -23,6 +23,8 @@ package org.jboss.ws.extensions.wsrm;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -155,7 +157,9 @@ public final class RMSequenceImpl implements RMSequence
                // prepare WS-RM request context
                QName terminateSequenceQN = Provider.get().getConstants().getTerminateSequenceQName();
                Map rmRequestContext = new HashMap();
-               rmRequestContext.put(RMConstant.OPERATION_QNAME, terminateSequenceQN);
+               List outMsgs = new LinkedList();
+               outMsgs.add(terminateSequenceQN);
+               rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
                rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, client.getWSRMSequence());
                // set up method invocation context
                Map requestContext = client.getBindingProvider().getRequestContext(); 
