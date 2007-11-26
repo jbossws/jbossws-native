@@ -27,6 +27,78 @@ What's new in jbossws-@version.id@
 
 Feature Request
 
+    * [JBWS-492] - Add support for Policy Identification
+    * [JBWS-493] - Add support for Compact Policy Expression
+    * [JBWS-494] - Add support for Policy Intersection
+    * [JBWS-895] - Provide support for policy attachments
+    * [JBWS-1644] - Process wsdl extensibility elements
+    * [JBWS-1645] - Modify WSDLGenerator to deal with policies
+    * [JBWS-1806] - Add EndpointRegistry to jmx-console
+    * [JBWS-1807] - HTTP bindings for Provider
+
+Bug
+
+    * [JBWS-700] - Update documentation for dealing with attachments
+    * [JBWS-1669] - Fix WebServiceContext.getMessageContext() for EJB endpoints
+    * [JBWS-1704] - The Use Of Remoting Causes An Additional 'datatype' Parameter To Be Sent On All Requests
+    * [JBWS-1735] - wstx.jar is missing from release, causes wsconsume to fail
+    * [JBWS-1761] - WSProvide ignores SOAPBinding declaration
+    * [JBWS-1791] - target deploy-jboss42-endorsed incomplete
+    * [JBWS-1792] - init-param for handler defined in jaxrpc-config not processed
+    * [JBWS-1795] - Type Substitution doesn't work with Schema2Java Client approach
+    * [JBWS-1796] - deploy-jboss40-no-ejb3 build fails
+    * [JBWS-1797] - Setting .NET friendly Endpoint in web.xml
+    * [JBWS-1798] - Cannot find local schema with relative urls
+    * [JBWS-1800] - Trying to monitor the JVM using -Dcom.sun.management.jmxremote prevents the jbossws 2.0.1 from coming up
+    * [JBWS-1801] - WSDL To Java - When an array if returned from a method on the SEI it is incorrectly ommitted from the generated JAX-RPC mapping.
+    * [JBWS-1808] - BackwardCompatibleURLPatternDeploymentAspect is mangling valid URLpatterns
+    * [JBWS-1809] - JAXBIntros are not taken into consideration when generating the WSDL
+    * [JBWS-1811] - Cannot access CLIENT_ADDRESSING_PROPERTIES inside client
+    * [JBWS-1815] - Missing fault detail in messages from SLSB Provider
+    * [JBWS-1843] - WSDL with custom schema imports causes java.lang.OutOfMemoryError: Java heap space when there are circular schema imports dependencies
+    * [JBWS-1852] - Failed to create a new SAX parser
+    * [JBWS-1856] - Attachment part not cleanup correctly
+    * [JBWS-1903] - DOMUtils doesn't clear thread locals
+
+Task
+
+    * [JBWS-856] - Complete WS-Policy implementation
+    * [JBWS-1330] - Fix jaxrpc wsse tests for jbossws-5.0
+    * [JBWS-1571] - Provide/Verify WS-Policy implementation
+    * [JBWS-1572] - Provide/Verify WS-PolicyAttachment implementation
+    * [JBWS-1612] - Provide an integration layer for ESB
+    * [JBWS-1614] - Provide an integration layer for JBossAS
+    * [JBWS-1748] - Improve the documentation that explains proprietary DD options
+    * [JBWS-1793] - Provide a test case for the tools scripts that reside under JBOSS_HOME/bin
+    * [JBWS-1816] - JAXWS SOAPFault inheritance
+    * [JBWS-1817] - WS-Security with JAX-WS Dispatch
+    * [JBWS-1835] - Schedule metro issues at java.net
+    * [JBWS-1842] - JAXB based ServiceRef meta data
+    * [JBWS-1846] - Release jbossws-2.0.2.GA binary
+    
+Errata
+    
+    FIXME: [JBCTS-540] EJB3 proxy does not implement the Home interface
+    FIXME: [JBWS-1460] @XmlMimeType on SEI parameter declarations
+    FIXME: [JBWS-1665] incorrect wsdl generation
+    FIXME: [JBWS-1772] WSConsume output is not correctly redirected
+    FIXME: [JBWS-1773] Verify isolated classloading with WSConsume
+    FIXME: [JBWS-1776] Verify isolated classloading with WSProvide
+    FIXME: [JBWS-1813] context-root in jboss.xml is ignored
+    FIXME: [JBWS-751] Multiple schema imports with the same namespace
+    FIXME: [JBWS-798] Complete EventingTestCase
+    FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
+    
+Enjoy,
+The JBossWS Team
+
+Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What's new in jbossws-2.0.1.GA
+------------------------------
+
+Feature Request
+
     * [JBWS-1736] - MTOM property at service-ref level
 
 Bug
@@ -54,7 +126,6 @@ Task
     * [JBWS-1770] - Fix Endpoint API for jboss-5.0.0.Beta3
 
 Errata
-------
 
     FIXME: [JBCTS-540] EJB3 proxy does not implement the Home interface
     FIXME: [JBCTS-624] R2753 cannot parse web.xml for jsp vehicle
@@ -67,11 +138,6 @@ Errata
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
     
-Enjoy,
-The JBossWS Team
-
-Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 What's new in jbossws-2.0.0
 ---------------------------
 
