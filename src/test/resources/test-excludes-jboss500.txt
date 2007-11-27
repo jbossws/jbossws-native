@@ -4,3 +4,6 @@ org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 # [JBAS-4930] Cannot lookup ejb3 remote proxy
 org/jboss/test/ws/jaxrpc/jbws331/**
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
+
+# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
+org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
