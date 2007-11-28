@@ -21,11 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.reqres;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import junit.framework.Test;
 
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
@@ -41,27 +36,9 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public final class RMAddressableReqResTestCase extends RMAbstractReqResTest
 {
 
-   private static final Properties props = new Properties();
-   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
-   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
-
-   static
-   {
-      // load test properties
-      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMAddressableReqResTestCase.properties");
-      try 
-      {
-         props.load(new FileInputStream(propertiesFile));
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
-   }
-   
    public static Test suite()
    {
-      return new JBossWSTestSetup(RMAddressableReqResTestCase.class, props.getProperty("archives"));
+      return new JBossWSTestSetup(RMAddressableReqResTestCase.class, getClasspath());
    }
 
    public final RMAddressingType getAddressingType()
@@ -69,14 +46,4 @@ public final class RMAddressableReqResTestCase extends RMAbstractReqResTest
       return RMAddressingType.ADDRESSABLE;
    }
 
-   public final boolean isEmulatorOn()
-   {
-      return this.emulatorOn;
-   }
-   
-   public final String getServiceURL()
-   {
-      return this.serviceURL;
-   }
-   
 }

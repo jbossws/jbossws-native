@@ -23,7 +23,11 @@ package org.jboss.test.ws.jaxws.wsrm.reqres;
 
 import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -50,9 +54,26 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
 {
    private static final String HELLO_WORLD_MSG = "Hello World";
    private static final String TARGET_NS = "http://org.jboss.ws/jaxws/wsrm";
+   private static final Properties props = new Properties();
+   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
+   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
    private Exception handlerException;
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
+   
+   static
+   {
+      // load test properties
+      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMAbstractReqResTest.properties");
+      try 
+      {
+         props.load(new FileInputStream(propertiesFile));
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+      }
+   }
    
    private enum InvocationType
    {
@@ -67,7 +88,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       if (proxy == null)
       {
          QName serviceName = new QName(TARGET_NS, "ReqResService");
-         URL wsdlURL = new URL(getServiceURL() + "?wsdl");
+         URL wsdlURL = new URL(serviceURL + "?wsdl");
          Service service = Service.create(wsdlURL, serviceName);
          proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
       }
@@ -148,20 +169,20 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       if (true) return; // disable WS-RM tests - they cause regression in hudson
       
       RMSequence sequence = null;
-      if (isEmulatorOn())
+      if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxyObject;
          sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.DUPLEX);
          System.out.println("Created sequence with outbound id=" + sequence.getOutboundId());
          System.out.println("Created sequence with inbound id=" + sequence.getInboundId());
       }
-      setAddrProps(proxy, "http://useless/action", getServiceURL());
+      setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      setAddrProps(proxy, "http://useless/action", getServiceURL());
+      setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      setAddrProps(proxy, "http://useless/action", getServiceURL());
+      setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      if (isEmulatorOn())
+      if (emulatorOn)
       {
          if (!sequence.isCompleted(1000, TimeUnit.MILLISECONDS)) {
             sequence.discard();
@@ -172,8 +193,11 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       }
    }
    
+   public static String getClasspath()
+   {
+      return props.getProperty("archives");
+   }
+   
    protected abstract RMAddressingType getAddressingType();
-   protected abstract boolean isEmulatorOn();
-   protected abstract String getServiceURL();
    
 }

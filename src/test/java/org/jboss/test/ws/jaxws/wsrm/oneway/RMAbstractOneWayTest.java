@@ -23,7 +23,11 @@ package org.jboss.test.ws.jaxws.wsrm.oneway;
 
 import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
@@ -44,15 +48,33 @@ import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
  */
 public abstract class RMAbstractOneWayTest extends JBossWSTest
 {
+   private static final Properties props = new Properties();
+   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
+   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
+
    private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
    private OneWayServiceIface proxy;
    
+   static
+   {
+      // load test properties
+      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMAbstractOneWayTest.properties");
+      try 
+      {
+         props.load(new FileInputStream(propertiesFile));
+      }
+      catch (IOException ignore)
+      {
+         ignore.printStackTrace();
+      }
+   }
+
    @Override
    protected void setUp() throws Exception
    {
       super.setUp();
       QName serviceName = new QName(targetNS, "OneWayService");
-      URL wsdlURL = new URL(getServiceURL() + "?wsdl");
+      URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (OneWayServiceIface)service.getPort(OneWayServiceIface.class);
    }
@@ -65,19 +87,19 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
       if (true) return; // disable WS-RM tests - they cause regression in hudson
       
       RMSequence sequence = null;
-      if (isEmulatorOn())
+      if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxy;
          sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.SIMPLEX);
          System.out.println("Created sequence with id=" + sequence.getOutboundId());
       }
-      setAddrProps(proxy, "http://useless/action1", getServiceURL());
+      setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
-      setAddrProps(proxy, "http://useless/action2", getServiceURL());
+      setAddrProps(proxy, "http://useless/action2", serviceURL);
       proxy.method2("Hello World");
-      setAddrProps(proxy, "http://useless/action3", getServiceURL());
+      setAddrProps(proxy, "http://useless/action3", serviceURL);
       proxy.method3(new String[] {"Hello","World"});
-      if (isEmulatorOn())
+      if (emulatorOn)
       {
          if (!sequence.isCompleted(1000, TimeUnit.MILLISECONDS)) {
             fail("Sequence not completed within specified time amount");
@@ -87,8 +109,11 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
       }
    }
 
+   public static String getClasspath()
+   {
+      return props.getProperty("archives");
+   }
+   
    protected abstract RMAddressingType getAddressingType();
-   protected abstract boolean isEmulatorOn();
-   protected abstract String getServiceURL();
    
 }
