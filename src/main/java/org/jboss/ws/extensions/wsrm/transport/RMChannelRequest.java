@@ -31,8 +31,6 @@ import java.util.concurrent.Callable;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.callback.Callback;
-import org.jboss.remoting.callback.HandleCallbackException;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
@@ -45,7 +43,7 @@ import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFacto
  */
 public final class RMChannelRequest implements Callable<RMChannelResponse>
 {
-   private static final Logger log = Logger.getLogger(RMChannelRequest.class);
+   private static final Logger logger = Logger.getLogger(RMChannelRequest.class);
    private static final String JBOSSWS_SUBSYSTEM = "jbossws";
    private final RMMessage rmRequest;
    
@@ -55,15 +53,6 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
       this.rmRequest = rmRequest;
    }
    
-   
-   
-   public void handleCallback(Callback callback)
-   throws HandleCallbackException
-   {
-      System.out.println("Handling callback: " + callback);
-      // TODO: implement this method
-   }
-
    public RMChannelResponse call()
    {
       InvokerLocator locator = null;
@@ -81,7 +70,7 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
          URI backPort = RMTransportHelper.getBackPortURI(rmRequest);
          String messageId = RMTransportHelper.getMessageId(rmRequest);
          
-         System.out.println("[WS-RM] backport URI is: " + backPort);
+         logger.debug("[WS-RM] backport URI is: " + backPort);
          RMCallbackHandler callbackHandler = null;
          // TODO: we should remember WSA:MessageId here too
 
@@ -94,7 +83,7 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
                callbackHandler.addUnassignedMessageListener(sequence);
             }
          }
-         boolean oneWay = RMTransportHelper.isOneWayOperation(rmRequest) && (backPort == null); // TODO: backport support
+         boolean oneWay = /*RMTransportHelper.isOneWayOperation(rmRequest) && */(backPort != null); // TODO: backport support
 
          Client client = new Client(locator, JBOSSWS_SUBSYSTEM, rmRequest.getMetadata().getContext(REMOTING_CONFIGURATION_CONTEXT));
          client.connect();
@@ -105,8 +94,8 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
             client.setUnMarshaller(RMUnMarshaller.getInstance());
       
          Map<String, Object> remotingInvocationContext = rmRequest.getMetadata().getContext(REMOTING_INVOCATION_CONTEXT);
-         if (log.isDebugEnabled())
-            log.debug("Remoting metadata: " + remotingInvocationContext);
+         if (logger.isDebugEnabled())
+            logger.debug("Remoting metadata: " + remotingInvocationContext);
 
          // debug the outgoing request message
          MessageTrace.traceMessage("Outgoing RM Request Message", rmRequest.getPayload());

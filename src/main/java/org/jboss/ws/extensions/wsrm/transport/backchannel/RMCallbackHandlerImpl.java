@@ -43,7 +43,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
  */
 public final class RMCallbackHandlerImpl implements RMCallbackHandler
 {
-   private static final Logger LOG = Logger.getLogger(RMCallbackHandlerImpl.class);
+   private static final Logger logger = Logger.getLogger(RMCallbackHandlerImpl.class);
    private final String handledPath;
    private final Object instanceLock = new Object();
    private Map<String, RMMessage> arrivedMessages = new HashMap<String, RMMessage>();
@@ -54,6 +54,7 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
    {
       super();
       this.handledPath = handledPath;
+      logger.debug("Registered callback handler listening on '" + handledPath + "' request path");
    }
    
    public Throwable getFault(String messageId)
@@ -70,12 +71,9 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
    public final void handle(InvocationRequest request)
    {
       String requestMessage = (String)request.getParameter();
-      System.out.println("=================================================");
-      System.out.println("4 - " + request.getRequestPayload());
-      System.out.println("5 - " + request.getReturnPayload());
       synchronized (instanceLock)
       {
-         LOG.debug("Setting response object");
+         logger.debug("Setting response object");
          MessageTrace.traceMessage("Incoming RM Response Message", requestMessage.getBytes());
          RMMessage message = RMMessageFactory.newMessage(requestMessage.getBytes(), new RMMetadata(new java.util.HashMap<String, Object>())); // TODO create map metadata
          String startPattern = "<wsa:RelatesTo>"; // TODO: remove this with XML content inspection
@@ -85,20 +83,19 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
          if (begin != -1)
          {
             String messageId = requestMessage.substring(begin, end);
-            System.out.println("Arrived message id: " + messageId);
+            logger.debug("Arrived message id: " + messageId);
             this.arrivedMessages.put(messageId, message); 
          }
          else
          {
-            System.out.println("Arrived message has no id");
+            logger.debug("Arrived message has no id");
             this.arrivedUnassignedMessages.add(message);
             if (this.listener != null)
             {
                this.listener.unassignedMessageReceived();
             }
          }
-         System.out.println("Message content is: " + requestMessage);
-         System.out.println("=================================================");
+         logger.debug("Message content is: " + requestMessage);
       }
    }
    
@@ -121,7 +118,7 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
          {
             try
             {
-               LOG.debug("waiting for response object associated with message id: " + messageId);
+               logger.debug("waiting for response object associated with message id: " + messageId);
                instanceLock.wait(100);
             }
             catch (InterruptedException ignore)

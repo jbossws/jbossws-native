@@ -23,11 +23,7 @@ package org.jboss.test.ws.jaxws.wsrm.reqres;
 
 import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -36,10 +32,7 @@ import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 
-import junit.framework.Test;
-
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.test.ws.jaxws.wsrm.ReqResServiceIface;
 
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
@@ -53,40 +46,17 @@ import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
  * @author richard.opalka@jboss.com
  * @since 22-Aug-2007
  */
-public class RMReqResTestCase extends JBossWSTest
+public abstract class RMAbstractReqResTest extends JBossWSTest
 {
-   private static final Properties props = new Properties();
    private static final String HELLO_WORLD_MSG = "Hello World";
    private static final String TARGET_NS = "http://org.jboss.ws/jaxws/wsrm";
-   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
    private Exception handlerException;
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
-   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
-   private final boolean addressable = Boolean.parseBoolean((String)props.get("addressable"));
-   
-   static
-   {
-      // load test properties
-      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMReqResTestCase.properties");
-      try 
-      {
-         props.load(new FileInputStream(propertiesFile));
-      }
-      catch (IOException ignore)
-      {
-         ignore.printStackTrace();
-      }
-   }
    
    private enum InvocationType
    {
       SYNC, ASYNC, ASYNC_FUTURE
-   }
-
-   public static Test suite()
-   {
-      return new JBossWSTestSetup(RMReqResTestCase.class, props.getProperty("archives"));
    }
 
    @Override
@@ -97,7 +67,7 @@ public class RMReqResTestCase extends JBossWSTest
       if (proxy == null)
       {
          QName serviceName = new QName(TARGET_NS, "ReqResService");
-         URL wsdlURL = new URL(serviceURL + "?wsdl");
+         URL wsdlURL = new URL(getServiceURL() + "?wsdl");
          Service service = Service.create(wsdlURL, serviceName);
          proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
       }
@@ -178,20 +148,20 @@ public class RMReqResTestCase extends JBossWSTest
       if (true) return; // disable WS-RM tests - they cause regression in hudson
       
       RMSequence sequence = null;
-      if (emulatorOn)
+      if (isEmulatorOn())
       {
          RMProvider wsrmProvider = (RMProvider)proxyObject;
          sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.DUPLEX);
          System.out.println("Created sequence with outbound id=" + sequence.getOutboundId());
          System.out.println("Created sequence with inbound id=" + sequence.getInboundId());
       }
-      setAddrProps(proxy, "http://useless/action", serviceURL);
+      setAddrProps(proxy, "http://useless/action", getServiceURL());
       invokeWebServiceMethod(invocationType);
-      setAddrProps(proxy, "http://useless/action", serviceURL);
+      setAddrProps(proxy, "http://useless/action", getServiceURL());
       invokeWebServiceMethod(invocationType);
-      setAddrProps(proxy, "http://useless/action", serviceURL);
+      setAddrProps(proxy, "http://useless/action", getServiceURL());
       invokeWebServiceMethod(invocationType);
-      if (emulatorOn)
+      if (isEmulatorOn())
       {
          if (!sequence.isCompleted(1000, TimeUnit.MILLISECONDS)) {
             sequence.discard();
@@ -202,9 +172,8 @@ public class RMReqResTestCase extends JBossWSTest
       }
    }
    
-   private RMAddressingType getAddressingType()
-   {
-      return addressable ? RMAddressingType.ADDRESSABLE : RMAddressingType.ANONYMOUS;
-   }
+   protected abstract RMAddressingType getAddressingType();
+   protected abstract boolean isEmulatorOn();
+   protected abstract String getServiceURL();
    
 }

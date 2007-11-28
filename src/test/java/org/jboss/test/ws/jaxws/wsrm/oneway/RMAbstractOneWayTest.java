@@ -23,24 +23,17 @@ package org.jboss.test.ws.jaxws.wsrm.oneway;
 
 import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-
-import junit.framework.Test;
 
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
 
 /**
@@ -49,40 +42,17 @@ import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
  * @author richard.opalka@jboss.com
  * @since 22-Aug-2007
  */
-public class RMOneWayTestCase extends JBossWSTest
+public abstract class RMAbstractOneWayTest extends JBossWSTest
 {
-   private static final Properties props = new Properties();
    private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
    private OneWayServiceIface proxy;
-   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
-   private final boolean addressable = Boolean.parseBoolean((String)props.get("addressable"));
-   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
    
-   static
-   {
-      // load test properties
-      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMOneWayTestCase.properties");
-      try 
-      {
-         props.load(new FileInputStream(propertiesFile));
-      }
-      catch (IOException ignore)
-      {
-         ignore.printStackTrace();
-      }
-   }
-   
-   public static Test suite()
-   {
-      return new JBossWSTestSetup(RMOneWayTestCase.class, props.getProperty("archives"));
-   }
-
    @Override
    protected void setUp() throws Exception
    {
       super.setUp();
       QName serviceName = new QName(targetNS, "OneWayService");
-      URL wsdlURL = new URL(serviceURL + "?wsdl");
+      URL wsdlURL = new URL(getServiceURL() + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (OneWayServiceIface)service.getPort(OneWayServiceIface.class);
    }
@@ -95,19 +65,19 @@ public class RMOneWayTestCase extends JBossWSTest
       if (true) return; // disable WS-RM tests - they cause regression in hudson
       
       RMSequence sequence = null;
-      if (emulatorOn)
+      if (isEmulatorOn())
       {
          RMProvider wsrmProvider = (RMProvider)proxy;
          sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.SIMPLEX);
          System.out.println("Created sequence with id=" + sequence.getOutboundId());
       }
-      setAddrProps(proxy, "http://useless/action1", serviceURL);
+      setAddrProps(proxy, "http://useless/action1", getServiceURL());
       proxy.method1();
-      setAddrProps(proxy, "http://useless/action2", serviceURL);
+      setAddrProps(proxy, "http://useless/action2", getServiceURL());
       proxy.method2("Hello World");
-      setAddrProps(proxy, "http://useless/action3", serviceURL);
+      setAddrProps(proxy, "http://useless/action3", getServiceURL());
       proxy.method3(new String[] {"Hello","World"});
-      if (emulatorOn)
+      if (isEmulatorOn())
       {
          if (!sequence.isCompleted(1000, TimeUnit.MILLISECONDS)) {
             fail("Sequence not completed within specified time amount");
@@ -117,9 +87,8 @@ public class RMOneWayTestCase extends JBossWSTest
       }
    }
 
-   private RMAddressingType getAddressingType()
-   {
-      return addressable ? RMAddressingType.ADDRESSABLE : RMAddressingType.ANONYMOUS;
-   }
+   protected abstract RMAddressingType getAddressingType();
+   protected abstract boolean isEmulatorOn();
+   protected abstract String getServiceURL();
    
 }
