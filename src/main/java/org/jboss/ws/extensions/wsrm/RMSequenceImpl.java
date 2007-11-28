@@ -22,6 +22,7 @@
 package org.jboss.ws.extensions.wsrm;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,8 +41,11 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
+import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
@@ -60,21 +64,19 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private static final Logger logger = Logger.getLogger(RMSequenceImpl.class);
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
-   private final String incomingSequenceId;
-   private final String outgoingSequenceId;
-   private final URI backPort;
-   private final ClientImpl client;
+   private final String incomingSequenceId = "http://sequence/id/123"; // TODO: use generator
+   private final RMConfig wsrmConfig;
+   private final RMSequenceType sequenceType;
+   private final RMAddressingType addrType;
+   private String outgoingSequenceId;
+   private URI backPort;
+   private ClientImpl client;
    // object states variables
    private boolean terminated = false;
    private boolean discarded = false;
    private AtomicLong messageNumber = new AtomicLong();
    private final Lock objectLock = new ReentrantLock();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
-   
-   public RMSequenceImpl(ClientImpl client, String outId, URI backPort)
-   {
-      this(client, outId, null, backPort);
-   }
    
    public void unassignedMessageReceived()
    {
@@ -83,19 +85,55 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       logger.debug("Unassigned message available in callback handler");
    }
 
-   public RMSequenceImpl(ClientImpl client, String outId, String inId, URI backPort)
+   public RMSequenceImpl(RMAddressingType addrType, RMSequenceType sequenceType, RMConfig wsrmConfig)
    {
       super();
-      this.client = client;
-      this.incomingSequenceId = inId;
-      this.outgoingSequenceId = outId;
-      this.backPort = backPort;
-      RMSequenceManager.getInstance().register(this);
+      if ((addrType == null) || (sequenceType == null) || (wsrmConfig == null))
+         throw new IllegalArgumentException();
+      
+      this.addrType = addrType;
+      this.sequenceType = sequenceType;
+      this.wsrmConfig = wsrmConfig;
+      try
+      {
+         this.backPort = new URI("http://localhost:8888/temporary_listen_address/666"); // TODO: use generator;;
+      }
+      catch (URISyntaxException use)
+      {
+         logger.warn(use);
+      }
+   }
+   
+   public final void setOutboundId(String outboundId)
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.outgoingSequenceId = outboundId;
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
+   }
+   
+   public final void setClient(ClientImpl client)
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.client = client;
+         RMSequenceManager.getInstance().register(this);
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
    }
    
    public final URI getBackPort()
    {
-      return this.backPort;
+      return (this.addrType == RMAddressingType.ADDRESSABLE) ? this.backPort : null;
    }
 
    public final long newMessageNumber()

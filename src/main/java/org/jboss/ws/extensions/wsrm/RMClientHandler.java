@@ -89,6 +89,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       rmRequestContext.put(RMConstant.WSA_MESSAGE_ID, optionalMessageId);
       rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
       SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
+      RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
       
       QName msgQName = rmConstants.getCreateSequenceQName();
       if (outMsgs.contains(msgQName))
@@ -106,7 +107,6 @@ public final class RMClientHandler extends GenericSOAPHandler
       if (outMsgs.contains(msgQName))
       {
          // try to serialize Sequence to message
-         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
          RMSequence sequence = rmFactory.newSequence();
          sequence.setIdentifier(sequenceImpl.getOutboundId());
          sequence.setMessageNumber(sequenceImpl.newMessageNumber());
@@ -119,7 +119,6 @@ public final class RMClientHandler extends GenericSOAPHandler
       if (outMsgs.contains(msgQName))
       {
          // try to serialize AckRequested to message
-         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
          RMAckRequested ackRequested = rmFactory.newAckRequested();
          ackRequested.setIdentifier(sequenceImpl.getOutboundId());
          ackRequested.setMessageNumber(sequenceImpl.getLastMessageNumber());
@@ -132,7 +131,6 @@ public final class RMClientHandler extends GenericSOAPHandler
       if (outMsgs.contains(msgQName))
       {
          // try to serialize CloseSequence to message
-         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
          RMCloseSequence closeSequence = rmFactory.newCloseSequence();
          closeSequence.setIdentifier(sequenceImpl.getOutboundId());
          closeSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
@@ -145,7 +143,6 @@ public final class RMClientHandler extends GenericSOAPHandler
       if (outMsgs.contains(msgQName))
       {
          // try to serialize CloseSequenceResponse to message
-         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
          RMCloseSequenceResponse closeSequenceResponse = rmFactory.newCloseSequenceResponse();
          closeSequenceResponse.setIdentifier(sequenceImpl.getOutboundId());
          data.put(msgQName, closeSequenceResponse);
@@ -156,7 +153,6 @@ public final class RMClientHandler extends GenericSOAPHandler
       if (outMsgs.contains(msgQName))
       {
          // try to serialize TerminateSequence to message
-         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
          RMTerminateSequence terminateSequence = rmFactory.newTerminateSequence();
          terminateSequence.setIdentifier(sequenceImpl.getOutboundId());
          terminateSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
@@ -169,7 +165,6 @@ public final class RMClientHandler extends GenericSOAPHandler
       if (outMsgs.contains(msgQName))
       {
          // try to serialize terminateSequenceResponse to message
-         RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
          RMTerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
          terminateSequenceResponse.setIdentifier(sequenceImpl.getOutboundId());
          data.put(msgQName, terminateSequenceResponse);
