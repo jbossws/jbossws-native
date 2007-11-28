@@ -42,8 +42,10 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.test.ws.jaxws.wsrm.ReqResServiceIface;
 
+import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 
 /**
  * Reliable JBoss WebService client invoking req/res methods
@@ -179,7 +181,7 @@ public class RMReqResTestCase extends JBossWSTest
       if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxyObject;
-         sequence = wsrmProvider.createSequence(addressable);
+         sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.DUPLEX);
          System.out.println("Created sequence with outbound id=" + sequence.getOutboundId());
          System.out.println("Created sequence with inbound id=" + sequence.getInboundId());
       }
@@ -195,9 +197,14 @@ public class RMReqResTestCase extends JBossWSTest
             sequence.discard();
             fail("Sequence not completed within specified time amount");
          } else {
-            sequence.terminate();
+            sequence.close();
          }
       }
+   }
+   
+   private RMAddressingType getAddressingType()
+   {
+      return addressable ? RMAddressingType.ADDRESSABLE : RMAddressingType.ANONYMOUS;
    }
    
 }

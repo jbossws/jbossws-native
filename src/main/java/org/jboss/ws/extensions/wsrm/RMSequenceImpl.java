@@ -42,6 +42,7 @@ import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
@@ -56,7 +57,9 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 @SuppressWarnings("unchecked")
 public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageListener
 {
-   private static final Logger LOGGER = Logger.getLogger(RMSequenceImpl.class);
+   private static final Logger logger = Logger.getLogger(RMSequenceImpl.class);
+   private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
+   
    private final String incomingSequenceId;
    private final String outgoingSequenceId;
    private final URI backPort;
@@ -77,7 +80,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    {
       // we can't use objectLock in the method - possible deadlock
       this.countOfUnassignedMessagesAvailable.addAndGet(1);
-      LOGGER.debug("Unassigned message available in callback handler");
+      logger.debug("Unassigned message available in callback handler");
    }
 
    public RMSequenceImpl(ClientImpl client, String outId, String inId, URI backPort)
@@ -127,11 +130,8 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          this.objectLock.unlock();
       }
    }
-
-   /**
-    * Sets up terminated flag to true.
-    */
-   public final void terminate() throws RMException
+   
+   public final void close() throws RMException
    {
       this.objectLock.lock();
       try
@@ -144,47 +144,12 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          client.getWSRMLock().lock();
          try 
          {
-            try
-            {
-               // set up addressing properties
-               String address = client.getEndpointMetaData().getEndpointAddress();
-               String action = RMConstant.TERMINATE_SEQUENCE_WSA_ACTION;
-               AddressingProperties props = null;
-               if (this.client.getWSRMSequence().getBackPort() != null)
-               {
-                  props = AddressingClientUtil.createDefaultProps(action, address);
-                  props.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.client.getWSRMSequence().getBackPort()));
-               }
-               else
-               {
-                  props = AddressingClientUtil.createAnonymousProps(action, address);
-               }
-               // prepare WS-RM request context
-               QName terminateSequenceQN = RMProvider.get().getConstants().getTerminateSequenceQName();
-               Map rmRequestContext = new HashMap();
-               List outMsgs = new LinkedList();
-               outMsgs.add(terminateSequenceQN);
-               rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
-               rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, client.getWSRMSequence());
-               // set up method invocation context
-               Map requestContext = client.getBindingProvider().getRequestContext(); 
-               requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
-               requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
-               // call stub method
-               this.client.invoke(terminateSequenceQN, new Object[] {}, client.getBindingProvider().getResponseContext());
-               RMSequenceManager.getInstance().unregister(this);
-            }
-            catch (Exception e)
-            {
-               throw new RMException("Unable to terminate WSRM sequence", e);
-            }
-            finally
-            {
-               this.client.setWSRMSequence(null); // TODO: do not remove this
-            }
+            sendCloseMessage();
+            sendTerminateMessage();
          }
          finally
          {
+            this.client.setWSRMSequence(null); // TODO: do not remove this
             this.client.getWSRMLock().unlock();
          }
       } 
@@ -192,6 +157,60 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       {
          this.objectLock.unlock();
       }
+   }
+
+   /**
+    * Sets up terminated flag to true.
+    */
+   public final void sendMessage(String action, QName operationQName) throws RMException
+   {
+      try
+      {
+         // set up addressing properties
+         String address = client.getEndpointMetaData().getEndpointAddress();
+         AddressingProperties props = null;
+         if (this.client.getWSRMSequence().getBackPort() != null)
+         {
+            props = AddressingClientUtil.createDefaultProps(action, address);
+            props.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.client.getWSRMSequence().getBackPort()));
+         }
+         else
+         {
+            props = AddressingClientUtil.createAnonymousProps(action, address);
+         }
+         // prepare WS-RM request context
+         Map rmRequestContext = new HashMap();
+         List outMsgs = new LinkedList();
+         outMsgs.add(operationQName);
+         rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
+         rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, this);
+         // set up method invocation context
+         Map requestContext = client.getBindingProvider().getRequestContext(); 
+         requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
+         requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
+         // call stub method
+         this.client.invoke(operationQName, new Object[] {}, client.getBindingProvider().getResponseContext());
+         RMSequenceManager.getInstance().unregister(this);
+      }
+      catch (Exception e)
+      {
+         throw new RMException("Unable to terminate WSRM sequence", e);
+      }
+   }
+   
+   private void sendCloseMessage()
+   {
+      sendMessage(RMConstant.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName());
+   }
+   
+   private void sendTerminateMessage()
+   {
+      sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName());
+   }
+   
+   private void sendSequenceAcknowledgementMessage()
+   {
+      sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName());
    }
 
    public final boolean isCompleted()
@@ -214,7 +233,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       return incomingSequenceId;
    }
 
-   public final boolean isTerminated()
+   public final boolean isClosed()
    {
       this.objectLock.lock();
       try

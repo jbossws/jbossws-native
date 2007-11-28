@@ -51,6 +51,24 @@
       </response>
    </view>
 
+   <view id="close.sequence">
+      <request httpMethod="POST" pathInfo="/OneWayService">
+         <contains>
+            <node name="|{${soap}}Envelope|{${soap}}Body|{${wsrm}}CloseSequence"/>
+         </contains>
+         <set property="req.wsa.messageid" value="|{${soap}}Envelope|{${soap}}Header|{${wsa}}MessageID"/>
+         <set property="req.wsa.action" value="|{${soap}}Envelope|{${soap}}Header|{${wsa}}Action"/>
+         <set property="req.wsa.replyto" value="|{${soap}}Envelope|{${soap}}Header|{${wsa}}ReplyTo|{${wsa}}Address"/>
+         <set property="req.wsrm.sequenceid" value="|{${soap}}Envelope|{${soap}}Body|{${wsrm}}CloseSequence|{${wsrm}}Identifier"/>
+      </request>
+      <response contentType="text/xml" statusCode="200" resource="resources/closeSequenceResponse.xml">
+         <set property="res.wsa.to" value="${req.wsa.replyto}"/>
+         <set property="res.wsa.action" value="${req.wsa.action}Response"/>
+         <set property="res.wsa.relatesto" value="${req.wsa.messageid}"/>
+         <set property="res.wsrm.sequenceid" value="${req.wsrm.sequenceid}"/>
+      </response>
+   </view>
+
    <view id="terminate.sequence">
       <request httpMethod="POST" pathInfo="/OneWayService">
          <contains>
@@ -63,7 +81,7 @@
       </request>
       <response contentType="text/xml" statusCode="200" resource="resources/terminateSequenceResponse.xml">
          <set property="res.wsa.to" value="${req.wsa.replyto}"/>
-         <set property="res.wsa.action" value="http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequenceResponse"/>
+         <set property="res.wsa.action" value="${req.wsa.action}Response"/>
          <set property="res.wsa.relatesto" value="${req.wsa.messageid}"/>
          <set property="res.wsrm.sequenceid" value="${req.wsrm.sequenceid}"/>
       </response>

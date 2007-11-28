@@ -21,16 +21,21 @@
  */
 package org.jboss.ws.extensions.wsrm.api;
 
-import java.util.concurrent.TimeUnit;
-
-public interface RMSequence
+/**
+ * This enumeration specifies client type that will be used for WS-RM exchange
+ *
+ * @author richard.opalka@jboss.com
+ *
+ * @since Nov 28, 2007
+ */
+public enum RMAddressingType
 {
-   String getOutboundId() throws RMException;
-   String getInboundId() throws RMException;
-   void discard() throws RMException;
-   boolean isDiscarded() throws RMException;
-   void close() throws RMException;
-   boolean isClosed() throws RMException;
-   boolean isCompleted() throws RMException;
-   boolean isCompleted(int timeAmount, TimeUnit timeUnit) throws RMException;
+   /**
+    * Specifies that client is anonymous
+    */
+   ANONYMOUS,
+   /**
+    * Specifies that client is addressable
+    */
+   ADDRESSABLE
 }

@@ -71,9 +71,11 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
+import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
@@ -486,7 +488,7 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public RMSequence createSequence(boolean addressableClient) throws RMException
+   public RMSequence createSequence(RMAddressingType addrType, RMSequenceType seqType) throws RMException
    {
       this.getWSRMLock().lock();
       try
@@ -501,9 +503,9 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
             String action = RMConstant.CREATE_SEQUENCE_WSA_ACTION;
             URI backPort = null;
             AddressingProperties addressingProps = null;
-            if (addressableClient)
+            if (addrType == RMAddressingType.ADDRESSABLE)
             {
-               backPort = new URI("http://localhost:8888/packports/1234567890-1234567890/1234567890-1234567890"); // TODO: use generator
+               backPort = new URI("http://localhost:8888/temporary_listen_address/666"); // TODO: use generator
                addressingProps = AddressingClientUtil.createDefaultProps(action, address);
                addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(backPort));
             }
