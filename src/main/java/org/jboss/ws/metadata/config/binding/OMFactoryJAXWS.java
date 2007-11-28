@@ -32,18 +32,18 @@ import org.jboss.ws.metadata.config.jaxws.CommonConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.HandlerChainsConfigJAXWS;
-import org.jboss.ws.metadata.wsrm.DeliveryAssuranceMetaData;
-import org.jboss.ws.metadata.wsrm.MessageStoreMetaData;
-import org.jboss.ws.metadata.wsrm.PortMetaData;
-import org.jboss.ws.metadata.wsrm.ProviderMetaData;
-import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
-import org.jboss.ws.extensions.wsrm.DeliveryAssurance;
-import org.jboss.ws.extensions.wsrm.DeliveryAssuranceFactory;
-import org.jboss.ws.extensions.wsrm.spi.Provider;
+import org.jboss.ws.extensions.wsrm.RMDeliveryAssurance;
+import org.jboss.ws.extensions.wsrm.RMDeliveryAssuranceFactory;
+import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
+import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
+import org.jboss.ws.extensions.wsrm.config.RMConfig;
+import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
+import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 
 /**
  * ObjectModelFactory for JAXRPC configurations.
@@ -134,7 +134,7 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
       }
       if ("reliable-messaging".equals(localName))
       {
-         ReliableMessagingMetaData wsrmCfg = new ReliableMessagingMetaData();
+         RMConfig wsrmCfg = new RMConfig();
          commonConfig.setRMMetaData(wsrmCfg);
          return wsrmCfg;
       }
@@ -142,13 +142,13 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
       return null;
    }
    
-   public Object newChild(ReliableMessagingMetaData wsrmConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   public Object newChild(RMConfig wsrmConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       int countOfAttributes = attrs.getLength();
 
       if (localName.equals("delivery-assurance"))
       {
-         DeliveryAssuranceMetaData deliveryAssurance = getDeliveryAssurance(attrs);
+         RMDeliveryAssuranceConfig deliveryAssurance = getDeliveryAssurance(attrs);
          wsrmConfig.setDeliveryAssurance(deliveryAssurance);
          return deliveryAssurance;
       }
@@ -163,7 +163,7 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
                break;
             }
          }
-         ProviderMetaData provider = new ProviderMetaData();
+         RMProviderConfig provider = new RMProviderConfig();
          provider.setSpecVersion(specVersion);
          wsrmConfig.setProvider(provider);
          return provider;
@@ -180,7 +180,7 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
                className = attrs.getValue(i);
          }
          
-         MessageStoreMetaData messageStore = new MessageStoreMetaData();
+         RMMessageStoreConfig messageStore = new RMMessageStoreConfig();
          messageStore.setId(id);
          messageStore.setClassName(className);
          wsrmConfig.setMessageStore(messageStore);
@@ -197,7 +197,7 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
                break;
             }
          }
-         PortMetaData port = new PortMetaData();
+         RMPortConfig port = new RMPortConfig();
          port.setPortName(QName.valueOf(portName));
          wsrmConfig.getPorts().add(port);
          return port;
@@ -206,11 +206,11 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
       return null;
    }
    
-   public Object newChild(PortMetaData port, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   public Object newChild(RMPortConfig port, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       if (localName.equals("delivery-assurance"))
       {
-         DeliveryAssuranceMetaData deliveryAssurance = getDeliveryAssurance(attrs);
+         RMDeliveryAssuranceConfig deliveryAssurance = getDeliveryAssurance(attrs);
          port.setDeliveryAssurance(deliveryAssurance);
          return deliveryAssurance;
       }
@@ -218,7 +218,7 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
       return null;
    }
    
-   private DeliveryAssuranceMetaData getDeliveryAssurance(Attributes attrs)
+   private RMDeliveryAssuranceConfig getDeliveryAssurance(Attributes attrs)
    {
       String inOrder = null, quality = null;
       for (int i = 0; i < attrs.getLength() && (inOrder == null || quality == null); i++)
@@ -229,13 +229,13 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          if (attrLocalName.equals("quality"))
             quality = attrs.getValue(i);
       }
-      DeliveryAssuranceMetaData deliveryAssurance = new DeliveryAssuranceMetaData();
+      RMDeliveryAssuranceConfig deliveryAssurance = new RMDeliveryAssuranceConfig();
       deliveryAssurance.setQuality(quality);
       deliveryAssurance.setInOrder(inOrder);
       return deliveryAssurance;
    }
    
-   public void setValue(MessageStoreMetaData messageStore, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   public void setValue(RMMessageStoreConfig messageStore, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
    {
       if (localName.equals("config-file"))
       {

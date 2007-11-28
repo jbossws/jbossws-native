@@ -59,13 +59,13 @@ import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.extensions.wsrm.config.RMConfig;
+import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.ws.metadata.wsrm.PortMetaData;
-import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
@@ -703,14 +703,14 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      List<PortMetaData> rmPortMetaData = backupRMMD();
+      List<RMPortConfig> rmPortMetaData = backupRMMD();
       config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
       propagateRMMD(rmPortMetaData);
 
       reconfigHandlerMetaData();
    }
 
-   private List<PortMetaData> backupRMMD()
+   private List<RMPortConfig> backupRMMD()
    {
       if ((config != null) && (config.getRMMetaData() != null))
          return config.getRMMetaData().getPorts();
@@ -718,20 +718,20 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       return null;
    }
    
-   private void propagateRMMD(List<PortMetaData> backedUpMD)
+   private void propagateRMMD(List<RMPortConfig> backedUpMD)
    {
       if ((backedUpMD != null) && (backedUpMD.size() > 0))
       {
          if (config.getRMMetaData() == null)
          {
-            config.setRMMetaData(new ReliableMessagingMetaData());
+            config.setRMMetaData(new RMConfig());
             config.getRMMetaData().getPorts().addAll(backedUpMD);
          }
          else 
          {
             // RM policy specified in config file will be always used
-            List<PortMetaData> ports = config.getRMMetaData().getPorts();
-            for (PortMetaData portMD : backedUpMD)
+            List<RMPortConfig> ports = config.getRMMetaData().getPorts();
+            for (RMPortConfig portMD : backedUpMD)
             {
                QName portName = portMD.getPortName();
                if (!contains(ports, portName))
@@ -743,9 +743,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       }
    }
    
-   private boolean contains(List<PortMetaData> ports, QName portName)
+   private boolean contains(List<RMPortConfig> ports, QName portName)
    {
-      for (PortMetaData pMD : ports)
+      for (RMPortConfig pMD : ports)
       {
          if (pMD.getPortName().equals(portName))
             return true;

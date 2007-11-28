@@ -26,19 +26,19 @@ import java.util.List;
 
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.extensions.wsrm.spi.Provider;
-import org.jboss.ws.extensions.wsrm.spi.MessageFactory;
-import org.jboss.ws.extensions.wsrm.spi.protocol.AckRequested;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CloseSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CloseSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.IncompleteSequenceBehavior;
-import org.jboss.ws.extensions.wsrm.spi.protocol.Sequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement;
-import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
-import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMIncompleteSequenceBehavior;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequenceResponse;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
@@ -48,7 +48,7 @@ import org.jboss.wsf.test.JBossWSTest;
 public final class WSRMDeSerializationTestCase extends JBossWSTest
 {
    private static final String WSRM_200702_NS = "http://docs.oasis-open.org/ws-rx/wsrm/200702";
-   private static final MessageFactory WSRM_200702_FACTORY = Provider.getInstance(WSRM_200702_NS).getMessageFactory();
+   private static final RMMessageFactory WSRM_200702_FACTORY = RMProvider.getInstance(WSRM_200702_NS).getMessageFactory();
    
    private static final String CREATE_SEQUENCE_MESSAGE
       = "<soap:Envelope "
@@ -276,34 +276,34 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testSequenceAcknowledgementDeserialization1() throws Exception
    {
-      SequenceAcknowledgement sequenceAcknowledgement = WSRM_200702_FACTORY.newSequenceAcknowledgement();
+      RMSequenceAcknowledgement sequenceAcknowledgement = WSRM_200702_FACTORY.newSequenceAcknowledgement();
       sequenceAcknowledgement.deserializeFrom(toSOAPMessage(SEQUENCE_ACKNOWLEDGEMENT_MESSAGE_1));
       // perform assertion
       assertEquals(sequenceAcknowledgement.getIdentifier(), "http://Business456.com/RM/ABC");
       assertTrue(sequenceAcknowledgement.isFinal());
       assertFalse(sequenceAcknowledgement.isNone());
       assertEquals(sequenceAcknowledgement.getNacks().size(), 0);
-      List<SequenceAcknowledgement.AcknowledgementRange> ranges = sequenceAcknowledgement.getAcknowledgementRanges();
+      List<RMSequenceAcknowledgement.AcknowledgementRange> ranges = sequenceAcknowledgement.getAcknowledgementRanges();
       assertEquals(ranges.size(), 2);
-      SequenceAcknowledgement.AcknowledgementRange firstRange = ranges.get(0);
+      RMSequenceAcknowledgement.AcknowledgementRange firstRange = ranges.get(0);
       assertEquals(firstRange.getLower(), 1);
       assertEquals(firstRange.getLower(), 1);
-      SequenceAcknowledgement.AcknowledgementRange secondRange = ranges.get(1);
+      RMSequenceAcknowledgement.AcknowledgementRange secondRange = ranges.get(1);
       assertEquals(secondRange.getLower(), 3);
       assertEquals(secondRange.getLower(), 3);
    }
    
    public void testSequenceAcknowledgementSerialization1() throws Exception
    {
-      SequenceAcknowledgement sequenceAcknowledgementMessage = WSRM_200702_FACTORY.newSequenceAcknowledgement();
+      RMSequenceAcknowledgement sequenceAcknowledgementMessage = WSRM_200702_FACTORY.newSequenceAcknowledgement();
       // construct message
       sequenceAcknowledgementMessage.setIdentifier("http://Business456.com/RM/ABC");
       sequenceAcknowledgementMessage.setFinal();
-      SequenceAcknowledgement.AcknowledgementRange firstRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
+      RMSequenceAcknowledgement.AcknowledgementRange firstRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
       firstRange.setLower(1);
       firstRange.setUpper(1);
       sequenceAcknowledgementMessage.addAcknowledgementRange(firstRange);
-      SequenceAcknowledgement.AcknowledgementRange secondRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
+      RMSequenceAcknowledgement.AcknowledgementRange secondRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
       secondRange.setLower(3);
       secondRange.setUpper(3);
       sequenceAcknowledgementMessage.addAcknowledgementRange(secondRange);
@@ -313,7 +313,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testSequenceAcknowledgementDeserialization2() throws Exception
    {
-      SequenceAcknowledgement sequenceAcknowledgement = WSRM_200702_FACTORY.newSequenceAcknowledgement();
+      RMSequenceAcknowledgement sequenceAcknowledgement = WSRM_200702_FACTORY.newSequenceAcknowledgement();
       sequenceAcknowledgement.deserializeFrom(toSOAPMessage(SEQUENCE_ACKNOWLEDGEMENT_MESSAGE_2));
       // perform assertion
       assertEquals(sequenceAcknowledgement.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -327,7 +327,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
 
    public void testSequenceAcknowledgementSerialization2() throws Exception
    {
-      SequenceAcknowledgement sequenceAcknowledgementMessage = WSRM_200702_FACTORY.newSequenceAcknowledgement();
+      RMSequenceAcknowledgement sequenceAcknowledgementMessage = WSRM_200702_FACTORY.newSequenceAcknowledgement();
       // construct message
       sequenceAcknowledgementMessage.setIdentifier("http://Business456.com/RM/ABC");
       sequenceAcknowledgementMessage.addNack(2);
@@ -337,7 +337,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testSequenceAcknowledgementDeserialization3() throws Exception
    {
-      SequenceAcknowledgement sequenceAcknowledgement = WSRM_200702_FACTORY.newSequenceAcknowledgement();
+      RMSequenceAcknowledgement sequenceAcknowledgement = WSRM_200702_FACTORY.newSequenceAcknowledgement();
       sequenceAcknowledgement.deserializeFrom(toSOAPMessage(SEQUENCE_ACKNOWLEDGEMENT_MESSAGE_3));
       // perform assertion
       assertEquals(sequenceAcknowledgement.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -349,7 +349,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testSequenceAcknowledgementSerialization3() throws Exception
    {
-      SequenceAcknowledgement sequenceAcknowledgementMessage = WSRM_200702_FACTORY.newSequenceAcknowledgement();
+      RMSequenceAcknowledgement sequenceAcknowledgementMessage = WSRM_200702_FACTORY.newSequenceAcknowledgement();
       // construct message
       sequenceAcknowledgementMessage.setIdentifier("http://Business456.com/RM/ABC");
       sequenceAcknowledgementMessage.setNone();
@@ -359,29 +359,29 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testCreateSequenceMessageDeserialization() throws Exception
    {
-      CreateSequence createSequenceMessage = WSRM_200702_FACTORY.newCreateSequence();
+      RMCreateSequence createSequenceMessage = WSRM_200702_FACTORY.newCreateSequence();
       createSequenceMessage.deserializeFrom(toSOAPMessage(CREATE_SEQUENCE_MESSAGE));
       // perform assertion
       assertEquals(createSequenceMessage.getAcksTo(), "http://Business456.com/serviceA/789");
       assertEquals(createSequenceMessage.getExpires(), "PT0S");
-      CreateSequence.Offer offer = createSequenceMessage.getOffer(); 
+      RMCreateSequence.Offer offer = createSequenceMessage.getOffer(); 
       assertEquals(offer.getIdentifier(), "http://Business456.com/RM/ABC");
       assertEquals(offer.getEndpoint(), "http://Business456.com/serviceA/ASDF");
       assertEquals(offer.getExpires(), "PT1S");
-      assertEquals(offer.getIncompleteSequenceBehavior(), IncompleteSequenceBehavior.DISCARD_ENTIRE_SEQUENCE);
+      assertEquals(offer.getIncompleteSequenceBehavior(), RMIncompleteSequenceBehavior.DISCARD_ENTIRE_SEQUENCE);
    }
    
    public void testCreateSequenceMessageSerialization() throws Exception
    {
-      CreateSequence createSequenceMessage = WSRM_200702_FACTORY.newCreateSequence();
+      RMCreateSequence createSequenceMessage = WSRM_200702_FACTORY.newCreateSequence();
       // construct message
       createSequenceMessage.setAcksTo("http://Business456.com/serviceA/789");
       createSequenceMessage.setExpires("PT0S");
-      CreateSequence.Offer offer = createSequenceMessage.newOffer();
+      RMCreateSequence.Offer offer = createSequenceMessage.newOffer();
       offer.setIdentifier("http://Business456.com/RM/ABC");
       offer.setEndpoint("http://Business456.com/serviceA/ASDF");
       offer.setExpires("PT1S");
-      offer.setIncompleteSequenceBehavior(IncompleteSequenceBehavior.DISCARD_ENTIRE_SEQUENCE);
+      offer.setIncompleteSequenceBehavior(RMIncompleteSequenceBehavior.DISCARD_ENTIRE_SEQUENCE);
       createSequenceMessage.setOffer(offer);
       // perform assertion
       assertEquals(createSequenceMessage, CREATE_SEQUENCE_MESSAGE, WSRM_200702_FACTORY);
@@ -389,24 +389,24 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testCreateSequenceResponseMessageDeserialization() throws Exception
    {
-      CreateSequenceResponse createSequenceResponseMessage = WSRM_200702_FACTORY.newCreateSequenceResponse();
+      RMCreateSequenceResponse createSequenceResponseMessage = WSRM_200702_FACTORY.newCreateSequenceResponse();
       createSequenceResponseMessage.deserializeFrom(toSOAPMessage(CREATE_SEQUENCE_RESPONSE_MESSAGE));
       // perform assertion
       assertEquals(createSequenceResponseMessage.getIdentifier(), "http://Business456.com/RM/ABC");
       assertEquals(createSequenceResponseMessage.getExpires(), "PT0S");
-      assertEquals(createSequenceResponseMessage.getIncompleteSequenceBehavior(), IncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
-      CreateSequenceResponse.Accept accept = createSequenceResponseMessage.getAccept();
+      assertEquals(createSequenceResponseMessage.getIncompleteSequenceBehavior(), RMIncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
+      RMCreateSequenceResponse.Accept accept = createSequenceResponseMessage.getAccept();
       assertEquals(accept.getAcksTo(), "http://Business456.com/serviceA/ASDF");
    }
    
    public void testCreateSequenceResponseMessageSerialization() throws Exception
    {
-      CreateSequenceResponse createSequenceResponse = WSRM_200702_FACTORY.newCreateSequenceResponse();
+      RMCreateSequenceResponse createSequenceResponse = WSRM_200702_FACTORY.newCreateSequenceResponse();
       // construct message
       createSequenceResponse.setIdentifier("http://Business456.com/RM/ABC");
       createSequenceResponse.setExpires("PT0S");
-      createSequenceResponse.setIncompleteSequenceBehavior(IncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
-      CreateSequenceResponse.Accept accept = createSequenceResponse.newAccept();
+      createSequenceResponse.setIncompleteSequenceBehavior(RMIncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
+      RMCreateSequenceResponse.Accept accept = createSequenceResponse.newAccept();
       accept.setAcksTo("http://Business456.com/serviceA/ASDF");
       createSequenceResponse.setAccept(accept);
       // perform assertion
@@ -415,7 +415,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testCloseSequenceMessageDeserialization() throws Exception
    {
-      CloseSequence closeSequence = WSRM_200702_FACTORY.newCloseSequence();
+      RMCloseSequence closeSequence = WSRM_200702_FACTORY.newCloseSequence();
       closeSequence.deserializeFrom(toSOAPMessage(CLOSE_SEQUENCE_MESSAGE));
       // perform assertion
       assertEquals(closeSequence.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -424,7 +424,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testCloseSequenceMessageSerialization() throws Exception
    {
-      CloseSequence closeSequence = WSRM_200702_FACTORY.newCloseSequence();
+      RMCloseSequence closeSequence = WSRM_200702_FACTORY.newCloseSequence();
       // construct message
       closeSequence.setIdentifier("http://Business456.com/RM/ABC");
       closeSequence.setLastMsgNumber(3);
@@ -434,7 +434,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
 
    public void testCloseSequenceResponseMessageDeserialization() throws Exception
    {
-      CloseSequenceResponse closeSequenceResponse = WSRM_200702_FACTORY.newCloseSequenceResponse();
+      RMCloseSequenceResponse closeSequenceResponse = WSRM_200702_FACTORY.newCloseSequenceResponse();
       closeSequenceResponse.deserializeFrom(toSOAPMessage(CLOSE_SEQUENCE_RESPONSE_MESSAGE));
       // perform assertion
       assertEquals(closeSequenceResponse.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -442,7 +442,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testCloseSequenceResponseMessageSerialization() throws Exception
    {
-      CloseSequenceResponse closeSequenceResponse = WSRM_200702_FACTORY.newCloseSequenceResponse();
+      RMCloseSequenceResponse closeSequenceResponse = WSRM_200702_FACTORY.newCloseSequenceResponse();
       // construct message
       closeSequenceResponse.setIdentifier("http://Business456.com/RM/ABC");
       // perform assertion
@@ -451,7 +451,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testTerminateSequenceMessageDeserialization() throws Exception
    {
-      TerminateSequence terminateSequence = WSRM_200702_FACTORY.newTerminateSequence();
+      RMTerminateSequence terminateSequence = WSRM_200702_FACTORY.newTerminateSequence();
       terminateSequence.deserializeFrom(toSOAPMessage(TERMINATE_SEQUENCE_MESSAGE));
       // perform assertion
       assertEquals(terminateSequence.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -460,7 +460,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testTerminateSequenceMessageSerialization() throws Exception
    {
-      TerminateSequence terminateSequence = WSRM_200702_FACTORY.newTerminateSequence();
+      RMTerminateSequence terminateSequence = WSRM_200702_FACTORY.newTerminateSequence();
       // construct message
       terminateSequence.setIdentifier("http://Business456.com/RM/ABC");
       terminateSequence.setLastMsgNumber(3);
@@ -470,7 +470,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testTerminateSequenceResponseMessageDeserialization() throws Exception
    {
-      TerminateSequenceResponse terminateSequenceResponse = WSRM_200702_FACTORY.newTerminateSequenceResponse();
+      RMTerminateSequenceResponse terminateSequenceResponse = WSRM_200702_FACTORY.newTerminateSequenceResponse();
       terminateSequenceResponse.deserializeFrom(toSOAPMessage(TERMINATE_SEQUENCE_RESPONSE_MESSAGE));
       // perform assertion
       assertEquals(terminateSequenceResponse.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -478,7 +478,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testTerminateSequenceResponseMessageSerialization() throws Exception
    {
-      TerminateSequenceResponse terminateSequenceResponse = WSRM_200702_FACTORY.newTerminateSequenceResponse();
+      RMTerminateSequenceResponse terminateSequenceResponse = WSRM_200702_FACTORY.newTerminateSequenceResponse();
       // construct message
       terminateSequenceResponse.setIdentifier("http://Business456.com/RM/ABC");
       // perform assertion
@@ -487,7 +487,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testSequenceMessageSerialization() throws Exception
    {
-      Sequence sequence = WSRM_200702_FACTORY.newSequence();
+      RMSequence sequence = WSRM_200702_FACTORY.newSequence();
       sequence.deserializeFrom(toSOAPMessage(SEQUENCE_PLUS_ACKREQUESTED_MESSAGE));
       // perform assertion
       assertEquals(sequence.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -496,7 +496,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testSequenceMessageDeserialization() throws Exception
    {
-      Sequence sequence = WSRM_200702_FACTORY.newSequence();
+      RMSequence sequence = WSRM_200702_FACTORY.newSequence();
       // construct message
       sequence.setIdentifier("http://Business456.com/RM/ABC");
       sequence.setMessageNumber(1);
@@ -506,7 +506,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testAckRequestedMessageSerialization() throws Exception
    {
-      AckRequested ackRequested = WSRM_200702_FACTORY.newAckRequested();
+      RMAckRequested ackRequested = WSRM_200702_FACTORY.newAckRequested();
       ackRequested.deserializeFrom(toSOAPMessage(SEQUENCE_PLUS_ACKREQUESTED_MESSAGE));
       // perform assertion
       assertEquals(ackRequested.getIdentifier(), "http://Business456.com/RM/ABC");
@@ -514,7 +514,7 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    public void testAckRequestedMessageDeserialization() throws Exception
    {
-      AckRequested ackRequested = WSRM_200702_FACTORY.newAckRequested();
+      RMAckRequested ackRequested = WSRM_200702_FACTORY.newAckRequested();
       // construct message
       ackRequested.setIdentifier("http://Business456.com/RM/ABC");
       // perform assertion
@@ -523,40 +523,40 @@ public final class WSRMDeSerializationTestCase extends JBossWSTest
    
    // TODO: implement other de/serializations
    
-   private static void assertEquals(Serializable serializable, String exemplar, MessageFactory factory) throws Exception
+   private static void assertEquals(RMSerializable serializable, String exemplar, RMMessageFactory factory) throws Exception
    {
       // serialize constructed message
       SOAPMessage createdSOAPMessage = newEmptySOAPMessage();
       serializable.serializeTo(createdSOAPMessage);
       // deserialize from constructed message
-      Serializable serializable1 = newEmptySerializable(factory, serializable);
+      RMSerializable serializable1 = newEmptySerializable(factory, serializable);
       serializable1.deserializeFrom(createdSOAPMessage);
       // deserialize from reference message
-      Serializable serializable2 = newEmptySerializable(factory, serializable);
+      RMSerializable serializable2 = newEmptySerializable(factory, serializable);
       serializable2.deserializeFrom(toSOAPMessage(exemplar));
       // perform assertion
       assertEquals(serializable1, serializable2);
    }
    
-   private static Serializable newEmptySerializable(MessageFactory factory, Serializable helper)
+   private static RMSerializable newEmptySerializable(RMMessageFactory factory, RMSerializable helper)
    {
-      if (helper instanceof CreateSequence)
+      if (helper instanceof RMCreateSequence)
          return factory.newCreateSequence();
-      if (helper instanceof CreateSequenceResponse)
+      if (helper instanceof RMCreateSequenceResponse)
          return factory.newCreateSequenceResponse();
-      if (helper instanceof CloseSequence)
+      if (helper instanceof RMCloseSequence)
          return factory.newCloseSequence();
-      if (helper instanceof CloseSequenceResponse)
+      if (helper instanceof RMCloseSequenceResponse)
          return factory.newCloseSequenceResponse();
-      if (helper instanceof TerminateSequence)
+      if (helper instanceof RMTerminateSequence)
          return factory.newTerminateSequence();
-      if (helper instanceof TerminateSequenceResponse)
+      if (helper instanceof RMTerminateSequenceResponse)
          return factory.newTerminateSequenceResponse();
-      if (helper instanceof Sequence)
+      if (helper instanceof RMSequence)
          return factory.newSequence();
-      if (helper instanceof AckRequested)
+      if (helper instanceof RMAckRequested)
          return factory.newAckRequested();
-      if (helper instanceof SequenceAcknowledgement)
+      if (helper instanceof RMSequenceAcknowledgement)
          return factory.newSequenceAcknowledgement();
       
       throw new IllegalArgumentException();

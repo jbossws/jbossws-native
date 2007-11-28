@@ -9,8 +9,8 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingBuilder;
 
-import org.jboss.ws.extensions.wsrm.spi.Constants;
-import org.jboss.ws.extensions.wsrm.spi.Provider;
+import org.jboss.ws.extensions.wsrm.spi.RMConstants;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 
 public final class RMConstant
 {
@@ -41,7 +41,7 @@ public final class RMConstant
    static
    {
       Set<QName> temp = new HashSet<QName>();
-      Constants constants = Provider.get().getConstants();
+      RMConstants constants = RMProvider.get().getConstants();
       temp.add(constants.getSequenceQName());
       temp.add(constants.getSequenceFaultQName());
       temp.add(constants.getAcknowledgementRangeQName());
@@ -53,9 +53,9 @@ public final class RMConstant
       temp.add(constants.getTerminateSequenceQName());
       temp.add(constants.getTerminateSequenceResponseQName());
       PROTOCOL_OPERATION_QNAMES = Collections.unmodifiableSet(temp);
-      CREATE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/CreateSequence";
-      CLOSE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/CloseSequence";
-      TERMINATE_SEQUENCE_WSA_ACTION = Provider.get().getConstants().getNamespaceURI() + "/TerminateSequence";
+      CREATE_SEQUENCE_WSA_ACTION = RMProvider.get().getConstants().getNamespaceURI() + "/CreateSequence";
+      CLOSE_SEQUENCE_WSA_ACTION = RMProvider.get().getConstants().getNamespaceURI() + "/CloseSequence";
+      TERMINATE_SEQUENCE_WSA_ACTION = RMProvider.get().getConstants().getNamespaceURI() + "/TerminateSequence";
    }
 
    private RMConstant()

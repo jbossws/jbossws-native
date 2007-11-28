@@ -21,9 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,21 +38,20 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
-import org.jboss.ws.extensions.wsrm.client_api.RMException;
-import org.jboss.ws.extensions.wsrm.spi.Constants;
-import org.jboss.ws.extensions.wsrm.spi.MessageFactory;
-import org.jboss.ws.extensions.wsrm.spi.Provider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.AckRequested;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CloseSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CloseSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.Sequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement;
-import org.jboss.ws.extensions.wsrm.spi.protocol.SequenceFault;
-import org.jboss.ws.extensions.wsrm.spi.protocol.Serializable;
-import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.spi.RMConstants;
+import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequenceResponse;
 
 /**
  * TODO: add comment
@@ -67,8 +64,8 @@ import org.jboss.ws.extensions.wsrm.spi.protocol.TerminateSequenceResponse;
 public final class RMClientHandler extends GenericSOAPHandler
 {
    private static final Logger log = Logger.getLogger(RMClientHandler.class);
-   private static final MessageFactory rmFactory = Provider.get().getMessageFactory();
-   private static final Constants rmConstants = Provider.get().getConstants();
+   private static final RMMessageFactory rmFactory = RMProvider.get().getMessageFactory();
+   private static final RMConstants rmConstants = RMProvider.get().getConstants();
    private static final Set headers = RMConstant.PROTOCOL_OPERATION_QNAMES;
 
    public Set getHeaders()
@@ -87,8 +84,9 @@ public final class RMClientHandler extends GenericSOAPHandler
       
       Map rmRequestContext = (Map)commonMsgContext.get(RMConstant.REQUEST_CONTEXT);
       List<QName> outMsgs = (List<QName>)rmRequestContext.get(RMConstant.PROTOCOL_MESSAGES);
-      Map<QName, Serializable> data = new HashMap<QName, Serializable>();
-      rmRequestContext.put(RMConstant.WSA_MESSAGE_ID, addrProps.getMessageID().getURI().toString());
+      Map<QName, RMSerializable> data = new HashMap<QName, RMSerializable>();
+      String optionalMessageId = (addrProps.getMessageID() != null) ? addrProps.getMessageID().getURI().toString() : null;
+      rmRequestContext.put(RMConstant.WSA_MESSAGE_ID, optionalMessageId);
       rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
       SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
       
@@ -97,7 +95,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize CreateSequence to message
          String replyTo = addrProps.getReplyTo().getAddress().getURI().toString();
-         CreateSequence createSequence = rmFactory.newCreateSequence();
+         RMCreateSequence createSequence = rmFactory.newCreateSequence();
          createSequence.setAcksTo(replyTo);
          createSequence.serializeTo(soapMessage);
          data.put(msgQName, createSequence);
@@ -109,8 +107,8 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize Sequence to message
          RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-         Sequence sequence = rmFactory.newSequence();
-         sequence.setIdentifier(sequenceImpl.getId());
+         RMSequence sequence = rmFactory.newSequence();
+         sequence.setIdentifier(sequenceImpl.getOutboundId());
          sequence.setMessageNumber(sequenceImpl.newMessageNumber());
          sequence.serializeTo(soapMessage);
          data.put(msgQName, sequence);
@@ -122,8 +120,8 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize AckRequested to message
          RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-         AckRequested ackRequested = rmFactory.newAckRequested();
-         ackRequested.setIdentifier(sequenceImpl.getId());
+         RMAckRequested ackRequested = rmFactory.newAckRequested();
+         ackRequested.setIdentifier(sequenceImpl.getOutboundId());
          ackRequested.setMessageNumber(sequenceImpl.getLastMessageNumber());
          ackRequested.serializeTo(soapMessage);
          data.put(msgQName, ackRequested);
@@ -135,8 +133,8 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize CloseSequence to message
          RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-         CloseSequence closeSequence = rmFactory.newCloseSequence();
-         closeSequence.setIdentifier(sequenceImpl.getId());
+         RMCloseSequence closeSequence = rmFactory.newCloseSequence();
+         closeSequence.setIdentifier(sequenceImpl.getOutboundId());
          closeSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
          closeSequence.serializeTo(soapMessage);
          data.put(msgQName, closeSequence);
@@ -148,8 +146,8 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize CloseSequenceResponse to message
          RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-         CloseSequenceResponse closeSequenceResponse = rmFactory.newCloseSequenceResponse();
-         closeSequenceResponse.setIdentifier(sequenceImpl.getId());
+         RMCloseSequenceResponse closeSequenceResponse = rmFactory.newCloseSequenceResponse();
+         closeSequenceResponse.setIdentifier(sequenceImpl.getOutboundId());
          data.put(msgQName, closeSequenceResponse);
          log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
       }
@@ -159,8 +157,8 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize TerminateSequence to message
          RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-         TerminateSequence terminateSequence = rmFactory.newTerminateSequence();
-         terminateSequence.setIdentifier(sequenceImpl.getId());
+         RMTerminateSequence terminateSequence = rmFactory.newTerminateSequence();
+         terminateSequence.setIdentifier(sequenceImpl.getOutboundId());
          terminateSequence.setLastMsgNumber(sequenceImpl.getLastMessageNumber());
          terminateSequence.serializeTo(soapMessage);
          data.put(msgQName, terminateSequence);
@@ -172,13 +170,14 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to serialize terminateSequenceResponse to message
          RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
-         TerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
-         terminateSequenceResponse.setIdentifier(sequenceImpl.getId());
+         RMTerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
+         terminateSequenceResponse.setIdentifier(sequenceImpl.getOutboundId());
          data.put(msgQName, terminateSequenceResponse);
          log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
       }
       
       // TODO: implement SequenceAcknowledgement handler part
+      // TODO: implement SequenceFault serialization
 
       return true;
    }
@@ -191,7 +190,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       Map rmResponseContext = new HashMap();
       List<QName> messages = new LinkedList<QName>();
       rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, messages);
-      Map<QName, Serializable> data = new HashMap<QName, Serializable>();
+      Map<QName, RMSerializable> data = new HashMap<QName, RMSerializable>();
       rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
       msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
       msgContext.setScope(RMConstant.RESPONSE_CONTEXT, Scope.APPLICATION);
@@ -200,7 +199,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize CreateSequenceResponse from message
          QName msgQName = rmConstants.getCreateSequenceResponseQName();
-         CreateSequenceResponse wsrmMsg = rmFactory.newCreateSequenceResponse();
+         RMCreateSequenceResponse wsrmMsg = rmFactory.newCreateSequenceResponse();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -212,7 +211,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize AckRequested from message
          QName msgQName = rmConstants.getAckRequestedQName();
-         AckRequested wsrmMsg = rmFactory.newAckRequested();
+         RMAckRequested wsrmMsg = rmFactory.newAckRequested();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -224,7 +223,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize Sequence from message
          QName msgQName = rmConstants.getSequenceQName();
-         Sequence wsrmMsg = rmFactory.newSequence();
+         RMSequence wsrmMsg = rmFactory.newSequence();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -236,7 +235,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize SequenceAcknowledgement from message
          QName msgQName = rmConstants.getSequenceAcknowledgementQName();
-         SequenceAcknowledgement wsrmMsg = rmFactory.newSequenceAcknowledgement();
+         RMSequenceAcknowledgement wsrmMsg = rmFactory.newSequenceAcknowledgement();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -248,7 +247,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize CloseSequence from message
          QName msgQName = rmConstants.getCloseSequenceQName();
-         CloseSequence wsrmMsg = rmFactory.newCloseSequence();
+         RMCloseSequence wsrmMsg = rmFactory.newCloseSequence();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -260,7 +259,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize CloseSequence from message
          QName msgQName = rmConstants.getCloseSequenceResponseQName();
-         CloseSequenceResponse wsrmMsg = rmFactory.newCloseSequenceResponse();
+         RMCloseSequenceResponse wsrmMsg = rmFactory.newCloseSequenceResponse();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -272,7 +271,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize TerminateSequence from message
          QName msgQName = rmConstants.getTerminateSequenceQName();
-         TerminateSequence wsrmMsg = rmFactory.newTerminateSequence();
+         RMTerminateSequence wsrmMsg = rmFactory.newTerminateSequence();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);
@@ -284,7 +283,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       {
          // try to deserialize TerminateSequenceResponse from message
          QName msgQName = rmConstants.getTerminateSequenceResponseQName();
-         TerminateSequenceResponse wsrmMsg = rmFactory.newTerminateSequenceResponse();
+         RMTerminateSequenceResponse wsrmMsg = rmFactory.newTerminateSequenceResponse();
          wsrmMsg.deserializeFrom(soapMessage);
          messages.add(msgQName);
          data.put(msgQName, wsrmMsg);

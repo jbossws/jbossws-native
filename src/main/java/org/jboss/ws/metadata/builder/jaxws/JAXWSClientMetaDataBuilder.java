@@ -36,7 +36,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
-import org.jboss.ws.extensions.wsrm.spi.Provider;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -116,7 +116,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
    private void setupRMOperations(EndpointMetaData endpointMD)
    {
       String rmSpecVersion = endpointMD.getConfig().getRMMetaData().getProvider().getSpecVersion();
-      Provider rmProvider = Provider.getInstance(rmSpecVersion);
+      RMProvider rmProvider = RMProvider.getInstance(rmSpecVersion);
       
       // register createSequence method
       QName createSequenceQName = rmProvider.getConstants().getCreateSequenceQName();

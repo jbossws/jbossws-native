@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -36,11 +37,13 @@ import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
-import org.jboss.ws.extensions.wsrm.client_api.RMException;
-import org.jboss.ws.extensions.wsrm.client_api.RMSequence;
-import org.jboss.ws.extensions.wsrm.spi.Provider;
+import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
 /**
  * TODO: all termination methods such as terminate, discard, ... etc must unregister the sequence from client
@@ -51,9 +54,11 @@ import org.jboss.ws.extensions.wsrm.spi.Provider;
  * @since Oct 25, 2007
  */
 @SuppressWarnings("unchecked")
-public final class RMSequenceImpl implements RMSequence
+public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageListener
 {
-   private final String id;
+   private static final Logger LOGGER = Logger.getLogger(RMSequenceImpl.class);
+   private final String incomingSequenceId;
+   private final String outgoingSequenceId;
    private final URI backPort;
    private final ClientImpl client;
    // object states variables
@@ -61,13 +66,28 @@ public final class RMSequenceImpl implements RMSequence
    private boolean discarded = false;
    private AtomicLong messageNumber = new AtomicLong();
    private final Lock objectLock = new ReentrantLock();
+   private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    
-   public RMSequenceImpl(ClientImpl client, String id, URI backPort)
+   public RMSequenceImpl(ClientImpl client, String outId, URI backPort)
+   {
+      this(client, outId, null, backPort);
+   }
+   
+   public void unassignedMessageReceived()
+   {
+      // we can't use objectLock in the method - possible deadlock
+      this.countOfUnassignedMessagesAvailable.addAndGet(1);
+      LOGGER.debug("Unassigned message available in callback handler");
+   }
+
+   public RMSequenceImpl(ClientImpl client, String outId, String inId, URI backPort)
    {
       super();
       this.client = client;
-      this.id = id;
+      this.incomingSequenceId = inId;
+      this.outgoingSequenceId = outId;
       this.backPort = backPort;
+      RMSequenceManager.getInstance().register(this);
    }
    
    public final URI getBackPort()
@@ -77,28 +97,12 @@ public final class RMSequenceImpl implements RMSequence
 
    public final long newMessageNumber()
    {
-      this.objectLock.lock();
-      try
-      {
-         return this.messageNumber.incrementAndGet();
-      }
-      finally 
-      {
-         this.objectLock.unlock();
-      }
+      return this.messageNumber.incrementAndGet();
    }
    
    public final long getLastMessageNumber()
    {
-      this.objectLock.lock();
-      try
-      {
-         return this.messageNumber.get();
-      }
-      finally
-      {
-         this.objectLock.unlock();
-      }
+      return this.messageNumber.get();
    }
    
    public final void discard() throws RMException
@@ -111,6 +115,7 @@ public final class RMSequenceImpl implements RMSequence
          {
             this.client.setWSRMSequence(null);
             this.discarded = true;
+            RMSequenceManager.getInstance().unregister(this);
          }
          finally
          {
@@ -155,7 +160,7 @@ public final class RMSequenceImpl implements RMSequence
                   props = AddressingClientUtil.createAnonymousProps(action, address);
                }
                // prepare WS-RM request context
-               QName terminateSequenceQN = Provider.get().getConstants().getTerminateSequenceQName();
+               QName terminateSequenceQN = RMProvider.get().getConstants().getTerminateSequenceQName();
                Map rmRequestContext = new HashMap();
                List outMsgs = new LinkedList();
                outMsgs.add(terminateSequenceQN);
@@ -167,6 +172,7 @@ public final class RMSequenceImpl implements RMSequence
                requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
                // call stub method
                this.client.invoke(terminateSequenceQN, new Object[] {}, client.getBindingProvider().getResponseContext());
+               RMSequenceManager.getInstance().unregister(this);
             }
             catch (Exception e)
             {
@@ -198,9 +204,14 @@ public final class RMSequenceImpl implements RMSequence
       return true;
    }
 
-   public final String getId()
+   public final String getOutboundId()
    {
-      return id;
+      return outgoingSequenceId;
+   }
+   
+   public final String getInboundId()
+   {
+      return incomingSequenceId;
    }
 
    public final boolean isTerminated()

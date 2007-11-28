@@ -32,12 +32,12 @@ import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.AssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAssertion;
+import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
+import org.jboss.ws.extensions.wsrm.config.RMConfig;
+import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
+import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
-import org.jboss.ws.metadata.wsrm.DeliveryAssuranceMetaData;
-import org.jboss.ws.metadata.wsrm.PortMetaData;
-import org.jboss.ws.metadata.wsrm.ProviderMetaData;
-import org.jboss.ws.metadata.wsrm.ReliableMessagingMetaData;
 
 /**
  * Reliable messaging policy deployer
@@ -82,34 +82,34 @@ public final class RMPolicyAssertionDeployer implements AssertionDeployer
          EndpointMetaData endpointMD = (EndpointMetaData) extMetaData;
          
          // prepare wsrm metadata
-         ReliableMessagingMetaData rmMD = endpointMD.getConfig().getRMMetaData(); 
+         RMConfig rmMD = endpointMD.getConfig().getRMMetaData(); 
          if (rmMD == null)
          {
-            rmMD = new ReliableMessagingMetaData();
+            rmMD = new RMConfig();
             endpointMD.getConfig().setRMMetaData(rmMD);
          }
          
          // construct new port metadata
-         PortMetaData portMD = new PortMetaData();
+         RMPortConfig portMD = new RMPortConfig();
          portMD.setPortName(endpointMD.getPortName());
          List<PrimitiveAssertion> wsrmpAssertions = getWSRMPAssertions(assertion);
          portMD.setDeliveryAssurance(constructDeliveryAssurance(wsrmpAssertions));
          
          // ensure port does not exists yet
-         for (PortMetaData pMD : rmMD.getPorts())
+         for (RMPortConfig pMD : rmMD.getPorts())
          {
             assert ! pMD.getPortName().equals(portMD.getPortName());
          }
          
          // set up port WSRMP metadata
          rmMD.getPorts().add(portMD);
-         ProviderMetaData providerMD = new ProviderMetaData();
+         RMProviderConfig providerMD = new RMProviderConfig();
          providerMD.setSpecVersion(WSRM_NS);
          rmMD.setProvider(providerMD);
       }
    }
 
-   private static DeliveryAssuranceMetaData constructDeliveryAssurance(List<PrimitiveAssertion> assertions)
+   private static RMDeliveryAssuranceConfig constructDeliveryAssurance(List<PrimitiveAssertion> assertions)
    throws UnsupportedAssertion
    {
       if (assertions.size() == 1)
@@ -117,7 +117,7 @@ public final class RMPolicyAssertionDeployer implements AssertionDeployer
          QName assertionQN = assertions.get(0).getName();
          assertIsWSRMPAssertion(assertionQN);
          
-         DeliveryAssuranceMetaData deliveryMD = new DeliveryAssuranceMetaData();
+         RMDeliveryAssuranceConfig deliveryMD = new RMDeliveryAssuranceConfig();
          deliveryMD.setInOrder(FALSE);
          deliveryMD.setQuality(assertionQN.getLocalPart());
          return deliveryMD;
@@ -131,7 +131,7 @@ public final class RMPolicyAssertionDeployer implements AssertionDeployer
          
          boolean firstIsInOrder = firstAssertionQN.equals(IN_ORDER);
          
-         DeliveryAssuranceMetaData deliveryMD = new DeliveryAssuranceMetaData();
+         RMDeliveryAssuranceConfig deliveryMD = new RMDeliveryAssuranceConfig();
          deliveryMD.setInOrder(TRUE);
          if (firstIsInOrder)
          {

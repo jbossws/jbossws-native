@@ -42,8 +42,8 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.test.ws.jaxws.wsrm.ReqResServiceIface;
 
-import org.jboss.ws.extensions.wsrm.client_api.RMProvider;
-import org.jboss.ws.extensions.wsrm.client_api.RMSequence;
+import org.jboss.ws.extensions.wsrm.api.RMProvider;
+import org.jboss.ws.extensions.wsrm.api.RMSequence;
 
 /**
  * Reliable JBoss WebService client invoking req/res methods
@@ -173,14 +173,15 @@ public class ReqResTestCase extends JBossWSTest
       System.out.println("FIXME [JBWS-515] Provide an initial implementation for WS-ReliableMessaging");
       System.out.println("FIXME [JBWS-1699] Implement the basic message exchange that is required for WS-RM");
       System.out.println("FIXME [JBWS-1700] Provide a comprehensive test case for WS-RM");
-      if (true) return; // disable WS-RM tests - they cause regression in hudson
+      //if (true) return; // disable WS-RM tests - they cause regression in hudson
       
       RMSequence sequence = null;
       if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxyObject;
          sequence = wsrmProvider.createSequence(addressable);
-         System.out.println("Created sequence with id=" + sequence.getId());
+         System.out.println("Created sequence with outbound id=" + sequence.getOutboundId());
+         System.out.println("Created sequence with inbound id=" + sequence.getInboundId());
       }
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);

@@ -54,9 +54,9 @@ import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.config.EndpointProperty;
 
-import org.jboss.ws.extensions.wsrm.RMHelper;
-import org.jboss.ws.extensions.wsrm.RMChannel;
-import org.jboss.ws.extensions.wsrm.RMMetadata;
+import org.jboss.ws.extensions.wsrm.transport.RMChannel;
+import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;
+import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
 
 /**
  * SOAPConnection implementation.
@@ -194,7 +194,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
       try
       {
-         if (RMHelper.isRMMessage(callProps))
+         if (RMTransportHelper.isRMMessage(callProps))
          {
             RMMetadata rmMetadata = new RMMetadata(targetAddress, oneway, marshaller, unmarshaller, callProps, metadata, clientConfig);
             return RM_CHANNEL.send(reqMessage, rmMetadata);

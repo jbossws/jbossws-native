@@ -71,11 +71,10 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
-import org.jboss.ws.extensions.wsrm.client_api.RMException;
-import org.jboss.ws.extensions.wsrm.client_api.RMProvider;
-import org.jboss.ws.extensions.wsrm.client_api.RMSequence;
-import org.jboss.ws.extensions.wsrm.spi.Provider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.api.RMProvider;
+import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -289,8 +288,8 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
                }
                Map<String, Object> rmRequestContext = new HashMap<String, Object>();
                List<QName> outMsgs = new LinkedList<QName>();
-               outMsgs.add(Provider.get().getConstants().getSequenceQName());
-               outMsgs.add(Provider.get().getConstants().getAckRequestedQName());
+               outMsgs.add(org.jboss.ws.extensions.wsrm.spi.RMProvider.get().getConstants().getSequenceQName());
+               outMsgs.add(org.jboss.ws.extensions.wsrm.spi.RMProvider.get().getConstants().getAckRequestedQName());
                rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
                rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, wsrmSequence);
                reqContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
@@ -515,7 +514,7 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
             Map requestContext = getBindingProvider().getRequestContext();
             requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
             // set up wsrm request context
-            QName createSequenceQN = Provider.get().getConstants().getCreateSequenceQName();
+            QName createSequenceQN = org.jboss.ws.extensions.wsrm.spi.RMProvider.get().getConstants().getCreateSequenceQName();
             Map rmRequestContext = new HashMap();
             List outMsgs = new LinkedList();
             outMsgs.add(createSequenceQN);
@@ -525,7 +524,7 @@ public class ClientImpl extends CommonClient implements RMProvider, BindingProvi
             invoke(createSequenceQN, new Object[] {}, getBindingProvider().getResponseContext());
             // read WSRM sequence id from response context
             Map rmResponseContext = (Map)getBindingProvider().getResponseContext().get(RMConstant.RESPONSE_CONTEXT);
-            String id = ((CreateSequenceResponse)((Map)rmResponseContext.get(RMConstant.PROTOCOL_MESSAGES_MAPPING)).get(Provider.get().getConstants().getCreateSequenceResponseQName())).getIdentifier();
+            String id = ((RMCreateSequenceResponse)((Map)rmResponseContext.get(RMConstant.PROTOCOL_MESSAGES_MAPPING)).get(org.jboss.ws.extensions.wsrm.spi.RMProvider.get().getConstants().getCreateSequenceResponseQName())).getIdentifier();
             return this.wsrmSequence = new RMSequenceImpl(this, id, backPort);
          }
          catch (Exception e)
