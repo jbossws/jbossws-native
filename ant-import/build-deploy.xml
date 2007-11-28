@@ -57,7 +57,7 @@
   <!-- Deploy jbossws to jboss422 -->
   <target name="deploy-jboss422" depends="jars-jboss42,undeploy-jboss422,deploy-jboss422-endorsed" description="Deploy jbossws to jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
-    <macro-deploy-native422 jbosshome="${jboss422.home}" stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
+    <macro-deploy-native422 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty" jbosshome="${jboss422.home}"/>
   </target>
   
@@ -68,7 +68,7 @@
   <!-- Remove jbossws from jboss422 -->
   <target name="undeploy-jboss422" depends="prepare,undeploy-jboss422-endorsed" description="Remove jbossws from jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
-    <macro-undeploy-native422 jbosshome="${jboss422.home}"/>
+    <macro-undeploy-native422/>
     <macro-undeploy-framework jbosshome="${jboss422.home}"/>
   </target>
   <target name="undeploy-jboss422-endorsed" depends="prepare">
