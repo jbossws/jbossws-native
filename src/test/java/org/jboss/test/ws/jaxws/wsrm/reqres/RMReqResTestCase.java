@@ -51,7 +51,7 @@ import org.jboss.ws.extensions.wsrm.api.RMSequence;
  * @author richard.opalka@jboss.com
  * @since 22-Aug-2007
  */
-public class ReqResTestCase extends JBossWSTest
+public class RMReqResTestCase extends JBossWSTest
 {
    private static final Properties props = new Properties();
    private static final String HELLO_WORLD_MSG = "Hello World";
@@ -66,7 +66,7 @@ public class ReqResTestCase extends JBossWSTest
    static
    {
       // load test properties
-      File propertiesFile = new File("resources/jaxws/wsrm/properties/ReqResTestCase.properties");
+      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMReqResTestCase.properties");
       try 
       {
          props.load(new FileInputStream(propertiesFile));
@@ -84,7 +84,7 @@ public class ReqResTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(ReqResTestCase.class, props.getProperty("archives"));
+      return new JBossWSTestSetup(RMReqResTestCase.class, props.getProperty("archives"));
    }
 
    @Override

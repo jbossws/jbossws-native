@@ -31,7 +31,6 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
 import junit.framework.Test;
@@ -48,7 +47,7 @@ import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
  * @author richard.opalka@jboss.com
  * @since 22-Aug-2007
  */
-public class OneWayTestCase extends JBossWSTest
+public class RMOneWayTestCase extends JBossWSTest
 {
    private static final Properties props = new Properties();
    private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
@@ -60,7 +59,7 @@ public class OneWayTestCase extends JBossWSTest
    static
    {
       // load test properties
-      File propertiesFile = new File("resources/jaxws/wsrm/properties/OneWayTestCase.properties");
+      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMOneWayTestCase.properties");
       try 
       {
          props.load(new FileInputStream(propertiesFile));
@@ -73,7 +72,7 @@ public class OneWayTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return new JBossWSTestSetup(OneWayTestCase.class, props.getProperty("archives"));
+      return new JBossWSTestSetup(RMOneWayTestCase.class, props.getProperty("archives"));
    }
 
    @Override

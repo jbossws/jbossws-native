@@ -45,7 +45,7 @@ import org.jboss.wsf.test.JBossWSTest;
  * WS-RM messages de/serialization test case
  * @author richard.opalka@jboss.com
  */
-public final class WSRMDeSerializationTestCase extends JBossWSTest
+public final class RMDeSerializationTestCase extends JBossWSTest
 {
    private static final String WSRM_200702_NS = "http://docs.oasis-open.org/ws-rx/wsrm/200702";
    private static final RMMessageFactory WSRM_200702_FACTORY = RMProvider.getInstance(WSRM_200702_NS).getMessageFactory();
