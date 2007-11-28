@@ -14,16 +14,15 @@
 <project>
   
   <!-- Deploy jbossws/native to jboss405 -->
-  <target name="deploy-jboss405" depends="deploy-jboss405-no-ejb3" description="Deploy jbossws/native to jboss405"/>
+  <target name="deploy-jboss405" depends="deploy-jboss405-ejb3,deploy-jboss405-no-ejb3" description="Deploy jbossws/native to jboss405"/>
   
   <target name="deploy-jboss405-ejb3" depends="undeploy-jboss405">
     <macro-deploy-native405 stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
-    
     <macro-deploy-framework thirdpartylibs="${lib.dir}" jbosshome="${jboss405.home}"/>
   </target>
   
   <target name="deploy-jboss405-no-ejb3" depends="deploy-jboss405-ejb3" unless="jboss405.ejb3.available">
-    <macro-setup-native40-no-ejb3/>
+    <macro-deploy-native405-no-ejb3/>
     <echo>*********************************</echo>
     <echo>* JBossWS EJB3 support disabled *</echo>
     <echo>* All EJB3 tests will fail. *</echo>
