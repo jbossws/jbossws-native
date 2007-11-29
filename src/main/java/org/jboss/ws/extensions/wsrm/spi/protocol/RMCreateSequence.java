@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.wsrm.spi.protocol;
 
+import javax.xml.datatype.Duration;
+
 /**
  * <p><b>CreateSequence</b> element requests creation of a new Sequence between the RM Source that sends it, and the
  * RM Destination to which it is sent. The RM Source MUST NOT send this element as a header
@@ -76,13 +78,13 @@ public interface RMCreateSequence extends RMSerializable
     * the element indicates an implied value of <b>&quot;PT0S&quot;</b>.
     * @param duration
     */
-   void setExpires(String duration);
+   void setExpires(Duration duration);
    
    /**
     * Getter
     * @return duration
     */
-   String getExpires();
+   Duration getExpires();
    
    /**
     * Factory method

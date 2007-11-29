@@ -35,6 +35,7 @@ import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingConstants;
 
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
@@ -94,7 +95,7 @@ final class RMCreateSequenceResponseSerializer implements RMSerializer
          if (expiresElement != null)
          {
             String duration = getRequiredTextContent(expiresElement, expiresQName);
-            o.setExpires(duration);
+            o.setExpires(RMHelper.stringToDuration(duration));
          }
 
          // read optional wsrm:IncompleteSequenceBehavior element
@@ -165,7 +166,7 @@ final class RMCreateSequenceResponseSerializer implements RMSerializer
          {
             // write optional wsrm:Expires element
             QName expiresQName = wsrmConstants.getExpiresQName();
-            createSequenceResponseElement.addChildElement(expiresQName).setValue(o.getExpires());
+            createSequenceResponseElement.addChildElement(expiresQName).setValue(RMHelper.durationToString(o.getExpires()));
          }
          
          if (o.getIncompleteSequenceBehavior() != null)

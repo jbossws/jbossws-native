@@ -25,6 +25,8 @@ import static org.jboss.ws.extensions.wsrm.common.serialization.RMSerializationH
 import static org.jboss.ws.extensions.wsrm.common.serialization.RMSerializationHelper.getRequiredElement;
 import static org.jboss.ws.extensions.wsrm.common.serialization.RMSerializationHelper.getRequiredTextContent;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
@@ -35,6 +37,7 @@ import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingConstants;
 
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
@@ -96,7 +99,7 @@ final class RMCreateSequenceSerializer implements RMSerializer
          if (expiresElement != null)
          {
             String duration = getRequiredTextContent(expiresElement, expiresQName);
-            o.setExpires(duration);
+            o.setExpires(RMHelper.stringToDuration(duration));
          }
 
          // read optional wsrm:Offer element
@@ -186,7 +189,7 @@ final class RMCreateSequenceSerializer implements RMSerializer
          {
             // write optional wsrm:Expires element
             QName expiresQName = wsrmConstants.getExpiresQName();
-            createSequenceElement.addChildElement(expiresQName).setValue(o.getExpires());
+            createSequenceElement.addChildElement(expiresQName).setValue(RMHelper.durationToString(o.getExpires()));
          }
          
          if (o.getOffer() != null)

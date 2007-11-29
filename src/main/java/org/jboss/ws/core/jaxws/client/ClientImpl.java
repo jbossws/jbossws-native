@@ -75,6 +75,7 @@ import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
+import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
 import org.jboss.ws.metadata.config.Configurable;
@@ -534,6 +535,9 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
             String outboundId = createSequenceResponse.getIdentifier();
             candidateSequence.setClient(this);
             candidateSequence.setOutboundId(outboundId);
+            candidateSequence.setBehavior(createSequenceResponse.getIncompleteSequenceBehavior());
+            candidateSequence.setDuration(RMHelper.durationToLong(createSequenceResponse.getExpires()));
+            createSequenceResponse.getIncompleteSequenceBehavior();
             return this.wsrmSequence = candidateSequence;
          }
          catch (Exception e)

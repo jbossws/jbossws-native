@@ -48,6 +48,7 @@ import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMIncompleteSequenceBehavior;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
 /**
@@ -64,11 +65,14 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private static final Logger logger = Logger.getLogger(RMSequenceImpl.class);
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
-   private final String incomingSequenceId = "http://sequence/id/123"; // TODO: use generator
    private final RMConfig wsrmConfig;
    private final RMSequenceType sequenceType;
    private final RMAddressingType addrType;
+   private RMIncompleteSequenceBehavior behavior = RMIncompleteSequenceBehavior.NO_DISCARD;
+   private String incomingSequenceId;
    private String outgoingSequenceId;
+   private long duration = -1;
+   private long creationTime;
    private URI backPort;
    private ClientImpl client;
    // object states variables
@@ -82,6 +86,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    {
       // we can't use objectLock in the method - possible deadlock
       this.countOfUnassignedMessagesAvailable.addAndGet(1);
+      logger.debug("Expected sequence expiration in " + ((System.currentTimeMillis() - this.creationTime) / 1000) + "seconds");
       logger.debug("Unassigned message available in callback handler");
    }
 
@@ -129,6 +134,20 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       {
          this.objectLock.unlock();
       }
+   }
+   
+   public final void setDuration(long duration)
+   {
+      if (duration > 0)
+      {
+         this.creationTime = System.currentTimeMillis();
+         this.duration = duration;
+      }
+   }
+   
+   public final long getDuration()
+   {
+      return -1L;
    }
    
    public final URI getBackPort()
@@ -249,6 +268,22 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private void sendSequenceAcknowledgementMessage()
    {
       sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName());
+   }
+   
+   public final void setBehavior(RMIncompleteSequenceBehavior behavior)
+   {
+      this.objectLock.lock();
+      try
+      {
+         if (behavior != null)
+         {
+            this.behavior = behavior;
+         }
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
    }
 
    public final boolean isCompleted()

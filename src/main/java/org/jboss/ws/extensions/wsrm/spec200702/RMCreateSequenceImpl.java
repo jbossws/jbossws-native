@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.wsrm.spec200702;
 
+import javax.xml.datatype.Duration;
+
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.common.serialization.RMAbstractSerializable;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
@@ -38,7 +40,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    private static final RMProvider PROVIDER = RMProviderImpl.getInstance();
    // internal fields
    private String acksTo;
-   private String expires;
+   private Duration expires;
    private Offer offer;
 
    RMCreateSequenceImpl()
@@ -57,7 +59,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence#getExpires()
     */
-   public String getExpires()
+   public Duration getExpires()
    {
       return this.expires;
    }
@@ -94,9 +96,9 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence#setExpires(java.lang.String)
     */
-   public void setExpires(String duration)
+   public void setExpires(Duration duration)
    {
-      if ((duration == null) || (duration.trim().equals("")))
+      if ((duration == null) || (duration.toString().equals("")))
          throw new IllegalArgumentException("Duration cannot be null nor empty string");
       if (this.expires != null)
          throw new UnsupportedOperationException("Value already set, cannot be overriden");

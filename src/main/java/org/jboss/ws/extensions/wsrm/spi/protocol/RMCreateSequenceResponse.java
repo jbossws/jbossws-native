@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.wsrm.spi.protocol;
 
+import javax.xml.datatype.Duration;
+
 /**
  * <p><b>CreateSequenceResponse</b> element is sent in the body of the response message in response to a <b>CreateSequence</b>
  * request message. It indicates that the RM Destination has created a new Sequence at the
@@ -72,13 +74,13 @@ public interface RMCreateSequenceResponse extends RMSerializable
     * the corresponding <b>CreateSequence</b> message.
     * @param duration
     */
-   void setExpires(String duration);
+   void setExpires(Duration duration);
    
    /**
     * Getter
     * @return sequence duration
     */
-   String getExpires();
+   Duration getExpires();
    
    /**
     * This element, if present, specifies the behavior that the destination will exhibit upon the closure or

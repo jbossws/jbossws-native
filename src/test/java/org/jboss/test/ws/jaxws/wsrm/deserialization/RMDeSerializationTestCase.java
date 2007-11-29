@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.xml.soap.SOAPMessage;
 
+import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
@@ -363,7 +364,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       createSequenceMessage.deserializeFrom(toSOAPMessage(CREATE_SEQUENCE_MESSAGE));
       // perform assertion
       assertEquals(createSequenceMessage.getAcksTo(), "http://Business456.com/serviceA/789");
-      assertEquals(createSequenceMessage.getExpires(), "PT0S");
+      assertEquals(createSequenceMessage.getExpires(), RMHelper.stringToDuration("PT0S"));
       RMCreateSequence.Offer offer = createSequenceMessage.getOffer(); 
       assertEquals(offer.getIdentifier(), "http://Business456.com/RM/ABC");
       assertEquals(offer.getEndpoint(), "http://Business456.com/serviceA/ASDF");
@@ -376,7 +377,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       RMCreateSequence createSequenceMessage = WSRM_200702_FACTORY.newCreateSequence();
       // construct message
       createSequenceMessage.setAcksTo("http://Business456.com/serviceA/789");
-      createSequenceMessage.setExpires("PT0S");
+      createSequenceMessage.setExpires(RMHelper.stringToDuration("PT0S"));
       RMCreateSequence.Offer offer = createSequenceMessage.newOffer();
       offer.setIdentifier("http://Business456.com/RM/ABC");
       offer.setEndpoint("http://Business456.com/serviceA/ASDF");
@@ -393,7 +394,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       createSequenceResponseMessage.deserializeFrom(toSOAPMessage(CREATE_SEQUENCE_RESPONSE_MESSAGE));
       // perform assertion
       assertEquals(createSequenceResponseMessage.getIdentifier(), "http://Business456.com/RM/ABC");
-      assertEquals(createSequenceResponseMessage.getExpires(), "PT0S");
+      assertEquals(createSequenceResponseMessage.getExpires(), RMHelper.stringToDuration("PT0S"));
       assertEquals(createSequenceResponseMessage.getIncompleteSequenceBehavior(), RMIncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
       RMCreateSequenceResponse.Accept accept = createSequenceResponseMessage.getAccept();
       assertEquals(accept.getAcksTo(), "http://Business456.com/serviceA/ASDF");
@@ -404,7 +405,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       RMCreateSequenceResponse createSequenceResponse = WSRM_200702_FACTORY.newCreateSequenceResponse();
       // construct message
       createSequenceResponse.setIdentifier("http://Business456.com/RM/ABC");
-      createSequenceResponse.setExpires("PT0S");
+      createSequenceResponse.setExpires(RMHelper.stringToDuration("PT0S"));
       createSequenceResponse.setIncompleteSequenceBehavior(RMIncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
       RMCreateSequenceResponse.Accept accept = createSequenceResponse.newAccept();
       accept.setAcksTo("http://Business456.com/serviceA/ASDF");

@@ -10,6 +10,8 @@
  <env:Body>
   <wsrm11:CreateSequenceResponse>
    <wsrm11:Identifier>${res.wsrm.sequenceid}</wsrm11:Identifier>
+   <wsrm11:Expires>PT10S</wsrm11:Expires>
+   <wsrm11:IncompleteSequenceBehavior>DiscardEntireSequence</wsrm11:IncompleteSequenceBehavior>
   </wsrm11:CreateSequenceResponse>
  </env:Body>
 </env:Envelope>
