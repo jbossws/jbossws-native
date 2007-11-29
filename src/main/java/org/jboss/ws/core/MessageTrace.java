@@ -23,13 +23,17 @@ package org.jboss.ws.core;
 
 // $Id$
 
+import java.io.ByteArrayInputStream;
+
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPElementWriter;
+import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 
@@ -77,7 +81,9 @@ public final class MessageTrace
       }
       else if (message instanceof byte[])
       {
-         msgLog.trace(messagePrefix + "\n" + new String((byte[])message));
+         Element root = new XMLFragment(new StreamSource(new ByteArrayInputStream((byte[])message))).toElement();
+         String xmlString = DOMWriter.printNode(root, true);
+         msgLog.trace(messagePrefix + "\n" + xmlString);
       }
       else
       {

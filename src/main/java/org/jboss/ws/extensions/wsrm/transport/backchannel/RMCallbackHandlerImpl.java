@@ -95,7 +95,7 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
                this.listener.unassignedMessageReceived();
             }
          }
-         logger.debug("Message content is: " + requestMessage);
+         MessageTrace.traceMessage("Incoming RM Response Message (callback)", requestMessage.getBytes());
       }
    }
    
