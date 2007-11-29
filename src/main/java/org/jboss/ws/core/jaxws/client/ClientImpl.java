@@ -537,7 +537,6 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
             candidateSequence.setOutboundId(outboundId);
             candidateSequence.setBehavior(createSequenceResponse.getIncompleteSequenceBehavior());
             candidateSequence.setDuration(RMHelper.durationToLong(createSequenceResponse.getExpires()));
-            createSequenceResponse.getIncompleteSequenceBehavior();
             return this.wsrmSequence = candidateSequence;
          }
          catch (Exception e)

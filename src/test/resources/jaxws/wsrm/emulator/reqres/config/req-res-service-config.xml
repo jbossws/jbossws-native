@@ -25,7 +25,7 @@
          <set property="res.wsa.to" value="${req.wsa.replyto}"/>
          <set property="res.wsa.action" value="http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequenceResponse"/>
          <set property="res.wsa.relatesto" value="${req.wsa.messageid}"/>
-         <set property="res.wsrm.sequenceid" value="http://sequence/id/456"/>
+         <set property="res.wsrm.sequenceid" value="http://sequence/id/outbound/123"/>
       </response>
    </view>
 
@@ -46,8 +46,7 @@
          <set property="res.wsa.action" value="http://docs.oasis-open.org/ws-rx/wsrm/200702/SequenceAcknowledgement"/>
          <set property="res.wsa.relatesto" value="${req.wsa.messageid}"/>
          <set property="res.wsrm.sequenceid" value="${req.wsrm.sequenceid}"/>
-         <set property="res.wsrm.ack.lower" value="${req.wsrm.messagenumber}"/>
-         <set property="res.wsrm.ack.upper" value="${req.wsrm.messagenumber}"/>
+         <set property="res.wsrm.messagenumber" value="${req.wsrm.messagenumber}"/>
       </response>
    </view>
 

@@ -8,8 +8,15 @@
   <wsa:Action env:mustUnderstand="1">${res.wsa.action}</wsa:Action>
   <wsrm:SequenceAcknowledgement>
    <wsrm:Identifier>${res.wsrm.sequenceid}</wsrm:Identifier>
-   <wsrm:AcknowledgementRange Upper='${res.wsrm.ack.upper}' Lower='${res.wsrm.ack.lower}'/>
+   <wsrm:AcknowledgementRange Upper='${res.wsrm.messagenumber}' Lower='${res.wsrm.messagenumber}'/>
   </wsrm:SequenceAcknowledgement>
+  <wsrm:AckRequested>
+   <wsrm:Identifier>http://sequence/id/inbound/456</wsrm:Identifier>
+  </wsrm:AckRequested>
+  <wsrm:Sequence env:mustUnderstand="1">
+   <wsrm:Identifier>http://sequence/id/inbound/456</wsrm:Identifier>
+   <wsrm:MessageNumber>${res.wsrm.messagenumber}</wsrm:MessageNumber>
+  </wsrm:Sequence>
  </env:Header>
  <env:Body>
   <ns1:echoResponse xmlns:ns1='http://org.jboss.ws/jaxws/wsrm'>
