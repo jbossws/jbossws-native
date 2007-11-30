@@ -22,6 +22,7 @@
 package org.jboss.ws.extensions.wsrm;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -167,11 +168,31 @@ public final class RMClientHandler extends GenericSOAPHandler
          // try to serialize terminateSequenceResponse to message
          RMTerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
          terminateSequenceResponse.setIdentifier(sequenceImpl.getOutboundId());
+         terminateSequenceResponse.serializeTo(soapMessage);
          data.put(msgQName, terminateSequenceResponse);
          log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
       }
       
-      // TODO: implement SequenceAcknowledgement handler part
+      msgQName = rmConstants.getSequenceAcknowledgementQName();
+      if (outMsgs.contains(msgQName))
+      {
+         // try to serialize SequenceAcknowledgement to message
+         RMSequenceAcknowledgement sequenceAcknowledgement = rmFactory.newSequenceAcknowledgement();
+         sequenceAcknowledgement.setIdentifier(sequenceImpl.getInboundId());
+         Iterator<Long> receivedInboudMessages = sequenceImpl.getReceivedInboundMessages().iterator();
+         while (receivedInboudMessages.hasNext())
+         {
+            long messageNo = receivedInboudMessages.next();
+            RMSequenceAcknowledgement.RMAcknowledgementRange range = sequenceAcknowledgement.newAcknowledgementRange();
+            range.setLower(messageNo);
+            range.setUpper(messageNo);
+            sequenceAcknowledgement.addAcknowledgementRange(range);
+         }
+         sequenceAcknowledgement.serializeTo(soapMessage);
+         data.put(msgQName, sequenceAcknowledgement);
+         log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
+      }
+
       // TODO: implement SequenceFault serialization
 
       return true;

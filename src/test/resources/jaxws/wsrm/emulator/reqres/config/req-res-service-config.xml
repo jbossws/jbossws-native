@@ -29,7 +29,7 @@
       </response>
    </view>
 
-   <view id="sequence.acknowledgement">
+   <view id="server.sequence.acknowledgement">
       <request httpMethod="POST" pathInfo="/ReqResService">
          <contains>
             <node name="|{${soap}}Envelope|{${soap}}Header|{${wsrm}}Sequence"/>
@@ -48,6 +48,15 @@
          <set property="res.wsrm.sequenceid" value="${req.wsrm.sequenceid}"/>
          <set property="res.wsrm.messagenumber" value="${req.wsrm.messagenumber}"/>
       </response>
+   </view>
+
+   <view id="client.sequence.acknowledgement">
+      <request httpMethod="POST" pathInfo="/ReqResService">
+         <contains>
+            <node name="|{${soap}}Envelope|{${soap}}Header|{${wsrm}}SequenceAcknowledgement"/>
+         </contains>
+      </request>
+      <response statusCode="200"/>
    </view>
 
    <view id="close.sequence">

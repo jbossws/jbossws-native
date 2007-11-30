@@ -100,7 +100,11 @@ public class EndpointEmulator extends HttpServlet
       ctx.log(configFile + SEPARATOR + view.getId());
       Map<String, String> resProperties = view.getResponse().getProperties();
       Map<String, String> reqProperties = view.getRequest().getProperties();
-      String responseMessage = Util.getResourceAsString(ctx, view.getResponse().getResource());
+      String responseMessage = null;
+      if (view.getResponse().getResource() != null)
+      {
+         responseMessage = Util.getResourceAsString(ctx, view.getResponse().getResource());
+      }
       String responseTo = null;
       
       if (resProperties.size() > 0)
@@ -112,7 +116,10 @@ public class EndpointEmulator extends HttpServlet
          }
          
          Map<String, String> replaceMap = Util.prepareReplaceMap(initializedReqProperties, resProperties);
-         responseMessage = Util.replaceAll(responseMessage, replaceMap);
+         if (responseMessage != null)
+         {
+            responseMessage = Util.replaceAll(responseMessage, replaceMap);
+         }
          responseTo = replaceMap.get(RESPONSE_TO);
          if (ADDRESSING_ANONYMOUS_URI.equals(responseTo))
          {
@@ -123,23 +130,32 @@ public class EndpointEmulator extends HttpServlet
       if (responseTo == null)
       {
          ctx.log("Sending response through ServletResponse");
-         resp.setContentType(view.getResponse().getContentType());
+         if (view.getResponse().getContentType() != null)
+         {
+            resp.setContentType(view.getResponse().getContentType());
+         }
          resp.setStatus(Integer.valueOf(view.getResponse().getStatusCode()));
-         PrintWriter writer = resp.getWriter();
-         writer.print(responseMessage);
-         writer.flush();
-         writer.close();
+         if (responseMessage != null)
+         {
+            PrintWriter writer = resp.getWriter();
+            writer.print(responseMessage);
+            writer.flush();
+            writer.close();
+         }
       }
       else
       {
-         ctx.log("Sending response through new socket connection");
-         URL url = new URL(responseTo);
-         Socket socket = new Socket(url.getHost(), url.getPort());
-         OutputStream out = socket.getOutputStream();
-         out.write(Util.createHTTPHeaders(url, responseMessage.length(), view.getResponse().getContentType()));
-         out.write(responseMessage.getBytes());
-         out.flush();
-         out.close();
+         if (responseMessage != null)
+         {
+            ctx.log("Sending response through new socket connection");
+            URL url = new URL(responseTo);
+            Socket socket = new Socket(url.getHost(), url.getPort());
+            OutputStream out = socket.getOutputStream();
+            out.write(Util.createHTTPHeaders(url, responseMessage.length(), view.getResponse().getContentType()));
+            out.write(responseMessage.getBytes());
+            out.flush();
+            out.close();
+         }
       }
    }
    

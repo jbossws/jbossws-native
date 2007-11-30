@@ -355,7 +355,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
          // Get the return object
          Object retObj = null;
          boolean isWsrmMessage = msgContext.get(RMConstant.REQUEST_CONTEXT) != null;
-         if ((oneway == false && handlerPass) || isWsrmMessage)
+         Boolean wsrmOneWay = (Boolean)((Map<String, Object>)msgContext.get(RMConstant.REQUEST_CONTEXT)).get(RMConstant.ONE_WAY_OPERATION);
+         wsrmOneWay = wsrmOneWay == null ? Boolean.FALSE : wsrmOneWay.booleanValue();
+         if ((oneway == false && handlerPass) || (wsrmOneWay == false))
          {
             // Verify 
             if (binding instanceof CommonSOAPBinding)

@@ -196,7 +196,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       {
          if (RMTransportHelper.isRMMessage(callProps))
          {
-            RMMetadata rmMetadata = new RMMetadata(targetAddress, oneway, marshaller, unmarshaller, callProps, metadata, clientConfig);
+            RMMetadata rmMetadata = new RMMetadata(targetAddress, marshaller, unmarshaller, callProps, metadata, clientConfig);
             return RM_CHANNEL.send(reqMessage, rmMetadata);
          }
          else 

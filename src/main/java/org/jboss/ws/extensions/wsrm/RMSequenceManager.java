@@ -21,8 +21,10 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -93,9 +95,20 @@ public final class RMSequenceManager implements Runnable
       {
          while (this.destroyed == false)
          {
-            for (int i = 0; i < sequences.size(); i++)
+            for (RMSequenceImpl sequence : sequences)
             {
-               logger.debug("processing sequence " + sequences.get(i).getOutboundId());
+               logger.debug("Processing outbound sequence " + sequence.getOutboundId());
+               if (sequence.isAckRequested())
+               {
+                  /*
+                  logger.debug("Sending ack for inbound sequence " + sequence.getInboundId());
+                  Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
+                  wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, true);
+                  sequence.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
+                  sequence.sendSequenceAcknowledgementMessage();
+                  sequence.ackRequested(false);
+                  */
+               }
             }
 
             try

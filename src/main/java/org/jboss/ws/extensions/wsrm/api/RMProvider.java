@@ -36,5 +36,5 @@ public interface RMProvider
     * @return created sequence
     * @throws RMException
     */
-   RMSequence createSequence(RMAddressingType addrType, RMSequenceType seqType) throws RMException;
+   RMSequence createSequence(RMAddressingType addrType);
 }

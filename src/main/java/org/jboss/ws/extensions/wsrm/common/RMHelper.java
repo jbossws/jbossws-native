@@ -95,7 +95,7 @@ public final class RMHelper
          {
             for (long i = range.getLower(); i <= range.getUpper(); i++)
             {
-               sequence.addReceivedInboundMessage(i);
+               sequence.addReceivedMessage(i);
             }
          }
          if (seqAckHeader.isFinal())
@@ -119,7 +119,7 @@ public final class RMHelper
          throw new RMException("Expected inbound sequenceId:" + sequence.getInboundId() + " , but was: " + inboundSeqId);
       }
       
-      sequence.ackRequested();
+      sequence.ackRequested(true);
    }
    
    public static void handleSequenceHeader(RMSequence seqHeader, RMSequenceImpl sequence)

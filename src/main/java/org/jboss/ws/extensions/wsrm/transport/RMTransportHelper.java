@@ -5,11 +5,15 @@ import static org.jboss.ws.extensions.wsrm.RMConstant.*;
 import java.net.URI;
 import java.util.Map;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 
 public final class RMTransportHelper
 {
+
+   private static Logger logger = Logger.getLogger(RMTransportHelper.class);
+   
    private RMTransportHelper()
    {
       // no instances
@@ -43,7 +47,15 @@ public final class RMTransportHelper
    
    public static boolean isOneWayOperation(RMMessage rmRequest)
    {
-      return (Boolean)rmRequest.getMetadata().getContext(RMConstant.INVOCATION_CONTEXT).get(ONE_WAY_OPERATION);
+      RMMetadata meta = rmRequest.getMetadata();
+      if (meta == null) throw new RuntimeException("Unable to obtain wsrm metadata");
+      Map<String, Object> invCtx = meta.getContext(RMConstant.INVOCATION_CONTEXT);
+      if (invCtx == null) throw new RuntimeException("Unable to obtain invocation context");
+      Map<String, Object> wsrmReqCtx = (Map<String, Object>)invCtx.get(RMConstant.REQUEST_CONTEXT);
+      Boolean isOneWay = (Boolean)wsrmReqCtx.get(ONE_WAY_OPERATION); 
+      logger.debug("oneWayMessage == " + (isOneWay == null ? false : isOneWay.booleanValue()));
+      logger.debug("messages == " + wsrmReqCtx.get(PROTOCOL_MESSAGES));
+      return isOneWay == null ? false : isOneWay.booleanValue();
    }
 
 }

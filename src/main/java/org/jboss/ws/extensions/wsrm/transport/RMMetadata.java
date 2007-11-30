@@ -12,7 +12,6 @@ public final class RMMetadata
    
    public RMMetadata(
          String targetAddress,
-         boolean oneWay,
          Marshaller marshaller,
          UnMarshaller unmarshaller,
          Map<String, Object> invocationContext,
@@ -23,7 +22,6 @@ public final class RMMetadata
          throw new IllegalArgumentException("Target address cannot be null");
       
       invocationContext.put(RMConstant.TARGET_ADDRESS, targetAddress);
-      invocationContext.put(RMConstant.ONE_WAY_OPERATION, oneWay);
       setContext(RMConstant.INVOCATION_CONTEXT, invocationContext);
       
       if (marshaller == null || unmarshaller == null)

@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.wsrm;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,10 +33,9 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
@@ -43,11 +43,10 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
-import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
-import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMIncompleteSequenceBehavior;
@@ -68,7 +67,6 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
    private final RMConfig wsrmConfig;
-   private final RMSequenceType sequenceType;
    private final RMAddressingType addrType;
    private final Set<Long> acknowledgedOutboundMessages = new TreeSet<Long>();
    private final Set<Long> receivedInboundMessages = new TreeSet<Long>();
@@ -85,7 +83,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private boolean isFinal;
    private boolean inboundMessageAckRequested;
    private AtomicLong messageNumber = new AtomicLong();
-   private final Lock objectLock = new ReentrantLock();
+   private final Object lock = new Object();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    
    public void unassignedMessageReceived()
@@ -96,14 +94,13 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       logger.debug("Unassigned message available in callback handler");
    }
 
-   public RMSequenceImpl(RMAddressingType addrType, RMSequenceType sequenceType, RMConfig wsrmConfig)
+   public RMSequenceImpl(RMAddressingType addrType, RMConfig wsrmConfig)
    {
       super();
-      if ((addrType == null) || (sequenceType == null) || (wsrmConfig == null))
+      if ((addrType == null) || (wsrmConfig == null))
          throw new IllegalArgumentException();
       
       this.addrType = addrType;
-      this.sequenceType = sequenceType;
       this.wsrmConfig = wsrmConfig;
       try
       {
@@ -115,135 +112,132 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       }
    }
    
+   public final Set<Long> getReceivedInboundMessages()
+   {
+      synchronized (lock)
+      {
+         return Collections.unmodifiableSet(this.receivedInboundMessages);
+      }
+   }
+   
+   public final BindingProvider getBindingProvider()
+   {
+      synchronized (lock)
+      {
+         return (BindingProvider)this.client;
+      }
+   }
+   
    public final void setFinal()
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.isFinal = true;
          logger.debug("Sequence " + this.outgoingSequenceId + " state changed to final");
       }
-      finally
+   }
+   
+   public final void ackRequested(boolean requested)
+   {
+      synchronized (lock)
       {
-         this.objectLock.unlock();
+         this.inboundMessageAckRequested = requested;
+         logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
       }
    }
    
-   public final void ackRequested()
+   public final boolean isAckRequested()
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
-         this.inboundMessageAckRequested = true;
-         logger.debug("Sequence " + this.incomingSequenceId + " ack requested. Messages in the queue: " + this.receivedInboundMessages);
-      }
-      finally
-      {
-         this.objectLock.unlock();
+         return this.inboundMessageAckRequested;
       }
    }
    
    public final void addReceivedInboundMessage(long messageId)
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.receivedInboundMessages.add(messageId);
          logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", received message no. " + messageId);
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
    
    public final void addReceivedMessage(long messageId)
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.acknowledgedOutboundMessages.add(messageId);
-         logger.debug("Message no. " + messageId + " of sequence: " + this.outgoingSequenceId + " acknowledged by server");
-      }
-      finally
-      {
-         this.objectLock.unlock();
+         logger.debug("Outbound Sequence: " + this.outgoingSequenceId + ", message no. " + messageId + " acknowledged by server");
       }
    }
    
    public final void setOutboundId(String outboundId)
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.outgoingSequenceId = outboundId;
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
    
    public final void setInboundId(String inboundId)
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.incomingSequenceId = inboundId;
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
    
    public final void setClient(ClientImpl client)
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.client = client;
          RMSequenceManager.getInstance().register(this);
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
    
    public final void setDuration(long duration)
    {
-      if (duration > 0)
+      synchronized (lock)
       {
-         this.creationTime = System.currentTimeMillis();
-         this.duration = duration;
+         if (duration > 0)
+         {
+            this.creationTime = System.currentTimeMillis();
+            this.duration = duration;
+         }
       }
    }
    
    public final long getDuration()
    {
-      return -1L;
+      synchronized (lock)
+      {
+         return this.duration;
+      }
    }
    
    public final URI getBackPort()
    {
+      // no need for synchronization
       return (this.addrType == RMAddressingType.ADDRESSABLE) ? this.backPort : null;
    }
 
    public final long newMessageNumber()
    {
+      // no need for synchronization
       return this.messageNumber.incrementAndGet();
    }
    
    public final long getLastMessageNumber()
    {
+      // no need for synchronization
       return this.messageNumber.get();
    }
    
    public final void discard() throws RMException
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          this.client.getWSRMLock().lock();
          try
@@ -257,23 +251,17 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
             this.client.getWSRMLock().unlock();
          }
       }
-      finally
-      {
-         this.objectLock.unlock();
-      }
    }
    
    public final void close() throws RMException
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          if (this.terminated)
             return; 
          
          this.terminated = true;
 
-         client.getWSRMLock().lock();
          try 
          {
             sendCloseMessage();
@@ -281,20 +269,17 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          }
          finally
          {
+            client.getWSRMLock().lock();
             this.client.setWSRMSequence(null); // TODO: do not remove this
             this.client.getWSRMLock().unlock();
          }
-      } 
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
 
    /**
     * Sets up terminated flag to true.
     */
-   public final void sendMessage(String action, QName operationQName) throws RMException
+   private void sendMessage(String action, QName operationQName) throws RMException
    {
       try
       {
@@ -311,18 +296,23 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
             props = AddressingClientUtil.createAnonymousProps(action, address);
          }
          // prepare WS-RM request context
-         Map rmRequestContext = new HashMap();
+         Map requestContext = client.getBindingProvider().getRequestContext(); 
+         Map rmRequestContext = (Map)requestContext.get(RMConstant.REQUEST_CONTEXT);
+         if (rmRequestContext == null)
+         {
+            rmRequestContext = new HashMap(); 
+         }
          List outMsgs = new LinkedList();
          outMsgs.add(operationQName);
          rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
          rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, this);
          // set up method invocation context
-         Map requestContext = client.getBindingProvider().getRequestContext(); 
          requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
+         requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
          requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
          // call stub method
          this.client.invoke(operationQName, new Object[] {}, client.getBindingProvider().getResponseContext());
-         RMSequenceManager.getInstance().unregister(this);
+         //RMSequenceManager.getInstance().unregister(this); // TODO: each sequence will be unregistered by sequence manager
       }
       catch (Exception e)
       {
@@ -330,34 +320,48 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       }
    }
    
-   private void sendCloseMessage()
+   public final void sendCloseMessage()
    {
+      /*
+      synchronized (lock)
+      {
+         while (this.isAckRequested())
+         {
+            try
+            {
+               logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
+               lock.wait(100);
+            }
+            catch (InterruptedException ie)
+            {
+               logger.warn(ie.getMessage(), ie);
+            }
+         }
+      }*/
+      Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
+      wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
+      this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
       sendMessage(RMConstant.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName());
    }
    
-   private void sendTerminateMessage()
+   public final void sendTerminateMessage()
    {
       sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName());
    }
    
-   private void sendSequenceAcknowledgementMessage()
+   public final void sendSequenceAcknowledgementMessage()
    {
       sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName());
    }
    
    public final void setBehavior(RMIncompleteSequenceBehavior behavior)
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          if (behavior != null)
          {
             this.behavior = behavior;
          }
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
 
@@ -383,27 +387,17 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
 
    public final boolean isClosed()
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          return this.terminated;
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
 
    public final boolean isDiscarded()
    {
-      this.objectLock.lock();
-      try
+      synchronized (lock)
       {
          return this.discarded;
-      }
-      finally
-      {
-         this.objectLock.unlock();
       }
    }
 }

@@ -83,7 +83,7 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
                callbackHandler.addUnassignedMessageListener(sequence);
             }
          }
-         boolean oneWay = /*RMTransportHelper.isOneWayOperation(rmRequest) && */(backPort != null); // TODO: backport support
+         boolean oneWay = (backPort != null); // TODO: backport support
 
          Client client = new Client(locator, JBOSSWS_SUBSYSTEM, rmRequest.getMetadata().getContext(REMOTING_CONFIGURATION_CONTEXT));
          client.connect();
@@ -119,7 +119,7 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
          
          if (backPort != null) // TODO: backport support
          {
-            if (messageId != null)
+            if ((null != messageId) && (false == RMTransportHelper.isOneWayOperation(rmRequest)))
             {
                // register callbacks only for outbound messages with messageId
                return new RMChannelResponse(callbackHandler, messageId);

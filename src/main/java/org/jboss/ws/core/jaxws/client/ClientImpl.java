@@ -23,7 +23,6 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
-import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,7 +72,6 @@ import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
@@ -270,7 +268,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    public Object invoke(QName opName, Object[] args, Map<String, Object> resContext) throws RemoteException
    {
       this.wsrmLock.lock();
-
+      
       try
       {
          // Associate a message context with the current thread
@@ -339,22 +337,25 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
                if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
                {
                   Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
-                  RMConstants wsrmConstants = RMProvider.get().getConstants();
-                  Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
-                  QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
-                  if (mapping.keySet().contains(seqAck))
+                  if (wsrmResCtx != null)
                   {
-                     RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
-                  }
-                  QName seq = wsrmConstants.getSequenceQName();
-                  if (mapping.keySet().contains(seq))
-                  {
-                     RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
-                  }
-                  QName ackReq = wsrmConstants.getAckRequestedQName();
-                  if (mapping.keySet().contains(ackReq))
-                  {
-                     RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
+                     RMConstants wsrmConstants = RMProvider.get().getConstants();
+                     Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+                     QName seq = wsrmConstants.getSequenceQName();
+                     if (mapping.keySet().contains(seq))
+                     {
+                        RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
+                     }
+                     QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
+                     if (mapping.keySet().contains(seqAck))
+                     {
+                        RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
+                     }
+                     QName ackReq = wsrmConstants.getAckRequestedQName();
+                     if (mapping.keySet().contains(ackReq))
+                     {
+                        RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
+                     }
                   }
                }
             }
@@ -526,22 +527,20 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public org.jboss.ws.extensions.wsrm.api.RMSequence createSequence(RMAddressingType addrType, RMSequenceType seqType) throws RMException
+   public org.jboss.ws.extensions.wsrm.api.RMSequence createSequence(RMAddressingType addrType) throws RMException
    {
       this.getWSRMLock().lock();
       try
       {
          if (this.wsrmSequence != null)
             throw new IllegalStateException("Sequence already registered with proxy instance");
-         if (seqType == null)
-            throw new IllegalArgumentException("Sequence type cannot be null");
          if (addrType == null)
             throw new IllegalArgumentException("Addressing type cannot be null");
 
          try
          {
             // set up addressing data
-            RMSequenceImpl candidateSequence = new RMSequenceImpl(addrType, seqType, getEndpointMetaData().getConfig().getRMMetaData());
+            RMSequenceImpl candidateSequence = new RMSequenceImpl(addrType, getEndpointMetaData().getConfig().getRMMetaData());
             String address = getEndpointMetaData().getEndpointAddress();
             String action = RMConstant.CREATE_SEQUENCE_WSA_ACTION;
             AddressingProperties addressingProps = null;

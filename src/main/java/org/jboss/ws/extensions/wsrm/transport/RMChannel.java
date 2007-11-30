@@ -93,12 +93,12 @@ public class RMChannel
       return rmMessage;
    }
    
-   private MessageAbstraction createResponse(RMMessage rmResponse, RMMetadata rmMetadata) throws Throwable
+   private MessageAbstraction createResponse(RMMessage rmRequest, RMMessage rmResponse, RMMetadata rmMetadata) throws Throwable
    {
       Map<String, Object> invocationContext = rmMetadata.getContext(INVOCATION_CONTEXT);
-      boolean oneWay = (Boolean)rmMetadata.getContext(INVOCATION_CONTEXT).get(ONE_WAY_OPERATION);
+      boolean oneWay = RMTransportHelper.isOneWayOperation(rmRequest);
       MessageAbstraction response = null;
-      //if (!oneWay)
+      if (!oneWay)
       {
          byte[] payload = rmResponse.getPayload();
          InputStream is = payload == null ? null : new ByteArrayInputStream(rmResponse.getPayload()); 
@@ -117,7 +117,7 @@ public class RMChannel
    {
       RMMessage rmRequest = createRMMessage(request, rmMetadata);
       RMMessage rmResponse = sendToChannel(rmRequest);
-      return createResponse(rmResponse, rmMetadata);
+      return createResponse(rmRequest, rmResponse, rmMetadata);
    }
    
    private RMMessage sendToChannel(RMMessage request) throws Throwable

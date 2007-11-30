@@ -45,7 +45,7 @@ public final class RMConstant
       RMConstants constants = RMProvider.get().getConstants();
       temp.add(constants.getSequenceQName());
       temp.add(constants.getSequenceFaultQName());
-      temp.add(constants.getAcknowledgementRangeQName());
+      temp.add(constants.getSequenceAcknowledgementQName());
       temp.add(constants.getAckRequestedQName());
       temp.add(constants.getCreateSequenceQName());
       temp.add(constants.getCreateSequenceResponseQName());

@@ -124,6 +124,12 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       createSequenceMD.setOneWay(false);
       endpointMD.addOperation(createSequenceMD);
       
+      // register sequenceAcknowledgement method
+      QName sequenceAcknowledgementQName = rmProvider.getConstants().getSequenceAcknowledgementQName();
+      OperationMetaData sequenceAcknowledgementMD = new OperationMetaData(endpointMD, sequenceAcknowledgementQName, "sequenceAcknowledgement");
+      sequenceAcknowledgementMD.setOneWay(true);
+      endpointMD.addOperation(sequenceAcknowledgementMD);
+      
       // register closeSequence method
       QName closeSequenceQName = rmProvider.getConstants().getCloseSequenceQName();
       OperationMetaData closeSequenceMD = new OperationMetaData(endpointMD, closeSequenceQName, "closeSequence");
