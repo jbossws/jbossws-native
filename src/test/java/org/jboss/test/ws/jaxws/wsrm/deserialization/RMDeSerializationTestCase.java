@@ -284,12 +284,12 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       assertTrue(sequenceAcknowledgement.isFinal());
       assertFalse(sequenceAcknowledgement.isNone());
       assertEquals(sequenceAcknowledgement.getNacks().size(), 0);
-      List<RMSequenceAcknowledgement.AcknowledgementRange> ranges = sequenceAcknowledgement.getAcknowledgementRanges();
+      List<RMSequenceAcknowledgement.RMAcknowledgementRange> ranges = sequenceAcknowledgement.getAcknowledgementRanges();
       assertEquals(ranges.size(), 2);
-      RMSequenceAcknowledgement.AcknowledgementRange firstRange = ranges.get(0);
+      RMSequenceAcknowledgement.RMAcknowledgementRange firstRange = ranges.get(0);
       assertEquals(firstRange.getLower(), 1);
       assertEquals(firstRange.getLower(), 1);
-      RMSequenceAcknowledgement.AcknowledgementRange secondRange = ranges.get(1);
+      RMSequenceAcknowledgement.RMAcknowledgementRange secondRange = ranges.get(1);
       assertEquals(secondRange.getLower(), 3);
       assertEquals(secondRange.getLower(), 3);
    }
@@ -300,11 +300,11 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       // construct message
       sequenceAcknowledgementMessage.setIdentifier("http://Business456.com/RM/ABC");
       sequenceAcknowledgementMessage.setFinal();
-      RMSequenceAcknowledgement.AcknowledgementRange firstRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
+      RMSequenceAcknowledgement.RMAcknowledgementRange firstRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
       firstRange.setLower(1);
       firstRange.setUpper(1);
       sequenceAcknowledgementMessage.addAcknowledgementRange(firstRange);
-      RMSequenceAcknowledgement.AcknowledgementRange secondRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
+      RMSequenceAcknowledgement.RMAcknowledgementRange secondRange = sequenceAcknowledgementMessage.newAcknowledgementRange();
       secondRange.setLower(3);
       secondRange.setUpper(3);
       sequenceAcknowledgementMessage.addAcknowledgementRange(secondRange);
@@ -365,7 +365,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       // perform assertion
       assertEquals(createSequenceMessage.getAcksTo(), "http://Business456.com/serviceA/789");
       assertEquals(createSequenceMessage.getExpires(), RMHelper.stringToDuration("PT0S"));
-      RMCreateSequence.Offer offer = createSequenceMessage.getOffer(); 
+      RMCreateSequence.RMOffer offer = createSequenceMessage.getOffer(); 
       assertEquals(offer.getIdentifier(), "http://Business456.com/RM/ABC");
       assertEquals(offer.getEndpoint(), "http://Business456.com/serviceA/ASDF");
       assertEquals(offer.getExpires(), "PT1S");
@@ -378,7 +378,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       // construct message
       createSequenceMessage.setAcksTo("http://Business456.com/serviceA/789");
       createSequenceMessage.setExpires(RMHelper.stringToDuration("PT0S"));
-      RMCreateSequence.Offer offer = createSequenceMessage.newOffer();
+      RMCreateSequence.RMOffer offer = createSequenceMessage.newOffer();
       offer.setIdentifier("http://Business456.com/RM/ABC");
       offer.setEndpoint("http://Business456.com/serviceA/ASDF");
       offer.setExpires("PT1S");
@@ -396,7 +396,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       assertEquals(createSequenceResponseMessage.getIdentifier(), "http://Business456.com/RM/ABC");
       assertEquals(createSequenceResponseMessage.getExpires(), RMHelper.stringToDuration("PT0S"));
       assertEquals(createSequenceResponseMessage.getIncompleteSequenceBehavior(), RMIncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
-      RMCreateSequenceResponse.Accept accept = createSequenceResponseMessage.getAccept();
+      RMCreateSequenceResponse.RMAccept accept = createSequenceResponseMessage.getAccept();
       assertEquals(accept.getAcksTo(), "http://Business456.com/serviceA/ASDF");
    }
    
@@ -407,7 +407,7 @@ public final class RMDeSerializationTestCase extends JBossWSTest
       createSequenceResponse.setIdentifier("http://Business456.com/RM/ABC");
       createSequenceResponse.setExpires(RMHelper.stringToDuration("PT0S"));
       createSequenceResponse.setIncompleteSequenceBehavior(RMIncompleteSequenceBehavior.DISCARD_FOLLOWING_FIRST_GAP);
-      RMCreateSequenceResponse.Accept accept = createSequenceResponse.newAccept();
+      RMCreateSequenceResponse.RMAccept accept = createSequenceResponse.newAccept();
       accept.setAcksTo("http://Business456.com/serviceA/ASDF");
       createSequenceResponse.setAccept(accept);
       // perform assertion

@@ -118,19 +118,19 @@ public interface RMSequenceAcknowledgement extends RMSerializable
     * Factory method
     * @return new instance of AcknowledgementRange
     */
-   AcknowledgementRange newAcknowledgementRange();
+   RMAcknowledgementRange newAcknowledgementRange();
    
    /**
     * Setter
     * @param acknowledgementRange
     */
-   void addAcknowledgementRange(AcknowledgementRange acknowledgementRange);
+   void addAcknowledgementRange(RMAcknowledgementRange acknowledgementRange);
    
    /**
     * Getter 
     * @return list of acknowledged ranges
     */
-   List<AcknowledgementRange> getAcknowledgementRanges();
+   List<RMAcknowledgementRange> getAcknowledgementRanges();
    
    /**
     * The RM Destination MAY include one or more instances of this element within a
@@ -139,7 +139,7 @@ public interface RMSequenceAcknowledgement extends RMSerializable
     * Destination MUST NOT include this element if a sibling <b>Nack</b> or <b>None</b> element is also present as
     * a child of <b>SequenceAcknowledgement</b>.
     */
-   interface AcknowledgementRange
+   interface RMAcknowledgementRange
    {
       /**
        * The RM Destination MUST set the value of this attribute equal to the message number of the

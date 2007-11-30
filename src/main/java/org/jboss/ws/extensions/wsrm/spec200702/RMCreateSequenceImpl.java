@@ -41,7 +41,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    // internal fields
    private String acksTo;
    private Duration expires;
-   private Offer offer;
+   private RMOffer offer;
 
    RMCreateSequenceImpl()
    {
@@ -67,7 +67,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence#getOffer()
     */
-   public Offer getOffer()
+   public RMOffer getOffer()
    {
       return this.offer;
    }
@@ -75,7 +75,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence#newOffer()
     */
-   public Offer newOffer()
+   public RMOffer newOffer()
    {
       return new OfferImpl();
    }
@@ -109,7 +109,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence#setOffer(org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence.Offer)
     */
-   public void setOffer(Offer offer)
+   public void setOffer(RMOffer offer)
    {
       if (offer == null)
          throw new IllegalArgumentException("Offer cannot be null");
@@ -190,7 +190,7 @@ final class RMCreateSequenceImpl extends RMAbstractSerializable implements RMCre
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequence.Offer
     */
-   private static class OfferImpl implements RMCreateSequence.Offer
+   private static class OfferImpl implements RMCreateSequence.RMOffer
    {
       
       private String endpoint;

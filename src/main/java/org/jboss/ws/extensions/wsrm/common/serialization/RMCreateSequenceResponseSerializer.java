@@ -112,7 +112,7 @@ final class RMCreateSequenceResponseSerializer implements RMSerializer
          SOAPElement acceptElement = getOptionalElement(createSequenceResponseElement, acceptQName, createSequenceResponseQName);
          if (acceptElement != null)
          {
-            RMCreateSequenceResponse.Accept accept = o.newAccept();
+            RMCreateSequenceResponse.RMAccept accept = o.newAccept();
             
             // read required wsrm:AcksTo element
             QName acksToQName = wsrmConstants.getAcksToQName();

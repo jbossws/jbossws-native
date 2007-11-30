@@ -73,11 +73,15 @@ import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
+import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -326,8 +330,41 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       }
       finally
       {
-         // Copy the inbound msg properties to the binding's response context
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+         this.wsrmLock.lock();
+         try
+         {
+            if (this.wsrmSequence != null)
+            {
+               if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
+               {
+                  Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
+                  RMConstants wsrmConstants = RMProvider.get().getConstants();
+                  Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+                  QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
+                  if (mapping.keySet().contains(seqAck))
+                  {
+                     RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
+                  }
+                  QName seq = wsrmConstants.getSequenceQName();
+                  if (mapping.keySet().contains(seq))
+                  {
+                     RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
+                  }
+                  QName ackReq = wsrmConstants.getAckRequestedQName();
+                  if (mapping.keySet().contains(ackReq))
+                  {
+                     RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
+                  }
+               }
+            }
+         }
+         finally
+         {
+            this.wsrmLock.unlock();
+         }
+
+         // Copy the inbound msg properties to the binding's response context
          for (String key : msgContext.keySet())
          {
             Object value = msgContext.get(key);
@@ -489,7 +526,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public RMSequence createSequence(RMAddressingType addrType, RMSequenceType seqType) throws RMException
+   public org.jboss.ws.extensions.wsrm.api.RMSequence createSequence(RMAddressingType addrType, RMSequenceType seqType) throws RMException
    {
       this.getWSRMLock().lock();
       try

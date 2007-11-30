@@ -41,7 +41,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
    private static final RMProvider PROVIDER = RMProviderImpl.getInstance();
    // internal fields
    private final List<Long> nacks = new LinkedList<Long>();
-   private final List<AcknowledgementRange> acknowledgementRanges = new LinkedList<AcknowledgementRange>(); 
+   private final List<RMAcknowledgementRange> acknowledgementRanges = new LinkedList<RMAcknowledgementRange>(); 
    private String identifier;
    
    RMSequenceAcknowledgementImpl()
@@ -52,7 +52,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement#addAcknowledgementRange(org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement.AcknowledgementRange)
     */
-   public void addAcknowledgementRange(AcknowledgementRange newAcknowledgementRange)
+   public void addAcknowledgementRange(RMAcknowledgementRange newAcknowledgementRange)
    {
       if ((newAcknowledgementRange == null) || (!(newAcknowledgementRange instanceof AcknowledgementRangeImpl)))
          throw new IllegalArgumentException();
@@ -60,7 +60,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
          throw new IllegalStateException("There are already some nacks specified");
       if ((newAcknowledgementRange.getLower() == 0) || (newAcknowledgementRange.getUpper() == 0))
          throw new IllegalArgumentException("Both, lower and upper values must be specified");
-      for (AcknowledgementRange alreadyAccepted : acknowledgementRanges)
+      for (RMAcknowledgementRange alreadyAccepted : acknowledgementRanges)
          checkOverlap(alreadyAccepted, newAcknowledgementRange);
       
       this.acknowledgementRanges.add(newAcknowledgementRange);
@@ -82,7 +82,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement#getAcknowledgementRanges()
     */
-   public List<AcknowledgementRange> getAcknowledgementRanges()
+   public List<RMAcknowledgementRange> getAcknowledgementRanges()
    {
       return Collections.unmodifiableList(acknowledgementRanges);
    }
@@ -122,7 +122,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.SequenceAcknowledgement#newAcknowledgementRange()
     */
-   public AcknowledgementRange newAcknowledgementRange()
+   public RMAcknowledgementRange newAcknowledgementRange()
    {
       return new AcknowledgementRangeImpl();
    }
@@ -220,7 +220,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
          throw new RMException("AcknowledgementRange or Nack must be set");
    }
 
-   private static void checkOverlap(AcknowledgementRange currentRange, AcknowledgementRange newRange)
+   private static void checkOverlap(RMAcknowledgementRange currentRange, RMAcknowledgementRange newRange)
    {
       if ((currentRange.getLower() <= newRange.getLower()) && (newRange.getLower() <= currentRange.getUpper()))
          throw new IllegalArgumentException(
@@ -230,7 +230,7 @@ final class RMSequenceAcknowledgementImpl extends RMAbstractSerializable impleme
             "Overlap detected: " + currentRange + " vs. " + newRange);
    }
    
-   private static class AcknowledgementRangeImpl implements RMSequenceAcknowledgement.AcknowledgementRange
+   private static class AcknowledgementRangeImpl implements RMSequenceAcknowledgement.RMAcknowledgementRange
    {
       
       private long lower;

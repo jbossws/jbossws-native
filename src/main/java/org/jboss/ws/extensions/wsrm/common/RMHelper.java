@@ -22,12 +22,19 @@
 package org.jboss.ws.extensions.wsrm.common;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.wsrm.RMClientHandler;
+import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
 
 /**
  * RM utility library
@@ -39,6 +46,8 @@ import org.jboss.ws.extensions.wsrm.api.RMException;
 public final class RMHelper
 {
    
+   private static final Logger logger = Logger.getLogger(RMHelper.class);
+
    private RMHelper()
    {
       // no instances allowed
@@ -74,6 +83,61 @@ public final class RMHelper
          return -1L;
       
       return d.getTimeInMillis(new Date());
+   }
+   
+   public static void handleSequenceAcknowledgementHeader(RMSequenceAcknowledgement seqAckHeader, RMSequenceImpl sequence)
+   {
+      String seqId = seqAckHeader.getIdentifier();
+      if (sequence.getOutboundId().equals(seqId))
+      {
+         List<RMSequenceAcknowledgement.RMAcknowledgementRange> ranges = seqAckHeader.getAcknowledgementRanges();
+         for (RMSequenceAcknowledgement.RMAcknowledgementRange range : ranges)
+         {
+            for (long i = range.getLower(); i <= range.getUpper(); i++)
+            {
+               sequence.addReceivedInboundMessage(i);
+            }
+         }
+         if (seqAckHeader.isFinal())
+         {
+            sequence.setFinal();
+         }
+      }
+      else
+      {
+         logger.warn("Expected outbound sequenceId:" + sequence.getOutboundId() + " , but was: " + seqId);
+         throw new RMException("Expected outbound sequenceId:" + sequence.getOutboundId() + " , but was: " + seqId);
+      }
+   }
+   
+   public static void handleAckRequestedHeader(RMAckRequested ackReqHeader, RMSequenceImpl sequence)
+   {
+      String inboundSeqId = ackReqHeader.getIdentifier();
+      if (false == sequence.getInboundId().equals(inboundSeqId))
+      {
+         logger.warn("Expected inbound sequenceId:" + sequence.getInboundId() + " , but was: " + inboundSeqId);
+         throw new RMException("Expected inbound sequenceId:" + sequence.getInboundId() + " , but was: " + inboundSeqId);
+      }
+      
+      sequence.ackRequested();
+   }
+   
+   public static void handleSequenceHeader(RMSequence seqHeader, RMSequenceImpl sequence)
+   {
+      String inboundSeqId = seqHeader.getIdentifier();
+      if (null == sequence.getInboundId())
+      {
+         sequence.setInboundId(inboundSeqId);
+      }
+      else
+      {
+         if (false == sequence.getInboundId().equals(inboundSeqId))
+         {
+            logger.warn("Expected inbound sequenceId:" + sequence.getInboundId() + " , but was: " + inboundSeqId);
+            throw new RMException("Expected inbound sequenceId:" + sequence.getInboundId() + " , but was: " + inboundSeqId);
+         }
+      }
+      sequence.addReceivedInboundMessage(seqHeader.getMessageNumber());
    }
    
 }

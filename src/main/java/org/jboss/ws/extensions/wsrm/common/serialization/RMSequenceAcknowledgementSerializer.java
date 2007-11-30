@@ -121,7 +121,7 @@ final class RMSequenceAcknowledgementSerializer implements RMSerializer
 
             for (SOAPElement ackRangeElement : ackRangeElements)
             {
-               RMSequenceAcknowledgement.AcknowledgementRange ackRange = o.newAcknowledgementRange();
+               RMSequenceAcknowledgement.RMAcknowledgementRange ackRange = o.newAcknowledgementRange();
             
                // read required wsrm:Upper attribute
                String upper = getRequiredTextContent(ackRangeElement, upperQName, ackRangeQName);
@@ -198,7 +198,7 @@ final class RMSequenceAcknowledgementSerializer implements RMSerializer
             }
          }
          
-         List<RMSequenceAcknowledgement.AcknowledgementRange> ackRanges = o.getAcknowledgementRanges();
+         List<RMSequenceAcknowledgement.RMAcknowledgementRange> ackRanges = o.getAcknowledgementRanges();
          if (ackRanges.size() != 0)
          {
             QName acknowledgementRangeQName = wsrmConstants.getAcknowledgementRangeQName();
@@ -206,7 +206,7 @@ final class RMSequenceAcknowledgementSerializer implements RMSerializer
             QName lowerQName = wsrmConstants.getLowerQName();
 
             // write optional wsrm:AcknowledgementRange elements
-            for (RMSequenceAcknowledgement.AcknowledgementRange ackRange : ackRanges)
+            for (RMSequenceAcknowledgement.RMAcknowledgementRange ackRange : ackRanges)
             {
                SOAPElement acknowledgementRangeElement = sequenceAckElement.addChildElement(acknowledgementRangeQName);
                // write required wsrm:Lower attribute

@@ -41,7 +41,7 @@ final class RMCreateSequenceResponseImpl extends RMAbstractSerializable implemen
    // internal fields
    private String identifier;
    private Duration expires;
-   private Accept accept;
+   private RMAccept accept;
 
    RMCreateSequenceResponseImpl()
    {
@@ -51,7 +51,7 @@ final class RMCreateSequenceResponseImpl extends RMAbstractSerializable implemen
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse#getAccept()
     */
-   public Accept getAccept()
+   public RMAccept getAccept()
    {
       return this.accept;
    }
@@ -83,7 +83,7 @@ final class RMCreateSequenceResponseImpl extends RMAbstractSerializable implemen
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse#newAccept()
     */
-   public Accept newAccept()
+   public RMAccept newAccept()
    {
       return new AcceptImpl();
    }
@@ -91,7 +91,7 @@ final class RMCreateSequenceResponseImpl extends RMAbstractSerializable implemen
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse#setAccept(org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse.Accept)
     */
-   public void setAccept(Accept accept)
+   public void setAccept(RMAccept accept)
    {
       if (accept == null)
          throw new IllegalArgumentException("Accept cannot be null");
@@ -204,7 +204,7 @@ final class RMCreateSequenceResponseImpl extends RMAbstractSerializable implemen
    /*
     * @see org.jboss.ws.extensions.wsrm.spi.protocol.CreateSequenceResponse.Accept
     */
-   private static class AcceptImpl implements RMCreateSequenceResponse.Accept
+   private static class AcceptImpl implements RMCreateSequenceResponse.RMAccept
    {
 
       private String acksTo;

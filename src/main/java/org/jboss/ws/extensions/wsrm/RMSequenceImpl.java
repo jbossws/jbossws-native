@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -68,6 +70,8 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private final RMConfig wsrmConfig;
    private final RMSequenceType sequenceType;
    private final RMAddressingType addrType;
+   private final Set<Long> acknowledgedOutboundMessages = new TreeSet<Long>();
+   private final Set<Long> receivedInboundMessages = new TreeSet<Long>();
    private RMIncompleteSequenceBehavior behavior = RMIncompleteSequenceBehavior.NO_DISCARD;
    private String incomingSequenceId;
    private String outgoingSequenceId;
@@ -76,8 +80,10 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private URI backPort;
    private ClientImpl client;
    // object states variables
-   private boolean terminated = false;
-   private boolean discarded = false;
+   private boolean terminated;
+   private boolean discarded;
+   private boolean isFinal;
+   private boolean inboundMessageAckRequested;
    private AtomicLong messageNumber = new AtomicLong();
    private final Lock objectLock = new ReentrantLock();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
@@ -109,12 +115,81 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       }
    }
    
+   public final void setFinal()
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.isFinal = true;
+         logger.debug("Sequence " + this.outgoingSequenceId + " state changed to final");
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
+   }
+   
+   public final void ackRequested()
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.inboundMessageAckRequested = true;
+         logger.debug("Sequence " + this.incomingSequenceId + " ack requested. Messages in the queue: " + this.receivedInboundMessages);
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
+   }
+   
+   public final void addReceivedInboundMessage(long messageId)
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.receivedInboundMessages.add(messageId);
+         logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", received message no. " + messageId);
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
+   }
+   
+   public final void addReceivedMessage(long messageId)
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.acknowledgedOutboundMessages.add(messageId);
+         logger.debug("Message no. " + messageId + " of sequence: " + this.outgoingSequenceId + " acknowledged by server");
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
+   }
+   
    public final void setOutboundId(String outboundId)
    {
       this.objectLock.lock();
       try
       {
          this.outgoingSequenceId = outboundId;
+      }
+      finally
+      {
+         this.objectLock.unlock();
+      }
+   }
+   
+   public final void setInboundId(String inboundId)
+   {
+      this.objectLock.lock();
+      try
+      {
+         this.incomingSequenceId = inboundId;
       }
       finally
       {

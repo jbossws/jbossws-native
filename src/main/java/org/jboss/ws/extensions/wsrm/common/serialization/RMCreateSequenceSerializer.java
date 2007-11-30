@@ -107,7 +107,7 @@ final class RMCreateSequenceSerializer implements RMSerializer
          SOAPElement offerElement = getOptionalElement(createSequenceElement, offerQName, createSequenceQName);
          if (offerElement != null)
          {
-            RMCreateSequence.Offer offer = o.newOffer();
+            RMCreateSequence.RMOffer offer = o.newOffer();
 
             // read required wsrm:Identifier element
             QName identifierQName = wsrmConstants.getIdentifierQName();
@@ -194,7 +194,7 @@ final class RMCreateSequenceSerializer implements RMSerializer
          
          if (o.getOffer() != null)
          {
-            RMCreateSequence.Offer offer = o.getOffer();
+            RMCreateSequence.RMOffer offer = o.getOffer();
             
             // write optional wsrm:Offer element
             QName offerQName = wsrmConstants.getOfferQName();

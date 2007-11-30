@@ -99,19 +99,19 @@ public interface RMCreateSequenceResponse extends RMSerializable
     * Factory method
     * @return new instance of accept
     */
-   Accept newAccept();
+   RMAccept newAccept();
    
    /**
     * Setter
     * @param accept
     */
-   void setAccept(Accept accept);
+   void setAccept(RMAccept accept);
    
    /**
     * Getter
     * @return accept
     */
-   Accept getAccept();
+   RMAccept getAccept();
    
    /**
     * <p>This element, if present, enables an RM Destination to accept the offer of a corresponding
@@ -121,7 +121,7 @@ public interface RMCreateSequenceResponse extends RMSerializable
     * <b>CreateSequence</b> that did contain a child Offer, then the RM Source MAY immediately reclaim
     * any resources associated with the unused offered Sequence.</p>
     */
-   interface Accept
+   interface RMAccept
    {
       /**
        * <p>The RM Destination MUST include this element, of type <b>wsa:EndpointReferenceType</b> (as

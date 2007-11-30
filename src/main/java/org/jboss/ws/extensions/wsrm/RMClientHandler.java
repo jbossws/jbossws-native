@@ -182,7 +182,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       log.debug("handling inbound message");
       
       SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
-      Map rmResponseContext = new HashMap();
+      Map<String, Object> rmResponseContext = new HashMap();
       List<QName> messages = new LinkedList<QName>();
       rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, messages);
       Map<QName, RMSerializable> data = new HashMap<QName, RMSerializable>();

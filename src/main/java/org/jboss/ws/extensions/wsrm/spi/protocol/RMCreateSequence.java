@@ -90,25 +90,25 @@ public interface RMCreateSequence extends RMSerializable
     * Factory method
     * @return new instance of Offer
     */
-   Offer newOffer();
+   RMOffer newOffer();
    
    /**
     * Setter
     * @param offer
     */
-   void setOffer(Offer offer);
+   void setOffer(RMOffer offer);
    
    /**
     * Getter
     * @return offer
     */
-   Offer getOffer();
+   RMOffer getOffer();
 
    /**
     * This element, if present, enables an RM Source to offer a corresponding Sequence for the reliable
     * exchange of messages Transmitted from RM Destination to RM Source.
     */
-   interface Offer
+   interface RMOffer
    {
       /**
        * The RM Source MUST set the value of this element to an absolute URI (conformant with
