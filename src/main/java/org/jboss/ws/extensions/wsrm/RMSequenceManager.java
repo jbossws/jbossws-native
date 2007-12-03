@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -45,7 +46,7 @@ public final class RMSequenceManager implements Runnable
    private static final Lock classLock = new ReentrantLock();
    private final Object instanceLock = new Object();
    private final List<RMSequenceImpl> sequences = new LinkedList<RMSequenceImpl>();
-   private boolean destroyed;
+   private AtomicBoolean destroyed = new AtomicBoolean();
    
    private RMSequenceManager()
    {
@@ -91,35 +92,35 @@ public final class RMSequenceManager implements Runnable
    
    public void run()
    {
-      synchronized (instanceLock)
+      while (destroyed.get() == false)
       {
-         while (this.destroyed == false)
+         synchronized (instanceLock)
          {
             for (RMSequenceImpl sequence : sequences)
             {
                logger.debug("Processing outbound sequence " + sequence.getOutboundId());
+               /*
                if (sequence.isAckRequested())
                {
-                  /*
                   logger.debug("Sending ack for inbound sequence " + sequence.getInboundId());
                   Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
                   wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, true);
                   sequence.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
                   sequence.sendSequenceAcknowledgementMessage();
                   sequence.ackRequested(false);
-                  */
                }
+               */
             }
+         }
 
-            try
-            {
-               logger.debug("sleeping for 10 miliseconds");
-               instanceLock.wait(10);
-            }
-            catch (InterruptedException ie)
-            {
-               logger.warn(ie);
-            }
+         try
+         {
+            logger.debug("sleeping for 10 miliseconds");
+            Thread.sleep(10);
+         }
+         catch (InterruptedException ie)
+         {
+            logger.warn(ie);
          }
       }
    }
@@ -130,15 +131,12 @@ public final class RMSequenceManager implements Runnable
       try
       {
          instance = null;
+         this.destroyed.set(true);
+         logger.debug("destroyed");
       }
       finally
       {
          classLock.unlock();
-      }
-      synchronized (this.instanceLock)
-      {
-         this.destroyed = true;
-         logger.debug("destroyed");
       }
    }
 }

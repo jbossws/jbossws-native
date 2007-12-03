@@ -36,7 +36,6 @@ import javax.xml.ws.Service;
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
-import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
 
@@ -90,7 +89,7 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
       if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxy;
-         sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.SIMPLEX);
+         sequence = wsrmProvider.createSequence(getAddressingType());
          System.out.println("Created sequence with id=" + sequence.getOutboundId());
       }
       setAddrProps(proxy, "http://useless/action1", serviceURL);

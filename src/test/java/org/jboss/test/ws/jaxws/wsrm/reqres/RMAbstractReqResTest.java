@@ -42,7 +42,6 @@ import org.jboss.test.ws.jaxws.wsrm.ReqResServiceIface;
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
-import org.jboss.ws.extensions.wsrm.api.RMSequenceType;
 
 /**
  * Reliable JBoss WebService client invoking req/res methods
@@ -172,7 +171,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       if (emulatorOn)
       {
          RMProvider wsrmProvider = (RMProvider)proxyObject;
-         sequence = wsrmProvider.createSequence(getAddressingType(), RMSequenceType.DUPLEX);
+         sequence = wsrmProvider.createSequence(getAddressingType());
          System.out.println("Created sequence with outbound id=" + sequence.getOutboundId());
          System.out.println("Created sequence with inbound id=" + sequence.getInboundId());
       }

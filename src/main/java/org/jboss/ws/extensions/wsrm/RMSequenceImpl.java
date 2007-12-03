@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -81,7 +82,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private boolean terminated;
    private boolean discarded;
    private boolean isFinal;
-   private boolean inboundMessageAckRequested;
+   private AtomicBoolean inboundMessageAckRequested = new AtomicBoolean();
    private AtomicLong messageNumber = new AtomicLong();
    private final Object lock = new Object();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
@@ -139,19 +140,13 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final void ackRequested(boolean requested)
    {
-      synchronized (lock)
-      {
-         this.inboundMessageAckRequested = requested;
-         logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
-      }
+      this.inboundMessageAckRequested.set(requested);
+      logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
    }
    
    public final boolean isAckRequested()
    {
-      synchronized (lock)
-      {
-         return this.inboundMessageAckRequested;
-      }
+      return this.inboundMessageAckRequested.get();
    }
    
    public final void addReceivedInboundMessage(long messageId)
@@ -309,7 +304,6 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          // set up method invocation context
          requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
          requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
-         requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
          // call stub method
          this.client.invoke(operationQName, new Object[] {}, client.getBindingProvider().getResponseContext());
          //RMSequenceManager.getInstance().unregister(this); // TODO: each sequence will be unregistered by sequence manager
@@ -337,7 +331,8 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
                logger.warn(ie.getMessage(), ie);
             }
          }
-      }*/
+      }
+      */
       Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
       wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
       this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
@@ -347,6 +342,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    public final void sendTerminateMessage()
    {
       sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName());
+      RMSequenceManager.getInstance().unregister(this);
    }
    
    public final void sendSequenceAcknowledgementMessage()
