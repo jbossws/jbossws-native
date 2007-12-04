@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.emulator.config;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +34,6 @@ public interface Request
 {
    String getHttpMethod();
    String getPathInfo();
-   List<String> getMatches();
+   Map<String, String> getMatches();
    Map<String, String> getProperties();
 }

@@ -59,6 +59,7 @@ public final class Constant
    public static final String NODE_ELEMENT = "node";
    public static final String ID_ATTRIBUTE = "id";
    public static final String NAME_ATTRIBUTE = "name";
+   public static final String EQUALS_ATTRIBUTE = "equals";
    public static final String RESOURCE_ATTRIBUTE = "resource";
    public static final String STATUS_CODE_ATTRIBUTE = "statusCode";
    public static final String CONTENT_TYPE_ATTRIBUTE = "contentType";

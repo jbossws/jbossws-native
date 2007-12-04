@@ -54,6 +54,9 @@
       <request httpMethod="POST" pathInfo="/ReqResService">
          <contains>
             <node name="|{${soap}}Envelope|{${soap}}Header|{${wsrm}}SequenceAcknowledgement"/>
+            <node
+               name="|{${soap}}Envelope|{${soap}}Header|{${wsa}}Action"
+               equals="http://docs.oasis-open.org/ws-rx/wsrm/200702/SequenceAcknowledgement"/>
          </contains>
       </request>
       <response statusCode="200"/>

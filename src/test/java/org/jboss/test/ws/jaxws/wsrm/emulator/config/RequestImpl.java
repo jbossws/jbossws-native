@@ -46,7 +46,7 @@ final class RequestImpl implements Request
    private final String httpMethod;
    private final String pathInfo;
    private final Map<String, String> properties;
-   private final List<String> matches;
+   private final Map<String, String> matches;
 
    RequestImpl(Element e, Map<String, String> namespaces)
    {
@@ -56,17 +56,18 @@ final class RequestImpl implements Request
       if ((contains != null) && (contains.getLength() == 1))
       {
          NodeList nodes = ((Element)contains.item(0)).getElementsByTagName(NODE_ELEMENT);
-         List<String> toFill = new LinkedList<String>();
-         this.matches = Collections.unmodifiableList(toFill);
+         Map<String, String> toFill = new HashMap<String, String>();
+         this.matches = Collections.unmodifiableMap(toFill);
          for (int i = 0; i < nodes.getLength(); i++)
          {
             String nameAttrValue = ((Element)nodes.item(i)).getAttribute(NAME_ATTRIBUTE);
-            toFill.add(Util.replaceAll(nameAttrValue, namespaces));
+            String equalsAttrValue = ((Element)nodes.item(i)).getAttribute(EQUALS_ATTRIBUTE);
+            toFill.put(Util.replaceAll(nameAttrValue, namespaces), equalsAttrValue);
          }
       }
       else
       {
-         this.matches = Collections.emptyList();
+         this.matches = Collections.emptyMap();
       }
       NodeList setNodes = e.getElementsByTagName(SET_ELEMENT);
       if ((setNodes != null) && (setNodes.getLength() > 0))
@@ -91,7 +92,7 @@ final class RequestImpl implements Request
       return this.httpMethod;
    }
 
-   public final List<String> getMatches()
+   public final Map<String, String> getMatches()
    {
       return this.matches;
    }

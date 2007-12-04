@@ -210,14 +210,19 @@ public final class Util
    
    public static boolean matches(Document req, View view)
    {
-      List<String> matches = view.getRequest().getMatches();
+      Map<String, String> matches = view.getRequest().getMatches();
       if ((matches == null) || (matches.size() == 0))
          return true;
       
       boolean match = true;
-      for (String matchString : matches)
+      for (String matchString : matches.keySet())
       {
          match = match && elementExists(req, matchString);
+         String equalsValue = matches.get(matchString);
+         if (match && (null != equalsValue) && (!"".equals(equalsValue)))
+         {
+            match = match && equalsValue.equals(getElement(req, matchString).getTextContent());
+         }
       }
       
       return match;
