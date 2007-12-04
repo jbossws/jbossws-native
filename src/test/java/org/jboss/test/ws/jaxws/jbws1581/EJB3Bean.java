@@ -27,11 +27,8 @@ import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.xml.ws.WebServiceRef;
 
-import org.jboss.annotation.ejb.RemoteBinding;
-
 @Stateless
 @Remote(EJB3Remote.class)
-@RemoteBinding(jndiBinding = "/ejb3/EJB3Bean")
 public class EJB3Bean implements EJB3Remote
 {
    @WebServiceRef(wsdlLocation = "META-INF/wsdl/TestService.wsdl")
