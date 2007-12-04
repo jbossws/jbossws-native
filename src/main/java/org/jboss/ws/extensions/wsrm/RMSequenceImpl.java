@@ -188,7 +188,6 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       synchronized (lock)
       {
          this.client = client;
-         RMSequenceManager.getInstance().register(this);
       }
    }
    
@@ -239,7 +238,6 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          {
             this.client.setWSRMSequence(null);
             this.discarded = true;
-            RMSequenceManager.getInstance().unregister(this);
          }
          finally
          {
@@ -306,7 +304,6 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
          // call stub method
          this.client.invoke(operationQName, new Object[] {}, client.getBindingProvider().getResponseContext());
-         //RMSequenceManager.getInstance().unregister(this); // TODO: each sequence will be unregistered by sequence manager
       }
       catch (Exception e)
       {
@@ -316,23 +313,14 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final void sendCloseMessage()
    {
-      /*
       synchronized (lock)
       {
          while (this.isAckRequested())
          {
-            try
-            {
-               logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
-               lock.wait(100);
-            }
-            catch (InterruptedException ie)
-            {
-               logger.warn(ie.getMessage(), ie);
-            }
+            logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
+            sendSequenceAcknowledgementMessage();
          }
       }
-      */
       Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
       wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
       this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
@@ -342,11 +330,14 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    public final void sendTerminateMessage()
    {
       sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName());
-      RMSequenceManager.getInstance().unregister(this);
    }
    
    public final void sendSequenceAcknowledgementMessage()
    {
+      Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
+      wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, true);
+      this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
+      ackRequested(false);
       sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName());
    }
    

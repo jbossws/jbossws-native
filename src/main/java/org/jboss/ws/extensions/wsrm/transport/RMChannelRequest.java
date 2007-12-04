@@ -107,7 +107,14 @@ public final class RMChannelRequest implements Callable<RMChannelResponse>
          }
          else
          {
-            rmResponse = (RMMessage)client.invoke(rmRequest.getPayload(), remotingInvocationContext);
+            Object retVal = client.invoke(rmRequest.getPayload(), remotingInvocationContext);
+            if ((null != retVal) && (false == (retVal instanceof RMMessage)))
+            {
+               String msg = retVal.getClass().getName() + ": '" + retVal + "'";
+               logger.warn(msg);
+               throw new RuntimeException(msg);
+            }
+            rmResponse = (RMMessage)retVal;
          }
 
          // Disconnect the remoting client
