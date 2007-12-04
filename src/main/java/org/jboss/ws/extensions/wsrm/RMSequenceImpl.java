@@ -272,7 +272,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    /**
     * Sets up terminated flag to true.
     */
-   private void sendMessage(String action, QName operationQName) throws RMException
+   private void sendMessage(String action, QName operationQName, List protocolMessages) throws RMException
    {
       try
       {
@@ -295,9 +295,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
          {
             rmRequestContext = new HashMap(); 
          }
-         List outMsgs = new LinkedList();
-         outMsgs.add(operationQName);
-         rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
+         rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
          rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, this);
          // set up method invocation context
          requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
@@ -324,12 +322,20 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
       wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
       this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
-      sendMessage(RMConstant.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName());
+      List msgs = new LinkedList();
+      msgs.add(wsrmConstants.getCloseSequenceQName());
+      sendMessage(RMConstant.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName(), msgs);
    }
    
    public final void sendTerminateMessage()
    {
-      sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName());
+      List msgs = new LinkedList();
+      msgs.add(wsrmConstants.getTerminateSequenceQName());
+      if (this.getInboundId() != null)
+      {
+         msgs.add(wsrmConstants.getSequenceAcknowledgementQName());
+      }
+      sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName(), msgs);
    }
    
    public final void sendSequenceAcknowledgementMessage()
@@ -338,7 +344,9 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, true);
       this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
       ackRequested(false);
-      sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName());
+      List msgs = new LinkedList();
+      msgs.add(wsrmConstants.getSequenceAcknowledgementQName());
+      sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName(), msgs);
    }
    
    public final void setBehavior(RMIncompleteSequenceBehavior behavior)
