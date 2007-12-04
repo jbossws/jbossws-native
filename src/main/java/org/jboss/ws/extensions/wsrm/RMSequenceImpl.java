@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,6 +42,7 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
+import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
@@ -78,13 +78,9 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private long creationTime;
    private URI backPort;
    private ClientImpl client;
-   // object states variables
-   private boolean terminated;
-   private boolean discarded;
    private boolean isFinal;
    private AtomicBoolean inboundMessageAckRequested = new AtomicBoolean();
    private AtomicLong messageNumber = new AtomicLong();
-   private final Object lock = new Object();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    
    public void unassignedMessageReceived()
@@ -105,7 +101,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       this.wsrmConfig = wsrmConfig;
       try
       {
-         this.backPort = new URI("http://localhost:8888/temporary_listen_address/666"); // TODO: use generator;;
+         this.backPort = new URI("http://localhost:8888/temporary_listen_address/" + UUIDGenerator.generateRandomUUIDString());
       }
       catch (URISyntaxException use)
       {
@@ -115,27 +111,18 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final Set<Long> getReceivedInboundMessages()
    {
-      synchronized (lock)
-      {
-         return Collections.unmodifiableSet(this.receivedInboundMessages);
-      }
+      return Collections.unmodifiableSet(this.receivedInboundMessages);
    }
    
    public final BindingProvider getBindingProvider()
    {
-      synchronized (lock)
-      {
-         return (BindingProvider)this.client;
-      }
+      return (BindingProvider)this.client;
    }
    
    public final void setFinal()
    {
-      synchronized (lock)
-      {
-         this.isFinal = true;
-         logger.debug("Sequence " + this.outgoingSequenceId + " state changed to final");
-      }
+      this.isFinal = true;
+      logger.debug("Sequence " + this.outgoingSequenceId + " state changed to final");
    }
    
    public final void ackRequested(boolean requested)
@@ -151,64 +138,43 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final void addReceivedInboundMessage(long messageId)
    {
-      synchronized (lock)
-      {
-         this.receivedInboundMessages.add(messageId);
-         logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", received message no. " + messageId);
-      }
+      this.receivedInboundMessages.add(messageId);
+      logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", received message no. " + messageId);
    }
    
-   public final void addReceivedMessage(long messageId)
+   public final void addReceivedOutboundMessage(long messageId)
    {
-      synchronized (lock)
-      {
-         this.acknowledgedOutboundMessages.add(messageId);
-         logger.debug("Outbound Sequence: " + this.outgoingSequenceId + ", message no. " + messageId + " acknowledged by server");
-      }
+      this.acknowledgedOutboundMessages.add(messageId);
+      logger.debug("Outbound Sequence: " + this.outgoingSequenceId + ", message no. " + messageId + " acknowledged by server");
    }
    
    public final void setOutboundId(String outboundId)
    {
-      synchronized (lock)
-      {
-         this.outgoingSequenceId = outboundId;
-      }
+      this.outgoingSequenceId = outboundId;
    }
    
    public final void setInboundId(String inboundId)
    {
-      synchronized (lock)
-      {
-         this.incomingSequenceId = inboundId;
-      }
+      this.incomingSequenceId = inboundId;
    }
    
    public final void setClient(ClientImpl client)
    {
-      synchronized (lock)
-      {
-         this.client = client;
-      }
+      this.client = client;
    }
    
    public final void setDuration(long duration)
    {
-      synchronized (lock)
+      if (duration > 0)
       {
-         if (duration > 0)
-         {
-            this.creationTime = System.currentTimeMillis();
-            this.duration = duration;
-         }
+         this.creationTime = System.currentTimeMillis();
+         this.duration = duration;
       }
    }
    
    public final long getDuration()
    {
-      synchronized (lock)
-      {
-         return this.duration;
-      }
+      return this.duration;
    }
    
    public final URI getBackPort()
@@ -229,43 +195,16 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       return this.messageNumber.get();
    }
    
-   public final void discard() throws RMException
-   {
-      synchronized (lock)
-      {
-         this.client.getWSRMLock().lock();
-         try
-         {
-            this.client.setWSRMSequence(null);
-            this.discarded = true;
-         }
-         finally
-         {
-            this.client.getWSRMLock().unlock();
-         }
-      }
-   }
-   
    public final void close() throws RMException
    {
-      synchronized (lock)
+      try 
       {
-         if (this.terminated)
-            return; 
-         
-         this.terminated = true;
-
-         try 
-         {
-            sendCloseMessage();
-            sendTerminateMessage();
-         }
-         finally
-         {
-            client.getWSRMLock().lock();
-            this.client.setWSRMSequence(null); // TODO: do not remove this
-            this.client.getWSRMLock().unlock();
-         }
+         sendCloseMessage();
+         sendTerminateMessage();
+      }
+      finally
+      {
+         this.client.setWSRMSequence(null);
       }
    }
 
@@ -311,13 +250,10 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final void sendCloseMessage()
    {
-      synchronized (lock)
+      while (this.isAckRequested())
       {
-         while (this.isAckRequested())
-         {
-            logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
-            sendSequenceAcknowledgementMessage();
-         }
+         logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
+         sendSequenceAcknowledgementMessage();
       }
       Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
       wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
@@ -351,23 +287,10 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final void setBehavior(RMIncompleteSequenceBehavior behavior)
    {
-      synchronized (lock)
+      if (behavior != null)
       {
-         if (behavior != null)
-         {
-            this.behavior = behavior;
-         }
+         this.behavior = behavior;
       }
-   }
-
-   public final boolean isCompleted()
-   {
-      return true;
-   }
-
-   public final boolean isCompleted(int timeAmount, TimeUnit timeUnit)
-   {
-      return true;
    }
 
    public final String getOutboundId()
@@ -380,19 +303,4 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       return incomingSequenceId;
    }
 
-   public final boolean isClosed()
-   {
-      synchronized (lock)
-      {
-         return this.terminated;
-      }
-   }
-
-   public final boolean isDiscarded()
-   {
-      synchronized (lock)
-      {
-         return this.discarded;
-      }
-   }
 }

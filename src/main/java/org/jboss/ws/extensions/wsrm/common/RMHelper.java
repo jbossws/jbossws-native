@@ -95,7 +95,7 @@ public final class RMHelper
          {
             for (long i = range.getLower(); i <= range.getUpper(); i++)
             {
-               sequence.addReceivedMessage(i);
+               sequence.addReceivedOutboundMessage(i);
             }
          }
          if (seqAckHeader.isFinal())

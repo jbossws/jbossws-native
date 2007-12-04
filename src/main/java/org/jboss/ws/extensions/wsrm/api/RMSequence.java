@@ -21,17 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm.api;
 
-import java.util.concurrent.TimeUnit;
-
 public interface RMSequence
 {
-   String getOutboundId();
-   String getInboundId();
-   void discard();
-   long getDuration();
-   boolean isDiscarded();
    void close();
-   boolean isClosed();
-   boolean isCompleted();
-   boolean isCompleted(int timeAmount, TimeUnit timeUnit);
 }
