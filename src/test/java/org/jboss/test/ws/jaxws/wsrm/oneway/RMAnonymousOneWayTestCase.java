@@ -21,14 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.oneway;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import junit.framework.Test;
 
-import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -46,9 +40,9 @@ public final class RMAnonymousOneWayTestCase extends RMAbstractOneWayTest
       return new JBossWSTestSetup(RMAnonymousOneWayTestCase.class, getClasspath());
    }
 
-   public final RMAddressingType getAddressingType()
+   public final boolean isClientAddressable()
    {
-      return RMAddressingType.ANONYMOUS;
+      return false;
    }
 
 }

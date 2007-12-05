@@ -39,7 +39,6 @@ import javax.xml.ws.Service;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.ReqResServiceIface;
 
-import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
 
@@ -170,7 +169,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       RMSequence sequence = null;
       if (emulatorOn)
       {
-         sequence = ((RMProvider)proxyObject).createSequence(getAddressingType());
+         sequence = ((RMProvider)proxyObject).createSequence(isClientAddressable());
       }
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
@@ -189,6 +188,6 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       return props.getProperty("archives");
    }
    
-   protected abstract RMAddressingType getAddressingType();
+   protected abstract boolean isClientAddressable();
    
 }

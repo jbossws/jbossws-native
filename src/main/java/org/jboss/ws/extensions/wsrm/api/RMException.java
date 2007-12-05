@@ -24,8 +24,13 @@ package org.jboss.ws.extensions.wsrm.api;
 import javax.xml.ws.WebServiceException;
 
 /**
- * Reliable messaging exception
+ * WS-RM exception
+ * 
  * @author richard.opalka@jboss.com
+ * 
+ * @since Oct 22, 2007
+ * @see org.jboss.ws.extensions.wsrm.api.RMProvider
+ * @see org.jboss.ws.extensions.wsrm.api.RMSequence
  */
 public class RMException extends WebServiceException
 {

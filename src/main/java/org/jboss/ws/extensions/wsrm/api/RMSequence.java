@@ -21,7 +21,23 @@
  */
 package org.jboss.ws.extensions.wsrm.api;
 
+/**
+ * WS-RM sequence. User can only create sequence using <b>RMProvider</b>
+ * interface and close sequence using <b>RMSequence</b> interface
+ *
+ * @author richard.opalka@jboss.com
+ *
+ * @since Oct 22, 2007
+ * @see org.jboss.ws.extensions.wsrm.api.RMProvider
+ * @see org.jboss.ws.extensions.wsrm.api.RMException
+ */
 public interface RMSequence
 {
+   
+   /**
+    * Close the sequence
+    * @throws unchecked RMException if sequence termination failed
+    */
    void close();
+   
 }

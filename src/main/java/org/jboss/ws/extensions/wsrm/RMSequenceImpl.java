@@ -45,7 +45,6 @@ import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
-import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
@@ -68,7 +67,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
    private final RMConfig wsrmConfig;
-   private final RMAddressingType addrType;
+   private final boolean addressableClient;
    private final Set<Long> acknowledgedOutboundMessages = new TreeSet<Long>();
    private final Set<Long> receivedInboundMessages = new TreeSet<Long>();
    private RMIncompleteSequenceBehavior behavior = RMIncompleteSequenceBehavior.NO_DISCARD;
@@ -91,13 +90,13 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       logger.debug("Unassigned message available in callback handler");
    }
 
-   public RMSequenceImpl(RMAddressingType addrType, RMConfig wsrmConfig)
+   public RMSequenceImpl(boolean addrType, RMConfig wsrmConfig)
    {
       super();
-      if ((addrType == null) || (wsrmConfig == null))
+      if (wsrmConfig == null)
          throw new IllegalArgumentException();
       
-      this.addrType = addrType;
+      this.addressableClient = addrType;
       this.wsrmConfig = wsrmConfig;
       try
       {
@@ -180,7 +179,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    public final URI getBackPort()
    {
       // no need for synchronization
-      return (this.addrType == RMAddressingType.ADDRESSABLE) ? this.backPort : null;
+      return (this.addressableClient) ? this.backPort : null;
    }
 
    public final long newMessageNumber()

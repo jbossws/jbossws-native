@@ -35,7 +35,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
 /**
- * TODO: Add comment
+ * Reliable messaging callback handler listens for incomming requests on specified path
  *
  * @author richard.opalka@jboss.com
  *
@@ -50,6 +50,10 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
    private List<RMMessage> arrivedUnassignedMessages = new LinkedList<RMMessage>();
    private RMUnassignedMessageListener listener;
    
+   /**
+    * Request path to listen for incomming messages
+    * @param handledPath
+    */
    public RMCallbackHandlerImpl(String handledPath)
    {
       super();
@@ -59,7 +63,7 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
    
    public Throwable getFault(String messageId)
    {
-      // TODO Auto-generated method stub
+      // TODO implement
       return null;
    }
 
@@ -75,7 +79,9 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
       {
          logger.debug("Setting response object");
          MessageTrace.traceMessage("Incoming RM Response Message", requestMessage.getBytes());
-         RMMessage message = RMMessageFactory.newMessage(requestMessage.getBytes(), new RMMetadata(new java.util.HashMap<String, Object>())); // TODO create map metadata
+         // TODO: is it necessary to initialize metadata from request message?
+         RMMetadata metadata = new RMMetadata(new java.util.HashMap<String, Object>());
+         RMMessage message = RMMessageFactory.newMessage(requestMessage.getBytes(), metadata);
          String startPattern = "<wsa:RelatesTo>"; // TODO: remove this with XML content inspection
          String endPattern = "</wsa:RelatesTo>";
          int begin = requestMessage.indexOf(startPattern) + startPattern.length();
@@ -118,12 +124,12 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
          {
             try
             {
-               logger.debug("waiting for response object associated with message id: " + messageId);
+               logger.debug("waiting for response with message id: " + messageId);
                instanceLock.wait(100);
             }
-            catch (InterruptedException ignore)
+            catch (InterruptedException ie)
             {
-               // TODO: never ignore exceptions - LOG it using logger
+               logger.warn(ie.getMessage(), ie);
             }
          }
          return this.arrivedMessages.get(messageId);

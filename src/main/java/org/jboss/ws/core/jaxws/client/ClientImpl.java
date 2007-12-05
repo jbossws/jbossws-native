@@ -70,7 +70,6 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
-import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
@@ -508,21 +507,19 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public org.jboss.ws.extensions.wsrm.api.RMSequence createSequence(RMAddressingType addrType) throws RMException
+   public org.jboss.ws.extensions.wsrm.api.RMSequence createSequence(boolean addressableClient) throws RMException
    {
       if (this.wsrmSequence != null)
          throw new IllegalStateException("Sequence already registered with proxy instance");
-      if (addrType == null)
-         throw new IllegalArgumentException("Addressing type cannot be null");
 
       try
       {
          // set up addressing data
-         RMSequenceImpl candidateSequence = new RMSequenceImpl(addrType, getEndpointMetaData().getConfig().getRMMetaData());
+         RMSequenceImpl candidateSequence = new RMSequenceImpl(addressableClient, getEndpointMetaData().getConfig().getRMMetaData());
          String address = getEndpointMetaData().getEndpointAddress();
          String action = RMConstant.CREATE_SEQUENCE_WSA_ACTION;
          AddressingProperties addressingProps = null;
-         if (addrType == RMAddressingType.ADDRESSABLE)
+         if (addressableClient)
          {
             addressingProps = AddressingClientUtil.createDefaultProps(action, address);
             addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(candidateSequence.getBackPort()));

@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxws.wsrm.reqres;
 
 import junit.framework.Test;
 
-import org.jboss.ws.extensions.wsrm.api.RMAddressingType;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -41,9 +40,9 @@ public final class RMAnonymousReqResTestCase extends RMAbstractReqResTest
       return new JBossWSTestSetup(RMAnonymousReqResTestCase.class, getClasspath());
    }
 
-   public final RMAddressingType getAddressingType()
+   public final boolean isClientAddressable()
    {
-      return RMAddressingType.ANONYMOUS;
+      return false;
    }
 
 }
