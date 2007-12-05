@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm.transport;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -45,8 +46,8 @@ public final class RMChannelManagerImpl implements Runnable, RMChannelManager
    private static final Logger logger = Logger.getLogger(RMChannelManagerImpl.class);
    private static RMChannelManager instance = new RMChannelManagerImpl();
    private static final ExecutorService rmChannelPool = Executors.newFixedThreadPool(5, new RMThreadFactory());
-   private static final int countOfAttempts = 10;
-   private static final int timeToWait = 2;
+   private static final int countOfAttempts = 100;
+   private static final int timeToWait = 3;
    
    private static final class RMThreadFactory implements ThreadFactory
    {
@@ -102,39 +103,49 @@ public final class RMChannelManagerImpl implements Runnable, RMChannelManager
    
    public final RMMessage send(RMMessage request) throws Throwable
    {
-      // submit new task to channel
-      // if response has no fault - delete saved request and return response to the client
-      // if response has fault - try to detect it's type
-      
       RMChannelResponse result = null;
       long startTime = 0L;
       long endTime = 0L;
+      int attemptNumber = 1;
       
       for (int i = 0; i < countOfAttempts; i++)
       {
+         logger.debug("Sending RM request - attempt no. " + attemptNumber++);
          Future<RMChannelResponse> futureResult = rmChannelPool.submit(new RMChannelTask(request));
          try 
          {
             startTime = System.currentTimeMillis();
             result = futureResult.get(timeToWait, TimeUnit.SECONDS);
-            endTime = System.currentTimeMillis();
-            logger.debug("Response message received in " + (endTime - startTime) + " miliseconds");
-            break;
+            if (result != null)
+            {
+               Throwable t = result.getFault();
+               if (t != null)
+               {
+                  logger.warn(result.getFault().getClass().getName(), result.getFault());
+                  Thread.sleep(timeToWait * 1000);
+               }
+               else
+               {
+                  endTime = System.currentTimeMillis();
+                  logger.debug("Response message received in " + (endTime - startTime) + " miliseconds");
+                  break;
+               }
+            }
          }
          catch (TimeoutException te)
          {
             endTime = System.currentTimeMillis();
-            logger.warn("Response message not received in " + (endTime - startTime) + " miliseconds");
+            logger.warn("Timeout - response message not received in " + (endTime - startTime) + " miliseconds");
          }
       }
 
       if (result == null)
-         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getMessageId(request));
+         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getMessageId(request) + ". Count of attempts to deliver the message was: " + countOfAttempts);
       
       Throwable fault = result.getFault();
       if (fault != null)
       {
-         throw fault;
+         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getMessageId(request) + ". Count of attempts to deliver the message was: " + countOfAttempts, fault);
       }
       else
       {

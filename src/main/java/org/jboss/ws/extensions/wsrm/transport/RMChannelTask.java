@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.wsrm.transport;
 
 import static org.jboss.ws.extensions.wsrm.RMConstant.*;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Map;
@@ -112,7 +113,7 @@ public final class RMChannelTask implements Callable<RMChannelResponse>
             {
                String msg = retVal.getClass().getName() + ": '" + retVal + "'";
                logger.warn(msg);
-               throw new RuntimeException(msg);
+               throw new IOException(msg);
             }
             rmResponse = (RMMessage)retVal;
          }

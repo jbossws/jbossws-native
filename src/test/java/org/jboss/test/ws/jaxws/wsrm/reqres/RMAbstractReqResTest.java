@@ -62,7 +62,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
    private static final TimeUnit testTimeUnit = TimeUnit.SECONDS;
-   private static final long testWaitPeriod = 180L;
+   private static final long testWaitPeriod = 300L;
    private static final Executor testExecutor = new ThreadPoolExecutor(
       0, 5, testWaitPeriod, testTimeUnit, new SynchronousQueue<Runnable>()
    );

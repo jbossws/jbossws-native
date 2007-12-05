@@ -58,7 +58,7 @@ public class EndpointEmulator extends HttpServlet
    private String configFile;
    private ServletContext ctx;
    private List<View> views;
-   private Map<String, Integer> delayedMessages;
+   private Map<String, Integer> delayedMessages = new HashMap<String, Integer>();
    
    @Override
    public void init(ServletConfig config) throws ServletException
