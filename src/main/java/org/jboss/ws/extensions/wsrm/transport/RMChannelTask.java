@@ -41,13 +41,13 @@ import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFacto
  * @see org.jboss.ws.extensions.wsrm.transport.RMChannel
  * @author richard.opalka@jboss.com
  */
-public final class RMChannelRequest implements Callable<RMChannelResponse>
+public final class RMChannelTask implements Callable<RMChannelResponse>
 {
-   private static final Logger logger = Logger.getLogger(RMChannelRequest.class);
+   private static final Logger logger = Logger.getLogger(RMChannelTask.class);
    private static final String JBOSSWS_SUBSYSTEM = "jbossws";
    private final RMMessage rmRequest;
    
-   RMChannelRequest(RMMessage rmRequest)
+   RMChannelTask(RMMessage rmRequest)
    {
       super();
       this.rmRequest = rmRequest;

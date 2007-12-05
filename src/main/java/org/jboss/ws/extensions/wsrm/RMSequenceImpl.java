@@ -25,7 +25,6 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +65,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageListener
 {
    private static final Logger logger = Logger.getLogger(RMSequenceImpl.class);
+   private static final String PATH_PREFIX = "/temporary_listen_address/";
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
    private final RMConfig wsrmConfig;
@@ -111,7 +111,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
             logger.debug("Backports server configuration omits host configuration - using autodetected " + host);
          }  
          String port = wsrmConfig.getBackPortsServer().getPort();
-         String path = "/temporary_listen_address/" + UUIDGenerator.generateRandomUUIDString();
+         String path = PATH_PREFIX + UUIDGenerator.generateRandomUUIDString();
          this.backPort = new URI("http://" + host + ":" + port + path);
       }
       catch (URISyntaxException use)
@@ -128,7 +128,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    
    public final Set<Long> getReceivedInboundMessages()
    {
-      return Collections.unmodifiableSet(this.receivedInboundMessages);
+      return this.receivedInboundMessages;
    }
    
    public final BindingProvider getBindingProvider()

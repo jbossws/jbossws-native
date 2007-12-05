@@ -32,10 +32,6 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * RM Channel
@@ -56,30 +52,8 @@ public class RMChannel
    }
 
    // Holds the list of tasks that will be send to the remoting transport channel
-   private static final ExecutorService rmChannelPool = Executors.newFixedThreadPool(5, new RMThreadFactory());
+   private static final RMChannelManager rmChannelManager = RMChannelManagerImpl.getInstance();
    
-   private static final class RMThreadFactory implements ThreadFactory
-   {
-      final ThreadGroup group;
-      final AtomicInteger threadNumber = new AtomicInteger(1);
-      final String namePrefix = "rm-pool-thread-";
-    
-      private RMThreadFactory()
-      {
-         SecurityManager sm = System.getSecurityManager();
-         group = (sm != null) ? sm.getThreadGroup() : Thread.currentThread().getThreadGroup();
-      }
-      
-      public Thread newThread(Runnable r)
-      {
-         Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-         if (t.isDaemon())
-            t.setDaemon(false);
-         if (t.getPriority() != Thread.NORM_PRIORITY)
-            t.setPriority(Thread.NORM_PRIORITY);
-         return t;
-      }
-   }
 
    private RMMessage createRMMessage(MessageAbstraction request, RMMetadata rmMetadata) throws Throwable
    {
@@ -122,16 +96,7 @@ public class RMChannel
    
    private RMMessage sendToChannel(RMMessage request) throws Throwable
    {
-      RMChannelResponse result = rmChannelPool.submit(new RMChannelRequest(request)).get();
-
-      Throwable fault = result.getFault();
-      if (fault != null)
-      {
-         throw fault;
-      }
-      else
-      {
-         return result.getResponse();
-      }
+      return rmChannelManager.send(request);
    }
+   
 }
