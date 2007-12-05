@@ -28,7 +28,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
@@ -58,6 +61,11 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    private Exception handlerException;
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
+   private static final TimeUnit testTimeUnit = TimeUnit.SECONDS;
+   private static final long testWaitPeriod = 180L;
+   private static final Executor testExecutor = new ThreadPoolExecutor(
+      0, 5, testWaitPeriod, testTimeUnit, new SynchronousQueue<Runnable>()
+   );
    
    static
    {
@@ -91,6 +99,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
          QName serviceName = new QName(TARGET_NS, "ReqResService");
          URL wsdlURL = new URL(serviceURL + "?wsdl");
          Service service = Service.create(wsdlURL, serviceName);
+         service.setExecutor(testExecutor);
          proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
       }
    }
@@ -129,7 +138,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
          {
             try
             {
-               String retStr = (String) response.get(1000, TimeUnit.MILLISECONDS);
+               String retStr = (String) response.get(testWaitPeriod, testTimeUnit);
                assertEquals(HELLO_WORLD_MSG, retStr);
                asyncHandlerCalled = true;
             }
@@ -140,7 +149,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
          }
       };
       Future<?> future = proxy.echoAsync(HELLO_WORLD_MSG, handler);
-      future.get(1000, TimeUnit.MILLISECONDS);
+      future.get(testWaitPeriod, testTimeUnit);
       ensureAsyncStatus();
    }
    

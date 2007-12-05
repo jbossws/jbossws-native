@@ -29,8 +29,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -52,9 +54,11 @@ import org.w3c.dom.Element;
 public class EndpointEmulator extends HttpServlet
 {
    
+   private static final Random generator = new Random();
    private String configFile;
    private ServletContext ctx;
    private List<View> views;
+   private Map<String, Integer> delayedMessages;
    
    @Override
    public void init(ServletConfig config) throws ServletException
@@ -89,6 +93,7 @@ public class EndpointEmulator extends HttpServlet
    protected void doGet(HttpServletRequest req, HttpServletResponse res)
    throws ServletException, IOException
    {
+      delayedMessages = new HashMap<String, Integer>();
       handleRequest(HTTP_GET, req, res);
    }
    
@@ -125,6 +130,37 @@ public class EndpointEmulator extends HttpServlet
          {
             responseTo = null;
          }
+      }
+      
+      try
+      {
+         boolean sleep = generator.nextBoolean();
+         if (sleep)
+         {
+            Integer countOfDelayedMessages = this.delayedMessages.get(view.getId());
+            if (countOfDelayedMessages == null)
+            {
+               countOfDelayedMessages = 0;
+            }
+            if (countOfDelayedMessages.intValue() < 5)
+            {
+               Thread.sleep(5 * 1000);
+               ctx.log("serving request after " + 5 + " seconds");
+               this.delayedMessages.put(view.getId(), countOfDelayedMessages.intValue() + 1);
+            }
+            else
+            {
+               ctx.log("serving request immediately");
+            }
+         }
+         else
+         {
+            ctx.log("serving request immediately");
+         }
+      }
+      catch (InterruptedException ie)
+      {
+         ctx.log(ie.getMessage(), ie);
       }
       
       if (responseTo == null)
