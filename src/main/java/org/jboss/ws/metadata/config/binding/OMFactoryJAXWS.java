@@ -38,6 +38,7 @@ import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 import org.jboss.ws.extensions.wsrm.RMDeliveryAssurance;
 import org.jboss.ws.extensions.wsrm.RMDeliveryAssuranceFactory;
+import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
@@ -151,6 +152,24 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          RMDeliveryAssuranceConfig deliveryAssurance = getDeliveryAssurance(attrs);
          wsrmConfig.setDeliveryAssurance(deliveryAssurance);
          return deliveryAssurance;
+      }
+      if (localName.equals("backports-server"))
+      {
+         String host = null, port = null;
+         for (int i = 0; i < countOfAttributes && (host == null || port == null); i++)
+         {
+            String attrLocalName = attrs.getLocalName(i); 
+            if (attrLocalName.equals("host"))
+               host = attrs.getValue(i);
+            if (attrLocalName.equals("port"))
+               port = attrs.getValue(i);
+         }
+         
+         RMBackPortsServerConfig backportsServer = new RMBackPortsServerConfig();
+         backportsServer.setHost(host);
+         backportsServer.setPort(port);
+         wsrmConfig.setBackPortsServer(backportsServer);
+         return backportsServer;
       }
       if (localName.equals("provider"))
       {

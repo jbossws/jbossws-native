@@ -71,6 +71,14 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
+      <xsd:element name="backports-server" type="tns:backportsServerType" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            Backports server configuration to be used for addressable clients.
+            Users must always configure backports server on client machines.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
       <xsd:element name="provider" type="tns:providerType">
         <xsd:annotation>
           <xsd:documentation>
@@ -93,6 +101,23 @@
         </xsd:annotation>
       </xsd:element>
     </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="backportsServerType">
+    <xsd:attribute name="host" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          Host name to be used for backports server. If not specified default one will be detected.
+          Make sure you have DNS correctly configured so runtime is able to detect your real hostname.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="port" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+           Port number to be used for backports server.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="msgStoreType">
     <xsd:sequence>

@@ -46,6 +46,7 @@
       <config-name>Standard WSRM Endpoint</config-name>
 	  <reliable-messaging>
           <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
+          <backports-server host="realhostname.realdomain" port="9999"/>
           <provider
           	  specVersion="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
           <message-store

@@ -26,14 +26,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.extensions.wsrm.RMDeliveryAssurance;
-import org.jboss.ws.extensions.wsrm.RMDeliveryQuality;
+import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
@@ -157,5 +155,8 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertEquals(port2.getPortName(), new QName("http://custom/namespace/", "Port2"));
       assertEquals(port2.getDeliveryAssurance().getInOrder(), "true");
       assertEquals(port2.getDeliveryAssurance().getQuality(), "ExactlyOnce");
+      RMBackPortsServerConfig backportsServer = wsrmConfig.getBackPortsServer();
+      assertEquals(backportsServer.getHost(), "realhostname.realdomain");
+      assertEquals(backportsServer.getPort(), "9999");
    }
 }

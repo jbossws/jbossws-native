@@ -21,8 +21,10 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -94,17 +96,33 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    {
       super();
       if (wsrmConfig == null)
-         throw new IllegalArgumentException();
+         throw new RMException("WS-RM configuration missing");
+      if (wsrmConfig.getBackPortsServer() == null)
+         throw new RMException("WS-RM backports server configuration missing");
       
       this.addressableClient = addrType;
       this.wsrmConfig = wsrmConfig;
       try
       {
-         this.backPort = new URI("http://localhost:8888/temporary_listen_address/" + UUIDGenerator.generateRandomUUIDString());
+         String host = wsrmConfig.getBackPortsServer().getHost();
+         if (host == null)
+         {
+            host = InetAddress.getLocalHost().getCanonicalHostName();
+            logger.debug("Backports server configuration omits host configuration - using autodetected " + host);
+         }  
+         String port = wsrmConfig.getBackPortsServer().getPort();
+         String path = "/temporary_listen_address/" + UUIDGenerator.generateRandomUUIDString();
+         this.backPort = new URI("http://" + host + ":" + port + path);
       }
       catch (URISyntaxException use)
       {
          logger.warn(use);
+         throw new RMException(use.getMessage(), use);
+      }
+      catch (UnknownHostException uhe)
+      {
+         logger.warn(uhe);
+         throw new RMException(uhe.getMessage(), uhe);
       }
    }
    

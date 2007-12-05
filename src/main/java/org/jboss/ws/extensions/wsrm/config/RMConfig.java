@@ -34,6 +34,7 @@ public final class RMConfig
    
    private RMDeliveryAssuranceConfig deliveryAssurance;
    private RMProviderConfig provider;
+   private RMBackPortsServerConfig backportsServer;
    private RMMessageStoreConfig messageStore;
    private List<RMPortConfig> ports = new LinkedList<RMPortConfig>();
    
@@ -48,6 +49,16 @@ public final class RMConfig
    public final RMDeliveryAssuranceConfig getDeliveryAssurance()
    {
       return this.deliveryAssurance;
+   }
+   
+   public final void setBackPortsServer(RMBackPortsServerConfig backportsServer)
+   {
+      this.backportsServer = backportsServer;
+   }
+   
+   public final RMBackPortsServerConfig getBackPortsServer()
+   {
+      return this.backportsServer;
    }
    
    public final void setProvider(RMProviderConfig provider)
