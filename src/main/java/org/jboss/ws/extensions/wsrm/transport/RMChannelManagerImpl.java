@@ -21,7 +21,9 @@
  */
 package org.jboss.ws.extensions.wsrm.transport;
 
-import java.io.IOException;
+import static org.jboss.ws.extensions.wsrm.RMConstant.REMOTING_INVOCATION_CONTEXT;
+
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -30,17 +32,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.jboss.logging.Logger;
+import org.jboss.remoting.transport.http.HTTPMetadataConstants;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 
 /**
- * WS-RM channel manager ensures message reliable delivery according to sequence configuration
+ * WS-RM channel manager ensures message reliable delivery according to sequence retransmission configuration
  *
  * @author richard.opalka@jboss.com
  *
  * @since Dec 5, 2007
  */
-public final class RMChannelManagerImpl implements Runnable, RMChannelManager
+public final class RMChannelManagerImpl implements RMChannelManager
 {
    
    private static final Logger logger = Logger.getLogger(RMChannelManagerImpl.class);
@@ -74,9 +79,7 @@ public final class RMChannelManagerImpl implements Runnable, RMChannelManager
 
    private RMChannelManagerImpl()
    {
-      Thread thread = new Thread(this, "RMChannelManager");
-      thread.setDaemon(true);
-      thread.start();
+      // forbidden inheritance
    }
    
    public static final RMChannelManager getInstance()
@@ -84,23 +87,6 @@ public final class RMChannelManagerImpl implements Runnable, RMChannelManager
       return instance;
    }
 
-   public final void run()
-   {
-      while (true)
-      {
-         logger.debug("checking persistent store for undelivered messages");
-         try
-         {
-            Thread.sleep(10);
-         }
-         catch (InterruptedException ie)
-         {
-            logger.warn(ie.getMessage(), ie);
-         }
-      }
-      
-   }
-   
    public final RMMessage send(RMMessage request) throws Throwable
    {
       RMChannelResponse result = null;
@@ -122,14 +108,26 @@ public final class RMChannelManagerImpl implements Runnable, RMChannelManager
                if (t != null)
                {
                   logger.warn(result.getFault().getClass().getName(), result.getFault());
-                  Thread.sleep(timeToWait * 1000);
                }
                else
                {
                   endTime = System.currentTimeMillis();
+                  if (result.getResponse() != null)
+                  {
+                     Map<String, Object> remotingCtx = result.getResponse().getMetadata().getContext(REMOTING_INVOCATION_CONTEXT);
+                     if (remotingCtx != null)
+                     {
+                        if (Integer.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).equals(remotingCtx.get(HTTPMetadataConstants.RESPONSE_CODE)))
+                        {
+                           logger.debug("Response message received in " + (endTime - startTime) + " miliseconds, but contains internal server code, going to resend the request message");
+                           continue;
+                        }
+                     }
+                  }
                   logger.debug("Response message received in " + (endTime - startTime) + " miliseconds");
                   break;
                }
+               Thread.sleep(timeToWait * 1000);
             }
          }
          catch (TimeoutException te)
