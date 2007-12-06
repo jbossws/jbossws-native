@@ -9,12 +9,8 @@
   <client-config>
     <config-name>Standard WSRM Client</config-name>
     <reliable-messaging>
-      <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
       <backports-server port="7777"/>
-      <provider specVersion="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
-      <message-store id="wsrmStoreId" class="custom.MessageStoreImpl">
-        <config-file>META-INF/config.xml</config-file>
-      </message-store>
+      <message-retransmission attempts="50" interval="10" timeout="3"/>
     </reliable-messaging>	
     <post-handler-chains>
       <javaee:handler-chain>

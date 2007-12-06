@@ -84,14 +84,6 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private AtomicLong messageNumber = new AtomicLong();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    
-   public void unassignedMessageReceived()
-   {
-      // we can't use objectLock in the method - possible deadlock
-      this.countOfUnassignedMessagesAvailable.addAndGet(1);
-      logger.debug("Expected sequence expiration in " + ((System.currentTimeMillis() - this.creationTime) / 1000) + "seconds");
-      logger.debug("Unassigned message available in callback handler");
-   }
-
    public RMSequenceImpl(boolean addrType, RMConfig wsrmConfig)
    {
       super();
@@ -126,6 +118,19 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
       }
    }
    
+   public void unassignedMessageReceived()
+   {
+      // we can't use objectLock in the method - possible deadlock
+      this.countOfUnassignedMessagesAvailable.addAndGet(1);
+      logger.debug("Expected sequence expiration in " + ((System.currentTimeMillis() - this.creationTime) / 1000) + "seconds");
+      logger.debug("Unassigned message available in callback handler");
+   }
+   
+   public final RMConfig getRMConfig()
+   {
+      return this.wsrmConfig;
+   }
+
    public final Set<Long> getReceivedInboundMessages()
    {
       return this.receivedInboundMessages;

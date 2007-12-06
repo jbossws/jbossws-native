@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
+import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
@@ -158,5 +159,9 @@ public class ConfigFactoryTestCase extends JBossWSTest
       RMBackPortsServerConfig backportsServer = wsrmConfig.getBackPortsServer();
       assertEquals(backportsServer.getHost(), "realhostname.realdomain");
       assertEquals(backportsServer.getPort(), "9999");
+      RMMessageRetransmissionConfig messageRetransmission = wsrmConfig.getMessageRetransmission();
+      assertEquals(messageRetransmission.getCountOfAttempts(), 50);
+      assertEquals(messageRetransmission.getRetransmissionInterval(), 10);
+      assertEquals(messageRetransmission.getMessageTimeout(), 3);
    }
 }

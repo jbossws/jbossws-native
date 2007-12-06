@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.transport.http.HTTPMetadataConstants;
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 
 /**
  * WS-RM channel manager ensures message reliable delivery according to sequence retransmission configuration
@@ -51,8 +52,6 @@ public final class RMChannelManagerImpl implements RMChannelManager
    private static final Logger logger = Logger.getLogger(RMChannelManagerImpl.class);
    private static RMChannelManager instance = new RMChannelManagerImpl();
    private static final ExecutorService rmChannelPool = Executors.newFixedThreadPool(5, new RMThreadFactory());
-   private static final int countOfAttempts = 100;
-   private static final int timeToWait = 3;
    
    private static final class RMThreadFactory implements ThreadFactory
    {
@@ -89,6 +88,13 @@ public final class RMChannelManagerImpl implements RMChannelManager
 
    public final RMMessage send(RMMessage request) throws Throwable
    {
+      RMMessageRetransmissionConfig qos = RMTransportHelper.getSequence(request).getRMConfig().getMessageRetransmission();
+      if (qos == null)
+         throw new RMException("User must specify message retransmission configuration in JAX-WS WS-RM config");
+      
+      int countOfAttempts = qos.getCountOfAttempts();
+      int inactivityTimeout = qos.getMessageTimeout();
+      int retransmissionInterval = qos.getRetransmissionInterval();
       RMChannelResponse result = null;
       long startTime = 0L;
       long endTime = 0L;
@@ -101,7 +107,7 @@ public final class RMChannelManagerImpl implements RMChannelManager
          try 
          {
             startTime = System.currentTimeMillis();
-            result = futureResult.get(timeToWait, TimeUnit.SECONDS);
+            result = futureResult.get(inactivityTimeout, TimeUnit.SECONDS);
             if (result != null)
             {
                Throwable t = result.getFault();
@@ -127,13 +133,28 @@ public final class RMChannelManagerImpl implements RMChannelManager
                   logger.debug("Response message received in " + (endTime - startTime) + " miliseconds");
                   break;
                }
-               Thread.sleep(timeToWait * 1000);
+               try
+               {
+                  Thread.sleep(retransmissionInterval * 1000);
+               }
+               catch (InterruptedException ie)
+               {
+                  logger.warn(ie.getMessage(), ie);
+               }
             }
          }
          catch (TimeoutException te)
          {
             endTime = System.currentTimeMillis();
             logger.warn("Timeout - response message not received in " + (endTime - startTime) + " miliseconds");
+            try
+            {
+               Thread.sleep(retransmissionInterval * 1000);
+            }
+            catch (InterruptedException ie)
+            {
+               logger.warn(ie.getMessage(), ie);
+            }
          }
       }
 

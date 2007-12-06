@@ -115,8 +115,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
    private void setupRMOperations(EndpointMetaData endpointMD)
    {
-      String rmSpecVersion = endpointMD.getConfig().getRMMetaData().getProvider().getSpecVersion();
-      RMProvider rmProvider = RMProvider.getInstance(rmSpecVersion);
+      RMProvider rmProvider = RMProvider.get();
       
       // register createSequence method
       QName createSequenceQName = rmProvider.getConstants().getCreateSequenceQName();

@@ -71,7 +71,7 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="backports-server" type="tns:backportsServerType" minOccurs="0" maxOccurs="1">
+      <xsd:element name="backports-server" type="tns:backportsServerType" minOccurs="0">
         <xsd:annotation>
           <xsd:documentation>
             Backports server configuration to be used for addressable clients.
@@ -79,14 +79,21 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="provider" type="tns:providerType">
+      <xsd:element name="message-retransmission" type="tns:messageRetransmissionType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Message retransmission allow users to configure the QoS of WS-RM.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="provider" type="tns:providerType" minOccurs="0">
         <xsd:annotation>
           <xsd:documentation>
             WS-RM specification version to be used for reliable messaging.
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="message-store" type="tns:msgStoreType">
+      <xsd:element name="message-store" type="tns:msgStoreType" minOccurs="0">
         <xsd:annotation>
           <xsd:documentation>
             WS-RM message store to be used for reliable messaging.
@@ -101,6 +108,29 @@
         </xsd:annotation>
       </xsd:element>
     </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="messageRetransmissionType">
+    <xsd:attribute name="interval" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          Message retransmission interval (in seconds)
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="attempts" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+           Maximum count of message retransmission attempts.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="timeout" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+           Maximum count of seconds to wait for response.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="backportsServerType">
     <xsd:attribute name="host" type="xsd:string" use="optional">

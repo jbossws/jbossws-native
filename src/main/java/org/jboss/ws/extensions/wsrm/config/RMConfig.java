@@ -35,14 +35,22 @@ public final class RMConfig
    private RMDeliveryAssuranceConfig deliveryAssurance;
    private RMProviderConfig provider;
    private RMBackPortsServerConfig backportsServer;
+   private RMMessageRetransmissionConfig messageRetransmission;
    private RMMessageStoreConfig messageStore;
    private List<RMPortConfig> ports = new LinkedList<RMPortConfig>();
    
+   public final void setMessageRetransmission(RMMessageRetransmissionConfig messageRetransmission)
+   {
+      this.messageRetransmission = messageRetransmission;
+   }
+   
+   public final RMMessageRetransmissionConfig getMessageRetransmission()
+   {
+      return this.messageRetransmission;
+   }
+   
    public final void setDeliveryAssurance(RMDeliveryAssuranceConfig deliveryAssurance)
    {
-      if (deliveryAssurance == null)
-         throw new IllegalArgumentException();
-      
       this.deliveryAssurance = deliveryAssurance;
    }
    
@@ -63,9 +71,6 @@ public final class RMConfig
    
    public final void setProvider(RMProviderConfig provider)
    {
-      if (provider == null)
-         throw new IllegalArgumentException();
-      
       this.provider = provider;
    }
    
@@ -76,9 +81,6 @@ public final class RMConfig
    
    public final void setMessageStore(RMMessageStoreConfig messageStore)
    {
-      if (messageStore == null)
-         throw new IllegalArgumentException();
-      
       this.messageStore = messageStore;
    }
    

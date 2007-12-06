@@ -40,6 +40,7 @@ import org.jboss.ws.extensions.wsrm.RMDeliveryAssurance;
 import org.jboss.ws.extensions.wsrm.RMDeliveryAssuranceFactory;
 import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
+import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
@@ -152,6 +153,27 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          RMDeliveryAssuranceConfig deliveryAssurance = getDeliveryAssurance(attrs);
          wsrmConfig.setDeliveryAssurance(deliveryAssurance);
          return deliveryAssurance;
+      }
+      if (localName.equals("message-retransmission"))
+      {
+         int interval = 0, attempts = 0, timeout=0;
+         for (int i = 0; i < countOfAttributes; i++)
+         {
+            String attrLocalName = attrs.getLocalName(i); 
+            if (attrLocalName.equals("interval"))
+               interval = Integer.valueOf(attrs.getValue(i));
+            if (attrLocalName.equals("attempts"))
+               attempts = Integer.valueOf(attrs.getValue(i));
+            if (attrLocalName.equals("timeout"))
+               timeout = Integer.valueOf(attrs.getValue(i));
+         }
+         
+         RMMessageRetransmissionConfig retransmissionConfig = new RMMessageRetransmissionConfig();
+         retransmissionConfig.setCountOfAttempts(attempts);
+         retransmissionConfig.setRetransmissionInterval(interval);
+         retransmissionConfig.setMessageTimeout(timeout);
+         wsrmConfig.setMessageRetransmission(retransmissionConfig);
+         return retransmissionConfig;
       }
       if (localName.equals("backports-server"))
       {
