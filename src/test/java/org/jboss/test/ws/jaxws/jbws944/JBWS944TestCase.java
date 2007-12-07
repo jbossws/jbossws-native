@@ -70,7 +70,7 @@ public class JBWS944TestCase extends JBossWSTest
    {
       if (true)
       {
-         System.out.println("FIXME: [JBCTS-540] EJB3 proxy does not implement the Home interface");
+         System.out.println("FIXME [JBCTS-540] EJB3 proxy does not implement the Home interface");
          return;
       }
       

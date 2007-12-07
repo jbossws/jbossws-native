@@ -73,7 +73,7 @@ public class MimeDeclarationTestCase extends TestCase {
 
       if(true)
       {
-         System.out.println("FIXME: [JBWS-1460] @XmlMimeType on SEI parameter declarations");
+         System.out.println("FIXME [JBWS-1460] @XmlMimeType on SEI parameter declarations");
          return;
       }
 

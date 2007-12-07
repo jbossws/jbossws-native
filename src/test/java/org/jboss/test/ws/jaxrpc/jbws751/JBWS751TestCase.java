@@ -45,7 +45,7 @@ public class JBWS751TestCase extends JBossWSTest
    {
       if (true)
       {
-         System.out.println("FIXME: [JBWS-751] Multiple schema imports with the same namespace");
+         System.out.println("FIXME [JBWS-751] Multiple schema imports with the same namespace");
          return;
       }
       
@@ -61,7 +61,7 @@ public class JBWS751TestCase extends JBossWSTest
    {
       if (true)
       {
-         System.out.println("FIXME: [JBWS-751] Multiple schema imports with the same namespace");
+         System.out.println("FIXME [JBWS-751] Multiple schema imports with the same namespace");
          return;
       }
       

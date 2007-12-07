@@ -158,7 +158,7 @@ public class JBWS1653TestCase extends JBossWSTest
    {
       if (false)
       {
-         System.out.println("FIXME: [JBWS-1771] Post-handler-chain not invoked for \"Standard Client\" configuration with DII client");
+         System.out.println("FIXME [JBWS-1771] Post-handler-chain not invoked for \"Standard Client\" configuration with DII client");
          return;
       }
 

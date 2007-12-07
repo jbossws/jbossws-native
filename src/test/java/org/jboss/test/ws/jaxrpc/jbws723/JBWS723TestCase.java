@@ -167,7 +167,7 @@ public class JBWS723TestCase extends JBossWSTest
          port.getContactInfo("mafia");
 
          if (isTargetJBoss50())
-            System.out.println("FIXME: [JBAS-3595] - Tomcat allows http access with transport guarantie CONFIDENTIAL");
+            System.out.println("FIXME [JBAS-3595] - Tomcat allows http access with transport guarantie CONFIDENTIAL");
          else fail("Security exception expected");
       }
       catch (RemoteException ignore)

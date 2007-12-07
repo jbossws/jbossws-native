@@ -203,7 +203,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       XSElementDecl valueElement = (XSElementDecl) ((XSParticleDecl) sequence.getParticles().item(0)).getTerm();
       String name = valueElement.getTypeDefinition().getName();
 
-      //System.out.println("FIXME: JBWS-357");
+      //System.out.println("FIXME JBWS-357");
       assertEquals("HelloObj", name);
 
    }

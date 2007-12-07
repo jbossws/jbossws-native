@@ -49,7 +49,7 @@ public class JMSTransportTestCase extends JBossWSTest
    {
       if (isTargetJBoss50())
       {
-         System.out.println("FIXME: [JBWS-1312] Fix JMS transport in trunk");
+         System.out.println("FIXME [JBWS-1312] Fix JMS transport in trunk");
          return;
       }
       

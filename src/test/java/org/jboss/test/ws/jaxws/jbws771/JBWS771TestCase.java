@@ -137,7 +137,7 @@ public class JBWS771TestCase extends JBossWSTest
 
    public void testWSConsume() throws Exception
    {
-      System.out.println("[JBWS-1724] wsconsume cannot use part names that are friendly to .NET");
+      System.out.println("FIXME [JBWS-1724] wsconsume cannot use part names that are friendly to .NET");
       //WSConsume.main(new String[]{"--output=tests/wsconsume", wsdlURL.toExternalForm()});
    }
 

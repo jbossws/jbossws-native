@@ -63,7 +63,7 @@ public class JBWS981TestCase extends JBossWSTest
 
    public void testCall() throws Exception
    {
-      System.out.println("FIXME: [JBWS-981] Virtual host configuration for EJB endpoints");
+      System.out.println("FIXME [JBWS-981] Virtual host configuration for EJB endpoints");
       if (true) return;
 
       String message = "hello";

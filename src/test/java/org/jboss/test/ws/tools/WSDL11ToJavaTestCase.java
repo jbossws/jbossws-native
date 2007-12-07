@@ -107,7 +107,7 @@ public class WSDL11ToJavaTestCase extends WSToolsTest
       
       WSDLValidator validator = new WSDL11Validator();
       if (validator.validate(seiClass, wsdlDefinitions) == false)
-         System.err.println("FIXME: " + validator.getErrorList().toString());
+         System.err.println("FIXME " + validator.getErrorList().toString());
 
       return wsdlDefinitions;
    }

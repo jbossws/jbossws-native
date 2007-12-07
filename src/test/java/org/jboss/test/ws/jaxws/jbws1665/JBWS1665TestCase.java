@@ -49,7 +49,7 @@ public class JBWS1665TestCase extends JBossWSTest
 
    public void testWebService() throws Exception
    {
-      System.out.println("FIXME: [JBWS-1665] incorrect wsdl generation");
+      System.out.println("FIXME [JBWS-1665] incorrect wsdl generation");
       
       //assertWSDLAccess();
 

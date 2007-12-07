@@ -64,7 +64,7 @@ public class RpcJSETestCase extends JBossWSTest
          }
          else
          {
-            System.out.println("FIXME: [JBWS-1397] Fix <wsdl-publish-location> for jboss-5.0.x");
+            System.out.println("FIXME [JBWS-1397] Fix <wsdl-publish-location> for jboss-5.0.x");
             ServiceFactoryImpl factory = new ServiceFactoryImpl();
             URL wsdlURL = new File("resources/jaxrpc/samples/jsr109pojo/rpclit//WEB-INF/wsdl/TestService.wsdl").toURL();
             URL mappingURL = new File("resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml").toURL();
