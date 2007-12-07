@@ -21,25 +21,17 @@
  */
 package org.jboss.ws.extensions.wsrm.transport;
 
-import static org.jboss.ws.extensions.wsrm.RMConstant.*;
-
-import org.jboss.remoting.marshal.Marshaller;
-import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.MessageAbstraction;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
-
-import java.util.Map;
-
 /**
- * RM Channel
+ * RM Channel implements reliable transport
+ * 
  * @author richard.opalka@jboss.com
  */
 public class RMChannel
 {
-   private static final RMChannel INSTANCE = new RMChannel();
+   
+   private static final RMChannel instance = new RMChannel();
    
    private RMChannel()
    {
@@ -48,55 +40,14 @@ public class RMChannel
 
    public static RMChannel getInstance()
    {
-      return INSTANCE;
+      return instance;
    }
 
-   // Holds the list of tasks that will be send to the remoting transport channel
-   private static final RMChannelManager rmChannelManager = RMChannelManagerImpl.getInstance();
-   
-
-   private RMMessage createRMMessage(MessageAbstraction request, RMMetadata rmMetadata) throws Throwable
-   {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      Marshaller marshaller = (Marshaller)rmMetadata.getContext(SERIALIZATION_CONTEXT).get(MARSHALLER);
-      // we have to serialize message before putting it to the rm pool
-      //  * contextClassloader not serializable issue
-      //  * DOMUtil threadlocal issue (if message is de/serialized in separate thread)
-      marshaller.write(request, baos);
-      RMMessage rmMessage = RMMessageFactory.newMessage(baos.toByteArray(), rmMetadata);
-      return rmMessage;
-   }
-   
-   private MessageAbstraction createResponse(RMMessage rmRequest, RMMessage rmResponse, RMMetadata rmMetadata) throws Throwable
-   {
-      Map<String, Object> invocationContext = rmMetadata.getContext(INVOCATION_CONTEXT);
-      boolean oneWay = RMTransportHelper.isOneWayOperation(rmRequest);
-      MessageAbstraction response = null;
-      if (!oneWay)
-      {
-         byte[] payload = rmResponse.getPayload();
-         InputStream is = payload == null ? null : new ByteArrayInputStream(rmResponse.getPayload()); 
-         // we have to deserialize message after pick up from the rm pool
-         //  * contextClassloader not serializable issue
-         //  * DOMUtil threadlocal issue (if message is de/serialized in separate thread)
-         UnMarshaller unmarshaller = (UnMarshaller)rmMetadata.getContext(SERIALIZATION_CONTEXT).get(UNMARSHALLER);
-         response = (MessageAbstraction)unmarshaller.read(is, rmResponse.getMetadata().getContext(REMOTING_INVOCATION_CONTEXT));
-      }
-      invocationContext.clear();
-      invocationContext.putAll(rmMetadata.getContext(REMOTING_INVOCATION_CONTEXT));
-      return response;
-   }
-   
    public MessageAbstraction send(MessageAbstraction request, RMMetadata rmMetadata) throws Throwable
    {
-      RMMessage rmRequest = createRMMessage(request, rmMetadata);
-      RMMessage rmResponse = sendToChannel(rmRequest);
-      return createResponse(rmRequest, rmResponse, rmMetadata);
-   }
-   
-   private RMMessage sendToChannel(RMMessage request) throws Throwable
-   {
-      return rmChannelManager.send(request);
+      RMMessage rmRequest = RMMessageAssembler.convertMessageToRMSource(request, rmMetadata);
+      RMMessage rmResponse = RMSender.getInstance().send(rmRequest);
+      return RMMessageAssembler.convertRMSourceToMessage(rmRequest, rmResponse, rmMetadata);
    }
    
 }

@@ -25,17 +25,13 @@ package org.jboss.ws.extensions.wsrm.transport;
  * Implementations of this interface must be registered in callback handler
  *
  * @author richard.opalka@jboss.com
- *
- * @since Nov 27, 2007
  */
 public interface RMUnassignedMessageListener
 {
+   
    /**
-    * This event is fired when there's new unassigned message available in
-    * callback handler this sequence is associated with. Each implementation
-    * of this class should remember the count of this notification method calls
-    * and must initiate new dummy message request to pick up all unassigned
-    * messages from the callback handler
+    * This event is fired when there's new unassigned message available in callback handler.
     */
    void unassignedMessageReceived();
+   
 }

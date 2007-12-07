@@ -24,8 +24,8 @@ package org.jboss.ws.extensions.wsrm.transport;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
 
 /**
- * Represents response that goes from the RM channel
- * @see org.jboss.ws.extensions.wsrm.transport.RMChannel
+ * RM channel response represents response that goes from the RM channel
+ *
  * @author richard.opalka@jboss.com
  */
 final class RMChannelResponse

@@ -30,11 +30,12 @@ import org.jboss.remoting.marshal.Marshaller;
 
 /**
  * Marshalls byte array to the output stream
+ * 
  * @author richard.opalka@jboss.com
  */
 final class RMMarshaller implements Marshaller
 {
-   private static final Marshaller INSTANCE = new RMMarshaller();
+   private static final Marshaller instance = new RMMarshaller();
    
    public Marshaller cloneMarshaller() throws CloneNotSupportedException
    {
@@ -43,7 +44,7 @@ final class RMMarshaller implements Marshaller
    
    public static Marshaller getInstance()
    {
-      return INSTANCE;
+      return instance;
    }
    
    public void write(Object dataObject, OutputStream output) throws IOException

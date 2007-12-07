@@ -6,6 +6,11 @@ import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 
+/**
+ * RM metadata heavily used by this RM transport
+ *
+ * @author richard.opalka@jboss.com
+ */
 public final class RMMetadata
 {
    private Map<String, Map<String, Object>> contexts = new HashMap<String, Map<String, Object>>();
@@ -60,4 +65,5 @@ public final class RMMetadata
    {
       return this.contexts.get(key);
    }
+   
 }

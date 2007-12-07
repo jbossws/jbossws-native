@@ -1,11 +1,13 @@
 package org.jboss.ws.extensions.wsrm.transport;
 
 /**
- * RM message object 
+ * RM source instance
+ *  
  * @author richard.opalka@jboss.com
  */
 public class RMMessageImpl implements RMMessage
 {
+   
    private final byte[] payload;
    private final RMMetadata rmMetadata;
    
@@ -25,4 +27,5 @@ public class RMMessageImpl implements RMMessage
    {
       return this.rmMetadata;
    }
+   
 }

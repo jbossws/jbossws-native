@@ -9,6 +9,11 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 
+/**
+ * Utility class heavily used in this transport implementation
+ *
+ * @author richard.opalka@jboss.com
+ */
 public final class RMTransportHelper
 {
 
@@ -24,7 +29,7 @@ public final class RMTransportHelper
       return (ctx != null) && (ctx.containsKey(RMConstant.REQUEST_CONTEXT)); 
    }
    
-   public static String getMessageId(RMMessage rmRequest)
+   public static String getAddressingMessageId(RMMessage rmRequest)
    {
       return (String)getWsrmRequestContext(rmRequest).get(WSA_MESSAGE_ID);
    }

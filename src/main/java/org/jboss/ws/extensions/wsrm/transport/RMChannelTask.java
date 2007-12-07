@@ -38,11 +38,11 @@ import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFactory;
 
 /**
- * Represents request that goes to the RM channel
- * @see org.jboss.ws.extensions.wsrm.transport.RMChannel
+ * RM channel task to be executed
+ * 
  * @author richard.opalka@jboss.com
  */
-public final class RMChannelTask implements Callable<RMChannelResponse>
+final class RMChannelTask implements Callable<RMChannelResponse>
 {
    private static final Logger logger = Logger.getLogger(RMChannelTask.class);
    private static final String JBOSSWS_SUBSYSTEM = "jbossws";
@@ -69,7 +69,7 @@ public final class RMChannelTask implements Callable<RMChannelResponse>
       try
       {
          URI backPort = RMTransportHelper.getBackPortURI(rmRequest);
-         String messageId = RMTransportHelper.getMessageId(rmRequest);
+         String messageId = RMTransportHelper.getAddressingMessageId(rmRequest);
          
          logger.debug("[WS-RM] backport URI is: " + backPort);
          RMCallbackHandler callbackHandler = null;
@@ -95,8 +95,6 @@ public final class RMChannelTask implements Callable<RMChannelResponse>
             client.setUnMarshaller(RMUnMarshaller.getInstance());
       
          Map<String, Object> remotingInvocationContext = rmRequest.getMetadata().getContext(REMOTING_INVOCATION_CONTEXT);
-         if (logger.isDebugEnabled())
-            logger.debug("Remoting metadata: " + remotingInvocationContext);
 
          // debug the outgoing request message
          MessageTrace.traceMessage("Outgoing RM Request Message", rmRequest.getPayload());

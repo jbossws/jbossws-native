@@ -30,11 +30,12 @@ import org.jboss.remoting.marshal.UnMarshaller;
 
 /**
  * Unmarshalls byte array from the input stream
+ * 
  * @author richard.opalka@jboss.com
  */
 final class RMUnMarshaller implements UnMarshaller
 {
-   private static final UnMarshaller INSTANCE = new RMUnMarshaller();
+   private static final UnMarshaller instance = new RMUnMarshaller();
 
    public UnMarshaller cloneUnMarshaller() throws CloneNotSupportedException
    {
@@ -43,7 +44,7 @@ final class RMUnMarshaller implements UnMarshaller
    
    public static UnMarshaller getInstance()
    {
-      return INSTANCE;
+      return instance;
    }
    
    public Object read(InputStream is, Map metadata) throws IOException, ClassNotFoundException
@@ -67,5 +68,6 @@ final class RMUnMarshaller implements UnMarshaller
    {
       // do nothing
    }
+   
 }
 

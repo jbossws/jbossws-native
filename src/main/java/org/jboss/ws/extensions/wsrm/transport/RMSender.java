@@ -40,26 +40,29 @@ import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 
 /**
- * WS-RM channel manager ensures message reliable delivery according to sequence retransmission configuration
+ * RM sender ensures reliable message delivery. The QoS is specified in the JAX-WS client Sconfiguration file.
  *
  * @author richard.opalka@jboss.com
- *
- * @since Dec 5, 2007
  */
-public final class RMChannelManagerImpl implements RMChannelManager
+public final class RMSender
 {
    
-   private static final Logger logger = Logger.getLogger(RMChannelManagerImpl.class);
-   private static RMChannelManager instance = new RMChannelManagerImpl();
-   private static final ExecutorService rmChannelPool = Executors.newFixedThreadPool(5, new RMThreadFactory());
+   private static final Logger logger = Logger.getLogger(RMSender.class);
+   private static RMSender instance = new RMSender();
+   private static final ThreadFactory rmThreadPool = new RMThreadPoolFactory();
+   private static final int maxCountOfThreads = 5;
+   private static final ExecutorService rmTasksQueue = Executors.newFixedThreadPool(maxCountOfThreads, rmThreadPool);
    
-   private static final class RMThreadFactory implements ThreadFactory
+   /**
+    * Generates worker threads (daemons)
+    */
+   private static final class RMThreadPoolFactory implements ThreadFactory
    {
       final ThreadGroup group;
       final AtomicInteger threadNumber = new AtomicInteger(1);
-      final String namePrefix = "rm-pool-thread-";
+      final String namePrefix = "rm-pool-worker-thread-";
     
-      private RMThreadFactory()
+      private RMThreadPoolFactory()
       {
          SecurityManager sm = System.getSecurityManager();
          group = (sm != null) ? sm.getThreadGroup() : Thread.currentThread().getThreadGroup();
@@ -68,20 +71,20 @@ public final class RMChannelManagerImpl implements RMChannelManager
       public Thread newThread(Runnable r)
       {
          Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-         if (t.isDaemon())
-            t.setDaemon(false);
-         if (t.getPriority() != Thread.NORM_PRIORITY)
+         if (false == t.isDaemon())
+            t.setDaemon(true);
+         if (Thread.NORM_PRIORITY != t.getPriority())
             t.setPriority(Thread.NORM_PRIORITY);
          return t;
       }
    }
 
-   private RMChannelManagerImpl()
+   private RMSender()
    {
       // forbidden inheritance
    }
    
-   public static final RMChannelManager getInstance()
+   public static final RMSender getInstance()
    {
       return instance;
    }
@@ -103,7 +106,7 @@ public final class RMChannelManagerImpl implements RMChannelManager
       for (int i = 0; i < countOfAttempts; i++)
       {
          logger.debug("Sending RM request - attempt no. " + attemptNumber++);
-         Future<RMChannelResponse> futureResult = rmChannelPool.submit(new RMChannelTask(request));
+         Future<RMChannelResponse> futureResult = rmTasksQueue.submit(new RMChannelTask(request));
          try 
          {
             startTime = System.currentTimeMillis();
@@ -159,12 +162,12 @@ public final class RMChannelManagerImpl implements RMChannelManager
       }
 
       if (result == null)
-         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getMessageId(request) + ". Count of attempts to deliver the message was: " + countOfAttempts);
+         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getAddressingMessageId(request) + ". Count of attempts to deliver the message was: " + countOfAttempts);
       
       Throwable fault = result.getFault();
       if (fault != null)
       {
-         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getMessageId(request) + ". Count of attempts to deliver the message was: " + countOfAttempts, fault);
+         throw new RMException("Unable to deliver message with addressing id: " + RMTransportHelper.getAddressingMessageId(request) + ". Count of attempts to deliver the message was: " + countOfAttempts, fault);
       }
       else
       {
