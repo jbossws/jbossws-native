@@ -3,8 +3,7 @@
 # Fix BPEL before AS50 goes final
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
-# [JBAS-4930] Cannot lookup ejb3 remote proxy
-org/jboss/test/ws/jaxrpc/jbws331/**
+# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
 # [EJBTHREE-1150] WebServiceContext injection requires mapped-name
