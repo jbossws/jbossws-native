@@ -342,31 +342,39 @@ public class ServiceEndpointInvoker
    {
       Class implClass = endpoint.getTargetBeanClass();
       Method seiMethod = sepInv.getJavaMethod();
+      Method implMethod = null;
 
-      String methodName = seiMethod.getName();
-      Class[] paramTypes = seiMethod.getParameterTypes();
-      for (int i = 0; i < paramTypes.length; i++)
+      if (seiMethod != null) // RM hack
       {
-         Class paramType = paramTypes[i];
-         if (JavaUtils.isPrimitive(paramType) == false)
+         String methodName = seiMethod.getName();
+         Class[] paramTypes = seiMethod.getParameterTypes();
+         for (int i = 0; i < paramTypes.length; i++)
          {
-            String paramTypeName = paramType.getName();
-            paramType = JavaUtils.loadJavaType(paramTypeName);
-            paramTypes[i] = paramType;
+            Class paramType = paramTypes[i];
+            if (JavaUtils.isPrimitive(paramType) == false)
+            {
+               String paramTypeName = paramType.getName();
+               paramType = JavaUtils.loadJavaType(paramTypeName);
+               paramTypes[i] = paramType;
+            }
+         }
+
+         try
+         {
+            implMethod = implClass.getMethod(methodName, paramTypes);
+         }
+         catch (NoSuchMethodException ex)
+         {
+            log.error("CodeSource: " + implClass.getProtectionDomain().getCodeSource());
+            log.error("ClassLoader: " + implClass.getClassLoader());
+            throw ex;
          }
       }
-
-      Method implMethod = null;
-      try
+      else
       {
-         implMethod = implClass.getMethod(methodName, paramTypes);
+         log.debug("RM method returned as null");
       }
-      catch (NoSuchMethodException ex)
-      {
-         log.error("CodeSource: " + implClass.getProtectionDomain().getCodeSource());
-         log.error("ClassLoader: " + implClass.getClassLoader());
-         throw ex;
-      }
+      
       return implMethod;
    }
 

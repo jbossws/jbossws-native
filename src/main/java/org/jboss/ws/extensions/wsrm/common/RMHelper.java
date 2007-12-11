@@ -27,14 +27,19 @@ import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
+import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.wsrm.RMClientHandler;
+import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
  * RM utility library
@@ -138,6 +143,40 @@ public final class RMHelper
          }
       }
       sequence.addReceivedInboundMessage(seqHeader.getMessageNumber());
+   }
+   
+   public static void setupRMOperations(EndpointMetaData endpointMD)
+   {
+      RMProvider rmProvider = RMProvider.get();
+      
+      // register createSequence method
+      QName createSequenceQName = rmProvider.getConstants().getCreateSequenceQName();
+      OperationMetaData createSequenceMD = new OperationMetaData(endpointMD, createSequenceQName, "createSequence");
+      createSequenceMD.setOneWay(false);
+      endpointMD.addOperation(createSequenceMD);
+      
+      // register sequenceAcknowledgement method
+      QName sequenceAcknowledgementQName = rmProvider.getConstants().getSequenceAcknowledgementQName();
+      OperationMetaData sequenceAcknowledgementMD = new OperationMetaData(endpointMD, sequenceAcknowledgementQName, "sequenceAcknowledgement");
+      sequenceAcknowledgementMD.setOneWay(true);
+      endpointMD.addOperation(sequenceAcknowledgementMD);
+      
+      // register closeSequence method
+      QName closeSequenceQName = rmProvider.getConstants().getCloseSequenceQName();
+      OperationMetaData closeSequenceMD = new OperationMetaData(endpointMD, closeSequenceQName, "closeSequence");
+      closeSequenceMD.setOneWay(false);
+      endpointMD.addOperation(closeSequenceMD);
+      
+      // register terminateSequence method
+      QName terminateSequenceQName = rmProvider.getConstants().getTerminateSequenceQName();
+      OperationMetaData terminateSequenceMD = new OperationMetaData(endpointMD, terminateSequenceQName, "terminateSequence");
+      terminateSequenceMD.setOneWay(false);
+      endpointMD.addOperation(terminateSequenceMD);
+   }
+   
+   public static boolean isRMOperation(QName operationQName)
+   {
+      return RMConstant.PROTOCOL_OPERATION_QNAMES.contains(operationQName);
    }
    
 }

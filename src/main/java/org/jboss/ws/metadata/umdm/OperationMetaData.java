@@ -37,6 +37,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.common.ResourceLoaderAdapter;
@@ -185,7 +187,7 @@ public class OperationMetaData extends ExtensibleMetaData
             }
          }
 
-         if (tmpMethod == null)
+         if ((tmpMethod == null) && (epMetaData.getConfig().getRMMetaData() == null)) // RM hack
             throw new WSException("Cannot find java method: " + javaName);
       }
       return tmpMethod;
@@ -474,7 +476,8 @@ return false;
       }
 
       // Report unsynchronized java method
-      if (javaMethod == null)
+      boolean isRMMethod = RMProvider.get().getConstants().getNamespaceURI().equals(qname.getNamespaceURI());
+      if ((javaMethod == null) && (isRMMethod == false)) // RM hack
       {
          StringBuilder errMsg = new StringBuilder("Cannot synchronize to any of these methods:");
          for (Method method : unsynchronizedMethods)

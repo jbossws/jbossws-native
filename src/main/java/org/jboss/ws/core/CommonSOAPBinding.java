@@ -73,6 +73,7 @@ import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -172,13 +173,10 @@ public abstract class CommonSOAPBinding implements CommonBinding
             
             if (opMetaData.getEndpointMetaData().getConfig().getRMMetaData() != null)
             {
-               for (QName wsrmQN : RMConstant.PROTOCOL_OPERATION_QNAMES)
+               // RM hack to JAX-RPC serialization
+               if (RMHelper.isRMOperation(opMetaData.getQName()))
                {
-                  if (wsrmQN.equals(opMetaData.getQName()))
-                  {
-                     serialize = false;
-                     break;
-                  }
+                  serialize = false;
                }
             }
             
@@ -373,7 +371,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                if (node instanceof SOAPElement)
                   numChildElements++;
             }
-            if (numChildElements != numParameters)
+            if (numChildElements != numParameters && (RMHelper.isRMOperation(opMetaData.getQName()) == false))
                throw new WSException("Invalid number of payload elements: " + numChildElements);
          }
 
