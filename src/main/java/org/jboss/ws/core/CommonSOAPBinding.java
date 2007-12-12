@@ -437,16 +437,19 @@ public abstract class CommonSOAPBinding implements CommonBinding
          {
             QName opQName = opMetaData.getResponseName();
 
-            Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
-            soapBodyElement = new SOAPBodyElementRpc(opName);
-            soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
-
-            // Add soap encodingStyle
-            if (opMetaData.getUse() == Use.ENCODED)
+            if (false == RMHelper.isRMOperation(opQName)) // RM hack
             {
-               String envURI = soapEnvelope.getNamespaceURI();
-               String envPrefix = soapEnvelope.getPrefix();
-               soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
+               Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
+               soapBodyElement = new SOAPBodyElementRpc(opName);
+               soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
+
+               // Add soap encodingStyle
+               if (opMetaData.getUse() == Use.ENCODED)
+               {
+                  String envURI = soapEnvelope.getNamespaceURI();
+                  String envPrefix = soapEnvelope.getPrefix();
+                  soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
+               }
             }
          }
 

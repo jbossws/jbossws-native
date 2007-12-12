@@ -60,9 +60,9 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
  * @since Oct 25, 2007
  */
 @SuppressWarnings("unchecked")
-public final class RMClientSequenceImpl implements RMSequenceIface, RMUnassignedMessageListener
+public final class RMClientSequence implements RMSequenceIface, RMUnassignedMessageListener
 {
-   private static final Logger logger = Logger.getLogger(RMClientSequenceImpl.class);
+   private static final Logger logger = Logger.getLogger(RMClientSequence.class);
    private static final String PATH_PREFIX = "/temporary_listen_address/";
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
@@ -82,7 +82,7 @@ public final class RMClientSequenceImpl implements RMSequenceIface, RMUnassigned
    private AtomicLong messageNumber = new AtomicLong();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    
-   public RMClientSequenceImpl(boolean addrType, RMConfig wsrmConfig)
+   public RMClientSequence(boolean addrType, RMConfig wsrmConfig)
    {
       super();
       if (wsrmConfig == null)

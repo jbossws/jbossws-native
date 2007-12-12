@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.ws.core.MessageTrace;
-import org.jboss.ws.extensions.wsrm.RMClientSequenceImpl;
+import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFactory;
 
@@ -78,7 +78,7 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          if (backPort != null)
          {
             callbackHandler = RMCallbackHandlerFactory.getCallbackHandler(backPort);
-            RMClientSequenceImpl sequence = RMTransportHelper.getSequence(rmRequest);
+            RMClientSequence sequence = RMTransportHelper.getSequence(rmRequest);
             if (sequence != null)
             {
                callbackHandler.addUnassignedMessageListener(sequence);

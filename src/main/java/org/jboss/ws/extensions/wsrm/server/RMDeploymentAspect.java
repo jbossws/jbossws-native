@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
+import java.util.LinkedList;
+
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Deployment;
@@ -52,6 +54,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
             InvocationHandler origInvHandler = ep.getInvocationHandler();
             InvocationHandler wsrmInvHandler = new RMInvocationHandler(origInvHandler);
             ep.setInvocationHandler(wsrmInvHandler);
+            ep.addAttachment(RMServerSequence.class, new LinkedList<RMServerSequence>());
             RMHelper.setupRMOperations(sepMetaData);
          }
       }
@@ -71,6 +74,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
          {
             RMInvocationHandler rmInvHandler = (RMInvocationHandler)invHandler;
             ep.setInvocationHandler(rmInvHandler.getDelegate());
+            ep.removeAttachment(RMServerSequence.class);
          }
       }
    }

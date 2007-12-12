@@ -67,7 +67,7 @@ import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.RMClientSequenceImpl;
+import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
@@ -105,14 +105,14 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    private static HandlerType[] HANDLER_TYPES = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
 
    // WS-RM sequence associated with the proxy
-   private RMClientSequenceImpl wsrmSequence;
+   private RMClientSequence wsrmSequence;
 
-   public final void setWSRMSequence(RMClientSequenceImpl wsrmSequence)
+   public final void setWSRMSequence(RMClientSequence wsrmSequence)
    {
       this.wsrmSequence = wsrmSequence;
    }
 
-   public final RMClientSequenceImpl getWSRMSequence()
+   public final RMClientSequence getWSRMSequence()
    {
       return this.wsrmSequence;
    }
@@ -513,7 +513,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       try
       {
          // set up addressing data
-         RMClientSequenceImpl candidateSequence = new RMClientSequenceImpl(addressableClient, getEndpointMetaData().getConfig().getRMMetaData());
+         RMClientSequence candidateSequence = new RMClientSequence(addressableClient, getEndpointMetaData().getConfig().getRMMetaData());
          String address = getEndpointMetaData().getEndpointAddress();
          String action = RMConstant.CREATE_SEQUENCE_WSA_ACTION;
          AddressingProperties addressingProps = null;

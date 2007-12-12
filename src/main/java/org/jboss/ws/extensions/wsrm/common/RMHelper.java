@@ -23,17 +23,26 @@ package org.jboss.ws.extensions.wsrm.common;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
+import javax.xml.ws.addressing.AddressingBuilder;
+import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.addressing.Relationship;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
+import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.RMClientSequenceImpl;
+import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.jaxws.RMHandler;
+import org.jboss.ws.extensions.wsrm.server.RMServerSequence;
+import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
@@ -52,6 +61,7 @@ public final class RMHelper
 {
    
    private static final Logger logger = Logger.getLogger(RMHelper.class);
+   private static final RMConstants rmConstants = RMProvider.get().getConstants();
 
    private RMHelper()
    {
@@ -72,9 +82,61 @@ public final class RMHelper
       }
    }
    
+   public static RMServerSequence getServerSequence(String seqId, List<RMServerSequence> sequences)
+   {
+      for (RMServerSequence seq : sequences)
+      {
+         if (seq.getInboundId().equals(seqId))
+         {
+            return seq;
+         }
+      }
+      
+      return null;
+   }
+   
+   public static AddressingProperties createAddressingProperties(AddressingProperties reqAddrProps, List<QName> rmMessages)
+   {
+      AddressingProperties retVal = null;
+      
+      if (rmMessages.contains(rmConstants.getCreateSequenceQName()))
+      {
+         String wsaTo = reqAddrProps.getReplyTo().getAddress().getURI().toString(); 
+         retVal = AddressingClientUtil.createDefaultProps(RMConstant.CREATE_SEQUENCE_RESPONSE_WSA_ACTION, wsaTo);
+         retVal.setMessageID(null);
+         AddressingBuilder addrBuilder = AddressingBuilder.getAddressingBuilder();
+         retVal.setRelatesTo(new Relationship[] {addrBuilder.newRelationship(addrBuilder.newURI(reqAddrProps.getMessageID().getURI()).getURI())});
+      }
+      
+      return retVal;
+   }
+   
+   public static boolean isCreateSequence(Map<String, Object> rmMsgContext)
+   {
+      List<QName> protocolMessages = (List<QName>)rmMsgContext.get(RMConstant.PROTOCOL_MESSAGES);
+      return protocolMessages.contains(rmConstants.getCreateSequenceQName());
+   }
+   
+   public static boolean isCloseSequence(Map<String, Object> rmMsgContext)
+   {
+      List<QName> protocolMessages = (List<QName>)rmMsgContext.get(RMConstant.PROTOCOL_MESSAGES);
+      return protocolMessages.contains(rmConstants.getCloseSequenceQName());
+   }
+   
+   public static boolean isTerminateSequence(Map<String, Object> rmMsgContext)
+   {
+      List<QName> protocolMessages = (List<QName>)rmMsgContext.get(RMConstant.PROTOCOL_MESSAGES);
+      return protocolMessages.contains(rmConstants.getTerminateSequenceQName());
+   }
+   
    public static Duration stringToDuration(String s)
    {
       return factory.newDuration(s);
+   }
+   
+   public static Duration longToDuration(long l)
+   {
+      return factory.newDuration(l);
    }
    
    public static String durationToString(Duration d)
@@ -90,7 +152,7 @@ public final class RMHelper
       return d.getTimeInMillis(new Date());
    }
    
-   public static void handleSequenceAcknowledgementHeader(RMSequenceAcknowledgement seqAckHeader, RMClientSequenceImpl sequence)
+   public static void handleSequenceAcknowledgementHeader(RMSequenceAcknowledgement seqAckHeader, RMClientSequence sequence)
    {
       String seqId = seqAckHeader.getIdentifier();
       if (sequence.getOutboundId().equals(seqId))
@@ -115,7 +177,7 @@ public final class RMHelper
       }
    }
    
-   public static void handleAckRequestedHeader(RMAckRequested ackReqHeader, RMClientSequenceImpl sequence)
+   public static void handleAckRequestedHeader(RMAckRequested ackReqHeader, RMClientSequence sequence)
    {
       String inboundSeqId = ackReqHeader.getIdentifier();
       if (false == sequence.getInboundId().equals(inboundSeqId))
@@ -127,7 +189,7 @@ public final class RMHelper
       sequence.ackRequested(true);
    }
    
-   public static void handleSequenceHeader(RMSequence seqHeader, RMClientSequenceImpl sequence)
+   public static void handleSequenceHeader(RMSequence seqHeader, RMClientSequence sequence)
    {
       String inboundSeqId = seqHeader.getIdentifier();
       if (null == sequence.getInboundId())
@@ -153,24 +215,47 @@ public final class RMHelper
       QName createSequenceQName = rmProvider.getConstants().getCreateSequenceQName();
       OperationMetaData createSequenceMD = new OperationMetaData(endpointMD, createSequenceQName, "createSequence");
       createSequenceMD.setOneWay(false);
+      // setup addressing related data
+      AddressingOpMetaExt createSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
+      createSequenceAddrExt.setInboundAction(RMConstant.CREATE_SEQUENCE_WSA_ACTION);
+      createSequenceAddrExt.setOutboundAction(RMConstant.CREATE_SEQUENCE_RESPONSE_WSA_ACTION);
+      createSequenceMD.addExtension(createSequenceAddrExt);
+      // register operation metadata with endpoint metadata
       endpointMD.addOperation(createSequenceMD);
       
       // register sequenceAcknowledgement method
       QName sequenceAcknowledgementQName = rmProvider.getConstants().getSequenceAcknowledgementQName();
       OperationMetaData sequenceAcknowledgementMD = new OperationMetaData(endpointMD, sequenceAcknowledgementQName, "sequenceAcknowledgement");
       sequenceAcknowledgementMD.setOneWay(true);
+      // setup addressing related data
+      AddressingOpMetaExt sequenceAcknowledgementAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
+      sequenceAcknowledgementAddrExt.setInboundAction(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION);
+      sequenceAcknowledgementMD.addExtension(sequenceAcknowledgementAddrExt);
+      // register operation metadata with endpoint metadata
       endpointMD.addOperation(sequenceAcknowledgementMD);
       
       // register closeSequence method
       QName closeSequenceQName = rmProvider.getConstants().getCloseSequenceQName();
       OperationMetaData closeSequenceMD = new OperationMetaData(endpointMD, closeSequenceQName, "closeSequence");
       closeSequenceMD.setOneWay(false);
+      // setup addressing related data
+      AddressingOpMetaExt closeSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
+      closeSequenceAddrExt.setInboundAction(RMConstant.CLOSE_SEQUENCE_WSA_ACTION);
+      closeSequenceAddrExt.setOutboundAction(RMConstant.CLOSE_SEQUENCE_RESPONSE_WSA_ACTION);
+      closeSequenceMD.addExtension(closeSequenceAddrExt);
+      // register operation metadata with endpoint metadata
       endpointMD.addOperation(closeSequenceMD);
       
       // register terminateSequence method
       QName terminateSequenceQName = rmProvider.getConstants().getTerminateSequenceQName();
       OperationMetaData terminateSequenceMD = new OperationMetaData(endpointMD, terminateSequenceQName, "terminateSequence");
       terminateSequenceMD.setOneWay(false);
+      // setup addressing related data
+      AddressingOpMetaExt terminateSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
+      terminateSequenceAddrExt.setInboundAction(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION);
+      terminateSequenceAddrExt.setOutboundAction(RMConstant.TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION);
+      terminateSequenceMD.addExtension(terminateSequenceAddrExt);
+      // register operation metadata with endpoint metadata
       endpointMD.addOperation(terminateSequenceMD);
    }
    

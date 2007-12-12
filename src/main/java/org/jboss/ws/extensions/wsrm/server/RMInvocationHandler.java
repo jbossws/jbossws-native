@@ -21,7 +21,28 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.addressing.JAXWSAConstants;
+
 import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.ws.extensions.wsrm.common.RMHelper;
+import org.jboss.ws.extensions.wsrm.spi.RMConstants;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
@@ -37,6 +58,7 @@ public final class RMInvocationHandler extends InvocationHandler
 {
 
    private static final Logger logger = Logger.getLogger(RMInvocationHandler.class);
+   private static final RMConstants rmConstants = RMProvider.get().getConstants();
    
    private final InvocationHandler delegate;
    
@@ -63,11 +85,96 @@ public final class RMInvocationHandler extends InvocationHandler
    {
       this.delegate.init(ep);
    }
+   
+   /**
+    * Do RM staff before endpoint invocation
+    * @param ep endpoint
+    * @param inv invocation
+    * @return true if endpoint have to be called too
+    */
+   private void beforeEndpointInvocation(Endpoint ep, Invocation inv)
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      if (addrProps == null)
+         throw new RMException("WS-Addressing properties not found in server request");
+      
+      Map<String, Object> rmReqProps = (Map<String, Object>)msgContext.get(RMConstant.REQUEST_CONTEXT);
+      if (rmReqProps == null)
+         throw new RMException("WS-RM specific data not found in server request");
+      Map<String, Object> rmResProps = new HashMap<String, Object>();
+      List<QName> protocolMessages = new LinkedList<QName>();
+      Map<String, Object> rmResponseContext = new HashMap<String, Object>();
+      AddressingProperties respAddrProps = null;
+      List<RMServerSequence> sequences = (List<RMServerSequence>)ep.getAttachment(RMServerSequence.class);
+      RMServerSequence sequence = null;
+      
+      if (RMHelper.isCreateSequence(rmReqProps))
+      {
+         sequence = new RMServerSequence();
+         sequences.add(sequence);
+         protocolMessages.add(rmConstants.getCreateSequenceResponseQName());
+         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
+         rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
+         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+      }
+      
+      if (RMHelper.isCloseSequence(rmReqProps))
+      {
+         Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+         RMCloseSequence payload = (RMCloseSequence)data.get(rmConstants.getCloseSequenceQName());
+         String seqIdentifier = payload.getIdentifier();
+         sequence = RMHelper.getServerSequence(seqIdentifier, sequences);
+         if (sequence == null)
+         {
+            throw new NotImplementedException("TODO: implement unknown sequence fault generation");
+         }
+
+         sequence.close();
+         protocolMessages.add(rmConstants.getCloseSequenceResponseQName());
+         protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
+         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
+         rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
+         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+      }
+         
+      if (RMHelper.isTerminateSequence(rmReqProps))
+      {
+         Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+         RMTerminateSequence payload = (RMTerminateSequence)data.get(rmConstants.getTerminateSequenceQName());
+         String seqIdentifier = payload.getIdentifier();
+         sequence = RMHelper.getServerSequence(seqIdentifier, sequences);
+         if (sequence == null)
+         {
+            throw new NotImplementedException("TODO: implement unknown sequence fault generation");
+         }
+
+         sequences.remove(sequence);
+         protocolMessages.add(rmConstants.getTerminateSequenceResponseQName());
+         protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
+         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
+         rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
+         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+      }
+         
+      // TODO: implement
+   }
+   
+   /**
+    * Do RM staff after endpoint invocation
+    * @param ep endpoint
+    * @param inv invocation
+    */
+   private void afterEndpointInvocation(Endpoint ep, Invocation inv)
+   {
+      // TODO: implement
+   }
 
    @Override
    public final void invoke(Endpoint ep, Invocation inv) throws Exception
    {
-      // TODO: do WS-RM magic here (such as create, close or terminate sequence
+      beforeEndpointInvocation(ep, inv);
+      
       if (inv.getJavaMethod() != null)
       {
          logger.debug("Invoking method: " + inv.getJavaMethod().getName());
@@ -75,8 +182,10 @@ public final class RMInvocationHandler extends InvocationHandler
       }
       else
       {
-         logger.debug("RM protocol method detected");
+         logger.debug("RM lifecycle protocol method detected");
       }
+      
+      afterEndpointInvocation(ep, inv);
    }
    
    public final InvocationHandler getDelegate()

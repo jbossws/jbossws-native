@@ -30,9 +30,12 @@ public final class RMConstant
    public static final String PROTOCOL_MESSAGES_MAPPING = PREFIX + ".protocolMessagesMapping";
    // WS-Addressing related actions
    public static final String CREATE_SEQUENCE_WSA_ACTION;
+   public static final String CREATE_SEQUENCE_RESPONSE_WSA_ACTION;
    public static final String CLOSE_SEQUENCE_WSA_ACTION;
+   public static final String CLOSE_SEQUENCE_RESPONSE_WSA_ACTION;
    public static final String SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION;
    public static final String TERMINATE_SEQUENCE_WSA_ACTION;
+   public static final String TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION;
    
    public static final Set<QName> PROTOCOL_OPERATION_QNAMES;
    
@@ -56,9 +59,12 @@ public final class RMConstant
       String namespaceURI = RMProvider.get().getConstants().getNamespaceURI();
       PROTOCOL_OPERATION_QNAMES = Collections.unmodifiableSet(temp);
       CREATE_SEQUENCE_WSA_ACTION = namespaceURI + "/CreateSequence";
+      CREATE_SEQUENCE_RESPONSE_WSA_ACTION = namespaceURI + "/CreateSequenceResponse";
       CLOSE_SEQUENCE_WSA_ACTION = namespaceURI + "/CloseSequence";
+      CLOSE_SEQUENCE_RESPONSE_WSA_ACTION = namespaceURI + "/CloseSequenceResponse";
       SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION = namespaceURI + "/SequenceAcknowledgement";
       TERMINATE_SEQUENCE_WSA_ACTION = namespaceURI + "/TerminateSequence";
+      TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION = namespaceURI + "/TerminateSequenceResponse";
    }
 
    private RMConstant()
