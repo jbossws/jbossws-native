@@ -7,7 +7,11 @@ import javax.xml.ws.addressing.Action;
 import org.jboss.ws.annotation.EndpointConfig;
 
 @WebService
-@EndpointConfig(configName = "Standard WSRM Client", configFile = "META-INF/wsrm-jaxws-client-config.xml")
+@EndpointConfig
+(
+   configName = "Standard WSRM Client",
+   configFile = "META-INF/wsrm-jaxws-client-config.xml"
+)
 public interface OneWayServiceIface
 {
    @Oneway

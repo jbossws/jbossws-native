@@ -17,7 +17,11 @@ import org.jboss.ws.annotation.EndpointConfig;
 
 @WebService(name = "ReqRes", targetNamespace = "http://org.jboss.ws/jaxws/wsrm")
 @SOAPBinding(style = Style.RPC)
-@EndpointConfig(configName = "Standard WSRM Client", configFile = "META-INF/wsrm-jaxws-client-config.xml")
+@EndpointConfig
+(
+   configName = "Standard WSRM Client",
+   configFile = "META-INF/wsrm-jaxws-client-config.xml"
+)
 public interface ReqResServiceIface
 {
    @WebMethod(operationName = "echo")

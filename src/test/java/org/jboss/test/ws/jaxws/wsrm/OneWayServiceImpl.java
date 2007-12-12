@@ -5,6 +5,7 @@ import javax.jws.WebService;
 import javax.xml.ws.addressing.Action;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.annotation.Policy;
 import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
@@ -24,6 +25,11 @@ import java.util.Arrays;
       policyFileLocation = "WEB-INF/wsrm-exactly-once-in-order-policy.xml",
       scope = PolicyScopeLevel.WSDL_BINDING
    )
+)
+@EndpointConfig
+(
+   configName = "Standard WSRM Endpoint",
+   configFile = "WEB-INF/wsrm-jaxws-endpoint-config.xml"
 )
 public class OneWayServiceImpl implements OneWayServiceIface
 {

@@ -30,5 +30,17 @@ package org.jboss.ws.extensions.wsrm.jaxws;
  */
 public final class RMClientHandler extends RMHandler
 {
+   
+   @Override
+   protected boolean isClientSide()
+   {
+      return true;
+   }
+
+   @Override
+   protected boolean isServerSide()
+   {
+      return false;
+   }
 
 }

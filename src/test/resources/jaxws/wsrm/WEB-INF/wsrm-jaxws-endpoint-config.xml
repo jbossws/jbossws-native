@@ -8,13 +8,11 @@
 
   <endpoint-config>
     <config-name>Standard WSRM Endpoint</config-name>
-    <reliable-messaging>
-      <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
-      <provider specVersion="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+    <!--reliable-messaging>
       <message-store id="wsrmStoreId" class="custom.MessageStoreImpl">
         <config-file>META-INF/config.xml</config-file>
       </message-store>
-    </reliable-messaging>	
+    </reliable-messaging-->	
     <post-handler-chains>
       <javaee:handler-chain>
         <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
@@ -22,10 +20,10 @@
           <javaee:handler-name>WSAddressing Handler</javaee:handler-name>
           <javaee:handler-class>org.jboss.ws.extensions.addressing.jaxws.WSAddressingServerHandler</javaee:handler-class>
         </javaee:handler>
-        <!--javaee:handler>
+        <javaee:handler>
           <javaee:handler-name>WSRM Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.ws.extensions.wsrm.RMServerHandler</javaee:handler-class>
-        </javaee:handler-->
+          <javaee:handler-class>org.jboss.ws.extensions.wsrm.jaxws.RMServerHandler</javaee:handler-class>
+        </javaee:handler>
       </javaee:handler-chain>
     </post-handler-chains>
   </endpoint-config>
