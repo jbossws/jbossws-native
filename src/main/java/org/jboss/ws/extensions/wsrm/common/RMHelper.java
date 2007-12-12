@@ -30,10 +30,10 @@ import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.extensions.wsrm.RMClientHandler;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
+import org.jboss.ws.extensions.wsrm.RMClientSequenceImpl;
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.jaxws.RMHandler;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
@@ -90,7 +90,7 @@ public final class RMHelper
       return d.getTimeInMillis(new Date());
    }
    
-   public static void handleSequenceAcknowledgementHeader(RMSequenceAcknowledgement seqAckHeader, RMSequenceImpl sequence)
+   public static void handleSequenceAcknowledgementHeader(RMSequenceAcknowledgement seqAckHeader, RMClientSequenceImpl sequence)
    {
       String seqId = seqAckHeader.getIdentifier();
       if (sequence.getOutboundId().equals(seqId))
@@ -115,7 +115,7 @@ public final class RMHelper
       }
    }
    
-   public static void handleAckRequestedHeader(RMAckRequested ackReqHeader, RMSequenceImpl sequence)
+   public static void handleAckRequestedHeader(RMAckRequested ackReqHeader, RMClientSequenceImpl sequence)
    {
       String inboundSeqId = ackReqHeader.getIdentifier();
       if (false == sequence.getInboundId().equals(inboundSeqId))
@@ -127,7 +127,7 @@ public final class RMHelper
       sequence.ackRequested(true);
    }
    
-   public static void handleSequenceHeader(RMSequence seqHeader, RMSequenceImpl sequence)
+   public static void handleSequenceHeader(RMSequence seqHeader, RMClientSequenceImpl sequence)
    {
       String inboundSeqId = seqHeader.getIdentifier();
       if (null == sequence.getInboundId())

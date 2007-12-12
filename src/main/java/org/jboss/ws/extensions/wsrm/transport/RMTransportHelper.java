@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.RMSequenceImpl;
+import org.jboss.ws.extensions.wsrm.RMClientSequenceImpl;
 
 /**
  * Utility class heavily used in this transport implementation
@@ -45,9 +45,9 @@ public final class RMTransportHelper
       return (Map<String, Object>)invocationCtx.get(REQUEST_CONTEXT);
    }
    
-   public static RMSequenceImpl getSequence(RMMessage rmRequest)
+   public static RMClientSequenceImpl getSequence(RMMessage rmRequest)
    {
-      return (RMSequenceImpl)getWsrmRequestContext(rmRequest).get(SEQUENCE_REFERENCE);
+      return (RMClientSequenceImpl)getWsrmRequestContext(rmRequest).get(SEQUENCE_REFERENCE);
    }
    
    public static boolean isOneWayOperation(RMMessage rmRequest)

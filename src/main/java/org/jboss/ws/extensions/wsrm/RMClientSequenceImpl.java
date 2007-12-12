@@ -47,24 +47,22 @@ import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMIncompleteSequenceBehavior;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
 /**
- * TODO: all termination methods such as terminate, discard, ... etc must unregister the sequence from client
- * Reliable messaging sequence implementation
+ * Client side implementation of the RM sequence
  *
  * @author richard.opalka@jboss.com
  *
  * @since Oct 25, 2007
  */
 @SuppressWarnings("unchecked")
-public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageListener
+public final class RMClientSequenceImpl implements RMSequenceIface, RMUnassignedMessageListener
 {
-   private static final Logger logger = Logger.getLogger(RMSequenceImpl.class);
+   private static final Logger logger = Logger.getLogger(RMClientSequenceImpl.class);
    private static final String PATH_PREFIX = "/temporary_listen_address/";
    private static final RMConstants wsrmConstants = RMProvider.get().getConstants();
    
@@ -84,7 +82,7 @@ public final class RMSequenceImpl implements RMSequence, RMUnassignedMessageList
    private AtomicLong messageNumber = new AtomicLong();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    
-   public RMSequenceImpl(boolean addrType, RMConfig wsrmConfig)
+   public RMClientSequenceImpl(boolean addrType, RMConfig wsrmConfig)
    {
       super();
       if (wsrmConfig == null)

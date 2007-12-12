@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.wsrm;
+package org.jboss.ws.extensions.wsrm.jaxws;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +39,8 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.RMSequenceIface;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
@@ -55,26 +57,26 @@ import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequenceResponse;
 
 /**
- * TODO: add comment
+ * RM generic JAX-WS handler
  *
  * @author richard.opalka@jboss.com
  *
  * @since Oct 23, 2007
  */
 @SuppressWarnings("unchecked")
-public final class RMClientHandler extends GenericSOAPHandler
+public class RMHandler extends GenericSOAPHandler
 {
-   private static final Logger log = Logger.getLogger(RMClientHandler.class);
+   private static final Logger log = Logger.getLogger(RMHandler.class);
    private static final RMMessageFactory rmFactory = RMProvider.get().getMessageFactory();
    private static final RMConstants rmConstants = RMProvider.get().getConstants();
    private static final Set headers = RMConstant.PROTOCOL_OPERATION_QNAMES;
 
-   public Set getHeaders()
+   public final Set getHeaders()
    {
       return headers;
    }
 
-   protected boolean handleOutbound(MessageContext msgContext)
+   protected final boolean handleOutbound(MessageContext msgContext)
    {
       log.debug("handling outbound message");
       
@@ -90,7 +92,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       rmRequestContext.put(RMConstant.WSA_MESSAGE_ID, optionalMessageId);
       rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
       SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
-      RMSequenceImpl sequenceImpl = (RMSequenceImpl)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
+      RMSequenceIface sequenceImpl = (RMSequenceIface)rmRequestContext.get(RMConstant.SEQUENCE_REFERENCE);
       
       QName msgQName = rmConstants.getCreateSequenceQName();
       if (outMsgs.contains(msgQName))
@@ -198,7 +200,7 @@ public final class RMClientHandler extends GenericSOAPHandler
       return true;
    }
 
-   protected boolean handleInbound(MessageContext msgContext)
+   protected final boolean handleInbound(MessageContext msgContext)
    {
       log.debug("handling inbound message");
       
