@@ -401,6 +401,104 @@
   </macrodef>
   
   <!-- ================================================================== -->
+  <!-- Deployment  JBoss-4.2.3                                            -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-native423">
+    <attribute name="stacklibs"/>
+    <attribute name="thirdpartylibs"/>
+    <sequential>
+      
+      <!-- BIN SCRIPTS -->
+      <unzip dest="${jboss423.home}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
+      <chmod dir="${jboss423.home}/bin" perm="+x" includes="*.sh"/>
+      
+      <!-- CLIENT JARS -->
+      <copy todir="${jboss423.home}/client" overwrite="true">
+        <fileset dir="@{stacklibs}">
+          <include name="jboss-jaxrpc.jar"/>
+          <include name="jboss-jaxws.jar"/>
+          <include name="jboss-jaxws-ext.jar"/>
+          <include name="jboss-saaj.jar"/>
+          <include name="jbossws-client.jar"/>
+        </fileset>
+        <fileset dir="@{thirdpartylibs}">
+          <include name="jaxb-api.jar"/>
+          <include name="jaxb-impl.jar"/>
+          <include name="jaxb-xjc.jar"/>
+          <include name="jaxws-tools.jar"/>
+          <include name="jaxws-rt.jar"/>
+          <include name="policy.jar"/>
+          <include name="stax-ex.jar"/>
+          <include name="streambuffer.jar"/>
+          <include name="wsdl4j.jar"/>
+        </fileset>
+      </copy>
+      
+      <!-- SERVER JARS -->
+      <mkdir dir="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <unjar dest="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
+      <mkdir dir="${jboss423.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
+      <unzip dest="${jboss423.home}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-undeploy-native423">
+    <sequential>
+      
+      <delete>
+        
+        <!-- BIN SCRIPTS -->
+        <fileset dir="${jboss423.home}/bin">
+          <include name="wsconsume.*"/>
+          <include name="wsprovide.*"/>
+          <include name="wsrunclient.*"/>
+          <include name="wstools.*"/>
+        </fileset>
+        
+        <!-- CLIENT JARS -->
+        <fileset dir="${jboss423.home}/client">
+          <include name="jaxb-api.jar"/>
+          <include name="jaxb-impl.jar"/>
+          <include name="jaxb-xjc.jar"/>
+          <include name="jaxws-tools.jar"/>
+          <include name="jaxws-rt.jar"/>
+          <include name="jboss-jaxrpc.jar"/>
+          <include name="jboss-jaxws.jar"/>
+          <include name="jboss-jaxws-ext.jar"/>
+          <include name="jboss-saaj.jar"/>
+          <include name="jbossws-client.jar"/>
+          <include name="policy.jar"/>
+          <include name="stax-ex.jar"/>
+          <include name="streambuffer.jar"/>
+          <include name="wsdl4j.jar"/>
+          <!-- Remove only, do not deploy -->
+          <include name="jbossws-wsconsume-impl.jar"/>
+        </fileset>
+        
+        <!-- SERVER JARS -->
+        <fileset dir="${jboss423.home}/lib/endorsed">
+          <include name="jaxb-api.jar"/>
+        </fileset>
+        <fileset dir="${jboss423.home}/lib">
+          <!-- Remove only, do not deploy -->
+          <include name="jbossws-integration.jar"/>
+        </fileset>
+        <fileset dir="${jboss423.home}/server/${jboss.server.instance}/lib">
+          <include name="jboss-jaxrpc.jar"/>
+          <include name="jboss-jaxws.jar"/>
+          <include name="jboss-jaxws-ext.jar"/>
+          <include name="jboss-saaj.jar"/>
+          <!-- Remove only, do not deploy -->
+          <include name="jbossws-integration.jar"/>
+        </fileset>
+      </delete>
+      <delete dir="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <delete dir="${jboss423.home}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
   <!-- Deployment  JBoss-5.0.0                                            -->
   <!-- ================================================================== -->
   

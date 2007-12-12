@@ -77,8 +77,8 @@
 
   <!-- Deploy jbossws to jboss423 -->
   <target name="deploy-jboss423" depends="jars-jboss42,undeploy-jboss423,deploy-jboss423-endorsed" description="Deploy jbossws to jboss423">
-    <!--fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/-->
-    <macro-deploy-native422 jbosshome="${jboss423.home}" stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
+    <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+    <macro-deploy-native423 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty" jbosshome="${jboss423.home}"/>
   </target>
 
@@ -88,8 +88,8 @@
 
   <!-- Remove jbossws from jboss423 -->
   <target name="undeploy-jboss423" depends="prepare,undeploy-jboss423-endorsed" description="Remove jbossws from jboss423">
-    <!--fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/-->
-    <macro-undeploy-native422 jbosshome="${jboss423.home}"/>
+    <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+    <macro-undeploy-native423/>
     <macro-undeploy-framework jbosshome="${jboss423.home}"/>
   </target>
   <target name="undeploy-jboss423-endorsed" depends="prepare">

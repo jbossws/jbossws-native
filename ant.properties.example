@@ -11,7 +11,7 @@
 #jboss423.home=/home/tdiesler/svn/jbossas/branches/Branch_4_2/build/output/jboss-4.2.3.GA
 #jboss500.home=/home/tdiesler/svn/jbossas/trunk/build/output/jboss-5.0.0.Beta3
 
-# The JBoss server under test. This can be [jboss405|jboss405.no.ejb3|jboss421|jboss422|jboss500]
+# The JBoss server under test. This can be [jboss405|jboss405.no.ejb3|jboss421|jboss422|jboss423|jboss500]
 jbossws.integration.target=jboss500
 
 # The JBoss server instance
