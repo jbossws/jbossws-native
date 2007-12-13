@@ -75,6 +75,7 @@ import javax.jws.WebResult;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.jws.soap.SOAPMessageHandlers;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.BindingType;
@@ -297,7 +298,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             name = anWebFault.name();
 
          if (anWebFault.targetNamespace().length() > 0)
+         {
             namespace = anWebFault.targetNamespace();
+            XmlType anXmlType = exception.getAnnotation(XmlType.class);
+            if (anXmlType != null)
+               xmlType = new QName(anXmlType.namespace(), exception.getSimpleName());
+         }
 
          if (anWebFault.faultBean().length() > 0)
             faultBean = anWebFault.faultBean();
