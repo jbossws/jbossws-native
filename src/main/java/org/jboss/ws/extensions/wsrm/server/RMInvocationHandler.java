@@ -21,26 +21,32 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.addressing.Relationship;
+import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -102,11 +108,11 @@ public final class RMInvocationHandler extends InvocationHandler
       Map<String, Object> rmReqProps = (Map<String, Object>)msgContext.get(RMConstant.REQUEST_CONTEXT);
       if (rmReqProps == null)
          throw new RMException("WS-RM specific data not found in server request");
-      Map<String, Object> rmResProps = new HashMap<String, Object>();
       List<QName> protocolMessages = new LinkedList<QName>();
       Map<String, Object> rmResponseContext = new HashMap<String, Object>();
-      AddressingProperties respAddrProps = null;
       List<RMServerSequence> sequences = (List<RMServerSequence>)ep.getAttachment(RMServerSequence.class);
+      rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
+      msgContext.remove(RMConstant.RESPONSE_CONTEXT);
       RMServerSequence sequence = null;
       
       if (RMHelper.isCreateSequence(rmReqProps))
@@ -114,9 +120,7 @@ public final class RMInvocationHandler extends InvocationHandler
          sequence = new RMServerSequence();
          sequences.add(sequence);
          protocolMessages.add(rmConstants.getCreateSequenceResponseQName());
-         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
-         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
       }
       
       if (RMHelper.isCloseSequence(rmReqProps))
@@ -124,40 +128,94 @@ public final class RMInvocationHandler extends InvocationHandler
          Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
          RMCloseSequence payload = (RMCloseSequence)data.get(rmConstants.getCloseSequenceQName());
          String seqIdentifier = payload.getIdentifier();
-         sequence = RMHelper.getServerSequence(seqIdentifier, sequences);
+         sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
-            throw new NotImplementedException("TODO: implement unknown sequence fault generation");
+            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
          }
 
          sequence.close();
          protocolMessages.add(rmConstants.getCloseSequenceResponseQName());
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
-         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
-         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
       }
          
+      if (RMHelper.isSequenceAcknowledgement(rmReqProps))
+      {
+         Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+         RMSequenceAcknowledgement payload = (RMSequenceAcknowledgement)data.get(rmConstants.getSequenceAcknowledgementQName());
+         String seqIdentifier = payload.getIdentifier();
+         sequence = RMHelper.getServerSequenceByOutboundId(seqIdentifier, sequences);
+         if (sequence == null)
+         {
+            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
+         }
+
+         for (RMSequenceAcknowledgement.RMAcknowledgementRange range : payload.getAcknowledgementRanges())
+         {
+            for (long i = range.getLower(); i <= range.getUpper(); i++)
+            {
+               sequence.addReceivedOutboundMessage(i);
+            }
+         }
+      }
+      
       if (RMHelper.isTerminateSequence(rmReqProps))
       {
          Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
          RMTerminateSequence payload = (RMTerminateSequence)data.get(rmConstants.getTerminateSequenceQName());
          String seqIdentifier = payload.getIdentifier();
-         sequence = RMHelper.getServerSequence(seqIdentifier, sequences);
+         sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
-            throw new NotImplementedException("TODO: implement unknown sequence fault generation");
+            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
          }
 
          sequences.remove(sequence);
          protocolMessages.add(rmConstants.getTerminateSequenceResponseQName());
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
-         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
-         msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
       }
+      
+      if (RMHelper.isSequence(rmReqProps))
+      {
+         Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+         RMSequence payload = (RMSequence)data.get(rmConstants.getSequenceQName());
+         String seqIdentifier = payload.getIdentifier();
+         sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
+         if (sequence == null)
+         {
+            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
+         }
+
+         sequence.addReceivedInboundMessage(payload.getMessageNumber());
+         protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
+         rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
          
-      // TODO: implement
+         boolean retTypeIsVoid = inv.getJavaMethod().getReturnType().equals(Void.class) || inv.getJavaMethod().getReturnType().equals(Void.TYPE);
+         if (false == retTypeIsVoid)
+         {
+            protocolMessages.add(rmConstants.getSequenceQName());
+            protocolMessages.add(rmConstants.getAckRequestedQName());
+         }
+         else
+         {
+            AddressingBuilder builder = AddressingBuilder.getAddressingBuilder();
+            AddressingProperties addressingProps = builder.newAddressingProperties();
+            addressingProps.setTo(builder.newURI(addrProps.getReplyTo().getAddress().getURI()));
+            addressingProps.setRelatesTo(new Relationship[] {builder.newRelationship(addrProps.getMessageID().getURI())});
+            try
+            {
+               addressingProps.setAction(builder.newURI(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION));
+            }
+            catch (URISyntaxException ignore)
+            {
+            }
+            msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
+         }
+      }
+      
+      msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
    }
    
    /**

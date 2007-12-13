@@ -46,7 +46,6 @@ import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
 public abstract class RMAbstractOneWayTest extends JBossWSTest
 {
    private static final Properties props = new Properties();
-   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
    private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
 
    private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
@@ -82,23 +81,14 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
    
    public void testOneWayMethods() throws Exception
    {
-      if (true) return; // disable WS-RM tests - they cause regression in hudson
-      
-      RMSequence sequence = null;
-      if (emulatorOn)
-      {
-         sequence = ((RMProvider)proxy).createSequence(isClientAddressable());
-      }
+      RMSequence sequence = ((RMProvider)proxy).createSequence(isClientAddressable());
       setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
       setAddrProps(proxy, "http://useless/action2", serviceURL);
       proxy.method2("Hello World");
       setAddrProps(proxy, "http://useless/action3", serviceURL);
       proxy.method3(new String[] {"Hello","World"});
-      if (emulatorOn)
-      {
-         sequence.close();
-      }
+      sequence.close();
    }
 
    public static String getClasspath()

@@ -4,8 +4,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.Style;
 import javax.xml.ws.addressing.Action;
 
 import org.jboss.logging.Logger;
@@ -19,10 +17,6 @@ import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
    name = "ReqRes",
    serviceName = "ReqResService",
    targetNamespace = "http://org.jboss.ws/jaxws/wsrm"
-)
-@SOAPBinding
-(
-   style = Style.RPC
 )
 @PolicyAttachment
 (

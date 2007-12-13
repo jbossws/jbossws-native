@@ -57,7 +57,6 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    private static final String TARGET_NS = "http://org.jboss.ws/jaxws/wsrm";
    private static final Properties props = new Properties();
    private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
-   private final boolean emulatorOn = Boolean.parseBoolean((String)props.get("emulator"));
    private Exception handlerException;
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
@@ -173,23 +172,14 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    
    private void doReliableMessageExchange(Object proxyObject, InvocationType invocationType) throws Exception
    {
-      if (true) return; // disable WS-RM tests - they cause regression in hudson
-      
-      RMSequence sequence = null;
-      if (emulatorOn)
-      {
-         sequence = ((RMProvider)proxyObject).createSequence(isClientAddressable());
-      }
+      RMSequence sequence = ((RMProvider)proxyObject).createSequence(isClientAddressable());
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      if (emulatorOn)
-      {
-         sequence.close();
-      }
+      sequence.close();
    }
    
    public static String getClasspath()

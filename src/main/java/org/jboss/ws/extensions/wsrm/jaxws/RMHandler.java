@@ -228,16 +228,16 @@ public abstract class RMHandler extends GenericSOAPHandler
          // try to serialize SequenceAcknowledgement to message
          RMSequenceAcknowledgement sequenceAcknowledgement = rmFactory.newSequenceAcknowledgement();
          sequenceAcknowledgement.setIdentifier(sequenceImpl.getInboundId());
-         Iterator<Long> receivedInboudMessages = sequenceImpl.getReceivedInboundMessages().iterator();
-         if (false == receivedInboudMessages.hasNext())
+         Iterator<Long> receivedMessages = sequenceImpl.getReceivedInboundMessages().iterator();
+         if (false == receivedMessages.hasNext())
          {
             sequenceAcknowledgement.setNone();
          }
          else
          {
-            while (receivedInboudMessages.hasNext())
+            while (receivedMessages.hasNext())
             {
-               long messageNo = receivedInboudMessages.next();
+               long messageNo = receivedMessages.next();
                RMSequenceAcknowledgement.RMAcknowledgementRange range = sequenceAcknowledgement.newAcknowledgementRange();
                range.setLower(messageNo);
                range.setUpper(messageNo);
@@ -249,7 +249,7 @@ public abstract class RMHandler extends GenericSOAPHandler
          log.debug(msgQName.getLocalPart() + " WSRM message was serialized to payload");
       }
       
-      if (data.size() == 0)
+      if ((outMsgs.size() != 0) && (data.size() == 0))
          throw new RMException("RM handler did not serialize WS-RM message to the payload");
 
       // TODO: implement SequenceFault serialization

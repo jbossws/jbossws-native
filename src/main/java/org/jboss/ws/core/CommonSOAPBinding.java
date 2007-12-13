@@ -418,7 +418,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
          // R2714 For one-way operations, an INSTANCE MUST NOT return a HTTP response that contains a SOAP envelope.
          // Specifically, the HTTP response entity-body must be empty.
-         if (opMetaData.isOneWay())
+         boolean isWsrmMessage = msgContext.get(RMConstant.RESPONSE_CONTEXT) != null;
+         if (opMetaData.isOneWay() && (false == isWsrmMessage))
          {
             resMessage.getSOAPPart().setContent(null);
             return resMessage;

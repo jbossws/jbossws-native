@@ -82,7 +82,7 @@ public final class RMHelper
       }
    }
    
-   public static RMServerSequence getServerSequence(String seqId, List<RMServerSequence> sequences)
+   public static RMServerSequence getServerSequenceByInboundId(String seqId, List<RMServerSequence> sequences)
    {
       for (RMServerSequence seq : sequences)
       {
@@ -95,20 +95,17 @@ public final class RMHelper
       return null;
    }
    
-   public static AddressingProperties createAddressingProperties(AddressingProperties reqAddrProps, List<QName> rmMessages)
+   public static RMServerSequence getServerSequenceByOutboundId(String seqId, List<RMServerSequence> sequences)
    {
-      AddressingProperties retVal = null;
-      
-      if (rmMessages.contains(rmConstants.getCreateSequenceQName()))
+      for (RMServerSequence seq : sequences)
       {
-         String wsaTo = reqAddrProps.getReplyTo().getAddress().getURI().toString(); 
-         retVal = AddressingClientUtil.createDefaultProps(RMConstant.CREATE_SEQUENCE_RESPONSE_WSA_ACTION, wsaTo);
-         retVal.setMessageID(null);
-         AddressingBuilder addrBuilder = AddressingBuilder.getAddressingBuilder();
-         retVal.setRelatesTo(new Relationship[] {addrBuilder.newRelationship(addrBuilder.newURI(reqAddrProps.getMessageID().getURI()).getURI())});
+         if (seq.getOutboundId().equals(seqId))
+         {
+            return seq;
+         }
       }
       
-      return retVal;
+      return null;
    }
    
    public static boolean isCreateSequence(Map<String, Object> rmMsgContext)
@@ -127,6 +124,18 @@ public final class RMHelper
    {
       List<QName> protocolMessages = (List<QName>)rmMsgContext.get(RMConstant.PROTOCOL_MESSAGES);
       return protocolMessages.contains(rmConstants.getTerminateSequenceQName());
+   }
+   
+   public static boolean isSequence(Map<String, Object> rmMsgContext)
+   {
+      List<QName> protocolMessages = (List<QName>)rmMsgContext.get(RMConstant.PROTOCOL_MESSAGES);
+      return protocolMessages.contains(rmConstants.getSequenceQName());
+   }
+   
+   public static boolean isSequenceAcknowledgement(Map<String, Object> rmMsgContext)
+   {
+      List<QName> protocolMessages = (List<QName>)rmMsgContext.get(RMConstant.PROTOCOL_MESSAGES);
+      return protocolMessages.contains(rmConstants.getSequenceAcknowledgementQName());
    }
    
    public static Duration stringToDuration(String s)
