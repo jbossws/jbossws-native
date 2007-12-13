@@ -481,7 +481,14 @@ public abstract class MetaDataBuilder
       else
       {
          WSDLProperty messageName = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_IN);
-         addrExt.setInboundAction(tns + "/" + portTypeName + "/" + messageName);
+         if (messageName != null)
+         {
+            addrExt.setInboundAction(tns + "/" + portTypeName + "/" + messageName.getValue());
+         }
+         else
+         {
+            addrExt.setInboundAction(tns + "/" + portTypeName + "/IN");
+         }
       }
 
       // outbound action
@@ -493,7 +500,14 @@ public abstract class MetaDataBuilder
       else
       {
          WSDLProperty messageName = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_OUT);
-         addrExt.setOutboundAction(tns + "/" + portTypeName + "/" + messageName);
+         if (messageName != null)
+         {
+            addrExt.setOutboundAction(tns + "/" + portTypeName + "/" + messageName.getValue());
+         }
+         else
+         {
+            addrExt.setOutboundAction(tns + "/" + portTypeName + "/OUT");
+         }
       }
 
       opMetaData.addExtension(addrExt);
