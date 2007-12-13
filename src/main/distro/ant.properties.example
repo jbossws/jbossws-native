@@ -7,9 +7,10 @@
 jboss405.home=@jboss405.home@
 jboss421.home=@jboss421.home@
 jboss422.home=@jboss422.home@
+jboss423.home=@jboss423.home@
 jboss500.home=@jboss500.home@
 
-# The JBoss server under test. This can be [jboss405|jboss421|jboss422|jboss500]
+# The JBoss server under test. This can be [jboss405|jboss421|jboss422|jboss423|jboss500]
 jbossws.integration.target=jboss422
 
 # The JBoss settings
