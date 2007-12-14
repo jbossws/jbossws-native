@@ -8,11 +8,6 @@
 
   <endpoint-config>
     <config-name>Standard WSRM Endpoint</config-name>
-    <!--reliable-messaging>
-      <message-store id="wsrmStoreId" class="custom.MessageStoreImpl">
-        <config-file>META-INF/config.xml</config-file>
-      </message-store>
-    </reliable-messaging-->	
     <post-handler-chains>
       <javaee:handler-chain>
         <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>

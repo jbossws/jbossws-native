@@ -95,18 +95,20 @@ public final class RMInvocationHandler extends InvocationHandler
     * Do RM staff before endpoint invocation
     * @param ep endpoint
     * @param inv invocation
-    * @return true if endpoint have to be called too
+    * @return RM response context to be set after target endpoint invocation
     */
-   private void beforeEndpointInvocation(Endpoint ep, Invocation inv)
+   private Map<String, Object> prepareResponseContext(Endpoint ep, Invocation inv)
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
       if (addrProps == null)
-         throw new RMException("WS-Addressing properties not found in server request");
+         throw new IllegalStateException("WS-Addressing properties not found in server request");
       
       Map<String, Object> rmReqProps = (Map<String, Object>)msgContext.get(RMConstant.REQUEST_CONTEXT);
+      msgContext.remove(RMConstant.REQUEST_CONTEXT);
       if (rmReqProps == null)
-         throw new RMException("WS-RM specific data not found in server request");
+         throw new IllegalStateException("WS-RM specific data not found in server request");
+      
       List<QName> protocolMessages = new LinkedList<QName>();
       Map<String, Object> rmResponseContext = new HashMap<String, Object>();
       List<RMServerSequence> sequences = (List<RMServerSequence>)ep.getAttachment(RMServerSequence.class);
@@ -210,27 +212,17 @@ public final class RMInvocationHandler extends InvocationHandler
             catch (URISyntaxException ignore)
             {
             }
-            msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
+            rmResponseContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
          }
       }
       
-      msgContext.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+      return rmResponseContext;
    }
    
-   /**
-    * Do RM staff after endpoint invocation
-    * @param ep endpoint
-    * @param inv invocation
-    */
-   private void afterEndpointInvocation(Endpoint ep, Invocation inv)
-   {
-      // TODO: implement
-   }
-
    @Override
    public final void invoke(Endpoint ep, Invocation inv) throws Exception
    {
-      beforeEndpointInvocation(ep, inv);
+      Map<String, Object> rmResponseContext = prepareResponseContext(ep, inv);
       
       if (inv.getJavaMethod() != null)
       {
@@ -242,7 +234,14 @@ public final class RMInvocationHandler extends InvocationHandler
          logger.debug("RM lifecycle protocol method detected");
       }
       
-      afterEndpointInvocation(ep, inv);
+      setupResponseContext(rmResponseContext);
+   }
+   
+   private void setupResponseContext(Map<String, Object> rmResponseContext)
+   {
+      CommonMessageContext msgCtx = MessageContextAssociation.peekMessageContext(); 
+      msgCtx.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+      msgCtx.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, rmResponseContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND));
    }
    
    public final InvocationHandler getDelegate()
