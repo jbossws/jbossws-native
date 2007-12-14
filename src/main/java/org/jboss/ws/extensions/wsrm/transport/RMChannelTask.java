@@ -24,9 +24,7 @@ package org.jboss.ws.extensions.wsrm.transport;
 import static org.jboss.ws.extensions.wsrm.RMConstant.*;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -56,13 +54,6 @@ final class RMChannelTask implements Callable<RMChannelResponse>
       this.rmRequest = rmRequest;
    }
    
-   private String addURLParameter(String urlStr, String key, String value) throws MalformedURLException
-   {
-      URL url = new URL(urlStr);
-      urlStr += (url.getQuery() == null ? "?" : "&") + key + "=" + value;
-      return urlStr;
-   }
-
    public RMChannelResponse call()
    {
       try
@@ -72,7 +63,6 @@ final class RMChannelTask implements Callable<RMChannelResponse>
 
          if (version.startsWith("1.4"))
          {
-            targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "JBossWSMessage");
             MarshalFactory.addMarshaller("JBossWSMessage", RMMarshaller.getInstance(), RMUnMarshaller.getInstance());
          }
 
@@ -82,7 +72,6 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          
          logger.debug("[WS-RM] backport URI is: " + backPort);
          RMCallbackHandler callbackHandler = null;
-         // TODO: we should remember WSA:MessageId here too
 
          if (backPort != null)
          {
