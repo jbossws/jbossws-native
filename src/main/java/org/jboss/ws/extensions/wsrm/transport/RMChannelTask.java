@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.wsrm.transport;
 
-import static org.jboss.ws.extensions.wsrm.RMConstant.*;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
@@ -58,8 +56,8 @@ final class RMChannelTask implements Callable<RMChannelResponse>
    {
       try
       {
-         String targetAddress = (String)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT).get(TARGET_ADDRESS);
-         String version = (String)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT).get(REMOTING_VERSION);
+         String targetAddress = (String)rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT).get(RMChannelConstants.TARGET_ADDRESS);
+         String version = (String)rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT).get(RMChannelConstants.REMOTING_VERSION);
 
          if (version.startsWith("1.4"))
          {
@@ -84,7 +82,7 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          }
          boolean oneWay = RMTransportHelper.isOneWayOperation(rmRequest);
          
-         Client client = new Client(locator, JBOSSWS_SUBSYSTEM, rmRequest.getMetadata().getContext(REMOTING_CONFIGURATION_CONTEXT));
+         Client client = new Client(locator, JBOSSWS_SUBSYSTEM, rmRequest.getMetadata().getContext(RMChannelConstants.REMOTING_CONFIGURATION_CONTEXT));
          client.connect();
 
          client.setMarshaller(RMMarshaller.getInstance());
@@ -92,7 +90,7 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          if ((false == oneWay) && (null == backPort))  
             client.setUnMarshaller(RMUnMarshaller.getInstance());
       
-         Map<String, Object> remotingInvocationContext = rmRequest.getMetadata().getContext(REMOTING_INVOCATION_CONTEXT);
+         Map<String, Object> remotingInvocationContext = rmRequest.getMetadata().getContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT);
 
          // debug the outgoing request message
          MessageTrace.traceMessage("Outgoing RM Request Message", rmRequest.getPayload());

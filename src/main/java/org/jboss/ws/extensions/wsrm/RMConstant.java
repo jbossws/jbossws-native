@@ -18,15 +18,8 @@ public final class RMConstant
    }
    
    private static final String PREFIX = "wsrm";
-   public static final String TARGET_ADDRESS = PREFIX + ".targetAddress";
-   public static final String REMOTING_VERSION = PREFIX + ".remotingVersion";
+   
    public static final String ONE_WAY_OPERATION = PREFIX + ".oneWayOperation";
-   public static final String INVOCATION_CONTEXT = PREFIX + ".invocationContext";
-   public static final String MARSHALLER = PREFIX + ".marshaller";
-   public static final String UNMARSHALLER = PREFIX + ".unmarshaller";
-   public static final String SERIALIZATION_CONTEXT = PREFIX + ".serializationContext";
-   public static final String REMOTING_INVOCATION_CONTEXT = PREFIX + ".remotingInvocationContext";
-   public static final String REMOTING_CONFIGURATION_CONTEXT = PREFIX + ".remotingConfigurationContext";
    public static final String REQUEST_CONTEXT = PREFIX + ".requestContext";
    public static final String RESPONSE_CONTEXT = PREFIX + ".responseContext";
    public static final String SEQUENCE_REFERENCE = PREFIX + ".sequenceReference";

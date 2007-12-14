@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.wsrm.transport;
 
-import static org.jboss.ws.extensions.wsrm.RMConstant.REMOTING_INVOCATION_CONTEXT;
-
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -123,7 +121,7 @@ public final class RMSender
                   endTime = System.currentTimeMillis();
                   if (result.getResponse() != null)
                   {
-                     Map<String, Object> remotingCtx = result.getResponse().getMetadata().getContext(REMOTING_INVOCATION_CONTEXT);
+                     Map<String, Object> remotingCtx = result.getResponse().getMetadata().getContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT);
                      if (remotingCtx != null)
                      {
                         if (Integer.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).equals(remotingCtx.get(HTTPMetadataConstants.RESPONSE_CODE)))

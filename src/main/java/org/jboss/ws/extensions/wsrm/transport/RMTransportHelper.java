@@ -41,7 +41,7 @@ public final class RMTransportHelper
    
    private static Map<String, Object> getWsrmRequestContext(RMMessage rmRequest)
    {
-      Map<String, Object> invocationCtx = (Map<String, Object>)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT);
+      Map<String, Object> invocationCtx = (Map<String, Object>)rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT);
       return (Map<String, Object>)invocationCtx.get(REQUEST_CONTEXT);
    }
    
@@ -54,12 +54,10 @@ public final class RMTransportHelper
    {
       RMMetadata meta = rmRequest.getMetadata();
       if (meta == null) throw new RuntimeException("Unable to obtain wsrm metadata");
-      Map<String, Object> invCtx = meta.getContext(RMConstant.INVOCATION_CONTEXT);
+      Map<String, Object> invCtx = meta.getContext(RMChannelConstants.INVOCATION_CONTEXT);
       if (invCtx == null) throw new RuntimeException("Unable to obtain invocation context");
       Map<String, Object> wsrmReqCtx = (Map<String, Object>)invCtx.get(RMConstant.REQUEST_CONTEXT);
       Boolean isOneWay = (Boolean)wsrmReqCtx.get(ONE_WAY_OPERATION); 
-      logger.debug("oneWayMessage == " + (isOneWay == null ? false : isOneWay.booleanValue()));
-      logger.debug("messages == " + wsrmReqCtx.get(PROTOCOL_MESSAGES));
       return isOneWay == null ? false : isOneWay.booleanValue();
    }
 

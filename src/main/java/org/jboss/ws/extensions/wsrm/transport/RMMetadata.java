@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.HashMap;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
-import org.jboss.ws.extensions.wsrm.RMConstant;
 
 /**
  * RM metadata heavily used by this RM transport
@@ -27,27 +26,27 @@ public final class RMMetadata
       if (targetAddress == null)
          throw new IllegalArgumentException("Target address cannot be null");
       
-      invocationContext.put(RMConstant.TARGET_ADDRESS, targetAddress);
-      invocationContext.put(RMConstant.REMOTING_VERSION, remotingVersion);
-      setContext(RMConstant.INVOCATION_CONTEXT, invocationContext);
+      invocationContext.put(RMChannelConstants.TARGET_ADDRESS, targetAddress);
+      invocationContext.put(RMChannelConstants.REMOTING_VERSION, remotingVersion);
+      setContext(RMChannelConstants.INVOCATION_CONTEXT, invocationContext);
       
       if (marshaller == null || unmarshaller == null)
          throw new IllegalArgumentException("Unable to create de/serialization context");
       
       Map<String, Object> serializationContext = new HashMap<String, Object>();
-      serializationContext.put(RMConstant.MARSHALLER, marshaller);
-      serializationContext.put(RMConstant.UNMARSHALLER, unmarshaller);
-      setContext(RMConstant.SERIALIZATION_CONTEXT, serializationContext);
+      serializationContext.put(RMChannelConstants.MARSHALLER, marshaller);
+      serializationContext.put(RMChannelConstants.UNMARSHALLER, unmarshaller);
+      setContext(RMChannelConstants.SERIALIZATION_CONTEXT, serializationContext);
          
       if (remotingInvocationContext == null)
          throw new IllegalArgumentException("Remoting invocation context cannot be null");
       
-      setContext(RMConstant.REMOTING_INVOCATION_CONTEXT, remotingInvocationContext);
+      setContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT, remotingInvocationContext);
 
       if (remotingConfigurationContext == null)
          throw new IllegalArgumentException("Remoting configuraton context cannot be null");
 
-      setContext(RMConstant.REMOTING_CONFIGURATION_CONTEXT, remotingConfigurationContext);
+      setContext(RMChannelConstants.REMOTING_CONFIGURATION_CONTEXT, remotingConfigurationContext);
    }
    
    public RMMetadata(Map<String, Object> remotingInvocationContext)
@@ -55,7 +54,7 @@ public final class RMMetadata
       if (remotingInvocationContext == null)
          throw new IllegalArgumentException("Remoting invocation context cannot be null");
       
-      setContext(RMConstant.REMOTING_INVOCATION_CONTEXT, remotingInvocationContext);
+      setContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT, remotingInvocationContext);
    }
    
    void setContext(String key, Map<String, Object> ctx)

@@ -21,11 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm.transport;
 
-import static org.jboss.ws.extensions.wsrm.RMConstant.INVOCATION_CONTEXT;
-import static org.jboss.ws.extensions.wsrm.RMConstant.MARSHALLER;
-import static org.jboss.ws.extensions.wsrm.RMConstant.REMOTING_INVOCATION_CONTEXT;
-import static org.jboss.ws.extensions.wsrm.RMConstant.SERIALIZATION_CONTEXT;
-import static org.jboss.ws.extensions.wsrm.RMConstant.UNMARSHALLER;
+import static org.jboss.ws.extensions.wsrm.transport.RMChannelConstants.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

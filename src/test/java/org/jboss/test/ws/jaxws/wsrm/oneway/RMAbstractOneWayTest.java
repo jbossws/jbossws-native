@@ -77,8 +77,7 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
    
    public void testOneWayMethods() throws Exception
    {
-      boolean addressableClient = isClientAddressable();
-      RMSequence sequence = ((RMProvider)proxy).createSequence(addressableClient);
+      RMSequence sequence = ((RMProvider)proxy).createSequence(isClientAddressable());
       setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
       setAddrProps(proxy, "http://useless/action2", serviceURL);
