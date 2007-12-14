@@ -39,5 +39,6 @@ public interface RMSequenceIface extends RMSequence
    long getLastMessageNumber();
    String getInboundId();
    long getDuration();
+   String getAcksTo();
    Set<Long> getReceivedInboundMessages();
 }

@@ -29,18 +29,13 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
-import javax.xml.ws.addressing.AddressingBuilder;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.Relationship;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.jaxws.RMHandler;
 import org.jboss.ws.extensions.wsrm.server.RMServerSequence;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;

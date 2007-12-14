@@ -59,6 +59,11 @@ public class RMServerSequence implements RMSequenceIface
    {
       return this.duration;
    }
+   
+   public String getAcksTo()
+   {
+      return null;
+   }
 
    public String getOutboundId()
    {

@@ -257,7 +257,8 @@ public class ServiceEndpointInvoker
             msgContext.setMessageAbstraction(resMessage);
          }
 
-         if ((oneway == false) || (msgContext.get(RMConstant.RESPONSE_CONTEXT) != null)) // RM hack
+         boolean isWsrmMessage = msgContext.get(RMConstant.RESPONSE_CONTEXT) != null;
+         if ((oneway == false) || (isWsrmMessage)) // RM hack
          {
             // call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
             handlersPass = callResponseHandlerChain(sepMetaData, handlerType[2]);

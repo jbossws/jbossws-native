@@ -81,6 +81,7 @@ public final class RMClientSequence implements RMSequenceIface, RMUnassignedMess
    private AtomicBoolean inboundMessageAckRequested = new AtomicBoolean();
    private AtomicLong messageNumber = new AtomicLong();
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
+   private static final String ANONYMOUS_URI = AddressingBuilder.getAddressingBuilder().newAddressingConstants().getAnonymousURI();
    
    public RMClientSequence(boolean addrType, RMConfig wsrmConfig)
    {
@@ -201,6 +202,11 @@ public final class RMClientSequence implements RMSequenceIface, RMUnassignedMess
    {
       // no need for synchronization
       return (this.addressableClient) ? this.backPort : null;
+   }
+   
+   public final String getAcksTo()
+   {
+      return (this.addressableClient) ? this.backPort.toString() : ANONYMOUS_URI;
    }
 
    public final long newMessageNumber()
