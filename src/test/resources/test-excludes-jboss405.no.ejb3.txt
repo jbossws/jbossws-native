@@ -4,15 +4,10 @@
 org/jboss/test/ws/jaxrpc/jbws723/**
 
 # EJB3 compilation excludes
-org/jboss/test/ws/jaxws/wsrm/**
-org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase*
-org/jboss/test/ws/jaxws/samples/context/EndpointEJB*
-org/jboss/test/ws/jaxws/samples/retail/**
-org/jboss/test/ws/jaxws/samples/swaref/**
-org/jboss/test/ws/jaxws/samples/eardeployment/**
-org/jboss/test/ws/jaxws/samples/webserviceref/**
-org/jboss/test/ws/jaxws/samples/serviceref/*EJB*
-org/jboss/test/ws/jaxws/samples/webservice/*EJB3*
+org/jboss/test/ws/jaxws/binding/**
+org/jboss/test/ws/jaxws/jbws771/**
+org/jboss/test/ws/jaxws/jbws944/**
+org/jboss/test/ws/jaxws/jbws981/**
 org/jboss/test/ws/jaxws/jbws1283/**
 org/jboss/test/ws/jaxws/jbws1422/**
 org/jboss/test/ws/jaxws/jbws1446/**
@@ -30,17 +25,21 @@ org/jboss/test/ws/jaxws/jbws1809/**
 org/jboss/test/ws/jaxws/jbws1813/**
 org/jboss/test/ws/jaxws/jbws1815/**
 org/jboss/test/ws/jaxws/jbws1840/**
-org/jboss/test/ws/jaxws/jbws771/**
-org/jboss/test/ws/jaxws/jbws944/**
-org/jboss/test/ws/jaxws/jbws981/**
+org/jboss/test/ws/jaxws/jbws1904/**
 org/jboss/test/ws/jaxws/namespace/**
-org/jboss/test/ws/jaxws/webserviceref/**
 org/jboss/test/ws/jaxws/handlerlifecycle/**
-org/jboss/test/ws/jaxws/samples/wsaddressing/**
-org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean*
-org/jboss/test/ws/jaxws/samples/wseventing/**
 org/jboss/test/ws/jaxws/samples/context/**
-org/jboss/test/ws/jaxws/binding/**
+org/jboss/test/ws/jaxws/samples/eardeployment/**
+org/jboss/test/ws/jaxws/samples/retail/**
+org/jboss/test/ws/jaxws/samples/swaref/**
+org/jboss/test/ws/jaxws/samples/webserviceref/**
+org/jboss/test/ws/jaxws/samples/serviceref/*EJB*
+org/jboss/test/ws/jaxws/samples/webservice/*EJB3*
+org/jboss/test/ws/jaxws/samples/wsaddressing/**
+org/jboss/test/ws/jaxws/samples/wseventing/**
+org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean*
+org/jboss/test/ws/jaxws/webserviceref/**
+org/jboss/test/ws/jaxws/wsrm/**
 
 # EJB3 runtime excludes
 org/jboss/test/ws/interop/wsa/AddressingTestCase*
