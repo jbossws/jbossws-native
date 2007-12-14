@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.extensions.wsrm.RMSequenceIface;
+import org.jboss.ws.extensions.wsrm.RMSequenceExt;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
@@ -97,7 +97,7 @@ public final class RMHandlerHelper
       throw new IllegalArgumentException();
    }
    
-   public static RMSerializable prepareData(QName msgQN, List<QName> outMsgs, RMSequenceIface seq)
+   public static RMSerializable prepareData(QName msgQN, List<QName> outMsgs, RMSequenceExt seq)
    {
       if (outMsgs.contains(msgQN))
       {
@@ -144,14 +144,14 @@ public final class RMHandlerHelper
       return null;
    }
    
-   private static RMSerializable newCreateSequence(RMSequenceIface seq)
+   private static RMSerializable newCreateSequence(RMSequenceExt seq)
    {
       RMCreateSequence createSequence = rmFactory.newCreateSequence();
       createSequence.setAcksTo(seq.getAcksTo());
       return createSequence;
    }
    
-   private static RMSerializable newCreateSequenceResponse(RMSequenceIface seq)
+   private static RMSerializable newCreateSequenceResponse(RMSequenceExt seq)
    {
       RMCreateSequenceResponse createSequenceResponse = rmFactory.newCreateSequenceResponse();
       createSequenceResponse.setIdentifier(seq.getInboundId());
@@ -159,7 +159,7 @@ public final class RMHandlerHelper
       return createSequenceResponse;
    }
    
-   private static RMSerializable newCloseSequenceResponse(RMSequenceIface seq)
+   private static RMSerializable newCloseSequenceResponse(RMSequenceExt seq)
    {
       // construct CloseSequenceResponse object
       RMCloseSequenceResponse closeSequenceResponse = rmFactory.newCloseSequenceResponse();
@@ -167,7 +167,7 @@ public final class RMHandlerHelper
       return closeSequenceResponse;
    }
    
-   private static RMSerializable newCloseSequence(RMSequenceIface seq)
+   private static RMSerializable newCloseSequence(RMSequenceExt seq)
    {
       // construct CloseSequenceResponse object
       RMCloseSequence closeSequence = rmFactory.newCloseSequence();
@@ -179,7 +179,7 @@ public final class RMHandlerHelper
       return closeSequence;
    }
    
-   private static RMSerializable newTerminateSequence(RMSequenceIface seq)
+   private static RMSerializable newTerminateSequence(RMSequenceExt seq)
    {
       // construct CloseSequenceResponse object
       RMTerminateSequence terminateSequence = rmFactory.newTerminateSequence();
@@ -191,7 +191,7 @@ public final class RMHandlerHelper
       return terminateSequence;
    }
    
-   private static RMSerializable newTerminateSequenceResponse(RMSequenceIface seq)
+   private static RMSerializable newTerminateSequenceResponse(RMSequenceExt seq)
    {
       // construct TerminateSequenceResponse object
       RMTerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
@@ -199,7 +199,7 @@ public final class RMHandlerHelper
       return terminateSequenceResponse;
    }
    
-   private static RMSerializable newSequenceAcknowledgement(RMSequenceIface seq)
+   private static RMSerializable newSequenceAcknowledgement(RMSequenceExt seq)
    {
       // construct SequenceAcknowledgement object
       RMSequenceAcknowledgement sequenceAcknowledgement = rmFactory.newSequenceAcknowledgement();
@@ -224,7 +224,7 @@ public final class RMHandlerHelper
       return sequenceAcknowledgement;
    }
 
-   private static RMSerializable newAckRequested(RMSequenceIface seq)
+   private static RMSerializable newAckRequested(RMSequenceExt seq)
    {
       // construct AckRequested object
       RMAckRequested wsrmMsg = rmFactory.newAckRequested();
@@ -233,7 +233,7 @@ public final class RMHandlerHelper
       return wsrmMsg;
    }
 
-   private static RMSerializable newSequence(RMSequenceIface seq)
+   private static RMSerializable newSequence(RMSequenceExt seq)
    {
       // construct Sequence object
       RMSequence sequence = rmFactory.newSequence();

@@ -60,7 +60,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
  * @since Oct 25, 2007
  */
 @SuppressWarnings("unchecked")
-public final class RMClientSequence implements RMSequenceIface, RMUnassignedMessageListener
+public final class RMClientSequence implements RMSequenceExt, RMUnassignedMessageListener
 {
    private static final Logger logger = Logger.getLogger(RMClientSequence.class);
    private static final String PATH_PREFIX = "/temporary_listen_address/";
@@ -286,7 +286,7 @@ public final class RMClientSequence implements RMSequenceIface, RMUnassignedMess
       this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
       List msgs = new LinkedList();
       msgs.add(wsrmConstants.getCloseSequenceQName());
-      sendMessage(RMConstant.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName(), msgs);
+      sendMessage(RMAddressingConstants.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName(), msgs);
    }
    
    public final void sendTerminateMessage()
@@ -297,7 +297,7 @@ public final class RMClientSequence implements RMSequenceIface, RMUnassignedMess
       {
          msgs.add(wsrmConstants.getSequenceAcknowledgementQName());
       }
-      sendMessage(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName(), msgs);
+      sendMessage(RMAddressingConstants.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName(), msgs);
    }
    
    public final void sendSequenceAcknowledgementMessage()
@@ -308,7 +308,7 @@ public final class RMClientSequence implements RMSequenceIface, RMUnassignedMess
       ackRequested(false);
       List msgs = new LinkedList();
       msgs.add(wsrmConstants.getSequenceAcknowledgementQName());
-      sendMessage(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName(), msgs);
+      sendMessage(RMAddressingConstants.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION, wsrmConstants.getSequenceAcknowledgementQName(), msgs);
    }
    
    public final void setBehavior(RMIncompleteSequenceBehavior behavior)

@@ -47,25 +47,20 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
 {
    private static final Properties props = new Properties();
    private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
-
    private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
    private OneWayServiceIface proxy;
    
    static
    {
-      System.out.println("FIXME [JBWS-515] Provide an initial implementation for WS-ReliableMessaging");
-      System.out.println("FIXME [JBWS-1699] Implement the basic message exchange that is required for WS-RM");
-      System.out.println("FIXME [JBWS-1700] Provide a comprehensive test case for WS-RM");
-
-      // load test properties
-      File propertiesFile = new File("resources/jaxws/wsrm/properties/RMAbstractOneWayTest.properties");
       try 
       {
-         props.load(new FileInputStream(propertiesFile));
+         props.load(
+            new FileInputStream(
+               new File("resources/jaxws/wsrm/properties/RMAbstractOneWayTest.properties")));
       }
-      catch (IOException ignore)
+      catch (IOException ioe)
       {
-         ignore.printStackTrace();
+         ioe.printStackTrace();
       }
    }
 
@@ -73,6 +68,7 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
+      
       QName serviceName = new QName(targetNS, "OneWayService");
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
@@ -81,7 +77,8 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
    
    public void testOneWayMethods() throws Exception
    {
-      RMSequence sequence = ((RMProvider)proxy).createSequence(isClientAddressable());
+      boolean addressableClient = isClientAddressable();
+      RMSequence sequence = ((RMProvider)proxy).createSequence(addressableClient);
       setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
       setAddrProps(proxy, "http://useless/action2", serviceURL);

@@ -36,7 +36,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.RMSequenceIface;
+import org.jboss.ws.extensions.wsrm.RMSequenceExt;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
@@ -67,7 +67,7 @@ public final class RMServerHandler extends RMHandlerAbstractBase
       rmOutboundContext.put(RMConstant.WSA_MESSAGE_ID, optionalMessageId);
       rmOutboundContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
       SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
-      RMSequenceIface sequenceImpl = (RMSequenceIface)rmOutboundContext.get(RMConstant.SEQUENCE_REFERENCE);
+      RMSequenceExt sequenceImpl = (RMSequenceExt)rmOutboundContext.get(RMConstant.SEQUENCE_REFERENCE);
       
       // try to serialize CreateSequenceResponse to message
       serialize(rmConstants.getCreateSequenceResponseQName(), outMsgs, data, soapMessage, sequenceImpl);

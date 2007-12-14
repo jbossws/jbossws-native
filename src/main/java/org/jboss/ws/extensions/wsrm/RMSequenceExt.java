@@ -26,18 +26,18 @@ import java.util.Set;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
 
 /**
- * Detailed view to the sequence - not visible to API clients
+ * An extension of the standard RM sequence
  *
  * @author richard.opalka@jboss.com
  *
  * @since Dec 12, 2007
  */
-public interface RMSequenceIface extends RMSequence
+public interface RMSequenceExt extends RMSequence
 {
    String getOutboundId();
+   String getInboundId();
    long newMessageNumber();
    long getLastMessageNumber();
-   String getInboundId();
    long getDuration();
    String getAcksTo();
    Set<Long> getReceivedInboundMessages();

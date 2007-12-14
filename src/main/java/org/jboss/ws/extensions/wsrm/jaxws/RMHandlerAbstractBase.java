@@ -31,7 +31,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.RMSequenceIface;
+import org.jboss.ws.extensions.wsrm.RMSequenceExt;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
 
@@ -51,7 +51,7 @@ public abstract class RMHandlerAbstractBase extends GenericSOAPHandler
       return RMConstant.PROTOCOL_OPERATION_QNAMES;
    }
    
-   protected final void serialize(QName msgQN, List<QName> outMsgs, Map<QName, RMSerializable> data, SOAPMessage soapMessage, RMSequenceIface seq)
+   protected final void serialize(QName msgQN, List<QName> outMsgs, Map<QName, RMSerializable> data, SOAPMessage soapMessage, RMSequenceExt seq)
    {
       RMSerializable msg = RMHandlerHelper.prepareData(msgQN, outMsgs, seq);
       if (msg != null)

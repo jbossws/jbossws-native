@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
+import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
@@ -221,8 +222,8 @@ public final class RMHelper
       createSequenceMD.setOneWay(false);
       // setup addressing related data
       AddressingOpMetaExt createSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
-      createSequenceAddrExt.setInboundAction(RMConstant.CREATE_SEQUENCE_WSA_ACTION);
-      createSequenceAddrExt.setOutboundAction(RMConstant.CREATE_SEQUENCE_RESPONSE_WSA_ACTION);
+      createSequenceAddrExt.setInboundAction(RMAddressingConstants.CREATE_SEQUENCE_WSA_ACTION);
+      createSequenceAddrExt.setOutboundAction(RMAddressingConstants.CREATE_SEQUENCE_RESPONSE_WSA_ACTION);
       createSequenceMD.addExtension(createSequenceAddrExt);
       // register operation metadata with endpoint metadata
       endpointMD.addOperation(createSequenceMD);
@@ -233,7 +234,7 @@ public final class RMHelper
       sequenceAcknowledgementMD.setOneWay(true);
       // setup addressing related data
       AddressingOpMetaExt sequenceAcknowledgementAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
-      sequenceAcknowledgementAddrExt.setInboundAction(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION);
+      sequenceAcknowledgementAddrExt.setInboundAction(RMAddressingConstants.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION);
       sequenceAcknowledgementMD.addExtension(sequenceAcknowledgementAddrExt);
       // register operation metadata with endpoint metadata
       endpointMD.addOperation(sequenceAcknowledgementMD);
@@ -244,8 +245,8 @@ public final class RMHelper
       closeSequenceMD.setOneWay(false);
       // setup addressing related data
       AddressingOpMetaExt closeSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
-      closeSequenceAddrExt.setInboundAction(RMConstant.CLOSE_SEQUENCE_WSA_ACTION);
-      closeSequenceAddrExt.setOutboundAction(RMConstant.CLOSE_SEQUENCE_RESPONSE_WSA_ACTION);
+      closeSequenceAddrExt.setInboundAction(RMAddressingConstants.CLOSE_SEQUENCE_WSA_ACTION);
+      closeSequenceAddrExt.setOutboundAction(RMAddressingConstants.CLOSE_SEQUENCE_RESPONSE_WSA_ACTION);
       closeSequenceMD.addExtension(closeSequenceAddrExt);
       // register operation metadata with endpoint metadata
       endpointMD.addOperation(closeSequenceMD);
@@ -256,8 +257,8 @@ public final class RMHelper
       terminateSequenceMD.setOneWay(false);
       // setup addressing related data
       AddressingOpMetaExt terminateSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
-      terminateSequenceAddrExt.setInboundAction(RMConstant.TERMINATE_SEQUENCE_WSA_ACTION);
-      terminateSequenceAddrExt.setOutboundAction(RMConstant.TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION);
+      terminateSequenceAddrExt.setInboundAction(RMAddressingConstants.TERMINATE_SEQUENCE_WSA_ACTION);
+      terminateSequenceAddrExt.setOutboundAction(RMAddressingConstants.TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION);
       terminateSequenceMD.addExtension(terminateSequenceAddrExt);
       // register operation metadata with endpoint metadata
       endpointMD.addOperation(terminateSequenceMD);

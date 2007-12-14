@@ -39,6 +39,7 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
+import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
@@ -206,7 +207,7 @@ public final class RMInvocationHandler extends InvocationHandler
             addressingProps.setRelatesTo(new Relationship[] {builder.newRelationship(addrProps.getMessageID().getURI())});
             try
             {
-               addressingProps.setAction(builder.newURI(RMConstant.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION));
+               addressingProps.setAction(builder.newURI(RMAddressingConstants.SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION));
             }
             catch (URISyntaxException ignore)
             {

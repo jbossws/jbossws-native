@@ -66,6 +66,7 @@ import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
@@ -515,7 +516,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          // set up addressing data
          RMClientSequence candidateSequence = new RMClientSequence(addressableClient, getEndpointMetaData().getConfig().getRMMetaData());
          String address = getEndpointMetaData().getEndpointAddress();
-         String action = RMConstant.CREATE_SEQUENCE_WSA_ACTION;
+         String action = RMAddressingConstants.CREATE_SEQUENCE_WSA_ACTION;
          AddressingProperties addressingProps = null;
          if (addressableClient)
          {

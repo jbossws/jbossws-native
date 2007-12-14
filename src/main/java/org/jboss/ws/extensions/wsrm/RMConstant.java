@@ -2,19 +2,22 @@ package org.jboss.ws.extensions.wsrm;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.addressing.AddressingBuilder;
 
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 
 public final class RMConstant
 {
-   private static final String PREFIX = RMConstant.class.getName();
+
+   private RMConstant()
+   {
+      // instances not allowed
+   }
+   
+   private static final String PREFIX = "wsrm";
    public static final String TARGET_ADDRESS = PREFIX + ".targetAddress";
    public static final String REMOTING_VERSION = PREFIX + ".remotingVersion";
    public static final String ONE_WAY_OPERATION = PREFIX + ".oneWayOperation";
@@ -29,19 +32,8 @@ public final class RMConstant
    public static final String SEQUENCE_REFERENCE = PREFIX + ".sequenceReference";
    public static final String PROTOCOL_MESSAGES = PREFIX + ".protocolMessages";
    public static final String PROTOCOL_MESSAGES_MAPPING = PREFIX + ".protocolMessagesMapping";
-   // WS-Addressing related actions
-   public static final String CREATE_SEQUENCE_WSA_ACTION;
-   public static final String CREATE_SEQUENCE_RESPONSE_WSA_ACTION;
-   public static final String CLOSE_SEQUENCE_WSA_ACTION;
-   public static final String CLOSE_SEQUENCE_RESPONSE_WSA_ACTION;
-   public static final String SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION;
-   public static final String TERMINATE_SEQUENCE_WSA_ACTION;
-   public static final String TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION;
-   
-   public static final Set<QName> PROTOCOL_OPERATION_QNAMES;
-   
-   public static final String WSA_ANONYMOUS_URI = AddressingBuilder.getAddressingBuilder().newAddressingConstants().getAnonymousURI();
    public static final String WSA_MESSAGE_ID = PREFIX + ".wsaMessageId";
+   public static final Set<QName> PROTOCOL_OPERATION_QNAMES;
    
    static
    {
@@ -57,19 +49,7 @@ public final class RMConstant
       temp.add(constants.getCloseSequenceResponseQName());
       temp.add(constants.getTerminateSequenceQName());
       temp.add(constants.getTerminateSequenceResponseQName());
-      String namespaceURI = RMProvider.get().getConstants().getNamespaceURI();
       PROTOCOL_OPERATION_QNAMES = Collections.unmodifiableSet(temp);
-      CREATE_SEQUENCE_WSA_ACTION = namespaceURI + "/CreateSequence";
-      CREATE_SEQUENCE_RESPONSE_WSA_ACTION = namespaceURI + "/CreateSequenceResponse";
-      CLOSE_SEQUENCE_WSA_ACTION = namespaceURI + "/CloseSequence";
-      CLOSE_SEQUENCE_RESPONSE_WSA_ACTION = namespaceURI + "/CloseSequenceResponse";
-      SEQUENCE_ACKNOWLEDGEMENT_WSA_ACTION = namespaceURI + "/SequenceAcknowledgement";
-      TERMINATE_SEQUENCE_WSA_ACTION = namespaceURI + "/TerminateSequence";
-      TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION = namespaceURI + "/TerminateSequenceResponse";
    }
 
-   private RMConstant()
-   {
-      // no instances
-   }
 }
