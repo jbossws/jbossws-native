@@ -26,12 +26,14 @@ import static org.jboss.ws.extensions.wsrm.RMConstant.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
@@ -45,7 +47,7 @@ import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFacto
 final class RMChannelTask implements Callable<RMChannelResponse>
 {
    private static final Logger logger = Logger.getLogger(RMChannelTask.class);
-   private static final String JBOSSWS_SUBSYSTEM = "jbossws";
+   private static final String JBOSSWS_SUBSYSTEM = "jbossws-wsrm";
    private final RMMessage rmRequest;
    
    RMChannelTask(RMMessage rmRequest)
@@ -54,20 +56,27 @@ final class RMChannelTask implements Callable<RMChannelResponse>
       this.rmRequest = rmRequest;
    }
    
+   private String addURLParameter(String urlStr, String key, String value) throws MalformedURLException
+   {
+      URL url = new URL(urlStr);
+      urlStr += (url.getQuery() == null ? "?" : "&") + key + "=" + value;
+      return urlStr;
+   }
+
    public RMChannelResponse call()
    {
-      InvokerLocator locator = null;
       try
       {
-         locator = new InvokerLocator((String)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT).get(TARGET_ADDRESS));
-      }
-      catch (MalformedURLException e)
-      {
-         return new RMChannelResponse(new IllegalArgumentException("Malformed endpoint address", e));
-      }
+         String targetAddress = (String)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT).get(TARGET_ADDRESS);
+         String version = (String)rmRequest.getMetadata().getContext(INVOCATION_CONTEXT).get(REMOTING_VERSION);
 
-      try
-      {
+         if (version.startsWith("1.4"))
+         {
+            targetAddress = addURLParameter(targetAddress, InvokerLocator.DATATYPE, "JBossWSMessage");
+            MarshalFactory.addMarshaller("JBossWSMessage", RMMarshaller.getInstance(), RMUnMarshaller.getInstance());
+         }
+
+         InvokerLocator locator = new InvokerLocator(targetAddress);
          URI backPort = RMTransportHelper.getBackPortURI(rmRequest);
          String messageId = RMTransportHelper.getAddressingMessageId(rmRequest);
          
@@ -85,7 +94,7 @@ final class RMChannelTask implements Callable<RMChannelResponse>
             }
          }
          boolean oneWay = RMTransportHelper.isOneWayOperation(rmRequest);
-
+         
          Client client = new Client(locator, JBOSSWS_SUBSYSTEM, rmRequest.getMetadata().getContext(REMOTING_CONFIGURATION_CONTEXT));
          client.connect();
 
@@ -120,7 +129,7 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          client.disconnect();
 
          // trace the incomming response message
-         if (rmResponse != null)
+         if ((rmResponse != null) && (backPort == null))
             MessageTrace.traceMessage("Incoming RM Response Message", rmResponse.getPayload());
          
          if (backPort != null) // TODO: backport support

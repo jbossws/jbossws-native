@@ -16,6 +16,7 @@ public final class RMConstant
 {
    private static final String PREFIX = RMConstant.class.getName();
    public static final String TARGET_ADDRESS = PREFIX + ".targetAddress";
+   public static final String REMOTING_VERSION = PREFIX + ".remotingVersion";
    public static final String ONE_WAY_OPERATION = PREFIX + ".oneWayOperation";
    public static final String INVOCATION_CONTEXT = PREFIX + ".invocationContext";
    public static final String MARSHALLER = PREFIX + ".marshaller";

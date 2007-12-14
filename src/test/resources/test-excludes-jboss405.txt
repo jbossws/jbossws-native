@@ -13,9 +13,5 @@ org/jboss/test/ws/jaxws/webserviceref/**
 # [JBWS-1797] Setting .NET friendly Endpoint in web.xml
 org/jboss/test/ws/jaxws/jbws1797/**
 
-# WS-RM tests
-org/jboss/test/ws/jaxws/wsrm/oneway/**
-org/jboss/test/ws/jaxws/wsrm/reqres/**
-
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*

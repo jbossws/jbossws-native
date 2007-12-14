@@ -16,6 +16,7 @@ public final class RMMetadata
    private Map<String, Map<String, Object>> contexts = new HashMap<String, Map<String, Object>>();
    
    public RMMetadata(
+         String remotingVersion,
          String targetAddress,
          Marshaller marshaller,
          UnMarshaller unmarshaller,
@@ -27,6 +28,7 @@ public final class RMMetadata
          throw new IllegalArgumentException("Target address cannot be null");
       
       invocationContext.put(RMConstant.TARGET_ADDRESS, targetAddress);
+      invocationContext.put(RMConstant.REMOTING_VERSION, remotingVersion);
       setContext(RMConstant.INVOCATION_CONTEXT, invocationContext);
       
       if (marshaller == null || unmarshaller == null)
