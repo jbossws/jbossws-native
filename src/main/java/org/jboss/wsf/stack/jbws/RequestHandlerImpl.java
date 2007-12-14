@@ -77,6 +77,7 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -303,7 +304,10 @@ public class RequestHandlerImpl implements RequestHandler
             }
          }
 
-         if (outStream != null)
+         Map<String, Object> rmResCtx = (Map<String, Object>)msgContext.get(RMConstant.RESPONSE_CONTEXT);  
+         boolean isWsrmMessage = rmResCtx != null;
+         boolean isWsrmOneWay = isWsrmMessage && (Boolean)rmResCtx.get(RMConstant.ONE_WAY_OPERATION);
+         if ((outStream != null) && (isWsrmOneWay == false)) // RM hack
             sendResponse(outStream, msgContext, isFault);
       }
       catch (Exception ex)

@@ -115,6 +115,7 @@ public final class RMInvocationHandler extends InvocationHandler
       rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
       msgContext.remove(RMConstant.RESPONSE_CONTEXT);
       RMServerSequence sequence = null;
+      boolean isSequenceAcknowledgementOnly = true;
       
       if (RMHelper.isCreateSequence(rmReqProps))
       {
@@ -122,6 +123,7 @@ public final class RMInvocationHandler extends InvocationHandler
          sequences.add(sequence);
          protocolMessages.add(rmConstants.getCreateSequenceResponseQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
+         isSequenceAcknowledgementOnly = false;
       }
       
       if (RMHelper.isCloseSequence(rmReqProps))
@@ -139,6 +141,7 @@ public final class RMInvocationHandler extends InvocationHandler
          protocolMessages.add(rmConstants.getCloseSequenceResponseQName());
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
+         isSequenceAcknowledgementOnly = false;
       }
          
       if (RMHelper.isSequenceAcknowledgement(rmReqProps))
@@ -176,6 +179,7 @@ public final class RMInvocationHandler extends InvocationHandler
          protocolMessages.add(rmConstants.getTerminateSequenceResponseQName());
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
+         isSequenceAcknowledgementOnly = false;
       }
       
       if (RMHelper.isSequence(rmReqProps))
@@ -214,7 +218,10 @@ public final class RMInvocationHandler extends InvocationHandler
             }
             rmResponseContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
          }
+         isSequenceAcknowledgementOnly = false;
       }
+      
+      rmResponseContext.put(RMConstant.ONE_WAY_OPERATION, isSequenceAcknowledgementOnly);
       
       return rmResponseContext;
    }

@@ -319,11 +319,14 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   }
                }
                
-               if (payloadParent == null)
-                  throw new SOAPException("Cannot find RPC element in");
-               
-               QName elName = payloadParent.getElementQName();
-               elName = namespaceRegistry.registerQName(elName);
+               if (RMHelper.isRMOperation(opMetaData.getQName()) == false) // RM hack
+               {
+                  if (payloadParent == null)
+                     throw new SOAPException("Cannot find RPC element in");
+
+                  QName elName = payloadParent.getElementQName();
+                  elName = namespaceRegistry.registerQName(elName);
+               }
             }
 
             int numParameters = 0;
@@ -362,17 +365,20 @@ public abstract class CommonSOAPBinding implements CommonBinding
                }
             }
 
-            // Verify the numer of parameters matches the actual message payload
-            int numChildElements = 0;
-            Iterator itElements = payloadParent.getChildElements();
-            while (itElements.hasNext())
+            if (RMHelper.isRMOperation(opMetaData.getQName()) == false)
             {
-               Node node = (Node)itElements.next();
-               if (node instanceof SOAPElement)
-                  numChildElements++;
+               // Verify the numer of parameters matches the actual message payload
+               int numChildElements = 0;
+               Iterator itElements = payloadParent.getChildElements();
+               while (itElements.hasNext())
+               {
+                  Node node = (Node)itElements.next();
+                  if (node instanceof SOAPElement)
+                     numChildElements++;
+               }
+               if (numChildElements != numParameters)
+                  throw new WSException("Invalid number of payload elements: " + numChildElements);
             }
-            if (numChildElements != numParameters && (RMHelper.isRMOperation(opMetaData.getQName()) == false))
-               throw new WSException("Invalid number of payload elements: " + numChildElements);
          }
 
          // Generic message endpoint
