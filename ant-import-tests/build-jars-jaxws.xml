@@ -656,12 +656,12 @@
     
     <!-- jaxws-wsrm -->
     <war warfile="${tests.output.dir}/libs/jaxws-wsrm.war"
-         webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/web.xml">
+         webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/web.xml">
       <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/wsrm/OneWayServiceIface.class"/>
-        <include name="org/jboss/test/ws/jaxws/wsrm/OneWayServiceImpl.class"/>
-        <include name="org/jboss/test/ws/jaxws/wsrm/ReqResServiceIface.class"/>
-        <include name="org/jboss/test/ws/jaxws/wsrm/ReqResServiceImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/OneWayServiceIface.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/OneWayServiceImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/ReqResServiceIface.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/ReqResServiceImpl.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF">
         <include name="wsrm-exactly-once-in-order-policy.xml"/>

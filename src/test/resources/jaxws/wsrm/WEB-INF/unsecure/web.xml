@@ -7,7 +7,7 @@
 
   <servlet>
     <servlet-name>OneWayService</servlet-name>
-    <servlet-class>org.jboss.test.ws.jaxws.wsrm.OneWayServiceImpl</servlet-class>
+    <servlet-class>org.jboss.test.ws.jaxws.wsrm.services.OneWayServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -17,7 +17,7 @@
 
   <servlet>
     <servlet-name>ReqResService</servlet-name>
-    <servlet-class>org.jboss.test.ws.jaxws.wsrm.ReqResServiceImpl</servlet-class>
+    <servlet-class>org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>

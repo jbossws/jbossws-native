@@ -1,8 +1,7 @@
-package org.jboss.test.ws.jaxws.wsrm;
+package org.jboss.test.ws.jaxws.wsrm.services;
 
 import javax.jws.Oneway;
 import javax.jws.WebService;
-import javax.xml.ws.addressing.Action;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
@@ -16,7 +15,8 @@ import java.util.Arrays;
 (
    name = "OneWay",
    serviceName = "OneWayService",
-   endpointInterface = "org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface"
+   targetNamespace = "http://org.jboss.ws/jaxws/wsrm",
+   endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.OneWayServiceIface"
 )
 @PolicyAttachment
 (
@@ -35,21 +35,18 @@ public class OneWayServiceImpl implements OneWayServiceIface
 {
    private Logger log = Logger.getLogger(OneWayServiceImpl.class);
 
-   @Action(input="http://wsrm.example/oneway/method1")
    @Oneway
    public void method1()
    {
       log.info("method1()");
    }
 
-   @Action(input="http://wsrm.example/oneway/method2")
    @Oneway
    public void method2(String s)
    {
       log.info("method2(" + s + ")");
    }
 
-   @Action(input="http://wsrm.example/oneway/method3")
    @Oneway
    public void method3(String[] sa)
    {

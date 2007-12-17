@@ -40,7 +40,7 @@ import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.test.ws.jaxws.wsrm.ReqResServiceIface;
+import org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface;
 
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;

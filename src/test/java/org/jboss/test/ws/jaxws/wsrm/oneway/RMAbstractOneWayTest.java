@@ -35,7 +35,7 @@ import javax.xml.ws.Service;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.test.ws.jaxws.wsrm.OneWayServiceIface;
+import org.jboss.test.ws.jaxws.wsrm.services.OneWayServiceIface;
 
 /**
  * Reliable JBoss WebService client invoking one way methods
@@ -47,7 +47,7 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
 {
    private static final Properties props = new Properties();
    private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
-   private String targetNS = "http://wsrm.jaxws.ws.test.jboss.org/";
+   private String targetNS = "http://org.jboss.ws/jaxws/wsrm";
    private OneWayServiceIface proxy;
    
    static

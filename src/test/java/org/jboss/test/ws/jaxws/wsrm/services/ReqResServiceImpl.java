@@ -1,10 +1,7 @@
-package org.jboss.test.ws.jaxws.wsrm;
+package org.jboss.test.ws.jaxws.wsrm.services;
 
 import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.xml.ws.addressing.Action;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
@@ -16,7 +13,8 @@ import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 (
    name = "ReqRes",
    serviceName = "ReqResService",
-   targetNamespace = "http://org.jboss.ws/jaxws/wsrm"
+   targetNamespace = "http://org.jboss.ws/jaxws/wsrm",
+   endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface"
 )
 @PolicyAttachment
 (
@@ -36,11 +34,9 @@ public class ReqResServiceImpl
    private static Logger log = Logger.getLogger(ReqResServiceImpl.class);
 
    @WebMethod
-   @WebResult(name = "result")
-   @Action(input="http://wsrm.example/reqres/echo/input", output="http://wsrm.example/reqres/echo/output")
-   public String echo(@WebParam(name = "String_1") String msg)
+   public String echo(String s)
    {
-      log.info("echo: " + msg);
-      return msg;
+      log.info("echo(" + s + ")");
+      return s;
    }
 }
