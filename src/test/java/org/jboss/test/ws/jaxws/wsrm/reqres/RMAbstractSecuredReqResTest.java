@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.reqres;
 
-import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
+import static org.jboss.test.ws.jaxws.wsrm.Helper.setAddrProps;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,20 +39,19 @@ import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 
-import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface;
-
+import org.jboss.test.ws.jaxws.wsrm.services.SecuredReqResServiceIface;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.extensions.wsrm.api.RMSequence;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
- * Reliable JBoss WebService client invoking req/res methods
+ * Secured reliable JBoss WebService client invoking req/res methods
  *
  * @author richard.opalka@jboss.com
  * 
- * @since Aug 22, 2007
+ * @since Dec 17, 2007
  */
-public abstract class RMAbstractReqResTest extends JBossWSTest
+public abstract class RMAbstractSecuredReqResTest extends JBossWSTest
 {
    private static final String HELLO_WORLD_MSG = "Hello World";
    private static final String TARGET_NS = "http://org.jboss.ws/jaxws/wsrm";
@@ -60,7 +59,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
    private Exception handlerException;
    private boolean asyncHandlerCalled;
-   private ReqResServiceIface proxy;
+   private SecuredReqResServiceIface proxy;
    private static final TimeUnit testTimeUnit = TimeUnit.SECONDS;
    private static final long testWaitPeriod = 300L;
    private static final Executor testExecutor = new ThreadPoolExecutor(
@@ -73,7 +72,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       {
          props.load(
             new FileInputStream(
-               new File("resources/jaxws/wsrm/properties/RMAbstractReqResTest.properties")));
+               new File("resources/jaxws/wsrm/properties/RMAbstractSecuredReqResTest.properties")));
       }
       catch (IOException ioe)
       {
@@ -93,11 +92,12 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
 
       if (proxy == null)
       {
-         QName serviceName = new QName(TARGET_NS, "ReqResService");
+         QName serviceName = new QName(TARGET_NS, "SecuredReqResService");
          URL wsdlURL = new URL(serviceURL + "?wsdl");
          Service service = Service.create(wsdlURL, serviceName);
          service.setExecutor(testExecutor);
-         proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
+         proxy = (SecuredReqResServiceIface)service.getPort(SecuredReqResServiceIface.class);
+         // TODO: activate WS-Security
       }
    }
    
@@ -186,5 +186,4 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    }
    
    protected abstract boolean isClientAddressable();
-   
 }

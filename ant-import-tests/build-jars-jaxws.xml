@@ -669,6 +669,20 @@
       </webinf>
     </war>
 
+    <war warfile="${tests.output.dir}/libs/jaxws-secured-wsrm.war"
+         webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/SecuredOneWayServiceIface.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/SecuredOneWayServiceImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/SecuredReqResServiceIface.class"/>
+        <include name="org/jboss/test/ws/jaxws/wsrm/services/SecuredReqResServiceImpl.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF">
+        <include name="wsrm-exactly-once-in-order-policy.xml"/>
+        <include name="wsrm-jaxws-endpoint-config.xml"/>
+      </webinf>
+    </war>
+
     <war warfile="${tests.output.dir}/libs/jaxws-wsrm-one-way-emulator.war"
          webxml="${tests.output.dir}/resources/jaxws/wsrm/emulator/oneway/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -690,6 +704,12 @@
     </war>
 
     <jar jarfile="${tests.output.dir}/libs/jaxws-wsrm-client.jar">
+      <metainf dir="${tests.output.dir}/resources/jaxws/wsrm/META-INF">
+        <include name="wsrm-jaxws-client-config.xml"/>
+      </metainf>
+    </jar>
+
+    <jar jarfile="${tests.output.dir}/libs/jaxws-secured-wsrm-client.jar">
       <metainf dir="${tests.output.dir}/resources/jaxws/wsrm/META-INF">
         <include name="wsrm-jaxws-client-config.xml"/>
       </metainf>

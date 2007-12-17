@@ -26,21 +26,21 @@ import junit.framework.Test;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * Addressable version of one way WS-RM message exchange
+ * Secured anonymous version of one way WS-RM message exchange
  *
  * @author richard.opalka@jboss.com
  *
- * @since Nov 28, 2007
+ * @since Dec 17, 2007
  */
-public final class RMAddressableOneWayTestCase extends RMAbstractOneWayTest
+public class RMSecuredAnonymousOneWayTestCase extends RMAbstractSecuredOneWayTest
 {
    public static Test suite()
    {
-      return new JBossWSTestSetup(RMAddressableOneWayTestCase.class, getClasspath());
+      return new JBossWSTestSetup(RMSecuredAnonymousOneWayTestCase.class, getClasspath());
    }
 
    public final boolean isClientAddressable()
    {
-      return true;
+      return false;
    }
 }

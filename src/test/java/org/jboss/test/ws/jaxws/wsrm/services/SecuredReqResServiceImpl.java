@@ -22,10 +22,7 @@
 package org.jboss.test.ws.jaxws.wsrm.services;
 
 import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.xml.ws.addressing.Action;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
@@ -50,6 +47,7 @@ import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 )
 @EndpointConfig
 (
+//   configName = "Standard WSRM Endpoint", TODO: uncomment
    configName = "Standard WSRM Endpoint",
    configFile = "WEB-INF/wsrm-jaxws-endpoint-config.xml"
 )

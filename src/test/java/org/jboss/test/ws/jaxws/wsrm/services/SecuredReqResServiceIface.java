@@ -33,6 +33,7 @@ import org.jboss.ws.annotation.EndpointConfig;
 @WebService
 @EndpointConfig
 (
+//   configName = "Secured WSRM Client", TODO: uncomment
    configName = "Standard WSRM Client",
    configFile = "META-INF/wsrm-jaxws-client-config.xml"
 )

@@ -34,7 +34,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public final class RMAnonymousReqResTestCase extends RMAbstractReqResTest
 {
-   
    public static Test suite()
    {
       return new JBossWSTestSetup(RMAnonymousReqResTestCase.class, getClasspath());
@@ -44,5 +43,4 @@ public final class RMAnonymousReqResTestCase extends RMAbstractReqResTest
    {
       return false;
    }
-
 }
