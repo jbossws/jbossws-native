@@ -28,10 +28,9 @@ import java.util.Map;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.InvocationRequest;
+import org.jboss.remoting.transport.coyote.RequestMap;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.extensions.wsrm.transport.RMMessage;
-import org.jboss.ws.extensions.wsrm.transport.RMMessageFactory;
-import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
 /**
@@ -74,14 +73,11 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
 
    public final void handle(InvocationRequest request)
    {
-      String requestMessage = (String)request.getParameter();
+      RMMessage message = (RMMessage)request.getParameter();
       synchronized (instanceLock)
       {
-         logger.debug("Setting response object");
-         MessageTrace.traceMessage("Incoming RM Response Message", requestMessage.getBytes());
-         // TODO: is it necessary to initialize metadata from request message?
-         RMMetadata metadata = new RMMetadata(new java.util.HashMap<String, Object>());
-         RMMessage message = RMMessageFactory.newMessage(requestMessage.getBytes(), metadata);
+         String requestMessage = new String(message.getPayload());
+         MessageTrace.traceMessage("Incoming RM Response Message (callback)", requestMessage);
          String startPattern = "<wsa:RelatesTo>"; // TODO: remove this with XML content inspection
          String endPattern = "</wsa:RelatesTo>";
          int begin = requestMessage.indexOf(startPattern) + startPattern.length();
@@ -101,7 +97,6 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
                this.listener.unassignedMessageReceived();
             }
          }
-         MessageTrace.traceMessage("Incoming RM Response Message (callback)", requestMessage.getBytes());
       }
    }
    

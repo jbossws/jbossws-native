@@ -33,7 +33,7 @@ import org.jboss.remoting.marshal.UnMarshaller;
  * 
  * @author richard.opalka@jboss.com
  */
-final class RMUnMarshaller implements UnMarshaller
+public final class RMUnMarshaller implements UnMarshaller
 {
    private static final UnMarshaller instance = new RMUnMarshaller();
 

@@ -33,7 +33,7 @@ import org.jboss.remoting.marshal.Marshaller;
  * 
  * @author richard.opalka@jboss.com
  */
-final class RMMarshaller implements Marshaller
+public final class RMMarshaller implements Marshaller
 {
    private static final Marshaller instance = new RMMarshaller();
    

@@ -26,9 +26,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.callback.InvokerCallbackHandler;
 import org.jboss.remoting.transport.Connector;
 import org.jboss.ws.extensions.wsrm.api.RMException;
+import org.jboss.ws.extensions.wsrm.transport.RMMarshaller;
+import org.jboss.ws.extensions.wsrm.transport.RMUnMarshaller;
 
 /**
  * Back ports server used by addressable clients
@@ -78,7 +79,9 @@ public final class RMBackPortsServer implements Runnable
       this.port = port;
       try
       {
-         InvokerLocator il = new InvokerLocator(this.scheme + "://" + this.host + ":" + this.port);
+         // we have to use custom unmarshaller because default one removes CRNLs
+         String customUnmarshaller = "/?unmarshaller=" + RMUnMarshaller.class.getName();
+         InvokerLocator il = new InvokerLocator(this.scheme + "://" + this.host + ":" + this.port + customUnmarshaller);
          this.connector = new Connector();
          this.connector.setInvokerLocator(il.getLocatorURI());
          this.connector.create();
