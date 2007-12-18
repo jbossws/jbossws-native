@@ -34,7 +34,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public final class RMAnonymousOneWayTestCase extends RMAbstractOneWayTest
 {
-
    public static Test suite()
    {
       return new JBossWSTestSetup(RMAnonymousOneWayTestCase.class, getClasspath());
@@ -44,5 +43,4 @@ public final class RMAnonymousOneWayTestCase extends RMAbstractOneWayTest
    {
       return false;
    }
-
 }

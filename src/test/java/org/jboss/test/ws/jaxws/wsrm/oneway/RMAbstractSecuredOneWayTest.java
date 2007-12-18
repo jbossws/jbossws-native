@@ -23,11 +23,7 @@ package org.jboss.test.ws.jaxws.wsrm.oneway;
 
 import static org.jboss.test.ws.jaxws.wsrm.Helper.setAddrProps;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -46,35 +42,18 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
 {
-   private static final Properties props = new Properties();
-   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
-   private String targetNS = "http://org.jboss.ws/jaxws/wsrm";
+   private final String serviceURL = "http://" + getServerHost() + ":8080/jaxws-secured-wsrm/SecuredOneWayService";
    private SecuredOneWayServiceIface proxy;
    
-   static
-   {
-      try 
-      {
-         props.load(
-            new FileInputStream(
-               new File("resources/jaxws/wsrm/properties/RMAbstractSecuredOneWayTest.properties")));
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
-   }
-
    @Override
    protected void setUp() throws Exception
    {
       super.setUp();
       
-      QName serviceName = new QName(targetNS, "SecuredOneWayService");
+      QName serviceName = new QName("http://org.jboss.ws/jaxws/wsrm", "SecuredOneWayService");
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (SecuredOneWayServiceIface)service.getPort(SecuredOneWayServiceIface.class);
-      // TODO: activate WS-Security
    }
    
    public void testOneWayMethods() throws Exception
@@ -91,7 +70,7 @@ public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
 
    public static String getClasspath()
    {
-      return props.getProperty("archives");
+      return "jaxws-secured-wsrm.war, jaxws-secured-wsrm-client.jar";
    }
    
    protected abstract boolean isClientAddressable();

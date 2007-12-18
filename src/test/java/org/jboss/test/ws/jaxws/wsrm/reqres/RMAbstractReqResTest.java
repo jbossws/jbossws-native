@@ -23,11 +23,7 @@ package org.jboss.test.ws.jaxws.wsrm.reqres;
 
 import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.SynchronousQueue;
@@ -54,10 +50,8 @@ import org.jboss.ws.extensions.wsrm.api.RMSequence;
  */
 public abstract class RMAbstractReqResTest extends JBossWSTest
 {
-   private static final String HELLO_WORLD_MSG = "Hello World";
-   private static final String TARGET_NS = "http://org.jboss.ws/jaxws/wsrm";
-   private static final Properties props = new Properties();
-   private final String serviceURL = "http://" + getServerHost() + ":" + props.getProperty("port") + props.getProperty("path");
+   private static final String helloWorldMessage = "Hello World";
+   private final String serviceURL = "http://" + getServerHost() + ":8080/jaxws-wsrm/ReqResService";
    private Exception handlerException;
    private boolean asyncHandlerCalled;
    private ReqResServiceIface proxy;
@@ -66,20 +60,6 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    private static final Executor testExecutor = new ThreadPoolExecutor(
       0, 5, testWaitPeriod, testTimeUnit, new SynchronousQueue<Runnable>()
    );
-   
-   static
-   {
-      try 
-      {
-         props.load(
-            new FileInputStream(
-               new File("resources/jaxws/wsrm/properties/RMAbstractReqResTest.properties")));
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
-   }
    
    private enum InvocationType
    {
@@ -93,7 +73,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
 
       if (proxy == null)
       {
-         QName serviceName = new QName(TARGET_NS, "ReqResService");
+         QName serviceName = new QName("http://org.jboss.ws/jaxws/wsrm", "ReqResService");
          URL wsdlURL = new URL(serviceURL + "?wsdl");
          Service service = Service.create(wsdlURL, serviceName);
          service.setExecutor(testExecutor);
@@ -118,13 +98,13 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    
    private void doSynchronousInvocation() throws Exception
    {
-      assertEquals(proxy.echo(HELLO_WORLD_MSG), HELLO_WORLD_MSG);
+      assertEquals(proxy.echo(helloWorldMessage), helloWorldMessage);
    }
    
    private void doAsynchronousInvocation() throws Exception
    {
-      Response<String> response = proxy.echoAsync(HELLO_WORLD_MSG);
-      assertEquals(response.get(), HELLO_WORLD_MSG); // hidden future pattern
+      Response<String> response = proxy.echoAsync(helloWorldMessage);
+      assertEquals(response.get(), helloWorldMessage); // hidden future pattern
    }
 
    private void doAsynchronousInvocationUsingFuture() throws Exception
@@ -136,7 +116,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
             try
             {
                String retStr = (String) response.get(testWaitPeriod, testTimeUnit);
-               assertEquals(HELLO_WORLD_MSG, retStr);
+               assertEquals(helloWorldMessage, retStr);
                asyncHandlerCalled = true;
             }
             catch (Exception ex)
@@ -145,7 +125,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
             }
          }
       };
-      Future<?> future = proxy.echoAsync(HELLO_WORLD_MSG, handler);
+      Future<?> future = proxy.echoAsync(helloWorldMessage, handler);
       future.get(testWaitPeriod, testTimeUnit);
       ensureAsyncStatus();
    }
@@ -182,9 +162,8 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    
    public static String getClasspath()
    {
-      return props.getProperty("archives");
+      return "jaxws-wsrm.war, jaxws-wsrm-client.jar";
    }
    
    protected abstract boolean isClientAddressable();
-   
 }

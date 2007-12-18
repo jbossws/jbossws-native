@@ -29,8 +29,7 @@ import org.jboss.ws.annotation.EndpointConfig;
 @WebService
 @EndpointConfig
 (
-//   configName = "Secured WSRM Client", TODO: uncommented
-   configName = "Standard WSRM Client",
+   configName = "Secured WSRM Client",
    configFile = "META-INF/wsrm-jaxws-client-config.xml"
 )
 public interface SecuredOneWayServiceIface

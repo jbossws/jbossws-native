@@ -26,7 +26,7 @@
 	<classpathentry kind="lib" path="thirdparty/wstx.jar"/>
 	<classpathentry kind="lib" path="thirdparty/xalan.jar"/>
 	<classpathentry kind="lib" path="thirdparty/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="thirdparty/xmlsec.jar"/>
+	<classpathentry kind="lib" path="thirdparty/xmlsec.jar" sourcepath="thirdparty/xmlsec-src.zip"/>
 	<classpathentry kind="lib" path="thirdparty/ant.jar"/>
 	<classpathentry kind="lib" path="thirdparty/qdox.jar"/>
 	<classpathentry kind="lib" path="thirdparty/policy.jar"/>

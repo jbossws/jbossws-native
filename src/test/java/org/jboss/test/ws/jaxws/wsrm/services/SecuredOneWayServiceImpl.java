@@ -49,8 +49,7 @@ import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 )
 @EndpointConfig
 (
-//   configName = "Secured WSRM Endpoint", TODO: uncomment
-   configName = "Standard WSRM Endpoint",
+   configName = "Secured WSRM Endpoint",
    configFile = "WEB-INF/wsrm-jaxws-endpoint-config.xml"
 )
 public class SecuredOneWayServiceImpl implements SecuredOneWayServiceIface
