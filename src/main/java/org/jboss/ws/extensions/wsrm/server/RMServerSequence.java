@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
-import org.jboss.ws.extensions.wsrm.RMSequenceExt;
+import org.jboss.ws.extensions.wsrm.RMSequence;
 
 /**
  * Server side implementation of the RM sequence
@@ -37,7 +37,7 @@ import org.jboss.ws.extensions.wsrm.RMSequenceExt;
  *
  * @since Dec 12, 2007
  */
-public class RMServerSequence implements RMSequenceExt
+public class RMServerSequence implements RMSequence
 {
    private static final Logger logger = Logger.getLogger(RMServerSequence.class);
 

@@ -19,25 +19,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.wsrm.api;
+package org.jboss.ws.extensions.wsrm;
+
+import java.util.Set;
 
 /**
- * WS-RM sequence. User can only create sequence using <b>RMProvider</b>
- * interface and close sequence using <b>RMSequence</b> interface
+ * An extension of the standard RM sequence
  *
  * @author richard.opalka@jboss.com
  *
- * @since Oct 22, 2007
- * @see org.jboss.ws.extensions.wsrm.api.RMProvider
- * @see org.jboss.ws.extensions.wsrm.api.RMException
+ * @since Dec 12, 2007
  */
 public interface RMSequence
 {
-   
-   /**
-    * Close the sequence
-    * @throws unchecked RMException if sequence termination failed
-    */
-   void close();
-   
+   String getOutboundId();
+   String getInboundId();
+   long newMessageNumber();
+   long getLastMessageNumber();
+   long getDuration();
+   String getAcksTo();
+   Set<Long> getReceivedInboundMessages();
 }

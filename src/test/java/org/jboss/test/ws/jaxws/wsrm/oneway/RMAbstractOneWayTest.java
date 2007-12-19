@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
-import org.jboss.ws.extensions.wsrm.api.RMSequence;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.services.OneWayServiceIface;
 
@@ -58,14 +57,14 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
    
    public void testOneWayMethods() throws Exception
    {
-      RMSequence sequence = ((RMProvider)proxy).createSequence(isClientAddressable());
+      ((RMProvider)proxy).createSequence(isClientAddressable());
       setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
       setAddrProps(proxy, "http://useless/action2", serviceURL);
       proxy.method2("Hello World");
       setAddrProps(proxy, "http://useless/action3", serviceURL);
       proxy.method3(new String[] {"Hello","World"});
-      sequence.close();
+      ((RMProvider)proxy).closeSequence();
    }
 
    public static String getClasspath()

@@ -60,7 +60,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
  * @since Oct 25, 2007
  */
 @SuppressWarnings("unchecked")
-public final class RMClientSequence implements RMSequenceExt, RMUnassignedMessageListener
+public final class RMClientSequence implements RMSequence, RMUnassignedMessageListener
 {
    private static final Logger logger = Logger.getLogger(RMClientSequence.class);
    private static final String PATH_PREFIX = "/temporary_listen_address/";

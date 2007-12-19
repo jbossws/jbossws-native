@@ -30,7 +30,6 @@ import javax.xml.ws.WebServiceException;
  * 
  * @since Oct 22, 2007
  * @see org.jboss.ws.extensions.wsrm.api.RMProvider
- * @see org.jboss.ws.extensions.wsrm.api.RMSequence
  */
 public class RMException extends WebServiceException
 {

@@ -39,7 +39,6 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface;
 
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
-import org.jboss.ws.extensions.wsrm.api.RMSequence;
 
 /**
  * Reliable JBoss WebService client invoking req/res methods
@@ -150,14 +149,14 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    
    private void doReliableMessageExchange(Object proxyObject, InvocationType invocationType) throws Exception
    {
-      RMSequence sequence = ((RMProvider)proxyObject).createSequence(isClientAddressable());
+      ((RMProvider)proxyObject).createSequence(isClientAddressable());
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      sequence.close();
+      ((RMProvider)proxyObject).closeSequence();
    }
    
    public static String getClasspath()

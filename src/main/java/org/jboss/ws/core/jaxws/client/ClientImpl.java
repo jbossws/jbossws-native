@@ -506,7 +506,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public org.jboss.ws.extensions.wsrm.api.RMSequence createSequence(boolean addressableClient) throws RMException
+   public void createSequence(boolean addressableClient) throws RMException
    {
       if (this.wsrmSequence != null)
          throw new IllegalStateException("Sequence already registered with proxy instance");
@@ -547,12 +547,23 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          candidateSequence.setOutboundId(outboundId);
          candidateSequence.setBehavior(createSequenceResponse.getIncompleteSequenceBehavior());
          candidateSequence.setDuration(RMHelper.durationToLong(createSequenceResponse.getExpires()));
-         return this.wsrmSequence = candidateSequence;
+         this.wsrmSequence = candidateSequence;
       }
       catch (Exception e)
       {
          throw new RMException("Unable to create WSRM sequence", e);
       }
    }
-
+   
+   public void closeSequence()
+   {
+      try
+      {
+         this.wsrmSequence.close();
+      }
+      finally
+      {
+         this.wsrmSequence = null;
+      }
+   }
 }

@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.extensions.wsrm.RMSequenceExt;
+import org.jboss.ws.extensions.wsrm.RMSequence;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
@@ -36,7 +36,6 @@ import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
@@ -97,7 +96,7 @@ public final class RMHandlerHelper
       throw new IllegalArgumentException();
    }
    
-   public static RMSerializable prepareData(QName msgQN, List<QName> outMsgs, RMSequenceExt seq)
+   public static RMSerializable prepareData(QName msgQN, List<QName> outMsgs, RMSequence seq)
    {
       if (outMsgs.contains(msgQN))
       {
@@ -144,14 +143,14 @@ public final class RMHandlerHelper
       return null;
    }
    
-   private static RMSerializable newCreateSequence(RMSequenceExt seq)
+   private static RMSerializable newCreateSequence(RMSequence seq)
    {
       RMCreateSequence createSequence = rmFactory.newCreateSequence();
       createSequence.setAcksTo(seq.getAcksTo());
       return createSequence;
    }
    
-   private static RMSerializable newCreateSequenceResponse(RMSequenceExt seq)
+   private static RMSerializable newCreateSequenceResponse(RMSequence seq)
    {
       RMCreateSequenceResponse createSequenceResponse = rmFactory.newCreateSequenceResponse();
       createSequenceResponse.setIdentifier(seq.getInboundId());
@@ -159,7 +158,7 @@ public final class RMHandlerHelper
       return createSequenceResponse;
    }
    
-   private static RMSerializable newCloseSequenceResponse(RMSequenceExt seq)
+   private static RMSerializable newCloseSequenceResponse(RMSequence seq)
    {
       // construct CloseSequenceResponse object
       RMCloseSequenceResponse closeSequenceResponse = rmFactory.newCloseSequenceResponse();
@@ -167,7 +166,7 @@ public final class RMHandlerHelper
       return closeSequenceResponse;
    }
    
-   private static RMSerializable newCloseSequence(RMSequenceExt seq)
+   private static RMSerializable newCloseSequence(RMSequence seq)
    {
       // construct CloseSequenceResponse object
       RMCloseSequence closeSequence = rmFactory.newCloseSequence();
@@ -179,7 +178,7 @@ public final class RMHandlerHelper
       return closeSequence;
    }
    
-   private static RMSerializable newTerminateSequence(RMSequenceExt seq)
+   private static RMSerializable newTerminateSequence(RMSequence seq)
    {
       // construct CloseSequenceResponse object
       RMTerminateSequence terminateSequence = rmFactory.newTerminateSequence();
@@ -191,7 +190,7 @@ public final class RMHandlerHelper
       return terminateSequence;
    }
    
-   private static RMSerializable newTerminateSequenceResponse(RMSequenceExt seq)
+   private static RMSerializable newTerminateSequenceResponse(RMSequence seq)
    {
       // construct TerminateSequenceResponse object
       RMTerminateSequenceResponse terminateSequenceResponse = rmFactory.newTerminateSequenceResponse();
@@ -199,7 +198,7 @@ public final class RMHandlerHelper
       return terminateSequenceResponse;
    }
    
-   private static RMSerializable newSequenceAcknowledgement(RMSequenceExt seq)
+   private static RMSerializable newSequenceAcknowledgement(RMSequence seq)
    {
       // construct SequenceAcknowledgement object
       RMSequenceAcknowledgement sequenceAcknowledgement = rmFactory.newSequenceAcknowledgement();
@@ -224,7 +223,7 @@ public final class RMHandlerHelper
       return sequenceAcknowledgement;
    }
 
-   private static RMSerializable newAckRequested(RMSequenceExt seq)
+   private static RMSerializable newAckRequested(RMSequence seq)
    {
       // construct AckRequested object
       RMAckRequested wsrmMsg = rmFactory.newAckRequested();
@@ -233,10 +232,10 @@ public final class RMHandlerHelper
       return wsrmMsg;
    }
 
-   private static RMSerializable newSequence(RMSequenceExt seq)
+   private static RMSerializable newSequence(RMSequence seq)
    {
       // construct Sequence object
-      RMSequence sequence = rmFactory.newSequence();
+      org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence sequence = rmFactory.newSequence();
       sequence.setIdentifier(seq.getOutboundId());
       sequence.setMessageNumber(seq.newMessageNumber());
       return sequence;

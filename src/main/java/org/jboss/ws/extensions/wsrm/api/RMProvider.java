@@ -27,27 +27,30 @@ package org.jboss.ws.extensions.wsrm.api;
  * <p><blockquote><pre>
  * boolean addressableClient = true;
  * SEI sei = (SEI)service.getPort(SEI.class)
- * RMSequence sequence = ((RMProvider)sei).createSequence(addressableClient);
+ * ((RMProvider)sei).createSequence(addressableClient);
  * ...
  * sei.callMethod1();
  * sei.callMethod2();
  * ...
- * sequence.close();
+ * ((RMProvider)sei).closeSequence();
  * </pre></blockquote></p>
  *
  * @author richard.opalka@jboss.com
  *
  * @since Oct 22, 2007
- * @see org.jboss.ws.extensions.wsrm.api.RMSequence
- * @see org.jboss.ws.extensions.wsrm.api.RMException
  */
 public interface RMProvider
 {
    /**
-    * Creates new WS-RM sequence
+    * Creates new WS-RM sequence and associates it with service proxy
     * @param addressableClient
-    * @return created sequence
-    * @throws unchecked RMException if sequence creation error occurs
+    * @throws RMException if something went wrong
     */
-   RMSequence createSequence(boolean addressableClient);
+   void createSequence(boolean addressableClient);
+   
+   /**
+    * Close the sequence associated with service proxy
+    * @throws RMException if something went wrong
+    */
+   void closeSequence();
 }
