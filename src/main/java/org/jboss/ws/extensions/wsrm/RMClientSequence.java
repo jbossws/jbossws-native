@@ -223,20 +223,10 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
    
    public final void close() throws RMException
    {
-      try 
-      {
-         sendCloseMessage();
-         sendTerminateMessage();
-      }
-      finally
-      {
-         this.client.setWSRMSequence(null);
-      }
+      sendCloseMessage();
+      sendTerminateMessage();
    }
 
-   /**
-    * Sets up terminated flag to true.
-    */
    private void sendMessage(String action, QName operationQName, List protocolMessages) throws RMException
    {
       try
