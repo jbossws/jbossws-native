@@ -36,7 +36,6 @@ public final class RMConfig
    private RMProviderConfig provider;
    private RMBackPortsServerConfig backportsServer;
    private RMMessageRetransmissionConfig messageRetransmission;
-   private RMMessageStoreConfig messageStore;
    private List<RMPortConfig> ports = new LinkedList<RMPortConfig>();
    
    public final void setMessageRetransmission(RMMessageRetransmissionConfig messageRetransmission)
@@ -77,16 +76,6 @@ public final class RMConfig
    public final RMProviderConfig getProvider()
    {
       return this.provider;
-   }
-   
-   public final void setMessageStore(RMMessageStoreConfig messageStore)
-   {
-      this.messageStore = messageStore;
-   }
-   
-   public final RMMessageStoreConfig getMessageStore()
-   {
-      return this.messageStore;
    }
    
    public final List<RMPortConfig> getPorts()

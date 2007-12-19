@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
 import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
-import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
@@ -143,10 +142,6 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertEquals(deliveryAssurance.getQuality(), "AtLeastOnce");
       RMProviderConfig provider = wsrmConfig.getProvider();
       assertEquals(provider.getSpecVersion(), "http://docs.oasis-open.org/ws-rx/wsrm/200702");
-      RMMessageStoreConfig messageStore = wsrmConfig.getMessageStore();
-      assertEquals(messageStore.getId(), "wsrmStoreId");
-      assertEquals(messageStore.getClassName(), "custom.MessageStoreImpl");
-      assertEquals(messageStore.getConfigFile(), "META-INF/config.xml");
       List<RMPortConfig> ports = wsrmConfig.getPorts();
       RMPortConfig port1 = ports.get(0);
       assertEquals(port1.getPortName(), new QName("http://custom/namespace/", "Port1"));

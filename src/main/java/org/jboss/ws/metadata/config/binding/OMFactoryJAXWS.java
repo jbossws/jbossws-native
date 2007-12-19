@@ -36,16 +36,12 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
-import org.jboss.ws.extensions.wsrm.RMDeliveryAssurance;
-import org.jboss.ws.extensions.wsrm.RMDeliveryAssuranceFactory;
 import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
-import org.jboss.ws.extensions.wsrm.config.RMMessageStoreConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 
 /**
  * ObjectModelFactory for JAXRPC configurations.
@@ -209,24 +205,6 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          wsrmConfig.setProvider(provider);
          return provider;
       }
-      if (localName.equals("message-store"))
-      {
-         String className = null, id = null;
-         for (int i = 0; i < countOfAttributes && (className == null || id == null); i++)
-         {
-            String attrLocalName = attrs.getLocalName(i); 
-            if (attrLocalName.equals("id"))
-               id = attrs.getValue(i);
-            if (attrLocalName.equals("class"))
-               className = attrs.getValue(i);
-         }
-         
-         RMMessageStoreConfig messageStore = new RMMessageStoreConfig();
-         messageStore.setId(id);
-         messageStore.setClassName(className);
-         wsrmConfig.setMessageStore(messageStore);
-         return messageStore;
-      }
       if (localName.equals("port"))
       {
          String portName = null;
@@ -274,14 +252,6 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
       deliveryAssurance.setQuality(quality);
       deliveryAssurance.setInOrder(inOrder);
       return deliveryAssurance;
-   }
-   
-   public void setValue(RMMessageStoreConfig messageStore, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
-   {
-      if (localName.equals("config-file"))
-      {
-         messageStore.setConfigFile(value);
-      }
    }
    
    /**
