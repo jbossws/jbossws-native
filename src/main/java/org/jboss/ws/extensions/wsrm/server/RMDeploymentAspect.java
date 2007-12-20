@@ -66,10 +66,6 @@ public final class RMDeploymentAspect extends DeploymentAspect
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
-         ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
-         if (sepMetaData == null)
-            throw new IllegalStateException("Cannot obtain endpoint meta data");
-
          InvocationHandler invHandler = ep.getInvocationHandler();
          if (invHandler instanceof RMInvocationHandler)
          {
