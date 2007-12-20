@@ -56,6 +56,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
             ep.setInvocationHandler(wsrmInvHandler);
             ep.addAttachment(RMServerSequence.class, new LinkedList<RMServerSequence>());
             RMHelper.setupRMOperations(sepMetaData);
+            log.info("WS-RM invocation handler associated with endpoint " + ep.getAddress());
          }
       }
    }
@@ -75,6 +76,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
             RMInvocationHandler rmInvHandler = (RMInvocationHandler)invHandler;
             ep.setInvocationHandler(rmInvHandler.getDelegate());
             ep.removeAttachment(RMServerSequence.class);
+            log.info("WS-RM invocation handler removed from endpoint " + ep.getAddress());
          }
       }
    }
