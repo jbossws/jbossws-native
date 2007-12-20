@@ -93,13 +93,6 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="message-store" type="tns:msgStoreType" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>
-            WS-RM message store to be used for reliable messaging.
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
       <xsd:element name="port" type="tns:portType" minOccurs="0" maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation>
@@ -145,31 +138,6 @@
       <xsd:annotation>
         <xsd:documentation>
            Port number to be used for backports server.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-  </xsd:complexType>
-  <xsd:complexType name="msgStoreType">
-    <xsd:sequence>
-      <xsd:element name="config-file" type="xsd:string">
-        <xsd:annotation>
-          <xsd:documentation>
-            Message store specific configuration file.
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-    </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:string" use="required">
-      <xsd:annotation>
-        <xsd:documentation>
-          Message store identifier.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="class" type="xsd:string" use="required">
-      <xsd:annotation>
-        <xsd:documentation>
-           Message store class name providing public default constructor.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>

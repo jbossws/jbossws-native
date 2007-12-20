@@ -44,24 +44,18 @@
    <endpoint-config>
 
       <config-name>Standard WSRM Endpoint</config-name>
-	  <reliable-messaging>
-          <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
-          <backports-server host="realhostname.realdomain" port="9999"/>
-          <message-retransmission attempts="50" interval="10" timeout="3"/>
-          <provider
-          	  specVersion="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
-          <message-store
-              id="wsrmStoreId"
-              class="custom.MessageStoreImpl">
-              <config-file>META-INF/config.xml</config-file>
-          </message-store>
-          <port name="{http://custom/namespace/}Port1">
-              <delivery-assurance inOrder="false" quality="AtMostOnce"/>
-          </port>
-          <port name="{http://custom/namespace/}Port2">
-              <delivery-assurance inOrder="true" quality="ExactlyOnce"/>
-          </port>
-	  </reliable-messaging>	
+      <reliable-messaging>
+         <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
+         <backports-server host="realhostname.realdomain" port="9999"/>
+         <message-retransmission attempts="50" interval="10" timeout="3"/>
+         <provider specVersion="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+         <port name="{http://custom/namespace/}Port1">
+            <delivery-assurance inOrder="false" quality="AtMostOnce"/>
+         </port>
+         <port name="{http://custom/namespace/}Port2">
+            <delivery-assurance inOrder="true" quality="ExactlyOnce"/>
+         </port>
+      </reliable-messaging>	
 	
    </endpoint-config>
 
