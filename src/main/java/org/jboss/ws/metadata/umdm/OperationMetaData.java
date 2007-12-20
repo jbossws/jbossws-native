@@ -37,11 +37,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
-import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.wsf.common.JavaUtils;
-import org.jboss.wsf.common.ResourceLoaderAdapter;
 import org.w3c.dom.Element;
 
 /**
