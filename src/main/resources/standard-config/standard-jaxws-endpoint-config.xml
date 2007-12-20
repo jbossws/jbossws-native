@@ -7,6 +7,15 @@
   
   <endpoint-config>
     <config-name>Standard Endpoint</config-name>
+    <pre-handler-chains>
+      <javaee:handler-chain>
+        <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
+        <javaee:handler>
+          <javaee:handler-name>Recording Handler</javaee:handler-name>
+          <javaee:handler-class>org.jboss.wsf.framework.invocation.RecordingServerHandler</javaee:handler-class>
+        </javaee:handler>
+      </javaee:handler-chain>
+    </pre-handler-chains>
   </endpoint-config>
   
   <!--

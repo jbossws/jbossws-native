@@ -56,6 +56,12 @@
     <property name="provides">StackEndpointHandler</property>             
   </bean>
   
+  <bean name="WSNativeEndpointRecordProcessorDeploymentAspect" class="org.jboss.wsf.framework.deployment.EndpointRecordProcessorDeploymentAspect">
+    <property name="mbeanServer"><inject bean="WSMBeanServerLocator" property="mbeanServer"/></property>
+    <property name="requires">RegisteredEndpoint</property>
+    <property name="provides">EndpointRecordProcessors</property>             
+  </bean>
+  
   <bean name="WSNativeEventingDeploymentAspect" class="org.jboss.wsf.stack.jbws.EventingDeploymentAspect">
     <property name="requires">UnifiedMetaDataModel</property>
   </bean>
@@ -101,6 +107,7 @@
     <property name="aspects">
       <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">        
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
+        <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
         <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
@@ -121,6 +128,7 @@
         <inject bean="WSNativeContextPropertiesDeploymentAspect"/>
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
+        <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
         <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
@@ -140,6 +148,7 @@
         <inject bean="WSNativeContextPropertiesDeploymentAspect"/>
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
+        <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
         <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
@@ -150,4 +159,4 @@
     </property>
     <depends>WSDeploymentAspectInstallerEndpointAPI</depends>
   </bean>
-  
+

@@ -34,6 +34,7 @@ import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
 
@@ -120,4 +121,11 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
       return resContext;
    }
 
+   @Override
+   public void setOperationMetaData(OperationMetaData opMetaData)
+   {
+      super.setOperationMetaData(opMetaData);
+      if (opMetaData != null)
+         this.put(MessageContext.WSDL_OPERATION, opMetaData.getQName());
+   }
 }
