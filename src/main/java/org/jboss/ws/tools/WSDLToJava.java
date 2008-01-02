@@ -204,7 +204,7 @@ public class WSDLToJava implements WSDLToJavaIntf
          if (namespacePackageMap == null)
             namespacePackageMap = new HashMap<String, String>();
          String pkg = iter.next();
-         namespacePackageMap.put(map.get(pkg), pkg);
+         namespacePackageMap.put(pkg, map.get(pkg));
       }
    }
 
@@ -327,7 +327,8 @@ public class WSDLToJava implements WSDLToJavaIntf
             if (cl == null)
             {
                String faultTypeName = (!xt.getAnonymous()) ? faultXMLType.getLocalPart() : faultXMLName.getLocalPart();
-               buf.append(seiPkgName + "." + JavaUtils.capitalize(faultTypeName));
+               String packageName = getPackageName(xt.getNamespace());
+               buf.append(packageName + "." + JavaUtils.capitalize(faultTypeName));
             }
             else buf.append(cl.getName());
             buf.append(",");
@@ -628,8 +629,9 @@ public class WSDLToJava implements WSDLToJavaIntf
             className = className.substring(1);
          className = ToolsUtils.convertInvalidCharacters(className);
          className = utils.firstLetterUpperCase(className);
-         className = seiPkgName + "." + className + arraySuffix;
 
+         String packageName = getPackageName(xt.getNamespace());
+         className = packageName + "." + className + arraySuffix;
          if (holder)
          {
             className = holderWriter.getOrCreateHolder(className, getLocationForJavaGeneration());
@@ -751,7 +753,8 @@ public class WSDLToJava implements WSDLToJavaIntf
             className = className.substring(1);
          className = ToolsUtils.convertInvalidCharacters(className);
          className = utils.firstLetterUpperCase(className);
-         return seiPkgName + "." + className + arraySuffix;
+         String packageName = getPackageName(xt.getNamespace());
+         return packageName + "." + className + arraySuffix;
       }
 
       if (cls.isArray())
@@ -809,7 +812,10 @@ public class WSDLToJava implements WSDLToJavaIntf
    {
       XSDTypeToJava xtj = new XSDTypeToJava();
       xtj.setTypeMapping(this.typeMapping);
-      xtj.createJavaFile((XSComplexTypeDefinition)xt, containingElement, getLocationForJavaGeneration(), seiPkgName, xsmodel, exception);
+      String targetNS = wsdl.getTargetNamespace();
+      String tgtNS = xt.getNamespace();
+      String packName = getPackageName(tgtNS);
+      xtj.createJavaFile((XSComplexTypeDefinition)xt, containingElement, getLocationForJavaGeneration(), packName, xsmodel, exception);
    }
 
    public void setParameterStyle(String paramStyle)
@@ -817,4 +823,20 @@ public class WSDLToJava implements WSDLToJavaIntf
       this.parameterStyle = paramStyle;
    }
 
+   private String getPackageName(String targetNamespace)
+   {
+      //Get it from global config
+      if (namespacePackageMap != null)
+      {
+         String pkg = namespacePackageMap.get(targetNamespace);
+         if (pkg != null)
+         {
+            return pkg;
+         }
+      }
+
+     //return NamespacePackageMapping.getJavaPackageName(targetNamespace);
+     //Default behaviour will always generate all classes in the SEI package only
+     return seiPkgName;
+   }
 }
