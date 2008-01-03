@@ -270,6 +270,7 @@
           <include name="jboss-jaxrpc.jar"/>
           <include name="jboss-jaxws.jar"/>
           <include name="jboss-jaxws-ext.jar"/>
+          <include name="jbossws-jboss421.jar"/>
           <include name="jboss-saaj.jar"/>
           <include name="jbossws-client.jar"/>
           <include name="policy.jar"/>
@@ -289,6 +290,7 @@
           <include name="jbossws-integration.jar"/>
         </fileset>
         <fileset dir="${jboss421.home}/server/${jboss.server.instance}/lib">
+          <include name="jbossws-jboss421.jar"/>
           <include name="jboss-jaxrpc.jar"/>
           <include name="jboss-jaxws.jar"/>
           <include name="jboss-jaxws-ext.jar"/>
