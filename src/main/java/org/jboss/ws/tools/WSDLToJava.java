@@ -634,7 +634,7 @@ public class WSDLToJava implements WSDLToJavaIntf
          className = packageName + "." + className + arraySuffix;
          if (holder)
          {
-            className = holderWriter.getOrCreateHolder(className, getLocationForJavaGeneration());
+            className = holderWriter.getOrCreateHolder(className, getLocationForJavaGeneration(packageName));
          }
 
          buf.append(className);
@@ -798,9 +798,9 @@ public class WSDLToJava implements WSDLToJavaIntf
       return paramName;
    }
 
-   private File getLocationForJavaGeneration()
+   private File getLocationForJavaGeneration(String packageName)
    {
-      return new File(this.directoryToGenerate + "/" + seiPkgName.replace('.', '/'));
+      return new File(this.directoryToGenerate + "/" + packageName.replace('.', '/'));
    }
 
    private void generateJavaSource(XSComplexTypeDefinition xt, JBossXSModel xsmodel, String containingElement) throws IOException
@@ -815,7 +815,11 @@ public class WSDLToJava implements WSDLToJavaIntf
       String targetNS = wsdl.getTargetNamespace();
       String tgtNS = xt.getNamespace();
       String packName = getPackageName(tgtNS);
-      xtj.createJavaFile((XSComplexTypeDefinition)xt, containingElement, getLocationForJavaGeneration(), packName, xsmodel, exception);
+      if(!tgtNS.equals(targetNS))
+      {
+          File dir = utils.createPackage(this.directoryToGenerate, packName);
+      }
+      xtj.createJavaFile((XSComplexTypeDefinition)xt, containingElement, getLocationForJavaGeneration(packName), packName, xsmodel, exception);
    }
 
    public void setParameterStyle(String paramStyle)

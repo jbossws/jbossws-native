@@ -1,0 +1,9 @@
+<configuration xmlns="http://www.jboss.org/jbossws-tools"> 
+  <global> 
+    <package-namespace package="com.other" namespace="http://other.com"/> 
+    <package-namespace package="org.jboss.test.ws.jbws1217" namespace="http://org.jboss.test.ws/jbws1217"/> 
+  </global> 
+  <wsdl-java location="resources/tools/jbws1217/MultiplePackageNamespace.wsdl"> 
+    <mapping file="jaxrpc-mapping.xml" /> 
+  </wsdl-java> 
+</configuration>
