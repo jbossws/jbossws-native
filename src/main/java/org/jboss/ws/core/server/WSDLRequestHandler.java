@@ -199,10 +199,10 @@ public class WSDLRequestHandler
                      int newPort = newURL.getPort();
                      
                      String newLocation = orgProtocol + "://" + newHost;
-                     if (orgPort != -1)
-                        newLocation += ":" + orgPort;
-                     else if (newPort != -1)
+                     if (newPort != -1)
                         newLocation += ":" + newPort;
+                     else if (orgPort != -1)
+                        newLocation += ":" + orgPort;
                      
                      newLocation += orgPath;
                      locationAttr.setNodeValue(newLocation);
