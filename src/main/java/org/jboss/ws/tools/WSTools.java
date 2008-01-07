@@ -25,6 +25,7 @@ package org.jboss.ws.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.StringTokenizer;
@@ -46,7 +47,7 @@ public class WSTools
    private static Logger log = Logger.getLogger(WSTools.class);
 
    /**
-    * Entry point for the cmd line scripts.
+    * Entry point for the command line scripts.
     * Just passes the arguments to
     * @see generate(String)
     * @param args
@@ -55,7 +56,19 @@ public class WSTools
    public static void main(String[] args) throws IOException
    {
       WSTools tools = new WSTools();
-      tools.generate(args);
+      boolean success = false;
+      try
+      {
+         success = tools.generate(args);
+      } catch (Throwable e)
+      {
+         e.printStackTrace( new PrintWriter(System.err) );         
+      }
+
+      if(success)
+         System.exit(0);
+      else
+         System.exit(1);
    }
 
    /**
@@ -148,7 +161,7 @@ public class WSTools
       }
       else
       {
-         throw new WSException("Nothing done, Configuration source must have JavaToWSDL or WSDLToJava specified");
+         throw new IOException("Nothing done, Configuration source must have JavaToWSDL or WSDLToJava specified");
       }
       return true;
    }
