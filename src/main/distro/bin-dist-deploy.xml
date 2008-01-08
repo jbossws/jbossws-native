@@ -25,7 +25,7 @@
     <macro-deploy-native405-no-ejb3/>
     <echo>*********************************</echo>
     <echo>* JBossWS EJB3 support disabled *</echo>
-    <echo>* All EJB3 tests will fail. *</echo>
+    <echo>* All EJB3 tests will fail.     *</echo>
     <echo>*********************************</echo>
   </target>
   
