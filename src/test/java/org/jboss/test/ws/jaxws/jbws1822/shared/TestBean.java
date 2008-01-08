@@ -19,19 +19,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762.services;
+package org.jboss.test.ws.jaxws.jbws1822.shared;
 
-import javax.jws.WebService;
+import javax.ejb.Stateless;
+import org.jboss.annotation.ejb.LocalBinding;
 
 /**
- * EJB3 interface
+ * The EJB3 implementation
  *
- * @author richard.opalka@jboss.com
- *
- * @since Oct 17, 2007
+ * @author richard.opalka@jboss.org
+ * 
+ * @since 08-Jan-2008
  */
-@WebService
-public interface EJB3Iface
+@Stateless
+@LocalBinding(jndiBinding = "TestBeanIface")
+public class TestBean implements TestBeanIface
 {
-   public String echo(String msg);
+   public String printString()
+   {
+      return "Injected hello message";
+   }
 }

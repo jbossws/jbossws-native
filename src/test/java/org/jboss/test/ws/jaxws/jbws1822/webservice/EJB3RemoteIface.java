@@ -19,19 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762.services;
+package org.jboss.test.ws.jaxws.jbws1822.webservice;
 
 import javax.jws.WebService;
 
 /**
- * EJB3 interface
+ * An EJB3 remote interface
  *
- * @author richard.opalka@jboss.com
- *
- * @since Oct 17, 2007
+ * @author richard.opalka@jboss.org
+ * 
+ * @since 08-Jan-2008
  */
 @WebService
-public interface EJB3Iface
+public interface EJB3RemoteIface
 {
-   public String echo(String msg);
+   String getMessage();
 }
