@@ -173,6 +173,17 @@ public class HandlerResolverImpl implements HandlerResolver
 
    private void injectResources(Handler handler)
    {
+      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      try
+      {
+         ctxLoader.loadClass("javax.annotation.Resource");
+      }
+      catch (Throwable th)
+      {
+         log.debug("Cannot inject resources: " + th.toString());
+         return;
+      }
+      
       Class<? extends Handler> handlerClass = handler.getClass();
       for (Field field : handlerClass.getFields())
       {
@@ -188,6 +199,17 @@ public class HandlerResolverImpl implements HandlerResolver
 
    private void callPostConstruct(Handler handler) throws Exception
    {
+      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      try
+      {
+         ctxLoader.loadClass("javax.annotation.PostConstruct");
+      }
+      catch (Throwable th)
+      {
+         log.debug("Cannot call post construct: " + th.toString());
+         return;
+      }
+      
       Class<? extends Handler> handlerClass = handler.getClass();
       for (Method method : handlerClass.getMethods())
       {
