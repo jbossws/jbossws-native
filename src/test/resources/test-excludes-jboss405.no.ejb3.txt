@@ -31,11 +31,12 @@ org/jboss/test/ws/jaxws/namespace/**
 org/jboss/test/ws/jaxws/handlerlifecycle/**
 org/jboss/test/ws/jaxws/samples/context/**
 org/jboss/test/ws/jaxws/samples/eardeployment/**
+org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/retail/**
 org/jboss/test/ws/jaxws/samples/swaref/**
-org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/samples/serviceref/*EJB*
 org/jboss/test/ws/jaxws/samples/webservice/*EJB3*
+org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/samples/wsaddressing/**
 org/jboss/test/ws/jaxws/samples/wseventing/**
 org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean*

@@ -10,11 +10,14 @@ org/jboss/test/ws/jaxws/samples/retail/**
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
 
+# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
+org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
+
 # [JBWS-1797] Setting .NET friendly Endpoint in web.xml
 org/jboss/test/ws/jaxws/jbws1797/**
 
-# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
-org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
+# [JBWS-1911] Support the JMS transport with JAX-WS
+org/jboss/test/ws/jaxws/samples/jmstransport/**
 
 # [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
 # This requires changes to the AS web meta data (servlet init params), whic is not possible for 4.0.5

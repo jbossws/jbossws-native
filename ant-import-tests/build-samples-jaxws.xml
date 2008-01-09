@@ -18,7 +18,23 @@
     
     <mkdir dir="${tests.output.dir}/libs"/>
     
-    <!-- jaxws-webserviceref -->
+    <!-- jaxws-samples-jmstransport -->
+    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-jmstransport.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/jmstransport/Organization.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/jmstransport/OrganizationJMSEndpoint.class"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-jmstransport.sar">
+      <fileset dir="${tests.output.dir}/libs">
+        <include name="jaxws-samples-jmstransport.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/samples/jmstransport/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
+    
+    <!-- jaxws-samples-webserviceref -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-webserviceref.war" webxml="${tests.output.dir}/resources/jaxws/samples/webserviceref/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/samples/webserviceref/TestEndpointImpl.class"/>
@@ -107,6 +123,43 @@
       </manifest>
     </jar>
     
+    <!-- jaxws-samples-webserviceref-secure -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-secure.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointImpl.class"/>
+      </fileset>
+    </jar>
+    <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-secure-client.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointClient.class"/>
+        <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointService.class"/>
+        <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpoint.class"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/webserviceref/META-INF-secure">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+      </metainf>
+      <manifest>
+        <attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.SecureEndpointClient"/>
+      </manifest>
+    </jar>
+    <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-override-client.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientTwo.class"/>
+        <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointService.class"/>
+        <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpoint.class"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/webserviceref/META-INF-override">
+        <include name="jbossws-client-config.xml"/>
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+      <manifest>
+        <attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo"/>
+      </manifest>
+    </jar>
+    
     <!-- jaxws-samples-wsaddressing -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-wsaddressing.war" webxml="${tests.output.dir}/resources/jaxws/samples/wsaddressing/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -130,8 +183,8 @@
         <include name="wsdl/ws-addr.xsd"/>
       </webinf>
     </war>
-
-     <jar destfile="${tests.output.dir}/libs/jaxws-samples-wseventing-sink.jar">
+    
+    <jar destfile="${tests.output.dir}/libs/jaxws-samples-wseventing-sink.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/samples/wseventing/EventSink*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wseventing/SystemStatus.class"/>
@@ -169,21 +222,23 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-
-	<!-- jaxws-samples-wssecurity-username -->
-    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurity-username.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurity/simple-username/WEB-INF/web.xml">
+    
+    <!-- jaxws-samples-wssecurity-username -->
+    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurity-username.war"
+      webxml="${tests.output.dir}/resources/jaxws/samples/wssecurity/simple-username/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UsernameEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecurity/simple-username/WEB-INF">
-		<include name="jboss-web.xml"/>
+        <include name="jboss-web.xml"/>
         <include name="jboss-wsse-server.xml"/>
       </webinf>
     </war>
     
     <!-- jaxws-samples-wssecurityAnnotatedpolicy-encrypt -->
-    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurityAnnotatedpolicy-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy/WEB-INF/web.xml">
+    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurityAnnotatedpolicy-encrypt.war"
+      webxml="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/Hello.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/HelloJavaBean.class"/>
@@ -197,9 +252,10 @@
         <include name="Policy.xml"/>
       </webinf>
     </war>
-  	
-  	<!-- jaxws-samples-wssecuritypolicy-encrypt -->
-    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecuritypolicy-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy/WEB-INF/web.xml">
+    
+    <!-- jaxws-samples-wssecuritypolicy-encrypt -->
+    <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecuritypolicy-encrypt.war"
+      webxml="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/Hello.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/HelloJavaBean.class"/>
@@ -209,49 +265,12 @@
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
       </webinf>
-	  <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy/WEB-INF">
-		<include name="wsdl/**"/>
-	  </webinf>
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/wssecuritypolicy/WEB-INF">
+        <include name="wsdl/**"/>
+      </webinf>
     </war>
-
-     <!-- jaxws-webserviceref -->
-     <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-secure.jar">
-        <fileset dir="${tests.output.dir}/classes">
-           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointImpl.class"/>
-        </fileset>
-     </jar>
-     <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-secure-client.jar">
-        <fileset dir="${tests.output.dir}/classes">
-           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointClient.class"/>
-           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointService.class"/>
-           <include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpoint.class"/>
-        </fileset>
-        <metainf dir="${tests.output.dir}/resources/jaxws/webserviceref/META-INF-secure">
-           <include name="application-client.xml"/>
-           <include name="jboss-client.xml"/>
-        </metainf>
-        <manifest>
-           <attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.SecureEndpointClient"/>
-        </manifest>
-     </jar>
-     <jar destfile="${tests.output.dir}/libs/jaxws-samples-webserviceref-override-client.jar">
-        <fileset dir="${tests.output.dir}/classes">
-           <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientTwo.class"/>
-           <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointService.class"/>
-           <include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpoint.class"/>
-        </fileset>
-        <metainf dir="${tests.output.dir}/resources/jaxws/webserviceref/META-INF-override">
-           <include name="jbossws-client-config.xml"/>
-           <include name="application-client.xml"/>
-           <include name="jboss-client.xml"/>
-           <include name="wsdl/**"/>
-        </metainf>
-        <manifest>
-           <attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo"/>
-        </manifest>
-     </jar>
-
-     <!-- Please add alphabetically -->
+    
+    <!-- Please add alphabetically -->
     
   </target>
   
