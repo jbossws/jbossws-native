@@ -41,7 +41,7 @@ public interface SpamComplaintWSIface
 {
    @WebMethod(operationName="processSpamComplaints")
    @WebResult(name="SpamResult")
-   @ResponseWrapper(className="com.rsys.rsystools.ws.jaxws.ProcessSpamComplaintsResponse")
+   @ResponseWrapper(className="org.jboss.test.ws.jaxws.jbws1845.jaxws.SpamResult")
    public SpamResult processSpamComplaints(
       @WebParam(name = "email") String email,
       @WebParam(name = "fromAddress") String fromAddress,
