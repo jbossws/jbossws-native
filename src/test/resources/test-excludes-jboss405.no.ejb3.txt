@@ -39,37 +39,18 @@ org/jboss/test/ws/jaxws/samples/webservice/*EJB3*
 org/jboss/test/ws/jaxws/samples/wsaddressing/**
 org/jboss/test/ws/jaxws/samples/wseventing/**
 org/jboss/test/ws/jaxws/samples/wssecurity/UsernameBean*
+org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase*
+org/jboss/test/ws/jaxws/samples/wssecurity/SimpleUsernameTestCase*
 org/jboss/test/ws/jaxws/webserviceref/**
 org/jboss/test/ws/jaxws/wsrm/**
 
-# EJB3 runtime excludes
-org/jboss/test/ws/interop/wsa/AddressingTestCase*
-org/jboss/test/ws/interop/wsse/EncryptTestCase*
-org/jboss/test/ws/interop/wsse/SignTestCase*
-org/jboss/test/ws/interop/nov2007/wsaSoap12/AddressingTestCase*
-org/jboss/test/ws/interop/nov2007/wsse/Encrypt3DESTestCase*
-org/jboss/test/ws/interop/nov2007/wsse/EncryptTestCase*
+# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase*
-org/jboss/test/ws/jaxws/samples/handlerchain/HandlerChainTestCase*
-org/jboss/test/ws/jaxws/samples/logicalhandler/LogicalHandlerJAXBTestCase*
-org/jboss/test/ws/jaxws/samples/logicalhandler/LogicalHandlerSourceTestCase*
-org/jboss/test/ws/jaxws/samples/provider/ProviderPayloadTestCase*
-org/jboss/test/ws/jaxws/samples/wssecurity/*TestCase*
-org/jboss/test/ws/jaxws/samples/wseventing/SysmonTestCase*
-org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/SimpleEncryptTestCase*
-org/jboss/test/ws/jaxws/samples/wssecuritypolicy/SimpleEncryptTestCase*
-org/jboss/test/ws/jaxws/samples/httpbinding/HttpPayloadTestCase*
-org/jboss/test/ws/jaxws/samples/wsaddressing/AddressingStatefulTestCase*
-org/jboss/test/ws/jaxws/wseventing/EventingTestCase*
-org/jboss/test/ws/jaxws/wseventing/NotificationTestCase*
-org/jboss/test/ws/jaxws/wsaddressing/action/AddressingActionTestCase*
-org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*
-org/jboss/test/ws/jaxws/handlerscope/HandlerScopeTestCase*
 
 # [JBWS-1797] Setting .NET friendly Endpoint in web.xml
 org/jboss/test/ws/jaxws/jbws1797/**
 
 # [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
-# This requires changes to the AS web meta data (servlet init params), whic is not possible for 4.0.5
+# This requires changes to the AS web meta data (servlet init params), which is not possible for 4.0.5
 org/jboss/test/ws/jaxws/jbws1762/**
 org/jboss/test/ws/jaxrpc/jbws1762/**
