@@ -47,12 +47,6 @@ public class JMSTransportTestCase extends JBossWSTest
     */
    public void testSOAPMessageToEndpointQueue() throws Exception
    {
-      if (isTargetJBoss50())
-      {
-         System.out.println("FIXME [JBWS-1312] Fix JMS transport in trunk");
-         return;
-      }
-      
       String reqMessage =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
           "<env:Body>" +

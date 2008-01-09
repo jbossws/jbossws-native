@@ -3,8 +3,10 @@
 <!-- $Id$ -->
 
 <server>
-  <mbean code="org.jboss.mq.server.jmx.Queue"
-	 name="jboss.mq.destination:service=Queue,name=ResponseQueue">
+  <mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=RequestQueue">
+    <depends optional-attribute-name="DestinationManager">jboss.mq:service=DestinationManager</depends>
+  </mbean>
+  <mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=ResponseQueue">
     <depends optional-attribute-name="DestinationManager">jboss.mq:service=DestinationManager</depends>
   </mbean>
 </server>
