@@ -22,7 +22,6 @@
 package org.jboss.test.ws.jaxws.jbws1822.shared;
 
 import javax.ejb.Stateless;
-import org.jboss.annotation.ejb.LocalBinding;
 
 /**
  * The EJB3 implementation
@@ -32,7 +31,6 @@ import org.jboss.annotation.ejb.LocalBinding;
  * @since 08-Jan-2008
  */
 @Stateless
-@LocalBinding(jndiBinding = "TestBeanIface")
 public class TestBean implements TestBeanIface
 {
    public String printString()
