@@ -554,6 +554,14 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
+  	
+  	<!-- jaxws-jbws1845 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1845.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1845/*.class"/>
+      	<exclude name="org/jboss/test/ws/jaxws/jbws1845/*TestCase.class"/>
+      </fileset>
+    </jar>
     
     <!-- jaxws-jbws1854 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1854.war" webxml="${tests.output.dir}/resources/jaxws/jbws1854/WEB-INF/web.xml">
