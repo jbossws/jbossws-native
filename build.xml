@@ -235,12 +235,17 @@
     </jar>
 
     <!-- Build jbossws-context.war -->
-    <copy todir="${core.output.lib.dir}/jbossws-context.war">
+    <copy todir="${core.output.lib.dir}/jbossws-context.war" filtering="true">
       <fileset dir="${core.resources.dir}/jbossws-context.war">
         <include name="index.html"/>
         <include name="styles.css"/>
         <include name="WEB-INF/**"/>
       </fileset>
+      <filterset>
+        <filter token="build.id" value="${build.id}"/>
+        <filter token="implementation.version" value="jbossws-native-${version.id}"/>
+        <filtersfile file="${core.dir}/version.properties"/>
+      </filterset>
     </copy>
 
     <!-- Build jbossws-core-scripts.zip -->
