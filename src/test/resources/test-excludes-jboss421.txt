@@ -3,8 +3,6 @@
 # EJB3/Injection excludes
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
-org/jboss/test/ws/jaxws/jbws1762/**
-org/jboss/test/ws/jaxrpc/jbws1762/**
 
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
@@ -15,3 +13,6 @@ org/jboss/test/ws/jaxws/jbws1797/**
 # [JBWS-1911] Support the JMS transport with JAX-WS
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 
+# [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
+# This requires changes to the AS web meta data (servlet init params)
+org/jboss/test/ws/*/jbws1762/**
