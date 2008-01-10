@@ -19,14 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.jmstransport;
+package org.jboss.ws.core.client;
 
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
+// $Id$
 
-@WebService
-@SOAPBinding(style = SOAPBinding.Style.RPC)
-public interface Organization
+import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.jaxws.binding.HTTPMessageMarshaller;
+import org.jboss.ws.core.jaxws.binding.HTTPMessageUnMarshaller;
+
+/**
+ * @since 02-Apr-2007
+ */
+public class HTTPProtocolConnection extends HTTPRemotingConnection
 {
-   String getContactInfo(String organization);
+   public UnMarshaller getUnmarshaller()
+   {
+      return new HTTPMessageUnMarshaller();
+   }
+
+   public Marshaller getMarshaller()
+   {
+      return new HTTPMessageMarshaller();
+   }
 }

@@ -38,7 +38,7 @@ import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
-import org.jboss.ws.core.soap.SOAPMessageUnMarshaller;
+import org.jboss.ws.core.soap.SOAPMessageUnMarshallerHTTP;
 import org.jboss.ws.extensions.xop.XOPContext;
 
 /**
@@ -49,14 +49,14 @@ import org.jboss.ws.extensions.xop.XOPContext;
  *
  * @since 02-Apr-2007
  */
-public class SOAPRemotingConnection extends RemotingConnectionImpl
+public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
 {
-   protected UnMarshaller getUnmarshaller()
+   public UnMarshaller getUnmarshaller()
    {
-      return new SOAPMessageUnMarshaller();
+      return new SOAPMessageUnMarshallerHTTP();
    }
 
-   protected Marshaller getMarshaller()
+   public Marshaller getMarshaller()
    {
       return new SOAPMessageMarshaller();
    }

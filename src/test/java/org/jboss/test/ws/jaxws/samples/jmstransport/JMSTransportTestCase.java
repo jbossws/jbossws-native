@@ -8,6 +8,9 @@ package org.jboss.test.ws.jaxws.samples.jmstransport;
 
 // $Id$
 
+import java.io.File;
+import java.net.URL;
+
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
@@ -19,6 +22,8 @@ import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
@@ -42,10 +47,33 @@ public class JMSTransportTestCase extends JBossWSTest
       return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxws-samples-jmstransport.sar");
    }
 
-   /**
-    * Send the message to the specified queue
-    */
-   public void testSOAPMessageToEndpointQueue() throws Exception
+   public void testJMSEndpointPort() throws Exception
+   {
+      URL wsdlURL = new File("resources/jaxws/samples/jmstransport/jmsservice.wsdl").toURL();
+      QName serviceName = new QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointService");
+      QName portName = new QName("http://org.jboss.ws/samples/jmstransport", "JMSEndpointPort");
+      
+      Service service = Service.create(wsdlURL, serviceName);
+      Organization port = service.getPort(portName, Organization.class);
+      
+      String res = port.getContactInfo("mafia");
+      assertEquals("The 'mafia' boss is currently out of office, please call again.", res);
+   }
+
+   public void testHTTPEndpointPort() throws Exception
+   {
+      URL wsdlURL = new File("resources/jaxws/samples/jmstransport/jmsservice.wsdl").toURL();
+      QName serviceName = new QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointService");
+      QName portName = new QName("http://org.jboss.ws/samples/jmstransport", "HTTPEndpointPort");
+      
+      Service service = Service.create(wsdlURL, serviceName);
+      Organization port = service.getPort(portName, Organization.class);
+      
+      String res = port.getContactInfo("mafia");
+      assertEquals("The 'mafia' boss is currently out of office, please call again.", res);
+   }
+
+   public void testMessagingClient() throws Exception
    {
       String reqMessage =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +

@@ -19,14 +19,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.jmstransport;
+package org.jboss.ws.core.client;
 
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 
-@WebService
-@SOAPBinding(style = SOAPBinding.Style.RPC)
-public interface Organization
+import java.io.IOException;
+
+import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.MessageAbstraction;
+
+// $Id$
+
+/**
+ * A remote connection 
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 02-Apr-2007
+ */
+public interface RemoteConnection
 {
-   String getContactInfo(String organization);
+   Marshaller getMarshaller();
+
+   UnMarshaller getUnmarshaller();
+
+   MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException;
 }

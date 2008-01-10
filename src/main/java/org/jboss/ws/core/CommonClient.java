@@ -47,7 +47,9 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.client.EndpointInfo;
-import org.jboss.ws.core.client.SOAPRemotingConnection;
+import org.jboss.ws.core.client.RemoteConnection;
+import org.jboss.ws.core.client.RemoteConnectionFactory;
+import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.Style;
@@ -334,8 +336,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (shouldMaintainSession())
                addSessionInfo(reqMessage, callProps);
 
-            SOAPRemotingConnection remotingConnection = new SOAPRemotingConnection();
-            MessageAbstraction resMessage = remotingConnection.invoke(reqMessage, epInfo, oneway);
+            RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
+            MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
 
             if (shouldMaintainSession())
                saveSessionInfo(callProps, getRequestContext());

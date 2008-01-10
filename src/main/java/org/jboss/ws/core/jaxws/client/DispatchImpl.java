@@ -60,9 +60,9 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.ConfigProvider;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.client.EndpointInfo;
-import org.jboss.ws.core.client.HTTPRemotingConnection;
-import org.jboss.ws.core.client.RemotingConnection;
-import org.jboss.ws.core.client.SOAPRemotingConnection;
+import org.jboss.ws.core.client.HTTPProtocolConnection;
+import org.jboss.ws.core.client.RemoteConnection;
+import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
@@ -280,20 +280,20 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
       return retObj;
    }
 
-   private RemotingConnection getRemotingConnection()
+   private RemoteConnection getRemotingConnection()
    {
       String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
-      RemotingConnection remotingConnection;
+      RemoteConnection remotingConnection;
       if (HTTPBinding.HTTP_BINDING.equals(bindingID))
       {
-         remotingConnection = new HTTPRemotingConnection();
+         remotingConnection = new HTTPProtocolConnection();
       }
       else
       {
-         remotingConnection = new SOAPRemotingConnection();
+         remotingConnection = new SOAPProtocolConnectionHTTP();
       }
       return remotingConnection;
    }

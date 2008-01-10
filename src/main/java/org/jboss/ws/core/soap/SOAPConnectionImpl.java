@@ -23,16 +23,14 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
-import java.io.IOException;
-
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.client.RemotingConnectionImpl;
-import org.jboss.ws.core.client.SOAPRemotingConnection;
+import org.jboss.ws.core.client.HTTPRemotingConnection;
+import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
 
 /**
  * SOAPConnection implementation
@@ -47,11 +45,11 @@ public class SOAPConnectionImpl extends SOAPConnection
    // provide logging
    private static Logger log = Logger.getLogger(SOAPConnectionImpl.class);
 
-   private RemotingConnectionImpl remotingConnection;
+   private HTTPRemotingConnection remotingConnection;
 
    public SOAPConnectionImpl()
    {
-      remotingConnection = new SOAPRemotingConnection();
+      remotingConnection = new SOAPProtocolConnectionHTTP();
    }
 
    /**

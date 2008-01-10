@@ -21,20 +21,37 @@
  */
 package org.jboss.ws.core.client;
 
-
-import java.io.IOException;
-
-import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.wsf.spi.util.ServiceLoader;
 
 // $Id$
 
 /**
- * A remoting connection 
+ * A factory for remote connections 
  *
  * @author Thomas.Diesler@jboss.org
- * @since 02-Apr-2007
+ * @since 10-Jan-2008
  */
-public interface RemotingConnection
+public class RemoteConnectionFactory
 {
-   MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException;
+   public RemoteConnection getRemoteConnection(EndpointInfo epInfo)
+   {
+      String targetAddress = epInfo.getTargetAddress();
+      if (targetAddress == null)
+         throw new IllegalArgumentException("Cannot obtain target address from: " + epInfo);
+      
+      String key = null;
+      if (targetAddress.startsWith("http"))
+         key = RemoteConnection.class.getName() + ".http";
+      else if (targetAddress.startsWith("jms"))
+         key = RemoteConnection.class.getName() + ".jms";
+      
+      if (key == null)
+         throw new IllegalArgumentException("Cannot obtain remote connetion for: " + targetAddress);
+      
+      RemoteConnection con = (RemoteConnection)ServiceLoader.loadService(key, null);
+      if (con == null)
+         throw new IllegalArgumentException("Cannot obtain remote connetion for: " + key);
+      
+      return con;
+   }
 }
