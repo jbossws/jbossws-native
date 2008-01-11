@@ -293,7 +293,6 @@
         <include name="policy.jar"/>
         <include name="wsdl4j.jar"/>
         <include name="xmlsec.jar"/>
-        <include name="wstx.jar"/>
         <include name="jboss-jaxb-intros.jar"/>
       </fileset>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
