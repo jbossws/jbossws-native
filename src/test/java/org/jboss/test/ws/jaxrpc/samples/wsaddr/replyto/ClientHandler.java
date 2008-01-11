@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.xml.namespace.QName;
+import javax.xml.rpc.handler.GenericHandler;
 import javax.xml.rpc.handler.MessageContext;
 
 import javax.xml.ws.addressing.AddressingBuilder;
@@ -34,7 +35,6 @@ import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
 import org.jboss.logging.Logger;
-import org.jboss.test.ws.jaxws.wsaddressing.AddressingHandler;
 
 /**
  * A client side handler for the ws-addressing
@@ -42,7 +42,7 @@ import org.jboss.test.ws.jaxws.wsaddressing.AddressingHandler;
  * @author mageshbk@jboss.com
  * @since 12-Dec-2007
  */
-public class ClientHandler extends AddressingHandler
+public class ClientHandler extends GenericHandler
 {
    // Provide logging
    private static Logger log = Logger.getLogger(ClientHandler.class);
@@ -69,11 +69,21 @@ public class ClientHandler extends AddressingHandler
       }
       log.info("exit handleRequest");
       return true;
-    }
+   }
 
-    public QName[] getHeaders()
-    {
-        return headers;
-    }
+   public QName[] getHeaders()
+   {
+      return headers;
+   }
+
+   /**
+    * Get the JBoss server host from system property "jbosstest.server.host"
+    * This defaults to "localhost" if the property is not set
+    */
+   private String getServerHost()
+   {
+      String hostName = System.getProperty("jbosstest.server.host", "localhost");
+      return hostName;
+   }
 
 }
