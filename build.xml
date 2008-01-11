@@ -180,6 +180,7 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/annotation/**"/>
+        <include name="org/jboss/wsf/stack/jbws/**"/>
         <include name="org/jboss/ws/**"/>
       </fileset>
       <fileset dir="${core.resources.dir}">
@@ -194,7 +195,6 @@
       <fileset dir="${core.output.classes.dir}">
         <include name="org/jboss/wsf/**"/>
         <include name="org/jboss/ws/**"/>
-
         <!-- JAX-WS 2.1 extensions -->
         <include name="javax/xml/ws/**/*21.class"/>
         <include name="javax/xml/ws/Action.class"/>
@@ -211,7 +211,6 @@
         <include name="javax/xml/ws/soap/MTOM.class"/>
         <include name="javax/xml/ws/soap/MTOMFeature.class"/>
         <include name="javax/xml/ws/wsaddressing/**"/>
-
       </fileset>
       <fileset dir="${core.resources.dir}">
         <include name="schema/**"/>
@@ -224,14 +223,6 @@
       </fileset>
       <metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
       <metainf dir="${core.resources.dir}/standard-config"/>
-    </jar>
-
-    <!-- Build jbossws-native.jar -->
-    <jar jarfile="${core.output.lib.dir}/jbossws-native.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes.dir}">
-        <include name="org/jboss/wsf/stack/jbws/**"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jbossws-native.jar/META-INF"/>
     </jar>
 
     <!-- Build jbossws-context.war -->
@@ -284,9 +275,6 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-native50.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
         <include name="jbossws-context.war/**"/>
-        <include name="jbossws-native.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/output/lib">
         <include name="jbossws-core.jar"/>
       </fileset>
       <fileset dir="${core.dir}/thirdparty">
@@ -325,11 +313,8 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-native42.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
         <include name="jbossws-context.war/**"/>
-        <include name="jbossws-native.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/output/lib">
         <include name="jboss-jaxws.jar"/>
-         <include name="jboss-jaxws-ext.jar"/>
+        <include name="jboss-jaxws-ext.jar"/>
         <include name="jboss-jaxrpc.jar"/>
         <include name="jboss-saaj.jar"/>
         <include name="jbossws-core.jar"/>
@@ -388,11 +373,8 @@
     <jar jarfile="${core.output.lib.dir}/jbossws-native40.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
         <include name="jbossws-context.war/**"/>
-        <include name="jbossws-native.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/output/lib">
         <include name="jboss-jaxws.jar"/>
-         <include name="jboss-jaxws-ext.jar"/>
+        <include name="jboss-jaxws-ext.jar"/>
         <include name="jbossws-core.jar"/>
       </fileset>
       <fileset dir="${core.dir}/thirdparty">
