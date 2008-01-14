@@ -38,19 +38,19 @@ set JAVA=%JAVA_HOME%\bin\java
 set JBOSS_HOME=%DIRNAME%\..
 rem Setup the java endorsed dirs
 
-# Setup the java endorsed dirs
+rem Setup the java endorsed dirs
 set JBOSS_ENDORSED_DIRS=%JBOSS_HOME%\lib\endorsed
 
-# Setup the client classpath
+rem Setup the client classpath
 set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/log4j.jar
 set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/jbossws-client.jar
 
-# JBossAS-5.0 subset of jbossall-client.jar
-set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME/client/jboss-logging-spi.jar
-set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME/client/jboss-common-core.jar
+rem JBossAS-5.0 subset of jbossall-client.jar
+set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/jboss-logging-spi.jar
+set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/jboss-common-core.jar
 
-# JBossAS-4.2 subset of jbossall-client.jar
-set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME/client/jboss-common-client.jar
+rem JBossAS-4.2 subset of jbossall-client.jar
+set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/jboss-common-client.jar
 
 rem Execute the JVM
 "%JAVA%" %JAVA_OPTS% -Djava.endorsed.dirs="%JBOSS_ENDORSED_DIRS%" -Dlog4j.configuration=wstools-log4j.xml -classpath "%WSRUNCLIENT_CLASSPATH%" %ARGS%

@@ -30,7 +30,7 @@ rem Setup the java endorsed dirs
 set JBOSS_ENDORSED_DIRS=%JBOSS_HOME%\lib\endorsed
 
 rem Setup the wstools classpath
-set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;$JAVA_HOME/lib/tools.jar
+set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JAVA_HOME%/lib/tools.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/activation.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/getopt.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/wstx.jar
