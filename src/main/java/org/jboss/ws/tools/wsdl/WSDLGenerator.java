@@ -50,6 +50,7 @@ import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
+import org.jboss.ws.metadata.wsdl.WSDLDocumentation;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLImport;
@@ -109,6 +110,11 @@ public abstract class WSDLGenerator
       wsdl.addBinding(wsdlBinding);
       wsdlEndpoint.setBinding(bindingQName);
 
+      if (endpoint.getDocumentation() != null)
+      {
+         wsdlInterface.setDocumentationElement(new WSDLDocumentation(endpoint.getDocumentation()));
+      }
+      
       for (OperationMetaData operation : endpoint.getOperations())
       {
          processOperation(wsdlInterface, wsdlBinding, operation);
@@ -224,6 +230,12 @@ public abstract class WSDLGenerator
          wsdlBinding.addFault(bindingFault);
       }
 
+      // process optional documentation
+      if (operation.getDocumentation() != null)
+      {
+         interfaceOperation.setDocumentationElement(new WSDLDocumentation(operation.getDocumentation()));
+      }
+      
       wsdlInterface.addOperation(interfaceOperation);
       wsdlBinding.addOperation(bindingOperation);
    }

@@ -150,6 +150,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private JAXBContextCache jaxbCache = new JAXBContextCache();
 
    private List<BindingCustomization> bindingCustomization = new ArrayList<BindingCustomization>();
+   
+   private String documentation;
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
@@ -849,5 +851,15 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
       }
       return match;
+   }
+
+   public String getDocumentation()
+   {
+      return documentation;
+   }
+
+   public void setDocumentation(String documentation)
+   {
+      this.documentation = documentation;
    }
 }

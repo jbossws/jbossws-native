@@ -86,6 +86,7 @@ import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
+import org.jboss.ws.metadata.wsdl.WSDLDocumentation;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
@@ -652,6 +653,13 @@ public class WSDL11Reader
          {
             destInterface.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_EVENTSOURCE, eventSourceProp.getLocalPart()));
          }
+         
+         // documentation
+         Element documentationElement = srcPortType.getDocumentationElement();
+         if (documentationElement != null && documentationElement.getTextContent() != null)
+         {
+            destInterface.setDocumentationElement(new WSDLDocumentation(documentationElement.getTextContent()));
+         }
 
          destWsdl.addInterface(destInterface);
 
@@ -677,6 +685,13 @@ public class WSDL11Reader
 
          processPortTypeOperationOutput(srcWsdl, srcOperation, destOperation, srcPortType, destBinding);
          processPortTypeOperationFaults(srcOperation, destOperation, destInterface, destBinding);
+         
+         // documentation
+         Element documentationElement = srcOperation.getDocumentationElement();
+         if (documentationElement != null && documentationElement.getTextContent() != null)
+         {
+            destOperation.setDocumentationElement(new WSDLDocumentation(documentationElement.getTextContent()));
+         }
 
          destInterface.addOperation(destOperation);
       }

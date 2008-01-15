@@ -40,6 +40,7 @@ import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
+import org.jboss.ws.metadata.wsdl.WSDLDocumentation;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLImport;
@@ -386,6 +387,7 @@ public class WSDL11Writer extends WSDLWriter
             buffer.append("'");
          }
          buffer.append(">");
+         appendDocumentation(buffer, intf.getDocumentationElement());
          appendPortOperations(buffer, intf);
          buffer.append("</portType>");
       }
@@ -425,6 +427,7 @@ public class WSDL11Writer extends WSDLWriter
           
          }
          buffer.append(">");
+         appendDocumentation(buffer, operation.getDocumentationElement());
          appendUnknownExtensibilityElements(buffer, operation);
 
          String opname = operation.getName().getLocalPart();
@@ -449,6 +452,16 @@ public class WSDL11Writer extends WSDLWriter
          }
 
          buffer.append("</operation>");
+      }
+   }
+   
+   protected void appendDocumentation(StringBuilder buffer, WSDLDocumentation documentation)
+   {
+      if (documentation != null && documentation.getContent() != null)
+      {
+         buffer.append("<documentation>");
+         buffer.append(documentation.getContent());
+         buffer.append("</documentation>");
       }
    }
 

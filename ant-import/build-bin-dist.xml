@@ -50,6 +50,11 @@
 				<include name="macros-deploy-framework.xml"/>
 				<include name="macros-deploy-native.xml"/>
 			</fileset>
+			<fileset dir="${core.distro.dir}">
+				<include name="user-project-build.xml"/>
+				<include name="eclipse.project"/>
+				<include name="eclipse.classpath"/>
+			</fileset>
 		</copy>
 
 		<unzip dest="${bindist.bin.dir}" src="${thirdparty.dir}/jbossws-framework-scripts.zip"/>

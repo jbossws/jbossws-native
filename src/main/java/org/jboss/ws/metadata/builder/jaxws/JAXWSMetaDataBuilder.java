@@ -58,6 +58,7 @@ import javax.xml.ws.addressing.AddressingProperties;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.annotation.Documentation;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.WrapperGenerator;
@@ -590,6 +591,11 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          if (anBinding.style() != SOAPBinding.Style.DOCUMENT || epMetaData.getStyle() != Style.DOCUMENT)
             throw new IllegalArgumentException("@SOAPBinding must be specified using DOCUMENT style when placed on a method");
          opMetaData.setParameterStyle(anBinding.parameterStyle());
+      }
+      
+      if (method.isAnnotationPresent(Documentation.class))
+      {
+         opMetaData.setDocumentation(method.getAnnotation(Documentation.class).content());
       }
 
       epMetaData.addOperation(opMetaData);

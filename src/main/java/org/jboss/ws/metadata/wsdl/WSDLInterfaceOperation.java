@@ -78,6 +78,8 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
    private ArrayList<WSDLInterfaceOperationOutfault> outfaults = new ArrayList<WSDLInterfaceOperationOutfault>();
    /** Zero or more signature items */
    private LinkedHashMap<String, WSDLRPCSignatureItem> rpcSignatureItems = new LinkedHashMap<String, WSDLRPCSignatureItem>();
+   
+   private WSDLDocumentation documentationElement;
 
    public WSDLInterfaceOperation(WSDLInterface wsdlInterface, QName name)
    {
@@ -276,5 +278,15 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
          c = myname.compareTo(oname);
       }
       return c;
+   }
+
+   public WSDLDocumentation getDocumentationElement()
+   {
+      return documentationElement;
+   }
+
+   public void setDocumentationElement(WSDLDocumentation documentationElement)
+   {
+      this.documentationElement = documentationElement;
    }
 }
