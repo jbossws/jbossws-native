@@ -27,6 +27,7 @@ org/jboss/test/ws/jaxws/jbws1815/**
 org/jboss/test/ws/jaxws/jbws1822/**
 org/jboss/test/ws/jaxws/jbws1840/**
 org/jboss/test/ws/jaxws/jbws1845/**
+org/jboss/test/ws/jaxws/jbws1850/**
 org/jboss/test/ws/jaxws/jbws1904/**
 org/jboss/test/ws/jaxws/namespace/**
 org/jboss/test/ws/jaxws/handlerlifecycle/**
