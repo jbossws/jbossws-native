@@ -77,12 +77,12 @@ public class ClientHandler extends GenericHandler
    }
 
    /**
-    * Get the JBoss server host from system property "jbosstest.server.host"
+    * Get the JBoss server host from system property "jboss.bind.address"
     * This defaults to "localhost" if the property is not set
     */
    private String getServerHost()
    {
-      String hostName = System.getProperty("jbosstest.server.host", "localhost");
+      String hostName = System.getProperty("jboss.bind.address", "localhost");
       return hostName;
    }
 
