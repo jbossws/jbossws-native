@@ -33,7 +33,7 @@
    <service name='TestService'>
 
       <port binding='tns:EndpointInterfaceBinding' name='EndpointInterfacePort'>
-         <soap:address location='http://localhost:8080/jaxws-jbws1841/EJB3Bean'/>
+         <soap:address location='http://@jboss.bind.address@:8080/jaxws-jbws1841/EJB3Bean'/>
       </port>
    </service>
 </definitions>
