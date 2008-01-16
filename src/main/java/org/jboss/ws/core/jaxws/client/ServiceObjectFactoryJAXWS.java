@@ -24,6 +24,15 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.ConfigProvider;
+import org.jboss.ws.core.client.ServiceObjectFactory;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+
+import javax.naming.*;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,21 +41,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.ConfigProvider;
-import org.jboss.ws.core.client.ServiceObjectFactory;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.ws.Service
