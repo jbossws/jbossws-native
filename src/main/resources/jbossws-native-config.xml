@@ -34,6 +34,14 @@
     <property name="bindAddress">${jboss.bind.address}</property>
   </bean>
   
+  <!-- Installed Record Processors-->
+  <bean name="WSMemoryBufferRecorder" class="org.jboss.wsf.framework.management.recording.MemoryBufferRecorder">
+    <property name="recording">false</property>
+  </bean>
+  <bean name="WSLogRecorder" class="org.jboss.wsf.framework.management.recording.LogRecorder">
+    <property name="recording">false</property>
+  </bean>
+  
   <!-- 
     The stack specific deployment aspects
   --> 
@@ -60,6 +68,12 @@
     <property name="mbeanServer"><inject bean="WSMBeanServerLocator" property="mbeanServer"/></property>
     <property name="requires">RegisteredEndpoint</property>
     <property name="provides">EndpointRecordProcessors</property>             
+    <property name="processors">
+      <list class="java.util.ArrayList" elementClass="org.jboss.wsf.spi.management.recording.RecordProcessor">
+        <inject bean="WSMemoryBufferRecorder"/>
+        <inject bean="WSLogRecorder"/>
+      </list>
+    </property>
   </bean>
   
   <bean name="WSNativeEventingDeploymentAspect" class="org.jboss.wsf.stack.jbws.EventingDeploymentAspect">
@@ -88,7 +102,7 @@
     <property name="provides">JAXBIntros</property>
   </bean>
 
-      <!-- Deployment aspect installers -->
+  <!-- Deployment aspect installers -->
   <!-- Phase 1 -->
   <bean name="WSNativeDeploymentAspectInstallerPreJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
     <property name="manager"><inject bean="WSDeploymentAspectManagerPreJSE"/></property>
