@@ -33,7 +33,7 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * context-root in jboss.xml is ignored
- * 
+ *
  * http://jira.jboss.org/jira/browse/JBWS-1813
  *
  * @author Thomas.Diesler@jboss.com
@@ -50,16 +50,16 @@ public class JBWS1813TestCase extends JBossWSTest
 
    public void testPositive() throws Exception
    {
-     if (isTargetJBoss42() || isTargetJBoss40())
+      if ( isTargetJBoss40() )
       {
          System.out.println("FIXME [JBWS-1813] context-root in jboss.xml is ignored");
          return;
-     }
-      
+      }
+
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/jbws1813", "EndpointService");
       Endpoint port = Service.create(wsdlURL, serviceName).getPort(Endpoint.class);
-      
+
       String retObj = port.echo("Hello");
       assertEquals("Hello", retObj);
    }

@@ -5,7 +5,6 @@
 <jboss>
 
    <webservices>
-      <context-root>/test-context</context-root>      
+      <context-root>/test-context</context-root>       
    </webservices>
-
 </jboss>
