@@ -39,7 +39,7 @@ import java.util.List;
    targetNamespace = "http://org.jboss.ws/benchmark",
    endpointInterface = "org.jboss.test.ws.benchmark.jaxws.doclit.BenchmarkService"
 )
-@HandlerChain(file = "WEB-INF/handlers.xml")
+@HandlerChain(file = "handlers.xml")
 public class BenchmarkJSEHandlerEndpoint implements BenchmarkService {
 
    @WebMethod

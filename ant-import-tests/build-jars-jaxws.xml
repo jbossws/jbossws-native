@@ -34,13 +34,11 @@
     <war warfile="${tests.output.dir}/libs/jaxws-benchmark-doclit.war" webxml="${tests.output.dir}/resources/benchmark/jaxws/doclit/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/benchmark/jaxws/**/*.class"/>
+        <include name="org/jboss/test/ws/benchmark/jaxws/**/*.xml"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/benchmark/jaxws/doclit/WEB-INF">
         <include name="wsdl/**"/>
-      </webinf>
-      <webinf dir="${tests.output.dir}/resources/benchmark/jaxws/doclit/WEB-INF">
-        <include name="handlers.xml"/>
-      </webinf>
+      </webinf>     
     </war>
     
     <war warfile="${tests.output.dir}/libs/ri-benchmark-doclit.war" webxml="${tests.output.dir}/resources/benchmark/jaxws/doclit/ri/WEB-INF/web.xml">
