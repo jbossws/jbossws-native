@@ -19,3 +19,6 @@ org/jboss/test/ws/*/jbws1762/**
 
 #[JBWS-1841] WebServiceRef injection from DD doesn't work
 org/jboss/test/ws/*/jbws1841/**
+
+#[JBWS-1813] context-root from jboss.xml
+org/jboss/test/ws/*/jbws1813/**
