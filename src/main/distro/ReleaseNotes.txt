@@ -25,6 +25,60 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-@version.id@
 ----------------------------------
 
+Bug
+
+    * [JBWS-1217] - WSDLtoJava Namespace to package mapping does not support multiple namespaces
+    * [JBWS-1324] - JMS Endpoint - Message delivery starts before endpoint is ready.
+    * [JBWS-1762] - web.xml modified to web.xml.org - Subsequent runs fail
+    * [JBWS-1813] - context-root in jboss.xml is ignored
+    * [JBWS-1819] - wsrunclient script(s) differ and do not always function.
+    * [JBWS-1841] - WebServiceRef injection from DD doesn't work
+    * [JBWS-1873] - WSDL to Java - Incorrect case of generated type for anonymous type.
+    * [JBWS-1876] - Wrong Content-Type in SOAP 1.2 messages
+    * [JBWS-1879] - @BindingType is read from SEI instead of endpoint implementation
+    * [JBWS-1881] - WSDL To Java - All generated types have first character upper case, extends clause in base types do not take this into account.
+    * [JBWS-1906] - Stack overflow exception when reading bad wsdl files
+    * [JBWS-1924] - Verify installation script for jboss-4.2.1.GA
+    * [JBWS-1937] - Document/Literal addressing endpoint fails when retreiving Outbound Action
+    * [JBWS-1939] - URL port information of soap:address is different from import schemaLocation URL
+
+Feature Request
+
+    * [JBWS-1257] - Add configuration for token references
+    * [JBWS-1850] - Documentation support for Java->WSDL
+    * [JBWS-1874] - Allow configuration of secret key wrap algorithm
+    * [JBWS-1880] - WS-Addressing with endpoints using soap 1.2
+    * [JBWS-1897] - Enable/disable logging on every endpoint
+    * [JBWS-1898] - Statistics/logs about clients calling endpoints
+    * [JBWS-1899] - Fine grained management of statistics recording
+    * [JBWS-1904] - Explicitly set the namespace of a WebFault
+    * [JBWS-1911] - Support the JMS transport with JAX-WS
+    * [JBWS-1950] - Show collected records as html table in jmx-console
+
+Errata
+------
+
+    * FIXME [JBCTS-540] EJB3 proxy does not implement the Home interface
+    * FIXME [JBWS-1460] @XmlMimeType on SEI parameter declarations
+    * FIXME [JBWS-1665] incorrect wsdl generation
+    * FIXME [JBWS-1724] wsconsume cannot use part names that are friendly to .NET
+    * FIXME [JBWS-1772] WSConsume output is not correctly redirected
+    * FIXME [JBWS-1773] Verify isolated classloading with WSConsume
+    * FIXME [JBWS-1776] Verify isolated classloading with WSProvide
+    * FIXME [JBWS-751] Multiple schema imports with the same namespace
+    * FIXME [JBWS-798] Complete EventingTestCase
+    * FIXME [JBWS-981] Virtual host configuration for EJB endpoints
+
+
+Enjoy,
+The JBossWS Team
+
+Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+What's new in jbossws-2.0.2
+---------------------------
+
 Feature Request
 
     * [JBWS-1736] - MTOM property at service-ref level
@@ -66,11 +120,6 @@ Errata
     FIXME: [JBWS-751] Multiple schema imports with the same namespace
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
-    
-Enjoy,
-The JBossWS Team
-
-Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 What's new in jbossws-2.0.0
 ---------------------------
