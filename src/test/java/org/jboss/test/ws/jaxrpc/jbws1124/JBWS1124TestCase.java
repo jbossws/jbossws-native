@@ -52,8 +52,8 @@ public class JBWS1124TestCase extends JBossWSTest
    {
       ServiceFactoryImpl factory = new ServiceFactoryImpl();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jbws1124one/TestEndpoint?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws1124/WEB-INF/jaxrpc-mapping.xml").toURL();
-      QName qname = new QName("http://org.jboss.test.ws/jbws1124", "TestService");
+      URL mappingURL = new File("resources/jaxrpc/jbas5151/WEB-INF/jaxrpc-mapping.xml").toURL();
+      QName qname = new QName("http://org.jboss.test.ws/jbas5151", "TestService");
       Service service = factory.createService(wsdlURL, qname, mappingURL);
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
       assertEquals("jbws1124one", port.getResourceString());
@@ -64,8 +64,8 @@ public class JBWS1124TestCase extends JBossWSTest
    {
       ServiceFactoryImpl factory = new ServiceFactoryImpl();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jbws1124two/TestEndpoint?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws1124/WEB-INF/jaxrpc-mapping.xml").toURL();
-      QName qname = new QName("http://org.jboss.test.ws/jbws1124", "TestService");
+      URL mappingURL = new File("resources/jaxrpc/jbas5151/WEB-INF/jaxrpc-mapping.xml").toURL();
+      QName qname = new QName("http://org.jboss.test.ws/jbas5151", "TestService");
       Service service = factory.createService(wsdlURL, qname, mappingURL);
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
       assertEquals("jbws1124two", port.getResourceString());
