@@ -43,12 +43,18 @@
 		<copy tofile="${bindist.dir}/version.properties" file="${core.dir}/version.properties"/>
 		<copy tofile="${bindist.dir}/build.xml" file="${core.distro.dir}/bin-dist-build.xml"/>
 		<copy tofile="${bindist.build.dir}/build-deploy.xml" file="${core.distro.dir}/bin-dist-deploy.xml"/>
+		<copy tofile="${bindist.build.dir}/build-project-gen.xml" file="${core.distro.dir}/bin-dist-project-gen.xml"/>
 
 		<!-- build -->
 		<copy todir="${bindist.build.dir}">
 			<fileset dir="${core.dir}/ant-import">
 				<include name="macros-deploy-framework.xml"/>
 				<include name="macros-deploy-native.xml"/>
+			</fileset>
+			<fileset dir="${core.distro.dir}">
+				<include name="user-project-build.xml"/>
+				<include name="eclipse.project"/>
+				<include name="eclipse.classpath"/>
 			</fileset>
 		</copy>
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="classes/main" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3x.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-jaxrpc.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-jaxws.jar"/>
+	<classpathentry kind="lib" path="lib/jbossall-client.jar"/>
+	<classpathentry kind="lib" path="lib/jbossws-client.jar"/>
+	<classpathentry kind="lib" path="lib/jbossws-core.jar"/>
+	<classpathentry kind="lib" path="lib/jbossws-spi.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
