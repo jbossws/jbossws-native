@@ -489,7 +489,8 @@ public class MappingFileGeneratorHelper
                if (isDocStyle())
                {
                   XSTypeDefinition xt = getXSType(input);
-                  addJavaXMLTypeMap(xt, input.getElement().getLocalPart(), "", "", jwm, !isWrapped());
+                  // Don't unwrap the actual parameter.
+                  addJavaXMLTypeMap(xt, input.getElement().getLocalPart(), "", "", jwm, false);
                }
                else
                {
@@ -503,7 +504,8 @@ public class MappingFileGeneratorHelper
                if (isDocStyle())
                {
                   XSTypeDefinition xt = getXSType(output);
-                  addJavaXMLTypeMap(xt, output.getElement().getLocalPart(), "", "", jwm, !isWrapped());
+                  // Don't unwrap the response type.
+                  addJavaXMLTypeMap(xt, output.getElement().getLocalPart(), "", "", jwm, false);
                }
                else
                {
@@ -704,7 +706,7 @@ public class MappingFileGeneratorHelper
             }
          }
 
-         if ((skipWrapperArray && isRepresentsArray(xt)) == false)
+         if ((skipWrapperArray && SchemaUtils.isWrapperArrayType(xt)) == false)
          {
             jxtm = new JavaXmlTypeMapping(jwm);
             String javaType;
@@ -897,40 +899,6 @@ public class MappingFileGeneratorHelper
    private boolean isDocStyle()
    {
       return Constants.DOCUMENT_LITERAL.equals(wsdlStyle);
-   }
-
-   /**
-    * Checks whether the type represents an array type
-    *
-    * @param xst
-    * @return true: type represents an array
-    */
-   private boolean isRepresentsArray(XSTypeDefinition xst)
-   {
-      boolean bool = false;
-      if (xst instanceof XSComplexTypeDefinition)
-      {
-         XSComplexTypeDefinition xc = (XSComplexTypeDefinition)xst;
-         if (xc.getContentType() == XSComplexTypeDefinition.CONTENTTYPE_EMPTY)
-            return false;
-         XSParticle xsp = xc.getParticle();
-
-         if (xsp == null)
-            return false;
-
-         XSTerm xsterm = xsp.getTerm();
-         if (xsterm instanceof XSModelGroup)
-         {
-            XSModelGroup xm = (XSModelGroup)xsterm;
-            XSObjectList xo = xm.getParticles();
-            if (xo.getLength() == 1)
-            {
-               XSParticle xp = (XSParticle)xo.item(0);
-               bool = xp.getMaxOccursUnbounded() || xp.getMaxOccurs() > 1;
-            }
-         }
-      }
-      return bool;
    }
 
    /**
