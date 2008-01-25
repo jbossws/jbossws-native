@@ -33,7 +33,10 @@ import org.jboss.wsf.spi.annotation.WebContext;
 
 @MessageDriven(activationConfig = { 
       @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-      @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/RequestQueue") })
+      @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/RequestQueue")
+  },
+  messageListenerInterface = javax.jms.MessageListener.class
+)
 public class OrganizationJMSEndpoint extends JMSTransportSupportEJB3
 {
    // provide logging
