@@ -33,7 +33,7 @@ fi
 while [ $# -ge 1 ]; do
    case $1 in
        "-classpath") WSRUNCLIENT_CLASSPATH="$WSRUNCLIENT_CLASSPATH:$2"; shift;;
-       *) args="$1";;
+       *) args=$args" $1";;
    esac
    shift
 done
@@ -87,4 +87,4 @@ fi
    -Djava.endorsed.dirs="$JBOSS_ENDORSED_DIRS" \
    -Dlog4j.configuration=wstools-log4j.xml \
    -classpath "$WSRUNCLIENT_CLASSPATH" \
-   "$args"
+   $args
