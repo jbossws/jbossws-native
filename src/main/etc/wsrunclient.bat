@@ -44,6 +44,7 @@ set JBOSS_ENDORSED_DIRS=%JBOSS_HOME%\lib\endorsed
 rem Setup the client classpath
 set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/log4j.jar
 set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/jbossws-client.jar
+set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/xmlsec.jar
 
 rem JBossAS-5.0 subset of jbossall-client.jar
 set WSRUNCLIENT_CLASSPATH=%WSRUNCLIENT_CLASSPATH%;%JBOSS_HOME%/client/jboss-logging-spi.jar
