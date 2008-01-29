@@ -44,7 +44,7 @@ import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
  * 
  * @author richard.opalka@jboss.com
  */
-public final class RMPolicyAssertionDeployer implements AssertionDeployer
+public final class RM11PolicyAssertionDeployer implements AssertionDeployer
 {
 
    private static final String WSRMP_NS = "http://docs.oasis-open.org/ws-rx/wsrmp/200702";

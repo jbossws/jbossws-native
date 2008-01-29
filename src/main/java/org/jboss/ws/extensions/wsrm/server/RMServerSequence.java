@@ -114,5 +114,10 @@ public class RMServerSequence implements RMSequence
    {
       this.closed = true;
    }
+   
+   public String toString()
+   {
+      return this.inboundId + " - " + this.outboundId;
+   }
 
 }

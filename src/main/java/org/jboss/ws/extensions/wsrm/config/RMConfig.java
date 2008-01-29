@@ -24,6 +24,8 @@ package org.jboss.ws.extensions.wsrm.config;
 import java.util.List;
 import java.util.LinkedList;
 
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+
 /**
  * Reliable messaging configuration metadata
  * 
@@ -70,7 +72,14 @@ public final class RMConfig
    
    public final void setProvider(RMProviderConfig provider)
    {
-      this.provider = provider;
+      if (provider.getSpecVersion().equals(RMProvider.get().getNamespaceURI()))
+      {
+         this.provider = provider;
+      }
+      else
+      {
+         throw new IllegalArgumentException("RM provider namespace mismatch");
+      }
    }
    
    public final RMProviderConfig getProvider()

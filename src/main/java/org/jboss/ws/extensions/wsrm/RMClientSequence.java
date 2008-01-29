@@ -266,17 +266,20 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
    
    public final void sendCloseMessage()
    {
-      while (this.isAckRequested())
+      if (RMProvider.get().getMessageFactory().newCloseSequence() != null) // e.g. WS-RM 1.0 doesn't support this protocol message
       {
-         logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
-         sendSequenceAcknowledgementMessage();
+         while (this.isAckRequested())
+         {
+            logger.debug("Waiting till all inbound sequence acknowledgements will be sent");
+            sendSequenceAcknowledgementMessage();
+         }
+         Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
+         wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
+         this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
+         List msgs = new LinkedList();
+         msgs.add(wsrmConstants.getCloseSequenceQName());
+         sendMessage(RMAddressingConstants.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName(), msgs);
       }
-      Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
-      wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, false);
-      this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
-      List msgs = new LinkedList();
-      msgs.add(wsrmConstants.getCloseSequenceQName());
-      sendMessage(RMAddressingConstants.CLOSE_SEQUENCE_WSA_ACTION, wsrmConstants.getCloseSequenceQName(), msgs);
    }
    
    public final void sendTerminateMessage()
@@ -287,6 +290,10 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
       {
          msgs.add(wsrmConstants.getSequenceAcknowledgementQName());
       }
+      Map<String, Object> wsrmReqCtx = new HashMap<String, Object>();
+      boolean oneWayOperation = RMProvider.get().getMessageFactory().newTerminateSequenceResponse() == null;
+      wsrmReqCtx.put(RMConstant.ONE_WAY_OPERATION, oneWayOperation);
+      this.getBindingProvider().getRequestContext().put(RMConstant.REQUEST_CONTEXT, wsrmReqCtx);
       sendMessage(RMAddressingConstants.TERMINATE_SEQUENCE_WSA_ACTION, wsrmConstants.getTerminateSequenceQName(), msgs);
    }
    

@@ -39,7 +39,8 @@ import org.jboss.ws.extensions.policy.deployer.domainAssertion.WSSecurityAsserti
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAlternative;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAssertion;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
-import org.jboss.ws.extensions.wsrm.policy.RMPolicyAssertionDeployer;
+import org.jboss.ws.extensions.wsrm.policy.RM10PolicyAssertionDeployer;
+import org.jboss.ws.extensions.wsrm.policy.RM11PolicyAssertionDeployer;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
 
 /**
@@ -57,7 +58,8 @@ public class PolicyDeployer
    {
       me = new PolicyDeployer();
       me.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", WSSecurityAssertionDeployer.class);
-      me.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", RMPolicyAssertionDeployer.class);
+      me.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", RM11PolicyAssertionDeployer.class);
+      me.domainDeployerMap.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", RM10PolicyAssertionDeployer.class);
    }
 
    //hide constructor
@@ -85,6 +87,7 @@ public class PolicyDeployer
       PolicyDeployer instance = new PolicyDeployer();
       instance.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", NopAssertionDeployer.class);
       instance.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", NopAssertionDeployer.class);
+      instance.domainDeployerMap.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", NopAssertionDeployer.class);
       return instance;
 
    }

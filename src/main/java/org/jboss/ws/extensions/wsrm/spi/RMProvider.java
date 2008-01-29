@@ -21,8 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm.spi;
 
-import java.util.Map;
-import java.util.HashMap;
+import org.jboss.wsf.spi.util.ServiceLoader;
 
 /**
  * WS-RM Provider SPI facade. Each WS-RM provider must override this class.
@@ -32,20 +31,10 @@ import java.util.HashMap;
 public abstract class RMProvider
 {
    
-   private static final Map<String, RMProvider> REGISTERED_PROVIDERS = new HashMap<String, RMProvider>();
-   
-   static
-   {
-      REGISTERED_PROVIDERS.put(
-         org.jboss.ws.extensions.wsrm.spec200702.RMProviderImpl.getInstance().getNamespaceURI(),
-         org.jboss.ws.extensions.wsrm.spec200702.RMProviderImpl.getInstance()
-      );
-      REGISTERED_PROVIDERS.put(
-         org.jboss.ws.extensions.wsrm.spec200502.RMProviderImpl.getInstance().getNamespaceURI(),
-         org.jboss.ws.extensions.wsrm.spec200502.RMProviderImpl.getInstance()
-      );
-   }
-   
+   private static final RMProvider rmProviderImpl = (RMProvider) ServiceLoader.loadService(
+      RMProvider.class.getName(),
+         org.jboss.ws.extensions.wsrm.spec200702.RMProviderImpl.class.getName());
+
    /**
     * Must be overriden in subclasses
     * @param targetNamespace
@@ -72,23 +61,9 @@ public abstract class RMProvider
     */
    public abstract RMConstants getConstants();
    
-   /**
-    * Gets WS-RM provider by <b>wsrmNamespace</b>
-    * @param namespace associated with the WS-RM provider
-    * @return WS-RM provider instance
-    * @throws IllegalArgumentException if specified <b>wsrmNamespace</b> has no associated WS-RM provider 
-    */
-   public static final RMProvider getInstance(String wsrmNamespace)
-   {
-      if (!REGISTERED_PROVIDERS.keySet().contains(wsrmNamespace))
-         throw new IllegalArgumentException("No WS-RM provider registered for namespace " + wsrmNamespace);
-
-      return REGISTERED_PROVIDERS.get(wsrmNamespace);
-   }
-   
    public static final RMProvider get()
    {
-      return org.jboss.ws.extensions.wsrm.spec200702.RMProviderImpl.getInstance();
+      return rmProviderImpl;
    }
    
 }

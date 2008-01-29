@@ -239,26 +239,33 @@ public final class RMHelper
       // register operation metadata with endpoint metadata
       endpointMD.addOperation(sequenceAcknowledgementMD);
       
-      // register closeSequence method
-      QName closeSequenceQName = rmProvider.getConstants().getCloseSequenceQName();
-      OperationMetaData closeSequenceMD = new OperationMetaData(endpointMD, closeSequenceQName, "closeSequence");
-      closeSequenceMD.setOneWay(false);
-      // setup addressing related data
-      AddressingOpMetaExt closeSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
-      closeSequenceAddrExt.setInboundAction(RMAddressingConstants.CLOSE_SEQUENCE_WSA_ACTION);
-      closeSequenceAddrExt.setOutboundAction(RMAddressingConstants.CLOSE_SEQUENCE_RESPONSE_WSA_ACTION);
-      closeSequenceMD.addExtension(closeSequenceAddrExt);
-      // register operation metadata with endpoint metadata
-      endpointMD.addOperation(closeSequenceMD);
+      if (rmProvider.getMessageFactory().newCloseSequence() != null)
+      {
+         // register closeSequence method
+         QName closeSequenceQName = rmProvider.getConstants().getCloseSequenceQName();
+         OperationMetaData closeSequenceMD = new OperationMetaData(endpointMD, closeSequenceQName, "closeSequence");
+         closeSequenceMD.setOneWay(false);
+         // setup addressing related data
+         AddressingOpMetaExt closeSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
+         closeSequenceAddrExt.setInboundAction(RMAddressingConstants.CLOSE_SEQUENCE_WSA_ACTION);
+         closeSequenceAddrExt.setOutboundAction(RMAddressingConstants.CLOSE_SEQUENCE_RESPONSE_WSA_ACTION);
+         closeSequenceMD.addExtension(closeSequenceAddrExt);
+         // register operation metadata with endpoint metadata
+         endpointMD.addOperation(closeSequenceMD);
+      }
       
       // register terminateSequence method
       QName terminateSequenceQName = rmProvider.getConstants().getTerminateSequenceQName();
       OperationMetaData terminateSequenceMD = new OperationMetaData(endpointMD, terminateSequenceQName, "terminateSequence");
-      terminateSequenceMD.setOneWay(false);
+      boolean isOneWay = rmProvider.getMessageFactory().newTerminateSequenceResponse() == null;
+      terminateSequenceMD.setOneWay(isOneWay);
       // setup addressing related data
       AddressingOpMetaExt terminateSequenceAddrExt = new AddressingOpMetaExt(new AddressingPropertiesImpl().getNamespaceURI());
       terminateSequenceAddrExt.setInboundAction(RMAddressingConstants.TERMINATE_SEQUENCE_WSA_ACTION);
-      terminateSequenceAddrExt.setOutboundAction(RMAddressingConstants.TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION);
+      if (!isOneWay)
+      {
+         terminateSequenceAddrExt.setOutboundAction(RMAddressingConstants.TERMINATE_SEQUENCE_RESPONSE_WSA_ACTION);
+      }
       terminateSequenceMD.addExtension(terminateSequenceAddrExt);
       // register operation metadata with endpoint metadata
       endpointMD.addOperation(terminateSequenceMD);

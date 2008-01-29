@@ -33,11 +33,11 @@ import org.jboss.ws.extensions.wsrm.common.RMConstantsImpl;
 public final class RMProviderImpl extends RMProvider
 {
    
-   private static final String IMPLEMENTATION_VERSION = "http://schemas.xmlsoap.org/ws/2005/02/rm";
+   public static final String IMPLEMENTATION_VERSION = "http://schemas.xmlsoap.org/ws/2005/02/rm";
    private static final RMConstants CONSTANTS = new RMConstantsImpl("wsrm10", IMPLEMENTATION_VERSION);
    private static final RMProvider INSTANCE = new RMProviderImpl();
    
-   private RMProviderImpl()
+   public RMProviderImpl()
    {
       // forbidden inheritance
    }

@@ -67,10 +67,13 @@ public abstract class RMHandlerAbstractBase extends GenericSOAPHandler
       try
       {
          RMSerializable wsrmMsg = RMHandlerHelper.getMessage(msgQN);
-         wsrmMsg.deserializeFrom(soapMessage);
-         messages.add(msgQN);
-         data.put(msgQN, wsrmMsg);
-         log.debug(msgQN.getLocalPart() + " WSRM message was deserialized from payload");
+         if (wsrmMsg != null)
+         {
+            wsrmMsg.deserializeFrom(soapMessage);
+            messages.add(msgQN);
+            data.put(msgQN, wsrmMsg);
+            log.debug(msgQN.getLocalPart() + " WSRM message was deserialized from payload");
+         }
       }
       catch (RMException ignore) {}
    }

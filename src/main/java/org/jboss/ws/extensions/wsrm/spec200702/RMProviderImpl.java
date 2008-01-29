@@ -33,11 +33,11 @@ import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 public final class RMProviderImpl extends RMProvider
 {
    
-   private static final String IMPLEMENTATION_VERSION = "http://docs.oasis-open.org/ws-rx/wsrm/200702";
+   public static final String IMPLEMENTATION_VERSION = "http://docs.oasis-open.org/ws-rx/wsrm/200702";
    private static final RMConstants CONSTANTS = new RMConstantsImpl("wsrm11",IMPLEMENTATION_VERSION);
    private static final RMProvider INSTANCE = new RMProviderImpl();
    
-   private RMProviderImpl()
+   public RMProviderImpl()
    {
       // forbidden inheritance
    }
