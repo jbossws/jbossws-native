@@ -22,12 +22,9 @@
 package org.jboss.test.ws.jaxws.jbws1733;
 
 import javax.jws.WebService;
-import javax.jws.Oneway;
 
 @WebService
 public interface JBWS1733
 {
    int getCounter();
-   @Oneway
-   void pingCounter();
 }
