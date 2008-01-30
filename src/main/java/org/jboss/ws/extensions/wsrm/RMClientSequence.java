@@ -83,37 +83,38 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
    private AtomicInteger countOfUnassignedMessagesAvailable = new AtomicInteger();
    private static final String ANONYMOUS_URI = AddressingBuilder.getAddressingBuilder().newAddressingConstants().getAnonymousURI();
    
-   public RMClientSequence(boolean addrType, RMConfig wsrmConfig)
+   public RMClientSequence(RMConfig wsrmConfig)
    {
       super();
       if (wsrmConfig == null)
          throw new RMException("WS-RM configuration missing");
-      if (wsrmConfig.getBackPortsServer() == null)
-         throw new RMException("WS-RM backports server configuration missing");
       
-      this.addressableClient = addrType;
       this.wsrmConfig = wsrmConfig;
-      try
+      this.addressableClient = wsrmConfig.getBackPortsServer() != null;
+      if (this.addressableClient)
       {
-         String host = wsrmConfig.getBackPortsServer().getHost();
-         if (host == null)
+         try
          {
-            host = InetAddress.getLocalHost().getCanonicalHostName();
-            logger.debug("Backports server configuration omits host configuration - using autodetected " + host);
-         }  
-         String port = wsrmConfig.getBackPortsServer().getPort();
-         String path = PATH_PREFIX + UUIDGenerator.generateRandomUUIDString();
-         this.backPort = new URI("http://" + host + ":" + port + path);
-      }
-      catch (URISyntaxException use)
-      {
-         logger.warn(use);
-         throw new RMException(use.getMessage(), use);
-      }
-      catch (UnknownHostException uhe)
-      {
-         logger.warn(uhe);
-         throw new RMException(uhe.getMessage(), uhe);
+            String host = wsrmConfig.getBackPortsServer().getHost();
+            if (host == null)
+            {
+               host = InetAddress.getLocalHost().getCanonicalHostName();
+               logger.debug("Backports server configuration omits host configuration - using autodetected " + host);
+            }  
+            String port = wsrmConfig.getBackPortsServer().getPort();
+            String path = PATH_PREFIX + UUIDGenerator.generateRandomUUIDString();
+            this.backPort = new URI("http://" + host + ":" + port + path);
+         }
+         catch (URISyntaxException use)
+         {
+            logger.warn(use);
+            throw new RMException(use.getMessage(), use);
+         }
+         catch (UnknownHostException uhe)
+         {
+            logger.warn(uhe);
+            throw new RMException(uhe.getMessage(), uhe);
+         }
       }
    }
    

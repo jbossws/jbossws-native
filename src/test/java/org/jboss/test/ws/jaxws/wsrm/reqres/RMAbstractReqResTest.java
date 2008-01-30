@@ -38,6 +38,7 @@ import javax.xml.ws.Service;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface;
 
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 
 /**
@@ -77,6 +78,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
          Service service = Service.create(wsdlURL, serviceName);
          service.setExecutor(testExecutor);
          proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
+         ((StubExt)proxy).setConfigName(getConfigName(), "META-INF/wsrm-jaxws-client-config.xml");
       }
    }
    
@@ -149,7 +151,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
    
    private void doReliableMessageExchange(Object proxyObject, InvocationType invocationType) throws Exception
    {
-      ((RMProvider)proxyObject).createSequence(isClientAddressable());
+      ((RMProvider)proxyObject).createSequence();
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
@@ -164,5 +166,6 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       return "jaxws-wsrm.war, jaxws-wsrm-client.jar";
    }
    
-   protected abstract boolean isClientAddressable();
+   protected abstract String getConfigName();
+   
 }

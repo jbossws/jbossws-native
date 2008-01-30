@@ -24,8 +24,6 @@ package org.jboss.ws.extensions.wsrm.config;
 import java.util.List;
 import java.util.LinkedList;
 
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-
 /**
  * Reliable messaging configuration metadata
  * 
@@ -35,7 +33,6 @@ public final class RMConfig
 {
    
    private RMDeliveryAssuranceConfig deliveryAssurance;
-   private RMProviderConfig provider;
    private RMBackPortsServerConfig backportsServer;
    private RMMessageRetransmissionConfig messageRetransmission;
    private List<RMPortConfig> ports = new LinkedList<RMPortConfig>();
@@ -68,23 +65,6 @@ public final class RMConfig
    public final RMBackPortsServerConfig getBackPortsServer()
    {
       return this.backportsServer;
-   }
-   
-   public final void setProvider(RMProviderConfig provider)
-   {
-      if (provider.getSpecVersion().equals(RMProvider.get().getNamespaceURI()))
-      {
-         this.provider = provider;
-      }
-      else
-      {
-         throw new IllegalArgumentException("RM provider namespace mismatch");
-      }
-   }
-   
-   public final RMProviderConfig getProvider()
-   {
-      return this.provider;
    }
    
    public final List<RMPortConfig> getPorts()

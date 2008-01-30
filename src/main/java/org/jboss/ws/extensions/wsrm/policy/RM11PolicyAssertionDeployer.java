@@ -35,12 +35,12 @@ import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAssertion;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
-import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
+import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
 
 /**
- * Reliable messaging policy deployer
+ * Reliable messaging 1.1 policy deployer
  * 
  * @author richard.opalka@jboss.com
  */
@@ -103,9 +103,10 @@ public final class RM11PolicyAssertionDeployer implements AssertionDeployer
          
          // set up port WSRMP metadata
          rmMD.getPorts().add(portMD);
-         RMProviderConfig providerMD = new RMProviderConfig();
-         providerMD.setSpecVersion(WSRM_NS);
-         rmMD.setProvider(providerMD);
+         if (!WSRM_NS.equals(RMProvider.get().getNamespaceURI()))
+         {
+            throw new IllegalArgumentException("RM provider namespace mismatch");
+         }
       }
    }
 

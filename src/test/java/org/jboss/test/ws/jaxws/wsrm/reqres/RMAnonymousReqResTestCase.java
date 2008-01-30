@@ -39,8 +39,8 @@ public final class RMAnonymousReqResTestCase extends RMAbstractReqResTest
       return new JBossWSTestSetup(RMAnonymousReqResTestCase.class, getClasspath());
    }
 
-   public final boolean isClientAddressable()
+   public final String getConfigName()
    {
-      return false;
+      return "Standard Anonymous WSRM Client";
    }
 }

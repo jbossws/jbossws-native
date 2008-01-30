@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.jboss.test.ws.jaxws.wsrm.services.SecuredOneWayServiceIface;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.wsf.test.JBossWSTest;
 
@@ -48,16 +49,17 @@ public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      
+
       QName serviceName = new QName("http://org.jboss.ws/jaxws/wsrm", "SecuredOneWayService");
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (SecuredOneWayServiceIface)service.getPort(SecuredOneWayServiceIface.class);
+      ((StubExt)proxy).setConfigName(getConfigName(), "META-INF/wsrm-jaxws-client-config.xml");
    }
    
    public void testOneWayMethods() throws Exception
    {
-      ((RMProvider)proxy).createSequence(isClientAddressable());
+      ((RMProvider)proxy).createSequence();
       setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
       setAddrProps(proxy, "http://useless/action2", serviceURL);
@@ -72,5 +74,6 @@ public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
       return "jaxws-secured-wsrm.war, jaxws-secured-wsrm-client.jar";
    }
    
-   protected abstract boolean isClientAddressable();
+   protected abstract String getConfigName();
+   
 }

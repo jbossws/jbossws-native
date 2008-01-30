@@ -31,7 +31,6 @@ import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
-import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
@@ -140,8 +139,6 @@ public class ConfigFactoryTestCase extends JBossWSTest
       RMDeliveryAssuranceConfig deliveryAssurance = wsrmConfig.getDeliveryAssurance();
       assertEquals(deliveryAssurance.getInOrder(), "true");
       assertEquals(deliveryAssurance.getQuality(), "AtLeastOnce");
-      RMProviderConfig provider = wsrmConfig.getProvider();
-      assertEquals(provider.getSpecVersion(), "http://docs.oasis-open.org/ws-rx/wsrm/200702");
       List<RMPortConfig> ports = wsrmConfig.getPorts();
       RMPortConfig port1 = ports.get(0);
       assertEquals(port1.getPortName(), new QName("http://custom/namespace/", "Port1"));

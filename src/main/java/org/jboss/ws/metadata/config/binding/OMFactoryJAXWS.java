@@ -41,7 +41,6 @@ import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
-import org.jboss.ws.extensions.wsrm.config.RMProviderConfig;
 
 /**
  * ObjectModelFactory for JAXRPC configurations.
@@ -188,22 +187,6 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          backportsServer.setPort(port);
          wsrmConfig.setBackPortsServer(backportsServer);
          return backportsServer;
-      }
-      if (localName.equals("provider"))
-      {
-         String specVersion = null;
-         for (int i = 0; i < countOfAttributes; i++)
-         {
-            if (attrs.getLocalName(i).equals("specVersion"))
-            {
-               specVersion = attrs.getValue(i);
-               break;
-            }
-         }
-         RMProviderConfig provider = new RMProviderConfig();
-         provider.setSpecVersion(specVersion);
-         wsrmConfig.setProvider(provider);
-         return provider;
       }
       if (localName.equals("port"))
       {

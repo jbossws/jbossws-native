@@ -8,14 +8,7 @@ import javax.jws.WebService;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 
-import org.jboss.ws.annotation.EndpointConfig;
-
 @WebService
-@EndpointConfig
-(
-   configName = "Standard WSRM Client",
-   configFile = "META-INF/wsrm-jaxws-client-config.xml"
-)
 public interface ReqResServiceIface
 {
    @WebMethod(operationName = "echo")

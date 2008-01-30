@@ -63,6 +63,7 @@ public class JBWS1733TestCase extends JBossWSTest
    public void testIssue() throws Exception
    {
       ((BindingProvider)proxy).getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
+      proxy.pingCounter();
       for (int i = 1; i <= 10; i++)
       {
          assertTrue(proxy.getCounter() == i);

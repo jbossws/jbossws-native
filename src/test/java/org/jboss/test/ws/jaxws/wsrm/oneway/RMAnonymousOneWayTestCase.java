@@ -39,8 +39,8 @@ public final class RMAnonymousOneWayTestCase extends RMAbstractOneWayTest
       return new JBossWSTestSetup(RMAnonymousOneWayTestCase.class, getClasspath());
    }
 
-   public final boolean isClientAddressable()
+   public final String getConfigName()
    {
-      return false;
+      return "Standard Anonymous WSRM Client";
    }
 }

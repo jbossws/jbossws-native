@@ -39,8 +39,8 @@ public final class RMAddressableOneWayTestCase extends RMAbstractOneWayTest
       return new JBossWSTestSetup(RMAddressableOneWayTestCase.class, getClasspath());
    }
 
-   public final boolean isClientAddressable()
+   public final String getConfigName()
    {
-      return true;
+      return "Standard Addressable WSRM Client";
    }
 }

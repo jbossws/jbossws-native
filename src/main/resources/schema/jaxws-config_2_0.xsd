@@ -75,7 +75,7 @@
         <xsd:annotation>
           <xsd:documentation>
             Backports server configuration to be used for addressable clients.
-            Users must always configure backports server on client machines.
+            If element is not present in client configuration then client is anonymous.
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -83,13 +83,6 @@
         <xsd:annotation>
           <xsd:documentation>
             Message retransmission allow users to configure the QoS of WS-RM.
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="provider" type="tns:providerType" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>
-            WS-RM specification version to be used for reliable messaging.
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -163,21 +156,6 @@
           In order quality of service to be ensured. Set this attribute to 'true' to ensure in order message delivery.
         </xsd:documentation>
       </xsd:annotation>
-    </xsd:attribute>
-  </xsd:complexType>
-  <xsd:complexType name="providerType">
-    <xsd:attribute name="specVersion" use="required">
-      <xsd:annotation>
-        <xsd:documentation>
-          WS-RM spec. version to be used for reliable messaging.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
-          <xsd:enumeration value="http://schemas.xmlsoap.org/ws/2005/02/rm"/>
-        </xsd:restriction>
-      </xsd:simpleType>
     </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="portType">

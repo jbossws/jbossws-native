@@ -39,8 +39,8 @@ public class RMSecuredAddressableOneWayTestCase extends RMAbstractSecuredOneWayT
       return new JBossWSTestSetup(RMSecuredAddressableOneWayTestCase.class, getClasspath());
    }
 
-   public final boolean isClientAddressable()
+   public final String getConfigName()
    {
-      return true;
+      return "Secured Addressable WSRM Client";
    }
 }

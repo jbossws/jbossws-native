@@ -39,8 +39,8 @@ public final class RMAddressableReqResTestCase extends RMAbstractReqResTest
       return new JBossWSTestSetup(RMAddressableReqResTestCase.class, getClasspath());
    }
 
-   public final boolean isClientAddressable()
+   public final String getConfigName()
    {
-      return true;
+      return "Standard Addressable WSRM Client";
    }
 }

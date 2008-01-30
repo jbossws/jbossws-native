@@ -23,6 +23,7 @@ package org.jboss.test.ws.jaxws.jbws1733;
 
 import javax.annotation.Resource;
 import javax.jws.WebService;
+import javax.jws.Oneway;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.WebServiceContext;
@@ -54,6 +55,11 @@ public class JBWS1733Impl implements JBWS1733
       counter = new Integer(counter.intValue() + 1);
       session.setAttribute("counter", counter);
       return counter;
+   }
+   @Oneway
+   public void pingCounter()
+   {
+      getCounter();
    }
 
 }

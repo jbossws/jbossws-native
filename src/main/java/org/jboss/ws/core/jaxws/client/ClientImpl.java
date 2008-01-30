@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.client;
 
 // $Id$
 
+import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -506,7 +507,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    // WS-RM support //
    ///////////////////
    @SuppressWarnings("unchecked")
-   public void createSequence(boolean addressableClient) throws RMException
+   public void createSequence() throws RMException
    {
       if (this.wsrmSequence != null)
          throw new IllegalStateException("Sequence already registered with proxy instance");
@@ -514,14 +515,15 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       try
       {
          // set up addressing data
-         RMClientSequence candidateSequence = new RMClientSequence(addressableClient, getEndpointMetaData().getConfig().getRMMetaData());
+         RMClientSequence candidateSequence = new RMClientSequence(getEndpointMetaData().getConfig().getRMMetaData());
          String address = getEndpointMetaData().getEndpointAddress();
          String action = RMAddressingConstants.CREATE_SEQUENCE_WSA_ACTION;
          AddressingProperties addressingProps = null;
-         if (addressableClient)
+         URI backPort = candidateSequence.getBackPort();
+         if (backPort != null)
          {
             addressingProps = AddressingClientUtil.createDefaultProps(action, address);
-            addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(candidateSequence.getBackPort()));
+            addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(backPort));
          }
          else
          {

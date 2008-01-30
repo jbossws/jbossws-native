@@ -39,8 +39,8 @@ public class RMSecuredAddressableReqResTestCase extends RMAbstractSecuredReqResT
       return new JBossWSTestSetup(RMSecuredAddressableReqResTestCase.class, getClasspath());
    }
 
-   public final boolean isClientAddressable()
+   public final String getConfigName()
    {
-      return true;
+      return "Secured Addressable WSRM Client";
    }
 }
