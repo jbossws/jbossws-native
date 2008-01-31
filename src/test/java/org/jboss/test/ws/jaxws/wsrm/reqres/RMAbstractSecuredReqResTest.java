@@ -150,14 +150,13 @@ public abstract class RMAbstractSecuredReqResTest extends JBossWSTest
    
    private void doReliableMessageExchange(Object proxyObject, InvocationType invocationType) throws Exception
    {
-      ((RMProvider)proxyObject).createSequence();
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      ((RMProvider)proxyObject).closeSequence();
+      ((RMProvider)proxyObject).closeSequence(); // this is optional operation
    }
    
    public static String getClasspath()

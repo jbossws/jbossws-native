@@ -59,14 +59,13 @@ public abstract class RMAbstractOneWayTest extends JBossWSTest
    
    public void testOneWayMethods() throws Exception
    {
-      ((RMProvider)proxy).createSequence();
       setAddrProps(proxy, "http://useless/action1", serviceURL);
       proxy.method1();
       setAddrProps(proxy, "http://useless/action2", serviceURL);
       proxy.method2("Hello World");
       setAddrProps(proxy, "http://useless/action3", serviceURL);
       proxy.method3(new String[] {"Hello","World"});
-      ((RMProvider)proxy).closeSequence();
+      ((RMProvider)proxy).closeSequence(); // this is optional operation
    }
 
    public static String getClasspath()
