@@ -30,12 +30,9 @@ import java.rmi.RemoteException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 
-import javax.jws.WebService;
-
 /**
  * @author Heiko.Braun@jboss.org
  */
-@WebService
 public class TestEndpointImpl implements TestEndpoint
 {
    private Logger log = Logger.getLogger(TestEndpointImpl.class);
