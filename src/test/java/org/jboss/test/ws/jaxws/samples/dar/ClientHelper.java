@@ -21,6 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
+import java.io.PrintStream;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -74,15 +75,20 @@ public class ClientHelper
    
    public static void printResponse(DarResponse response)
    {
+      printResponse(response, System.out);
+   }
+   
+   public static void printResponse(DarResponse response, PrintStream output)
+   {
       List<Route> routes = response.getRoutes();
       for (Route route : routes)
       {
-         System.out.print(route.getBusId() + ": ");
+         output.print(route.getBusId() + ": ");
          for (Stop stop : route.getStops())
          {
-            System.out.print(stop.getNode() + " ");
+            output.print(stop.getNode() + " ");
          }
-         System.out.print("\n");
+         output.print("\n");
       }
    }
 }

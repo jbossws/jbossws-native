@@ -72,6 +72,29 @@
       	<include name="wsdl/reply.wsdl"/>
       </webinf>
     </war>
+    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Bus.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarJMSEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarRequest.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponse.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Route.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
+      </fileset>
+    </jar>
+    <war jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.war" webxml="${tests.output.dir}/resources/jaxws/samples/dar/WEB-INF-jms/web.xml">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/JMSClient.class"/>
+      </fileset>
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/dar/WEB-INF-jms">
+        <include name="jboss-web.xml"/>
+      </webinf>
+    </war>
+  	
     
     <!-- jaxws-samples-jmstransport -->
     <jar jarfile="${tests.output.dir}/libs/jaxws-samples-jmstransport.jar">
