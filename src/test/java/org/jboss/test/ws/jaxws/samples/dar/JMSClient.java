@@ -29,7 +29,6 @@ import java.io.PrintStream;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueReceiver;
 import javax.jms.QueueSender;
 import javax.jms.QueueSession;
 import javax.jms.Session;
@@ -116,24 +115,15 @@ public class JMSClient extends HttpServlet
          Queue reqQueue = (Queue)context.lookup("queue/DarRequestQueue");
          con = connectionFactory.createQueueConnection();
          session = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-         Queue resQueue = session.createTemporaryQueue();
-         QueueReceiver receiver = session.createReceiver(resQueue);
+         Queue resQueue = (Queue)context.lookup("queue/DarResponseQueue");
          con.start();
          TextMessage message = session.createTextMessage(reqMessage);
          message.setJMSReplyTo(resQueue);
          QueueSender sender = session.createSender(reqQueue);
          sender.send(message);
          sender.close();
-         
-         log.info("Request message sent, doing something interesting in the mean time... ;-) ");
-         
-         TextMessage textMessage = (TextMessage)receiver.receive();
-         String result = textMessage.getText();
-         log.info("DAR response received: " + result);
+         ps.println("Request message sent, doing something interesting in the mean time... ;-) ");
          con.stop();
-         session.close();
-         con.close();
-         ps.println(result);
       }
       catch (Exception e)
       {
@@ -153,6 +143,7 @@ public class JMSClient extends HttpServlet
          catch(Exception e1) {}
       }
    }
+   
 
    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
       doGet(httpServletRequest,httpServletResponse);

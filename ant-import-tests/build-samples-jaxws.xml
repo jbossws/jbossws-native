@@ -94,6 +94,20 @@
         <include name="jboss-web.xml"/>
       </webinf>
     </war>
+    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.jar">
+      <fileset dir="${tests.output.dir}/classes">
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/DarResponseMessageBean.class"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.sar">
+      <fileset dir="${tests.output.dir}/libs">
+        <include name="jaxws-samples-dar-jms-client.war"/>
+        <include name="jaxws-samples-dar-jms-client.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/samples/dar/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
   	
     
     <!-- jaxws-samples-jmstransport -->
