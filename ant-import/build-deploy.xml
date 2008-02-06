@@ -13,8 +13,8 @@
 
 <project>
   
-  <import file="${core.dir}/ant-import/macros-deploy-framework.xml"/>
-  <import file="${core.dir}/ant-import/macros-deploy-native.xml"/>
+  <import file="${core.dir}/ant-import/macros-deploy-framework.xml" optional="true"/>
+  <import file="${core.dir}/ant-import/macros-deploy-native.xml" optional="true"/>
   
   <!-- Deploy jbossws to jboss405 -->
   <target name="deploy-jboss405" depends="deploy-jboss405-ejb3,deploy-jboss405-no-ejb3" description="Deploy jbossws to jboss405"/>
