@@ -14,6 +14,8 @@
 <project>
   
   <import file="${core.dir}/ant-import/macros-deploy-framework.xml" optional="true"/>
+  <import file="${core.dir}/ant-import/macros-deploy-cxf.xml" optional="true"/>
+  <import file="${core.dir}/ant-import/macros-deploy-sunri.xml" optional="true"/>
   <import file="${core.dir}/ant-import/macros-deploy-native.xml" optional="true"/>
   
   <!-- Deploy jbossws to jboss405 -->
@@ -68,6 +70,8 @@
   <!-- Remove jbossws from jboss422 -->
   <target name="undeploy-jboss422" depends="prepare,undeploy-jboss422-endorsed" description="Remove jbossws from jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+    <macro-undeploy-cxf422/>
+    <macro-undeploy-sunri422/>
     <macro-undeploy-native422/>
     <macro-undeploy-framework jbosshome="${jboss422.home}"/>
   </target>
@@ -89,6 +93,8 @@
   <!-- Remove jbossws from jboss423 -->
   <target name="undeploy-jboss423" depends="prepare,undeploy-jboss423-endorsed" description="Remove jbossws from jboss423">
     <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+    <macro-undeploy-cxf423/>
+    <macro-undeploy-sunri423/>
     <macro-undeploy-native423/>
     <macro-undeploy-framework jbosshome="${jboss423.home}"/>
   </target>
@@ -108,6 +114,8 @@
   
   <!-- Remove jbossws from jboss500 -->
   <target name="undeploy-jboss500" depends="prepare,undeploy-jboss500-endorsed" description="Remove jbossws from jboss500">
+    <macro-undeploy-cxf500/>
+    <macro-undeploy-sunri500/>
     <macro-undeploy-native500/>
     <macro-undeploy-framework jbosshome="${jboss500.home}"/>
   </target>
