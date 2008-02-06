@@ -13,6 +13,50 @@
 
 <project>
   
+  <patternset id="bin.patternset">
+    <include name="wsconsume.*"/>
+    <include name="wsprovide.*"/>
+    <include name="wsrunclient.*"/>
+    <include name="wstools.*"/>
+  </patternset>
+
+  <patternset id="client.stack.patternset">
+    <include name="jboss-jaxrpc.jar"/>
+    <include name="jboss-jaxws.jar"/>
+    <include name="jboss-jaxws-ext.jar"/>
+    <include name="jboss-saaj.jar"/>
+    <include name="jbossws-client.jar"/>
+  </patternset>
+
+  <patternset id="client.patternset">
+    <include name="jaxb-api.jar"/>
+    <include name="jaxb-impl.jar"/>
+    <include name="jaxb-xjc.jar"/>
+    <include name="jaxws-tools.jar"/>
+    <include name="jaxws-rt.jar"/>
+    <include name="policy.jar"/>
+    <include name="stax-ex.jar"/>
+    <include name="streambuffer.jar"/>
+    <include name="wsdl4j.jar"/>
+  </patternset>
+
+  <patternset id="bc.patternset">
+    <include name="jbossws-wsconsume-impl.jar"/>
+    <include name="jbossws-integration.jar"/>
+  </patternset>
+
+  <patternset id="lib.patternset">
+    <include name="jaxb-api.jar"/>
+    <include name="jaxb-impl.jar"/>
+  </patternset>
+
+  <patternset id="native.patternset">
+    <include name="jboss-jaxrpc.jar"/>
+    <include name="jboss-jaxws.jar"/>
+    <include name="jboss-jaxws-ext.jar"/>
+    <include name="jboss-saaj.jar"/>
+  </patternset>
+
   <!-- ================================================================== -->
   <!-- Deploy Endorsed                                                    -->
   <!-- ================================================================== -->
@@ -28,10 +72,7 @@
           <include name="jaxb-api.jar"/>
         </fileset>
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
+          <patternset refid="native.patternset"/>
         </fileset>
       </copy>
     </sequential>
@@ -44,10 +85,7 @@
       <delete>
         <fileset dir="@{jbosshome}/lib/endorsed">
           <include name="jaxb-api.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
+          <patternset refid="native.patternset"/>
         </fileset>
       </delete>
     </sequential>
@@ -70,25 +108,14 @@
       <!-- CLIENT JARS -->
       <copy todir="${jboss405.home}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.stack.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
+          <patternset refid="client.patternset"/>
+          <!-- AS 4.0.5 specific jars -->
           <include name="jbossws-jboss40.jar"/>
-          <include name="policy.jar"/>
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
           <include name="jboss-xml-binding.jar"/>
           <include name="stax-api.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
           <include name="wstx.jar"/>
         </fileset>
       </copy>
@@ -96,17 +123,16 @@
       <!-- SERVER JARS -->
       <copy todir="${jboss405.home}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
+          <!-- AS 4.0.5 specific jars -->
           <include name="jboss-xml-binding.jar"/>
         </fileset>
       </copy>
       <copy todir="${jboss405.home}/server/${jboss.server.instance}/lib" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
+          <patternset refid="native.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
+          <!-- AS 4.0.5 specific jars -->
           <include name="jbossws-jboss40.jar"/>
           <include name="wsdl4j.jar"/>
         </fileset>
@@ -142,46 +168,33 @@
         
         <!-- BIN SCRIPTS -->
         <fileset dir="${jboss405.home}/bin">
-          <include name="wsconsume.*"/>
-          <include name="wsprovide.*"/>
-          <include name="wsrunclient.*"/>
-          <include name="wstools.*"/>
+          <patternset refid="bin.patternset"/>
         </fileset>
         
         <!-- CLIENT JARS -->
         <fileset dir="${jboss405.home}/client">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-          <include name="jbossws-jboss40.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-api.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-wsconsume-impl.jar"/>
+          <patternset refid="client.stack.patternset"/>
+          <patternset refid="client.patternset"/>
+          <patternset refid="bc.patternset"/>
+          <!-- AS 4.0.5 specific jars -->
           <include name="jbossws14-client.jar"/>
+          <include name="jbossws-jboss40.jar"/>
+          <include name="jboss-xml-binding.jar"/>
+          <include name="stax-api.jar"/>
+          <include name="wstx.jar"/>
         </fileset>
         
         <!-- SERVER JARS -->
         <fileset dir="${jboss405.home}/lib">
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="bc.patternset"/>
+          <!-- AS 4.0.5 specific jars -->
+          <include name="jboss-xml-binding.jar"/>
         </fileset>
         <fileset dir="${jboss405.home}/server/${jboss.server.instance}/lib">
+          <patternset refid="native.patternset"/>
+          <!-- AS 4.0.5 specific jars -->
           <include name="jbossws-jboss40.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
+          <include name="wsdl4j.jar"/>
         </fileset>
       </delete>
       <delete dir="${jboss405.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
@@ -208,35 +221,26 @@
       <!-- CLIENT JARS -->
       <copy todir="${jboss421.home}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.stack.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
+          <patternset refid="client.patternset"/>
+          <!-- AS 4.2.1 specific jars -->
           <include name="jbossws-jboss421.jar"/>
           <include name="jboss-xml-binding.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
         </fileset>
       </copy>
       
       <!-- SERVER JARS -->
       <copy todir="${jboss421.home}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
+          <!-- AS 4.2.1 specific jars -->
           <include name="jboss-xml-binding.jar"/>
         </fileset>
       </copy>
       <copy todir="${jboss421.home}/server/${jboss.server.instance}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
+          <!-- AS 4.2.1 specific jars -->
           <include name="jbossws-jboss421.jar"/>
         </fileset>
       </copy>
@@ -254,49 +258,30 @@
         
         <!-- BIN SCRIPTS -->
         <fileset dir="${jboss421.home}/bin">
-          <include name="wsconsume.*"/>
-          <include name="wsprovide.*"/>
-          <include name="wsrunclient.*"/>
-          <include name="wstools.*"/>
+          <patternset refid="bin.patternset"/>
         </fileset>
         
         <!-- CLIENT JARS -->
         <fileset dir="${jboss421.home}/client">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
+          <patternset refid="client.stack.patternset"/>
+          <patternset refid="client.patternset"/>
+          <patternset refid="bc.patternset"/>
+          <!-- AS 4.2.1 specific jars -->
           <include name="jbossws-jboss421.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-wsconsume-impl.jar"/>
+          <include name="jboss-xml-binding.jar"/>
         </fileset>
         
         <!-- SERVER JARS -->
-        <fileset dir="${jboss421.home}/lib/endorsed">
-          <include name="jaxb-api.jar"/>
-        </fileset>
         <fileset dir="${jboss421.home}/lib">
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="bc.patternset"/>
+          <!-- AS 4.2.1 specific jars -->
+          <include name="jboss-xml-binding.jar"/>
         </fileset>
         <fileset dir="${jboss421.home}/server/${jboss.server.instance}/lib">
+          <patternset refid="native.patternset"/>
+          <patternset refid="bc.patternset"/>
+          <!-- AS 4.2.1 specific jars -->
           <include name="jbossws-jboss421.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
         </fileset>
       </delete>
       <delete dir="${jboss421.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
@@ -320,22 +305,10 @@
       <!-- CLIENT JARS -->
       <copy todir="${jboss422.home}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.stack.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
+          <patternset refid="client.patternset"/>
         </fileset>
       </copy>
       
@@ -354,47 +327,23 @@
         
         <!-- BIN SCRIPTS -->
         <fileset dir="${jboss422.home}/bin">
-          <include name="wsconsume.*"/>
-          <include name="wsprovide.*"/>
-          <include name="wsrunclient.*"/>
-          <include name="wstools.*"/>
+          <patternset refid="bin.patternset"/>
         </fileset>
         
         <!-- CLIENT JARS -->
         <fileset dir="${jboss422.home}/client">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-wsconsume-impl.jar"/>
+          <patternset refid="client.stack.patternset"/>
+          <patternset refid="client.patternset"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
         
         <!-- SERVER JARS -->
-        <fileset dir="${jboss422.home}/lib/endorsed">
-          <include name="jaxb-api.jar"/>
-        </fileset>
         <fileset dir="${jboss422.home}/lib">
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
         <fileset dir="${jboss422.home}/server/${jboss.server.instance}/lib">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="native.patternset"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
       </delete>
       <delete dir="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
@@ -418,22 +367,10 @@
       <!-- CLIENT JARS -->
       <copy todir="${jboss423.home}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.stack.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
+          <patternset refid="client.patternset"/>
         </fileset>
       </copy>
       
@@ -452,47 +389,23 @@
         
         <!-- BIN SCRIPTS -->
         <fileset dir="${jboss423.home}/bin">
-          <include name="wsconsume.*"/>
-          <include name="wsprovide.*"/>
-          <include name="wsrunclient.*"/>
-          <include name="wstools.*"/>
+          <patternset refid="bin.patternset"/>
         </fileset>
         
         <!-- CLIENT JARS -->
         <fileset dir="${jboss423.home}/client">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-wsconsume-impl.jar"/>
+          <patternset refid="client.stack.patternset"/>
+          <patternset refid="client.patternset"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
         
         <!-- SERVER JARS -->
-        <fileset dir="${jboss423.home}/lib/endorsed">
-          <include name="jaxb-api.jar"/>
-        </fileset>
         <fileset dir="${jboss423.home}/lib">
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
         <fileset dir="${jboss423.home}/server/${jboss.server.instance}/lib">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="native.patternset"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
       </delete>
       <delete dir="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
@@ -517,38 +430,24 @@
       <!-- CLIENT JARS -->
       <copy todir="${jboss500.home}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.stack.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
-          <include name="policy.jar"/>
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
+          <patternset refid="client.patternset"/>
         </fileset>
       </copy>
+
+      <!-- BOOTSTRAP JARS -->
       <copy todir="${jboss500.home}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
+          <patternset refid="lib.patternset"/>
         </fileset>
       </copy>
       
       <!-- SERVER JARS -->
       <copy todir="${jboss500.home}/server/${jboss.server.instance}/lib" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
+          <patternset refid="native.patternset"/>
         </fileset>
       </copy>
       
@@ -566,40 +465,25 @@
       <delete>
         <!-- BIN SCRIPTS -->
         <fileset dir="${jboss500.home}/bin">
-          <include name="wsconsume.*"/>
-          <include name="wsprovide.*"/>
-          <include name="wsrunclient.*"/>
-          <include name="wstools.*"/>
+          <patternset refid="bin.patternset"/>
         </fileset>
         
         <!-- CLIENT JARS -->
         <fileset dir="${jboss500.home}/client">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-wsconsume-impl.jar"/>
+          <patternset refid="client.stack.patternset"/>
+          <patternset refid="client.patternset"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
         
+        <!-- BOOTSTRAP JARS -->
+        <fileset dir="${jboss500.home}/lib">
+          <patternset refid="lib.patternset"/>
+        </fileset>
+
         <!-- SERVER JARS -->
         <fileset dir="${jboss500.home}/server/${jboss.server.instance}/lib">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <!-- Remove only, do not deploy -->
-          <include name="jbossws-integration.jar"/>
+          <patternset refid="native.patternset"/>
+          <patternset refid="bc.patternset"/>
         </fileset>
       </delete>
       
