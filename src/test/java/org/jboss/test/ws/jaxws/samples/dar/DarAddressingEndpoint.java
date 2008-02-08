@@ -90,7 +90,7 @@ public class DarAddressingEndpoint
    
    
    @WebMethod(operationName = "onewayProcess", action = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessIn")
-   @Action(input = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessIn", output = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessOut")
+   @Action(input = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessIn")
    @Oneway
    public void onewayProcess(DarRequest request)
    {
