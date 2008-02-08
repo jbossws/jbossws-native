@@ -195,17 +195,6 @@
         <include name="org/jboss/test/ws/jaxws/samples/news/SecurePrinter.class"/>
       </fileset>
     </jar>
-  	
-  	<!--
-    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-jmstransport.sar">
-      <fileset dir="${tests.output.dir}/libs">
-        <include name="jaxws-samples-jmstransport.jar"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/resources/jaxws/samples/jmstransport/META-INF">
-        <include name="jboss-service.xml"/>
-      </metainf>
-    </jar>
-    -->
     
     <!-- jaxws-samples-webserviceref -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-webserviceref.war" webxml="${tests.output.dir}/resources/jaxws/samples/webserviceref/WEB-INF/web.xml">
