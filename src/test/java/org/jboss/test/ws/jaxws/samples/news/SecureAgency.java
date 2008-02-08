@@ -31,20 +31,6 @@ public class SecureAgency extends Agency
    {
       super(url);
       ((StubExt)endpoint).setConfigName("Standard WSSecurity Client");
-      if (System.getProperty("org.jboss.ws.wsse.keyStore") == null)
-      {
-         System.setProperty("org.jboss.ws.wsse.keyStore", "alice-sign_enc.jks");
-         System.setProperty("org.jboss.ws.wsse.keyStorePassword", "password");
-      }
-      if (System.getProperty("org.jboss.ws.wsse.trustStore") == null)
-      {
-         System.setProperty("org.jboss.ws.wsse.trustStore", "wsse10.truststore");
-         System.setProperty("org.jboss.ws.wsse.trustStorePassword", "password");
-      }
-      System.out.println("keystore: " + System.getProperty("org.jboss.ws.wsse.keyStore"));
-      System.out.println("truststore: " + System.getProperty("org.jboss.ws.wsse.trustStore"));
-      System.out.println("keystore password: " + System.getProperty("org.jboss.ws.wsse.keyStorePassword"));
-      System.out.println("truststore password: " + System.getProperty("org.jboss.ws.wsse.trustStorePassword"));
    }
    
    public static void main(String[] args)
