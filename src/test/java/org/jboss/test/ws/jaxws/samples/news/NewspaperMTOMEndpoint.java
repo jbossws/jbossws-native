@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -28,7 +30,12 @@ import javax.xml.ws.BindingType;
 
 import org.jboss.wsf.spi.annotation.WebContext;
 
-
+/**
+ * The MTOM newspaper endpoint
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 @Stateless
 @WebService(endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperMTOM",
       name = "NewspaperMTOMEndpoint",

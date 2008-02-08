@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -29,6 +31,12 @@ import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.wsf.spi.annotation.WebContext;
 
+/**
+ * The press release endpoint enforcing authentication plus message encryption and signature
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 @Stateless
 @WebService(name = "PressReleaseEndpoint",
             targetNamespace = "http://org.jboss.ws/samples/news",

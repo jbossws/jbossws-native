@@ -21,13 +21,20 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import java.util.Date;
 
 import javax.activation.DataHandler;
 
 import org.jboss.logging.Logger;
 
-
+/**
+ * The common implementation of the SWA newspaper endpoint
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 public class AbstractNewspaperSWAEndpoint
 {
    private Logger log = Logger.getLogger(this.getClass());

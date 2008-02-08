@@ -21,11 +21,19 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import java.util.Date;
 
 import javax.activation.DataHandler;
 import javax.xml.bind.annotation.XmlMimeType;
 
+/**
+ * The MTOM version of the newspaper edition
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 public class EditionMTOM
 {
    private Date date;

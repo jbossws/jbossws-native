@@ -21,12 +21,20 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 import org.jboss.wsf.spi.annotation.WebContext;
 
+/**
+ * The press release endpoint
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 @Stateless
 @WebService(name = "PressReleaseEndpoint",
             targetNamespace = "http://org.jboss.ws/samples/news",

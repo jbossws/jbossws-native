@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import java.util.Date;
 
 import javax.jws.WebMethod;
@@ -28,6 +30,12 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
+/**
+ * The MTOM newspaper endpoint interface
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 @WebService(targetNamespace = "http://org.jboss.ws/samples/news")
 @SOAPBinding(style = SOAPBinding.Style.RPC,
        use = SOAPBinding.Use.LITERAL)

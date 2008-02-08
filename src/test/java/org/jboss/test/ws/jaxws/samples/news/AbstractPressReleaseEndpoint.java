@@ -21,8 +21,16 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import org.jboss.logging.Logger;
 
+/**
+ * The common implementation of the press release endpoint
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 public abstract class AbstractPressReleaseEndpoint
 {
    private Logger log = Logger.getLogger(this.getClass());

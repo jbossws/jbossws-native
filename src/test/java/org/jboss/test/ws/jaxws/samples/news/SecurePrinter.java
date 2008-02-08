@@ -21,10 +21,18 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import java.net.URL;
 
 import javax.xml.ws.BindingProvider;
 
+/**
+ * The printer client using https transport
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 public class SecurePrinter extends Printer
 {
    public SecurePrinter(URL url, boolean mtom)

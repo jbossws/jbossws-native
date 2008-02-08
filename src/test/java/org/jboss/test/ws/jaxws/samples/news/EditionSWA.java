@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import java.util.Date;
 
 import javax.activation.DataHandler;
@@ -28,6 +30,12 @@ import javax.xml.bind.annotation.XmlAttachmentRef;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * The SWA version of the newspaper edition
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 @XmlRootElement
 public class EditionSWA
 {

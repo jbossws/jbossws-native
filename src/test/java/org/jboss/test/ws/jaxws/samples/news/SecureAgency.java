@@ -21,10 +21,18 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
+//$Id$
+
 import java.net.URL;
 
 import org.jboss.ws.core.StubExt;
 
+/**
+ * The press agency client using WS-Security
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 31-Jan-2008
+ */
 public class SecureAgency extends Agency
 {
    public SecureAgency(URL url)
@@ -46,8 +54,7 @@ public class SecureAgency extends Agency
          else
          {
             System.out.println("SecureAgency client usage:");
-            System.out.println("./wsrunclient.sh -classpath agency.jar -Dorg.jboss.ws.wsse.trustStore=wsse10.truststore -Dorg.jboss.ws.wsse.keyStore=alice-sign_enc.jks " +
-            		"-Dorg.jboss.ws.wsse.keyStorePassword=password -Dorg.jboss.ws.wsse.trustStorePassword=password org.jboss.test.ws.jaxws.samples.news.SecureAgency " +
+            System.out.println("./wsrunclient.sh -classpath agency.jar org.jboss.test.ws.jaxws.samples.news.SecureAgency " +
             		"http://localhost.localdomain:8080/news/pressRelease?wsdl title body");
          }
       }
