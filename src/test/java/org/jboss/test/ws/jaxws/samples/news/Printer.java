@@ -90,7 +90,7 @@ public class Printer
             System.out.println("Downloading newspaper document: " + id);
             EditionSWA edition = swaEndpoint.getNewspaperEdition(id);
             DataHandler dh = edition.getContent();
-            System.out.println("Content: " + dh.getContentType());
+            System.out.println("Content type: " + dh.getContentType());
             System.out.println("Content: " + dh.getContent());
          }
       }

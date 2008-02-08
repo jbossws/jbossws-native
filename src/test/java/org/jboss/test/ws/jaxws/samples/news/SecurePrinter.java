@@ -41,9 +41,6 @@ public class SecurePrinter extends Printer
       BindingProvider bp = mtom ? (BindingProvider)mtomEndpoint : (BindingProvider)swaEndpoint;
       bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, "kermit");
       bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, "thefrog");
-      System.setProperty("javax.net.ssl.trustStore", "/home/alessio/dati/jboss-4.2.2.GA/server/default/truststore_ale");
-      System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-      System.setProperty("javax.net.ssl.trustStoreType", "jks");
       System.setProperty("org.jboss.security.ignoreHttpsHost", "true");
    }
    
@@ -59,9 +56,11 @@ public class SecurePrinter extends Printer
          else
          {
             System.out.println("SecurePrinter client usage:");
-            System.out.println("wsrunclient.sh -classpath agency.jar org.jboss.test.ws.jaxws.samples.news.SecurePrinter http://host:port/news/newspaper/mtom?wsdl");
+            System.out.println("wsrunclient.sh -classpath agency.jar -Djavax.net.ssl.trustStore=truststorePath -Djavax.net.ssl.trustStorePassword=truststorePwd " +
+            		"org.jboss.test.ws.jaxws.samples.news.SecurePrinter http://host:port/news/newspaper/mtom?wsdl");
             System.out.println("or");
-            System.out.println("wsrunclient.sh -classpath agency.jar org.jboss.test.ws.jaxws.samples.news.SecurePrinter http://host:port/news/newspaper/swa?wsdl");
+            System.out.println("wsrunclient.sh -classpath agency.jar -Djavax.net.ssl.trustStore=truststorePath -Djavax.net.ssl.trustStorePassword=truststorePwd " +
+            		"org.jboss.test.ws.jaxws.samples.news.SecurePrinter http://host:port/news/newspaper/swa?wsdl");
          }
       }
       catch (Exception e)

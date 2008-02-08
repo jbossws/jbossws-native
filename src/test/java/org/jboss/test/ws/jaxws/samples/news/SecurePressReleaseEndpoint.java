@@ -27,7 +27,6 @@ import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
-import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.wsf.spi.annotation.WebContext;
 
@@ -43,7 +42,6 @@ import org.jboss.wsf.spi.annotation.WebContext;
             serviceName = "PressReleaseService")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT,
              use = SOAPBinding.Use.LITERAL)
-@SecurityDomain("JBossWS")
 @WebContext(contextRoot="/news",
             urlPattern="/pressRelease")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
