@@ -217,16 +217,7 @@ public class ServiceEndpointInvoker
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
                
-               try
-               {
-                  invHandler.invoke(endpoint, inv);
-               }
-               catch (InvocationTargetException th)
-               {
-                  // Unwrap the throwable raised by the service endpoint implementation
-                  Throwable targetEx = ((InvocationTargetException)th).getTargetException();
-                  throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
-               }
+               invHandler.invoke(endpoint, inv);
 
                // Handler processing might have replaced the endpoint invocation
                sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
@@ -269,15 +260,20 @@ public class ServiceEndpointInvoker
             faultType[0] = null;
          }
       }
-      catch (RuntimeException ex)
+      catch (InvocationTargetException invocationEx)
       {
+         //Unwrap the throwable raised by the service endpoint implementation
+         Throwable targetEx = invocationEx.getTargetException();
+         Exception ex = targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx);
+         
          // Reverse the message direction
          processPivotInternal(msgContext, direction);
 
          try
          {
             CommonBinding binding = bindingProvider.getCommonBinding();
-            binding.bindFaultMessage(ex);
+            MessageAbstraction exMessage = binding.bindFaultMessage(ex);
+            msgContext.setMessageAbstraction(exMessage);
 
             // call the fault handler chain
             boolean handlersPass = true;
