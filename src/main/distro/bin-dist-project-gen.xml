@@ -19,7 +19,7 @@
     
     <filterset id="project">
       <filter token="projectName" value="${project.name}" />
-      <filter token="jbossHome" value="${jboss.home}" />
+      <filter token="jbossHome" value="${project.jboss.home}" />
    	</filterset>
   	
   	<path id="jbws-ant.path" path="${basedir}/lib/jbossws-core.jar"/>
@@ -67,8 +67,8 @@
         <entry key="workspace.home" value="${workspace.home.new}"/>
         <entry key="project.name" value="${project.name.new}"/>
         <entry key="project.type" value="${project.type.new}"/>
-        <entry key="jboss.home" value="${jboss.home.new}"/>
-        <entry key="jboss.conf" value="${jboss.conf.new}"/>
+        <entry key="project.jboss.home" value="${jboss.home.new}"/>
+        <entry key="project.jboss.conf" value="${jboss.conf.new}"/>
     </propertyfile>
     
     <echo message=""/>
@@ -133,7 +133,7 @@
     </copy>
     <echo message="Copying other JBoss libraries to the ${project.home}/lib directory..." />
     <copy todir="${project.home}/lib" overwrite="true">
-      <fileset dir="${jboss.home}/client" >
+      <fileset dir="${project.jboss.home}/client" >
         <include name="jbossall-client.jar"/>
         <include name="jboss-ejb3x.jar"/>
         <include name="ejb3-persistence.jar"/>
@@ -154,8 +154,8 @@
   
   <target name="settings" depends="init-project-properties" description="Print the current project settings">
     <echo message="Java project workspace: ${workspace.home}"/>
-    <echo message="JBoss home: ${jboss.home}"/>
-    <echo message="JBoss conf: ${jboss.conf}"/>
+    <echo message="JBoss home: ${project.jboss.home}"/>
+    <echo message="JBoss conf: ${project.jboss.conf}"/>
     <echo message="Project name: ${project.name}"/>
     <echo message="Project type: ${project.type}"/>
   </target>

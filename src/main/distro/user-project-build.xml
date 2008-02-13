@@ -7,7 +7,7 @@
 	<property name="project.name" value="@projectName@" />
 	<property name="dist.dir" value="dist" />
 	<property name="lib.dir" value="lib" />
-	<property name="deploy.dir" value="${jboss.home}/server/default/deploy" />
+	<property name="deploy.dir" value="${project.jboss.home}/server/${project.jboss.conf}/deploy" />
 	<property name="output.dir" value="output" />
 	<property name="src.main.dir" value="src/main/java" />
 	<property name="resources.main.dir" value="src/main/resources" />
@@ -52,7 +52,7 @@
 		</copy>
 	</target>
 
-	<target name="dist" depends="compile,copyclasses" description="Create the application distribution archive">
+	<target name="dist" depends="clean,compile,copyclasses" description="Create the application distribution archive">
 		<fail unless="project.type">project.type not set</fail>
 		<jar jarfile="${dist.dir}/${project.name}.${project.type}">
 			<fileset dir="${output.dir}" />
@@ -64,13 +64,13 @@
 	</target>
 
 	<target name="deploy" depends="dist" description="Deploy to JBoss AS">
-		<fail unless="jboss.home">jboss.home not set</fail>
+		<fail unless="project.jboss.home">project.jboss.home not set</fail>
 		<copy todir="${deploy.dir}" file="${dist.dir}/${project.name}.${project.type}" />
 	</target>
 
 	<target name="undeploy" description="Undeploy from JBoss AS">
-		<fail unless="jboss.home">jboss.home not set</fail>
-		<fail unless="jboss.conf">jboss.conf not set</fail>
+		<fail unless="project.jboss.home">project.jboss.home not set</fail>
+		<fail unless="project.jboss.conf">project.jboss.conf not set</fail>
 		<delete file="${deploy.dir}/${project.name}.${project.type}" />
 	</target>
 
