@@ -19,29 +19,6 @@
   <import file="${core.dir}/ant-import/macros-deploy-native.xml" optional="true"/>
   
   <!-- ================================================================== -->
-  <!-- Deployment JBoss405                                                -->
-  <!-- ================================================================== -->
-
-  <!-- Deploy jbossws to jboss405 -->
-  <target name="deploy-jboss405" depends="deploy-jboss405-ejb3,deploy-jboss405-no-ejb3" description="Deploy jbossws to jboss405"/>
-  
-  <target name="deploy-jboss405-ejb3" depends="jars-jboss40,undeploy-jboss405">
-    <macro-deploy-native405 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
-    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty" jbosshome="${jboss405.home}"/>
-  </target>
-  
-  <target name="deploy-jboss405-no-ejb3" depends="deploy-jboss405-ejb3" unless="jboss405.ejb3.available"
-    description="Deploy jbossws to jboss405 without EJB3 support">
-    <macro-deploy-native405-no-ejb3/>
-  </target>
-  
-  <!-- Remove jbossws from jboss405 -->
-  <target name="undeploy-jboss405" depends="prepare" description="Remove jbossws from jboss405">
-    <macro-undeploy-native405/>
-    <macro-undeploy-framework jbosshome="${jboss405.home}"/>
-  </target>
-  
-  <!-- ================================================================== -->
   <!-- Deployment JBoss421                                                -->
   <!-- ================================================================== -->
 
@@ -133,6 +110,29 @@
     <macro-undeploy-native500/>
     <macro-undeploy-endorsed jbosshome="${jboss500.home}"/>
     <macro-undeploy-framework jbosshome="${jboss500.home}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment JBoss501                                                -->
+  <!-- ================================================================== -->
+
+  <!-- Deploy jbossws to jboss501 -->
+  <target name="deploy-jboss501" depends="jars-jboss50,undeploy-jboss501,deploy-jboss501-endorsed" description="Deploy jbossws to jboss501">
+    <macro-deploy-native501 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
+    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty" jbosshome="${jboss501.home}"/>
+  </target>
+  
+  <target name="deploy-jboss501-endorsed" depends="prepare" if="HAVE_JDK_1.6">
+    <macro-deploy-endorsed jbosshome="${jboss501.home}" stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
+  </target>
+  
+  <!-- Remove jbossws from jboss501 -->
+  <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
+    <macro-undeploy-cxf501/>
+    <macro-undeploy-sunri501/>
+    <macro-undeploy-native501/>
+    <macro-undeploy-endorsed jbosshome="${jboss501.home}"/>
+    <macro-undeploy-framework jbosshome="${jboss501.home}"/>
   </target>
   
 </project>
