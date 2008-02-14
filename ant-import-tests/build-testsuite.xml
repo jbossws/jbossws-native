@@ -46,7 +46,6 @@
       <pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
 			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
       <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
-      <pathelement location="${core.dir}/thirdparty/xmlunit.jar"/>
       <pathelement location="${core.dir}/thirdparty/jboss-jaxb-intros.jar"/>
     </path>
 
@@ -63,10 +62,6 @@
 			<pathelement location="${core.dir}/thirdparty/jaxen.jar"/>
 			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jboss-logging-log4j.jar"/>
-			<!--
-			<pathelement location="${core.dir}/thirdparty/log4j.jar"/>
-			<pathelement location="${tests.etc.dir}"/>
-		  -->
 		</path>
 
 	</target>
