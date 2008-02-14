@@ -51,10 +51,8 @@
 		<!-- build -->
 		<copy todir="${bindist.build.dir}">
 			<fileset dir="${core.dir}/ant-import">
-				<include name="macros-deploy-cxf.xml"/>
-				<include name="macros-deploy-sunri.xml"/>
-				<include name="macros-deploy-native.xml"/>
 				<include name="macros-deploy-framework.xml"/>
+				<include name="macros-deploy-native.xml"/>
 			</fileset>
 			<fileset dir="${core.distro.dir}">
 				<include name="user-project-build.xml"/>

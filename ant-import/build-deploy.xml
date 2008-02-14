@@ -13,10 +13,8 @@
 
 <project>
   
-  <import file="${core.dir}/ant-import/macros-deploy-framework.xml" optional="true"/>
-  <import file="${core.dir}/ant-import/macros-deploy-cxf.xml" optional="true"/>
-  <import file="${core.dir}/ant-import/macros-deploy-sunri.xml" optional="true"/>
-  <import file="${core.dir}/ant-import/macros-deploy-native.xml" optional="true"/>
+  <import file="${core.dir}/ant-import/macros-deploy-framework.xml"/>
+  <import file="${core.dir}/ant-import/macros-deploy-native.xml"/>
   
   <!-- ================================================================== -->
   <!-- Deployment JBoss421                                                -->
@@ -33,16 +31,14 @@
   </target>
   
   <!-- Remove jbossws from jboss421 -->
-  <target name="undeploy-jboss421" depends="prepare" description="Remove jbossws from jboss421">
+  <target name="undeploy-jboss421" depends="prepare,undeploy-jboss421-endorsed" description="Remove jbossws from jboss421">
     <macro-undeploy-native421/>
-    <macro-undeploy-endorsed jbosshome="${jboss421.home}"/>
     <macro-undeploy-framework jbosshome="${jboss421.home}"/>
   </target>
+  <target name="undeploy-jboss421-endorsed" depends="prepare">
+    <macro-undeploy-endorsed jbosshome="${jboss421.home}"/>
+  </target>
   
-  <!-- ================================================================== -->
-  <!-- Deployment JBoss422                                                -->
-  <!-- ================================================================== -->
-
   <!-- Deploy jbossws to jboss422 -->
   <target name="deploy-jboss422" depends="jars-jboss42,undeploy-jboss422,deploy-jboss422-endorsed" description="Deploy jbossws to jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
@@ -55,18 +51,14 @@
   </target>
   
   <!-- Remove jbossws from jboss422 -->
-  <target name="undeploy-jboss422" depends="prepare" description="Remove jbossws from jboss422">
+  <target name="undeploy-jboss422" depends="prepare,undeploy-jboss422-endorsed" description="Remove jbossws from jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
-    <macro-undeploy-cxf422/>
-    <macro-undeploy-sunri422/>
     <macro-undeploy-native422/>
     <macro-undeploy-framework jbosshome="${jboss422.home}"/>
+  </target>
+  <target name="undeploy-jboss422-endorsed" depends="prepare">
     <macro-undeploy-endorsed jbosshome="${jboss422.home}"/>
   </target>
-
-  <!-- ================================================================== -->
-  <!-- Deployment JBoss423                                                -->
-  <!-- ================================================================== -->
 
   <!-- Deploy jbossws to jboss423 -->
   <target name="deploy-jboss423" depends="jars-jboss42,undeploy-jboss423,deploy-jboss423-endorsed" description="Deploy jbossws to jboss423">
@@ -80,19 +72,15 @@
   </target>
 
   <!-- Remove jbossws from jboss423 -->
-  <target name="undeploy-jboss423" depends="prepare" description="Remove jbossws from jboss423">
+  <target name="undeploy-jboss423" depends="prepare,undeploy-jboss423-endorsed" description="Remove jbossws from jboss423">
     <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
-    <macro-undeploy-cxf423/>
-    <macro-undeploy-sunri423/>
     <macro-undeploy-native423/>
-    <macro-undeploy-endorsed jbosshome="${jboss423.home}"/>
     <macro-undeploy-framework jbosshome="${jboss423.home}"/>
   </target>
+  <target name="undeploy-jboss423-endorsed" depends="prepare">
+    <macro-undeploy-endorsed jbosshome="${jboss423.home}"/>
+  </target>
   
-  <!-- ================================================================== -->
-  <!-- Deployment JBoss500                                                -->
-  <!-- ================================================================== -->
-
   <!-- Deploy jbossws to jboss500 -->
   <target name="deploy-jboss500" depends="jars-jboss50,undeploy-jboss500,deploy-jboss500-endorsed" description="Deploy jbossws to jboss500">
     <macro-deploy-native500 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
@@ -104,12 +92,13 @@
   </target>
   
   <!-- Remove jbossws from jboss500 -->
-  <target name="undeploy-jboss500" depends="prepare" description="Remove jbossws from jboss500">
-    <macro-undeploy-cxf500/>
-    <macro-undeploy-sunri500/>
+  <target name="undeploy-jboss500" depends="prepare,undeploy-jboss500-endorsed" description="Remove jbossws from jboss500">
     <macro-undeploy-native500/>
-    <macro-undeploy-endorsed jbosshome="${jboss500.home}"/>
     <macro-undeploy-framework jbosshome="${jboss500.home}"/>
+  </target>
+  
+  <target name="undeploy-jboss500-endorsed" depends="prepare">
+    <macro-undeploy-endorsed jbosshome="${jboss500.home}"/>
   </target>
   
   <!-- ================================================================== -->
@@ -128,11 +117,13 @@
   
   <!-- Remove jbossws from jboss501 -->
   <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
-    <macro-undeploy-cxf501/>
-    <macro-undeploy-sunri501/>
     <macro-undeploy-native501/>
     <macro-undeploy-endorsed jbosshome="${jboss501.home}"/>
     <macro-undeploy-framework jbosshome="${jboss501.home}"/>
+  </target>
+  
+  <target name="undeploy-jboss501-endorsed" depends="prepare">
+    <macro-undeploy-endorsed jbosshome="${jboss501.home}"/>
   </target>
   
 </project>
