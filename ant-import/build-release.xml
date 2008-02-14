@@ -89,19 +89,6 @@
       </filterset>
     </copy>
     
-    <!-- jboss/jbossws-native40 -->
-    <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
-    <mkdir dir="${jboss.repository.dir}/jbossws-native40/${repository.id}/lib"/>
-    <copy todir="${jboss.repository.dir}/jbossws-native40/${repository.id}/lib" overwrite="true">
-      <fileset dir="${core.dir}/output/lib">
-        <include name="jbossws-native40.sar"/>
-      </fileset>
-    </copy>
-    <copy tofile="${jboss.repository.dir}/jbossws-native40/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info40.xml" filtering="true" overwrite="true">
-      <filterset>
-        <filtersfile file="${core.dir}/version.properties"/>
-      </filterset>
-    </copy>
   </target>
 
   <target name="check-svn-externals" depends="init">

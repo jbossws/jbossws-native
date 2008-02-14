@@ -53,9 +53,6 @@
     <get src="${jboss.repository}/jboss/jbossws-framework/${jbossws-framework}/lib/jbossws-framework-src.zip" dest="${thirdparty.dir}/jbossws-framework-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-spi/${jbossws-spi}/lib/jbossws-spi.jar" dest="${thirdparty.dir}/jbossws-spi.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-spi/${jbossws-spi}/lib/jbossws-spi-src.zip" dest="${thirdparty.dir}/jbossws-spi-src.zip" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss40/${jbossws-jboss40}/lib/jbossws-jboss40.jar" dest="${thirdparty.dir}/jbossws-jboss40.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss40/${jbossws-jboss40}/lib/jbossws-jboss40-resources.zip" dest="${thirdparty.dir}/jbossws-jboss40-resources.zip" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss40/${jbossws-jboss40}/lib/jbossws-jboss40-src.zip" dest="${thirdparty.dir}/jbossws-jboss40-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42.jar" dest="${thirdparty.dir}/jbossws-jboss421.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42-src.zip" dest="${thirdparty.dir}/jbossws-jboss421-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42-resources.zip" dest="${thirdparty.dir}/jbossws-jboss42-resources.zip" usetimestamp="true" verbose="true"/>
@@ -85,8 +82,8 @@
     <get src="${jboss.repository}/jboss/jboss-javaee/${jboss-javaee}/lib/jboss-javaee.jar" dest="${thirdparty.dir}/jboss-javaee.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs.jar" dest="${thirdparty.dir}/jboss-vfs.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jboss-vfs/${jboss-vfs}/lib/jboss-vfs-sources.jar" dest="${thirdparty.dir}/jboss-vfs-sources.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss40}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss40}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss42}/lib/jboss-xml-binding.jar" dest="${thirdparty.dir}/jboss-xml-binding.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossxb/${jboss-jbossxb-jboss42}/lib/jboss-xml-binding-sources.jar" dest="${thirdparty.dir}/jboss-xml-binding-sources.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jaxbintros/${jaxbintros}/lib/jboss-jaxb-intros.jar" dest="${thirdparty.dir}/jboss-jaxb-intros.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-container.jar" dest="${thirdparty.dir}/jboss-container.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-dependency.jar" dest="${thirdparty.dir}/jboss-dependency.jar" usetimestamp="true" verbose="true"/>

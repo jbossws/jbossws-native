@@ -14,12 +14,12 @@
 <!--
   The JBossWS project is organised like this
   
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~+
-  Target Container:       |     AS-5.0      |  |     AS-4.2      |  |      AS-4.0     |  |    | 
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
-  Container Integration:  | jbossws-jboss50 |  | jbossws-jboss42 |  | jbossws-jboss40 |  |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
+                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       +~~~~+
+  Target Container:       |     AS-5.0      |  |     AS-4.2      |                       |    | 
+                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       |    |
+                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       |    |
+  Container Integration:  | jbossws-jboss50 |  | jbossws-jboss42 |                       |    |
+                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       |    |
                           +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+  |    |
   WS Framework:           |      jbossws-spi, jbossws-framework, jbossws-common       |  |    |
                           +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+  |    |
@@ -177,7 +177,7 @@
   <!--
     | Build all jar files.
     -->
-  <target name="jars" depends="compile,jars-jboss40,jars-jboss42,jars-jboss50" description="Builds all jar files.">
+  <target name="jars" depends="compile,jars-jboss42,jars-jboss50" description="Builds all jar files.">
   </target>
 
   <!--
@@ -410,65 +410,6 @@
       </fileset>
       <metainf dir="${core.output.dir}/resources/jbossws-jboss42.sar/META-INF">
         <include name="jboss-service.xml"/>
-      </metainf>
-      <metainf dir="${core.dir}/src/main/resources/standard-config">
-        <include name="standard-*-config.xml"/>
-      </metainf>
-    </jar>
-  </target>
-
-  <target name="jars-jboss40" depends="jars-common">
-
-    <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss40-resources.zip"/>
-
-    <!-- Concat jboss-beans.xml -->
-    <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
-      </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${core.output.dir}/resources/jbossws-jboss40-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt;
-      </footer>
-    </concat>
-
-    <!-- Concat jboss-beans-no-ejb3.xml -->
-    <concat destfile="${core.output.lib.dir}/jbossws-native40/jbossws.beans/META-INF/jboss-beans-no-ejb3.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
-      </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${core.output.dir}/resources/jbossws-jboss40-config-no-ejb3.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt;
-      </footer>
-    </concat>
-    
-    <!-- Build jbossws-native40.sar -->
-    <jar jarfile="${core.output.lib.dir}/jbossws-native40.sar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.lib.dir}">
-        <include name="jbossws-context.war/**"/>
-        <include name="jboss-jaxws.jar"/>
-        <include name="jboss-jaxws-ext.jar"/>
-        <include name="jbossws-core.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/thirdparty">
-        <include name="jaxb-api.jar"/>
-        <include name="jaxb-impl.jar"/>
-        <include name="policy.jar"/>
-        <include name="stax-api.jar"/>
-        <include name="wsdl4j.jar"/>
-        <include name="xmlsec.jar"/>
-        <include name="wstx.jar"/>
-        <include name="jboss-jaxb-intros.jar"/>
-      </fileset>
-      <fileset dir="${core.output.lib.dir}/jbossws-native40">
-        <include name="jbossws.beans/**"/>
-      </fileset>
-      <metainf dir="${core.output.dir}/resources/jbossws-jboss40.sar/META-INF">
-        <include name="jboss-service.xml"/>
-        <include name="jboss-service-no-ejb3.xml"/>
       </metainf>
       <metainf dir="${core.dir}/src/main/resources/standard-config">
         <include name="standard-*-config.xml"/>

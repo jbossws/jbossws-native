@@ -168,7 +168,6 @@
   <!-- dummy jar targets -->
 	<target name="jars-jboss50" depends="prepare"/>
 	<target name="jars-jboss42" depends="prepare"/>
-	<target name="jars-jboss40" depends="prepare"/>
   
 	<!-- ================================================================== -->
 	<!-- Miscellaneous                                                       -->
