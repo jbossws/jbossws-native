@@ -19,7 +19,7 @@
     <echo message="*"/>
     <echo message="* Almost there, please do these steps manually"/>
     <echo message="*"/>
-    <echo message="*  - Create SVN tag: jbossws-native-${version.id}"/>
+    <echo message="*  - Create SVN tag: jbossws-${version.id}"/>
     <echo message="*  - Release the jbossws-${version.id} version in JIRA"/>
     <echo message="*  - Update portal-content/project.xml"/>
     <echo message="*  - Update portal-content/counter.xml"/>
@@ -124,14 +124,14 @@
     <!-- Copy downloads -->
     <copy todir="${portal.downloads}" overwrite="true">
       <fileset dir="${core.dir}/output">
-        <include name="jbossws-native-src-${version.id}.zip"/>
-        <include name="jbossws-native-${version.id}.zip"/>
+        <include name="jbossws-${version.id}-src.zip"/>
+        <include name="jbossws-${version.id}.zip"/>
       </fileset>
     </copy>
     
     <!-- Copy Release Notes -->
-    <copy tofile="${portal.downloads}/ReleaseNotes-${version.id}.txt" file="${core.dir}/output/jbossws-native-${version.id}/docs/ReleaseNotes.txt" overwrite="true"/>
-    <copy tofile="${portal.downloads}/Install-${version.id}.txt" file="${core.dir}/output/jbossws-native-${version.id}/docs/Install.txt" overwrite="true"/>
+    <copy tofile="${portal.downloads}/ReleaseNotes-${version.id}.txt" file="${core.dir}/output/jbossws-${version.id}/docs/ReleaseNotes.txt" overwrite="true"/>
+    <copy tofile="${portal.downloads}/Install-${version.id}.txt" file="${core.dir}/output/jbossws-${version.id}/docs/Install.txt" overwrite="true"/>
   </target>
   
   <target name="check-portal-content" depends="prepare" unless="jbossws.portal.content.available">
@@ -147,9 +147,9 @@
   <!-- Build the src dist -->
   <target name="build-src-dist" description="Build the source distribution">
     <property name="build.src.dist" value="${core.dir}/output/src-dist"/>
-    <delete dir="${build.src.dist}/jbossws-native-src-${version.id}"/>
-    <mkdir dir="${build.src.dist}/jbossws-native-src-${version.id}"/>
-    <copy todir="${build.src.dist}/jbossws-native-src-${version.id}">
+    <delete dir="${build.src.dist}/jbossws-${version.id}-src"/>
+    <mkdir dir="${build.src.dist}/jbossws-${version.id}-src"/>
+    <copy todir="${build.src.dist}/jbossws-${version.id}-src">
       <fileset dir="${basedir}">
         <exclude name="**/*.md5"/>
         <exclude name="**/output*/**"/>
@@ -157,8 +157,8 @@
         <exclude name="mergeinfo.txt"/>
       </fileset>
     </copy>
-    <zip destfile="${core.dir}/output/jbossws-native-src-${version.id}.zip" basedir="${build.src.dist}"
-      includes="jbossws-native-src-${version.id}/**"/>
+    <zip destfile="${core.dir}/output/jbossws-${version.id}-src.zip" basedir="${build.src.dist}"
+      includes="jbossws-${version.id}-src/**"/>
   </target>
   
 </project>
