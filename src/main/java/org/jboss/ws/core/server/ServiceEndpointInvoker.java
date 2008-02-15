@@ -217,7 +217,16 @@ public class ServiceEndpointInvoker
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
                
-               invHandler.invoke(endpoint, inv);
+               try
+               {
+                  invHandler.invoke(endpoint, inv);
+               }
+               catch (InvocationTargetException th)
+               {
+                  //Unwrap the throwable raised by the service endpoint implementation
+                  Throwable targetEx = th.getTargetException();
+                  throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
+               }
 
                // Handler processing might have replaced the endpoint invocation
                sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
@@ -260,12 +269,8 @@ public class ServiceEndpointInvoker
             faultType[0] = null;
          }
       }
-      catch (InvocationTargetException invocationEx)
+      catch (Exception ex)
       {
-         //Unwrap the throwable raised by the service endpoint implementation
-         Throwable targetEx = invocationEx.getTargetException();
-         Exception ex = targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx);
-         
          // Reverse the message direction
          processPivotInternal(msgContext, direction);
 
