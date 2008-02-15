@@ -96,10 +96,7 @@
   </target>
   
   <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
-    <macro-undeploy-cxf501/>
-    <macro-undeploy-sunri501/>
     <macro-undeploy-native501/>
-    <macro-undeploy-endorsed jbosshome="${jboss501.home}"/>
     <macro-undeploy-framework jbosshome="${jboss501.home}"/>
   </target>
   
