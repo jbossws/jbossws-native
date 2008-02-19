@@ -32,9 +32,6 @@
       <compatible version="@ibm-wsdl4j@"/>
       <compatible version="@ibm-wsdl4j@-brew"/>
     </import>
-    <import componentref="jbpm/bpel">
-      <compatible version="@jbpm-bpel@"/>
-    </import>
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>
     </import>
