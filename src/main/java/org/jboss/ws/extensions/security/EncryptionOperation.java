@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.security;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.apache.xml.security.encryption.EncryptedData;
 import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.Reference;
 import org.jboss.ws.extensions.security.element.ReferenceList;
@@ -159,8 +161,8 @@ public class EncryptionOperation implements EncodingOperation
          for (Target target : targets)
             processTarget(cipher, message, target, list, secretKey);
       }
-
-      X509Certificate cert = store.getCertificate(alias);
+      
+      X509Certificate cert = getCertificate(alias);
       X509Token token = (X509Token) header.getSharedToken(cert);
 
       // Can we reuse an existing token?
@@ -173,6 +175,29 @@ public class EncryptionOperation implements EncodingOperation
 
       EncryptedKey eKey = new EncryptedKey(message, secretKey, token, list, wrap, tokenRefType);
       header.addSecurityProcess(eKey);
+   }
+   
+   @SuppressWarnings("unchecked")
+   private X509Certificate getCertificate(String alias) throws WSSecurityException
+   {
+      X509Certificate cert = null;
+      if (alias != null)
+      {
+         cert = store.getCertificate(alias);
+         if (cert == null)
+            throw new WSSecurityException("Cannot load certificate from keystore; alias = " + alias);
+      }
+      else
+      {
+         List<PublicKey> publicKeys = (List<PublicKey>)MessageContextAssociation.peekMessageContext().get(Constants.SIGNATURE_KEYS);
+         if (publicKeys != null && publicKeys.size() == 1)
+            cert = store.getCertificateByPublicKey(publicKeys.iterator().next());
+         if (cert == null)
+            throw new WSSecurityException("Cannot get the certificate for message encryption! Verify the keystore contents, " +
+            		"considering the certificate is obtained through the alias specified in the encrypt configuration element " +
+            		"or (server side only) through a single key used to sign the incoming message.");
+      }
+      return cert;
    }
    
    

@@ -71,4 +71,6 @@ public class Constants
    public static final String XENC_CONTENT_TYPE = EncryptionConstants.TYPE_CONTENT;
    
    public static final QName WSSE_HEADER_QNAME = new QName(WSSE_NS, "Security");
+   
+   public static final String SIGNATURE_KEYS = "org.jboss.ws.wsse.signaturePublicKeys";
 }

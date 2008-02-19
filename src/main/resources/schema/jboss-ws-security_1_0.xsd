@@ -165,7 +165,7 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
-    <xs:attribute name="alias" type="xs:string" use="required">
+    <xs:attribute name="alias" type="xs:string">
       <xs:annotation>
         <xs:documentation>The name of the certificate to use.</xs:documentation>
       </xs:annotation>
