@@ -32,7 +32,7 @@
  
  <service name='TestEndpointService'>
   <port binding='tns:TestEndpointBinding' name='TestEndpointPort'>
-   <soap:address location='http://@jboss.bind.address@:8080/jaxws-samples-webserviceref'/>
+   <soap:address location='http://@jboss.bind.address@:8080/jaxws-webserviceref'/>
   </port>
  </service>
  
