@@ -138,6 +138,7 @@
 			<pathelement location="${thirdparty.dir}/policy.jar"/>
 			<pathelement location="${thirdparty.dir}/jaxws-tools.jar"/>
 			<pathelement location="${thirdparty.dir}/wstx.jar"/>
+			<pathelement location="${basedir}/tools/lib/junit.jar"/>
 		</path>
 
 	</target>
