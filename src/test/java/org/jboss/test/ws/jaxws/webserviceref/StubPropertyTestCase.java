@@ -42,11 +42,11 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class StubPropertyTestCase extends JBossWSTest
 {
-   public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-samples-webserviceref-secure";
+   public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-webserviceref-secure";
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(StubPropertyTestCase.class, "jaxws-samples-webserviceref-secure.jar, jaxws-samples-webserviceref-secure-client.jar");
+      return new JBossWSTestSetup(StubPropertyTestCase.class, "jaxws-webserviceref-secure.jar, jaxws-webserviceref-secure-client.jar");
    }
 
    public void testWSDLAccess() throws Exception

@@ -33,7 +33,7 @@ import javax.jws.soap.SOAPBinding;
  * Generated source version: 2.0
  *
  */
-@WebService(name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "http://localhost.localdomain:8080/jaxws-samples-webserviceref?wsdl")
+@WebService(name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "http://localhost.localdomain:8080/jaxws-webserviceref?wsdl")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface TestEndpoint {
 

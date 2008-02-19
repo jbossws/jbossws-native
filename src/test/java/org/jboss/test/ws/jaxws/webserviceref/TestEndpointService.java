@@ -35,7 +35,7 @@ import java.net.URL;
  * Generated source version: 2.0
  *
  */
-@WebServiceClient(name = "TestEndpointService", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "file://bogus-location/jaxws-samples-webserviceref?wsdl")
+@WebServiceClient(name = "TestEndpointService", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "file://bogus-location/jaxws-webserviceref?wsdl")
 public class TestEndpointService
     extends Service
 {
@@ -47,7 +47,7 @@ public class TestEndpointService
     static {
         URL url = null;
         try {
-            url = new URL("file://bogus-location/jaxws-samples-webserviceref?wsdl");
+            url = new URL("file://bogus-location/jaxws-webserviceref?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

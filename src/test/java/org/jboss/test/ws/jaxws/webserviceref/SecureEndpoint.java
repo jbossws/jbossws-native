@@ -15,7 +15,7 @@ import javax.jws.soap.SOAPBinding.Style;
  * Generated source version: 2.0
  * 
  */
-@WebService(name = "SecureEndpoint", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "http://localhost.localdomain:8080/jaxws-samples-webserviceref-secure/SecureEndpoint?wsdl")
+@WebService(name = "SecureEndpoint", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "http://localhost.localdomain:8080/jaxws-webserviceref-secure/SecureEndpoint?wsdl")
 @SOAPBinding(style = Style.RPC)
 public interface SecureEndpoint {
 

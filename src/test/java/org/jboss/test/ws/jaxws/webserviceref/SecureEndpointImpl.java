@@ -36,7 +36,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @Stateless(name = "SecureEndpoint")
 @SOAPBinding(style = Style.RPC)
 
-@WebContext(contextRoot="/jaxws-samples-webserviceref-secure", urlPattern="/*", authMethod = "BASIC", transportGuarantee = "NONE", secureWSDLAccess = false)
+@WebContext(contextRoot="/jaxws-webserviceref-secure", urlPattern="/*", authMethod = "BASIC", transportGuarantee = "NONE", secureWSDLAccess = false)
 @SecurityDomain("JBossWS")
 @RolesAllowed("friend")
 public class SecureEndpointImpl

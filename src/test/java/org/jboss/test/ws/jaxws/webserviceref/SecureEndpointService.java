@@ -15,7 +15,7 @@ import javax.xml.ws.WebServiceClient;
  * Generated source version: 2.0
  * 
  */
-@WebServiceClient(name = "SecureEndpointService", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "http://localhost.localdomain:8080/jaxws-samples-webserviceref-secure/SecureEndpoint?wsdl")
+@WebServiceClient(name = "SecureEndpointService", targetNamespace = "http://org.jboss.ws/wsref", wsdlLocation = "http://localhost.localdomain:8080/jaxws-webserviceref-secure/SecureEndpoint?wsdl")
 public class SecureEndpointService
     extends Service
 {
@@ -27,7 +27,7 @@ public class SecureEndpointService
     static {
         URL url = null;
         try {
-            url = new URL("http://localhost.localdomain:8080/jaxws-samples-webserviceref-secure/SecureEndpoint?wsdl");
+            url = new URL("http://localhost.localdomain:8080/jaxws-webserviceref-secure/SecureEndpoint?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
