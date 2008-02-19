@@ -155,6 +155,7 @@
         <exclude name="**/output*/**"/>
         <exclude name="**/thirdparty/**"/>
         <exclude name="mergeinfo.txt"/>
+        <exclude name="ant.properties"/>
       </fileset>
     </copy>
     <zip destfile="${core.dir}/output/jbossws-${version.id}-src.zip" basedir="${build.src.dist}"
