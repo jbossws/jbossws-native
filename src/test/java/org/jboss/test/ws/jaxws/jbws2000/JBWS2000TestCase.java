@@ -60,7 +60,7 @@ public class JBWS2000TestCase extends JBossWSTest
    public void testFileTransfer() throws Exception
    {
       DataHandler dh = new DataHandler(
-        new GeneratorDataSource(1024*1204)
+        new GeneratorDataSource(1024*1204*150)
       );
 
       boolean success = port.transferFile("JBWS2000.data", dh);
