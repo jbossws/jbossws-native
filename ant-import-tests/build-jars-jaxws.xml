@@ -608,6 +608,15 @@
       </metainf>
     </jar>
   	
+    <!-- jaxws-jbws1872 -->
+    <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1872.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1872/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1872/*TestCase*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1872/ClientIface.class"/>
+      </fileset>
+    </jar>
+
   	<!-- jaxws-jbws1904 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1904.jar">
       <fileset dir="${tests.output.dir}/classes">
