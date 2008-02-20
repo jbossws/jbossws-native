@@ -232,6 +232,9 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
          if (handlerPass)
          {
             Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
+            if (callProps.containsKey(BindingProvider.ENDPOINT_ADDRESS_PROPERTY)) {
+               targetAddress = (String) callProps.get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
+            }
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
             resMsg = getRemotingConnection().invoke(reqMsg, epInfo, false);
 
