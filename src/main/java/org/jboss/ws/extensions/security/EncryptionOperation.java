@@ -37,7 +37,6 @@ import org.apache.xml.security.encryption.EncryptedData;
 import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.Reference;
 import org.jboss.ws.extensions.security.element.ReferenceList;
@@ -189,7 +188,7 @@ public class EncryptionOperation implements EncodingOperation
       }
       else
       {
-         List<PublicKey> publicKeys = (List<PublicKey>)MessageContextAssociation.peekMessageContext().get(Constants.SIGNATURE_KEYS);
+         List<PublicKey> publicKeys = SignatureKeysAssociation.getPublicKeys();
          if (publicKeys != null && publicKeys.size() == 1)
             cert = store.getCertificateByPublicKey(publicKeys.iterator().next());
          if (cert == null)

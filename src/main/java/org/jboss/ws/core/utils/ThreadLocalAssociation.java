@@ -23,6 +23,8 @@ package org.jboss.ws.core.utils;
 
 // $Id$
 
+import java.security.PublicKey;
+import java.util.List;
 import java.util.Stack;
 
 import org.jboss.ws.core.CommonMessageContext;
@@ -47,6 +49,11 @@ public class ThreadLocalAssociation
     * @see org.jboss.ws.extensions.security.STRTransform
     */
    private static ThreadLocal<SecurityStore> strTransformAssoc = new ThreadLocal<SecurityStore>();
+   
+   /**
+    * Public keys used to sign incoming message
+    */
+   private static ThreadLocal<List<PublicKey>> signatureKeysAssoc = new ThreadLocal<List<PublicKey>>();
 
    public static ThreadLocal<Stack<CommonMessageContext>> localMsgContextAssoc()
    {
@@ -57,10 +64,16 @@ public class ThreadLocalAssociation
    {
       return strTransformAssoc;
    }
+   
+   public static ThreadLocal<List<PublicKey>> localSignatureKeysAssoc()
+   {
+      return signatureKeysAssoc;
+   }
 
    public static void clear()
    {
       msgContextAssoc.remove();
       strTransformAssoc.remove();
+      signatureKeysAssoc.remove();
    }
 }
