@@ -548,10 +548,11 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          // TODO: figure out a way to assign message name instead of IN and OUT
          String tns = epMetaData.getPortName().getNamespaceURI();
          String portTypeName = epMetaData.getPortName().getLocalPart();
-         addrExt.setInboundAction(tns + "/" + portTypeName + "/IN");
+         String opName = opMetaData.getQName().getLocalPart();
+         addrExt.setInboundAction(tns + "/" + portTypeName  + "/" +  opName + "/IN");
 
          if (!opMetaData.isOneWay())
-            addrExt.setOutboundAction(tns + "/" + portTypeName + "/OUT");
+            addrExt.setOutboundAction(tns + "/" + portTypeName  + "/" +  opName + "/OUT");
       }
 
       opMetaData.addExtension(addrExt);
