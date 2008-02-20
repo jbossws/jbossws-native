@@ -457,7 +457,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       {
          for (Subscription s : subscriptions)
          {
-            pw.println("<tr><td>" + s.getIdentifier() + "</td><td>" + s.getExpires() + "</td><td>" + s.getFilter().getExpression() + "</td></tr>");
+            pw.println("<tr><td>" + s.getIdentifier() + "</td><td>" + s.getExpires() + "</td><td>" + (s.getFilter()!=null ? s.getFilter().getExpression() : "") + "</td></tr>");
          }
       }
       pw.println("</table>");
