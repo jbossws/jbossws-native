@@ -33,6 +33,17 @@
       <url-pattern>/manage</url-pattern>
    </servlet-mapping>
 
+   <servlet>
+      <servlet-name>inVM</servlet-name>
+      <servlet-class>org.jboss.test.ws.jaxws.wseventing.InVMServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>inVM</servlet-name>
+      <url-pattern>/inVM</url-pattern>
+   </servlet-mapping>
+
+
    <session-config>
       <session-timeout>54</session-timeout>
    </session-config>

@@ -80,8 +80,7 @@ public class EventingSupport extends JBossWSTest
       "    <Lat>2746</Lat>\n" +
       "    <Long>8270</Long>\n" +
       "    <Comments xml:lang='en-US' >\n" +
-      "        WINDS 55 WITH GUSTS TO 65. ROOF TORN OFF BOAT HOUSE. REPORTED\n" +
-      "        BY STORM SPOTTER. (TBW)\n" +
+      "        Should be a REMOTE notification\n" +
       "    </Comments>\n" +
       "</WindReport>";
 

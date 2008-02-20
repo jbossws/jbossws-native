@@ -34,6 +34,13 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 /**
  * Test the notification delivery.
  *
@@ -64,6 +71,29 @@ public class NotificationTestCase extends EventingSupport
       {         
          throw e;
       }
+   }
+
+   public void testInVMNotification() throws Exception
+   {
+      URL u = new URL ( "http://localhost:8080/jaxws-wseventing/inVM" );
+      HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+      huc.setRequestMethod("GET");
+      huc.connect();
+
+      StringBuffer sb = new StringBuffer();
+
+      int code = huc.getResponseCode();
+      if  (code>=200 &&  code<300 )
+      {
+         InputStream in = huc.getInputStream();
+         BufferedReader input = new BufferedReader(new InputStreamReader(in));
+         String line = "";
+         while ((line = input.readLine()) != null)
+            sb.append(line);
+      }
+
+      assertEquals(sb.toString(), "Notification successful");
+      huc.disconnect();
    }
 
 }
