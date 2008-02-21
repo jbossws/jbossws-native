@@ -659,6 +659,16 @@
         <include name="org/jboss/test/ws/jaxws/holder/HolderServiceImpl.class"/>
       </classes>
     </war>
+  	
+  	<!-- jaxws-samples-webfault -->
+    <war warfile="${tests.output.dir}/libs/jaxws-webfault.war" webxml="${tests.output.dir}/resources/jaxws/webfault/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/webfault/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/webfault/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/webfault/CustomException.class"/>
+        <include name="org/jboss/test/ws/jaxws/webfault/SimpleException.class"/>
+      </classes>
+    </war>
     
     <!-- jaxws-wsdd -->
     <war warfile="${tests.output.dir}/libs/jaxws-wsdd.war" webxml="${tests.output.dir}/resources/jaxws/wsdd/WEB-INF/web.xml">
