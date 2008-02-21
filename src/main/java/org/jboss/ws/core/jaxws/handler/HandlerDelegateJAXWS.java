@@ -31,12 +31,16 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.PortInfo;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -92,7 +96,13 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       log.debug("callResponseHandlerChain: " + type);
       HandlerChainExecutor executor =  getExecutor(type);
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      return (executor != null ? executor.handleMessage(msgContext) : true);
+      boolean status = (executor != null ? executor.handleMessage(msgContext) : true);
+
+      MessageAbstraction msg = ((CommonMessageContext)msgContext).getMessageAbstraction();
+      if (type == HandlerType.ENDPOINT && (msg instanceof SOAPMessage))
+         XOPContext.visitAndRestoreXOPData();
+      
+      return status;
    }
 
    public void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
@@ -112,7 +122,13 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       log.debug("callFaultHandlerChain: " + type);
       HandlerChainExecutor executor =  getExecutor(type);
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
-      return (executor != null ? executor.handleFault(msgContext, ex) : true);
+      boolean status = (executor != null ? executor.handleFault(msgContext, ex) : true);
+
+      MessageAbstraction msg = ((CommonMessageContext)msgContext).getMessageAbstraction();
+      if (type == HandlerType.ENDPOINT && (msg instanceof SOAPMessage))
+         XOPContext.visitAndRestoreXOPData();
+                  
+      return status;
    }
 
    private List<Handler> getHandlerChain(EndpointMetaData epMetaData, HandlerType type)
