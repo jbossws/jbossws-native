@@ -16,7 +16,7 @@
   <!-- Building                                                           -->
   <!-- ================================================================== -->
   
-  <target name="build-interop-jars">
+  <target name="build-jars-interop">
     
     <mkdir dir="${tests.output.dir}/libs"/>
     
