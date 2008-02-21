@@ -114,7 +114,7 @@ public class WSSecurityDispatcher
 
       SOAPHeader soapHeader = soapMessage.getSOAPHeader();
       QName secQName = new QName(Constants.WSSE_NS, "Security");
-      Element secHeaderElement = Util.findElement(soapHeader, secQName);
+      Element secHeaderElement = (soapHeader != null) ? Util.findElement(soapHeader, secQName) : null; 
 
       if (secHeaderElement == null)
       {
