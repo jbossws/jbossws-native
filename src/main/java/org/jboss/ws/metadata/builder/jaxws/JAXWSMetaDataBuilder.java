@@ -545,7 +545,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       else
       // default action values
       {
-         // TODO: figure out a way to assign message name instead of IN and OUT
          String tns = epMetaData.getPortName().getNamespaceURI();
          String portTypeName = epMetaData.getPortName().getLocalPart();
          String opName = opMetaData.getQName().getLocalPart();
