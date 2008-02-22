@@ -165,7 +165,7 @@ public class ReflectiveAttachmentRefScanner {
                }
                else if(XmlMimeType.class == annotation.annotationType())
                {
-                  XmlMimeType mimeTypeDecl = method.getAnnotation(XmlMimeType.class);
+                  XmlMimeType mimeTypeDecl = ((XmlMimeType)annotation);
                   paramResult = new AttachmentScanResult(mimeTypeDecl.value(), AttachmentScanResult.Type.XOP);
                }
 

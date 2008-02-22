@@ -53,6 +53,7 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.config.EndpointProperty;
+import org.jboss.ws.metadata.config.CommonConfig;
 
 /**
  * SOAPConnection implementation.
@@ -308,10 +309,10 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          // May be overridden through endpoint config
          if (msgContext != null)
          {
-            Properties epmdProps = msgContext.getEndpointMetaData().getProperties();
+            CommonConfig config = msgContext.getEndpointMetaData().getConfig();
 
             // chunksize settings
-            String chunkSizeValue = epmdProps.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
+            String chunkSizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
             int chunkSize = chunkSizeValue != null ? Integer.valueOf(chunkSizeValue) : -1;
             if (chunkSize > 0)
             {
