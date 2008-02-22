@@ -107,6 +107,9 @@ public interface Constants
     /** WS-Addressing namespace uri **/
    static final String URI_WS_ADDRESSING = "http://www.w3.org/2005/08/addressing";
 
+   /** JAX-WS binding customizations namespace uri **/
+   static final String URI_JAXWS_WSDL_CUSTOMIZATIONS = "http://java.sun.com/xml/ns/jaxws";
+   
    /**Style of WSDL */
    static final String RPC_LITERAL = "RPC/Literal";
    static final String DOCUMENT_LITERAL = "Document/Literal";
@@ -304,6 +307,10 @@ public interface Constants
    
    static final QName WSDL_ATTRIBUTE_WSP_POLICYURIS = new QName(URI_WS_POLICY, "PolicyURIs");
    static final QName WSDL_ELEMENT_WSP_POLICYREFERENCE = new QName(URI_WS_POLICY, "PolicyReference");
+   static final QName WSDL_ELEMENT_JAXWS_BINDINGS = new QName(URI_JAXWS_WSDL_CUSTOMIZATIONS, "bindings");
+   static final QName WSDL_ELEMENT_JAXWS_CLASS = new QName(URI_JAXWS_WSDL_CUSTOMIZATIONS, "class");
+   static final QName WSDL_ELEMENT_JAXWS_METHOD = new QName(URI_JAXWS_WSDL_CUSTOMIZATIONS, "method");
+   static final QName WSDL_ELEMENT_JAXWS_JAVADOC = new QName(URI_JAXWS_WSDL_CUSTOMIZATIONS, "javadoc");
 
    /** WSDL-2.0 exchange patterns */
    static final String WSDL20_PATTERN_IN_ONLY = "http://www.w3.org/2004/08/wsdl/in-only";

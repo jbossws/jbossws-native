@@ -112,6 +112,22 @@ public abstract class WSDLGenerator
 
       if (endpoint.getDocumentation() != null)
       {
+         String prefix = wsdl.getPrefix(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS);
+         if (prefix == null)
+         {
+            prefix = "jaxws";
+            wsdl.registerNamespaceURI(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, prefix);
+         }
+         
+         Element javadocElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_JAVADOC.getLocalPart(), prefix);
+         javadocElement.setTextContent(endpoint.getDocumentation());
+         Element classElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_CLASS.getLocalPart(), prefix);
+         classElement.setAttribute("name", interfaceQName.getLocalPart());
+         classElement.appendChild(javadocElement);
+         Element bindingsElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_BINDINGS.getLocalPart(), prefix);
+         bindingsElement.appendChild(classElement);
+         WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, bindingsElement);
+         wsdlInterface.addExtensibilityElement(ext);
          wsdlInterface.setDocumentationElement(new WSDLDocumentation(endpoint.getDocumentation()));
       }
       
@@ -233,6 +249,22 @@ public abstract class WSDLGenerator
       // process optional documentation
       if (operation.getDocumentation() != null)
       {
+         String prefix = wsdl.getPrefix(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS);
+         if (prefix == null)
+         {
+            prefix = "jaxws";
+            wsdl.registerNamespaceURI(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, prefix);
+         }
+         
+         Element javadocElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_JAVADOC.getLocalPart(), prefix);
+         javadocElement.setTextContent(operation.getDocumentation());
+         Element methodElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_METHOD.getLocalPart(), prefix);
+         methodElement.setAttribute("name", operation.getQName().getLocalPart());
+         methodElement.appendChild(javadocElement);
+         Element bindingsElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_BINDINGS.getLocalPart(), prefix);
+         bindingsElement.appendChild(methodElement);
+         WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, bindingsElement);
+         interfaceOperation.addExtensibilityElement(ext);
          interfaceOperation.setDocumentationElement(new WSDLDocumentation(operation.getDocumentation()));
       }
       

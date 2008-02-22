@@ -179,6 +179,7 @@ public class WSDL11Writer extends WSDLWriter
       for (WSDLExtensibilityElement ext : extendable.getAllExtensibilityElements())
       {
          appendPolicyElements(builder, ext);
+         appendJAXWSCustomizationElements(builder, ext);
          //add processing of further extensibility element types below
       }
    }
@@ -187,6 +188,14 @@ public class WSDL11Writer extends WSDLWriter
    {
       if (Constants.WSDL_ELEMENT_POLICY.equalsIgnoreCase(extElem.getUri()) ||
             Constants.WSDL_ELEMENT_POLICYREFERENCE.equalsIgnoreCase(extElem.getUri()))
+      {
+         appendElementSkippingKnownNs(builder, extElem.getElement());
+      }
+   }
+   
+   private void appendJAXWSCustomizationElements(StringBuilder builder, WSDLExtensibilityElement extElem)
+   {
+      if (Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS.equalsIgnoreCase(extElem.getUri()))
       {
          appendElementSkippingKnownNs(builder, extElem.getElement());
       }
@@ -388,6 +397,7 @@ public class WSDL11Writer extends WSDLWriter
          }
          buffer.append(">");
          appendDocumentation(buffer, intf.getDocumentationElement());
+         appendUnknownExtensibilityElements(buffer, intf);
          appendPortOperations(buffer, intf);
          buffer.append("</portType>");
       }
