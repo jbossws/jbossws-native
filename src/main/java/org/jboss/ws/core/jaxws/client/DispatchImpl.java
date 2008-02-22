@@ -243,6 +243,10 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
             resMsg = getRemotingConnection().invoke(reqMsg, epInfo, false);
 
+            //Pivot, switch to response ctx and save the response message there
+            msgContext = MessageContextJAXWS.processPivot(msgContext);
+            msgContext.setMessageAbstraction(resMsg);
+            
             // Call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
             handlerPass = callResponseHandlerChain(portName, handlerType[2]);
             faultType[2] = null;
@@ -259,6 +263,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
       }
       catch (Exception ex)
       {
+         msgContext = MessageContextJAXWS.processPivot(msgContext);
          if (faultType[2] != null)
             callFaultHandlerChain(portName, faultType[2], ex);
          if (faultType[1] != null)
