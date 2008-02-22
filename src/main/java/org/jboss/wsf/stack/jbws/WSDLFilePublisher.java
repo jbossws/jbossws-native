@@ -235,6 +235,10 @@ public class WSDLFilePublisher
                   resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("/") + 1);
 
                   resourcePath = expLocation + resourcePath + schemaLocation;
+                  while (resourcePath.indexOf("//") != -1)
+                  {
+                     resourcePath = resourcePath.replace("//", "/");
+                  }
                   URL resourceURL = dep.getMetaDataFileURL(resourcePath);
                   InputStream is = new ResourceURL(resourceURL).openStream();
                   if (is == null)
