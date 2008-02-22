@@ -21,10 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.jbws1850;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -37,10 +34,8 @@ import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.w3c.dom.Element;
 
 /**
  * Test wsdl documentation
