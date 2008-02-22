@@ -319,9 +319,6 @@ public class WSDLFilePublisher
       File locationFile = null;
       if (predefinedLocation == false)
       {
-         System.out.println("serverConfig -> "+ serverConfig);
-         System.out.println("serverConfig.getServerDataDir() -> "+ serverConfig.getServerDataDir());
-         System.out.println("serverConfig.getServerDataDir().getCanonicalPath() -> "+ serverConfig.getServerDataDir().getCanonicalPath());
          locationFile = new File(serverConfig.getServerDataDir().getCanonicalPath() + "/wsdl/" + archiveName);
       }
       else
