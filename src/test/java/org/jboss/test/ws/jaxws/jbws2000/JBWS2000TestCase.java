@@ -25,6 +25,8 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.soap.SOAPBinding;
 import javax.activation.DataHandler;
 
 import junit.framework.Test;
@@ -54,14 +56,16 @@ public class JBWS2000TestCase extends JBossWSTest
          QName serviceName = new QName("http://service.mtom.test.net/", "FileTransferServiceImplService");         
          Service service = Service.create(wsdlURL, serviceName);
          port = service.getPort(FileTransferService.class);
+
+         SOAPBinding binding = (SOAPBinding)((BindingProvider)port).getBinding();
+         binding.setMTOMEnabled(true);
       }
    }
 
    public void testFileTransfer() throws Exception
    {
-      DataHandler dh = new DataHandler(
-        new GeneratorDataSource(1024*1204*150)
-      );
+      GeneratorDataSource source = new GeneratorDataSource(1024 * 1204 * 150);
+      DataHandler dh = new DataHandler(source);
 
       boolean success = port.transferFile("JBWS2000.data", dh);
       assertTrue("Failed to transfer file", success);

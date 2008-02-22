@@ -29,8 +29,9 @@ import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 
 import javax.xml.bind.annotation.XmlMimeType;
-import java.awt.*;
+import java.awt.Image;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Test the ReflectiveXOPScanner.
@@ -71,20 +72,20 @@ public class MimeDeclarationTestCase extends TestCase {
    public void testAnnotatedParameter() throws Exception
    {
 
-      if(true)
+      /*if(true)
       {
          System.out.println("FIXME [JBWS-1460] @XmlMimeType on SEI parameter declarations");
          return;
-      }
+      }*/
 
       Method m = AnnotatedSEI.class.getMethod("foo", new Class[] {byte[].class});
       assertNotNull(m);
 
       System.out.println(m.getParameterAnnotations().length);
 
-      AttachmentScanResult  mimeType = SCANNER.scanBean( m.getParameterTypes()[0]);
-      assertNotNull("Unable to find xop declaration", mimeType);
-      assertEquals("text/xml", mimeType.getMimeType());
+      List<AttachmentScanResult> mimeTypes = ReflectiveAttachmentRefScanner.scanMethod( m );
+      assertNotNull("Unable to find xop declaration", mimeTypes.isEmpty());
+      assertEquals("text/xml", mimeTypes.get(0).getMimeType());
    }
 
    public void testSimpleRecursion() throws Exception
