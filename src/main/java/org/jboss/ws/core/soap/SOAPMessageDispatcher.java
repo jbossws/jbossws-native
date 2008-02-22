@@ -93,6 +93,7 @@ public class SOAPMessageDispatcher
             if (childNode instanceof SOAPBodyElement)
             {
                soapBodyElement = (SOAPBodyElement)childNode;
+               soapBodyElement.getValue(); //force transition to DOM-Valid model
             }
          }
 

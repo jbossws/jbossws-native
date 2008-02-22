@@ -74,11 +74,13 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+
 
 /**
  * The Dispatch interface provides support for the dynamic invocation of a service endpoint operations. 
@@ -211,6 +213,9 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
       msgContext.setEndpointMetaData(epMetaData);
       msgContext.setSOAPMessage(reqMsg);
       msgContext.putAll(reqContext);
+      // Try to find out the operation metadata corresponding to the message we're sending
+      msgContext.setOperationMetaData(getOperationMetaData(epMetaData,reqMsg));
+      
 
       // The contents of the request context are used to initialize the message context (see section 9.4.1)
       // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
@@ -605,5 +610,22 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
       HandlerChainExecutor executor = executorMap.get(type);
       if (executor != null)
          executor.close(msgContext);
+   }
+   
+   private OperationMetaData getOperationMetaData(EndpointMetaData epMetaData, MessageAbstraction reqMessage) throws SOAPException
+   {
+      OperationMetaData opMetaData = null;
+      if (HTTPBinding.HTTP_BINDING.equals(epMetaData.getBindingId()) && epMetaData.getOperations().size() == 1)
+      {
+         opMetaData = epMetaData.getOperations().get(0);
+      }
+      else if (reqMessage instanceof SOAPMessageImpl)
+      {
+         SOAPMessageImpl soapMessage = (SOAPMessageImpl)reqMessage;
+         opMetaData = soapMessage.getOperationMetaData(epMetaData);
+      }
+      if (opMetaData == null)
+         log.debug("Cannot find the right operation metadata!");
+      return opMetaData;
    }
 }
