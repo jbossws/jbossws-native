@@ -75,7 +75,7 @@ public class NotificationTestCase extends EventingSupport
 
    public void testInVMNotification() throws Exception
    {
-      URL u = new URL ( "http://localhost:8080/jaxws-wseventing/inVM" );
+      URL u = new URL ( "http://"+getServerHost()+":8080/jaxws-wseventing/inVM" );
       HttpURLConnection huc = (HttpURLConnection) u.openConnection();
       huc.setRequestMethod("GET");
       huc.connect();
