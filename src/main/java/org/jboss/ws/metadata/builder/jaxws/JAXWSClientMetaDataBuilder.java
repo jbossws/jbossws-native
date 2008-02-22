@@ -88,7 +88,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions);
 
          //Setup policies for each endpoint
-         //Policy processing disable in order to attend the WSCF Interoperability plug-fest (that requires WS-Security Policy and we don't have it yet)
          for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
          {
             PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getClientSidePolicyMetaDataBuilder();
