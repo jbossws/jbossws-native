@@ -303,6 +303,9 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       if (null == eventSource)
          throw new SubscriptionError(EventingConstants.CODE_UNABLE_TO_PROCESS, "EventSource '" + eventSourceNS + "' not registered");
 
+      if (eventSource.getState() != EventSource.State.STARTED)
+         throw new SubscriptionError(EventingConstants.CODE_UNABLE_TO_PROCESS, "EventSource '" + eventSourceNS + "' not started");
+
       // expiry constraints
       if (expires != null)
       {
