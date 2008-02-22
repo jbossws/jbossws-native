@@ -83,7 +83,38 @@
       <equals arg1="${jbossws.integration.target}" arg2="jboss501"/>
     </or>
   </condition>
-  
+
+   <!-- switch jbossxb dependening on container -->
+   <condition property="container-dependent.jbossxb.version" value="${jboss-jbossxb-jboss42}">
+      <or>
+         <equals arg1="${jbossws.integration.target}" arg2="jboss421"/>
+         <equals arg1="${jbossws.integration.target}" arg2="jboss422"/>
+         <equals arg1="${jbossws.integration.target}" arg2="jboss423"/>
+      </or>
+   </condition>
+   <condition property="container-dependent.jbossxb.version" value="${jboss-jbossxb-jboss50}">
+      <or>
+         <equals arg1="${jbossws.integration.target}" arg2="jboss500"/>
+         <equals arg1="${jbossws.integration.target}" arg2="jboss501"/>
+      </or>
+   </condition>
+
+   <!-- switch remoting dependening on container -->
+      <condition property="container-dependent.remoting.version" value="${jboss-remoting-jboss42}">
+         <or>
+            <equals arg1="${jbossws.integration.target}" arg2="jboss421"/>
+            <equals arg1="${jbossws.integration.target}" arg2="jboss422"/>
+            <equals arg1="${jbossws.integration.target}" arg2="jboss423"/>
+         </or>
+      </condition>
+      <condition property="container-dependent.remoting.version" value="${jboss-remoting-jboss50}">
+         <or>
+            <equals arg1="${jbossws.integration.target}" arg2="jboss500"/>
+            <equals arg1="${jbossws.integration.target}" arg2="jboss501"/>
+         </or>
+      </condition>
+
+
   <available property="jbossws.portal.content.available" file="${jbossws.portal.content}" type="dir"/>
   
   <!-- JDK Detection -->
