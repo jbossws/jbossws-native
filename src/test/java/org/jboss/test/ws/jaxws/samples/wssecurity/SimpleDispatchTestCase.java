@@ -49,21 +49,23 @@ import org.w3c.dom.Element;
  * http://jira.jboss.org/jira/browse/JBWS-1817
  *
  * @author Thomas.Diesler@jboss.com
+ * @author alessio.soldano@jboss.com
  * @since 02-Oct-2007
  */
 public class SimpleDispatchTestCase extends JBossWSTest
 {
-   private static Dispatch dispatch;
+   private static Dispatch usernameDispatch;
+   private static Dispatch encryptDispatch;
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SimpleDispatchTestCase.class, "jaxws-samples-wssecurity-username.war");
+      return new JBossWSTestSetup(SimpleDispatchTestCase.class, "jaxws-samples-wssecurity-username.war jaxws-samples-wssecurity-encrypt.war");
    }
 
    @Override
    protected void setUp() throws Exception
    {
-      if (dispatch == null)
+      if (usernameDispatch == null)
       {
          URL wsdlURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl").toURL();
          URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml").toURL();
@@ -71,10 +73,26 @@ public class SimpleDispatchTestCase extends JBossWSTest
          QName portName = new QName("http://org.jboss.ws/samples/wssecurity", "UsernameEndpointPort");
 
          Service service = Service.create(wsdlURL, serviceName);
-         dispatch = service.createDispatch(portName, Source.class, Mode.PAYLOAD);
+         usernameDispatch = service.createDispatch(portName, Source.class, Mode.PAYLOAD);
 
-         ((ConfigProvider)dispatch).setSecurityConfig(securityURL.toExternalForm());
-         ((ConfigProvider)dispatch).setConfigName("Standard WSSecurity Client");
+         ((ConfigProvider)usernameDispatch).setSecurityConfig(securityURL.toExternalForm());
+         ((ConfigProvider)usernameDispatch).setConfigName("Standard WSSecurity Client");
+      }
+      if (encryptDispatch == null)
+      {
+         URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurity/HelloService.wsdl").toURL();
+         URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-encrypt/META-INF/jboss-wsse-client.xml").toURL();
+         QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
+         QName portName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloPort");
+
+         Service service = Service.create(wsdlURL, serviceName);
+         encryptDispatch = service.createDispatch(portName, Source.class, Mode.PAYLOAD);
+
+         ((ConfigProvider)encryptDispatch).setSecurityConfig(securityURL.toExternalForm());
+         ((ConfigProvider)encryptDispatch).setConfigName("Standard WSSecurity Client");
+         
+         encryptDispatch.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+               "http://" + getServerHost() + ":8080/jaxws-samples-wssecurity-encrypt");
       }
    }
 
@@ -83,7 +101,7 @@ public class SimpleDispatchTestCase extends JBossWSTest
       try
       {
          String payload = "<ns1:getUsernameToken xmlns:ns1='http://org.jboss.ws/samples/wssecurity'/>";
-         dispatch.invoke(new StreamSource(new StringReader(payload)));
+         usernameDispatch.invoke(new StreamSource(new StringReader(payload)));
          fail("Server should respond with [401] - Unauthorized");
       }
       catch (Exception ex)
@@ -94,16 +112,27 @@ public class SimpleDispatchTestCase extends JBossWSTest
 
    public void testUsernameToken() throws Exception
    {
-      Map<String, Object> reqContext = dispatch.getRequestContext();
+      Map<String, Object> reqContext = usernameDispatch.getRequestContext();
       reqContext.put(BindingProvider.USERNAME_PROPERTY, "kermit");
       reqContext.put(BindingProvider.PASSWORD_PROPERTY, "thefrog");
 
       String payload = "<ns1:getUsernameToken xmlns:ns1='http://org.jboss.ws/samples/wssecurity'/>";
-      Source retObj = (Source)dispatch.invoke(new StreamSource(new StringReader(payload)));
+      Source retObj = (Source)usernameDispatch.invoke(new StreamSource(new StringReader(payload)));
       
       Element docElement = DOMUtils.sourceToElement(retObj);
       Element retElement = DOMUtils.getFirstChildElement(docElement);
       String retPayload = DOMWriter.printNode(retElement, false);
       assertEquals("<return>kermit</return>", retPayload);
+   }
+   
+   public void testEncrypt() throws Exception
+   {
+      String payload = "<ns1:echoUserType xmlns:ns1='http://org.jboss.ws/samples/wssecurity'><user><msg>Kermit</msg></user></ns1:echoUserType>";
+      Source retObj = (Source)encryptDispatch.invoke(new StreamSource(new StringReader(payload)));
+      
+      Element docElement = DOMUtils.sourceToElement(retObj);
+      Element retElement = DOMUtils.getFirstChildElement(docElement);
+      String retPayload = DOMWriter.printNode(retElement, false);
+      assertEquals("<return><msg>Kermit</msg></return>", retPayload);
    }
 }
