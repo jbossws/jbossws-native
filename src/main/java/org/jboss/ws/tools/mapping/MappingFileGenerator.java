@@ -212,7 +212,7 @@ public class MappingFileGenerator
          throws IOException
    {
       WSDLUtils utils = WSDLUtils.getInstance();
-      XSDTypeToJava xst = new XSDTypeToJava();
+      XSDTypeToJava xst = new XSDTypeToJava(namespacePackageMap);
       xst.setTypeMapping(this.typeMapping);
       xst.setPackageName(getPackageName(typeNamespace));
       ServiceEndpointMethodMapping[] mapArr = seim.getServiceEndpointMethodMappings();

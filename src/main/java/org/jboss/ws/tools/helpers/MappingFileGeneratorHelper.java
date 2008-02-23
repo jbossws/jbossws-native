@@ -947,7 +947,7 @@ public class MappingFileGeneratorHelper
       String targetNS = wsdlDefinitions.getTargetNamespace();
       MethodParamPartsMapping mppm = new MethodParamPartsMapping(semm);
       mppm.setParamPosition(paramPosition);
-      String javaType = getJavaTypeAsString(xmlName, xmlType, targetNS, array, primitive);
+      String javaType = getJavaTypeAsString(xmlName, xmlType, xmlType.getNamespaceURI(), array, primitive);
       mppm.setParamType(javaType);
 
       //WSDL Message Mapping

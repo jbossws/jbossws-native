@@ -55,7 +55,7 @@ public class XSDToJava implements XSDToJavaIntf
    /**
     * Utility class that converts a XSD Type into a Java class
     */
-   protected XSDTypeToJava xsdJava = new XSDTypeToJava();
+   protected XSDTypeToJava xsdJava = new XSDTypeToJava(null);
    
    private LiteralTypeMapping typeMapping = null;
 
@@ -69,9 +69,7 @@ public class XSDToJava implements XSDToJavaIntf
    {
       XSLoader xsloader = SchemaUtils.getInstance().getXSLoader();
       XSModel xsmodel = xsloader.loadURI(schemaFile);
-
-      if (createPackageDir) dirloc = utils.createPackage(dirloc.getAbsolutePath(), packageName);
-      generateJavaSource(xsmodel, dirloc, packageName);
+      generateJavaSource(xsmodel, dirloc, packageName, createPackageDir);
    }
 
 
@@ -82,7 +80,10 @@ public class XSDToJava implements XSDToJavaIntf
                            boolean createPackageDir)
       throws IOException
    {
-      if (createPackageDir) dirloc = utils.createPackage(dirloc.getAbsolutePath(), packageName);
+      if (createPackageDir)
+      {
+         utils.createPackage(dirloc.getAbsolutePath(), packageName);
+      }
       generateJavaSource(xsmodel, dirloc, packageName);
    }
 
@@ -106,7 +107,7 @@ public class XSDToJava implements XSDToJavaIntf
             String tname = type.getName();
             if (Constants.NS_SCHEMA_XSD.equals(nsuri) && "anyType".equals(tname)) continue;
             checkXSDTypeToJava();
-            xsdJava.createJavaFile(ctype, dirloc, packageName, xsmodel);
+            xsdJava.createJavaFile(ctype, dirloc.getPath(), packageName, xsmodel);
          }
          else if (type instanceof XSSimpleTypeDefinition)
          {
@@ -116,7 +117,7 @@ public class XSDToJava implements XSDToJavaIntf
             String tname = type.getName();
             if (Constants.NS_SCHEMA_XSD.equals(nsuri) && "anyType".equals(tname)) continue;
             checkXSDTypeToJava();
-            xsdJava.createJavaFile(stype, dirloc, packageName, xsmodel);
+            xsdJava.createJavaFile(stype, dirloc.getPath(), packageName, xsmodel);
          }
       }
 
@@ -158,13 +159,13 @@ public class XSDToJava implements XSDToJavaIntf
       if (type.getName() != null)
          throw new IllegalArgumentException(str);
       checkXSDTypeToJava();
-      xsdJava.createJavaFile(type,outerElementName, loc,pkgname,schema, false);
+      xsdJava.createJavaFile(type,outerElementName,loc.getPath(),pkgname,schema, false);
    }
    
    private void checkXSDTypeToJava()
    {
       if(xsdJava == null)
-         xsdJava = new XSDTypeToJava();
+         xsdJava = new XSDTypeToJava(null);
       xsdJava.setTypeMapping(typeMapping); 
    }
 }
