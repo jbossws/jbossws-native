@@ -46,7 +46,8 @@ public class JBWS1217TestCase extends JBossWSTest
 
       compareSource(resourceDir + "/MySEIService.java", toolsDir + "/org/jboss/test/ws/jbws1217/MySEIService.java");
       compareSource(resourceDir + "/MySEI.java", toolsDir + "/org/jboss/test/ws/jbws1217/MySEI.java");
-      compareSource(resourceDir + "/TestException.java", toolsDir + "/com/other/TestException.java");
+      compareSource(resourceDir + "/TestException.java", toolsDir + "/com/other/exception/TestException.java");
+      compareSource(resourceDir + "/BaseException.java", toolsDir + "/com/other/base/BaseException.java");
 
       JaxrpcMappingValidator mappingValidator = new JaxrpcMappingValidator();
       mappingValidator.validate(resourceDir + "/jaxrpc-mapping.xml", toolsDir + "/jaxrpc-mapping.xml");

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <definitions name='MySEIService' targetNamespace='http://org.jboss.test.ws/jbws1217' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:ns1='http://other.com' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://org.jboss.test.ws/jbws1217' xmlns:xsd='http://www.w3.org/2001/XMLSchema'> 
  <types> 
-  <schema targetNamespace='http://other.com' xmlns='http://www.w3.org/2001/XMLSchema' xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:tns='http://other.com' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'> 
-   <complexType name='TestException'> 
-    <sequence/> 
+  <schema targetNamespace='http://other.com' xmlns='http://www.w3.org/2001/XMLSchema' xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:tns='http://other.com' xmlns:ns1='http://other.com.base' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'> 
+  <import namespace='http://other.com.base'/>
+   <complexType name='TestException'>
+    <complexContent>
+     <extension base="ns1:BaseException">
+      <sequence/> 
+     </extension>
+    </complexContent>
    </complexType> 
    <element name='TestException' type='tns:TestException'/> 
+  </schema>
+  <schema targetNamespace='http://other.com.base' xmlns='http://www.w3.org/2001/XMLSchema' xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:tns='http://other.com.base' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'> 
+   <complexType name='BaseException'>
+    <sequence/>
+   </complexType>
+   <element name="BaseException" type="tns:BaseException"/>
   </schema> 
  </types> 
  <message name='MySEI_testException'/> 

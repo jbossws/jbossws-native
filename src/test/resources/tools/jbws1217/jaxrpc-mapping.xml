@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?><java-wsdl-mapping version='1.1' xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd'>
  <package-mapping>
-  <package-type>com.other</package-type>
+  <package-type>com.other.exception</package-type>
   <namespaceURI>http://other.com</namespaceURI>
  </package-mapping>
  <package-mapping>
@@ -8,12 +8,12 @@
   <namespaceURI>http://org.jboss.test.ws/jbws1217</namespaceURI>
  </package-mapping>
  <java-xml-type-mapping>
-  <java-type>com.other.TestException</java-type>
+  <java-type>com.other.exception.TestException</java-type>
   <root-type-qname xmlns:typeNS='http://other.com'>typeNS:TestException</root-type-qname>
   <qname-scope>complexType</qname-scope>
  </java-xml-type-mapping>
  <exception-mapping>
-  <exception-type>com.other.TestException</exception-type>
+  <exception-type>com.other.exception.TestException</exception-type>
   <wsdl-message xmlns:exMsgNS='http://org.jboss.test.ws/jbws1217'>exMsgNS:TestException</wsdl-message>
  </exception-mapping>
  <service-interface-mapping>
