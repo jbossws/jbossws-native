@@ -328,7 +328,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             throw new WSException("Interface does not have a @WebService annotation: " + seiName);
 
          if (seiAnnotation.portName().length() > 0 || seiAnnotation.serviceName().length() > 0 || seiAnnotation.endpointInterface().length() > 0)
-            throw new WSException("@WebService[portName,serviceName,endpointInterface] MUST NOT be defined on: " + seiName);
+            throw new WSException("@WebService cannot have attribute 'portName', 'serviceName', 'endpointInterface' on: " + seiName);
 
          // Redefine the interface or "PortType" name
          name = seiAnnotation.name();
