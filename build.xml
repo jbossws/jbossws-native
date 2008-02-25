@@ -105,6 +105,7 @@
   <property name="core.resources.dir" value="${core.src.dir}/resources"/>
   <property name="core.output.dir" value="${core.dir}/output"/>
   <property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
+  <property name="core.output.deploy.dir" value="${core.output.dir}/deploy"/>
   <property name="core.output.etc.dir" value="${core.output.dir}/etc"/>
   <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
   <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
