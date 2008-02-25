@@ -30,6 +30,8 @@ import javax.xml.transform.Source;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +84,9 @@ public class ReflectiveAttachmentRefScanner {
          Class<?> type = field.getType();
 
          boolean exceptionToTheRule = isAttachmentDataType(type);
-
+         if (! exceptionToTheRule) {
+            type = getFieldComponentType(field);
+         }
          // only non JDK types are inspected except for byte[] and java.lang.String
          if( !alreadyScanned(field) && (exceptionToTheRule || !isJDKType(type)) )
          {
@@ -216,6 +220,31 @@ public class ReflectiveAttachmentRefScanner {
    public void reset()
    {
       scannedFields.clear();
+   }
+
+   /**
+    * In the case of an array T[] or a List<T> returns T, else returns the field type
+    *
+    * @param clazz
+    * @return the type of the field, if the field is an array returns the component type,
+    * if the field is declared as List<T> returns T
+    */
+   private Class<?> getFieldComponentType(Field field) {
+	   Class<?> fieldType = field.getType();
+	   if (fieldType.isArray()) {
+		   return fieldType.getComponentType();
+	   } else if (List.class.isAssignableFrom(fieldType)) {
+		   if (field.getGenericType() instanceof ParameterizedType) {
+		   		ParameterizedType paramType = (ParameterizedType) field.getGenericType();
+		   		if ((paramType.getRawType() instanceof Class) && List.class.isAssignableFrom((Class<?>) paramType.getRawType())) {
+		   			Type[] actualTypes = paramType.getActualTypeArguments();
+		   			if (actualTypes.length == 1 && (actualTypes[0] instanceof Class)) {
+		   				return (Class<?>) actualTypes[0];
+		   			}
+		   		}
+		   }
+	   }
+	   return fieldType;
    }
 
    private static boolean isAttachmentDataType(Class clazz) {

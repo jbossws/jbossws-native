@@ -108,6 +108,20 @@ public class MimeDeclarationTestCase extends TestCase {
       assertFalse("MTOM should be disabled", XOPContext.isMTOMEnabled());
    }
 
+   public void testNestedArray() throws Exception
+   {
+      AttachmentScanResult  mimeType = SCANNER.scanBean(NestedArray.class);
+      assertNotNull("Unable to find xop declaration", mimeType);
+      assertEquals("text/plain", mimeType.getMimeType());
+   }
+
+   public void testNestedList() throws Exception
+   {
+      AttachmentScanResult  mimeType = SCANNER.scanBean(NestedList.class);
+      assertNotNull("Unable to find xop declaration", mimeType);
+      assertEquals("text/plain", mimeType.getMimeType());
+   }
+
    class FieldAnnotation
    {
       @XmlMimeType("text/xml")
@@ -157,5 +171,13 @@ public class MimeDeclarationTestCase extends TestCase {
    {
       @XmlMimeType("text/plain")
       String data;
+   }
+
+   class NestedArray {
+      Nested[] nested;
+   }
+
+   class NestedList {
+      List<Nested> nested;
    }
 }
