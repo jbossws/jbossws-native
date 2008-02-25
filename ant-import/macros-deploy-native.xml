@@ -135,6 +135,7 @@
         
       <loadfile property="jbossws.undeploy.files" srcfile="${jboss421.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
       <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
+      <delete dir="${jboss421.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
       <delete>
         <fileset dir="${jboss421.home}" includes="${jbossws.undeploy.files}"/>
       </delete>
@@ -205,6 +206,7 @@
       
       <loadfile property="jbossws.undeploy.files" srcfile="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
       <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
+      <delete dir="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
       <delete>
         <fileset dir="${jboss422.home}" includes="${jbossws.undeploy.files}"/>
       </delete>
@@ -275,6 +277,7 @@
       
       <loadfile property="jbossws.undeploy.files" srcfile="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
       <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
+      <delete dir="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
       <delete>
         <fileset dir="${jboss423.home}" includes="${jbossws.undeploy.files}"/>
       </delete>
@@ -365,6 +368,7 @@
       
       <loadfile property="jbossws.undeploy.files" srcfile="${jboss500.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
       <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
+      <delete dir="${jboss500.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
       <delete>
         <fileset dir="${jboss500.home}" includes="${jbossws.undeploy.files}"/>
       </delete>
@@ -457,6 +461,7 @@
       
       <loadfile property="jbossws.undeploy.files" srcfile="${jboss501.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
       <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
+      <delete dir="${jboss501.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
       <delete>
         <fileset dir="${jboss501.home}" includes="${jbossws.undeploy.files}"/>
       </delete>
