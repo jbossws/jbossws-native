@@ -625,6 +625,14 @@
       </fileset>
     </jar>
 
+  	<!-- jaxws-jbws1909 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1909.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1909/*.class"/>
+      	<exclude name="org/jboss/test/ws/jaxws/jbws1909/*TestCase.class"/>
+      </fileset>
+    </jar>
+
    <!-- jaxws-jbws1969 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1969.jar">
       <fileset dir="${tests.output.dir}/classes">

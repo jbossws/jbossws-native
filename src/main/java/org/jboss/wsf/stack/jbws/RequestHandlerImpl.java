@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,7 @@ import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Document;
 
 /**
@@ -521,37 +523,26 @@ public class RequestHandlerImpl implements RequestHandler
       }
    }
 
-   public void handleWSDLRequest(Endpoint endpoint, OutputStream outputStream, InvocationContext context)
+   public void handleWSDLRequest(Endpoint endpoint, OutputStream outStream, InvocationContext context)
    {
       log.debug("handleWSDLRequest: " + endpoint.getName());
 
-      ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
-      if (epMetaData == null)
-         throw new IllegalStateException("Cannot obtain endpoint meta data");
-
-      ServletRequestContext reqContext = (ServletRequestContext)context;
-      HttpServletRequest req = reqContext.getHttpServletRequest();
-
       try
       {
-         // For the base document the resourcePath should be null
-         String resPath = (String)req.getParameter("resource");
-         URL reqURL = new URL(req.getRequestURL().toString());
-
-         String wsdlHost = reqURL.getProtocol() + "://" + reqURL.getHost();
-         if (reqURL.getPort() != -1)
-            wsdlHost += ":" + reqURL.getPort();
-
-         if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
-            wsdlHost = serverConfig.getWebServiceHost();
-         
-         log.debug("WSDL request, using host: " + wsdlHost);
-
-         WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
-         Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
-
-         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-         new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
+         if (context instanceof ServletRequestContext)
+         {
+            handleWSDLRequestFromServletContext(endpoint, outStream, context);
+         }
+         else
+         {
+            String epAddress = endpoint.getAddress();
+            if (epAddress == null)
+               throw new IllegalArgumentException("Invalid endpoint address: " + epAddress);
+            
+            URL wsdlUrl = new URL(epAddress + "?wsdl");
+            InputStream inStream = wsdlUrl.openStream();
+            IOUtils.copyStream(outStream, inStream);
+         }
       }
       catch (RuntimeException rte)
       {
@@ -561,6 +552,35 @@ public class RequestHandlerImpl implements RequestHandler
       {
          throw new WSException(ex);
       }
+   }
+
+   private void handleWSDLRequestFromServletContext(Endpoint endpoint, OutputStream outputStream, InvocationContext context) throws MalformedURLException, IOException
+   {
+      ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
+      if (epMetaData == null)
+         throw new IllegalStateException("Cannot obtain endpoint meta data");
+
+      ServletRequestContext reqContext = (ServletRequestContext)context;
+      HttpServletRequest req = reqContext.getHttpServletRequest();
+      
+      // For the base document the resourcePath should be null
+      String resPath = (String)req.getParameter("resource");
+      URL reqURL = new URL(req.getRequestURL().toString());
+
+      String wsdlHost = reqURL.getProtocol() + "://" + reqURL.getHost();
+      if (reqURL.getPort() != -1)
+         wsdlHost += ":" + reqURL.getPort();
+
+      if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
+         wsdlHost = serverConfig.getWebServiceHost();
+      
+      log.debug("WSDL request, using host: " + wsdlHost);
+
+      WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
+      Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
+
+      OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+      new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
    }
 
    private void handleException(Exception ex) throws ServletException
