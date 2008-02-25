@@ -345,6 +345,17 @@
       <unjar dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native50.sar"/>
       <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
       <unzip dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
+      
+      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deploy.files.txt"/>
+      <copy todir="${jboss500.home}" overwrite="true">
+        <fileset refid="jbossws.deploy.files"/>
+      </copy>
+      
+      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
+      <echo file="${core.output.deploy.dir}/jbossws.deploy.files.txt" message="${jbossws.deploy.files}"/>
+      <replace file="${core.output.deploy.dir}/jbossws.deploy.files.txt" token=";" value=" "/>
+      <copy todir="${jboss500.home}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deploy.files.txt" overwrite="true"/>
+        
     </sequential>
   </macrodef>
   
