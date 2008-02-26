@@ -9,7 +9,7 @@
   <client-config>
     <config-name>Standard Anonymous WSRM Client</config-name>
     <reliable-messaging>
-      <message-retransmission attempts="50" interval="10" timeout="3"/>
+      <message-retransmission attempts="50" interval="10" timeout="10"/>
     </reliable-messaging>	
     <post-handler-chains>
       <javaee:handler-chain>
@@ -30,7 +30,7 @@
     <config-name>Standard Addressable WSRM Client</config-name>
     <reliable-messaging>
       <backports-server port="7777"/>
-      <message-retransmission attempts="50" interval="10" timeout="3"/>
+      <message-retransmission attempts="50" interval="10" timeout="10"/>
     </reliable-messaging>	
     <post-handler-chains>
       <javaee:handler-chain>
@@ -50,7 +50,7 @@
   <client-config>
     <config-name>Secured Anonymous WSRM Client</config-name>
     <reliable-messaging>
-      <message-retransmission attempts="50" interval="10" timeout="3"/>
+      <message-retransmission attempts="50" interval="10" timeout="10"/>
     </reliable-messaging>	
     <post-handler-chains>
       <javaee:handler-chain>
@@ -75,7 +75,7 @@
     <config-name>Secured Addressable WSRM Client</config-name>
     <reliable-messaging>
       <backports-server port="7777"/>
-      <message-retransmission attempts="50" interval="10" timeout="3"/>
+      <message-retransmission attempts="50" interval="10" timeout="10"/>
     </reliable-messaging>	
     <post-handler-chains>
       <javaee:handler-chain>
