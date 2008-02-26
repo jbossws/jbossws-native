@@ -37,7 +37,6 @@ import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.server.RMServerSequence;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
@@ -76,32 +75,6 @@ public final class RMHelper
       {
          throw new RMException(dce.getMessage(), dce);
       }
-   }
-   
-   public static RMServerSequence getServerSequenceByInboundId(String seqId, List<RMServerSequence> sequences)
-   {
-      for (RMServerSequence seq : sequences)
-      {
-         if (seq.getInboundId().equals(seqId))
-         {
-            return seq;
-         }
-      }
-      
-      return null;
-   }
-   
-   public static RMServerSequence getServerSequenceByOutboundId(String seqId, List<RMServerSequence> sequences)
-   {
-      for (RMServerSequence seq : sequences)
-      {
-         if (seq.getOutboundId().equals(seqId))
-         {
-            return seq;
-         }
-      }
-      
-      return null;
    }
    
    public static boolean isCreateSequence(Map<String, Object> rmMsgContext)

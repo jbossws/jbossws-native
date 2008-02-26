@@ -1,0 +1,94 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2005, JBoss Inc., and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.jboss.ws.extensions.wsrm.server;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.jboss.logging.Logger;
+
+/**
+ * Server side RM store that de/serializes sequences
+ *
+ * @author richard.opalka@jboss.com
+ */
+public final class RMStore
+{
+   
+   private static final Logger logger = Logger.getLogger(RMStore.class);
+   
+   public static final void serialize(String dataDir, RMServerSequence seq)
+   {
+      File dir = new File(dataDir);
+      dir.mkdirs();
+      File file = new File(dir, seq.getId());
+      FileOutputStream fos = null;
+      try
+      {
+         fos = new FileOutputStream(file);
+         fos.write(seq.toByteArray());
+      }
+      catch (IOException ioe)
+      {
+         logger.error(ioe.getMessage(), ioe);
+      }
+      finally
+      {
+         if (fos != null)
+         {
+            try
+            {
+               fos.close();
+            }
+            catch (IOException ignore)
+            {
+               // do nothing
+            }
+         }
+      }
+   }
+   
+   public static final RMServerSequence deserialize(String dataDir, String seqId, boolean inbound)
+   {
+      File[] sequences = new File(dataDir).listFiles();
+      for (int i = 0; i < sequences.length; i++)
+      {
+         try
+         {
+            RMServerSequence sequence = new RMServerSequence(sequences[i]);
+            boolean matches = inbound ? sequence.getInboundId().equals(seqId) : sequence.getOutboundId().equals(seqId);
+            if (matches)
+            {
+               return sequence;
+            }
+         }
+         catch (IOException ioe)
+         {
+            logger.error(ioe.getMessage(), ioe);
+         }
+      }
+      
+      return null;
+   }
+   
+}

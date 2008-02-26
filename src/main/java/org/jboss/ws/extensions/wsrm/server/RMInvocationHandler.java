@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,9 +48,14 @@ import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 
 /**
  * RM Invocation Handler 
@@ -63,12 +69,31 @@ public final class RMInvocationHandler extends InvocationHandler
 
    private static final Logger logger = Logger.getLogger(RMInvocationHandler.class);
    private static final RMConstants rmConstants = RMProvider.get().getConstants();
-   
+   private ServerConfig serverConfig;
    private final InvocationHandler delegate;
+   private final ArchiveDeployment dep;
+   private final String dataDir;
    
-   RMInvocationHandler(InvocationHandler delegate)
+   RMInvocationHandler(InvocationHandler delegate, ArchiveDeployment dep)
    {
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      this.serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
       this.delegate = delegate;
+      this.dep = dep;
+      this.dataDir = getPersistLocation();
+   }
+   
+   private String getPersistLocation()
+   {
+      try
+      {
+         String deploymentDir = (dep.getParent() != null ? dep.getParent().getSimpleName() : dep.getSimpleName());
+         return serverConfig.getServerDataDir().getCanonicalPath() + "/wsrm/" + deploymentDir;
+      }
+      catch (IOException ioe)
+      {
+         throw new IllegalStateException();
+      }
    }
    
    @Override
@@ -96,7 +121,7 @@ public final class RMInvocationHandler extends InvocationHandler
     * @param inv invocation
     * @return RM response context to be set after target endpoint invocation
     */
-   private Map<String, Object> prepareResponseContext(Endpoint ep, Invocation inv)
+   private synchronized Map<String, Object> prepareResponseContext(Endpoint ep, Invocation inv)
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
@@ -110,7 +135,6 @@ public final class RMInvocationHandler extends InvocationHandler
       
       List<QName> protocolMessages = new LinkedList<QName>();
       Map<String, Object> rmResponseContext = new HashMap<String, Object>();
-      List<RMServerSequence> sequences = (List<RMServerSequence>)ep.getAttachment(RMServerSequence.class);
       rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
       msgContext.remove(RMConstant.RESPONSE_CONTEXT);
       RMServerSequence sequence = null;
@@ -119,7 +143,7 @@ public final class RMInvocationHandler extends InvocationHandler
       if (RMHelper.isCreateSequence(rmReqProps))
       {
          sequence = new RMServerSequence();
-         sequences.add(sequence);
+         RMStore.serialize(dataDir, sequence);
          protocolMessages.add(rmConstants.getCreateSequenceResponseQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
          isOneWayOperation = false;
@@ -130,13 +154,15 @@ public final class RMInvocationHandler extends InvocationHandler
          Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
          RMCloseSequence payload = (RMCloseSequence)data.get(rmConstants.getCloseSequenceQName());
          String seqIdentifier = payload.getIdentifier();
-         sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
+         sequence = RMStore.deserialize(dataDir, seqIdentifier, true);
+         //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
             throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
          }
 
          sequence.close();
+         RMStore.serialize(dataDir, sequence);
          protocolMessages.add(rmConstants.getCloseSequenceResponseQName());
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
@@ -148,7 +174,8 @@ public final class RMInvocationHandler extends InvocationHandler
          Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
          RMSequenceAcknowledgement payload = (RMSequenceAcknowledgement)data.get(rmConstants.getSequenceAcknowledgementQName());
          String seqIdentifier = payload.getIdentifier();
-         sequence = RMHelper.getServerSequenceByOutboundId(seqIdentifier, sequences);
+         sequence = RMStore.deserialize(dataDir, seqIdentifier, false);
+         //sequence = RMHelper.getServerSequenceByOutboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
             throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
@@ -161,6 +188,8 @@ public final class RMInvocationHandler extends InvocationHandler
                sequence.addReceivedOutboundMessage(i);
             }
          }
+
+         RMStore.serialize(dataDir, sequence);
       }
       
       if (RMHelper.isTerminateSequence(rmReqProps))
@@ -168,13 +197,15 @@ public final class RMInvocationHandler extends InvocationHandler
          Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
          RMTerminateSequence payload = (RMTerminateSequence)data.get(rmConstants.getTerminateSequenceQName());
          String seqIdentifier = payload.getIdentifier();
-         sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
+         sequence = RMStore.deserialize(dataDir, seqIdentifier, true);
+         //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
             throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
          }
 
-         sequences.remove(sequence);
+         RMStore.serialize(dataDir, sequence); // TODO: serialization of terminated sequence results in no file
+         //sequences.remove(sequence);
          if (RMProvider.get().getMessageFactory().newTerminateSequenceResponse() != null)
          {
             protocolMessages.add(rmConstants.getTerminateSequenceResponseQName());
@@ -184,7 +215,7 @@ public final class RMInvocationHandler extends InvocationHandler
          }
          else
          {
-            return null; // no WS-RM context propagated
+            return null; // no WS-RM context propagated - WS-RM 1.0
          }
       }
       
@@ -193,13 +224,15 @@ public final class RMInvocationHandler extends InvocationHandler
          Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
          RMSequence payload = (RMSequence)data.get(rmConstants.getSequenceQName());
          String seqIdentifier = payload.getIdentifier();
-         sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
+         sequence = RMStore.deserialize(dataDir, seqIdentifier, true);
+         //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
             throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
          }
 
          sequence.addReceivedInboundMessage(payload.getMessageNumber());
+         RMStore.serialize(dataDir, sequence);
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
          

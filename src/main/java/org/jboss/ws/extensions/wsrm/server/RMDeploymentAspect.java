@@ -21,10 +21,9 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
-import java.util.LinkedList;
-
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -52,9 +51,9 @@ public final class RMDeploymentAspect extends DeploymentAspect
          if (sepMetaData.getConfig().getRMMetaData() != null)
          {
             InvocationHandler origInvHandler = ep.getInvocationHandler();
-            InvocationHandler wsrmInvHandler = new RMInvocationHandler(origInvHandler);
+            InvocationHandler wsrmInvHandler = new RMInvocationHandler(origInvHandler, (ArchiveDeployment)dep);
+            // TODO: implement wsrm data dir clean up here
             ep.setInvocationHandler(wsrmInvHandler);
-            ep.addAttachment(RMServerSequence.class, new LinkedList<RMServerSequence>());
             RMHelper.setupRMOperations(sepMetaData);
             log.info("WS-RM invocation handler associated with endpoint " + ep.getAddress());
          }
@@ -71,7 +70,6 @@ public final class RMDeploymentAspect extends DeploymentAspect
          {
             RMInvocationHandler rmInvHandler = (RMInvocationHandler)invHandler;
             ep.setInvocationHandler(rmInvHandler.getDelegate());
-            ep.removeAttachment(RMServerSequence.class);
             log.info("WS-RM invocation handler removed from endpoint " + ep.getAddress());
          }
       }
