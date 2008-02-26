@@ -28,9 +28,7 @@ import org.jboss.jaxb.intros.configmodel.JaxbIntros;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.JAXBBindingCustomization;
 import org.jboss.wsf.spi.binding.BindingCustomization;
-import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.DeploymentAspect;
-import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,30 +40,46 @@ import java.io.InputStream;
 public class JAXBIntroDeploymentAspect extends DeploymentAspect
 {
    private static Logger logger = Logger.getLogger(JAXBIntroDeploymentAspect.class);
+   private static final String META_INF_JAXB_INTROS_XML = "META-INF/jaxb-intros.xml";
+   private static final String WEB_INF_JAXB_INTROS_XML = "WEB-INF/jaxb-intros.xml";
 
    public void create(Deployment deployment)
    {
 
+      // assert ArchiveDeployment
+      if(! (deployment instanceof ArchiveDeployment) )
+      {
+         log.debug("JAXBIntroDeploymentAspect doesn't work on " + deployment.getClass());
+         return;
+      }
+
+      ArchiveDeployment archive = (ArchiveDeployment)deployment;
       InputStream introsConfigStream = null;
 
-      try {   // META-INF first
-         ClassLoader classLoader = deployment.getRuntimeClassLoader();
-         introsConfigStream = classLoader.getResource("META-INF/jaxb-intros.xml").openStream();
+      try
+      {
+         // META-INF first
+         UnifiedVirtualFile vfs = archive.getRootFile().findChild(META_INF_JAXB_INTROS_XML);
+         introsConfigStream = vfs.toURL().openStream();
       } catch (Exception e) {}
 
       if(null == introsConfigStream)
       {
-         try { // WEB-INF second
-
-            ClassLoader classLoader = deployment.getRuntimeClassLoader();
-            introsConfigStream = classLoader.getResource("WEB-INF/jaxb-intros.xml").openStream();
+         try 
+         {
+            // WEB-INF second
+            UnifiedVirtualFile vfs = archive.getRootFile().findChild(WEB_INF_JAXB_INTROS_XML);
+            introsConfigStream = vfs.toURL().openStream();
          } catch (Exception e) {
             return;
          }
       }
       
-      try {
-         if(introsConfigStream != null) {
+      try
+      {
+
+         if(introsConfigStream != null)
+         {
             JaxbIntros jaxbIntros = IntroductionsConfigParser.parseConfig(introsConfigStream);
             IntroductionsAnnotationReader annotationReader = new IntroductionsAnnotationReader(jaxbIntros);
             String defaultNamespace = jaxbIntros.getDefaultNamespace();
@@ -83,8 +97,12 @@ public class JAXBIntroDeploymentAspect extends DeploymentAspect
             }
 
          }
-      } finally {
-         if(introsConfigStream != null) {
+
+      }
+      finally
+      {
+         if(introsConfigStream != null)
+         {
             try {
                introsConfigStream.close();
             } catch (IOException e) {
