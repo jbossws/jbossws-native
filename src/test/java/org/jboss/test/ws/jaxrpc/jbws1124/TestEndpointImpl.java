@@ -36,7 +36,7 @@ import org.jboss.ws.WSException;
 public class TestEndpointImpl implements TestEndpoint
 {
    private Logger log = Logger.getLogger(TestEndpointImpl.class);
-   private static final String WEB_INF_TEST_RESOURCE_TXT = "WEB-INF/test-resource.txt";
+   private static final String WEB_INF_TEST_RESOURCE_TXT = "org/jboss/test/ws/jaxrpc/jbws1124/test-resource.txt";
 
    public String getResourceString() throws RemoteException
    {

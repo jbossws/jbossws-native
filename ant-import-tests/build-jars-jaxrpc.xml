@@ -2150,17 +2150,26 @@
     <copy todir="${tests.output.dir}/resources" overwrite="true">
       <fileset dir="${tests.resources.dir}">
         <include name="jaxrpc/jbws1124/META-INF/jboss-client.xml"/>
-        <include name="jaxrpc/jbws1124/WEB-INF/test-resource.txt"/>
         <include name="jaxrpc/jbws1124/WEB-INF/jboss-web.xml"/>
       </fileset>
       <filterset>
         <filter token="jbws1124.domain" value="jbws1124one"/>
       </filterset>
     </copy>
-    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1124one.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF/web.xml">
+     <copy todir="${tests.output.dir}/classes/org/jboss/test/ws/jaxrpc/jbws1124/" overwrite="true">
+        <fileset dir="${tests.resources.dir}/jaxrpc/jbws1124/WEB-INF/">
+           <include name="test-resource.txt"/>
+        </fileset>
+        <filterset>
+           <filter token="jbws1124.domain" value="jbws1124one"/>
+        </filterset>
+     </copy>
+
+     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1124one.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1124/test-resource.txt"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF">
         <include name="webservices.xml"/>
@@ -2174,17 +2183,26 @@
     <copy todir="${tests.output.dir}/resources" overwrite="true">
       <fileset dir="${tests.resources.dir}">
         <include name="jaxrpc/jbws1124/META-INF/jboss-client.xml"/>
-        <include name="jaxrpc/jbws1124/WEB-INF/test-resource.txt"/>
         <include name="jaxrpc/jbws1124/WEB-INF/jboss-web.xml"/>
       </fileset>
       <filterset>
         <filter token="jbws1124.domain" value="jbws1124two"/>
       </filterset>
     </copy>
-    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1124two.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF/web.xml">
+     <copy todir="${tests.output.dir}/classes/org/jboss/test/ws/jaxrpc/jbws1124/" overwrite="true">
+        <fileset dir="${tests.resources.dir}/jaxrpc/jbws1124/WEB-INF/">
+           <include name="test-resource.txt"/>
+        </fileset>
+        <filterset>
+           <filter token="jbws1124.domain" value="jbws1124two"/>
+        </filterset>
+     </copy>
+
+     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1124two.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1124/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1124/test-resource.txt"/>
       </classes>
       <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1124/WEB-INF">
         <include name="webservices.xml"/>
