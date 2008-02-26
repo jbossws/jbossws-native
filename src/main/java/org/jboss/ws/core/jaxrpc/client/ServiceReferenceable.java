@@ -39,6 +39,7 @@ import javax.naming.StringRefAddr;
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
@@ -148,9 +149,11 @@ public class ServiceReferenceable implements Referenceable
       ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
       try
       {
+         WSSecurityConfiguration securityConfig = WSSecurityConfigFactory.newInstance().createConfiguration(
+           refMetaData.getVfsRoot(), WSSecurityOMFactory.CLIENT_RESOURCE_NAME
+         );
+         
          ObjectOutputStream oos = new ObjectOutputStream(baos);
-         WSSecurityOMFactory factory = WSSecurityOMFactory.newInstance();
-         WSSecurityConfiguration securityConfig = factory.parse(getSecurityConfig());
          oos.writeObject(securityConfig);
          oos.close();
       }
