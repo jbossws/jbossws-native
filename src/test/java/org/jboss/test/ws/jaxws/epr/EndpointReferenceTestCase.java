@@ -79,6 +79,6 @@ public class EndpointReferenceTestCase extends JBossWSTest
       TestEndpoint port = service.getPort(epr, TestEndpoint.class);
       ((StubExt)port).setConfigName("Standard WSAddressing Client");
       String retStr = port.echo("hello");
-      assertEquals("hello", retStr);
+      assertEquals("hello|123456789|ABCDEFG", retStr);
    }
 }

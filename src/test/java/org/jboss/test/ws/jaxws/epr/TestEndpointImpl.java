@@ -30,6 +30,7 @@ import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.addressing.JAXWSAConstants;
@@ -70,7 +71,7 @@ public class TestEndpointImpl implements TestEndpoint
          ReferenceParameters refParams = addrProps.getReferenceParameters();
          for (Object refParam : refParams.getElements())
          {
-            input += "|" + ((Element)refParam).getNodeValue();
+            input += "|" + ((SOAPElement)refParam).getValue();
          }
       }
       catch (Exception ex)

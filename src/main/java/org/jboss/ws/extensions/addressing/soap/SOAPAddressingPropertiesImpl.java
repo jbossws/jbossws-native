@@ -285,7 +285,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 					SOAPElement wsaRelatesTo = soapHeader.addChildElement(new NameImpl(ADDR.getRelatesToQName()));
 					if (rel.getType() != null)
 					{
-						wsaRelatesTo.setAttribute(ADDR.getRelationshipTypeName(), getPrefixedName(rel.getType()));
+						wsaRelatesTo.setAttribute(ADDR.getRelationshipTypeName(), getQualifiedName(rel.getType()));
 					}
 					wsaRelatesTo.addTextNode(rel.getID().toString());
 				}
@@ -298,7 +298,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
             for (Object obj : refParams.getElements())
             {
                SOAPElement refElement = appendElement(soapHeader, obj);
-               QName refQName = new QName(getNamespaceURI(), "IsReferenceParameter");
+               QName refQName = new QName(ADDR.getNamespaceURI(), "IsReferenceParameter", ADDR.getNamespacePrefix());
                refElement.addAttribute(refQName, "true");
             }
 			}
@@ -337,7 +337,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 	{
 		for (QName qname : attributes.keySet())
 		{
-			String qualname = getPrefixedName(qname);
+			String qualname = getQualifiedName(qname);
 			String value = attributes.get(qname);
 			soapElement.setAttribute(qualname, value);
 		}
@@ -395,7 +395,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
       }
    }
 
-	private String getPrefixedName(QName qname)
+	private String getQualifiedName(QName qname)
 	{
 		String prefix = qname.getPrefix();
 		String localPart = qname.getLocalPart();
