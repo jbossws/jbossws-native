@@ -15,13 +15,15 @@
   
   <import file="${core.dir}/ant-import/macros-deploy-native.xml"/>
   
+	<property name="deploy.dir" value="${core.dir}/output/deploy"/>
+	<property name="jbossws.default.undeploy.files" value="${core.dir}/ant-import/jbossws.default.undeploy.files"/>
+  
   <!-- ================================================================== -->
   <!-- Deployment JBoss421                                                -->
   <!-- ================================================================== -->
 
   <!-- Deploy jbossws to jboss421 -->
   <target name="deploy-jboss421" depends="jars-jboss42,undeploy-jboss421,deploy-jboss421-endorsed" description="Deploy jbossws to jboss421">
-    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-native421 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
   </target>
   <target name="deploy-jboss421-endorsed" depends="prepare" if="HAVE_JDK_1.6">
@@ -36,7 +38,6 @@
   <!-- Deploy jbossws to jboss422 -->
   <target name="deploy-jboss422" depends="jars-jboss42,undeploy-jboss422,deploy-jboss422-endorsed" description="Deploy jbossws to jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
-    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-native422 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
   </target>
   <target name="deploy-jboss422-endorsed" depends="prepare" if="HAVE_JDK_1.6">
@@ -52,7 +53,6 @@
   <!-- Deploy jbossws to jboss423 -->
   <target name="deploy-jboss423" depends="jars-jboss42,undeploy-jboss423,deploy-jboss423-endorsed" description="Deploy jbossws to jboss423">
     <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
-    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-native423 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
   </target>
   <target name="deploy-jboss423-endorsed" depends="prepare" if="HAVE_JDK_1.6">
@@ -67,7 +67,6 @@
   
   <!-- Deploy jbossws to jboss500 -->
   <target name="deploy-jboss500" depends="jars-jboss50,undeploy-jboss500,deploy-jboss500-endorsed" description="Deploy jbossws to jboss500">
-    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-native500 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
   </target>
   <target name="deploy-jboss500-endorsed" depends="prepare" if="HAVE_JDK_1.6">
@@ -85,7 +84,6 @@
 
   <!-- Deploy jbossws to jboss501 -->
   <target name="deploy-jboss501" depends="jars-jboss50,undeploy-jboss501,deploy-jboss501-endorsed" description="Deploy jbossws to jboss501">
-    <macro-deploy-framework thirdpartylibs="${core.dir}/thirdparty"/>
     <macro-deploy-native501 stacklibs="${core.dir}/output/lib" thirdpartylibs="${core.dir}/thirdparty"/>
   </target>
   <target name="deploy-jboss501-endorsed" depends="prepare" if="HAVE_JDK_1.6">

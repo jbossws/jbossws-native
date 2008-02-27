@@ -19,12 +19,15 @@
 
 	<property name="build.dir" value="${basedir}/build"/>
 	<property name="bin.dir" value="${basedir}/bin"/>
+	<property name="deploy.dir" value="${basedir}/output/deploy"/>
 	<property name="docs.dir" value="${basedir}/docs"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="thirdparty.dir" value="${basedir}/lib"/>
 	<property name="tests.dir" value="${basedir}/tests"/>
 	<property name="tests.output.dir" value="${basedir}/output"/>
-
+  
+	<property name="jbossws.default.undeploy.files" value="${build.dir}/jbossws.default.undeploy.files"/>
+  
 	<property file="${basedir}/ant.properties"/>
 	<property file="${basedir}/version.properties"/>
 
@@ -96,7 +99,6 @@
 
 	<import file="${basedir}/build/build-deploy.xml"/>
 	<import file="${basedir}/build/build-project-gen.xml"/>
-	<import file="${basedir}/build/macros-deploy-framework.xml"/>
 	<import file="${basedir}/build/macros-deploy-native.xml"/>
 	<import file="${basedir}/tests/ant-import/build-testsuite.xml"/>
 

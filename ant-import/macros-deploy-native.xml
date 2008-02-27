@@ -69,8 +69,8 @@
     <attribute name="stacklibs"/>
     <attribute name="thirdpartylibs"/>
     <sequential>
-      <mkdir dir="${core.output.deploy.dir}/lib/endorsed"/>
-      <copy todir="${core.output.deploy.dir}/lib/endorsed" overwrite="true">
+      <mkdir dir="${deploy.dir}/lib/endorsed"/>
+      <copy todir="${deploy.dir}/lib/endorsed" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="lib.endorsed.patternset"/>
         </fileset>
@@ -90,18 +90,17 @@
     <sequential>
       
       <!-- BIN SCRIPTS -->
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{thirdpartylibs}/jbossws-framework-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
+      <unzip dest="${deploy.dir}/bin" src="@{thirdpartylibs}/jbossws-framework-scripts.zip"/>
       
       <!-- CLIENT JARS-->
-      <copy todir="${core.output.deploy.dir}/client">
+      <copy todir="${deploy.dir}/client">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="client.patternset"/>
         </fileset>
       </copy>
       
       <!-- SERVER LIB JARS-->
-      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib">
+      <copy todir="${deploy.dir}/server/${jboss.server.instance}/lib">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="server.lib.patternset"/>
         </fileset>
@@ -127,16 +126,17 @@
       <unzip dest="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
       
       <!-- Deploy the jars -->
-      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deployed.files"/>
+      <fileset id="jbossws.deploy.files" dir="${deploy.dir}" excludes="jbossws.deployed.files"/>
       <copy todir="@{jbosshome}" overwrite="true">
         <fileset refid="jbossws.deploy.files"/>
       </copy>
+      <chmod dir="@{jbosshome}/bin" perm="+x" includes="*.sh"/>
       
       <!-- Write jbossws.deployed.files -->
       <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
-      <echo file="${core.output.deploy.dir}/jbossws.deployed.files" message="${jbossws.deploy.files}"/>
-      <replace file="${core.output.deploy.dir}/jbossws.deployed.files" token=";" value=" "/>
-      <copy todir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deployed.files" overwrite="true"/>
+      <echo file="${deploy.dir}/jbossws.deployed.files" message="${jbossws.deploy.files}"/>
+      <replace file="${deploy.dir}/jbossws.deployed.files" token=";" value=" "/>
+      <copy todir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${deploy.dir}/jbossws.deployed.files" overwrite="true"/>
       
     </sequential>
   </macrodef>
@@ -149,10 +149,10 @@
     <attribute name="jbosshome"/>
     <sequential>
       
-      <delete dir="${core.output.deploy.dir}"/>
+      <delete dir="${deploy.dir}"/>
       
       <loadfile property="jbossws.undeploy.files" srcfile="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deployed.files" failonerror="false"/>
-      <loadfile property="jbossws.undeploy.files" srcfile="${core.dir}/ant-import/jbossws.default.undeploy.files" failonerror="false"/>
+      <loadfile property="jbossws.undeploy.files" srcfile="${jbossws.default.undeploy.files}" failonerror="false"/>
       <delete dir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
       <delete dir="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
       <delete>
@@ -172,14 +172,15 @@
     <sequential>
       <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
       
+      <macro-deploy-framework thirdpartylibs="@{thirdpartylibs}"/>
+      
       <!-- BIN SCRIPTS -->
-      <mkdir dir="${core.output.deploy.dir}/bin"/>
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
+      <mkdir dir="${deploy.dir}/bin"/>
+      <unzip dest="${deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
       
       <!-- CLIENT JARS -->
-      <mkdir dir="${core.output.deploy.dir}/client"/>
-      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
+      <mkdir dir="${deploy.dir}/client"/>
+      <copy todir="${deploy.dir}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
           <patternset refid="client.patternset"/>
           <include name="jbossws-jboss421.jar"/>
@@ -191,8 +192,8 @@
       </copy>
       
       <!-- LIB JARS -->
-      <mkdir dir="${core.output.deploy.dir}/lib"/>
-      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
+      <mkdir dir="${deploy.dir}/lib"/>
+      <copy todir="${deploy.dir}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="lib.patternset"/>
           <include name="jboss-xml-binding.jar"/>
@@ -200,8 +201,8 @@
       </copy>
       
       <!-- SERVER LIB JARS -->
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib"/>
-      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
+      <mkdir dir="${deploy.dir}/server/${jboss.server.instance}/lib"/>
+      <copy todir="${deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
           <include name="jbossws-jboss421.jar"/>
         </fileset>
@@ -229,13 +230,12 @@
     <sequential>
       
       <!-- BIN SCRIPTS -->
-      <mkdir dir="${core.output.deploy.dir}/bin"/>
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
+      <mkdir dir="${deploy.dir}/bin"/>
+      <unzip dest="${deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
       
       <!-- CLIENT JARS -->
-      <mkdir dir="${core.output.deploy.dir}/client"/>
-      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
+      <mkdir dir="${deploy.dir}/client"/>
+      <copy todir="${deploy.dir}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
           <patternset refid="client.patternset"/>
         </fileset>
@@ -256,6 +256,7 @@
     <attribute name="thirdpartylibs"/>
     <sequential>
       <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+      <macro-deploy-framework thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-native42x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-jbossws jbosshome="${jboss422.home}" sarname="jbossws-native42.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
@@ -277,6 +278,7 @@
     <attribute name="thirdpartylibs"/>
     <sequential>
       <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+      <macro-deploy-framework thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-native42x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-jbossws jbosshome="${jboss423.home}" sarname="jbossws-native42.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
@@ -299,13 +301,12 @@
     <sequential>
       
       <!-- BIN SCRIPTS -->
-      <mkdir dir="${core.output.deploy.dir}/bin"/>
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
+      <mkdir dir="${deploy.dir}/bin"/>
+      <unzip dest="${deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
       
       <!-- CLIENT JARS -->
-      <mkdir dir="${core.output.deploy.dir}/client"/>
-      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
+      <mkdir dir="${deploy.dir}/client"/>
+      <copy todir="${deploy.dir}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
           <patternset refid="client.patternset"/>
         </fileset>
@@ -315,15 +316,15 @@
       </copy>
       
       <!-- LIB JARS -->
-      <mkdir dir="${core.output.deploy.dir}/lib"/>
-      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
+      <mkdir dir="${deploy.dir}/lib"/>
+      <copy todir="${deploy.dir}/lib" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="lib.patternset"/>
         </fileset>
       </copy>
       
       <!-- SERVER JARS -->
-      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
+      <copy todir="${deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
         <fileset dir="@{stacklibs}">
           <patternset refid="server.lib.patternset"/>
         </fileset>
@@ -341,6 +342,7 @@
     <attribute name="thirdpartylibs"/>
     <sequential>
       <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
+      <macro-deploy-framework thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-native50x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-jbossws jbosshome="${jboss500.home}" sarname="jbossws-native50.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
@@ -362,6 +364,7 @@
     <attribute name="thirdpartylibs"/>
     <sequential>
       <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
+      <macro-deploy-framework thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-native50x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
       <macro-deploy-jbossws jbosshome="${jboss501.home}" sarname="jbossws-native50.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
