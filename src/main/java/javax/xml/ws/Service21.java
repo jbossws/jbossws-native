@@ -21,6 +21,8 @@
  */
 package javax.xml.ws;
 
+// $Id$
+
 import javax.xml.namespace.QName;
 import javax.xml.bind.JAXBContext;
 import java.net.URL;
@@ -29,14 +31,43 @@ import java.net.URL;
  * @author Heiko.Braun@jboss.com
  * @version $Revision$
  */
-public abstract class Service21 extends Service
+public class Service21 extends Service
 {
-
+   
    protected Service21(URL wsdlDocumentLocation, QName serviceName)
    {
       super(wsdlDocumentLocation, serviceName);
    }
 
+   /**
+    * Create a <code>Service</code> instance.
+    *
+    * The specified WSDL document location and service qualified name MUST
+    * uniquely identify a <code>wsdl:service</code> element.
+    *
+    * @param wsdlLocation URL for the WSDL document location
+    *                             for the service
+    * @param serviceName QName for the service
+    * @throws WebServiceException If any error in creation of the
+    *                    specified service.
+    **/
+   public static Service21 create(URL wsdlLocation, QName serviceName)
+   {
+      return new Service21(wsdlLocation, serviceName);
+   }
+
+   /**
+    * Create a <code>Service</code> instance.
+    *
+    * @param serviceName QName for the service
+    * @throws WebServiceException If any error in creation of the
+    *                    specified service
+    */
+   public static Service21 create(QName serviceName)
+   {
+      return create(null, serviceName);
+   }
+   
    /**
        * Creates a <code>Dispatch</code> instance for use with objects of
        * the users choosing. If there

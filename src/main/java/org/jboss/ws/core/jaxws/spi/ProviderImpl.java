@@ -31,15 +31,16 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.SOAPBinding;
-import javax.xml.ws.spi.Provider;
-import javax.xml.ws.spi.ServiceDelegate;
 import javax.xml.ws.spi.Provider21;
+import javax.xml.ws.spi.ServiceDelegate;
+import javax.xml.ws.spi.ServiceDelegate21;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
+import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import org.jboss.util.NotImplementedException;
-import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -61,7 +62,6 @@ public class ProviderImpl extends Provider21
    public ServiceDelegate createServiceDelegate(URL wsdlLocation, QName serviceName, Class serviceClass)
    {
       ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
-      DOMUtils.clearThreadLocals();
       return delegate;
    }
 
@@ -79,7 +79,7 @@ public class ProviderImpl extends Provider21
       // PublishEndpoint method on a Provider MUST be the same as first invoking the createEndpoint
       // method with the binding ID appropriate to the URL scheme used by the address, then invoking the 
       // publish(String address) method on the resulting endpoint.
-      
+
       String bindingId = getBindingFromAddress(address);
       EndpointImpl endpoint = (EndpointImpl)createEndpoint(bindingId, implementor);
       endpoint.publish(address);
@@ -108,23 +108,40 @@ public class ProviderImpl extends Provider21
       }
       return bindingId;
    }
-   
+
    @Override
-   public <T extends EndpointReference> T createEndpointReference(Class<T> clazz, QName serviceName, QName portName, Source wsdlDocumentLocation, Element... referenceParameters)
+   public <T extends EndpointReference> T createEndpointReference(Class<T> clazz, QName serviceName, QName portName, Source wsdlDocumentLocation,
+         Element... referenceParameters)
    {
       throw new NotImplementedException();
    }
 
    @Override
-   public W3CEndpointReference createW3CEndpointReference(String address, QName serviceName, QName portName, List<Element> metadata, String wsdlDocumentLocation, List<Element> referenceParameters)
+   public W3CEndpointReference createW3CEndpointReference(String address, QName serviceName, QName portName, List<Element> metadata, String wsdlDocumentLocation,
+         List<Element> referenceParameters)
    {
-      throw new NotImplementedException();
+      W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
+      builder = builder.address(address).serviceName(serviceName).endpointName(portName).wsdlDocumentLocation(wsdlDocumentLocation);
+      for (Element el : metadata)
+         builder = builder.metadata(el);
+      for (Element el : referenceParameters)
+         builder = builder.referenceParameter(el);
+      return builder.build();
    }
 
    @Override
-   public <T> T getPort(EndpointReference endpointReference, Class<T> serviceEndpointInterface, WebServiceFeature... features)
+   public <T> T getPort(EndpointReference epr, Class<T> sei, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      URL wsdlLocation = null;
+      QName serviceName = null;
+      if (epr instanceof W3CEndpointReference)
+      {
+         W3CEndpointReference w3c = (W3CEndpointReference)epr;
+         wsdlLocation = w3c.getWsdlLocation();
+         serviceName = w3c.getServiceName();
+      }
+      ServiceDelegate21 delegate = (ServiceDelegate21)createServiceDelegate(wsdlLocation, serviceName, Service.class);
+      return delegate.getPort(epr, sei, features);
    }
 
    @Override

@@ -46,11 +46,10 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.spi.ServiceDelegate;
 import javax.xml.ws.spi.ServiceDelegate21;
+import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
@@ -126,7 +125,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
             wsdlURL = null;
          }
       }
-      
+
       if (wsdlURL != null)
       {
          JAXWSClientMetaDataBuilder builder = new JAXWSClientMetaDataBuilder();
@@ -188,7 +187,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          QName portType = getPortTypeName(seiClass);
          epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
       }
-      
+
       String seiClassName = seiClass.getName();
       epMetaData.setServiceEndpointInterfaceName(seiClassName);
 
@@ -382,15 +381,15 @@ public class ServiceDelegateImpl extends ServiceDelegate21
    {
       if (seiClass == null)
          throw new IllegalArgumentException("SEI class cannot be null");
-      
+
       try
       {
          ExecutorService executor = (ExecutorService)getExecutor();
          ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
-         
+
          T proxy;
-         try 
+         try
          {
             proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, RMProvider.class, BindingProvider.class, StubExt.class }, handler);
          }
@@ -458,42 +457,61 @@ public class ServiceDelegateImpl extends ServiceDelegate21
    @Override
    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Mode mode, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      return createDispatch(portName, type, mode);
    }
 
    @Override
-   public <T> Dispatch<T> createDispatch(EndpointReference endpointReference, Class<T> type, Mode mode, WebServiceFeature... features)
+   public <T> Dispatch<T> createDispatch(EndpointReference epr, Class<T> type, Mode mode, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      QName portName = null;
+      if (epr instanceof W3CEndpointReference)
+      {
+         W3CEndpointReference w3c = (W3CEndpointReference)epr;
+         portName = w3c.getEndpointName();
+      }
+      return createDispatch(portName, type, mode);
    }
 
    @Override
    public Dispatch<Object> createDispatch(QName portName, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      return createDispatch(portName, context, mode);
    }
 
    @Override
-   public Dispatch<Object> createDispatch(EndpointReference endpointReference, JAXBContext context, Mode mode, WebServiceFeature... features)
+   public Dispatch<Object> createDispatch(EndpointReference epr, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      QName portName = null;
+      if (epr instanceof W3CEndpointReference)
+      {
+         W3CEndpointReference w3c = (W3CEndpointReference)epr;
+         portName = w3c.getEndpointName();
+      }
+      return createDispatch(portName, context, mode);
    }
 
    @Override
-   public <T> T getPort(QName portName, Class<T> serviceEndpointInterface, WebServiceFeature... features)
+   public <T> T getPort(QName portName, Class<T> sei, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      return getPort(portName, sei);
    }
 
    @Override
-   public <T> T getPort(EndpointReference endpointReference, Class<T> serviceEndpointInterface, WebServiceFeature... features)
+   public <T> T getPort(EndpointReference epr, Class<T> sei, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      return getPort(sei);
    }
 
    @Override
-   public <T> T getPort(Class<T> serviceEndpointInterface, WebServiceFeature... features)
+   public <T> T getPort(Class<T> sei, WebServiceFeature... features)
    {
-      throw new NotImplementedException();
+      log.warn("WebServiceFeature not implemented");
+      return getPort(sei);
    }
 }

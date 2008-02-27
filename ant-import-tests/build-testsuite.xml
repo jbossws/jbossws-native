@@ -70,7 +70,7 @@
 	<!-- Generating sources                                                 -->
 	<!-- ================================================================== -->
 
-	<target name="wsconsume" depends="tests-init" description="Consume JAX-WS contracts">
+	<target name="wsconsume" depends="tests-init" unless="noconsume" description="Consume JAX-WS contracts">
 
 		<!-- Define the JAX-WS wsconsume task -->
 		<taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">			

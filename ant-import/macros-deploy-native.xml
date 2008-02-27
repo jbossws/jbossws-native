@@ -13,43 +13,152 @@
 
 <project>
   
+  <!-- 
+  These patterns should be common for all supported containers 
+  Exceptions must be defined in the individual deploy macros.
+  -->
+  <patternset id="client.patternset">
+    <include name="jbossws-client.jar"/>
+    <include name="jbossws-common.jar"/>
+    <include name="jbossws-framework.jar"/>
+    <include name="jbossws-spi.jar"/>
+    <include name="jaxb-api.jar"/>
+    <include name="jaxb-impl.jar"/>
+    <include name="jaxb-xjc.jar"/>
+    <include name="jaxws-tools.jar"/>
+    <include name="jaxws-rt.jar"/>
+    <include name="jboss-jaxrpc.jar"/>
+    <include name="jboss-jaxws.jar"/>
+    <include name="jboss-jaxws-ext.jar"/>
+    <include name="jboss-saaj.jar"/>
+    <include name="policy.jar"/>
+    <include name="stax-ex.jar"/>
+    <include name="streambuffer.jar"/>
+    <include name="wsdl4j.jar"/>
+  </patternset>
+  
+  <patternset id="lib.patternset">
+    <include name="jaxb-api.jar"/>
+    <include name="jaxb-impl.jar"/>
+  </patternset>
+  
+  <patternset id="lib.endorsed.patternset">
+    <include name="jboss-jaxrpc.jar"/>
+    <include name="jboss-jaxws.jar"/>
+    <include name="jboss-jaxws-ext.jar"/>
+    <include name="jboss-saaj.jar"/>
+    <include name="jaxb-api.jar"/>
+  </patternset>
+  
+  <patternset id="server.lib.patternset">
+    <include name="jbossws-common.jar"/>
+    <include name="jbossws-framework.jar"/>
+    <include name="jbossws-spi.jar"/>
+    <include name="jboss-jaxrpc.jar"/>
+    <include name="jboss-jaxws.jar"/>
+    <include name="jboss-jaxws-ext.jar"/>
+    <include name="jboss-saaj.jar"/>
+  </patternset>
+  
   <!-- ================================================================== -->
   <!-- Deploy Endorsed                                                    -->
   <!-- ================================================================== -->
   
   <!-- Deploy API jars to lib/endorsed for usage with jdk1.6 -->
   <macrodef name="macro-deploy-endorsed">
-    <attribute name="jbosshome"/>
     <attribute name="stacklibs"/>
     <attribute name="thirdpartylibs"/>
     <sequential>
-      <copy todir="@{jbosshome}/lib/endorsed" overwrite="true">
+      <mkdir dir="${core.output.deploy.dir}/lib/endorsed"/>
+      <copy todir="${core.output.deploy.dir}/lib/endorsed" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
+          <patternset refid="lib.endorsed.patternset"/>
         </fileset>
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
+          <patternset refid="lib.endorsed.patternset"/>
         </fileset>
       </copy>
     </sequential>
   </macrodef>
   
-  <!-- Undeploy API jars from lib/endorsed -->
-  <macrodef name="macro-undeploy-endorsed">
+  <!-- ================================================================== -->
+  <!-- Deploy Framework                                                   -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-framework">
+    <attribute name="thirdpartylibs"/>
+    <sequential>
+      
+      <!-- BIN SCRIPTS -->
+      <unzip dest="${core.output.deploy.dir}/bin" src="@{thirdpartylibs}/jbossws-framework-scripts.zip"/>
+      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
+      
+      <!-- CLIENT JARS-->
+      <copy todir="${core.output.deploy.dir}/client">
+        <fileset dir="@{thirdpartylibs}">
+          <patternset refid="client.patternset"/>
+        </fileset>
+      </copy>
+      
+      <!-- SERVER LIB JARS-->
+      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib">
+        <fileset dir="@{thirdpartylibs}">
+          <patternset refid="server.lib.patternset"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy JBossWS                                                     -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws">
+    <attribute name="jbosshome"/>
+    <attribute name="sarname"/>
+    <attribute name="stacklibs"/>
+    <attribute name="thirdpartylibs"/>
+    <sequential>
+      
+      <!-- Deploy the sars -->
+      <mkdir dir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <unjar dest="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/@{sarname}"/>
+      <mkdir dir="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
+      <unzip dest="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
+      
+      <!-- Deploy the jars -->
+      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deployed.files"/>
+      <copy todir="@{jbosshome}" overwrite="true">
+        <fileset refid="jbossws.deploy.files"/>
+      </copy>
+      
+      <!-- Write jbossws.deployed.files -->
+      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
+      <echo file="${core.output.deploy.dir}/jbossws.deployed.files" message="${jbossws.deploy.files}"/>
+      <replace file="${core.output.deploy.dir}/jbossws.deployed.files" token=";" value=" "/>
+      <copy todir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deployed.files" overwrite="true"/>
+      
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Undeploy JBossWS                                                   -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-undeploy-jbossws">
     <attribute name="jbosshome"/>
     <sequential>
+      
+      <delete dir="${core.output.deploy.dir}"/>
+      
+      <loadfile property="jbossws.undeploy.files" srcfile="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deployed.files" failonerror="false"/>
+      <loadfile property="jbossws.undeploy.files" srcfile="${core.dir}/ant-import/jbossws.default.undeploy.files" failonerror="false"/>
+      <delete dir="@{jbosshome}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <delete dir="@{jbosshome}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
       <delete>
-        <fileset dir="@{jbosshome}/lib/endorsed">
-          <include name="jaxb-api.jar"/>
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-        </fileset>
+        <fileset dir="@{jbosshome}" includes="${jbossws.undeploy.files}"/>
       </delete>
+      
     </sequential>
   </macrodef>
   
@@ -63,7 +172,61 @@
     <sequential>
       <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
       
-      <delete dir="${core.output.deploy.dir}"/>
+      <!-- BIN SCRIPTS -->
+      <mkdir dir="${core.output.deploy.dir}/bin"/>
+      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
+      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
+      
+      <!-- CLIENT JARS -->
+      <mkdir dir="${core.output.deploy.dir}/client"/>
+      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
+        <fileset dir="@{stacklibs}">
+          <patternset refid="client.patternset"/>
+          <include name="jbossws-jboss421.jar"/>
+        </fileset>
+        <fileset dir="@{thirdpartylibs}">
+          <patternset refid="client.patternset"/>
+          <include name="jboss-xml-binding.jar"/>
+        </fileset>
+      </copy>
+      
+      <!-- LIB JARS -->
+      <mkdir dir="${core.output.deploy.dir}/lib"/>
+      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
+        <fileset dir="@{thirdpartylibs}">
+          <patternset refid="lib.patternset"/>
+          <include name="jboss-xml-binding.jar"/>
+        </fileset>
+      </copy>
+      
+      <!-- SERVER LIB JARS -->
+      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib"/>
+      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
+        <fileset dir="@{thirdpartylibs}">
+          <include name="jbossws-jboss421.jar"/>
+        </fileset>
+      </copy>
+      
+      <macro-deploy-jbossws jbosshome="${jboss421.home}" sarname="jbossws-native42.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
+      
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-undeploy-native421">
+    <sequential>
+      <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
+      <macro-undeploy-jbossws jbosshome="${jboss421.home}"/>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment  JBoss-4.2.x                                            -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-native42x">
+    <attribute name="stacklibs"/>
+    <attribute name="thirdpartylibs"/>
+    <sequential>
       
       <!-- BIN SCRIPTS -->
       <mkdir dir="${core.output.deploy.dir}/bin"/>
@@ -74,72 +237,13 @@
       <mkdir dir="${core.output.deploy.dir}/client"/>
       <copy todir="${core.output.deploy.dir}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="jbossws-jboss421.jar"/>
-          <include name="jboss-xml-binding.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
+          <patternset refid="client.patternset"/>
         </fileset>
       </copy>
       
-      <!-- LIB JARS -->
-      <mkdir dir="${core.output.deploy.dir}/lib"/>
-      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
-          <include name="jboss-xml-binding.jar"/>
-        </fileset>
-      </copy>
-      
-      <!-- SERVER JARS -->
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib"/>
-      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
-          <include name="jbossws-jboss421.jar"/>
-        </fileset>
-      </copy>
-      
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <unjar dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-      <unzip dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
-      
-      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deploy.files.txt"/>
-      <copy todir="${jboss421.home}" overwrite="true">
-        <fileset refid="jbossws.deploy.files"/>
-      </copy>
-      
-      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
-      <echo file="${core.output.deploy.dir}/jbossws.deploy.files.txt" message="${jbossws.deploy.files}"/>
-      <replace file="${core.output.deploy.dir}/jbossws.deploy.files.txt" token=";" value=" "/>
-      <copy todir="${jboss421.home}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deploy.files.txt" overwrite="true"/>
-        
-    </sequential>
-  </macrodef>
-  
-  <macrodef name="macro-undeploy-native421">
-    <sequential>
-      <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
-        
-      <loadfile property="jbossws.undeploy.files" srcfile="${jboss421.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
-      <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
-      <delete dir="${jboss421.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <delete>
-        <fileset dir="${jboss421.home}" includes="${jbossws.undeploy.files}"/>
-      </delete>
-        
     </sequential>
   </macrodef>
   
@@ -151,66 +255,16 @@
     <attribute name="stacklibs"/>
     <attribute name="thirdpartylibs"/>
     <sequential>
-      
-      <delete dir="${core.output.deploy.dir}"/>
-      
-      <!-- BIN SCRIPTS -->
-      <mkdir dir="${core.output.deploy.dir}/bin"/>
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
-      
-      <!-- CLIENT JARS -->
-      <mkdir dir="${core.output.deploy.dir}/client"/>
-      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
-        <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-        </fileset>
-        <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-        </fileset>
-      </copy>
-      
-      <!-- SERVER JARS -->
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <unjar dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-      <unzip dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
-      
-      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deploy.files.txt"/>
-      <copy todir="${jboss422.home}" overwrite="true">
-        <fileset refid="jbossws.deploy.files"/>
-      </copy>
-      
-      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
-      <echo file="${core.output.deploy.dir}/jbossws.deploy.files.txt" message="${jbossws.deploy.files}"/>
-      <replace file="${core.output.deploy.dir}/jbossws.deploy.files.txt" token=";" value=" "/>
-      <copy todir="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deploy.files.txt" overwrite="true"/>
-        
+      <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+      <macro-deploy-native42x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
+      <macro-deploy-jbossws jbosshome="${jboss422.home}" sarname="jbossws-native42.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
   </macrodef>
   
   <macrodef name="macro-undeploy-native422">
     <sequential>
-      
-      <loadfile property="jbossws.undeploy.files" srcfile="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
-      <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
-      <delete dir="${jboss422.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <delete>
-        <fileset dir="${jboss422.home}" includes="${jbossws.undeploy.files}"/>
-      </delete>
-        
+      <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+      <macro-undeploy-jbossws jbosshome="${jboss422.home}"/>
     </sequential>
   </macrodef>
   
@@ -222,8 +276,27 @@
     <attribute name="stacklibs"/>
     <attribute name="thirdpartylibs"/>
     <sequential>
-      
-      <delete dir="${core.output.deploy.dir}"/>
+      <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+      <macro-deploy-native42x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
+      <macro-deploy-jbossws jbosshome="${jboss423.home}" sarname="jbossws-native42.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-undeploy-native423">
+    <sequential>
+      <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+      <macro-undeploy-jbossws jbosshome="${jboss423.home}"/>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment  JBoss-5.0.x                                            -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-native50x">
+    <attribute name="stacklibs"/>
+    <attribute name="thirdpartylibs"/>
+    <sequential>
       
       <!-- BIN SCRIPTS -->
       <mkdir dir="${core.output.deploy.dir}/bin"/>
@@ -234,53 +307,27 @@
       <mkdir dir="${core.output.deploy.dir}/client"/>
       <copy todir="${core.output.deploy.dir}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
+          <patternset refid="client.patternset"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="policy.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
+          <patternset refid="client.patternset"/>
+        </fileset>
+      </copy>
+      
+      <!-- LIB JARS -->
+      <mkdir dir="${core.output.deploy.dir}/lib"/>
+      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
+        <fileset dir="@{thirdpartylibs}">
+          <patternset refid="lib.patternset"/>
         </fileset>
       </copy>
       
       <!-- SERVER JARS -->
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <unjar dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native42.sar"/>
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-      <unzip dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
-      
-      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deploy.files.txt"/>
-      <copy todir="${jboss423.home}" overwrite="true">
-        <fileset refid="jbossws.deploy.files"/>
+      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
+        <fileset dir="@{stacklibs}">
+          <patternset refid="server.lib.patternset"/>
+        </fileset>
       </copy>
-      
-      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
-      <echo file="${core.output.deploy.dir}/jbossws.deploy.files.txt" message="${jbossws.deploy.files}"/>
-      <replace file="${core.output.deploy.dir}/jbossws.deploy.files.txt" token=";" value=" "/>
-      <copy todir="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deploy.files.txt" overwrite="true"/>
-        
-    </sequential>
-  </macrodef>
-  
-  <macrodef name="macro-undeploy-native423">
-    <sequential>
-      
-      <loadfile property="jbossws.undeploy.files" srcfile="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
-      <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
-      <delete dir="${jboss423.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <delete>
-        <fileset dir="${jboss423.home}" includes="${jbossws.undeploy.files}"/>
-      </delete>
       
     </sequential>
   </macrodef>
@@ -294,85 +341,15 @@
     <attribute name="thirdpartylibs"/>
     <sequential>
       <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
-      
-      <delete dir="${core.output.deploy.dir}"/>
-      
-      <!-- BIN SCRIPTS -->
-      <mkdir dir="${core.output.deploy.dir}/bin"/>
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
-      
-      <!-- CLIENT JARS -->
-      <mkdir dir="${core.output.deploy.dir}/client"/>
-      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
-        <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-        </fileset>
-        <fileset dir="@{thirdpartylibs}">
-          <include name="policy.jar"/>
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-        </fileset>
-      </copy>
-      
-      <!-- LIB JARS -->
-      <mkdir dir="${core.output.deploy.dir}/lib"/>
-      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-        </fileset>
-      </copy>
-      
-      <!-- SERVER JARS -->
-      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
-        <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-        </fileset>
-      </copy>
-      
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <unjar dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native50.sar"/>
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-      <unzip dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
-      
-      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deploy.files.txt"/>
-      <copy todir="${jboss500.home}" overwrite="true">
-        <fileset refid="jbossws.deploy.files"/>
-      </copy>
-      
-      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
-      <echo file="${core.output.deploy.dir}/jbossws.deploy.files.txt" message="${jbossws.deploy.files}"/>
-      <replace file="${core.output.deploy.dir}/jbossws.deploy.files.txt" token=";" value=" "/>
-      <copy todir="${jboss500.home}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deploy.files.txt" overwrite="true"/>
-        
+      <macro-deploy-native50x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
+      <macro-deploy-jbossws jbosshome="${jboss500.home}" sarname="jbossws-native50.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
   </macrodef>
   
   <macrodef name="macro-undeploy-native500">
     <sequential>
       <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
-      
-      <loadfile property="jbossws.undeploy.files" srcfile="${jboss500.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
-      <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
-      <delete dir="${jboss500.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <delete>
-        <fileset dir="${jboss500.home}" includes="${jbossws.undeploy.files}"/>
-      </delete>
-      
+      <macro-undeploy-jbossws jbosshome="${jboss500.home}"/>
     </sequential>
   </macrodef>
   
@@ -380,92 +357,20 @@
   <!-- Deployment  JBoss-5.0.1                                            -->
   <!-- ================================================================== -->
   
-  
   <macrodef name="macro-deploy-native501">
     <attribute name="stacklibs"/>
     <attribute name="thirdpartylibs"/>
     <sequential>
       <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
-      
-      <delete dir="${core.output.deploy.dir}"/>
-      
-      <!-- BIN SCRIPTS -->
-      <mkdir dir="${core.output.deploy.dir}/bin"/>
-      <unzip dest="${core.output.deploy.dir}/bin" src="@{stacklibs}/jbossws-core-scripts.zip"/>
-      <chmod dir="${core.output.deploy.dir}/bin" perm="+x" includes="*.sh"/>
-      
-      <!-- CLIENT JARS -->
-      <mkdir dir="${core.output.deploy.dir}/client"/>
-      <copy todir="${core.output.deploy.dir}/client" overwrite="true">
-        <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-          <include name="jbossws-client.jar"/>
-        </fileset>
-        <fileset dir="@{thirdpartylibs}">
-          <include name="policy.jar"/>
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-          <include name="jaxb-xjc.jar"/>
-          <include name="jaxws-tools.jar"/>
-          <include name="jaxws-rt.jar"/>
-          <include name="stax-ex.jar"/>
-          <include name="streambuffer.jar"/>
-          <include name="wsdl4j.jar"/>
-        </fileset>
-      </copy>
-      
-      <!-- LIB JARS -->
-      <mkdir dir="${core.output.deploy.dir}/lib"/>
-      <copy todir="${core.output.deploy.dir}/lib" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
-          <include name="jaxb-api.jar"/>
-          <include name="jaxb-impl.jar"/>
-        </fileset>
-      </copy>
-      
-      <!-- SERVER JARS -->
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib"/>
-      <copy todir="${core.output.deploy.dir}/server/${jboss.server.instance}/lib" overwrite="true">
-        <fileset dir="@{stacklibs}">
-          <include name="jboss-jaxrpc.jar"/>
-          <include name="jboss-jaxws.jar"/>
-          <include name="jboss-jaxws-ext.jar"/>
-          <include name="jboss-saaj.jar"/>
-        </fileset>
-      </copy>
-      
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <unjar dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar" src="@{stacklibs}/jbossws-native50.sar"/>
-      <mkdir dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar"/>
-      <unzip dest="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/juddi-service.sar" src="@{thirdpartylibs}/juddi-service.sar"/>
-      
-      <fileset id="jbossws.deploy.files" dir="${core.output.deploy.dir}" excludes="jbossws.deploy.files.txt"/>
-      <copy todir="${jboss501.home}" overwrite="true">
-        <fileset refid="jbossws.deploy.files"/>
-      </copy>
-      
-      <property name="jbossws.deploy.files" refid="jbossws.deploy.files"/>
-      <echo file="${core.output.deploy.dir}/jbossws.deploy.files.txt" message="${jbossws.deploy.files}"/>
-      <replace file="${core.output.deploy.dir}/jbossws.deploy.files.txt" token=";" value=" "/>
-      <copy todir="${jboss501.home}/server/${jboss.server.instance}/deploy/jbossws.sar" file="${core.output.deploy.dir}/jbossws.deploy.files.txt" overwrite="true"/>
-        
+      <macro-deploy-native50x stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
+      <macro-deploy-jbossws jbosshome="${jboss501.home}" sarname="jbossws-native50.sar" stacklibs="@{stacklibs}" thirdpartylibs="@{thirdpartylibs}"/>
     </sequential>
   </macrodef>
   
   <macrodef name="macro-undeploy-native501">
     <sequential>
       <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
-      
-      <loadfile property="jbossws.undeploy.files" srcfile="${jboss501.home}/server/${jboss.server.instance}/deploy/jbossws.sar/jbossws.deploy.files.txt" failonerror="false"/>
-      <property name="jbossws.undeploy.files" value="nothing.to.undeploy"/>
-      <delete dir="${jboss501.home}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <delete>
-        <fileset dir="${jboss501.home}" includes="${jbossws.undeploy.files}"/>
-      </delete>
-      
+      <macro-undeploy-jbossws jbosshome="${jboss501.home}"/>
     </sequential>
   </macrodef>
   

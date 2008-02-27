@@ -98,6 +98,14 @@
       </webinf>
     </war>
     
+    <!-- jaxws-epr -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-epr.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/epr/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/epr/*TestCase.class"/>
+      </fileset>
+    </jar>
+    
     <!-- jaxws-handlerlifecycle -->
     <war warfile="${tests.output.dir}/libs/jaxws-handlerlifecycle.war" webxml="${tests.output.dir}/resources/jaxws/handlerlifecycle/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

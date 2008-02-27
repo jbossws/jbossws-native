@@ -23,15 +23,14 @@ package javax.xml.ws;
 
 // $Id$
 
+import java.net.URL;
+import java.util.Iterator;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.Provider;
-import javax.xml.ws.spi.ServiceDelegate;
 import javax.xml.ws.spi.ServiceDelegate21;
-import javax.xml.ws.spi.Provider21;
-import java.net.URL;
-import java.util.Iterator;
 
 /**
  * <code>Service</code> objects provide the client view of a Web service.
@@ -82,6 +81,35 @@ public class Service
       delegate = (ServiceDelegate21)Provider.provider().createServiceDelegate(wsdlDocumentLocation, serviceName, this.getClass());
    }
 
+   /**
+    * Create a <code>Service</code> instance.
+    *
+    * The specified WSDL document location and service qualified name MUST
+    * uniquely identify a <code>wsdl:service</code> element.
+    *
+    * @param wsdlLocation URL for the WSDL document location
+    *                             for the service
+    * @param serviceName QName for the service
+    * @throws WebServiceException If any error in creation of the
+    *                    specified service.
+    **/
+   public static Service create(URL wsdlLocation, QName serviceName)
+   {
+      return new Service(wsdlLocation, serviceName);
+   }
+
+   /**
+    * Create a <code>Service</code> instance.
+    *
+    * @param serviceName QName for the service
+    * @throws WebServiceException If any error in creation of the
+    *                    specified service
+    */
+   public static Service create(QName serviceName)
+   {
+      return create(null, serviceName);
+   }
+   
    /** 
     * The getPort method returns a proxy. A service client
     * uses this proxy to invoke operations on the target
@@ -315,34 +343,5 @@ public class Service
    public void setExecutor(java.util.concurrent.Executor executor)
    {
       delegate.setExecutor(executor);
-   }
-
-   /**
-    * Create a <code>Service</code> instance.
-    *
-    * The specified WSDL document location and service qualified name MUST
-    * uniquely identify a <code>wsdl:service</code> element.
-    *
-    * @param wsdlLocation URL for the WSDL document location
-    *                             for the service
-    * @param serviceName QName for the service
-    * @throws WebServiceException If any error in creation of the
-    *                    specified service.
-    **/
-   public static Service create(URL wsdlLocation, QName serviceName)
-   {
-      return new Service(wsdlLocation, serviceName);
-   }
-
-   /**
-    * Create a <code>Service</code> instance.
-    *
-    * @param serviceName QName for the service
-    * @throws WebServiceException If any error in creation of the
-    *                    specified service
-    */
-   public static Service create(QName serviceName)
-   {
-      return create(null, serviceName);
    }
 }

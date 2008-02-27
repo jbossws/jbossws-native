@@ -46,9 +46,10 @@ import javax.xml.ws.handler.HandlerResolver;
  *
  * @since JAX-WS 2.0
  */
-public abstract class ServiceDelegate {
-
-   protected ServiceDelegate() {
+public abstract class ServiceDelegate
+{
+   protected ServiceDelegate()
+   {
    }
 
    /**
@@ -79,8 +80,7 @@ public abstract class ServiceDelegate {
     * @see java.lang.reflect.Proxy
     * @see java.lang.reflect.InvocationHandler
     **/
-   public abstract <T> T getPort(QName portName,
-                                 Class<T> serviceEndpointInterface);
+   public abstract <T> T getPort(QName portName, Class<T> serviceEndpointInterface);
 
    /**
     * The getPort method returns a proxy. The parameter
@@ -107,9 +107,6 @@ public abstract class ServiceDelegate {
     **/
    public abstract <T> T getPort(Class<T> serviceEndpointInterface);
 
-
-
-
    /**
     * Creates a new port for the service. Ports created in this way contain
     * no WSDL port type information and can only be used for creating
@@ -125,10 +122,7 @@ public abstract class ServiceDelegate {
     * @see javax.xml.ws.soap.SOAPBinding#SOAP12HTTP_BINDING
     * @see javax.xml.ws.http.HTTPBinding#HTTP_BINDING
     **/
-   public abstract void addPort(QName portName, String bindingId,
-                                String endpointAddress);
-
-
+   public abstract void addPort(QName portName, String bindingId, String endpointAddress);
 
    /**
     * Creates a <code>Dispatch</code> instance for use with objects of
@@ -151,9 +145,7 @@ public abstract class ServiceDelegate {
     * @see javax.xml.transform.Source
     * @see javax.xml.soap.SOAPMessage
     **/
-   public abstract <T> Dispatch<T> createDispatch(QName portName, Class<T> type,
-                                                  Service.Mode mode);
-
+   public abstract <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Service.Mode mode);
 
    /**
     * Creates a <code>Dispatch</code> instance for use with JAXB
@@ -174,8 +166,7 @@ public abstract class ServiceDelegate {
     *
     * @see javax.xml.bind.JAXBContext
     **/
-   public abstract Dispatch<Object> createDispatch(QName portName,
-                                                   JAXBContext context, Service.Mode mode);
+   public abstract Dispatch<Object> createDispatch(QName portName, JAXBContext context, Service.Mode mode);
 
    /**
     * Gets the name of this service.

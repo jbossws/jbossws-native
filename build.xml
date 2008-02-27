@@ -159,7 +159,7 @@
   <!-- Compile etc files (manifests and such) -->
   <target name="compile-etc" depends="init">
     <mkdir dir="${core.output.etc.dir}"/>
-    <copy todir="${core.output.etc.dir}" filtering="yes" overwrite="true">
+    <copy todir="${core.output.etc.dir}" filtering="yes">
       <fileset dir="${core.etc.dir}"/>
       <filterset>
         <filter token="java.vm.version" value="${java.vm.version}"/>
