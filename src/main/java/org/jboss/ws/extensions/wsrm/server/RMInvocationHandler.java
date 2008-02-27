@@ -121,7 +121,7 @@ public final class RMInvocationHandler extends InvocationHandler
     * @param inv invocation
     * @return RM response context to be set after target endpoint invocation
     */
-   private synchronized Map<String, Object> prepareResponseContext(Endpoint ep, Invocation inv)
+   private static synchronized Map<String, Object> prepareResponseContext(Endpoint ep, Invocation inv, String dataDir)
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
@@ -268,7 +268,7 @@ public final class RMInvocationHandler extends InvocationHandler
    @Override
    public final void invoke(Endpoint ep, Invocation inv) throws Exception
    {
-      Map<String, Object> rmResponseContext = prepareResponseContext(ep, inv);
+      Map<String, Object> rmResponseContext = prepareResponseContext(ep, inv, this.dataDir);
       
       if (inv.getJavaMethod() != null)
       {

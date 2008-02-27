@@ -52,7 +52,6 @@ public final class RMDeploymentAspect extends DeploymentAspect
          {
             InvocationHandler origInvHandler = ep.getInvocationHandler();
             InvocationHandler wsrmInvHandler = new RMInvocationHandler(origInvHandler, (ArchiveDeployment)dep);
-            // TODO: implement wsrm data dir clean up here
             ep.setInvocationHandler(wsrmInvHandler);
             RMHelper.setupRMOperations(sepMetaData);
             log.info("WS-RM invocation handler associated with endpoint " + ep.getAddress());
@@ -70,7 +69,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
          {
             RMInvocationHandler rmInvHandler = (RMInvocationHandler)invHandler;
             ep.setInvocationHandler(rmInvHandler.getDelegate());
-            log.info("WS-RM invocation handler removed from endpoint " + ep.getAddress());
+            log.info("WS-RM invocation handler removed for endpoint " + ep.getAddress());
          }
       }
    }

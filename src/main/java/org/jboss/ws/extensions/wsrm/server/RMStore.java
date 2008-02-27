@@ -81,6 +81,10 @@ public final class RMStore
             {
                return sequence;
             }
+            if ((sequence.getCreationTime() + sequence.getDuration()) >= System.currentTimeMillis())
+            {
+               sequences[i].delete(); // clean up timeouted sequences
+            }
          }
          catch (IOException ioe)
          {

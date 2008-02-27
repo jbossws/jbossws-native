@@ -21,18 +21,18 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Iterator;
+import java.io.ByteArrayOutputStream;
+
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Iterator;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMSequence;
 
@@ -124,16 +124,6 @@ public class RMServerSequence implements RMSequence
       return this.outboundId;
    }
    
-   public void serialize()
-   {
-      throw new NotImplementedException();
-   }
-   
-   public void deserialize()
-   {
-      throw new NotImplementedException();
-   }
-
    public final void addReceivedInboundMessage(long messageId)
    {
       this.receivedInboundMessages.add(messageId);
@@ -173,6 +163,11 @@ public class RMServerSequence implements RMSequence
    {
       return this.receivedInboundMessages;
    }
+   
+   public long getCreationTime()
+   {
+      return this.creationTime;
+   }
 
    public void close()
    {
@@ -211,7 +206,7 @@ public class RMServerSequence implements RMSequence
    
    public String toString()
    {
-      return this.inboundId + " - " + this.outboundId;
+      return this.sequenceId + "[" + this.inboundId + " - " + this.outboundId + "]";
    }
 
 }
