@@ -26,6 +26,7 @@ package org.jboss.ws.core.jaxws.spi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Proxy;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,6 +46,10 @@ import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.addressing.AddressingBuilder;
+import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.ServiceDelegate21;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
@@ -75,6 +80,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaDat
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.w3c.dom.Element;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -457,61 +463,121 @@ public class ServiceDelegateImpl extends ServiceDelegate21
    @Override
    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Mode mode, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
-      return createDispatch(portName, type, mode);
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
+      Dispatch<T> dispatch = createDispatch(portName, type, mode);
+      return dispatch;
    }
 
    @Override
    public <T> Dispatch<T> createDispatch(EndpointReference epr, Class<T> type, Mode mode, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
       QName portName = null;
       if (epr instanceof W3CEndpointReference)
       {
          W3CEndpointReference w3c = (W3CEndpointReference)epr;
          portName = w3c.getEndpointName();
       }
-      return createDispatch(portName, type, mode);
+      Dispatch<T> dispatch = createDispatch(portName, type, mode);
+      return dispatch;
    }
 
    @Override
    public Dispatch<Object> createDispatch(QName portName, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
-      return createDispatch(portName, context, mode);
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
+      Dispatch<Object> dispatch = createDispatch(portName, context, mode);
+      return dispatch;
    }
 
    @Override
    public Dispatch<Object> createDispatch(EndpointReference epr, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
       QName portName = null;
       if (epr instanceof W3CEndpointReference)
       {
          W3CEndpointReference w3c = (W3CEndpointReference)epr;
          portName = w3c.getEndpointName();
       }
-      return createDispatch(portName, context, mode);
+
+      Dispatch<Object> dispatch = createDispatch(portName, context, mode);
+      return dispatch;
    }
 
    @Override
    public <T> T getPort(QName portName, Class<T> sei, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
-      return getPort(portName, sei);
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
+      T port = getPort(portName, sei);
+      return port;
    }
 
    @Override
    public <T> T getPort(EndpointReference epr, Class<T> sei, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
-      return getPort(sei);
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
+      T port = getPort(sei);
+      initAddressingProperties(port, epr);
+      return port;
    }
 
    @Override
    public <T> T getPort(Class<T> sei, WebServiceFeature... features)
    {
-      log.warn("WebServiceFeature not implemented");
-      return getPort(sei);
+      if (features != null)
+         log.warn("WebServiceFeature not implemented");
+
+      T port = getPort(sei);
+      return port;
+   }
+
+   // Workaround for [JBWS-2015] Modify addressing handlers to work with the JAXWS-2.1 API
+   private <T> void initAddressingProperties(T port, EndpointReference epr)
+   {
+      Map<String, Object> reqContext = ((BindingProvider)port).getRequestContext();
+      AddressingBuilder builder = AddressingBuilder.getAddressingBuilder();
+      AddressingProperties addrProps = builder.newAddressingProperties();
+      reqContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
+
+      if (epr instanceof W3CEndpointReference)
+      {
+         try
+         {
+            W3CEndpointReference w3cepr = (W3CEndpointReference)epr;
+            if (w3cepr.getAddress() != null)
+               addrProps.setTo(builder.newURI(w3cepr.getAddress()));
+            
+            List<Element> w3cRefParams = w3cepr.getReferenceParameters();
+            if (w3cRefParams != null)
+            {
+               ReferenceParameters refParams = addrProps.getReferenceParameters();
+               for (Element w3cRefParam : w3cRefParams)
+               {
+                  refParams.addElement(w3cRefParam);
+               }
+            }
+         }
+         catch (URISyntaxException ex)
+         {
+            throw new IllegalArgumentException(ex);
+         }
+      }
+      else
+      {
+         throw new IllegalArgumentException("Unsupported EPR type: " + epr);
+      }
    }
 }

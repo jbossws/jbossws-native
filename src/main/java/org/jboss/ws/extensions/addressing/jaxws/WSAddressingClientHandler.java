@@ -24,6 +24,8 @@ package org.jboss.ws.extensions.addressing.jaxws;
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 
 import javax.xml.namespace.QName;
@@ -37,6 +39,8 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,18 +88,29 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
       }
       
       addrProps = (SOAPAddressingProperties)msgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
-		if (addrProps != null)
-		{
-			SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
-			addrProps.writeHeaders(soapMessage);
-		}
-		else
-		{
-			// supply default addressing properties
-			addrProps = (SOAPAddressingPropertiesImpl)ADDR_BUILDER.newAddressingProperties();
-			msgContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
-			msgContext.setScope(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, Scope.APPLICATION);
-		}
+      if (addrProps == null)
+      {
+         // supply default addressing properties
+         addrProps = (SOAPAddressingPropertiesImpl)ADDR_BUILDER.newAddressingProperties();
+         msgContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
+         msgContext.setScope(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, Scope.APPLICATION);
+      }
+      
+      if (addrProps.getAction() == null)
+      {
+         try
+         {
+            OperationMetaData opMetaData = ((CommonMessageContext)msgContext).getOperationMetaData();
+            addrProps.setAction(ADDR_BUILDER.newURI(opMetaData.getJavaName()));
+         }
+         catch (URISyntaxException ex)
+         {
+            // ignore
+         }
+      }
+      
+		SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
+		addrProps.writeHeaders(soapMessage);
 
 		return true;
 	}

@@ -23,24 +23,60 @@ package org.jboss.test.ws.jaxws.epr;
 
 // $Id$
 
+import java.io.ByteArrayOutputStream;
+
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.addressing.ReferenceParameters;
+import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.annotation.EndpointConfig;
+import org.w3c.dom.Element;
 
 @WebService(serviceName = "TestEndpointService", name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/epr")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @Stateless
+@EndpointConfig(configName = "Standard WSAddressing Endpoint")
 public class TestEndpointImpl implements TestEndpoint
 {
    // provide logging
    private final static Logger log = Logger.getLogger(TestEndpointImpl.class);
 
+   @Resource
+   WebServiceContext context;
+
    @WebMethod
    public String echo(String input)
    {
+      try
+      {
+         SOAPMessageContext msgContext = (SOAPMessageContext)context.getMessageContext();
+
+         // log message
+         SOAPMessage soapMessage = msgContext.getMessage();
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         soapMessage.writeTo(baos);
+         log.info(new String(baos.toByteArray()));
+         
+         SOAPAddressingProperties addrProps = (SOAPAddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+         ReferenceParameters refParams = addrProps.getReferenceParameters();
+         for (Object refParam : refParams.getElements())
+         {
+            input += "|" + ((Element)refParam).getNodeValue();
+         }
+      }
+      catch (Exception ex)
+      {
+         throw new RuntimeException(ex);
+      }
       return input;
    }
 }

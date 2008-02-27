@@ -31,6 +31,8 @@ import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import junit.framework.Test;
 
+import org.jboss.ws.core.StubExt;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -49,12 +51,13 @@ public class EndpointReferenceTestCase extends JBossWSTest
       return new JBossWSTestSetup(EndpointReferenceTestCase.class, "jaxws-epr.jar");
    }
 
-   public void _testSimple() throws Exception
+   public void testSimple() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-epr/TestEndpointImpl?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/epr", "TestEndpointService");
       Service service = Service.create(wsdlURL, serviceName);
       TestEndpoint port = service.getPort(TestEndpoint.class);
+      ((StubExt)port).setConfigName("Standard WSAddressing Client");
       String retStr = port.echo("hello");
       assertEquals("hello", retStr);
    }
@@ -62,15 +65,19 @@ public class EndpointReferenceTestCase extends JBossWSTest
    public void testEndpointReference() throws Exception
    {
       String address = "http://" + getServerHost() + ":8080/jaxws-epr/TestEndpointImpl";
+      URL wsdlURL = new URL(address + "?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/epr", "TestEndpointService");
-      
+
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       builder = builder.address(address);
       builder = builder.serviceName(serviceName);
+      builder.referenceParameter(DOMUtils.parse("<fabrikam:CustomerKey xmlns:fabrikam='http://example.com/fabrikam'>123456789</fabrikam:CustomerKey>"));
+      builder.referenceParameter(DOMUtils.parse("<fabrikam:ShoppingCart xmlns:fabrikam='http://example.com/fabrikam'>ABCDEFG</fabrikam:ShoppingCart>"));
       W3CEndpointReference epr = builder.build();
-      
-      Service21 service = Service21.create(serviceName);
+
+      Service21 service = Service21.create(wsdlURL, serviceName);
       TestEndpoint port = service.getPort(epr, TestEndpoint.class);
+      ((StubExt)port).setConfigName("Standard WSAddressing Client");
       String retStr = port.echo("hello");
       assertEquals("hello", retStr);
    }
