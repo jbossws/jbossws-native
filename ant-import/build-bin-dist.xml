@@ -35,7 +35,7 @@
     <mkdir dir="${bindist.tools.dir}"/>
     
     <!-- root -->
-    <copy tofile="${bindist.dir}/ant.properties" file="${core.distro.dir}/ant.properties.example">
+    <copy tofile="${bindist.dir}/ant.properties.example" file="${core.distro.dir}/ant.properties.example">
       <filterset>
         <filtersfile file="${core.dir}/ant.properties"/>
       </filterset>
