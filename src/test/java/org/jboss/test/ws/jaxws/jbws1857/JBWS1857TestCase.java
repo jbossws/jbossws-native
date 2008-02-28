@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.jboss.test.ws.jaxws.jbws1857.types.Stammdaten;
+import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
@@ -39,17 +40,14 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class JBWS1857TestCase extends JBossWSTest
 {
-
    public void testPortCreation() throws Exception
    {
       File wsdlFile = new File("resources/jaxws/jbws1857/StammdatenService.wsdl");
       QName serviceName = new QName("http://example.com", "StammdatenService");
       Service service = Service.create(wsdlFile.toURL(), serviceName);
       
-      long start = System.currentTimeMillis();
       service.getPort(Stammdaten.class);
-      long time = start - System.currentTimeMillis();
-      
-      assertTrue("Creation of the port took too long", time < 20000);
+      Integer ctxCount = JAXBContextFactory.getContextCount();
+      assertTrue("Too many JAXB context: " + ctxCount, ctxCount < 3);
    }
 }
