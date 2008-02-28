@@ -54,11 +54,23 @@ public class SimpleSignTestCase extends JBossWSTest
    public void testEndpoint() throws Exception
    {
       Hello hello = getPort();
-
+      performTest(hello, "Kermit");
+   }
+   
+   public void testEndpointWithCRLFs() throws Exception
+   {
+      Hello hello = getPort();
+      performTest(hello, "Kermit\nmy friend");
+      performTest(hello, "Kermit\rmy friend");
+      performTest(hello, "Kermit\r\nmy friend");
+   }
+   
+   private void performTest(Hello hello, String msg) throws Exception
+   {
       UserType in0 = new UserType();
-      in0.setMsg("Kermit");
+      in0.setMsg(msg);
       UserType retObj = hello.echoUserType(in0);
-      assertEquals("Kermit", retObj.getMsg());
+      assertEquals(msg, retObj.getMsg());
    }
 
    private Hello getPort() throws Exception
