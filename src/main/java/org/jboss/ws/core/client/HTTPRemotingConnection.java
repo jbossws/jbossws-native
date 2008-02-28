@@ -90,10 +90,15 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    private static Map<String, String> configMap = new HashMap<String, String>();
    static
    {
+      configMap.put(StubExt.PROPERTY_KEY_ALIAS, "org.jboss.remoting.keyAlias");
       configMap.put(StubExt.PROPERTY_KEY_STORE, "org.jboss.remoting.keyStore");
+      configMap.put(StubExt.PROPERTY_KEY_STORE_ALGORITHM, "org.jboss.remoting.keyStoreAlgorithm");
       configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, "org.jboss.remoting.keyStorePassword");
       configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, "org.jboss.remoting.keyStoreType");
+      configMap.put(StubExt.PROPERTY_SSL_PROTOCOL, "org.jboss.remoting.sslProtocol");
+      configMap.put(StubExt.PROPERTY_SSL_PROVIDER_NAME, "org.jboss.remoting.sslProviderName");
       configMap.put(StubExt.PROPERTY_TRUST_STORE, "org.jboss.remoting.trustStore");
+      configMap.put(StubExt.PROPERTY_TRUST_STORE_ALGORITHM, "org.jboss.remoting.truststoreAlgorithm");
       configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, "org.jboss.remoting.trustStorePassword");
       configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, "org.jboss.remoting.trustStoreType");
    }

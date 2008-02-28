@@ -41,14 +41,24 @@ public interface StubExt extends ConfigProvider
 {
    /** ClientTimeout property: org.jboss.ws.timeout */
    static final String PROPERTY_CLIENT_TIMEOUT = "org.jboss.ws.timeout";
+   /** Key Alias property: org.jboss.ws.keyAlias */
+   static final String PROPERTY_KEY_ALIAS = "org.jboss.ws.keyAlias";
    /** KeyStore property: org.jboss.ws.keyStore */
    static final String PROPERTY_KEY_STORE = "org.jboss.ws.keyStore";
+   /** KeyStore Management Algorithm property: org.jboss.ws.keyStoreAlgorithm */
+   static final String PROPERTY_KEY_STORE_ALGORITHM = "org.jboss.ws.keyStoreAlgorithm";
    /** KeyStorePassword property: org.jboss.ws.keyStorePassword */
    static final String PROPERTY_KEY_STORE_PASSWORD = "org.jboss.ws.keyStorePassword";
    /** KeyStoreType property: org.jboss.ws.keyStoreType */
    static final String PROPERTY_KEY_STORE_TYPE = "org.jboss.ws.keyStoreType";
+   /** Remoting SSL Protocol property: org.jboss.ws.sslProtocol */
+   static final String PROPERTY_SSL_PROTOCOL = "org.jboss.ws.sslProtocol";
+   /** Remoting SSL Provider Name property: org.jboss.ws.sslProviderName */
+   static final String PROPERTY_SSL_PROVIDER_NAME = "org.jboss.ws.sslProviderName";
    /** TrustStore property: org.jboss.ws.trustStore */
    static final String PROPERTY_TRUST_STORE = "org.jboss.ws.trustStore";
+   /** TrustStore Management Algorithm property: org.jboss.ws.trustStoreAlgorithm */
+   static final String PROPERTY_TRUST_STORE_ALGORITHM = "org.jboss.ws.trustStoreAlgorithm";
    /** TrustStorePassword property: org.jboss.ws.trustStorePassword */
    static final String PROPERTY_TRUST_STORE_PASSWORD = "org.jboss.ws.trustStorePassword";
    /** TrustStoreType property: org.jboss.ws.trustStoreType */

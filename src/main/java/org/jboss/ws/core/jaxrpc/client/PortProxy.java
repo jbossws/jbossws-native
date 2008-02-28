@@ -78,10 +78,15 @@ public class PortProxy implements InvocationHandler
    static
    {
       legacyPropertyMap.put("org.jboss.webservice.client.timeout", StubExt.PROPERTY_CLIENT_TIMEOUT);
+      legacyPropertyMap.put("org.jboss.webservice.keyAlias", StubExt.PROPERTY_KEY_ALIAS);
       legacyPropertyMap.put("org.jboss.webservice.keyStore", StubExt.PROPERTY_KEY_STORE);
+      legacyPropertyMap.put("org.jboss.webservice.keyStoreAlgorithm", StubExt.PROPERTY_KEY_STORE_ALGORITHM);
       legacyPropertyMap.put("org.jboss.webservice.keyStorePassword", StubExt.PROPERTY_KEY_STORE_PASSWORD);
       legacyPropertyMap.put("org.jboss.webservice.keyStoreType", StubExt.PROPERTY_KEY_STORE_TYPE);
+      legacyPropertyMap.put("org.jboss.webservice.sslProtocol", StubExt.PROPERTY_SSL_PROTOCOL);
+      legacyPropertyMap.put("org.jboss.webservice.sslProviderName", StubExt.PROPERTY_SSL_PROVIDER_NAME);
       legacyPropertyMap.put("org.jboss.webservice.trustStore", StubExt.PROPERTY_TRUST_STORE);
+      legacyPropertyMap.put("org.jboss.webservice.trustStoreAlgorithm", StubExt.PROPERTY_TRUST_STORE_ALGORITHM);
       legacyPropertyMap.put("org.jboss.webservice.trustStorePassword", StubExt.PROPERTY_TRUST_STORE_PASSWORD);
       legacyPropertyMap.put("org.jboss.webservice.trustStoreType", StubExt.PROPERTY_TRUST_STORE_TYPE);
    }
