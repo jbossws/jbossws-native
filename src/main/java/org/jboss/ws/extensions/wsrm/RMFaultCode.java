@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceFaultCode;
+
 /**
  * RM fault constants
  *
@@ -32,7 +34,7 @@ package org.jboss.ws.extensions.wsrm;
 public final class RMFaultCode
 {
    
-   private final String subcode;
+   private final RMSequenceFaultCode subcode;
    private final String reason;
 
    /**
@@ -47,8 +49,8 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode SEQUENCE_TERMINATED = new RMFaultCode(
-      "SequenceTerminated",
-      "The Sequence has been terminated due to an unrecoverable error."
+         RMSequenceFaultCode.SEQUENCE_TERMINATED,
+         "The Sequence has been terminated due to an unrecoverable error."
    );
 
    /**
@@ -64,8 +66,8 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode UNKNOWN_SEQUENCE = new RMFaultCode(
-      "UnknownSequence",
-      "The value of wsrm:Identifier is not a known Sequence identifier."
+         RMSequenceFaultCode.UNKNOWN_SEQUENCE,
+         "The value of wsrm:Identifier is not a known Sequence identifier."
    );
    
    /**
@@ -82,13 +84,14 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode INVALID_ACKNOWLEDGEMENT = new RMFaultCode(
-      "InvalidAcknowledgement",
-      "The SequenceAcknowledgement violates the cumulative Acknowledgement invariant."
+         RMSequenceFaultCode.INVALID_ACKNOWLEDGEMENT,
+         "The SequenceAcknowledgement violates the cumulative Acknowledgement invariant."
    );
    
    /**
     * Message number in /wsrm:Sequence/wsrm:MessageNumber of a Received
-    * message exceeds the internal limitations of an RM Destination
+    * message exceeds the internal limitations of an RM Destination.
+    * It is an unrecoverable error and terminates the Sequence.
     * <p>
     * <table>
     * <tr><td>[Code]</td><td>Sender</td></tr>
@@ -103,8 +106,8 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode MESSAGE_NUMBER_ROLLOVER = new RMFaultCode(
-      "MessageNumberRollover",
-      "The maximum value for wsrm:MessageNumber has been exceeded."
+         RMSequenceFaultCode.MESSAGE_NUMBER_ROLLOVER,
+         "The maximum value for wsrm:MessageNumber has been exceeded."
    );
    
    /**
@@ -120,8 +123,8 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode CREATE_SEQUENCE_REFUSED = new RMFaultCode(
-      "CreateSequenceRefused",
-      "The Create Sequence request has been refused by the RM Destination."
+         RMSequenceFaultCode.CREATE_SEQUENCE_REFUSED,
+         "The Create Sequence request has been refused by the RM Destination."
    );
    
    /**
@@ -139,15 +142,14 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode SEQUENCE_CLOSED = new RMFaultCode(
-      "SequenceClosed",
-      "The Sequence is closed and cannot accept new messages."
+         RMSequenceFaultCode.SEQUENCE_CLOSED,
+         "The Sequence is closed and cannot accept new messages."
    );
    
    /**
     * If an RM Destination requires the use of WS-RM,
     * this fault is generated when it Receives an incoming
     * message that did not use this protocol.
-    * 
     * <p>
     * <table>
     * <tr><td>[Code]</td><td>Sender</td></tr>
@@ -158,8 +160,27 @@ public final class RMFaultCode
     * </p>
     */
    public static final RMFaultCode WSRM_REQUIRED = new RMFaultCode(
-      "WSRMRequired",
-      "The RM Destination requires the use of WSRM"
+         RMSequenceFaultCode.WSRM_REQUIRED,
+         "The RM Destination requires the use of WSRM"
+   );
+
+   /**
+    * This fault is sent by an RM Destination to indicate that it has received a message that
+    * has a &lt;MessageNumber&gt; within a Sequence that exceeds the value of the
+    * &lt;MessageNumber&gt; element that accompanied a &lt;LastMessage&gt; element for the
+    * Sequence. This is an unrecoverable error and terminates the Sequence.
+    * <p>
+    * <table>
+    * <tr><td>[Code]</td><td>Sender</td></tr>
+    * <tr><td>[Subcode]</td><td>wsrm:LastMessageNumberExceeded</td></tr>
+    * <tr><td>[Reason]</td><td>The value for wsrm:MessageNumber exceeds the value of the MessageNumber accompanying a LastMessage element in this Sequence.</td></tr>
+    * <tr><td>[Detail]</td><td>&lt;wsrm:Identifier...&gt; xs:anyURI &lt;/wsrm:Identifier&gt;</td></tr>
+    * </table>
+    * </p>
+    */
+   public static final RMFaultCode LAST_MESSAGE_NUMBER_EXCEEDED = new RMFaultCode(
+         RMSequenceFaultCode.LAST_MESSAGE_NUMBER_EXCEEDED,
+         "The value for wsrm:MessageNumber exceeds the value of the MessageNumber accompanying a LastMessage element in this Sequence"
    );
    
    /**
@@ -167,7 +188,7 @@ public final class RMFaultCode
     * @param subcode the subcode
     * @param reason message
     */
-   private RMFaultCode(String subcode, String reason)
+   private RMFaultCode(RMSequenceFaultCode subcode, String reason)
    {
       super();
       this.subcode = subcode;
@@ -178,7 +199,7 @@ public final class RMFaultCode
     * Gets subcode
     * @return subcode
     */
-   public final String getSubcode()
+   public final RMSequenceFaultCode getSubcode()
    {
       return this.subcode;
    }

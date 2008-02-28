@@ -36,8 +36,8 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMSequence;
-import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
@@ -88,9 +88,7 @@ public final class RMServerHandler extends RMHandlerAbstractBase
       serialize(rmConstants.getSequenceAcknowledgementQName(), outMsgs, data, soapMessage, sequenceImpl);
       
       if ((outMsgs.size() != 0) && (data.size() == 0))
-         throw new RMException("RM handler have not serialized WS-RM message to the payload");
-
-      // TODO: implement SequenceFault serialization
+         throw new IllegalStateException("RM handler have not serialized WS-RM message to the payload");
 
       return true;
    }
@@ -127,12 +125,36 @@ public final class RMServerHandler extends RMHandlerAbstractBase
       deserialize(rmConstants.getTerminateSequenceQName(), soapMessage, messages, data);
       
       if (data.size() == 0)
-         throw new RMException("RM handler was not able to find WS-RM message in the payload");
+         throw new IllegalStateException("RM handler was not able to find WS-RM message in the payload");
       
       // propagate RM response context to higher layers
       msgContext.put(RMConstant.REQUEST_CONTEXT, rmResponseContext);
       msgContext.setScope(RMConstant.REQUEST_CONTEXT, Scope.APPLICATION);
       
+      return true;
+   }
+
+   @Override
+   public boolean handleFault(MessageContext msgContext)
+   {
+      log.debug("handling fault message");
+      CommonMessageContext commonMsgContext = (CommonMessageContext)msgContext;
+      SOAPAddressingProperties addrProps = (SOAPAddressingProperties)commonMsgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
+      Map<String, Object> rmOutboundContext = (Map<String, Object>)commonMsgContext.get(RMConstant.RESPONSE_CONTEXT);
+      List<QName> outMsgs = (List<QName>)rmOutboundContext.get(RMConstant.PROTOCOL_MESSAGES);
+      Map<QName, RMSerializable> data = new HashMap<QName, RMSerializable>();
+      String optionalMessageId = (addrProps.getMessageID() != null) ? addrProps.getMessageID().getURI().toString() : null;
+      rmOutboundContext.put(RMConstant.WSA_MESSAGE_ID, optionalMessageId);
+      rmOutboundContext.put(RMConstant.PROTOCOL_MESSAGES_MAPPING, data);
+      SOAPMessage soapMessage = ((SOAPMessageContext)commonMsgContext).getMessage();
+      RMFault sequenceFault = (RMFault)rmOutboundContext.get(RMConstant.FAULT_REFERENCE);
+
+      // try to serialize SequenceFault to message
+      serialize(rmConstants.getSequenceFaultQName(), outMsgs, data, soapMessage, sequenceFault);
+      
+      if ((outMsgs.size() != 0) && (data.size() == 0))
+         throw new IllegalStateException("RM handler have not serialized WS-RM message to the payload");
+
       return true;
    }
 

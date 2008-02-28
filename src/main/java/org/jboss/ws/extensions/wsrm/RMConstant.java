@@ -23,6 +23,7 @@ public final class RMConstant
    public static final String REQUEST_CONTEXT = PREFIX + ".requestContext";
    public static final String RESPONSE_CONTEXT = PREFIX + ".responseContext";
    public static final String SEQUENCE_REFERENCE = PREFIX + ".sequenceReference";
+   public static final String FAULT_REFERENCE = PREFIX + ".faultReference";
    public static final String PROTOCOL_MESSAGES = PREFIX + ".protocolMessages";
    public static final String PROTOCOL_MESSAGES_MAPPING = PREFIX + ".protocolMessagesMapping";
    public static final String WSA_MESSAGE_ID = PREFIX + ".wsaMessageId";

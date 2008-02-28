@@ -79,4 +79,10 @@ public class RMFault extends WebServiceException
       return this.details;
    }
 
+   @Override
+   public String getMessage()
+   {
+      return faultCode.getSubcode() + ": " + faultCode.getReason();
+   }
+
 }

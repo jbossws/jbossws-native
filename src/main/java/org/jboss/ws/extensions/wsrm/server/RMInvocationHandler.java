@@ -293,7 +293,22 @@ public final class RMInvocationHandler extends InvocationHandler
    @Override
    public final void invoke(Endpoint ep, Invocation inv) throws Exception
    {
-      Map<String, Object> rmResponseContext = prepareResponseContext(ep, inv, this.dataDir);
+      Map<String, Object> rmResponseContext = null;
+      try
+      {
+         rmResponseContext = prepareResponseContext(ep, inv, this.dataDir);
+      }
+      catch (RMFault fault)
+      {
+         rmResponseContext = new HashMap<String, Object>();
+         List<QName> protocolMessages = new LinkedList<QName>();
+         protocolMessages.add(rmConstants.getSequenceFaultQName());
+         rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
+         rmResponseContext.put(RMConstant.FAULT_REFERENCE, fault);
+         CommonMessageContext msgCtx = MessageContextAssociation.peekMessageContext(); 
+         msgCtx.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
+         throw fault; // rethrow
+      }
       
       if (inv.getJavaMethod() != null)
       {

@@ -31,6 +31,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
@@ -76,6 +77,17 @@ public abstract class RMHandlerAbstractBase extends GenericSOAPHandler
          }
       }
       catch (RMException ignore) {}
+   }
+   
+   protected final void serialize(QName msgQN, List<QName> outMsgs, Map<QName, RMSerializable> data, SOAPMessage soapMessage, RMFault fault)
+   {
+      RMSerializable msg = RMHandlerHelper.prepareData(msgQN, outMsgs, fault);
+      if (msg != null)
+      {
+         msg.serializeTo(soapMessage);
+         data.put(msgQN, msg);
+         log.debug(msgQN.getLocalPart() + " WSRM message was serialized to payload");
+      }
    }
    
 }

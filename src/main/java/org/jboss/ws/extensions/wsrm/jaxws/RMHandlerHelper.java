@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMSequence;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
@@ -37,6 +38,7 @@ import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceFault;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
 import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequenceResponse;
@@ -141,6 +143,29 @@ public final class RMHandlerHelper
       }
       
       return null;
+   }
+   
+   public static RMSerializable prepareData(QName msgQN, List<QName> outMsgs, RMFault fault)
+   {
+      if (outMsgs.contains(msgQN))
+      {
+         if (rmConstants.getSequenceFaultQName().equals(msgQN))
+         {
+            return newSequenceFault(fault);
+         }
+         
+         throw new IllegalArgumentException(msgQN.toString());
+      }
+      
+      return null;
+   }
+   
+   private static RMSerializable newSequenceFault(RMFault fault)
+   {
+      RMSequenceFault sequenceFault = rmFactory.newSequenceFault();
+      sequenceFault.setDetail(fault);
+      sequenceFault.setFaultCode(fault.getFaultCode().getSubcode());
+      return sequenceFault;
    }
    
    private static RMSerializable newCreateSequence(RMSequence seq)
