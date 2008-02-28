@@ -30,7 +30,7 @@ import org.jboss.test.ws.jaxws.jbws1857.types.Stammdaten;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
- * [JBWS-1857] JAXBContext created for every invokation of service.getPort()
+ * [JBWS-1857] JAXBContext created for every wrapper type
  * 
  * http://jira.jboss.org/jira/browse/JBWS-1857
  *
@@ -43,13 +43,11 @@ public class JBWS1857TestCase extends JBossWSTest
    public void testPortCreation() throws Exception
    {
       File wsdlFile = new File("resources/jaxws/jbws1857/StammdatenService.wsdl");
-      assertTrue(wsdlFile.exists());
-
       QName serviceName = new QName("http://example.com", "StammdatenService");
       Service service = Service.create(wsdlFile.toURL(), serviceName);
       
       long start = System.currentTimeMillis();
-      Stammdaten port = service.getPort(Stammdaten.class);
+      service.getPort(Stammdaten.class);
       long time = start - System.currentTimeMillis();
       
       assertTrue("Creation of the port took too long", time < 20000);
