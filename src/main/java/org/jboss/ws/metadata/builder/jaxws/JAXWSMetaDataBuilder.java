@@ -70,7 +70,8 @@ import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
-import org.jboss.ws.metadata.acessor.JAXBAccessor;
+import org.jboss.ws.metadata.accessor.JAXBAccessor;
+import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
@@ -377,7 +378,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       // JAX-WS p.37 pg.1, the annotation only affects the element name, not the type name
       ParameterMetaData wrapperParameter = new ParameterMetaData(operation, xmlName, xmlType, requestWrapperType);
-      wrapperParameter.setAccessorFactoryCreator(JAXBAccessor.FACTORY_CREATOR);
+      wrapperParameter.setAccessorFactoryCreator(new JAXBAccessorFactoryCreator());
       operation.addParameter(wrapperParameter);
 
       return wrapperParameter;
@@ -409,7 +410,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
 
       ParameterMetaData retMetaData = new ParameterMetaData(operation, xmlName, xmlType, responseWrapperType);
-      retMetaData.setAccessorFactoryCreator(JAXBAccessor.FACTORY_CREATOR);
+      retMetaData.setAccessorFactoryCreator(new JAXBAccessorFactoryCreator());
       operation.setReturnParameter(retMetaData);
 
       return retMetaData;

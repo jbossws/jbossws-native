@@ -41,7 +41,9 @@ import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
-import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
+import org.jboss.ws.metadata.accessor.AccessorFactory;
+import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
+import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.wsf.common.JavaUtils;
@@ -78,7 +80,7 @@ public class ParameterMetaData
    // SOAP-ENC:Array
    private boolean soapArrayParam;
    private QName soapArrayCompType;
-   private AccessorFactoryCreator accessorFactoryCreator = ReflectiveMethodAccessor.FACTORY_CREATOR;
+   private AccessorFactoryCreator accessorFactoryCreator = new ReflectiveMethodAccessorFactoryCreator();
 
    private static final List<String> messageTypes = new ArrayList<String>();
    static
