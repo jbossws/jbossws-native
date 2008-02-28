@@ -21,25 +21,23 @@
  */
 package org.jboss.ws.extensions.wsrm.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ByteArrayOutputStream;
-
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Iterator;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMFaultCode;
 import org.jboss.ws.extensions.wsrm.RMFaultConstant;
-import org.jboss.ws.extensions.wsrm.RMFaultConstants;
 import org.jboss.ws.extensions.wsrm.RMSequence;
 
 /**
