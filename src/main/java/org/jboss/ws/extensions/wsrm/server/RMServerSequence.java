@@ -146,6 +146,7 @@ public class RMServerSequence implements RMSequence
             Map<String, Object> detailsMap = new HashMap<String, Object>(3);
             detailsMap.put(RMFaultConstant.IDENTIFIER, this.inboundId);
             detailsMap.put(RMFaultConstant.MAX_MESSAGE_NUMBER, this.messageNumber);
+            this.terminate();
             throw new RMFault(RMFaultCode.MESSAGE_NUMBER_ROLLOVER, detailsMap);
          }
          

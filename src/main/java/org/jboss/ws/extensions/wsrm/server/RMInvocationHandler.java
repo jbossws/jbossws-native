@@ -35,7 +35,6 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.Relationship;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
@@ -213,7 +212,6 @@ public final class RMInvocationHandler extends InvocationHandler
          RMTerminateSequence payload = (RMTerminateSequence)data.get(rmConstants.getTerminateSequenceQName());
          String seqIdentifier = payload.getIdentifier();
          sequence = RMStore.deserialize(dataDir, seqIdentifier, true);
-         //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
             throw getUnknownSequenceFault(seqIdentifier);
@@ -240,14 +238,19 @@ public final class RMInvocationHandler extends InvocationHandler
          RMSequence payload = (RMSequence)data.get(rmConstants.getSequenceQName());
          String seqIdentifier = payload.getIdentifier();
          sequence = RMStore.deserialize(dataDir, seqIdentifier, true);
-         //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
             throw getUnknownSequenceFault(seqIdentifier);
          }
 
-         sequence.addReceivedInboundMessage(payload.getMessageNumber());
-         RMStore.serialize(dataDir, sequence);
+         try 
+         {
+            sequence.addReceivedInboundMessage(payload.getMessageNumber());
+         }
+         finally
+         {
+            RMStore.serialize(dataDir, sequence);
+         }
          protocolMessages.add(rmConstants.getSequenceAcknowledgementQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);
          
