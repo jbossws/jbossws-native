@@ -22,7 +22,7 @@
     <macro-deploy-native421 stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   <target name="deploy-jboss421-endorsed" depends="prepare" if="HAVE_JDK_1.6">
-    <macro-deploy-endorsed jbosshome="${jboss421.home}" stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
+    <macro-deploy-endorsed stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   
   <target name="undeploy-jboss421" depends="prepare" description="Remove jbossws/native from jboss421">
@@ -34,7 +34,7 @@
     <macro-deploy-native422 stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   <target name="deploy-jboss422-endorsed" depends="prepare" if="HAVE_JDK_1.6">
-    <macro-deploy-endorsed jbosshome="${jboss422.home}" stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
+    <macro-deploy-endorsed stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   
   <target name="undeploy-jboss422" depends="prepare" description="Remove jbossws/native from jboss422">
@@ -46,7 +46,7 @@
     <macro-deploy-native423 stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   <target name="deploy-jboss423-endorsed" depends="prepare" if="HAVE_JDK_1.6">
-    <macro-deploy-endorsed jbosshome="${jboss423.home}" stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
+    <macro-deploy-endorsed stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   
   <target name="undeploy-jboss423" depends="prepare" description="Remove jbossws/native from jboss423">
@@ -58,7 +58,7 @@
     <macro-deploy-native500 stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   <target name="deploy-jboss500-endorsed" depends="prepare" if="HAVE_JDK_1.6">
-    <macro-deploy-endorsed jbosshome="${jboss500.home}" stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
+    <macro-deploy-endorsed stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   
   <target name="undeploy-jboss500" depends="prepare" description="Remove jbossws/native from jboss500">
@@ -74,7 +74,7 @@
     <macro-deploy-native501 stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   <target name="deploy-jboss501-endorsed" depends="prepare" if="HAVE_JDK_1.6">
-    <macro-deploy-endorsed jbosshome="${jboss501.home}" stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
+    <macro-deploy-endorsed stacklibs="${lib.dir}" thirdpartylibs="${lib.dir}"/>
   </target>
   
   <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
