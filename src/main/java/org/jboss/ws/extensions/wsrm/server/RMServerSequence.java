@@ -28,12 +28,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ByteArrayOutputStream;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Iterator;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.ws.extensions.wsrm.RMFault;
+import org.jboss.ws.extensions.wsrm.RMFaultCode;
+import org.jboss.ws.extensions.wsrm.RMFaultConstant;
+import org.jboss.ws.extensions.wsrm.RMFaultConstants;
 import org.jboss.ws.extensions.wsrm.RMSequence;
 
 /**
@@ -126,8 +132,26 @@ public class RMServerSequence implements RMSequence
    
    public final void addReceivedInboundMessage(long messageId)
    {
-      this.receivedInboundMessages.add(messageId);
-      logger.debug("Inbound Sequence: " + this.inboundId + ", received message no. " + messageId);
+      if (this.closed)
+      {
+         Map<String, Object> detailsMap = new HashMap<String, Object>(2);
+         detailsMap.put(RMFaultConstant.IDENTIFIER, this.inboundId);
+         throw new RMFault(RMFaultCode.SEQUENCE_CLOSED, detailsMap);
+      }
+      else
+      {
+         if (messageId == Long.MAX_VALUE)
+         {
+            // maximum number achieved - generating fault
+            Map<String, Object> detailsMap = new HashMap<String, Object>(3);
+            detailsMap.put(RMFaultConstant.IDENTIFIER, this.inboundId);
+            detailsMap.put(RMFaultConstant.MAX_MESSAGE_NUMBER, this.messageNumber);
+            throw new RMFault(RMFaultCode.MESSAGE_NUMBER_ROLLOVER, detailsMap);
+         }
+         
+         this.receivedInboundMessages.add(messageId);
+         logger.debug("Inbound Sequence: " + this.inboundId + ", received message no. " + messageId);
+      }
    }
 
    public final void addReceivedOutboundMessage(long messageId)
@@ -144,7 +168,14 @@ public class RMServerSequence implements RMSequence
    
    public final long newMessageNumber()
    {
-      // no need for synchronization
+      if (this.messageNumber == Long.MAX_VALUE)
+      {
+         Map<String, Object> detailsMap = new HashMap<String, Object>(3);
+         detailsMap.put(RMFaultConstant.IDENTIFIER, this.outboundId);
+         detailsMap.put(RMFaultConstant.MAX_MESSAGE_NUMBER, this.messageNumber);
+         throw new RMFault(RMFaultCode.MESSAGE_NUMBER_ROLLOVER, detailsMap);
+      }
+
       return ++this.messageNumber;
    }
    
@@ -174,9 +205,19 @@ public class RMServerSequence implements RMSequence
       this.closed = true;
    }
    
+   public boolean isClosed()
+   {
+      return this.closed;
+   }
+   
    public void terminate()
    {
       this.terminated = true;
+   }
+   
+   public boolean isTerminated()
+   {
+      return this.terminated;
    }
    
    public byte[] toByteArray() throws IOException

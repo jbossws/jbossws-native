@@ -40,17 +40,27 @@ public final class RMStore
    public static final void serialize(String dataDir, RMServerSequence seq)
    {
       File dir = new File(dataDir);
-      dir.mkdirs();
-      File file = new File(dir, seq.getId());
+      if (false == dir.exists())
+      {
+         dir.mkdirs();
+      }
+      File sequenceFile = new File(dir, seq.getId());
+      if (seq.isTerminated() && sequenceFile.exists())
+      {
+         // throw away terminated sequences
+         sequenceFile.delete();
+         return;
+      }
+      
       FileOutputStream fos = null;
       try
       {
-         fos = new FileOutputStream(file);
+         fos = new FileOutputStream(sequenceFile);
          fos.write(seq.toByteArray());
       }
       catch (IOException ioe)
       {
-         logger.error(ioe.getMessage(), ioe);
+         logger.error("Can't write sequence to file " + sequenceFile.getName(), ioe);
       }
       finally
       {
@@ -60,9 +70,9 @@ public final class RMStore
             {
                fos.close();
             }
-            catch (IOException ignore)
+            catch (IOException ioe)
             {
-               // do nothing
+               logger.error("Can't close sequence file " + sequenceFile.getName(), ioe);
             }
          }
       }
@@ -88,7 +98,7 @@ public final class RMStore
          }
          catch (IOException ioe)
          {
-            logger.error(ioe.getMessage(), ioe);
+            logger.error("Can't read sequence from file " + sequences[i].getName(), ioe);
          }
       }
       

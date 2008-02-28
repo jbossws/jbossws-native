@@ -40,6 +40,9 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
 import org.jboss.ws.extensions.wsrm.RMConstant;
+import org.jboss.ws.extensions.wsrm.RMFault;
+import org.jboss.ws.extensions.wsrm.RMFaultCode;
+import org.jboss.ws.extensions.wsrm.RMFaultConstant;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.spi.RMConstants;
 import org.jboss.ws.extensions.wsrm.spi.RMProvider;
@@ -124,14 +127,19 @@ public final class RMInvocationHandler extends InvocationHandler
    private static synchronized Map<String, Object> prepareResponseContext(Endpoint ep, Invocation inv, String dataDir)
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
-      if (addrProps == null)
-         throw new IllegalStateException("WS-Addressing properties not found in server request");
       
       Map<String, Object> rmReqProps = (Map<String, Object>)msgContext.get(RMConstant.REQUEST_CONTEXT);
       msgContext.remove(RMConstant.REQUEST_CONTEXT);
       if (rmReqProps == null)
-         throw new IllegalStateException("WS-RM specific data not found in server request");
+      {
+         throw new RMFault(RMFaultCode.WSRM_REQUIRED);
+      }
+      
+      AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      if (addrProps == null)
+      {
+         throw new IllegalStateException("WS-Addressing properties not found in server request");
+      }
       
       List<QName> protocolMessages = new LinkedList<QName>();
       Map<String, Object> rmResponseContext = new HashMap<String, Object>();
@@ -155,10 +163,9 @@ public final class RMInvocationHandler extends InvocationHandler
          RMCloseSequence payload = (RMCloseSequence)data.get(rmConstants.getCloseSequenceQName());
          String seqIdentifier = payload.getIdentifier();
          sequence = RMStore.deserialize(dataDir, seqIdentifier, true);
-         //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
-            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
+            throw getUnknownSequenceFault(seqIdentifier);
          }
 
          sequence.close();
@@ -175,16 +182,24 @@ public final class RMInvocationHandler extends InvocationHandler
          RMSequenceAcknowledgement payload = (RMSequenceAcknowledgement)data.get(rmConstants.getSequenceAcknowledgementQName());
          String seqIdentifier = payload.getIdentifier();
          sequence = RMStore.deserialize(dataDir, seqIdentifier, false);
-         //sequence = RMHelper.getServerSequenceByOutboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
-            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
+            throw getUnknownSequenceFault(seqIdentifier);
          }
 
          for (RMSequenceAcknowledgement.RMAcknowledgementRange range : payload.getAcknowledgementRanges())
          {
             for (long i = range.getLower(); i <= range.getUpper(); i++)
             {
+               if (i > sequence.getLastMessageNumber())
+               {
+                  // invalid acknowledgement - generating fault
+                  RMStore.serialize(dataDir, sequence);
+                  Map<String, Object> detailsMap = new HashMap<String, Object>(2);
+                  detailsMap.put(RMFaultConstant.ACKNOWLEDGEMENT, range);
+                  throw new RMFault(RMFaultCode.INVALID_ACKNOWLEDGEMENT, new HashMap<String, Object>(2));
+               }
+
                sequence.addReceivedOutboundMessage(i);
             }
          }
@@ -201,7 +216,7 @@ public final class RMInvocationHandler extends InvocationHandler
          //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
-            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
+            throw getUnknownSequenceFault(seqIdentifier);
          }
 
          RMStore.serialize(dataDir, sequence); // TODO: serialization of terminated sequence results in no file
@@ -228,7 +243,7 @@ public final class RMInvocationHandler extends InvocationHandler
          //sequence = RMHelper.getServerSequenceByInboundId(seqIdentifier, sequences);
          if (sequence == null)
          {
-            throw new NotImplementedException("TODO: implement unknown sequence fault" + seqIdentifier);
+            throw getUnknownSequenceFault(seqIdentifier);
          }
 
          sequence.addReceivedInboundMessage(payload.getMessageNumber());
@@ -263,6 +278,13 @@ public final class RMInvocationHandler extends InvocationHandler
       rmResponseContext.put(RMConstant.ONE_WAY_OPERATION, isOneWayOperation);
       
       return rmResponseContext;
+   }
+   
+   private static RMFault getUnknownSequenceFault(String sequenceId)
+   {
+      Map<String, Object> detailsMap = new HashMap<String, Object>(2);
+      detailsMap.put(RMFaultConstant.IDENTIFIER, sequenceId);
+      return new RMFault(RMFaultCode.UNKNOWN_SEQUENCE, detailsMap);
    }
    
    @Override
