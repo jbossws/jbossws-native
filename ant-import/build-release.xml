@@ -13,7 +13,7 @@
 
 <project>
 
-  <target name="release" depends="release-to-repository,release-to-portal" description="Release JBossWS">
+  <target name="release" depends="release-to-repository,release-to-portal" description="Release JBossWS/Native">
     <echo message="*********************************************"/>
     <echo message="* Released: jbossws-${version.id}"/>
     <echo message="*"/>
@@ -35,7 +35,6 @@
     <echo message="*********************************************"/>
   </target>
   
-  <!-- Release to jboss.local.repository -->
   <target name="release-to-repository" depends="jars,check-svn-externals,warn-svn-externals" 
     description="Release to jboss.local.repository">
 
@@ -112,7 +111,7 @@
       ***********************************************
     </echo>
   </target>
-  
+
   <!-- Release to portal content -->
   <target name="release-to-portal" depends="check-portal-content,build-src-dist,build-bin-dist" 
     description="Release to portal-content" if="jbossws.portal.content.available">
@@ -123,15 +122,15 @@
     
     <!-- Copy downloads -->
     <copy todir="${portal.downloads}" overwrite="true">
-      <fileset dir="${core.dir}/output">
+      <fileset dir="${basedir}/output">
         <include name="jbossws-${version.id}-src.zip"/>
         <include name="jbossws-${version.id}.zip"/>
       </fileset>
     </copy>
     
     <!-- Copy Release Notes -->
-    <copy tofile="${portal.downloads}/ReleaseNotes-${version.id}.txt" file="${core.dir}/output/jbossws-${version.id}/docs/ReleaseNotes.txt" overwrite="true"/>
-    <copy tofile="${portal.downloads}/Install-${version.id}.txt" file="${core.dir}/output/jbossws-${version.id}/docs/Install.txt" overwrite="true"/>
+    <copy tofile="${portal.downloads}/ReleaseNotes-${version.id}.txt" file="${bindist.docs.dir}/ReleaseNotes.txt" overwrite="true"/>
+    <copy tofile="${portal.downloads}/Install-${version.id}.txt" file="${bindist.docs.dir}/Install.txt" overwrite="true"/>
   </target>
   
   <target name="check-portal-content" depends="prepare" unless="jbossws.portal.content.available">
@@ -144,9 +143,8 @@
   <!-- Build source distributions                                                -->
   <!-- ================================================================== -->
 
-  <!-- Build the src dist -->
   <target name="build-src-dist" description="Build the source distribution">
-    <property name="build.src.dist" value="${core.dir}/output/src-dist"/>
+    <property name="build.src.dist" value="${basedir}/output/src-dist"/>
     <delete dir="${build.src.dist}/jbossws-${version.id}-src"/>
     <mkdir dir="${build.src.dist}/jbossws-${version.id}-src"/>
     <copy todir="${build.src.dist}/jbossws-${version.id}-src">
@@ -158,7 +156,7 @@
         <exclude name="ant.properties"/>
       </fileset>
     </copy>
-    <zip destfile="${core.dir}/output/jbossws-${version.id}-src.zip" basedir="${build.src.dist}"
+    <zip destfile="${basedir}/output/jbossws-${version.id}-src.zip" basedir="${build.src.dist}"
       includes="jbossws-${version.id}-src/**"/>
   </target>
   
