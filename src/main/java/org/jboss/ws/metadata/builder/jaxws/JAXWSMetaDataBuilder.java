@@ -548,10 +548,10 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          String tns = epMetaData.getPortName().getNamespaceURI();
          String portTypeName = epMetaData.getPortName().getLocalPart();
          String opName = opMetaData.getQName().getLocalPart();
-         addrExt.setInboundAction(tns + "/" + portTypeName  + "/" +  opName + "/IN");
+         addrExt.setInboundAction(tns + "/" + portTypeName  + "/" +  opName + "Request");
 
          if (!opMetaData.isOneWay())
-            addrExt.setOutboundAction(tns + "/" + portTypeName  + "/" +  opName + "/OUT");
+            addrExt.setOutboundAction(tns + "/" + portTypeName  + "/" +  opName + "Response");
       }
 
       opMetaData.addExtension(addrExt);
