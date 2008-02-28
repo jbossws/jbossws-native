@@ -482,7 +482,9 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          W3CEndpointReference w3c = (W3CEndpointReference)epr;
          portName = w3c.getEndpointName();
       }
+      
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
+      initAddressingProperties(dispatch, epr);
       return dispatch;
    }
 
@@ -510,6 +512,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
       }
 
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
+      initAddressingProperties(dispatch, epr);
       return dispatch;
    }
 
@@ -530,7 +533,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          log.warn("WebServiceFeature not implemented");
 
       T port = getPort(sei);
-      initAddressingProperties(port, epr);
+      initAddressingProperties((BindingProvider)port, epr);
       return port;
    }
 
@@ -545,9 +548,9 @@ public class ServiceDelegateImpl extends ServiceDelegate21
    }
 
    // Workaround for [JBWS-2015] Modify addressing handlers to work with the JAXWS-2.1 API
-   private <T> void initAddressingProperties(T port, EndpointReference epr)
+   private void initAddressingProperties(BindingProvider bindingProvider, EndpointReference epr)
    {
-      Map<String, Object> reqContext = ((BindingProvider)port).getRequestContext();
+      Map<String, Object> reqContext = bindingProvider.getRequestContext();
       AddressingBuilder builder = AddressingBuilder.getAddressingBuilder();
       AddressingProperties addrProps = builder.newAddressingProperties();
       reqContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
