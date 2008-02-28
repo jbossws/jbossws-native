@@ -42,7 +42,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.org
  * @since 05-May-2006
  */
-public abstract class HandlerMetaData implements Serializable
+public abstract class HandlerMetaData implements InitalizableMetaData, Serializable
 {
    // provide logging
    private final Logger log = Logger.getLogger(HandlerMetaData.class);

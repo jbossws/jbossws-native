@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
@@ -48,7 +49,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @since 12-May-2004
  */
-public class OperationMetaData extends ExtensibleMetaData
+public class OperationMetaData extends ExtensibleMetaData implements InitalizableMetaData
 {
    // provide logging
    private final Logger log = Logger.getLogger(OperationMetaData.class);
@@ -446,6 +447,12 @@ return false;
          fault.validate();
    }
 
+   public void eagerInitialize()
+   {
+      // Call eagerInitialize(List<Method> unsynchronizedMethods) instead
+      throw new NotImplementedException();
+   }
+   
    /**
     * @see UnifiedMetaData#eagerInitialize()
     */

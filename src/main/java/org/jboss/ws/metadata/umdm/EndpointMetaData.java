@@ -23,8 +23,8 @@ package org.jboss.ws.metadata.umdm;
 
 // $Id$
 
-import java.lang.reflect.Method;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,9 +34,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Observer;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
@@ -54,6 +54,7 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
 import org.jboss.ws.core.jaxws.JAXBContextCache;
+import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
@@ -61,6 +62,9 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
+import org.jboss.ws.metadata.accessor.AccessorFactory;
+import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
+import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
@@ -72,13 +76,15 @@ import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
+import com.sun.xml.bind.api.JAXBRIContext;
+
 /**
  * A Service component describes a set of endpoints.
  *
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider
+public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, InitalizableMetaData
 {
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
@@ -524,6 +530,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       eagerInitializeOperations();
       eagerInitializeTypes();
+      eagerInitializeAccessors();
    }
 
    private void eagerInitializeOperations()
@@ -610,6 +617,53 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       }
    }
 
+   private void eagerInitializeAccessors()
+   {
+      // Collect the list of all used types
+      List<Class> types = new ArrayList<Class>();
+      for (OperationMetaData opMetaData : operations)
+      {
+         for (ParameterMetaData paramMetaData : opMetaData.getParameters())
+         {
+            types.add(paramMetaData.getJavaType());
+         }
+         
+         ParameterMetaData retParam = opMetaData.getReturnParameter();
+         if (retParam != null)
+            types.add(retParam.getJavaType());
+      }
+      
+      // Create a JAXBContext for those types
+      Class[] typeArr = new Class[types.size()];
+      JAXBRIContext jaxbCtx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(types.toArray(typeArr));
+      
+      // Create the accessors using a shared JAXBContext 
+      for (OperationMetaData opMetaData : operations)
+      {
+         for (ParameterMetaData paramMetaData : opMetaData.getParameters())
+         {
+            createAccessor(paramMetaData, jaxbCtx);
+         }
+         
+         ParameterMetaData retParam = opMetaData.getReturnParameter();
+         if (retParam != null)
+            createAccessor(retParam, jaxbCtx);
+      }
+   }
+
+   private void createAccessor(ParameterMetaData paramMetaData, JAXBRIContext jaxbCtx)
+   {
+      AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
+      if (factoryCreator instanceof JAXBAccessorFactoryCreator)
+      {
+         ((JAXBAccessorFactoryCreator)factoryCreator).setJAXBContext(jaxbCtx);
+         AccessorFactory factory = factoryCreator.create(paramMetaData);
+         for (WrappedParameter wrapped : paramMetaData.getWrappedParameters())
+            wrapped.setAccessor(factory.create(wrapped));
+      }
+   }
+
+   
    // ---------------------------------------------------------------
    // Configuration provider impl
 

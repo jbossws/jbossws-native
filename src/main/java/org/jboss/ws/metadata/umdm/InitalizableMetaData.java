@@ -19,39 +19,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1857;
+package org.jboss.ws.metadata.umdm;
 
-import java.io.File;
+// $Id$
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-
-import org.jboss.test.ws.jaxws.jbws1857.types.Stammdaten;
-import org.jboss.wsf.test.JBossWSTest;
 
 /**
- * [JBWS-1857] JAXBContext created for every invokation of service.getPort()
+ * Metadata that is Inizializable
  * 
- * http://jira.jboss.org/jira/browse/JBWS-1857
- *
- * @author Thomas.Diesler@jboss.com
+ * @author Thomas.Diesler@jboss.org
  * @since 28-Feb-2008
  */
-public class JBWS1857TestCase extends JBossWSTest
+public interface InitalizableMetaData
 {
-
-   public void testPortCreation() throws Exception
-   {
-      File wsdlFile = new File("resources/jaxws/jbws1857/StammdatenService.wsdl");
-      assertTrue(wsdlFile.exists());
-
-      QName serviceName = new QName("http://example.com", "StammdatenService");
-      Service service = Service.create(wsdlFile.toURL(), serviceName);
-      
-      long start = System.currentTimeMillis();
-      Stammdaten port = service.getPort(Stammdaten.class);
-      long time = start - System.currentTimeMillis();
-      
-      assertTrue("Creation of the port took too long", time < 20000);
-   }
+   void eagerInitialize();
 }

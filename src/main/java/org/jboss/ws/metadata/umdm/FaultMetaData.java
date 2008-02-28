@@ -52,7 +52,7 @@ import org.jboss.wsf.common.JavaUtils;
  * @author jason.greene@jboss.com
  * @since 12-May-2005
  */
-public class FaultMetaData
+public class FaultMetaData implements InitalizableMetaData
 {
    // provide logging
    private final Logger log = Logger.getLogger(FaultMetaData.class);

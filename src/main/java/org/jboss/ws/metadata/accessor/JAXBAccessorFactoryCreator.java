@@ -23,7 +23,6 @@ package org.jboss.ws.metadata.accessor;
 
 //$Id$
 
-import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
@@ -31,17 +30,24 @@ import com.sun.xml.bind.api.JAXBRIContext;
 
 public class JAXBAccessorFactoryCreator implements AccessorFactoryCreator
 {
+   private JAXBRIContext ctx;
+   
+   public void setJAXBContext(JAXBRIContext ctx)
+   {
+      this.ctx = ctx;
+   }
+
    public AccessorFactory create(ParameterMetaData parameter)
    {
-      Class clazz = parameter.getJavaType();
-      JAXBRIContext ctx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(clazz);
-      return new JAXBAccessorFactory(clazz, ctx);
+      if (ctx == null)
+         throw new IllegalStateException("JAXBContext not available");
+      return new JAXBAccessorFactory(parameter.getJavaType(), ctx);
    }
 
    public AccessorFactory create(FaultMetaData fault)
    {
-      Class clazz = fault.getFaultBean();
-      JAXBRIContext ctx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(clazz);
-      return new JAXBAccessorFactory(clazz, ctx);
+      if (ctx == null)
+         throw new IllegalStateException("JAXBContext not available");
+      return new JAXBAccessorFactory(fault.getFaultBean(), ctx);
    }
 }
