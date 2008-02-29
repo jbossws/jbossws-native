@@ -29,43 +29,57 @@ package org.jboss.ws.extensions.wsrm.spi.protocol;
  */
 public enum RMSequenceFaultCode
 {
+   
    /**
     * Sequence terminated
     */
-   SEQUENCE_TERMINATED,
+   SEQUENCE_TERMINATED("SequenceTerminated"),
    
    /**
     * Unknown sequence
     */
-   UNKNOWN_SEQUENCE,
+   UNKNOWN_SEQUENCE("UnknownSequence"),
    
    /**
     * Invalid acknowledgement
     */
-   INVALID_ACKNOWLEDGEMENT,
+   INVALID_ACKNOWLEDGEMENT("InvalidAcknowledgement"),
    
    /**
     * Message number rollover
     */
-   MESSAGE_NUMBER_ROLLOVER,
+   MESSAGE_NUMBER_ROLLOVER("MessageNumberRollover"),
    
    /**
     * Create sequence refused
     */
-   CREATE_SEQUENCE_REFUSED,
+   CREATE_SEQUENCE_REFUSED("CreateSequenceRefused"),
    
    /**
     * Sequence closed
     */
-   SEQUENCE_CLOSED,
+   SEQUENCE_CLOSED("SequenceClosed"),
    
    /**
     * WSRM required 
     */
-   WSRM_REQUIRED,
+   WSRM_REQUIRED("WSRMRequired"),
    
    /**
     * Last message number exceeded
     */
-   LAST_MESSAGE_NUMBER_EXCEEDED
+   LAST_MESSAGE_NUMBER_EXCEEDED("LastMessageNumberExceeded");
+   
+   private final String value;
+   
+   RMSequenceFaultCode(String value)
+   {
+      this.value = value;
+   }
+   
+   public final String getValue()
+   {
+      return this.value;
+   }
+   
 }

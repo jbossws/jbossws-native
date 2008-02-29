@@ -55,6 +55,7 @@ public final class RMConstantsImpl implements RMConstants
    private final QName lastMsgNumberQName;
    private final QName lowerQName;
    private final QName messageNumberQName;
+   private final QName maxMessageNumberQName;
    private final QName nackQName;
    private final QName noneQName;
    private final QName offerQName;
@@ -89,6 +90,7 @@ public final class RMConstantsImpl implements RMConstants
       this.lastMsgNumberQName = new QName(namespaceURI, "LastMsgNumber", prefix);
       this.lowerQName = new QName(null, "Lower", "");
       this.messageNumberQName = new QName(namespaceURI, "MessageNumber", prefix);
+      this.maxMessageNumberQName = new QName(namespaceURI, "MaxMessageNumber", prefix);
       this.nackQName = new QName(namespaceURI, "Nack", prefix);
       this.noneQName = new QName(namespaceURI, "None", prefix);
       this.offerQName = new QName(namespaceURI, "Offer", prefix);
@@ -274,6 +276,14 @@ public final class RMConstantsImpl implements RMConstants
    public final QName getMessageNumberQName()
    {
       return this.messageNumberQName;
+   }
+
+   /**
+    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getMaxMessageNumberQName()
+    */
+   public final QName getMaxMessageNumberQName()
+   {
+      return this.maxMessageNumberQName;
    }
 
    /**

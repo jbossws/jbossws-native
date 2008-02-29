@@ -153,6 +153,12 @@ public interface RMConstants
 
    /**
     * getter
+    * @return <b>MaxMessageNumber</b> QName
+    */
+   QName getMaxMessageNumberQName();
+
+   /**
+    * getter
     * @return <b>AckRequested</b> QName
     */
    QName getAckRequestedQName();

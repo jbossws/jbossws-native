@@ -305,6 +305,7 @@ public final class RMInvocationHandler extends InvocationHandler
          protocolMessages.add(rmConstants.getSequenceFaultQName());
          rmResponseContext.put(RMConstant.PROTOCOL_MESSAGES, protocolMessages);
          rmResponseContext.put(RMConstant.FAULT_REFERENCE, fault);
+         rmResponseContext.put(RMConstant.ONE_WAY_OPERATION, false);
          CommonMessageContext msgCtx = MessageContextAssociation.peekMessageContext(); 
          msgCtx.put(RMConstant.RESPONSE_CONTEXT, rmResponseContext);
          throw fault; // rethrow
