@@ -85,6 +85,12 @@ public final class MessageTrace
          String xmlString = DOMWriter.printNode(root, true);
          msgLog.trace(messagePrefix + "\n" + xmlString);
       }
+      else if (message instanceof String)
+      {
+         Element root = new XMLFragment(new StreamSource(new ByteArrayInputStream(((String)message).getBytes()))).toElement();
+         String xmlString = DOMWriter.printNode(root, true);
+         msgLog.trace(messagePrefix + "\n" + xmlString);
+      }
       else
       {
           msgLog.warn("Unsupported message type: " + message);

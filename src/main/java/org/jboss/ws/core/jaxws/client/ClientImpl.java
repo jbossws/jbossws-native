@@ -281,6 +281,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
             }
             Map<String, Object> rmRequestContext = new HashMap<String, Object>();
             List<QName> outMsgs = new LinkedList<QName>();
+            wsrmSequence.newMessageNumber();
             outMsgs.add(RMProvider.get().getConstants().getSequenceQName());
             outMsgs.add(RMProvider.get().getConstants().getAckRequestedQName());
             if (wsrmSequence.isAckRequested())

@@ -262,7 +262,7 @@ public final class RMHandlerHelper
       // construct Sequence object
       org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence sequence = rmFactory.newSequence();
       sequence.setIdentifier(seq.getOutboundId());
-      sequence.setMessageNumber(seq.newMessageNumber());
+      sequence.setMessageNumber(seq.getLastMessageNumber());
       return sequence;
    }
 

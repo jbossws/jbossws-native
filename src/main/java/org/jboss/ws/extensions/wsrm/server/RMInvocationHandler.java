@@ -217,8 +217,7 @@ public final class RMInvocationHandler extends InvocationHandler
             throw getUnknownSequenceFault(seqIdentifier);
          }
 
-         RMStore.serialize(dataDir, sequence); // TODO: serialization of terminated sequence results in no file
-         //sequences.remove(sequence);
+         RMStore.serialize(dataDir, sequence);
          if (RMProvider.get().getMessageFactory().newTerminateSequenceResponse() != null)
          {
             protocolMessages.add(rmConstants.getTerminateSequenceResponseQName());
@@ -257,6 +256,14 @@ public final class RMInvocationHandler extends InvocationHandler
          boolean retTypeIsVoid = inv.getJavaMethod().getReturnType().equals(Void.class) || inv.getJavaMethod().getReturnType().equals(Void.TYPE);
          if (false == retTypeIsVoid)
          {
+            try
+            {
+               sequence.newMessageNumber();
+            }
+            finally
+            {
+               RMStore.serialize(dataDir, sequence);
+            }
             protocolMessages.add(rmConstants.getSequenceQName());
             protocolMessages.add(rmConstants.getAckRequestedQName());
          }

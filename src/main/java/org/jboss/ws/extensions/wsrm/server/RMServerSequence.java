@@ -169,6 +169,7 @@ public class RMServerSequence implements RMSequence
    {
       if (this.messageNumber == Long.MAX_VALUE)
       {
+         this.terminate();
          Map<String, Object> detailsMap = new HashMap<String, Object>(3);
          detailsMap.put(RMFaultConstant.IDENTIFIER, this.outboundId);
          detailsMap.put(RMFaultConstant.MAX_MESSAGE_NUMBER, this.messageNumber);
