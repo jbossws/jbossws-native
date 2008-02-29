@@ -44,7 +44,6 @@ import javax.xml.transform.Source;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 
-import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -219,7 +218,14 @@ public final class W3CEndpointReference extends EndpointReference
 
    private static JAXBContext getW3CJaxbContext()
    {
-      return JAXBContextFactory.newInstance().createContext(new Class[] { W3CEndpointReference.class });
+      try
+      {
+         return JAXBContext.newInstance(new Class[] { W3CEndpointReference.class });
+      }
+      catch (JAXBException ex)
+      {
+         throw new WebServiceException("Cannot obtain JAXB context", ex);
+      }
    }
 
    private static class Address
