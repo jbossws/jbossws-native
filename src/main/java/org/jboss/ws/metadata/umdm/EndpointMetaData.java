@@ -672,9 +672,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (factoryCreator instanceof JAXBAccessorFactoryCreator)
          ((JAXBAccessorFactoryCreator)factoryCreator).setJAXBContext(jaxbCtx);
       
-      AccessorFactory factory = factoryCreator.create(paramMetaData);
-      for (WrappedParameter wrapped : paramMetaData.getWrappedParameters())
-         wrapped.setAccessor(factory.create(wrapped));
+      if (paramMetaData.getWrappedParameters() != null)
+      {
+         AccessorFactory factory = factoryCreator.create(paramMetaData);
+         for (WrappedParameter wParam : paramMetaData.getWrappedParameters())
+            wParam.setAccessor(factory.create(wParam));
+      }
    }
    
    // ---------------------------------------------------------------
