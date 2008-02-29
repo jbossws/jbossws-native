@@ -33,8 +33,8 @@ import javax.xml.ws.Service21;
 import junit.framework.Test;
 
 import org.jboss.test.ws.jaxws.jbws1172.types.MyTest;
-import org.jboss.ws.core.utils.SchemaValidationHelper;
 import org.jboss.ws.extensions.validation.SchemaExtractor;
+import org.jboss.ws.extensions.validation.SchemaValidationHelper;
 import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;

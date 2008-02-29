@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.utils;
+package org.jboss.ws.extensions.validation;
 
 // $Id$
 
@@ -31,7 +31,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jboss.ws.extensions.validation.ValidationErrorHandler;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 import org.xml.sax.ErrorHandler;
@@ -45,7 +44,7 @@ import org.xml.sax.ErrorHandler;
 public class SchemaValidationHelper
 {
    private URL xsdURL;
-   private ErrorHandler errorHandler = new ValidationErrorHandler();
+   private ErrorHandler errorHandler = new StrictlyValidErrorHandler();
    
    public SchemaValidationHelper(URL xsdURL)
    {

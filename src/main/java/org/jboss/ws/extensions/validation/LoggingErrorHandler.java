@@ -29,26 +29,24 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Extracts the schema from a given WSDL
+ * An error handler that logs a @{SAXException} on error.
  * 
  * @author Thomas.Diesler@jboss.com
  * @since 29-Feb-2008
  */
-public class ValidationErrorHandler implements ErrorHandler
+public class LoggingErrorHandler implements ErrorHandler
 {
    // provide logging
-   private static Logger log = Logger.getLogger(ValidationErrorHandler.class);
+   private static Logger log = Logger.getLogger(LoggingErrorHandler.class);
    
    public void error(SAXParseException ex) throws SAXException
    {
       log.error(ex.toString());
-      throw new SAXException(ex.getMessage());
    }
 
    public void fatalError(SAXParseException ex) throws SAXException
    {
       log.fatal(ex.toString());
-      throw new SAXException(ex.getMessage());
    }
 
    public void warning(SAXParseException ex) throws SAXException

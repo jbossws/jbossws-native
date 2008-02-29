@@ -26,7 +26,7 @@ package org.jboss.ws.feature;
 import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.extensions.validation.ValidationErrorHandler;
+import org.jboss.ws.extensions.validation.StrictlyValidErrorHandler;
 import org.xml.sax.ErrorHandler;
 
 /**
@@ -55,7 +55,7 @@ public final class SchemaValidationFeature extends WebServiceFeature
     * Optional property for the error handler. 
     * If this is not specified the @{ValidationErrorHandler} will be used.
     */
-   protected ErrorHandler errorHandler = new ValidationErrorHandler(); 
+   protected ErrorHandler errorHandler = new StrictlyValidErrorHandler(); 
 
    /**
     * Create an <code>SchemaValidationFeature</code>.

@@ -19,39 +19,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.annotation;
+package org.jboss.ws.extensions.validation;
 
-// $Id$
+//$Id$
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.jboss.ws.extensions.validation.StrictlyValidErrorHandler;
+import org.jboss.logging.Logger;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
- * This feature represents the use of schema validation with a 
- * web service.
+ * An error handler that throws a @{SAXException} on error and fatal error.
  * 
  * @author Thomas.Diesler@jboss.com
  * @since 29-Feb-2008
  */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.TYPE })
-public @interface SchemaValidation 
+public class StrictlyValidErrorHandler implements ErrorHandler
 {
-   /**
-    * Optional property for the schema location. If this is not specified the schema
-    * will be attempted to extract from the WSDL.
-    * 
-    * The syntax is the same as for schemaLocation attributes in instance documents: e.g, "http://www.example.com file_name.xsd".
-    */
-   String schemaLocation() default "";
+   // provide logging
+   private static Logger log = Logger.getLogger(StrictlyValidErrorHandler.class);
    
-   /**
-    * Optional property for the error handler. 
-    * If this is not specified the @{ValidationErrorHandler} will be used.
-    */
-   Class errorHandler() default StrictlyValidErrorHandler.class;
+   public void error(SAXParseException ex) throws SAXException
+   {
+      log.error(ex.toString());
+      throw new SAXException(ex.getMessage());
+   }
+
+   public void fatalError(SAXParseException ex) throws SAXException
+   {
+      log.fatal(ex.toString());
+      throw new SAXException(ex.getMessage());
+   }
+
+   public void warning(SAXParseException ex) throws SAXException
+   {
+      log.warn(ex.toString());
+   }
 }
