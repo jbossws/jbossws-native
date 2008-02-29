@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.jboss.logging.Logger;
 import org.jboss.remoting.InvocationRequest;
-import org.jboss.remoting.transport.coyote.RequestMap;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.extensions.wsrm.transport.RMMessage;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;

@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.jboss.logging.Logger;
+import org.jboss.remoting.CannotConnectException;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.remoting.marshal.MarshalFactory;
@@ -102,7 +103,19 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          }
          else
          {
-            Object retVal = client.invoke(rmRequest.getPayload(), remotingInvocationContext);
+            Object retVal = null;
+            try
+            {
+               retVal = client.invoke(rmRequest.getPayload(), remotingInvocationContext);
+            }
+            catch (CannotConnectException cce)
+            {
+               // remoting hack - ignore NullPointerException cause
+               if (false == (cce.getCause() instanceof NullPointerException))
+               {
+                  throw cce;
+               }
+            }
             if ((null != retVal) && (false == (retVal instanceof RMMessage)))
             {
                String msg = retVal.getClass().getName() + ": '" + retVal + "'";
