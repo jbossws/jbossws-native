@@ -620,22 +620,37 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private void eagerInitializeAccessors()
    {
       // Collect the list of all used types
+      boolean useJAXBAccessorFactory = false;
       List<Class> types = new ArrayList<Class>();
       for (OperationMetaData opMetaData : operations)
       {
          for (ParameterMetaData paramMetaData : opMetaData.getParameters())
          {
+            AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
+            if (factoryCreator instanceof JAXBAccessorFactoryCreator)
+               useJAXBAccessorFactory = true;
+            
             types.add(paramMetaData.getJavaType());
          }
          
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
+         {
+            AccessorFactoryCreator factoryCreator = retParam.getAccessorFactoryCreator();
+            if (factoryCreator instanceof JAXBAccessorFactoryCreator)
+               useJAXBAccessorFactory = true;
+            
             types.add(retParam.getJavaType());
+         }
       }
       
       // Create a JAXBContext for those types
-      Class[] typeArr = new Class[types.size()];
-      JAXBRIContext jaxbCtx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(types.toArray(typeArr));
+      JAXBRIContext jaxbCtx = null;
+      if (useJAXBAccessorFactory)
+      {
+         Class[] typeArr = new Class[types.size()];
+         jaxbCtx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(types.toArray(typeArr));
+      }
       
       // Create the accessors using a shared JAXBContext 
       for (OperationMetaData opMetaData : operations)
@@ -655,14 +670,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
       if (factoryCreator instanceof JAXBAccessorFactoryCreator)
-      {
          ((JAXBAccessorFactoryCreator)factoryCreator).setJAXBContext(jaxbCtx);
-         AccessorFactory factory = factoryCreator.create(paramMetaData);
-         for (WrappedParameter wrapped : paramMetaData.getWrappedParameters())
-            wrapped.setAccessor(factory.create(wrapped));
-      }
+      
+      AccessorFactory factory = factoryCreator.create(paramMetaData);
+      for (WrappedParameter wrapped : paramMetaData.getWrappedParameters())
+         wrapped.setAccessor(factory.create(wrapped));
    }
-
    
    // ---------------------------------------------------------------
    // Configuration provider impl
