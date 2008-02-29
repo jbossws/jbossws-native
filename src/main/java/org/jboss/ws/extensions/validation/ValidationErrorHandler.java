@@ -19,41 +19,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.tools.metadata;
+package org.jboss.ws.extensions.validation;
 
-// $Id$
+//$Id$
 
-import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-
-import javax.xml.namespace.QName;
+import org.jboss.logging.Logger;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
- *  Tools Endpoint Metadata
- *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
- *  @since  Oct 6, 2005
+ * Extracts the schema from a given WSDL
+ * 
+ * @author Thomas.Diesler@jboss.com
+ * @since 29-Feb-2008
  */
-public class ToolsEndpointMetaData extends EndpointMetaData
+public class ValidationErrorHandler implements ErrorHandler
 {
-   public String typeNamespace;
-   private String endpointAddress;
-   private String documentation;
-
-   public ToolsEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
-   {
-      super(service, portName, portTypeName, Type.JAXRPC);
-      super.configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
-      super.configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
-   }
+   // provide logging
+   private static Logger log = Logger.getLogger(ValidationErrorHandler.class);
    
-   public String getEndpointAddress()
+   public void error(SAXParseException ex) throws SAXException
    {
-      return endpointAddress;
+      log.error(ex.toString());
+      throw new SAXException(ex.getMessage());
    }
 
-   public void setEndpointAddress(String endpointAddress)
+   public void fatalError(SAXParseException ex) throws SAXException
    {
-      this.endpointAddress = endpointAddress;
+      log.fatal(ex.toString());
+      throw new SAXException(ex.getMessage());
+   }
+
+   public void warning(SAXParseException ex) throws SAXException
+   {
+      log.warn(ex.toString());
    }
 }

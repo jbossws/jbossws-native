@@ -29,9 +29,11 @@ import java.lang.reflect.Proxy;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -467,6 +469,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          log.warn("WebServiceFeature not implemented");
 
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
+      initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
 
@@ -485,6 +488,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
       
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
       initAddressingProperties(dispatch, epr);
+      initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
 
@@ -495,6 +499,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          log.warn("WebServiceFeature not implemented");
 
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
+      initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
 
@@ -513,6 +518,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
 
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
       initAddressingProperties(dispatch, epr);
+      initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
 
@@ -523,6 +529,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          log.warn("WebServiceFeature not implemented");
 
       T port = getPort(portName, sei);
+      initWebserviceFeatures(port, features);
       return port;
    }
 
@@ -534,6 +541,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
 
       T port = getPort(sei);
       initAddressingProperties((BindingProvider)port, epr);
+      initWebserviceFeatures(port, features);
       return port;
    }
 
@@ -544,7 +552,21 @@ public class ServiceDelegateImpl extends ServiceDelegate21
          log.warn("WebServiceFeature not implemented");
 
       T port = getPort(sei);
+      initWebserviceFeatures(port, features);
       return port;
+   }
+
+   private <T> void initWebserviceFeatures(T stub, WebServiceFeature... features)
+   {
+      if (features != null)
+      {
+         Set<WebServiceFeature> featureSet = new HashSet<WebServiceFeature>();
+         for (WebServiceFeature feature : features)
+            featureSet.add(feature);
+         
+         EndpointMetaData epMetaData = ((StubExt)stub).getEndpointMetaData();
+         epMetaData.setFeatures(featureSet);
+      }
    }
 
    // Workaround for [JBWS-2015] Modify addressing handlers to work with the JAXWS-2.1 API

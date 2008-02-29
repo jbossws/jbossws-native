@@ -81,7 +81,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    private ParameterMetaData paramMetaData;
 
    // content soapContent
-   private SOAPContent soapContent;
+   protected SOAPContent soapContent;
 
    // while transitioning DOM expansion needs to be locked
    private boolean lockDOMExpansion = false;
@@ -129,12 +129,13 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return getParamMetaData().getJavaType();
    }
 
-   private void transitionTo(State nextState)
+   protected State transitionTo(State nextState)
    {
-      if (nextState != soapContent.getState())
+      State prevState = soapContent.getState();
+      if (nextState != prevState)
       {
          log.debug("-----------------------------------");
-         log.debug("Transitioning from " + soapContent.getState() + " to " + nextState);
+         log.debug("Transitioning from " + prevState + " to " + nextState);
          lockDOMExpansion = true;
 
          soapContent = soapContent.transitionTo(nextState);
@@ -142,6 +143,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
          lockDOMExpansion = false;
          log.debug("-----------------------------------");
       }
+      return prevState;
    }
 
    /** Get the payload as source.

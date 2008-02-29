@@ -41,6 +41,7 @@ import java.util.Set;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
@@ -148,6 +149,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
    // All of the registered types
    private List<Class> registeredTypes = new ArrayList<Class>();
+   // The features defined for this endpoint
+   private Set<WebServiceFeature> features = new HashSet<WebServiceFeature>();
+   // The documentation edfined through the @Documentation annotation
+   private String documentation;
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -157,8 +162,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private List<BindingCustomization> bindingCustomization = new ArrayList<BindingCustomization>();
    
-   private String documentation;
-
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
       this.serviceMetaData = service;
@@ -360,6 +363,36 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.properties = properties;
    }
 
+   public <T extends WebServiceFeature> T getFeature(Class<T> key)
+   {
+      for (WebServiceFeature feature : features)
+      {
+         if (key.isAssignableFrom(feature.getClass()))
+            return (T)feature;
+      }
+      return null;
+   }
+
+   public Set<WebServiceFeature> getFeatures()
+   {
+      return features;
+   }
+
+   public void setFeatures(Set<WebServiceFeature> features)
+   {
+      this.features = features;
+   }
+
+   public String getDocumentation()
+   {
+      return documentation;
+   }
+
+   public void setDocumentation(String documentation)
+   {
+      this.documentation = documentation;
+   }
+   
    public List<OperationMetaData> getOperations()
    {
       return new ArrayList<OperationMetaData>(operations);
@@ -921,15 +954,5 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          match = getServiceEndpointInterfaceName().equals(seiName) || getPortName().equals(portName);
       }
       return match;
-   }
-
-   public String getDocumentation()
-   {
-      return documentation;
-   }
-
-   public void setDocumentation(String documentation)
-   {
-      this.documentation = documentation;
    }
 }

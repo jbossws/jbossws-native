@@ -1,0 +1,25 @@
+<schema elementFormDefault="qualified" targetNamespace="http://www.my-company.it/ws/my-test" xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://www.my-company.it/ws/my-test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <complexType name="MyWSException">
+    <sequence>
+      <element name="message" nillable="true" type="string"/>
+    </sequence>
+  </complexType>
+  <complexType name="performTest">
+    <sequence>
+      <element name="Code" nillable="true" type="tns:CodeType"/>
+    </sequence>
+  </complexType>
+  <complexType name="performTestResponse">
+    <sequence/>
+  </complexType>
+  <simpleType name="CodeType">
+    <restriction base="integer">
+      <minInclusive value="0"/>
+      <maxInclusive value="1000"/>
+    </restriction>
+  </simpleType>
+  <element name="MyWSException" type="tns:MyWSException"/>
+  <element name="performTest" type="tns:performTest"/>
+  <element name="performTestResponse" type="tns:performTestResponse"/>
+</schema>

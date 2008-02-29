@@ -40,6 +40,7 @@ public class ClientEndpointMetaData extends EndpointMetaData
 {
    // The endpoint address
    private String endpointAddress;
+   private String documentation;
    
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {

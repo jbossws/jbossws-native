@@ -25,6 +25,11 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.soap.SOAPContent.State;
+import org.jboss.ws.feature.SchemaValidationFeature;
+
 /**
  * An abstract implemenation of the SOAPBodyElement
  * <p/>
@@ -35,6 +40,12 @@ import javax.xml.soap.SOAPBodyElement;
  */
 public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyElement
 {
+   // provide logging
+   private static Logger log = Logger.getLogger(SOAPBodyElementDoc.class);
+   
+   private SchemaValidationFeature feature;
+   private boolean validated;
+   
    public SOAPBodyElementDoc(Name name)
    {
       super(name);
@@ -50,4 +61,36 @@ public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyEl
       super(element);
    }
 
+   @Override
+   protected State transitionTo(State nextState)
+   {
+      State prevState = soapContent.getState();
+      if (nextState != prevState)
+      {
+         if (doValidation() && nextState == State.OBJECT_VALID)
+         {
+            log.info("Validating: " + prevState);
+            validated = true;
+         }
+         
+         log.info(prevState + "=>" + nextState);
+         prevState = super.transitionTo(nextState);
+         
+         if (doValidation() && prevState == State.OBJECT_VALID)
+         {
+            log.info("Validating: " + nextState);
+            validated = true;
+         }
+      }
+      return prevState;
+   }
+
+   private boolean doValidation()
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null)
+         feature = msgContext.getEndpointMetaData().getFeature(SchemaValidationFeature.class);
+      
+      return feature != null && validated == false;
+   }
 }
