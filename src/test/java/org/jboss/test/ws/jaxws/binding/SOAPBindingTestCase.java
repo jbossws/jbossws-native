@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.binding;
 
-// $Id: $
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +40,8 @@ import junit.framework.Test;
 import org.jboss.ws.Constants;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.w3c.dom.Element;
 
 /**
  * Test SOAP12 binding type
@@ -67,8 +62,6 @@ public class SOAPBindingTestCase extends JBossWSTest
    public void testWSDLAccess() throws Exception
    {
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
-      //Element root = DOMUtils.parse(wsdlURL.openStream());
-      //System.out.println(DOMWriter.printNode(root, true));
 
       WSDLDefinitions defs = WSDLDefinitionsFactory.newInstance().parse(wsdlURL);
       Definition wsdl = defs.getWsdlOneOneDefinition();
