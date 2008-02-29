@@ -183,10 +183,10 @@
       <copy todir="${deploy.dir}/client" overwrite="true">
         <fileset dir="@{stacklibs}">
           <patternset refid="client.patternset"/>
-          <include name="jbossws-jboss421.jar"/>
         </fileset>
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="client.patternset"/>
+          <include name="jbossws-jboss421.jar"/>
           <include name="jboss-xml-binding.jar"/>
         </fileset>
       </copy>
