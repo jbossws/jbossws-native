@@ -49,6 +49,8 @@ public class SchemaExtractor
    // provide logging
    private static Logger log = Logger.getLogger(SchemaExtractor.class);
 
+   private File xsdFile;
+   
    public URL getSchemaUrl(URL wsdlURL) throws IOException
    {
       // parse the wsdl
@@ -78,15 +80,24 @@ public class SchemaExtractor
       Element schemaElement = schemaElements.get(0);
 
       File tmpdir = IOUtils.createTempDirectory();
-      File tmpFile = File.createTempFile("jbossws_schema", ".xsd", tmpdir);
-      tmpFile.deleteOnExit();
+      xsdFile = File.createTempFile("jbossws_schema", ".xsd", tmpdir);
+      xsdFile.deleteOnExit();
 
-      OutputStreamWriter outwr = new OutputStreamWriter(new FileOutputStream(tmpFile));
+      OutputStreamWriter outwr = new OutputStreamWriter(new FileOutputStream(xsdFile));
       DOMWriter domWriter = new DOMWriter(outwr);
       domWriter.setPrettyprint(true);
       domWriter.print(schemaElement);
       outwr.close();
 
-      return tmpFile.toURL();
+      return xsdFile.toURL();
+   }
+   
+   public void close()
+   {
+      if (xsdFile != null)
+      {
+         xsdFile.delete();
+         xsdFile = null;
+      }
    }
 }

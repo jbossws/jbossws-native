@@ -21,26 +21,26 @@
  */
 package org.jboss.test.ws.jaxws.jbws1172;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.ws.Service;
 import javax.xml.ws.Service21;
 
 import junit.framework.Test;
 
 import org.jboss.test.ws.jaxws.jbws1172.types.MyTest;
+import org.jboss.ws.core.utils.SchemaValidationHelper;
 import org.jboss.ws.extensions.validation.SchemaExtractor;
-import org.jboss.ws.extensions.validation.ValidationErrorHandler;
 import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * [JBWS-1172] Support schema validation for incoming messages
@@ -52,6 +52,8 @@ import org.xml.sax.SAXException;
  */
 public class JBWS1172TestCase extends JBossWSTest
 {
+   private static final QName SERVICE_NAME = new QName("http://www.my-company.it/ws/my-test", "MyTestService");
+
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1172TestCase.class, "jaxws-jbws1172.war");
@@ -59,18 +61,20 @@ public class JBWS1172TestCase extends JBossWSTest
 
    public void testSchemaValidationPositive() throws Exception
    {
-      URL xsdURL = new File("resources/jaxws/jbws1172/TestService.xsd").toURL();
+      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
-      parseDocument(inxml, xsdURL);
+      new SchemaValidationHelper(xsdURL).validateDocument(inxml);
    }
 
    public void testSchemaValidationNegative() throws Exception
    {
-      URL xsdURL = new File("resources/jaxws/jbws1172/TestService.xsd").toURL();
+      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>2000</Code></performTest>";
       try
       {
-         parseDocument(inxml, xsdURL);
+         new SchemaValidationHelper(xsdURL).validateDocument(inxml);
       }
       catch (SAXException ex)
       {
@@ -79,57 +83,97 @@ public class JBWS1172TestCase extends JBossWSTest
       }
    }
 
-   public void testSchemaExtractor() throws Exception
-   {
-      URL wsdlURL = new File("resources/jaxws/jbws1172/TestService.wsdl").toURL();
-      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
-      String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
-      parseDocument(inxml, xsdURL);
-   }
-
    public void testEndpointWsdlValidation() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/noval?wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
-      parseDocument(inxml, xsdURL);
-   }
-   
-   public void testNonValidatingClient() throws Exception
-   {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172?wsdl");
-      QName serviceName = new QName("http://www.my-company.it/ws/my-test", "MyTestService");
-      Service service = Service.create(wsdlURL, serviceName);
-      MyTest port = service.getPort(MyTest.class);
-      port.performTest(new Long(1000));
+      new SchemaValidationHelper(xsdURL).validateDocument(inxml);
    }
    
    public void testValidatingClientWithExplicitSchema() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172?wsdl");
+      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
-      QName serviceName = new QName("http://www.my-company.it/ws/my-test", "MyTestService");
-      Service21 service = Service21.create(wsdlURL, serviceName);
-      MyTest port = service.getPort(MyTest.class, new SchemaValidationFeature(xsdURL.toString()));
-      port.performTest(new Long(1000));
+      
+      Service21 service = Service21.create(wsdlURL, SERVICE_NAME);
+      SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
+      MyTest port = service.getPort(MyTest.class, feature);
+      try
+      {
+         port.performTest(new Long(2000));
+      }
+      catch (Exception ex)
+      {
+         StringWriter stwr = new StringWriter(); 
+         ex.printStackTrace(new PrintWriter(stwr));
+         String msg = stwr.toString();
+         assertTrue("Unexpectd message: " + ex.getMessage(), msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
+      }
    }
    
-   private void parseDocument(String inxml, URL xsdURL) throws Exception
+   public void testValidatingClientWithErrorHandler() throws Exception
    {
-      DocumentBuilder builder = getDocumentBuilder(xsdURL);
-      ByteArrayInputStream bais = new ByteArrayInputStream(inxml.getBytes());
-      builder.parse(bais);
+      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
+      
+      Service21 service = Service21.create(wsdlURL, SERVICE_NAME);
+      SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
+      
+      TestErrorHandler errorHandler = new TestErrorHandler();
+      feature.setErrorHandler(errorHandler);
+      
+      MyTest port = service.getPort(MyTest.class, feature);
+      port.performTest(new Long(2000));
+      
+      String msg = errorHandler.getErrors();
+      assertTrue("Unexpectd message: " + msg, msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
    }
-
-   private DocumentBuilder getDocumentBuilder(URL xsdURL) throws ParserConfigurationException
+   
+   public void testNonValidatingEndpoint() throws Exception
    {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setValidating(true);
-      factory.setNamespaceAware(true);
-      factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-      factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", xsdURL.toExternalForm());
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      builder.setErrorHandler(new ValidationErrorHandler());
-      return builder;
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/noval?wsdl");
+      
+      Service service = Service.create(wsdlURL, SERVICE_NAME);
+      MyTest port = service.getPort(MyTest.class);
+      port.performTest(new Long(1000));
+      port.performTest(new Long(2000));
+   }
+   
+   public void testValidatingEndpoint() throws Exception
+   {
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/doval?wsdl");
+      
+      Service service = Service.create(wsdlURL, SERVICE_NAME);
+      MyTest port = service.getPort(MyTest.class);
+      port.performTest(new Long(1000));
+      try
+      {
+         port.performTest(new Long(2000));
+      }
+      catch (Exception ex)
+      {
+         String msg = ex.getMessage();
+         assertTrue("Unexpectd message: " + ex.getMessage(), msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
+      }
+}
+   
+   private static  class TestErrorHandler implements ErrorHandler
+   {
+      private StringBuilder errors = new StringBuilder();
+      public String getErrors()
+      {
+         return errors.toString();
+      }
+      public void error(SAXParseException ex) throws SAXException
+      {
+         errors.append(ex.getMessage());
+      }
+      public void fatalError(SAXParseException ex) throws SAXException
+      {
+      }
+      public void warning(SAXParseException ex) throws SAXException
+      {
+      }
    }
 }

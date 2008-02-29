@@ -213,9 +213,13 @@
     <!-- jaxws-jbws1172 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1172.war" webxml="${tests.output.dir}/resources/jaxws/jbws1172/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/jbws1172/MyTestImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws1172/NonValidatingEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws1172/ValidatingEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxws/jbws1172/types/*.class"/>
       </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbws1172/WEB-INF">
+        <include name="wsdl/**"/>
+      </webinf>
     </war>
     
     <!-- jaxws-jbws1178 -->

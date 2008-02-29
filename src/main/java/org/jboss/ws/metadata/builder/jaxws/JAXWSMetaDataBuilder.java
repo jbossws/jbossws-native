@@ -24,6 +24,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 // $Id$
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -59,6 +60,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.Documentation;
+import org.jboss.ws.annotation.SchemaValidation;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.WrapperGenerator;
@@ -70,7 +72,7 @@ import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
-import org.jboss.ws.metadata.accessor.JAXBAccessor;
+import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -89,6 +91,8 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLMIMEPart;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.wsf.spi.deployment.ArchiveDeployment;
+import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
@@ -98,6 +102,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;
+import org.xml.sax.ErrorHandler;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.TypeReference;
@@ -1034,5 +1039,47 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    public void setWrapperGenerator(WrapperGenerator wrapperGenerator)
    {
       this.wrapperGenerator = wrapperGenerator;
+   }
+
+   protected void processWebServiceFeatures(Deployment dep, ServerEndpointMetaData sepMetaData, Class<?> sepClass)
+   {
+      if (sepClass.isAnnotationPresent(SchemaValidation.class))
+      {
+         SchemaValidation anValidation = sepClass.getAnnotation(SchemaValidation.class);
+         SchemaValidationFeature feature = new SchemaValidationFeature();
+         
+         String xsdLoc = anValidation.schemaLocation();
+         if (xsdLoc.length() > 0)
+         {
+            if (dep instanceof ArchiveDeployment)
+            {
+               try
+               {
+                  URL xsdURL = ((ArchiveDeployment)dep).getMetaDataFileURL(xsdLoc);
+                  xsdLoc = xsdURL.toExternalForm();
+               }
+               catch (IOException ex)
+               {
+                  throw new WSException("Cannot load schema: " + xsdLoc, ex);
+               }
+            }
+            feature.setSchemaLocation(xsdLoc);
+         }
+         
+         Class handlerClass = anValidation.errorHandler();
+         if (handlerClass != null)
+         {
+            try
+            {
+               ErrorHandler errorHandler = (ErrorHandler)handlerClass.newInstance();
+               feature.setErrorHandler(errorHandler);
+            }
+            catch (Exception ex)
+            {
+               throw new WSException("Cannot instanciate error handler: " + handlerClass, ex);
+            }
+         }
+         sepMetaData.addWebServiceFeature(feature);
+      }
    }
 }

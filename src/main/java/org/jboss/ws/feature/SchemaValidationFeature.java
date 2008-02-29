@@ -84,6 +84,7 @@ public final class SchemaValidationFeature extends WebServiceFeature
    public SchemaValidationFeature(String schemaLocation)
    {
       this.schemaLocation = schemaLocation;
+      this.enabled = true;
    }
 
    /**
@@ -94,8 +95,8 @@ public final class SchemaValidationFeature extends WebServiceFeature
     */
    public SchemaValidationFeature(boolean enabled, String schemaLocation)
    {
-      this.enabled = enabled;
       this.schemaLocation = schemaLocation;
+      this.enabled = enabled;
    }
 
    /**
@@ -104,6 +105,16 @@ public final class SchemaValidationFeature extends WebServiceFeature
    public String getID()
    {
       return ID;
+   }
+
+   public String getSchemaLocation()
+   {
+      return schemaLocation;
+   }
+
+   public void setSchemaLocation(String schemaLocation)
+   {
+      this.schemaLocation = schemaLocation;
    }
 
    public ErrorHandler getErrorHandler()

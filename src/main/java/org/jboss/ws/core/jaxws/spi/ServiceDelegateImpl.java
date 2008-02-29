@@ -565,7 +565,7 @@ public class ServiceDelegateImpl extends ServiceDelegate21
             featureSet.add(feature);
          
          EndpointMetaData epMetaData = ((StubExt)stub).getEndpointMetaData();
-         epMetaData.setFeatures(featureSet);
+         epMetaData.setWebServiceFeatures(featureSet);
       }
    }
 

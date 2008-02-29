@@ -112,6 +112,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
          if(null == runtimeClassLoader)
             throw new IllegalArgumentException("Runtime loader cannot be null");
+         
          resetMetaDataBuilder(runtimeClassLoader);
 
          ServerEndpointMetaData sepMetaData = result.sepMetaData;
@@ -136,6 +137,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
          // process config
          processEndpointConfig(dep, sepMetaData, sepClass, linkName);
+
+         // process web service features
+         processWebServiceFeatures(dep, sepMetaData, sepClass);
 
          // Process endpoint documentation
          if (seiClass.isAnnotationPresent(Documentation.class))
@@ -209,7 +213,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
       catch (Exception ex)
       {
-         throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
+         WSException.rethrow("Cannot build meta data: " + ex.getMessage(), ex);
+         return null;
       }
    }
 
@@ -321,6 +326,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
          if(null == runtimeClassLoader)
             throw new IllegalArgumentException("Runtime loader cannot be null");
+         
          seiClass = runtimeClassLoader.loadClass(seiName);
          WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 
@@ -340,8 +346,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             interfaceNS = wsdlUtils.getTypeNamespace(seiClass);
 
          // The spec states that WSDL location should be allowed on an SEI, although it
-         // makes far more sense on the implementation bean, so we ALWAYS override the SEI
-         // when wsdlLocation is defined on the bean
+         // makes far more sense on the implementation bean, so we ONLY consider the SEI
+         // wsdlLocation when it is not defined on the bean already
 
          if (wsdlLocation.length() == 0)
             wsdlLocation = seiAnnotation.wsdlLocation();

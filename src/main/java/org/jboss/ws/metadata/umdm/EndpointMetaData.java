@@ -363,22 +363,27 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.properties = properties;
    }
 
-   public <T extends WebServiceFeature> T getFeature(Class<T> key)
+   public <T extends WebServiceFeature> T getWebServiceFeature(Class<T> key)
    {
       for (WebServiceFeature feature : features)
       {
-         if (key.isAssignableFrom(feature.getClass()))
+         if (key == feature.getClass())
             return (T)feature;
       }
       return null;
    }
 
-   public Set<WebServiceFeature> getFeatures()
+   public Set<WebServiceFeature> getWebServiceFeatures()
    {
       return features;
    }
 
-   public void setFeatures(Set<WebServiceFeature> features)
+   public void addWebServiceFeature(WebServiceFeature feature)
+   {
+      this.features.add(feature);
+   }
+
+   public void setWebServiceFeatures(Set<WebServiceFeature> features)
    {
       this.features = features;
    }

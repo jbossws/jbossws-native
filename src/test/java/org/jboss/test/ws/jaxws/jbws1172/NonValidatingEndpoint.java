@@ -19,34 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.soap;
+package org.jboss.test.ws.jaxws.jbws1172;
 
-// $Id: $
+import javax.jws.WebService;
 
-/**
- * Represent SOAP message payload that can transition from
- * one representation to the next.
- *
- * @see SOAPContentElement
- * 
- * @author Heiko.Braun@jboss.org
- * @since 05.02.2007
- */
-public abstract class SOAPContent implements SOAPContentAccess
+import org.jboss.logging.Logger;
+
+@WebService(serviceName = "MyTestService", 
+      targetNamespace = "http://www.my-company.it/ws/my-test", 
+      endpointInterface = "org.jboss.test.ws.jaxws.jbws1172.types.MyTest")
+      
+public class NonValidatingEndpoint
 {
-   public enum State
+   // provide logging
+   private static Logger log = Logger.getLogger(NonValidatingEndpoint.class);
+   
+   public void performTest(Long code) 
    {
-      OBJECT_VALID, XML_VALID, DOM_VALID
-   }
-
-   protected SOAPContentElement container;
-
-   abstract SOAPContent transitionTo(State nextState);
-
-   abstract State getState();
-
-   protected SOAPContent(SOAPContentElement container)
-   {
-      this.container = container;
+      log.info(code);
    }
 }
