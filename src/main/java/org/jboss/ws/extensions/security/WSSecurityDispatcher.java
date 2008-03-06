@@ -31,22 +31,18 @@ import javax.xml.rpc.Stub;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.BindingProvider;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.wsse.Config;
 import org.jboss.ws.metadata.wsse.Encrypt;
-import org.jboss.ws.metadata.wsse.Operation;
-import org.jboss.ws.metadata.wsse.Port;
 import org.jboss.ws.metadata.wsse.RequireEncryption;
 import org.jboss.ws.metadata.wsse.RequireSignature;
 import org.jboss.ws.metadata.wsse.RequireTimestamp;
@@ -57,7 +53,7 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 
-public class WSSecurityDispatcher
+public class WSSecurityDispatcher implements WSSecurityAPI
 {
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityDispatcher.class);
@@ -85,23 +81,6 @@ public class WSSecurityDispatcher
       return newList;
    }
 
-   private static Config getConfig(WSSecurityConfiguration config, String portName, String opName)
-   {
-      Port port = config.getPorts().get(portName);
-      if (port == null)
-         return config.getDefaultConfig();
-
-      Operation operation = port.getOperations().get(opName);
-      if (operation == null)
-      {
-         Config portConfig = port.getDefaultConfig();
-         return (portConfig == null) ? config.getDefaultConfig() : portConfig;
-
-      }
-
-      return operation.getConfig();
-   }
-
    private static CommonSOAPFaultException convertToFault(WSSecurityException e)
    {
       return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
@@ -109,75 +88,10 @@ public class WSSecurityDispatcher
 
    public static void handleInbound(CommonMessageContext ctx) throws SOAPException, SOAPFaultException
    {
-      WSSecurityConfiguration config = getSecurityConfig(ctx);
+      WSSecurityConfiguration configuration = getSecurityConfig(ctx);
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
-
-      SOAPHeader soapHeader = soapMessage.getSOAPHeader();
-      QName secQName = new QName(Constants.WSSE_NS, "Security");
-      Element secHeaderElement = (soapHeader != null) ? Util.findElement(soapHeader, secQName) : null; 
-
-      if (secHeaderElement == null)
-      {
-         // This is ok, we always allow faults to be received because WS-Security does not encrypt faults
-         if (soapMessage.getSOAPBody().getFault() != null)
-            return;
-
-         OperationMetaData opMetaData = ctx.getOperationMetaData();
-         if (opMetaData == null)
-         {
-            // Get the operation meta data from the soap message
-            // for the server side inbound message.
-            EndpointMetaData epMetaData = ctx.getEndpointMetaData();
-            opMetaData = soapMessage.getOperationMetaData(epMetaData);
-         }
-
-         String operation = opMetaData.getQName().toString();
-         String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
-
-         if (hasRequirements(config, operation, port))
-            throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
-
-         return;
-      }
-
-      try
-      {
-         SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getKeyPasswords(), config.getTrustStoreURL(),
-               config.getTrustStoreType(), config.getTrustStorePassword());
-         SecurityDecoder decoder = new SecurityDecoder(securityStore);
-
-         decoder.decode(soapMessage.getSOAPPart(), secHeaderElement);
-         
-         if (log.isTraceEnabled())
-            log.trace("Decoded Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
-
-         OperationMetaData opMetaData = ctx.getOperationMetaData();
-         if (opMetaData == null)
-         {
-            // Get the operation meta data from the soap message
-            // for the server side inbound message.
-            EndpointMetaData epMetaData = ctx.getEndpointMetaData();
-            opMetaData = soapMessage.getOperationMetaData(epMetaData);
-         }
-
-         String operation = opMetaData.getQName().toString();
-         String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
-
-         List<OperationDescription<RequireOperation>> operations = buildRequireOperations(config, operation, port);
-
-         decoder.verify(operations);
-         if(log.isDebugEnabled()) log.debug("Verification is successful");
-
-         decoder.complete();
-      }
-      catch (WSSecurityException e)
-      {
-         if (e.isInternalError())
-            log.error("Internal error occured handling inbound message:", e);
-         else if(log.isDebugEnabled()) log.debug("Returning error to sender: " + e.getMessage());
-
-         throw convertToFault(e);
-      }
+      
+      new WSSecurityDispatcher().decodeMessage(configuration, soapMessage, new MessageContextConfigSelector(ctx)); //TODO!!!
    }
 
    private static WSSecurityConfiguration getSecurityConfig(CommonMessageContext ctx)
@@ -189,18 +103,11 @@ public class WSSecurityDispatcher
       return config;
    }
 
-   private static boolean hasRequirements(WSSecurityConfiguration config, String operation, String port)
+   private static List<OperationDescription<RequireOperation>> buildRequireOperations(Config operationConfig)
    {
-      Config operationConfig = getConfig(config, port, operation);
-      return (operationConfig != null && operationConfig.getRequires() != null);
-   }
-
-   private static List<OperationDescription<RequireOperation>> buildRequireOperations(WSSecurityConfiguration config, String operation, String port)
-   {
-      Config operationConfig = getConfig(config, port, operation);
       if (operationConfig == null)
          return null;
-
+      
       Requires requires = operationConfig.getRequires();
       if (requires == null)
          return null;
@@ -229,50 +136,102 @@ public class WSSecurityDispatcher
 
    public static void handleOutbound(CommonMessageContext ctx) throws SOAPException, SOAPFaultException
    {
-      WSSecurityConfiguration config = getSecurityConfig(ctx);
+      WSSecurityConfiguration configuration = getSecurityConfig(ctx);
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
-
-      EndpointMetaData epMetaData = ctx.getEndpointMetaData();
-      String port = epMetaData.getPortName().getLocalPart();
       
-      String opName = null;
-      OperationMetaData opMetaData = ctx.getOperationMetaData();
-      if (opMetaData != null)
-         opName = opMetaData.getQName().toString();
+      String user = (String)ctx.get(Stub.USERNAME_PROPERTY);
+      String pass = (String)ctx.get(Stub.PASSWORD_PROPERTY);
+      
+      if (user == null && pass == null)
+      {
+         user = (String)ctx.get(BindingProvider.USERNAME_PROPERTY);
+         pass = (String)ctx.get(BindingProvider.PASSWORD_PROPERTY);
+      }
 
-      Config opConfig = getConfig(config, port, opName);
-      log.debug("WS-Security config: " + opConfig);
+      new WSSecurityDispatcher().encodeMessage(configuration, soapMessage, new MessageContextConfigSelector(ctx), user, pass); //TODO!!
+   }
+   
+   private static Config getConfig(WSSecurityConfiguration configuration, Config operationConfig)
+   {
+      //null operationConfig means default behavior
+      return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
+   }
+   
+   private static boolean hasRequirements(Config config)
+   {
+      return config != null && config.getRequires() != null;
+   }
+   
+   public void decodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig) throws SOAPException
+   {
+      Config config = getConfig(configuration, operationConfig);
+      SOAPHeader soapHeader = message.getSOAPHeader();
+      QName secQName = new QName(Constants.WSSE_NS, "Security");
+      Element secHeaderElement = (soapHeader != null) ? Util.findElement(soapHeader, secQName) : null; 
+
+      if (secHeaderElement == null)
+      {
+         // This is ok, we always allow faults to be received because WS-Security does not encrypt faults
+         if (message.getSOAPBody().getFault() != null)
+            return;
+
+         if (hasRequirements(config))
+            throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
+
+         return;
+      }
+
+      try
+      {
+         SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
+               configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
+         SecurityDecoder decoder = new SecurityDecoder(securityStore);
+
+         decoder.decode(message.getSOAPPart(), secHeaderElement);
+         
+         if (log.isTraceEnabled())
+            log.trace("Decoded Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
+
+         List<OperationDescription<RequireOperation>> operations = buildRequireOperations(config);
+
+         decoder.verify(operations);
+         if(log.isDebugEnabled()) log.debug("Verification is successful");
+
+         decoder.complete();
+      }
+      catch (WSSecurityException e)
+      {
+         if (e.isInternalError())
+            log.error("Internal error occured handling inbound message:", e);
+         else if(log.isDebugEnabled()) log.debug("Returning error to sender: " + e.getMessage());
+
+         throw convertToFault(e);
+      }
+      
+   }
+
+   public void encodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig, String user, String password) throws SOAPException
+   {
+      Config config = getConfig(configuration, operationConfig);
+      log.debug("WS-Security config: " + config);
       
       // Nothing to process
-      if (opConfig == null)
+      if (config == null)
          return;
 
       ArrayList<OperationDescription<EncodingOperation>> operations = new ArrayList<OperationDescription<EncodingOperation>>();
-      Timestamp timestamp = opConfig.getTimestamp();
+      Timestamp timestamp = config.getTimestamp();
       if (timestamp != null)
       {
          operations.add(new OperationDescription<EncodingOperation>(TimestampOperation.class, null, null, timestamp.getTtl(), null, null, null));
       }
 
-      if (opConfig.getUsername() != null)
+      if (config.getUsername() != null && user != null && password != null)
       {
-         Object user = ctx.get(Stub.USERNAME_PROPERTY);
-         Object pass = ctx.get(Stub.PASSWORD_PROPERTY);
-         
-         if (user == null && pass == null)
-         {
-            user = ctx.get(BindingProvider.USERNAME_PROPERTY);
-            pass = ctx.get(BindingProvider.PASSWORD_PROPERTY);
-         }
-
-         if (user != null && pass != null)
-         {
-            operations.add(new OperationDescription<EncodingOperation>(SendUsernameOperation.class, null, user.toString(), pass.toString(), null, null, null));
-            ctx.put(StubExt.PROPERTY_AUTH_TYPE, StubExt.PROPERTY_AUTH_TYPE_WSSE);
-         }
+         operations.add(new OperationDescription<EncodingOperation>(SendUsernameOperation.class, null, user, password, null, null, null));
       }
 
-      Sign sign = opConfig.getSign();
+      Sign sign = config.getSign();
       if (sign != null)
       {
          List<Target> targets = convertTargets(sign.getTargets());
@@ -288,7 +247,7 @@ public class WSSecurityDispatcher
          operations.add(new OperationDescription<EncodingOperation>(SignatureOperation.class, targets, sign.getAlias(), null, null, null, sign.getTokenRefType()));
       }
 
-      Encrypt encrypt = opConfig.getEncrypt();
+      Encrypt encrypt = config.getEncrypt();
       if (encrypt != null)
       {
          List<Target> targets = convertTargets(encrypt.getTargets());
@@ -298,14 +257,14 @@ public class WSSecurityDispatcher
       if (operations.size() == 0)
          return;
 
-      if(log.isDebugEnabled()) log.debug("Encoding Message:\n" + DOMWriter.printNode(soapMessage.getSOAPPart(), true));
+      if(log.isDebugEnabled()) log.debug("Encoding Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
 
       try
       {
-         SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getKeyPasswords() , config.getTrustStoreURL(),
-               config.getTrustStoreType(), config.getTrustStorePassword());
+         SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
+               configuration.getKeyPasswords() , configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
          SecurityEncoder encoder = new SecurityEncoder(operations, securityStore);
-         encoder.encode(soapMessage.getSOAPPart());
+         encoder.encode(message.getSOAPPart());
       }
       catch (WSSecurityException e)
       {
@@ -316,4 +275,5 @@ public class WSSecurityDispatcher
          throw convertToFault(e);
       }
    }
+
 }
