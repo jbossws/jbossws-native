@@ -38,7 +38,7 @@
   <target name="release-to-repository" depends="jars,check-svn-externals,warn-svn-externals" 
     description="Release to jboss.local.repository">
 
-    <!-- jboss/jbossws -->
+    <!-- jboss/jbossws-native -->
     <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
     <mkdir dir="${jboss.repository.dir}/jbossws/${repository.id}/bin"/>
     <mkdir dir="${jboss.repository.dir}/jbossws/${repository.id}/lib"/>
@@ -64,8 +64,11 @@
       </fileset>
     </copy>
     <copy todir="${jboss.repository.dir}/jbossws/${repository.id}/resources" overwrite="true">
-      <fileset dir="${core.dir}/src/main/resources/standard-config">
+      <fileset dir="${core.resources.dir}/standard-config">
         <include name="standard-*-config.xml"/>
+      </fileset>
+      <fileset dir="${core.resources.dir}">
+        <include name="jbossws-native-config.xml"/>
       </fileset>
     </copy>
     <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${core.output.etc.dir}/component-info.xml" filtering="true" overwrite="true">
@@ -73,35 +76,6 @@
         <filtersfile file="${core.dir}/version.properties"/>
       </filterset>
     </copy>
-	  
-    <!-- jboss/jbossws-native50 -->
-    <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
-    <mkdir dir="${jboss.repository.dir}/jbossws-native50/${repository.id}/resources"/>
-    <copy todir="${jboss.repository.dir}/jbossws-native50/${repository.id}/resources" overwrite="true">
-      <fileset dir="${core.output.lib.dir}/jbossws-native50">
-        <include name="jbossws-beans.xml"/>
-      </fileset>
-    </copy>
-    <copy tofile="${jboss.repository.dir}/jbossws-native50/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info50.xml" filtering="true" overwrite="true">
-      <filterset>
-        <filtersfile file="${core.dir}/version.properties"/>
-      </filterset>
-    </copy>
-    
-    <!-- jboss/jbossws-native42 -->
-    <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
-    <mkdir dir="${jboss.repository.dir}/jbossws-native42/${repository.id}/lib"/>
-    <copy todir="${jboss.repository.dir}/jbossws-native42/${repository.id}/lib" overwrite="true">
-      <fileset dir="${core.dir}/output/lib">
-        <include name="jbossws-native42.sar"/>
-      </fileset>
-    </copy>
-    <copy tofile="${jboss.repository.dir}/jbossws-native42/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info42.xml" filtering="true" overwrite="true">
-      <filterset>
-        <filtersfile file="${core.dir}/version.properties"/>
-      </filterset>
-    </copy>
-    
   </target>
 
   <target name="check-svn-externals" depends="init">

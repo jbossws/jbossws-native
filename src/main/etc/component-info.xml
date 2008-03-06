@@ -17,11 +17,25 @@
     <artifact id="standard-jaxrpc-endpoint-config.xml"/>
     <artifact id="standard-jaxws-client-config.xml"/>
     <artifact id="standard-jaxws-endpoint-config.xml"/>
+    <artifact id="jbossws-native-config.xml"/>
     <artifact id="wsrunclient.bat"/>
     <artifact id="wsrunclient.sh"/>
     <artifact id="wstools.bat"/>
     <artifact id="wstools.sh"/>
 
+    <import componentref="jboss/jbossxb">
+      <compatible version="@jboss-jbossxb-jboss42@"/>
+      <compatible version="@jboss-jbossxb-jboss42@-brew"/>
+      <compatible version="@jboss-jbossxb-jboss50@"/>
+      <compatible version="@jboss-jbossxb-jboss50@-brew"/>
+    </import>
+    <import componentref="jboss/remoting">
+      <compatible version="@jboss-remoting-jboss42@"/>
+      <compatible version="@jboss-remoting-jboss42@-brew"/>
+      <compatible version="@jboss-remoting-jboss50@"/>
+      <compatible version="@jboss-remoting-jboss50@-brew"/>
+    </import>
+    
     <import componentref="jboss/jaxbintros">
       <compatible version="@jboss-jaxbintros@"/>
     </import>
