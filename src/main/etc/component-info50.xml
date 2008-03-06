@@ -5,7 +5,7 @@
     version="@repository.id@"
     licenseType="lgpl">
     
-    <artifact id="jbossws-native50.sar"/>
+    <artifact id="jbossws-beans.xml"/>
     
     <import componentref="jboss/jbossws">
       <compatible version="@repository.id@"/>

@@ -303,18 +303,15 @@
     </jar>
 
     <!-- Build jbossws-context.war -->
-    <copy todir="${core.output.lib.dir}/jbossws-context.war" filtering="true">
+    <war warfile="${core.output.lib.dir}/jbossws-context.war" webxml="${core.resources.dir}/jbossws-context.war/WEB-INF/web.xml">
       <fileset dir="${core.resources.dir}/jbossws-context.war">
         <include name="index.html"/>
         <include name="styles.css"/>
-        <include name="WEB-INF/**"/>
       </fileset>
-      <filterset>
-        <filter token="build.id" value="${build.id}"/>
-        <filter token="implementation.version" value="jbossws-${version.id}"/>
-        <filtersfile file="${core.dir}/version.properties"/>
-      </filterset>
-    </copy>
+      <webinf dir="${core.resources.dir}/jbossws-context.war">
+        <include name="jboss-web.xml"/>
+      </webinf>
+    </war>
 
     <!-- Build jbossws-core-scripts.zip -->
     <zip zipfile="${core.output.lib.dir}/jbossws-core-scripts.zip" >
@@ -351,7 +348,7 @@
     <!-- Build jbossws-native50.sar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-native50.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
-        <include name="jbossws-context.war/**"/>
+        <include name="jbossws-context.war"/>
         <include name="jbossws-core.jar"/>
       </fileset>
       <fileset dir="${core.dir}/thirdparty">
@@ -389,7 +386,7 @@
     <!-- Build jbossws-native42.sar -->
     <jar jarfile="${core.output.lib.dir}/jbossws-native42.sar" manifest="${core.output.etc.dir}/default.mf">
       <fileset dir="${core.output.lib.dir}">
-        <include name="jbossws-context.war/**"/>
+        <include name="jbossws-context.war"/>
         <include name="jboss-jaxws.jar"/>
         <include name="jboss-jaxws-ext.jar"/>
         <include name="jboss-jaxrpc.jar"/>

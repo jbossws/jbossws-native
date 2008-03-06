@@ -12,8 +12,19 @@
     <artifact id="jboss-jaxws-ext.jar"/>
     <artifact id="jboss-saaj.jar"/>
     <artifact id="jbossws-core-src.zip"/>
-    <artifact id="jbossws-core-scripts.zip"/>
+    <artifact id="jbossws-context.war"/>
+    <artifact id="standard-jaxrpc-client-config.xml"/>
+    <artifact id="standard-jaxrpc-endpoint-config.xml"/>
+    <artifact id="standard-jaxws-client-config.xml"/>
+    <artifact id="standard-jaxws-endpoint-config.xml"/>
+    <artifact id="wsrunclient.bat"/>
+    <artifact id="wsrunclient.sh"/>
+    <artifact id="wstools.bat"/>
+    <artifact id="wstools.sh"/>
 
+    <import componentref="jboss/jaxbintros">
+      <compatible version="@jboss-jaxbintros@"/>
+    </import>
     <import componentref="jboss/jbossws-common">
       <compatible version="@jbossws-common@"/>
     </import>

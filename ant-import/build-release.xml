@@ -40,7 +40,17 @@
 
     <!-- jboss/jbossws -->
     <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
+    <mkdir dir="${jboss.repository.dir}/jbossws/${repository.id}/bin"/>
     <mkdir dir="${jboss.repository.dir}/jbossws/${repository.id}/lib"/>
+    <mkdir dir="${jboss.repository.dir}/jbossws/${repository.id}/resources"/>
+    <copy todir="${jboss.repository.dir}/jbossws/${repository.id}/bin" overwrite="true">
+      <fileset dir="${core.output.etc.dir}">
+        <include name="wsrunclient.bat"/>
+        <include name="wstools.bat"/>
+        <include name="wsrunclient.sh"/>
+        <include name="wstools.sh"/>
+      </fileset>
+    </copy>
     <copy todir="${jboss.repository.dir}/jbossws/${repository.id}/lib" overwrite="true">
       <fileset dir="${core.output.lib.dir}">
         <include name="jbossws-client.jar"/>
@@ -49,8 +59,14 @@
         <include name="jboss-jaxws.jar"/>
         <include name="jboss-jaxws-ext.jar"/>
         <include name="jboss-saaj.jar"/>
+        <include name="jbossws-context.war"/>
         <include name="jbossws-core-src.zip"/>
         <include name="jbossws-core-scripts.zip"/>
+      </fileset>
+    </copy>
+    <copy todir="${jboss.repository.dir}/jbossws/${repository.id}/resources" overwrite="true">
+      <fileset dir="${core.dir}/src/main/resources/standard-config">
+        <include name="standard-*-config.xml"/>
       </fileset>
     </copy>
     <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${core.output.etc.dir}/component-info.xml" filtering="true" overwrite="true">
@@ -61,11 +77,10 @@
 	  
     <!-- jboss/jbossws-native50 -->
     <property name="jboss.repository.dir" value="${jboss.local.repository}/jboss"/>
-    <mkdir dir="${jboss.repository.dir}/jbossws-native50/${repository.id}/lib"/>
-    <copy todir="${jboss.repository.dir}/jbossws-native50/${repository.id}/lib" overwrite="true">
-      <fileset dir="${core.dir}/output/lib">
-        <include name="jbossws-native50.sar"/>
-        <include name="jbossws-native50-deployer.zip"/>
+    <mkdir dir="${jboss.repository.dir}/jbossws-native50/${repository.id}/resources"/>
+    <copy todir="${jboss.repository.dir}/jbossws-native50/${repository.id}/resources" overwrite="true">
+      <fileset dir="${core.output.lib.dir}/jbossws-native50">
+        <include name="jbossws-beans.xml"/>
       </fileset>
     </copy>
     <copy tofile="${jboss.repository.dir}/jbossws-native50/${repository.id}/component-info.xml" file="${core.etc.dir}/component-info50.xml" filtering="true" overwrite="true">
