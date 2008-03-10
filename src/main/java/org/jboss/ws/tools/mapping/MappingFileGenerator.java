@@ -24,8 +24,11 @@ package org.jboss.ws.tools.mapping;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.rpc.encoding.TypeMapping;
 
@@ -72,7 +75,7 @@ public class MappingFileGenerator
    /**
     * Package Names to override
     */
-   protected Map<String, String> namespacePackageMap;
+   protected Map<String, String> namespacePackageMap = new HashMap<String,String>();
 
    /**
     * Service Name
@@ -204,6 +207,20 @@ public class MappingFileGenerator
       if (typeNamespace != null && typeNamespace.equals(targetNS) == false || isServerSideGeneration())
          jwm.addPackageMapping(helper.constructPackageMapping(jwm, getPackageName(typeNamespace), typeNamespace));
       jwm.addPackageMapping(helper.constructPackageMapping(jwm, getPackageName(targetNS), targetNS));
+
+      if (namespacePackageMap != null)
+      {
+         Set<String> keys = namespacePackageMap.keySet();
+         Iterator<String> iter = keys.iterator();
+         while (iter != null && iter.hasNext())
+         {
+            String ns = iter.next();
+            if (jwm.getPackageNameForNamespaceURI(ns) == null)
+            {
+               jwm.addPackageMapping(helper.constructPackageMapping(jwm, namespacePackageMap.get(ns), ns));
+            }
+         }
+      }
 
       return jwm;
    }

@@ -23,6 +23,7 @@ package org.jboss.ws.tools.helpers;
 
 import java.beans.Introspector;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public class MappingFileGeneratorHelper
    private String typeNamespace;
    private String serviceName = null;
    private String packageName = null;
-   private Map<String, String> namespacePackageMap = null;
+   private Map<String, String> namespacePackageMap = new HashMap<String,String>();
    private Set<String> registeredTypes = new HashSet<String>();
    private Set<String> registeredExceptions = new HashSet<String>();
 
@@ -479,6 +480,7 @@ public class MappingFileGeneratorHelper
          WsdlReturnValueMapping wrvm = new WsdlReturnValueMapping(semm);
          wrvm.setMethodReturnValue(getJavaTypeAsString(xmlName, xmlType, nameSpace, false, true));
          QName messageName = WSDLUtils.getWsdl11Output(wiop).getMessageName();
+
          wrvm.setWsdlMessage(new QName(messageName.getNamespaceURI(), messageName.getLocalPart(), WSToolsConstants.WSTOOLS_CONSTANT_MAPPING_WSDL_MESSAGE_NS));
          wrvm.setWsdlMessagePartName(partName);
          semm.setWsdlReturnValueMapping(wrvm);
@@ -711,9 +713,17 @@ public class MappingFileGeneratorHelper
 
       if (xt instanceof XSComplexTypeDefinition)
       {
-
          XSModelGroup xm = null;
          XSComplexTypeDefinition xc = (XSComplexTypeDefinition)xt;
+         XSTypeDefinition baseType = xc.getBaseType();
+         short der = xc.getDerivationMethod();
+
+         if ((baseType != null) && !utils.isBaseTypeIgnorable(baseType, xc))
+         {
+               addJavaXMLTypeMap(baseType, baseType.getName(), "", "", jwm, skipWrapperArray); //Recurse for base types
+         }
+
+         // handleContentTypeElementsWithDerivationNone
          if (xc.getContentType() != XSComplexTypeDefinition.CONTENTTYPE_EMPTY)
          {
             XSParticle xp = xc.getParticle();
@@ -797,12 +807,15 @@ public class MappingFileGeneratorHelper
       {
          XSTerm xsterm = ((XSParticle)xo.item(i)).getTerm();
          if (xsterm instanceof XSModelGroup)
+         {
             addVariableMappingMap((XSModelGroup)xsterm, jxtm, javaType);
+         }
          else if (xsterm instanceof XSElementDeclaration)
          {
             XSElementDeclaration xe = (XSElementDeclaration)xsterm;
             VariableMapping vm = new VariableMapping(jxtm);
             String name = xe.getName();
+            
             // JBWS-1170 Convert characters which are illegal in Java identifiers
             vm.setJavaVariableName(ToolsUtils.convertInvalidCharacters(Introspector.decapitalize(name)));
             vm.setXmlElementName(name);
