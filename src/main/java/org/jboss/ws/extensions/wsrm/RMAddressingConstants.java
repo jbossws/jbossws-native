@@ -23,7 +23,7 @@ package org.jboss.ws.extensions.wsrm;
 
 import javax.xml.ws.addressing.AddressingBuilder;
 
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
 
 /**
  * Addressing constants related to WS-RM protocol

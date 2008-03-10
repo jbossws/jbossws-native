@@ -23,8 +23,8 @@ package org.jboss.ws.extensions.wsrm.common.serialization;
 
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
 
 /**
  * Each WS-RM message de/serializer must implement this interface

@@ -38,9 +38,9 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMSequence;
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
 
 /**
  * Server WS-RM JAX-WS handler

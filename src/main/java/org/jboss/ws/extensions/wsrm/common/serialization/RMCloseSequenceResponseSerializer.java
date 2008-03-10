@@ -32,10 +32,10 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCloseSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
 
 /**
  * <b>CloseSequenceResponse</b> object de/serializer

@@ -24,13 +24,13 @@ package org.jboss.ws.extensions.wsrm.common.serialization;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
 
 /**
  * Utility class which should be subclassed by all WS-RM protocol providers.
  * @author richard.opalka@jboss.com
- * @see org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable
+ * @see org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable
  */
 public abstract class RMAbstractSerializable implements RMSerializable
 {

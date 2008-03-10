@@ -22,17 +22,17 @@
 package org.jboss.ws.extensions.wsrm.common.serialization;
 
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceFault;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMAckRequested;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCloseSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCloseSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceFault;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMTerminateSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMTerminateSequenceResponse;
 
 import javax.xml.soap.SOAPMessage;
 

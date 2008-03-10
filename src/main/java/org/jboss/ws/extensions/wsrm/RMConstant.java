@@ -6,8 +6,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
 
 public final class RMConstant
 {

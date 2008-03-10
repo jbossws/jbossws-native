@@ -36,11 +36,11 @@ import javax.xml.ws.addressing.AddressingConstants;
 
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMIncompleteSequenceBehavior;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMIncompleteSequenceBehavior;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
 
 /**
  * <b>CreateSequenceResponse</b> object de/serializer

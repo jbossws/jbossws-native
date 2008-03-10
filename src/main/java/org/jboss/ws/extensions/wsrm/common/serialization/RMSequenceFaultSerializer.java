@@ -35,11 +35,11 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMFaultConstant;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceFault;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceFault;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
 
 /**
  * <b>SequenceFault</b> object de/serializer

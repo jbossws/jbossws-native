@@ -29,19 +29,19 @@ import javax.xml.namespace.QName;
 import org.jboss.ws.extensions.wsrm.RMFault;
 import org.jboss.ws.extensions.wsrm.RMSequence;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMMessageFactory;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCloseSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMCreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceFault;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSerializable;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMTerminateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMMessageFactory;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMAckRequested;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCloseSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCloseSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequenceResponse;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceFault;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMTerminateSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMTerminateSequenceResponse;
 
 /**
  * Handler helper
@@ -260,7 +260,7 @@ public final class RMHandlerHelper
    private static RMSerializable newSequence(RMSequence seq)
    {
       // construct Sequence object
-      org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence sequence = rmFactory.newSequence();
+      org.jboss.ws.extensions.wsrm.protocol.spi.RMSequence sequence = rmFactory.newSequence();
       sequence.setIdentifier(seq.getOutboundId());
       sequence.setMessageNumber(seq.getLastMessageNumber());
       return sequence;

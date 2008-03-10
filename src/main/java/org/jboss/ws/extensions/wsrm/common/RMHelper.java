@@ -37,11 +37,11 @@ import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMAckRequested;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequence;
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceAcknowledgement;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMAckRequested;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequence;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 

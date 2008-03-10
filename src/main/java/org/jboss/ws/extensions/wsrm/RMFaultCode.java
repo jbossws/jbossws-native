@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
-import org.jboss.ws.extensions.wsrm.spi.protocol.RMSequenceFaultCode;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceFaultCode;
 
 /**
  * RM fault constants

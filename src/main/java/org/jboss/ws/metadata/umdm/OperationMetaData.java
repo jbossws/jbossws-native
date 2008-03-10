@@ -38,7 +38,7 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
-import org.jboss.ws.extensions.wsrm.spi.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
 import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.Element;
 

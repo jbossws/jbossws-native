@@ -23,12 +23,12 @@ package org.jboss.ws.extensions.wsrm.common;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.extensions.wsrm.spi.RMConstants;
+import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
 
 /**
  * Utility class which should be used by all WS-RM protocol providers.
  * @author richard.opalka@jboss.com
- * @see org.jboss.ws.extensions.wsrm.spi.RMConstants
+ * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants
  */
 public final class RMConstantsImpl implements RMConstants
 {
@@ -103,7 +103,7 @@ public final class RMConstantsImpl implements RMConstants
    }
    
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getPrefix()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getPrefix()
     */
    public final String getPrefix()
    {
@@ -111,7 +111,7 @@ public final class RMConstantsImpl implements RMConstants
    }
    
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getNamespaceURI()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getNamespaceURI()
     */
    public final String getNamespaceURI()
    {
@@ -119,7 +119,7 @@ public final class RMConstantsImpl implements RMConstants
    }
    
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getAcceptQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getAcceptQName()
     */
    public final QName getAcceptQName()
    {
@@ -127,7 +127,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getAckRequestedQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getAckRequestedQName()
     */
    public final QName getAckRequestedQName()
    {
@@ -135,7 +135,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getAcknowledgementRangeQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getAcknowledgementRangeQName()
     */
    public final QName getAcknowledgementRangeQName()
    {
@@ -143,7 +143,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getAcksToQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getAcksToQName()
     */
    public final QName getAcksToQName()
    {
@@ -151,7 +151,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getCloseSequenceQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getCloseSequenceQName()
     */
    public final QName getCloseSequenceQName()
    {
@@ -159,7 +159,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getCloseSequenceResponseQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getCloseSequenceResponseQName()
     */
    public final QName getCloseSequenceResponseQName()
    {
@@ -167,7 +167,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getCreateSequenceQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getCreateSequenceQName()
     */
    public final QName getCreateSequenceQName()
    {
@@ -175,7 +175,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getCreateSequenceResponseQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getCreateSequenceResponseQName()
     */
    public final QName getCreateSequenceResponseQName()
    {
@@ -183,7 +183,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getDetailQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getDetailQName()
     */
    public final QName getDetailQName()
    {
@@ -191,7 +191,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getEndpointQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getEndpointQName()
     */
    public final QName getEndpointQName()
    {
@@ -199,7 +199,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getExpiresQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getExpiresQName()
     */
    public final QName getExpiresQName()
    {
@@ -207,7 +207,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getFaultCodeQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getFaultCodeQName()
     */
    public final QName getFaultCodeQName()
    {
@@ -215,7 +215,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getFinalQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getFinalQName()
     */
    public final QName getFinalQName()
    {
@@ -223,7 +223,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getIdentifierQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getIdentifierQName()
     */
    public final QName getIdentifierQName()
    {
@@ -231,7 +231,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getIncompleteSequenceBehaviorQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getIncompleteSequenceBehaviorQName()
     */
    public final QName getIncompleteSequenceBehaviorQName()
    {
@@ -239,7 +239,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getLastMessageNumberQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getLastMessageNumberQName()
     */
    public final QName getLastMessageNumberQName()
    {
@@ -247,7 +247,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getLastMessageQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getLastMessageQName()
     */
    public final QName getLastMessageQName()
    {
@@ -255,7 +255,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getLastMsgNumberQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getLastMsgNumberQName()
     */
    public final QName getLastMsgNumberQName()
    {
@@ -263,7 +263,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getLowerQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getLowerQName()
     */
    public final QName getLowerQName()
    {
@@ -271,7 +271,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getMessageNumberQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getMessageNumberQName()
     */
    public final QName getMessageNumberQName()
    {
@@ -279,7 +279,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getMaxMessageNumberQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getMaxMessageNumberQName()
     */
    public final QName getMaxMessageNumberQName()
    {
@@ -287,7 +287,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getNackQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getNackQName()
     */
    public final QName getNackQName()
    {
@@ -295,7 +295,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getNoneQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getNoneQName()
     */
    public final QName getNoneQName()
    {
@@ -303,7 +303,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getOfferQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getOfferQName()
     */
    public final QName getOfferQName()
    {
@@ -311,7 +311,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getSequenceAcknowledgementQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getSequenceAcknowledgementQName()
     */
    public final QName getSequenceAcknowledgementQName()
    {
@@ -319,7 +319,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getSequenceFaultQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getSequenceFaultQName()
     */
    public final QName getSequenceFaultQName()
    {
@@ -327,7 +327,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getSequenceQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getSequenceQName()
     */
    public final QName getSequenceQName()
    {
@@ -335,7 +335,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getTerminateSequenceQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getTerminateSequenceQName()
     */
    public final QName getTerminateSequenceQName()
    {
@@ -343,7 +343,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getTerminateSequenceResponseQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getTerminateSequenceResponseQName()
     */
    public final QName getTerminateSequenceResponseQName()
    {
@@ -351,7 +351,7 @@ public final class RMConstantsImpl implements RMConstants
    }
 
    /**
-    * @see org.jboss.ws.extensions.wsrm.spi.RMConstants#getUpperQName()
+    * @see org.jboss.ws.extensions.wsrm.protocol.RMConstants#getUpperQName()
     */
    public final QName getUpperQName()
    {
