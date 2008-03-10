@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,6 +28,9 @@ import javax.crypto.SecretKey;
 
 import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.encryption.XMLEncryptionException;
+import org.jboss.ws.extensions.security.Constants;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.ReferenceList;
 import org.jboss.ws.extensions.security.element.SecurityHeader;

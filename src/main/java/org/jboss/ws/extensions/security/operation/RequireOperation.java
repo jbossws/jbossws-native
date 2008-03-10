@@ -19,22 +19,21 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import java.util.List;
+import java.util.Collection;
 
+import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
 /**
- * <code>EncodingOperation</code> represents an encoding operation that is
- * applied to a standard SOAP message, transforming it into a WS-Security
- * encoded message.
+ * Marker interface for all requirement based WS-Security operations.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public interface EncodingOperation extends Operation
+public interface RequireOperation extends Operation
 {
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, String wrap, String tokenRefType) throws WSSecurityException;
+   public void process(Document message, SecurityHeader header, Collection<String> processedIds) throws WSSecurityException;
 }

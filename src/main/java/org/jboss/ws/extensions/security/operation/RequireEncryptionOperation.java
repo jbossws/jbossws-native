@@ -19,15 +19,19 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-/**
- * Marker interface for all WS-Security operations
- *
- * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
- */
-public interface Operation
+import java.util.List;
+
+import org.jboss.ws.extensions.security.Target;
+
+
+public class RequireEncryptionOperation extends RequireTargetableOperation
 {
 
+   public RequireEncryptionOperation(List<Target> targets)
+   {
+      super(targets);
+   }
+   
 }

@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +27,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.extensions.security.QNameTarget;
+import org.jboss.ws.extensions.security.Target;
+import org.jboss.ws.extensions.security.Util;
+import org.jboss.ws.extensions.security.WsuIdTarget;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.exception.FailedCheckException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
@@ -35,8 +39,11 @@ import org.w3c.dom.Element;
 
 public class RequireTargetableOperation implements RequireOperation
 {
-   public RequireTargetableOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
+   private List<Target> targets;
+   
+   public RequireTargetableOperation(List<Target> targets)
    {
+      this.targets = targets;
    }
 
    private Collection<String> resolveTarget(Document message, Target target) throws WSSecurityException
@@ -72,7 +79,7 @@ public class RequireTargetableOperation implements RequireOperation
       return result;
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, Collection<String> processedIds) throws WSSecurityException
+   public void process(Document message, SecurityHeader header, Collection<String> processedIds) throws WSSecurityException
    {
       if (targets == null || targets.size() == 0)
       {

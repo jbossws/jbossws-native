@@ -35,6 +35,14 @@ import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.operation.DecryptionOperation;
+import org.jboss.ws.extensions.security.operation.OperationDescription;
+import org.jboss.ws.extensions.security.operation.ReceiveUsernameOperation;
+import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
+import org.jboss.ws.extensions.security.operation.RequireOperation;
+import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
+import org.jboss.ws.extensions.security.operation.SignatureVerificationOperation;
+import org.jboss.ws.extensions.security.operation.TimestampVerificationOperation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -134,41 +142,23 @@ public class SecurityDecoder
       }
    }
 
-   public void verify(List<OperationDescription<RequireOperation>> requireOperations) throws WSSecurityException
+   public void verify(List<RequireOperation> requireOperations) throws WSSecurityException
    {
       if (requireOperations == null)
          return;
 
-      for (OperationDescription<RequireOperation> o : requireOperations)
+      for (RequireOperation op : requireOperations)
       {
-         Class<? extends RequireOperation> operation = o.getOperation();
-         RequireOperation op;
          Collection<String> processedIds = null;
-
-         if (operation.equals(RequireSignatureOperation.class))
+         if (op instanceof RequireSignatureOperation)
          {
-            op = new RequireSignatureOperation(header, store);
             processedIds = signedIds;
          }
-         else if (operation.equals(RequireEncryptionOperation.class))
+         else if (op instanceof RequireEncryptionOperation)
          {
-            op = new RequireEncryptionOperation(header, store);
             processedIds = encryptedIds;
          }
-         else
-         {
-            try
-            {
-               Constructor<? extends RequireOperation> c = operation.getConstructor(SecurityHeader.class, SecurityStore.class);
-               op = c.newInstance(header, store);
-            }
-            catch (Exception e)
-            {
-               throw new WSSecurityException("Error constructing operation: " + operation);
-            }
-         }
-
-         op.process(message, o.getTargets(), o.getCertificateAlias(), o.getCredential(), processedIds);
+         op.process(message, header, processedIds);
       }
    }
 

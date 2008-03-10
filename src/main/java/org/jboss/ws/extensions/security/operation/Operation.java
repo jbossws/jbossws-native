@@ -19,16 +19,15 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import org.jboss.ws.extensions.security.element.SecurityHeader;
-import org.jboss.ws.extensions.security.exception.WSSecurityException;
-
-
-public class RequireSignatureOperation extends RequireTargetableOperation
+/**
+ * Marker interface for all WS-Security operations
+ *
+ * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @version $Revision$
+ */
+public interface Operation
 {
-   public RequireSignatureOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
-   {
-      super(header, store);
-   }
+
 }

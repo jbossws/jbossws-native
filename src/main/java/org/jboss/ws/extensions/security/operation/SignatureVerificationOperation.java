@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +28,10 @@ import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.signature.SignedInfo;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xml.security.signature.XMLSignatureException;
+import org.jboss.ws.extensions.security.STRTransform;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.SignatureKeysAssociation;
+import org.jboss.ws.extensions.security.WsuIdResolver;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.SecurityProcess;
 import org.jboss.ws.extensions.security.element.Signature;

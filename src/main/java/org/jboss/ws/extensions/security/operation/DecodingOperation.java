@@ -19,16 +19,23 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import org.jboss.ws.extensions.security.element.SecurityHeader;
+import java.util.Collection;
+
+import org.jboss.ws.extensions.security.element.SecurityProcess;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.w3c.dom.Document;
 
-
-public class RequireEncryptionOperation extends RequireTargetableOperation
+/**
+ * <code>DecodingOperation</code> represents an operation that is applied to a
+ * WS-Security encoded message to both convert and verify the contents of the
+ * message.
+ *
+ * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @version $Revision$
+ */
+public interface DecodingOperation extends Operation
 {
-   public RequireEncryptionOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
-   {
-      super(header, store);
-   }
+   public Collection<String> process(Document message, SecurityProcess process) throws WSSecurityException;
 }

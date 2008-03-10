@@ -19,41 +19,43 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import java.util.List;
+import java.util.Calendar;
+import java.util.Collection;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Timestamp;
+import org.jboss.ws.extensions.security.exception.FailedCheckException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
-public class TimestampOperation implements EncodingOperation
+
+public class RequireTimestampOperation implements RequireOperation
 {
-   private SecurityHeader header;
-
-   private SecurityStore store;
-
-   public TimestampOperation(SecurityHeader header, SecurityStore store)
+   private String maxAge;
+   
+   public RequireTimestampOperation(String maxAge)
    {
-      this.header = header;
-      this.store = store;
+      this.maxAge = maxAge;
    }
-
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, String keyWrapAlgorithm, String tokenRefType) throws WSSecurityException
+   
+   public void process(Document message, SecurityHeader header, Collection<String> processedIds) throws WSSecurityException
    {
-      Integer ttl = null;
+      Timestamp stamp = header.getTimestamp();
+      if (stamp == null)
+         throw new FailedCheckException("Required timestamp not present.");
 
-      try
-      {
-         // Time to live is stuffed in the credential field
-         ttl = Integer.valueOf(credential);
-      }
-      catch (NumberFormatException e)
-      {
-         // Eat
-      }
+      // If there is no maxAge specified then we are done
+      if (maxAge == null)
+         return;
 
-      header.setTimestamp(new Timestamp(ttl, message));
+      int max = Integer.parseInt(maxAge);
+
+      Calendar expired = (Calendar)stamp.getCreated().clone();
+      expired.add(Calendar.SECOND, max);
+
+      if (! Calendar.getInstance().before(expired))
+         throw new FailedCheckException("Timestamp of message is too old.");
    }
 }

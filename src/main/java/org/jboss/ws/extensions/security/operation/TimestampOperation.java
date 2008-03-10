@@ -19,29 +19,32 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import java.util.List;
-
+import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
-import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
-public class SendUsernameOperation implements EncodingOperation
+public class TimestampOperation implements EncodingOperation
 {
-   private SecurityHeader header;
-
-   private SecurityStore store;
-
-   public SendUsernameOperation(SecurityHeader header, SecurityStore store)
+   private Integer ttl;
+   
+   public TimestampOperation(String timeToLive)
    {
-      this.header = header;
-      this.store = store;
+      try
+      {
+         this.ttl = Integer.valueOf(timeToLive);
+      }
+      catch (NumberFormatException e)
+      {
+         // Eat
+      }
    }
 
-   public void process(Document message, List<Target> targets, String username, String credential, String algorithm, String keyWrapAlgorithm, String tokenRefType) throws WSSecurityException
+   public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException
    {
-      header.addToken(new UsernameToken(username, credential, message));
+      header.setTimestamp(new Timestamp(ttl, message));
    }
 }

@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +37,11 @@ import org.apache.xml.security.encryption.EncryptedData;
 import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.extensions.security.QNameTarget;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.SignatureKeysAssociation;
+import org.jboss.ws.extensions.security.Target;
+import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.Reference;
 import org.jboss.ws.extensions.security.element.ReferenceList;
@@ -48,10 +53,12 @@ import org.w3c.dom.Element;
 
 public class EncryptionOperation implements EncodingOperation
 {
-   private SecurityHeader header;
-
-   private SecurityStore store;
-
+   private List<Target> targets;
+   private String alias;
+   private String algorithm;
+   private String wrap;
+   private String tokenRefType;
+   
    private static class Algorithm
    {
       Algorithm(String jceName, String xmlName, int size)
@@ -79,10 +86,14 @@ public class EncryptionOperation implements EncodingOperation
       algorithms.put("tripledes", new Algorithm("TripleDes", XMLCipher.TRIPLEDES, 168));
    }
 
-   public EncryptionOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
+   public EncryptionOperation(List<Target> targets, String alias, String algorithm, String wrap, String tokenRefType)
    {
-      this.header = header;
-      this.store = store;
+      super();
+      this.targets = targets;
+      this.alias = alias;
+      this.algorithm = algorithm;
+      this.wrap = wrap;
+      this.tokenRefType = tokenRefType;
    }
 
    private void processTarget(XMLCipher cipher, Document message, Target target, ReferenceList list, SecretKey key) throws WSSecurityException
@@ -129,8 +140,8 @@ public class EncryptionOperation implements EncodingOperation
          throw new WSSecurityException(e.getMessage());
       }
    }
-
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, String wrap, String tokenRefType) throws WSSecurityException
+   
+   public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException
    {
       if (! algorithms.containsKey(algorithm))
          algorithm = DEFAULT_ALGORITHM;
@@ -161,7 +172,7 @@ public class EncryptionOperation implements EncodingOperation
             processTarget(cipher, message, target, list, secretKey);
       }
       
-      X509Certificate cert = getCertificate(alias);
+      X509Certificate cert = getCertificate(store, alias);
       X509Token token = (X509Token) header.getSharedToken(cert);
 
       // Can we reuse an existing token?
@@ -177,7 +188,7 @@ public class EncryptionOperation implements EncodingOperation
    }
    
    @SuppressWarnings("unchecked")
-   private X509Certificate getCertificate(String alias) throws WSSecurityException
+   private X509Certificate getCertificate(SecurityStore store, String alias) throws WSSecurityException
    {
       X509Certificate cert = null;
       if (alias != null)

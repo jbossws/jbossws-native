@@ -244,7 +244,25 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
       else if ("username".equals(localName))
       {
-         return new Username();
+         //By default, we do not use password digest
+         Boolean digestPassword = new Boolean(false);
+         String digestPasswordAttr = attrs.getValue("", "digestPassword");
+         if (digestPasswordAttr != null)
+            digestPassword = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, digestPasswordAttr, null);
+         
+         //if password digest is enabled, we use nonces by default
+         Boolean useNonce = new Boolean(true);
+         String useNonceAttr = attrs.getValue("", "useNonce");
+         if (useNonceAttr != null)
+            useNonce = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useNonceAttr, null);
+         
+         //if password digest is enabled, we use the created element by default
+         Boolean useCreated = new Boolean(true);
+         String useCreatedAttr = attrs.getValue("", "useCreated");
+         if (useCreatedAttr != null)
+            useCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useCreatedAttr, null);
+         
+         return new Username(digestPassword, useNonce, useCreated);
       }
 
       return null;

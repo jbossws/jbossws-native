@@ -35,22 +35,21 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.extensions.security.Constants;
-import org.jboss.ws.extensions.security.EncryptionOperation;
-import org.jboss.ws.extensions.security.OperationDescription;
 import org.jboss.ws.extensions.security.QNameTarget;
-import org.jboss.ws.extensions.security.RequireEncryptionOperation;
-import org.jboss.ws.extensions.security.RequireSignatureOperation;
 import org.jboss.ws.extensions.security.SecurityDecoder;
 import org.jboss.ws.extensions.security.SecurityEncoder;
 import org.jboss.ws.extensions.security.SecurityStore;
-import org.jboss.ws.extensions.security.SendUsernameOperation;
-import org.jboss.ws.extensions.security.SignatureOperation;
 import org.jboss.ws.extensions.security.Target;
-import org.jboss.ws.extensions.security.TimestampOperation;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.WSSecurityAPI;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.extensions.security.WsuIdTarget;
+import org.jboss.ws.extensions.security.operation.EncryptionOperation;
+import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
+import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
+import org.jboss.ws.extensions.security.operation.SendUsernameOperation;
+import org.jboss.ws.extensions.security.operation.SignatureOperation;
+import org.jboss.ws.extensions.security.operation.TimestampOperation;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.common.DOMWriter;
@@ -180,8 +179,8 @@ public class RoundTripTestCase extends JBossWSTest
       targets.add(new WsuIdTarget("timestamp"));
 
       LinkedList operations = new LinkedList();
-      operations.add(new OperationDescription(TimestampOperation.class, null, null, "300", null, null, null));
-      operations.add(new OperationDescription(SignatureOperation.class, targets, "wsse", null, null, null, null));
+      operations.add(new TimestampOperation("300"));
+      operations.add(new SignatureOperation(targets, "wsse", null));
 
       name = new QName("http://org.jboss.ws/2004", "someHeader");
       target = new QNameTarget(name);
@@ -192,8 +191,8 @@ public class RoundTripTestCase extends JBossWSTest
       target = new QNameTarget(name, true);
       targets.add(target);
 
-      operations.add(new OperationDescription(EncryptionOperation.class, targets, "wsse", null, null, null, null));
-      operations.add(new OperationDescription(SendUsernameOperation.class, null, "hi", "there", null, null, null));
+      operations.add(new EncryptionOperation(targets, "wsse", null, null, null));
+      operations.add(new SendUsernameOperation("hi", "there"));
 
       return operations;
    }
@@ -209,8 +208,8 @@ public class RoundTripTestCase extends JBossWSTest
       targets.add(target);
       //targets.add(new WsuIdTarget("timestamp"));
       LinkedList operations = new LinkedList();
-      operations.add(new OperationDescription(RequireSignatureOperation.class, targets, null, null, null, null, null));
-      operations.add(new OperationDescription(RequireEncryptionOperation.class, targets, null, null, null, null, null));
+      operations.add(new RequireSignatureOperation(targets));
+      operations.add(new RequireEncryptionOperation(targets));
 
       return operations;
    }

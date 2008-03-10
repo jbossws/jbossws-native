@@ -26,7 +26,7 @@ import javax.xml.namespace.QName;
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.extensions.security.EncryptionOperation;
+import org.jboss.ws.extensions.security.operation.EncryptionOperation;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**

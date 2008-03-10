@@ -35,6 +35,16 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.operation.EncodingOperation;
+import org.jboss.ws.extensions.security.operation.EncryptionOperation;
+//import org.jboss.ws.extensions.security.operation.OperationDescription;
+import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
+import org.jboss.ws.extensions.security.operation.RequireOperation;
+import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
+import org.jboss.ws.extensions.security.operation.RequireTimestampOperation;
+import org.jboss.ws.extensions.security.operation.SendUsernameOperation;
+import org.jboss.ws.extensions.security.operation.SignatureOperation;
+import org.jboss.ws.extensions.security.operation.TimestampOperation;
 import org.jboss.ws.metadata.wsse.Config;
 import org.jboss.ws.metadata.wsse.Encrypt;
 import org.jboss.ws.metadata.wsse.RequireEncryption;
@@ -80,7 +90,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
    }
 
-   private static List<OperationDescription<RequireOperation>> buildRequireOperations(Config operationConfig)
+   private static List<RequireOperation> buildRequireOperations(Config operationConfig)
    {
       if (operationConfig == null)
          return null;
@@ -89,23 +99,23 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       if (requires == null)
          return null;
 
-      ArrayList<OperationDescription<RequireOperation>> operations = new ArrayList<OperationDescription<RequireOperation>>();
+      ArrayList<RequireOperation> operations = new ArrayList<RequireOperation>();
       RequireTimestamp requireTimestamp = requires.getRequireTimestamp();
       if (requireTimestamp != null)
-         operations.add(new OperationDescription<RequireOperation>(RequireTimestampOperation.class, null, requireTimestamp.getMaxAge(), null, null, null, null));
+         operations.add(new RequireTimestampOperation(requireTimestamp.getMaxAge()));
 
       RequireSignature requireSignature = requires.getRequireSignature();
       if (requireSignature != null)
       {
          List<Target> targets = convertTargets(requireSignature.getTargets());
-         operations.add(new OperationDescription<RequireOperation>(RequireSignatureOperation.class, targets, null, null, null, null, null));
+         operations.add(new RequireSignatureOperation(targets));
       }
 
       RequireEncryption requireEncryption = requires.getRequireEncryption();
       if (requireEncryption != null)
       {
          List<Target> targets = convertTargets(requireEncryption.getTargets());
-         operations.add(new OperationDescription<RequireOperation>(RequireEncryptionOperation.class, targets, null, null, null, null, null));
+         operations.add(new RequireEncryptionOperation(targets));
       }
 
       return operations;
@@ -152,7 +162,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          if (log.isTraceEnabled())
             log.trace("Decoded Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
 
-         List<OperationDescription<RequireOperation>> operations = buildRequireOperations(config);
+         List<RequireOperation> operations = buildRequireOperations(config);
 
          decoder.verify(operations);
          if(log.isDebugEnabled()) log.debug("Verification is successful");
@@ -179,16 +189,16 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       if (config == null)
          return;
 
-      ArrayList<OperationDescription<EncodingOperation>> operations = new ArrayList<OperationDescription<EncodingOperation>>();
+      ArrayList<EncodingOperation> operations = new ArrayList<EncodingOperation>();
       Timestamp timestamp = config.getTimestamp();
       if (timestamp != null)
       {
-         operations.add(new OperationDescription<EncodingOperation>(TimestampOperation.class, null, null, timestamp.getTtl(), null, null, null));
+         operations.add(new TimestampOperation(timestamp.getTtl()));
       }
 
       if (config.getUsername() != null && user != null && password != null)
       {
-         operations.add(new OperationDescription<EncodingOperation>(SendUsernameOperation.class, null, user, password, null, null, null));
+         operations.add(new SendUsernameOperation(user, password));
       }
 
       Sign sign = config.getSign();
@@ -198,20 +208,20 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          if (sign.isIncludeTimestamp())
          {
             if (timestamp == null)
-               operations.add(new OperationDescription<EncodingOperation>(TimestampOperation.class, null, null, null, null, null, null));
+               operations.add(new TimestampOperation(null)); //TODO!! check this null
 
             if (targets != null && targets.size() > 0)
                targets.add(new WsuIdTarget("timestamp"));
          }
 
-         operations.add(new OperationDescription<EncodingOperation>(SignatureOperation.class, targets, sign.getAlias(), null, null, null, sign.getTokenRefType()));
+         operations.add(new SignatureOperation(targets, sign.getAlias(), sign.getTokenRefType()));
       }
 
       Encrypt encrypt = config.getEncrypt();
       if (encrypt != null)
       {
          List<Target> targets = convertTargets(encrypt.getTargets());
-         operations.add(new OperationDescription<EncodingOperation>(EncryptionOperation.class, targets, encrypt.getAlias(), null, encrypt.getAlgorithm(), encrypt.getWrap(), encrypt.getTokenRefType()));
+         operations.add(new EncryptionOperation(targets, encrypt.getAlias(), encrypt.getAlgorithm(), encrypt.getWrap(), encrypt.getTokenRefType()));
       }
 
       if (operations.size() == 0)

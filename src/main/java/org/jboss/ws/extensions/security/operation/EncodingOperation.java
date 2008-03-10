@@ -19,40 +19,23 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.metadata.wsse;
+package org.jboss.ws.extensions.security.operation;
 
-import java.io.Serializable;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.element.SecurityHeader;
+import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.w3c.dom.Document;
 
-
-public class Username implements Serializable
+/**
+ * <code>EncodingOperation</code> represents an encoding operation that is
+ * applied to a standard SOAP message, transforming it into a WS-Security
+ * encoded message.
+ *
+ * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @version $Revision$
+ */
+public interface EncodingOperation extends Operation
 {
-   private static final long serialVersionUID = 8273360977250180943L;
+   public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException;
    
-   private boolean digestPassword;
-   
-   private boolean useNonce;
-   
-   private boolean useCreated;
-   
-   public Username(boolean digestPassword, boolean useNonce, boolean useCreated)
-   {
-      this.digestPassword = digestPassword;
-      this.useNonce = useNonce;
-      this.useCreated = useCreated;
-   }
-
-   public boolean isDigestPassword()
-   {
-      return digestPassword;
-   }
-
-   public boolean isUseNonce()
-   {
-      return useNonce;
-   }
-
-   public boolean isUseCreated()
-   {
-      return useCreated;
-   }
 }

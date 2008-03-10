@@ -21,11 +21,13 @@
 */
 package org.jboss.ws.extensions.security;
 
-import java.lang.reflect.Constructor;
+//$Id$
+
 import java.util.List;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.operation.EncodingOperation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -39,11 +41,11 @@ import org.w3c.dom.Element;
  */
 public class SecurityEncoder
 {
-   private List<OperationDescription<EncodingOperation>> operations;
+   private List<EncodingOperation> operations;
 
    private SecurityStore store;
 
-   public SecurityEncoder(List<OperationDescription<EncodingOperation>> operations, SecurityStore store)
+   public SecurityEncoder(List<EncodingOperation> operations, SecurityStore store)
    {
       org.apache.xml.security.Init.init();
       this.operations = operations;
@@ -69,21 +71,9 @@ public class SecurityEncoder
    public void encode(Document message) throws WSSecurityException
    {
       SecurityHeader header = new SecurityHeader(message);
-      for (OperationDescription<EncodingOperation> op : operations)
+      for (EncodingOperation operation : operations)
       {
-         EncodingOperation operation;
-
-         try
-         {
-            Constructor<? extends EncodingOperation> constructor = op.getOperation().getConstructor(SecurityHeader.class, SecurityStore.class);
-            operation = constructor.newInstance(header, store);
-         }
-         catch (Exception e)
-         {
-            throw new WSSecurityException("Error constructing operation: " + op.getOperation());
-         }
-
-         operation.process(message, op.getTargets(), op.getCertificateAlias(), op.getCredential(), op.getAlgorithm(), op.getKeyWrapAlgorithm(), op.getTokenRefType());
+         operation.process(message, header, store);
       }
       attachHeader(header, message);
    }

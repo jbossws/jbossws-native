@@ -19,23 +19,27 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import java.util.Collection;
-
-import org.jboss.ws.extensions.security.element.SecurityProcess;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.element.SecurityHeader;
+import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
-/**
- * <code>DecodingOperation</code> represents an operation that is applied to a
- * WS-Security encoded message to both convert and verify the contents of the
- * message.
- *
- * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
- */
-public interface DecodingOperation extends Operation
+public class SendUsernameOperation implements EncodingOperation
 {
-   public Collection<String> process(Document message, SecurityProcess process) throws WSSecurityException;
+   private String username;
+   private String credential;
+   
+   public SendUsernameOperation(String username, String credential)
+   {
+      this.username = username;
+      this.credential = credential;
+   }
+
+   public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException
+   {
+      header.addToken(new UsernameToken(username, credential, message));
+   }
 }

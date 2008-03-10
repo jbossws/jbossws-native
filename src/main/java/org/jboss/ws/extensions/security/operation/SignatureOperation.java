@@ -19,7 +19,7 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -34,6 +34,12 @@ import org.apache.xml.security.signature.XMLSignatureException;
 import org.apache.xml.security.transforms.TransformationException;
 import org.apache.xml.security.transforms.Transforms;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.extensions.security.QNameTarget;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.Target;
+import org.jboss.ws.extensions.security.Util;
+import org.jboss.ws.extensions.security.WsuIdResolver;
+import org.jboss.ws.extensions.security.WsuIdTarget;
 import org.jboss.ws.extensions.security.element.Reference;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.SecurityTokenReference;
@@ -46,16 +52,18 @@ import org.w3c.dom.Element;
 
 public class SignatureOperation implements EncodingOperation
 {
-   private SecurityHeader header;
+   private List<Target> targets;
+   private String alias;
+   private String tokenRefType;
 
-   private SecurityStore store;
-
-   public SignatureOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
+   public SignatureOperation(List<Target> targets, String alias, String tokenRefType)
    {
-      this.header = header;
-      this.store = store;
+      super();
+      this.targets = targets;
+      this.alias = alias;
+      this.tokenRefType = tokenRefType;
    }
-
+   
    private void processTarget(XMLSignature sig, Document message, Target target)
    {
       if (target instanceof QNameTarget)
@@ -120,7 +128,7 @@ public class SignatureOperation implements EncodingOperation
       }
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, String keyWrapAlgorithm, String tokenRefType) throws WSSecurityException
+   public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException
    {
       Element envelope = message.getDocumentElement();
       XMLSignature sig;

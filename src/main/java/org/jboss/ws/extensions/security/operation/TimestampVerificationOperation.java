@@ -19,44 +19,45 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
 
-import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.exception.FailedCheckException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
 
-public class RequireTimestampOperation implements RequireOperation
+public class TimestampVerificationOperation
 {
-   private SecurityHeader header;
+   private Calendar now = null;
 
-   public RequireTimestampOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
+   public TimestampVerificationOperation()
    {
-      this.header = header;
    }
 
-   public void process(Document message, List<Target> targets, String maxAge, String credential, Collection<String> processedIds) throws WSSecurityException
+   /**
+    * A special constructor that allows you to use a different value when validating the message.
+    * DO NOT USE THIS UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!.
+    *
+    * @param now The timestamp to use as the current time when validating a message expiration
+    */
+   public TimestampVerificationOperation(Calendar now)
    {
-      Timestamp stamp = header.getTimestamp();
-      if (stamp == null)
-         throw new FailedCheckException("Required timestamp not present.");
+      this.now = now;
+   }
 
-      // If there is no maxAge specified then we are done
-      if (maxAge == null)
-         return;
+   public void process(Document message, Timestamp timestamp) throws WSSecurityException
+   {
+      Calendar expired = timestamp.getExpires();
+      Calendar created = timestamp.getCreated();
+      Calendar now = (this.now == null) ? Calendar.getInstance() : this.now;
 
-      int max = Integer.parseInt(maxAge);
+      if (created.after(now))
+         throw new WSSecurityException("Invalid timestamp, message claimed to be created after now");
 
-      Calendar expired = (Calendar)stamp.getCreated().clone();
-      expired.add(Calendar.SECOND, max);
-
-      if (! Calendar.getInstance().before(expired))
-         throw new FailedCheckException("Timestamp of message is too old.");
+      if (expired != null && ! now.before(expired))
+         throw new FailedCheckException("Expired message.");
    }
 }

@@ -19,21 +19,21 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
-import java.util.Collection;
-import java.util.List;
-
+import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 
 /**
- * Marker interface for all requirement based WS-Security operations.
+ * <code>DecodingOperation</code> represents an operation that is applied to a
+ * WS-Security encoded message to both convert and verify the contents of the
+ * message.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
  */
-public interface RequireOperation extends Operation
+public interface TokenOperation
 {
-   public void process(Document message, List<Target> targets, String alias, String credential, Collection<String> processedIds) throws WSSecurityException;
+   public void process(Document message, Token token) throws WSSecurityException;
 }

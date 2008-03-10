@@ -19,10 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.operation;
 
 // $Id$
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.SimplePrincipal;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
@@ -53,6 +56,8 @@ public class ReceiveUsernameOperation implements TokenOperation
    {
       UsernameToken user = (UsernameToken)token;
       SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
+      Logger.getLogger(this.getClass()).info("Username: " + user.getUsername());
+      Logger.getLogger(this.getClass()).info("Password: " + user.getPassword());
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }
