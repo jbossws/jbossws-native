@@ -23,6 +23,7 @@ package org.jboss.test.ws.jaxrpc.wsse;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,9 +48,13 @@ import org.jboss.ws.extensions.security.SignatureOperation;
 import org.jboss.ws.extensions.security.Target;
 import org.jboss.ws.extensions.security.TimestampOperation;
 import org.jboss.ws.extensions.security.Util;
+import org.jboss.ws.extensions.security.WSSecurityAPI;
+import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.extensions.security.WsuIdTarget;
-import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -71,7 +76,6 @@ public class RoundTripTestCase extends JBossWSTest
             + "</env:Envelope>";
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(envStr.getBytes());
-
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
       SOAPEnvelope env = soapMsg.getSOAPPart().getEnvelope();
@@ -103,8 +107,52 @@ public class RoundTripTestCase extends JBossWSTest
 
       assertEquals(inputString, DOMWriter.printNode(doc, true));
    }
+   
+   public void testRoundTripUsingAPI() throws Exception
+   {
+      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>"
+            + " <env:Header>"
+            + "  <tns:someHeader xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'"
+            + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>"
+            + " </env:Header> "
+            + " <env:Body wsu:Id='element-9-1205139829909-17908832' xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>"
+            + "  <tns:echoString2 xmlns:env='http://schemas.xmlsoap.org/soap/envelope/' xmlns:tns='http://org.jboss.ws/2004' "
+            + "   xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>"
+            + "   <string>Hello World!</string>"
+            + "  </tns:echoString2>"
+            + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>"
+            + "   <string>Hello World!</string>"
+            + "  </tns:echoString>"
+            + " </env:Body>"
+            + "</env:Envelope>";
 
-   // WS-Security leaves wsu:id attributes arround on elements which are not cleaned
+      String conf = "<jboss-ws-security xmlns='http://www.jboss.com/ws-security/config' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'"
+           + "  xsi:schemaLocation='http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd'>"
+           + "  <config>"
+           + "    <encrypt type='x509v3' alias='wsse'/>"
+           + "    <sign alias='wsse'/>"
+           + "    <username/>"
+           + "    <requires>"
+           + "      <encryption/>"
+           + "      <signature/>"
+           + "    </requires>"
+           + "  </config>"
+           + "</jboss-ws-security>";
+      WSSecurityConfiguration configuration = WSSecurityOMFactory.newInstance().parse(new StringReader(conf));
+      ByteArrayInputStream inputStream = new ByteArrayInputStream(envStr.getBytes());
+      MessageFactory factory = new MessageFactoryImpl();
+      SOAPMessage soapMsg = factory.createMessage(null, inputStream);
+      String expected = DOMWriter.printNode(soapMsg.getSOAPPart().getEnvelope(), true);
+      
+      WSSecurityAPI sec = new WSSecurityDispatcher();
+      sec.encodeMessage(configuration, soapMsg, null, "kermit", "thefrog");
+      sec.decodeMessage(configuration, soapMsg, null);
+      
+      String actual = DOMWriter.printNode(soapMsg.getSOAPPart().getEnvelope(), true);
+      assertEquals(expected, actual);
+   }
+
+   // WS-Security leaves wsu:id attributes around on elements which are not cleaned
    // up due to performance reasons. This, however, breaks comparisons, so we manually
    // fix this for tests.
    private void cleanupWsuIds(Element element)

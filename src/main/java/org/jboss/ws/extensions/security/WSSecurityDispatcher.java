@@ -27,18 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.Stub;
-import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.BindingProvider;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.metadata.wsse.Config;
@@ -86,23 +80,6 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
    }
 
-   public static void handleInbound(CommonMessageContext ctx) throws SOAPException, SOAPFaultException
-   {
-      WSSecurityConfiguration configuration = getSecurityConfig(ctx);
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
-      
-      new WSSecurityDispatcher().decodeMessage(configuration, soapMessage, new MessageContextConfigSelector(ctx)); //TODO!!!
-   }
-
-   private static WSSecurityConfiguration getSecurityConfig(CommonMessageContext ctx)
-   {
-      WSSecurityConfiguration config = ctx.getEndpointMetaData().getServiceMetaData().getSecurityConfiguration();
-      if (config == null)
-         throw new WSException("Cannot obtain security configuration from message context");
-
-      return config;
-   }
-
    private static List<OperationDescription<RequireOperation>> buildRequireOperations(Config operationConfig)
    {
       if (operationConfig == null)
@@ -134,24 +111,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       return operations;
    }
 
-   public static void handleOutbound(CommonMessageContext ctx) throws SOAPException, SOAPFaultException
-   {
-      WSSecurityConfiguration configuration = getSecurityConfig(ctx);
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
-      
-      String user = (String)ctx.get(Stub.USERNAME_PROPERTY);
-      String pass = (String)ctx.get(Stub.PASSWORD_PROPERTY);
-      
-      if (user == null && pass == null)
-      {
-         user = (String)ctx.get(BindingProvider.USERNAME_PROPERTY);
-         pass = (String)ctx.get(BindingProvider.PASSWORD_PROPERTY);
-      }
-
-      new WSSecurityDispatcher().encodeMessage(configuration, soapMessage, new MessageContextConfigSelector(ctx), user, pass); //TODO!!
-   }
-   
-   private static Config getConfig(WSSecurityConfiguration configuration, Config operationConfig)
+   private static Config getActualConfig(WSSecurityConfiguration configuration, Config operationConfig)
    {
       //null operationConfig means default behavior
       return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
@@ -164,7 +124,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
    
    public void decodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig) throws SOAPException
    {
-      Config config = getConfig(configuration, operationConfig);
+      Config config = getActualConfig(configuration, operationConfig);
       SOAPHeader soapHeader = message.getSOAPHeader();
       QName secQName = new QName(Constants.WSSE_NS, "Security");
       Element secHeaderElement = (soapHeader != null) ? Util.findElement(soapHeader, secQName) : null; 
@@ -212,7 +172,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
    public void encodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig, String user, String password) throws SOAPException
    {
-      Config config = getConfig(configuration, operationConfig);
+      Config config = getActualConfig(configuration, operationConfig);
       log.debug("WS-Security config: " + config);
       
       // Nothing to process

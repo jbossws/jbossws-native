@@ -29,6 +29,12 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.ws.metadata.wsse.Config;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 
+/**
+ * WS-Security functionalities interface
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 06-Mar-2008
+ */
 public interface WSSecurityAPI
 {
    /**
