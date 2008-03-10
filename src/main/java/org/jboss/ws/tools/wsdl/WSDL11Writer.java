@@ -292,8 +292,7 @@ public class WSDL11Writer extends WSDLWriter
          if (writtenFaultMessages.contains(exceptionName))
             continue;
 
-         WSDLInterfaceFault interfaceFault = operation.getWsdlInterface().getFault(fault.getRef());
-         QName xmlName = interfaceFault.getElement();
+         QName xmlName = fault.getRef();
 
          buffer.append("<message name='" + exceptionName + "' >");
          String prefix = wsdl.getPrefix(xmlName.getNamespaceURI());
@@ -456,8 +455,7 @@ public class WSDL11Writer extends WSDLWriter
          for (WSDLInterfaceOperationOutfault fault : operation.getOutfaults())
          {
             QName element = fault.getRef();
-            String faultPrefix = wsdl.getPrefix(element.getNamespaceURI());
-            buffer.append("<fault  message='" + faultPrefix + ":" + element.getLocalPart());
+            buffer.append("<fault  message='" + prefix + ":" + element.getLocalPart());
             buffer.append("' name='" + element.getLocalPart() + "'/>");
          }
 

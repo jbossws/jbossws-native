@@ -82,7 +82,6 @@ public class JavaToWSDLHelper extends WSDLGenerator
    private JavaWsdlMapping javaWsdlMapping = new JavaWsdlMapping();
    private Map<QName, JavaXmlTypeMapping> mappedTypes = new HashMap<QName, JavaXmlTypeMapping>();
    private Set<String> mappedPackages = new HashSet<String>();
-   private Map<String,String> packageNamespaceMap = new HashMap<String,String>();
    private Set<String> mappedExceptions = new HashSet<String>();
 
    protected void processTypes()
@@ -249,7 +248,9 @@ public class JavaToWSDLHelper extends WSDLGenerator
 
          for(FaultMetaData fmd : operation.getFaults())
          {
-            JavaXmlTypeMapping typeMapping = mappedTypes.get(fmd.getXmlType());
+            String ns = getNamespace(fmd.getJavaType(), fmd.getXmlType().getNamespaceURI());
+            QName newXmlType = new QName(ns, fmd.getXmlType().getLocalPart());
+            JavaXmlTypeMapping typeMapping = mappedTypes.get(newXmlType);
             if (typeMapping == null)
                continue;
 
@@ -277,7 +278,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
 
       // Add package mapping for SEI
       String name = endpoint.getServiceEndpointInterface().getPackage().getName();
-      String namespace = packageNamespaceMap.get(name);
+      String namespace = getNamespace(name);
       if (namespace == null)
          namespace = WSDLUtils.getInstance().getTypeNamespace(name);
       addPackageMapping(name, namespace);
@@ -309,7 +310,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
       WsdlReturnValueMapping returnMapping = new WsdlReturnValueMapping(methodMapping);
       returnMapping.setMethodReturnValue(type);
       returnMapping.setWsdlMessagePartName(name);
-      String messageName = interfaceName + "_" + operation.getQName().getLocalPart() + "Response";;
+      String messageName = interfaceName + "_" + operation.getQName().getLocalPart() + "Response";
       QName messageQName = new QName(wsdl.getTargetNamespace(), messageName, "wsdlMsgNS");
       returnMapping.setWsdlMessage(messageQName);
       methodMapping.setWsdlReturnValueMapping(returnMapping);
@@ -358,6 +359,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
       if(Holder.class.isAssignableFrom(javaType))
          javaType = WSDLUtils.getInstance().getJavaTypeForHolder(javaType);
       JBossXSModel xsModel = javaToXSD.generateForSingleType(xmlType, javaType, elementNames);
+      String namespace = getNamespace(javaType, xmlType.getNamespaceURI());
       //  Now that the schema object graph is built,
       //  ask JavaToXSD to provide a list of xsmodels to be plugged
       //  into WSDLTypes
@@ -365,20 +367,32 @@ public class JavaToWSDLHelper extends WSDLGenerator
          throw new WSException("XSModel is null");
 
       WSDLTypes wsdlTypes = wsdl.getWsdlTypes();
-      WSDLUtils.addSchemaModel(wsdlTypes, xmlType.getNamespaceURI(), xsModel);
-      wsdl.registerNamespaceURI(xmlType.getNamespaceURI(), null);
+      WSDLUtils.addSchemaModel(wsdlTypes, namespace, xsModel);
+      wsdl.registerNamespaceURI(namespace, null);
 
       //Also get any custom namespaces
       SchemaCreatorIntf schemaCreator = javaToXSD.getSchemaCreator();
       mergeJavaWsdlMapping(schemaCreator.getJavaWsdlMapping());
 
-      HashMap map = schemaCreator.getCustomNamespaceMap();
-      Set keys = map != null ? map.keySet() : null;
+      //Register the global config namespaces
+      /*Map<String, String> nsmap = schemaCreator.getPackageNamespaceMap();
+      Set keys = nsmap != null ? nsmap.keySet() : null;
       Iterator iter = (keys != null && !keys.isEmpty()) ? keys.iterator() : null;
       while (iter != null && iter.hasNext())
       {
-         String pref = (String)iter.next();
-         String ns = (String)map.get(pref);
+         String pkg = (String)iter.next();
+         String ns = nsmap.get(pkg);
+         if (ns != null)
+            wsdl.registerNamespaceURI(ns, null);
+      }*/
+      //Register the custom generated namespaces
+      Map<String, String> nsmap = schemaCreator.getCustomNamespaceMap();
+      Set keys = nsmap != null ? nsmap.keySet() : null;
+      Iterator iter = (keys != null && !keys.isEmpty()) ? keys.iterator() : null;
+      while (iter != null && iter.hasNext())
+      {
+         String prefix = (String)iter.next();
+         String ns = nsmap.get(prefix);
          if (ns != null)
             wsdl.registerNamespaceURI(ns, null);
       }
@@ -390,7 +404,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
       for (PackageMapping packageMapping : source.getPackageMappings())
       {
          String name = packageMapping.getPackageType();
-         String namespaceURI = packageMapping.getNamespaceURI();
+         String namespaceURI = getNamespace(name, packageMapping.getNamespaceURI());
 
          addPackageMapping(name, namespaceURI);
       }
@@ -401,17 +415,22 @@ public class JavaToWSDLHelper extends WSDLGenerator
          if (name == null)
             name = type.getAnonymousTypeQName();
 
+         //override namespace from globalconfig
+         String pkgName = getJustPackageName(type.getJavaType());
+         String ns = getNamespace(pkgName, name.getNamespaceURI());
+         name = new QName(ns, name.getLocalPart(), name.getPrefix());
+
          if (mappedTypes.containsKey(name))
             continue;
 
+         addPackageMapping(pkgName, ns);
          mappedTypes.put(name, type);
 
          JavaXmlTypeMapping typeCopy = new JavaXmlTypeMapping(javaWsdlMapping);
          typeCopy.setQNameScope(type.getQnameScope());
          typeCopy.setAnonymousTypeQName(type.getAnonymousTypeQName());
          typeCopy.setJavaType(type.getJavaType());
-         typeCopy.setRootTypeQName(type.getRootTypeQName());
-
+         typeCopy.setRootTypeQName(name);
          for (VariableMapping variable : type.getVariableMappings())
          {
             VariableMapping variableCopy = new VariableMapping(typeCopy);
