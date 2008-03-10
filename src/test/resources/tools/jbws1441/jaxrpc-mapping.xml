@@ -8,6 +8,11 @@
     <package-type>org.jboss.test.ws.jbws1441</package-type>
     <namespaceURI>http://test.jboss.org/ws/jbws1441/types</namespaceURI>
   </package-mapping>
+ <java-xml-type-mapping>
+  <java-type>org.jboss.test.ws.jbws1441.AbstractType</java-type>
+  <root-type-qname xmlns:typeNS="http://test.jboss.org/ws/jbws1441/types">typeNS:AbstractType</root-type-qname>
+  <qname-scope>complexType</qname-scope>
+ </java-xml-type-mapping>
   <java-xml-type-mapping>
     <java-type>org.jboss.test.ws.jbws1441.TelephoneNumber</java-type>
     <root-type-qname xmlns:typeNS="http://test.jboss.org/ws/jbws1441/types">typeNS:TelephoneNumber</root-type-qname>

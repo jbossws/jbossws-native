@@ -1,12 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?><java-wsdl-mapping version='1.1' xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd'>
  <package-mapping>
-  <package-type>com.other.exception</package-type>
-  <namespaceURI>http://other.com</namespaceURI>
+  <package-type>com.other.base</package-type>
+  <namespaceURI>http://other.com.base</namespaceURI>
  </package-mapping>
  <package-mapping>
   <package-type>org.jboss.test.ws.jbws1217</package-type>
   <namespaceURI>http://org.jboss.test.ws/jbws1217</namespaceURI>
  </package-mapping>
+ <package-mapping>
+  <package-type>com.other.exception</package-type>
+  <namespaceURI>http://other.com</namespaceURI>
+ </package-mapping>
+ <java-xml-type-mapping>
+  <java-type>com.other.base.BaseException</java-type>
+  <root-type-qname xmlns:typeNS='http://other.com.base'>typeNS:BaseException</root-type-qname>
+  <qname-scope>complexType</qname-scope>
+ </java-xml-type-mapping>
  <java-xml-type-mapping>
   <java-type>com.other.exception.TestException</java-type>
   <root-type-qname xmlns:typeNS='http://other.com'>typeNS:TestException</root-type-qname>
