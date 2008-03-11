@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project>
+  
+  <!-- ================================================================== -->
+  <!-- Prepare Deployment Structure JBoss-4.2.x                           -->
+  <!-- ================================================================== -->
+  
+  <target name="deploy-structure-jboss42" depends="prepare-deploy">
+    
+    <!-- Create the deployment structure -->
+    <antcall target="deploy-jbossws-native42" inheritall="false">
+      <param name="installserver" value="${deploy.structure.jboss42}/server/${jboss.server.instance}"/>
+      <param name="resourcesdir" value="${deploy.artifacts.dir}/resources/jbossws-jboss42.sar"/>
+      <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
+    </antcall>
+    
+    <!-- Create jbossws-deploy.conf -->
+    <fileset id="jbossws.deploy.fileset" dir="${deploy.structure.jboss42}" excludes="**/jbossws.sar/**"/>
+    <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
+    <property name="jbossws.sar.dir" value="${deploy.structure.jboss42}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+    <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
+    <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment JBoss421                                                -->
+  <!-- ================================================================== -->
+
+  <target name="deploy-jboss421" depends="undeploy-jboss421,deploy-structure-jboss42" description="Deploy jbossws to jboss421">
+    <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
+    <copy todir="${jboss421.home}" overwrite="true">
+      <fileset dir="${deploy.structure.jboss42}"/>
+    </copy>
+    <chmod dir="${jboss421.home}/bin" perm="+x" includes="*.sh"/>
+    
+    <!-- Extras for jboss-4.2.1 -->
+    <copy todir="${jboss421.home}/lib" overwrite="true">
+      <fileset dir="${thirdparty.dir}">
+        <include name="jboss-xml-binding.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${jboss421.home}/client" overwrite="true">
+      <fileset dir="${thirdparty.dir}">
+        <include name="jboss-xml-binding.jar"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="undeploy-jboss421" depends="prepare" description="Remove jbossws from jboss421">
+    <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
+    <macro-undeploy-jbossws targetdir="${jboss421.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment JBoss422                                                -->
+  <!-- ================================================================== -->
+
+  <target name="deploy-jboss422" depends="undeploy-jboss422,deploy-structure-jboss42" description="Deploy jbossws to jboss422">
+    <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+    <copy todir="${jboss422.home}" overwrite="true">
+      <fileset dir="${deploy.structure.jboss42}"/>
+    </copy>
+    <chmod dir="${jboss422.home}/bin" perm="+x" includes="*.sh"/>
+  </target>
+  
+  <target name="undeploy-jboss422" depends="prepare" description="Remove jbossws from jboss422">
+    <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
+    <macro-undeploy-jbossws targetdir="${jboss422.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Deployment JBoss423                                                -->
+  <!-- ================================================================== -->
+
+  <target name="deploy-jboss423" depends="undeploy-jboss423,deploy-structure-jboss42" description="Deploy jbossws to jboss423">
+    <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+    <copy todir="${jboss423.home}" overwrite="true">
+      <fileset dir="${deploy.structure.jboss42}"/>
+    </copy>
+    <chmod dir="${jboss423.home}/bin" perm="+x" includes="*.sh"/>
+  </target>
+  
+  <target name="undeploy-jboss423" depends="prepare" description="Remove jbossws from jboss423">
+    <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
+    <macro-undeploy-jbossws targetdir="${jboss423.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Prepare Deployment Structure JBoss-5.0.x                           -->
+  <!-- ================================================================== -->
+  
+  <target name="deploy-structure-jboss50" depends="prepare-deploy">
+    
+    <!-- Create the deployment structure -->
+    <antcall target="deploy-jbossws-native50" inheritall="false">
+      <param name="installserver" value="${deploy.structure.jboss50}/server/${jboss.server.instance}"/>
+      <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
+    </antcall>
+    
+    <!-- Create jbossws-deploy.conf -->
+    <fileset id="jbossws.deploy.fileset" dir="${deploy.structure.jboss50}" excludes="**/jbossws.sar/**"/>
+    <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
+    <property name="jbossws.sar.dir" value="${deploy.structure.jboss50}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+    <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
+    <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment JBoss500                                                -->
+  <!-- ================================================================== -->
+
+  <target name="deploy-jboss500" depends="undeploy-jboss500,deploy-structure-jboss50" description="Deploy jbossws to jboss500">
+    <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
+    <copy todir="${jboss500.home}" overwrite="true">
+      <fileset dir="${deploy.structure.jboss50}"/>
+    </copy>
+    <chmod dir="${jboss500.home}/bin" perm="+x" includes="*.sh"/>
+  </target>
+  
+  <target name="undeploy-jboss500" depends="prepare" description="Remove jbossws from jboss500">
+    <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
+    <macro-undeploy-jbossws targetdir="${jboss500.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Deployment JBoss501                                                -->
+  <!-- ================================================================== -->
+
+  <target name="deploy-jboss501" depends="undeploy-jboss501,deploy-structure-jboss50" description="Deploy jbossws to jboss501">
+    <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
+    <copy todir="${jboss501.home}" overwrite="true">
+      <fileset dir="${deploy.structure.jboss50}"/>
+    </copy>
+    <chmod dir="${jboss501.home}/bin" perm="+x" includes="*.sh"/>
+  </target>
+  
+  <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
+    <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
+    <macro-undeploy-jbossws targetdir="${jboss501.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+  </target>
+  
+</project>

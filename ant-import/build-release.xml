@@ -35,7 +35,7 @@
     <echo message="*********************************************"/>
   </target>
   
-  <target name="release-to-repository" depends="prepare-deploy50,check-svn-externals,warn-svn-externals" 
+  <target name="release-to-repository" depends="deploy-structure-jboss50,check-svn-externals,warn-svn-externals" 
     description="Release to jboss.local.repository">
 
     <!-- jboss/jbossws-native -->
@@ -50,7 +50,7 @@
         <include name="wstools.bat"/>
         <include name="wstools.sh"/>
       </fileset>
-      <fileset dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar">
+      <fileset dir="${deploy.structure.jboss50}/server/${jboss.server.instance}/deploy/jbossws.sar">
         <include name="jbossws-deploy.conf"/>
       </fileset>
     </copy>

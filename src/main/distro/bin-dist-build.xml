@@ -18,15 +18,15 @@
 	<!-- ================================================================== -->
 
 	<property name="build.dir" value="${basedir}/build"/>
-	<property name="bin.dir" value="${basedir}/bin"/>
-	<property name="deploy.dir" value="${basedir}/output/deploy"/>
 	<property name="docs.dir" value="${basedir}/docs"/>
-	<property name="lib.dir" value="${basedir}/lib"/>
-	<property name="thirdparty.dir" value="${basedir}/lib"/>
+	<property name="thirdparty.dir" value="${basedir}/deploy"/>
 	<property name="tests.dir" value="${basedir}/tests"/>
 	<property name="tests.output.dir" value="${basedir}/output"/>
   
-	<property name="jbossws.default.undeploy.files" value="${build.dir}/jbossws.default.undeploy.files"/>
+  <property name="deploy.artifacts.dir" value="${basedir}/deploy"/>
+  <property name="deploy.structure.jboss42" value="${basedir}/output/deploy-jboss42"/>
+  <property name="deploy.structure.jboss50" value="${basedir}/output/deploy-jboss50"/>
+	<property name="jbossws.default.deploy.conf" value="${build.dir}/jbossws-default-deploy.conf"/>
   
 	<property file="${basedir}/ant.properties"/>
 	<property file="${basedir}/version.properties"/>
@@ -99,7 +99,7 @@
 
 	<import file="${basedir}/build/build-deploy.xml"/>
 	<import file="${basedir}/build/build-project-gen.xml"/>
-	<import file="${basedir}/build/macros-deploy-native.xml"/>
+	<import file="${basedir}/build/jbossws-deploy-macros.xml"/>
 	<import file="${basedir}/tests/ant-import/build-testsuite.xml"/>
 
 	<!-- ================================================================== -->
@@ -127,13 +127,13 @@
 	<target name="tests-init" depends="prepare,tests-classpath">
 
 		<path id="ws.stack.classpath">
-			<pathelement location="${lib.dir}/jbossws-common.jar"/>
-			<pathelement location="${lib.dir}/jbossws-spi.jar"/>
-			<pathelement location="${lib.dir}/jboss-jaxrpc.jar"/>
-			<pathelement location="${lib.dir}/jboss-jaxws.jar"/>
-			<pathelement location="${lib.dir}/jboss-saaj.jar"/>
-			<pathelement location="${lib.dir}/jbossws-core.jar"/>
-			<pathelement location="${lib.dir}/jbossws-client.jar"/>
+			<pathelement location="${thirdparty.dir}/jbossws-common.jar"/>
+			<pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
+			<pathelement location="${thirdparty.dir}/jboss-jaxrpc.jar"/>
+			<pathelement location="${thirdparty.dir}/jboss-jaxws.jar"/>
+			<pathelement location="${thirdparty.dir}/jboss-saaj.jar"/>
+			<pathelement location="${thirdparty.dir}/jbossws-core.jar"/>
+			<pathelement location="${thirdparty.dir}/jbossws-client.jar"/>
 		</path>
 
 		<path id="tests.extra.classpath">
@@ -168,9 +168,10 @@
 
 	<target name="tests-main" depends="tests-jars" description="Build the test deployments."/>
 
-  <!-- dummy jar targets -->
+  <!-- dummy targets -->
 	<target name="jars-jboss50" depends="prepare"/>
 	<target name="jars-jboss42" depends="prepare"/>
+	<target name="prepare-deploy" depends="prepare"/>
   
 	<!-- ================================================================== -->
 	<!-- Miscellaneous                                                       -->

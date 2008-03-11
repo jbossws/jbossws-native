@@ -93,12 +93,13 @@
 
   <import file="${basedir}/ant-import/build-setup.xml"/>
   <import file="${basedir}/ant-import/build-bin-dist.xml"/>
-  <import file="${basedir}/ant-import/build-deploy42.xml"/>
-  <import file="${basedir}/ant-import/build-deploy50.xml"/>
+  <import file="${basedir}/ant-import/build-prepare-deploy.xml"/>
+  <import file="${basedir}/ant-import/build-deploy.xml"/>
   <import file="${basedir}/ant-import/build-release.xml"/>
   <import file="${basedir}/ant-import/build-thirdparty.xml"/>
   <import file="${basedir}/ant-import-tests/build-testsuite.xml"/>
-
+  <import file="${basedir}/ant-import/jbossws-deploy-macros.xml"/>
+  
   <property name="core.src.dir" value="${core.dir}/src/main"/>
   <property name="core.etc.dir" value="${core.src.dir}/etc"/>
   <property name="core.distro.dir" value="${core.src.dir}/distro"/>
@@ -113,6 +114,11 @@
   <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
   <property name="core.output.resources.dir" value="${core.output.dir}/resources"/>
 
+  <property name="deploy.artifacts.dir" value="${core.output.deploy.dir}-artifacts"/>
+  <property name="deploy.structure.jboss42" value="${core.output.deploy.dir}-jboss42"/>
+  <property name="deploy.structure.jboss50" value="${core.output.deploy.dir}-jboss50"/>
+	<property name="jbossws.default.deploy.conf" value="${core.dir}/ant-import/jbossws-default-deploy.conf"/>
+  
   <target name="init" depends="prepare,thirdparty">
   </target>
 

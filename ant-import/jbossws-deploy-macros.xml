@@ -259,12 +259,13 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-undeploy-jbossws">
+    <attribute name="defaultconf"/>
     <attribute name="targetdir"/>
     <sequential>
-      <loadfile property="jbossws.undeploy.files" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
-      <loadfile property="jbossws.undeploy.files" srcfile="${jbossws.default.undeploy.files}" failonerror="false"/>
+      <loadfile property="jbossws.deploy.conf" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
+      <loadfile property="jbossws.deploy.conf" srcfile="@{defaultconf}" failonerror="false"/>
       <delete>
-        <fileset dir="@{targetdir}/../../../.." includes="${jbossws.undeploy.files}"/>
+        <fileset dir="@{targetdir}/../../../.." includes="${jbossws.deploy.conf}"/>
       </delete>
     </sequential>
   </macrodef>

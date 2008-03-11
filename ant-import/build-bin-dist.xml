@@ -17,39 +17,38 @@
   <!-- Binary distribution                                                -->
   <!-- ================================================================== -->
   
-  <target name="build-bin-dist" depends="jars, javadoc" description="Build the binary distribution">
+  <target name="build-bin-dist" depends="jars,javadoc,prepare-deploy" description="Build the binary distribution">
     
     <property name="bindist.dir" value="${core.output.dir}/jbossws-native-dist"/>
     <property name="bindist.build.dir" value="${bindist.dir}/build"/>
-    <property name="bindist.bin.dir" value="${bindist.dir}/bin"/>
-    <property name="bindist.lib.dir" value="${bindist.dir}/lib"/>
+    <property name="bindist.deploy.dir" value="${bindist.dir}/deploy"/>
     <property name="bindist.docs.dir" value="${bindist.dir}/docs"/>
     <property name="bindist.tests.dir" value="${bindist.dir}/tests"/>
     <property name="bindist.tools.dir" value="${bindist.dir}/tools"/>
     
     <delete dir="${bindist.dir}"/>
     <mkdir dir="${bindist.build.dir}"/>
-    <mkdir dir="${bindist.bin.dir}"/>
+    <mkdir dir="${bindist.deploy.dir}"/>
     <mkdir dir="${bindist.docs.dir}"/>
     <mkdir dir="${bindist.tests.dir}"/>
     <mkdir dir="${bindist.tools.dir}"/>
     
     <!-- root -->
-    <copy tofile="${bindist.dir}/ant.properties.example" file="${core.distro.dir}/ant.properties.example">
+    <copy file="${core.distro.dir}/ant.properties.example" todir="${bindist.dir}">
       <filterset>
         <filtersfile file="${core.dir}/ant.properties"/>
       </filterset>
     </copy>
     <copy tofile="${bindist.dir}/version.properties" file="${core.dir}/version.properties"/>
     <copy tofile="${bindist.dir}/build.xml" file="${core.distro.dir}/bin-dist-build.xml"/>
-    <copy tofile="${bindist.build.dir}/build-deploy.xml" file="${core.distro.dir}/bin-dist-deploy.xml"/>
     <copy tofile="${bindist.build.dir}/build-project-gen.xml" file="${core.distro.dir}/bin-dist-project-gen.xml"/>
     
     <!-- build -->
     <copy todir="${bindist.build.dir}">
       <fileset dir="${core.dir}/ant-import">
-        <include name="jbossws.default.undeploy.files"/>
-        <include name="macros-deploy-native.xml"/>
+        <include name="build-deploy.xml"/>
+        <include name="jbossws-deploy-macros.xml"/>
+        <include name="jbossws-default-deploy.conf"/>
       </fileset>
       <fileset dir="${core.distro.dir}">
         <include name="user-project-build.xml"/>
@@ -58,16 +57,10 @@
       </fileset>
     </copy>
     
-    <unzip dest="${bindist.bin.dir}" src="${thirdparty.dir}/jbossws-framework-scripts.zip"/>
-    
-    <copy todir="${bindist.bin.dir}">
-      <fileset dir="${core.dir}/src/main/etc">
-        <include name="*.sh"/>
-        <include name="*.bat"/>
-      </fileset>
+    <!-- deploy -->
+    <copy todir="${bindist.deploy.dir}">
+      <fileset dir="${deploy.artifacts.dir}"/>
     </copy>
-    
-    <chmod dir="${bindist.bin.dir}" perm="+x" includes="**/*.sh"/>
     
     <!-- docs -->
     <copy todir="${bindist.docs.dir}">
@@ -88,48 +81,6 @@
     <copy todir="${bindist.docs.dir}">
       <fileset dir="${core.etc.dir}">
         <include name="JBossORG-EULA.txt"/>
-      </fileset>
-    </copy>
-    
-    <!-- lib -->
-    <copy todir="${bindist.lib.dir}" overwrite="true">
-      <fileset dir="${thirdparty.dir}">
-        <include name="jbossws-common.jar"/>
-        <include name="jbossws-framework.jar"/>
-        <include name="jbossws-framework-scripts.zip"/>
-        <include name="jbossws-spi.jar"/>
-        <include name="jbossws-jboss421.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/output/lib">
-        <include name="jboss-jaxrpc.jar"/>
-        <include name="jboss-jaxws.jar"/>
-        <include name="jboss-jaxws-ext.jar"/>
-        <include name="jboss-saaj.jar"/>
-        <include name="jbossws-client.jar"/>
-        <include name="jbossws-core.jar"/>
-        <include name="jbossws-core-scripts.zip"/>
-      </fileset>
-      <fileset dir="${core.dir}/output/lib">
-        <include name="jbossws-context.war"/>
-        <include name="jbossws-native40.sar"/>
-        <include name="jbossws-native42.sar"/>
-        <include name="jbossws-native50.sar"/>
-      </fileset>
-      <fileset dir="${thirdparty.dir}">
-        <include name="getopt.jar"/>
-        <include name="jaxb-api.jar"/>
-        <include name="jaxb-impl.jar"/>
-        <include name="jaxb-xjc.jar"/>
-        <include name="jaxws-tools.jar"/>
-        <include name="jaxws-rt.jar"/>
-        <include name="jboss-xml-binding.jar"/>
-        <include name="juddi-service.sar"/>
-        <include name="policy.jar"/>
-        <include name="stax-api.jar"/>
-        <include name="stax-ex.jar"/>
-        <include name="streambuffer.jar"/>
-        <include name="wsdl4j.jar"/>
-        <include name="wstx.jar"/>
       </fileset>
     </copy>
     
