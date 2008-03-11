@@ -119,7 +119,8 @@
     <!-- Create the deployment structure -->
     <antcall target="deploy-jbossws-native42" inheritall="false">
       <param name="installserver" value="${core.output.deploy.dir}/server/${jboss.server.instance}"/>
-      <param name="thirdpartylibs" value="${core.output.deploy.dir}-src"/>
+      <param name="resourcesdir" value="${core.output.resources.dir}/jbossws-jboss42.sar"/>
+      <param name="thirdpartydir" value="${core.output.deploy.dir}-src"/>
     </antcall>
     
     <!-- Create jbossws-deploy.conf -->

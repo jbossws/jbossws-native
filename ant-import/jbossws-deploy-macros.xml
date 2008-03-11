@@ -84,12 +84,12 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-deploy-jbossws-bin">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.bin.patternset"/>
         </fileset>
       </copy>
@@ -101,12 +101,12 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-deploy-jbossws-lib">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.lib.patternset"/>
         </fileset>
       </copy>
@@ -118,12 +118,12 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-deploy-jbossws-endorsed">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.lib.endorsed.patternset"/>
         </fileset>
       </copy>
@@ -135,12 +135,12 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-deploy-jbossws-client">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.client.patternset"/>
         </fileset>
       </copy>
@@ -152,12 +152,12 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-deploy-jbossws-server-lib">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.server.lib.patternset"/>
         </fileset>
       </copy>
@@ -169,53 +169,56 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-deploy-jbossws-native42-sar">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
+    <attribute name="resourcesdir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.service.lib.patternset"/>
           <include name="**/jbossws-deploy.conf"/>
         </fileset>
       </copy>
       <unzip dest="@{targetdir}/jbossws-context.war" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <include name="**/jbossws-context.war"/>
         </fileset>
       </unzip>
       <copy todir="@{targetdir}/jbossws.beans/META-INF" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <include name="**/jbossws-native42-beans.xml"/>
         </fileset>
       </copy>
+      <move file="@{targetdir}/jbossws.beans/META-INF/jbossws-native42-beans.xml" tofile="@{targetdir}/jbossws.beans/META-INF/jboss-beans.xml"/>
       <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <include name="**/standard-jaxrpc-*-config.xml"/>
           <include name="**/standard-jaxws-*-config.xml"/>
         </fileset>
+        <fileset dir="@{resourcesdir}/META-INF"/>
       </copy>
     </sequential>
   </macrodef>
   
   <macrodef name="macro-deploy-jbossws-native50-sar">
-    <attribute name="thirdpartylibs"/>
+    <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.service.lib.patternset"/>
           <include name="**/jbossws-deploy.conf"/>
         </fileset>
       </copy>
       <unzip dest="@{targetdir}/jbossws-context.war" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <include name="**/jbossws-context.war"/>
         </fileset>
       </unzip>
       <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartylibs}">
+        <fileset dir="@{thirdpartydir}">
           <include name="**/standard-jaxrpc-*-config.xml"/>
           <include name="**/standard-jaxws-*-config.xml"/>
           <include name="**/jbossws-native50-beans.xml"/>
@@ -232,23 +235,23 @@
   <available classname="java.io.Console" property="HAVE_JDK_1.6"/>
   
   <target name="deploy-jbossws-native42" depends="deploy-jbossws-endorsed">
-    <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-lib targetdir="${installserver}/../../lib" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-server-lib targetdir="${installserver}/lib" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-native42-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartylibs="${thirdpartylibs}"/>
+    <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-lib targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-server-lib targetdir="${installserver}/lib" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-native42-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartydir="${thirdpartydir}" resourcesdir="${resourcesdir}"/>
   </target>
   
   <target name="deploy-jbossws-native50" depends="deploy-jbossws-endorsed">
-    <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-lib targetdir="${installserver}/../../lib" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-server-lib targetdir="${installserver}/lib" thirdpartylibs="${thirdpartylibs}"/>
-    <macro-deploy-jbossws-native50-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartylibs="${thirdpartylibs}"/>
+    <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-lib targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-server-lib targetdir="${installserver}/lib" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-native50-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartydir="${thirdpartydir}"/>
   </target>
   
   <target name="deploy-jbossws-endorsed" if="HAVE_JDK_1.6">
-    <macro-deploy-jbossws-endorsed targetdir="${installserver}/../../lib/endorsed" thirdpartylibs="${thirdpartylibs}"/>
+    <macro-deploy-jbossws-endorsed targetdir="${installserver}/../../lib/endorsed" thirdpartydir="${thirdpartydir}"/>
   </target>
   
   <!-- ================================================================== -->
