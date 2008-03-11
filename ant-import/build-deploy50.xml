@@ -15,7 +15,7 @@
   
   <import file="${core.dir}/ant-import/jbossws-deploy-macros.xml"/>
   
-	<property name="jbossws.default.undeploy.files" value="${core.dir}/ant-import/jbossws.default.undeploy.files"/>
+	<property name="jbossws.default.undeploy.files" value="${core.dir}/ant-import/jbossws-default-deploy.conf"/>
   
   <!-- ================================================================== -->
   <!-- Deployment JBoss500                                                -->
@@ -24,7 +24,7 @@
   <target name="deploy-jboss500" depends="undeploy-jboss500,prepare-deploy50" description="Deploy jbossws to jboss500">
     <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
     <copy todir="${jboss500.home}" overwrite="true">
-      <fileset dir="${core.output.deploy.dir}" excludes="jbossws.deployed.files"/>
+      <fileset dir="${core.output.deploy.dir}" excludes="jbossws-deploy.conf"/>
     </copy>
     <chmod dir="${jboss500.home}/bin" perm="+x" includes="*.sh"/>
   </target>
@@ -41,7 +41,7 @@
   <target name="deploy-jboss501" depends="undeploy-jboss501,prepare-deploy50" description="Deploy jbossws to jboss501">
     <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
     <copy todir="${jboss501.home}" overwrite="true">
-      <fileset dir="${core.output.deploy.dir}" excludes="jbossws.deployed.files"/>
+      <fileset dir="${core.output.deploy.dir}" excludes="jbossws-deploy.conf"/>
     </copy>
     <chmod dir="${jboss501.home}/bin" perm="+x" includes="*.sh"/>
   </target>
@@ -93,12 +93,12 @@
       <param name="thirdpartylibs" value="${core.output.deploy.dir}-src"/>
     </antcall>
     
-    <!-- Create jbossws.deployed.files -->
-    <fileset id="jbossws.deploy.fileset" dir="${core.output.deploy.dir}" excludes="**/jbossws.deployed.files,**/jbossws.sar/**"/>
+    <!-- Create jbossws-deploy.conf -->
+    <fileset id="jbossws.deploy.fileset" dir="${core.output.deploy.dir}" excludes="**/jbossws-deploy.conf,**/jbossws.sar/**"/>
     <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
     <property name="jbossws.sar.dir" value="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-    <echo file="${jbossws.sar.dir}/jbossws.deployed.files" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
-    <replace file="${jbossws.sar.dir}/jbossws.deployed.files" token=";" value=" "/>
+    <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
+    <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
   </target>
   
 </project>

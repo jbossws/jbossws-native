@@ -50,6 +50,9 @@
         <include name="wstools.bat"/>
         <include name="wstools.sh"/>
       </fileset>
+      <fileset dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar">
+        <include name="jbossws-deploy.conf"/>
+      </fileset>
     </copy>
     <copy todir="${jboss.repository.dir}/jbossws/${repository.id}/lib" overwrite="true">
       <fileset dir="${core.output.lib.dir}">
@@ -73,9 +76,6 @@
       </fileset>
       <fileset dir="${basedir}/ant-import">
         <include name="jbossws-deploy-macros.xml"/>
-      </fileset>
-      <fileset dir="${core.output.deploy.dir}/server/${jboss.server.instance}/deploy/jbossws.sar">
-        <include name="jbossws.deployed.files"/>
       </fileset>
     </copy>
     <copy tofile="${jboss.repository.dir}/jbossws/${repository.id}/component-info.xml" file="${core.output.etc.dir}/component-info.xml" filtering="true" overwrite="true">

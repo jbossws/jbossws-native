@@ -176,6 +176,7 @@
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="jbossws.service.lib.patternset"/>
+          <include name="**/jbossws-deploy.conf"/>
         </fileset>
       </copy>
       <unzip dest="@{targetdir}/jbossws-context.war" overwrite="true">
@@ -205,6 +206,7 @@
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
         <fileset dir="@{thirdpartylibs}">
           <patternset refid="jbossws.service.lib.patternset"/>
+          <include name="**/jbossws-deploy.conf"/>
         </fileset>
       </copy>
       <unzip dest="@{targetdir}/jbossws-context.war" overwrite="true">
@@ -256,7 +258,7 @@
   <macrodef name="macro-undeploy-jbossws">
     <attribute name="targetdir"/>
     <sequential>
-      <loadfile property="jbossws.undeploy.files" srcfile="@{targetdir}/jbossws.deployed.files" failonerror="false"/>
+      <loadfile property="jbossws.undeploy.files" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
       <loadfile property="jbossws.undeploy.files" srcfile="${jbossws.default.undeploy.files}" failonerror="false"/>
       <delete>
         <fileset dir="@{targetdir}/../../../.." includes="${jbossws.undeploy.files}"/>
