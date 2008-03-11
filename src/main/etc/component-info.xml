@@ -17,7 +17,8 @@
     <artifact id="standard-jaxrpc-endpoint-config.xml"/>
     <artifact id="standard-jaxws-client-config.xml"/>
     <artifact id="standard-jaxws-endpoint-config.xml"/>
-    <artifact id="jbossws-native-config.xml"/>
+    <artifact id="jbossws-native50-beans.xml"/>
+    <artifact id="jbossws-deploy-macros.xml"/>
     <artifact id="wsrunclient.bat"/>
     <artifact id="wsrunclient.sh"/>
     <artifact id="wstools.bat"/>

@@ -93,7 +93,8 @@
 
   <import file="${basedir}/ant-import/build-setup.xml"/>
   <import file="${basedir}/ant-import/build-bin-dist.xml"/>
-  <import file="${basedir}/ant-import/build-deploy.xml"/>
+  <import file="${basedir}/ant-import/build-deploy42.xml"/>
+  <import file="${basedir}/ant-import/build-deploy50.xml"/>
   <import file="${basedir}/ant-import/build-release.xml"/>
   <import file="${basedir}/ant-import/build-thirdparty.xml"/>
   <import file="${basedir}/ant-import-tests/build-testsuite.xml"/>
@@ -110,6 +111,7 @@
   <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
   <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
   <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
+  <property name="core.output.resources.dir" value="${core.output.dir}/resources"/>
 
   <target name="init" depends="prepare,thirdparty">
   </target>
@@ -126,7 +128,7 @@
     | documentation compiles.
     -->
 
-  <target name="compile" depends="init,compile-classes,compile-etc"
+  <target name="compile" depends="init,compile-classes,compile-etc,compile-resources"
           description="Compile all source files."/>
 
   <!-- Compile java sources -->
@@ -171,6 +173,41 @@
     </copy>
   </target>
 
+  <!-- Compile resource files -->
+  <target name="compile-resources" depends="init">
+    
+    <!-- Concat jbossws-native50-beans.xml -->
+    <mkdir dir="${core.output.resources.dir}"/>
+    <concat destfile="${core.output.resources.dir}/jbossws-native50-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt;
+      </header>
+      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt;
+      </footer>
+    </concat>
+    
+    <!-- Concat jboss-beans.xml -->
+    <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss42-resources.zip"/>
+    <concat destfile="${core.output.resources.dir}/jbossws-native42-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
+      </header>
+      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
+      <fileset file="${core.output.resources.dir}/jbossws-jboss42-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt;
+      </footer>
+    </concat>
+    
+    <copy todir="${core.output.resources.dir}">
+      <fileset dir="${core.resources.dir}/standard-config">
+        <include name="standard-*-config.xml"/>
+      </fileset>
+    </copy>
+  </target>
+
   <!-- ================================================================== -->
   <!-- Archives                                                           -->
   <!-- ================================================================== -->
@@ -178,13 +215,7 @@
   <!--
     | Build all jar files.
     -->
-  <target name="jars" depends="compile,jars-jboss42,jars-jboss50" description="Builds all jar files.">
-  </target>
-
-  <!--
-    |  Build all jar files.
-    -->
-  <target name="jars-common" depends="compile">
+  <target name="jars" depends="compile" description="Builds all jar files.">
 
     <!-- Build jboss-jaxrpc.jar -->
     <mkdir dir="${core.output.lib.dir}"/>
@@ -330,89 +361,6 @@
       <fileset dir="${core.java.dir}"/>
     </zip>
 
-  </target>
-
-  <target name="jars-jboss50" depends="jars-common">
-
-    <!-- Concat jbossws-beans.xml -->
-    <concat destfile="${core.output.lib.dir}/jbossws-native50/jbossws-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt;
-      </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt;
-      </footer>
-    </concat>
-
-    <!-- Build jbossws-native50.sar -->
-    <jar jarfile="${core.output.lib.dir}/jbossws-native50.sar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.lib.dir}">
-        <include name="jbossws-context.war"/>
-        <include name="jbossws-core.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/thirdparty">
-        <include name="policy.jar"/>
-        <include name="wsdl4j.jar"/>
-        <include name="xmlsec.jar"/>
-        <include name="jboss-jaxb-intros.jar"/>
-      </fileset>
-      <metainf dir="${core.dir}/src/main/resources/standard-config">
-        <include name="standard-*-config.xml"/>
-      </metainf>
-      <metainf dir="${core.output.lib.dir}/jbossws-native50">
-        <include name="jbossws-beans.xml"/>
-      </metainf>
-    </jar>
-
-  </target>
-
-  <target name="jars-jboss42" depends="jars-common">
-
-    <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss42-resources.zip"/>
-
-    <!-- Concat jboss-beans.xml -->
-    <concat destfile="${core.output.lib.dir}/jbossws-native42/jbossws.beans/META-INF/jboss-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
-      </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${core.output.dir}/resources/jbossws-jboss42-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt;
-      </footer>
-    </concat>
-
-    <!-- Build jbossws-native42.sar -->
-    <jar jarfile="${core.output.lib.dir}/jbossws-native42.sar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.lib.dir}">
-        <include name="jbossws-context.war"/>
-        <include name="jboss-jaxws.jar"/>
-        <include name="jboss-jaxws-ext.jar"/>
-        <include name="jboss-jaxrpc.jar"/>
-        <include name="jboss-saaj.jar"/>
-        <include name="jbossws-core.jar"/>
-      </fileset>
-      <fileset dir="${core.dir}/thirdparty">
-        <include name="jaxb-api.jar"/>
-        <include name="jaxb-impl.jar"/>
-        <include name="policy.jar"/>
-        <include name="stax-api.jar"/>
-        <include name="wsdl4j.jar"/>
-        <include name="xmlsec.jar"/>
-        <include name="wstx.jar"/>
-        <include name="jboss-jaxb-intros.jar"/>
-      </fileset>
-      <fileset dir="${core.output.lib.dir}/jbossws-native42">
-        <include name="jbossws.beans/**"/>
-      </fileset>
-      <metainf dir="${core.output.dir}/resources/jbossws-jboss42.sar/META-INF">
-        <include name="jboss-service.xml"/>
-      </metainf>
-      <metainf dir="${core.dir}/src/main/resources/standard-config">
-        <include name="standard-*-config.xml"/>
-      </metainf>
-    </jar>
   </target>
 
   <!-- ================================================================== -->
