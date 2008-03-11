@@ -18,20 +18,12 @@
   <!-- ================================================================== -->
   
   <target name="deploy-structure-jboss42" depends="prepare-deploy">
-    
-    <!-- Create the deployment structure -->
     <antcall target="deploy-jbossws-native42" inheritall="false">
       <param name="installserver" value="${deploy.structure.jboss42}/server/${jboss.server.instance}"/>
       <param name="resourcesdir" value="${deploy.artifacts.dir}/resources/jbossws-jboss42.sar"/>
       <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
     </antcall>
-    
-    <!-- Create jbossws-deploy.conf -->
-    <fileset id="jbossws.deploy.fileset" dir="${deploy.structure.jboss42}" excludes="**/jbossws.sar/**"/>
-    <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
-    <property name="jbossws.sar.dir" value="${deploy.structure.jboss42}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-    <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
-    <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
+    <macro-create-deploy-conf deploystructure="${deploy.structure.jboss42}"/>
   </target>
   
   <!-- ================================================================== -->
@@ -102,19 +94,11 @@
   <!-- ================================================================== -->
   
   <target name="deploy-structure-jboss50" depends="prepare-deploy">
-    
-    <!-- Create the deployment structure -->
     <antcall target="deploy-jbossws-native50" inheritall="false">
       <param name="installserver" value="${deploy.structure.jboss50}/server/${jboss.server.instance}"/>
       <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
     </antcall>
-    
-    <!-- Create jbossws-deploy.conf -->
-    <fileset id="jbossws.deploy.fileset" dir="${deploy.structure.jboss50}" excludes="**/jbossws.sar/**"/>
-    <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
-    <property name="jbossws.sar.dir" value="${deploy.structure.jboss50}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-    <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
-    <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
+    <macro-create-deploy-conf deploystructure="${deploy.structure.jboss50}"/>
   </target>
   
   <!-- ================================================================== -->
@@ -150,5 +134,20 @@
     <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
     <macro-undeploy-jbossws targetdir="${jboss501.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
   </target>
+  
+  <!-- ================================================================== -->
+  <!-- Create jbossws-deploy.conf                                         -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-create-deploy-conf">
+    <attribute name="deploystructure"/>
+    <sequential>
+      <fileset id="jbossws.deploy.fileset" dir="@{deploystructure}" excludes="**/jbossws.sar/**"/>
+      <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
+      <property name="jbossws.sar.dir" value="@{deploystructure}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
+    </sequential>
+  </macrodef>
   
 </project>
