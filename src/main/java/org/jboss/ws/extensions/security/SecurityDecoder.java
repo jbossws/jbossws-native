@@ -21,7 +21,6 @@
 */
 package org.jboss.ws.extensions.security;
 
-import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,7 +35,6 @@ import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.operation.DecryptionOperation;
-import org.jboss.ws.extensions.security.operation.OperationDescription;
 import org.jboss.ws.extensions.security.operation.ReceiveUsernameOperation;
 import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
 import org.jboss.ws.extensions.security.operation.RequireOperation;
