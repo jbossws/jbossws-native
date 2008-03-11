@@ -145,6 +145,24 @@ public class OMFactoryJAXRPC implements ObjectModelFactory
    }
 
    /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if ("init-param".equals(localName))
+         return new UnifiedInitParamMetaData();
+      else return null;
+   }
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(UnifiedHandlerMetaData handler, UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      handler.addInitParam(param);
+   }   
+   
+   /**
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
