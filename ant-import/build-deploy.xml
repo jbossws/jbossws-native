@@ -39,14 +39,20 @@
     <chmod dir="${jboss421.home}/bin" perm="+x" includes="*.sh"/>
     
     <!-- Extras for jboss-4.2.1 -->
-    <copy todir="${jboss421.home}/lib" overwrite="true">
-      <fileset dir="${thirdparty.dir}">
+    <copy todir="${jboss421.client}" overwrite="true">
+      <fileset dir="${deploy.artifacts.dir}/lib">
+        <include name="jboss-xml-binding.jar"/>
+        <include name="jbossws-jboss421.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${jboss421.lib}" overwrite="true">
+      <fileset dir="${deploy.artifacts.dir}/lib">
         <include name="jboss-xml-binding.jar"/>
       </fileset>
     </copy>
-    <copy todir="${jboss421.home}/client" overwrite="true">
-      <fileset dir="${thirdparty.dir}">
-        <include name="jboss-xml-binding.jar"/>
+    <copy todir="${jboss421.server.lib}" overwrite="true">
+      <fileset dir="${deploy.artifacts.dir}/lib">
+        <include name="jbossws-jboss421.jar"/>
       </fileset>
     </copy>
   </target>
@@ -54,6 +60,7 @@
   <target name="undeploy-jboss421" depends="prepare" description="Remove jbossws from jboss421">
     <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
     <macro-undeploy-jbossws targetdir="${jboss421.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+    <delete file="${jboss421.server.lib}/jbossws-integration.jar"/>
     <delete dir="${jboss421.server.deploy}/juddi-service.sar"/>
   </target>
   
