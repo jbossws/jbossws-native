@@ -12,43 +12,43 @@
 <!-- $Id: bin-dist-build.xml 4081 2007-08-02 09:23:17Z thomas.diesler@jboss.com $ -->
 
 <project default="main" basedir="." name="JBossWS-Native">
-
-	<!-- ================================================================== -->
-	<!-- Setup                                                              -->
-	<!-- ================================================================== -->
-
-	<property name="build.dir" value="${basedir}/build"/>
-	<property name="docs.dir" value="${basedir}/docs"/>
-	<property name="thirdparty.dir" value="${basedir}/deploy"/>
-	<property name="tests.dir" value="${basedir}/tests"/>
-	<property name="tests.output.dir" value="${basedir}/output"/>
+  
+  <!-- ================================================================== -->
+  <!-- Setup                                                              -->
+  <!-- ================================================================== -->
+  
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="docs.dir" value="${basedir}/docs"/>
+  <property name="thirdparty.dir" value="${basedir}/deploy/lib"/>
+  <property name="tests.dir" value="${basedir}/tests"/>
+  <property name="tests.output.dir" value="${basedir}/output"/>
   
   <property name="deploy.artifacts.dir" value="${basedir}/deploy"/>
   <property name="deploy.structure.jboss42" value="${basedir}/output/deploy-jboss42"/>
   <property name="deploy.structure.jboss50" value="${basedir}/output/deploy-jboss50"/>
-	<property name="jbossws.default.deploy.conf" value="${build.dir}/jbossws-default-deploy.conf"/>
+  <property name="jbossws.default.deploy.conf" value="${build.dir}/jbossws-default-deploy.conf"/>
   
-	<property file="${basedir}/ant.properties"/>
-	<property file="${basedir}/version.properties"/>
-
+  <property file="${basedir}/ant.properties"/>
+  <property file="${basedir}/version.properties"/>
+  
   <property name="jboss421.lib" value="${jboss421.home}/lib"/>
   <property name="jboss421.client" value="${jboss421.home}/client"/>
   <property name="jboss421.server" value="${jboss421.home}/server/${jboss.server.instance}"/>
   <property name="jboss421.server.lib" value="${jboss421.server}/lib"/>
   <property name="jboss421.server.deploy" value="${jboss421.server}/deploy"/>
-
+  
   <property name="jboss422.lib" value="${jboss422.home}/lib"/>
   <property name="jboss422.client" value="${jboss422.home}/client"/>
   <property name="jboss422.server" value="${jboss422.home}/server/${jboss.server.instance}"/>
   <property name="jboss422.server.lib" value="${jboss422.server}/lib"/>
   <property name="jboss422.server.deploy" value="${jboss422.server}/deploy"/>
-
+  
   <property name="jboss423.lib" value="${jboss423.home}/lib"/>
   <property name="jboss423.client" value="${jboss423.home}/client"/>
   <property name="jboss423.server" value="${jboss423.home}/server/${jboss.server.instance}"/>
   <property name="jboss423.server.lib" value="${jboss423.server}/lib"/>
   <property name="jboss423.server.deploy" value="${jboss423.server}/deploy"/>
-
+  
   <property name="jboss500.lib" value="${jboss500.home}/lib"/>
   <property name="jboss500.client" value="${jboss500.home}/client"/>
   <property name="jboss500.server" value="${jboss500.home}/server/${jboss.server.instance}"/>
@@ -64,7 +64,7 @@
   <property name="jboss501.server.deployers" value="${jboss501.server}/deployers"/>
   
   <property name="jboss.server.instance.${jboss.server.instance}" value="true"/>
- 
+  
   <property name="jboss421.available.file" value="${jboss421.client}/jboss-client.jar"/>
   <property name="jboss422.available.file" value="${jboss422.client}/jboss-client.jar"/>
   <property name="jboss423.available.file" value="${jboss423.client}/jboss-client.jar"/>
@@ -96,96 +96,94 @@
   <available classname="java.io.Console" property="HAVE_JDK_1.6"/>
   
   <fail message="JDK1.5 or above is required" unless="HAVE_JDK_1.5"/>
-
-	<import file="${basedir}/build/build-deploy.xml"/>
-	<import file="${basedir}/build/build-project-gen.xml"/>
-	<import file="${basedir}/build/jbossws-deploy-macros.xml"/>
-	<import file="${basedir}/tests/ant-import/build-testsuite.xml"/>
-
-	<!-- ================================================================== -->
-	<!-- Initialization                                                     -->
-	<!-- ================================================================== -->
-
-	<target name="prepare">
-
-		<!-- Define jboss.home -->
-		<condition property="jboss.home" value="${jboss500.home}">
-			<equals arg1="${jbossws.integration.target}" arg2="jboss50"/>
-		</condition>
-		<condition property="jboss.home" value="${jboss422.home}">
-			<equals arg1="${jbossws.integration.target}" arg2="jboss42"/>
-		</condition>
-		<condition property="jboss.home" value="${jboss423.home}">
-			<equals arg1="${jbossws.integration.target}" arg2="jboss43"/>
-		</condition>
-
-		<!-- Define excludesfile -->
-    <property name="excludesfile" value="${tests.dir}/resources/test-excludes-${jbossws.integration.target}.txt"/>
-
-	</target>
-
-	<target name="tests-init" depends="prepare,tests-classpath">
-
-		<path id="ws.stack.classpath">
-			<pathelement location="${thirdparty.dir}/jbossws-common.jar"/>
-			<pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
-			<pathelement location="${thirdparty.dir}/jboss-jaxrpc.jar"/>
-			<pathelement location="${thirdparty.dir}/jboss-jaxws.jar"/>
-			<pathelement location="${thirdparty.dir}/jboss-saaj.jar"/>
-			<pathelement location="${thirdparty.dir}/jbossws-core.jar"/>
-			<pathelement location="${thirdparty.dir}/jbossws-client.jar"/>
-		</path>
-
-		<path id="tests.extra.classpath">
-			<pathelement location="${thirdparty.dir}/policy.jar"/>
-			<pathelement location="${thirdparty.dir}/jaxws-tools.jar"/>
-			<pathelement location="${thirdparty.dir}/wstx.jar"/>
-			<pathelement location="${basedir}/tools/lib/junit.jar"/>
-		</path>
-
-	</target>
-
-	<!-- ================================================================== -->
-	<!-- Compile                                                            -->
-	<!-- ================================================================== -->
-
-	<target name="tests-compile" depends="tests-init" description="Compile sources">
-		<macro-compile-classes srcdir="${tests.dir}/java" excludesfile="${excludesfile}"/>
-	</target>
-
-	<!-- ================================================================== -->
-	<!-- Building                                                           -->
-	<!-- ================================================================== -->
-
-	<!-- Copy resources -->
-	<target name="tests-copy-resources" depends="tests-init">
-		<macro-copy-resources srcdir="${tests.dir}"/>
-	</target>
-
-	<target name="tests-jars" depends="tests-compile,tests-copy-resources">
-		<ant antfile="${tests.dir}/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" inheritall="true"/>
-	</target>
-
-	<target name="tests-main" depends="tests-jars" description="Build the test deployments."/>
-
-  <!-- dummy targets -->
-	<target name="jars-jboss50" depends="prepare"/>
-	<target name="jars-jboss42" depends="prepare"/>
-	<target name="prepare-deploy" depends="prepare"/>
   
-	<!-- ================================================================== -->
-	<!-- Miscellaneous                                                       -->
-	<!-- ================================================================== -->
-
-	<target name="clean" depends="prepare" description="Cleans up most generated files.">
-		<delete dir="${tests.output.dir}"/>
-	</target>
-
-	<target name="clobber" depends="clean" description="Cleans up all generated files.">
-	</target>
-
-	<target name="main" depends="most" description="Executes the default target (most)."/>
-
-	<target name="most" depends="tests-main" description="Builds almost everything."/>
-
+  <import file="${basedir}/build/build-deploy.xml"/>
+  <import file="${basedir}/build/build-project-gen.xml"/>
+  <import file="${basedir}/build/jbossws-deploy-macros.xml"/>
+  <import file="${basedir}/tests/ant-import/build-testsuite.xml"/>
+  
+  <!-- ================================================================== -->
+  <!-- Initialization                                                     -->
+  <!-- ================================================================== -->
+  
+  <target name="prepare">
+    
+    <!-- Define jboss.home -->
+    <condition property="jboss.home" value="${jboss500.home}">
+      <equals arg1="${jbossws.integration.target}" arg2="jboss50"/>
+    </condition>
+    <condition property="jboss.home" value="${jboss422.home}">
+      <equals arg1="${jbossws.integration.target}" arg2="jboss42"/>
+    </condition>
+    <condition property="jboss.home" value="${jboss423.home}">
+      <equals arg1="${jbossws.integration.target}" arg2="jboss43"/>
+    </condition>
+    
+    <!-- Define excludesfile -->
+    <property name="excludesfile" value="${tests.dir}/resources/test-excludes-${jbossws.integration.target}.txt"/>
+    
+  </target>
+  
+  <target name="tests-init" depends="prepare,tests-classpath">
+    
+    <path id="ws.stack.classpath">
+      <pathelement location="${thirdparty.dir}/jbossws-common.jar"/>
+      <pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-jaxrpc.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-jaxws.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-saaj.jar"/>
+      <pathelement location="${thirdparty.dir}/jbossws-core.jar"/>
+      <pathelement location="${thirdparty.dir}/jbossws-client.jar"/>
+    </path>
+    
+    <path id="tests.extra.classpath">
+      <pathelement location="${thirdparty.dir}/policy.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxws-tools.jar"/>
+      <pathelement location="${thirdparty.dir}/wstx.jar"/>
+      <pathelement location="${basedir}/tools/lib/junit.jar"/>
+    </path>
+    
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Compile                                                            -->
+  <!-- ================================================================== -->
+  
+  <target name="tests-compile" depends="tests-init" description="Compile sources">
+    <macro-compile-classes srcdir="${tests.dir}/java" excludesfile="${excludesfile}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Building                                                           -->
+  <!-- ================================================================== -->
+  
+  <!-- Copy resources -->
+  <target name="tests-copy-resources" depends="tests-init">
+    <macro-copy-resources srcdir="${tests.dir}"/>
+  </target>
+  
+  <target name="tests-jars" depends="tests-compile,tests-copy-resources">
+    <ant antfile="${tests.dir}/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" inheritall="true"/>
+  </target>
+  
+  <target name="tests-main" depends="tests-jars" description="Build the test deployments."/>
+  
+  <!-- dummy targets -->
+  <target name="prepare-deploy" depends="prepare"/>
+  
+  <!-- ================================================================== -->
+  <!-- Miscellaneous                                                       -->
+  <!-- ================================================================== -->
+  
+  <target name="clean" depends="prepare" description="Cleans up most generated files.">
+    <delete dir="${tests.output.dir}"/>
+  </target>
+  
+  <target name="clobber" depends="clean" description="Cleans up all generated files.">
+  </target>
+  
+  <target name="main" depends="most" description="Executes the default target (most)."/>
+  
+  <target name="most" depends="tests-main" description="Builds almost everything."/>
+  
 </project>
