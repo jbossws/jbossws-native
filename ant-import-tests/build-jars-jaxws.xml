@@ -106,6 +106,13 @@
       </fileset>
     </jar>
     
+    <!-- jaxws-fastinfoset -->
+    <war warfile="${tests.output.dir}/libs/jaxws-fastinfoset.war" webxml="${tests.output.dir}/resources/jaxws/fastinfoset/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/fastinfoset/FastInfosetEndpoint.class"/>
+      </classes>
+    </war>
+    
     <!-- jaxws-handlerlifecycle -->
     <war warfile="${tests.output.dir}/libs/jaxws-handlerlifecycle.war" webxml="${tests.output.dir}/resources/jaxws/handlerlifecycle/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

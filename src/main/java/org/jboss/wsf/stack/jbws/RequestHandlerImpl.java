@@ -80,6 +80,7 @@ import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -96,6 +97,8 @@ import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Document;
+
+import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
 
 /**
  * A request handler
@@ -310,7 +313,7 @@ public class RequestHandlerImpl implements RequestHandler
          boolean isWsrmMessage = rmResCtx != null;
          boolean isWsrmOneWay = isWsrmMessage && (Boolean)rmResCtx.get(RMConstant.ONE_WAY_OPERATION);
          if ((outStream != null) && (isWsrmOneWay == false)) // RM hack
-            sendResponse(outStream, msgContext, isFault);
+            sendResponse(endpoint, outStream, isFault);
       }
       catch (Exception ex)
       {
@@ -331,9 +334,12 @@ public class RequestHandlerImpl implements RequestHandler
       }
    }
 
-   private void sendResponse(OutputStream outputStream, CommonMessageContext msgContext, boolean isFault) throws SOAPException, IOException
+   private void sendResponse(Endpoint endpoint, OutputStream output, boolean isFault) throws SOAPException, IOException
    {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
       MessageAbstraction resMessage = msgContext.getMessageAbstraction();
+      
       String wsaTo = null;
 
       // Get the destination from the AddressingProperties
@@ -352,7 +358,17 @@ public class RequestHandlerImpl implements RequestHandler
       }
       else
       {
-         resMessage.writeTo(outputStream);
+         if (epMetaData.isFeatureEnabled(FastInfosetFeature.class) && resMessage instanceof SOAPMessage)
+         {
+            SOAPEnvelope soapEnv = ((SOAPMessage)resMessage).getSOAPPart().getEnvelope();
+            DOMDocumentSerializer serializer = new DOMDocumentSerializer();
+            serializer.setOutputStream(output);
+            serializer.serialize(soapEnv);
+         }
+         else
+         {
+            resMessage.writeTo(output);
+         }
       }
    }
 
@@ -397,6 +413,7 @@ public class RequestHandlerImpl implements RequestHandler
 
             msgFactory.setServiceMode(sepMetaData.getServiceMode());
             msgFactory.setStyle(sepMetaData.getStyle());
+            msgFactory.setFeatureResolver(sepMetaData.getFeatureResolver());
 
             reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
          }

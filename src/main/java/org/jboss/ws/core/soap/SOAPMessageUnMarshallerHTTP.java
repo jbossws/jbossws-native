@@ -81,7 +81,7 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
          if (resCode != HttpServletResponse.SC_NO_CONTENT)
          {
             MimeHeaders mimeHeaders = getMimeHeaders(metadata);
-            soapMsg = new MessageFactoryImpl().createMessage(mimeHeaders, inputStream, true);
+            soapMsg = getMessageFactory().createMessage(mimeHeaders, inputStream, true);
          }
 
          return soapMsg;
@@ -93,6 +93,11 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
          e2.initCause(e);
          throw e2;
       }
+   }
+
+   protected MessageFactoryImpl getMessageFactory()
+   {
+      return new MessageFactoryImpl();
    }
 
    /**

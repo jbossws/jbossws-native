@@ -49,7 +49,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
 
       try
       {
-         SOAPMessage soapMsg = new MessageFactoryImpl().createMessage(null, inputStream, true);
+         SOAPMessage soapMsg = getMessageFactory().createMessage(null, inputStream, true);
 
          return soapMsg;
       }
@@ -60,6 +60,11 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
          e2.initCause(e);
          throw e2;
       }
+   }
+
+   protected MessageFactoryImpl getMessageFactory()
+   {
+      return new MessageFactoryImpl();
    }
 
    public void setClassLoader(ClassLoader classloader)

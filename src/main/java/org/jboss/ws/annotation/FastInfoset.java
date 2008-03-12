@@ -28,34 +28,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.jboss.ws.extensions.validation.StrictlyValidErrorHandler;
-import org.jboss.ws.feature.SchemaValidationFeature;
+import org.jboss.ws.feature.FastInfosetFeature;
 
 /**
- * This feature represents the use of schema validation with a 
- * web service.
+ * This feature represents the use of FastInfoset
  * 
  * @author Thomas.Diesler@jboss.com
  * @since 29-Feb-2008
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })
-@EndpointFeature( id = SchemaValidationFeature.ID)
-public @interface SchemaValidation 
-{
-   /**
-    * Optional property for the schema location. If this is not specified the schema
-    * will be attempted to extract from the WSDL.
-    * 
-    * The syntax is the same as for schemaLocation attributes in instance documents: e.g, "http://www.example.com file_name.xsd".
-    */
-   String schemaLocation() default "";
-   
-   /**
-    * Optional property for the error handler. 
-    * If this is not specified the @{ValidationErrorHandler} will be used.
-    */
-   Class errorHandler() default StrictlyValidErrorHandler.class;
+@EndpointFeature( id = FastInfosetFeature.ID)
+public @interface FastInfoset {
    
    /**
     * Specifies if the feature is enabled or disabled

@@ -100,7 +100,7 @@ public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyEl
       {
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-         feature = epMetaData.getWebServiceFeature(SchemaValidationFeature.class);
+         feature = epMetaData.getFeature(SchemaValidationFeature.class);
          URL xsdURL = feature.getSchemaLocation() != null ? new URL(feature.getSchemaLocation()) : null;
          if (xsdURL == null)
          {
@@ -139,7 +139,7 @@ public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyEl
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext != null)
-         feature = msgContext.getEndpointMetaData().getWebServiceFeature(SchemaValidationFeature.class);
+         feature = msgContext.getEndpointMetaData().getFeature(SchemaValidationFeature.class);
       
       return feature != null ? feature.isEnabled() : false;
    }

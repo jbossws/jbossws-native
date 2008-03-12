@@ -560,12 +560,11 @@ public class ServiceDelegateImpl extends ServiceDelegate21
    {
       if (features != null)
       {
-         Set<WebServiceFeature> featureSet = new HashSet<WebServiceFeature>();
-         for (WebServiceFeature feature : features)
-            featureSet.add(feature);
-         
          EndpointMetaData epMetaData = ((StubExt)stub).getEndpointMetaData();
-         epMetaData.setWebServiceFeatures(featureSet);
+         for (WebServiceFeature feature : features)
+         {
+            epMetaData.addFeature(feature);
+         }
       }
    }
 

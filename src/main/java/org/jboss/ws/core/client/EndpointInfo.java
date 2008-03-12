@@ -27,7 +27,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.ws.WebServiceFeature;
+
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.FeatureResolver;
 
 /** A wrapper object that associates the target address with some metadata
  * 
@@ -38,9 +41,11 @@ public class EndpointInfo
 {
    private String targetAddress;
    private Map<String, Object> properties;
+   private FeatureResolver features;
    
    public EndpointInfo(EndpointMetaData epMetaData, String targetAddress, Map<String, Object> callProps)
    {
+      this.features = epMetaData.getFeatureResolver();
       this.targetAddress = targetAddress;
       this.properties = callProps;
 
@@ -81,6 +86,11 @@ public class EndpointInfo
       return targetAddress;
    }
    
+   public <T extends WebServiceFeature> boolean isFeatureEnabled(Class<T> key)
+   {
+      return features.isFeatureEnabled(key);
+   }
+
    public boolean equals(Object obj)
    {
       if (!(obj instanceof EndpointInfo))

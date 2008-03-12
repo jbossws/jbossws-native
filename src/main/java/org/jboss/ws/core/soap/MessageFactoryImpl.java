@@ -39,12 +39,15 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
+import org.jboss.ws.feature.FastInfosetFeature;
+import org.jboss.ws.metadata.umdm.FeatureResolver;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.util.ServiceLoader;
 
@@ -64,21 +67,18 @@ public class MessageFactoryImpl extends MessageFactory
    private Mode serviceMode;
    // The style used by this MessageFactory
    private Style style;
+   // The features used by this MessageFactory
+   private FeatureResolver features = new FeatureResolver();
    // Used if the style is dynamic
    private boolean dynamic;
-
-   private EnvelopeBuilder envelopeBuilder;
 
    public MessageFactoryImpl()
    {
       envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
-      envelopeBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
    }
 
    public MessageFactoryImpl(String protocol) throws SOAPException
    {
-      envelopeBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
-
       if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(protocol) || SOAPConstants.DEFAULT_SOAP_PROTOCOL.equals(protocol))
          envNamespace = SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE;
       else if (SOAPConstants.SOAP_1_2_PROTOCOL.equals(protocol))
@@ -137,6 +137,16 @@ public class MessageFactoryImpl extends MessageFactory
       this.serviceMode = serviceMode;
    }
 
+   public void addFeature(WebServiceFeature feature)
+   {
+      this.features.addFeature(feature);
+   }
+   
+   public void setFeatureResolver(FeatureResolver features)
+   {
+      this.features = features;
+   }
+   
    /**
     * Creates a new SOAPMessage object with the default SOAPPart, SOAPEnvelope,
     * SOAPBody, and SOAPHeader objects. Profile-specific message factories can
@@ -255,11 +265,19 @@ public class MessageFactoryImpl extends MessageFactory
             soapMessage.setAttachments(attachments);
 
          // Get the SOAPEnvelope builder
-
-         envelopeBuilder.setStyle(getStyle());
+         EnvelopeBuilder envBuilder;
+         if (features.isFeatureEnabled(FastInfosetFeature.class))
+         {
+            envBuilder = new FastInfosetEnvelopeBuilder();
+         }
+         else
+         {
+            envBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), null);
+         }
 
          // Build the payload
-         envelopeBuilder.build(soapMessage, inputStream, ignoreParseError);
+         envBuilder.setStyle(getStyle());
+         envBuilder.build(soapMessage, inputStream, ignoreParseError);
       }
 
       return soapMessage;

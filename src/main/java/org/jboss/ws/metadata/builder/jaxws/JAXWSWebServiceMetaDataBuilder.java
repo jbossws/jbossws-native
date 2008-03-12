@@ -139,7 +139,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processEndpointConfig(dep, sepMetaData, sepClass, linkName);
 
          // process web service features
-         processWebServiceFeatures(dep, sepMetaData, sepClass);
+         EndpointFeatureProcessor epFeatureProcessor = new EndpointFeatureProcessor();
+         epFeatureProcessor.processEndpointFeatures(dep, sepMetaData, sepClass);
 
          // Process endpoint documentation
          if (seiClass.isAnnotationPresent(Documentation.class))

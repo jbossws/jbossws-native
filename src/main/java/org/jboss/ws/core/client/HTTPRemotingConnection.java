@@ -54,10 +54,12 @@ import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.CommonConfig;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 import org.jboss.ws.extensions.wsrm.transport.RMChannel;
 import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;
 import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
+import org.jboss.ws.feature.FastInfosetFeature;
 
 /**
  * SOAPConnection implementation.
@@ -306,12 +308,14 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          // May be overridden through endpoint config
          if (msgContext != null)
          {
-            CommonConfig config = msgContext.getEndpointMetaData().getConfig();
+            EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
+            CommonConfig config = epMetaData.getConfig();
 
             // chunksize settings
             String chunkSizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
             int chunkSize = chunkSizeValue != null ? Integer.valueOf(chunkSizeValue) : -1;
-            if (chunkSize > 0)
+            boolean isFastInfoset = epMetaData.isFeatureEnabled(FastInfosetFeature.class);
+            if (chunkSize > 0 && isFastInfoset == false)
             {
                clientConfig.put(EndpointProperty.CHUNKED_ENCODING_SIZE, chunkSizeValue);
             }

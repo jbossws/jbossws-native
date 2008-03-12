@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.core.client;
 
+import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.wsf.spi.util.ServiceLoader;
 
 // $Id$
@@ -47,6 +48,9 @@ public class RemoteConnectionFactory
       
       if (key == null)
          throw new IllegalArgumentException("Cannot obtain remote connetion for: " + targetAddress);
+      
+      if (epInfo.isFeatureEnabled(FastInfosetFeature.class))
+         key += ".fastinfoset";
       
       RemoteConnection con = (RemoteConnection)ServiceLoader.loadService(key, null);
       if (con == null)

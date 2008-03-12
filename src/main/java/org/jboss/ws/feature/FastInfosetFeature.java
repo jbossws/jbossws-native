@@ -19,30 +19,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config;
+package org.jboss.ws.feature;
 
-import java.net.URI;
+// $Id$
 
-/**
- * @author Heiko.Braun@jboss.org
- * @version $Id$
- * @since 14.12.2006
- */
+import javax.xml.ws.WebServiceFeature;
+
+import org.jboss.ws.Constants;
 
 /**
- * Refactor this to use features 
+ * This feature represents the use of FastInfoset
+ * 
+ * @author Thomas.Diesler@jboss.com
+ * @since 29-Feb-2008
  */
-@Deprecated
-public class EndpointProperty
+public final class FastInfosetFeature extends WebServiceFeature
 {
-   public final static String MTOM_THRESHOLD = "http://org.jboss.ws/mtom#threshold";
+   /** 
+    * Constant value identifying the SchemaValidationFeature
+    */
+   public static final String ID = Constants.NS_JBOSSWS_URI + "/features/fastinfoset";
 
    /**
-    * Set to 0 in order to disable chunked encoding
+    * Create an <code>SchemaValidationFeature</code>.
+    * The instance created will be enabled.
     */
-   public final static String CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
-   
-   public URI name;
-   public String value;
+   public FastInfosetFeature()
+   {
+      this.enabled = true;
+   }
 
+   /**
+    * Creates an <code>SchemaValidationFeature</code>.
+    * 
+    * @param enabled specifies if this feature should be enabled or not
+    */
+   public FastInfosetFeature(boolean enabled)
+   {
+      this.enabled = enabled;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public String getID()
+   {
+      return ID;
+   }
 }

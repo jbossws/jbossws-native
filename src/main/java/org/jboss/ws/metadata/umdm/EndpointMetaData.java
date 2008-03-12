@@ -63,6 +63,7 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
+import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
@@ -150,7 +151,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // All of the registered types
    private List<Class> registeredTypes = new ArrayList<Class>();
    // The features defined for this endpoint
-   private Set<WebServiceFeature> features = new HashSet<WebServiceFeature>();
+   private FeatureResolver features = new FeatureResolver();
    // The documentation edfined through the @Documentation annotation
    private String documentation;
 
@@ -363,29 +364,24 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.properties = properties;
    }
 
-   public <T extends WebServiceFeature> T getWebServiceFeature(Class<T> key)
+   public <T extends WebServiceFeature> T getFeature(Class<T> key)
    {
-      for (WebServiceFeature feature : features)
-      {
-         if (key == feature.getClass())
-            return (T)feature;
-      }
-      return null;
+      return features.getFeature(key);
    }
 
-   public Set<WebServiceFeature> getWebServiceFeatures()
+   public <T extends WebServiceFeature> boolean isFeatureEnabled(Class<T> key)
+   {
+      return features.isFeatureEnabled(key);
+   }
+   
+   public FeatureResolver getFeatureResolver()
    {
       return features;
    }
 
-   public void addWebServiceFeature(WebServiceFeature feature)
+   public void addFeature(WebServiceFeature feature)
    {
-      this.features.add(feature);
-   }
-
-   public void setWebServiceFeatures(Set<WebServiceFeature> features)
-   {
-      this.features = features;
+      this.features.addFeature(feature);
    }
 
    public String getDocumentation()

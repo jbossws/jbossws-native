@@ -19,30 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config;
+package org.jboss.test.ws.jaxws.fastinfoset;
 
-import java.net.URI;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
-/**
- * @author Heiko.Braun@jboss.org
- * @version $Id$
- * @since 14.12.2006
- */
-
-/**
- * Refactor this to use features 
- */
-@Deprecated
-public class EndpointProperty
+@WebService(targetNamespace = "http://org.jboss.ws/fastinfoset")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public interface FastInfoset
 {
-   public final static String MTOM_THRESHOLD = "http://org.jboss.ws/mtom#threshold";
-
-   /**
-    * Set to 0 in order to disable chunked encoding
-    */
-   public final static String CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
-   
-   public URI name;
-   public String value;
-
+   @WebMethod
+   String echo(String code);
 }

@@ -39,6 +39,7 @@
 		</path>
 
     <path id="tests.extra.classpath">
+			<pathelement location="${core.dir}/thirdparty/FastInfoset.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
 			<pathelement location="${core.dir}/thirdparty/policy.jar"/>

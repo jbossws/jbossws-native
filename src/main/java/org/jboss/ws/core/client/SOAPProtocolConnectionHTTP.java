@@ -24,18 +24,15 @@ package org.jboss.ws.core.client;
 // $Id$
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
 import org.jboss.ws.core.soap.SOAPMessageUnMarshallerHTTP;
@@ -46,7 +43,6 @@ import org.jboss.ws.extensions.xop.XOPContext;
  *
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
- *
  * @since 02-Apr-2007
  */
 public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
@@ -87,9 +83,9 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
    protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
    {
       super.populateHeaders(reqMessage, metadata);
-      
+
       Properties props = (Properties)metadata.get("HEADER");
-      
+
       // R2744 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
       // with a quoted value equal to the value of the soapAction attribute of
       // soapbind:operation, if present in the corresponding WSDL description.
@@ -115,6 +111,6 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
       {
          props.put("SOAPAction", "\"\"");
       }
-      
+
    }
 }

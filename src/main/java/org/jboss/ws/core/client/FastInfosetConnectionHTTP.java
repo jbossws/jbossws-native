@@ -19,30 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.config;
+package org.jboss.ws.core.client;
 
-import java.net.URI;
+// $Id$
+
+import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.soap.FastInfosetMarshaller;
+import org.jboss.ws.core.soap.FastInfosetUnMarshaller;
 
 /**
- * @author Heiko.Braun@jboss.org
- * @version $Id$
- * @since 14.12.2006
+ * SOAPConnection implementation
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 12-Mar-2008
  */
-
-/**
- * Refactor this to use features 
- */
-@Deprecated
-public class EndpointProperty
+public class FastInfosetConnectionHTTP extends SOAPProtocolConnectionHTTP
 {
-   public final static String MTOM_THRESHOLD = "http://org.jboss.ws/mtom#threshold";
+   public UnMarshaller getUnmarshaller()
+   {
+      return new FastInfosetUnMarshaller();
+   }
 
-   /**
-    * Set to 0 in order to disable chunked encoding
-    */
-   public final static String CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
-   
-   public URI name;
-   public String value;
-
+   public Marshaller getMarshaller()
+   {
+      return new FastInfosetMarshaller();
+   }
 }
