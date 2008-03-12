@@ -21,25 +21,94 @@
 */
 package org.jboss.ws.extensions.security.operation;
 
+//$Id$
+
+import java.security.MessageDigest;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+
+import org.jboss.logging.Logger;
+import org.jboss.security.Base64Encoder;
 import org.jboss.ws.extensions.security.SecurityStore;
+import org.jboss.ws.extensions.security.Util;
+import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallback;
+import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallbackHandler;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Document;
 
 public class SendUsernameOperation implements EncodingOperation
 {
+   private static Logger log = Logger.getLogger(SendUsernameOperation.class);
+   
    private String username;
    private String credential;
+   private boolean digestPassword;
+   private boolean useNonce;
+   private boolean useCreated;
    
-   public SendUsernameOperation(String username, String credential)
+   public SendUsernameOperation(String username, String credential, boolean digestPassword, boolean useNonce, boolean useCreated)
    {
       this.username = username;
       this.credential = credential;
+      this.digestPassword = digestPassword;
+      this.useNonce = useNonce;
+      this.useCreated = useCreated;
    }
 
    public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException
    {
-      header.addToken(new UsernameToken(username, credential, message));
+      String created = useCreated ? getCurrentTimestampAsString() : null;
+      String nonce = useNonce ? Util.generateNonce() : null;
+      String password = digestPassword ? createPasswordDigest(nonce, created, credential) : credential;
+      header.addToken(new UsernameToken(username, password, message, digestPassword, nonce, created));
+   }
+   
+   
+   private static String getCurrentTimestampAsString()
+   {
+      Calendar timestamp = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+      return SimpleTypeBindings.marshalDateTime(timestamp);
+   }
+   
+   /**
+    * Calculate the password digest using a MessageDigest and the UsernameTokenCallback/CallbackHandler
+    */
+   @SuppressWarnings("unchecked")
+   public static String createPasswordDigest(String nonce, String created, String password)
+   {
+      String passwordHash = null;
+      try
+      {
+         // convert password to byte data
+         byte[] passBytes = password.getBytes("UTF-8");
+         // prepare the username token digest callback
+         UsernameTokenCallback callback = new UsernameTokenCallback();
+         Map options = new HashMap();
+         callback.init(options);
+         // add the username token callback handler to provide the parameters
+         CallbackHandler handler = new UsernameTokenCallbackHandler(nonce, created);
+         handler.handle((Callback[])options.get("callbacks"));
+         // calculate the hash and apply the encoding.
+         MessageDigest md = MessageDigest.getInstance("SHA");
+         callback.preDigest(md);
+         md.update(passBytes);
+         callback.postDigest(md);
+         byte[] hash = md.digest();
+         passwordHash =  Base64Encoder.encode(hash);
+      }
+      catch(Exception e)
+      {
+         log.error("Password hash calculation failed ", e);
+      }
+      return passwordHash;
    }
 }

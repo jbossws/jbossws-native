@@ -21,11 +21,16 @@
 */
 package org.jboss.ws.extensions.security;
 
+//$Id$
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.util.Base64;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -36,7 +41,20 @@ import org.w3c.dom.Node;
 public class Util
 {
    public static int count = 0;
-
+   private static SecureRandom pseudoRng;
+   
+   static
+   {
+      try
+      {
+         pseudoRng = SecureRandom.getInstance("SHA1PRNG");
+         pseudoRng.setSeed(System.currentTimeMillis());
+      }
+      catch (NoSuchAlgorithmException e)
+      {
+      }
+   }
+   
    public static String assignWsuId(Element element)
    {
       String id = element.getAttributeNS(Constants.WSU_NS, Constants.ID);
@@ -213,5 +231,12 @@ public class Util
       id.append(prefix).append("-").append(count).append("-").append(time).append("-").append(id.hashCode());
 
       return id.toString();
+   }
+   
+   public static String generateNonce()
+   {
+      byte[] bytes = new byte[32];
+      pseudoRng.nextBytes(bytes);
+      return Base64.encodeBytes(bytes);
    }
 }

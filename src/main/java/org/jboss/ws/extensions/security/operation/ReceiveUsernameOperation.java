@@ -23,9 +23,13 @@ package org.jboss.ws.extensions.security.operation;
 
 // $Id$
 
+import javax.security.auth.callback.CallbackHandler;
+
 import org.jboss.logging.Logger;
+import org.jboss.security.auth.callback.CallbackHandlerPolicyContextHandler;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.SimplePrincipal;
+import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallbackHandler;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
@@ -58,6 +62,11 @@ public class ReceiveUsernameOperation implements TokenOperation
       SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
       Logger.getLogger(this.getClass()).info("Username: " + user.getUsername());
       Logger.getLogger(this.getClass()).info("Password: " + user.getPassword());
+      if (user.isDigest())
+      {
+         CallbackHandler handler = new UsernameTokenCallbackHandler(user.getNonce(), user.getCreated());
+         CallbackHandlerPolicyContextHandler.setCallbackHandler(handler);
+      }
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }

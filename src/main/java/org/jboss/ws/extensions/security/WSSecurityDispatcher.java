@@ -53,6 +53,7 @@ import org.jboss.ws.metadata.wsse.RequireTimestamp;
 import org.jboss.ws.metadata.wsse.Requires;
 import org.jboss.ws.metadata.wsse.Sign;
 import org.jboss.ws.metadata.wsse.Timestamp;
+import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
@@ -196,9 +197,10 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          operations.add(new TimestampOperation(timestamp.getTtl()));
       }
 
-      if (config.getUsername() != null && user != null && password != null)
+      Username username = config.getUsername();
+      if (username != null && user != null && password != null)
       {
-         operations.add(new SendUsernameOperation(user, password));
+         operations.add(new SendUsernameOperation(user, password, username.isDigestPassword(), username.isUseNonce(), username.isUseCreated()));
       }
 
       Sign sign = config.getSign();
@@ -208,7 +210,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          if (sign.isIncludeTimestamp())
          {
             if (timestamp == null)
-               operations.add(new TimestampOperation(null)); //TODO!! check this null
+               operations.add(new TimestampOperation(null));
 
             if (targets != null && targets.size() > 0)
                targets.add(new WsuIdTarget("timestamp"));

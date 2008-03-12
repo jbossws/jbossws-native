@@ -27,6 +27,7 @@ import java.security.PublicKey;
 import java.util.List;
 import java.util.Stack;
 
+import org.jboss.security.auth.callback.CallbackHandlerPolicyContextHandler;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.security.SecurityStore;
 
@@ -54,7 +55,7 @@ public class ThreadLocalAssociation
     * Public keys used to sign incoming message
     */
    private static ThreadLocal<List<PublicKey>> signatureKeysAssoc = new ThreadLocal<List<PublicKey>>();
-
+   
    public static ThreadLocal<Stack<CommonMessageContext>> localMsgContextAssoc()
    {
       return msgContextAssoc;
@@ -69,11 +70,16 @@ public class ThreadLocalAssociation
    {
       return signatureKeysAssoc;
    }
-
+   
    public static void clear()
    {
       msgContextAssoc.remove();
       strTransformAssoc.remove();
       signatureKeysAssoc.remove();
+      //This removes a custom callback security handler that might have
+      //been set if using UsernameTokenProfile with digest; doing this
+      //here won't be required anymore once our custom security manager
+      //will be used in our wsse implementation.
+      CallbackHandlerPolicyContextHandler.setCallbackHandler(null);
    }
 }
