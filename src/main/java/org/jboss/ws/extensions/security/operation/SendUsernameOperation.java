@@ -36,12 +36,12 @@ import javax.security.auth.callback.CallbackHandler;
 import org.jboss.logging.Logger;
 import org.jboss.security.Base64Encoder;
 import org.jboss.ws.extensions.security.SecurityStore;
-import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallback;
 import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallbackHandler;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.nonce.NonceGenerator;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Document;
 
@@ -54,24 +54,25 @@ public class SendUsernameOperation implements EncodingOperation
    private boolean digestPassword;
    private boolean useNonce;
    private boolean useCreated;
+   private NonceGenerator nonceGenerator;
    
-   public SendUsernameOperation(String username, String credential, boolean digestPassword, boolean useNonce, boolean useCreated)
+   public SendUsernameOperation(String username, String credential, boolean digestPassword, boolean useNonce, boolean useCreated, NonceGenerator nonceGenerator)
    {
       this.username = username;
       this.credential = credential;
       this.digestPassword = digestPassword;
       this.useNonce = useNonce;
       this.useCreated = useCreated;
+      this.nonceGenerator = nonceGenerator;
    }
 
    public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException
    {
       String created = useCreated ? getCurrentTimestampAsString() : null;
-      String nonce = useNonce ? Util.generateNonce() : null;
+      String nonce = useNonce ? nonceGenerator.generateNonce() : null;
       String password = digestPassword ? createPasswordDigest(nonce, created, credential) : credential;
       header.addToken(new UsernameToken(username, password, message, digestPassword, nonce, created));
    }
-   
    
    private static String getCurrentTimestampAsString()
    {

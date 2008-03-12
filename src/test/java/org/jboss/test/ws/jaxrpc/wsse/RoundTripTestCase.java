@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
 
 /**
  * Simple WS-Security round trip test
- *
+ * 
  * @author <a href="mailto:jason.greene@jboss.com>Jason T. Greene</a>
  */
 public class RoundTripTestCase extends JBossWSTest
@@ -95,7 +95,7 @@ public class RoundTripTestCase extends JBossWSTest
       env = soapMsg.getSOAPPart().getEnvelope();
       doc = env.getOwnerDocument();
 
-      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore());
+      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), null);
       decoder.decode(doc);
       decoder.verify(buildRequireOperations());
       decoder.complete();
@@ -106,53 +106,40 @@ public class RoundTripTestCase extends JBossWSTest
 
       assertEquals(inputString, DOMWriter.printNode(doc, true));
    }
-   
+
    public void testRoundTripUsingAPI() throws Exception
    {
-      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>"
-            + " <env:Header>"
+      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + " <env:Header>"
             + "  <tns:someHeader xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'"
-            + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>"
-            + " </env:Header> "
+            + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>" + " </env:Header> "
             + " <env:Body wsu:Id='element-9-1205139829909-17908832' xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>"
             + "  <tns:echoString2 xmlns:env='http://schemas.xmlsoap.org/soap/envelope/' xmlns:tns='http://org.jboss.ws/2004' "
-            + "   xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>"
-            + "   <string>Hello World!</string>"
-            + "  </tns:echoString2>"
-            + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>"
-            + "   <string>Hello World!</string>"
-            + "  </tns:echoString>"
-            + " </env:Body>"
-            + "</env:Envelope>";
+            + "   xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>" + "   <string>Hello World!</string>"
+            + "  </tns:echoString2>" + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>" + "   <string>Hello World!</string>" + "  </tns:echoString>"
+            + " </env:Body>" + "</env:Envelope>";
 
       String conf = "<jboss-ws-security xmlns='http://www.jboss.com/ws-security/config' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'"
-           + "  xsi:schemaLocation='http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd'>"
-           + "  <config>"
-           + "    <encrypt type='x509v3' alias='wsse'/>"
-           + "    <sign alias='wsse'/>"
-           + "    <username/>"
-           + "    <requires>"
-           + "      <encryption/>"
-           + "      <signature/>"
-           + "    </requires>"
-           + "  </config>"
-           + "</jboss-ws-security>";
+            + "  xsi:schemaLocation='http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd'>" + "  <config>"
+            + "    <encrypt type='x509v3' alias='wsse'/>" + "    <sign alias='wsse'/>" + "    <username/>" + "    <requires>" + "      <encryption/>"
+            + "      <signature/>" + "    </requires>" + "  </config>" + "</jboss-ws-security>";
       WSSecurityConfiguration configuration = WSSecurityOMFactory.newInstance().parse(new StringReader(conf));
       ByteArrayInputStream inputStream = new ByteArrayInputStream(envStr.getBytes());
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
       String expected = DOMWriter.printNode(soapMsg.getSOAPPart().getEnvelope(), true);
-      
+
       WSSecurityAPI sec = new WSSecurityDispatcher();
       sec.encodeMessage(configuration, soapMsg, null, "kermit", "thefrog");
       sec.decodeMessage(configuration, soapMsg, null);
-      
+
       String actual = DOMWriter.printNode(soapMsg.getSOAPPart().getEnvelope(), true);
       assertEquals(expected, actual);
    }
 
-   // WS-Security leaves wsu:id attributes around on elements which are not cleaned
-   // up due to performance reasons. This, however, breaks comparisons, so we manually
+   // WS-Security leaves wsu:id attributes around on elements which are not
+   // cleaned
+   // up due to performance reasons. This, however, breaks comparisons, so we
+   // manually
    // fix this for tests.
    private void cleanupWsuIds(Element element)
    {
@@ -192,7 +179,7 @@ public class RoundTripTestCase extends JBossWSTest
       targets.add(target);
 
       operations.add(new EncryptionOperation(targets, "wsse", null, null, null));
-      operations.add(new SendUsernameOperation("hi", "there",false,false,false));
+      operations.add(new SendUsernameOperation("hi", "there", false, false, false, null));
 
       return operations;
    }
@@ -206,7 +193,7 @@ public class RoundTripTestCase extends JBossWSTest
       name = new QName("http://org.jboss.ws/2004", "someHeader");
       target = new QNameTarget(name);
       targets.add(target);
-      //targets.add(new WsuIdTarget("timestamp"));
+      // targets.add(new WsuIdTarget("timestamp"));
       LinkedList operations = new LinkedList();
       operations.add(new RequireSignatureOperation(targets));
       operations.add(new RequireEncryptionOperation(targets));

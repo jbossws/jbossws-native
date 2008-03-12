@@ -51,7 +51,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
 
    public static String CLIENT_RESOURCE_NAME = "jboss-wsse-client.xml";
 
-   private static HashMap options = new HashMap(6);
+   private static HashMap options = new HashMap(7);
 
    static
    {
@@ -61,6 +61,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       options.put("trust-store-file", "setTrustStoreFile");
       options.put("trust-store-type", "setTrustStoreType");
       options.put("trust-store-password", "setTrustStorePassword");
+      options.put("nonce-factory-class", "setNonceFactory");
    }
 
    // provide logging
@@ -147,7 +148,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       if (method == null)
          return;
 
-      // Dispatch to propper initializer
+      // Dispatch to proper initializer
       try
       {
          WSSecurityConfiguration.class.getMethod(method, new Class[] { String.class }).invoke(configuration, new Object[] { value });

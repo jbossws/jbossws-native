@@ -35,6 +35,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.nonce.DefaultNonceFactory;
+import org.jboss.ws.extensions.security.nonce.NonceFactory;
 import org.jboss.ws.extensions.security.operation.EncodingOperation;
 import org.jboss.ws.extensions.security.operation.EncryptionOperation;
 //import org.jboss.ws.extensions.security.operation.OperationDescription;
@@ -156,7 +158,8 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       {
          SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
                configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
-         SecurityDecoder decoder = new SecurityDecoder(securityStore);
+         NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
+         SecurityDecoder decoder = new SecurityDecoder(securityStore, factory);
 
          decoder.decode(message.getSOAPPart(), secHeaderElement);
          
@@ -200,7 +203,8 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       Username username = config.getUsername();
       if (username != null && user != null && password != null)
       {
-         operations.add(new SendUsernameOperation(user, password, username.isDigestPassword(), username.isUseNonce(), username.isUseCreated()));
+         NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
+         operations.add(new SendUsernameOperation(user, password, username.isDigestPassword(), username.isUseNonce(), username.isUseCreated(), factory.getGenerator()));
       }
 
       Sign sign = config.getSign();

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <server>
+   <!--  ====================================================================  -->
+   <!--  Dynamic login config to install the login module using digest         -->
+   <!--  ====================================================================  -->
    <mbean code="org.jboss.security.auth.login.DynamicLoginConfig"
       name="jboss:service=DynamicLoginConfig">
       <attribute name="AuthConfig">META-INF/login-config.xml</attribute>

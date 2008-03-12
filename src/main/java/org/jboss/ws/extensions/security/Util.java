@@ -23,14 +23,12 @@ package org.jboss.ws.extensions.security;
 
 //$Id$
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.util.Base64;
+import org.jboss.ws.WSException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -41,19 +39,6 @@ import org.w3c.dom.Node;
 public class Util
 {
    public static int count = 0;
-   private static SecureRandom pseudoRng;
-   
-   static
-   {
-      try
-      {
-         pseudoRng = SecureRandom.getInstance("SHA1PRNG");
-         pseudoRng.setSeed(System.currentTimeMillis());
-      }
-      catch (NoSuchAlgorithmException e)
-      {
-      }
-   }
    
    public static String assignWsuId(Element element)
    {
@@ -233,10 +218,21 @@ public class Util
       return id.toString();
    }
    
-   public static String generateNonce()
+   @SuppressWarnings("unchecked")
+   public static <T> T loadFactory(Class<T> factoryType, String factoryClassName, Class<? extends T> defaultFactoryClassName)
    {
-      byte[] bytes = new byte[32];
-      pseudoRng.nextBytes(bytes);
-      return Base64.encodeBytes(bytes);
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      String name = factoryClassName != null ? factoryClassName : System.getProperty(factoryType.getName());
+      if (name == null)
+         name = defaultFactoryClassName.getName();
+      try
+      {
+         Class<T> cl = (Class<T>)loader.loadClass(name);
+         return cl.newInstance();
+      }
+      catch (Exception e)
+      {
+         throw new WSException(e);
+      }
    }
 }
