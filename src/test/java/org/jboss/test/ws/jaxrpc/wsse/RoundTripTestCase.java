@@ -192,7 +192,7 @@ public class RoundTripTestCase extends JBossWSTest
       targets.add(target);
 
       operations.add(new EncryptionOperation(targets, "wsse", null, null, null));
-      operations.add(new SendUsernameOperation("hi", "there"));
+      operations.add(new SendUsernameOperation("hi", "there",false,false,false));
 
       return operations;
    }

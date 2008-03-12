@@ -54,7 +54,6 @@ public class UsernameTokenCallback implements DigestCallback
    @SuppressWarnings("unchecked")
    public void init(Map options)
    {
-      //System.out.println("Chiamato init!!!");
       // Ask for MapCallback to obtain the digest parameters
       info = new MapCallback();
       Callback[] callbacks = { info };
@@ -63,7 +62,6 @@ public class UsernameTokenCallback implements DigestCallback
 
    public void preDigest(MessageDigest digest)
    {
-      //System.out.println("Chiamato pre!!!");
       try
       {
          String nonce = (String)info.getInfo(NONCE);
@@ -81,7 +79,6 @@ public class UsernameTokenCallback implements DigestCallback
 
    public void postDigest(MessageDigest digest)
    {
-//      System.out.println("Chiamato post!!!");
    }
   
    @SuppressWarnings("unchecked")
