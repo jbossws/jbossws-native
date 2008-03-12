@@ -39,8 +39,8 @@ public class JBWS2018TestCase extends WSToolsTest
 {
    public final void testMultiplePackageNameSpace() throws Exception
    {
-      String resourceDir = "resources/tools/jbws-2018";
-      String toolsDir = "tools/jbws-2018";
+      String resourceDir = "resources/tools/jbws2018";
+      String toolsDir = "tools/jbws2018";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 

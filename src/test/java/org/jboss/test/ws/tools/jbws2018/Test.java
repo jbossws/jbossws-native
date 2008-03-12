@@ -34,4 +34,8 @@ public interface  Test extends Remote
 {
 
   public void  testException() throws TestException, RemoteException;
+  public TestException getException() throws RemoteException;
+  public void setException(TestException error) throws RemoteException;
+  public TestException[] getExceptions() throws RemoteException;
+  public void getExceptions(TestException[] errors) throws RemoteException;
 }
