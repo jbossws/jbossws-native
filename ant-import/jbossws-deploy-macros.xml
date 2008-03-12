@@ -259,7 +259,9 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-undeploy-jbossws">
+    <!-- The location of the default file list -->
     <attribute name="defaultconf"/>
+    <!-- The jbossws.sar directory -->
     <attribute name="targetdir"/>
     <sequential>
       <loadfile property="jbossws.deploy.conf" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
@@ -267,6 +269,7 @@
       <delete>
         <fileset dir="@{targetdir}/../../../.." includes="${jbossws.deploy.conf}"/>
       </delete>
+      <delete dir="@{targetdir}"/>
     </sequential>
   </macrodef>
   

@@ -145,7 +145,7 @@
       <fileset id="jbossws.deploy.fileset" dir="@{deploystructure}" excludes="**/jbossws.sar/**"/>
       <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
       <property name="jbossws.sar.dir" value="@{deploystructure}/server/${jboss.server.instance}/deploy/jbossws.sar"/>
-      <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset} server/${jboss.server.instance}/deploy/jbossws.sar"/>
+      <echo file="${jbossws.sar.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset}"/>
       <replace file="${jbossws.sar.dir}/jbossws-deploy.conf" token=";" value=" "/>
     </sequential>
   </macrodef>
