@@ -1,8 +1,8 @@
 <configuration xmlns="http://www.jboss.org/jbossws-tools"> 
   <global> 
-    <package-namespace package="com.other.exception" namespace="http://other.com"/> 
-    <package-namespace package="com.other.base" namespace="http://other.com.base"/> 
-    <package-namespace package="org.jboss.test.ws.jbws1217" namespace="http://org.jboss.test.ws/jbws1217"/> 
+    <package-namespace package="org.jboss.test.ws.jbws1217.exception" namespace="http://com.other.exception"/> 
+    <package-namespace package="org.jboss.test.ws.jbws1217.base" namespace="http://com.other.base"/> 
+    <package-namespace package="org.jboss.test.ws.jbws1217" namespace="http://org.jboss.test.ws.jbws1217"/> 
   </global> 
   <wsdl-java location="resources/tools/jbws1217/MultiplePackageNamespace.wsdl"> 
     <mapping file="jaxrpc-mapping.xml" /> 
