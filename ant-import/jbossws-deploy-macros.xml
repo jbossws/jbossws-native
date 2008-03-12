@@ -266,15 +266,18 @@
   <!-- ================================================================== -->
   
   <macrodef name="macro-undeploy-jbossws">
-    <!-- The location of the default file list -->
     <attribute name="defaultconf"/>
-    <!-- The jbossws.sar directory -->
     <attribute name="targetdir"/>
     <sequential>
       <loadfile property="jbossws.deploy.conf" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
       <loadfile property="jbossws.deploy.conf" srcfile="@{defaultconf}" failonerror="false"/>
+      
+      <property name="jboss.undeploy.home" value="@{targetdir}/../../../.."/>
+      <available property="jboss.undeploy.client" file="${jboss.undeploy.home}/client"/>
+      <fail message="Cannot find ${jboss.undeploy.home}/client" unless="jboss.undeploy.client"/>
+      
       <delete>
-        <fileset dir="@{targetdir}/../../../.." includes="${jbossws.deploy.conf}"/>
+        <fileset dir="${jboss.undeploy.home}" includes="${jbossws.deploy.conf}"/>
       </delete>
       <delete dir="@{targetdir}"/>
     </sequential>
