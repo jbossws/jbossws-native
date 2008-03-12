@@ -14,8 +14,9 @@
 <project>
   
   <!-- 
-  These patterns should be common for all supported containers 
-  Exceptions must be defined in the individual deploy macros.
+    These patterns should be common for all supported containers.
+    All jars must also be declared in component-info.xml to ensure 
+    that the AS build uses the same version.
   -->
   <patternset id="jbossws.bin.patternset">
     <include name="**/wsconsume.bat"/>
@@ -43,9 +44,11 @@
     <include name="**/jboss-jaxws-ext.jar"/>
     <include name="**/jboss-saaj.jar"/>
     <include name="**/policy.jar"/>
+    <include name="**/stax-api.jar"/>
     <include name="**/stax-ex.jar"/>
     <include name="**/streambuffer.jar"/>
     <include name="**/wsdl4j.jar"/>
+    <include name="**/wstx.jar"/>
   </patternset>
   
   <patternset id="jbossws.lib.patternset">
@@ -178,6 +181,10 @@
         <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.service.lib.patternset"/>
           <include name="**/jbossws-deploy.conf"/>
+          <include name="**/jaxb-api.jar"/>
+          <include name="**/jaxb-impl.jar"/>
+          <include name="**/stax-api.jar"/>
+          <include name="**/wstx.jar"/>
         </fileset>
       </copy>
       <unzip dest="@{targetdir}/jbossws-context.war" overwrite="true">
