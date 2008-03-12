@@ -21,82 +21,82 @@
   	<!-- jaxws-samples-dar -->
     <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Bus.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarEndpoint.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarProcessor.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarRequest.class"/>
-	    <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarResponse.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Route.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ServiceRequest.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Stop.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Bus.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarEndpoint.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/DarRequest.class"/>
+	    <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponse.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/Route.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
       </fileset>
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-client.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/generated/*.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ClientHelper.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Client.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Client.class"/>
       </fileset>
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-addressing.jar">
       <fileset dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/AsyncProcessRequest.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Bus.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarAddressingEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarMessageBean.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarProcessor.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarRequest.class"/>
-	    <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarResponse.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ReplyConverter.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Route.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ServiceRequest.class"/>
-    	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Stop.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/generated/reply/*.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/AsyncProcessRequest.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Bus.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarAddressingEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/DarMessageBean.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/DarRequest.class"/>
+	    <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponse.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/ReplyConverter.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/Route.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
+    	<include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/generated/reply/*.class"/>
       </fileset>
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-addressing-client.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/generated/*.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ClientHelper.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/AddressingClient.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/AddressingClient.class"/>
       </fileset>
     </jar>
-  	<war warfile="${tests.output.dir}/libs/jaxws-samples-dar-addressing-client.war" webxml="${tests.output.dir}/resources/jaxws/samples/advanced/dialaride/WEB-INF/web.xml">
+  	<war warfile="${tests.output.dir}/libs/jaxws-samples-dar-addressing-client.war" webxml="${tests.output.dir}/resources/jaxws/samples/dar/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/generated/reply/*.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarReplyEndpointImpl.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ReplyToServlet.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/generated/reply/*.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/DarReplyEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/ReplyToServlet.class"/>
       </classes>
-      <webinf dir="${tests.output.dir}/resources/jaxws/samples/advanced/dialaride/WEB-INF">
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/dar/WEB-INF">
         <include name="jboss-web.xml"/>
       	<include name="wsdl/reply.wsdl"/>
       </webinf>
     </war>
     <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Bus.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarJMSEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarProcessor.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarRequest.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarResponse.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Route.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ServiceRequest.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/Stop.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Bus.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarJMSEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarRequest.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponse.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Route.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
       </fileset>
     </jar>
-    <war jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.war" webxml="${tests.output.dir}/resources/jaxws/samples/advanced/dialaride/WEB-INF-jms/web.xml">
+    <war jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.war" webxml="${tests.output.dir}/resources/jaxws/samples/dar/WEB-INF-jms/web.xml">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/generated/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/ClientHelper.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/JMSClient.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/JMSClient.class"/>
       </fileset>
-      <webinf dir="${tests.output.dir}/resources/jaxws/samples/advanced/dialaride/WEB-INF-jms">
+      <webinf dir="${tests.output.dir}/resources/jaxws/samples/dar/WEB-INF-jms">
         <include name="jboss-web.xml"/>
       </webinf>
     </war>
     <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.jar">
       <fileset dir="${tests.output.dir}/classes">
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/dialaride/DarResponseMessageBean.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/dar/DarResponseMessageBean.class"/>
       </fileset>
     </jar>
     <jar jarfile="${tests.output.dir}/libs/jaxws-samples-dar-jms-client.sar">
@@ -104,7 +104,7 @@
         <include name="jaxws-samples-dar-jms-client.war"/>
         <include name="jaxws-samples-dar-jms-client.jar"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/resources/jaxws/samples/advanced/dialaride/META-INF">
+      <metainf dir="${tests.output.dir}/resources/jaxws/samples/dar/META-INF">
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
@@ -129,48 +129,48 @@
   	<!-- jaxws-samples-news -->
     <jar jarfile="${tests.output.dir}/libs/jaxws-samples-news-step1-newspaper.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/PressRelease.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/AbstractPressReleaseEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/PressReleaseEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/NewspaperSWA.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/AbstractNewspaperSWAEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/NewspaperSWAEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/NewspaperMTOM.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/AbstractNewspaperMTOMEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/NewspaperMTOMEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/EditionSWA.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/EditionMTOM.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/jaxws-handlers-server.xml"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/PressRelease.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractPressReleaseEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/PressReleaseEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/NewspaperSWA.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperSWAEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/NewspaperSWAEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOM.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperMTOMEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOMEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/EditionSWA.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/EditionMTOM.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/jaxws-handlers-server.xml"/>
       </fileset>
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-news-step1-agency.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/generated/agency/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/Agency.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/generated/agency/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/Agency.class"/>
       </fileset>
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-news-step1-printer.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/generated/printer/**/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/Printer.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/generated/printer/**/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/Printer.class"/>
       </fileset>
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-news-step2-newspaper.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/PressRelease.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/AbstractPressReleaseEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/SecurePressReleaseEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/NewspaperSWA.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/AbstractNewspaperSWAEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/SecureNewspaperSWAEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/NewspaperMTOM.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/AbstractNewspaperMTOMEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/SecureNewspaperMTOMEndpoint.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/EditionSWA.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/EditionMTOM.class"/>
-      	<include name="org/jboss/test/ws/jaxws/samples/advanced/news/jaxws-handlers-server.xml"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/PressRelease.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractPressReleaseEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/SecurePressReleaseEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/NewspaperSWA.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperSWAEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOM.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperMTOMEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMEndpoint.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/EditionSWA.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/EditionMTOM.class"/>
+      	<include name="org/jboss/test/ws/jaxws/samples/news/jaxws-handlers-server.xml"/>
       </fileset>
-  	  <metainf dir="${tests.output.dir}/resources/jaxws/samples/advanced/news/META-INF">
+  	  <metainf dir="${tests.output.dir}/resources/jaxws/samples/news/META-INF">
         <include name="jboss-wsse-server.xml"/>
   	    <include name="bob-sign_enc.jks"/>
   	    <include name="wsse10.truststore"/>
@@ -178,11 +178,11 @@
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-news-step2-agency.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/generated/agency/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/Agency.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/SecureAgency.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/generated/agency/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/Agency.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/SecureAgency.class"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/resources/jaxws/samples/advanced/news/META-INF">
+      <metainf dir="${tests.output.dir}/resources/jaxws/samples/news/META-INF">
         <include name="jboss-wsse-client.xml"/>
         <include name="alice-sign_enc.jks"/>
         <include name="wsse10.truststore"/>
@@ -190,9 +190,9 @@
     </jar>
   	<jar jarfile="${tests.output.dir}/libs/jaxws-samples-news-step2-printer.jar">
       <fileset dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/generated/printer/**/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/Printer.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/advanced/news/SecurePrinter.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/generated/printer/**/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/Printer.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/SecurePrinter.class"/>
       </fileset>
     </jar>
     
