@@ -567,7 +567,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       if (xmlType != null)
       {
          name = xmlType.getLocalPart();
-         namespace = xmlType.getNamespaceURI();
+         namespace = getNamespace(componentType, xmlType.getNamespaceURI()); //xmlType.getNamespaceURI();
       }
       else
       {
@@ -705,6 +705,11 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
    {
       if (javaType.isPrimitive())
          return Constants.NS_JBOSSWS_URI + "/primitives";
+
+      while (javaType.isArray())
+      {
+         javaType = javaType.getComponentType();
+      }
 
       Package javaPackage = javaType.getPackage();
       if (javaPackage == null)

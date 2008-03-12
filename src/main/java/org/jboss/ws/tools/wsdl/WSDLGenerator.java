@@ -547,6 +547,10 @@ public abstract class WSDLGenerator
 
    protected String getNamespace(Class type, String defaultNS)
    {
+      while (type.isArray())
+      {
+         type = type.getComponentType();
+      }
       Package pkg = type.getPackage();
       String pkgName = null;
       if (pkg != null)
