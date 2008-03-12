@@ -177,7 +177,7 @@ public class XMLFragment
             Reader reader = streamSource.getReader();
             {
                if (reader == null)
-                  reader = new InputStreamReader(streamSource.getInputStream());
+                  reader = new InputStreamReader(streamSource.getInputStream(), "UTF-8");
             }
 
             char[] cbuf = new char[1024];

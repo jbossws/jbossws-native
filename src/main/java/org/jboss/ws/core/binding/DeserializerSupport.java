@@ -24,6 +24,7 @@ package org.jboss.ws.core.binding;
 // $Id$
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.Deserializer;
@@ -97,7 +98,7 @@ public abstract class DeserializerSupport implements Deserializer
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             StreamResult streamResult = new StreamResult(baos);
             tf.newTransformer().transform(source, streamResult);
-            xmlFragment = new String(baos.toByteArray());
+            xmlFragment = new String(baos.toByteArray(),"UTF-8");
             if (xmlFragment.startsWith("<?xml"))
             {
                int index = xmlFragment.indexOf(">");
@@ -106,6 +107,10 @@ public abstract class DeserializerSupport implements Deserializer
          }
       }
       catch (TransformerException e)
+      {
+         WSException.rethrow(e);
+      }
+      catch (UnsupportedEncodingException e)
       {
          WSException.rethrow(e);
       }
