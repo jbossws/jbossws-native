@@ -24,6 +24,7 @@ package org.jboss.test.ws.jbws2018;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.jboss.test.ws.jbws2018.base.BaseException;
 import org.jboss.test.ws.jbws2018.exception.TestException;
 
 /**
@@ -34,8 +35,8 @@ public interface  Test extends Remote
 {
 
   public void  testException() throws TestException, RemoteException;
-  public TestException getException() throws RemoteException;
-  public void setException(TestException error) throws RemoteException;
-  public TestException[] getExceptions() throws RemoteException;
-  public void getExceptions(TestException[] errors) throws RemoteException;
+  public BaseException getException() throws TestException, RemoteException;
+  public void setException(BaseException error) throws TestException, RemoteException;
+  public BaseException[] getExceptions() throws TestException, RemoteException;
+  public void setExceptions(BaseException[] errors) throws TestException, RemoteException;
 }
