@@ -35,6 +35,7 @@
     <copy todir="${jboss421.home}" overwrite="true">
       <fileset dir="${deploy.structure.jboss42}"/>
     </copy>
+    <unzip dest="${jboss421.server.deploy}/juddi-service.sar" src="${deploy.artifacts.dir}/lib/juddi-service.sar"/>
     <chmod dir="${jboss421.home}/bin" perm="+x" includes="*.sh"/>
     
     <!-- Extras for jboss-4.2.1 -->
@@ -53,6 +54,7 @@
   <target name="undeploy-jboss421" depends="prepare" description="Remove jbossws from jboss421">
     <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
     <macro-undeploy-jbossws targetdir="${jboss421.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+    <delete dir="${jboss421.server.deploy}/juddi-service.sar"/>
   </target>
   
   <!-- ================================================================== -->
@@ -64,12 +66,14 @@
     <copy todir="${jboss422.home}" overwrite="true">
       <fileset dir="${deploy.structure.jboss42}"/>
     </copy>
+    <unzip dest="${jboss422.server.deploy}/juddi-service.sar" src="${deploy.artifacts.dir}/lib/juddi-service.sar"/>
     <chmod dir="${jboss422.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
   <target name="undeploy-jboss422" depends="prepare" description="Remove jbossws from jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
     <macro-undeploy-jbossws targetdir="${jboss422.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+    <delete dir="${jboss422.server.deploy}/juddi-service.sar"/>
   </target>
 
   <!-- ================================================================== -->
@@ -81,12 +85,14 @@
     <copy todir="${jboss423.home}" overwrite="true">
       <fileset dir="${deploy.structure.jboss42}"/>
     </copy>
+    <unzip dest="${jboss423.server.deploy}/juddi-service.sar" src="${deploy.artifacts.dir}/lib/juddi-service.sar"/>
     <chmod dir="${jboss423.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
   <target name="undeploy-jboss423" depends="prepare" description="Remove jbossws from jboss423">
     <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
     <macro-undeploy-jbossws targetdir="${jboss423.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+    <delete dir="${jboss423.server.deploy}/juddi-service.sar"/>
   </target>
   
   <!-- ================================================================== -->
@@ -110,12 +116,14 @@
     <copy todir="${jboss500.home}" overwrite="true">
       <fileset dir="${deploy.structure.jboss50}"/>
     </copy>
+    <unzip dest="${jboss500.server.deploy}/juddi-service.sar" src="${deploy.artifacts.dir}/lib/juddi-service.sar"/>
     <chmod dir="${jboss500.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
   <target name="undeploy-jboss500" depends="prepare" description="Remove jbossws from jboss500">
     <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
     <macro-undeploy-jbossws targetdir="${jboss500.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+    <delete dir="${jboss500.server.deploy}/juddi-service.sar"/>
   </target>
   
   <!-- ================================================================== -->
@@ -127,12 +135,14 @@
     <copy todir="${jboss501.home}" overwrite="true">
       <fileset dir="${deploy.structure.jboss50}"/>
     </copy>
+    <unzip dest="${jboss501.server.deploy}/juddi-service.sar" src="${deploy.artifacts.dir}/lib/juddi-service.sar"/>
     <chmod dir="${jboss501.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
   <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
     <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
     <macro-undeploy-jbossws targetdir="${jboss501.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
+    <delete dir="${jboss501.server.deploy}/juddi-service.sar"/>
   </target>
   
   <!-- ================================================================== -->

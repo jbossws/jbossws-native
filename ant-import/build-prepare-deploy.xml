@@ -30,6 +30,7 @@
         <patternset refid="jbossws.lib.endorsed.patternset"/>
         <patternset refid="jbossws.server.lib.patternset"/>
         <patternset refid="jbossws.service.lib.patternset"/>
+        <include name="juddi-service.sar"/>
       </fileset>
       <fileset dir="${core.output.lib.dir}">
         <patternset refid="jbossws.client.patternset"/>
