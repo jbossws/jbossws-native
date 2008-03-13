@@ -703,41 +703,40 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
 
    private String getNamespace(Class javaType, String defaultNS)
    {
-      if (javaType.isPrimitive())
-         return Constants.NS_JBOSSWS_URI + "/primitives";
-
-      while (javaType.isArray())
+      String retNS = defaultNS;
+      if (javaType.isPrimitive() && retNS == null)
       {
-         javaType = javaType.getComponentType();
+         retNS = Constants.NS_JBOSSWS_URI + "/primitives";
       }
-
-      Package javaPackage = javaType.getPackage();
-      if (javaPackage == null)
+      else
       {
-         if (defaultNS != null)
+         while (javaType.isArray())
          {
-            return defaultNS;
+            javaType = javaType.getComponentType();
          }
-         else
+
+         Package javaPackage = javaType.getPackage();
+         if (javaPackage != null)
+         {
+            String packageName = javaPackage.getName();
+            String ns = packageNamespaceMap.get(packageName);
+            if (ns != null)
+            {
+               retNS = ns;
+            }
+            else if (retNS == null)
+            {
+               retNS = utils.getTypeNamespace(packageName);
+            }
+
+            allocatePrefix(retNS);
+         }
+         else if (retNS == null)
          {
             throw new WSException("Cannot determine namespace, Class had no package");
          }
       }
-      String packageName = javaPackage.getName();
-
-      String ns = packageNamespaceMap.get(packageName);
-      if (ns == null && defaultNS == null)
-      {
-         ns = utils.getTypeNamespace(packageName);
-      }
-      else if (ns == null)
-      {
-         ns = defaultNS;
-      }
-
-      allocatePrefix(ns);
-
-      return ns;
+      return retNS;
    }
 
    private JBossXSComplexTypeDefinition getComplexTypeForJavaException(QName xmlType, Class javaType)
