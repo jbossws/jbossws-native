@@ -43,21 +43,21 @@ public class AddressingClientTestCase extends JBossWSTest
       return new JBossWSTestSetup(AddressingClientTestCase.class, "jaxws-samples-dar.jar,jaxws-samples-dar-addressing-client.war");
    }
 
-   public void _testSync() throws Exception
+   public void testSync() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
       AddressingClient client = new AddressingClient(wsdlURL);
       client.run(false);
    }
    
-   public void _testAsync() throws Exception
+   public void testAsync() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
       AddressingClient client = new AddressingClient(wsdlURL);
       client.run(true);
    }
    
-   public void _testOneWay() throws Exception
+   public void testOneWay() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
       AddressingClient client = new AddressingClient(wsdlURL);
