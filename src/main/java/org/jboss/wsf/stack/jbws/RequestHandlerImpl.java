@@ -354,13 +354,18 @@ public class RequestHandlerImpl implements RequestHandler
       if (wsaTo != null)
       {
          log.debug("Sending response to addressing destination: " + wsaTo);
-         new SOAPConnectionImpl().callOneWay((SOAPMessage)resMessage, wsaTo);
+         SOAPMessage soapMessage = (SOAPMessage)resMessage;
+         new SOAPConnectionImpl().callOneWay(soapMessage, wsaTo);
       }
       else
       {
          if (epMetaData.isFeatureEnabled(FastInfosetFeature.class) && resMessage instanceof SOAPMessage)
          {
-            SOAPEnvelope soapEnv = ((SOAPMessage)resMessage).getSOAPPart().getEnvelope();
+            SOAPMessage soapMessage = (SOAPMessage)resMessage;
+            if (soapMessage.getAttachments().hasNext())
+               throw new IllegalStateException("Attachments not supported with FastInfoset");
+            
+            SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
             DOMDocumentSerializer serializer = new DOMDocumentSerializer();
             serializer.setOutputStream(output);
             serializer.serialize(soapEnv);
@@ -413,7 +418,7 @@ public class RequestHandlerImpl implements RequestHandler
 
             msgFactory.setServiceMode(sepMetaData.getServiceMode());
             msgFactory.setStyle(sepMetaData.getStyle());
-            msgFactory.setFeatureResolver(sepMetaData.getFeatureResolver());
+            msgFactory.setFeatures(sepMetaData.getFeatures());
 
             reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
          }

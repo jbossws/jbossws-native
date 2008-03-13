@@ -30,7 +30,7 @@ import java.util.Properties;
 import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.FeatureResolver;
+import org.jboss.ws.metadata.umdm.FeatureSet;
 
 /** A wrapper object that associates the target address with some metadata
  * 
@@ -41,11 +41,11 @@ public class EndpointInfo
 {
    private String targetAddress;
    private Map<String, Object> properties;
-   private FeatureResolver features;
+   private FeatureSet features;
    
    public EndpointInfo(EndpointMetaData epMetaData, String targetAddress, Map<String, Object> callProps)
    {
-      this.features = epMetaData.getFeatureResolver();
+      this.features = epMetaData.getFeatures();
       this.targetAddress = targetAddress;
       this.properties = callProps;
 

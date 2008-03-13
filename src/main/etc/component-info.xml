@@ -63,6 +63,9 @@
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>
     </import>
+    <import componentref="sun-fi">
+      <compatible version="@sun-fi@"/>
+    </import>
     <import componentref="sun-jaxb">
       <compatible version="@sun-jaxb@"/>
     </import>

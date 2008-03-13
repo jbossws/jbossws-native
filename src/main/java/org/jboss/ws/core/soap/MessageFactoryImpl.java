@@ -47,7 +47,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
 import org.jboss.ws.feature.FastInfosetFeature;
-import org.jboss.ws.metadata.umdm.FeatureResolver;
+import org.jboss.ws.metadata.umdm.FeatureSet;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.util.ServiceLoader;
 
@@ -68,7 +68,7 @@ public class MessageFactoryImpl extends MessageFactory
    // The style used by this MessageFactory
    private Style style;
    // The features used by this MessageFactory
-   private FeatureResolver features = new FeatureResolver();
+   private FeatureSet features = new FeatureSet();
    // Used if the style is dynamic
    private boolean dynamic;
 
@@ -142,7 +142,7 @@ public class MessageFactoryImpl extends MessageFactory
       this.features.addFeature(feature);
    }
    
-   public void setFeatureResolver(FeatureResolver features)
+   public void setFeatures(FeatureSet features)
    {
       this.features = features;
    }

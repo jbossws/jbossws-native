@@ -38,7 +38,7 @@ public class FastInfosetUnMarshaller extends SOAPMessageUnMarshallerHTTP
 
       MessageFactoryImpl factory = super.getMessageFactory();
       if (epMetaData != null)
-         factory.setFeatureResolver(epMetaData.getFeatureResolver());
+         factory.setFeatures(epMetaData.getFeatures());
 
       return factory;
    }

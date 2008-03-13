@@ -34,7 +34,7 @@ import javax.xml.ws.WebServiceFeature;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public class FeatureResolver
+public class FeatureSet
 {
    // The features defined for this endpoint
    private Set<WebServiceFeature> features = new HashSet<WebServiceFeature>();

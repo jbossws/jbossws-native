@@ -28,7 +28,6 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.logging.Logger;
 import org.jboss.remoting.InvocationRequest;
 import org.jboss.remoting.invocation.OnewayInvocation;
 import org.jboss.remoting.marshal.Marshaller;
@@ -41,9 +40,6 @@ import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
  */
 public class FastInfosetMarshaller implements Marshaller
 {
-   // Provide logging
-   private static Logger log = Logger.getLogger(FastInfosetMarshaller.class);
-
    /**
     * Marshaller will need to take the dataObject and convert
     * into primitive java data types and write to the

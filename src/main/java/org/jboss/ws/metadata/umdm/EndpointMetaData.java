@@ -151,7 +151,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // All of the registered types
    private List<Class> registeredTypes = new ArrayList<Class>();
    // The features defined for this endpoint
-   private FeatureResolver features = new FeatureResolver();
+   private FeatureSet features = new FeatureSet();
    // The documentation edfined through the @Documentation annotation
    private String documentation;
 
@@ -374,7 +374,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       return features.isFeatureEnabled(key);
    }
    
-   public FeatureResolver getFeatureResolver()
+   public FeatureSet getFeatures()
    {
       return features;
    }
