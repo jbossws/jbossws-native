@@ -18,6 +18,7 @@
   <!-- ================================================================== -->
   
   <target name="deploy-structure-jboss42" depends="prepare-deploy">
+    <delete dir="${deploy.structure.jboss42}"/>
     <antcall target="deploy-jbossws-native42" inheritall="false">
       <param name="installserver" value="${deploy.structure.jboss42}/server/${jboss.server.instance}"/>
       <param name="resourcesdir" value="${deploy.artifacts.dir}/resources/jbossws-jboss42.sar"/>
@@ -107,6 +108,7 @@
   <!-- ================================================================== -->
   
   <target name="deploy-structure-jboss50" depends="prepare-deploy">
+    <delete dir="${deploy.structure.jboss50}"/>
     <antcall target="deploy-jbossws-native50" inheritall="false">
       <param name="installserver" value="${deploy.structure.jboss50}/server/${jboss.server.instance}"/>
       <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
