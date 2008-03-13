@@ -89,6 +89,7 @@
       <fileset dir="${core.dir}/src/test-framework"/>
       <fileset dir="${core.dir}/src/test">
         <include name="resources/test-excludes-*.txt"/>
+        <include name="etc/log4j.xml"/>
       </fileset>
     </copy>
     
