@@ -65,6 +65,23 @@ public class UsernameAuthTestCase extends JBossWSTest
          fail();
       }
    }
+   
+   public void testWrongPasswordAuth() throws Exception
+   {
+      Hello port = getPort();
+      ((BindingProvider)port).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, "username");
+      ((BindingProvider)port).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, "password");
+      String msg = "Hi!";
+      try
+      {
+         String result = port.echo(msg);
+         fail();
+      }
+      catch (Exception e)
+      {
+         //OK
+      }
+   }
 
    private Hello getPort() throws Exception
    {
