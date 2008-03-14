@@ -13,7 +13,8 @@
 
 <project>
 
-  <target name="init-project-properties">
+  <target name="init-project-properties" depends="tests-classpath">
+  	<fail message="Did you copy the ant.properties.example to ant.properties?" unless="jboss.home"/>
     <property file="./user-project.properties" />
     <property name="project.home" value="${workspace.home}/${project.name}"/>
     
@@ -31,7 +32,7 @@
   	<taskdef name="pathWriter" classname="org.jboss.ws.tools.ant.PathWriterTask" classpathref="jbws-ant.path"/>
   </target>
 
-  <target name="setup-new-project" depends="init-project-properties, tests-init" description="Prompt for settings and setup configuration for a new user project">
+  <target name="setup-new-project" depends="init-project-properties" description="Prompt for settings and setup configuration for a new user project">
     <property file="./user-project.properties" prefix="old" />
     
     <echo message="-------------------------------------------------"/>
@@ -70,7 +71,7 @@
     <echo message="Please type 'ant create-project' to create the new project."/>
   </target>
 
-  <target name="create-project" depends="tests-init, validate-settings,configure-project" description="Create a new user project">
+  <target name="create-project" depends="validate-settings, configure-project" description="Create a new user project">
     <echo message="A basic webservice project named '${project.name}' has been created in the ${workspace.home} directory."/>
     <echo message="It includes a simple Ant build file and references the required libraries."/>
     <echo message="Please refer to http://jbws.dyndns.org/mediawiki/index.php?title=JBossWS for the authoritative documentation."/>
