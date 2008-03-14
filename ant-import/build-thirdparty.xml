@@ -75,6 +75,8 @@
     <get src="${jboss.repository}/apache-xerces/${apache-xerces}/lib/xercesImpl.jar" dest="${thirdparty.dir}/xercesImpl.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-xerces/${apache-xerces}/lib/xml-apis.jar" dest="${thirdparty.dir}/xml-apis.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-xmlsec/${apache-xmlsec}/lib/xmlsec.jar" dest="${thirdparty.dir}/xmlsec.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/codehaus-jettison/${codehaus-jettison}/lib/jettison.jar" dest="${thirdparty.dir}/jettison.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/codehaus-jettison/${codehaus-jettison}/lib/jettison-src.jar" dest="${thirdparty.dir}/jettison-src.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/dom4j/${dom4j}/lib/dom4j.jar" dest="${thirdparty.dir}/dom4j.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/gnu-getopt/${gnu-getopt}/lib/getopt.jar" dest="${thirdparty.dir}/getopt.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/hibernate/${hibernate}/lib/hibernate3.jar" dest="${thirdparty.dir}/hibernate3.jar" usetimestamp="true" verbose="true"/>
@@ -161,6 +163,7 @@
         <pathelement location="${thirdparty.dir}/jboss-remoting.jar"/>
         <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
         <pathelement location="${thirdparty.dir}/jbosssx.jar"/>
+        <pathelement location="${thirdparty.dir}/jettison.jar"/>
         <pathelement location="${thirdparty.dir}/mail.jar"/>
         <pathelement location="${thirdparty.dir}/policy.jar"/>
         <pathelement location="${thirdparty.dir}/servlet-api.jar"/>

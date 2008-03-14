@@ -40,8 +40,9 @@
 
     <path id="tests.extra.classpath">
 			<pathelement location="${core.dir}/thirdparty/FastInfoset.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
+			<pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
+			<pathelement location="${core.dir}/thirdparty/jettison.jar"/>
 			<pathelement location="${core.dir}/thirdparty/policy.jar"/>
       <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
       <pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
