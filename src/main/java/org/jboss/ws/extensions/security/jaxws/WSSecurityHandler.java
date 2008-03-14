@@ -39,7 +39,6 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.security.Constants;
-import org.jboss.ws.extensions.security.MessageContextConfigSelector;
 import org.jboss.ws.extensions.security.WSSecurityDispatcher;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -81,8 +80,7 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
          {
             CommonMessageContext ctx = (CommonMessageContext)msgContext;
             SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
-            
-            new WSSecurityDispatcher().decodeMessage(configuration, soapMessage, new MessageContextConfigSelector(ctx));
+            new WSSecurityDispatcher().decodeMessage(configuration, soapMessage, null);
          }
       }
       catch (SOAPException ex)
@@ -105,7 +103,7 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
             
             String user = (String)ctx.get(BindingProvider.USERNAME_PROPERTY);
             String pass = (String)ctx.get(BindingProvider.PASSWORD_PROPERTY);
-            new WSSecurityDispatcher().encodeMessage(configuration, soapMessage, new MessageContextConfigSelector(ctx), user, pass);
+            new WSSecurityDispatcher().encodeMessage(configuration, soapMessage, null, user, pass);
          }
       }
       catch (SOAPException ex)

@@ -30,16 +30,19 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
+import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.nonce.DefaultNonceFactory;
 import org.jboss.ws.extensions.security.nonce.NonceFactory;
 import org.jboss.ws.extensions.security.operation.EncodingOperation;
 import org.jboss.ws.extensions.security.operation.EncryptionOperation;
-//import org.jboss.ws.extensions.security.operation.OperationDescription;
 import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
 import org.jboss.ws.extensions.security.operation.RequireOperation;
 import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
@@ -47,8 +50,12 @@ import org.jboss.ws.extensions.security.operation.RequireTimestampOperation;
 import org.jboss.ws.extensions.security.operation.SendUsernameOperation;
 import org.jboss.ws.extensions.security.operation.SignatureOperation;
 import org.jboss.ws.extensions.security.operation.TimestampOperation;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.wsse.Config;
 import org.jboss.ws.metadata.wsse.Encrypt;
+import org.jboss.ws.metadata.wsse.Operation;
+import org.jboss.ws.metadata.wsse.Port;
 import org.jboss.ws.metadata.wsse.RequireEncryption;
 import org.jboss.ws.metadata.wsse.RequireSignature;
 import org.jboss.ws.metadata.wsse.RequireTimestamp;
@@ -126,9 +133,57 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
    private static Config getActualConfig(WSSecurityConfiguration configuration, Config operationConfig)
    {
+      if (operationConfig == null)
+      {
+         //if no configuration override, we try getting the right operation config
+         //according to the invoked operation that can be found using the context
+         CommonMessageContext ctx = MessageContextAssociation.peekMessageContext();
+         if (ctx != null)
+         {
+            EndpointMetaData epMetaData = ctx.getEndpointMetaData();
+            QName port = epMetaData.getPortName();
+            
+            OperationMetaData opMetaData = ctx.getOperationMetaData();
+            if (opMetaData == null)
+            {
+               // Get the operation meta data from the soap message
+               // for the server side inbound message.
+               SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
+               try
+               {
+                  opMetaData = soapMessage.getOperationMetaData(epMetaData);
+               }
+               catch (SOAPException e)
+               {
+                  throw new WebServiceException("Error while looking for the operation meta data: " + e);
+               }
+            }
+            if (opMetaData != null)
+               operationConfig = selectOperationConfig(configuration, port, opMetaData.getQName());
+         }
+      }
       //null operationConfig means default behavior
       return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
    }
+   
+   private static Config selectOperationConfig(WSSecurityConfiguration configuration, QName portName, QName opName)
+   {
+      Port port = configuration.getPorts().get(portName != null ? portName.getLocalPart() : null);
+      if (port == null)
+         return configuration.getDefaultConfig();
+
+      Operation operation = port.getOperations().get(opName != null ? opName.toString() : null);
+      if (operation == null)
+      {
+         //if the operation name was not available or didn't match any wsse configured operation,
+         //we fall back to the port wsse config (if available) or the default config.
+         Config portConfig = port.getDefaultConfig();
+         return (portConfig == null) ? configuration.getDefaultConfig() : portConfig;
+
+      }
+      return operation.getConfig();
+   }
+   
    
    private static boolean hasRequirements(Config config)
    {
