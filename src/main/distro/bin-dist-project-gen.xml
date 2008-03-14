@@ -22,43 +22,37 @@
       <filter token="jbossHome" value="${project.jboss.home}" />
    	</filterset>
   	
-  	<path id="jbws-ant.path" path="${basedir}/lib/jbossws-core.jar"/>
+  	<path id="jbws-ant.path">
+  		<pathelement location="${thirdparty.dir}/jbossws-core.jar" />
+  		<pathelement location="${thirdparty.dir}/jbossws-common.jar" />
+  	</path>
   	<taskdef name="pathFixer" classname="org.jboss.ws.tools.ant.FixPathTask" classpathref="jbws-ant.path"/>
+  	<taskdef name="eclipseClasspathGenerator" classname="org.jboss.ws.tools.ant.EclipseClasspathTask" classpathref="jbws-ant.path"/>
+  	<taskdef name="pathWriter" classname="org.jboss.ws.tools.ant.PathWriterTask" classpathref="jbws-ant.path"/>
   </target>
 
-  <target name="setup-new-project" depends="init-project-properties" description="Prompt for settings and setup configuration for a new user project">
+  <target name="setup-new-project" depends="init-project-properties, tests-init" description="Prompt for settings and setup configuration for a new user project">
     <property file="./user-project.properties" prefix="old" />
     
     <echo message="-------------------------------------------------"/>
     <echo message="  Welcome to the JBossWS user project generator"/>
     <echo message="-------------------------------------------------"/>
     <echo message=""/>
-    
-    <property name="old.workspace.home" value="C:/Projects"/>
+  	
+	<property name="old.workspace.home" value="C:/Projects"/>
     <input addproperty="workspace.home.new" 
-           message="Enter your Java project workspace (the directory that contains your projects) [${old.workspace.home}]" 
+           message="Enter your Java project workspace (the directory that contains your projects) " 
            defaultvalue="${old.workspace.home}"/>
     <pathFixer property="workspace.home.new" />
     
-    <property name="old.jboss.home" value="C:/Program Files/jboss-4.2.2.GA"/>
-    <input addproperty="jboss.home.new" 
-           message="Enter your JBoss home directory [${old.jboss.home}]" 
-           defaultvalue="${old.jboss.home}"/>
-    <pathFixer property="jboss.home.new" />
-    
-    <property name="old.jboss.conf" value="default"/>
-    <input addproperty="jboss.conf.new" 
-           message="Enter the JBoss configuration you would like to use [${old.jboss.conf}]" 
-           defaultvalue="${old.jboss.conf}"/>
-    
     <property name="old.project.name" value="myproject"/>
     <input addproperty="project.name.new" 
-           message="Enter the project name [${old.project.name}]" 
+           message="Enter the project name " 
            defaultvalue="${old.project.name}"/>
     
     <property name="old.project.type" value="jar"/>
     <input addproperty="project.type.new" 
-           message="Is this project deployed as an JAR (with EJB3 components) or a WAR (with no EJB3 support) [${old.project.type}] " 
+           message="Is this project deployed as an JAR (with EJB3 components) or a WAR (with no EJB3 support) " 
            validargs="jar,war"
            defaultvalue="${old.project.type}"/>
     
@@ -67,8 +61,8 @@
         <entry key="workspace.home" value="${workspace.home.new}"/>
         <entry key="project.name" value="${project.name.new}"/>
         <entry key="project.type" value="${project.type.new}"/>
-        <entry key="project.jboss.home" value="${jboss.home.new}"/>
-        <entry key="project.jboss.conf" value="${jboss.conf.new}"/>
+        <entry key="project.jboss.home" value="${jboss.home}"/>
+        <entry key="project.jboss.conf" value="${jboss.server.instance}"/>
     </propertyfile>
     
     <echo message=""/>
@@ -76,9 +70,9 @@
     <echo message="Please type 'ant create-project' to create the new project."/>
   </target>
 
-  <target name="create-project" depends="validate-settings,configure-project,copy-libraries" description="Create a new user project">
+  <target name="create-project" depends="tests-init, validate-settings,configure-project" description="Create a new user project">
     <echo message="A basic webservice project named '${project.name}' has been created in the ${workspace.home} directory."/>
-    <echo message="It includes a simple Ant build file and the required libraries."/>
+    <echo message="It includes a simple Ant build file and references the required libraries."/>
     <echo message="Please refer to http://jbws.dyndns.org/mediawiki/index.php?title=JBossWS for the authoritative documentation."/>
     <echo message=""/>
     <echo message="If you are an Eclipse user, import the project into Eclipse: right click in "/>
@@ -108,43 +102,24 @@
   <target name="configure-project">
     <mkdir dir="${project.home}/src/main/java"/>
     <mkdir dir="${project.home}/src/main/resources"/>
-    <mkdir dir="${project.home}/lib"/>
     <copy tofile="${project.home}/build.xml" file="${basedir}/build/user-project-build.xml">
       <filterset refid="project"/>
     </copy>
     <copy tofile="${project.home}/.project" file="${basedir}/build/eclipse.project">
       <filterset refid="project"/>
     </copy>
-    <copy tofile="${project.home}/.classpath" file="${basedir}/build/eclipse.classpath"/>
     <copy tofile="${project.home}/build.properties" file="${basedir}/user-project.properties"/>
-  </target>
-
-  <target name="copy-libraries">
-    <echo message="Copying JBossWS libraries to the ${project.home}/lib directory..." />
-    <copy todir="${project.home}/lib" overwrite="true">
-      <fileset dir="${basedir}/lib" >
-        <include name="jaxb-api.jar"/>
-        <include name="jboss-jaxrpc.jar"/>
-        <include name="jboss-jaxws.jar"/>
-        <include name="jbossws-client.jar"/>
-        <include name="jbossws-core.jar"/>
-        <include name="jbossws-spi.jar"/>
-      </fileset>
-    </copy>
-    <echo message="Copying other JBoss libraries to the ${project.home}/lib directory..." />
-    <copy todir="${project.home}/lib" overwrite="true">
-      <fileset dir="${project.jboss.home}/client" >
-        <include name="jbossall-client.jar"/>
-        <include name="jboss-ejb3x.jar"/>
-        <include name="ejb3-persistence.jar"/>
-      </fileset>
-    </copy>
-  </target>
-
-
-  <target name="update-project" depends="validate-settings,copy-libraries" description="Update user project libs">
-    <echo message="Libraries from the current configuration have been copied to the '${project.name}' project's lib directory."/>
-    <echo message="Please refresh / rebuild your project now." />
+  	<path id="project.classpath">
+		<path refid="integration.target.javac.classpath" />
+		<pathelement location="${jboss.client}/jbossws-common.jar"/>
+        <pathelement location="${jboss.client}/jbossws-spi.jar"/>
+        <pathelement location="${jboss.client}/jboss-jaxrpc.jar"/>
+        <pathelement location="${jboss.client}/jboss-jaxws.jar"/>
+        <pathelement location="${jboss.client}/jboss-saaj.jar"/>
+        <pathelement location="${jboss.client}/jbossws-client.jar"/>
+	</path>
+  	<eclipseClasspathGenerator pathId="project.classpath" outputFile="${project.home}/.classpath" srcPath="src/main/java" srcOutput="bin/main" />
+  	<pathWriter pathId="project.classpath" outputFile="${project.home}/libraries.xml" variables="project.jboss.home" />
   </target>
   
   <target name="delete-project" depends="validate-settings" description="Delete the configured user project">

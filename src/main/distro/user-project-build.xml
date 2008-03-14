@@ -2,11 +2,11 @@
 <project name="@projectName@" default="deploy" basedir="." >
 
 	<property file="${basedir}/build.properties" />
+	<import file="libraries.xml" />
 
 	<!-- set global properties for this build -->
 	<property name="project.name" value="@projectName@" />
 	<property name="dist.dir" value="dist" />
-	<property name="lib.dir" value="lib" />
 	<property name="deploy.dir" value="${project.jboss.home}/server/${project.jboss.conf}/deploy" />
 	<property name="output.dir" value="output" />
 	<property name="src.main.dir" value="src/main/java" />
@@ -18,14 +18,6 @@
 	<condition property="project.war" value="true">
 		<equals arg1="${project.type}" arg2="war"/>
 	</condition>
-
-	<fileset id="lib" dir="${lib.dir}">
-		<include name="*.jar" />
-	</fileset>
-
-	<path id="build.classpath">
-		<fileset refid="lib" />
-	</path>
 
 	<target name="clean">
 		<delete dir="${output.dir}" />
@@ -39,7 +31,7 @@
 
 	<target name="compile" depends="init" description="Compile the Java source code" unless="eclipse.running">
 		<tstamp/>
-		<javac destdir="${output.dir}" classpathref="build.classpath" debug="${javac.debug}" deprecation="${javac.deprecation}" nowarn="on">
+		<javac destdir="${output.dir}" classpathref="project.classpath" debug="${javac.debug}" deprecation="${javac.deprecation}" nowarn="on">
 			<src path="${src.main.dir}" />
 		</javac>
 	</target>

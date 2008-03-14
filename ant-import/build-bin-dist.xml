@@ -53,7 +53,6 @@
       <fileset dir="${core.distro.dir}">
         <include name="user-project-build.xml"/>
         <include name="eclipse.project"/>
-        <include name="eclipse.classpath"/>
       </fileset>
     </copy>
     
