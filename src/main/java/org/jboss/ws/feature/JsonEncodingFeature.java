@@ -28,33 +28,33 @@ import javax.xml.ws.WebServiceFeature;
 import org.jboss.ws.Constants;
 
 /**
- * This feature represents the use of FastInfoset
+ * This feature represents the use of JSON encoding
  * 
  * @author Thomas.Diesler@jboss.com
  * @since 29-Feb-2008
  */
-public final class FastInfosetFeature extends WebServiceFeature
+public final class JsonEncodingFeature extends WebServiceFeature
 {
    /** 
-    * Constant value identifying the FastInfosetFeature
+    * Constant value identifying the JSON encoding feature
     */
-   public static final String ID = Constants.NS_JBOSSWS_URI + "/features/fastinfoset";
+   public static final String ID = Constants.NS_JBOSSWS_URI + "/features/json";
 
    /**
-    * Create an <code>FastInfosetFeature</code>.
+    * Create an <code>JsonFeature</code>.
     * The instance created will be enabled.
     */
-   public FastInfosetFeature()
+   public JsonEncodingFeature()
    {
       this.enabled = true;
    }
 
    /**
-    * Creates an <code>FastInfosetFeature</code>.
+    * Creates an <code>JsonFeature</code>.
     * 
     * @param enabled specifies if this feature should be enabled or not
     */
-   public FastInfosetFeature(boolean enabled)
+   public JsonEncodingFeature(boolean enabled)
    {
       this.enabled = enabled;
    }

@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.json;
+package org.jboss.ws.extensions.json;
 
 import java.util.Iterator;
 
@@ -31,6 +31,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
@@ -65,7 +66,18 @@ public class BadgerFishXMLEventWriter implements XMLEventWriter
             streamWriter.writeStartElement(elQName.getNamespaceURI(), elQName.getLocalPart());
          else
             streamWriter.writeStartElement(elQName.getLocalPart());
+         
+         // Add element namespaces 
+         Iterator namespaces = element.getNamespaces();
+         while (namespaces.hasNext())
+         {
+            Namespace ns = (Namespace)namespaces.next();
+            String prefix = ns.getPrefix();
+            String nsURI = ns.getNamespaceURI();
+            streamWriter.writeNamespace(prefix, nsURI);
+         }
 
+         // Add element attributes 
          Iterator attris = element.getAttributes();
          while (attris.hasNext())
          {
@@ -79,13 +91,6 @@ public class BadgerFishXMLEventWriter implements XMLEventWriter
             else
                streamWriter.writeAttribute(atQName.getLocalPart(), value);
          }
-      }
-      else if (event.isNamespace())
-      {
-         Attribute attr = (Attribute)event;
-         QName qname = attr.getName();
-         String nsURI = attr.getValue();
-         streamWriter.writeNamespace(qname.getPrefix(), nsURI);
       }
       else if (event.isCharacters())
       {

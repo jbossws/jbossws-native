@@ -29,8 +29,10 @@ import java.net.URL;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.FastInfoset;
+import org.jboss.ws.annotation.JsonEncoding;
 import org.jboss.ws.annotation.SchemaValidation;
 import org.jboss.ws.feature.FastInfosetFeature;
+import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
@@ -55,16 +57,17 @@ public class EndpointFeatureProcessor
          }
          else if (an.annotationType() == FastInfoset.class)
          {
-            processFastInfoset(dep, sepMetaData, sepClass);
+            FastInfoset anFeature = sepClass.getAnnotation(FastInfoset.class);
+            FastInfosetFeature feature = new FastInfosetFeature(anFeature.enabled());
+            sepMetaData.addFeature(feature);
+         }
+         else if (an.annotationType() == JsonEncoding.class)
+         {
+            JsonEncoding anFeature = sepClass.getAnnotation(JsonEncoding.class);
+            JsonEncodingFeature feature = new JsonEncodingFeature(anFeature.enabled());
+            sepMetaData.addFeature(feature);
          }
       }
-   }
-
-   private void processFastInfoset(Deployment dep, ServerEndpointMetaData sepMetaData, Class<?> sepClass)
-   {
-      FastInfoset anFeature = sepClass.getAnnotation(FastInfoset.class);
-      FastInfosetFeature feature = new FastInfosetFeature(anFeature.enabled());
-      sepMetaData.addFeature(feature);
    }
 
    private void processSchemaValidation(Deployment dep, ServerEndpointMetaData sepMetaData, Class<?> sepClass)

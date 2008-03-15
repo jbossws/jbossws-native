@@ -146,6 +146,13 @@
       </classes>
     </war>
     
+    <!-- jaxws-json -->
+    <war warfile="${tests.output.dir}/libs/jaxws-json.war" webxml="${tests.output.dir}/resources/jaxws/json/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/json/JsonEndpoint.class"/>
+      </classes>
+    </war>
+    
     <!-- jaxws-jaxbintros -->
     <war warfile="${tests.output.dir}/libs/jaxws-jaxbintros.war" webxml="${tests.output.dir}/resources/jaxws/jaxbintros/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

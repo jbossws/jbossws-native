@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -74,13 +75,16 @@ import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.core.server.WSDLRequestHandler;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.extensions.json.DOMDocumentParser;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.feature.FastInfosetFeature;
+import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -97,8 +101,6 @@ import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Document;
-
-import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
 
 /**
  * A request handler
@@ -359,6 +361,7 @@ public class RequestHandlerImpl implements RequestHandler
       }
       else
       {
+         // FastInfoset support
          if (epMetaData.isFeatureEnabled(FastInfosetFeature.class) && resMessage instanceof SOAPMessage)
          {
             SOAPMessage soapMessage = (SOAPMessage)resMessage;
@@ -366,9 +369,20 @@ public class RequestHandlerImpl implements RequestHandler
                throw new IllegalStateException("Attachments not supported with FastInfoset");
             
             SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
-            DOMDocumentSerializer serializer = new DOMDocumentSerializer();
+            com.sun.xml.fastinfoset.dom.DOMDocumentSerializer serializer = new com.sun.xml.fastinfoset.dom.DOMDocumentSerializer();
             serializer.setOutputStream(output);
             serializer.serialize(soapEnv);
+         }
+         // JSON support
+         else if (epMetaData.isFeatureEnabled(JsonEncodingFeature.class) && resMessage instanceof SOAPMessage)
+         {
+            SOAPMessage soapMessage = (SOAPMessage)resMessage;
+            if (soapMessage.getAttachments().hasNext())
+               throw new IllegalStateException("Attachments not supported with JSON");
+            
+            SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
+            SOAPBodyElement payload = soapBody.getBodyElement();
+            new org.jboss.ws.extensions.json.DOMDocumentSerializer(output).serialize(payload);
          }
          else
          {
@@ -413,9 +427,16 @@ public class RequestHandlerImpl implements RequestHandler
          {
             reqMessage = new HTTPMessageImpl(headers, inputStream);
          }
+         else if (sepMetaData.isFeatureEnabled(JsonEncodingFeature.class))
+         {
+            MessageFactoryImpl factory = new MessageFactoryImpl();
+            SOAPMessageImpl soapMsg = (SOAPMessageImpl)factory.createMessage();
+            Document doc = new DOMDocumentParser().parse(inputStream);
+            soapMsg.getSOAPBody().addDocument(doc);
+            reqMessage = soapMsg;
+         }
          else
          {
-
             msgFactory.setServiceMode(sepMetaData.getServiceMode());
             msgFactory.setStyle(sepMetaData.getStyle());
             msgFactory.setFeatures(sepMetaData.getFeatures());

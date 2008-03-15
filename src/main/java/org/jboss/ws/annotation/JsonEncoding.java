@@ -19,51 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.feature;
+package org.jboss.ws.annotation;
 
 // $Id$
 
-import javax.xml.ws.WebServiceFeature;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.feature.JsonEncodingFeature;
 
 /**
- * This feature represents the use of FastInfoset
+ * This feature represents the use of JSON encoding
  * 
  * @author Thomas.Diesler@jboss.com
  * @since 29-Feb-2008
  */
-public final class FastInfosetFeature extends WebServiceFeature
-{
-   /** 
-    * Constant value identifying the FastInfosetFeature
-    */
-   public static final String ID = Constants.NS_JBOSSWS_URI + "/features/fastinfoset";
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = { ElementType.TYPE })
+@EndpointFeature(id = JsonEncodingFeature.ID)
+public @interface JsonEncoding {
 
    /**
-    * Create an <code>FastInfosetFeature</code>.
-    * The instance created will be enabled.
+    * Specifies if the feature is enabled or disabled
     */
-   public FastInfosetFeature()
-   {
-      this.enabled = true;
-   }
-
-   /**
-    * Creates an <code>FastInfosetFeature</code>.
-    * 
-    * @param enabled specifies if this feature should be enabled or not
-    */
-   public FastInfosetFeature(boolean enabled)
-   {
-      this.enabled = enabled;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public String getID()
-   {
-      return ID;
-   }
+   boolean enabled() default true;
 }

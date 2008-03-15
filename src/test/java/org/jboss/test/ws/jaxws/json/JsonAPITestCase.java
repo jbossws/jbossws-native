@@ -23,24 +23,17 @@ package org.jboss.test.ws.jaxws.json;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
 
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.codehaus.jettison.badgerfish.BadgerFishXMLInputFactory;
-import org.codehaus.jettison.badgerfish.BadgerFishXMLOutputFactory;
-import org.codehaus.jettison.json.JSONTokener;
+import org.jboss.ws.extensions.json.DOMDocumentParser;
+import org.jboss.ws.extensions.json.DOMDocumentSerializer;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.test.JBossWSTest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
- * Test Json functionality
+ * Test Json API 
  *
  * @author Thomas.Diesler@jboss.com
  * @since 12-Mar-2008
@@ -49,77 +42,70 @@ public class JsonAPITestCase extends JBossWSTest
 {
    public void testSimple() throws Exception
    {
-      String xmlStr = "<root>hello world</root>";
-      String expStr = "{\"root\":{\"$\":\"hello world\"}}";
-      String resStr = toJSON(xmlStr);
+      String xmlStr = "<kermit>the frog</kermit>";
+      String expStr = "{\"kermit\":{\"$\":\"the frog\"}}";
+      String resStr = toJSON(DOMUtils.parse(xmlStr));
       assertEquals("Unexpected result: " + resStr, expStr, resStr);
-      
+
       String resXML = toXML(resStr);
       assertEquals("Unexpected result: " + resXML, xmlStr, resXML);
    }
 
    public void testSimpleAttribute() throws Exception
    {
-      String xmlStr = "<root myat=\"value\">hello world</root>";
-      String expStr = "{\"root\":{\"@myat\":\"value\",\"$\":\"hello world\"}}";
-      String resStr = toJSON(xmlStr);
+      String xmlStr = "<kermit mygirl='piggy'>the frog</kermit>";
+      String expStr = "{\"kermit\":{\"@mygirl\":\"piggy\",\"$\":\"the frog\"}}";
+      String resStr = toJSON(DOMUtils.parse(xmlStr));
       assertEquals("Unexpected result: " + resStr, expStr, resStr);
-      
+
       String resXML = toXML(resStr);
       assertEquals("Unexpected result: " + resXML, xmlStr, resXML);
    }
 
-   public void _testDefaultNamespace() throws Exception
+   public void testDefaultNamespace() throws Exception
    {
-      String xmlStr = "<root xmlns=\"http://somns\">hello world</root>";
-      String expStr = "{\"root\":{\"$\":\"hello world\"}}";
-      String resStr = toJSON(xmlStr);
+      String xmlStr = "<kermit xmlns='http://somens'>the frog</kermit>";
+      String expStr = "{\"kermit\":{\"@xmlns\":{\"$\":\"http:\\/\\/somens\"},\"$\":\"the frog\"}}";
+      String resStr = toJSON(DOMUtils.parse(xmlStr));
       assertEquals("Unexpected result: " + resStr, expStr, resStr);
-      
+
       String resXML = toXML(resStr);
       assertEquals("Unexpected result: " + resXML, xmlStr, resXML);
    }
 
-   private String toJSON(String srcXML) throws FactoryConfigurationError, XMLStreamException
+   public void testElementNamespace() throws Exception
    {
-      ByteArrayInputStream bais = new ByteArrayInputStream(srcXML.getBytes());
+      String xmlStr = "<ns1:kermit xmlns:ns1='http://somens'>the frog</ns1:kermit>";
+      String expStr = "{\"ns1:kermit\":{\"@xmlns\":{\"ns1\":\"http:\\/\\/somens\"},\"$\":\"the frog\"}}";
+      String resStr = toJSON(DOMUtils.parse(xmlStr));
+      assertEquals("Unexpected result: " + resStr, expStr, resStr);
 
-      XMLInputFactory readerFactory = XMLInputFactory.newInstance();
-      XMLStreamReader streamReader = readerFactory.createXMLStreamReader(bais);
-      XMLEventReader eventReader = readerFactory.createXMLEventReader(streamReader);
-
-      StringWriter strWriter = new StringWriter();
-      BadgerFishXMLOutputFactory writerFactory = new BadgerFishXMLOutputFactory();
-      XMLStreamWriter streamWriter = writerFactory.createXMLStreamWriter(strWriter);
-
-      // UnsupportedOperationException in jettison-1.0-RC2
-      //XMLEventWriter eventWriter = writerFactory.createXMLEventWriter(strWriter);
-
-      XMLEventWriter eventWriter = new BadgerFishXMLEventWriter(streamWriter);
-      eventWriter.add(eventReader);
-      eventWriter.close();
-
-      String jsonStr = strWriter.toString();
-      return jsonStr;
+      String resXML = toXML(resStr);
+      assertEquals("Unexpected result: " + resXML, xmlStr, resXML);
    }
 
-   private String toXML(String jsonStr) throws XMLStreamException, FactoryConfigurationError
+   public void testElementAttributeNamespace() throws Exception
    {
-      BadgerFishXMLInputFactory inputFactory = new BadgerFishXMLInputFactory();
-      XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new JSONTokener(jsonStr));
-      XMLInputFactory readerFactory = XMLInputFactory.newInstance();
-      XMLEventReader eventReader = readerFactory.createXMLEventReader(streamReader);
-      
+      String xmlStr = "<ns1:kermit ns1:mygirl='piggy' xmlns:ns1='http://somens'>the frog</ns1:kermit>";
+      String expStr = "{\"ns1:kermit\":{\"@xmlns\":{\"ns1\":\"http:\\/\\/somens\"},\"@ns1:mygirl\":\"piggy\",\"$\":\"the frog\"}}";
+      String resStr = toJSON(DOMUtils.parse(xmlStr));
+      assertEquals("Unexpected result: " + resStr, expStr, resStr);
+
+      String resXML = toXML(resStr);
+      assertEquals("Unexpected result: " + resXML, xmlStr, resXML);
+   }
+
+   private String toJSON(Element srcDOM) throws Exception
+   {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-      XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(baos);
-      eventWriter.add(eventReader);
-      eventWriter.close();
-      
-      String resXML = new String(baos.toByteArray());
-      if (resXML.startsWith("<?xml "))
-         resXML = resXML.substring(resXML.indexOf("?>") + 2);
-      
-      return resXML;
+      new DOMDocumentSerializer(baos).serialize(srcDOM);
+      return new String(baos.toByteArray());
+   }
+
+   private String toXML(String jsonStr) throws Exception
+   {
+      ByteArrayInputStream bais = new ByteArrayInputStream(jsonStr.getBytes());
+      Document resDOM = new DOMDocumentParser().parse(bais);
+      return DOMWriter.printNode(resDOM, false);
    }
 }

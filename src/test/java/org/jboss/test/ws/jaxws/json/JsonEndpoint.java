@@ -19,51 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.feature;
+package org.jboss.test.ws.jaxws.json;
 
-// $Id$
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 
-import javax.xml.ws.WebServiceFeature;
+import org.jboss.logging.Logger;
+import org.jboss.ws.annotation.JsonEncoding;
 
-import org.jboss.ws.Constants;
-
-/**
- * This feature represents the use of FastInfoset
- * 
- * @author Thomas.Diesler@jboss.com
- * @since 29-Feb-2008
- */
-public final class FastInfosetFeature extends WebServiceFeature
+@WebService(targetNamespace = "http://org.jboss.ws/json")
+@JsonEncoding
+public class JsonEndpoint
 {
-   /** 
-    * Constant value identifying the FastInfosetFeature
-    */
-   public static final String ID = Constants.NS_JBOSSWS_URI + "/features/fastinfoset";
+   // provide logging
+   private static Logger log = Logger.getLogger(JsonEndpoint.class);
 
-   /**
-    * Create an <code>FastInfosetFeature</code>.
-    * The instance created will be enabled.
-    */
-   public FastInfosetFeature()
+   @WebMethod
+   public String echo(String code)
    {
-      this.enabled = true;
-   }
-
-   /**
-    * Creates an <code>FastInfosetFeature</code>.
-    * 
-    * @param enabled specifies if this feature should be enabled or not
-    */
-   public FastInfosetFeature(boolean enabled)
-   {
-      this.enabled = enabled;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public String getID()
-   {
-      return ID;
+      log.info(code);
+      return code;
    }
 }

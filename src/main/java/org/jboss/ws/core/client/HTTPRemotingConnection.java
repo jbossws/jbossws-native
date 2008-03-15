@@ -52,14 +52,13 @@ import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.config.EndpointProperty;
-import org.jboss.ws.metadata.config.CommonConfig;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-
 import org.jboss.ws.extensions.wsrm.transport.RMChannel;
-import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;
 import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
+import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;
 import org.jboss.ws.feature.FastInfosetFeature;
+import org.jboss.ws.metadata.config.CommonConfig;
+import org.jboss.ws.metadata.config.EndpointProperty;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 /**
  * SOAPConnection implementation.

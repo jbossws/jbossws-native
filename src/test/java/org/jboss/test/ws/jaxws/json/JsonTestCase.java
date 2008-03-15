@@ -19,51 +19,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.feature;
+package org.jboss.test.ws.jaxws.json;
 
-// $Id$
+import java.net.URL;
 
-import javax.xml.ws.WebServiceFeature;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service21;
 
-import org.jboss.ws.Constants;
+import junit.framework.Test;
+
+import org.jboss.ws.feature.JsonEncodingFeature;
+import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * This feature represents the use of FastInfoset
- * 
+ * Test JSON functionality
+ *
  * @author Thomas.Diesler@jboss.com
- * @since 29-Feb-2008
+ * @since 12-Mar-2008
  */
-public final class FastInfosetFeature extends WebServiceFeature
+public class JsonTestCase extends JBossWSTest
 {
-   /** 
-    * Constant value identifying the FastInfosetFeature
-    */
-   public static final String ID = Constants.NS_JBOSSWS_URI + "/features/fastinfoset";
-
-   /**
-    * Create an <code>FastInfosetFeature</code>.
-    * The instance created will be enabled.
-    */
-   public FastInfosetFeature()
+   public static Test suite()
    {
-      this.enabled = true;
+      return new JBossWSTestSetup(JsonTestCase.class, "jaxws-json.war");
    }
 
-   /**
-    * Creates an <code>FastInfosetFeature</code>.
-    * 
-    * @param enabled specifies if this feature should be enabled or not
-    */
-   public FastInfosetFeature(boolean enabled)
+   public void testRoundTrip() throws Exception
    {
-      this.enabled = enabled;
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-json?wsdl");
+      QName serviceName = new QName("http://org.jboss.ws/json", "JsonEndpointService");
+      Service21 service = Service21.create(wsdlURL, serviceName);
+
+      JsonEncodingFeature feature = new JsonEncodingFeature();
+      JsonPort port = service.getPort(JsonPort.class, feature);
+      String retStr = port.echo("hello world");
+      assertEquals("hello world", retStr);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getID()
-   {
-      return ID;
-   }
 }

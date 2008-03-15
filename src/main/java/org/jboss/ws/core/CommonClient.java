@@ -49,7 +49,6 @@ import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.RemoteConnectionFactory;
-import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.Style;
@@ -107,7 +106,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       {
          this.epMetaData = serviceMetaData.getEndpoints().get(0);
       }
-      
+
       // Initialize the binding provider
       this.bindingProvider = getCommonBindingProvider();
    }
@@ -117,7 +116,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    protected CommonClient(EndpointMetaData epMetaData)
    {
       this.epMetaData = epMetaData;
-      
+
       // Initialize the binding provider
       this.bindingProvider = getCommonBindingProvider();
    }
@@ -146,7 +145,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       {
          setOperationName(opName);
       }
-      
+
       // Initialize the binding provider
       this.bindingProvider = getCommonBindingProvider();
    }
@@ -657,7 +656,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       EndpointMetaData epMetaData = getEndpointMetaData();
       return epMetaData.getConfigFile();
    }
-   
+
    public String getSecurityConfig()
    {
       return securityConfig;
@@ -666,7 +665,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    public void setSecurityConfig(String securityConfig)
    {
       this.securityConfig = securityConfig;
-      
+
       if (securityConfig != null)
       {
          EndpointMetaData epMetaData = getEndpointMetaData();

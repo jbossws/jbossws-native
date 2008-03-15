@@ -24,7 +24,6 @@ package javax.xml.ws.http;
 // $Id$
 
 import javax.xml.ws.Binding;
-import javax.xml.ws.Binding21;
 
 /** The <code>HTTPBinding</code> interface is an 
  *  abstraction for the XML/HTTP binding.
@@ -33,7 +32,6 @@ import javax.xml.ws.Binding21;
 **/
 public interface HTTPBinding extends Binding
 {
-
   /**
    * A constant representing the identity of the XML/HTTP binding.
    */
