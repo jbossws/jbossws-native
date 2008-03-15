@@ -223,7 +223,7 @@ public class ServiceEndpointInvoker
                }
                catch (InvocationTargetException th)
                {
-                  //Unwrap the throwable raised by the service endpoint implementation
+                  // Unwrap the throwable raised by the service endpoint implementation
                   Throwable targetEx = th.getTargetException();
                   throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
                }
@@ -269,7 +269,7 @@ public class ServiceEndpointInvoker
             faultType[0] = null;
          }
       }
-      catch (Exception ex)
+      catch (RuntimeException ex)
       {
          // Reverse the message direction
          processPivotInternal(msgContext, direction);
@@ -277,8 +277,7 @@ public class ServiceEndpointInvoker
          try
          {
             CommonBinding binding = bindingProvider.getCommonBinding();
-            MessageAbstraction exMessage = binding.bindFaultMessage(ex);
-            msgContext.setMessageAbstraction(exMessage);
+            binding.bindFaultMessage(ex);
 
             // call the fault handler chain
             boolean handlersPass = true;
