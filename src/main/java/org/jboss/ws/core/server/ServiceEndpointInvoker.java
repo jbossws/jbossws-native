@@ -63,7 +63,6 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.server.RMInvocationHandler;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -223,7 +222,7 @@ public class ServiceEndpointInvoker
                }
                catch (InvocationTargetException th)
                {
-                  // Unwrap the throwable raised by the service endpoint implementation
+                  //Unwrap the throwable raised by the service endpoint implementation
                   Throwable targetEx = th.getTargetException();
                   throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
                }
@@ -269,14 +268,14 @@ public class ServiceEndpointInvoker
             faultType[0] = null;
          }
       }
-      catch (RuntimeException ex)
+      catch (Exception ex)
       {
          // Reverse the message direction
          processPivotInternal(msgContext, direction);
-
+         
+         CommonBinding binding = bindingProvider.getCommonBinding();
          try
          {
-            CommonBinding binding = bindingProvider.getCommonBinding();
             binding.bindFaultMessage(ex);
 
             // call the fault handler chain
@@ -291,6 +290,7 @@ public class ServiceEndpointInvoker
          catch (RuntimeException subEx)
          {
             log.warn("Exception while processing handleFault: ", ex);
+            binding.bindFaultMessage(subEx);
             ex = subEx;
          }
          throw ex;
