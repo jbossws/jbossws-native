@@ -121,7 +121,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 			if (wsaFrom != null)
 			{
 				EndpointReferenceImpl ref = new EndpointReferenceImpl(wsaFrom);
-				setReplyTo(ref);
+				setFrom(ref);
 			}
 
 			// Read wsa:ReplyTo
