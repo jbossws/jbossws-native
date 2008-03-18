@@ -146,6 +146,22 @@ public class AddressingTestCase extends JBossWSTest {
      } */
    }
 
+
+   public String getServerHost()
+   {
+      String host = null;
+      if("true".equals( System.getProperty("interop") ) )
+      {
+         host = "jbossws.demo.jboss.com";   // ask heiko about details for this service
+         System.out.println("Using interop host: jbossws.demo.jboss.com" );
+      }
+      else
+      {
+         host = super.getServerHost();
+      }
+      return host;
+   }
+
    /**
     * Certain MSFT testcases require the connection to be closed
     * since remoting cannot work with particluar HTTP response codes.

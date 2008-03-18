@@ -17,7 +17,7 @@ org/jboss/test/ws/jaxws/webserviceref/StubPropertyTestCase.*
 org/jboss/test/ws/jaxws/jbws1840/JBWS1840TestCase.*
 
 # [JBAS-5114] MessageDriven EJB3 does not create destination automatically
-org/jboss/test/ws/jaxws/samples/jmstransport/**
+#org/jboss/test/ws/jaxws/samples/jmstransport/**
 
 # [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
