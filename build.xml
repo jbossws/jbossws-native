@@ -210,6 +210,10 @@
       <fileset dir="${core.resources.dir}/standard-config">
         <include name="standard-*-config.xml"/>
       </fileset>
+      <fileset dir="${core.resources.dir}">
+        <include name="jbossws-jboss42.jar/**"/>
+        <include name="jbossws-jboss42.sar/**"/>
+      </fileset>
     </copy>
   </target>
 
