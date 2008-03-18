@@ -195,12 +195,13 @@
     </concat>
     
     <!-- Concat jboss-beans.xml -->
+    <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss42-resources.zip"/>
     <concat destfile="${core.output.resources.dir}/jbossws-native42-beans.xml">
       <header trimleading="yes">
         &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd" xmlns="urn:jboss:bean-deployer"&gt;
       </header>
       <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${core.resources.dir}/jbossws-jboss42-config.xml"/>
+      <fileset file="${core.output.resources.dir}/jbossws-jboss42-config.xml"/>
       <footer trimleading="yes">
         &lt;/deployment&gt;
       </footer>
@@ -209,10 +210,6 @@
     <copy todir="${core.output.resources.dir}">
       <fileset dir="${core.resources.dir}/standard-config">
         <include name="standard-*-config.xml"/>
-      </fileset>
-      <fileset dir="${core.resources.dir}">
-        <include name="jbossws-jboss42.jar/**"/>
-        <include name="jbossws-jboss42.sar/**"/>
       </fileset>
     </copy>
   </target>
