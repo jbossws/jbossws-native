@@ -48,7 +48,7 @@ public class ServerHandler extends GenericHandler
 
          SOAPFault soapFault = soapMessage.getSOAPBody().getFault();
          String faultString = soapFault.getFaultString();
-         if (!faultString.equals("Don't worry it's just a test") && !faultString.equals("org.jboss.test.ws.jaxrpc.exception.UserException"))
+         if (!faultString.equals("Don't worry it's just a test") && !faultString.equals("org.jboss.test.ws.jaxrpc.samples.exception.UserException"))
             throw new JAXRPCException("Unexpected fault string: " + faultString);
 
          return true;
