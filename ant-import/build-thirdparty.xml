@@ -63,7 +63,6 @@
     <get src="${jboss.repository}/jboss/jbossws-spi/${jbossws-spi}/lib/jbossws-spi-src.zip" dest="${thirdparty.dir}/jbossws-spi-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42.jar" dest="${thirdparty.dir}/jbossws-jboss421.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42-src.zip" dest="${thirdparty.dir}/jbossws-jboss421-src.zip" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss42/${jbossws-jboss42}/lib/jbossws-jboss42-resources.zip" dest="${thirdparty.dir}/jbossws-jboss42-resources.zip" usetimestamp="true" verbose="true"/>
 	      
     <get src="${jboss.repository}/apache-ant/${apache-ant}/lib/ant.jar" dest="${thirdparty.dir}/ant.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-collections/${apache-collections}/lib/commons-collections.jar" dest="${thirdparty.dir}/commons-collections.jar" usetimestamp="true" verbose="true"/>
