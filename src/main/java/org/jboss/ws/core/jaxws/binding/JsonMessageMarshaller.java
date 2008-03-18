@@ -34,7 +34,7 @@ import org.jboss.remoting.invocation.OnewayInvocation;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.extensions.json.DOMDocumentSerializer;
+import org.jboss.ws.extensions.json.BadgerFishDOMDocumentSerializer;
 
 /**
  * @author Thomas.Diesler@jboss.org
@@ -71,7 +71,7 @@ public class JsonMessageMarshaller implements Marshaller
          SOAPMessage soapMessage = (SOAPMessage)dataObject;
          SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
          SOAPBodyElement payload = soapBody.getBodyElement();
-         new DOMDocumentSerializer(output).serialize(payload);
+         new BadgerFishDOMDocumentSerializer(output).serialize(payload);
       }
       catch (SOAPException ex)
       {

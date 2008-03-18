@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  * @author Thomas.Diesler@jboss.com
  * @since 12-Mar-2008
  */
-public class DOMDocumentParser
+public class BadgerFishDOMDocumentParser
 {
    public Document parse(InputStream input) throws IOException
    {

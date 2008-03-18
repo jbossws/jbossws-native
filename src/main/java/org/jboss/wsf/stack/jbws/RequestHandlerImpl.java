@@ -80,7 +80,8 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.extensions.json.DOMDocumentParser;
+import org.jboss.ws.extensions.json.BadgerFishDOMDocumentParser;
+import org.jboss.ws.extensions.json.BadgerFishDOMDocumentSerializer;
 import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.feature.FastInfosetFeature;
@@ -101,6 +102,8 @@ import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Document;
+
+import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
 
 /**
  * A request handler
@@ -369,7 +372,7 @@ public class RequestHandlerImpl implements RequestHandler
                throw new IllegalStateException("Attachments not supported with FastInfoset");
             
             SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
-            com.sun.xml.fastinfoset.dom.DOMDocumentSerializer serializer = new com.sun.xml.fastinfoset.dom.DOMDocumentSerializer();
+            DOMDocumentSerializer serializer = new DOMDocumentSerializer();
             serializer.setOutputStream(output);
             serializer.serialize(soapEnv);
          }
@@ -381,8 +384,8 @@ public class RequestHandlerImpl implements RequestHandler
                throw new IllegalStateException("Attachments not supported with JSON");
             
             SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
-            SOAPBodyElement payload = soapBody.getBodyElement();
-            new org.jboss.ws.extensions.json.DOMDocumentSerializer(output).serialize(payload);
+            BadgerFishDOMDocumentSerializer serializer = new BadgerFishDOMDocumentSerializer(output);
+            serializer.serialize(soapBody.getBodyElement());
          }
          else
          {
@@ -431,7 +434,7 @@ public class RequestHandlerImpl implements RequestHandler
          {
             MessageFactoryImpl factory = new MessageFactoryImpl();
             SOAPMessageImpl soapMsg = (SOAPMessageImpl)factory.createMessage();
-            Document doc = new DOMDocumentParser().parse(inputStream);
+            Document doc = new BadgerFishDOMDocumentParser().parse(inputStream);
             soapMsg.getSOAPBody().addDocument(doc);
             reqMessage = soapMsg;
          }

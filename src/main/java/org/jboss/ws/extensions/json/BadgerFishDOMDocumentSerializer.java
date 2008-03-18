@@ -41,11 +41,11 @@ import org.w3c.dom.Element;
  * @author Thomas.Diesler@jboss.com
  * @since 12-Mar-2008
  */
-public class DOMDocumentSerializer
+public class BadgerFishDOMDocumentSerializer
 {
    private OutputStream output;
 
-   public DOMDocumentSerializer(OutputStream output)
+   public BadgerFishDOMDocumentSerializer(OutputStream output)
    {
       this.output = output;
    }

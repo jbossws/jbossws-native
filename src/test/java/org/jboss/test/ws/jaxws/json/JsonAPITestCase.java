@@ -24,8 +24,8 @@ package org.jboss.test.ws.jaxws.json;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import org.jboss.ws.extensions.json.DOMDocumentParser;
-import org.jboss.ws.extensions.json.DOMDocumentSerializer;
+import org.jboss.ws.extensions.json.BadgerFishDOMDocumentParser;
+import org.jboss.ws.extensions.json.BadgerFishDOMDocumentSerializer;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.test.JBossWSTest;
@@ -98,14 +98,14 @@ public class JsonAPITestCase extends JBossWSTest
    private String toJSON(Element srcDOM) throws Exception
    {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      new DOMDocumentSerializer(baos).serialize(srcDOM);
+      new BadgerFishDOMDocumentSerializer(baos).serialize(srcDOM);
       return new String(baos.toByteArray());
    }
 
    private String toXML(String jsonStr) throws Exception
    {
       ByteArrayInputStream bais = new ByteArrayInputStream(jsonStr.getBytes());
-      Document resDOM = new DOMDocumentParser().parse(bais);
+      Document resDOM = new BadgerFishDOMDocumentParser().parse(bais);
       return DOMWriter.printNode(resDOM, false);
    }
 }

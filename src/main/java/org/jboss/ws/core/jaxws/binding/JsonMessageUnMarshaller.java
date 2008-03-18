@@ -36,7 +36,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.extensions.json.DOMDocumentParser;
+import org.jboss.ws.extensions.json.BadgerFishDOMDocumentParser;
 import org.w3c.dom.Document;
 
 /**
@@ -60,7 +60,7 @@ public class JsonMessageUnMarshaller implements UnMarshaller
       {
          MessageFactoryImpl factory = new MessageFactoryImpl();
          SOAPMessage soapMsg = factory.createMessage();
-         Document doc = new DOMDocumentParser().parse(inputStream);
+         Document doc = new BadgerFishDOMDocumentParser().parse(inputStream);
          soapMsg.getSOAPBody().addDocument(doc);
          return soapMsg;
       }
