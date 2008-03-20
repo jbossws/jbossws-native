@@ -24,8 +24,10 @@
   
   <target name="thirdparty-init" depends="prepare">
     
-    <property name="thirdparty.dir" value="${core.dir}/thirdparty"/>
     <checksum file="${core.dir}/version.properties" fileext=".md5" verifyproperty="checksum.ok"/>
+    <property name="checksum.ok.${checksum.ok}" value="true"/>
+    
+    <property name="thirdparty.dir" value="${core.dir}/thirdparty"/>
     <condition property="force.thirdparty">
       <or>
         <not>
@@ -35,13 +37,17 @@
         <isset property="force.thirdparty.get"/>
       </or>
     </condition>
-    <echo message="checksum.ok = ${checksum.ok}"/>
+    <echo message="checksum.ok=${checksum.ok}"/>
+  </target>
+  
+  <target name="thirdparty-delete" depends="thirdparty-init" unless="checksum.ok.true">
+    <delete dir="${thirdparty.dir}"/>
   </target>
   
   <!-- 
     thirdpartry-get
   -->
-  <target name="thirdparty-get" depends="thirdparty-init" if="force.thirdparty" 
+  <target name="thirdparty-get" depends="thirdparty-delete" if="force.thirdparty" 
     description="Gets the thirdparty libraries">
 
     <!--
