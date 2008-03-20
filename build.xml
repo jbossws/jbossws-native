@@ -339,16 +339,28 @@
       <metainf dir="${core.resources.dir}/standard-config"/>
     </jar>
 
-    <!-- Build jbossws-context.war -->
-    <war warfile="${core.output.lib.dir}/jbossws-context.war" webxml="${core.resources.dir}/jbossws-context.war/WEB-INF/web.xml">
-      <fileset dir="${core.resources.dir}/jbossws-context.war">
+    <!-- Build jbossws-context.war - START -->
+    <copy todir="${core.output.resources.dir}/jbossws-context.war" overwrite="true" filtering="true">
+      <fileset dir="${core.resources.dir}/jbossws-context.war"/>
+      <filterset>
+        <filter token="build.id" value="${build.id}"/>
+        <filter token="implementation.version" value="jbossws-${version.id}"/>
+        <filtersfile file="${core.dir}/version.properties"/>
+      </filterset>
+    </copy>
+
+    <war warfile="${core.output.lib.dir}/jbossws-context.war"
+      webxml="${core.output.resources.dir}/jbossws-context.war/WEB-INF/web.xml"
+      manifest="${core.output.etc.dir}/default.mf">
+      <fileset dir="${core.output.resources.dir}/jbossws-context.war">
         <include name="index.html"/>
         <include name="styles.css"/>
       </fileset>
-      <webinf dir="${core.resources.dir}/jbossws-context.war">
+      <webinf dir="${core.output.resources.dir}/jbossws-context.war/WEB-INF">
         <include name="jboss-web.xml"/>
       </webinf>
     </war>
+    <!-- Build jbossws-context.war - END -->
 
     <!-- Build jbossws-core-scripts.zip -->
     <zip zipfile="${core.output.lib.dir}/jbossws-core-scripts.zip" >
