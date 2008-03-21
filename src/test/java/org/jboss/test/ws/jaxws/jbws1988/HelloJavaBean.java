@@ -29,7 +29,6 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.WebServiceContext;
 
-import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.wsf.spi.annotation.WebContext;
@@ -40,7 +39,8 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebContext(contextRoot = "/jaxws-jbws1988", urlPattern = "/*")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
-@SecurityDomain("JBossWSDigest")
+//We're declaring the domain in the jboss.xml since we have different annotation packages for AS5 and AS42
+//@SecurityDomain("JBossWSDigest")
 @RolesAllowed({"friend"}) 
 public class HelloJavaBean
 {

@@ -686,6 +686,7 @@
       </fileset>
       <metainf dir="${tests.output.dir}/resources/jaxws/jbws1988/META-INF">
         <include name="jboss-wsse-server.xml"/>
+      	<include name="jboss.xml"/>
       </metainf>
     </jar>
     <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1988.sar">
@@ -705,6 +706,7 @@
       </fileset>
       <metainf dir="${tests.output.dir}/resources/jaxws/jbws1991/META-INF">
         <include name="jboss-wsse-server.xml"/>
+      	<include name="jboss.xml"/>
       </metainf>
     </jar>
 
