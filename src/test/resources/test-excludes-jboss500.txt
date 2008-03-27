@@ -1,4 +1,6 @@
-# $Id: $
+#
+# $Id: test-excludes-jboss500.txt 6108 2008-03-26 17:32:49Z richard.opalka@jboss.com $
+#
 
 # Fix BPEL before AS50 goes final
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
@@ -8,9 +10,6 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
-
-# [EJBTHREE-1150] WebServiceContext injection requires mapped-name
-org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase.*
 
 # [JBAS-5055] Failed to load users/passwords/role files
 org/jboss/test/ws/jaxws/webserviceref/StubPropertyTestCase.*

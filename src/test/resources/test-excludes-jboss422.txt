@@ -1,24 +1,27 @@
-# $Id: $
+#
+# $Id: test-excludes-jboss422.txt 6108 2008-03-26 17:32:49Z richard.opalka@jboss.com $
+#
 
 # EJB3/Injection excludes
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
-
-# [JBWS-1797] Setting .NET friendly Endpoint in web.xml
-org/jboss/test/ws/jaxws/jbws1797/**
-
-# [JBWS-1911] Support the JMS transport with JAX-WS
-org/jboss/test/ws/jaxws/samples/jmstransport/**
 
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
 # [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
 # This requires changes to the AS web meta data (servlet init params)
-org/jboss/test/ws/*/jbws1762/**
+org/jboss/test/ws/jaxws/jbws1762/**
 
-#[JBWS-1841] WebServiceRef injection from DD doesn't work
-org/jboss/test/ws/*/jbws1841/**
+# [JBWS-1797] Setting .NET friendly Endpoint in web.xml
+org/jboss/test/ws/jaxws/jbws1797/**
 
-#[JBWS-1813] context-root from jboss.xml
-org/jboss/test/ws/*/jbws1813/**
+# [JBWS-1813] context-root from jboss.xml
+org/jboss/test/ws/jaxws/jbws1813/**
+
+# [JBWS-1841] WebServiceRef injection from DD doesn't work
+org/jboss/test/ws/jaxws/jbws1841/**
+
+# [JBWS-1911] Support the JMS transport with JAX-WS
+org/jboss/test/ws/jaxws/samples/jmstransport/**
+
