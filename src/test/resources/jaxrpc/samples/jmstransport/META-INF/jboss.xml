@@ -7,7 +7,7 @@
     <message-driven>
       <ejb-name>OrganizationMDB</ejb-name>
       <destination-jndi-name>queue/RequestQueue</destination-jndi-name>
-      <depends>jboss.mq.destination:service=Queue,name=RequestQueue</depends>
+      <depends>jboss.messaging.destination:service=Queue,name=RequestQueue</depends>
     </message-driven>
   </enterprise-beans>
 </jboss>
