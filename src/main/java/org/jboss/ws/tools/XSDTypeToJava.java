@@ -76,6 +76,8 @@ public class XSDTypeToJava
 
    private Set<String> generatedFiles = new HashSet<String>();
 
+   protected boolean serializableTypes;
+
    /**
     * List that is used for exception inheritance case wherein the variables
     * obtained from the base class go into the generated constructor alone and
@@ -83,8 +85,9 @@ public class XSDTypeToJava
     */
    private Map<String, List> typeNameToBaseVARList = new HashMap<String, List>();
 
-   public XSDTypeToJava()
+   public XSDTypeToJava(boolean serializableTypes)
    {
+      this.serializableTypes = serializableTypes;
    }
 
    public void createJavaFile(XSComplexTypeDefinition type, File loc, String pkgname, XSModel schema) throws IOException
@@ -154,7 +157,8 @@ public class XSDTypeToJava
 
       if (baseName == null && isExceptionType)
          baseName = "Exception";
-      jwriter.createJavaFile(loc, fname, pkgname, vars, null, baseName, isExceptionType, typeNameToBaseVARList);
+      jwriter.createJavaFile(loc, fname, pkgname, vars, null, baseName, isExceptionType, serializableTypes, typeNameToBaseVARList);
+
    }
 
    public void createJavaFile(XSSimpleTypeDefinition xsSimple, XSModel schema) throws IOException

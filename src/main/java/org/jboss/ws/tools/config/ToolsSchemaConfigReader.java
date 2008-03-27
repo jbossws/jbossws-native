@@ -81,6 +81,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
    private static final String RETURN_XML_NAME_ATTRIBUTE = "return-xml-name";
    private static final String ONEWAY_ATTRIBUTE = "one-way";
    private static final String PARAMETER_STYLE_ATTRIBUTE = "parameter-style";
+   private static final String SERIALIZABLE_TYPES_ATTRIBUTE = "serializable-types";
    private static final String STYLE_ATTRIBUTE = "style";
    private static final String ENDPOINT_ATTRIBUTE = "endpoint";
    private static final String NAME_ATTRIBUTE = "name";
@@ -179,7 +180,10 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
          String paramStyle = attrs.getValue(PARAMETER_STYLE_ATTRIBUTE);
          if (paramStyle != null)
             wsdl2jc.parameterStyle = paramStyle;
-
+         String serializableTypes = attrs.getValue(SERIALIZABLE_TYPES_ATTRIBUTE);
+         if ("true".equals(serializableTypes) || "1".equals(serializableTypes))
+            wsdl2jc.serializableTypes = true;         
+            
          return wsdl2jc;
       }
       else if (GLOBAL_TAG.equals(localName))

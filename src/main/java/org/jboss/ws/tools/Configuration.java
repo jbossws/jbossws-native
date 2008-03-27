@@ -140,6 +140,8 @@ public class Configuration
       public String wsdlLocation;
       // Parameter style {"wrapped", "bare"} 
       public String parameterStyle = "wrapped";
+      // Should generated types be Serializable?
+      public boolean serializableTypes;
       // Is a jaxrpc-mapping file needed?
       public boolean mappingFileNeeded;
       // Name of the jaxrpc-mapping file

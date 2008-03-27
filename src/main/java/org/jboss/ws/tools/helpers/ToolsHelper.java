@@ -64,9 +64,10 @@ import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.interfaces.WebservicesXMLCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.*;
+import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.common.IOUtils;
+import org.jboss.wsf.common.JavaUtils;
 
 /**
  *  Helper class used by the cmd line tool "jbossws"
@@ -225,7 +226,7 @@ public class ToolsHelper
       }
 
       JavaWriter writer = new JavaWriter();
-      writer.createJavaFile(new File(outDir), name + ".java", packageName, vars, null, null, false, null);
+      writer.createJavaFile(new File(outDir), name + ".java", packageName, vars, null, null, false, false, null);
 
       JavaXmlTypeMapping type = mappingIndex.get(parameter.getXmlType());
       if (type == null)
@@ -262,6 +263,7 @@ public class ToolsHelper
 
       WSDLToJava wsdlToJava = new WSDLToJava();
       wsdlToJava.setTypeMapping(new LiteralTypeMapping());
+      wsdlToJava.setGenerateSerializableTypes(w2jc.serializableTypes);
 
       WSDLDefinitions wsdl = null;
       try
@@ -401,7 +403,7 @@ public class ToolsHelper
       if (glc != null && glc.packageNamespaceMap != null)
       {
          Map<String, String> map = glc.packageNamespaceMap;
-         Iterator iter = map.keySet().iterator();
+         Iterator<String> iter = map.keySet().iterator();
          while (iter.hasNext())
          {
             String pkg = (String)iter.next();
