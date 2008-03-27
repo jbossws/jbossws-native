@@ -11,3 +11,5 @@
 #
 #  $Id$
 
+richard.opalka@jboss.com 27-Mar-2008
+svn merge -r 6111:6112 https://svn.jboss.org/repos/jbossws/stack/native/branches/jbossws-3.0.1-native-2.0.4.GA
