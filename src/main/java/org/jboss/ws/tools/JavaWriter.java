@@ -192,7 +192,7 @@ public class JavaWriter
     * @throws IOException
     */
    public void createJavaFile(File location, String filename, String packageName, List<VAR> vars, List<String> importList, String baseTypeName,
-         boolean isExceptionType, Map<String, List> typeNameToBaseVARList) throws IOException
+         boolean isExceptionType, boolean isSerializable, Map<String, List> typeNameToBaseVARList) throws IOException
    {
       File newLoc = null;
       if (needToCreatePackageStructure(location, packageName))
@@ -217,6 +217,8 @@ public class JavaWriter
       buffer.append(newline).append("public class  ").append(classname).append(newline);
       if (baseTypeName != null && baseTypeName.length() > 0)
          buffer.append(" extends ").append(baseTypeName);
+      if (isSerializable)
+         buffer.append(" implements java.io.Serializable");
       buffer.append("{").append(newline);
       createVariables(buffer, vars, isExceptionType);
       createCTR(buffer, classname, vars, isExceptionType, typeNameToBaseVARList);

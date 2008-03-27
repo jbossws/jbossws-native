@@ -247,6 +247,11 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
+    <xs:attribute name="serializable-types" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Should generated types implement java.io.Serializable, default to false.</xs:documentation>
+      </xs:annotation>    
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="parameterType">
     <xs:attribute name="type" use="required">

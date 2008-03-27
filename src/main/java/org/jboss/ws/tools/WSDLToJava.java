@@ -96,6 +96,7 @@ public class WSDLToJava implements WSDLToJavaIntf
    protected boolean annotate = false;
 
    protected Map<String, String> namespacePackageMap = null;
+   protected boolean generateSerializableTypes = false;
 
    protected HolderWriter holderWriter = new HolderWriter();
 
@@ -206,6 +207,16 @@ public class WSDLToJava implements WSDLToJavaIntf
          String pkg = iter.next();
          namespacePackageMap.put(pkg, map.get(pkg));
       }
+   }
+   
+   public boolean isGenerateSerializableTypes()
+   {
+      return generateSerializableTypes;
+   }
+   
+   public void setGenerateSerializableTypes(boolean generateSerializableTypes)
+   {
+      this.generateSerializableTypes = generateSerializableTypes;
    }
 
    public void setTypeMapping(LiteralTypeMapping tm)
@@ -808,7 +819,7 @@ public class WSDLToJava implements WSDLToJavaIntf
 
    private void generateJavaSource(XSComplexTypeDefinition xt, JBossXSModel xsmodel, String containingElement, boolean exception) throws IOException
    {
-      XSDTypeToJava xtj = new XSDTypeToJava(namespacePackageMap);
+      XSDTypeToJava xtj = new XSDTypeToJava(namespacePackageMap, generateSerializableTypes);
       xtj.setTypeMapping(this.typeMapping);
       String targetNS = wsdl.getTargetNamespace();
       String tgtNS = xt.getNamespace();

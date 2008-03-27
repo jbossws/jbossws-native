@@ -225,43 +225,6 @@ public class MappingFileGenerator
       return jwm;
    }
 
-   public void generateJavaSourceFileForRequestResponseStruct(File location, ServiceEndpointInterfaceMapping seim, JBossXSModel xsmodel, String typeNamespace)
-         throws IOException
-   {
-      WSDLUtils utils = WSDLUtils.getInstance();
-      XSDTypeToJava xst = new XSDTypeToJava(namespacePackageMap);
-      xst.setTypeMapping(this.typeMapping);
-      xst.setPackageName(getPackageName(typeNamespace));
-      ServiceEndpointMethodMapping[] mapArr = seim.getServiceEndpointMethodMappings();
-      int len = mapArr != null ? mapArr.length : 0;
-      for (int i = 0; i < len; i++)
-      {
-         ServiceEndpointMethodMapping mm = mapArr[i];
-         String opname = mm.getJavaMethodName();
-         String sei = seim.getServiceEndpointInterface();
-         String plainClassName = utils.getJustClassName(sei);
-         String classname = plainClassName + "_" + opname + "_RequestStruct";
-         List<VAR> listInputs = new ArrayList<VAR>();
-         MethodParamPartsMapping[] mppmarr = mm.getMethodParamPartsMappings();
-         int lenmppmarr = mppmarr != null ? mppmarr.length : 0;
-         for (int j = 0; j < lenmppmarr; j++)
-         {
-            listInputs.addAll(xst.getVARList((XSComplexTypeDefinition)xsmodel.getTypeDefinition(opname, typeNamespace), xsmodel, false));
-         }
-         JavaWriter jw = new JavaWriter();
-         jw.createJavaFile(location, classname, getPackageName(typeNamespace), listInputs, null, null, false, null);
-         classname = plainClassName + "_" + opname + "_ResponseStruct";
-         XSTypeDefinition xt = xsmodel.getTypeDefinition(opname + "Response", typeNamespace);
-         List<VAR> listOutputs = new ArrayList<VAR>();
-         if (xt instanceof XSSimpleTypeDefinition)
-         {
-            listOutputs.add(new VAR(Constants.DEFAULT_RPC_RETURN_NAME, xt.getName(), false));
-         }
-         else listOutputs.addAll(xst.getVARList((XSComplexTypeDefinition)xt, xsmodel, false));
-         jw.createJavaFile(location, classname, getPackageName(typeNamespace), listOutputs, null, null, false, null);
-      }
-   }
-
    //PRIVATE METHODS
    private boolean isServerSideGeneration()
    {

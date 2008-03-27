@@ -77,6 +77,7 @@ public class XSDTypeToJava
    private Set<String> generatedFiles = new HashSet<String>();
 
    protected Map<String, String> namespacePackageMap = null;
+   protected boolean serializableTypes;
 
    /**
     * List that is used for exception inheritance case wherein the variables
@@ -85,9 +86,10 @@ public class XSDTypeToJava
     */
    private Map<String, List> typeNameToBaseVARList = new HashMap<String, List>();
 
-   public XSDTypeToJava(Map<String, String> map)
+   public XSDTypeToJava(Map<String, String> map, boolean serializableTypes)
    {
       this.namespacePackageMap = map;
+      this.serializableTypes = serializableTypes;
    }
 
    public void createJavaFile(XSComplexTypeDefinition type, String loc, String pkgname, XSModel schema) throws IOException
@@ -164,7 +166,8 @@ public class XSDTypeToJava
          baseName = getPackageName(baseType.getNamespace()) + "." + baseName;
       }
       String packageName = getPackageName(type.getNamespace());
-      jwriter.createJavaFile(getLocationForJavaGeneration(packageName), fname, packageName, vars, null, baseName, isExceptionType, typeNameToBaseVARList);
+      jwriter.createJavaFile(getLocationForJavaGeneration(packageName), fname, packageName, vars, null, baseName, isExceptionType, serializableTypes,
+            typeNameToBaseVARList);
    }
 
    public void createJavaFile(XSSimpleTypeDefinition xsSimple, XSModel schema) throws IOException
