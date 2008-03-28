@@ -94,7 +94,7 @@
     
     <!-- build tools -->
     <copy todir="${bindist.tools.dir}" overwrite="true">
-      <fileset dir="${core.dir}/tools/ant"/>
+      <fileset dir="${core.dir}/tools"/>
     </copy>
     <copy todir="${bindist.dir}" overwrite="true">
       <fileset dir="${core.dir}">
