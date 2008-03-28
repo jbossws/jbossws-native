@@ -15,7 +15,7 @@ In order to install JBossWS the following steps are necessary:
 
 	ant deploy-jboss421
 	ant deploy-jboss422
-	ant deploy-jboss423
+	ant deploy-jboss423 // for JBoss AS 4.2 Branch
 	ant deploy-jboss500 // for JBoss AS Beta 4
         ant deploy-jboss501 // for JBoss AS Trunk
 
