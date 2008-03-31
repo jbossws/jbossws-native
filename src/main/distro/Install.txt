@@ -13,11 +13,8 @@ In order to install JBossWS the following steps are necessary:
 2.) Modify the target container location in ant.properties
 3.) Execute one of the following
 
-	ant deploy-jboss421
-	ant deploy-jboss422
-	ant deploy-jboss423
-	ant deploy-jboss500 // for JBoss AS Beta 4
-        ant deploy-jboss501 // for JBoss AS Trunk
+	ant deploy-jboss42x
+	ant deploy-jboss50x
 
 Please consult the wiki for detailed up to date install instructions
 http://labs.jboss.com/portal/jbossws/
