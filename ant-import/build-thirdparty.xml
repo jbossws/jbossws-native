@@ -109,7 +109,6 @@
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-deployers-src.zip" dest="${thirdparty.dir}/jboss-deployers-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/microcontainer/${jboss-microcontainer}/lib/jboss-microcontainer-src.zip" dest="${thirdparty.dir}/jboss-microcontainer-src.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/remoting/${jboss-remoting-jboss42}/lib/jboss-remoting.jar" dest="${thirdparty.dir}/jboss-remoting.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/remoting/${jboss-remoting-jboss42}/lib/jboss-remoting-src.jar" dest="${thirdparty.dir}/jboss-remoting-src.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-client.jar" dest="${thirdparty.dir}/jbosssx-client.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx.jar" dest="${thirdparty.dir}/jbosssx.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/security/${jboss-security}/lib/jbosssx-src.zip" dest="${thirdparty.dir}/jbosssx-src.zip" usetimestamp="true" verbose="true"/>
