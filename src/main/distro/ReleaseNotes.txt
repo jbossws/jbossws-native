@@ -25,6 +25,28 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-@version.id@
 ----------------------------------
 
+Feature Request
+
+    * [JBWS-925]  - Provide initial support for FastInfoset
+    * [JBWS-1124] - Scoped class loading domains for WS endpoints
+    * [JBWS-1165] - Provide initial support JSON data binding
+    * [JBWS-1172] - Support schema validation for incoming/outgoing messages
+    * [JBWS-1211] - Add support for @WebFault
+    * [JBWS-1296] - Add support for digest + nonces
+    * [JBWS-1814] - Dynamic Encryption based on clients input
+    * [JBWS-1820] - Using JRE from vendors other than Sun the Remoting key store and trust store algorithms are not propagated
+    * [JBWS-1844] - Implement Provider.createW3CEndpointReference()
+    * [JBWS-1850] - Documentation support for Java->WSDL
+    * [JBWS-1861] - Improve exception message on invalid @WebService usage on SEI
+    * [JBWS-1865] - Unify SOAP message trace
+    * [JBWS-1886] - Provide basic configuration for WS-enabled user projects
+    * [JBWS-1890] - Provide basic project configuration for JBossWS tests
+    * [JBWS-1893] - Provide meaningful advanced samples
+    * [JBWS-1968] - Documentation support for WSDL->Java
+    * [JBWS-1988] - Complete Username Token Profile 1.0
+    * [JBWS-1990] - Support for SOAP 1.2 in wsconsume
+    * [JBWS-2022] - Provide interface for WSSecurityDispatcher
+
 Bug
 
     * [JBWS-1217] - WSDLtoJava Namespace to package mapping does not support multiple namespaces
@@ -54,28 +76,6 @@ Bug
     * [JBWS-2018] - JavatoWSDL Package to Namespace mapping does not support multiple packages
     * [JBWS-2019] - WSDL To Java - Case of service-interface and service-endpoint-interface in JAX-RPC mapping does not match generated interface when WSDL type begins with lower case
     * [JBWS-2058] - 'wsa:From' header field is assigned to variable 'replyTo' instead of 'from'
-
-Feature Request
-
-    * [JBWS-925]  - Provide initial support for FastInfoset
-    * [JBWS-1124] - Scoped class loading domains for WS endpoints
-    * [JBWS-1165] - Provide initial support JSON data binding
-    * [JBWS-1172] - Support schema validation for incoming/outgoing messages
-    * [JBWS-1211] - Add support for @WebFault
-    * [JBWS-1296] - Add support for digest + nonces
-    * [JBWS-1814] - Dynamic Encryption based on clients input
-    * [JBWS-1820] - Using JRE from vendors other than Sun the Remoting key store and trust store algorithms are not propagated
-    * [JBWS-1844] - Implement Provider.createW3CEndpointReference()
-    * [JBWS-1850] - Documentation support for Java->WSDL
-    * [JBWS-1861] - Improve exception message on invalid @WebService usage on SEI
-    * [JBWS-1865] - Unify SOAP message trace
-    * [JBWS-1886] - Provide basic configuration for WS-enabled user projects
-    * [JBWS-1890] - Provide basic project configuration for JBossWS tests
-    * [JBWS-1893] - Provide meaningful advanced samples
-    * [JBWS-1968] - Documentation support for WSDL->Java
-    * [JBWS-1988] - Complete Username Token Profile 1.0
-    * [JBWS-1990] - Support for SOAP 1.2 in wsconsume
-    * [JBWS-2022] - Provide interface for WSSecurityDispatcher
 
 Task
 
@@ -237,7 +237,6 @@ Bug
     * [JBWS-1766] - UsernameToken ignores BindingProvider.USERNAME_PROPERTY
     * [JBWS-1771] - Post-handler-chain not invoked for "Standard Client" configuration with DII client
     * [JBWS-1780] - Context servlet throws NPE
-
 
 Task
 
