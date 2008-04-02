@@ -6,9 +6,8 @@
 
 <jboss-web>
 
-  <!-- A security domain that restricts access
-  <security-domain>java:/jaas/JBossWS</security-domain>
-  -->
+  <!-- A security domain that restricts access -->
+  <security-domain>java:/jaas/jmx-console</security-domain>  
   
   <context-root>jbossws</context-root>
 
