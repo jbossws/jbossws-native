@@ -34,22 +34,22 @@
     <url-pattern>/pclink</url-pattern>
   </servlet-mapping>
 
-   <!-- A security constraint that restricts access
+   <!-- A security constraint that restricts access -->
    <security-constraint>
      <web-resource-collection>
-       <web-resource-name>ContextServlet</web-resource-name>
-       <description>An example security config that only allows users with the
-         role 'friend' to access the JBossWS console web application
+       <web-resource-name>jbossws</web-resource-name>
+       <description>Security configuration that only allows users with the
+         role 'JBossAdmin' to access the JBossWS console web application
        </description>
        <url-pattern>/*</url-pattern>
        <http-method>GET</http-method>
        <http-method>POST</http-method>
      </web-resource-collection>
      <auth-constraint>
-       <role-name>friend</role-name>
+       <role-name>JBossAdmin</role-name>
      </auth-constraint>
    </security-constraint>
-   -->
+   
 
    <login-config>
       <auth-method>BASIC</auth-method>
@@ -57,7 +57,7 @@
    </login-config>
 
    <security-role>
-      <role-name>friend</role-name>
+      <role-name>JBossAdmin</role-name>
    </security-role>
   
   <!-- 
