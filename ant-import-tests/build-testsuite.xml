@@ -21,6 +21,9 @@
 	<property name="tests.dir" value="${core.dir}/src/test"/>
 	<property name="tests.java.dir" value="${tests.dir}/java"/>
 	<property name="tests.resources.dir" value="${tests.dir}/resources"/>
+  
+	<property name="tests.framework.dir" value="${core.dir}/src/test-framework"/>
+	<property name="tests.framework.resources.dir" value="${tests.framework.dir}/resources"/>
 
 	<!--
 	  Init the various classpaths
@@ -83,13 +86,12 @@
 		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-    <!--
-		<wsconsume wsdl="${tests.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-    -->
 		<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 		<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    
+		<wsconsume wsdl="${tests.framework.resources.dir}/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+		<wsconsume wsdl="${tests.framework.resources.dir}/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
 	</target>
 
 	<!--
