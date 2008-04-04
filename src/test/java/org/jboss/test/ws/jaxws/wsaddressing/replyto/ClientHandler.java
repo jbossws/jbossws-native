@@ -33,7 +33,7 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 
 import org.jboss.logging.Logger;
 import org.jboss.test.ws.jaxws.wsaddressing.AddressingHandler;
-import org.jboss.ws.core.utils.UUIDGenerator;
+import org.jboss.wsf.common.utils.UUIDGenerator;
 
 /**
  * A client side handler for the ws-addressing

@@ -143,7 +143,10 @@
     
     <!-- The compile classpath for jbossws core -->
       <path id="thirdparty.classpath">
-        <!-- A stack MUST NOT have a compile time dependency on jbossws-framework.jar -->
+        <!-- 
+          A stack MUST NOT have a compile time dependency on framework
+          http://www.jboss.org/index.html?module=bb&op=viewtopic&t=133071
+        -->
         <pathelement location="${thirdparty.dir}/jbossws-common.jar"/>
         <pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
         

@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.jbws1283;
 
-import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.wsf.common.handler.GenericSOAPHandler;
 
 import javax.activation.DataHandler;
 import javax.xml.soap.AttachmentPart;

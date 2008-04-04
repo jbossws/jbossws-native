@@ -43,7 +43,6 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
-import org.jboss.ws.core.utils.UUIDGenerator;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.api.RMException;
@@ -51,6 +50,7 @@ import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
 import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMIncompleteSequenceBehavior;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
+import org.jboss.wsf.common.utils.UUIDGenerator;
 
 /**
  * Client side implementation of the RM sequence

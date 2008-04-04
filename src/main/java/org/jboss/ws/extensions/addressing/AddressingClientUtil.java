@@ -9,7 +9,7 @@ import javax.xml.ws.addressing.AddressingConstants;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.AttributedURI;
 
-import org.jboss.ws.core.utils.UUIDGenerator;
+import org.jboss.wsf.common.utils.UUIDGenerator;
 
 /**
  * @author Heiko Braun, <heiko@openj.net>

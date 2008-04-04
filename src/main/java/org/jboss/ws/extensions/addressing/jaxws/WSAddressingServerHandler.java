@@ -23,10 +23,10 @@ package org.jboss.ws.extensions.addressing.jaxws;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.wsf.common.handler.GenericSOAPHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;

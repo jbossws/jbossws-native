@@ -30,7 +30,7 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.jaxws.handler.GenericSOAPHandler;
+import org.jboss.wsf.common.handler.GenericSOAPHandler;
 
 /**
  * A client side handler
