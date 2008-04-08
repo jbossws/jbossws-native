@@ -223,6 +223,7 @@
 		<ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
 		<ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
 		<ant antfile="${core.dir}/src/test-framework/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws"/>
+		<ant antfile="${core.dir}/src/test-framework/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws"/>
 	</target>
 
 	<target name="tests-main" depends="tests-jars" description="Build the deployments."/>
