@@ -19,38 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.console;
+package org.jboss.test.ws.jaxws.webserviceref;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.jboss.logging.Logger;
 
-import org.jboss.wsf.test.JBossWSTest;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
-/**
- * Ensure JBossWS console is accessible
- *
- * @author richard.opalka@jboss.com
- */
-public final class JBossWSConsoleAccessibilityTestCase extends JBossWSTest
+@WebService(name = "TestEndpoint", serviceName = "TestEndpointService", targetNamespace = "http://org.jboss.ws/wsref")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public class TestEndpointImpl
 {
-   
-   public void testAccess()
+   // Provide logging
+   private static Logger log = Logger.getLogger(org.jboss.test.ws.jaxws.webserviceref.TestEndpointImpl.class);
+
+   @WebMethod
+   public String echo(String input)
    {
-      try
-      {
-         String url = "http://" + this.getServerHost() + ":8080/jbossws";
-         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-         int responseCode = connection.getResponseCode();
-         if (responseCode != HttpURLConnection.HTTP_OK)
-         {
-            fail("Cannot access JBossWS console, responseCode == " + responseCode);
-         }
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace(System.err);
-         fail("Cannot access JBossWS console: " + e.getMessage());
-      }
+      org.jboss.test.ws.jaxws.webserviceref.TestEndpointImpl.log.info(input);
+      return input;
    }
-   
 }
