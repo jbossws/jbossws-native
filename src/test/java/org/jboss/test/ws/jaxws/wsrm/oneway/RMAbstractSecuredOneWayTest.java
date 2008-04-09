@@ -50,7 +50,7 @@ public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
    {
       super.setUp();
 
-      QName serviceName = new QName("http://org.jboss.ws/jaxws/wsrm", "SecuredOneWayService");
+      QName serviceName = new QName("http://www.jboss.org/jbossws/ws-extensions/wsrm", "SecuredOneWayService");
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (SecuredOneWayServiceIface)service.getPort(SecuredOneWayServiceIface.class);

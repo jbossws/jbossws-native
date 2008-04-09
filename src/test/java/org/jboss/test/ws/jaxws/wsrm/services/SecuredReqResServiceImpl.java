@@ -26,24 +26,14 @@ import javax.jws.WebService;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
-import org.jboss.ws.extensions.policy.PolicyScopeLevel;
-import org.jboss.ws.extensions.policy.annotation.Policy;
-import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 
 @WebService
 (
    name = "SecuredReqRes",
    serviceName = "SecuredReqResService",
-   targetNamespace = "http://org.jboss.ws/jaxws/wsrm",
+   wsdlLocation = "WEB-INF/wsdl/SecuredReqResService.wsdl",
+   targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm",
    endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.SecuredReqResServiceIface"
-)
-@PolicyAttachment
-(
-   @Policy
-   (
-      policyFileLocation = "WEB-INF/wsrm-exactly-once-in-order-policy.xml",
-      scope = PolicyScopeLevel.WSDL_BINDING
-   )
 )
 @EndpointConfig
 (

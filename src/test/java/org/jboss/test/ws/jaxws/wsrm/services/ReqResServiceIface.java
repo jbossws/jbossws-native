@@ -9,6 +9,9 @@ import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 
 @WebService
+(
+   targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm"
+)
 public interface ReqResServiceIface
 {
    @WebMethod(operationName = "echo")

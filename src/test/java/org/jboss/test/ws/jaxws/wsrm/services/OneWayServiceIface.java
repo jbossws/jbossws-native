@@ -4,6 +4,9 @@ import javax.jws.Oneway;
 import javax.jws.WebService;
 
 @WebService
+(
+   targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm"
+)
 public interface OneWayServiceIface
 {
    @Oneway

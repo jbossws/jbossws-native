@@ -73,7 +73,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
 
       if (proxy == null)
       {
-         QName serviceName = new QName("http://org.jboss.ws/jaxws/wsrm", "ReqResService");
+         QName serviceName = new QName("http://www.jboss.org/jbossws/ws-extensions/wsrm", "ReqResService");
          URL wsdlURL = new URL(serviceURL + "?wsdl");
          Service service = Service.create(wsdlURL, serviceName);
          service.setExecutor(testExecutor);
