@@ -169,6 +169,15 @@
       </classes>
     </war>
     
+    <!-- jaxws-jbws1809 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1809.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1809/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1809/*TestCase.class"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/jbws1809/META-INF"/>
+    </jar>
+    
   	<!-- jaxws-jbws1814 -->
     <war warfile="${tests.output.dir}/libs/jaxws-jbws1814.war" webxml="${tests.output.dir}/resources/jaxws/jbws1814/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
