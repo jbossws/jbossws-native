@@ -54,8 +54,7 @@
   </patternset>
   
   <patternset id="jbossws.lib.patternset">
-    <include name="**/jaxb-api.jar"/>
-    <include name="**/jaxb-impl.jar"/>
+    <include name="**/nothing-to-deploy"/>
   </patternset>
   
   <patternset id="jbossws.lib.endorsed.patternset">
@@ -107,7 +106,7 @@
   <!-- Deploy Lib                                                         -->
   <!-- ================================================================== -->
   
-  <macrodef name="macro-deploy-jbossws-lib">
+  <macrodef name="macro-deploy-jbossws-lib42">
     <attribute name="thirdpartydir"/>
     <attribute name="targetdir"/>
     <sequential>
@@ -115,6 +114,23 @@
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
         <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.lib.patternset"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-deploy-jbossws-lib50">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.lib.patternset"/>
+          <include name="**/jaxb-api.jar"/>
+          <include name="**/jaxb-impl.jar"/>
+          <include name="**/stax-api.jar"/>
+          <include name="**/wstx.jar"/>
         </fileset>
       </copy>
     </sequential>
@@ -247,7 +263,7 @@
   
   <target name="deploy-jbossws-native42" depends="deploy-jbossws-endorsed">
     <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" thirdpartydir="${thirdpartydir}"/>
-    <macro-deploy-jbossws-lib targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-lib42 targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-server-lib targetdir="${installserver}/lib" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-native42-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartydir="${thirdpartydir}" resourcesdir="${resourcesdir}"/>
@@ -255,7 +271,7 @@
   
   <target name="deploy-jbossws-native50" depends="deploy-jbossws-endorsed">
     <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" thirdpartydir="${thirdpartydir}"/>
-    <macro-deploy-jbossws-lib targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-lib50 targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-server-lib targetdir="${installserver}/lib" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-native50-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartydir="${thirdpartydir}"/>
