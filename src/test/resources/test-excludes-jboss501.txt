@@ -40,7 +40,7 @@ org/jboss/test/ws/jaxws/webserviceref/**
 # [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
 org/jboss/test/ws/jaxws/endpoint/**
 
-# [JBAS-5259] mapped-name is required for context of deployment
+# [JBAS-5359] mapped-name is required for context of deployment
 org/jboss/test/ws/jaxws/binding/**
 org/jboss/test/ws/jaxws/handlerlifecycle/**
 org/jboss/test/ws/jaxws/jbws1611/**
