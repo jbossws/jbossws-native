@@ -78,7 +78,7 @@ public final class RM10PolicyAssertionDeployer implements AssertionDeployer
          portMD.setPortName(endpointMD.getPortName());
          RMDeliveryAssuranceConfig deliveryMD = new RMDeliveryAssuranceConfig();
          deliveryMD.setInOrder("false");
-         deliveryMD.setQuality("AtMostOnce");
+         deliveryMD.setQuality("AtLeastOnce");
          portMD.setDeliveryAssurance(deliveryMD);
          
          // ensure port does not exists yet

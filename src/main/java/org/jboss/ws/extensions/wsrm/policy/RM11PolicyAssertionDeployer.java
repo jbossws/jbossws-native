@@ -92,8 +92,10 @@ public final class RM11PolicyAssertionDeployer implements AssertionDeployer
          // construct new port metadata
          RMPortConfig portMD = new RMPortConfig();
          portMD.setPortName(endpointMD.getPortName());
-         List<PrimitiveAssertion> wsrmpAssertions = getWSRMPAssertions(assertion);
-         portMD.setDeliveryAssurance(constructDeliveryAssurance(wsrmpAssertions));
+         RMDeliveryAssuranceConfig deliveryMD = new RMDeliveryAssuranceConfig();
+         deliveryMD.setInOrder("false");
+         deliveryMD.setQuality("AtLeastOnce");
+         portMD.setDeliveryAssurance(deliveryMD);
          
          // ensure port does not exists yet
          for (RMPortConfig pMD : rmMD.getPorts())
@@ -113,6 +115,15 @@ public final class RM11PolicyAssertionDeployer implements AssertionDeployer
    private static RMDeliveryAssuranceConfig constructDeliveryAssurance(List<PrimitiveAssertion> assertions)
    throws UnsupportedAssertion
    {
+      if (assertions.size() == 0)
+      {
+         // use default one
+         RMDeliveryAssuranceConfig deliveryMD = new RMDeliveryAssuranceConfig();
+         deliveryMD.setInOrder("false");
+         deliveryMD.setQuality("AtLeastOnce");
+         return deliveryMD;
+      }
+      
       if (assertions.size() == 1)
       {
          QName assertionQN = assertions.get(0).getName();
@@ -164,17 +175,19 @@ public final class RM11PolicyAssertionDeployer implements AssertionDeployer
    
    private static List<PrimitiveAssertion> getWSRMPAssertions(PrimitiveAssertion assertion)
    {
-      Policy policy = (Policy)assertion.getTerms().get(0);
-      XorCompositeAssertion xor = (XorCompositeAssertion)policy.getTerms().get(0);
-      AndCompositeAssertion and = (AndCompositeAssertion)xor.getTerms().get(0);
-      List<?> primitiveAssertions = and.getTerms();
-
       List<PrimitiveAssertion> retVal = new LinkedList<PrimitiveAssertion>();
-      for (int i = 0; i < primitiveAssertions.size(); i++)
+      if (assertion.getTerms().size() != 0)
       {
-         retVal.add((PrimitiveAssertion)primitiveAssertions.get(i));
+         Policy policy = (Policy)assertion.getTerms().get(0);
+         XorCompositeAssertion xor = (XorCompositeAssertion)policy.getTerms().get(0);
+         AndCompositeAssertion and = (AndCompositeAssertion)xor.getTerms().get(0);
+         List<?> primitiveAssertions = and.getTerms();
+
+         for (int i = 0; i < primitiveAssertions.size(); i++)
+         {
+            retVal.add((PrimitiveAssertion)primitiveAssertions.get(i));
+         }
       }
-      
       return retVal;
    }
 

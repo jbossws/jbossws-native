@@ -60,6 +60,7 @@ public class PolicyDeployer
       me.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", WSSecurityAssertionDeployer.class);
       me.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", RM11PolicyAssertionDeployer.class);
       me.domainDeployerMap.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", RM10PolicyAssertionDeployer.class);
+      me.domainDeployerMap.put("http://www.w3.org/2006/05/addressing/wsdl", NopAssertionDeployer.class);
    }
 
    //hide constructor
@@ -88,8 +89,8 @@ public class PolicyDeployer
       instance.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", NopAssertionDeployer.class);
       instance.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", NopAssertionDeployer.class);
       instance.domainDeployerMap.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", NopAssertionDeployer.class);
+      instance.domainDeployerMap.put("http://www.w3.org/2006/05/addressing/wsdl", NopAssertionDeployer.class);
       return instance;
-
    }
 
    @SuppressWarnings("unchecked")
