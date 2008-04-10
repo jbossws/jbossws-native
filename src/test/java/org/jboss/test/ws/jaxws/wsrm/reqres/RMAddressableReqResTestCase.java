@@ -22,15 +22,12 @@
 package org.jboss.test.ws.jaxws.wsrm.reqres;
 
 import junit.framework.Test;
-
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Addressable version of request reply WS-RM message exchange
  *
  * @author richard.opalka@jboss.com
- *
- * @since Nov 28, 2007
  */
 public final class RMAddressableReqResTestCase extends RMAbstractReqResTest
 {

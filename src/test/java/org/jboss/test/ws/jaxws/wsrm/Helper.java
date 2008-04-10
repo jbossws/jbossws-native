@@ -21,18 +21,16 @@
  */
 package org.jboss.test.ws.jaxws.wsrm;
 
+import java.lang.reflect.Method;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
-
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 
 /**
- * Test helper
+ * WS-RM Tests helper
  *
  * @author richard.opalka@jboss.com
- *
- * @since Oct 29, 2007
  */
 public final class Helper
 {
@@ -42,11 +40,29 @@ public final class Helper
       // no instances
    }
 
+   /**
+    * Setup addressing SOAP headers for specified proxy
+    * @param proxy
+    * @param wsaAction
+    * @param serviceURL
+    */
    public static void setAddrProps(Object proxy, String wsaAction, String serviceURL)
    {
       BindingProvider bp = (BindingProvider)proxy;
       AddressingProperties props = AddressingClientUtil.createAnonymousProps(wsaAction, serviceURL);
       bp.getRequestContext().put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
    }
-
+   
+   /**
+    * Invokes method using java reflection api
+    * @throws Exception if some reflection related problem occurs 
+    */
+   public static Object invokeMethodUsingReflection(String ifaceName, Object object, String methodName, Class<?>[] parametersSignature, Object[] parameters)
+   throws Exception
+   {
+      Object castedObject = Class.forName(ifaceName).cast(object);
+      Method castedObjectMethod = castedObject.getClass().getMethod(methodName, parametersSignature);
+      return castedObjectMethod.invoke(castedObject, parameters);
+   }
+   
 }

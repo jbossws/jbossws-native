@@ -22,15 +22,12 @@
 package org.jboss.test.ws.jaxws.wsrm.oneway;
 
 import junit.framework.Test;
-
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Secured addressable version of one way WS-RM message exchange
  *
  * @author richard.opalka@jboss.com
- *
- * @since Dec 17, 2007
  */
 public class RMSecuredAddressableOneWayTestCase extends RMAbstractSecuredOneWayTest
 {

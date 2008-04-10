@@ -22,15 +22,12 @@
 package org.jboss.test.ws.jaxws.wsrm.oneway;
 
 import junit.framework.Test;
-
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Anonymous version of one way WS-RM message exchange
  *
  * @author richard.opalka@jboss.com
- *
- * @since Nov 28, 2007
  */
 public final class RMAnonymousOneWayTestCase extends RMAbstractOneWayTest
 {

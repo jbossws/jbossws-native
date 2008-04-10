@@ -21,7 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.reqres;
 
-import static org.jboss.test.ws.jaxws.wsrm.Helper.*;
+import static org.jboss.test.ws.jaxws.wsrm.Helper.invokeMethodUsingReflection;
+import static org.jboss.test.ws.jaxws.wsrm.Helper.setAddrProps;
 
 import java.net.URL;
 import java.util.concurrent.Executor;
@@ -29,24 +30,17 @@ import java.util.concurrent.Future;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
-
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface;
-
-import org.jboss.ws.core.StubExt;
-import org.jboss.ws.extensions.wsrm.api.RMProvider;
 
 /**
  * Reliable JBoss WebService client invoking req/res methods
  *
  * @author richard.opalka@jboss.com
- * 
- * @since Aug 22, 2007
  */
 public abstract class RMAbstractReqResTest extends JBossWSTest
 {
@@ -78,10 +72,19 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
          Service service = Service.create(wsdlURL, serviceName);
          service.setExecutor(testExecutor);
          proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
-         ((StubExt)proxy).setConfigName(getConfigName(), "META-INF/wsrm-jaxws-client-config.xml");
+         if (isIntegrationNative())
+         {
+            // set up client config to be used - uses jbossws specific API via reflection
+            invokeMethodUsingReflection(
+               "org.jboss.ws.core.StubExt",
+               proxy, "setConfigName",
+               new Class[] { String.class, String.class },
+               new Object[] {getConfigName(), "META-INF/wsrm-jaxws-client-config.xml"}
+            );
+         }
       }
    }
-   
+
    public void testSynchronousInvocation() throws Exception
    {
       doReliableMessageExchange(proxy, InvocationType.SYNC);
@@ -157,7 +160,16 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      ((RMProvider)proxyObject).closeSequence(); // this is optional operation
+      if (isIntegrationNative())
+      {
+         // force close sequence - uses jbossws specific API via reflection
+         invokeMethodUsingReflection(
+            "org.jboss.ws.extensions.wsrm.api.RMProvider",
+            proxyObject, "closeSequence",
+            new Class[] {},
+            new Object[] {}
+         );
+      }
    }
    
    public static String getClasspath()

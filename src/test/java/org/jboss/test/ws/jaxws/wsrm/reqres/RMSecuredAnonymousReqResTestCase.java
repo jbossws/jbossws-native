@@ -22,15 +22,12 @@
 package org.jboss.test.ws.jaxws.wsrm.reqres;
 
 import junit.framework.Test;
-
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * Secured anonymous version of request reply WS-RM message exchange
  *
  * @author richard.opalka@jboss.com
- *
- * @since Dec 17, 2007
  */
 public class RMSecuredAnonymousReqResTestCase extends RMAbstractSecuredReqResTest
 {
