@@ -22,10 +22,14 @@
 package org.jboss.test.ws.jaxws.wsrm;
 
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.addressing.AddressingBuilder;
+import javax.xml.ws.addressing.AddressingConstants;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
-import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.wsf.common.utils.UUIDGenerator;
 
 /**
  * WS-RM Tests helper
@@ -34,6 +38,15 @@ import org.jboss.ws.extensions.addressing.AddressingClientUtil;
  */
 public final class Helper
 {
+   
+   private static AddressingBuilder BUILDER;
+   private static AddressingConstants CONSTANTS;
+
+   static
+   {
+      BUILDER = AddressingBuilder.getAddressingBuilder();
+      CONSTANTS = BUILDER.newAddressingConstants();
+   }
    
    private Helper()
    {
@@ -49,8 +62,26 @@ public final class Helper
    public static void setAddrProps(Object proxy, String wsaAction, String serviceURL)
    {
       BindingProvider bp = (BindingProvider)proxy;
-      AddressingProperties props = AddressingClientUtil.createAnonymousProps(wsaAction, serviceURL);
+      AddressingProperties props = createAnonymousProps(wsaAction, serviceURL);
+
       bp.getRequestContext().put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, props);
+   }
+   
+   public static AddressingProperties createAnonymousProps(String wsaAction, String wsaTo)
+   {
+      try
+      {
+         AddressingProperties addrProps = BUILDER.newAddressingProperties();
+         addrProps.setMessageID(BUILDER.newURI(new URI("urn:uuid:" + UUIDGenerator.generateRandomUUIDString())));
+         addrProps.setAction(BUILDER.newURI(wsaAction));
+         addrProps.setTo(BUILDER.newURI(wsaTo));
+         addrProps.setReplyTo(BUILDER.newEndpointReference(new URI(CONSTANTS.getAnonymousURI())));
+         return addrProps;
+      }
+      catch (URISyntaxException e)
+      {
+         throw new IllegalArgumentException(e.getMessage());
+      }
    }
    
    /**
