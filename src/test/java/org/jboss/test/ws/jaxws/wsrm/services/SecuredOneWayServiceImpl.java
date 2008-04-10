@@ -22,12 +22,8 @@
 package org.jboss.test.ws.jaxws.wsrm.services;
 
 import java.util.Arrays;
-
 import javax.jws.Oneway;
 import javax.jws.WebService;
-
-import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 
 @WebService
 (
@@ -37,30 +33,23 @@ import org.jboss.ws.annotation.EndpointConfig;
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm",
    endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.SecuredOneWayServiceIface"
 )
-@EndpointConfig
-(
-   configName = "Secured WSRM Endpoint",
-   configFile = "WEB-INF/wsrm-jaxws-endpoint-config.xml"
-)
 public class SecuredOneWayServiceImpl implements SecuredOneWayServiceIface
 {
-   private Logger log = Logger.getLogger(SecuredOneWayServiceImpl.class);
-
    @Oneway
    public void method1()
    {
-      log.info("method1()");
+      System.out.println("method1()");
    }
 
    @Oneway
    public void method2(String s)
    {
-      log.info("method2(" + s + ")");
+      System.out.println("method2(" + s + ")");
    }
 
    @Oneway
    public void method3(String[] sa)
    {
-      log.info("method3(" + Arrays.asList(sa) + ")");
+      System.out.println("method3(" + Arrays.asList(sa) + ")");
    }
 }

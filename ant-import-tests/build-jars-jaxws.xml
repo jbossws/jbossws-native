@@ -455,6 +455,9 @@
       <zipfileset
       	dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/wsdl" 
     	prefix="WEB-INF/wsdl"/>
+      <zipfileset
+        file="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/standard-jaxws-endpoint-config.xml" 
+        prefix="META-INF"/>
     </war>
 
     <war warfile="${tests.output.dir}/libs/jaxws-secured-wsrm.war"
@@ -478,6 +481,9 @@
       <zipfileset
         dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/wsdl" 
         prefix="WEB-INF/wsdl"/>
+      <zipfileset
+        file="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/standard-jaxws-endpoint-config.xml" 
+        prefix="META-INF"/>
     </war>
 
     <war warfile="${tests.output.dir}/libs/jaxws-wsrm-one-way-emulator.war"

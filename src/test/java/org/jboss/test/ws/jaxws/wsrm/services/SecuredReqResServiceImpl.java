@@ -24,9 +24,6 @@ package org.jboss.test.ws.jaxws.wsrm.services;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
-
 @WebService
 (
    name = "SecuredReqRes",
@@ -35,19 +32,12 @@ import org.jboss.ws.annotation.EndpointConfig;
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm",
    endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.SecuredReqResServiceIface"
 )
-@EndpointConfig
-(
-   configName = "Secured WSRM Endpoint",
-   configFile = "WEB-INF/wsrm-jaxws-endpoint-config.xml"
-)
 public class SecuredReqResServiceImpl
 {
-   private static Logger log = Logger.getLogger(SecuredReqResServiceImpl.class);
-
    @WebMethod
    public String echo(String s)
    {
-      log.info("echo(" + s + ")");
+      System.out.println("echo(" + s + ")");
       return s;
    }
 }

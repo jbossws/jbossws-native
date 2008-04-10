@@ -22,7 +22,6 @@
 package org.jboss.test.ws.jaxws.wsrm.services;
 
 import java.util.concurrent.Future;
-
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.ws.AsyncHandler;
