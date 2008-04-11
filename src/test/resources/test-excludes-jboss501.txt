@@ -33,10 +33,6 @@ org/jboss/test/ws/interop/**
 # [EJBTHREE-1150] WebServiceContext injection requires mapped-name
 org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
 
-# [JBAS-5389] EJB3 ClientLauncher not available
-org/jboss/test/ws/jaxws/samples/webserviceref/**
-org/jboss/test/ws/jaxws/webserviceref/**
-
 # [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
 org/jboss/test/ws/jaxws/endpoint/**
 
