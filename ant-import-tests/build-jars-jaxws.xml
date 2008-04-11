@@ -158,7 +158,7 @@
     <!-- jaxws-jbws1178 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1178.war" webxml="${tests.output.dir}/resources/jaxws/jbws1178/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
-        <include name="org/jboss/test/ws/jaxws/jbws1178/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws1178/TestEndpointImpl.class"/>
       </classes>
     </war>
     

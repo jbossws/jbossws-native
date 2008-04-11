@@ -27,8 +27,11 @@ import javax.jws.soap.SOAPBinding;
 
 @WebService(name = "TestEndpoint", serviceName = "TestEndpointService", targetNamespace = "http://org.jboss.ws/jbws1178")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-public interface TestEndpoint
+public class TestEndpointImpl
 {
    @WebMethod
-   public String echo(String input);
+   public String echo(String input)
+   {
+      return input;
+   }
 }
