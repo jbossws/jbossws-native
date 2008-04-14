@@ -29,7 +29,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.ws.addressing.Action;
+import javax.xml.ws.Action;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.AttributedURI;
 

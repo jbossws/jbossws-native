@@ -52,7 +52,7 @@ import javax.xml.ws.BindingType;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 import javax.xml.ws.WebFault;
-import javax.xml.ws.addressing.Action;
+import javax.xml.ws.Action;
 import javax.xml.ws.addressing.AddressingProperties;
 
 import org.jboss.logging.Logger;

@@ -31,7 +31,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.soap.SOAPFaultException;
-import javax.xml.ws.addressing.Action;
+import javax.xml.ws.Action;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.ReferenceParameters;
