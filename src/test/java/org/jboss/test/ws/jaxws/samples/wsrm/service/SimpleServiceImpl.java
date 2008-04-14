@@ -25,12 +25,19 @@ import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import org.jboss.ws.annotation.EndpointConfig;
+
 @WebService
 (
    name = "SimpleService",
    serviceName = "SimpleService",
    wsdlLocation = "WEB-INF/wsdl/SimpleService.wsdl",
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm"
+)
+@EndpointConfig
+(
+   configFile = "META-INF/wsrm-jaxws-endpoint-config.xml",
+   configName = "Standard WSRM Endpoint"
 )
 public class SimpleServiceImpl
 {

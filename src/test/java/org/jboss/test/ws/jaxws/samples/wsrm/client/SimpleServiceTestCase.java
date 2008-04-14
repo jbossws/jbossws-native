@@ -21,13 +21,14 @@
  */
 package org.jboss.test.ws.jaxws.samples.wsrm.client;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.test.ws.jaxws.samples.wsrm.generated.SimpleService;
@@ -44,7 +45,7 @@ public final class SimpleServiceTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return new JBossWSTestSetup(SimpleServiceTestCase.class, "jaxws-samples-wsrm.war");
+      return new JBossWSTestSetup(SimpleServiceTestCase.class, "jaxws-samples-wsrm.war, jaxws-samples-wsrm-client.jar");
    }
 
    @Override
@@ -56,12 +57,14 @@ public final class SimpleServiceTestCase extends JBossWSTest
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (SimpleService)service.getPort(SimpleService.class);
+      ((StubExt)proxy).setConfigName("Standard Anonymous WSRM Client", "META-INF/wsrm-jaxws-client-config.xml");
    }
    
    public void test() throws Exception
    {
       proxy.ping(); // one way call
       assertEquals("Hello World!", proxy.echo("Hello World!")); // request responce call
+      ((RMProvider)proxy).closeSequence();
    }
    
 }

@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions name='SimpleService' targetNamespace='http://www.jboss.org/jbossws/ws-extensions/wsrm' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://www.jboss.org/jbossws/ws-extensions/wsrm' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<definitions name='SimpleService' targetNamespace='http://www.jboss.org/jbossws/ws-extensions/wsrm' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://www.jboss.org/jbossws/ws-extensions/wsrm' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+  <wsp:UsingPolicy/>
+  <wsp:Policy
+    wsu:Id="wsrm11policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <wsp:All>
+      <wsp:ExactlyOne>
+         <wsp:All>
+            <ns1:RMAssertion xmlns:ns1="http://docs.oasis-open.org/ws-rx/wsrmp/200702"/>
+            <ns2:UsingAddressing xmlns:ns2="http://www.w3.org/2006/05/addressing/wsdl"/>
+         </wsp:All>
+      </wsp:ExactlyOne>
+    </wsp:All>
+  </wsp:Policy>
  <types>
   <xs:schema targetNamespace='http://www.jboss.org/jbossws/ws-extensions/wsrm' version='1.0' xmlns:tns='http://www.jboss.org/jbossws/ws-extensions/wsrm' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
    <xs:element name='echo' type='tns:echo'/>
@@ -39,6 +52,7 @@
   </operation>
  </portType>
  <binding name='SimpleServiceBinding' type='tns:SimpleService'>
+  <wsp:PolicyReference URI="#wsrm11policy"/>
   <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
   <operation name='echo'>
    <soap:operation soapAction=''/>
