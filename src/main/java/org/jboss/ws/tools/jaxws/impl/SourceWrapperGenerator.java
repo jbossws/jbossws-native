@@ -21,7 +21,14 @@
  */
 package org.jboss.ws.tools.jaxws.impl;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JAnnotationUse;
+import com.sun.codemodel.JAnnotationArrayMember;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.AbstractWrapperGenerator;
@@ -30,8 +37,11 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
 import org.jboss.wsf.common.JavaUtils;
-
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
@@ -81,11 +91,10 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
          throw new WSException("Operation is not document/literal (wrapped)");
 
       if (wrappedParameters == null)
-         throw new WSException("Cannot generate a type when their is no type information");
+         throw new WSException("Cannot generate a type when there is no type information");
 
       String wrapperName = pmd.getJavaTypeName();
-      if (log.isDebugEnabled())
-         if(log.isDebugEnabled()) log.debug("Generating wrapper: " + wrapperName);
+      log.debug("Generating wrapper: " + wrapperName);
 
       try
       {
@@ -105,7 +114,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
    public void generate(FaultMetaData fmd)
    {
       String faultBeanName = fmd.getFaultBeanName();
-      Class exception = fmd.getJavaType();
+      Class<?> exception = fmd.getJavaType();
 
       try
       {
@@ -124,7 +133,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
       }
    }
 
-   private static String getterPrefix(Class type)
+   private static String getterPrefix(Class<?> type)
    {
       return Boolean.TYPE == type || Boolean.class == type ? "is" : "get";
    }
@@ -133,7 +142,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
          throws ClassNotFoundException
    {
       variable = JavaUtils.isReservedKeyword(variable) ? "_" + variable : variable;
-      Class type = JavaUtils.loadJavaType(typeName, loader);
+      Class<?> type = JavaUtils.loadJavaType(typeName, loader);
       JFieldVar field = clazz.field(JMod.PRIVATE, type, variable);
       JAnnotationUse annotation = field.annotate(XmlElement.class);
       if (name.getNamespaceURI() != null)
