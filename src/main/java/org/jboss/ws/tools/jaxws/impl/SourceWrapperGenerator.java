@@ -132,6 +132,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
    private void addProperty(JDefinedClass clazz, String typeName, QName name, String variable)
          throws ClassNotFoundException
    {
+      variable = JavaUtils.isReservedKeyword(variable) ? "_" + variable : variable;
       Class type = JavaUtils.loadJavaType(typeName, loader);
       JFieldVar field = clazz.field(JMod.PRIVATE, type, variable);
       JAnnotationUse annotation = field.annotate(XmlElement.class);
