@@ -42,6 +42,7 @@ import org.jboss.ws.extensions.security.operation.RequireOperation;
 import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
 import org.jboss.ws.extensions.security.operation.SignatureVerificationOperation;
 import org.jboss.ws.extensions.security.operation.TimestampVerificationOperation;
+import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -62,16 +63,19 @@ public class SecurityDecoder
    private NonceFactory nonceFactory;
 
    private SecurityStore store;
+   
+   private TimestampVerification timestampVerification;
 
    private HashSet<String> signedIds = new HashSet<String>();
 
    private HashSet<String> encryptedIds = new HashSet<String>();
 
-   public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory)
+   public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory, TimestampVerification timestampVerification)
    {
       org.apache.xml.security.Init.init();
       this.store = store;
       this.nonceFactory = nonceFactory;
+      this.timestampVerification = timestampVerification;
    }
 
    /**
@@ -81,9 +85,9 @@ public class SecurityDecoder
     * @param SecurityStore the security store that contains key and trust information
     * @param now The timestamp to use as the current time when validating a message expiration
     */
-   public SecurityDecoder(SecurityStore store, Calendar now, NonceFactory nonceFactory)
+   public SecurityDecoder(SecurityStore store, Calendar now, NonceFactory nonceFactory, TimestampVerification timestampVerification)
    {
-      this(store, nonceFactory);
+      this(store, nonceFactory, timestampVerification);
       this.now = now;
    }
 
@@ -110,7 +114,7 @@ public class SecurityDecoder
       if (timestamp != null)
       {
          TimestampVerificationOperation operation =
-            (now == null) ? new TimestampVerificationOperation() : new TimestampVerificationOperation(now);
+            (now == null) ? new TimestampVerificationOperation(timestampVerification) : new TimestampVerificationOperation(now);
          operation.process(message, timestamp);
       }
 

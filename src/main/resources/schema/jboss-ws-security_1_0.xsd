@@ -38,6 +38,11 @@
             <xs:documentation>The passwords for the private keys in the keystore. Only required if the passwords are different from that of the keystore.</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="timestamp-verification" type="timestampVerificationType" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>The tolerances and logging required when verifying the 'created' and 'expires' value of the timestamps.</xs:documentation>
+          </xs:annotation>        
+        </xs:element>
         <xs:element name="config" type="configType" minOccurs="0">
           <xs:annotation>
             <xs:documentation>The default security configuration that is applied to all operations on all ports. This is only used if there is no port/operation config.</xs:documentation>
@@ -76,6 +81,28 @@
         <xs:documentation>The password of this private key. If not specified, the keystore password will be used.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="timestampVerificationType">
+    <xs:attribute name="createdTolerance" type="xs:long" use="optional">
+      <xs:annotation>
+        <xs:documentation>The number of seconds in the future the created value on a message will be accepted.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="warnCreated" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies if a WARN should be logged if a message in the future is accepted within the configured 'createdTolerance'.</xs:documentation>
+      </xs:annotation>      
+    </xs:attribute>  
+    <xs:attribute name="expiresTolerance" type="xs:long" use="optional">
+      <xs:annotation>
+        <xs:documentation>The number of seconds tolerance when checking the expires value of the timestamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="warnExpires" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies if a WARN should be logged if an expired message is accepted that is within the 'expiresTolerance'.</xs:documentation>
+      </xs:annotation>      
+    </xs:attribute>    
   </xs:complexType>
   <xs:complexType name="configType" mixed="true">
     <xs:all>

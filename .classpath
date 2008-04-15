@@ -13,6 +13,7 @@
 	<classpathentry kind="lib" path="thirdparty/jaxb-xjc.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jboss-common-core.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jboss-dependency.jar"/>
+	<classpathentry kind="lib" path="thirdparty/jboss-javaee.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jboss-j2ee.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jboss-logging-spi.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jboss-microcontainer.jar"/>

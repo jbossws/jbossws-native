@@ -95,7 +95,7 @@ public class RoundTripTestCase extends JBossWSTest
       env = soapMsg.getSOAPPart().getEnvelope();
       doc = env.getOwnerDocument();
 
-      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), null);
+      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), null, null);
       decoder.decode(doc);
       decoder.verify(buildRequireOperations());
       decoder.complete();

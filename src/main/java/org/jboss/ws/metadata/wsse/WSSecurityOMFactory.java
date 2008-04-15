@@ -179,6 +179,34 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       {
          return new Port(attrs.getValue("", "name"));
       }
+      if ("timestamp-verification".equals(localName))
+      {
+         //By default, the createdTolerance should be '0'
+         Long createdTolerance = new Long(0);
+         String createdToleranceAttr = attrs.getValue("", "createdTolerance");
+         if (createdToleranceAttr != null)
+            createdTolerance = (Long)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_LONG_NAME, createdToleranceAttr, null);
+
+         //By default, we do log warnings if the tolerance is used.
+         Boolean warnCreated = new Boolean(true);
+         String warnCreatedAttr = attrs.getValue("", "warnCreated");
+         if (warnCreatedAttr != null)
+            warnCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, warnCreatedAttr, null);
+
+         //By default, the expiresTolerance should be '0'
+         Long expiresTolerance = new Long(0);
+         String expiresToleranceAttr = attrs.getValue("", "expiresTolerance");
+         if (expiresToleranceAttr != null)
+            expiresTolerance = (Long)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_LONG_NAME, expiresToleranceAttr, null);
+
+         //By default, we do log warnings if the tolerance is used.
+         Boolean warnExpires = new Boolean(true);
+         String warnExpiresAttr = attrs.getValue("", "warnExpires");
+         if (warnExpiresAttr != null)
+            warnExpires = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, warnExpiresAttr, null);
+
+         return new TimestampVerification(createdTolerance, warnCreated, expiresTolerance, warnExpires);
+      }
       return null;
    }
 
@@ -216,6 +244,16 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    }
 
    /**
+    * Called when parsing TimestampVerification is complete.
+    */
+   public void addChild(WSSecurityConfiguration configuration, TimestampVerification timestampVerification, UnmarshallingContext navigator, String namespaceURI,
+         String localName)
+   {
+      log.trace("addChild: [obj=" + configuration + ",child=" + timestampVerification + "]");
+      configuration.setTimestampVerification(timestampVerification);
+   }
+
+   /**
     * Called when parsing of a new element started.
     */
    public Object newChild(Config config, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
@@ -233,7 +271,8 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
       else if ("encrypt".equals(localName))
       {
-         return new Encrypt(attrs.getValue("", "type"), attrs.getValue("", "alias"), attrs.getValue("", "algorithm"), attrs.getValue("", "keyWrapAlgorithm"), attrs.getValue("", "tokenReference"));
+         return new Encrypt(attrs.getValue("", "type"), attrs.getValue("", "alias"), attrs.getValue("", "algorithm"), attrs.getValue("", "keyWrapAlgorithm"), attrs
+               .getValue("", "tokenReference"));
       }
       else if ("timestamp".equals(localName))
       {
@@ -250,19 +289,19 @@ public class WSSecurityOMFactory implements ObjectModelFactory
          String digestPasswordAttr = attrs.getValue("", "digestPassword");
          if (digestPasswordAttr != null)
             digestPassword = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, digestPasswordAttr, null);
-         
+
          //if password digest is enabled, we use nonces by default
          Boolean useNonce = new Boolean(true);
          String useNonceAttr = attrs.getValue("", "useNonce");
          if (useNonceAttr != null)
             useNonce = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useNonceAttr, null);
-         
+
          //if password digest is enabled, we use the created element by default
          Boolean useCreated = new Boolean(true);
          String useCreatedAttr = attrs.getValue("", "useCreated");
          if (useCreatedAttr != null)
             useCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useCreatedAttr, null);
-         
+
          return new Username(digestPassword, useNonce, useCreated);
       }
 
