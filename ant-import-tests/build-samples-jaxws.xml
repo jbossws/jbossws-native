@@ -227,6 +227,27 @@
       </fileset>
     </jar>
     
+    <!-- jaxws-samples-wsrm -->
+    <war
+       warfile="${tests.output.dir}/libs/jaxws-samples-wsrm.war"
+       webxml="${tests.output.dir}/resources/jaxws/samples/wsrm/WEB-INF/web.xml">
+       <classes dir="${tests.output.dir}/classes">
+          <include name="org/jboss/test/ws/jaxws/samples/wsrm/service/**"/>
+       </classes>
+       <zipfileset
+          dir="${tests.output.dir}/resources/jaxws/samples/wsrm/WEB-INF/wsdl" 
+          prefix="WEB-INF/wsdl"/>
+        <zipfileset
+          file="${tests.output.dir}/resources/jaxws/samples/wsrm/WEB-INF/wsrm-jaxws-endpoint-config.xml" 
+          prefix="META-INF"/>
+    </war>
+
+    <jar jarfile="${tests.output.dir}/libs/jaxws-samples-wsrm-client.jar">
+      <metainf dir="${tests.output.dir}/resources/jaxws/samples/wsrm/META-INF">
+        <include name="wsrm-jaxws-client-config.xml"/>
+      </metainf>
+    </jar>
+
     <!-- jaxws-samples-wssecurity-encrypt -->
     <war warfile="${tests.output.dir}/libs/jaxws-samples-wssecurity-encrypt.war" webxml="${tests.output.dir}/resources/jaxws/samples/wssecurity/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
