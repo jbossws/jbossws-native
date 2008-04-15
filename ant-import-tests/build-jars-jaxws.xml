@@ -32,7 +32,7 @@
       </classes>
       <webinf dir="${tests.output.dir}/resources/benchmark/jaxws/doclit/WEB-INF">
         <include name="wsdl/**"/>
-      </webinf>     
+      </webinf>
     </war>
     
     <war warfile="${tests.output.dir}/libs/ri-benchmark-doclit.war" webxml="${tests.output.dir}/resources/benchmark/jaxws/doclit/ri/WEB-INF/web.xml">
@@ -47,19 +47,19 @@
         <include name="sun-jaxws.xml"/>
       </webinf>
     </war>
-
-     <!-- esb adoption -->
-     <jar jarfile="${tests.output.dir}/libs/jaxws-benchmark-doclit.esb">
-        <metainf dir="${tests.output.dir}/resources/benchmark/jaxws/esb/META-INF">
-           <include name="*.xml"/>
-        </metainf>
-        <fileset dir="${tests.output.dir}/libs">
-           <include name="jaxws-benchmark-doclit.war"/>
-        </fileset>
-        <fileset dir="${tests.output.dir}/resources/benchmark/jaxws/esb">
-           <include name="*.xml"/>
-        </fileset>
-     </jar>
+    
+    <!-- esb adoption -->
+    <jar jarfile="${tests.output.dir}/libs/jaxws-benchmark-doclit.esb">
+      <metainf dir="${tests.output.dir}/resources/benchmark/jaxws/esb/META-INF">
+        <include name="*.xml"/>
+      </metainf>
+      <fileset dir="${tests.output.dir}/libs">
+        <include name="jaxws-benchmark-doclit.war"/>
+      </fileset>
+      <fileset dir="${tests.output.dir}/resources/benchmark/jaxws/esb">
+        <include name="*.xml"/>
+      </fileset>
+    </jar>
     
     <!-- jaxws-epr -->
     <jar destfile="${tests.output.dir}/libs/jaxws-epr.jar">
@@ -175,7 +175,7 @@
       <metainf dir="${tests.output.dir}/resources/jaxws/jbws1809/META-INF"/>
     </jar>
     
-  	<!-- jaxws-jbws1814 -->
+    <!-- jaxws-jbws1814 -->
     <war warfile="${tests.output.dir}/libs/jaxws-jbws1814.war" webxml="${tests.output.dir}/resources/jaxws/jbws1814/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1814/HelloJavaBean.class"/>
@@ -185,22 +185,22 @@
       </webinf>
     </war>
     
-  	<!-- jaxws-jbws1850 -->
+    <!-- jaxws-jbws1850 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1850.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1850/TestServiceImpl.class"/>
       </fileset>
     </jar>
     
-  	<!-- jaxws-jbws1909 -->
+    <!-- jaxws-jbws1909 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1909.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1909/*.class"/>
-      	<exclude name="org/jboss/test/ws/jaxws/jbws1909/*TestCase.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1909/*TestCase.class"/>
       </fileset>
     </jar>
-
-  	<!-- jaxws-jbws1988 -->
+    
+    <!-- jaxws-jbws1988 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1988.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1988/*.class"/>
@@ -208,7 +208,7 @@
       </fileset>
       <metainf dir="${tests.output.dir}/resources/jaxws/jbws1988/META-INF">
         <include name="jboss-wsse-server.xml"/>
-      	<include name="jboss.xml"/>
+        <include name="jboss.xml"/>
       </metainf>
     </jar>
     <jar jarfile="${tests.output.dir}/libs/jaxws-jbws1988.sar">
@@ -219,19 +219,19 @@
         <include name="jbossws-roles.properties"/>
       </metainf>
     </jar>
-  	
-  	<!-- jaxws-jbws1991 -->
-  	<jar destfile="${tests.output.dir}/libs/jaxws-jbws1991.jar">
+    
+    <!-- jaxws-jbws1991 -->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws1991.jar">
       <fileset dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/jbws1991/*.class"/>
         <exclude name="org/jboss/test/ws/jaxws/jbws1991/*TestCase.class"/>
       </fileset>
       <metainf dir="${tests.output.dir}/resources/jaxws/jbws1991/META-INF">
         <include name="jboss-wsse-server.xml"/>
-      	<include name="jboss.xml"/>
+        <include name="jboss.xml"/>
       </metainf>
     </jar>
-
+    
     <!-- jaxws-webserviceref -->
     <war warfile="${tests.output.dir}/libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/resources/jaxws/webserviceref/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -438,8 +438,7 @@
     </war>
     
     <!-- jaxws-wsrm -->
-    <war warfile="${tests.output.dir}/libs/jaxws-wsrm.war"
-         webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/web.xml">
+    <war warfile="${tests.output.dir}/libs/jaxws-wsrm.war" webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/wsrm/services/OneWayServiceIface.class"/>
         <include name="org/jboss/test/ws/jaxws/wsrm/services/OneWayServiceImpl.class"/>
@@ -449,16 +448,11 @@
       <webinf dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF">
         <include name="wsrm-jaxws-endpoint-config.xml"/>
       </webinf>
-      <zipfileset
-      	dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/wsdl" 
-    	prefix="WEB-INF/wsdl"/>
-      <zipfileset
-        file="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/standard-jaxws-endpoint-config.xml" 
-        prefix="META-INF"/>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/wsdl" prefix="WEB-INF/wsdl"/>
+      <zipfileset file="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/unsecure/standard-jaxws-endpoint-config.xml" prefix="META-INF"/>
     </war>
-
-    <war warfile="${tests.output.dir}/libs/jaxws-secured-wsrm.war"
-         webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/web.xml">
+    
+    <war warfile="${tests.output.dir}/libs/jaxws-secured-wsrm.war" webxml="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/web.xml">
       <classes dir="${tests.output.dir}/classes">
         <include name="org/jboss/test/ws/jaxws/wsrm/services/SecuredOneWayServiceIface.class"/>
         <include name="org/jboss/test/ws/jaxws/wsrm/services/SecuredOneWayServiceImpl.class"/>
@@ -475,20 +469,16 @@
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
       </webinf>
-      <zipfileset
-        dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/wsdl" 
-        prefix="WEB-INF/wsdl"/>
-      <zipfileset
-        file="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/standard-jaxws-endpoint-config.xml" 
-        prefix="META-INF"/>
+      <zipfileset dir="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/wsdl" prefix="WEB-INF/wsdl"/>
+      <zipfileset file="${tests.output.dir}/resources/jaxws/wsrm/WEB-INF/secure/standard-jaxws-endpoint-config.xml" prefix="META-INF"/>
     </war>
-
+    
     <jar jarfile="${tests.output.dir}/libs/jaxws-wsrm-client.jar">
       <metainf dir="${tests.output.dir}/resources/jaxws/wsrm/META-INF">
         <include name="wsrm-jaxws-client-config.xml"/>
       </metainf>
     </jar>
-
+    
     <jar jarfile="${tests.output.dir}/libs/jaxws-secured-wsrm-client.jar">
       <metainf dir="${tests.output.dir}/resources/jaxws/wsrm/META-INF">
         <include name="wsrm-jaxws-client-config.xml"/>
@@ -497,7 +487,7 @@
         <include name="jboss-wsse-client.xml"/>
       </metainf>
     </jar>
-
+    
     <!-- Please add alphabetically -->
     
   </target>
