@@ -96,7 +96,7 @@ public class MultipartRelatedDecoder
          throw new IllegalArgumentException("multipart/related content type did not contain a boundary");
 
       try
-      {
+      {         
          // [JBWS-1393] - Problem interpreting messages with attachment when confronted with no <start> header
          if (start == null)
             boundary = ("--" + boundaryParameter).getBytes("US-ASCII");
@@ -148,6 +148,15 @@ public class MultipartRelatedDecoder
 
          // The root part is either the one pointed to by the start parameter, or
          // the first occuring part if start is not defined.
+
+         /*
+         if ( start != null && part.getContentId().startsWith("<")) {
+            if ( !(start.charAt(0)=='<')) {
+               start = "<"+start+">";
+            }
+         }
+         */
+
          if (rootPart == null && (start == null || start.equals(part.getContentId())))
          {
             if (isValidRootType(part.getContentType()) == false)

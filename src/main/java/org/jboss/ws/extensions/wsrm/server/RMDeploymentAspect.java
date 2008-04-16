@@ -28,6 +28,7 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
+import org.jboss.wsf.spi.WSFRuntime;
 
 /**
  * Registers RMInvocationHandler if WS-RM is detected
@@ -40,7 +41,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
 {
 
    @Override
-   public final void create(Deployment dep)
+   public final void start(Deployment dep, WSFRuntime runtime)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
@@ -60,7 +61,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
    }
    
    @Override
-   public final void destroy(Deployment dep)
+   public final void destroy(Deployment dep, WSFRuntime runtime)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {

@@ -29,6 +29,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.JAXBBindingCustomization;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.*;
+import org.jboss.wsf.spi.WSFRuntime;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,7 @@ public class JAXBIntroDeploymentAspect extends DeploymentAspect
    private static final String META_INF_JAXB_INTROS_XML = "META-INF/jaxb-intros.xml";
    private static final String WEB_INF_JAXB_INTROS_XML = "WEB-INF/jaxb-intros.xml";
 
-   public void create(Deployment deployment)
+   public void start(Deployment deployment, WSFRuntime runtime)
    {
 
       // assert ArchiveDeployment

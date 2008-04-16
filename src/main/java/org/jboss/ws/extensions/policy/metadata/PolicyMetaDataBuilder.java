@@ -50,7 +50,7 @@ import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**
  * A meta data builder for policies; handles checks for policy support
- * and their eventual deploy on both server side and client side.
+ * and their eventual start on both server side and client side.
  * 
  * @author Alessio Soldano, <mailto:alessio.soldano@javalinux.it>
  *

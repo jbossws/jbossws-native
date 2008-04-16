@@ -88,7 +88,7 @@ public class JbpmBpelTestSetup extends JBossWSTestSetup
       // create target URL
       URL targetUrl = new URL("http", JBossWSTestHelper.getServerHost(), getServerHttpPort(), file);
 
-      // submit process deploy request
+      // submit process start request
       int responseCode = submitRequest(targetUrl);
 
       if (responseCode != HttpURLConnection.HTTP_OK)

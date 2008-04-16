@@ -32,6 +32,7 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.WSFRuntime;
 
 /**
  * A deployer that creates event sources and register them with the 
@@ -43,7 +44,7 @@ import org.jboss.wsf.spi.deployment.Endpoint;
 public class EventingDeploymentAspect extends DeploymentAspect
 {
    @Override
-   public void create(Deployment dep)
+   public void start(Deployment dep, WSFRuntime runtime)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
@@ -72,7 +73,7 @@ public class EventingDeploymentAspect extends DeploymentAspect
    }
 
    @Override
-   public void destroy(Deployment dep)
+   public void destroy(Deployment dep, WSFRuntime runtime)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {

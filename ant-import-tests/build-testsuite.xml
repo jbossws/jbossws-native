@@ -32,26 +32,38 @@
 
 		<path id="ws.stack.classpath">
 			<pathelement location="${core.dir}/thirdparty/jbossws-common.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jbossws-spi.jar"/>
-			<pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
-			<pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
-      <pathelement location="${core.dir}/output/lib/jboss-jaxws-ext.jar"/>
-      <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
+         <pathelement location="${core.dir}/thirdparty/jbossws-spi.jar"/>
+         <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
+         <pathelement location="${core.dir}/output/lib/jbossws-embedded.jar"/>
+         <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
+         <pathelement location="${core.dir}/output/lib/jboss-jaxws-ext.jar"/>
+         <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
 			<pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
 			<pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
 		</path>
 
     <path id="tests.extra.classpath">
-			<pathelement location="${core.dir}/thirdparty/FastInfoset.jar"/>
+
+       <!-- embedded tests -->
+       <pathelement location="${core.dir}/thirdparty/jboss-kernel.jar"/>
+       <pathelement location="${core.dir}/thirdparty/jboss-dependency.jar"/>
+       <pathelement location="${core.dir}/thirdparty/jboss-reflect.jar"/>
+       <pathelement location="${core.dir}/thirdparty/jboss-mdr.jar"/>
+       <pathelement location="${core.dir}/thirdparty/jboss-common-core.jar"/>
+       <pathelement location="${core.dir}/thirdparty/servlet-api.jar"/>
+       <pathelement location="${core.dir}/thirdparty/webserver.jar"/>
+       <!-- / embedded tests -->
+
+         <pathelement location="${core.dir}/thirdparty/FastInfoset.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
 			<pathelement location="${core.dir}/thirdparty/jettison.jar"/>
 			<pathelement location="${core.dir}/thirdparty/policy.jar"/>
-      <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
-      <pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
+         <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
+         <pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
 			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
-      <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
-      <pathelement location="${core.dir}/thirdparty/jboss-jaxb-intros.jar"/>
+         <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
+         <pathelement location="${core.dir}/thirdparty/jboss-jaxb-intros.jar"/>
     </path>
 
     <!-- The jBPM BPEL classpath -->

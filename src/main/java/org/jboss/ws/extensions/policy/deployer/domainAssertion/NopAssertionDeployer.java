@@ -27,7 +27,7 @@ import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
 
 /**
  * This assertion deployer actually does nothing when asked to
- * deploy a policy assertion. It is used as a placeholder by
+ * start a policy assertion. It is used as a placeholder by
  * PolicyDeployer in case no modification to umdm or anything
  * else is actually required (for example when running the
  * WSProvideTask tool).

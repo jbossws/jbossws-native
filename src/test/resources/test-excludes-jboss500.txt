@@ -20,12 +20,3 @@ org/jboss/test/ws/jaxws/samples/jmstransport/**
 
 # [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
-
-# [JBWS-2107] Resolve dependency on @SecurityDomain
-org/jboss/test/ws/jaxws/webserviceref/Secure**
-org/jboss/test/ws/jaxws/samples/dar/**
-org/jboss/test/ws/jaxws/samples/news/**
-org/jboss/test/ws/jaxws/jbws1840/**
-
-# [JBWS-1526] Automated testing and availablity checks of public endpoints (interop)
-org/jboss/test/ws/interop/**
