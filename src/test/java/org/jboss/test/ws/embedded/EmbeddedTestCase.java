@@ -23,6 +23,7 @@ package org.jboss.test.ws.embedded;
 
 import junit.framework.TestCase;
 import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.WSFRuntime;
 import org.jboss.wsf.stack.jbws.embedded.DeploymentModelBuilder;
 import org.jboss.wsf.stack.jbws.embedded.EmbeddableWSFRuntime;
 
@@ -55,7 +56,7 @@ public class EmbeddedTestCase extends TestCase
         .build();
 
       // Publish
-      EmbeddableWSFRuntime container = EmbeddableWSFRuntime.bootstrap( EmbeddableWSFRuntime.DEFAULT_CONFIG_URL);
+      WSFRuntime container = EmbeddableWSFRuntime.bootstrap( EmbeddableWSFRuntime.DEFAULT_CONFIG_URL);
       container.create(dep);
       container.start(dep);
 
