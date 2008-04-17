@@ -142,7 +142,7 @@ public class WSSecurityDispatcher
       {
          SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getKeyPasswords(), config.getTrustStoreURL(),
                config.getTrustStoreType(), config.getTrustStorePassword());
-         SecurityDecoder decoder = new SecurityDecoder(securityStore);
+         SecurityDecoder decoder = new SecurityDecoder(securityStore, config.getTimestampVerification());
 
          decoder.decode(soapMessage.getSOAPPart(), secHeaderElement);
          

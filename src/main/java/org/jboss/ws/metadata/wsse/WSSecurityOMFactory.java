@@ -178,6 +178,34 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       {
          return new Port(attrs.getValue("", "name"));
       }
+      if ("timestamp-verification".equals(localName))
+      {
+         //By default, the createdTolerance should be '0'
+         Long createdTolerance = new Long(0);
+         String createdToleranceAttr = attrs.getValue("", "createdTolerance");
+         if (createdToleranceAttr != null)
+            createdTolerance = (Long)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_LONG_NAME, createdToleranceAttr, null);
+
+         //By default, we do log warnings if the tolerance is used.
+         Boolean warnCreated = new Boolean(true);
+         String warnCreatedAttr = attrs.getValue("", "warnCreated");
+         if (warnCreatedAttr != null)
+            warnCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, warnCreatedAttr, null);
+
+         //By default, the expiresTolerance should be '0'
+         Long expiresTolerance = new Long(0);
+         String expiresToleranceAttr = attrs.getValue("", "expiresTolerance");
+         if (expiresToleranceAttr != null)
+            expiresTolerance = (Long)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_LONG_NAME, expiresToleranceAttr, null);
+
+         //By default, we do log warnings if the tolerance is used.
+         Boolean warnExpires = new Boolean(true);
+         String warnExpiresAttr = attrs.getValue("", "warnExpires");
+         if (warnExpiresAttr != null)
+            warnExpires = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, warnExpiresAttr, null);
+
+         return new TimestampVerification(createdTolerance, warnCreated, expiresTolerance, warnExpires);
+      }
       return null;
    }
 
@@ -212,6 +240,16 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    {
       log.trace("addChild: [obj=" + configuration + ",child=" + port + "]");
       configuration.addPort(port);
+   }
+
+   /**
+    * Called when parsing TimestampVerification is complete.
+    */
+   public void addChild(WSSecurityConfiguration configuration, TimestampVerification timestampVerification, UnmarshallingContext navigator, String namespaceURI,
+         String localName)
+   {
+      log.trace("addChild: [obj=" + configuration + ",child=" + timestampVerification + "]");
+      configuration.setTimestampVerification(timestampVerification);
    }
 
    /**

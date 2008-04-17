@@ -23,16 +23,22 @@ package org.jboss.ws.extensions.security;
 
 import java.util.Calendar;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.security.element.Timestamp;
+import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
-
 
 public class TimestampVerificationOperation
 {
+   private static final Logger log = Logger.getLogger(TimestampVerificationOperation.class);
+
+   private TimestampVerification timestampVerification;
+
    private Calendar now = null;
 
-   public TimestampVerificationOperation()
+   public TimestampVerificationOperation(TimestampVerification timestampVerification)
    {
+      this.timestampVerification = timestampVerification;
    }
 
    /**
@@ -48,14 +54,48 @@ public class TimestampVerificationOperation
 
    public void process(Document message, Timestamp timestamp) throws WSSecurityException
    {
-      Calendar expired = timestamp.getExpires();
+      Calendar expires = timestamp.getExpires();
       Calendar created = timestamp.getCreated();
+
       Calendar now = (this.now == null) ? Calendar.getInstance() : this.now;
 
-      if (created.after(now))
-         throw new WSSecurityException("Invalid timestamp, message claimed to be created after now");
+      boolean rejectCreated = created.after(now);
+      if (rejectCreated && timestampVerification != null && timestampVerification.getCreatedTolerance() > 0)
+      {
+         Calendar tolerantCreatedNow = (Calendar)now.clone();
+         tolerantCreatedNow.add(Calendar.SECOND, (int)timestampVerification.getCreatedTolerance());
 
-      if (expired != null && ! now.before(expired))
+         rejectCreated = created.after(tolerantCreatedNow);
+
+         if (rejectCreated == false && timestampVerification.isWarnCreated())
+         {
+            log.warn("Accepting Timestamp with 'Created' after now but within configured tolerance.");
+         }
+      }
+
+      if (rejectCreated)
+      {
+         throw new WSSecurityException("Invalid timestamp, message claimed to be created after now");
+      }
+
+      boolean rejectExpires = expires != null && !now.before(expires);
+      if (rejectExpires && timestampVerification != null && timestampVerification.getExpiresTolerance() > 0)
+      {
+         Calendar tolerantExpiresNow = (Calendar)now.clone();         
+         tolerantExpiresNow.add(Calendar.SECOND, (int)timestampVerification.getExpiresTolerance() * -1);
+         
+         rejectExpires = !tolerantExpiresNow.before(expires);
+
+         if (rejectExpires == false && timestampVerification.isWarnExpires())
+         {
+            log.warn("Accepting Timestamp with 'Expires' in past but within configured tolerance.");
+         }
+      }
+
+      if (rejectExpires)
+      {
          throw new FailedCheckException("Expired message.");
+      }
+
    }
 }

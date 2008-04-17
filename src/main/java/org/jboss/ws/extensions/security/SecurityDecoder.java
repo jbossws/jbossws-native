@@ -34,6 +34,7 @@ import org.jboss.ws.extensions.security.element.Signature;
 import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -52,15 +53,19 @@ public class SecurityDecoder
    private Document message;
 
    private SecurityStore store;
+   
+   private TimestampVerification timestampVerification;
 
    private HashSet<String> signedIds = new HashSet<String>();
 
    private HashSet<String> encryptedIds = new HashSet<String>();
 
-   public SecurityDecoder(SecurityStore store)
+
+   public SecurityDecoder(SecurityStore store, TimestampVerification timestampVerification)
    {
       org.apache.xml.security.Init.init();
       this.store = store;
+      this.timestampVerification = timestampVerification;
    }
 
    /**
@@ -70,9 +75,10 @@ public class SecurityDecoder
     * @param SecurityStore the security store that contains key and trust information
     * @param now The timestamp to use as the current time when validating a message expiration
     */
-   public SecurityDecoder(SecurityStore store, Calendar now)
+
+   public SecurityDecoder(SecurityStore store, Calendar now, TimestampVerification timestampVerification)
    {
-      this(store);
+      this(store, timestampVerification);
       this.now = now;
    }
 
@@ -99,7 +105,7 @@ public class SecurityDecoder
       if (timestamp != null)
       {
          TimestampVerificationOperation operation =
-            (now == null) ? new TimestampVerificationOperation() : new TimestampVerificationOperation(now);
+            (now == null) ? new TimestampVerificationOperation(timestampVerification) : new TimestampVerificationOperation(now);
          operation.process(message, timestamp);
       }
 
