@@ -22,13 +22,8 @@
 package org.jboss.test.ws.embedded;
 
 import junit.framework.TestCase;
-import org.jboss.wsf.common.ResourceLoaderAdapter;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
-import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.stack.jbws.embedded.DeploymentModelBuilder;
 import org.jboss.wsf.stack.jbws.embedded.EmbeddableWSFRuntime;
 
 import javax.xml.namespace.QName;
@@ -53,29 +48,11 @@ public class EmbeddedTestCase extends TestCase
     * @throws Exception
     */
    public void testEmbeddedContainer() throws Exception
-   {
-      SPIProvider spi = SPIProviderResolver.getInstance().getProvider();
-      DeploymentModelFactory modelFactory = spi.getSPI(DeploymentModelFactory.class);
-
-      // Deployment
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      Deployment dep = modelFactory.newDeployment("HelloWorldDeployment", contextClassLoader);
-      dep.setRuntimeClassLoader(contextClassLoader);
-
-      // TODO: Hack, should this become another DeploymentAspect?
-      ((ArchiveDeployment)dep).setRootFile(new ResourceLoaderAdapter());
-      
-      dep.setType(Deployment.DeploymentType.JAXWS_JSE);
-      dep.setService(modelFactory.newService());
-
-      // Service
-      dep.getService().setContextRoot("/hello");
-
-      // Endpoint
-      Endpoint endpoint = modelFactory.newEndpoint("org.jboss.test.ws.embedded.HelloWorldEndpoint");
-      endpoint.setShortName("hello");
-      endpoint.setURLPattern("/endpoint");      
-      dep.getService().addEndpoint(endpoint);
+   {      
+      Deployment dep = new DeploymentModelBuilder()
+        .setContextRoot("/hello")
+        .addEndpoint("org.jboss.test.ws.embedded.HelloWorldEndpoint", "/endpoint")
+        .build();
 
       // Publish
       EmbeddableWSFRuntime container = EmbeddableWSFRuntime.bootstrap( EmbeddableWSFRuntime.DEFAULT_CONFIG_URL);

@@ -185,19 +185,6 @@
     </copy>
   </target>
 
-   <!--target name="clean-42x-resources">
-      <delete dir="${core.output.dir}/resources"/>
-      <mkdir dir="${core.output.dir}/resources"/>
-   </target>
-
-   <target name="unzip-jboss422-resources" depends="clean-42x-resources" if="jbossws.integration.jboss422">
-      <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss422-resources.zip" overwrite="true"/>
-   </target>
-
-   <target name="unzip-jboss423-resources" depends="clean-42x-resources" if="jbossws.integration.jboss423">
-      <unzip dest="${core.output.dir}/resources" src="${thirdparty.dir}/jbossws-jboss422-resources.zip" overwrite="true"/>
-   </target-->
-
    <!-- Compile resource files -->
    <target name="compile42-resources" if="jbossws.integration.jboss42">
       <mkdir dir="${core.output.resources.dir}"/>      
