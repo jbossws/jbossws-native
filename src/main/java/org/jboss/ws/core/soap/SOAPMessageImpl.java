@@ -81,7 +81,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    {
       soapPart = new SOAPPartImpl(this);
       setProperty(CHARACTER_SET_ENCODING, "UTF-8");
-      setProperty(WRITE_XML_DECLARATION, Boolean.valueOf(System.getProperty(WRITE_XML_DECLARATION, "false")));
+      setProperty(WRITE_XML_DECLARATION, Boolean.valueOf(WRITE_XML_DECLARATION));
    }
 
    public CIDGenerator getCidGenerator()
