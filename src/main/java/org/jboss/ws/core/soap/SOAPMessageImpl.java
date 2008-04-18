@@ -73,6 +73,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    private boolean isSWARefMessage;
    private SOAPPartImpl soapPart;   
    private MultipartRelatedEncoder multipartRelatedEncoder;
+   private static final boolean writeXMLDeclaration = Boolean.getBoolean(WRITE_XML_DECLARATION);
 
    // Cache the associated operation meta data
    private OperationMetaData opMetaData;
@@ -81,7 +82,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    {
       soapPart = new SOAPPartImpl(this);
       setProperty(CHARACTER_SET_ENCODING, "UTF-8");
-      setProperty(WRITE_XML_DECLARATION, Boolean.valueOf(WRITE_XML_DECLARATION));
+      setProperty(WRITE_XML_DECLARATION, writeXMLDeclaration);
    }
 
    public CIDGenerator getCidGenerator()
