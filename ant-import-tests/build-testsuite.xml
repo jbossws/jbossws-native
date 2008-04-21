@@ -9,235 +9,256 @@
 <!-- $Id$ -->
 
 <project>
-
+  
   <property name="tests.output.dir" value="${core.dir}/output/tests"/>
   
   <import file="${core.dir}/src/test-framework/ant-import/build-testsuite.xml"/>
-
-	<!-- Define excluded tests -->
-	<property name="excludes-short-name" value="test-excludes-${jbossws.integration.target}.txt"/>
+  
+  <!-- Define excluded tests -->
+  <property name="excludes-short-name" value="test-excludes-${jbossws.integration.target}.txt"/>
   <property name="excludesfile" value="${core.dir}/src/test/resources/test-excludes-${jbossws.integration.target}.txt"/>
   
-	<property name="tests.dir" value="${core.dir}/src/test"/>
-	<property name="tests.java.dir" value="${tests.dir}/java"/>
-	<property name="tests.resources.dir" value="${tests.dir}/resources"/>
+  <property name="tests.dir" value="${core.dir}/src/test"/>
+  <property name="tests.java.dir" value="${tests.dir}/java"/>
+  <property name="tests.resources.dir" value="${tests.dir}/resources"/>
   
-	<property name="tests.framework.dir" value="${core.dir}/src/test-framework"/>
-	<property name="tests.framework.resources.dir" value="${tests.framework.dir}/resources"/>
-
-	<!--
-	  Init the various classpaths
-	-->
-	<target name="tests-init" depends="thirdparty-classpath,tests-classpath">
-
-		<path id="ws.stack.classpath">
-			<pathelement location="${core.dir}/thirdparty/jbossws-common.jar"/>
-         <pathelement location="${core.dir}/thirdparty/jbossws-spi.jar"/>
-         <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
-         <pathelement location="${core.dir}/output/lib/jbossws-embedded.jar"/>
-         <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
-         <pathelement location="${core.dir}/output/lib/jboss-jaxws-ext.jar"/>
-         <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
-			<pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
-			<pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
-		</path>
-
-    <path id="tests.extra.classpath">
-
-       <!-- embedded tests -->
-       <pathelement location="${core.dir}/thirdparty/jboss-kernel.jar"/>
-       <pathelement location="${core.dir}/thirdparty/jboss-dependency.jar"/>
-       <pathelement location="${core.dir}/thirdparty/jboss-reflect.jar"/>
-       <pathelement location="${core.dir}/thirdparty/jboss-mdr.jar"/>
-       <pathelement location="${core.dir}/thirdparty/jboss-common-core.jar"/>
-       <pathelement location="${core.dir}/thirdparty/servlet-api.jar"/>
-       <pathelement location="${core.dir}/thirdparty/webserver.jar"/>
-       <!-- / embedded tests -->
-
-         <pathelement location="${core.dir}/thirdparty/FastInfoset.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jettison.jar"/>
-			<pathelement location="${core.dir}/thirdparty/policy.jar"/>
-         <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
-         <pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
-			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
-         <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
-         <pathelement location="${core.dir}/thirdparty/jboss-jaxb-intros.jar"/>
+  <property name="tests.framework.dir" value="${core.dir}/src/test-framework"/>
+  <property name="tests.framework.resources.dir" value="${tests.framework.dir}/resources"/>
+  
+  <!--
+  Init the various classpaths
+  -->
+  <target name="tests-init" depends="thirdparty-classpath,tests-classpath">
+    
+    <path id="ws.stack.classpath">
+      <pathelement location="${core.dir}/thirdparty/jbossws-common.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbossws-spi.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-jaxrpc.jar"/>
+      <pathelement location="${core.dir}/output/lib/jbossws-embedded.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-jaxws.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-jaxws-ext.jar"/>
+      <pathelement location="${core.dir}/output/lib/jboss-saaj.jar"/>
+      <pathelement location="${core.dir}/output/lib/jbossws-core.jar"/>
+      <pathelement location="${core.dir}/output/lib/jbossws-client.jar"/>
     </path>
-
+    
+    <path id="tests.extra.classpath">
+      
+      <!-- embedded tests -->
+      <pathelement location="${core.dir}/thirdparty/jboss-kernel.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-dependency.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-reflect.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-mdr.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-common-core.jar"/>
+      <pathelement location="${core.dir}/thirdparty/servlet-api.jar"/>
+      <pathelement location="${core.dir}/thirdparty/webserver.jar"/>
+      <!-- / embedded tests -->
+      
+      <pathelement location="${core.dir}/thirdparty/FastInfoset.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jaxws-tools.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbossws-framework.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jettison.jar"/>
+      <pathelement location="${core.dir}/thirdparty/policy.jar"/>
+      <pathelement location="${core.dir}/thirdparty/qdox.jar"/>
+      <pathelement location="${core.dir}/thirdparty/stax-api.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wstx.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-jaxb-intros.jar"/>
+    </path>
+    
     <!-- The jBPM BPEL classpath -->
-		<path id="jbpm.bpel.classpath">
-			<path refid="ws.stack.classpath"/>
-			<pathelement location="${core.dir}/thirdparty/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
-			<pathelement location="${core.dir}/thirdparty/jbpm-bpel/jbpm-bpel.jar" />
-			<pathelement location="${core.dir}/thirdparty/jbpm-bpel/jbpm-jpdl.jar" />
-			<pathelement location="${core.dir}/thirdparty/jbpm-bpel/commons-lang.jar" />
-			<pathelement location="${core.dir}/thirdparty/commons-collections.jar"/>
-			<pathelement location="${core.dir}/thirdparty/commons-logging.jar"/>
-			<pathelement location="${core.dir}/thirdparty/dom4j.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jaxen.jar"/>
-			<pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
-			<pathelement location="${core.dir}/thirdparty/jboss-logging-log4j.jar"/>
-		</path>
-
-	</target>
-
-	<!-- ================================================================== -->
-	<!-- Generating sources                                                 -->
-	<!-- ================================================================== -->
-
-	<target name="wsconsume" depends="tests-init" unless="noconsume" description="Consume JAX-WS contracts">
-
-		<!-- Define the JAX-WS wsconsume task -->
-		<taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">			
+    <path id="jbpm.bpel.classpath">
+      <path refid="ws.stack.classpath"/>
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel/jbpm-bpel.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel/jbpm-jpdl.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jbpm-bpel/commons-lang.jar"/>
+      <pathelement location="${core.dir}/thirdparty/commons-collections.jar"/>
+      <pathelement location="${core.dir}/thirdparty/commons-logging.jar"/>
+      <pathelement location="${core.dir}/thirdparty/dom4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jaxen.jar"/>
+      <pathelement location="${core.dir}/thirdparty/wsdl4j.jar"/>
+      <pathelement location="${core.dir}/thirdparty/jboss-logging-log4j.jar"/>
+    </path>
+    
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Generating sources                                                 -->
+  <!-- ================================================================== -->
+  
+  <target name="wsconsume" depends="tests-init" unless="noconsume" description="Consume JAX-WS contracts">
+    
+    <!-- Define the JAX-WS wsconsume task -->
+    <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">
       <classpath refid="tests.client.classpath"/>
     </taskdef>
-
-		<wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="true" fork="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
     
-		<wsconsume wsdl="${tests.framework.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-		<wsconsume wsdl="${tests.framework.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
-	</target>
-
-	<!--
-		 Generate BPEL sources
-	  -->
-	<target name="servicegen" depends="tests-compile" description="Generate the BPEL resources.">
-		<!-- create jbpm process archives -->
-		<mkdir dir="${tests.output.dir}/libs"/>
-		<zip destfile="${tests.output.dir}/libs/jaxrpc-samples-wsbpel-hello-process.zip">
-			<fileset dir="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/bpel" />
-		</zip>
-		<!-- Copy the BPEL sar -->
-		<copy file="${core.dir}/thirdparty/jbpm-bpel.sar" todir="${tests.output.dir}/libs"/>
-
-		<!-- generate wsdl binding and service definitions for bpel processes -->
-		<taskdef name="servicegen" classname="org.jbpm.bpel.ant.ServiceGeneratorTask">
-			<classpath refid="jbpm.bpel.classpath"/>
-		</taskdef>
-		<servicegen processfile="${tests.output.dir}/libs/jaxrpc-samples-wsbpel-hello-process.zip"
-						outputdir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF/wsdl"
-						bindingfile="hello-binding-.wsdl" servicefile="hello-service.wsdl" />
-	</target>
-
-	<!--
-		 Generate JAX-RPC sources
-	  -->
-	<target name="wstools" depends="tests-compile" description="Generate the JAX-RPC artifacts.">
-
-		<!-- Define the JAX-RPC tools task -->
-		<taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
-			<classpath refid="ws.stack.classpath"/>
-			<classpath refid="thirdparty.classpath"/>
-			<classpath location="${core.dir}/thirdparty/concurrent.jar"/>
-			<classpath location="${tests.output.dir}/classes"/>
-			<classpath location="${tests.output.dir}"/>
-		</taskdef>
-
-		<!-- Generate JAX-RPC artifacts -->
-		<mkdir dir="${tests.output.dir}/wstools/java"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/bare/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/dynamichandler/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/dynamichandler/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/exception/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/exception/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/handler/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/handler/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/holder/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/holder/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jmstransport/META-INF" config="${tests.resources.dir}/jaxrpc/samples/jmstransport/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/doclit/META-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109ejb/doclit/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/rpclit/META-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109ejb/rpclit/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109pojo/doclit/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109pojo/rpclit/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/message/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/message/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${tests.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
-    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsaddr/hello/wstools-config.xml"/>
-    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsaddr/replyto/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/wstools-config.xml"/>
-		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
-		<move todir="${tests.output.dir}/wstools/java">
-			<fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
-		</move>
+    <wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="true" fork="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl"
+      package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy" sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    
+    <wsconsume wsdl="${tests.framework.resources.dir}/jaxws/complex/META-INF/wsdl/RegistrationService.wsdl" package="org.jboss.test.ws.jaxws.complex"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.framework.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder"
+      sourcedestdir="${tests.output.dir}/wsconsume/java" keep="true" verbose="false"/>
+  </target>
+  
+  <!--
+  Generate BPEL sources
+  -->
+  <target name="servicegen" depends="tests-compile" description="Generate the BPEL resources.">
+    <!-- create jbpm process archives -->
+    <mkdir dir="${tests.output.dir}/test-libs"/>
+    <zip destfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsbpel-hello-process.zip">
+      <fileset dir="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/bpel"/>
+    </zip>
+    <!-- Copy the BPEL sar -->
+    <copy file="${core.dir}/thirdparty/jbpm-bpel.sar" todir="${tests.output.dir}/test-libs"/>
+    
+    <!-- generate wsdl binding and service definitions for bpel processes -->
+    <taskdef name="servicegen" classname="org.jbpm.bpel.ant.ServiceGeneratorTask">
+      <classpath refid="jbpm.bpel.classpath"/>
+    </taskdef>
+    <servicegen processfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsbpel-hello-process.zip"
+      outputdir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF/wsdl" bindingfile="hello-binding-.wsdl" servicefile="hello-service.wsdl"/>
+  </target>
+  
+  <!--
+  Generate JAX-RPC sources
+  -->
+  <target name="wstools" depends="tests-compile" description="Generate the JAX-RPC artifacts.">
+    
+    <!-- Define the JAX-RPC tools task -->
+    <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
+      <classpath refid="ws.stack.classpath"/>
+      <classpath refid="thirdparty.classpath"/>
+      <classpath location="${core.dir}/thirdparty/concurrent.jar"/>
+      <classpath location="${tests.output.dir}/test-classes"/>
+      <classpath location="${tests.output.dir}"/>
+    </taskdef>
+    
+    <!-- Generate JAX-RPC artifacts -->
+    <mkdir dir="${tests.output.dir}/wstools/java"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/bare/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/dynamichandler/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/dynamichandler/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/exception/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/exception/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/handler/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/handler/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/holder/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/holder/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jmstransport/META-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/jmstransport/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/doclit/META-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/jsr109ejb/doclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/rpclit/META-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/jsr109ejb/rpclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/jsr109pojo/doclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/jsr109pojo/rpclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/message/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/message/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${tests.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/wsaddr/hello/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/wsaddr/replyto/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF"
+      config="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
+    <move todir="${tests.output.dir}/wstools/java">
+      <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
+    </move>
     <move todir="${tests.output.dir}/wstools/java">
       <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" includes="org/**"/>
     </move>
     <move todir="${tests.output.dir}/wstools/java">
       <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" includes="org/**"/>
     </move>
-
-		<!-- Copy generated resources -->
-		<copy todir="${tests.output.dir}/resources">
-			<fileset dir="${tests.output.dir}/wstools/resources">
-				<include name="**/*.wsdl"/>
-				<include name="**/*.xml"/>
-			</fileset>
-		</copy>
-		<!-- Copy resources that cannot (yet) be generated -->
-		<copy todir="${tests.output.dir}/resources/jaxrpc/samples" overwrite="true">
-			<fileset dir="${tests.resources.dir}/jaxrpc/samples-override"/>
-			<filterset>
-				<filter token="jboss.bind.address" value="${node0}"/>
-			</filterset>
-		</copy>
-	</target>
-
-	<!--
-		 Generate JAX-WS sources
-	  -->
-	<target name="wsprovide" depends="tests-compile" description="Provide the JAX-WS contracts.">
-
-		<!-- Define the JAX-WS wsprovide task -->
-		<taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.WSProvideTask">
-			<classpath refid="tests.client.classpath"/>
-			<classpath location="${tests.output.dir}/classes"/>
-			<classpath location="${tests.output.dir}/resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
-		</taskdef>
-
-		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean" verbose="true"/>
-		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"/>
-	</target>
-
-	<target name="tests-compile-generated-resources" depends="servicegen,wstools,wsprovide">
-		<macro-compile-classes srcdir="${tests.output.dir}/wstools/java" excludesfile="${excludesfile}"/>
-	</target>
-
-	<!-- ================================================================== -->
-	<!-- Compiling                                                          -->
-	<!-- ================================================================== -->
-
-	<target name="tests-compile" depends="wsconsume,tests-classpath" description="Compile sources">
-		<macro-compile-classes srcdir="${tests.output.dir}/wsconsume/java" excludesfile="${excludesfile}"/>
-		<macro-compile-classes srcdir="${core.dir}/src/test-framework/java" excludesfile="${excludesfile}"/>
-		<macro-compile-classes srcdir="${core.dir}/src/test/java" excludesfile="${excludesfile}"/>
-	</target>
-
-	<!-- ================================================================== -->
-	<!-- Building                                                           -->
-	<!-- ================================================================== -->
-
-	<!-- Copy resources -->
-	<target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
-		<macro-copy-resources srcdir="${core.dir}/src/test-framework"/>
-		<macro-copy-resources srcdir="${core.dir}/src/test"/>
-	</target>
-
-	<target name="tests-jars" depends="wsconsume,tests-compile,tests-copy-resources,tests-compile-generated-resources" description="Build the deployments.">
-		<ant antfile="${core.dir}/ant-import-tests/build-jars-interop.xml" target="build-jars-interop"/>
-		<ant antfile="${core.dir}/ant-import-tests/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
-		<ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
-		<ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
-		<ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
-		<ant antfile="${core.dir}/src/test-framework/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws"/>
-		<ant antfile="${core.dir}/src/test-framework/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws"/>
-	</target>
-
-	<target name="tests-main" depends="tests-jars" description="Build the deployments."/>
-
+    
+    <!-- Copy generated resources -->
+    <copy todir="${tests.output.dir}/test-resources">
+      <fileset dir="${tests.output.dir}/wstools/resources">
+        <include name="**/*.wsdl"/>
+        <include name="**/*.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy resources that cannot (yet) be generated -->
+    <copy todir="${tests.output.dir}/test-resources/jaxrpc/samples" overwrite="true">
+      <fileset dir="${tests.resources.dir}/jaxrpc/samples-override"/>
+      <filterset>
+        <filter token="jboss.bind.address" value="${node0}"/>
+      </filterset>
+    </copy>
+  </target>
+  
+  <!--
+  Generate JAX-WS sources
+  -->
+  <target name="wsprovide" depends="tests-compile" description="Provide the JAX-WS contracts.">
+    
+    <!-- Define the JAX-WS wsprovide task -->
+    <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.WSProvideTask">
+      <classpath refid="tests.client.classpath"/>
+      <classpath location="${tests.output.dir}/test-classes"/>
+      <classpath location="${tests.output.dir}/test-resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
+    </taskdef>
+    
+    <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true"
+      sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean" verbose="true"/>
+    <wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true"
+      sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"/>
+  </target>
+  
+  <target name="tests-compile-generated-resources" depends="servicegen,wstools,wsprovide">
+    <macro-compile-classes srcdir="${tests.output.dir}/wstools/java" excludesfile="${excludesfile}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Compiling                                                          -->
+  <!-- ================================================================== -->
+  
+  <target name="tests-compile" depends="wsconsume,tests-classpath" description="Compile sources">
+    <macro-compile-classes srcdir="${tests.output.dir}/wsconsume/java" excludesfile="${excludesfile}"/>
+    <macro-compile-classes srcdir="${core.dir}/src/test-framework/java" excludesfile="${excludesfile}"/>
+    <macro-compile-classes srcdir="${core.dir}/src/test/java" excludesfile="${excludesfile}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Building                                                           -->
+  <!-- ================================================================== -->
+  
+  <!-- Copy resources -->
+  <target name="tests-copy-resources" depends="tests-init" description="Copy the deployment resources.">
+    <macro-copy-resources srcdir="${core.dir}/src/test-framework"/>
+    <macro-copy-resources srcdir="${core.dir}/src/test"/>
+  </target>
+  
+  <target name="tests-jars" depends="wsconsume,tests-compile,tests-copy-resources,tests-compile-generated-resources" description="Build the deployments.">
+    <ant antfile="${core.dir}/ant-import-tests/build-jars-interop.xml" target="build-jars-interop"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-jars-jaxws.xml" target="build-jars-jaxws"/>
+    <ant antfile="${core.dir}/ant-import-tests/build-samples-jaxws.xml" target="build-samples-jaxws"/>
+    <ant antfile="${core.dir}/src/test-framework/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws"/>
+    <ant antfile="${core.dir}/src/test-framework/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws"/>
+  </target>
+  
+  <target name="tests-main" depends="tests-jars" description="Build the deployments."/>
+  
 </project>
