@@ -56,8 +56,8 @@ public class SimpleUsernameTestCase extends JBossWSTest
    {
       if (port == null)
       {
-         URL wsdlURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl").toURL();
-         URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml").toURL();
+         URL wsdlURL = getResourceURL("jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl");
+         URL securityURL = getResourceURL("jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml");
          QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "UsernameService");
 
          Service service = Service.create(wsdlURL, serviceName);

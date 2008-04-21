@@ -67,8 +67,8 @@ public class SimpleDispatchTestCase extends JBossWSTest
    {
       if (usernameDispatch == null)
       {
-         URL wsdlURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl").toURL();
-         URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml").toURL();
+         URL wsdlURL = getResourceURL("jaxws/samples/wssecurity/simple-username/META-INF/wsdl/UsernameService.wsdl");
+         URL securityURL = getResourceURL("jaxws/samples/wssecurity/simple-username/META-INF/jboss-wsse-client.xml");
          QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "UsernameService");
          QName portName = new QName("http://org.jboss.ws/samples/wssecurity", "UsernameEndpointPort");
 
@@ -81,7 +81,7 @@ public class SimpleDispatchTestCase extends JBossWSTest
       if (encryptDispatch == null)
       {
          URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurity/HelloService.wsdl").toURL();
-         URL securityURL = new File("resources/jaxws/samples/wssecurity/simple-encrypt/META-INF/jboss-wsse-client.xml").toURL();
+         URL securityURL = getResourceURL("jaxws/samples/wssecurity/simple-encrypt/META-INF/jboss-wsse-client.xml");
          QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
          QName portName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloPort");
 

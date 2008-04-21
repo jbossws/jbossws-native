@@ -82,7 +82,7 @@ public class SysmonTestCase extends JBossWSTest
 
       if (subscriptionPort == null || managementPort == null)
       {
-         URL wsdlURL = new File("resources/jaxws/samples/wseventing/WEB-INF/wsdl/sysmon.wsdl").toURL();
+         URL wsdlURL = getResourceURL("jaxws/samples/wseventing/WEB-INF/wsdl/sysmon.wsdl");
          QName defaultServiceName = new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "EventingService");
 
          Service service = Service.create(wsdlURL, defaultServiceName);
