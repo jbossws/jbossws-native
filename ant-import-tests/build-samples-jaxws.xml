@@ -194,7 +194,20 @@
         <include name="org/jboss/test/ws/jaxws/samples/news/SecurePrinter.class"/>
       </fileset>
     </jar>
-    
+
+    <!-- jaxws-samples-wsa -->
+    <war
+       warfile="${tests.output.dir}/test-libs/jaxws-samples-wsa.war"
+       webxml="${tests.output.dir}/test-resources/jaxws/samples/wsa/WEB-INF/web.xml">
+       <classes dir="${tests.output.dir}/test-classes">
+          <include name="org/jboss/test/ws/jaxws/samples/wsa/Service*.class"/>
+          <include name="org/jboss/test/ws/jaxws/samples/wsa/jaxws/*.class"/>
+       </classes>
+       <zipfileset
+          dir="${tests.output.dir}/test-resources/jaxws/samples/wsa/WEB-INF/wsdl" 
+          prefix="WEB-INF/wsdl"/>
+    </war>
+
     <!-- jaxws-samples-wsaddressing -->
     <war warfile="${tests.output.dir}/test-libs/jaxws-samples-wsaddressing.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/wsaddressing/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
