@@ -1,5 +1,5 @@
 <configuration>
-  <wsdl-java location="resources/tools/jbws1260/scenario_E/Wrapped.wsdl" parameter-style="wrapped">
+  <wsdl-java location="test-resources/tools/jbws1260/scenario_E/Wrapped.wsdl" parameter-style="wrapped">
     <mapping file="wrapped-mapping.xml"/>
   </wsdl-java>
 </configuration>

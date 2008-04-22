@@ -1,5 +1,5 @@
 <configuration>
-  <wsdl-java location="resources/tools/jbws1278/doclit/PhoneBook.wsdl" 
+  <wsdl-java location="test-resources/tools/jbws1278/doclit/PhoneBook.wsdl" 
              parameter-style="bare"
              serializable-types="true">
     <mapping file="jaxrpc-mapping.xml"/>
