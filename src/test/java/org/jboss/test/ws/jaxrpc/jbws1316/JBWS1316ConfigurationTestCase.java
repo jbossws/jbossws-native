@@ -42,7 +42,7 @@ public class JBWS1316ConfigurationTestCase extends JBossWSTest
 
    private WSSecurityConfiguration load(final String fileName) throws IOException
    {
-      File configFile = new File(getResourceFile("jaxrpc/jbws1316/config/").getPath() + fileName);
+      File configFile = getResourceFile("jaxrpc/jbws1316/config/" + fileName);
       WSSecurityOMFactory factory = WSSecurityOMFactory.newInstance();
 
       return factory.parse(configFile.toURL());

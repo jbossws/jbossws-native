@@ -71,7 +71,8 @@ public class JBWS1384TestCase extends JBossWSTest
    public void testWsdlToJava() throws Exception
    {
       WSTools wstools = new WSTools();
-      boolean ret = wstools.generate(getResourceFile("jaxrpc/jbws1384/wstools-config.xml").getPath(), "./wstools/jbws1384");
+      String configPath = getResourceFile("jaxrpc/jbws1384/wstools-config.xml").getPath();
+      boolean ret = wstools.generate(configPath, "./wstools/jbws1384");
       assertTrue("wstools success", ret);
    }
 
