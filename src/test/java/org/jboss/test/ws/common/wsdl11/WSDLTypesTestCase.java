@@ -40,7 +40,7 @@ public class WSDLTypesTestCase extends JBossWSTest
 {
    public void testIncludedSchema() throws Exception
    {
-      File wsdlLocation = new File("resources/tools/wsdl11/TestServiceXsdInclude.wsdl");
+      File wsdlLocation = getResourceFile("tools/wsdl11/TestServiceXsdInclude.wsdl");
       assertTrue(wsdlLocation.exists());
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
@@ -53,7 +53,7 @@ public class WSDLTypesTestCase extends JBossWSTest
 
    public void testImportedSchema() throws Exception
    {
-      File wsdlLocation = new File("resources/tools/wsdl11/TestServiceXsdImport.wsdl");
+      File wsdlLocation = getResourceFile("tools/wsdl11/TestServiceXsdImport.wsdl");
       assertTrue(wsdlLocation.exists());
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();

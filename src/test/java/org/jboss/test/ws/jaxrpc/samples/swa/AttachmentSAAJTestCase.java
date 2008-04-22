@@ -80,7 +80,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
       String rpcMethodName = "sendMimeImageGIF";
       SOAPMessage msg = setupMimeMessage(rpcMethodName);
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.gif").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.gif");
 
       // On Linux the X11 server must be installed properly to create images successfully.
       // If the image cannot be created in the test VM, we assume it cannot be done on the
@@ -110,7 +110,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
       String rpcMethodName = "sendMimeImageJPEG";
       SOAPMessage msg = setupMimeMessage(rpcMethodName);
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.jpeg").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.jpeg");
 
       // On Linux the X11 server must be installed properly to create images successfully.
       // If the image cannot be created in the test VM, we assume it cannot be done on the
@@ -140,7 +140,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
       String rpcMethodName = "sendMimeTextPlain";
       SOAPMessage msg = setupMimeMessage(rpcMethodName);
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.txt").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.txt");
       addAttachmentPart(msg, "text/plain", new DataHandler(url));
 
       //msg.writeTo(new FileOutputStream(rpcMethodName + "_RequestMessage.txt"));
@@ -155,7 +155,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
       String rpcMethodName = "sendMimeMultipart";
       SOAPMessage msg = setupMimeMessage(rpcMethodName);
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.txt").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.txt");
       MimeMultipart multipart = new MimeMultipart("mixed");
       MimeBodyPart bodyPart = new MimeBodyPart();
       bodyPart.setDataHandler(new DataHandler(url));
@@ -184,7 +184,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
       String rpcMethodName = "sendMimeTextXML";
       SOAPMessage msg = setupMimeMessage(rpcMethodName);
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.xml").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.xml");
       addAttachmentPart(msg, "text/xml", new DataHandler(url));
 
       //msg.writeTo(new FileOutputStream(rpcMethodName + "_RequestMessage.txt"));
@@ -198,7 +198,7 @@ public class AttachmentSAAJTestCase extends JBossWSTest
       String rpcMethodName = "sendMimeApplicationXML";
       SOAPMessage msg = setupMimeMessage(rpcMethodName);
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.xml").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.xml");
       addAttachmentPart(msg, "application/xml", new DataHandler(url));
 
       //msg.writeTo(new FileOutputStream(rpcMethodName + "_RequestMessage.txt"));

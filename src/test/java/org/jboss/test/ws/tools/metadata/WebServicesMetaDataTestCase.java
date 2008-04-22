@@ -48,7 +48,7 @@ public class WebServicesMetaDataTestCase extends JBossWSTest
 {
    public void testWebServicesMetaDataRead() throws Exception
    {
-      URL webservicesURL = new File("resources/tools/metadatafixture/webservices.xml").toURL(); 
+      URL webservicesURL = getResourceURL("tools/metadatafixture/webservices.xml"); 
       // Unmarshall webservices.xml
       WebservicesMetaData webservices = null;
       InputStream is = webservicesURL.openStream();
@@ -67,7 +67,7 @@ public class WebServicesMetaDataTestCase extends JBossWSTest
    
    public void testWebServicesMetaDataWrite() throws Exception
    {
-      URL webservicesURL = new File("resources/tools/metadatafixture/webservices.xml").toURL(); 
+      URL webservicesURL = getResourceURL("tools/metadatafixture/webservices.xml"); 
       // Unmarshall webservices.xml
       WebservicesMetaData webservices = constructWSMetaData(); 
       assertNotNull("WebServicesMetaData is null?",webservices);

@@ -48,7 +48,7 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
 
       if (port == null)
       {
-         URL wsdlLocation = new File("resources/interop/wsse/shared/WEB-INF/wsdl/WsSecurity10.wsdl").toURL();
+         URL wsdlLocation = getResourceURL("interop/wsse/shared/WEB-INF/wsdl/WsSecurity10.wsdl");
          QName serviceName = new QName("http://tempuri.org/", "PingService10");
          Service service = Service.create(wsdlLocation, serviceName);
          port = service.getPort(IPingService.class);
@@ -69,8 +69,8 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
    protected void defaultSetup(IPingService port) {
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
 
-      System.setProperty("org.jboss.ws.wsse.keyStore", "resources/interop/wsse/shared/META-INF/alice.jks");
-      System.setProperty("org.jboss.ws.wsse.trustStore", "resources/interop/wsse/shared/META-INF/wsse10.truststore");
+      System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("interop/wsse/shared/META-INF/alice.jks").getPath());
+      System.setProperty("org.jboss.ws.wsse.trustStore", getResourceFile("interop/wsse/shared/META-INF/wsse10.truststore").getPath());
       System.setProperty("org.jboss.ws.wsse.keyStorePassword", "password");
       System.setProperty("org.jboss.ws.wsse.trustStorePassword", "password");
       System.setProperty("org.jboss.ws.wsse.keyStoreType", "jks");

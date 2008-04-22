@@ -58,8 +58,8 @@ public class JBWS1386TestCase extends JBossWSTest
       if (port == null)
       {
          ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-         URL wsdlURL = new File("resources/jaxrpc/jbws1386/WEB-INF/wsdl/TestService.wsdl").toURL();
-         URL mappingURL = new File("resources/jaxrpc/jbws1386/WEB-INF/jaxrpc-mapping.xml").toURL();
+         URL wsdlURL = getResourceURL("jaxrpc/jbws1386/WEB-INF/wsdl/TestService.wsdl");
+         URL mappingURL = getResourceURL("jaxrpc/jbws1386/WEB-INF/jaxrpc-mapping.xml");
          QName serviceName = new QName("http://org.jboss.test.ws/jbws1386", "TestService");
          Service service = factory.createService(wsdlURL, serviceName , mappingURL);
          port = (RequestService)service.getPort(RequestService.class);

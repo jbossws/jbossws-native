@@ -46,7 +46,7 @@ public abstract class AbstractEJB2Test extends JBossWSTest
    {
       super.setUp();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
-      URL mappingURL = new File("resources/jaxrpc/jbws1762/META-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws1762/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws1762", "EJB2Bean");
       
       ServiceFactoryImpl factory = new ServiceFactoryImpl();

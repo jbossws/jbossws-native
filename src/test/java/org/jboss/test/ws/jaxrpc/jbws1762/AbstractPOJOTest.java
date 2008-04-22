@@ -53,7 +53,7 @@ public abstract class AbstractPOJOTest extends JBossWSTest
       {
          ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
          URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
-         URL mappingURL = new File("resources/jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml").toURL();
+         URL mappingURL = getResourceURL("jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml");
          QName serviceName = new QName(pojoTargetNS, pojoServiceName);
          
          Service service = factory.createService(wsdlURL, serviceName, mappingURL);

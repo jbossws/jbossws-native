@@ -48,7 +48,7 @@ public class AnonTypesTestCase extends JBossWSTest
       QName q = new QName(targetNS,"Items", Constants.PREFIX_TNS);
       jxsd.getSchemaCreator().addPackageNamespaceMapping(Items.class.getPackage().getName(), targetNS);
       String xs = jxsd.generateForSingleType(q,Items.class).serialize();
-      File xsdFile = new File("resources/tools/jbws-204/wscompile/anontypes_new.xsd");
+      File xsdFile = getResourceFile("tools/jbws-204/wscompile/anontypes_new.xsd");
       checkXMLFiles(xsdFile.toURL(),xs);
    }
 

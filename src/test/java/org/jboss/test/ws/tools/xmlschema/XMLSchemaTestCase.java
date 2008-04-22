@@ -46,7 +46,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testXMLTypeReturned() throws MalformedURLException
    {
       String filename = "CustomInterface20.xsd";
-      File xsdFile = new File("resources/tools/wsdlfixture/" + filename);
+      File xsdFile = new File(getResourceFile("tools/wsdlfixture/").getPath() + filename);
       XSModel xsmodel = parseSchema(xsdFile.toURL());
       assertNotNull("XSModel is null?", xsmodel);
       XSNamedMap xsmap = xsmodel.getComponentsByNamespace(XSConstants.ELEMENT_DECLARATION, "http://org.jboss.ws/types");
@@ -60,7 +60,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testXSDInclude() throws MalformedURLException
    {
       String filename = "SchemaMain.xsd";
-      File xsdFile = new File("resources/tools/xsd/schemainclude/" + filename);
+      File xsdFile = new File(getResourceFile("tools/xsd/schemainclude/").getPath() + filename);
       assertTrue("Does Schema file exist?", xsdFile.exists());
       XSModel xsmodel = parseSchema(xsdFile.toURL());
       assertNotNull("XSModel is null?", xsmodel);
@@ -76,7 +76,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testBadXSDInclude()
    {
       String filename = "SchemaBadMain.xsd";
-      File xsdFile = new File("resources/tools/xsd/schemainclude/" + filename);
+      File xsdFile = new File(getResourceFile("tools/xsd/schemainclude/").getPath() + filename);
       try
       {
          XSModel xsmodel = parseSchema(xsdFile.toURL());
@@ -96,11 +96,11 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testXSDImport() throws MalformedURLException
    {
       String filename = "SchemaMain.xsd";
-      File xsdFile = new File("resources/tools/xsd/schemaimport/" + filename);
+      File xsdFile = new File(getResourceFile("tools/xsd/schemaimport/").getPath() + filename);
       //Create an Hashmap of <namespace,URL>
       Map schemaMap = new HashMap();
       schemaMap.put("http://org.jboss.ws/types", xsdFile.toURL());
-      schemaMap.put("http://org.jboss.ws/types2", new File("resources/tools/xsd/schemaimport/SchemaImport.xsd").toURL());
+      schemaMap.put("http://org.jboss.ws/types2", getResourceURL("/tools/xsd/schemaimport/SchemaImport.xsd"));
       XSModel xsmodel = parseSchema(schemaMap);
       assertNotNull("XSModel is null?", xsmodel);
       XSNamedMap xsmap = xsmodel.getComponentsByNamespace(XSConstants.TYPE_DEFINITION, "http://org.jboss.ws/types2");

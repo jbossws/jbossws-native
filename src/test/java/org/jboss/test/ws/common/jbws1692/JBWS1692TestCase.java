@@ -47,11 +47,11 @@ public class JBWS1692TestCase extends JBossWSTest
    public void testImportNode() throws Exception
    {
       MessageFactory factory = MessageFactory.newInstance();
-      File soapreqfile = new File("resources/common/jbws1692/soap-request-template.xml");
+      File soapreqfile = getResourceFile("common/jbws1692/soap-request-template.xml");
       SOAPMessage msg = factory.createMessage(null, new FileInputStream(soapreqfile));
 
       // Get the node that needs to be imported
-      Node someNode = getNode("resources/common/jbws1692/import-node.xml");
+      Node someNode = getNode(getResourceFile("common/jbws1692/import-node.xml").getPath());
 
       // Import the node
       Node importedNode = msg.getSOAPPart().getOwnerDocument().importNode(someNode, true);

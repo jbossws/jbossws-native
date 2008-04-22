@@ -51,7 +51,7 @@ public class SunInteropTestCase extends JBossWSTest
    /** Test that we can build an envelope from InputStream */
    public void testSunSTRRequest() throws Exception
    {
-      InputStream inputStream = new FileInputStream("resources/jaxrpc/wsse/interop/sun-xws.xml");
+      InputStream inputStream = new FileInputStream(getResourceFile("jaxrpc/wsse/interop/sun-xws.xml").getPath());
 
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
@@ -85,7 +85,7 @@ public class SunInteropTestCase extends JBossWSTest
    /** Test that we can build an envelope from InputStream */
    public void testSunIssuerSerialSignEncrypt() throws Exception
    {
-      InputStream inputStream = new FileInputStream("resources/jaxrpc/wsse/interop/sun-xws-issuerserial-sign-encrypt.xml");
+      InputStream inputStream = new FileInputStream(getResourceFile("jaxrpc/wsse/interop/sun-xws-issuerserial-sign-encrypt.xml").getPath());
 
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);

@@ -21,53 +21,50 @@
  */
 package org.jboss.test.ws.jaxws.jaxbintros;
 
-import com.sun.xml.bind.api.JAXBRIContext;
-import junit.framework.TestCase;
-import org.jboss.jaxb.intros.IntroductionsAnnotationReader;
-import org.jboss.jaxb.intros.IntroductionsConfigParser;
-import org.jboss.jaxb.intros.configmodel.JaxbIntros;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+
+import org.jboss.jaxb.intros.IntroductionsAnnotationReader;
+import org.jboss.jaxb.intros.IntroductionsConfigParser;
+import org.jboss.jaxb.intros.configmodel.JaxbIntros;
+import org.jboss.wsf.test.JBossWSTest;
+
+import com.sun.xml.bind.api.JAXBRIContext;
+
 /**
  * @author Heiko.Braun@jboss.com
  * @version $Revision$
  */
-public class AnnotationReaderTestCase extends TestCase
+public class AnnotationReaderTestCase extends JBossWSTest
 {
    public void testUnmarshal() throws Exception
    {
-      String reqString =
-        "   <ns1:user xmlns:ns1='http://org.jboss.ws/provider' string='Kermit'>" +
-          "      <qname>The Frog</qname>" +
-          "    </ns1:user>";
+      String reqString = 
+         "   <ns1:user xmlns:ns1='http://org.jboss.ws/provider' string='Kermit'>" + 
+         "      <qname>The Frog</qname>" + 
+         "    </ns1:user>";
 
-      JaxbIntros config = IntroductionsConfigParser.parseConfig(
-        new FileInputStream("resources/jaxws/jaxbintros/WEB-INF/jaxb-intros.xml")
-      );
-      
+      JaxbIntros config = IntroductionsConfigParser.parseConfig(new FileInputStream(getResourceFile("jaxws/jaxbintros/WEB-INF/jaxb-intros.xml").getPath()));
+
       IntroductionsAnnotationReader reader = new IntroductionsAnnotationReader(config);
       Map<String, Object> jaxbConfig = new HashMap<String, Object>();
 
       jaxbConfig.put(JAXBRIContext.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.ws/provider");
       jaxbConfig.put(JAXBRIContext.ANNOTATION_READER, reader);
 
-      JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] {UserType.class}, jaxbConfig);
+      JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] { UserType.class }, jaxbConfig);
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-      JAXBElement jbe = unmarshaller.unmarshal(
-        new StreamSource(
-          new ByteArrayInputStream(reqString.getBytes())
+      JAXBElement jbe = unmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(reqString.getBytes())
 
-        ), UserType.class
-      );
+      ), UserType.class);
 
       UserType ut = (UserType)jbe.getValue();
       assertEquals("Kermit", ut.getString());

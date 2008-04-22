@@ -56,7 +56,7 @@ public class BaseDataTypesRpcLitTestCase extends BaseDataTypesSupport {
 
       if (targetPort == null)
       {
-         URL wsdlLocation = new File("resources/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl").toURL();
+         URL wsdlLocation = getResourceURL("interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl");
          Service service = Service.create(wsdlLocation, new QName("http://tempuri.org/", "BaseDataTypesRpcLitService") );
          targetPort = service.getPort(IBaseDataTypesRpcLit.class);
          ((BindingProvider)targetPort).getRequestContext().put(

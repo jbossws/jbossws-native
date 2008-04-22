@@ -64,7 +64,7 @@ public class JBWS871TestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         URL wsdlURL = new File("resources/jaxws/jbws871/META-INF/wsdl/TestEndpoint.wsdl").toURL();
+         URL wsdlURL = getResourceURL("jaxws/jbws871/META-INF/wsdl/TestEndpoint.wsdl");
          QName serviceName = new QName("http://jbws871.jaxws.ws.test.jboss.org/", "RpcArrayEndpointService");
          Service service = Service.create(wsdlURL, serviceName);
          endpoint = (RpcArrayEndpoint)service.getPort(RpcArrayEndpoint.class);

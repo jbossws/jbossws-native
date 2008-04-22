@@ -72,7 +72,7 @@ public class AttachmentProxyTestCase extends JBossWSTest
     */
    public void testSendMimeImageGIF() throws Exception
    {
-      URL url = new File("resources/jaxrpc/samples/swa/attach.gif").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.gif");
 
       // On Linux the X11 server must be installed properly to create images successfully.
       // If the image cannot be created in the test VM, we assume it cannot be done on the
@@ -98,7 +98,7 @@ public class AttachmentProxyTestCase extends JBossWSTest
     */
    public void testSendMimeImageJPEG() throws Exception
    {
-      URL url = new File("resources/jaxrpc/samples/swa/attach.jpeg").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.jpeg");
 
       // On Linux the X11 server must be installed properly to create images successfully.
       // If the image cannot be created in the test VM, we assume it cannot be done on the
@@ -132,7 +132,7 @@ public class AttachmentProxyTestCase extends JBossWSTest
     */
    public void testSendMimeMultipart() throws Exception
    {
-      URL url = new File("resources/jaxrpc/samples/swa/attach.txt").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.txt");
       MimeMultipart multipart = new MimeMultipart("mixed");
       MimeBodyPart bodyPart = new MimeBodyPart();
       bodyPart.setDataHandler(new DataHandler(url));
@@ -148,7 +148,7 @@ public class AttachmentProxyTestCase extends JBossWSTest
     */
    public void testSendMimeTextXML() throws Exception
    {
-      FileInputStream stream = new FileInputStream("resources/jaxrpc/samples/swa/attach.xml");
+      FileInputStream stream = new FileInputStream(getResourceFile("jaxrpc/samples/swa/attach.xml").getPath());
       StreamSource source = new StreamSource(stream);
 
       String value = port.sendMimeTextXML("Some text message", new DataHandler(source, "text/xml"));
@@ -159,7 +159,7 @@ public class AttachmentProxyTestCase extends JBossWSTest
     */
    public void testSendMimeApplicationXML() throws Exception
    {
-      FileInputStream stream = new FileInputStream("resources/jaxrpc/samples/swa/attach.xml");
+      FileInputStream stream = new FileInputStream(getResourceFile("jaxrpc/samples/swa/attach.xml").getPath());
       StreamSource source = new StreamSource(stream);
 
       String value = port.sendMimeApplicationXML("Some text message", source);

@@ -70,7 +70,7 @@ public class AttachmentDIITestCase extends JBossWSTest
       String rpcMethodName = "sendMimeImageGIF";
       Call call = setupMimeMessage(rpcMethodName, "image/gif");
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.gif").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.gif");
 
       // On Linux the X11 server must be installed properly to create images successfully.
       // If the image cannot be created in the test VM, we assume it cannot be done on the
@@ -98,7 +98,7 @@ public class AttachmentDIITestCase extends JBossWSTest
       String rpcMethodName = "sendMimeImageJPEG";
       Call call = setupMimeMessage(rpcMethodName, "image/jpeg");
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.jpeg").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.jpeg");
 
       // On Linux the X11 server must be installed properly to create images successfully.
       // If the image cannot be created in the test VM, we assume it cannot be done on the
@@ -126,7 +126,7 @@ public class AttachmentDIITestCase extends JBossWSTest
       String rpcMethodName = "sendMimeTextPlain";
       Call call = setupMimeMessage(rpcMethodName, "text/plain");
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.txt").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.txt");
       sendAndValidateMimeMessage(call, new DataHandler(url));
    }
 
@@ -137,7 +137,7 @@ public class AttachmentDIITestCase extends JBossWSTest
       String rpcMethodName = "sendMimeMultipart";
       Call call = setupMimeMessage(rpcMethodName, "multipart/mixed");
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.txt").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.txt");
       MimeMultipart mimepart = new MimeMultipart("mixed");
       MimeBodyPart bodyPart = new MimeBodyPart();
       bodyPart.setDataHandler(new DataHandler(url));
@@ -154,7 +154,7 @@ public class AttachmentDIITestCase extends JBossWSTest
    {
       String rpcMethodName = "sendMimeTextXML";
       Call call = setupMimeMessage(rpcMethodName, "text/xml");
-      FileInputStream stream = new FileInputStream("resources/jaxrpc/samples/swa/attach.xml");
+      FileInputStream stream = new FileInputStream(getResourceFile("jaxrpc/samples/swa/attach.xml").getPath());
       StreamSource source = new StreamSource(stream);
 
       sendAndValidateMimeMessage(call, new DataHandler(source, "text/xml"));
@@ -167,7 +167,7 @@ public class AttachmentDIITestCase extends JBossWSTest
       String rpcMethodName = "sendMimeApplicationXML";
       Call call = setupMimeMessage(rpcMethodName, "application/xml");
 
-      URL url = new File("resources/jaxrpc/samples/swa/attach.xml").toURL();
+      URL url = getResourceURL("jaxrpc/samples/swa/attach.xml");
       sendAndValidateMimeMessage(call, new DataHandler(url));
    }
 

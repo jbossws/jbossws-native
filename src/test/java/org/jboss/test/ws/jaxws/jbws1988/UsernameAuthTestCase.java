@@ -89,7 +89,7 @@ public class UsernameAuthTestCase extends JBossWSTest
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/jbws1988", "HelloService");
       Hello port = Service.create(wsdlURL, serviceName).getPort(Hello.class);
-      URL securityURL = new File("resources/jaxws/jbws1988/META-INF/jboss-wsse-client.xml").toURL();
+      URL securityURL = getResourceURL("jaxws/jbws1988/META-INF/jboss-wsse-client.xml");
       ((StubExt)port).setSecurityConfig(securityURL.toExternalForm());
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
       ((BindingProvider)port).getRequestContext().put(StubExt.PROPERTY_AUTH_TYPE, StubExt.PROPERTY_AUTH_TYPE_WSSE);

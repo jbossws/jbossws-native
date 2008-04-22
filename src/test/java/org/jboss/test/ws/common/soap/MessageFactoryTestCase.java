@@ -119,7 +119,7 @@ public class MessageFactoryTestCase extends JBossWSTest
    // [JBWS-1407] Premature end of File exception on createMessage
    public void testPrematureEndOfFile() throws Exception
    {
-      File envFile = new File("resources/common/soap/MessageFactory/jbws1407.xml");
+      File envFile = getResourceFile("common/soap/MessageFactory/jbws1407.xml");
       assertTrue("File exists: " + envFile, envFile.exists());
 
       FileInputStream inputStream = new FileInputStream(envFile);

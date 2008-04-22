@@ -45,17 +45,17 @@ public class JBWS1090TestCase extends JBossWSTest
       new File("tools/jbws1090").mkdirs();
       
       // copy webservices.xml fixture to output folder 
-      FileInputStream src = new FileInputStream("resources/tools/metadatafixture/webservices.xml");
+      FileInputStream src = new FileInputStream(getResourceFile("tools/metadatafixture/webservices.xml").getPath());
       FileOutputStream dest = new FileOutputStream("tools/jbws1090/webservices.xml");
       IOUtils.copyStream(dest, src);
       src.close();
       dest.close();
 
       // run wstools
-      String[] args = { "-dest", "tools/jbws1090", "-config", "resources/tools/jbws1090/wstools-config.xml" };
+      String[] args = { "-dest", "tools/jbws1090", "-config", getResourceFile("tools/jbws1090/wstools-config.xml").getPath() };
       new WSTools().generate(args);
 
-      Element expected = DOMUtils.parse(new FileInputStream("resources/tools/jbws1090/webservices.xml"));
+      Element expected = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1090/webservices.xml").getPath()));
       Element was = DOMUtils.parse(new FileInputStream("tools/jbws1090/webservices.xml"));
       assertEquals(expected, was);
    }

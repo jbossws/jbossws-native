@@ -62,7 +62,7 @@ public class WSDL20AssertionsTestCase extends JBossWSTest
    private void doWSDLTest(String wsdlname)
    {
       // System property passed through the ant build script
-      String wsdldir = System.getProperty("wsdl.dir", "resources/tools");
+      String wsdldir = System.getProperty("wsdl.dir", getResourceFile("tools").getPath());
 
       File wsdlFile = new File(wsdldir + "/wsdl20assertions/" + wsdlname);
  

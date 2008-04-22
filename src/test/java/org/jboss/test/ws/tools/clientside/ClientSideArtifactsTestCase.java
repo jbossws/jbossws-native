@@ -67,7 +67,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
    public void testSimpleCase() throws Exception
    {
       WSDLToJava wsdlJava = new WSDLToJava();
-      File wsdlFile = new File("resources/tools/jbws-161/wscompile/simple/wsdl/HelloWsService.wsdl");
+      File wsdlFile = getResourceFile("tools/jbws-161/wscompile/simple/wsdl/HelloWsService.wsdl");
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
       WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile.toURL());
       wsdlJava.generateSEI(wsdl, new File("tools/jbws-160/jbossws/simple/sei"));
@@ -93,7 +93,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the Service File
       String fname = "HelloWsService.java";
-      File file1 = new File("resources/tools/jbws-160/wscompile/simple/service/" + fname);
+      File file1 = new File(getResourceFile("tools/jbws-160/wscompile/simple/service/").getPath() + fname);
       File file2 = new File("tools/jbws-160/jbossws/simple/service/org/jboss/types/" + fname);
 
       try
@@ -107,7 +107,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the SEI
       fname = "HelloWs.java";
-      file1 = new File("resources/tools/jbws-160/wscompile/simple/sei/" + fname);
+      file1 = new File(getResourceFile("tools/jbws-160/wscompile/simple/sei/").getPath() + fname);
       file2 = new File("tools/jbws-160/jbossws/simple/sei/org/jboss/types/" + fname);
 
       try
@@ -120,7 +120,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       }
 
       //Compare mapping files
-      File expFile = new File("resources/tools/jbws-160/wscompile/simple/mapping/jaxrpc-mapping.xml");
+      File expFile = getResourceFile("tools/jbws-160/wscompile/simple/mapping/jaxrpc-mapping.xml");
       File genFile = new File("tools/jbws-160/jbossws/simple/mapping/jaxrpc-mapping.xml");
 
       compareXMLFiles(expFile.toURL(), genFile.toURL());
@@ -130,7 +130,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
    public void testCustomCase() throws Exception
    {
       WSDLToJava wsdlJava = new WSDLToJava();
-      File wsdlFile = new File("resources/tools/jbws-161/wscompile/custom/wsdl/HelloCustomService.wsdl");
+      File wsdlFile = getResourceFile("tools/jbws-161/wscompile/custom/wsdl/HelloCustomService.wsdl");
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
       WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile.toURL());
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
@@ -158,7 +158,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the Service File
       String fname = "HelloCustomService.java";
-      File file1 = new File("resources/tools/jbws-160/wscompile/custom/service/" + fname);
+      File file1 = new File(getResourceFile("tools/jbws-160/wscompile/custom/service/").getPath() + fname);
       File file2 = new File("tools/jbws-160/jbossws/custom/service/org/jboss/types/" + fname);
 
       try
@@ -172,7 +172,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the SEI
       fname = "HelloCustomRemote.java";
-      file1 = new File("resources/tools/jbws-160/wscompile/custom/sei/" + fname);
+      file1 = new File(getResourceFile("tools/jbws-160/wscompile/custom/sei/").getPath() + fname);
       file2 = new File("tools/jbws-160/jbossws/custom/sei/org/jboss/types/" + fname);
 
       /*try
@@ -185,7 +185,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
        }*/
 
       //Compare mapping files 
-      String fix = "resources/tools/jbws-160/wscompile/custom/mapping/jaxrpc-mapping.xml";
+      String fix = getResourceFile("tools/jbws-160/wscompile/custom/mapping/jaxrpc-mapping.xml").getPath();
       String gen = "tools/jbws-160/jbossws/custom/mapping/jaxrpc-mapping.xml";
 
       JaxrpcMappingValidator mv = new JaxrpcMappingValidator();

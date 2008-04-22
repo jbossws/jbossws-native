@@ -89,7 +89,7 @@ public class JBWS1653TestCase extends JBossWSTest
    {
       ServiceFactoryImpl factory = new ServiceFactoryImpl();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml");
       QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
       Service service = factory.createService(wsdlURL, qname, mappingURL);
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
@@ -109,7 +109,7 @@ public class JBWS1653TestCase extends JBossWSTest
             try
             {
                if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
-                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+                  resURL = getResourceURL("jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml");
             }
             catch (MalformedURLException ex)
             {
@@ -124,7 +124,7 @@ public class JBWS1653TestCase extends JBossWSTest
             try
             {
                if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
-                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+                  resURL = getResourceURL("jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml");
             }
             catch (MalformedURLException ex)
             {
@@ -170,7 +170,7 @@ public class JBWS1653TestCase extends JBossWSTest
             try
             {
                if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
-                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+                  resURL = getResourceURL("jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml");
             }
             catch (MalformedURLException ex)
             {
@@ -215,7 +215,7 @@ public class JBWS1653TestCase extends JBossWSTest
             try
             {
                if (resName.endsWith("META-INF/standard-jaxrpc-client-config.xml"))
-                  resURL = new File("resources/jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml").toURL();
+                  resURL = getResourceURL("jaxrpc/jbws1653/META-INF/standard-jaxrpc-client-config.xml");
             }
             catch (MalformedURLException ex)
             {
@@ -228,7 +228,7 @@ public class JBWS1653TestCase extends JBossWSTest
 
       ServiceFactoryImpl factory = new ServiceFactoryImpl();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml");
       QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
       Service service = factory.createService(wsdlURL, qname, mappingURL);
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);

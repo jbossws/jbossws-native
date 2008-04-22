@@ -91,7 +91,7 @@ public class SimpleEncryptTestCase extends JBossWSTest
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/jbws1814", "HelloService");
       Hello port = Service.create(wsdlURL, serviceName).getPort(Hello.class);
-      URL securityURL = new File("resources/jaxws/jbws1814/META-INF/jboss-wsse-client.xml").toURL();
+      URL securityURL = getResourceURL("jaxws/jbws1814/META-INF/jboss-wsse-client.xml");
       ((StubExt)port).setSecurityConfig(securityURL.toExternalForm());
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
       return port;
@@ -107,8 +107,8 @@ public class SimpleEncryptTestCase extends JBossWSTest
       trustStorePassword = System.getProperty("org.jboss.ws.wsse.trustStorePassword");
       trustStoreType = System.getProperty("org.jboss.ws.wsse.trustStoreType");
       //Set values
-      System.setProperty("org.jboss.ws.wsse.keyStore", "resources/jaxws/jbws1814/META-INF/" + client + "-sign_enc.jks");
-      System.setProperty("org.jboss.ws.wsse.trustStore", "resources/jaxws/jbws1814/META-INF/wsse10.truststore");
+      System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("jaxws/jbws1814/META-INF/" + client + "-sign_enc.jks").getPath());
+      System.setProperty("org.jboss.ws.wsse.trustStore", getResourceFile("jaxws/jbws1814/META-INF/wsse10.truststore").getPath());
       System.setProperty("org.jboss.ws.wsse.keyStorePassword", "password");
       System.setProperty("org.jboss.ws.wsse.trustStorePassword", "password");
       System.setProperty("org.jboss.ws.wsse.keyStoreType", "jks");

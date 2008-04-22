@@ -42,7 +42,7 @@ public class JBWS1857TestCase extends JBossWSTest
 {
    public void testPortCreation() throws Exception
    {
-      File wsdlFile = new File("resources/jaxws/jbws1857/StammdatenService.wsdl");
+      File wsdlFile = getResourceFile("jaxws/jbws1857/StammdatenService.wsdl");
       QName serviceName = new QName("http://example.com", "StammdatenService");
       Service service = Service.create(wsdlFile.toURL(), serviceName);
       

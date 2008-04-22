@@ -47,7 +47,7 @@ public class JBWS1453TestCase extends JBossWSTest
     */
    public void testGenerate() throws Exception
    {
-      String resourceDir = "resources/tools/jbws1453";
+      String resourceDir = getResourceFile("tools/jbws1453").getPath();
       String toolsDir = "tools/jbws1453";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);

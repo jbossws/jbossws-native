@@ -63,8 +63,8 @@ public class ServiceRefClientTestCase extends JBossWSTest
 
    public void testDynamicProxy() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxrpc/samples/serviceref/META-INF/wsdl/TestEndpoint.wsdl").toURL();
-      URL mappingURL = new File("resources/jaxrpc/samples/serviceref/META-INF/jaxrpc-mapping.xml").toURL();
+      URL wsdlURL = getResourceURL("jaxrpc/samples/serviceref/META-INF/wsdl/TestEndpoint.wsdl");
+      URL mappingURL = getResourceURL("jaxrpc/samples/serviceref/META-INF/jaxrpc-mapping.xml");
       QName qname = new QName("http://org.jboss.ws/wsref", "TestEndpointService");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, qname, mappingURL);
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
@@ -76,7 +76,7 @@ public class ServiceRefClientTestCase extends JBossWSTest
 
    public void testDynamicProxyNeg() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxrpc/samples/serviceref/META-INF/wsdl/TestEndpoint.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxrpc/samples/serviceref/META-INF/wsdl/TestEndpoint.wsdl");
       QName qname = new QName("http://org.jboss.ws/wsref", "TestEndpointService");
       Service service = ServiceFactory.newInstance().createService(wsdlURL, qname);
       try

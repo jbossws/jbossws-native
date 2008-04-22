@@ -64,7 +64,7 @@ public class JBWS1697TestCase extends WSToolsTest
 
    protected void generateScenario(final String scenario) throws Exception
    {
-      String resourceDir = "resources/tools/jbws1697/" + scenario;
+      String resourceDir = getResourceFile("tools/jbws1697/").getPath() + scenario;
       String toolsDir = "tools/jbws1697/" + scenario;
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);

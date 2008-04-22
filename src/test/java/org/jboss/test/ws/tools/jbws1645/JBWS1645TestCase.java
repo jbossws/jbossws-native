@@ -78,7 +78,7 @@ public class JBWS1645TestCase extends JBossWSTest
    public void testWSDLGeneratorWithPolicies() throws Exception
    {
       Class seiClass = StandardJavaTypes.class;
-      String fixturefile = "resources/tools/jbws1645/StandardJavaTypesServiceJBWS1645.wsdl";
+      String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645.wsdl").getPath();
       
       File wsdlDir = new File("./tools/jbws1645");
       wsdlDir.mkdirs();
@@ -101,9 +101,9 @@ public class JBWS1645TestCase extends JBossWSTest
       //manually add policies to the umd
       ServiceMetaData serviceMetaData = umd.getServices().get(0);
       EndpointMetaData epMetaData = serviceMetaData.getEndpoints().get(0);
-      addPolicy(new File("resources/tools/jbws1645/PortPolicy.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/PortTypePolicy.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/BindingPolicy.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/PortPolicy.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/PortTypePolicy.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/BindingPolicy.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
       
       //generate the wsdl definitions and write the wsdl file
       WSDLDefinitions wsdl = jwsdl.generate(seiClass);
@@ -129,7 +129,7 @@ public class JBWS1645TestCase extends JBossWSTest
    public void testWSDLGeneratorWithMultiplePolicies() throws Exception
    {
       Class seiClass = StandardJavaTypes.class;
-      String fixturefile = "resources/tools/jbws1645/StandardJavaTypesServiceJBWS1645-Multiple.wsdl";
+      String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645-Multiple.wsdl").getPath();
       
       File wsdlDir = new File("./tools/jbws1645");
       wsdlDir.mkdirs();
@@ -152,12 +152,12 @@ public class JBWS1645TestCase extends JBossWSTest
       //manually add policies to the umd
       ServiceMetaData serviceMetaData = umd.getServices().get(0);
       EndpointMetaData epMetaData = serviceMetaData.getEndpoints().get(0);
-      addPolicy(new File("resources/tools/jbws1645/PortPolicy.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/PortPolicy2.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/PortTypePolicy2.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/PortTypePolicy.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/BindingPolicy.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
-      addPolicy(new File("resources/tools/jbws1645/BindingPolicy2.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/PortPolicy.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/PortPolicy2.txt"), PolicyScopeLevel.WSDL_PORT, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/PortTypePolicy2.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/PortTypePolicy.txt"), PolicyScopeLevel.WSDL_PORT_TYPE, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/BindingPolicy.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
+      addPolicy(getResourceFile("tools/jbws1645/BindingPolicy2.txt"), PolicyScopeLevel.WSDL_BINDING, epMetaData);
       
       //generate the wsdl definitions and write the wsdl file
       WSDLDefinitions wsdl = jwsdl.generate(seiClass);

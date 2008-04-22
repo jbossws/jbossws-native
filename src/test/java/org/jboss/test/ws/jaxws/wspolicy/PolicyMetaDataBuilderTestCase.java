@@ -56,7 +56,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
 {
    public void testEndpointScopePolicies() throws Exception
    {
-      UnifiedVirtualFile vfRoot = new URLLoaderAdapter(new File("resources/jaxws/wspolicy").toURL());
+      UnifiedVirtualFile vfRoot = new URLLoaderAdapter(getResourceURL("jaxws/wspolicy"));
       UnifiedMetaData umd = new UnifiedMetaData(vfRoot);
       
       QName serviceName = new QName("http://org.jboss.ws/jaxws/endpoint", "TestService");
@@ -72,7 +72,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       PolicyDeployer deployer = PolicyDeployer.newInstance(map);
       PolicyMetaDataBuilder builder = new PolicyMetaDataBuilder(deployer);
 
-      WSDLDefinitions wsdlDefinitions = readWsdl("resources/jaxws/wspolicy/TestService.wsdl");
+      WSDLDefinitions wsdlDefinitions = readWsdl(getResourceFile("jaxws/wspolicy/TestService.wsdl").getPath());
       builder.processPolicyExtensions(epMetaData, wsdlDefinitions);
 
       PolicyMetaExtension policyExt = (PolicyMetaExtension)epMetaData.getExtension(Constants.URI_WS_POLICY);
@@ -108,7 +108,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       PolicyMetaDataBuilder builder = new PolicyMetaDataBuilder(deployer);
       builder.setToolMode(true);
 
-      UnifiedVirtualFile vfRoot = new URLLoaderAdapter(new File("resources/jaxws/wspolicy").toURL());
+      UnifiedVirtualFile vfRoot = new URLLoaderAdapter(getResourceURL("jaxws/wspolicy"));
       UnifiedMetaData umd = new UnifiedMetaData(vfRoot);
       ServiceMetaData serviceMetaData = new ServiceMetaData(umd, new QName("dummyServiceName"));
       umd.addService(serviceMetaData);

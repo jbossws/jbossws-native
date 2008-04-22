@@ -57,7 +57,7 @@ public class BenchmarkDocJSETestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         URL wsdlLocation = new File("resources/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl").toURL();
+         URL wsdlLocation = getResourceURL("benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl");
          Service service = Service.create(wsdlLocation, new QName("http://org.jboss.ws/benchmark", "BenchmarkWebService"));
          endpoint = service.getPort(BenchmarkService.class);
          ((BindingProvider)endpoint).getRequestContext().put(

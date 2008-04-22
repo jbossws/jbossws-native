@@ -49,7 +49,7 @@ import org.jboss.wsf.common.IOUtils;
  */
 public abstract class XOPBase extends JBossWSTest
 {
-   private File imgFile = new File("resources/jaxrpc/xop/shared/attach.jpeg");
+   private File imgFile = getResourceFile("jaxrpc/xop/shared/attach.jpeg");
 
    protected abstract XOPPing getPort();
 

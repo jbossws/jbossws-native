@@ -47,7 +47,7 @@ public class DocumentStyleUnmarshallerTestCase extends WSToolsTest
 
    protected XSModel getSchemaModel() throws Exception
    {
-      File xsdFile = new File("resources/common/jbossxb/DocumentStyle.xsd");
+      File xsdFile = getResourceFile("common/jbossxb/DocumentStyle.xsd");
       assertTrue(xsdFile.exists());
 
       return parseSchema(xsdFile.toURL());
@@ -83,7 +83,7 @@ public class DocumentStyleUnmarshallerTestCase extends WSToolsTest
    private JavaWsdlMapping getJavaWSDLMapping() throws Exception
    {
       JavaWsdlMappingFactory factory = JavaWsdlMappingFactory.newInstance();
-      URL mappingURL = new File("resources/common/jbossxb/DocumentStyle.xml").toURL();
+      URL mappingURL = getResourceURL("common/jbossxb/DocumentStyle.xml");
       JavaWsdlMapping javaWsdlMapping = factory.parse(mappingURL);
       return javaWsdlMapping;
    }

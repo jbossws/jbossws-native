@@ -54,7 +54,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testPrimitiveTypes() throws Exception
    {
       Class seiClass = PrimitiveTypes.class;
-      String fixturefile = "resources/tools/wsdlfixture/PrimitiveTypesService_RPC_11.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/PrimitiveTypesService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
 
@@ -62,7 +62,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testStandardJavaTypes() throws Exception
    {
       Class seiClass = StandardJavaTypes.class;
-      String fixturefile = "resources/tools/wsdlfixture/StandardJavaTypesService_RPC_11.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/StandardJavaTypesService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
 
@@ -70,7 +70,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testCustomTypes() throws Exception
    {
       Class seiClass = CustomInterface.class;
-      String fixturefile = "resources/tools/wsdlfixture/CustomInterfaceService_RPC_11.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/CustomInterfaceService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
 
@@ -78,7 +78,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testExceptionTypes() throws Exception
    {
       Class seiClass = ServiceException.class;
-      String fixturefile = "resources/tools/wsdlfixture/ServiceExceptionService_RPC_11.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/ServiceExceptionService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
 
@@ -86,7 +86,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testComplexTypes() throws Exception
    {
       Class seiClass = ComplexTypes.class;
-      String fixturefile = "resources/tools/wsdlfixture/ComplexTypesService_RPC_11.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/ComplexTypesService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
 
@@ -94,8 +94,8 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testArrayTypes() throws Exception
    {
       Class seiClass = ArrayInterface.class;
-      // String fixturefile = "resources/tools/wsdlfixture/ArrayInterfaceService_RPC_11.wsdl";
-      String fixturefile = "resources/tools/wsdlfixture/arrays/ArrayInterfaceService_RPC_11.wsdl";
+      // String fixturefile = getResourceFile("tools/wsdlfixture/ArrayInterfaceService_RPC_11.wsdl").getPath();
+      String fixturefile = getResourceFile("tools/wsdlfixture/arrays/ArrayInterfaceService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
    
@@ -103,7 +103,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testPrimitiveArrayTypes() throws Exception
    {
       Class seiClass = PrimitiveArrayTypes.class;
-      String fixturefile = "resources/tools/wsdlfixture/arrays/PrimitiveArrayTypesService_RPC_11.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/arrays/PrimitiveArrayTypesService_RPC_11.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
    
@@ -111,7 +111,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
    public void testInterfaceInheritence() throws Exception
    {
       Class seiClass = InheritenceChildInterface.class;
-      String fixturefile = "resources/tools/wsdlfixture/InheritenceChildInterfaceService_RPC.wsdl";
+      String fixturefile = getResourceFile("tools/wsdlfixture/InheritenceChildInterfaceService_RPC.wsdl").getPath();
       doWSDLTest(seiClass, fixturefile);
    }
 

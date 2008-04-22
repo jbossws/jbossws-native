@@ -49,7 +49,7 @@ public class GlobalConfigTestCase extends WSToolsTest
 
    public void testJavaToWSDL() throws IOException
    {
-      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", "resources/tools/config/java2wsdlglobal.xml" };
+      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", getResourceFile("tools/config/java2wsdlglobal.xml").getPath() };
       WSTools tools = new WSTools();
       tools.generate(args);
 
@@ -60,7 +60,7 @@ public class GlobalConfigTestCase extends WSToolsTest
 
    public void testWSDLToJava() throws IOException, ClassNotFoundException
    {
-      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", "resources/tools/config/wsdl2javaglobal.xml" };
+      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", getResourceFile("tools/config/wsdl2javaglobal.xml").getPath() };
       WSTools tools = new WSTools();
       tools.generate(args);
       File file = new File("tools/globalconfig/org/jboss/test/ws/StandardJavaTypes.java");

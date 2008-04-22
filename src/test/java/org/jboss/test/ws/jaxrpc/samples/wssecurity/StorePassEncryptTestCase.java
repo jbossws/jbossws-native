@@ -65,9 +65,9 @@ public class StorePassEncryptTestCase extends JBossWSTest
          else
          {
             ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/wssecurity/WEB-INF/wsdl/HelloService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/wssecurity/WEB-INF/jaxrpc-mapping.xml").toURL();
-            URL securityURL = new File("resources/jaxrpc/samples/wssecurity/store-pass-encrypt/META-INF/jboss-wsse-client.xml").toURL();
+            URL wsdlURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/wsdl/HelloService.wsdl");
+            URL mappingURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/jaxrpc-mapping.xml");
+            URL securityURL = getResourceURL("jaxrpc/samples/wssecurity/store-pass-encrypt/META-INF/jboss-wsse-client.xml");
             QName qname = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
             ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, qname, mappingURL, securityURL);
             port = (Hello)service.getPort(Hello.class);

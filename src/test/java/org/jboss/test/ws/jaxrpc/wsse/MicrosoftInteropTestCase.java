@@ -75,7 +75,7 @@ public class MicrosoftInteropTestCase extends JBossWSTest
          "  </soap:Body>" +
          "</soap:Envelope>";
 
-      InputStream inputStream = new FileInputStream("resources/jaxrpc/wsse/interop/microsoft-wse.xml");
+      InputStream inputStream = new FileInputStream(getResourceFile("jaxrpc/wsse/interop/microsoft-wse.xml").getPath());
 
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);

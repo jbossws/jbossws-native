@@ -49,7 +49,7 @@ public class WsdlPublishTestCase extends JBossWSTest
    public void testClientProxy() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-wsdlpublish?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/wsdlpublish/WEB-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/wsdlpublish/WEB-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.ws/wsdlpublish", "TestService");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       

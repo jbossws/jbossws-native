@@ -41,7 +41,7 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class SimpleFileImportTestCase extends JBossWSTest
 {
-   public static final String WSDL_LOCATION = "resources/common/wsdl11/simplefile/SimpleFile.wsdl";
+   private final String WSDL_LOCATION = getResourceFile("common/wsdl11/simplefile/SimpleFile.wsdl").getPath();
 
    public void testFileURL() throws Exception
    {

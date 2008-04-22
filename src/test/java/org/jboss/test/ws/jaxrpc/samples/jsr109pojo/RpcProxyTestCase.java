@@ -57,7 +57,7 @@ public class RpcProxyTestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         File javaWsdlMappingFile = new File("resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml");
+         File javaWsdlMappingFile = getResourceFile("jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml");
          assertTrue(javaWsdlMappingFile.exists());
 
          QName serviceName = new QName(TARGET_NAMESPACE, "TestService");

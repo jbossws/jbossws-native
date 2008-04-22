@@ -59,7 +59,7 @@ public abstract class JBWS206Test extends WSToolsTest
    public void checkServiceEndpointInterface() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = "resources/tools/jbws-206/wscompileArtifacts/" + getBase();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/").getPath() + getBase();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String seiName = getSEIName() + ".java";
@@ -72,7 +72,7 @@ public abstract class JBWS206Test extends WSToolsTest
    public void checkServiceInterface() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = "resources/tools/jbws-206/wscompileArtifacts/" + getBase();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/").getPath() + getBase();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String serviceName = getServiceName();
@@ -85,7 +85,7 @@ public abstract class JBWS206Test extends WSToolsTest
    public final void checkUserType(String name) throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = "resources/tools/jbws-206/wscompileArtifacts/" + getBase();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/").getPath() + getBase();
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
 
       //    Check User Types
@@ -96,7 +96,7 @@ public abstract class JBWS206Test extends WSToolsTest
    protected final void generate() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String configloc = "resources/tools/jbws-206/jbosswsConfig/" + getBase() + "/" + getBase() + "wsdl2java.xml";
+      String configloc = getResourceFile("tools/jbws-206/jbosswsConfig/" + getBase() + "/" + getBase() + "wsdl2java.xml").getPath();
 
       String[] args = new String[] { "-dest", out_dir, "-config", configloc };
       WSTools tools = new WSTools();

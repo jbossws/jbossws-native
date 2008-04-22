@@ -27,9 +27,9 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
+import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
-import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
@@ -50,10 +50,10 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class ConfigFactoryTestCase extends JBossWSTest
 {
-   
+
    public void testJAXRPCObjectModelFactory() throws Exception
    {
-      File confFile = new File("resources/common/config/jaxrpc-endpoint-config.xml");
+      File confFile = getResourceFile("common/config/jaxrpc-endpoint-config.xml");
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
@@ -68,7 +68,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertEquals("Standard Endpoint", epc1.getConfigName());
       assertNull(epc1.getPreHandlerChain());
       assertNull(epc1.getPostHandlerChain());
-      assertFalse("MTOM should not be enabled" , epc1.hasFeature("http://org.jboss.ws/mtom"));
+      assertFalse("MTOM should not be enabled", epc1.hasFeature("http://org.jboss.ws/mtom"));
 
       assertEquals("Standard WSSecurity Endpoint", epc2.getConfigName());
       UnifiedHandlerChainMetaData preChain = epc2.getPreHandlerChain();
@@ -80,7 +80,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
 
    public void testJAXWSFeatures() throws Exception
    {
-      File confFile = new File("resources/common/config/jaxws-endpoint-config.xml");
+      File confFile = getResourceFile("common/config/jaxws-endpoint-config.xml");
       assertTrue(confFile.exists());
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
 
@@ -88,7 +88,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertNotNull("Null config", config);
 
       EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard MTOM Endpoint");
-      assertTrue("Feature not set" , epConfig.hasFeature("http://org.jboss.ws/mtom"));
+      assertTrue("Feature not set", epConfig.hasFeature("http://org.jboss.ws/mtom"));
 
       // disable feature
       epConfig.setFeature("http://org.jboss.ws/mtom", false);
@@ -97,14 +97,14 @@ public class ConfigFactoryTestCase extends JBossWSTest
 
    public void testJAXRPCFeatures() throws Exception
    {
-      File confFile = new File("resources/common/config/jaxrpc-endpoint-config.xml");
+      File confFile = getResourceFile("common/config/jaxrpc-endpoint-config.xml");
       assertTrue(confFile.exists());
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
       ConfigRootJAXRPC config = (ConfigRootJAXRPC)factory.parse(confFile.toURL());
       assertNotNull("Null config", config);
 
       CommonConfigJAXRPC epConfig = (CommonConfigJAXRPC)config.getConfigByName("Standard MTOM Endpoint");
-      assertTrue("Feature not set" , epConfig.hasFeature("http://org.jboss.ws/mtom"));
+      assertTrue("Feature not set", epConfig.hasFeature("http://org.jboss.ws/mtom"));
 
       // disable feature
       epConfig.setFeature("http://org.jboss.ws/mtom", false);
@@ -113,7 +113,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
 
    public void testProperties() throws Exception
    {
-      File confFile = new File("resources/common/config/jaxws-endpoint-config.xml");
+      File confFile = getResourceFile("common/config/jaxws-endpoint-config.xml");
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
@@ -125,10 +125,10 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertNotNull("Property does not exist", value);
       assertEquals("Wrong property valule", value, "5000");
    }
-   
+
    public void testWSRMConfiguration() throws Exception
    {
-      File confFile = new File("resources/common/config/jaxws-endpoint-config.xml");
+      File confFile = getResourceFile("common/config/jaxws-endpoint-config.xml");
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();

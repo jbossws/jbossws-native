@@ -90,7 +90,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
    {
       String typeNS = "http://org.jboss.ws/types";
       XSLoader xsloader = SchemaUtils.getInstance().getXSLoader();
-      XSModel xsmodel = xsloader.loadURI("resources/tools/wsdlfixture/CustomInterface20.xsd");
+      XSModel xsmodel = xsloader.loadURI(getResourceFile("tools/wsdlfixture/CustomInterface20.xsd").getPath());
       assertNotNull("XSModel is null?", xsmodel);
 
       XSNamedMap xsnamedmap = getXSNamedMap(xsmodel, typeNS);
@@ -111,8 +111,8 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       String arrTypeNS = "http://org.jboss/types/arrays/org/jboss/test/ws/tools/jbws_161/custom";
 
       Map map = new HashMap();
-      map.put(typeNS,new File("resources/tools/wsdlfixture/customtype/CustomTypeObj.xsd").toURL());
-      map.put(arrTypeNS,new File("resources/tools/wsdlfixture/customtype/CustomTypeArrays.xsd").toURL());
+      map.put(typeNS,getResourceURL("/tools/wsdlfixture/customtype/CustomTypeObj.xsd"));
+      map.put(arrTypeNS,getResourceURL("/tools/wsdlfixture/customtype/CustomTypeArrays.xsd"));
 
       XSModel xsmodel = new JavaToXSD().parseSchema(map);
       assertNotNull("XSModel is null?", xsmodel);
@@ -137,7 +137,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       assertEquals("HelloObj", name);
 
       //Test the case when the schema files are parsed one by one
-      XSModel newxsmodel = utils.parseSchema("resources/tools/wsdlfixture/customtype/CustomTypeObj.xsd");
+      XSModel newxsmodel = utils.parseSchema(getResourceFile("tools/wsdlfixture/customtype/CustomTypeObj.xsd").getPath());
       assertNotNull("XSModel is null?", newxsmodel);
       xsnamedmap = getXSNamedMap(newxsmodel, typeNS);
       assertNotNull("XSNamedMap is null?", xsnamedmap);
@@ -146,7 +146,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       assertEquals("HelloObj", xobj.getName());
       assertTrue("HelloObj is a complex type?",xobj instanceof XSComplexTypeDefinition);
 
-      newxsmodel = utils.parseSchema("resources/tools/wsdlfixture/customtype/CustomTypeArrays.xsd");
+      newxsmodel = utils.parseSchema(getResourceFile("tools/wsdlfixture/customtype/CustomTypeArrays.xsd").getPath());
       assertNotNull("XSModel is null?", newxsmodel);
       xsnamedmap = getXSNamedMap(newxsmodel, arrTypeNS);
       assertNotNull("XSNamedMap is null?", xsnamedmap);
@@ -173,12 +173,12 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       SchemaUtils utils = SchemaUtils.getInstance();
       String typeNS = "http://org.jboss/types";
       String arrTypeNS = "http://org.jboss/types/arrays/org/jboss/test/ws/tools/jbws_161/custom";
-      String arr[] = {"resources/tools/wsdlfixture/customtype/CustomTypeObj.xsd",
-                      "resources/tools/wsdlfixture/customtype/CustomTypeArrays.xsd"};
+      String arr[] = {getResourceFile("tools/wsdlfixture/customtype/CustomTypeObj.xsd").getPath(),
+                      getResourceFile("tools/wsdlfixture/customtype/CustomTypeArrays.xsd").getPath()};
       XSLoader xsloader = utils.getXSLoader();
       Map map = new HashMap();
-      map.put(typeNS,new File("resources/tools/wsdlfixture/customtype/CustomTypeObj.xsd").toURL());
-      map.put(arrTypeNS,new File("resources/tools/wsdlfixture/customtype/CustomTypeArrays.xsd").toURL());
+      map.put(typeNS,getResourceURL("/tools/wsdlfixture/customtype/CustomTypeObj.xsd"));
+      map.put(arrTypeNS,getResourceURL("/tools/wsdlfixture/customtype/CustomTypeArrays.xsd"));
 
       ((XMLSchemaLoader)xsloader).setEntityResolver(new JBossXSEntityResolver(new JBossWSEntityResolver(), map));
       //Construct a StringList

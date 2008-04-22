@@ -58,7 +58,7 @@ public class NillableTypesTestCase extends JBossWSTest
        xsmodel.addXSTypeDefinition(xst);
        StringWriter sw = new StringWriter();
        sutils.serialize(xsmodel,sw);
-       File xsdFile = new File("resources/tools/jbws-204/wscompile/nillable.xsd");
+       File xsdFile = getResourceFile("tools/jbws-204/wscompile/nillable.xsd");
        checkXMLFiles(xsdFile.toURL(),sw.toString());
     }
 

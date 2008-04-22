@@ -61,7 +61,7 @@ public class JBWS1172TestCase extends JBossWSTest
 
    public void testSchemaValidationPositive() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
       new SchemaValidationHelper(xsdURL).validateDocument(inxml);
@@ -69,7 +69,7 @@ public class JBWS1172TestCase extends JBossWSTest
 
    public void testSchemaValidationNegative() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>2000</Code></performTest>";
       try
@@ -93,7 +93,7 @@ public class JBWS1172TestCase extends JBossWSTest
    
    public void testValidatingClientWithExplicitSchema() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       
       Service21 service = Service21.create(wsdlURL, SERVICE_NAME);
@@ -114,7 +114,7 @@ public class JBWS1172TestCase extends JBossWSTest
    
    public void testValidatingClientWithErrorHandler() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       
       Service21 service = Service21.create(wsdlURL, SERVICE_NAME);

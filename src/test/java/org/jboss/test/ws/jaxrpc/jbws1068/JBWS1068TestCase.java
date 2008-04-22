@@ -39,7 +39,7 @@ public class JBWS1068TestCase extends JBossWSTest
 {
    public void testWSDLParse() throws Exception
    {
-      File wsdlFile = new File("resources/jaxrpc/jbws1068/wsrp_services.wsdl");
+      File wsdlFile = getResourceFile("jaxrpc/jbws1068/wsrp_services.wsdl");
       assertTrue(wsdlFile.exists());
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();

@@ -44,18 +44,18 @@ public class EnumTestCase extends JBossWSTest
 
    public final void testEnumWsdl() throws Exception
    {
-      String config = "resources/tools/enums/wstools-config.xml";
+      String config = getResourceFile("tools/enums/wstools-config.xml").getPath();
       String[] args= new String[]{"-dest", "tools/enums", "-config", config};
       new WSTools().generate(args);
       
       Element exp;
       if (hasJDK15())
       {
-         exp = DOMUtils.parse(new FileInputStream("resources/tools/enums/EnumService15.wsdl"));
+         exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService15.wsdl").getPath()));
       }      
       else
       {
-         exp = DOMUtils.parse(new FileInputStream("resources/tools/enums/EnumService14.wsdl"));
+         exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService14.wsdl").getPath()));
       }
       
       Element was = DOMUtils.parse(new FileInputStream("tools/enums/wsdl/EnumService.wsdl"));

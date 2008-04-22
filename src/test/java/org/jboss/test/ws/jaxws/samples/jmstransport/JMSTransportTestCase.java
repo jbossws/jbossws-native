@@ -49,7 +49,7 @@ public class JMSTransportTestCase extends JBossWSTest
 
    public void testJMSEndpointPort() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/samples/jmstransport/jmsservice.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxws/samples/jmstransport/jmsservice.wsdl");
       QName serviceName = new QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointService");
       QName portName = new QName("http://org.jboss.ws/samples/jmstransport", "JMSEndpointPort");
       
@@ -62,7 +62,7 @@ public class JMSTransportTestCase extends JBossWSTest
 
    public void testHTTPEndpointPort() throws Exception
    {
-      URL wsdlURL = new File("resources/jaxws/samples/jmstransport/jmsservice.wsdl").toURL();
+      URL wsdlURL = getResourceURL("jaxws/samples/jmstransport/jmsservice.wsdl");
       QName serviceName = new QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointService");
       QName portName = new QName("http://org.jboss.ws/samples/jmstransport", "HTTPEndpointPort");
       

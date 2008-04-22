@@ -59,8 +59,8 @@ public class JBWS1384TestCase extends JBossWSTest
       if (port == null)
       {
          ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-         URL wsdlURL = new File("resources/jaxrpc/jbws1384/WEB-INF/wsdl/ExampleService.wsdl").toURL();
-         URL mappingURL = new File("resources/jaxrpc/jbws1384/WEB-INF/jaxrpc-mapping.xml").toURL();
+         URL wsdlURL = getResourceURL("jaxrpc/jbws1384/WEB-INF/wsdl/ExampleService.wsdl");
+         URL mappingURL = getResourceURL("jaxrpc/jbws1384/WEB-INF/jaxrpc-mapping.xml");
          QName serviceName = new QName("http://org.jboss.test.webservice/samples2", "Gasherbrum");
          Service service = factory.createService(wsdlURL, serviceName , mappingURL);
          port = (TransmulatorInterface)service.getPort(TransmulatorInterface.class);
@@ -71,7 +71,7 @@ public class JBWS1384TestCase extends JBossWSTest
    public void testWsdlToJava() throws Exception
    {
       WSTools wstools = new WSTools();
-      boolean ret = wstools.generate("resources/jaxrpc/jbws1384/wstools-config.xml", "./wstools/jbws1384");
+      boolean ret = wstools.generate(getResourceFile("jaxrpc/jbws1384/wstools-config.xml").getPath(), "./wstools/jbws1384");
       assertTrue("wstools success", ret);
    }
 

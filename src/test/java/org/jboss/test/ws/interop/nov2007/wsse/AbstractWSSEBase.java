@@ -56,7 +56,7 @@ public abstract class AbstractWSSEBase extends JBossWSTest
 
       if (port == null)
       {
-         URL wsdlLocation = new File("resources/interop/nov2007/wsse/shared/WEB-INF/wsdl/WsSecurity10.wsdl").toURL();
+         URL wsdlLocation = getResourceURL("interop/nov2007/wsse/shared/WEB-INF/wsdl/WsSecurity10.wsdl");
          QName serviceName = new QName("http://InteropBaseAddress/interop", "PingService10");
          Service service = Service.create(wsdlLocation, serviceName);
          port = (IPingService)service.getPort(getScenarioPortQName(), IPingService.class);

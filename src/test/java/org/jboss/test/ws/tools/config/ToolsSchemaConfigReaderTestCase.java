@@ -42,7 +42,7 @@ public class ToolsSchemaConfigReaderTestCase extends JBossWSTest
 {
    public void testJavaToWSDL() throws Exception
    {
-      String j2wConfigFile = "resources/tools/config/java2wsdl.xml";
+      String j2wConfigFile = getResourceFile("tools/config/java2wsdl.xml").getPath();
       ToolsSchemaConfigReader configReader = new ToolsSchemaConfigReader();
       Configuration config = configReader.readConfig(j2wConfigFile);
       assertNotNull("config is null?", config);
@@ -51,7 +51,7 @@ public class ToolsSchemaConfigReaderTestCase extends JBossWSTest
 
    public void testWSDLToJava() throws Exception
    {
-      String w2jConfigFile = "resources/tools/config/wsdl2java.xml";
+      String w2jConfigFile = getResourceFile("tools/config/wsdl2java.xml").getPath();
       ToolsSchemaConfigReader configReader = new ToolsSchemaConfigReader();
       Configuration config = configReader.readConfig(w2jConfigFile);
       assertNotNull("config is null?", config);
@@ -61,7 +61,7 @@ public class ToolsSchemaConfigReaderTestCase extends JBossWSTest
    // [JBWS-719] Enable schema validation on wstools config
    public void testInvalidConfig() throws IOException, ClassNotFoundException
    {
-      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", "resources/tools/config/invalidConfig.xml" };
+      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", getResourceFile("tools/config/invalidConfig.xml").getPath() };
       WSTools tools = new WSTools();
       try
       {

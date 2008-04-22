@@ -40,7 +40,7 @@ public class MicrosoftGeneratedWSDLTestCase extends JBossWSTest
 {
 	public void testBaseRpcLit() throws Exception
 	{
-		File wsdlFile = new File("resources/common/wsdl11/microsoft-interop/rpclit/BaseTypesRpcLit.wsdl");
+		File wsdlFile = getResourceFile("common/wsdl11/microsoft-interop/rpclit/BaseTypesRpcLit.wsdl");
 		assertTrue(wsdlFile.exists());
 		
 		

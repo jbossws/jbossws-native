@@ -50,7 +50,7 @@ public class JavaWsdlMappingMetaDataTestCase extends JBossWSTest
    
    public void testJavaWsdlMappingMetaDataRead() throws Exception
    {
-      URL jwmURL = new File("resources/tools/jbws-161/wscompile/simple/mapping/jaxrpc-mapping.xml").toURL(); 
+      URL jwmURL = getResourceURL("tools/jbws-161/wscompile/simple/mapping/jaxrpc-mapping.xml"); 
        
       JavaWsdlMappingFactory mappingFactory = JavaWsdlMappingFactory.newInstance();
       JavaWsdlMapping javaWsdlMapping = mappingFactory.parse(jwmURL); 
@@ -59,7 +59,7 @@ public class JavaWsdlMappingMetaDataTestCase extends JBossWSTest
    
    public void testJavaWsdlMappingMetaDataWrite() throws Exception
    {
-      URL jwmURL = new File("resources/tools/jbws-161/wscompile/simple/mapping/jaxrpc-mapping.xml").toURL(); 
+      URL jwmURL = getResourceURL("tools/jbws-161/wscompile/simple/mapping/jaxrpc-mapping.xml"); 
     
       JavaWsdlMapping javaWsdlMapping = constructMappingMetaData();
       assertNotNull("MappingMetaData is null?",javaWsdlMapping);

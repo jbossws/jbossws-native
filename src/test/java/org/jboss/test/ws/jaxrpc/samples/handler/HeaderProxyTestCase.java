@@ -61,7 +61,7 @@ public class HeaderProxyTestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         File javaWsdlMappingFile = new File("resources/jaxrpc/samples/handler/WEB-INF/jaxrpc-mapping.xml");
+         File javaWsdlMappingFile = getResourceFile("jaxrpc/samples/handler/WEB-INF/jaxrpc-mapping.xml");
          assertTrue(javaWsdlMappingFile.exists());
 
          QName serviceName = new QName(NAMESPACE_URI, "TestService");

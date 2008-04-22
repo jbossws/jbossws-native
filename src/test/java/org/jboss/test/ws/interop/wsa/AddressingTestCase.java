@@ -80,7 +80,7 @@ public class AddressingTestCase extends JBossWSTest {
       
       if (echoPort==null || notifyPort==null)
       {
-         this.wsdlLocation = new File("resources/interop/wsa/WEB-INF/wsdl/service.wsdl").toURL();
+         this.wsdlLocation = getResourceURL("interop/wsa/WEB-INF/wsdl/service.wsdl");
 
          Service service = Service.create(wsdlLocation, new QName("http://tempuri.org/", "WSAddressingCR"));
          echoPort = service.getPort(EchoPortType.class);

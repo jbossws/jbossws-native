@@ -66,8 +66,8 @@ public class RpcJSETestCase extends JBossWSTest
          {
             System.out.println("FIXME [JBWS-1397] Fix <wsdl-publish-location> for jboss-5.0.x");
             ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = new File("resources/jaxrpc/samples/jsr109pojo/rpclit//WEB-INF/wsdl/TestService.wsdl").toURL();
-            URL mappingURL = new File("resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml").toURL();
+            URL wsdlURL = getResourceURL("jaxrpc/samples/jsr109pojo/rpclit//WEB-INF/wsdl/TestService.wsdl");
+            URL mappingURL = getResourceURL("jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml");
             QName qname = new QName("http://org.jboss.ws/samples/jsr109pojo", "TestService");
             Service service = factory.createService(wsdlURL, qname, mappingURL);
             port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);

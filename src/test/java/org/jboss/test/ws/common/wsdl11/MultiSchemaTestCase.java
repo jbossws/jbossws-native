@@ -39,7 +39,7 @@ public class MultiSchemaTestCase extends JBossWSTest
 {
    public void testMultipleSchemas() throws Exception
    {
-      File wsdlFile = new File("resources/jaxrpc/marshall-rpclit/WEB-INF/wsdl/MarshallService.wsdl");
+      File wsdlFile = getResourceFile("jaxrpc/marshall-rpclit/WEB-INF/wsdl/MarshallService.wsdl");
       assertTrue(wsdlFile.exists());
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();

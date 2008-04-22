@@ -38,7 +38,7 @@ public class JBWS1079TestCase extends JBossWSTest
 
    public void testAnonymousType() throws Exception
    {
-      String resourceDir = "resources/tools/jbws1079";
+      String resourceDir = getResourceFile("tools/jbws1079").getPath();
       String toolsDir = "tools/jbws1079";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);

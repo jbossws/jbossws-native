@@ -37,7 +37,7 @@ public class JBWS1170TestCase extends JBossWSTest
 {
    public final void testHyphenatedElement() throws Exception
    {
-      String resourceDir = "resources/tools/jbws1170";
+      String resourceDir = getResourceFile("tools/jbws1170").getPath();
       String toolsDir = "tools/jbws1170";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);

@@ -21,10 +21,10 @@
  */
 package org.jboss.test.ws.tools.scripts;
 
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * JBWS-1793: Provide a test case for the tools scripts that reside under JBOSS_HOME/bin
@@ -32,9 +32,9 @@ import java.io.IOException;
  * @author Heiko.Braun@jboss.com
  * @version $Revision$
  */
-public class ScriptTestCase extends TestCase
+public class ScriptTestCase extends JBossWSTest
 {
-   private String TOOLS_CONFIG = "resources/tools/scripts/wstools-config.xml";
+   private String TOOLS_CONFIG = getResourceFile("tools/scripts/wstools-config.xml").getPath();
 
    private String JBOSS_HOME;
    private String JDK_HOME;
@@ -46,23 +46,23 @@ public class ScriptTestCase extends TestCase
       super.setUp();
 
       JBOSS_HOME = System.getProperty("jboss.home");
-      TEST_EXEC_DIR = System.getProperty("test.execution.dir");
+      TEST_EXEC_DIR = new File(".").getPath();
       JDK_HOME = System.getProperty("jdk.home");
       OS = System.getProperty("os.name").toLowerCase();
    }
 
    public void testWSToolsFromCommandLine() throws Exception
    {
-      if(isWindowsOS())
+      if (isWindowsOS())
       {
          fail("This test has not been verified on windows");
       }
 
       // use absolute path for the output to be re-usable
-      String absToolsConfig= new File(TOOLS_CONFIG).getAbsolutePath();
+      String absToolsConfig = new File(TOOLS_CONFIG).getAbsolutePath();
       String absOutput = new File("wstools/java").getAbsolutePath();
 
-      String command = JBOSS_HOME + "/bin/wstools.sh -config "+ TOOLS_CONFIG + " -dest wstools/java";
+      String command = JBOSS_HOME + "/bin/wstools.sh -config " + TOOLS_CONFIG + " -dest wstools/java";
       Process p = executeCommand(command);
 
       // check status code
@@ -73,30 +73,25 @@ public class ScriptTestCase extends TestCase
       assertTrue("Service endpoint interface not generated", javaSource.exists());
    }
 
-   private Process executeCommand(String command)
-     throws IOException
+   private Process executeCommand(String command) throws IOException
    {
       // be verbose
       System.out.println("cmd: " + command);
       System.out.println("test execution dir: " + TEST_EXEC_DIR);
 
-      Process p = Runtime.getRuntime().exec(
-        command,
-        new String[] {"JBOSS_HOME="+ JBOSS_HOME, "JAVA_HOME="+ JDK_HOME}
-      );
+      Process p = Runtime.getRuntime().exec(command, new String[] { "JBOSS_HOME=" + JBOSS_HOME, "JAVA_HOME=" + JDK_HOME });
       return p;
    }
 
-   private void assertStatusCode(Process p, String s)
-     throws InterruptedException
+   private void assertStatusCode(Process p, String s) throws InterruptedException
    {
       // check status code
       int status = p.waitFor();
-      assertTrue(s +" did exit with status " + status, status==0);
+      assertTrue(s + " did exit with status " + status, status == 0);
    }
-   
+
    private boolean isWindowsOS()
    {
-      return ( (OS.indexOf("nt") > -1) || (OS.indexOf("windows") > -1 ));
+      return ((OS.indexOf("nt") > -1) || (OS.indexOf("windows") > -1));
    }
 }

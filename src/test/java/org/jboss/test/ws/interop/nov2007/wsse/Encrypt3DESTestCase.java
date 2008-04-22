@@ -72,8 +72,8 @@ public class Encrypt3DESTestCase extends AbstractWSSEBase
    {
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
       
-      System.setProperty("org.jboss.ws.wsse.keyStore", "resources/interop/nov2007/wsse/shared/META-INF/alice-sign_enc.jks");
-      System.setProperty("org.jboss.ws.wsse.trustStore", "resources/interop/nov2007/wsse/shared/META-INF/wsse10.truststore");
+      System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("interop/nov2007/wsse/shared/META-INF/alice-sign_enc.jks").getPath());
+      System.setProperty("org.jboss.ws.wsse.trustStore", getResourceFile("interop/nov2007/wsse/shared/META-INF/wsse10.truststore").getPath());
       System.setProperty("org.jboss.ws.wsse.keyStorePassword", "password");
       System.setProperty("org.jboss.ws.wsse.trustStorePassword", "password");
       System.setProperty("org.jboss.ws.wsse.keyStoreType", "jks");

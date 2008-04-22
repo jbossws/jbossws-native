@@ -45,7 +45,7 @@ public class WSDLTypesTestCase extends JBossWSTest
    public void testXMLTypeReturned()
    {
       String filename = "StandardJavaTypesService_DOC_11.wsdl";
-      File wsdlFile = new File("resources/tools/wsdlfixture/" + filename);
+      File wsdlFile = new File(getResourceFile("tools/wsdlfixture/").getPath() + filename);
       WSDLTypes types = null;
       try
       {
@@ -69,7 +69,7 @@ public class WSDLTypesTestCase extends JBossWSTest
    public void testXMLSchemaReturned()
    {
       String filename = "StandardJavaTypesService_DOC_11.wsdl";
-      File wsdlFile = new File("resources/tools/wsdlfixture/" + filename);
+      File wsdlFile = new File(getResourceFile("tools/wsdlfixture/").getPath() + filename);
       WSDLTypes types = null;
       try
       {

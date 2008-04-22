@@ -35,9 +35,8 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class JBWS810TestCase extends JBossWSTest
 {
-
-   private static final String resourceDir = "resources/tools/jbws810";
-   private static final String toolsDir = "tools/jbws810";
+   private String resourceDir = getResourceFile("tools/jbws810").getPath();
+   private String toolsDir = "tools/jbws810";
 
    public void testDocument() throws Exception
    {
@@ -63,7 +62,7 @@ public class JBWS810TestCase extends JBossWSTest
       mappingValidator.validate(testResourceDir + "/jaxrpc-mapping.xml", testToolsDir + "/jaxrpc-mapping.xml");
    }
 
-   private static void compareSource(final String type, final String fileName) throws Exception
+   private void compareSource(final String type, final String fileName) throws Exception
    {
       File expected = new File(resourceDir + "/" + type + "/" + fileName);
       File generated = new File(toolsDir + "/" + type + "/org/jboss/test/ws/jbws810/" + fileName);

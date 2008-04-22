@@ -55,7 +55,7 @@ public class JBWS165TestCase extends JBossWSTest
    public void testNone() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws165-jaxrpc-jbws165-none/HelloNone?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServiceNone");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       Hello port = (Hello) service.getPort(Hello.class);
@@ -67,7 +67,7 @@ public class JBWS165TestCase extends JBossWSTest
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCOne?wsdl");
       
-      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServicePcURI");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       QName portName = new QName("http://org.jboss.test.webservice/jbws165", "HelloPortOne");
@@ -80,7 +80,7 @@ public class JBWS165TestCase extends JBossWSTest
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Path/HelloPCTwo?wsdl");
       
-      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServicePcURI");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       QName portName = new QName("http://org.jboss.test.webservice/jbws165", "HelloPortTwo");
@@ -92,7 +92,7 @@ public class JBWS165TestCase extends JBossWSTest
    public void testContextRoot() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Context/HelloContextRoot?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServiceCtxRoot");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       Hello port = (Hello) service.getPort(Hello.class);
@@ -103,7 +103,7 @@ public class JBWS165TestCase extends JBossWSTest
    public void testBoth() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/Explicit/Both/Explicit/Path?wsdl");
-      URL mappingURL = new File("resources/jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml").toURL();
+      URL mappingURL = getResourceURL("jaxrpc/jbws165/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws165", "HelloServiceBoth");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
       Hello port = (Hello) service.getPort(Hello.class);

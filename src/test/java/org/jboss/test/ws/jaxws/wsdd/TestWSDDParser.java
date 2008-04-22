@@ -21,7 +21,10 @@
  */
 package org.jboss.test.ws.jaxws.wsdd;
 
-import junit.framework.TestCase;
+// $Id: $
+
+import java.io.InputStream;
+import java.net.URL;
 
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
@@ -29,26 +32,23 @@ import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
+import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;
-
-import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
 
 /**
  * Tets webservice.xml additions that are related to JAX-WS
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 12, 2007
  */
-public class TestWSDDParser extends TestCase {
+public class TestWSDDParser extends JBossWSTest
+{
 
    public void testJAXWSElementParsing() throws Exception
    {
-      URL webservicesURL = new File("resources/jaxws/wsdd/webservices.xml").toURL();
+      URL webservicesURL = getResourceURL("jaxws/wsdd/webservices.xml");
       // Unmarshall webservices.xml
       WebservicesMetaData webservices = null;
       InputStream is = webservicesURL.openStream();
@@ -67,11 +67,11 @@ public class TestWSDDParser extends TestCase {
 
       WebserviceDescriptionMetaData wsDesc = webservices.getWebserviceDescriptions()[0];
       assertNotNull(wsDesc);
-      assertTrue(wsDesc.getPortComponents().length==1);
+      assertTrue(wsDesc.getPortComponents().length == 1);
 
       PortComponentMetaData portComp = wsDesc.getPortComponents()[0];
       assertNotNull(portComp);
-      assertTrue(portComp.getHandlerChains().getHandlerChains().size()>0);
+      assertTrue(portComp.getHandlerChains().getHandlerChains().size() > 0);
 
       // wsdlService
       assertTrue(portComp.getWsdlService().getLocalPart().equals("HelloService"));
@@ -82,7 +82,7 @@ public class TestWSDDParser extends TestCase {
       // handler chains
       UnifiedHandlerChainMetaData handlerChain = portComp.getHandlerChains().getHandlerChains().get(0);
       assertNotNull(handlerChain);
-      assertTrue( ((UnifiedHandlerMetaData)handlerChain.getHandlers().get(0)).getHandlerName().equals("ServerHandler1"));
+      assertTrue(((UnifiedHandlerMetaData)handlerChain.getHandlers().get(0)).getHandlerName().equals("ServerHandler1"));
 
    }
 

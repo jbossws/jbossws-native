@@ -54,7 +54,7 @@ public class BaseDataTypesDocLitWTestCase extends BaseDataTypesSupport {
 
       if (targetPort == null)
       {
-         URL wsdlLocation = new File("resources/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl").toURL();
+         URL wsdlLocation = getResourceURL("interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl");
          Service service = Service.create(wsdlLocation, new QName("http://tempuri.org/", "BaseDataTypesDocLitWService") );
          BaseDataTypesDocLitWTestCase.targetPort = service.getPort(IBaseDataTypesDocLitW.class);
          ((BindingProvider)BaseDataTypesDocLitWTestCase.targetPort).getRequestContext().put(
