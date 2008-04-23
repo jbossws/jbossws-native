@@ -32,32 +32,15 @@ import org.w3c.dom.Element;
  * Test Enum Support
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class EnumTestCase extends JBossWSTest
 {
-
-   //Set up the test
-   protected void setUp()
-   {
-   }
-
    public final void testEnumWsdl() throws Exception
    {
       String config = getResourceFile("tools/enums/wstools-config.xml").getPath();
-      String[] args= new String[]{"-dest", "tools/enums", "-config", config};
-      new WSTools().generate(args);
+      new WSTools().generate(new String[] {"-dest", "tools/enums", "-config", config});
       
-      Element exp;
-      if (hasJDK15())
-      {
-         exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService15.wsdl").getPath()));
-      }      
-      else
-      {
-         exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService14.wsdl").getPath()));
-      }
-      
+      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService15.wsdl").getPath()));
       Element was = DOMUtils.parse(new FileInputStream("tools/enums/wsdl/EnumService.wsdl"));
       assertEquals(exp, was);
    }
