@@ -44,7 +44,7 @@ public class BpelHelloTestCase extends JBossWSTest
    public static Test suite()
    {
       JBossWSTestSetup wsTestSetup = new JBossWSTestSetup(BpelHelloTestCase.class, "jaxrpc-samples-wsbpel-hello.war, jaxrpc-samples-wsbpel-hello-client.jar");
-      return new JbpmBpelTestSetup(wsTestSetup, new String[] { "libs/jaxrpc-samples-wsbpel-hello-process.zip" });
+      return new JbpmBpelTestSetup(wsTestSetup, new String[] { "jaxrpc-samples-wsbpel-hello-process.zip" });
    }
 
    protected void setUp() throws Exception

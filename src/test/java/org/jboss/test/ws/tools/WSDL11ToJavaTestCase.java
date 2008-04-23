@@ -99,7 +99,7 @@ public class WSDL11ToJavaTestCase extends WSToolsTest
 
    private WSDLDefinitions getWSDLDefinitions(Class seiClass, String wsdlFileName) throws Exception
    {
-      File wsdlFile = new File(getResourceFile("tools/wsdlfixture/").getPath() + wsdlFileName);
+      File wsdlFile = getResourceFile("tools/wsdlfixture/" + wsdlFileName);
       assertTrue(wsdlFile.exists());
 
       WSDLDefinitions wsdlDefinitions = getWSDLDefinitions(wsdlFile);

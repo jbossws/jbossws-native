@@ -46,7 +46,7 @@ public class SchemaAnnotationsTestCase extends WSToolsTest
    public void testXSDAnnotations() throws MalformedURLException
    {
       String filename = "xsdAnnotation.xsd";
-      File xsdFile = new File(getResourceFile("tools/xsd/annotations/").getPath() + filename);  
+      File xsdFile = getResourceFile("tools/xsd/annotations/" + filename);  
       XSModel xsmodel = parseSchema(xsdFile.toURL());
       assertNotNull("XSModel is null?", xsmodel);
       XSObjectList xsobjlist = xsmodel.getAnnotations();

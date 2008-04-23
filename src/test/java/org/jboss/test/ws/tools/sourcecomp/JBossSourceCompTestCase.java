@@ -44,8 +44,8 @@ public class JBossSourceCompTestCase extends JBossWSTest
    public void testExactSourceFiles() throws Exception
    {
       String fname="PrimitiveTypes.java";
-      File file1 = new File(getResourceFile("tools/sourcecomp/expected/").getPath() + fname);
-      File file2 = new File(getResourceFile("tools/sourcecomp/actual/").getPath() + fname);
+      File file1 = getResourceFile("tools/sourcecomp/expected/" + fname);
+      File file2 = getResourceFile("tools/sourcecomp/actual/" + fname);
       sc= new JBossSourceComparator(file1,file2);
       assertTrue("Source Files Match:",sc.validate());
       sc.validateImports();
@@ -57,8 +57,8 @@ public class JBossSourceCompTestCase extends JBossWSTest
    public void testMissingMethod()
    {
       String fname="PrimitiveTypes.java";
-      File file1 = new File(getResourceFile("tools/sourcecomp/expected/").getPath() + fname);
-      File file2 = new File(getResourceFile("tools/sourcecomp/missingmethod/").getPath() + fname);
+      File file1 = getResourceFile("tools/sourcecomp/expected/" + fname);
+      File file2 = getResourceFile("tools/sourcecomp/missingmethod/" + fname);
       try
       {
          sc= new JBossSourceComparator(file1,file2);
@@ -83,8 +83,8 @@ public class JBossSourceCompTestCase extends JBossWSTest
    public void testMissingParam()
    {
       String fname="PrimitiveTypes.java";
-      File file1 = new File(getResourceFile("tools/sourcecomp/expected/").getPath() + fname);
-      File file2 = new File(getResourceFile("tools/sourcecomp/missingparam/").getPath() + fname);
+      File file1 = getResourceFile("tools/sourcecomp/expected/" + fname);
+      File file2 = getResourceFile("tools/sourcecomp/missingparam/" + fname);
       try
       {
          sc= new JBossSourceComparator(file1,file2);
@@ -109,8 +109,8 @@ public class JBossSourceCompTestCase extends JBossWSTest
    public void testMissingImports()
    {
       String fname="PrimitiveTypes.java";
-      File file1 = new File(getResourceFile("tools/sourcecomp/expected/").getPath() + fname);
-      File file2 = new File(getResourceFile("tools/sourcecomp/missingimport/").getPath() + fname);
+      File file1 = getResourceFile("tools/sourcecomp/expected/" + fname);
+      File file2 = getResourceFile("tools/sourcecomp/missingimport/" + fname);
       try
       {
          sc= new JBossSourceComparator(file1,file2);
@@ -135,8 +135,8 @@ public class JBossSourceCompTestCase extends JBossWSTest
    public void testDifferentMethodOrder()
    {
       String fname="PrimitiveTypes.java";
-      File file1 = new File(getResourceFile("tools/sourcecomp/expected/").getPath() + fname);
-      File file2 = new File(getResourceFile("tools/sourcecomp/diffmethodorder/").getPath() + fname);
+      File file1 = getResourceFile("tools/sourcecomp/expected/" + fname);
+      File file2 = getResourceFile("tools/sourcecomp/diffmethodorder/" + fname);
       try
       {
          sc= new JBossSourceComparator(file1,file2);

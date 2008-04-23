@@ -38,7 +38,7 @@
 	<classpathentry kind="lib" path="thirdparty/concurrent.jar"/>
 	<classpathentry kind="lib" path="thirdparty/junit.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jboss-jaxb-intros.jar"/>
-	<classpathentry kind="lib" path="thirdparty/jbossws-common.jar" sourcepath="thirdparty/jbossws-common-src.zip"/>
+	<classpathentry kind="lib" path="thirdparty/jbossws-common.jar" sourcepath="thirdparty/jbossws-common-src.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jbossws-spi.jar" sourcepath="thirdparty/jbossws-spi-src.zip"/>
 	<classpathentry kind="lib" path="thirdparty/FastInfoset.jar"/>
 	<classpathentry kind="lib" path="thirdparty/jettison.jar" sourcepath="thirdparty/jettison-src.jar"/>

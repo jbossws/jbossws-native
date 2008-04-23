@@ -5,5 +5,5 @@
     <global>
       <package-namespace package="org.jboss.test.webservice.userexceptioninheritance" namespace="http://org.jboss.ws"/> 
     </global> 
-    <wsdl-java location="resources/tools/jbws-206/wsdlFixture/UserExceptionInheritance/UserExceptionInheritanceService_RPC_11.wsdl"/>
+    <wsdl-java location="test-resources/tools/jbws-206/wsdlFixture/UserExceptionInheritance/UserExceptionInheritanceService_RPC_11.wsdl"/>
 </configuration>

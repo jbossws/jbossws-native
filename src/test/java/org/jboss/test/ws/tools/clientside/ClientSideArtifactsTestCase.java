@@ -93,7 +93,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the Service File
       String fname = "HelloWsService.java";
-      File file1 = new File(getResourceFile("tools/jbws-160/wscompile/simple/service/").getPath() + fname);
+      File file1 = getResourceFile("tools/jbws-160/wscompile/simple/service/" + fname);
       File file2 = new File("tools/jbws-160/jbossws/simple/service/org/jboss/types/" + fname);
 
       try
@@ -107,7 +107,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the SEI
       fname = "HelloWs.java";
-      file1 = new File(getResourceFile("tools/jbws-160/wscompile/simple/sei/").getPath() + fname);
+      file1 = getResourceFile("tools/jbws-160/wscompile/simple/sei/" + fname);
       file2 = new File("tools/jbws-160/jbossws/simple/sei/org/jboss/types/" + fname);
 
       try
@@ -158,7 +158,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the Service File
       String fname = "HelloCustomService.java";
-      File file1 = new File(getResourceFile("tools/jbws-160/wscompile/custom/service/").getPath() + fname);
+      File file1 = getResourceFile("tools/jbws-160/wscompile/custom/service/" + fname);
       File file2 = new File("tools/jbws-160/jbossws/custom/service/org/jboss/types/" + fname);
 
       try
@@ -172,7 +172,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Match the SEI
       fname = "HelloCustomRemote.java";
-      file1 = new File(getResourceFile("tools/jbws-160/wscompile/custom/sei/").getPath() + fname);
+      file1 = getResourceFile("tools/jbws-160/wscompile/custom/sei/" + fname);
       file2 = new File("tools/jbws-160/jbossws/custom/sei/org/jboss/types/" + fname);
 
       /*try

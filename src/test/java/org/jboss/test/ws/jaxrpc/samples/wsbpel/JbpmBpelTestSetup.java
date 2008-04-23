@@ -66,7 +66,7 @@ public class JbpmBpelTestSetup extends JBossWSTestSetup
          String processFileName = processFiles[i];
 
          // check file exists before dispatching to server 
-         File processFile = new File(processFileName);
+         File processFile = getArchiveFile(processFileName);
          if (!processFile.exists())
             throw new FileNotFoundException(processFileName);
 

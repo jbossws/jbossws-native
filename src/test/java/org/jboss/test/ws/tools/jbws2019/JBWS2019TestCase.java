@@ -47,7 +47,7 @@ public class JBWS2019TestCase extends JBossWSTest
 
    protected void generateScenario(final String scenario) throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws2019/").getPath() + scenario;
+      String resourceDir = getResourceFile("tools/jbws2019/" + scenario).getPath();
       String toolsDir = "tools/jbws2019/" + scenario;
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);

@@ -5,5 +5,5 @@
     <global>
       <package-namespace package="org.jboss.test.webservice.inoutparameters" namespace="http://org.jboss.ws/holder"/> 
     </global> 
-    <wsdl-java location="resources/tools/jbws-206/wsdlFixture/InOutParameters/InOutParametersService_RPC_11.wsdl"/>
+    <wsdl-java location="test-resources/tools/jbws-206/wsdlFixture/InOutParameters/InOutParametersService_RPC_11.wsdl"/>
 </configuration>

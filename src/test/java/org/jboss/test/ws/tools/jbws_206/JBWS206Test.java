@@ -59,7 +59,7 @@ public abstract class JBWS206Test extends WSToolsTest
    public void checkServiceEndpointInterface() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/").getPath() + getBase();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getPath();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String seiName = getSEIName() + ".java";
@@ -72,7 +72,7 @@ public abstract class JBWS206Test extends WSToolsTest
    public void checkServiceInterface() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/").getPath() + getBase();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getPath();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String serviceName = getServiceName();
@@ -85,7 +85,7 @@ public abstract class JBWS206Test extends WSToolsTest
    public final void checkUserType(String name) throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/").getPath() + getBase();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getPath();
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
 
       //    Check User Types

@@ -64,7 +64,7 @@ public class JBWS1666TestCase extends JBossWSTest
       
       // Setup the classpath - do not modify this lightheartedly. 
       // Maybe you should extend the Class-Path in the MANIFEST instead.
-      StringBuffer cp = new StringBuffer("./classes");
+      StringBuffer cp = new StringBuffer("./test-classes");
       cp.append(":" + jbc + "/jbossws-client.jar");
       if (isTargetJBoss50())
       {

@@ -5,5 +5,5 @@
     <global>
       <package-namespace package="org.jboss.test.webservice.oneway" namespace="http://org.jboss.ws"/> 
     </global> 
-    <wsdl-java location="resources/tools/jbws-206/wsdlFixture/OneWay/OneWayService_RPC_11.wsdl"/>
+    <wsdl-java location="test-resources/tools/jbws-206/wsdlFixture/OneWay/OneWayService_RPC_11.wsdl"/>
 </configuration>

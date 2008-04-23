@@ -46,7 +46,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testXMLTypeReturned() throws MalformedURLException
    {
       String filename = "CustomInterface20.xsd";
-      File xsdFile = new File(getResourceFile("tools/wsdlfixture/").getPath() + filename);
+      File xsdFile = getResourceFile("tools/wsdlfixture/" + filename);
       XSModel xsmodel = parseSchema(xsdFile.toURL());
       assertNotNull("XSModel is null?", xsmodel);
       XSNamedMap xsmap = xsmodel.getComponentsByNamespace(XSConstants.ELEMENT_DECLARATION, "http://org.jboss.ws/types");
@@ -60,7 +60,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testXSDInclude() throws MalformedURLException
    {
       String filename = "SchemaMain.xsd";
-      File xsdFile = new File(getResourceFile("tools/xsd/schemainclude/").getPath() + filename);
+      File xsdFile = getResourceFile("tools/xsd/schemainclude/" + filename);
       assertTrue("Does Schema file exist?", xsdFile.exists());
       XSModel xsmodel = parseSchema(xsdFile.toURL());
       assertNotNull("XSModel is null?", xsmodel);
@@ -76,7 +76,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testBadXSDInclude()
    {
       String filename = "SchemaBadMain.xsd";
-      File xsdFile = new File(getResourceFile("tools/xsd/schemainclude/").getPath() + filename);
+      File xsdFile = getResourceFile("tools/xsd/schemainclude/" + filename);
       try
       {
          XSModel xsmodel = parseSchema(xsdFile.toURL());
@@ -96,7 +96,7 @@ public class XMLSchemaTestCase extends WSToolsTest
    public void testXSDImport() throws MalformedURLException
    {
       String filename = "SchemaMain.xsd";
-      File xsdFile = new File(getResourceFile("tools/xsd/schemaimport/").getPath() + filename);
+      File xsdFile = getResourceFile("tools/xsd/schemaimport/" + filename);
       //Create an Hashmap of <namespace,URL>
       Map schemaMap = new HashMap();
       schemaMap.put("http://org.jboss.ws/types", xsdFile.toURL());

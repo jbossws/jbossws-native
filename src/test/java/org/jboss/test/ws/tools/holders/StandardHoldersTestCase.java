@@ -60,7 +60,7 @@ public class StandardHoldersTestCase extends WSToolsTest
       generateSEI(wsdlDefinitions);
       //Now validate the SEI
       String fname="HoldersServiceInterface.java";
-      File file1 = new File(getResourceFile("tools/holders/java/org/jboss/test/").getPath() + fname);
+      File file1 = getResourceFile("tools/holders/java/org/jboss/test/"+ fname);
       File file2 = new File("tools/org/jboss/test/" + fname);
 
       try
@@ -134,7 +134,7 @@ public class StandardHoldersTestCase extends WSToolsTest
 
    private WSDLDefinitions getWSDLDefinitions(String wsdlFileName) throws Exception
    {
-      File wsdlFile = new File(getResourceFile("tools/holders/wsdl/").getPath() + wsdlFileName);
+      File wsdlFile = getResourceFile("tools/holders/wsdl/" + wsdlFileName);
       assertTrue("WSDL File exists?",wsdlFile.exists());
 
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
