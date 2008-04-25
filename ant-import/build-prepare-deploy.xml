@@ -32,7 +32,8 @@
         <patternset refid="jbossws.service.lib.patternset"/>
         <include name="jboss-xml-binding.jar"/>
         <include name="jbossws-jboss421.jar"/>
-        <include name="jbossws-jboss42.jar"/>
+        <include name="jbossws-jboss422.jar"/>
+        <include name="jbossws-jboss423.jar"/>
         <include name="jbossws-jboss50.jar"/>
         <include name="jbossws-jboss50-container.jar"/>
         <include name="juddi-service.sar"/>
@@ -49,9 +50,7 @@
     <copy todir="${deploy.artifacts.dir}/resources">
       <fileset dir="${core.output.resources.dir}">
         <include name="standard-*-config.xml"/>
-        <include name="jbossws-native42-beans.xml"/>
-        <include name="jbossws-native50-beans.xml"/>
-        <include name="jbossws-jboss42.sar/**"/>
+        <include name="jbossws-jboss*/**"/>
         <include name="jbossws-deployer-beans.xml"/>
       </fileset>
     </copy>

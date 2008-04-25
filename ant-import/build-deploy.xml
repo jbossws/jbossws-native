@@ -21,8 +21,9 @@
     <delete dir="${deploy.structure.jboss42}"/>
     <antcall target="deploy-jbossws-native42" inheritall="false">
       <param name="installserver" value="${deploy.structure.jboss42}/server/${jboss.server.instance}"/>
-      <param name="resourcesdir" value="${deploy.artifacts.dir}/resources/jbossws-jboss42.sar"/>
+      <param name="resourcesdir" value="${deploy.artifacts.dir}/resources"/>
       <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
+      <param name="jbossid" value="${deploy.target}"/>
     </antcall>
     <macro-create-deploy-conf deploystructure="${deploy.structure.jboss42}"/>
   </target>
@@ -30,6 +31,10 @@
   <!-- ================================================================== -->
   <!-- Deployment JBoss421                                                -->
   <!-- ================================================================== -->
+  
+  <target name="deploy-target-jboss421" depends="prepare">
+    <property name="deploy.target" value="jboss421"/>
+  </target>
 
   <target name="deploy-jboss421" depends="undeploy-jboss421,deploy-structure-jboss42" description="Deploy jbossws to jboss421">
     <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
@@ -58,7 +63,7 @@
     </copy>
   </target>
   
-  <target name="undeploy-jboss421" depends="prepare" description="Remove jbossws from jboss421">
+  <target name="undeploy-jboss421" depends="deploy-target-jboss421" description="Remove jbossws from jboss421">
     <fail message="Not available: ${jboss421.available.file}" unless="jboss421.available"/>
     <macro-undeploy-jbossws targetdir="${jboss421.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
     <delete file="${jboss421.server.lib}/jbossws-integration.jar"/>
@@ -69,6 +74,10 @@
   <!-- Deployment JBoss422                                                -->
   <!-- ================================================================== -->
 
+  <target name="deploy-target-jboss422" depends="prepare">
+    <property name="deploy.target" value="jboss422"/>
+  </target>
+
   <target name="deploy-jboss422" depends="undeploy-jboss422,deploy-structure-jboss42" description="Deploy jbossws to jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
     <copy todir="${jboss422.home}" overwrite="true">
@@ -78,7 +87,7 @@
     <chmod dir="${jboss422.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
-  <target name="undeploy-jboss422" depends="prepare" description="Remove jbossws from jboss422">
+  <target name="undeploy-jboss422" depends="deploy-target-jboss422" description="Remove jbossws from jboss422">
     <fail message="Not available: ${jboss422.available.file}" unless="jboss422.available"/>
     <macro-undeploy-jbossws targetdir="${jboss422.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
     <delete dir="${jboss422.server.deploy}/juddi-service.sar"/>
@@ -87,6 +96,10 @@
   <!-- ================================================================== -->
   <!-- Deployment JBoss423                                                -->
   <!-- ================================================================== -->
+
+  <target name="deploy-target-jboss423" depends="prepare">
+    <property name="deploy.target" value="jboss423"/>
+  </target>
 
   <target name="deploy-jboss423" depends="undeploy-jboss423,deploy-structure-jboss42" description="Deploy jbossws to jboss423">
     <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
@@ -97,7 +110,7 @@
     <chmod dir="${jboss423.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
-  <target name="undeploy-jboss423" depends="prepare" description="Remove jbossws from jboss423">
+  <target name="undeploy-jboss423" depends="deploy-target-jboss423" description="Remove jbossws from jboss423">
     <fail message="Not available: ${jboss423.available.file}" unless="jboss423.available"/>
     <macro-undeploy-jbossws targetdir="${jboss423.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
     <delete dir="${jboss423.server.deploy}/juddi-service.sar"/>
@@ -112,6 +125,7 @@
     <antcall target="deploy-jbossws-native50" inheritall="false">
       <param name="installserver" value="${deploy.structure.jboss50}/server/${jboss.server.instance}"/>
       <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
+      <param name="jbossid" value="${deploy.target}"/>
     </antcall>
     <macro-create-deploy-conf deploystructure="${deploy.structure.jboss50}"/>
   </target>
@@ -119,6 +133,10 @@
   <!-- ================================================================== -->
   <!-- Deployment JBoss500                                                -->
   <!-- ================================================================== -->
+
+  <target name="deploy-target-jboss500" depends="prepare">
+    <property name="deploy.target" value="jboss500"/>
+  </target>
 
   <target name="deploy-jboss500" depends="undeploy-jboss500,deploy-structure-jboss50" description="Deploy jbossws to jboss500">
     <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
@@ -129,7 +147,7 @@
     <chmod dir="${jboss500.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
-  <target name="undeploy-jboss500" depends="prepare" description="Remove jbossws from jboss500">
+  <target name="undeploy-jboss500" depends="deploy-target-jboss500" description="Remove jbossws from jboss500">
     <fail message="Not available: ${jboss500.available.file}" unless="jboss500.available"/>
     <macro-undeploy-jbossws targetdir="${jboss500.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
     <delete dir="${jboss500.server.deploy}/juddi-service.sar"/>
@@ -138,6 +156,10 @@
   <!-- ================================================================== -->
   <!-- Deployment JBoss501                                                -->
   <!-- ================================================================== -->
+
+  <target name="deploy-target-jboss501" depends="prepare">
+    <property name="deploy.target" value="jboss501"/>
+  </target>
 
   <target name="deploy-jboss501" depends="undeploy-jboss501,deploy-structure-jboss50" description="Deploy jbossws to jboss501">
     <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
@@ -148,7 +170,7 @@
     <chmod dir="${jboss501.home}/bin" perm="+x" includes="*.sh"/>
   </target>
   
-  <target name="undeploy-jboss501" depends="prepare" description="Remove jbossws from jboss501">
+  <target name="undeploy-jboss501" depends="deploy-target-jboss501" description="Remove jbossws from jboss501">
     <fail message="Not available: ${jboss501.available.file}" unless="jboss501.available"/>
     <macro-undeploy-jbossws targetdir="${jboss501.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
     <delete dir="${jboss501.server.deploy}/juddi-service.sar"/>
