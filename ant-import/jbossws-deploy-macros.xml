@@ -146,11 +146,6 @@
     <attribute name="jbossid"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
-      <delete>
-        <fileset dir="@{targetdir}">
-          <include name="jbossws-jboss*.jar"/>
-        </fileset>
-      </delete>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
         <fileset dir="@{thirdpartydir}">
           <include name="**/jbossws-common.jar"/>
@@ -211,11 +206,6 @@
     <attribute name="jbossid"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
-      <delete>
-        <fileset dir="@{targetdir}">
-          <include name="jbossws-jboss*.jar"/>
-        </fileset>
-      </delete>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
         <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.client.patternset"/>
@@ -235,11 +225,6 @@
     <attribute name="jbossid"/>
     <sequential>
       <mkdir dir="@{targetdir}"/>
-      <delete>
-        <fileset dir="@{targetdir}">
-          <include name="jbossws-jboss*.jar"/>
-        </fileset>
-      </delete>
       <copy todir="@{targetdir}" flatten="true" overwrite="true">
         <fileset dir="@{thirdpartydir}">
           <patternset refid="jbossws.server.lib.patternset"/>
@@ -372,14 +357,32 @@
       <loadfile property="jbossws.deploy.conf" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
       <loadfile property="jbossws.deploy.conf" srcfile="@{defaultconf}" failonerror="false"/>
       
-      <property name="jboss.undeploy.home" value="@{targetdir}/../../../.."/>
-      <available property="jboss.undeploy.client" file="${jboss.undeploy.home}/client"/>
-      <fail message="Cannot find ${jboss.undeploy.home}/client" unless="jboss.undeploy.client"/>
+      <property name="jboss.server.home" value="@{targetdir}/../.."/>
+      <property name="jboss.home" value="${jboss.server.home}/../.."/>
+      <available property="jboss.undeploy.client" file="${jboss.home}/client"/>
+      <fail message="Cannot find ${jboss.home}/client" unless="jboss.undeploy.client"/>
       
+      <!-- delete stale container integration jars -->
       <delete>
-        <fileset dir="${jboss.undeploy.home}" includes="${jbossws.deploy.conf}"/>
+        <fileset dir="${jboss.server.home}/deployers/jbossws.deployer">
+          <include name="jbossws-jboss*.jar"/>
+        </fileset>
+        <fileset dir="${jboss.server.home}/lib">
+          <include name="jbossws-jboss*.jar"/>
+        </fileset>
+        <fileset dir="${jboss.home}/client">
+          <include name="jbossws-jboss*.jar"/>
+        </fileset>
       </delete>
+      
+      <!-- delete content of last deployment -->
+      <delete>
+        <fileset dir="${jboss.home}" includes="${jbossws.deploy.conf}"/>
+      </delete>
+      
+      <!-- delete jbossws.sar -->
       <delete dir="@{targetdir}"/>
+      
     </sequential>
   </macrodef>
   
