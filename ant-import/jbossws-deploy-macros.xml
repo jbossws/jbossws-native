@@ -364,9 +364,6 @@
       
       <!-- delete stale container integration jars -->
       <delete>
-        <fileset dir="${jboss.server.home}/deployers/jbossws.deployer">
-          <include name="jbossws-jboss*.jar"/>
-        </fileset>
         <fileset dir="${jboss.server.home}/lib">
           <include name="jbossws-jboss*.jar"/>
         </fileset>
@@ -383,6 +380,19 @@
       <!-- delete jbossws.sar -->
       <delete dir="@{targetdir}"/>
       
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-undeploy-deployer">
+    <attribute name="defaultconf"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <property name="jboss.server.home" value="@{targetdir}/../.."/>
+      <delete>
+        <fileset dir="${jboss.server.home}/deployers/jbossws.deployer">
+          <include name="jbossws-jboss*.jar"/>
+        </fileset>
+      </delete>
     </sequential>
   </macrodef>
   
