@@ -384,7 +384,6 @@
   </macrodef>
   
   <macrodef name="macro-undeploy-deployer">
-    <attribute name="defaultconf"/>
     <attribute name="targetdir"/>
     <sequential>
       <property name="jboss.server.home" value="@{targetdir}/../.."/>
