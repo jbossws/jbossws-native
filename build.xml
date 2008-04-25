@@ -216,10 +216,20 @@
   
   <target name="compile50-resources">
     
-    <unzip dest="${core.output.resources.dir}" src="${thirdparty.dir}/jbossws-jboss50-deployer-resources.zip"/>
+    <unzip dest="${core.output.resources.dir}/jbossws-jboss500" src="${thirdparty.dir}/jbossws-jboss500-resources.zip"/>
+    <unzip dest="${core.output.resources.dir}/jbossws-jboss501" src="${thirdparty.dir}/jbossws-jboss501-resources.zip"/>
+    
+    <!-- Concat jbossws-jboss500-beans.xml -->
+    <concat destfile="${core.output.resources.dir}/jbossws-jboss500/jbossws-jboss500-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt; </header>
+      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt; </footer>
+    </concat>
     
     <!-- Concat jbossws-jboss501-beans.xml -->
-    <concat destfile="${core.output.resources.dir}/jbossws-jboss501-beans.xml">
+    <concat destfile="${core.output.resources.dir}/jbossws-jboss501/jbossws-jboss501-beans.xml">
       <header trimleading="yes">
         &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt; </header>
       <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>

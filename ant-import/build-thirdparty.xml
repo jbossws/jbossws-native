@@ -74,10 +74,14 @@
     <get src="${jboss.repository}/jboss/jbossws-jboss423/${jbossws-jboss423}/lib/jbossws-jboss423.jar" dest="${thirdparty.dir}/jbossws-jboss423.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss423/${jbossws-jboss423}/lib/jbossws-jboss423-src.jar" dest="${thirdparty.dir}/jbossws-jboss423-src.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/jboss/jbossws-jboss423/${jbossws-jboss423}/lib/jbossws-jboss423-resources.zip" dest="${thirdparty.dir}/jbossws-jboss423-resources.zip" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss50/${jbossws-jboss501}/lib/jbossws-jboss50.jar" dest="${thirdparty.dir}/jbossws-jboss50.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss50/${jbossws-jboss501}/lib/jbossws-jboss50-src.zip" dest="${thirdparty.dir}/jbossws-jboss50-src.zip" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss50/${jbossws-jboss501}/lib/jbossws-jboss50-container.jar" dest="${thirdparty.dir}/jbossws-jboss50-container.jar" usetimestamp="true" verbose="true"/>
-    <get src="${jboss.repository}/jboss/jbossws-jboss50/${jbossws-jboss501}/lib/jbossws-jboss50-deployer-resources.zip" dest="${thirdparty.dir}/jbossws-jboss50-deployer-resources.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss500/${jbossws-jboss500}/lib/jbossws-jboss500.jar" dest="${thirdparty.dir}/jbossws-jboss500.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss500/${jbossws-jboss500}/lib/jbossws-jboss500-container.jar" dest="${thirdparty.dir}/jbossws-jboss500-container.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss500/${jbossws-jboss500}/lib/jbossws-jboss500-src.jar" dest="${thirdparty.dir}/jbossws-jboss500-src.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss500/${jbossws-jboss500}/lib/jbossws-jboss500-resources.zip" dest="${thirdparty.dir}/jbossws-jboss500-resources.zip" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss501/${jbossws-jboss501}/lib/jbossws-jboss501.jar" dest="${thirdparty.dir}/jbossws-jboss501.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss501/${jbossws-jboss501}/lib/jbossws-jboss501-container.jar" dest="${thirdparty.dir}/jbossws-jboss501-container.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss501/${jbossws-jboss501}/lib/jbossws-jboss501-src.jar" dest="${thirdparty.dir}/jbossws-jboss501-src.jar" usetimestamp="true" verbose="true"/>
+    <get src="${jboss.repository}/jboss/jbossws-jboss501/${jbossws-jboss501}/lib/jbossws-jboss501-resources.zip" dest="${thirdparty.dir}/jbossws-jboss501-resources.zip" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-ant/${apache-ant}/lib/ant.jar" dest="${thirdparty.dir}/ant.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-collections/${apache-collections}/lib/commons-collections.jar" dest="${thirdparty.dir}/commons-collections.jar" usetimestamp="true" verbose="true"/>
     <get src="${jboss.repository}/apache-log4j/${apache-log4j}/lib/log4j.jar" dest="${thirdparty.dir}/log4j.jar" usetimestamp="true" verbose="true"/>

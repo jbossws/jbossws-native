@@ -143,13 +143,14 @@
    <macrodef name="macro-deploy-jbossws-deployers50">
       <attribute name="thirdpartydir"/>
       <attribute name="targetdir"/>
+      <attribute name="jbossid"/>
       <sequential>
          <mkdir dir="@{targetdir}"/>
          <copy todir="@{targetdir}" flatten="true" overwrite="true">
             <fileset dir="@{thirdpartydir}">
                <include name="**/jbossws-common.jar"/>
                <include name="**/jbossws-framework.jar"/>
-               <include name="**/jbossws-jboss50.jar"/>               
+               <include name="**/jbossws-@{jbossid}.jar"/>               
             </fileset>
          </copy>
          <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true">
@@ -167,11 +168,12 @@
     <macrodef name="macro-deploy-jbossws-deploy50">
       <attribute name="thirdpartydir"/>
       <attribute name="targetdir"/>
+      <attribute name="jbossid"/>
       <sequential>
          <mkdir dir="@{targetdir}"/>
          <copy todir="@{targetdir}" flatten="true" overwrite="true">
             <fileset dir="@{thirdpartydir}">               
-               <include name="**/jbossws-jboss50-container.jar"/>
+               <include name="**/jbossws-@{jbossid}-container.jar"/>
             </fileset>
          </copy>
       </sequential>
@@ -334,8 +336,8 @@
     <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-lib50 targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-server-lib50 targetdir="${installserver}/lib" thirdpartydir="${thirdpartydir}"/>
-    <macro-deploy-jbossws-deployers50 targetdir="${installserver}/deployers/jbossws.deployer/" thirdpartydir="${thirdpartydir}"/>
-    <macro-deploy-jbossws-deploy50 targetdir="${installserver}/deploy" thirdpartydir="${thirdpartydir}"/>
+    <macro-deploy-jbossws-deployers50 targetdir="${installserver}/deployers/jbossws.deployer/" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-deploy50 targetdir="${installserver}/deploy" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-native50-sar targetdir="${installserver}/deploy/jbossws.sar" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
   </target>
   
