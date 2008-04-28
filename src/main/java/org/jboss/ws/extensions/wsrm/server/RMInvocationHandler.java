@@ -318,17 +318,22 @@ public final class RMInvocationHandler extends InvocationHandler
          throw fault; // rethrow
       }
       
-      if (inv.getJavaMethod() != null)
+      try
       {
-         logger.debug("Invoking method: " + inv.getJavaMethod().getName());
-         this.delegate.invoke(ep, inv);
+         if (inv.getJavaMethod() != null)
+         {
+            logger.debug("Invoking method: " + inv.getJavaMethod().getName());
+            this.delegate.invoke(ep, inv);
+         }
+         else
+         {
+            logger.debug("RM lifecycle protocol method detected");
+         }
       }
-      else
+      finally
       {
-         logger.debug("RM lifecycle protocol method detected");
+         setupResponseContext(rmResponseContext);
       }
-      
-      setupResponseContext(rmResponseContext);
    }
    
    private void setupResponseContext(Map<String, Object> rmResponseContext)
