@@ -55,10 +55,3 @@ org/jboss/test/ws/jaxrpc/jbws331/**
 # [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
 org/jboss/test/ws/jaxrpc/jbws720/**
 
-# [EJBTHREE-1323] ClassNotFoundException: org.jboss.ejb3.tx.TxInterceptorFactory
-org/jboss/test/ws/jaxws/samples/advanced/retail/**
-org/jboss/test/ws/jaxws/samples/context/**
-org/jboss/test/ws/jaxws/samples/eardeployment/**
-org/jboss/test/ws/jaxws/samples/swaref/**
-org/jboss/test/ws/jaxws/samples/webserviceref/**
-org/jboss/test/ws/jaxws/samples/webservice/**
