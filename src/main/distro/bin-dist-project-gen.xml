@@ -24,11 +24,11 @@
    	</filterset>
   	
   	<path id="jbws-ant.path">
-  		<pathelement location="${thirdparty.dir}/jbossws-core.jar" />
   		<pathelement location="${thirdparty.dir}/jbossws-common.jar" />
   	</path>
   	<taskdef name="pathFixer" classname="org.jboss.ws.tools.ant.FixPathTask" classpathref="jbws-ant.path"/>
   	<taskdef name="eclipseClasspathGenerator" classname="org.jboss.ws.tools.ant.EclipseClasspathTask" classpathref="jbws-ant.path"/>
+  	<taskdef name="eclipseProjectGenerator" classname="org.jboss.ws.tools.ant.EclipseProjectTask" classpathref="jbws-ant.path"/>
   	<taskdef name="pathWriter" classname="org.jboss.ws.tools.ant.PathWriterTask" classpathref="jbws-ant.path"/>
   </target>
 
@@ -106,9 +106,6 @@
     <copy tofile="${project.home}/build.xml" file="${basedir}/build/user-project-build.xml">
       <filterset refid="project"/>
     </copy>
-    <copy tofile="${project.home}/.project" file="${basedir}/build/eclipse.project">
-      <filterset refid="project"/>
-    </copy>
     <copy tofile="${project.home}/build.properties" file="${basedir}/user-project.properties"/>
   	<path id="project.classpath">
 		<path refid="integration.target.javac.classpath" />
@@ -120,6 +117,7 @@
         <pathelement location="${jboss.client}/jbossws-client.jar"/>
 	</path>
   	<eclipseClasspathGenerator pathId="project.classpath" outputFile="${project.home}/.classpath" srcPath="src/main/java" srcOutput="bin/main" />
+  	<eclipseProjectGenerator projectName="${project.name}" outputFile="${project.home}/.project" />
   	<pathWriter pathId="project.classpath" outputFile="${project.home}/libraries.xml" variables="project.jboss.home" />
   </target>
   
