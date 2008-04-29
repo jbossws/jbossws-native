@@ -91,8 +91,10 @@
         <include name="etc/**"/>
         <include name="java/**/jaxws/samples/**"/>
         <include name="java/**/jaxws/smoke/**"/>
+        <include name="java/**/projectGenerator/**"/>
         <include name="resources/jaxws/samples/**"/>
         <include name="resources/jaxws/smoke/**"/>
+        <include name="resources/projectGenerator/**"/>
       </fileset>
       <fileset dir="${core.dir}/src/test">
         <include name="resources/test-excludes-*.txt"/>
