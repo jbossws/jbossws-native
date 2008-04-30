@@ -52,7 +52,7 @@ public class Client
       ClientHelper.setUsernamePassword((BindingProvider)endpoint, "kermit", "thefrog");
    }
    
-   public void run(boolean asynch) throws Exception
+   public DarResponse run(boolean asynch) throws Exception
    {
       DarRequest request = ClientHelper.getRequest();
       System.out.println(new Date() + " Sending request...");
@@ -69,6 +69,7 @@ public class Client
       }
       System.out.println(new Date() + " Response received: "+darResponse);
       ClientHelper.printResponse(darResponse);
+      return darResponse;
    }
    
    public static void main(String[] args)

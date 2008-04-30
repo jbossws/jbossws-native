@@ -48,7 +48,8 @@
  </binding>
  <service name="DarReplyService">
   <port binding="tns:DarReplyEndpointBinding" name="DarReplyEndpointPort">
-   <soap:address location="http://localhost.localdomain:8080/dar-client/replyService"/>
+   <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+   <!-- <soap:address location="http://localhost.localdomain:8080/dar-client/replyService"/> -->
   </port>
  </service>
 </definitions>

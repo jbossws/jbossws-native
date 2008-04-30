@@ -52,6 +52,7 @@ import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 public class AddressingClient
 {
    protected DarEndpoint endpoint;
+   protected String replyToHost;
    
    private static AddressingBuilder BUILDER;
    private static final String WSA_TO = "http://org.jboss.test.ws.jaxws.samples.dar/server";
@@ -63,17 +64,18 @@ public class AddressingClient
       BUILDER = AddressingBuilder.getAddressingBuilder();
    }
    
-   public AddressingClient(URL url)
+   public AddressingClient(URL url, String replyToHost)
    {
       DarService service = new DarService(url, new QName("http://org.jboss.ws/samples/dar", "DarService"));
       endpoint = service.getDarEndpointPort();
       ((StubExt)endpoint).setConfigName("Standard WSAddressing Client");
       ClientHelper.setUsernamePassword((BindingProvider)endpoint, "kermit", "thefrog");
+      this.replyToHost = replyToHost;
    }
    
    public void run(boolean asynch) throws Exception
    {
-      configureAddressingProperties((BindingProvider)endpoint, WSA_ACTION, WSA_TO, "http://localhost:8080/dar-client/replyTo");
+      configureAddressingProperties((BindingProvider)endpoint, WSA_ACTION, WSA_TO, "http://" + replyToHost + ":8080/dar-client/replyTo");
       DarRequest request = ClientHelper.getRequest();
       System.out.println(new Date() + " Sending request...");
       if (asynch)
@@ -92,7 +94,7 @@ public class AddressingClient
    
    public void runOneway() throws Exception
    {
-      configureAddressingProperties((BindingProvider)endpoint, WSA_ACTION_ONEWAY, WSA_TO, "http://localhost:8080/dar-client/replyService");
+      configureAddressingProperties((BindingProvider)endpoint, WSA_ACTION_ONEWAY, WSA_TO, "http://" + replyToHost + ":8080/dar-client/replyService");
       DarRequest request = ClientHelper.getRequest();
       System.out.println(new Date() + " Sending request...");
       endpoint.onewayProcess(request);
@@ -115,7 +117,7 @@ public class AddressingClient
       {
          if (args.length == 1)
          {
-            AddressingClient client = new AddressingClient(new URL(args[0]));
+            AddressingClient client = new AddressingClient(new URL(args[0]), "localhost");
             System.out.println("* Synchronous invocation: ");
             client.run(false);
             System.out.println("\n* Asynchronous invocation: ");

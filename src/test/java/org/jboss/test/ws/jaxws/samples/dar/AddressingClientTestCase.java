@@ -24,6 +24,7 @@ package org.jboss.test.ws.jaxws.samples.dar;
 //$Id$
 
 import java.net.URL;
+import java.util.Date;
 
 import junit.framework.Test;
 
@@ -32,6 +33,8 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * DAR addressing client; invokes the DAR addressing endpoint (sync, asynch and oneway)
+ * (this is actually a weak test since we can't check if the 
+ * reply-to-service actually receives the response)
  *
  * @author Thomas.Diesler@jboss.org
  * @since 24-Nov-2005
@@ -40,27 +43,36 @@ public class AddressingClientTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      return new JBossWSTestSetup(AddressingClientTestCase.class, "jaxws-samples-dar.jar,jaxws-samples-dar-addressing-client.war");
+      return new JBossWSTestSetup(AddressingClientTestCase.class, "jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar");
    }
 
    public void testSync() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
-      AddressingClient client = new AddressingClient(wsdlURL);
-      //client.run(false);
+      AddressingClient client = new AddressingClient(wsdlURL, getServerHost());
+      Date start = new Date();
+      client.run(false);
+      Date stop = new Date();
+      assertTrue(stop.getTime() - start.getTime() > 3000);
    }
    
    public void testAsync() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
-      AddressingClient client = new AddressingClient(wsdlURL);
-      //client.run(true);
+      AddressingClient client = new AddressingClient(wsdlURL, getServerHost());
+      Date start = new Date();
+      client.run(true);
+      Date stop = new Date();
+      assertTrue(stop.getTime() - start.getTime() > 3000);
    }
    
    public void testOneWay() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
-      AddressingClient client = new AddressingClient(wsdlURL);
-      //client.runOneway();
+      AddressingClient client = new AddressingClient(wsdlURL, getServerHost());
+      Date start = new Date();
+      client.runOneway();
+      Date stop = new Date();
+      assertTrue(stop.getTime() - start.getTime() < 3000);
    }
 }
