@@ -35,7 +35,7 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * DAR client; invokes the DAR JMS endpoint
+ * Invokes the DAR JMS client
  * (this is actually a weak test since we don't check if the 
  * response queue actually receives the response)
  *
