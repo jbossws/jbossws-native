@@ -1,0 +1,150 @@
+<assembly xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0-SNAPSHOT.xsd">
+  
+  <id>deploy-artifacts</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  
+  <dependencySets>
+    
+    <!-- bin -->
+    <dependencySet>
+      <outputDirectory>bin</outputDirectory>
+      <useStrictFiltering>true</useStrictFiltering>
+      <scope>provided</scope>
+      <unpack>true</unpack>
+      <includes>
+        <include>*:jbossws-framework:zip:scripts</include>
+      </includes>
+    </dependencySet>
+    
+    <!-- lib -->
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <useStrictFiltering>true</useStrictFiltering>
+      <scope>provided</scope>
+      <unpack>false</unpack>
+      <includes>
+        <include>*:jbossws-framework:jar</include>
+        <include>*:jbossws-jboss422:jar:*</include>
+        <include>*:jbossws-jboss423:jar:*</include>
+        <include>*:jbossws-jboss500:jar:*</include>
+        <include>*:jbossws-jboss501:jar:*</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}-${artifact.classifier}.${artifact.extension}</outputFileNameMapping>
+      <useStrictFiltering>true</useStrictFiltering>
+      <scope>provided</scope>
+      <unpack>false</unpack>
+      <includes>
+        <include>*:jbossws-jboss500:jar:container</include>
+        <include>*:jbossws-jboss501:jar:container</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+  
+  <!-- lib -->
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>org.jboss.ws.native:jbossws-native-client</include>
+      </includes>
+      <binaries>
+        <outputDirectory>lib</outputDirectory>
+        <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
+    <moduleSet>
+      <includes>
+        <include>org.jboss.ws.native:jbossws-native-core</include>
+      </includes>
+      <binaries>
+        <outputDirectory>lib</outputDirectory>
+        <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+        <unpack>false</unpack>
+        <dependencySets>
+          <dependencySet>
+            <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+            <useStrictFiltering>true</useStrictFiltering>
+            <includes>
+              <include>*:FastInfoset:jar</include>
+              <include>*:jaxb-api:jar</include>
+              <include>*:jaxb-impl:jar</include>
+              <include>*:jaxb-xjc:jar</include>
+              <include>*:jaxws-tools:jar</include>
+              <include>*:jaxws-rt:jar</include>
+              <include>*:jboss-jaxb-intros:jar</include>
+              <include>*:jbossws-common:jar</include>
+              <include>*:jbossws-native-jaxrpc:jar</include>
+              <include>*:jbossws-native-jaxws:jar</include>
+              <include>*:jbossws-native-jaxws-ext:jar</include>
+              <include>*:jbossws-native-saaj:jar</include>
+              <include>*:jbossws-spi:jar</include>
+              <include>*:jettison:jar</include>
+              <include>*:policy:jar</include>
+              <include>*:stax-api:jar</include>
+              <include>*:stax-ex:jar</include>
+              <include>*:streambuffer:jar</include>
+              <include>*:wsdl4j:jar</include>
+              <include>*:xmlsec:jar</include>
+            </includes>
+          </dependencySet>
+          <dependencySet>
+            <outputFileNameMapping>wstx.jar</outputFileNameMapping>
+            <useStrictFiltering>true</useStrictFiltering>
+            <includes>
+              <include>*:wstx-lgpl:jar</include>
+            </includes>
+          </dependencySet>
+        </dependencySets>
+      </binaries>
+    </moduleSet>
+    <moduleSet>
+      <includes>
+        <include>org.jboss.ws.native:jbossws-native-management</include>
+      </includes>
+      <binaries>
+        <outputDirectory>lib</outputDirectory>
+        <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+        <includeDependencies>false</includeDependencies>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+  
+  <fileSets>
+    <!-- bin -->
+    <fileSet>
+      <directory>src/main/etc</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>wsrunclient.*</include>
+        <include>wstools.*</include>
+      </includes>
+    </fileSet>
+    
+    <!-- resources -->
+    <fileSet>
+      <directory>modules/client/src/main/resources/META-INF</directory>
+      <outputDirectory>resources</outputDirectory>
+      <includes>
+        <include>standard-jaxrpc-*-config.xml</include>
+        <include>standard-jaxws-*-config.xml</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/core/target/resources</directory>
+      <outputDirectory>resources</outputDirectory>
+      <includes>
+        <include>jbossws-*/**</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+  
+</assembly>

@@ -11,457 +11,79 @@
 
 <!-- $Id$ -->
 
-<!--
-  The JBossWS project is organised like this
+<project basedir="." name="JBossWS-Metro">
   
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       +~~~~+
-  Target Container:       |     AS-5.0      |  |     AS-4.2      |                       |    | 
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       |    |
-  Container Integration:  | jbossws-jboss50 |  | jbossws-jboss42 |                       |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+                       |    |
-                          +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+  |    |
-  WS Framework:           |      jbossws-spi, jbossws-framework, jbossws-common       |  |    |
-                          +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+  |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
-  WS Stack Integration:   | jbossws-native  |  |  jbossws-metro  |  |   jbossws-cxf   |  |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
-  WS Stack:               |   jbossws-core  |  |   Sun Metro     |  |   Apache CXF    |  |    |
-                          +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  +~~~~~~~~~~~~~~~~~+  |    |
-  WS-* Extensions:        +~+ +~+              +~+ +~+              +~+ +~+              |    |
-                          | | | |              | | | |              | | | |              |    |
-                          | | | |              | | | |              | | | |              |    |
-                          | | | |              | | | |              | | | |              |    |
-                          | | | |              | | | |              | | | |              |    |
-                          | | | |              | | | |              | | | |              |    |
-                          +~+ +~+              +~+ +~+              +~+ +~+              +~~~~+
-                                                                                     JAXWS Testsuite  
-   
-  
-  Typically you would build, deploy, test one of the WS stacks against one of the supported target containers.
-  Here we explain first the manual procedure. Further down you find instruction on how to do this using our
-  automated Hudson QA environment.
-  
-  Working with JBossWS-Native
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  To run the general JAXWS samples against our native WS stack on JBoss-5.0 you would run the sequence below. 
-  This is also the required sequence before any SVN commit. If one of the tests fails, please complain loudly.
-  
-             cd  stack/native/trunk
-             ant deploy-jboss500
-             ant tests-smoke
+  <!-- ================================================================== -->
+  <!-- Setup                                                              -->
+  <!-- ================================================================== -->
 
-  To run the collection of provider sample tests, you would run 
+  <property name="stack.dir" value="${basedir}"/>
+  <property name="stack.distro.dir" value="${stack.dir}/src/main/distro"/>
+  <property name="stack.output.dir" value="${stack.dir}/target"/>
   
-             ant -Dtest=jaxws/samples/provider test
+  <property name="deploy.artifacts.dir" value="${stack.output.dir}/deploy-artifacts"/>
+  
+  <import file="${stack.distro.dir}/build-setup.xml"/>
+  <import file="${stack.distro.dir}/build-deploy.xml"/>
+  <import file="${stack.distro.dir}/jbossws-deploy-macros.xml"/>
+  
+  <property name="jbossws.default.deploy.conf" value="${stack.distro.dir}/jbossws-default-deploy.conf"/>
+  <property name="target.properties.file" value="${basedir}/target.properties"/>
+  
+  <!-- ================================================================== -->
+  <!-- Initialization                                                     -->
+  <!-- ================================================================== -->
+  
+  <target name="init" depends="prepare">
+    <xmlproperty file="${stack.dir}/pom.xml"/>
+    <property name="version.id" value="${project.version}"/>
+          
+    <echo message="version.id=${version.id}"/>
+    <echo message="integration.target=${jbossws.integration.target}"/>
     
-  To run a single specific test, you would run
-  
-             ant -Dtest=org.jboss.test.ws.jaxws.samples.provider.ProviderPayloadTestCase one-test
-
-  This can be done in debug mode as well
-  
-             ant -Ddebug=true -Dtest=org.jboss.test.ws.jaxws.samples.provider.ProviderPayloadTestCase one-test
-
-  Working with the Hudson QA environment
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  The Hudson QA environment helps you to test any supported stack against any supported target container.
-  To setup Hudson on your local box, you would run
-  
-             cd  framework/trunk
-             ant hudson-setup
-             ant hudson-start
-  
-  When you hit http://localhost:8180/hudson you should be able to 
-  
-             1. login
-             2. build a target container
-             3. run a testsuite against the target container
-  
-  Publicly, Hudson is available at http://jbws.dyndns.org:8180/hudson/
-  
-  Have fun + good luck
-  The JBossWS Team
--->
-
-<project default="main" basedir="." name="JBossWS-Native">
-  
-  <property name="core.dir" value="${basedir}"/>
-  
-  <import file="${basedir}/ant-import/build-setup.xml"/>
-  <import file="${basedir}/ant-import/build-bin-dist.xml"/>
-  <import file="${basedir}/ant-import/build-prepare-deploy.xml"/>
-  <import file="${basedir}/ant-import/build-deploy.xml"/>
-  <import file="${basedir}/ant-import/build-release.xml"/>
-  <import file="${basedir}/ant-import/build-thirdparty.xml"/>
-  <import file="${basedir}/ant-import-tests/build-testsuite.xml"/>
-  <import file="${basedir}/ant-import/jbossws-deploy-macros.xml"/>
-  
-  <property name="core.src.dir" value="${core.dir}/src/main"/>
-  <property name="core.etc.dir" value="${core.src.dir}/etc"/>
-  <property name="core.distro.dir" value="${core.src.dir}/distro"/>
-  <property name="core.java.dir" value="${core.src.dir}/java"/>
-  <property name="core.resources.dir" value="${core.src.dir}/resources"/>
-  <property name="core.output.dir" value="${core.dir}/output"/>
-  <property name="core.output.apidocs.dir" value="${core.output.dir}/apidocs"/>
-  <property name="core.output.deploy.dir" value="${core.output.dir}/deploy"/>
-  <property name="core.output.etc.dir" value="${core.output.dir}/etc"/>
-  <property name="core.output.classes.dir" value="${core.output.dir}/classes"/>
-  <property name="core.output.classes14.dir" value="${core.output.dir}/classes14"/>
-  <property name="core.output.lib.dir" value="${core.output.dir}/lib"/>
-  <property name="core.output.resources.dir" value="${core.output.dir}/resources"/>
-  
-  <property name="deploy.artifacts.dir" value="${core.output.deploy.dir}-artifacts"/>
-  <property name="deploy.structure.jboss42" value="${core.output.deploy.dir}-jboss42"/>
-  <property name="deploy.structure.jboss50" value="${core.output.deploy.dir}-jboss50"/>
-  <property name="jbossws.default.deploy.conf" value="${core.dir}/ant-import/jbossws-default-deploy.conf"/>
-  
-  <target name="init" depends="prepare,thirdparty">
+    <fail message="jbossws.integration.target not set" unless="jbossws.integration.target"/>
+    <property name="deploy.structure" value="${stack.output.dir}/deploy-${jbossws.integration.target}"/>
   </target>
   
   <!-- ================================================================== -->
-  <!-- Compile                                                            -->
+  <!-- Distribution                                                       -->
   <!-- ================================================================== -->
   
-  <!--
-  | Compile everything.
-  |
-  | This target should depend on other compile-* targets for each
-  | different type of compile that needs to be performed, short of
-  | documentation compiles.
-  -->
-  
-  <target name="compile" depends="init,compile-classes,compile-etc,compile-resources" description="Compile all source files."/>
-  
-  <!-- Compile java sources -->
-  <target name="compile-classes" depends="init">
+  <target name="prepare-deploy" depends="prepare">
     
-    <!-- Compile interfaces with jdk1.4 -->
-    <mkdir dir="${core.output.classes14.dir}"/>
-    <javac srcdir="${core.java.dir}" destdir="${core.output.classes14.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
-      deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}" source="1.4" target="1.4">
-      <include name="javax/xml/rpc/**"/>
-      <include name="javax/xml/soap/**"/>
-      <classpath refid="thirdparty.classpath"/>
-    </javac>
-    
-    <!-- Compile core classes with jdk1.5 -->
-    <mkdir dir="${core.output.classes.dir}"/>
-    <javac srcdir="${core.java.dir}" sourcepath="" destdir="${core.output.classes.dir}" encoding="utf-8" debug="${javac.debug}" verbose="${javac.verbose}"
-      deprecation="${javac.deprecation}" failonerror="${javac.fail.onerror}" source="1.5" target="1.5">
-      <include name="javax/annotation/**"/>
-      <include name="javax/xml/ws/**"/>
-      <include name="javax/jws/**"/>
-      <include name="org/jboss/annotation/**"/>
-      <include name="org/jboss/ws/**"/>
-      <include name="org/jboss/wsf/stack/jbws/**"/>
-      <classpath path="${core.output.classes14.dir}"/>
-      <classpath refid="thirdparty.classpath"/>
-    </javac>
-    
-    <copy todir="${core.output.classes.dir}">
-      <fileset dir="${core.java.dir}">
-        <include name="**/*.xml"/>
-      </fileset>
-    </copy>
+    <delete dir="${deploy.artifacts.dir}"/>
+    <exec dir="${basedir}" executable="mvn" failonerror="true">
+      <arg value="package"/>
+      <arg value="assembly:directory"/>
+    </exec>
   </target>
   
-  <!-- Compile etc files (manifests and such) -->
-  <target name="compile-etc" depends="init">
-    <mkdir dir="${core.output.etc.dir}"/>
-    <copy todir="${core.output.etc.dir}" filtering="yes">
-      <fileset dir="${core.etc.dir}"/>
-      <filterset>
-        <filter token="java.vm.version" value="${java.vm.version}"/>
-        <filter token="java.vm.vendor" value="${java.vm.vendor}"/>
-        <filter token="build.id" value="${build.id}"/>
-        <filter token="implementation.version" value="jbossws-${version.id}"/>
-        <filtersfile file="${core.dir}/version.properties"/>
-      </filterset>
-    </copy>
-  </target>
-  
-  <!-- Compile resource files -->
-  <target name="compile42-resources">
+  <target name="build-bin-dist" depends="prepare-deploy" description="Build the binary distribution">
     
-    <unzip dest="${core.output.dir}/resources/jbossws-jboss422" src="${thirdparty.dir}/jbossws-jboss422-resources.zip"/>
-    <unzip dest="${core.output.dir}/resources/jbossws-jboss423" src="${thirdparty.dir}/jbossws-jboss423-resources.zip"/>
+    <echo message="*************************************"/>
+    <echo message="* mvn -P bindist assembly:directory *"/>
+    <echo message="*************************************"/>
     
-    <!-- Concat jbossws-jboss422-beans.xml -->
-    <concat destfile="${core.output.resources.dir}/jbossws-jboss422/jbossws-jboss422-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd"
-        xmlns="urn:jboss:bean-deployer"&gt; </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${core.output.resources.dir}/jbossws-jboss422/jbossws-jboss42-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt; </footer>
-    </concat>
-    
-    <!-- Concat jbossws-jboss423-beans.xml -->
-    <concat destfile="${core.output.resources.dir}/jbossws-jboss423/jbossws-jboss423-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd"
-        xmlns="urn:jboss:bean-deployer"&gt; </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <fileset file="${core.output.resources.dir}/jbossws-jboss423/jbossws-jboss42-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt; </footer>
-    </concat>
-    
-  </target>
-  
-  <target name="compile50-resources">
-    
-    <unzip dest="${core.output.resources.dir}/jbossws-jboss500" src="${thirdparty.dir}/jbossws-jboss500-resources.zip"/>
-    <unzip dest="${core.output.resources.dir}/jbossws-jboss501" src="${thirdparty.dir}/jbossws-jboss501-resources.zip"/>
-    
-    <!-- Concat jbossws-jboss500-beans.xml -->
-    <concat destfile="${core.output.resources.dir}/jbossws-jboss500/jbossws-jboss500-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt; </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt; </footer>
-    </concat>
-    
-    <!-- Concat jbossws-jboss501-beans.xml -->
-    <concat destfile="${core.output.resources.dir}/jbossws-jboss501/jbossws-jboss501-beans.xml">
-      <header trimleading="yes">
-        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt; </header>
-      <fileset file="${core.resources.dir}/jbossws-native-config.xml"/>
-      <footer trimleading="yes">
-        &lt;/deployment&gt; </footer>
-    </concat>
-  </target>
-  
-  <target name="compile-resources" depends="init, compile42-resources, compile50-resources">
-    <mkdir dir="${core.output.resources.dir}"/>
-    <copy todir="${core.output.resources.dir}">
-      <fileset dir="${core.resources.dir}/standard-config">
-        <include name="standard-*-config.xml"/>
-      </fileset>
-    </copy>
-    
+    <delete dir="${stack.output.dir}/jbossws-metro-dist"/>
+    <exec dir="${basedir}" executable="mvn" failonerror="true">
+      <arg value="-P bindist"/>
+      <arg value="assembly:directory"/>
+    </exec>
   </target>
   
   <!-- ================================================================== -->
-  <!-- Archives                                                           -->
+  <!-- Miscellaneous                                                       -->
   <!-- ================================================================== -->
-  
-  <!--
-  | Build all jar files.
-  -->
-  <target name="jars" depends="compile" description="Builds all jar files.">
-    
-    <!-- Build jboss-jaxrpc.jar -->
-    <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-jaxrpc.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes14.dir}">
-        <include name="javax/xml/rpc/**"/>
-      </fileset>
-    </jar>
-    
-    <!-- Build jboss-saaj.jar -->
-    <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-saaj.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes14.dir}">
-        <include name="javax/xml/soap/**"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jboss-saaj.jar/META-INF"/>
-    </jar>
-    
-    <!-- Build jboss-jaxws.jar -->
-    <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-jaxws.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes.dir}">
-        <include name="javax/annotation/**"/>
-        <include name="javax/jws/**"/>
-        <include name="javax/xml/ws/**"/>
-        <exclude name="javax/xml/ws/**/*21.class"/>
-        <exclude name="javax/xml/ws/Action.class"/>
-        <exclude name="javax/xml/ws/EndpointReference.class"/>
-        <exclude name="javax/xml/ws/FaultAction.class"/>
-        <exclude name="javax/xml/ws/RespectBinding.class"/>
-        <exclude name="javax/xml/ws/RespectBindingFeature.class"/>
-        <exclude name="javax/xml/ws/WebServiceFeature.class"/>
-        <exclude name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
-        <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <exclude name="javax/xml/ws/soap/AddressingFeature.class"/>
-        <exclude name="javax/xml/ws/addressing/**"/>
-        <exclude name="javax/xml/ws/soap/Addressing.class"/>
-        <exclude name="javax/xml/ws/soap/MTOM.class"/>
-        <exclude name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <exclude name="javax/xml/ws/wsaddressing/**"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jboss-jaxws.jar/META-INF"/>
-    </jar>
-    
-    <!-- Build jboss-jaxws-ext.jar -->
-    <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jboss-jaxws-ext.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes.dir}">
-        <!-- JAX-WS 2.1 extensions -->
-        <include name="javax/xml/ws/**/*21.class"/>
-        <include name="javax/xml/ws/Action.class"/>
-        <include name="javax/xml/ws/EndpointReference.class"/>
-        <include name="javax/xml/ws/FaultAction.class"/>
-        <include name="javax/xml/ws/RespectBinding.class"/>
-        <include name="javax/xml/ws/RespectBindingFeature.class"/>
-        <include name="javax/xml/ws/WebServiceFeature.class"/>
-        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <include name="javax/xml/ws/soap/AddressingFeature.class"/>
-        <include name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
-        <include name="javax/xml/ws/addressing/**"/>
-        <include name="javax/xml/ws/soap/Addressing.class"/>
-        <include name="javax/xml/ws/soap/MTOM.class"/>
-        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <include name="javax/xml/ws/wsaddressing/**"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jboss-jaxws-ext.jar/META-INF"/>
-    </jar>
-    
-    <!-- Build jbossws-core.jar -->
-    <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jbossws-core.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes.dir}">
-        <include name="org/jboss/annotation/**"/>
-        <include name="org/jboss/wsf/stack/jbws/*"/>
-        <include name="org/jboss/ws/**"/>
-        <exclude name="org/jboss/wsf/stack/jbws/embedded/**"/>
-      </fileset>
-      <fileset dir="${core.resources.dir}">
-        <include name="schema/**"/>
-        <include name="dtd/**"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
-    </jar>
-    
-    <!-- Build jbossws-embedded.jar -->
-    <mkdir dir="${core.output.lib.dir}"/>
-    <jar jarfile="${core.output.lib.dir}/jbossws-embedded.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes.dir}">
-        <include name="org/jboss/wsf/stack/jbws/embedded/**"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jbossws-embedded.jar/META-INF"/>
-    </jar>
-    
-    <!-- Build jbossws-client.jar -->
-    <jar jarfile="${core.output.lib.dir}/jbossws-client.jar" manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.classes.dir}">
-        <include name="org/jboss/wsf/**"/>
-        <include name="org/jboss/ws/**"/>
-        <exclude name="org/jboss/wsf/stack/jbws/embedded/**"/>
-        
-        <!-- JAX-WS 2.1 extensions -->
-        <include name="javax/xml/ws/**/*21.class"/>
-        <include name="javax/xml/ws/Action.class"/>
-        <include name="javax/xml/ws/EndpointReference.class"/>
-        <include name="javax/xml/ws/FaultAction.class"/>
-        <include name="javax/xml/ws/RespectBinding.class"/>
-        <include name="javax/xml/ws/RespectBindingFeature.class"/>
-        <include name="javax/xml/ws/WebServiceFeature.class"/>
-        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <include name="javax/xml/ws/soap/AddressingFeature.class"/>
-        <include name="javax/xml/ws/spi/WebServiceFeatureAnnotation.class"/>
-        <include name="javax/xml/ws/addressing/**"/>
-        <include name="javax/xml/ws/soap/Addressing.class"/>
-        <include name="javax/xml/ws/soap/MTOM.class"/>
-        <include name="javax/xml/ws/soap/MTOMFeature.class"/>
-        <include name="javax/xml/ws/wsaddressing/**"/>
-      </fileset>
-      <fileset dir="${core.resources.dir}">
-        <include name="schema/**"/>
-        <include name="dtd/**"/>
-      </fileset>
-      <fileset dir="${core.etc.dir}">
-        <include name="log4j.properties"/>
-        <include name="ws*.bat"/>
-        <include name="ws*.sh"/>
-      </fileset>
-      <metainf dir="${core.resources.dir}/jbossws-core.jar/META-INF"/>
-      <metainf dir="${core.resources.dir}/standard-config"/>
-    </jar>
-    
-    <!-- Build jbossws-context.war -->
-    <copy todir="${core.output.resources.dir}/jbossws-context.war" overwrite="true" filtering="true">
-      <fileset dir="${core.resources.dir}/jbossws-context.war"/>
-      <filterset>
-        <filter token="build.id" value="${build.id}"/>
-        <filter token="implementation.version" value="jbossws-${version.id}"/>
-        <filtersfile file="${core.dir}/version.properties"/>
-      </filterset>
-    </copy>
-    <war warfile="${core.output.lib.dir}/jbossws-context.war" webxml="${core.output.resources.dir}/jbossws-context.war/WEB-INF/web.xml"
-      manifest="${core.output.etc.dir}/default.mf">
-      <fileset dir="${core.output.resources.dir}/jbossws-context.war">
-        <include name="index.html"/>
-        <include name="styles.css"/>
-      </fileset>
-      <webinf dir="${core.output.resources.dir}/jbossws-context.war/WEB-INF">
-        <include name="jboss-web.xml"/>
-      </webinf>
-    </war>
-    
-    <!-- Build jbossws-core-scripts.zip -->
-    <zip zipfile="${core.output.lib.dir}/jbossws-core-scripts.zip">
-      <fileset dir="${core.output.etc.dir}">
-        <include name="wsrunclient.bat"/>
-        <include name="wstools.bat"/>
-      </fileset>
-      <zipfileset dir="${core.output.etc.dir}" filemode="755">
-        <include name="wsrunclient.sh"/>
-        <include name="wstools.sh"/>
-      </zipfileset>
-    </zip>
-    
-    <!-- Build jbossws-core-src.zip -->
-    <zip zipfile="${core.output.lib.dir}/jbossws-core-src.zip">
-      <fileset dir="${core.java.dir}"/>
-    </zip>
-    
-  </target>
-  
-  <!-- ================================================================== -->
-  <!-- Documentation                                                      -->
-  <!-- ================================================================== -->
-  
-  <!-- Generate the JavaDoc -->
-  <target name="javadoc" depends="init" description="Generate the Javadoc" if="javadoc">
-    
-    <mkdir dir="${core.output.apidocs.dir}"/>
-    <javadoc destdir="${core.output.apidocs.dir}" author="true" version="true" use="true" windowtitle="JBossWS API">
-      <classpath refid="thirdparty.classpath"/>
-      <packageset dir="${core.java.dir}" defaultexcludes="yes">
-        <include name="org/jboss/ws/**"/>
-      </packageset>
-      <doctitle><![CDATA[<h1>JBossWS Native</h1>]]>
-      </doctitle>
-      <tag name="todo" scope="all" description="To do:"/>
-      <group title="Core" packages="org.jboss.ws.core*"/>
-      <group title="Metadata" packages="org.jboss.ws.metadata*"/>
-      <group title="Integration" packages="org.jboss.ws.integration*"/>
-      <group title="Extensions" packages="org.jboss.ws.extensions*"/>
-      <group title="Tools" packages="org.jboss.ws.tools*"/>
-    </javadoc>
-  </target>
   
   <target name="clean" depends="prepare" description="Cleans up most generated files.">
-    <delete dir="${core.output.dir}"/>
-  </target>
-  
-  <target name="clobber" depends="clean" description="Cleans up all generated files.">
-    <delete dir="${core.dir}/thirdparty"/>
-  </target>
-  
-  <target name="main" description="Executes the default target (most)." depends="most"/>
-  
-  <target name="most" description="Builds almost everything." depends="jars,tests-main"/>
-  
-  <target name="all" description="Create a distribution zip file" depends="most">
+    
+    <echo message="*************************************"/>
+    <echo message="* mvn clean                         *"/>
+    <echo message="*************************************"/>
+    
+    <exec dir="${basedir}" executable="mvn" failonerror="true">
+      <arg value="clean"/>
+    </exec>
   </target>
   
 </project>

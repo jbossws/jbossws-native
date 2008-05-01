@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project>
+  
+  <!-- 
+  These patterns should be common for all supported containers.
+  All jars must also be declared in component-info.xml to ensure 
+  that the AS build uses the same version.
+  -->
+  <patternset id="jbossws.bin.patternset">
+    <include name="**/wsconsume.bat"/>
+    <include name="**/wsconsume.sh"/>
+    <include name="**/wsprovide.bat"/>
+    <include name="**/wsprovide.sh"/>
+    <include name="**/wsrunclient.bat"/>
+    <include name="**/wsrunclient.sh"/>
+    <include name="**/wstools.bat"/>
+    <include name="**/wstools.sh"/>
+  </patternset>
+  
+  <patternset id="jbossws.client.patternset">
+    <include name="**/FastInfoset.jar"/>
+    <include name="**/jaxb-api.jar"/>
+    <include name="**/jaxb-impl.jar"/>
+    <include name="**/jaxb-xjc.jar"/>
+    <include name="**/jaxws-tools.jar"/>
+    <include name="**/jaxws-rt.jar"/>
+    <include name="**/jbossws-common.jar"/>
+    <include name="**/jbossws-framework.jar"/>
+    <include name="**/jbossws-native-client.jar"/>
+    <include name="**/jbossws-native-core.jar"/>
+    <include name="**/jbossws-native-jaxrpc.jar"/>
+    <include name="**/jbossws-native-jaxws.jar"/>
+    <include name="**/jbossws-native-jaxws-ext.jar"/>
+    <include name="**/jbossws-native-saaj.jar"/>
+    <include name="**/jbossws-spi.jar"/>
+    <include name="**/jettison.jar"/>
+    <include name="**/policy.jar"/>
+    <include name="**/stax-api.jar"/>
+    <include name="**/stax-ex.jar"/>
+    <include name="**/streambuffer.jar"/>
+    <include name="**/wsdl4j.jar"/>
+    <include name="**/wstx.jar"/>
+  </patternset>
+  
+  <patternset id="jbossws.lib.patternset">
+    <include name="**/nothing-to-deploy"/>
+  </patternset>
+  
+  <patternset id="jbossws.lib.endorsed.patternset">
+    <include name="**/jbossws-native-jaxrpc.jar"/>
+    <include name="**/jbossws-native-jaxws.jar"/>
+    <include name="**/jbossws-native-jaxws-ext.jar"/>
+    <include name="**/jbossws-native-saaj.jar"/>
+    <include name="**/jaxb-api.jar"/>
+  </patternset>
+  
+  <patternset id="jbossws.server.lib.patternset">
+    <include name="**/jbossws-common.jar"/>
+    <include name="**/jbossws-framework.jar"/>
+    <include name="**/jbossws-native-jaxrpc.jar"/>
+    <include name="**/jbossws-native-jaxws.jar"/>
+    <include name="**/jbossws-native-jaxws-ext.jar"/>
+    <include name="**/jbossws-native-saaj.jar"/>
+    <include name="**/jbossws-spi.jar"/>
+  </patternset>
+  
+  <patternset id="jbossws.service.lib.patternset">
+    <include name="**/FastInfoset.jar"/>
+    <include name="**/jboss-jaxb-intros.jar"/>
+    <include name="**/jbossws-native-core.jar"/>
+    <include name="**/jettison.jar"/>
+    <include name="**/policy.jar"/>
+    <include name="**/wsdl4j.jar"/>
+    <include name="**/xmlsec.jar"/>
+  </patternset>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Bin                                                         -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-bin">
+    <attribute name="artifactsdir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{artifactsdir}/bin">
+          <patternset refid="jbossws.bin.patternset"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Lib                                                         -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-lib42">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.lib.patternset"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-deploy-jbossws-lib50">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.lib.patternset"/>
+          <include name="**/jaxb-api.jar"/>
+          <include name="**/jaxb-impl.jar"/>
+          <include name="**/stax-api.jar"/>
+          <include name="**/wstx.jar"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Deployers                                                   -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-deployers50">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <include name="**/jbossws-common.jar"/>
+          <include name="**/jbossws-framework.jar"/>
+          <include name="**/jbossws-@{jbossid}.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <include name="**/jbossws-deployer-beans.xml"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Deploy                                                   -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-deploy50">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <include name="**/jbossws-@{jbossid}-container.jar"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Lib Endorsed                                                -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-endorsed">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.lib.endorsed.patternset"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Client                                                      -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-client">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.client.patternset"/>
+          <include name="**/jbossws-@{jbossid}.jar"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy Server Lib                                                  -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-server-lib42">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.server.lib.patternset"/>
+          <include name="**/jbossws-@{jbossid}.jar"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-deploy-jbossws-server-lib50">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <patternset refid="jbossws.server.lib.patternset"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy JBossWS Service                                             -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-jbossws-sar42">
+    <attribute name="artifactsdir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true">
+        <fileset dir="@{artifactsdir}/lib">
+          <patternset refid="jbossws.service.lib.patternset"/>
+          <include name="**/jaxb-api.jar"/>
+          <include name="**/jaxb-impl.jar"/>
+          <include name="**/stax-api.jar"/>
+          <include name="**/wstx.jar"/>
+        </fileset>
+      </copy>
+      <unzip dest="@{targetdir}/jbossws-management.war">
+        <fileset dir="@{artifactsdir}/lib">
+          <include name="**/jbossws-native-management.war"/>
+        </fileset>
+      </unzip>
+      <copy todir="@{targetdir}/jbossws.beans">
+        <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}/jbossws.beans">
+          <include name="META-INF/**"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/META-INF">
+        <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}/jbossws-jboss42.sar/META-INF"/>
+        <fileset dir="@{artifactsdir}/resources">
+          <include name="standard-*-config.xml"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="macro-deploy-jbossws-sar50">
+    <attribute name="artifactsdir"/>
+    <attribute name="targetdir"/>
+    <attribute name="jbossid"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{artifactsdir}/lib">
+          <patternset refid="jbossws.service.lib.patternset"/>
+        </fileset>
+      </copy>
+      <unzip dest="@{targetdir}/jbossws-management.war">
+        <fileset dir="@{artifactsdir}/lib">
+          <include name="**/jbossws-native-management.war"/>
+        </fileset>
+      </unzip>
+      <copy todir="@{targetdir}">
+        <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}/jbossws.beans">
+          <include name="META-INF/**"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+  
+   <!-- ================================================================== -->
+   <!-- Deploy Deployers                                                   -->
+   <!-- ================================================================== -->
+
+   <macrodef name="macro-deploy-jbossws-deployers50">
+      <attribute name="artifactsdir"/>
+      <attribute name="targetdir"/>
+      <attribute name="jbossid"/>
+      <sequential>
+        <mkdir dir="@{targetdir}"/>
+        <copy todir="@{targetdir}" flatten="true" overwrite="true">
+          <fileset dir="@{artifactsdir}/lib">
+            <include name="**/jbossws-common.jar"/>
+            <include name="**/jbossws-framework.jar"/>
+            <include name="**/jbossws-@{jbossid}.jar"/>
+          </fileset>
+        </copy>
+        <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true">
+          <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}">
+            <include name="**/jbossws-deployer-beans.xml"/>
+          </fileset>
+        </copy>
+      </sequential>
+   </macrodef>
+
+   <!-- ================================================================== -->
+   <!-- Deploy Deploy                                                   -->
+   <!-- ================================================================== -->
+
+    <macrodef name="macro-deploy-jbossws-deploy50">
+      <attribute name="thirdpartydir"/>
+      <attribute name="targetdir"/>
+      <attribute name="jbossid"/>
+      <sequential>
+         <mkdir dir="@{targetdir}"/>
+         <copy todir="@{targetdir}" flatten="true" overwrite="true">
+            <fileset dir="@{thirdpartydir}">               
+               <include name="**/jbossws-@{jbossid}-container.jar"/>
+            </fileset>
+         </copy>
+      </sequential>
+   </macrodef>
+  
+  <!-- ================================================================== -->
+  <!-- Deploy JBossWS                                                     -->
+  <!-- ================================================================== -->
+  
+  <!-- JDK Detection -->
+  <available classname="java.io.Console" property="HAVE_JDK_1.6"/>
+  
+  <target name="deploy-jbossws-native42" depends="deploy-jbossws-endorsed">
+    <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" artifactsdir="${artifactsdir}"/>
+    <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-lib42 targetdir="${installserver}/../../lib" thirdpartydir="${artifactsdir}/lib"/>
+    <macro-deploy-jbossws-server-lib42 targetdir="${installserver}/lib" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-sar42 targetdir="${installserver}/deploy/jbossws.sar" artifactsdir="${artifactsdir}" jbossid="${jbossid}"/>
+  </target>
+  
+  <target name="deploy-jbossws-native50" depends="deploy-jbossws-endorsed">
+    <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" artifactsdir="${artifactsdir}"/>
+    <macro-deploy-jbossws-client targetdir="${installserver}/../../client" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-lib50 targetdir="${installserver}/../../lib" thirdpartydir="${artifactsdir}/lib"/>
+    <macro-deploy-jbossws-server-lib50 targetdir="${installserver}/lib" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-sar50 targetdir="${installserver}/deploy/jbossws.sar" artifactsdir="${artifactsdir}" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-deployers50 targetdir="${installserver}/deployers/jbossws.deployer/" artifactsdir="${artifactsdir}" jbossid="${jbossid}"/>
+    <macro-deploy-jbossws-deploy50 targetdir="${installserver}/deploy" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
+  </target>
+  
+  <target name="deploy-jbossws-endorsed" if="HAVE_JDK_1.6">
+    <macro-deploy-jbossws-endorsed targetdir="${installserver}/../../lib/endorsed" thirdpartydir="${thirdpartydir}"/>
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Undeploy JBossWS                                                   -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-undeploy-jbossws">
+    <attribute name="defaultconf"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <loadfile property="jbossws.deploy.conf" srcfile="@{targetdir}/jbossws-deploy.conf" failonerror="false"/>
+      <loadfile property="jbossws.deploy.conf" srcfile="@{defaultconf}" failonerror="false"/>
+      
+      <property name="jboss.server.home" value="@{targetdir}/../.."/>
+      <property name="jboss.home" value="${jboss.server.home}/../.."/>
+      <available property="jboss.undeploy.client" file="${jboss.home}/client"/>
+      <fail message="Cannot find ${jboss.home}/client" unless="jboss.undeploy.client"/>
+      
+      <!-- delete stale container integration jars -->
+      <delete>
+        <fileset dir="${jboss.server.home}">
+          <include name="**/jbossws-jboss*.jar"/>
+        </fileset>
+        <fileset dir="${jboss.home}/client">
+          <include name="jbossws-jboss*.jar"/>
+        </fileset>
+      </delete>
+      
+      <!-- delete content of last deployment -->
+      <delete>
+        <fileset dir="${jboss.home}" includes="${jbossws.deploy.conf}"/>
+      </delete>
+      
+      <!-- delete jbossws.sar -->
+      <delete dir="@{targetdir}"/>
+      
+    </sequential>
+  </macrodef>
+  
+</project>

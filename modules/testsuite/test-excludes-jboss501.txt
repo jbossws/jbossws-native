@@ -1,0 +1,93 @@
+#
+# $Id$
+#
+
+# Fix BPEL before AS50 goes final
+org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
+# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
+org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
+
+# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
+org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
+
+# [JBAS-5055] Failed to load users/passwords/role files
+org/jboss/test/ws/jaxws/webserviceref/StubPropertyTestCase.*
+org/jboss/test/ws/jaxws/jbws1840/JBWS1840TestCase.*
+
+# [JBAS-5114] MessageDriven EJB3 does not create destination automatically
+org/jboss/test/ws/jaxws/samples/jmstransport/**
+
+# [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
+org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
+
+# [JBWS-2107] Resolve dependency on @SecurityDomain
+org/jboss/test/ws/jaxws/webserviceref/Secure**
+org/jboss/test/ws/jaxws/samples/dar/**
+org/jboss/test/ws/jaxws/samples/news/**
+org/jboss/test/ws/jaxws/jbws1840/**
+
+# [JBWS-1526] Automated testing and availablity checks of public endpoints (interop)
+org/jboss/test/ws/interop/**
+
+# [EJBTHREE-1150] WebServiceContext injection requires mapped-name
+org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
+
+# [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
+org/jboss/test/ws/jaxws/endpoint/**
+
+# [JBAS-5359] mapped-name is required for context of deployment
+org/jboss/test/ws/jaxws/binding/**
+org/jboss/test/ws/jaxws/handlerlifecycle/**
+org/jboss/test/ws/jaxws/jbws1611/**
+org/jboss/test/ws/jaxws/jbws1733/**
+org/jboss/test/ws/jaxws/namespace/**
+org/jboss/test/ws/jaxws/samples/wsaddressing/**
+org/jboss/test/ws/jaxws/samples/wssecurity/*TestCase.*
+
+# [JBAS-5386] ClassNotFoundException: org.jboss.deployment.security.WarPolicyConfigurationFacade
+org/jboss/test/ws/jaxrpc/jbws1762/**
+org/jboss/test/ws/jaxws/jbws1762/**
+
+# [JBAS-5387] EJB21 name not bound
+org/jboss/test/ws/jaxrpc/jbws331/**
+
+# [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
+org/jboss/test/ws/jaxrpc/jbws720/**
+
+# [JBWS-2163] wsconsume for maven build -->
+org/jboss/test/ws/jaxws/complex/**
+org/jboss/test/ws/jaxws/holder/**
+org/jboss/test/ws/jaxws/smoke/tools/**
+org/jboss/test/ws/benchmark/**
+org/jboss/test/ws/interop/**
+org/jboss/test/ws/jaxws/samples/wssecuritypolicy/**
+org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/**
+org/jboss/test/ws/jaxws/samples/wssecurity/**
+
+# [JBWS-2167] Fix samples jaxr for maven build
+org/jboss/test/ws/jaxws/samples/jaxr/**
+
+# [JBWS-2168] Fix samples bpel for maven build
+org/jboss/test/ws/jaxrpc/samples/wsbpel/**
+
+# [JBWS-2169] Fix samples jaxrpc for maven build
+org/jboss/test/ws/jaxrpc/samples/docstyle/**
+org/jboss/test/ws/jaxrpc/samples/dynamichandler/**
+org/jboss/test/ws/jaxrpc/samples/exception/**
+org/jboss/test/ws/jaxrpc/samples/handler/**
+org/jboss/test/ws/jaxrpc/samples/holder/**
+org/jboss/test/ws/jaxrpc/samples/jmstransport/**
+org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
+org/jboss/test/ws/jaxrpc/samples/jsr109pojo/**
+org/jboss/test/ws/jaxrpc/samples/message/**
+org/jboss/test/ws/jaxrpc/samples/oneway/**
+org/jboss/test/ws/jaxrpc/samples/rpcstyle/**
+org/jboss/test/ws/jaxrpc/samples/secureejb/**
+org/jboss/test/ws/jaxrpc/samples/wsaddr/**
+org/jboss/test/ws/jaxrpc/samples/wsbpel/**
+org/jboss/test/ws/jaxrpc/samples/wssecurity/**
+
+# [JBWS-2170] Fix embedded for maven build
+org/jboss/test/ws/embedded/**
+

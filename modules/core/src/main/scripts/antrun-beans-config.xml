@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id$ -->
+
+<project default="main">
+  
+  <property name="project.resources.directory" value="${basedir}/src/main/resources"/>
+  <property name="project.build.directory" value="${basedir}/target"/>
+  <property name="project.build.resources.directory" value="${project.build.directory}/resources"/>
+  
+  <property name="thirdparty.dir" value="${project.build.directory}/thirdparty"/>
+  
+  <!-- ================================================================== -->
+  <!-- Initialization                                                     -->
+  <!-- ================================================================== -->
+  
+  <target name="init">
+  </target>
+  
+  <!-- Compile resource files -->
+  <target name="main" depends="init">
+    
+    <!-- Concat jbossws-jboss422/jbossws.beans -->
+    <echo message="Concat jbossws-jboss422/jbossws.beans"/>
+    <concat destfile="${project.build.resources.directory}/jbossws-jboss422/jbossws.beans/META-INF/jboss-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd"
+        xmlns="urn:jboss:bean-deployer"&gt; </header>
+      <fileset file="${project.resources.directory}/jbossws-native-config.xml"/>
+      <fileset file="${project.build.resources.directory}/jbossws-jboss422/jbossws-jboss42-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt; </footer>
+    </concat>
+    
+    <!-- Concat jbossws-jboss423/jbossws.beans -->
+    <echo message="Concat jbossws-jboss423/jbossws.beans"/>
+    <concat destfile="${project.build.resources.directory}/jbossws-jboss423/jbossws.beans/META-INF/jboss-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:jboss:bean-deployer bean-deployer_1_0.xsd"
+        xmlns="urn:jboss:bean-deployer"&gt; </header>
+      <fileset file="${project.resources.directory}/jbossws-native-config.xml"/>
+      <fileset file="${project.build.resources.directory}/jbossws-jboss423/jbossws-jboss42-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt; </footer>
+    </concat>
+    
+    <!-- Concat jbossws-jboss500/jbossws.beans -->
+    <echo message="Concat jbossws-jboss500/jbossws.beans"/>
+    <concat destfile="${project.build.resources.directory}/jbossws-jboss500/jbossws.beans/META-INF/jboss-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt; </header>
+      <fileset file="${project.resources.directory}/jbossws-native-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt; </footer>
+    </concat>
+    
+    <!-- Concat jbossws-jboss501/jbossws.beans -->
+    <echo message="Concat jbossws-jboss501/jbossws.beans"/>
+    <concat destfile="${project.build.resources.directory}/jbossws-jboss501/jbossws.beans/META-INF/jboss-beans.xml">
+      <header trimleading="yes">
+        &lt;deployment xmlns="urn:jboss:bean-deployer:2.0"&gt; </header>
+      <fileset file="${project.resources.directory}/jbossws-native-config.xml"/>
+      <footer trimleading="yes">
+        &lt;/deployment&gt; </footer>
+    </concat>
+    
+  </target>
+  
+</project>

@@ -1,0 +1,321 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <name>JBoss Web Services - Stack Native Testsuite</name>
+  <artifactId>jbossws-native-testsuite</artifactId>
+  <packaging>pom</packaging>
+  
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.ws.native</groupId>
+    <artifactId>jbossws-native</artifactId>
+    <version>3.0.2-SNAPSHOT</version>
+  </parent>
+  
+  <!-- Properties -->
+  <properties>
+    <surefire.jdpw.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdpw.args>
+    <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.jvm.args>
+  </properties>
+  
+  <!-- Modules -->
+  <modules>
+    <module>native-tests</module>
+    <module>framework-tests</module>
+  </modules>
+  
+  <!-- Dependencies -->
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-client</artifactId>
+      <version>${version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-embedded</artifactId>
+      <version>${version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-framework</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-framework</artifactId>
+      <classifier>testsuite</classifier>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>javax.ejb</groupId>
+      <artifactId>ejb-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <!-- Build -->
+  <build>
+    <testResources>
+      <!-- copy etc files -->
+      <testResource>
+        <directory>src/test/etc</directory>
+      </testResource>
+      <!-- copy handler definitions -->
+      <testResource>
+        <targetPath>../test-classes</targetPath>
+        <directory>src/test/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </testResource>
+      <!-- copy non binary files -->
+      <testResource>
+        <targetPath>../test-resources</targetPath>
+        <directory>src/test/resources</directory>
+        <includes>
+          <include>**/*.wsdl</include>
+          <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+      </testResource>
+      <!-- copy binary files -->
+      <testResource>
+        <targetPath>../test-resources</targetPath>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <exclude>**/*.wsdl</exclude>
+          <exclude>**/*.xml</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>${surefire.jvm.args}</argLine>
+          <!--argLine>${surefire.jdpw.args}</argLine-->
+          <systemProperties>
+            <property>
+              <name>java.naming.provider.url</name>
+              <value>jnp://${jboss.bind.address}:1099</value>
+            </property>
+            <property>
+              <name>java.util.logging.manager</name>
+              <value>org.jboss.wsf.common.logging.JDKLogManager</value>
+            </property>
+            <property>
+              <name>jboss.home</name>
+              <value>${jboss.home}</value>
+            </property>
+            <property>
+              <name>jbossws.integration.target</name>
+              <value>${jbossws.integration.target}</value>
+            </property>
+            <property>
+              <name>build.testlog</name>
+              <value>${project.build.directory}/test-log</value>
+            </property>
+            <property>
+              <name>test.archive.directory</name>
+              <value>${project.build.directory}/test-libs</value>
+            </property>
+            <property>
+              <name>test.resources.directory</name>
+              <value>${project.build.directory}/test-resources</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <!-- Profiles -->
+  <profiles>
+    
+    <!-- 
+    Name:  jboss422
+    Descr: JBoss-4.2.2 specific options  
+    -->
+    <profile>
+      <id>jboss422</id>
+      <properties>
+        <jboss.version>4.2.2.GA</jboss.version>
+        <jbossws.integration.target>jboss422</jbossws.integration.target>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.client</groupId>
+          <artifactId>jbossall-client</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss422</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>-Djava.endorsed.dirs=${jboss422.home}/lib/endorsed</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- 
+    Name:  jboss423
+    Descr: JBoss-4.2.3 specific options  
+    -->
+    <profile>
+      <id>jboss423</id>
+      <properties>
+        <jboss.version>4.2.3-SNAPSHOT</jboss.version>
+        <jbossws.integration.target>jboss423</jbossws.integration.target>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.client</groupId>
+          <artifactId>jbossall-client</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss423</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>-Djava.endorsed.dirs=${jboss423.home}/lib/endorsed</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- 
+    Name:  jboss500
+    Descr: JBoss-5.0.0 specific options  
+    -->
+    <profile>
+      <id>jboss500</id>
+      <properties>
+        <jboss.version>5.0.0.Beta4</jboss.version>
+        <jbossws.integration.target>jboss500</jbossws.integration.target>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.client</groupId>
+          <artifactId>jbossall-client</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss500</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>-Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- 
+    Name:  jboss501
+    Descr: JBoss-5.0.1 specific options  
+    -->
+    <profile>
+      <id>jboss501</id>
+      <properties>
+        <jboss.version>5.0.0-SNAPSHOT</jboss.version>
+        <jbossws.integration.target>jboss501</jbossws.integration.target>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.client</groupId>
+          <artifactId>jbossall-client</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss501</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>-Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- 
+    Name:  no-jboss-bind-address
+    Descr: Set the default jboss.bind.address
+    
+    command line cannot overwrite pom properties
+    http://jira.codehaus.org/browse/MNG-3546   
+    -->
+    <profile>
+      <id>no-jboss-bind-address</id>
+      <activation>
+        <property>
+          <name>!jboss.bind.address</name>
+        </property>
+      </activation>
+      <properties>
+        <jboss.bind.address>localhost</jboss.bind.address>
+      </properties>
+    </profile>
+    
+    <!-- 
+    Name:  test-failure-ignore
+    Descr: Ignore test failures on hudson
+    -->
+    <profile>
+      <id>test-failure-ignore</id>
+      <activation>
+        <property>
+          <name>hudson</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <testFailureIgnore>true</testFailureIgnore>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
+</project>
