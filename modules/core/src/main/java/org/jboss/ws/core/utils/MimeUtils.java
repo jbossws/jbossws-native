@@ -290,17 +290,12 @@ public class MimeUtils
          Object converted = null;
          try
          {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-               sb.append(line + "\n");
+            StringBuilder out = new StringBuilder();
+            byte[] b = new byte[4096];
+            for (int n; (n = in.read(b)) != -1;) {
+                out.append(new String(b, 0, n));
             }
-
-            br.close();
-
-            converted = sb.toString();
+            converted = out.toString();
          }
          catch (IOException e)
          {
