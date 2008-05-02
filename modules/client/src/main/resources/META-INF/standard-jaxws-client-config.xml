@@ -49,7 +49,7 @@
     <config-name>Standard WSSecurity Client</config-name>
     <post-handler-chains>
       <javaee:handler-chain>
-        <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
+        <javaee:protocol-bindings>##SOAP11_HTTP ##SOAP11_HTTP_MTOM</javaee:protocol-bindings>
         <javaee:handler>
           <javaee:handler-name>WSSecurityHandlerOutbound</javaee:handler-name>
           <javaee:handler-class>org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerClient</javaee:handler-class>
