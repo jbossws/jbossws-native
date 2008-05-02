@@ -87,7 +87,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.0.2.SP1</version>
             <configuration>
               <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
               <testExcludeFile>../test-excludes-jboss422.txt</testExcludeFile>
@@ -107,7 +106,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.0.2.SP1</version>
             <configuration>
               <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
               <testExcludeFile>../test-excludes-jboss423.txt</testExcludeFile>
@@ -127,7 +125,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.0.2.SP1</version>
             <configuration>
               <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
               <testExcludeFile>../test-excludes-jboss500.txt</testExcludeFile>
@@ -147,7 +144,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.0.2.SP1</version>
             <configuration>
               <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
               <testExcludeFile>../test-excludes-jboss501.txt</testExcludeFile>
