@@ -67,6 +67,7 @@
   <target name="tests-init" depends="init,tests-classpath">
     
     <path id="ws.stack.classpath">
+      <!-- Move the native API to the front of the classpath -->
       <pathelement location="${thirdparty.dir}/jbossws-native-jaxws-ext.jar"/>
       <pathelement location="${thirdparty.dir}/jbossws-native-jaxws.jar"/>
       <pathelement location="${thirdparty.dir}/jbossws-native-jaxrpc.jar"/>
