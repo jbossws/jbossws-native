@@ -53,7 +53,7 @@
     </fileSet>
     <!-- test etc -->
     <fileSet>
-      <directory>modules/testsuite/metro-tests/src/test</directory>
+      <directory>modules/testsuite/native-tests/src/test</directory>
       <outputDirectory>tests</outputDirectory>
       <includes>
         <include>etc/**</include>
