@@ -461,7 +461,7 @@
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
             <configuration>
-              <finalName>jbossws-metro-dist</finalName>
+              <finalName>jbossws-native-dist</finalName>
               <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
               <appendAssemblyId>false</appendAssemblyId>
               <descriptors>
