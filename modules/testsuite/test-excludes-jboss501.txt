@@ -91,3 +91,5 @@ org/jboss/test/ws/jaxrpc/samples/wssecurity/**
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
 
+# [JBWS-2171] JBossClientMetaData.class not found
+org/jboss/test/ws/jaxws/webserviceref/ServiceRefOverridesTestCase.*
