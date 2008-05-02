@@ -27,12 +27,12 @@
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-jaxws-ext</artifactId>
-      <version>${project.version}</version>
+      <version>${version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-jaxrpc</artifactId>
-      <version>${project.version}</version>
+      <version>${version}</version>
     </dependency>
     
     <!-- provided apis -->

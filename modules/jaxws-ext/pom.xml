@@ -18,8 +18,29 @@
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-jaxws</artifactId>
-      <version>${project.version}</version>
+      <version>${version}</version>
     </dependency>
   </dependencies>
+  
+  <!-- Profiles -->
+  <profiles>
+    <profile>
+      <id>jdk16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerVersion>1.5</compilerVersion>
+              <fork>true</fork>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   
 </project>
