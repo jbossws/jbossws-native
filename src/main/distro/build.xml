@@ -67,9 +67,11 @@
   <target name="tests-init" depends="init,tests-classpath">
     
     <path id="ws.stack.classpath">
-      <fileset dir="${thirdparty.dir}">
-        <exclude name="jaxws-rt.jar"/>
-      </fileset>
+      <pathelement location="${thirdparty.dir}/jbossws-native-jaxws-ext.jar"/>
+      <pathelement location="${thirdparty.dir}/jbossws-native-jaxws.jar"/>
+      <pathelement location="${thirdparty.dir}/jbossws-native-jaxrpc.jar"/>
+      <pathelement location="${thirdparty.dir}/jbossws-native-saaj.jar"/>
+      <fileset dir="${thirdparty.dir}"/>
     </path>
     
     <path id="tests.extra.classpath">
