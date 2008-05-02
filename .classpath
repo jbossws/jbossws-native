@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="modules/saaj/src/main/java"/>
+	<classpathentry kind="src" path="modules/testsuite/native-tests/src/test/java"/>
 	<classpathentry kind="src" path="modules/jaxrpc/src/main/java"/>
 	<classpathentry kind="src" path="modules/jaxws/src/main/java"/>
 	<classpathentry kind="src" path="modules/jaxws-ext/src/main/java"/>
