@@ -38,6 +38,7 @@
     Loads the jboss.home properties from the effective maven settings
   -->  
   <target name="mvn-settings">
+    <mkdir dir="${stack.output.dir}"/>
     <exec dir="${basedir}" executable="mvn" failonerror="true" output="${stack.output.dir}/effective-settings.txt">
       <arg value="help:effective-settings"/>
     </exec>
@@ -104,21 +105,6 @@
       <arg value="-Pbindist"/>
       <arg value="package"/>
       <arg value="assembly:directory"/>
-    </exec>
-  </target>
-  
-  <!-- ================================================================== -->
-  <!-- Miscellaneous                                                      -->
-  <!-- ================================================================== -->
-  
-  <target name="clean" depends="prepare" description="Cleans up most generated files.">
-    
-    <echo message="*************************************"/>
-    <echo message="* mvn clean                         *"/>
-    <echo message="*************************************"/>
-    
-    <exec dir="${basedir}" executable="mvn" failonerror="true">
-      <arg value="clean"/>
     </exec>
   </target>
   
