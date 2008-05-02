@@ -22,8 +22,10 @@
 package org.jboss.ws.core.soap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -66,6 +68,8 @@ public class NodeImpl implements javax.xml.soap.Node
    protected org.w3c.dom.Node domNode;
    // A list of soap children
    private List<NodeImpl> soapChildren = new ArrayList<NodeImpl>();
+   // A hash with the user data
+   private Map<String, Object> userData;
 
    /** Construct the Node for a given org.w3c.dom.Node
     *
@@ -613,8 +617,11 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public Object getUserData(String key)
    {
-      // FIXME getUserData
-      throw new NotImplementedException("getUserData");
+      if (userData != null)
+      {
+         return userData.get(key);
+      }
+      return null;
    }
 
    public boolean isDefaultNamespace(String namespaceURI)
@@ -654,8 +661,11 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public Object setUserData(String key, Object data, UserDataHandler handler)
    {
-      // FIXME setUserData
-      throw new NotImplementedException("setUserData");
+      if (userData == null)
+      {
+         userData = new HashMap<String, Object>();
+      }
+      return userData.put(key, data);
    }
 
    // END org.w3c.dom.Node DOM Level 3 *****************************************************************************

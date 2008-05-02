@@ -105,7 +105,7 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       boolean status = (executor != null ? executor.handleMessage(msgContext) : true);
 
       MessageAbstraction msg = ((CommonMessageContext)msgContext).getMessageAbstraction();
-      if (type == HandlerType.ENDPOINT && (msg instanceof SOAPMessage))
+      if (msg instanceof SOAPMessage)
          XOPContext.visitAndRestoreXOPData();
       
       return status;
@@ -131,7 +131,7 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       boolean status = (executor != null ? executor.handleFault(msgContext, ex) : true);
 
       MessageAbstraction msg = ((CommonMessageContext)msgContext).getMessageAbstraction();
-      if (type == HandlerType.ENDPOINT && (msg instanceof SOAPMessage))
+      if (msg instanceof SOAPMessage)
          XOPContext.visitAndRestoreXOPData();
                   
       return status;
