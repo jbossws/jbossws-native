@@ -15,6 +15,17 @@
   
   <!-- Dependencies -->
   <dependencies>
+    <!-- This shortens the path to the JAX-WS impl. Otherwise jaxws-rt.jar might be seen first -->
+    <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-jaxws-ext</artifactId>
+      <version>${version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-jaxrpc</artifactId>
+      <version>${version}</version>
+    </dependency>
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-core</artifactId>
