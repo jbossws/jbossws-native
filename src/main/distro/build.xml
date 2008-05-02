@@ -62,7 +62,9 @@
   <target name="tests-init" depends="init,tests-classpath">
     
     <path id="ws.stack.classpath">
-      <fileset dir="${thirdparty.dir}"/>
+      <fileset dir="${thirdparty.dir}">
+        <exclude name="jaxws-rt.jar"/>
+      </fileset>
     </path>
     
     <path id="tests.extra.classpath">
