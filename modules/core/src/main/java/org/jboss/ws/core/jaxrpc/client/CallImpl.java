@@ -547,12 +547,7 @@ public class CallImpl extends CommonClient implements Call, RoleSource
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
       HandlerChainBaseImpl handlerChain = (HandlerChainBaseImpl)jaxrpcService.getHandlerChain(portName);
-      boolean status = (handlerChain != null ? handlerChain.handleRequest(msgContext, type) : true);
-
-      if (type == HandlerType.ENDPOINT)
-         XOPContext.visitAndRestoreXOPData();
-
-      return status;
+      return (handlerChain != null ? handlerChain.handleRequest(msgContext, type) : true);
    }
 
    @Override

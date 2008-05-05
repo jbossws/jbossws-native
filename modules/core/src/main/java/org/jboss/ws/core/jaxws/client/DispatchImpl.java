@@ -71,6 +71,7 @@ import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -230,6 +231,8 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
 
+         XOPContext.visitAndRestoreXOPData();
+         
          // Handlers might have replaced the message
          reqMsg = (SOAPMessageImpl)msgContext.getSOAPMessage();
 
