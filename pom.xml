@@ -554,6 +554,30 @@
         <module>modules/testsuite</module>
       </modules>
     </profile>
+    
+    <!-- 
+    Name:  smoketest
+    Descr: Executes the smoke tests  
+    -->
+    <profile>
+      <id>smoketest</id>
+      <modules>
+        <module>modules/testsuite</module>
+      </modules>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <testFailureIgnore>true</testFailureIgnore>
+              <includes>
+                <include>jaxws/samples/**/*TestCase</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
   
 </project>
