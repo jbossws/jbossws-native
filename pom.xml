@@ -569,9 +569,8 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <testFailureIgnore>true</testFailureIgnore>
               <includes>
-                <include>jaxws/samples/**/*TestCase</include>
+                <include>org/jboss/test/ws/jaxws/samples/**/*TestCase.java</include>
               </includes>
             </configuration>
           </plugin>
