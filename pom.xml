@@ -545,17 +545,6 @@
     </profile>
     
     <!-- 
-    Name:  testsuite
-    Descr: Executes the testsuite  
-    -->
-    <profile>
-      <id>testsuite</id>
-      <modules>
-        <module>modules/testsuite</module>
-      </modules>
-    </profile>
-    
-    <!-- 
     Name:  smoketest
     Descr: Executes the smoke tests  
     -->
@@ -576,6 +565,17 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    
+    <!-- 
+    Name:  testsuite
+    Descr: Executes the testsuite  
+    -->
+    <profile>
+      <id>testsuite</id>
+      <modules>
+        <module>modules/testsuite</module>
+      </modules>
     </profile>
   </profiles>
   
