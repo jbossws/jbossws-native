@@ -144,6 +144,24 @@
   <profiles>
     
     <!-- 
+    Name:  hudson
+    Descr: Ignore test failures on hudson
+    -->
+    <profile>
+      <id>hudson</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <testFailureIgnore>true</testFailureIgnore>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- 
     Name:  jboss422
     Descr: JBoss-4.2.2 specific options  
     -->
@@ -292,29 +310,6 @@
       <properties>
         <jboss.bind.address>localhost</jboss.bind.address>
       </properties>
-    </profile>
-    
-    <!-- 
-    Name:  test-failure-ignore
-    Descr: Ignore test failures on hudson
-    -->
-    <profile>
-      <id>test-failure-ignore</id>
-      <activation>
-        <property>
-          <name>hudson</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <testFailureIgnore>true</testFailureIgnore>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
   
