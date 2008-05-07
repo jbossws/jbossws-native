@@ -224,9 +224,9 @@ public class WSToolsBase extends JBossWSTest
    protected boolean semanticallyValidateWSDL(String expPath, String genpath) throws Exception
    {
       boolean bool = true;
-      File wsdlfix = createResourceFile(expPath);
+      File wsdlfix = new File(expPath);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-      File wsdlFile = createResourceFile(genpath);
+      File wsdlFile = new File(genpath);
       assertTrue("Generated WSDL File exists", wsdlFile.exists());
       Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
       //assertEquals(exp,was);
