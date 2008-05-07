@@ -17,6 +17,7 @@
   <!-- Properties -->
   <properties>
     <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.jvm.args>
+     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
   </properties>
   
   <!-- Modules -->
