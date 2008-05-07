@@ -80,7 +80,7 @@ public class JBWS1645TestCase extends JBossWSTest
       Class seiClass = StandardJavaTypes.class;
       String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645.wsdl").getPath();
       
-      File wsdlDir = new File("./tools/jbws1645");
+      File wsdlDir = createResourceFile("./tools/jbws1645");
       wsdlDir.mkdirs();
       
       String sname = WSDLUtils.getJustClassName(seiClass) + "Service";
@@ -131,7 +131,7 @@ public class JBWS1645TestCase extends JBossWSTest
       Class seiClass = StandardJavaTypes.class;
       String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645-Multiple.wsdl").getPath();
       
-      File wsdlDir = new File("./tools/jbws1645");
+      File wsdlDir = createResourceFile("./tools/jbws1645");
       wsdlDir.mkdirs();
       
       String sname = WSDLUtils.getJustClassName(seiClass) + "Service-Multiple";

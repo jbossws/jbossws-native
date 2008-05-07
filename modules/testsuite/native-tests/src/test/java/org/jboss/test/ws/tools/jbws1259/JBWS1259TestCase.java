@@ -134,7 +134,7 @@ public class JBWS1259TestCase extends JBossWSTest
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 
-      File resourceDirFile = new File(resourceDir);
+      File resourceDirFile = createResourceFile(resourceDir);
       String[] expectedFiles = resourceDirFile.list(new FilenameFilter() {
          public boolean accept(File dir, String name)
          {
@@ -156,7 +156,7 @@ public class JBWS1259TestCase extends JBossWSTest
          }
       }
 
-      File packageDir = new File(toolsDir + "/org/jboss/test/ws/jbws1259");
+      File packageDir = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1259");
       String[] generatedFiles = packageDir.list();
       for (int i = 0; i < generatedFiles.length; i++)
       {
@@ -176,8 +176,8 @@ public class JBWS1259TestCase extends JBossWSTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = new File(expectedName);
-      File generated = new File(generatedName);
+      File expected = createResourceFile(expectedName);
+      File generated = createResourceFile(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

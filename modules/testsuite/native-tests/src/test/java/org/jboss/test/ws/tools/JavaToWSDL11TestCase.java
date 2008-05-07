@@ -23,6 +23,7 @@ package org.jboss.test.ws.tools;
 
 import java.io.File;
 import java.io.Writer;
+import java.io.FileWriter;
 
 import org.jboss.test.ws.common.jbossxb.complex.ComplexTypes;
 import org.jboss.test.ws.tools.sei.ArrayInterface;
@@ -117,7 +118,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
 
    private void doWSDLTest(Class seiClass, String fixturefile) throws Exception
    {
-      File wsdlDir = new File("./tools/wsdl-out");
+      File wsdlDir = createResourceFile("./tools/wsdl-out");
       wsdlDir.mkdirs();
       
       String sname = WSDLUtils.getInstance().getJustClassName(seiClass) + "Service";
@@ -142,7 +143,7 @@ public class JavaToWSDL11TestCase extends JBossWSTest
 
       assertEquals(exp, was);
       /*
-       File wsdlFile = new File(config.getWsdlOutFile());
+       File wsdlFile = createResourceFile(config.getWsdlOutFile());
        WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
        WSDLDefinitions wsdl = wsdlFactory.parse(wsdlFile.toURL());
 

@@ -30,14 +30,14 @@ import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSModel;
 import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 
 /**
  *  Tests handling of schema annotations by JBossWS Tools
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Aug 17, 2005
  */
-public class SchemaAnnotationsTestCase extends WSToolsTest
+public class SchemaAnnotationsTestCase extends WSToolsBase
 {
    /**
     * Check XSD Annotation

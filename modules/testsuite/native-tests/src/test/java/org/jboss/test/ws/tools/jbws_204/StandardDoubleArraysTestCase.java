@@ -27,7 +27,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.Constants;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Aug 31, 2005
  */
-public class StandardDoubleArraysTestCase extends WSToolsTest
+public class StandardDoubleArraysTestCase extends WSToolsBase
 {
    private String WSCOMPILE_SCHEMA = "xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'  xmlns='http://www.w3.org/2001/XMLSchema'";
 

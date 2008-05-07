@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * @author anil.saldhana@jboss.org
  * @since 22-Jan-2005
  */
-public class SchemaGeneratorTestCase extends WSToolsTest
+public class SchemaGeneratorTestCase extends WSToolsBase
 {
 
    private static final String SCHEMA_NAMESPACES =

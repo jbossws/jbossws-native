@@ -46,15 +46,15 @@ public class JBWS1253TestCase extends JBossWSTest
       JaxrpcMappingValidator mappingValidator = new JaxrpcMappingValidator();
       mappingValidator.validate(resourceDir + "/myporttype-mapping.xml", toolsDir + "/myporttype-mapping.xml");
 
-      File expSEI = new File(resourceDir + "/My.java");
-      File wasSEI = new File(toolsDir + "/org/jboss/test/ws/jbws1253/My.java");
+      File expSEI = createResourceFile(resourceDir + "/My.java");
+      File wasSEI = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1253/My.java");
 
       JBossSourceComparator sc = new JBossSourceComparator(expSEI, wasSEI);
       sc.validate();
       sc.validateImports();
 
-      File expService = new File(resourceDir + "/TestSEIService.java");
-      File wasService = new File(toolsDir + "/org/jboss/test/ws/jbws1253/TestSEIService.java");
+      File expService = createResourceFile(resourceDir + "/TestSEIService.java");
+      File wasService = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1253/TestSEIService.java");
 
       sc = new JBossSourceComparator(expService, wasService);
       sc.validate();

@@ -41,6 +41,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.VariableMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlMessageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlReturnValueMapping;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  *  Validates a JAXRPC Mapping File against another
@@ -62,8 +63,8 @@ public class JaxrpcMappingValidator
    public boolean validate(String mappingFile1, String mappingFile2) throws Exception
    {
       JavaWsdlMappingFactory mappingFactory = JavaWsdlMappingFactory.newInstance();
-      JavaWsdlMapping javaWsdlMapping1 = mappingFactory.parse(new File(mappingFile1).toURL());
-      JavaWsdlMapping javaWsdlMapping2 = mappingFactory.parse(new File(mappingFile2).toURL());
+      JavaWsdlMapping javaWsdlMapping1 = mappingFactory.parse( new File(mappingFile1).toURL());
+      JavaWsdlMapping javaWsdlMapping2 = mappingFactory.parse( new File(mappingFile2).toURL());
       return validate(javaWsdlMapping1, javaWsdlMapping2);
    }
 

@@ -24,7 +24,7 @@ package org.jboss.test.ws.tools.jbws429;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
@@ -37,7 +37,7 @@ import org.jboss.ws.tools.WSTools;
  * @author darran.lofthouse@jboss.com
  * @since 11 Apr 2007
  */
-public class JBWS429TestCase extends WSToolsTest
+public class JBWS429TestCase extends WSToolsBase
 {
 
    /**
@@ -79,7 +79,7 @@ public class JBWS429TestCase extends WSToolsTest
       String toolsDir = "tools/jbws429/" + scenario;
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
-      File resourceDirFile = new File(resourceDir);
+      File resourceDirFile = createResourceFile(resourceDir);
       String[] expectedFiles = resourceDirFile.list(new FilenameFilter() {
          public boolean accept(File dir, String name)
          {
@@ -101,7 +101,7 @@ public class JBWS429TestCase extends WSToolsTest
          }
       }
 
-      File packageDir = new File(toolsDir + "/org/jboss/test/ws/jbws429");
+      File packageDir = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws429");
       String[] generatedFiles = packageDir.list();
       for (int i = 0; i < generatedFiles.length; i++)
       {
@@ -121,8 +121,8 @@ public class JBWS429TestCase extends WSToolsTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = new File(expectedName);
-      File generated = new File(generatedName);
+      File expected = createResourceFile(expectedName);
+      File generated = createResourceFile(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

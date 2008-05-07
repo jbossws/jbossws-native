@@ -24,7 +24,7 @@ package org.jboss.test.ws.tools.doclit;
 import java.io.File;
 import java.io.Writer;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Aug 3, 2005
  */
-public class ToolsDocLitTestCase extends WSToolsTest
+public class ToolsDocLitTestCase extends WSToolsBase
 {
    public void testTrivialCase() throws Exception
    {
@@ -57,15 +57,15 @@ public class ToolsDocLitTestCase extends WSToolsTest
       jwsdl.addFeature(WSToolsConstants.WSTOOLS_FEATURE_RESTRICT_TO_TARGET_NS, true);
       WSDLDefinitions wsdl = jwsdl.generate(seiClass);
 
-      Writer fw = IOUtils.getCharsetFileWriter(new File(wsdlPath), Constants.DEFAULT_XML_CHARSET);
+      Writer fw = IOUtils.getCharsetFileWriter(createResourceFile(wsdlPath), Constants.DEFAULT_XML_CHARSET);
       new WSDLWriter(wsdl).write(fw, Constants.DEFAULT_XML_CHARSET);
       fw.close();
 
       String fixturefile = getResourceFile("tools/doc-lit/trivial/wsdl/SampleService.wsdl").getPath();
       //Validate the generated WSDL
-      File wsdlfix = new File(fixturefile);
+      File wsdlfix = createResourceFile(fixturefile);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-      File wsdlFile = new File(wsdlPath);
+      File wsdlFile = createResourceFile(wsdlPath);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
       Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
       //assertEquals(exp, was);

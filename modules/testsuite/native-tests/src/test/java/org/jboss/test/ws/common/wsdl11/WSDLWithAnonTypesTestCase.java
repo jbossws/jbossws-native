@@ -31,7 +31,7 @@ import org.apache.xerces.xs.XSModelGroup;
 import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  * @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  * @since Aug 31, 2005
  */
-public class WSDLWithAnonTypesTestCase extends WSToolsTest
+public class WSDLWithAnonTypesTestCase extends WSToolsBase
 {
    String wsdlfile = getResourceFile("jaxrpc/anonymous/WEB-INF/wsdl/TestService.wsdl").getPath();
 

@@ -21,9 +21,7 @@
  */
 package org.jboss.test.ws.tools.jbws_211.tests;
 
-import java.io.File;
-
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.tools.WSTools;
 
 /**
@@ -32,7 +30,7 @@ import org.jboss.ws.tools.WSTools;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since  Sep 24, 2005
  */
-public abstract class JBWS211Test extends WSToolsTest
+public abstract class JBWS211Test extends WSToolsBase
 {
    protected abstract String getBase();
 
@@ -46,7 +44,7 @@ public abstract class JBWS211Test extends WSToolsTest
    protected void setUp()
    {
       String out_dir = "tools/jbws-211/jbossws/" + getBase();
-      new File(out_dir + "/wsdl").mkdirs();
+      createResourceFile(out_dir + "/wsdl").mkdirs();
    }
 
    public final void testJava2WSDL() throws Exception

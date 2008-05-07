@@ -43,7 +43,7 @@ import org.jboss.ws.tools.wsdl.WSDLWriter;
  * @author Thomas.Diesler@jboss.org
  * @since 14-Oct-2004
  */
-public class WSDL11ToJavaTestCase extends WSToolsTest
+public class WSDL11ToJavaTestCase extends WSToolsBase
 {
    /** Test a SEI that contains JAXRPC primitive types */
    public void testPrimitiveTypes() throws Exception
@@ -83,9 +83,9 @@ public class WSDL11ToJavaTestCase extends WSToolsTest
 
    private void writeWSDL(WSDLDefinitions wsdl, String fname) throws Exception
    {
-      File wsdlDir = new File("./tools/wsdl-out");
+      File wsdlDir = createResourceFile("./tools/wsdl-out");
       wsdlDir.mkdirs();
-      FileWriter writer = new FileWriter(new File(wsdlDir + "/" + fname));
+      FileWriter writer = new FileWriter(wsdlDir + "/" + fname);
       new WSDLWriter(wsdl).write(writer);
       writer.close();
    }
@@ -124,7 +124,7 @@ public class WSDL11ToJavaTestCase extends WSToolsTest
       try
       {
          wsdljava.setTypeMapping(new LiteralTypeMapping());
-         wsdljava.generateSEI(wsdl, new File(seidir));
+         wsdljava.generateSEI(wsdl, createResourceFile(seidir));
       }
       catch (Exception e)
       {

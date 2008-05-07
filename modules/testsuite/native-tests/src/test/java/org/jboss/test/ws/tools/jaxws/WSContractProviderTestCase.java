@@ -43,7 +43,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testBasic() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/jaxws/wscontractprovider/basic/out");
+      File outputDir = createResourceFile("tools/jaxws/wscontractprovider/basic/out");
       gen.setOutputDirectory(outputDir);
       gen.provide(DocWrappedServiceImpl.class);
       
@@ -61,7 +61,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    private void checkWrapperSource(File outputDir, boolean shouldExist)
    {
       File file1 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/SubmitPO.java");
-      File file2 = new File(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/SubmitPOResponse.java");
+      File file2 = createResourceFile(outputDir, "org/jboss/test/ws/tools/jaxws/jaxws/SubmitPOResponse.java");
       assertEquals(shouldExist, file1.exists());
       assertEquals(shouldExist, file2.exists());
    }
@@ -85,7 +85,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testSource() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/jaxws/wscontractprovider/source/out");
+      File outputDir = createResourceFile("tools/jaxws/wscontractprovider/source/out");
       gen.setOutputDirectory(outputDir);
       gen.setGenerateSource(true);
       gen.provide(DocWrappedServiceImpl.class);
@@ -97,8 +97,8 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testSourceDir() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/jaxws/wscontractprovider/sourcedir/out");
-      File sourceDir = new File("tools/jaxws/wscontractprovider/sourcedir/source");
+      File outputDir = createResourceFile("tools/jaxws/wscontractprovider/sourcedir/out");
+      File sourceDir = createResourceFile("tools/jaxws/wscontractprovider/sourcedir/source");
       
       gen.setOutputDirectory(outputDir);
       gen.setSourceDirectory(sourceDir);
@@ -113,7 +113,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testWsdl() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/jaxws/wscontractprovider/wsdl/out");
+      File outputDir = createResourceFile("tools/jaxws/wscontractprovider/wsdl/out");
       gen.setOutputDirectory(outputDir);
       gen.setGenerateWsdl(true);
       gen.provide(DocWrappedServiceImpl.class);
@@ -123,7 +123,7 @@ public class WSContractProviderTestCase extends JBossWSTest
       // There should be no source code
       checkWrapperSource(outputDir, false);
       
-      File wsdlFile = new File(outputDir, "DocWrappedService.wsdl");
+      File wsdlFile = createResourceFile(outputDir, "DocWrappedService.wsdl");
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
       wsdlFactory.parse(wsdlFile.toURL());
    }
@@ -131,8 +131,8 @@ public class WSContractProviderTestCase extends JBossWSTest
    public void testResourceDir() throws Exception
    {
       WSContractProvider gen = getGenerator();
-      File outputDir = new File("tools/jaxws/wscontractprovider/resourcedir/out");
-      File wsdlDir = new File("tools/jaxws/wscontractprovider/resourcedir/wsdl");
+      File outputDir = createResourceFile("tools/jaxws/wscontractprovider/resourcedir/out");
+      File wsdlDir = createResourceFile("tools/jaxws/wscontractprovider/resourcedir/wsdl");
       gen.setOutputDirectory(outputDir);
       gen.setResourceDirectory(wsdlDir);
       gen.setGenerateWsdl(true);
@@ -144,10 +144,10 @@ public class WSContractProviderTestCase extends JBossWSTest
       checkWrapperSource(outputDir, false);
       
       String wsdlName = "DocWrappedService.wsdl";
-      File wsdlFile = new File(outputDir, wsdlName);
+      File wsdlFile = createResourceFile(outputDir, wsdlName);
       assertFalse(wsdlFile.exists());
       
-      wsdlFile = new File(wsdlDir, wsdlName);
+      wsdlFile = createResourceFile(wsdlDir, wsdlName);
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
       wsdlFactory.parse(wsdlFile.toURL());
    }

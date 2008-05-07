@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.Writer;
 
 import org.jboss.test.ws.common.jbossxb.holders.HoldersServiceInterface;
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.WSDL11Validator;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Aug 2, 2005
  */
-public class StandardHoldersTestCase extends WSToolsTest
+public class StandardHoldersTestCase extends WSToolsBase
 {
    public void testStandardHoldersWsdlToJava() throws Exception
    {
@@ -61,7 +61,7 @@ public class StandardHoldersTestCase extends WSToolsTest
       //Now validate the SEI
       String fname="HoldersServiceInterface.java";
       File file1 = getResourceFile("tools/holders/java/org/jboss/test/"+ fname);
-      File file2 = new File("tools/org/jboss/test/" + fname);
+      File file2 = createResourceFile("tools/org/jboss/test/" + fname);
 
       try
       {
@@ -85,7 +85,7 @@ public class StandardHoldersTestCase extends WSToolsTest
       //Generate the wsdl
       String wsdlDir = "tools/";
       String wsdlPath = wsdlDir+ "/HolderService.wsdl";
-      Writer fw = IOUtils.getCharsetFileWriter(new File(wsdlPath), Constants.DEFAULT_XML_CHARSET);
+      Writer fw = IOUtils.getCharsetFileWriter(createResourceFile(wsdlPath), Constants.DEFAULT_XML_CHARSET);
       new WSDLWriter(wsdl).write(fw, Constants.DEFAULT_XML_CHARSET);
       fw.close();
 
@@ -94,9 +94,9 @@ public class StandardHoldersTestCase extends WSToolsTest
       try
       {
          String fixturefile = getResourceFile("tools/holders/wsdl/HolderService.wsdl").getPath();
-         File wsdlfix = new File(fixturefile);
+         File wsdlfix = createResourceFile(fixturefile);
          Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-         File wsdlFile = new File(wsdlPath);
+         File wsdlFile = createResourceFile(wsdlPath);
          assertNotNull("Generated WSDL File exists?", wsdlFile);
          Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
          assertEquals(exp,was);
@@ -151,7 +151,7 @@ public class StandardHoldersTestCase extends WSToolsTest
       try
       {
          wsdljava.setTypeMapping(new LiteralTypeMapping());
-         wsdljava.generateSEI(wsdl, new File(seidir));
+         wsdljava.generateSEI(wsdl, createResourceFile(seidir));
       }
       catch (Exception e)
       {

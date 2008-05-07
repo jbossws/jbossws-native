@@ -871,13 +871,14 @@ public class JBWS1260TestCase extends JBossWSTest
 
    protected void generateScenario(final String scenario) throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1260/scenario_" + scenario).getPath();
-      String toolsDir = "tools/jbws1260/scenario_" + scenario;
+      File resourceDir = createResourceFile("tools/jbws1260/scenario_" + scenario);
+      resourceDir.mkdirs();
+      String toolsDir = resourceDir.getAbsolutePath();
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 
-      File resourceDirFile = new File(resourceDir);
-      String[] expectedFiles = resourceDirFile.list(new FilenameFilter() {
+
+      String[] expectedFiles = resourceDir.list(new FilenameFilter() {
          public boolean accept(File dir, String name)
          {
             return name.endsWith(".java");

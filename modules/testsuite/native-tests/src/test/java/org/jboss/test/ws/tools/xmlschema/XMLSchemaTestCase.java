@@ -30,13 +30,13 @@ import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModel;
 import org.apache.xerces.xs.XSNamedMap;
 import org.apache.xerces.xs.XSObject;
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 
 /** All the XML schema related test cases  
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since  Mar 17, 2005
  */
-public class XMLSchemaTestCase extends WSToolsTest
+public class XMLSchemaTestCase extends WSToolsBase
 {
    /**
     * Given a set of xml schemas, check if the xmltype

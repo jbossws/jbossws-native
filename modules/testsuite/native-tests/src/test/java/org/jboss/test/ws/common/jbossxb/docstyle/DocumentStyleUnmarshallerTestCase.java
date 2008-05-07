@@ -28,7 +28,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSModel;
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBUnmarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -40,7 +40,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
  * @author Thomas.Diesler@jboss.org
  * @since 18-Oct-2004
  */
-public class DocumentStyleUnmarshallerTestCase extends WSToolsTest
+public class DocumentStyleUnmarshallerTestCase extends WSToolsBase
 {
 
    private static final String TARGET_NAMESPACE = "http://org.jboss.ws/jaxrpc/types";

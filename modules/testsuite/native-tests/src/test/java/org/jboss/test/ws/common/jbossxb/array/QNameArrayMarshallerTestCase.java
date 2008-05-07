@@ -26,7 +26,7 @@ import java.io.StringWriter;
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSModel;
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBConstants;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -38,7 +38,7 @@ import org.jboss.wsf.common.DOMUtils;
  * @author Thomas.Diesler@jboss.org
  * @since 29-Apr-2005
  */
-public class QNameArrayMarshallerTestCase extends WSToolsTest
+public class QNameArrayMarshallerTestCase extends WSToolsBase
 {
 
    private static final String TARGET_NAMESPACE = "http://org.jboss.ws/types";

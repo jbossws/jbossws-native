@@ -5,5 +5,5 @@
     <global>
       <package-namespace package="org.jboss.test.webservice.wsdlimport" namespace="http://jboss.org/wsdlimport"/> 
     </global> 
-    <wsdl-java location="test-resources/tools/jbws-206/wsdlFixture/WsdlImport/WsdlImportService_RPC_11.wsdl"/>
+    <wsdl-java location="${test.resources.directory}/tools/jbws-206/wsdlFixture/WsdlImport/WsdlImportService_RPC_11.wsdl"/>
 </configuration>

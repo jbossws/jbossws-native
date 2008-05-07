@@ -5,5 +5,5 @@
   <global>
     <package-namespace package="org.jboss.test.ws" namespace="http://org.jboss.ws"/>
   </global>
-  <wsdl-java location="test-resources/tools/wsdlfixture/StandardJavaTypesService_RPC_11.wsdl"/>
+  <wsdl-java location="${test.resources.directory}/tools/wsdlfixture/StandardJavaTypesService_RPC_11.wsdl"/>
 </configuration>

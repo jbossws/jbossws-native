@@ -47,6 +47,7 @@ import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.Element;
@@ -56,7 +57,7 @@ import org.w3c.dom.Element;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since  Sep 5, 2005
  */
-public class WSToolsTest extends JBossWSTest
+public class WSToolsBase extends JBossWSTest
 {
    protected static final String SCHEMA_NAMESPACES = "xmlns='http://www.w3.org/2001/XMLSchema' " + "xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' "
          + "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'";
@@ -72,9 +73,9 @@ public class WSToolsTest extends JBossWSTest
 
    public void mkdirs(String path)
    {
-      new File(path).mkdirs();
+      createResourceFile(path).mkdirs();
    }
-   
+
    /** Get the Schema as a String */
    public String generateSchema(QName xmlType, Class javaType) throws Exception
    {
@@ -194,16 +195,16 @@ public class WSToolsTest extends JBossWSTest
    {
       ServiceCreator sc = new ServiceCreator();
       sc.setPackageName(packageName);
-      sc.setDirLocation(new File(location));
+      sc.setDirLocation(createResourceFile(location));
       sc.setWsdl(wsdl);
       sc.createServiceDescriptor();
    }
 
    protected void validateXML(String fixtureFile, String genFile) throws Exception
    {
-      File wsdlfix = new File(fixtureFile);
+      File wsdlfix = createResourceFile(fixtureFile);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-      File wsdlFile = new File(genFile);
+      File wsdlFile = createResourceFile(genFile);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
       Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
       assertEquals(exp, was);
@@ -223,9 +224,9 @@ public class WSToolsTest extends JBossWSTest
    protected boolean semanticallyValidateWSDL(String expPath, String genpath) throws Exception
    {
       boolean bool = true;
-      File wsdlfix = new File(expPath);
+      File wsdlfix = createResourceFile(expPath);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-      File wsdlFile = new File(genpath);
+      File wsdlFile = createResourceFile(genpath);
       assertTrue("Generated WSDL File exists", wsdlFile.exists());
       Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
       //assertEquals(exp,was);

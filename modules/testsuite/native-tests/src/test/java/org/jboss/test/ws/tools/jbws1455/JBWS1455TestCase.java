@@ -53,8 +53,8 @@ public class JBWS1455TestCase extends JBossWSTest
 
    private void compareSource(final String fileName) throws Exception
    {
-      File expected = new File(resourceDir + "/" + fileName);
-      File generated = new File(toolsDir + "/org/jboss/test/ws/jbws1455/" + fileName);
+      File expected = createResourceFile(resourceDir + "/" + fileName);
+      File generated = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1455/" + fileName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

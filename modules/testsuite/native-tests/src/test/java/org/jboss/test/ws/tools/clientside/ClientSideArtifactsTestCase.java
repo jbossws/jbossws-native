@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
@@ -36,6 +36,7 @@ import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.test.JBossWSTestHelper;
 import org.w3c.dom.Element;
 
 /**
@@ -43,7 +44,7 @@ import org.w3c.dom.Element;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since   Jun 22, 2005 
  */
-public class ClientSideArtifactsTestCase extends WSToolsTest
+public class ClientSideArtifactsTestCase extends WSToolsBase
 {
    //Set up the test
    protected void setUp()
@@ -58,10 +59,11 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
    public void mkdirs(String path)
    {
-      File file = new File(path);
+      File resDir = createResourceFile(JBossWSTestHelper.getTestResourcesDir());
+      File file = createResourceFile( resDir.getAbsolutePath() + File.separator + path);
       if (file.exists() == false)
          file.mkdirs();
-   }
+   }   
 
    /** Test a simple SEI that uses primitives */
    public void testSimpleCase() throws Exception
@@ -70,14 +72,14 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       File wsdlFile = getResourceFile("tools/jbws-161/wscompile/simple/wsdl/HelloWsService.wsdl");
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
       WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile.toURL());
-      wsdlJava.generateSEI(wsdl, new File("tools/jbws-160/jbossws/simple/sei"));
+      wsdlJava.generateSEI(wsdl, createResourceFile("tools/jbws-160/jbossws/simple/sei"));
 
       //Create the Service File
       //Generate the Service Interface
       ServiceCreator sc = new ServiceCreator();
       sc.setPackageName("org.jboss.types");
       //sc.setServiceName("HelloWsService");
-      sc.setDirLocation(new File("tools/jbws-160/jbossws/simple/service"));
+      sc.setDirLocation(createResourceFile("tools/jbws-160/jbossws/simple/service"));
       sc.setWsdl(wsdl);
       //sc.setPortName( "HelloWs" );
       sc.createServiceDescriptor();
@@ -87,14 +89,14 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       mgf.setPackageName("org.jboss.types");
       mgf.setServiceName("HelloWsService");
       JavaWsdlMapping jwm = mgf.generate();
-      FileWriter fw = new FileWriter("tools/jbws-160/jbossws/simple/mapping" + "/" + "jaxrpc-mapping.xml");
+      FileWriter fw = new FileWriter( createResourceFile("tools/jbws-160/jbossws/simple/mapping" + "/" + "jaxrpc-mapping.xml"));
       fw.write(jwm.serialize());
       fw.close();
 
       //Match the Service File
       String fname = "HelloWsService.java";
       File file1 = getResourceFile("tools/jbws-160/wscompile/simple/service/" + fname);
-      File file2 = new File("tools/jbws-160/jbossws/simple/service/org/jboss/types/" + fname);
+      File file2 = createResourceFile("tools/jbws-160/jbossws/simple/service/org/jboss/types/" + fname);
 
       try
       {
@@ -108,7 +110,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       //Match the SEI
       fname = "HelloWs.java";
       file1 = getResourceFile("tools/jbws-160/wscompile/simple/sei/" + fname);
-      file2 = new File("tools/jbws-160/jbossws/simple/sei/org/jboss/types/" + fname);
+      file2 = createResourceFile("tools/jbws-160/jbossws/simple/sei/org/jboss/types/" + fname);
 
       try
       {
@@ -121,7 +123,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
 
       //Compare mapping files
       File expFile = getResourceFile("tools/jbws-160/wscompile/simple/mapping/jaxrpc-mapping.xml");
-      File genFile = new File("tools/jbws-160/jbossws/simple/mapping/jaxrpc-mapping.xml");
+      File genFile = createResourceFile("tools/jbws-160/jbossws/simple/mapping/jaxrpc-mapping.xml");
 
       compareXMLFiles(expFile.toURL(), genFile.toURL());
    }
@@ -134,14 +136,14 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
       WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile.toURL());
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
-      wsdlJava.generateSEI(wsdl, new File("tools/jbws-160/jbossws/custom/sei"));
+      wsdlJava.generateSEI(wsdl, createResourceFile("tools/jbws-160/jbossws/custom/sei"));
 
       //Create the Service File
       //Generate the Service Interface
       ServiceCreator sc = new ServiceCreator();
       sc.setPackageName("org.jboss.types");
       //sc.setServiceName("HelloCustomService");
-      sc.setDirLocation(new File("tools/jbws-160/jbossws/custom/service"));
+      sc.setDirLocation(createResourceFile("tools/jbws-160/jbossws/custom/service"));
       sc.setWsdl(wsdl);
       //sc.setPortName( "HelloCustomRemote" );
       sc.createServiceDescriptor();
@@ -152,14 +154,14 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       mgf.setServiceName("HelloCustomService");
       //    mgf.generate(); 
       JavaWsdlMapping jwm = mgf.generate();
-      FileWriter fw = new FileWriter("tools/jbws-160/jbossws/custom/mapping" + "/" + "jaxrpc-mapping.xml");
+      FileWriter fw = new FileWriter( createResourceFile("tools/jbws-160/jbossws/custom/mapping" + "/" + "jaxrpc-mapping.xml")); 
       fw.write(DOMWriter.printNode(DOMUtils.parse(jwm.serialize()), true));
       fw.close();
 
       //Match the Service File
       String fname = "HelloCustomService.java";
       File file1 = getResourceFile("tools/jbws-160/wscompile/custom/service/" + fname);
-      File file2 = new File("tools/jbws-160/jbossws/custom/service/org/jboss/types/" + fname);
+      File file2 = createResourceFile("tools/jbws-160/jbossws/custom/service/org/jboss/types/" + fname);
 
       try
       {
@@ -173,7 +175,7 @@ public class ClientSideArtifactsTestCase extends WSToolsTest
       //Match the SEI
       fname = "HelloCustomRemote.java";
       file1 = getResourceFile("tools/jbws-160/wscompile/custom/sei/" + fname);
-      file2 = new File("tools/jbws-160/jbossws/custom/sei/org/jboss/types/" + fname);
+      file2 = createResourceFile("tools/jbws-160/jbossws/custom/sei/org/jboss/types/" + fname);
 
       /*try
        {

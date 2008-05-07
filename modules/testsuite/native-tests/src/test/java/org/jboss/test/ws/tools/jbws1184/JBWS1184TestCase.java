@@ -90,8 +90,8 @@ public class JBWS1184TestCase extends JBossWSTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = new File(expectedName);
-      File generated = new File(generatedName);
+      File expected = createResourceFile(expectedName);
+      File generated = createResourceFile(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.tools.assertions;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.sei.SomeException;
 import org.jboss.test.ws.tools.sei.assertions.AssertMethodParamExtendRemote;
 import org.jboss.test.ws.tools.sei.assertions.AssertRemoteExceptions;
@@ -38,7 +38,7 @@ import org.jboss.ws.tools.JavaToWSDL;
  * @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  * @since Feb 3, 2005
  */
-public class Jaxrpc20AssertionsTestCase extends WSToolsTest
+public class Jaxrpc20AssertionsTestCase extends WSToolsBase
 {
    public void testIsInterface() throws Exception
    {

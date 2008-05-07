@@ -23,7 +23,7 @@ package org.jboss.test.ws.tools.jbws_206;
 
 import java.io.File;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.tools.WSTools;
 
 /**
@@ -32,7 +32,7 @@ import org.jboss.ws.tools.WSTools;
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
  *  @since  Sep 25, 2005
  */
-public abstract class JBWS206Test extends WSToolsTest
+public abstract class JBWS206Test extends WSToolsBase
 {
    public abstract String getBase();
 
@@ -65,8 +65,8 @@ public abstract class JBWS206Test extends WSToolsTest
       String seiName = getSEIName() + ".java";
       String sei = fixBase + "/sei/" + seiName;
       //    Check the sei
-      // assertExactSourceFiles(new File(sei), new File(out_dir + "/client/" + packageDir + "/" + seiName ));
-      assertExactSourceFiles(new File(sei), new File(out_dir + "/" + packageDir + "/" + seiName));
+      // assertExactSourceFiles(createResourceFile(sei), createResourceFile(out_dir + "/client/" + packageDir + "/" + seiName ));
+      assertExactSourceFiles(createResourceFile(sei), createResourceFile(out_dir + "/" + packageDir + "/" + seiName));
    }
 
    public void checkServiceInterface() throws Exception
@@ -78,8 +78,8 @@ public abstract class JBWS206Test extends WSToolsTest
       String serviceName = getServiceName();
 
       //    Check the Service File
-      assertExactSourceFiles(new File(fixBase + "/service/" + serviceName + ".java"), new File(out_dir + "/" + packageDir + "/" + serviceName + ".java"));
-      //new File(out_dir + "/client/" + packageDir + "/" + serviceName + ".java" ));
+      assertExactSourceFiles(createResourceFile(fixBase + "/service/" + serviceName + ".java"), createResourceFile(out_dir + "/" + packageDir + "/" + serviceName + ".java"));
+      //createResourceFile(out_dir + "/client/" + packageDir + "/" + serviceName + ".java" ));
    }
 
    public final void checkUserType(String name) throws Exception
@@ -89,8 +89,8 @@ public abstract class JBWS206Test extends WSToolsTest
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
 
       //    Check User Types
-      assertExactSourceFiles(new File(fixBase + "/usertypes/" + name), new File(out_dir + "/" + packageDir + "/" + name));
-      //new File(out_dir + "/client/" + packageDir + "/" + name ));
+      assertExactSourceFiles(createResourceFile(fixBase + "/usertypes/" + name), createResourceFile(out_dir + "/" + packageDir + "/" + name));
+      //createResourceFile(out_dir + "/client/" + packageDir + "/" + name ));
    }
 
    protected final void generate() throws Exception

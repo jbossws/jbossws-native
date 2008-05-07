@@ -77,7 +77,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
 
    public void createDir(String path)
    {
-      File file = new File(path);
+      File file = createResourceFile(path);
       if (file.exists() == false)
          file.mkdirs();
    }
@@ -229,7 +229,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       ct.setParticle(xsp);
       xsmodel.addXSComplexTypeDefinition(ct);  //Always add global complex types to global types
       //Lets write the schema into a file
-      File xsdOutFile = new File("tools/wsdlwritedir/HelloObj.xsd");
+      File xsdOutFile = createResourceFile("tools/wsdlwritedir/HelloObj.xsd");
       xsdOutFile.delete();
       xsmodel.writeTo(new FileOutputStream(xsdOutFile));
    }

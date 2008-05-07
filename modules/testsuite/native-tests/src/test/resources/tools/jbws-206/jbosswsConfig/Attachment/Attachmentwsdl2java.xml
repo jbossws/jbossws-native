@@ -5,5 +5,5 @@
 	<global>
       <package-namespace package="org.jboss.test.webservice.attachment" namespace="http://org.jboss.ws/attachment"/> 
    </global> 
-    <wsdl-java location="test-resources/tools/jbws-206/wsdlFixture/Attachment/AttachmentService_RPC_11.wsdl"/>
+    <wsdl-java location="${test.resources.directory}/tools/jbws-206/wsdlFixture/Attachment/AttachmentService_RPC_11.wsdl"/>
 </configuration>

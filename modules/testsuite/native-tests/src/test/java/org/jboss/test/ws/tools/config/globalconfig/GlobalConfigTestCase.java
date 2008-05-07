@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
@@ -44,7 +44,7 @@ import com.thoughtworks.qdox.model.JavaSource;
  * @author Thomas.Diesler@jboss.org
  * @since Aug 29, 2005
  */
-public class GlobalConfigTestCase extends WSToolsTest
+public class GlobalConfigTestCase extends WSToolsBase
 {
 
    public void testJavaToWSDL() throws IOException
@@ -53,7 +53,7 @@ public class GlobalConfigTestCase extends WSToolsTest
       WSTools tools = new WSTools();
       tools.generate(args);
 
-      WSDLDefinitions wsdl = getWSDLDefinitions(new File("tools/globalconfig/wsdl/MarshallService.wsdl"));
+      WSDLDefinitions wsdl = getWSDLDefinitions(createResourceFile("tools/globalconfig/wsdl/MarshallService.wsdl"));
       JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
       assertNotNull(xsmodel.getNamespaceItem("http://jboss.org/types"));
    }
@@ -63,7 +63,7 @@ public class GlobalConfigTestCase extends WSToolsTest
       String[] args = new String[] { "-dest", "tools/globalconfig", "-config", getResourceFile("tools/config/wsdl2javaglobal.xml").getPath() };
       WSTools tools = new WSTools();
       tools.generate(args);
-      File file = new File("tools/globalconfig/org/jboss/test/ws/StandardJavaTypes.java");
+      File file = createResourceFile("tools/globalconfig/org/jboss/test/ws/StandardJavaTypes.java");
       assertTrue(file.exists());
       checkGeneratedClass(file);
    }

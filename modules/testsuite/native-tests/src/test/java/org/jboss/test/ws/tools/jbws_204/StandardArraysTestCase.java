@@ -27,7 +27,7 @@ import java.util.Calendar;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.ws.Constants;
 import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.wsf.common.DOMUtils;
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  *  @since   Jul 19, 2005
  */
 
-public class StandardArraysTestCase extends WSToolsTest
+public class StandardArraysTestCase extends WSToolsBase
 {
    private  JavaToXSD jxsd = null;
 

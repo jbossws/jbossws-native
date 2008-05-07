@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.tools.jbws1231;
 
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
 
@@ -30,7 +30,7 @@ import org.jboss.ws.tools.WSTools;
  * @author darran.lofthouse@jboss.com
  * @since 13 Jan 2007
  */
-public class JBWS1231TestCase extends WSToolsTest
+public class JBWS1231TestCase extends WSToolsBase
 {
 
    public final void testGenerate() throws Exception

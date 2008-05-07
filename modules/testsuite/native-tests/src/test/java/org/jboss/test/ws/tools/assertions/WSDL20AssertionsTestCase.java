@@ -64,7 +64,7 @@ public class WSDL20AssertionsTestCase extends JBossWSTest
       // System property passed through the ant build script
       String wsdldir = System.getProperty("wsdl.dir", getResourceFile("tools").getPath());
 
-      File wsdlFile = new File(wsdldir + "/wsdl20assertions/" + wsdlname);
+      File wsdlFile = createResourceFile(wsdldir + "/wsdl20assertions/" + wsdlname);
  
       WSDLToJavaIntf wsdljava = new WSDLToJava();
       try

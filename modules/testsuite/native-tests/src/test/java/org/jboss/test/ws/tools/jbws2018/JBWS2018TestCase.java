@@ -21,12 +21,9 @@
  */
 package org.jboss.test.ws.tools.jbws2018;
 
-import java.io.File;
-
-import org.jboss.test.ws.tools.WSToolsTest;
+import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
-import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * JBWS-2018 - Test the support of multiple namespace to multiple
@@ -35,7 +32,7 @@ import org.jboss.wsf.test.JBossWSTest;
  * @author mageshbk@jboss.com
  * @since 10 March 2008
  */
-public class JBWS2018TestCase extends WSToolsTest
+public class JBWS2018TestCase extends WSToolsBase
 {
    public final void testMultiplePackageNameSpace() throws Exception
    {
