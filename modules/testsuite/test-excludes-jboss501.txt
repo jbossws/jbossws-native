@@ -55,38 +55,11 @@ org/jboss/test/ws/jaxrpc/jbws331/**
 # [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
 org/jboss/test/ws/jaxrpc/jbws720/**
 
-# [JBWS-2163] wsconsume for maven build -->
-org/jboss/test/ws/jaxws/complex/**
-org/jboss/test/ws/jaxws/holder/**
-org/jboss/test/ws/jaxws/smoke/tools/**
-org/jboss/test/ws/benchmark/**
-org/jboss/test/ws/interop/**
-org/jboss/test/ws/jaxws/samples/wssecuritypolicy/**
-org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/**
-org/jboss/test/ws/jaxws/samples/wssecurity/**
-
 # [JBWS-2167] Fix samples jaxr for maven build
 org/jboss/test/ws/jaxws/samples/jaxr/**
 
 # [JBWS-2168] Fix samples bpel for maven build
 org/jboss/test/ws/jaxrpc/samples/wsbpel/**
-
-# [JBWS-2169] Fix samples jaxrpc for maven build
-org/jboss/test/ws/jaxrpc/samples/docstyle/**
-org/jboss/test/ws/jaxrpc/samples/dynamichandler/**
-org/jboss/test/ws/jaxrpc/samples/exception/**
-org/jboss/test/ws/jaxrpc/samples/handler/**
-org/jboss/test/ws/jaxrpc/samples/holder/**
-org/jboss/test/ws/jaxrpc/samples/jmstransport/**
-org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**
-org/jboss/test/ws/jaxrpc/samples/jsr109pojo/**
-org/jboss/test/ws/jaxrpc/samples/message/**
-org/jboss/test/ws/jaxrpc/samples/oneway/**
-org/jboss/test/ws/jaxrpc/samples/rpcstyle/**
-org/jboss/test/ws/jaxrpc/samples/secureejb/**
-org/jboss/test/ws/jaxrpc/samples/wsaddr/**
-org/jboss/test/ws/jaxrpc/samples/wsbpel/**
-org/jboss/test/ws/jaxrpc/samples/wssecurity/**
 
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
