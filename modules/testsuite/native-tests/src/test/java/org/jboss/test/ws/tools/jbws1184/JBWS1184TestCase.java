@@ -76,8 +76,9 @@ public class JBWS1184TestCase extends JBossWSTest
 
    protected void generateScenario(final String scenario) throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1184/scenario_" + scenario).getPath();
-      String toolsDir = "tools/jbws1184/scenario_" + scenario;
+      File resourceFile = createResourceFile("tools/jbws1184/scenario_" + scenario);
+      String resourceDir = resourceFile.getAbsolutePath();
+      String toolsDir = resourceDir;
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 
@@ -90,8 +91,8 @@ public class JBWS1184TestCase extends JBossWSTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = createResourceFile(expectedName);
-      File generated = createResourceFile(generatedName);
+      File expected = new File(expectedName);
+      File generated = new File(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

@@ -41,13 +41,13 @@ public class JBWS1536TestCase extends JBossWSTest
 
    public final void testGenerate() throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1536").getPath();
-      String toolsDir = "tools/jbws1536";
+      String resourceDir = createResourceFile("tools/jbws1536").getAbsolutePath();
+      String toolsDir = resourceDir; //"tools/jbws1536";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
 
       new WSTools().generate(args);
       
-      Element expected = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1536/webservices.xml").getPath()));
+      Element expected = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1536/webservices.xml").getAbsolutePath()));
       Element was = DOMUtils.parse(new FileInputStream("tools/jbws1536/webservices.xml"));
       assertEquals(expected, was);      
    }

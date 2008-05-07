@@ -48,7 +48,7 @@ public class ComplexTypesTestCase extends WSToolsBase
    {
       String filename = "ComplexType_ElementsOnly.xsd";
       String packagename = "org.jboss.ws.types";
-      String schemaFile = getResourceFile("tools/xsd/complextypes/ComplexType_ElementsOnly.xsd").getPath();
+      String schemaFile = getResourceFile("tools/xsd/complextypes/ComplexType_ElementsOnly.xsd").getAbsolutePath();
 
       this.mkdirs(genPath);
       File dir = createResourceFile(genPath);
@@ -80,7 +80,7 @@ public class ComplexTypesTestCase extends WSToolsBase
    {
       String filename = "ComplexType_ElementsAttrib.xsd";
       String packagename = "org.jboss.ws.types";
-      String schemaFile = getResourceFile("tools/xsd/complextypes/ComplexType_ElementsAttrib.xsd").getPath();
+      String schemaFile = getResourceFile("tools/xsd/complextypes/ComplexType_ElementsAttrib.xsd").getAbsolutePath();
 
       this.mkdirs(genPath);
       File dir = createResourceFile(genPath);
@@ -102,7 +102,7 @@ public class ComplexTypesTestCase extends WSToolsBase
     */
    public void testXSComplexType_FromSimpleType() throws Exception
    {
-      String filename = getResourceFile("tools/xsd/complextypes/ComplexTypeFromSimpleType.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/complextypes/ComplexTypeFromSimpleType.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types";
 
       this.mkdirs(genPath);
@@ -125,7 +125,7 @@ public class ComplexTypesTestCase extends WSToolsBase
     */
    public void testXSComplexType_EmptyContent() throws Exception
    {
-      String filename = getResourceFile("tools/xsd/complextypes/CT_EmptyContent.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/complextypes/CT_EmptyContent.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types";
 
       this.mkdirs(genPath);
@@ -147,7 +147,7 @@ public class ComplexTypesTestCase extends WSToolsBase
     */
    public void testXSComplexTypeOccurrence() throws Exception
    {
-      String filename = getResourceFile("tools/xsd/complextypes/ComplexTypesOccurence.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/complextypes/ComplexTypesOccurence.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types";
 
       this.mkdirs(genPath);
@@ -170,7 +170,7 @@ public class ComplexTypesTestCase extends WSToolsBase
     */
    public void testXSComplexType_Inheritance() throws Exception
    {
-      String filename = getResourceFile("tools/xsd/complextypes/CT_ExtensionRestriction.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/complextypes/CT_ExtensionRestriction.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types";
 
       this.mkdirs(genPath);
@@ -204,7 +204,7 @@ public class ComplexTypesTestCase extends WSToolsBase
       /**
        * wscompile does not support element groups
        */
-      String filename = getResourceFile("tools/xsd/complextypes/CT_SequenceGroups.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/complextypes/CT_SequenceGroups.xsd").getAbsolutePath();
       //This testcase will pass because wscompile does not support xsd:group
       String packagename = "org.jboss.ws.types";
 

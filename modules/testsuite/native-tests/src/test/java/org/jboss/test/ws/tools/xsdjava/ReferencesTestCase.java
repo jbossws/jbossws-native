@@ -48,7 +48,7 @@ public class ReferencesTestCase extends WSToolsBase
    public void testXSElemAttribReferences() throws Exception
    {
 
-      String filename = getResourceFile("tools/xsd/references/ElemAttribReferences.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/references/ElemAttribReferences.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types"; 
 
       this.mkdirs(genPath);

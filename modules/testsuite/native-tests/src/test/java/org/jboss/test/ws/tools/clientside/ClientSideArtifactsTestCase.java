@@ -187,7 +187,7 @@ public class ClientSideArtifactsTestCase extends WSToolsBase
        }*/
 
       //Compare mapping files 
-      String fix = getResourceFile("tools/jbws-160/wscompile/custom/mapping/jaxrpc-mapping.xml").getPath();
+      String fix = getResourceFile("tools/jbws-160/wscompile/custom/mapping/jaxrpc-mapping.xml").getAbsolutePath();
       String gen = "tools/jbws-160/jbossws/custom/mapping/jaxrpc-mapping.xml";
 
       JaxrpcMappingValidator mv = new JaxrpcMappingValidator();

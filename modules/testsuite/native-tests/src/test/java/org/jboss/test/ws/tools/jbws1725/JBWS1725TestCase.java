@@ -41,9 +41,11 @@ public class JBWS1725TestCase extends JBossWSTest
 
    public void testExtensionType() throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1725").getPath();
-      String toolsDir = "tools/jbws1725";
-      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
+      File resourceDir = createResourceFile("tools/jbws1725");
+      resourceDir.mkdirs();
+
+      String toolsDir = resourceDir.getAbsolutePath();
+      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir.getAbsolutePath() + "/wstools-config.xml" };
       new WSTools().generate(args);
 
       compareSource(resourceDir + "/PasswordType.java", toolsDir + "/org/jboss/test/ws/jbws1725/PasswordType.java");
@@ -51,8 +53,8 @@ public class JBWS1725TestCase extends JBossWSTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = createResourceFile(expectedName);
-      File generated = createResourceFile(generatedName);
+      File expected = new File(expectedName);
+      File generated = new File(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

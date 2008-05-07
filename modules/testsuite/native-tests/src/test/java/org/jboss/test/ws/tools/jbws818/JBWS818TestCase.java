@@ -44,11 +44,11 @@ public class JBWS818TestCase extends JBossWSTest
 
    public final void testEnumWsdl() throws Exception
    {
-      String config = getResourceFile("tools/jbws818/wstools-config.xml").getPath();
+      String config = getResourceFile("tools/jbws818/wstools-config.xml").getAbsolutePath();
       String[] args= new String[]{"-dest", "tools/jbws818", "-config", config};
       new WSTools().generate(args);
 
-      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws818/CrossPackageInheritenceService.wsdl").getPath()));
+      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws818/CrossPackageInheritenceService.wsdl").getAbsolutePath()));
       Element was = DOMUtils.parse(new FileInputStream("tools/jbws818/wsdl/CrossPackageInheritenceService.wsdl"));
       assertEquals(exp, was);
    }

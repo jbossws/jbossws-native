@@ -78,7 +78,7 @@ public class JBWS1645TestCase extends JBossWSTest
    public void testWSDLGeneratorWithPolicies() throws Exception
    {
       Class seiClass = StandardJavaTypes.class;
-      String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645.wsdl").getPath();
+      String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645.wsdl").getAbsolutePath();
       
       File wsdlDir = createResourceFile("./tools/jbws1645");
       wsdlDir.mkdirs();
@@ -129,7 +129,7 @@ public class JBWS1645TestCase extends JBossWSTest
    public void testWSDLGeneratorWithMultiplePolicies() throws Exception
    {
       Class seiClass = StandardJavaTypes.class;
-      String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645-Multiple.wsdl").getPath();
+      String fixturefile = getResourceFile("tools/jbws1645/StandardJavaTypesServiceJBWS1645-Multiple.wsdl").getAbsolutePath();
       
       File wsdlDir = createResourceFile("./tools/jbws1645");
       wsdlDir.mkdirs();

@@ -35,8 +35,8 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class JBWS810TestCase extends JBossWSTest
 {
-   private String resourceDir = getResourceFile("tools/jbws810").getPath();
-   private String toolsDir = "tools/jbws810";
+   private String resourceDir = createResourceFile("tools/jbws810").getAbsolutePath();
+   private String toolsDir = resourceDir; //"tools/jbws810";
 
    public void testDocument() throws Exception
    {

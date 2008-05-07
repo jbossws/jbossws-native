@@ -36,8 +36,8 @@ public class JBWS1080TestCase extends JBossWSTest
 
    public final void testNoNamespaceElement() throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1080").getPath();
-      String toolsDir = "tools/jbws1080";
+      String resourceDir = createResourceFile("tools/jbws1080").getAbsolutePath();
+      String toolsDir = resourceDir; //"tools/jbws1080";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
 
       try

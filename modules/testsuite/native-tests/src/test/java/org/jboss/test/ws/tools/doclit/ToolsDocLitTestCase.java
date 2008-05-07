@@ -61,7 +61,7 @@ public class ToolsDocLitTestCase extends WSToolsBase
       new WSDLWriter(wsdl).write(fw, Constants.DEFAULT_XML_CHARSET);
       fw.close();
 
-      String fixturefile = getResourceFile("tools/doc-lit/trivial/wsdl/SampleService.wsdl").getPath();
+      String fixturefile = getResourceFile("tools/doc-lit/trivial/wsdl/SampleService.wsdl").getAbsolutePath();
       //Validate the generated WSDL
       File wsdlfix = createResourceFile(fixturefile);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());

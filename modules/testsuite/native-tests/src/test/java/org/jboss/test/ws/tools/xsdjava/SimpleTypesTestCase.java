@@ -48,7 +48,7 @@ public class SimpleTypesTestCase extends WSToolsBase
     */
    public void testXSSimpleTypes() throws Exception
    {
-      String filename = getResourceFile("tools/xsd/simpletypes/SimpleType.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/simpletypes/SimpleType.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types";
 
       mkdirs(genPath);

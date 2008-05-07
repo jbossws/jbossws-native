@@ -49,7 +49,7 @@ public class AnonymousTypesTestCase extends WSToolsBase
    {
       String filename = "AnonTypes.xsd";
       String packagename = "org.jboss.ws.types";
-      String schemaFile = getResourceFile("tools/xsd/anontypes/" + filename).getPath(); 
+      String schemaFile = getResourceFile("tools/xsd/anontypes/" + filename).getAbsolutePath();
      
       String genPath = "tools/xsd-java-checker/jbossws/anontypes/";
       this.mkdirs(genPath);

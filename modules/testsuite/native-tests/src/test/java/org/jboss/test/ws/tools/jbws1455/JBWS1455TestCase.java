@@ -36,8 +36,8 @@ import org.jboss.wsf.test.JBossWSTest;
 public class JBWS1455TestCase extends JBossWSTest
 {
 
-   private String resourceDir = getResourceFile("tools/jbws1455").getPath();
-   private String toolsDir = "tools/jbws1455";
+   private String resourceDir = createResourceFile("tools/jbws1455").getAbsolutePath();
+   private String toolsDir = resourceDir; //"tools/jbws1455";
 
    public void testGenerate() throws Exception
    {
@@ -53,8 +53,8 @@ public class JBWS1455TestCase extends JBossWSTest
 
    private void compareSource(final String fileName) throws Exception
    {
-      File expected = createResourceFile(resourceDir + "/" + fileName);
-      File generated = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1455/" + fileName);
+      File expected = new File(resourceDir + "/" + fileName);
+      File generated = new File(toolsDir + "/org/jboss/test/ws/jbws1455/" + fileName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

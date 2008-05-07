@@ -90,7 +90,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
    {
       String typeNS = "http://org.jboss.ws/types";
       XSLoader xsloader = SchemaUtils.getInstance().getXSLoader();
-      XSModel xsmodel = xsloader.loadURI(getResourceFile("tools/wsdlfixture/CustomInterface20.xsd").getPath());
+      XSModel xsmodel = xsloader.loadURI(getResourceFile("tools/wsdlfixture/CustomInterface20.xsd").getAbsolutePath());
       assertNotNull("XSModel is null?", xsmodel);
 
       XSNamedMap xsnamedmap = getXSNamedMap(xsmodel, typeNS);
@@ -137,7 +137,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       assertEquals("HelloObj", name);
 
       //Test the case when the schema files are parsed one by one
-      XSModel newxsmodel = utils.parseSchema(getResourceFile("tools/wsdlfixture/customtype/CustomTypeObj.xsd").getPath());
+      XSModel newxsmodel = utils.parseSchema(getResourceFile("tools/wsdlfixture/customtype/CustomTypeObj.xsd").getAbsolutePath());
       assertNotNull("XSModel is null?", newxsmodel);
       xsnamedmap = getXSNamedMap(newxsmodel, typeNS);
       assertNotNull("XSNamedMap is null?", xsnamedmap);
@@ -146,7 +146,7 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       assertEquals("HelloObj", xobj.getName());
       assertTrue("HelloObj is a complex type?",xobj instanceof XSComplexTypeDefinition);
 
-      newxsmodel = utils.parseSchema(getResourceFile("tools/wsdlfixture/customtype/CustomTypeArrays.xsd").getPath());
+      newxsmodel = utils.parseSchema(getResourceFile("tools/wsdlfixture/customtype/CustomTypeArrays.xsd").getAbsolutePath());
       assertNotNull("XSModel is null?", newxsmodel);
       xsnamedmap = getXSNamedMap(newxsmodel, arrTypeNS);
       assertNotNull("XSNamedMap is null?", xsnamedmap);
@@ -173,8 +173,8 @@ public class XercesSchemaParserTestCase extends JBossWSTest
       SchemaUtils utils = SchemaUtils.getInstance();
       String typeNS = "http://org.jboss/types";
       String arrTypeNS = "http://org.jboss/types/arrays/org/jboss/test/ws/tools/jbws_161/custom";
-      String arr[] = {getResourceFile("tools/wsdlfixture/customtype/CustomTypeObj.xsd").getPath(),
-                      getResourceFile("tools/wsdlfixture/customtype/CustomTypeArrays.xsd").getPath()};
+      String arr[] = {getResourceFile("tools/wsdlfixture/customtype/CustomTypeObj.xsd").getAbsolutePath(),
+                      getResourceFile("tools/wsdlfixture/customtype/CustomTypeArrays.xsd").getAbsolutePath()};
       XSLoader xsloader = utils.getXSLoader();
       Map map = new HashMap();
       map.put(typeNS,getResourceURL("/tools/wsdlfixture/customtype/CustomTypeObj.xsd"));

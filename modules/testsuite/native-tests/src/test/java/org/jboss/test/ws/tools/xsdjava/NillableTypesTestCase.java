@@ -51,7 +51,7 @@ public class NillableTypesTestCase extends WSToolsBase
        * wscompile has a bug. It does not generate accessors for 'byte'
        * and getBoolean
        */ 
-      String filename = getResourceFile("tools/xsd/nillabletypes/Nillable.xsd").getPath();
+      String filename = getResourceFile("tools/xsd/nillabletypes/Nillable.xsd").getAbsolutePath();
       String packagename = "org.jboss.ws.types"; 
       this.mkdirs(genPath);
       File dir = createResourceFile(genPath);

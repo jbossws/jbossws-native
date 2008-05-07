@@ -38,8 +38,9 @@ public class JBWS1079TestCase extends JBossWSTest
 
    public void testAnonymousType() throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1079").getPath();
-      String toolsDir = "tools/jbws1079";
+      File resourceFile = createResourceFile("tools/jbws1079");
+      String resourceDir = resourceFile.getAbsolutePath();
+      String toolsDir = resourceDir;
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 
@@ -54,8 +55,8 @@ public class JBWS1079TestCase extends JBossWSTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = createResourceFile(expectedName);
-      File generated = createResourceFile(generatedName);
+      File expected = new File(expectedName);
+      File generated = new File(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

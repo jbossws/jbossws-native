@@ -37,10 +37,10 @@ public class EnumTestCase extends JBossWSTest
 {
    public final void testEnumWsdl() throws Exception
    {
-      String config = getResourceFile("tools/enums/wstools-config.xml").getPath();
+      String config = getResourceFile("tools/enums/wstools-config.xml").getAbsolutePath();
       new WSTools().generate(new String[] {"-dest", "tools/enums", "-config", config});
       
-      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService15.wsdl").getPath()));
+      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService15.wsdl").getAbsolutePath()));
       Element was = DOMUtils.parse(new FileInputStream("tools/enums/wsdl/EnumService.wsdl"));
       assertEquals(exp, was);
    }

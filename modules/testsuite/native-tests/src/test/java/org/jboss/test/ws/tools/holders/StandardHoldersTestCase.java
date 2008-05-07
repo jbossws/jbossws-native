@@ -93,7 +93,7 @@ public class StandardHoldersTestCase extends WSToolsBase
       //First check if the wsdl files are well formed
       try
       {
-         String fixturefile = getResourceFile("tools/holders/wsdl/HolderService.wsdl").getPath();
+         String fixturefile = getResourceFile("tools/holders/wsdl/HolderService.wsdl").getAbsolutePath();
          File wsdlfix = createResourceFile(fixturefile);
          Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
          File wsdlFile = createResourceFile(wsdlPath);

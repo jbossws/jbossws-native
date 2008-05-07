@@ -59,7 +59,7 @@ public abstract class JBWS206Test extends WSToolsBase
    public void checkServiceEndpointInterface() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getPath();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getAbsolutePath();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String seiName = getSEIName() + ".java";
@@ -72,7 +72,7 @@ public abstract class JBWS206Test extends WSToolsBase
    public void checkServiceInterface() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getPath();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getAbsolutePath();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String serviceName = getServiceName();
@@ -85,7 +85,7 @@ public abstract class JBWS206Test extends WSToolsBase
    public final void checkUserType(String name) throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getPath();
+      String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getAbsolutePath();
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
 
       //    Check User Types
@@ -96,7 +96,7 @@ public abstract class JBWS206Test extends WSToolsBase
    protected final void generate() throws Exception
    {
       String out_dir = "tools/jbws-206/jbossws/" + getBase();
-      String configloc = getResourceFile("tools/jbws-206/jbosswsConfig/" + getBase() + "/" + getBase() + "wsdl2java.xml").getPath();
+      String configloc = getResourceFile("tools/jbws-206/jbosswsConfig/" + getBase() + "/" + getBase() + "wsdl2java.xml").getAbsolutePath();
 
       String[] args = new String[] { "-dest", out_dir, "-config", configloc };
       WSTools tools = new WSTools();
