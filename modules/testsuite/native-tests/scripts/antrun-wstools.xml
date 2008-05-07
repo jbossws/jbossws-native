@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<!-- $Id$ -->
+
+<project>
+  
+  <!-- ================================================================== -->
+  <!-- Generating sources                                                 -->
+  <!-- ================================================================== -->
+  
+  <target name="wstools" description="Generate the JAX-RPC artifacts.">
+    
+    <!-- Define the JAX-RPC tools task -->
+    <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
+      <classpath>
+        <pathelement path="${maven.classpath}"/>
+      </classpath>
+    </taskdef>
+    
+    <!-- Generate JAX-RPC artifacts -->
+    <mkdir dir="${tests.output.dir}/wstools/java"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/bare/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/dynamichandler/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/dynamichandler/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/exception/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/exception/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/handler/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/handler/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/holder/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/holder/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jmstransport/META-INF" config="${tests.resources.dir}/jaxrpc/samples/jmstransport/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/doclit/META-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109ejb/doclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109ejb/rpclit/META-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109ejb/rpclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/doclit/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109pojo/doclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/jsr109pojo/rpclit/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/jsr109pojo/rpclit/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/message/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/message/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${tests.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsaddr/hello/wstools-config.xml"/>
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsaddr/replyto/wstools-config.xml"/>
+    <!--wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/wstools-config.xml"/-->
+    <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
+    <move todir="${tests.output.dir}/wstools/java">
+      <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
+    </move>
+    <move todir="${tests.output.dir}/wstools/java">
+      <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" includes="org/**"/>
+    </move>
+    <move todir="${tests.output.dir}/wstools/java">
+      <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" includes="org/**"/>
+    </move>
+    
+    <!-- Copy generated resources -->
+    <copy todir="${tests.output.dir}/test-resources">
+      <fileset dir="${tests.output.dir}/wstools/resources">
+        <include name="**/*.wsdl"/>
+        <include name="**/*.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy resources that cannot (yet) be generated -->
+    <copy todir="${tests.output.dir}/test-resources/jaxrpc/samples" overwrite="true">
+      <fileset dir="${tests.resources.dir}/jaxrpc/samples-override"/>
+      <filterset>
+        <filter token="jboss.bind.address" value="${node0}"/>
+      </filterset>
+    </copy>
+  </target>
+  
+</project>

@@ -46,6 +46,21 @@
             </configuration>
           </execution>
           <execution>
+            <id>wstools</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <property name="maven.classpath" refid="maven.test.classpath"/>
+                <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
+                <property name="tests.output.dir" value="${project.build.directory}"/>
+                <ant antfile="scripts/antrun-wstools.xml" target="wstools"/>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
             <id>build-jars</id>
             <phase>test-compile</phase>
             <goals>
