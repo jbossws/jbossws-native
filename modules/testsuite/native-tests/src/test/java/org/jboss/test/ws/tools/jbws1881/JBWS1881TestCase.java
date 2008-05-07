@@ -47,12 +47,13 @@ public class JBWS1881TestCase extends JBossWSTest
 
    protected void generateScenario(final String scenario) throws Exception
    {
-      String resourceDir = getResourceFile("tools/jbws1881/" + scenario).getPath();
-      String toolsDir = "tools/jbws1881/" + scenario;
+      File resourceDir = createResourceFile("tools/jbws1881/" + scenario);
+      resourceDir.mkdirs();
+      String toolsDir = resourceDir.getAbsolutePath();
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
-      File resourceDirFile = createResourceFile(resourceDir);
-      String[] expectedFiles = resourceDirFile.list(new FilenameFilter() {
+
+      String[] expectedFiles = resourceDir.list(new FilenameFilter() {
          public boolean accept(File dir, String name)
          {
             return name.endsWith(".java");
@@ -73,7 +74,7 @@ public class JBWS1881TestCase extends JBossWSTest
          }
       }
 
-      File packageDir = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1881");
+      File packageDir = new File(toolsDir + "/org/jboss/test/ws/jbws1881");
       String[] generatedFiles = packageDir.list();
       for (int i = 0; i < generatedFiles.length; i++)
       {
@@ -93,8 +94,8 @@ public class JBWS1881TestCase extends JBossWSTest
 
    private static void compareSource(final String expectedName, final String generatedName) throws Exception
    {
-      File expected = createResourceFile(expectedName);
-      File generated = createResourceFile(generatedName);
+      File expected = new File(expectedName);
+      File generated = new File(generatedName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();
