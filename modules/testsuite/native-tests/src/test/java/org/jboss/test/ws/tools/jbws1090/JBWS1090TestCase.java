@@ -42,11 +42,12 @@ public class JBWS1090TestCase extends JBossWSTest
    public void testWebServicesAppend() throws Exception
    {
       // create output dir
-      createResourceFile("tools/jbws1090").mkdirs();
+      File resourceDir = createResourceFile("tools/jbws1090");
+      resourceDir.mkdirs();
       
       // copy webservices.xml fixture to output folder 
       FileInputStream src = new FileInputStream(getResourceFile("tools/metadatafixture/webservices.xml").getPath());
-      FileOutputStream dest = new FileOutputStream("tools/jbws1090/webservices.xml");
+      FileOutputStream dest = new FileOutputStream(createResourceFile("tools/jbws1090/webservices.xml"));
       IOUtils.copyStream(dest, src);
       src.close();
       dest.close();
@@ -56,7 +57,7 @@ public class JBWS1090TestCase extends JBossWSTest
       new WSTools().generate(args);
 
       Element expected = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1090/webservices.xml").getPath()));
-      Element was = DOMUtils.parse(new FileInputStream("tools/jbws1090/webservices.xml"));
+      Element was = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1090/webservices.xml")));
       assertEquals(expected, was);
    }
 }

@@ -58,7 +58,7 @@ public abstract class JBWS206Test extends WSToolsBase
 
    public void checkServiceEndpointInterface() throws Exception
    {
-      String out_dir = "tools/jbws-206/jbossws/" + getBase();
+      String out_dir = getResourceFile("tools/jbws-206/jbossws/" + getBase()).getAbsolutePath();
       String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getAbsolutePath();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
@@ -66,36 +66,36 @@ public abstract class JBWS206Test extends WSToolsBase
       String sei = fixBase + "/sei/" + seiName;
       //    Check the sei
       // assertExactSourceFiles(createResourceFile(sei), createResourceFile(out_dir + "/client/" + packageDir + "/" + seiName ));
-      assertExactSourceFiles(createResourceFile(sei), createResourceFile(out_dir + "/" + packageDir + "/" + seiName));
+      assertExactSourceFiles(new File(sei), new File(out_dir + "/" + packageDir + "/" + seiName));
    }
 
    public void checkServiceInterface() throws Exception
    {
-      String out_dir = "tools/jbws-206/jbossws/" + getBase();
+      String out_dir = getResourceFile("tools/jbws-206/jbossws/" + getBase()).getAbsolutePath();
       String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getAbsolutePath();
 
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
       String serviceName = getServiceName();
 
       //    Check the Service File
-      assertExactSourceFiles(createResourceFile(fixBase + "/service/" + serviceName + ".java"), createResourceFile(out_dir + "/" + packageDir + "/" + serviceName + ".java"));
+      assertExactSourceFiles(new File(fixBase + "/service/" + serviceName + ".java"), new File(out_dir + "/" + packageDir + "/" + serviceName + ".java"));
       //createResourceFile(out_dir + "/client/" + packageDir + "/" + serviceName + ".java" ));
    }
 
    public final void checkUserType(String name) throws Exception
    {
-      String out_dir = "tools/jbws-206/jbossws/" + getBase();
+      String out_dir = getResourceFile("tools/jbws-206/jbossws/" + getBase()).getAbsolutePath();
       String fixBase = getResourceFile("tools/jbws-206/wscompileArtifacts/" + getBase()).getAbsolutePath();
       String packageDir = "org/jboss/test/webservice/" + getBase().toLowerCase();
 
       //    Check User Types
-      assertExactSourceFiles(createResourceFile(fixBase + "/usertypes/" + name), createResourceFile(out_dir + "/" + packageDir + "/" + name));
+      assertExactSourceFiles(new File(fixBase + "/usertypes/" + name), new File(out_dir + "/" + packageDir + "/" + name));
       //createResourceFile(out_dir + "/client/" + packageDir + "/" + name ));
    }
 
    protected final void generate() throws Exception
    {
-      String out_dir = "tools/jbws-206/jbossws/" + getBase();
+      String out_dir = getResourceFile("tools/jbws-206/jbossws/" + getBase()).getAbsolutePath();
       String configloc = getResourceFile("tools/jbws-206/jbosswsConfig/" + getBase() + "/" + getBase() + "wsdl2java.xml").getAbsolutePath();
 
       String[] args = new String[] { "-dest", out_dir, "-config", configloc };

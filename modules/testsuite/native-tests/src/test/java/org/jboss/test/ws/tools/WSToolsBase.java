@@ -202,9 +202,9 @@ public class WSToolsBase extends JBossWSTest
 
    protected void validateXML(String fixtureFile, String genFile) throws Exception
    {
-      File wsdlfix = createResourceFile(fixtureFile);
+      File wsdlfix = new File(fixtureFile);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-      File wsdlFile = createResourceFile(genFile);
+      File wsdlFile = new File(genFile);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
       Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
       assertEquals(exp, was);
