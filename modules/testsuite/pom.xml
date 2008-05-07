@@ -112,7 +112,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>${surefire.jvm.args}</argLine>
-          <!--argLine>${surefire.jdpw.args}</argLine-->
+          <argLine>${surefire.jdpw.args}</argLine>
           <systemProperties>
             <property>
               <name>build.testlog</name>

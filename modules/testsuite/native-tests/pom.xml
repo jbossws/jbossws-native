@@ -61,6 +61,21 @@
             </configuration>
           </execution>
           <execution>
+            <id>wsprovide</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <property name="maven.classpath" refid="maven.test.classpath"/>
+                <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
+                <property name="tests.output.dir" value="${project.build.directory}"/>
+                <ant antfile="scripts/antrun-wsprovide.xml" target="wsprovide"/>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
             <id>build-jars</id>
             <phase>test-compile</phase>
             <goals>
