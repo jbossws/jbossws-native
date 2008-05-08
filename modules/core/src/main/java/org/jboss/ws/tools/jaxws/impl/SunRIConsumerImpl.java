@@ -45,6 +45,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
    private File catalog;
    private boolean extension;
    private boolean generateSource;
+   private boolean nocompile;
    private File outputDir = new File("output");
    private File sourceDir;
    private String targetPackage;
@@ -107,14 +108,22 @@ public class SunRIConsumerImpl extends WSContractConsumer
       this.wsdlLocation = wsdlLocation;
    }
 
+   @Override
    public void setAdditionalCompilerClassPath(List<String> additionalCompilerClassPath)
    {
       this.additionalCompilerClassPath = additionalCompilerClassPath;
    }
 
+   @Override
    public void setTarget(String target)
    {     
       this.target = target;
+   }
+
+   @Override
+   public void setNoCompile(boolean nocompile)
+   {
+      this.nocompile = nocompile;
    }
 
    @Override
@@ -140,6 +149,11 @@ public class SunRIConsumerImpl extends WSContractConsumer
       if (extension)
       {
          args.add("-extension");
+      }
+
+      if (nocompile)
+      {
+         args.add("-Xnocompile");
       }
 
       if (generateSource)
