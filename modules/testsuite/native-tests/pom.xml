@@ -54,6 +54,7 @@
                     <property name="maven.classpath" refid="maven.test.classpath"/>
                     <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
                     <property name="tests.output.dir" value="${project.build.directory}"/>
+                    <property name="project.version" value="${project.version}"/>
                     <ant antfile="scripts/antrun-wsconsume.xml" target="wsconsume"/>
                   </tasks>
                 </configuration>
