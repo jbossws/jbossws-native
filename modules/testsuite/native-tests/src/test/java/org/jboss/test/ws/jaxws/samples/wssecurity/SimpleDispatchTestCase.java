@@ -80,7 +80,7 @@ public class SimpleDispatchTestCase extends JBossWSTest
       }
       if (encryptDispatch == null)
       {
-         URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurity/HelloService.wsdl").toURL();
+         URL wsdlURL = getResourceURL("wsprovide/jaxws/samples/wssecurity/HelloService.wsdl");
          URL securityURL = getResourceURL("jaxws/samples/wssecurity/simple-encrypt/META-INF/jboss-wsse-client.xml");
          QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
          QName portName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloPort");

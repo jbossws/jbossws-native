@@ -23,8 +23,8 @@
       </classpath>
 		</taskdef>
 
-		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean" destdir="${tests.output.dir}/test-classes" verbose="false"/>
-		<wsprovide resourcedestdir="${tests.output.dir}/wsprovide/resources/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean" destdir="${tests.output.dir}/test-classes" verbose="false"/>
+		<wsprovide resourcedestdir="${tests.output.dir}/test-resources/wsprovide/jaxws/samples/wssecurity" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean" destdir="${tests.output.dir}/test-classes" verbose="false"/>
+		<wsprovide resourcedestdir="${tests.output.dir}/test-resources/wsprovide/jaxws/samples/wssecurityAnnotatedpolicy" genwsdl="true" sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean" destdir="${tests.output.dir}/test-classes" verbose="false"/>
 	</target>
 
 </project>

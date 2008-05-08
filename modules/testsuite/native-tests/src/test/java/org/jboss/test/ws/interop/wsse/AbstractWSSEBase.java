@@ -21,25 +21,26 @@
  */
 package org.jboss.test.ws.interop.wsse;
 
+// $Id: $
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
+
 import org.jboss.ws.core.StubExt;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestHelper;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.BindingProvider;
-import java.net.URLClassLoader;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.File;
-
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 25.01.2007
  */
-public abstract class AbstractWSSEBase extends JBossWSTest {
-
+public abstract class AbstractWSSEBase extends JBossWSTest
+{
    protected IPingService port;
 
    protected void setUp() throws Exception
@@ -53,10 +54,7 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
          Service service = Service.create(wsdlLocation, serviceName);
          port = service.getPort(IPingService.class);
 
-         ((BindingProvider)port).getRequestContext().put(
-            BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            getEndpointURL()
-         );
+         ((BindingProvider)port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, getEndpointURL());
          configureClient();
       }
 
@@ -65,8 +63,8 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
 
    abstract String getEndpointURL();
 
-
-   protected void defaultSetup(IPingService port) {
+   protected void defaultSetup(IPingService port)
+   {
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
 
       System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("interop/wsse/shared/META-INF/alice.jks").getPath());
@@ -77,7 +75,8 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
       System.setProperty("org.jboss.ws.wsse.trustStoreType", "jks");
    }
 
-   protected void configureClient() {
+   protected void configureClient()
+   {
 
       /*InteropConfigFactory factory = InteropConfigFactory.newInstance();
       ClientScenario scenario = factory.createClientScenario(System.getProperty("client.scenario"));
@@ -93,13 +92,14 @@ public abstract class AbstractWSSEBase extends JBossWSTest {
       */
    }
 
-   protected static void addClientConfToClasspath(String s) {
+   protected static void addClientConfToClasspath(String s)
+   {
       try
       {
          // wrap the classloader upfront to allow inclusion of the client.jar
          JBossWSTestHelper helper = new JBossWSTestHelper();
          ClassLoader parent = Thread.currentThread().getContextClassLoader();
-         URLClassLoader replacement = new URLClassLoader(new URL[] {helper.getArchiveURL(s)}, parent);
+         URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveURL(s) }, parent);
          Thread.currentThread().setContextClassLoader(replacement);
 
       }
