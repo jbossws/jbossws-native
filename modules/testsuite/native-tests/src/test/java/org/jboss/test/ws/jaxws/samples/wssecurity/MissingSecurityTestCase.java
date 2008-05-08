@@ -102,7 +102,7 @@ public class MissingSecurityTestCase extends JBossWSTest
    
    private Hello getPort() throws Exception
    {
-      URL wsdlURL = new File("wsprovide/resources/jaxws/samples/wssecurity/HelloService.wsdl").toURL();
+      URL wsdlURL = getResourceURL("wsprovide/jaxws/samples/wssecurity/HelloService.wsdl");
       QName serviceName = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
 
       Service service = Service.create(wsdlURL, serviceName);
