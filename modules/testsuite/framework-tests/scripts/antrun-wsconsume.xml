@@ -14,12 +14,12 @@
 	<!-- Generating sources                                                 -->
 	<!-- ================================================================== -->
 
-	<target name="wsconsume" description="Consume JAX-WS contracts">
+	<target name="wsconsume" depends="prepend-jars" description="Consume JAX-WS contracts">
 
 		<!-- Define the JAX-WS wsconsume task -->
 		<taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">			
       <classpath>
-        <pathelement path="${maven.test.classpath}"/>
+        <pathelement path="${wsconsume.classpath}"/>
       </classpath>
     </taskdef>
 
@@ -27,4 +27,22 @@
 		<wsconsume wsdl="${tests.resources.dir}/jaxws/holder/META-INF/wsdl/HolderService.wsdl" package="org.jboss.test.ws.jaxws.holder" sourcedestdir="${tests.output.dir}/wsconsume/java" destdir="${tests.output.dir}/test-classes" keep="true" verbose="false"/>
 	</target>
 
+  <!-- 
+  wsconsume cannot run with jaxws-api from build output
+  http://jira.jboss.org/jira/browse/JBWS-2175 
+  -->
+  <target name="available-jars">
+    <property name="jaxws.ext.jar" value="${basedir}/../../jaxws-ext/target/jbossws-native-jaxws-ext-${project.version}.jar"/>
+    <available property="jaxws.ext.jar.available" file="${jaxws.ext.jar}"/>
+    <echo message="jaxws.ext.jar.available=${jaxws.ext.jar.available}"/>
+  </target>
+  
+  <target name="prepend-jars" depends="available-jars,prepend-jaxws-ext">
+    <property name="wsconsume.classpath" value="${maven.test.classpath}"/>
+  </target>
+  
+  <target name="prepend-jaxws-ext" if="jaxws.ext.jar.available">
+    <property name="wsconsume.classpath" value="${jaxws.ext.jar}:${maven.test.classpath}"/>
+  </target>
+  
 </project>
