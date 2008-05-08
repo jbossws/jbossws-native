@@ -466,6 +466,7 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
               <compilerVersion>1.5</compilerVersion>
+              <executable>${java.jdk15.home}/bin/javac</executable>
               <fork>true</fork>
             </configuration>
           </plugin>
