@@ -34,7 +34,7 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class ScriptTestCase extends JBossWSTest
 {
-   private String TOOLS_CONFIG = getResourceFile("tools/scripts/wstools-config.xml").getPath();
+   private String TOOLS_CONFIG = getResourceFile("tools/scripts/wstools-config.xml").getAbsolutePath();
 
    private String JBOSS_HOME;
    private String JDK_HOME;
@@ -58,17 +58,17 @@ public class ScriptTestCase extends JBossWSTest
          fail("This test has not been verified on windows");
       }
 
-      // use absolute path for the output to be re-usable
-      String absToolsConfig = createResourceFile(TOOLS_CONFIG).getAbsolutePath();
-      String absOutput = createResourceFile("wstools/java").getAbsolutePath();
+      // use absolute path for the output to be re-usable      
+      File dest = createResourceFile("wstools/java");
+      dest.mkdirs();
 
-      String command = JBOSS_HOME + "/bin/wstools.sh -config " + TOOLS_CONFIG + " -dest wstools/java";
+      String command = JBOSS_HOME + "/bin/wstools.sh -config " + TOOLS_CONFIG + " -dest "+ dest.getAbsolutePath();
       Process p = executeCommand(command);
 
       // check status code
       assertStatusCode(p, "wstools");
 
-      File javaSource = createResourceFile("wstools/java/org/jboss/test/ws/jbws810/PhoneBookService.java");
+      File javaSource = getResourceFile("wstools/java/org/jboss/test/ws/jbws810/PhoneBookService.java");
 
       assertTrue("Service endpoint interface not generated", javaSource.exists());
    }

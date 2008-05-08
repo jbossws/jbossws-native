@@ -47,12 +47,14 @@ public class JBWS1873TestCase extends JBossWSTest
 
    protected void generateScenario(final String scenario) throws Exception
    {
-      String resourceDir = createResourceFile("tools/jbws1873/" + scenario).getAbsolutePath();
-      String toolsDir = resourceDir; //"tools/jbws1873/" + scenario;
-      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
+      File resourceDir = createResourceFile("tools/jbws1873/" + scenario);
+      resourceDir.mkdirs();
+
+      String toolsDir = resourceDir.getAbsolutePath();
+      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir.getAbsolutePath() + "/wstools-config.xml" };
       new WSTools().generate(args);
-      File resourceDirFile = createResourceFile(resourceDir);
-      String[] expectedFiles = resourceDirFile.list(new FilenameFilter() {
+
+      String[] expectedFiles = resourceDir.list(new FilenameFilter() {
          public boolean accept(File dir, String name)
          {
             return name.endsWith(".java");
@@ -73,7 +75,7 @@ public class JBWS1873TestCase extends JBossWSTest
          }
       }
 
-      File packageDir = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1873");
+      File packageDir = new File(toolsDir + "/org/jboss/test/ws/jbws1873");
       String[] generatedFiles = packageDir.list();
       for (int i = 0; i < generatedFiles.length; i++)
       {

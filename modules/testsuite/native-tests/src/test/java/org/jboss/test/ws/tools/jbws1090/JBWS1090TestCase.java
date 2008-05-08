@@ -42,7 +42,7 @@ public class JBWS1090TestCase extends JBossWSTest
    public void testWebServicesAppend() throws Exception
    {
       // create output dir
-      File resourceDir = createResourceFile("tools/jbws1090");
+      File resourceDir = createResourceFile("tools/jbws1090");      
       resourceDir.mkdirs();
       
       // copy webservices.xml fixture to output folder 

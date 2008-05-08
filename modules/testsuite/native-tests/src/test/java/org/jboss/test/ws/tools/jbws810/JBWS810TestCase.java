@@ -35,8 +35,16 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class JBWS810TestCase extends JBossWSTest
 {
-   private String resourceDir = createResourceFile("tools/jbws810").getAbsolutePath();
-   private String toolsDir = resourceDir; //"tools/jbws810";
+   private File resourceDir;
+   private String toolsDir;
+
+
+   protected void setUp() throws Exception
+   {
+      resourceDir = createResourceFile("tools/jbws810");
+      resourceDir.mkdirs();
+      toolsDir = resourceDir.getAbsolutePath();
+   }
 
    public void testDocument() throws Exception
    {
@@ -51,7 +59,7 @@ public class JBWS810TestCase extends JBossWSTest
    public void runTest(final String type) throws Exception
    {
       String testToolsDir = toolsDir + "/" + type;
-      String testResourceDir = resourceDir + "/" + type;
+      String testResourceDir = resourceDir.getAbsolutePath() + "/" + type;
 
       String[] args = new String[] { "-dest", testToolsDir, "-config", testResourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
@@ -64,8 +72,8 @@ public class JBWS810TestCase extends JBossWSTest
 
    private void compareSource(final String type, final String fileName) throws Exception
    {
-      File expected = createResourceFile(resourceDir + "/" + type + "/" + fileName);
-      File generated = createResourceFile(toolsDir + "/" + type + "/org/jboss/test/ws/jbws810/" + fileName);
+      File expected = new File(resourceDir + "/" + type + "/" + fileName);
+      File generated = new File(toolsDir + "/" + type + "/org/jboss/test/ws/jbws810/" + fileName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);
       sc.validate();

@@ -61,7 +61,7 @@ public class StandardHoldersTestCase extends WSToolsBase
       //Now validate the SEI
       String fname="HoldersServiceInterface.java";
       File file1 = getResourceFile("tools/holders/java/org/jboss/test/"+ fname);
-      File file2 = createResourceFile("tools/org/jboss/test/" + fname);
+      File file2 = getResourceFile("tools/org/jboss/test/" + fname);
 
       try
       {
@@ -83,9 +83,11 @@ public class StandardHoldersTestCase extends WSToolsBase
       WSDLDefinitions wsdl = jwsdl.generate(HoldersServiceInterface.class);
 
       //Generate the wsdl
-      String wsdlDir = "tools/";
-      String wsdlPath = wsdlDir+ "/HolderService.wsdl";
-      Writer fw = IOUtils.getCharsetFileWriter(createResourceFile(wsdlPath), Constants.DEFAULT_XML_CHARSET);
+      File wsdlDir = createResourceFile("tools/");
+      wsdlDir.mkdirs();
+
+      String wsdlPath = wsdlDir.getAbsolutePath()+ "/HolderService.wsdl";
+      Writer fw = IOUtils.getCharsetFileWriter(new File(wsdlPath), Constants.DEFAULT_XML_CHARSET);
       new WSDLWriter(wsdl).write(fw, Constants.DEFAULT_XML_CHARSET);
       fw.close();
 
@@ -94,12 +96,13 @@ public class StandardHoldersTestCase extends WSToolsBase
       try
       {
          String fixturefile = getResourceFile("tools/holders/wsdl/HolderService.wsdl").getAbsolutePath();
-         File wsdlfix = createResourceFile(fixturefile);
+         File wsdlfix = new File(fixturefile);
          Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-         File wsdlFile = createResourceFile(wsdlPath);
+         File wsdlFile = getResourceFile(wsdlPath);
          assertNotNull("Generated WSDL File exists?", wsdlFile);
          Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
          assertEquals(exp,was);
+
          //Now that we have figured out that the wsdl files are well formed,
          //lets do the semantic wsdl validation
          WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
@@ -144,14 +147,15 @@ public class StandardHoldersTestCase extends WSToolsBase
 
    private void generateSEI(WSDLDefinitions wsdl)
    {
-      String seidir = "tools";
+      File seidir = createResourceFile("tools");
+      seidir.mkdirs();
       WSDLToJavaIntf wsdljava = new WSDLToJava();
 
       //Generate the SEI
       try
       {
          wsdljava.setTypeMapping(new LiteralTypeMapping());
-         wsdljava.generateSEI(wsdl, createResourceFile(seidir));
+         wsdljava.generateSEI(wsdl, seidir);
       }
       catch (Exception e)
       {

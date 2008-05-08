@@ -38,23 +38,23 @@ public class JBWS1253TestCase extends JBossWSTest
 {
    public final void testPortTypePort() throws Exception
    {
-      String resourceDir = createResourceFile("tools/jbws1253").getAbsolutePath();
-      String toolsDir = resourceDir; //"tools/jbws1253";
-      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
+      File resourceDir = createResourceFile("tools/jbws1253");
+      String toolsDir = resourceDir.getAbsolutePath();
+      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir.getAbsolutePath() + "/wstools-config.xml" };
       new WSTools().generate(args);
 
       JaxrpcMappingValidator mappingValidator = new JaxrpcMappingValidator();
-      mappingValidator.validate(resourceDir + "/myporttype-mapping.xml", toolsDir + "/myporttype-mapping.xml");
+      mappingValidator.validate(resourceDir.getAbsolutePath() + "/myporttype-mapping.xml", toolsDir + "/myporttype-mapping.xml");
 
-      File expSEI = createResourceFile(resourceDir + "/My.java");
-      File wasSEI = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1253/My.java");
+      File expSEI = getResourceFile(resourceDir + "/My.java");
+      File wasSEI = getResourceFile(toolsDir + "/org/jboss/test/ws/jbws1253/My.java");
 
       JBossSourceComparator sc = new JBossSourceComparator(expSEI, wasSEI);
       sc.validate();
       sc.validateImports();
 
-      File expService = createResourceFile(resourceDir + "/TestSEIService.java");
-      File wasService = createResourceFile(toolsDir + "/org/jboss/test/ws/jbws1253/TestSEIService.java");
+      File expService = new File(resourceDir.getAbsolutePath() + "/TestSEIService.java");
+      File wasService = new File(toolsDir + "/org/jboss/test/ws/jbws1253/TestSEIService.java");
 
       sc = new JBossSourceComparator(expService, wasService);
       sc.validate();

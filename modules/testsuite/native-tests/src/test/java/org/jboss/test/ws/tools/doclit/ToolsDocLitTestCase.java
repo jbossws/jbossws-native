@@ -46,7 +46,7 @@ public class ToolsDocLitTestCase extends WSToolsBase
    public void testTrivialCase() throws Exception
    {
       Class seiClass = TrivialService.class;
-      String wsdlDir = "tools/";
+      String wsdlDir = createResourceFile("tools/").getAbsolutePath();
       String sname = "SampleService";
       String wsdlPath = wsdlDir+ "/" + sname + ".wsdl";
       JavaToWSDL jwsdl = new JavaToWSDL(Constants.NS_WSDL11);
@@ -57,15 +57,15 @@ public class ToolsDocLitTestCase extends WSToolsBase
       jwsdl.addFeature(WSToolsConstants.WSTOOLS_FEATURE_RESTRICT_TO_TARGET_NS, true);
       WSDLDefinitions wsdl = jwsdl.generate(seiClass);
 
-      Writer fw = IOUtils.getCharsetFileWriter(createResourceFile(wsdlPath), Constants.DEFAULT_XML_CHARSET);
+      Writer fw = IOUtils.getCharsetFileWriter(new File(wsdlPath), Constants.DEFAULT_XML_CHARSET);
       new WSDLWriter(wsdl).write(fw, Constants.DEFAULT_XML_CHARSET);
       fw.close();
 
       String fixturefile = getResourceFile("tools/doc-lit/trivial/wsdl/SampleService.wsdl").getAbsolutePath();
       //Validate the generated WSDL
-      File wsdlfix = createResourceFile(fixturefile);
+      File wsdlfix = new File(fixturefile);
       Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
-      File wsdlFile = createResourceFile(wsdlPath);
+      File wsdlFile = new File(wsdlPath);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
       Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
       //assertEquals(exp, was);

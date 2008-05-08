@@ -49,21 +49,27 @@ public class GlobalConfigTestCase extends WSToolsBase
 
    public void testJavaToWSDL() throws IOException
    {
-      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", getResourceFile("tools/config/java2wsdlglobal.xml").getPath() };
+      File dir = createResourceFile("tools/globalconfig");
+      dir.mkdirs();
+
+      String[] args = new String[] { "-dest", dir.getAbsolutePath(), "-config", getResourceFile("tools/config/java2wsdlglobal.xml").getAbsolutePath() };
       WSTools tools = new WSTools();
       tools.generate(args);
 
-      WSDLDefinitions wsdl = getWSDLDefinitions(createResourceFile("tools/globalconfig/wsdl/MarshallService.wsdl"));
+      WSDLDefinitions wsdl = getWSDLDefinitions(getResourceFile("tools/globalconfig/wsdl/MarshallService.wsdl"));
       JBossXSModel xsmodel = WSDLUtils.getSchemaModel(wsdl.getWsdlTypes());
       assertNotNull(xsmodel.getNamespaceItem("http://jboss.org/types"));
    }
 
    public void testWSDLToJava() throws IOException, ClassNotFoundException
    {
-      String[] args = new String[] { "-dest", "tools/globalconfig", "-config", getResourceFile("tools/config/wsdl2javaglobal.xml").getPath() };
+      File dir = createResourceFile("tools/globalconfig");
+      dir.mkdirs();
+
+      String[] args = new String[] { "-dest", dir.getAbsolutePath(), "-config", getResourceFile("tools/config/wsdl2javaglobal.xml").getPath() };
       WSTools tools = new WSTools();
       tools.generate(args);
-      File file = createResourceFile("tools/globalconfig/org/jboss/test/ws/StandardJavaTypes.java");
+      File file = getResourceFile("tools/globalconfig/org/jboss/test/ws/StandardJavaTypes.java");
       assertTrue(file.exists());
       checkGeneratedClass(file);
    }
