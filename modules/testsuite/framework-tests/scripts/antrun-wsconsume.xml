@@ -19,7 +19,7 @@
 		<!-- Define the JAX-WS wsconsume task -->
 		<taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">			
       <classpath>
-        <pathelement path="${maven.classpath}"/>
+        <pathelement path="${maven.test.classpath}"/>
       </classpath>
     </taskdef>
 

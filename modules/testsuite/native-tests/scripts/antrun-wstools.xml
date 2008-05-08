@@ -19,7 +19,7 @@
     <!-- Define the JAX-RPC tools task -->
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath>
-        <pathelement path="${maven.classpath}"/>
+        <pathelement path="${maven.test.classpath}"/>
       </classpath>
     </taskdef>
     
