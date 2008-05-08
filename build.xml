@@ -78,7 +78,8 @@
     
     <xmlproperty file="${stack.dir}/pom.xml"/>
     <property name="version.id" value="${project.version}"/>
-          
+    
+    <echo message="java.version=${java.version}"/>          
     <echo message="version.id=${version.id}"/>
     <echo message="integration.target=${jbossws.integration.target}"/>
     
