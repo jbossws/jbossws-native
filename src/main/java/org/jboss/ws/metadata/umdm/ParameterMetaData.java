@@ -41,7 +41,9 @@ import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
-import org.jboss.ws.metadata.acessor.ReflectiveMethodAccessor;
+import org.jboss.ws.metadata.accessor.AccessorFactory;
+import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
+import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.wsf.common.JavaUtils;
@@ -53,7 +55,7 @@ import org.jboss.wsf.common.JavaUtils;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @since 12-May-2005
  */
-public class ParameterMetaData
+public class ParameterMetaData implements InitalizableMetaData
 {
    // provide logging
    private final Logger log = Logger.getLogger(ParameterMetaData.class);
@@ -78,7 +80,7 @@ public class ParameterMetaData
    // SOAP-ENC:Array
    private boolean soapArrayParam;
    private QName soapArrayCompType;
-   private AccessorFactoryCreator accessorFactoryCreator = ReflectiveMethodAccessor.FACTORY_CREATOR;
+   private AccessorFactoryCreator accessorFactoryCreator = new ReflectiveMethodAccessorFactoryCreator();
 
    private static final List<String> messageTypes = new ArrayList<String>();
    static
@@ -209,7 +211,8 @@ public class ParameterMetaData
       // Remove potential prefix
       if (xmlType.getNamespaceURI().length() > 0)
          this.xmlType = new QName(xmlType.getNamespaceURI(), xmlType.getLocalPart());
-      else this.xmlType = xmlType;
+      else
+         this.xmlType = xmlType;
 
       // Special case to identify attachments
       if (Constants.NS_ATTACHMENT_MIME_TYPE.equals(xmlType.getNamespaceURI()))
@@ -292,7 +295,8 @@ public class ParameterMetaData
          setMode(ParameterMode.INOUT);
       else if ("OUT".equals(mode))
          setMode(ParameterMode.OUT);
-      else throw new IllegalArgumentException("Invalid mode: " + mode);
+      else
+         throw new IllegalArgumentException("Invalid mode: " + mode);
    }
 
    public void setMode(ParameterMode mode)
@@ -378,7 +382,6 @@ public class ParameterMetaData
 
       this.soapArrayCompType = compXmlType;
    }
-
 
    @Deprecated
    // FIXME This hack should be removed
@@ -466,18 +469,13 @@ public class ParameterMetaData
       Type epType = getOperationMetaData().getEndpointMetaData().getType();
       if (getOperationMetaData().isDocumentWrapped() && !isInHeader() && !isSwA() && !isMessageType())
       {
-            if (loadWrapperBean() == null)
-            {
-               if (epType == EndpointMetaData.Type.JAXRPC)
-                  throw new WSException("Autogeneration of wrapper beans not supported with JAXRPC");
+         if (loadWrapperBean() == null)
+         {
+            if (epType == EndpointMetaData.Type.JAXRPC)
+               throw new WSException("Autogeneration of wrapper beans not supported with JAXRPC");
 
-               new DynamicWrapperGenerator( getClassLoader() ).generate(this);
-            }
-
-         // Initialize accessors
-         AccessorFactory factory = accessorFactoryCreator.create(this);
-         for (WrappedParameter wrapped : wrappedParameters)
-            wrapped.setAccessor(factory.create(wrapped));
+            new DynamicWrapperGenerator(getClassLoader()).generate(this);
+         }
       }
 
       javaType = getJavaType();
@@ -502,8 +500,9 @@ public class ParameterMetaData
          AttachmentScanResult scanResult = scanner.scanBean(javaType);
          if (scanResult != null)
          {
-            if(log.isDebugEnabled()) log.debug("Identified attachment reference: " + xmlName + ", type="+scanResult.getType());
-            if(scanResult.getType() == AttachmentScanResult.Type.XOP)
+            if (log.isDebugEnabled())
+               log.debug("Identified attachment reference: " + xmlName + ", type=" + scanResult.getType());
+            if (scanResult.getType() == AttachmentScanResult.Type.XOP)
                setXOP(true);
             else
                setSwaRef(true);
@@ -544,12 +543,18 @@ public class ParameterMetaData
          }
          catch (Exception ex)
          {
-            if(log.isDebugEnabled()) log.debug("Invalid wrapper type:" + typeName, ex);
+            if (log.isDebugEnabled())
+               log.debug("Invalid wrapper type:" + typeName, ex);
             return false;
          }
       }
 
       return true;
+   }
+
+   public AccessorFactoryCreator getAccessorFactoryCreator()
+   {
+      return accessorFactoryCreator;
    }
 
    public void setAccessorFactoryCreator(AccessorFactoryCreator accessorFactoryCreator)

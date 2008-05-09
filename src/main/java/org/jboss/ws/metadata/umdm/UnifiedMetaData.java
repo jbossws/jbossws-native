@@ -48,7 +48,7 @@ import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @since 12-May-2005
  */
-public class UnifiedMetaData
+public class UnifiedMetaData implements InitalizableMetaData
 {
    // provide logging
    private static Logger log = Logger.getLogger(UnifiedMetaData.class);

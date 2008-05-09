@@ -60,7 +60,7 @@ import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public class ServiceMetaData
+public class ServiceMetaData implements InitalizableMetaData
 {
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceMetaData.class);

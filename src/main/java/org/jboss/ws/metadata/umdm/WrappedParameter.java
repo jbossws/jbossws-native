@@ -21,15 +21,17 @@
  */
 package org.jboss.ws.metadata.umdm;
 
+// $Id$
+
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.metadata.accessor.Accessor;
 import org.jboss.wsf.common.JavaUtils;
 
 /**
  * WrappedParameter represents a document/literal wrapped parameter.
  *
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WrappedParameter
 {

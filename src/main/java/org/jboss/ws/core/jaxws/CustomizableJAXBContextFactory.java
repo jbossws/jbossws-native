@@ -21,18 +21,22 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import com.sun.xml.bind.api.JAXBRIContext;
-import com.sun.xml.bind.api.TypeReference;
-import com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader;
+// $Id$
+
+import java.util.Collection;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.util.Collection;
+import com.sun.xml.bind.api.JAXBRIContext;
+import com.sun.xml.bind.api.TypeReference;
+import com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader;
 
 /**
  * The default factory checks if a {@link JAXBBindingCustomization} exists
@@ -57,64 +61,65 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
 
    public JAXBContext createContext(Class clazz) throws WSException
    {
-      return createContext(new Class[] {clazz});
+      return createContext(new Class[] { clazz });
    }
 
    public JAXBContext createContext(Class[] clazzes) throws WSException
    {
       try
       {
-         BindingCustomization customization = getCustomization();
+         BindingCustomization bcust = getCustomization();
 
-         JAXBContext jaxbCtx;         
-         if(null == customization)
+         JAXBContext jaxbCtx;
+         if (null == bcust)
             jaxbCtx = JAXBContext.newInstance(clazzes);
          else
-            jaxbCtx = createContext(clazzes, customization);
+            jaxbCtx = createContext(clazzes, bcust);
 
+         incrementContextCount();
          return jaxbCtx;
       }
-      catch (JAXBException e) {
+      catch (JAXBException e)
+      {
          throw new WSException("Failed to create JAXBContext", e);
       }
    }
 
-   public JAXBContext createContext(Class[] clazzes, BindingCustomization bindingCustomization) throws WSException
+   public JAXBContext createContext(Class[] clazzes, BindingCustomization bcust) throws WSException
    {
       try
       {
-         return JAXBContext.newInstance(clazzes, bindingCustomization);
+         JAXBContext jaxbCtx = JAXBContext.newInstance(clazzes, bcust);
+         incrementContextCount();
+         return jaxbCtx;
       }
-      catch (JAXBException e) {
+      catch (JAXBException e)
+      {
          throw new WSException("Failed to create JAXBContext", e);
       }
    }
 
-   public JAXBRIContext createContext(
-     Class[] classes, Collection<TypeReference> typeReferences,
-     String defaultNamespaceRemap, boolean c14nSupport, BindingCustomization bindingCustomization)
+   public JAXBRIContext createContext(Class[] classes, Collection<TypeReference> refs, String defaultNS, boolean c14n, BindingCustomization bcust)
    {
       try
       {
-         RuntimeAnnotationReader runtimeAnnotations = bindingCustomization!=null ?
-           (RuntimeAnnotationReader)bindingCustomization.get(JAXBRIContext.ANNOTATION_READER) : null;
+         RuntimeAnnotationReader anReader = null;
+         if (bcust != null)
+            anReader = (RuntimeAnnotationReader)bcust.get(JAXBRIContext.ANNOTATION_READER);
 
-         return JAXBRIContext.newInstance(
-           classes, typeReferences,
-           null,
-           defaultNamespaceRemap, c14nSupport ,
-           runtimeAnnotations
-         );
-
+         JAXBRIContext jaxbCtx = JAXBRIContext.newInstance(classes, refs, null, defaultNS, c14n, anReader);
+         incrementContextCount();
+         return jaxbCtx;
       }
-      catch (JAXBException e) {
+      catch (JAXBException e)
+      {
          throw new WSException("Failed to create JAXBContext", e);
       }
    }
 
    private BindingCustomization getCustomization()
    {
-      Endpoint threadLocal = EndpointAssociation.getEndpoint();
-      return threadLocal!=null ? threadLocal.getAttachment(BindingCustomization.class):null;      
+      Endpoint ep = EndpointAssociation.getEndpoint();
+      return ep != null ? ep.getAttachment(BindingCustomization.class) : null;
    }
 }

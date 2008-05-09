@@ -19,18 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.metadata.acessor;
+package org.jboss.ws.metadata.accessor;
 
-import java.beans.PropertyDescriptor;
+//$Id$
+
 import java.lang.reflect.Method;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.umdm.Accessor;
-import org.jboss.ws.metadata.umdm.AccessorFactory;
-import org.jboss.ws.metadata.umdm.AccessorFactoryCreator;
-import org.jboss.ws.metadata.umdm.FaultMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.WrappedParameter;
 
 /**
  * A simple JavaBean accessor that uses ordinary reflection.
@@ -44,41 +39,7 @@ public class ReflectiveMethodAccessor implements Accessor
    private Method getter;
    private Method setter;
 
-   public static AccessorFactoryCreator FACTORY_CREATOR = new AccessorFactoryCreator()
-   {
-      public AccessorFactory create(ParameterMetaData parameter)
-      {
-         return create(parameter.getJavaType());
-      }
-
-      public AccessorFactory create(FaultMetaData fault)
-      {
-         return create(fault.getFaultBean());
-      }
-
-      private AccessorFactory create(final Class clazz)
-      {
-         return new AccessorFactory()
-         {
-            public Accessor create(WrappedParameter parameter)
-            {
-               try
-               {
-                  PropertyDescriptor pd = new PropertyDescriptor(parameter.getVariable(), clazz);
-                  return new ReflectiveMethodAccessor(pd.getReadMethod(), pd.getWriteMethod());
-               }
-               catch (Throwable t)
-               {
-                  WSException ex = new WSException(t.getMessage());
-                  ex.setStackTrace(t.getStackTrace());
-                  throw ex;
-               }
-            }
-         };
-      }
-   };
-
-   private ReflectiveMethodAccessor(Method getter, Method setter)
+   ReflectiveMethodAccessor(Method getter, Method setter)
    {
       this.getter = getter;
       this.setter = setter;
