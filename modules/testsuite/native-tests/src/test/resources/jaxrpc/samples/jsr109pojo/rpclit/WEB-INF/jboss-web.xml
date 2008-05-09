@@ -6,7 +6,7 @@
   
   <webservice-description>
     <webservice-description-name>TestService</webservice-description-name>
-    <wsdl-publish-location>file:@wsdl-publish-location@/jsr109pojo</wsdl-publish-location>
+    <wsdl-publish-location>file:@wsdl.publish.location@/jsr109pojo</wsdl-publish-location>
   </webservice-description>
   
 </jboss-web>

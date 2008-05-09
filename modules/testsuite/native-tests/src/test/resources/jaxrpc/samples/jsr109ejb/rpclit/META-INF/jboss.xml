@@ -8,7 +8,7 @@
     <context-root>/jaxrpc-samples-jsr109ejb-rpc</context-root>
     <webservice-description>
       <webservice-description-name>TestService</webservice-description-name>
-      <wsdl-publish-location>file:@wsdl-publish-location@/jsr109ejb</wsdl-publish-location>
+      <wsdl-publish-location>file:@wsdl.publish.location@/jsr109ejb</wsdl-publish-location>
     </webservice-description>
   </webservices>
   

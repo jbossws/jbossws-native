@@ -55,7 +55,8 @@ public class WsdlPublishTestCase extends JBossWSTest
       
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
       
-      String resStr = port.echoSimple(new File("wsdl-publish/some-wsdl-location/foo/bar/TestService.wsdl").getAbsolutePath());
+      String dir = System.getProperty("wsdl.publish.location");
+      String resStr = port.echoSimple(new File(dir + "/some-wsdl-location/foo/bar/TestService.wsdl").getAbsolutePath());
       assertEquals("{http://org.jboss.test.ws/wsdlpublish}TestEndpoint", resStr);
    }
 }

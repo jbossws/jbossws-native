@@ -4,6 +4,6 @@
 <jboss-web>
   <webservice-description>
     <webservice-description-name>TestService</webservice-description-name>
-    <wsdl-publish-location>file:@wsdl-publish-location@/some-wsdl-location</wsdl-publish-location>
+    <wsdl-publish-location>file:@wsdl.publish.location@/some-wsdl-location</wsdl-publish-location>
   </webservice-description>
 </jboss-web>
