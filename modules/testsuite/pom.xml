@@ -19,6 +19,7 @@
     <surefire.security.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.security.args>
     <surefire.jdwp.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdwp.args>
     <test.archive.directory>${project.build.directory}/test-libs</test.archive.directory>
+    <test.classes.directory>${project.build.directory}/test-classes</test.classes.directory>
     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
     <wsdl.publish.location>${project.build.directory}/wsdl-publish</wsdl.publish.location>
   </properties>
@@ -186,6 +187,10 @@
             <property>
               <name>test.archive.directory</name>
               <value>${test.archive.directory}</value>
+            </property>
+            <property>
+              <name>test.classes.directory</name>
+              <value>${test.classes.directory}</value>
             </property>
             <property>
               <name>test.resources.directory</name>
