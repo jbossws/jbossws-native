@@ -69,20 +69,12 @@
     <priority value="INFO"/>
   </category>
 
-  <!--
-  <category name="org.jboss.xb">
-    <priority value="TRACE" class="org.jboss.logging.XLevel"/>
-  </category>
-  -->
-
   <!-- ======================= -->
   <!-- Setup the Root category -->
   <!-- ======================= -->
 
   <root>
-<!--
-    <appender-ref ref="CONSOLE"/>
--->
+    <!--appender-ref ref="CONSOLE"/-->
     <appender-ref ref="FILE"/>
   </root>
 

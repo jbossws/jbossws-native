@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.tools.ant;
 
+// $Id$
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
@@ -33,12 +35,10 @@ import org.apache.tools.ant.types.Reference;
  */
 public class wstools extends MatchingTask
 {
-   protected Path compileClasspath = null;
-   private boolean verbose = false;
-
-   private String dest = null;
-
-   private String config = null;
+   protected Path compileClasspath;
+   private boolean verbose;
+   private String dest;
+   private String config;
 
    /**
     * Creates a nested classpath element.
@@ -88,6 +88,11 @@ public class wstools extends MatchingTask
    public void setVerbose(boolean verbose)
    {
       this.verbose = verbose;
+   }
+
+   public void addConfiguredSysproperty(SysProperty prop)
+   {
+      System.setProperty(prop.getKey(), prop.getValue());
    }
 
    public void execute() throws BuildException

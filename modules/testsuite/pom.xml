@@ -164,6 +164,30 @@
               <name>test.resources.directory</name>
               <value>${project.build.directory}/test-resources</value>
             </property>
+            <property>
+              <name>org.jboss.ws.wsse.keyStore</name>
+              <value>${project.build.directory}/test-resources/jaxws/samples/wssecurity/wsse.keystore</value>
+            </property>
+            <property>
+              <name>org.jboss.ws.wsse.trustStore</name>
+              <value>${project.build.directory}/test-resources/jaxws/samples/wssecurity/wsse.truststore</value>
+            </property>
+            <property>
+              <name>org.jboss.ws.wsse.keyStorePassword</name>
+              <value>jbossws</value>
+            </property>
+            <property>
+              <name>org.jboss.ws.wsse.trustStorePassword</name>
+              <value>jbossws</value>
+            </property>
+            <property>
+              <name>org.jboss.ws.wsse.keyStoreType</name>
+              <value>jks</value>
+            </property>
+            <property>
+              <name>org.jboss.ws.wsse.trustStoreType</name>
+              <value>jks</value>
+            </property>
           </systemProperties>
         </configuration>
       </plugin>
