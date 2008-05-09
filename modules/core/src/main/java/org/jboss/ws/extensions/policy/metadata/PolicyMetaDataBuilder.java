@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.extensions.policy.metadata;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -104,7 +105,7 @@ public class PolicyMetaDataBuilder
       return builder;
    }
 
-   public void processPolicyAnnotations(EndpointMetaData epMetaData, Class<?> sepClass)
+   public void processPolicyAnnotations(EndpointMetaData epMetaData, Class<?> sepClass) throws IOException
    {
       UnifiedVirtualFile vfRoot = epMetaData.getServiceMetaData().getUnifiedMetaData().getRootFile();
       for (org.jboss.ws.extensions.policy.annotation.Policy anPolicy : sepClass.getAnnotation(PolicyAttachment.class).value())
@@ -134,10 +135,6 @@ public class PolicyMetaDataBuilder
             {
                throw new WSException("Policy scope " + scope + " not supported yet!");
             }
-         }
-         catch (Exception e)
-         {
-            log.error(e);
          }
          finally
          {
