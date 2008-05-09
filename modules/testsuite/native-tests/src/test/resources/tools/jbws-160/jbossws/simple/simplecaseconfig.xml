@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--This is the config file used by jbossws-->
-<!--  
-<configuration> 
-     <wsdltojava wsdllocation="test-resources/tools/jbws-160/wscompile/simple/wsdl/HelloWsService.wsdl"
-                          packagename="org.jboss.types"
-                          seidir="output/resources/tools/jbws-160/jbossws/simple/sei" 
-                          servicename="HelloWsService" >
-                <mapping directory="output/resources/tools/jbws-160/jbossws/simple/mapping" 
-                       filename="jaxrpc-mapping.xml" />
-       </wsdltojava>
-</configuration>
--->
-
 <configuration xmlns="http://www.jboss.org/jbossws-tools" 
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
      xsi:schemaLocation="http://www.jboss.org/jbossws-tools http://www.jboss.org/jbossws-tools/schema/jbossws-tool_1_0.xsd">
-   <wsdlToJava wsdlLocation="test-resources/tools/jbws-160/wscompile/simple/wsdl/HelloWsService.wsdl"
+   <wsdlToJava wsdlLocation="@test.resources.directory@/tools/jbws-160/wscompile/simple/wsdl/HelloWsService.wsdl"
                useJavaAnnotations="false">
         <mapping fileName="mapping.xml"/>
     </wsdlToJava>  

@@ -18,6 +18,7 @@
   <properties>
     <surefire.security.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.security.args>
     <surefire.jdwp.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdwp.args>
+    <test.archive.directory>${project.build.directory}/test-libs</test.archive.directory>
     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
   </properties>
   
@@ -183,11 +184,11 @@
             </property>
             <property>
               <name>test.archive.directory</name>
-              <value>${project.build.directory}/test-libs</value>
+              <value>${test.archive.directory}</value>
             </property>
             <property>
               <name>test.resources.directory</name>
-              <value>${project.build.directory}/test-resources</value>
+              <value>${test.resources.directory}</value>
             </property>
           </systemProperties>
         </configuration>

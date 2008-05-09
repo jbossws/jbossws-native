@@ -13,7 +13,7 @@
     <package-namespace package="org.jboss.test.ws.jaxrpc.jbws1384" namespace="http://org.jboss.test.webservice/samples2"/>
   </global>
   
-  <wsdl-java location="test-resources/jaxrpc/jbws1384/WEB-INF/wsdl/ExampleService.wsdl">
+  <wsdl-java location="@test.resources.directory@/jaxrpc/jbws1384/WEB-INF/wsdl/ExampleService.wsdl">
     <mapping file="jaxrpc-mapping.xml" />
     <webservices servlet-link="ExampleService" />
   </wsdl-java>
