@@ -70,6 +70,8 @@
                     <property name="maven.test.classpath" refid="maven.test.classpath"/>
                     <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
                     <property name="tests.output.dir" value="${project.build.directory}"/>
+                    <property name="jboss.bind.address" value="${jboss.bind.address}"/>
+                    <property name="java.jdk15.home" value="${java.jdk15.home}"/>
                     <ant antfile="scripts/antrun-wstools.xml" target="wstools"/>
                   </tasks>
                 </configuration>
