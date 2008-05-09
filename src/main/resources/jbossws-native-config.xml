@@ -61,7 +61,7 @@
   </bean>
   
   <bean name="WSNativePublishContractDeploymentAspect" class="org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect">
-    <property name="requires">UnifiedMetaDataModel</property>
+    <property name="requires">UnifiedMetaDataModel, JAXBIntros</property>
     <property name="provides">PublishedContract</property>
   </bean>
   
@@ -70,12 +70,12 @@
   </bean>
   
   <bean name="WSNativeUnifiedMetaDataDeploymentAspect" class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
-    <property name="requires">RuntimeLoader, ContainerMetaData, URLPattern, VFSRoot</property>
+    <property name="requires">RuntimeLoader, ContainerMetaData, URLPattern, VFSRoot, JAXBIntros</property>
     <property name="provides">UnifiedMetaDataModel</property>
   </bean>
 
-  <bean name="WSJAXBIntroDeploymentAspect" class="org.jboss.wsf.stack.jbws.JAXBIntroDeploymentAspect">
-    <property name="requires">UnifiedMetaDataModel, RuntimeLoader</property>
+  <bean name="WSJAXBIntroDeploymentAspect" class="org.jboss.wsf.stack.jbws.JAXBIntroDeploymentAspect">    
+    <property name="provides">JAXBIntros</property>
   </bean>
 
       <!-- Deployment aspect installers -->

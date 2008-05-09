@@ -23,42 +23,13 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 // $Id$
 
-import java.io.File;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.jws.HandlerChain;
-import javax.jws.Oneway;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPMessageHandlers;
-import javax.jws.soap.SOAPBinding.ParameterStyle;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.BindingType;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
-import javax.xml.ws.WebFault;
-import javax.xml.ws.addressing.Action;
-import javax.xml.ws.addressing.AddressingProperties;
-
+import com.sun.xml.bind.api.JAXBRIContext;
+import com.sun.xml.bind.api.TypeReference;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
+import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.WrapperGenerator;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
@@ -75,6 +46,7 @@ import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
@@ -83,18 +55,47 @@ import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLMIMEPart;
+import org.jboss.wsf.common.JavaUtils;
+import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.Unmarshaller;
 import org.jboss.xb.binding.UnmarshallerFactory;
 
-import com.sun.xml.bind.api.JAXBRIContext;
-import com.sun.xml.bind.api.TypeReference;
+import javax.jws.HandlerChain;
+import javax.jws.Oneway;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.jws.soap.SOAPMessageHandlers;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.BindingType;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
+import javax.xml.ws.WebFault;
+import javax.xml.ws.addressing.Action;
+import javax.xml.ws.addressing.AddressingProperties;
+import java.io.File;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract class that represents a JAX-WS metadata builder.
@@ -918,9 +919,27 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          String targetNS = epMetaData.getPortTypeName().getNamespaceURI().intern();
          if (log.isDebugEnabled())
             log.debug("JAXBContext [types=" + javaTypes + ",tns=" + targetNS + "]");
-         jaxbCtx = JAXBRIContext.newInstance(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false);
+
+         JAXBContextFactory factory = JAXBContextFactory.newInstance();
+
+
+         // JAXBIntros may mofiy the WSDL being generated
+         // only true for server side invocation, tooling (WSProvide) doesnt support this
+         BindingCustomization bindingCustomization = null;
+         if(epMetaData instanceof ServerEndpointMetaData)
+         {
+            Endpoint endpoint = ((ServerEndpointMetaData)epMetaData).getEndpoint();
+            bindingCustomization = endpoint!=null ? endpoint.getAttachment(BindingCustomization.class) : null;
+         }
+
+         jaxbCtx = factory.createContext(
+           javaTypes.toArray(new Class[0]),
+           typeRefs,
+           targetNS,
+           false, bindingCustomization
+         );
       }
-      catch (JAXBException ex)
+      catch (WSException ex)
       {
          throw new IllegalStateException("Cannot build JAXB context", ex);
       }

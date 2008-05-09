@@ -21,8 +21,10 @@
  */
 package org.jboss.ws.core.binding;
 
-
-
+import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.ws.core.soap.MessageContextAssociation;
 
 // $Id: ComplexTypeSerializer.java 1757 2006-12-22 15:40:24Z thomas.diesler@jboss.com $
 
@@ -34,5 +36,14 @@ package org.jboss.ws.core.binding;
  */
 public abstract class ComplexTypeSerializer extends SerializerSupport
 {
-
+   protected BindingCustomization getBindingCustomization()
+   {
+      BindingCustomization bindingCustomization = null;
+      EndpointMetaData epMetaData = MessageContextAssociation.peekMessageContext().getEndpointMetaData();
+      if(epMetaData instanceof ServerEndpointMetaData)
+      {
+         bindingCustomization = ((ServerEndpointMetaData)epMetaData).getEndpoint().getAttachment(BindingCustomization.class);
+      }
+      return bindingCustomization;
+   }
 }
