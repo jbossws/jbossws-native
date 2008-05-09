@@ -16,8 +16,9 @@
   
   <!-- Properties -->
   <properties>
-    <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.jvm.args>
-     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
+    <surefire.security.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.security.args>
+    <surefire.jdwp.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdwp.args>
+    <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
   </properties>
   
   <!-- Modules -->
@@ -130,12 +131,8 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>${surefire.jvm.args}</argLine>
+          <forkMode>pertest</forkMode>
           <systemProperties>
-            <property>
-              <name>log4j.output.dir</name>
-              <value>${project.build.directory}</value>
-            </property>
             <property>
               <name>java.naming.provider.url</name>
               <value>jnp://${jboss.bind.address}:1099</value>
@@ -157,12 +154,8 @@
               <value>${jbossws.integration.target}</value>
             </property>
             <property>
-              <name>test.archive.directory</name>
-              <value>${project.build.directory}/test-libs</value>
-            </property>
-            <property>
-              <name>test.resources.directory</name>
-              <value>${project.build.directory}/test-resources</value>
+              <name>log4j.output.dir</name>
+              <value>${project.build.directory}</value>
             </property>
             <property>
               <name>org.jboss.ws.wsse.keyStore</name>
@@ -188,6 +181,14 @@
               <name>org.jboss.ws.wsse.trustStoreType</name>
               <value>jks</value>
             </property>
+            <property>
+              <name>test.archive.directory</name>
+              <value>${project.build.directory}/test-libs</value>
+            </property>
+            <property>
+              <name>test.resources.directory</name>
+              <value>${project.build.directory}/test-resources</value>
+            </property>
           </systemProperties>
         </configuration>
       </plugin>
@@ -203,16 +204,25 @@
     -->
     <profile>
       <id>debug</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <argLine>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</argLine>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <activation>
+        <property>
+          <name>debug</name>
+        </property>
+      </activation>
+      <properties>
+        <surefire.jvm.args>${surefire.security.args} ${surefire.jdwp.args}</surefire.jvm.args>
+      </properties>
+    </profile>
+    <profile>
+      <id>no-debug</id>
+      <activation>
+        <property>
+          <name>!debug</name>
+        </property>
+      </activation>
+      <properties>
+        <surefire.jvm.args>${surefire.security.args}</surefire.jvm.args>
+      </properties>
     </profile>
     
     <!-- 
@@ -242,6 +252,7 @@
       <properties>
         <jboss.version>4.2.2.GA</jboss.version>
         <jbossws.integration.target>jboss422</jbossws.integration.target>
+        <java.endorsed.dirs>${jboss422.home}/lib/endorsed</java.endorsed.dirs>
       </properties>
       <dependencies>
         <dependency>
@@ -257,9 +268,16 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
+              <testExcludeFile>../test-excludes-jboss422.txt</testExcludeFile>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>-Djava.endorsed.dirs=${jboss422.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss422.home}/lib/endorsed</argLine>
             </configuration>
           </plugin>
         </plugins>
@@ -290,9 +308,16 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
+              <testExcludeFile>../test-excludes-jboss423.txt</testExcludeFile>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>-Djava.endorsed.dirs=${jboss423.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss423.home}/lib/endorsed</argLine>
             </configuration>
           </plugin>
         </plugins>
@@ -323,9 +348,16 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
+              <testExcludeFile>../test-excludes-jboss500.txt</testExcludeFile>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>-Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
             </configuration>
           </plugin>
         </plugins>
@@ -356,9 +388,16 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
+              <testExcludeFile>../test-excludes-jboss501.txt</testExcludeFile>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>-Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
             </configuration>
           </plugin>
         </plugins>
