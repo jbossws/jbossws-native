@@ -133,8 +133,8 @@
           <argLine>${surefire.jvm.args}</argLine>
           <systemProperties>
             <property>
-              <name>build.testlog</name>
-              <value>${project.build.directory}/test-log</value>
+              <name>log4j.output.dir</name>
+              <value>${project.build.directory}</value>
             </property>
             <property>
               <name>java.naming.provider.url</name>
