@@ -36,7 +36,6 @@ import org.jboss.ws.tools.client.ServiceCreator;
 import org.jboss.ws.tools.mapping.MappingFileGenerator;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.w3c.dom.Element;
 
 /**
@@ -59,8 +58,7 @@ public class ClientSideArtifactsTestCase extends WSToolsBase
 
    public void mkdirs(String path)
    {
-      File resDir = createResourceFile(JBossWSTestHelper.getTestResourcesDir());
-      File file = createResourceFile( resDir.getAbsolutePath() + File.separator + path);
+      File file = createResourceFile(path);
       if (file.exists() == false)
          file.mkdirs();
    }   
