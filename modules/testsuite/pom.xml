@@ -134,7 +134,8 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <forkMode>pertest</forkMode>
+          <!-- http://jira.jboss.org/jira/browse/JBWS-2176 
+          <forkMode>pertest</forkMode-->
           <systemProperties>
             <property>
               <name>java.naming.provider.url</name>
@@ -162,11 +163,11 @@
             </property>
             <property>
               <name>org.jboss.ws.wsse.keyStore</name>
-              <value>${project.build.directory}/test-resources/jaxws/samples/wssecurity/wsse.keystore</value>
+              <value>${test.resources.directory}/jaxws/samples/wssecurity/wsse.keystore</value>
             </property>
             <property>
               <name>org.jboss.ws.wsse.trustStore</name>
-              <value>${project.build.directory}/test-resources/jaxws/samples/wssecurity/wsse.truststore</value>
+              <value>${test.resources.directory}/jaxws/samples/wssecurity/wsse.truststore</value>
             </property>
             <property>
               <name>org.jboss.ws.wsse.keyStorePassword</name>
@@ -263,7 +264,6 @@
       <properties>
         <jboss.version>4.2.2.GA</jboss.version>
         <jbossws.integration.target>jboss422</jbossws.integration.target>
-        <java.endorsed.dirs>${jboss422.home}/lib/endorsed</java.endorsed.dirs>
       </properties>
       <dependencies>
         <dependency>
