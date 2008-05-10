@@ -22,6 +22,7 @@
     <test.classes.directory>${project.build.directory}/test-classes</test.classes.directory>
     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
     <wsdl.publish.location>${project.build.directory}/wsdl-publish</wsdl.publish.location>
+    <hibernate.version>3.2.4.sp1</hibernate.version>
   </properties>
   
   <!-- Modules -->
@@ -347,6 +348,11 @@
       </properties>
       <dependencies>
         <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate</artifactId>
+          <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
           <groupId>org.jboss.client</groupId>
           <artifactId>jbossall-client</artifactId>
           <version>${jboss.version}</version>
@@ -386,6 +392,11 @@
         <jbossws.integration.target>jboss501</jbossws.integration.target>
       </properties>
       <dependencies>
+        <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate</artifactId>
+          <version>${hibernate.version}</version>
+        </dependency>
         <dependency>
           <groupId>org.jboss.client</groupId>
           <artifactId>jbossall-client</artifactId>
