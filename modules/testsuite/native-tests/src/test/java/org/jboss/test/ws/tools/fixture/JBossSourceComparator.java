@@ -200,7 +200,13 @@ public class JBossSourceComparator
          throw new Exception("Class names should be equal");
       if ((expected.getSuperJavaClass() != null) && (actual.getSuperJavaClass() != null))
       {
-         if (!expected.getSuperJavaClass().getName().equals(actual.getSuperJavaClass().getName()))
+         String expSuperClassName = expected.getSuperJavaClass().getName();
+         if (expected.getPackage().length() > 0 && expSuperClassName.startsWith(expected.getPackage()))
+            expSuperClassName = expSuperClassName.substring(expected.getPackage().length() + 1);
+         String actSuperClassName = actual.getSuperJavaClass().getName();
+         if (actual.getPackage().length() > 0 && actSuperClassName.startsWith(actual.getPackage()))
+            actSuperClassName = actSuperClassName.substring(actual.getPackage().length() + 1);
+         if (!expSuperClassName.equals(actSuperClassName))
             throw new Exception("Super class should be equal");
       }
       if ((expected.getSuperJavaClass() == null) ^ (actual.getSuperJavaClass() == null))
