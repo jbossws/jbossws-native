@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.core.jaxws.spi;
 
-// $Id$
+// $Id:$
 
 import java.net.MalformedURLException;
 import java.net.URL;
