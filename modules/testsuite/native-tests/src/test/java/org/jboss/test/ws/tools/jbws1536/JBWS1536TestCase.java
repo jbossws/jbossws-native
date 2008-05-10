@@ -48,7 +48,7 @@ public class JBWS1536TestCase extends JBossWSTest
       new WSTools().generate(args);
       
       Element expected = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1536/webservices.xml").getAbsolutePath()));
-      Element was = DOMUtils.parse(new FileInputStream("tools/jbws1536/webservices.xml"));
+      Element was = DOMUtils.parse(new FileInputStream(getResourceFile("tools/jbws1536/webservices.xml")));
       assertEquals(expected, was);      
    }
 
