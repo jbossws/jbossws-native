@@ -81,7 +81,7 @@ public abstract class Provider
       {
          return (Provider)ProviderLoader.loadProvider(DEFAULT_JAXWSPROVIDER);
       }
-      catch (WebServiceException ex)
+      catch (RuntimeException ex)
       {
          throw ex;
       }
