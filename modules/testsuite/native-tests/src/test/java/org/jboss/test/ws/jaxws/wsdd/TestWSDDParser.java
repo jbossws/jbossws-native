@@ -48,7 +48,7 @@ public class TestWSDDParser extends JBossWSTest
 
    public void testJAXWSElementParsing() throws Exception
    {
-      URL webservicesURL = getResourceURL("jaxws/wsdd/webservices.xml");
+      URL webservicesURL = getResourceURL("jaxws/wsdd/WEB-INF/webservices.xml");
       // Unmarshall webservices.xml
       WebservicesMetaData webservices = null;
       InputStream is = webservicesURL.openStream();
@@ -74,7 +74,7 @@ public class TestWSDDParser extends JBossWSTest
       assertTrue(portComp.getHandlerChains().getHandlerChains().size() > 0);
 
       // wsdlService
-      assertTrue(portComp.getWsdlService().getLocalPart().equals("HelloService"));
+      assertTrue(portComp.getWsdlService().getLocalPart().equals("WSDDEndpointImplService"));
 
       // mtom
       assertTrue(portComp.isEnableMtom());
@@ -82,7 +82,7 @@ public class TestWSDDParser extends JBossWSTest
       // handler chains
       UnifiedHandlerChainMetaData handlerChain = portComp.getHandlerChains().getHandlerChains().get(0);
       assertNotNull(handlerChain);
-      assertTrue(((UnifiedHandlerMetaData)handlerChain.getHandlers().get(0)).getHandlerName().equals("ServerHandler1"));
+      assertTrue(((UnifiedHandlerMetaData)handlerChain.getHandlers().get(0)).getHandlerName().equals("CustomHandler"));
 
    }
 
