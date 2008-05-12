@@ -47,7 +47,7 @@ public class ScriptTestCase extends JBossWSTest
 
       JBOSS_HOME = System.getProperty("jboss.home");
       TEST_EXEC_DIR = createResourceFile(".").getPath();
-      JDK_HOME = System.getProperty("jdk.home");
+      JDK_HOME = System.getProperty("java.home");
       OS = System.getProperty("os.name").toLowerCase();
    }
 
