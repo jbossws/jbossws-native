@@ -94,10 +94,15 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       //configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, SSLSocketBuilder.REMOTING_TRUST_STORE_PASSWORD);
       //configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, SSLSocketBuilder.REMOTING_TRUST_STORE_TYPE);
 
+      configMap.put(StubExt.PROPERTY_KEY_ALIAS, "org.jboss.remoting.keyAlias");
       configMap.put(StubExt.PROPERTY_KEY_STORE, "org.jboss.remoting.keyStore");
+      configMap.put(StubExt.PROPERTY_KEY_STORE_ALGORITHM, "org.jboss.remoting.keyStoreAlgorithm");
       configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, "org.jboss.remoting.keyStorePassword");
       configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, "org.jboss.remoting.keyStoreType");
+      configMap.put(StubExt.PROPERTY_SSL_PROTOCOL, "org.jboss.remoting.sslProtocol");
+      configMap.put(StubExt.PROPERTY_SSL_PROVIDER_NAME, "org.jboss.remoting.sslProviderName");
       configMap.put(StubExt.PROPERTY_TRUST_STORE, "org.jboss.remoting.trustStore");
+      configMap.put(StubExt.PROPERTY_TRUST_STORE_ALGORITHM, "org.jboss.remoting.truststoreAlgorithm");
       configMap.put(StubExt.PROPERTY_TRUST_STORE_PASSWORD, "org.jboss.remoting.trustStorePassword");
       configMap.put(StubExt.PROPERTY_TRUST_STORE_TYPE, "org.jboss.remoting.trustStoreType");
    }
@@ -222,10 +227,10 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       {
          // Get the invoker from Remoting for a given endpoint address
          log.debug("Get locator for: " + endpoint);
-         
+
          Marshaller marshaller = getMarshaller();
          UnMarshaller unmarshaller = getUnmarshaller();
-         
+
          /** 
           * [JBWS-1704] The Use Of Remoting Causes An Additional 'datatype' Parameter To Be Sent On All Requests
           * 
@@ -265,7 +270,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
    private String getRemotingVersion()
    {
-      String version = null; 
+      String version = null;
       try
       {
          // Access the constant dynamically, otherwise it will be the compile time value
@@ -276,7 +281,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
       {
          throw new RuntimeException("Cannot obtain remoting version", ex);
       }
-      
+
       if (version == null)
       {
          URL codeURL = Version.class.getProtectionDomain().getCodeSource().getLocation();
@@ -305,7 +310,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
 
          // Enable chunked encoding. This is the default size. 
          clientConfig.put("chunkedLength", "1024");
-         
+
          // May be overridden through endpoint config
          if (msgContext != null)
          {
