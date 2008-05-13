@@ -150,13 +150,15 @@ public class JBWS771TestCase extends JBossWSTest
    public void testWSConsume() throws Exception
    {
       // use absolute path for the output to be re-usable
-      String absOutput = new File(RESOURCES_DIR + "/../wsconsume/java").getAbsolutePath();
-      String command = JBOSS_HOME + "/bin/wsconsume.sh -k -o " + absOutput + " --binding=" + RESOURCES_DIR + "/jaxws/jbws771/binding.xml " + wsdlURL.toExternalForm();
+      String absOutput = createResourceFile("wsconsume/java").getAbsolutePath();
+      String command = JBOSS_HOME + "/bin/wsconsume.sh -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + "/jaxws/jbws771/binding.xml " + wsdlURL.toExternalForm();
       Process p = executeCommand(command);
 
       // check status code
       assertStatusCode(p, "wsconsume");
-
+      
+      File javaSource = getResourceFile("wsconsume/java/org/jboss/test/ws/jaxws/jbws771/JBWS771Service.java");
+      assertTrue("Service endpoint interface not generated", javaSource.exists());
    }
 
    private Definition getWSDLDefinition(String wsdlLocation) throws Exception
