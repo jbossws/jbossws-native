@@ -49,8 +49,8 @@ import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.test.JBossWSTest;
 
 /**
  * Test the SOAPBindingProvider
@@ -167,6 +167,11 @@ public class SOAPBindingTestCase extends JBossWSTest
       SOAPMessageContextJAXRPC messageContext = new SOAPMessageContextJAXRPC();
       MessageContextAssociation.pushMessageContext(messageContext);
       messageContext.setOperationMetaData(opMetaData);
+   }
+   
+   protected void tearDown()
+   {
+      MessageContextAssociation.popMessageContext();
    }
 
    /** Test binding of the request message

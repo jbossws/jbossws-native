@@ -142,55 +142,62 @@ public class GenericAttachmentTestCase extends JBossWSTest
 
       OperationMetaData opMetaData = call.getOperationMetaData();
 
-      // Associate a message context with the current thread
-      SOAPMessageContextJAXRPC messageContext = new SOAPMessageContextJAXRPC();
-      MessageContextAssociation.pushMessageContext(messageContext);
-      messageContext.setOperationMetaData(opMetaData);
-
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP11HTTP_BINDING, Type.JAXRPC);
-      CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
-
-      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
-      epInv.initInputParams(new Object[]{"Hello World!", "hi"});
-      
-      SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
-
-      ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-      reqMessage.saveChanges();
-      reqMessage.writeTo(stream);
-
-      ByteArrayInputStream in = new ByteArrayInputStream(stream.toByteArray());
-
-      String type = reqMessage.getMimeHeaders().getHeader(MimeConstants.CONTENT_TYPE)[0];
-
-      MimeHeaders headers = new MimeHeaders();
-      headers.addHeader(MimeConstants.CONTENT_TYPE, type);
-      SOAPMessageImpl msg2 = (SOAPMessageImpl)new MessageFactoryImpl().createMessage(headers, in);
-
-      epInv = binding.unbindRequestMessage(opMetaData, msg2);
-
-      assertEquals(epInv.getRequestParamValue(new QName("String_1")).toString(), "Hello World!");
-      assertEquals(epInv.getRequestParamValue(new QName("foo")).toString(), "hi");
-
-      epInv.setReturnValue("test");
-
-      SOAPMessage responseMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
-
-      stream = new ByteArrayOutputStream();
-      responseMessage.writeTo(stream);
-
-      in = new ByteArrayInputStream(stream.toByteArray());
-
-      type = responseMessage.getMimeHeaders().getHeader(MimeConstants.CONTENT_TYPE)[0];
-
-      headers = new MimeHeaders();
-      headers.addHeader(MimeConstants.CONTENT_TYPE, type);
-      SOAPMessageImpl msg3 = (SOAPMessageImpl)new MessageFactoryImpl().createMessage(headers, in);
-
-      binding.unbindResponseMessage(opMetaData, msg3, epInv, null);
-
-      assertEquals("test", epInv.getReturnValue());
+      try
+      {
+         // Associate a message context with the current thread
+         SOAPMessageContextJAXRPC messageContext = new SOAPMessageContextJAXRPC();
+         MessageContextAssociation.pushMessageContext(messageContext);
+         messageContext.setOperationMetaData(opMetaData);
+   
+         CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP11HTTP_BINDING, Type.JAXRPC);
+         CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
+   
+         EndpointInvocation epInv = new EndpointInvocation(opMetaData);
+         epInv.initInputParams(new Object[]{"Hello World!", "hi"});
+         
+         SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
+   
+         ByteArrayOutputStream stream = new ByteArrayOutputStream();
+   
+         reqMessage.saveChanges();
+         reqMessage.writeTo(stream);
+   
+         ByteArrayInputStream in = new ByteArrayInputStream(stream.toByteArray());
+   
+         String type = reqMessage.getMimeHeaders().getHeader(MimeConstants.CONTENT_TYPE)[0];
+   
+         MimeHeaders headers = new MimeHeaders();
+         headers.addHeader(MimeConstants.CONTENT_TYPE, type);
+         SOAPMessageImpl msg2 = (SOAPMessageImpl)new MessageFactoryImpl().createMessage(headers, in);
+   
+         epInv = binding.unbindRequestMessage(opMetaData, msg2);
+   
+         assertEquals(epInv.getRequestParamValue(new QName("String_1")).toString(), "Hello World!");
+         assertEquals(epInv.getRequestParamValue(new QName("foo")).toString(), "hi");
+   
+         epInv.setReturnValue("test");
+   
+         SOAPMessage responseMessage = (SOAPMessage)binding.bindResponseMessage(opMetaData, epInv);
+   
+         stream = new ByteArrayOutputStream();
+         responseMessage.writeTo(stream);
+   
+         in = new ByteArrayInputStream(stream.toByteArray());
+   
+         type = responseMessage.getMimeHeaders().getHeader(MimeConstants.CONTENT_TYPE)[0];
+   
+         headers = new MimeHeaders();
+         headers.addHeader(MimeConstants.CONTENT_TYPE, type);
+         SOAPMessageImpl msg3 = (SOAPMessageImpl)new MessageFactoryImpl().createMessage(headers, in);
+   
+         binding.unbindResponseMessage(opMetaData, msg3, epInv, null);
+   
+         assertEquals("test", epInv.getReturnValue());
+      }
+      finally
+      {
+         MessageContextAssociation.popMessageContext();
+      }
    }
 
    public void testMimeMatchingAttachments() throws Exception

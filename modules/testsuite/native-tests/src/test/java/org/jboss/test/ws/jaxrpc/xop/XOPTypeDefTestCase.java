@@ -112,7 +112,14 @@ public class XOPTypeDefTestCase extends JBossWSTest
    public void testXOPContext()
    {
       SOAPMessageContextJAXRPC messageContext = new SOAPMessageContextJAXRPC();
-      MessageContextAssociation.pushMessageContext(messageContext);
-      assertFalse("MTOM should be disabled", XOPContext.isMTOMEnabled());
+      try
+      {
+         MessageContextAssociation.pushMessageContext(messageContext);
+         assertFalse("MTOM should be disabled", XOPContext.isMTOMEnabled());
+      }
+      finally
+      {
+         MessageContextAssociation.popMessageContext();
+      }
    }
 }

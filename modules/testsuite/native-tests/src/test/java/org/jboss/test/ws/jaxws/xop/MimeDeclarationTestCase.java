@@ -104,8 +104,15 @@ public class MimeDeclarationTestCase extends TestCase {
     public void testXOPContext()
    {
       SOAPMessageContextJAXWS msgContext = new SOAPMessageContextJAXWS();
-      MessageContextAssociation.pushMessageContext(msgContext);
-      assertFalse("MTOM should be disabled", XOPContext.isMTOMEnabled());
+      try
+      {
+         MessageContextAssociation.pushMessageContext(msgContext);
+         assertFalse("MTOM should be disabled", XOPContext.isMTOMEnabled());
+      }
+      finally
+      {
+         MessageContextAssociation.popMessageContext();
+      }
    }
 
    public void testNestedArray() throws Exception
