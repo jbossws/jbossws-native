@@ -23,10 +23,10 @@ package org.jboss.test.ws.jaxws.jbws771;
 
 // $Id: JBWS771TestCase.java 3729 2007-06-26 19:38:00Z thomas.diesler@jboss.com $
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.io.IOException;
-import java.io.File;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
@@ -44,7 +44,6 @@ import junit.framework.Test;
 
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.spi.tools.cmd.WSConsume;
 
 /**
  * [JBWS-771] Use part names that are friendly to .NET
@@ -60,7 +59,7 @@ public class JBWS771TestCase extends JBossWSTest
 
    private String JBOSS_HOME;
    private String JDK_HOME;
-   private String TEST_EXEC_DIR;
+   private String RESOURCES_DIR;
    private String OS;
 
    public static Test suite()
@@ -81,8 +80,8 @@ public class JBWS771TestCase extends JBossWSTest
       }
 
       JBOSS_HOME = System.getProperty("jboss.home");
-      TEST_EXEC_DIR = System.getProperty("test.execution.dir");
-      JDK_HOME = System.getProperty("jdk.home");
+      RESOURCES_DIR = createResourceFile(".").getPath();
+      JDK_HOME = System.getProperty("java.home");
       OS = System.getProperty("os.name").toLowerCase();
    }
 
@@ -149,10 +148,10 @@ public class JBWS771TestCase extends JBossWSTest
    }
 
    public void testWSConsume() throws Exception
-   {                
+   {
       // use absolute path for the output to be re-usable
-      String absOutput = new File("wsconsume/java").getAbsolutePath();
-      String command = JBOSS_HOME + "/bin/wsconsume.sh -k -o "+absOutput+" --binding=resources/jaxws/jbws771/binding.xml "+ wsdlURL.toExternalForm();
+      String absOutput = new File(RESOURCES_DIR + "/../wsconsume/java").getAbsolutePath();
+      String command = JBOSS_HOME + "/bin/wsconsume.sh -k -o " + absOutput + " --binding=" + RESOURCES_DIR + "/jaxws/jbws771/binding.xml " + wsdlURL.toExternalForm();
       Process p = executeCommand(command);
 
       // check status code
@@ -169,25 +168,20 @@ public class JBWS771TestCase extends JBossWSTest
       return definition;
    }
 
-   private Process executeCommand(String command)
-     throws IOException
+   private Process executeCommand(String command) throws IOException
    {
       // be verbose
       System.out.println("cmd: " + command);
-      System.out.println("test execution dir: " + TEST_EXEC_DIR);
+      System.out.println("resources dir: " + RESOURCES_DIR);
 
-      Process p = Runtime.getRuntime().exec(
-        command,
-        new String[] {"JBOSS_HOME="+ JBOSS_HOME, "JAVA_HOME="+ JDK_HOME}
-      );
+      Process p = Runtime.getRuntime().exec(command, new String[] { "JBOSS_HOME=" + JBOSS_HOME, "JAVA_HOME=" + JDK_HOME });
       return p;
    }
 
-   private void assertStatusCode(Process p, String s)
-     throws InterruptedException
+   private void assertStatusCode(Process p, String s) throws InterruptedException
    {
       // check status code
       int status = p.waitFor();
-      assertTrue(s +" did exit with status " + status, status==0);
+      assertTrue(s + " did exit with status " + status, status == 0);
    }
 }
