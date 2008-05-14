@@ -43,7 +43,6 @@
       <artifactId>jbossws-native-embedded</artifactId>
       <version>${version}</version>
     </dependency>
-    
     <dependency>
       <groupId>com.sun</groupId>
       <artifactId>tools</artifactId>
@@ -51,7 +50,6 @@
       <scope>system</scope>
       <systemPath>${java.home}/../lib/tools.jar</systemPath>
     </dependency>
-    
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-framework</artifactId>
@@ -74,6 +72,13 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- required for WS-RM client backports server -->
+    <dependency>
+      <groupId>jboss.web</groupId>
+      <artifactId>jbossweb</artifactId>
+      <version>2.1.0.GA</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -290,10 +295,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss422.home}/lib/endorsed</argLine>
-              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/server/default/deploy/jboss-web.deployer/jbossweb.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -334,10 +335,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss423.home}/lib/endorsed</argLine>
-              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/server/default/deploy/jboss-web.deployer/jbossweb.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -383,10 +380,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
-              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/server/default/deployers/jbossweb.deployer/jbossweb.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -432,10 +425,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
-              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/server/default/deploy/jbossweb.sar/jbossweb.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
