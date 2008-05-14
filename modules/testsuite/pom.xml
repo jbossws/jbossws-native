@@ -290,6 +290,10 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss422.home}/lib/endorsed</argLine>
+              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/server/default/deploy/jboss-web.deployer/jbossweb.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -330,6 +334,10 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss423.home}/lib/endorsed</argLine>
+              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/server/default/deploy/jboss-web.deployer/jbossweb.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -375,6 +383,10 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
+              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/server/default/deployers/jbossweb.deployer/jbossweb.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -420,6 +432,10 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
+              <!-- http://jira.jboss.org/jira/browse/JBWS-2180 -->
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/server/default/deploy/jbossweb.sar/jbossweb.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
