@@ -40,7 +40,13 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class SimpleSignEncryptTestCase extends JBossWSTest
 {
-
+   private String keyStore;
+   private String trustStore;
+   private String keyStorePassword;
+   private String trustStorePassword;
+   private String keyStoreType;
+   private String trustStoreType;
+   
    /** Construct the test case with a given name
     */
 
@@ -63,6 +69,40 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
 
    public void testEndpointNoProperties() throws Exception
    {
+      clearEnvironment();
+      try
+      {
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+         Hello hello = (Hello)service.getPort(Hello.class);
+   
+         UserType in0 = new UserType("Kermit");
+   
+         try
+         {
+            hello.echoUserType(in0);
+            fail("Expected exception not thrown");
+         }
+         catch (RemoteException e)
+         {
+         }
+      }
+      finally
+      {
+         restoreEnvironment();
+      }
+   }
+
+   private void clearEnvironment()
+   {
+      //Backup values
+      keyStore = System.getProperty("org.jboss.ws.wsse.keyStore");
+      keyStorePassword = System.getProperty("org.jboss.ws.wsse.keyStorePassword");
+      keyStoreType = System.getProperty("org.jboss.ws.wsse.keyStoreType");
+      trustStore = System.getProperty("org.jboss.ws.wsse.trustStore");
+      trustStorePassword = System.getProperty("org.jboss.ws.wsse.trustStorePassword");
+      trustStoreType = System.getProperty("org.jboss.ws.wsse.trustStoreType");
+      //Clear
       Properties props = System.getProperties();
       props.remove("org.jboss.ws.wsse.keyStore");
       props.remove("org.jboss.ws.wsse.trustStore");
@@ -70,20 +110,15 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
       props.remove("org.jboss.ws.wsse.trustStorePassword");
       props.remove("org.jboss.ws.wsse.keyStoreType");
       props.remove("org.jboss.ws.wsse.trustStoreType");
+   }
 
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-      Hello hello = (Hello)service.getPort(Hello.class);
-
-      UserType in0 = new UserType("Kermit");
-
-      try
-      {
-         hello.echoUserType(in0);
-         fail("Expected exception not thrown");
-      }
-      catch (RemoteException e)
-      {
-      }
+   private void restoreEnvironment()
+   {
+      System.setProperty("org.jboss.ws.wsse.keyStore", keyStore);
+      System.setProperty("org.jboss.ws.wsse.trustStore", trustStore);
+      System.setProperty("org.jboss.ws.wsse.keyStorePassword", keyStorePassword);
+      System.setProperty("org.jboss.ws.wsse.trustStorePassword", trustStorePassword);
+      System.setProperty("org.jboss.ws.wsse.keyStoreType", keyStoreType);
+      System.setProperty("org.jboss.ws.wsse.trustStoreType", trustStoreType);
    }
 }

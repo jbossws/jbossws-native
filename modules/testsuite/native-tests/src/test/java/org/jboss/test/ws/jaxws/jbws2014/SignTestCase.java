@@ -84,12 +84,14 @@ public class SignTestCase extends JBossWSTest
 
    private TestEndpoint getPort() throws Exception
    {
+      /**
       System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("jaxws/jbws2014/wsse.keystore").getPath());
       System.setProperty("org.jboss.ws.wsse.trustStore", getResourceFile("jaxws/jbws2014/wsse.truststore").getPath());
       System.setProperty("org.jboss.ws.wsse.keyStorePassword", "jbossws");
       System.setProperty("org.jboss.ws.wsse.trustStorePassword", "jbossws");
       System.setProperty("org.jboss.ws.wsse.keyStoreType", "jks");
       System.setProperty("org.jboss.ws.wsse.trustStoreType", "jks");
+      **/
       
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws2014?wsdl");
       URL securityURL = getResourceURL("jaxws/jbws2014/sign/META-INF/jboss-wsse-client.xml");

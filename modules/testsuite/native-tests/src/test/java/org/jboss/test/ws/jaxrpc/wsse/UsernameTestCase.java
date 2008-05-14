@@ -42,6 +42,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class UsernameTestCase extends JBossWSTest
 {
    private static JaxRpcTestService port;
+   private String keyStore;
+   private String trustStore;
+   private String keyStorePassword;
+   private String trustStorePassword;
+   private String keyStoreType;
+   private String trustStoreType;
 
    public static Test suite()
    {
@@ -59,6 +65,14 @@ public class UsernameTestCase extends JBossWSTest
          port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
       }
 
+      //Backup values
+      keyStore = System.getProperty("org.jboss.ws.wsse.keyStore");
+      keyStorePassword = System.getProperty("org.jboss.ws.wsse.keyStorePassword");
+      keyStoreType = System.getProperty("org.jboss.ws.wsse.keyStoreType");
+      trustStore = System.getProperty("org.jboss.ws.wsse.trustStore");
+      trustStorePassword = System.getProperty("org.jboss.ws.wsse.trustStorePassword");
+      trustStoreType = System.getProperty("org.jboss.ws.wsse.trustStoreType");
+      //Clear environment
       Properties props = System.getProperties();
       props.remove("org.jboss.ws.wsse.keyStore");
       props.remove("org.jboss.ws.wsse.trustStore");
@@ -66,6 +80,18 @@ public class UsernameTestCase extends JBossWSTest
       props.remove("org.jboss.ws.wsse.trustStorePassword");
       props.remove("org.jboss.ws.wsse.keyStoreType");
       props.remove("org.jboss.ws.wsse.trustStoreType");
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      //Restore environment
+      System.setProperty("org.jboss.ws.wsse.keyStore", keyStore);
+      System.setProperty("org.jboss.ws.wsse.trustStore", trustStore);
+      System.setProperty("org.jboss.ws.wsse.keyStorePassword", keyStorePassword);
+      System.setProperty("org.jboss.ws.wsse.trustStorePassword", trustStorePassword);
+      System.setProperty("org.jboss.ws.wsse.keyStoreType", keyStoreType);
+      System.setProperty("org.jboss.ws.wsse.trustStoreType", trustStoreType);
+      super.tearDown();
    }
 
    public void testEchoString() throws Exception

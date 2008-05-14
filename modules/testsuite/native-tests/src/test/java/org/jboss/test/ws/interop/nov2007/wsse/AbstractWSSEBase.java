@@ -47,8 +47,13 @@ import org.jboss.wsf.test.JBossWSTestHelper;
  */
 public abstract class AbstractWSSEBase extends JBossWSTest
 {
-
    protected IPingService port;
+   private String keyStore;
+   private String trustStore;
+   private String keyStorePassword;
+   private String trustStorePassword;
+   private String keyStoreType;
+   private String trustStoreType;
 
    protected void setUp() throws Exception
    {
@@ -63,7 +68,26 @@ public abstract class AbstractWSSEBase extends JBossWSTest
          configureClient();
       }
 
+      //Backup values
+      keyStore = System.getProperty("org.jboss.ws.wsse.keyStore");
+      keyStorePassword = System.getProperty("org.jboss.ws.wsse.keyStorePassword");
+      keyStoreType = System.getProperty("org.jboss.ws.wsse.keyStoreType");
+      trustStore = System.getProperty("org.jboss.ws.wsse.trustStore");
+      trustStorePassword = System.getProperty("org.jboss.ws.wsse.trustStorePassword");
+      trustStoreType = System.getProperty("org.jboss.ws.wsse.trustStoreType");
       scenarioSetup(port);
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      //Restore environment
+      System.setProperty("org.jboss.ws.wsse.keyStore", keyStore);
+      System.setProperty("org.jboss.ws.wsse.trustStore", trustStore);
+      System.setProperty("org.jboss.ws.wsse.keyStorePassword", keyStorePassword);
+      System.setProperty("org.jboss.ws.wsse.trustStorePassword", trustStorePassword);
+      System.setProperty("org.jboss.ws.wsse.keyStoreType", keyStoreType);
+      System.setProperty("org.jboss.ws.wsse.trustStoreType", trustStoreType);
+      super.tearDown();
    }
    
    protected abstract void scenarioSetup(IPingService port);
