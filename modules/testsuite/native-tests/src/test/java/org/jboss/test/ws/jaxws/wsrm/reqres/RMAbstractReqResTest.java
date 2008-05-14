@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.reqres;
 
-import static org.jboss.test.ws.jaxws.wsrm.Helper.invokeMethodUsingReflection;
 import static org.jboss.test.ws.jaxws.wsrm.Helper.setAddrProps;
 
 import java.net.URL;
@@ -34,6 +33,9 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
+
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.test.ws.jaxws.wsrm.services.ReqResServiceIface;
 
@@ -72,16 +74,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
          Service service = Service.create(wsdlURL, serviceName);
          service.setExecutor(testExecutor);
          proxy = (ReqResServiceIface)service.getPort(ReqResServiceIface.class);
-         if (isIntegrationNative())
-         {
-            // set up client config to be used - uses jbossws specific API via reflection
-            invokeMethodUsingReflection(
-               "org.jboss.ws.core.StubExt",
-               proxy, "setConfigName",
-               new Class[] { String.class, String.class },
-               new Object[] {getConfigName(), "META-INF/wsrm-jaxws-client-config.xml"}
-            );
-         }
+         ((StubExt)proxy).setConfigName(getConfigName(), "META-INF/wsrm-jaxws-client-config.xml");
       }
    }
 
@@ -160,16 +153,7 @@ public abstract class RMAbstractReqResTest extends JBossWSTest
       invokeWebServiceMethod(invocationType);
       setAddrProps(proxy, "http://useless/action", serviceURL);
       invokeWebServiceMethod(invocationType);
-      if (isIntegrationNative())
-      {
-         // force close sequence - uses jbossws specific API via reflection
-         invokeMethodUsingReflection(
-            "org.jboss.ws.extensions.wsrm.api.RMProvider",
-            proxyObject, "closeSequence",
-            new Class[] {},
-            new Object[] {}
-         );
-      }
+      ((RMProvider)proxy).closeSequence();
    }
    
    public static String getClasspath()

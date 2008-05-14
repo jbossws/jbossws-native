@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsrm;
 
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.xml.ws.BindingProvider;
@@ -82,18 +81,6 @@ public final class Helper
       {
          throw new IllegalArgumentException(e.getMessage());
       }
-   }
-   
-   /**
-    * Invokes method using java reflection api
-    * @throws Exception if some reflection related problem occurs 
-    */
-   public static Object invokeMethodUsingReflection(String ifaceName, Object object, String methodName, Class<?>[] parametersSignature, Object[] parameters)
-   throws Exception
-   {
-      Object castedObject = Class.forName(ifaceName).cast(object);
-      Method castedObjectMethod = castedObject.getClass().getMethod(methodName, parametersSignature);
-      return castedObjectMethod.invoke(castedObject, parameters);
    }
    
 }

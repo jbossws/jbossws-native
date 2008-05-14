@@ -21,13 +21,14 @@
  */
 package org.jboss.test.ws.jaxws.wsrm.oneway;
 
-import static org.jboss.test.ws.jaxws.wsrm.Helper.invokeMethodUsingReflection;
 import static org.jboss.test.ws.jaxws.wsrm.Helper.setAddrProps;
 
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import org.jboss.test.ws.jaxws.wsrm.services.SecuredOneWayServiceIface;
+import org.jboss.ws.core.StubExt;
+import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
@@ -49,16 +50,7 @@ public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
       proxy = (SecuredOneWayServiceIface)service.getPort(SecuredOneWayServiceIface.class);
-      if (isIntegrationNative())
-      {
-         // set up client config to be used - uses jbossws specific API via reflection
-         invokeMethodUsingReflection(
-            "org.jboss.ws.core.StubExt",
-            proxy, "setConfigName",
-            new Class[] { String.class, String.class },
-            new Object[] {getConfigName(), "META-INF/wsrm-jaxws-client-config.xml"}
-         );
-      }
+      ((StubExt)proxy).setConfigName(getConfigName(), "META-INF/wsrm-jaxws-client-config.xml");
    }
    
    public void testOneWayMethods() throws Exception
@@ -69,16 +61,7 @@ public abstract class RMAbstractSecuredOneWayTest extends JBossWSTest
       proxy.method2("Hello World");
       setAddrProps(proxy, "http://useless/action3", serviceURL);
       proxy.method3(new String[] {"Hello","World"});
-      if (isIntegrationNative())
-      {
-         // force close sequence - uses jbossws specific API via reflection
-         invokeMethodUsingReflection(
-            "org.jboss.ws.extensions.wsrm.api.RMProvider",
-            proxy, "closeSequence",
-            new Class[] {},
-            new Object[] {}
-         );
-      }
+      ((RMProvider)proxy).closeSequence();
    }
 
    public static String getClasspath()
