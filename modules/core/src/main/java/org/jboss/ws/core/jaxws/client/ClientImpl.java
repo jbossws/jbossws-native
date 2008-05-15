@@ -318,43 +318,50 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       finally
       {
          msgContext = MessageContextAssociation.peekMessageContext();
-         if (this.wsrmSequence != null)
+         
+         try
          {
-            if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
-            {
-               Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
-               if (wsrmResCtx != null)
-               {
-                  RMConstants wsrmConstants = RMProvider.get().getConstants();
-                  Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
-                  QName seq = wsrmConstants.getSequenceQName();
-                  if (mapping.keySet().contains(seq))
-                  {
-                     RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
-                  }
-                  QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
-                  if (mapping.keySet().contains(seqAck))
-                  {
-                     RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
-                  }
-                  QName ackReq = wsrmConstants.getAckRequestedQName();
-                  if (mapping.keySet().contains(ackReq))
-                  {
-                     RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
-                  }
-               }
-            }
-         }
+        	 if (this.wsrmSequence != null)
+        	 {
+        		 if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
+        		 {
+        			 Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
+        			 if (wsrmResCtx != null)
+        			 {
+        				 RMConstants wsrmConstants = RMProvider.get().getConstants();
+        				 Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+        				 QName seq = wsrmConstants.getSequenceQName();
+        				 if (mapping.keySet().contains(seq))
+        				 {
+        					 RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
+        				 }
+        				 QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
+        				 if (mapping.keySet().contains(seqAck))
+        				 {
+        					 RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
+        				 }
+        				 QName ackReq = wsrmConstants.getAckRequestedQName();
+        				 if (mapping.keySet().contains(ackReq))
+        				 {
+        					 RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
+        				 }
+        			 }
+        		 }
+        	 }
 
-         // Copy the inbound msg properties to the binding's response context
-         for (String key : msgContext.keySet())
+        	 // Copy the inbound msg properties to the binding's response context
+        	 for (String key : msgContext.keySet())
+        	 {
+        		 Object value = msgContext.get(key);
+        		 resContext.put(key, value);
+        	 }
+
+         }
+         finally
          {
-            Object value = msgContext.get(key);
-            resContext.put(key, value);
+        	// Reset the message context association
+            MessageContextAssociation.popMessageContext();
          }
-
-         // Reset the message context association
-         MessageContextAssociation.popMessageContext();
       }
    }
 
