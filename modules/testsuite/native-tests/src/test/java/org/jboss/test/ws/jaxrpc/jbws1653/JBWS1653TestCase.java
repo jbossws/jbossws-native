@@ -135,15 +135,15 @@ public class JBWS1653TestCase extends JBossWSTest
       };
       Thread.currentThread().setContextClassLoader(urlLoader);
 
-      URL configURL = urlLoader.findResource("META-INF/standard-jaxrpc-client-config.xml");
-      assertTrue("Invalid config url: " + configURL, configURL.toExternalForm().indexOf("jbws1653") > 0);
-
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-      TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
-
       try
       {
+         URL configURL = urlLoader.findResource("META-INF/standard-jaxrpc-client-config.xml");
+         assertTrue("Invalid config url: " + configURL, configURL.toExternalForm().indexOf("jbws1653") > 0);
+
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
+
          String retStr = port.echoString("kermit");
          assertEquals("kermit", retStr);
          assertEquals("kermit", ClientHandler.message);
@@ -181,20 +181,20 @@ public class JBWS1653TestCase extends JBossWSTest
       };
       Thread.currentThread().setContextClassLoader(urlLoader);
 
-      ServiceFactoryImpl factory = new ServiceFactoryImpl();
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
-      QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
-      Service service = factory.createService(wsdlURL, qname);
-
-      Call call = service.createCall();
-      call.setOperationName(new QName("http://org.jboss.test.ws/jbws1653", "echoString"));
-
-      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint");
-
-      String hello = "Hello";
-
       try
       {
+         ServiceFactoryImpl factory = new ServiceFactoryImpl();
+         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
+         QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
+         Service service = factory.createService(wsdlURL, qname);
+
+         Call call = service.createCall();
+         call.setOperationName(new QName("http://org.jboss.test.ws/jbws1653", "echoString"));
+
+         call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint");
+
+         String hello = "Hello";
+
          Object retObj = call.invoke(new Object[] { hello });
          assertEquals(hello, retObj);
          assertEquals(hello, ClientHandler.message);
@@ -226,15 +226,15 @@ public class JBWS1653TestCase extends JBossWSTest
       };
       Thread.currentThread().setContextClassLoader(urlLoader);
 
-      ServiceFactoryImpl factory = new ServiceFactoryImpl();
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
-      URL mappingURL = getResourceURL("jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml");
-      QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
-      Service service = factory.createService(wsdlURL, qname, mappingURL);
-      TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
-
       try
       {
+         ServiceFactoryImpl factory = new ServiceFactoryImpl();
+         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-jbws1653/TestEndpoint?wsdl");
+         URL mappingURL = getResourceURL("jaxrpc/jbws1653/WEB-INF/jaxrpc-mapping.xml");
+         QName qname = new QName("http://org.jboss.test.ws/jbws1653", "TestService");
+         Service service = factory.createService(wsdlURL, qname, mappingURL);
+         TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
+
          String retStr = port.echoString("thefrog");
          assertEquals("thefrog", retStr);
          assertEquals("thefrog", ClientHandler.message);

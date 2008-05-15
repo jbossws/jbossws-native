@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.interop.nov2007.wsaSoap12;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -81,16 +80,21 @@ public class AddressingTestCase extends JBossWSTest {
    private Element extraStuff;
    private Element wsdl1Param;
    private Element wsdl2Param;
+   private ClassLoader origCL;
 
    public static Test suite()
    {
-      addClientConfToClasspath("jbossws-interop-nov2007-wsaSoap12-client.jar");
       return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-nov2007-wsaSoap12.war");
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      Thread.currentThread().setContextClassLoader(origCL);
    }
 
    protected void setUp() throws Exception
    {
-      
+      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsaSoap12-client.jar"); 
       if (echoPort==null || notifyPort==null)
       {
          wsdlLocation = getResourceURL("interop/nov2007/wsaSoap12/WEB-INF/wsdl/service.wsdl");
@@ -113,7 +117,7 @@ public class AddressingTestCase extends JBossWSTest {
       extraStuff = DOMUtils.parse("<customer:extraStuff xmlns:customer=\"http://example.org/customer\">This should be ignored</customer:extraStuff>");
    }
    
-   protected static void addClientConfToClasspath(String s)
+   protected static ClassLoader addClientConfToClasspath(String s)
    {
       try
       {
@@ -122,7 +126,7 @@ public class AddressingTestCase extends JBossWSTest {
          ClassLoader parent = Thread.currentThread().getContextClassLoader();
          URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveURL(s) }, parent);
          Thread.currentThread().setContextClassLoader(replacement);
-
+         return parent;
       }
       catch (MalformedURLException e)
       {

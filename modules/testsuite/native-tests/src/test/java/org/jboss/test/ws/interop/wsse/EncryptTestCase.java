@@ -31,11 +31,21 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * @since Aug 23, 2006
  */
 public class EncryptTestCase extends AbstractWSSEBase  {
-
+   private ClassLoader origCL;
+   
    public static Test suite()
    {
-      addClientConfToClasspath("jbossws-interop-wsse10Encrypt-client.jar");
       return new JBossWSTestSetup(EncryptTestCase.class, "jbossws-interop-wsse10Encrypt.war");
+   }
+   
+   protected void setUp() throws Exception
+   {
+      origCL = addClientConfToClasspath("jbossws-interop-wsse10Encrypt-client.jar"); 
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      Thread.currentThread().setContextClassLoader(origCL);
    }
 
 	String getEndpointURL() {

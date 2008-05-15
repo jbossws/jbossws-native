@@ -43,10 +43,21 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class SecureNewsTestCase extends JBossWSTest
 {
+   private ClassLoader origCL;
+   
    public static Test suite()
    {
-      addClientConfToClasspath("jaxws-samples-news-step2-agency.jar"); //this way the ws-security conf is available
       return new JBossWSTestSetup(SecureNewsTestCase.class, "jaxws-samples-news-step2-newspaper.jar");
+   }
+   
+   protected void setUp() throws Exception
+   {
+      origCL = addClientConfToClasspath("jaxws-samples-news-step2-agency.jar"); //this way the ws-security conf is available 
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      Thread.currentThread().setContextClassLoader(origCL);
    }
    
    public void testAgency() throws Exception
@@ -56,8 +67,7 @@ public class SecureNewsTestCase extends JBossWSTest
       agency.run("Press release title", "Press release body");
    }
    
-   
-   protected static void addClientConfToClasspath(String s)
+   protected static ClassLoader addClientConfToClasspath(String s)
    {
       try
       {
@@ -66,7 +76,7 @@ public class SecureNewsTestCase extends JBossWSTest
          ClassLoader parent = Thread.currentThread().getContextClassLoader();
          URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveFile(s).toURL() }, parent);
          Thread.currentThread().setContextClassLoader(replacement);
-
+         return parent;
       }
       catch (MalformedURLException e)
       {

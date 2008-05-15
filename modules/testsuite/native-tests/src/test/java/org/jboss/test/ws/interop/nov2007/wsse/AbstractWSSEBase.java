@@ -58,7 +58,6 @@ public abstract class AbstractWSSEBase extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
-
       if (port == null)
       {
          URL wsdlLocation = getResourceURL("interop/nov2007/wsse/shared/WEB-INF/wsdl/WsSecurity10.wsdl");
@@ -117,7 +116,7 @@ public abstract class AbstractWSSEBase extends JBossWSTest
 
    }
 
-   protected static void addClientConfToClasspath(String s)
+   protected static ClassLoader addClientConfToClasspath(String s)
    {
       try
       {
@@ -126,7 +125,7 @@ public abstract class AbstractWSSEBase extends JBossWSTest
          ClassLoader parent = Thread.currentThread().getContextClassLoader();
          URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveURL(s) }, parent);
          Thread.currentThread().setContextClassLoader(replacement);
-
+         return parent;
       }
       catch (MalformedURLException e)
       {

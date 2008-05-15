@@ -61,11 +61,21 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class EncryptTestCase extends AbstractWSSEBase
 {
-
+   private ClassLoader origCL;
+   
    public static Test suite()
    {
-      addClientConfToClasspath("jbossws-interop-nov2007-wsseEncrypt-client.jar");
       return new JBossWSTestSetup(EncryptTestCase.class, "jbossws-interop-nov2007-wsseEncrypt.war");
+   }
+   
+   protected void setUp() throws Exception
+   {
+      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseEncrypt-client.jar"); 
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      Thread.currentThread().setContextClassLoader(origCL);
    }
 
    public void testEcho() throws Exception

@@ -30,11 +30,21 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * @since 07-Mar-2006
  */
 public class SignTestCase extends AbstractWSSEBase {
+   private ClassLoader origCL;
 
    public static Test suite()
    {
-      addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar");
       return new JBossWSTestSetup(SignTestCase.class, "jbossws-interop-wsse10Sign.war");
+   }
+
+   protected void setUp() throws Exception
+   {
+      origCL = addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar"); 
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      Thread.currentThread().setContextClassLoader(origCL);
    }
 
    String getEndpointURL() {
