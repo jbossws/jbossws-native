@@ -37,14 +37,18 @@ public class SignTestCase extends AbstractWSSEBase {
       return new JBossWSTestSetup(SignTestCase.class, "jbossws-interop-wsse10Sign.war");
    }
 
+   @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar"); 
+      origCL = addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar");
+      super.setUp();
    }
    
+   @Override
    protected void tearDown() throws Exception
    {
       Thread.currentThread().setContextClassLoader(origCL);
+      super.tearDown();
    }
 
    String getEndpointURL() {

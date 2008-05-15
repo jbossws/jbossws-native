@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.interop.nov2007.wsse;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;

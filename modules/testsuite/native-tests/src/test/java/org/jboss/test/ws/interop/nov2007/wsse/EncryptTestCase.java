@@ -68,14 +68,18 @@ public class EncryptTestCase extends AbstractWSSEBase
       return new JBossWSTestSetup(EncryptTestCase.class, "jbossws-interop-nov2007-wsseEncrypt.war");
    }
    
+   @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseEncrypt-client.jar"); 
+      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseEncrypt-client.jar");
+      super.setUp();
    }
    
+   @Override
    protected void tearDown() throws Exception
    {
       Thread.currentThread().setContextClassLoader(origCL);
+      super.tearDown();
    }
 
    public void testEcho() throws Exception

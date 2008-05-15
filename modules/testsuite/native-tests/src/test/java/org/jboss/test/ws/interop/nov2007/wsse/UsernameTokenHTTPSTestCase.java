@@ -58,14 +58,18 @@ public class UsernameTokenHTTPSTestCase extends AbstractWSSEBase
       return new JBossWSTestSetup(UsernameTokenHTTPSTestCase.class, "jbossws-interop-nov2007-wsseUsernameTokenHTTPS.war");
    }
 
+   @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseUsernameTokenHTTPS-client.jar"); 
+      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseUsernameTokenHTTPS-client.jar");
+      super.setUp();
    }
    
+   @Override
    protected void tearDown() throws Exception
    {
       Thread.currentThread().setContextClassLoader(origCL);
+      super.tearDown();
    }
 
    @Override

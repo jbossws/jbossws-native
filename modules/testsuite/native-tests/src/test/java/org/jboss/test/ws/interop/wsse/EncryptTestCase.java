@@ -38,14 +38,18 @@ public class EncryptTestCase extends AbstractWSSEBase  {
       return new JBossWSTestSetup(EncryptTestCase.class, "jbossws-interop-wsse10Encrypt.war");
    }
    
+   @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-wsse10Encrypt-client.jar"); 
+      origCL = addClientConfToClasspath("jbossws-interop-wsse10Encrypt-client.jar");
+      super.setUp();
    }
    
+   @Override
    protected void tearDown() throws Exception
    {
       Thread.currentThread().setContextClassLoader(origCL);
+      super.tearDown();
    }
 
 	String getEndpointURL() {

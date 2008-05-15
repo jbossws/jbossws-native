@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1653;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -45,6 +44,7 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS1653TestCase extends JBossWSTest
 {
+   
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(JBWS1653TestCase.class, "jaxrpc-jbws1653.war, jaxrpc-jbws1653-client.jar");
