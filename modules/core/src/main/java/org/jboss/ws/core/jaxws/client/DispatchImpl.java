@@ -211,78 +211,82 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
       // Associate a message context with the current thread
       CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
       MessageContextAssociation.pushMessageContext(msgContext);
-      msgContext.setEndpointMetaData(epMetaData);
-      msgContext.setSOAPMessage(reqMsg);
-      msgContext.putAll(reqContext);
-      // Try to find out the operation metadata corresponding to the message we're sending
-      msgContext.setOperationMetaData(getOperationMetaData(epMetaData,reqMsg));
-      
-
-      // The contents of the request context are used to initialize the message context (see section 9.4.1)
-      // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
-      // request context is copied to the message context with a scope of HANDLER.
-      msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
-      
-      QName portName = epMetaData.getPortName();
       try
       {
-         // Call the request handlers
-         boolean handlerPass = callRequestHandlerChain(portName, handlerType[0]);
-         handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
-         handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
+         msgContext.setEndpointMetaData(epMetaData);
+         msgContext.setSOAPMessage(reqMsg);
+         msgContext.putAll(reqContext);
+         // Try to find out the operation metadata corresponding to the message we're sending
+         msgContext.setOperationMetaData(getOperationMetaData(epMetaData,reqMsg));
 
-         XOPContext.visitAndRestoreXOPData();
-         
-         // Handlers might have replaced the message
-         reqMsg = (SOAPMessageImpl)msgContext.getSOAPMessage();
+         // The contents of the request context are used to initialize the message context (see section 9.4.1)
+         // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
+         // request context is copied to the message context with a scope of HANDLER.
+         msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.TRUE);
 
-         MessageAbstraction resMsg = null;
-         if (handlerPass)
+         QName portName = epMetaData.getPortName();
+         try
          {
-            Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
-            if (callProps.containsKey(BindingProvider.ENDPOINT_ADDRESS_PROPERTY)) {
-               targetAddress = (String) callProps.get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
+            // Call the request handlers
+            boolean handlerPass = callRequestHandlerChain(portName, handlerType[0]);
+            handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
+            handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
+
+            XOPContext.visitAndRestoreXOPData();
+
+            // Handlers might have replaced the message
+            reqMsg = (SOAPMessageImpl)msgContext.getSOAPMessage();
+
+            MessageAbstraction resMsg = null;
+            if (handlerPass)
+            {
+               Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
+               if (callProps.containsKey(BindingProvider.ENDPOINT_ADDRESS_PROPERTY)) {
+                  targetAddress = (String) callProps.get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
+               }
+               EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
+               resMsg = getRemotingConnection().invoke(reqMsg, epInfo, false);
+
+               //Pivot, switch to response ctx and save the response message there
+               msgContext = MessageContextJAXWS.processPivot(msgContext);
+               msgContext.setMessageAbstraction(resMsg);
+
+               // Call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
+               handlerPass = callResponseHandlerChain(portName, handlerType[2]);
+               faultType[2] = null;
+               handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[1]);
+               faultType[1] = null;
+               handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[0]);
+               faultType[0] = null;
             }
-            EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
-            resMsg = getRemotingConnection().invoke(reqMsg, epInfo, false);
 
-            //Pivot, switch to response ctx and save the response message there
-            msgContext = MessageContextJAXWS.processPivot(msgContext);
-            msgContext.setMessageAbstraction(resMsg);
-            
-            // Call the  response handler chain, removing the fault type entry will not call handleFault for that chain 
-            handlerPass = callResponseHandlerChain(portName, handlerType[2]);
-            faultType[2] = null;
-            handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[1]);
-            faultType[1] = null;
-            handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[0]);
-            faultType[0] = null;
+            if (handlerPass)
+            {
+               retObj = getReturnObject(resMsg);
+            }
          }
-
-         if (handlerPass)
+         catch (Exception ex)
          {
-            retObj = getReturnObject(resMsg);
-         }
-      }
-      catch (Exception ex)
-      {
-         msgContext = MessageContextJAXWS.processPivot(msgContext);
-         if (faultType[2] != null)
-            callFaultHandlerChain(portName, faultType[2], ex);
-         if (faultType[1] != null)
-            callFaultHandlerChain(portName, faultType[1], ex);
-         if (faultType[0] != null)
-            callFaultHandlerChain(portName, faultType[0], ex);
+            msgContext = MessageContextJAXWS.processPivot(msgContext);
+            if (faultType[2] != null)
+               callFaultHandlerChain(portName, faultType[2], ex);
+            if (faultType[1] != null)
+               callFaultHandlerChain(portName, faultType[1], ex);
+            if (faultType[0] != null)
+               callFaultHandlerChain(portName, faultType[0], ex);
 
-         throw ex;
+            throw ex;
+         }
+         finally
+         {
+            closeHandlerChain(portName, handlerType[2]);
+            closeHandlerChain(portName, handlerType[1]);
+            closeHandlerChain(portName, handlerType[0]);
+         }
       }
       finally
       {
-         closeHandlerChain(portName, handlerType[2]);
-         closeHandlerChain(portName, handlerType[1]);
-         closeHandlerChain(portName, handlerType[0]);
-         
-         MessageContextAssociation.popMessageContext();
+          MessageContextAssociation.popMessageContext();
       }
       return retObj;
    }
@@ -340,9 +344,9 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
    {
       CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
       MessageContextAssociation.pushMessageContext(msgContext);
-      msgContext.setEndpointMetaData(epMetaData);
       try
       {
+         msgContext.setEndpointMetaData(epMetaData);
          MessageAbstraction reqMsg = getRequestMessage(msg);
          String targetAddress = epMetaData.getEndpointAddress();
          getRemotingConnection().invoke(reqMsg, targetAddress, true);

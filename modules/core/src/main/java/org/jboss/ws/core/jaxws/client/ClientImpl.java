@@ -263,105 +263,104 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
       MessageContextAssociation.pushMessageContext(msgContext);
 
-      // The contents of the request context are used to initialize the message context (see section 9.4.1)
-      // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
-      // request context is copied to the message context with a scope of HANDLER.
-      Map<String, Object> reqContext = getBindingProvider().getRequestContext();
-
-      if (this.wsrmSequence != null)
-      {
-         if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
-         {
-            if (this.wsrmSequence.getBackPort() != null)
-            {
-               // rewrite ReplyTo to use client addressable back port
-               Map<String, Object> requestContext = getBindingProvider().getRequestContext();
-               AddressingProperties addressingProps = (AddressingProperties)requestContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
-               addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.wsrmSequence.getBackPort()));
-            }
-            Map<String, Object> rmRequestContext = new HashMap<String, Object>();
-            List<QName> outMsgs = new LinkedList<QName>();
-            wsrmSequence.newMessageNumber();
-            outMsgs.add(RMProvider.get().getConstants().getSequenceQName());
-            outMsgs.add(RMProvider.get().getConstants().getAckRequestedQName());
-            if (wsrmSequence.isAckRequested())
-            {
-               // piggy backing
-               outMsgs.add(RMProvider.get().getConstants().getSequenceAcknowledgementQName());
-            }
-            rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
-            rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, wsrmSequence);
-            reqContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
-         }
-      }
-
-      msgContext.putAll(reqContext);
-
       try
       {
-         Object retObj = invoke(opName, args, false);
-         return retObj;
-      }
-      catch (Exception ex)
-      {
-         OperationMetaData opMetaData = getOperationMetaData();
-         if (opMetaData.isOneWay())
+         // The contents of the request context are used to initialize the message context (see section 9.4.1)
+         // prior to invoking any handlers (see chapter 9) for the outbound message. Each property within the
+         // request context is copied to the message context with a scope of HANDLER.
+         Map<String, Object> reqContext = getBindingProvider().getRequestContext();
+
+         if (this.wsrmSequence != null)
          {
-            handleOneWayException(opMetaData, ex);
+            if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
+            {
+               if (this.wsrmSequence.getBackPort() != null)
+               {
+                  // rewrite ReplyTo to use client addressable back port
+                  Map<String, Object> requestContext = getBindingProvider().getRequestContext();
+                  AddressingProperties addressingProps = (AddressingProperties)requestContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
+                  addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.wsrmSequence.getBackPort()));
+               }
+               Map<String, Object> rmRequestContext = new HashMap<String, Object>();
+               List<QName> outMsgs = new LinkedList<QName>();
+               wsrmSequence.newMessageNumber();
+               outMsgs.add(RMProvider.get().getConstants().getSequenceQName());
+               outMsgs.add(RMProvider.get().getConstants().getAckRequestedQName());
+               if (wsrmSequence.isAckRequested())
+               {
+                  // piggy backing
+                  outMsgs.add(RMProvider.get().getConstants().getSequenceAcknowledgementQName());
+               }
+               rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
+               rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, wsrmSequence);
+               reqContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
+            }
          }
-         else
-         {
-            handleRemoteException(opMetaData, ex);
-         }
-         return null;
-      }
-      finally
-      {
-         msgContext = MessageContextAssociation.peekMessageContext();
-         
+
+         msgContext.putAll(reqContext);
+
          try
          {
-        	 if (this.wsrmSequence != null)
-        	 {
-        		 if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
-        		 {
-        			 Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
-        			 if (wsrmResCtx != null)
-        			 {
-        				 RMConstants wsrmConstants = RMProvider.get().getConstants();
-        				 Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
-        				 QName seq = wsrmConstants.getSequenceQName();
-        				 if (mapping.keySet().contains(seq))
-        				 {
-        					 RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
-        				 }
-        				 QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
-        				 if (mapping.keySet().contains(seqAck))
-        				 {
-        					 RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
-        				 }
-        				 QName ackReq = wsrmConstants.getAckRequestedQName();
-        				 if (mapping.keySet().contains(ackReq))
-        				 {
-        					 RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
-        				 }
-        			 }
-        		 }
-        	 }
-
-        	 // Copy the inbound msg properties to the binding's response context
-        	 for (String key : msgContext.keySet())
-        	 {
-        		 Object value = msgContext.get(key);
-        		 resContext.put(key, value);
-        	 }
-
+            Object retObj = invoke(opName, args, false);
+            return retObj;
+         }
+         catch (Exception ex)
+         {
+            OperationMetaData opMetaData = getOperationMetaData();
+            if (opMetaData.isOneWay())
+            {
+               handleOneWayException(opMetaData, ex);
+            }
+            else
+            {
+               handleRemoteException(opMetaData, ex);
+            }
+            return null;
          }
          finally
          {
-        	// Reset the message context association
-            MessageContextAssociation.popMessageContext();
+            msgContext = MessageContextAssociation.peekMessageContext();
+
+            if (this.wsrmSequence != null)
+            {
+               if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
+               {
+                  Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
+                  if (wsrmResCtx != null)
+                  {
+                     RMConstants wsrmConstants = RMProvider.get().getConstants();
+                     Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+                     QName seq = wsrmConstants.getSequenceQName();
+                     if (mapping.keySet().contains(seq))
+                     {
+                        RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
+                     }
+                     QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
+                     if (mapping.keySet().contains(seqAck))
+                     {
+                        RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
+                     }
+                     QName ackReq = wsrmConstants.getAckRequestedQName();
+                     if (mapping.keySet().contains(ackReq))
+                     {
+                        RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
+                     }
+                  }
+               }
+            }
+
+            // Copy the inbound msg properties to the binding's response context
+            for (String key : msgContext.keySet())
+            {
+               Object value = msgContext.get(key);
+               resContext.put(key, value);
+            }
          }
+      }
+      finally
+      {
+         // Reset the message context association
+         MessageContextAssociation.popMessageContext();
       }
    }
 

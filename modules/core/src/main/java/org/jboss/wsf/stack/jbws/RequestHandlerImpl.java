@@ -277,10 +277,10 @@ public class RequestHandlerImpl implements RequestHandler
 
       // Associate a message context with the current thread
       MessageContextAssociation.pushMessageContext(msgContext);
-      msgContext.setEndpointMetaData(sepMetaData);
 
       try
       {
+         msgContext.setEndpointMetaData(sepMetaData);
          MessageAbstraction resMessage = processRequest(endpoint, headerSource, invContext, inStream);
 
          // Replace the message context with the response context
