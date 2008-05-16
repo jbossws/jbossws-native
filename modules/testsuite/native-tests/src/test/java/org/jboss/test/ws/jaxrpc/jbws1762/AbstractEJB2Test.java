@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1762;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -40,24 +39,32 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public abstract class AbstractEJB2Test extends JBossWSTest
 {
+
    private EJB2Iface ejb2Proxy;
    
-   public void setUp() throws Exception
+   @Override
+   protected void setUp() throws Exception
    {
-      super.setUp();
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
       URL mappingURL = getResourceURL("jaxrpc/jbws1762/META-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.webservice/jbws1762", "EJB2Bean");
       
       ServiceFactoryImpl factory = new ServiceFactoryImpl();
       ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, serviceName, mappingURL);
-      ejb2Proxy = (EJB2Iface)service.getPort(EJB2Iface.class);
+      this.ejb2Proxy = (EJB2Iface)service.getPort(EJB2Iface.class);
+   }
+   
+   @Override
+   protected void tearDown() throws Exception
+   {
+      this.ejb2Proxy = null;
    }
    
    protected abstract String getWSDLLocation();
    
    public void testEJB2() throws Exception
    {
-      assertEquals(ejb2Proxy.echo("Hello!"), "Hello!");
+      assertEquals(this.ejb2Proxy.echo("Hello!"), "Hello!");
    }
+   
 }

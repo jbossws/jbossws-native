@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1762;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -41,30 +40,32 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public abstract class AbstractPOJOTest extends JBossWSTest
 {
-   private String pojoTargetNS = "http://org.jboss.test.ws/jbws1762";
-   private String pojoServiceName = "POJOBean";
+
    private POJOIface pojoProxy;
 
-   public void setUp() throws Exception
+   @Override
+   protected void setUp() throws Exception
    {
-      super.setUp();
-      
-      if (pojoProxy == null)
-      {
-         ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
-         URL mappingURL = getResourceURL("jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml");
-         QName serviceName = new QName(pojoTargetNS, pojoServiceName);
-         
-         Service service = factory.createService(wsdlURL, serviceName, mappingURL);
-         pojoProxy = (POJOIface)service.getPort(POJOIface.class);
-      }
+      ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
+      URL mappingURL = getResourceURL("jaxrpc/jbws1762/WEB-INF/jaxrpc-mapping.xml");
+      QName serviceName = new QName("http://org.jboss.test.ws/jbws1762", "POJOBean");
+
+      Service service = factory.createService(wsdlURL, serviceName, mappingURL);
+      this.pojoProxy = (POJOIface)service.getPort(POJOIface.class);
    }
    
-   protected abstract String getWSDLLocation();
-
+   @Override
+   protected void tearDown() throws Exception
+   {
+      this.pojoProxy = null;
+   }
+   
    public void testPOJO() throws Exception
    {
-      assertEquals(pojoProxy.echo("Hello!"), "Hello!");
+      assertEquals(this.pojoProxy.echo("Hello!"), "Hello!");
    }
+
+   protected abstract String getWSDLLocation();
+
 }
