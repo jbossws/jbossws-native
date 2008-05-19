@@ -224,6 +224,12 @@
         <groupId>com.sun.xml.ws</groupId>
         <artifactId>jaxws-tools</artifactId>
         <version>${sun.jaxws.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.stream</groupId>
+            <artifactId>sjsxp</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.sun.xml.ws</groupId>
