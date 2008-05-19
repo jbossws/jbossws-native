@@ -11,7 +11,7 @@
 
 <!-- $Id$ -->
 
-<project basedir="." name="JBossWS-CXF">
+<project basedir="." name="JBossWS-Native">
   
   <!-- ================================================================== -->
   <!-- Setup                                                              -->
