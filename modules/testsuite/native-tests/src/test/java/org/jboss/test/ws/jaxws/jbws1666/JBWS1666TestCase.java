@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import junit.framework.Test;
 
 import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.wsf.common.IOUtils;
 
@@ -64,8 +65,8 @@ public class JBWS1666TestCase extends JBossWSTest
       
       // Setup the classpath - do not modify this lightheartedly. 
       // Maybe you should extend the Class-Path in the MANIFEST instead.
-      StringBuffer cp = new StringBuffer("./test-classes");
-      cp.append(":" + jbc + "/jbossws-client.jar");
+      StringBuffer cp = new StringBuffer(System.getProperty("test.classes.directory"));
+      cp.append(":" + jbc + "/jbossws-native-client.jar");
       if (isTargetJBoss50())
       {
          cp.append(":" + jbc + "/jboss-common-core.jar");
