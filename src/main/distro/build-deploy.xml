@@ -72,7 +72,7 @@
   </target>
   
   <!-- ================================================================== -->
-  <!-- Prepare Deployment Structure JBoss-4.2.x                           -->
+  <!-- Prepare Deployment Structure JBoss-5.0.x                           -->
   <!-- ================================================================== -->
   
   <target name="deploy-structure-jboss50" depends="prepare-deploy">
