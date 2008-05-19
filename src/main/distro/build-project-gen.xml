@@ -13,7 +13,7 @@
 
 <project>
 
-  <target name="init-project-properties" depends="tests-classpath">
+  <target name="init-project-properties" depends="tests-init">
   	<fail message="Did you copy the ant.properties.example to ant.properties?" unless="jboss.home"/>
     <property file="./user-project.properties" />
     <property name="project.home" value="${workspace.home}/${project.name}"/>
@@ -108,13 +108,15 @@
     </copy>
     <copy tofile="${project.home}/build.properties" file="${basedir}/user-project.properties"/>
   	<path id="project.classpath">
-		<path refid="integration.target.javac.classpath" />
-		<pathelement location="${jboss.client}/jbossws-common.jar"/>
+        <pathelement location="${jboss.client}/jbossws-common.jar"/>
         <pathelement location="${jboss.client}/jbossws-spi.jar"/>
-        <pathelement location="${jboss.client}/jboss-jaxrpc.jar"/>
-        <pathelement location="${jboss.client}/jboss-jaxws.jar"/>
-        <pathelement location="${jboss.client}/jboss-saaj.jar"/>
-        <pathelement location="${jboss.client}/jbossws-client.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-jaxrpc.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-jaxws.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-jaxws-ext.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-saaj.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-core.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-client.jar"/>
+        <path refid="integration.target.javac.classpath" />
 	</path>
   	<eclipseClasspathGenerator pathId="project.classpath" outputFile="${project.home}/.classpath" srcPath="src/main/java" srcOutput="bin/main" />
   	<eclipseProjectGenerator projectName="${project.name}" outputFile="${project.home}/.project" />
