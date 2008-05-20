@@ -52,17 +52,7 @@ public class SecureEJBTestCase extends JBossWSTest
       return new JBossWSTestSetup(SecureEJBTestCase.class, "jaxrpc-samples-secureejb.jar, jaxrpc-samples-secureejb-client.jar");
    }
    
-   public void testAllScenarios() throws Exception
-   {
-      _testRoleSecuredWSDLAccess();
-      _testRoleSecuredServiceAccess();
-      _testBasicSecuredSLSB();
-      _testBasicSecuredServiceAccess();
-      _testConfidentialSecuredWSDLAccess();
-      _testConfidentialServiceAccess();
-   }
-
-   public void _testRoleSecuredWSDLAccess() throws Exception
+   public void testRoleSecuredWSDLAccess() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-samples-ejb/RoleSecured?wsdl");
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
@@ -70,7 +60,7 @@ public class SecureEJBTestCase extends JBossWSTest
       assertNotNull("Expect unsecured wsdl access by default for jaxrpc", wsdl);
    }
 
-   public void _testRoleSecuredServiceAccess() throws Exception
+   public void testRoleSecuredServiceAccess() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/RoleSecured");
@@ -97,7 +87,7 @@ public class SecureEJBTestCase extends JBossWSTest
 
    /** Test that the remote access to this bean is unchecked
     */
-   public void _testBasicSecuredSLSB() throws Exception
+   public void testBasicSecuredSLSB() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
       OrganizationHome home = (OrganizationHome)iniCtx.lookup("ejb/BasicSecuredSLSB");
@@ -107,7 +97,7 @@ public class SecureEJBTestCase extends JBossWSTest
       assertEquals("The 'mafia' boss is currently out of office, please call again.", info);
    }
 
-   public void _testBasicSecuredServiceAccess() throws Exception
+   public void testBasicSecuredServiceAccess() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/BasicSecured");
@@ -132,7 +122,7 @@ public class SecureEJBTestCase extends JBossWSTest
       assertEquals("The 'mafia' boss is currently out of office, please call again.", info);
    }
 
-   public void _testConfidentialSecuredWSDLAccess() throws Exception
+   public void testConfidentialSecuredWSDLAccess() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-samples-ejb/ConfidentialSecured?wsdl");
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
@@ -140,7 +130,7 @@ public class SecureEJBTestCase extends JBossWSTest
       assertNotNull("Expect unsecured wsdl access", wsdl);
    }
 
-   public void _testConfidentialServiceAccess() throws Exception
+   public void testConfidentialServiceAccess() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/ConfidentialSecured");
