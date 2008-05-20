@@ -61,7 +61,7 @@ public class AddressingReplyToTestCase extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
-
+      
       if (initial == null)
       {
          Service initialService = (Service)getInitialContext("initial-client").lookup("java:comp/env/service/InitialService");
@@ -75,10 +75,19 @@ public class AddressingReplyToTestCase extends JBossWSTest
          faultto = (FaultToEndpoint) service.getPort(FaultToEndpoint.class);
       }
    }
+   
+   public void testScenario() throws Exception
+   {
+      _testReplyToMessage();
+      _testFaultToMessage();
+      _testInital();
+      _testReplyTo();
+      _testFaultTo();
+   }
 
    /** This sends a valid message to the ReplyTo endpoint and verfies whether we can read it of again.
     */
-   public void testReplyToMessage() throws Exception
+   public void _testReplyToMessage() throws Exception
    {
       String reqEnv =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
@@ -102,7 +111,7 @@ public class AddressingReplyToTestCase extends JBossWSTest
 
    /** This sends a fault message to the FaultTo endpoint and verfies whether we can read it of again.
     */
-	public void testFaultToMessage() throws Exception
+	public void _testFaultToMessage() throws Exception
    {
       String reqEnv =
          "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
@@ -125,7 +134,7 @@ public class AddressingReplyToTestCase extends JBossWSTest
       assertEquals("java.lang.IllegalArgumentException: Mars Bar", faultto.getLastFault());
    }
 
-   public void testInital() throws Exception
+   public void _testInital() throws Exception
    {
       String item = initial.addItem("Ice Cream");
       assertNull("Expected null, but was: " + item, item);
@@ -134,13 +143,13 @@ public class AddressingReplyToTestCase extends JBossWSTest
       assertNull("Expected null, but was: " + item, item);
    }
 
-   public void testReplyTo() throws Exception
+   public void _testReplyTo() throws Exception
    {
       String item = replyto.getLastItem();
       assertEquals("Ice Cream", item);
    }
 
-   public void testFaultTo() throws Exception
+   public void _testFaultTo() throws Exception
    {
       String lastFault = faultto.getLastFault();
 
