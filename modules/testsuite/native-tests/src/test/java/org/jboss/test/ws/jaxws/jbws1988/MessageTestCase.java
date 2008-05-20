@@ -40,10 +40,6 @@ import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.invocation.SecurityAdaptor;
-import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Element;
@@ -56,6 +52,22 @@ import org.w3c.dom.Element;
  */
 public class MessageTestCase extends JBossWSTest
 {
+   private WSSecurityAPI sec;
+   
+   @Override
+   protected void setUp() throws Exception
+   {
+      super.setUp();
+      sec = new WSSecurityDispatcher();
+   }
+
+   @Override
+   protected void tearDown() throws Exception
+   {
+      super.tearDown();
+      sec.cleanup();
+   }
+
    private String serverConf = "<jboss-ws-security xmlns='http://www.jboss.com/ws-security/config' "
       + "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' "
       + "xsi:schemaLocation='http://www.jboss.com/ws-security/config "
@@ -112,10 +124,9 @@ public class MessageTestCase extends JBossWSTest
       //"2008-03-12T17:12:31.310Z"
       Calendar created = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
       
-      WSSecurityAPI sec = new WSSecurityDispatcher();
       sec.decodeMessage(configuration, getMessage(created, envStr), null);
-      
       created.add(Calendar.MINUTE, -10);
+      
       try
       {
          sec.decodeMessage(configuration, getMessage(created, envStr), null);
@@ -124,14 +135,6 @@ public class MessageTestCase extends JBossWSTest
       catch (Exception e)
       {
          //OK
-      }
-      finally
-      {
-         //Reset username/password since they're stored using a ThreadLocal
-         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
-         securityAdaptor.setPrincipal(null);
-         securityAdaptor.setCredential(null);
       }
    }
    
@@ -149,7 +152,6 @@ public class MessageTestCase extends JBossWSTest
       ByteArrayInputStream inputStream = new ByteArrayInputStream(testMessage.getBytes());
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
-      WSSecurityAPI sec = new WSSecurityDispatcher();
       sec.encodeMessage(configuration, soapMsg, null, "kermit", "therealfrog");
       Element securityEl = (Element)soapMsg.getSOAPHeader().getChildElements(Constants.WSSE_HEADER_QNAME).next();
       Element usernameTokenEl = (Element)DOMUtils.getChildElements(securityEl, new QName(Constants.WSSE_NS, "UsernameToken")).next();
@@ -169,7 +171,6 @@ public class MessageTestCase extends JBossWSTest
       ByteArrayInputStream inputStream = new ByteArrayInputStream(testMessage.getBytes());
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
-      WSSecurityAPI sec = new WSSecurityDispatcher();
       Username username = new Username(true, true, false);
       Config config = new Config();
       config.setUsername(username);
@@ -190,7 +191,6 @@ public class MessageTestCase extends JBossWSTest
       ByteArrayInputStream inputStream = new ByteArrayInputStream(testMessage.getBytes());
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
-      WSSecurityAPI sec = new WSSecurityDispatcher();
       Username username = new Username(true, false, true);
       Config config = new Config();
       config.setUsername(username);

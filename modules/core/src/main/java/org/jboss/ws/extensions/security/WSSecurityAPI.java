@@ -72,4 +72,10 @@ public interface WSSecurityAPI
     * @throws SOAPException
     */
    public void encodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig, String user, String password) throws SOAPException;
+   
+   /**
+    * Cleanup shared resources 
+    */
+   public void cleanup();
+   
 }

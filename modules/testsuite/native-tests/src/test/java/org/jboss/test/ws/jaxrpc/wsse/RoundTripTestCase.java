@@ -53,10 +53,6 @@ import org.jboss.ws.extensions.security.operation.TimestampOperation;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.common.DOMWriter;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.invocation.SecurityAdaptor;
-import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -71,12 +67,20 @@ public class RoundTripTestCase extends JBossWSTest
    /** Test that we can build an envelope from InputStream */
    public void testRoundTrip() throws Exception
    {
-      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + " <env:Header>"
-            + "  <tns:someHeader xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'"
-            + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>" + " </env:Header> " + " <env:Body>"
-            + "  <tns:echoString2 xmlns:tns='http://org.jboss.ws/2004'>" + "   <string>Hello World!</string>" + "  </tns:echoString2>"
-            + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>" + "   <string>Hello World!</string>" + "  </tns:echoString>" + " </env:Body>"
-            + "</env:Envelope>";
+      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" 
+         + " <env:Header>"
+         + "  <tns:someHeader xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'"
+         + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>" 
+         + " </env:Header> " 
+         + " <env:Body>"
+         + "  <tns:echoString2 xmlns:tns='http://org.jboss.ws/2004'>" 
+         + "   <string>Hello World!</string>" 
+         + "  </tns:echoString2>"
+         + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>" 
+         + "   <string>Hello World!</string>" 
+         + "  </tns:echoString>" 
+         + " </env:Body>"
+         + "</env:Envelope>";
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(envStr.getBytes());
       MessageFactory factory = new MessageFactoryImpl();
@@ -113,28 +117,43 @@ public class RoundTripTestCase extends JBossWSTest
 
    public void testRoundTripUsingAPI() throws Exception
    {
-      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" + " <env:Header>"
-            + "  <tns:someHeader xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'"
-            + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>" + " </env:Header> "
-            + " <env:Body wsu:Id='element-9-1205139829909-17908832' xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>"
-            + "  <tns:echoString2 xmlns:env='http://schemas.xmlsoap.org/soap/envelope/' xmlns:tns='http://org.jboss.ws/2004' "
-            + "   xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>" + "   <string>Hello World!</string>"
-            + "  </tns:echoString2>" + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>" + "   <string>Hello World!</string>" + "  </tns:echoString>"
-            + " </env:Body>" + "</env:Envelope>";
+      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" 
+         + " <env:Header>"
+         + "  <tns:someHeader xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'"
+         + "    tns:test='hi' xmlns:tns='http://org.jboss.ws/2004'>some header value</tns:someHeader>" 
+         + " </env:Header> "
+         + " <env:Body wsu:Id='element-9-1205139829909-17908832' xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>"
+         + "  <tns:echoString2 xmlns:env='http://schemas.xmlsoap.org/soap/envelope/' xmlns:tns='http://org.jboss.ws/2004' "
+         + "   xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>" 
+         + "   <string>Hello World!</string>"
+         + "  </tns:echoString2>" 
+         + "  <tns:echoString xmlns:tns='http://org.jboss.ws/2004'>" 
+         + "   <string>Hello World!</string>" 
+         + "  </tns:echoString>"
+         + " </env:Body>" 
+         + "</env:Envelope>";
 
       String conf = "<jboss-ws-security xmlns='http://www.jboss.com/ws-security/config' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'"
-            + "  xsi:schemaLocation='http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd'>" + "  <config>"
-            + "    <encrypt type='x509v3' alias='wsse'/>" + "    <sign alias='wsse'/>" + "    <username/>" + "    <requires>" + "      <encryption/>"
-            + "      <signature/>" + "    </requires>" + "  </config>" + "</jboss-ws-security>";
+            + "  xsi:schemaLocation='http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd'>" 
+            + "  <config>"
+            + "    <encrypt type='x509v3' alias='wsse'/>" 
+            + "    <sign alias='wsse'/>" 
+            + "    <username/>" 
+            + "    <requires>" 
+            + "      <encryption/>"
+            + "      <signature/>" 
+            + "    </requires>" 
+            + "  </config>" 
+            + "</jboss-ws-security>";
       WSSecurityConfiguration configuration = WSSecurityOMFactory.newInstance().parse(new StringReader(conf));
       ByteArrayInputStream inputStream = new ByteArrayInputStream(envStr.getBytes());
       MessageFactory factory = new MessageFactoryImpl();
       SOAPMessage soapMsg = factory.createMessage(null, inputStream);
       String expected = DOMWriter.printNode(soapMsg.getSOAPPart().getEnvelope(), true);
 
+      WSSecurityAPI sec = new WSSecurityDispatcher();
       try
       {
-         WSSecurityAPI sec = new WSSecurityDispatcher();
          sec.encodeMessage(configuration, soapMsg, null, "kermit", "thefrog");
          sec.decodeMessage(configuration, soapMsg, null);
    
@@ -143,11 +162,7 @@ public class RoundTripTestCase extends JBossWSTest
       }
       finally
       {
-         //Reset username/password since they're stored using a ThreadLocal
-         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
-         securityAdaptor.setPrincipal(null);
-         securityAdaptor.setCredential(null);
+         sec.cleanup();
       }
    }
 

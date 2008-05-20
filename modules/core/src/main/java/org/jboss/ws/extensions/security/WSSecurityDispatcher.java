@@ -65,6 +65,10 @@ import org.jboss.ws.metadata.wsse.Timestamp;
 import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.invocation.SecurityAdaptor;
+import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
 import org.w3c.dom.Element;
 
 public class WSSecurityDispatcher implements WSSecurityAPI
@@ -72,124 +76,6 @@ public class WSSecurityDispatcher implements WSSecurityAPI
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityDispatcher.class);
 
-   private static List<Target> convertTargets(List<org.jboss.ws.metadata.wsse.Target> targets)
-   {
-      if (targets == null)
-         return null;
-
-      ArrayList<Target> newList = new ArrayList<Target>(targets.size());
-
-      for (org.jboss.ws.metadata.wsse.Target target : targets)
-      {
-         if ("qname".equals(target.getType()))
-         {
-            QNameTarget qnameTarget = new QNameTarget(QName.valueOf(target.getValue()), target.isContentOnly());
-            newList.add(qnameTarget);
-         }
-         else if ("wsuid".equals(target.getType()))
-         {
-            newList.add(new WsuIdTarget(target.getValue()));
-         }
-      }
-
-      return newList;
-   }
-
-   private static CommonSOAPFaultException convertToFault(WSSecurityException e)
-   {
-      return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
-   }
-
-   private static List<RequireOperation> buildRequireOperations(Config operationConfig)
-   {
-      if (operationConfig == null)
-         return null;
-      
-      Requires requires = operationConfig.getRequires();
-      if (requires == null)
-         return null;
-
-      ArrayList<RequireOperation> operations = new ArrayList<RequireOperation>();
-      RequireTimestamp requireTimestamp = requires.getRequireTimestamp();
-      if (requireTimestamp != null)
-         operations.add(new RequireTimestampOperation(requireTimestamp.getMaxAge()));
-
-      RequireSignature requireSignature = requires.getRequireSignature();
-      if (requireSignature != null)
-      {
-         List<Target> targets = convertTargets(requireSignature.getTargets());
-         operations.add(new RequireSignatureOperation(targets));
-      }
-
-      RequireEncryption requireEncryption = requires.getRequireEncryption();
-      if (requireEncryption != null)
-      {
-         List<Target> targets = convertTargets(requireEncryption.getTargets());
-         operations.add(new RequireEncryptionOperation(targets));
-      }
-
-      return operations;
-   }
-
-   private static Config getActualConfig(WSSecurityConfiguration configuration, Config operationConfig)
-   {
-      if (operationConfig == null)
-      {
-         //if no configuration override, we try getting the right operation config
-         //according to the invoked operation that can be found using the context
-         CommonMessageContext ctx = MessageContextAssociation.peekMessageContext();
-         if (ctx != null)
-         {
-            EndpointMetaData epMetaData = ctx.getEndpointMetaData();
-            QName port = epMetaData.getPortName();
-            
-            OperationMetaData opMetaData = ctx.getOperationMetaData();
-            if (opMetaData == null)
-            {
-               // Get the operation meta data from the soap message
-               // for the server side inbound message.
-               SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
-               try
-               {
-                  opMetaData = soapMessage.getOperationMetaData(epMetaData);
-               }
-               catch (SOAPException e)
-               {
-                  throw new WebServiceException("Error while looking for the operation meta data: " + e);
-               }
-            }
-            if (opMetaData != null)
-               operationConfig = selectOperationConfig(configuration, port, opMetaData.getQName());
-         }
-      }
-      //null operationConfig means default behavior
-      return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
-   }
-   
-   private static Config selectOperationConfig(WSSecurityConfiguration configuration, QName portName, QName opName)
-   {
-      Port port = configuration.getPorts().get(portName != null ? portName.getLocalPart() : null);
-      if (port == null)
-         return configuration.getDefaultConfig();
-
-      Operation operation = port.getOperations().get(opName != null ? opName.toString() : null);
-      if (operation == null)
-      {
-         //if the operation name was not available or didn't match any wsse configured operation,
-         //we fall back to the port wsse config (if available) or the default config.
-         Config portConfig = port.getDefaultConfig();
-         return (portConfig == null) ? configuration.getDefaultConfig() : portConfig;
-
-      }
-      return operation.getConfig();
-   }
-   
-   
-   private static boolean hasRequirements(Config config)
-   {
-      return config != null && config.getRequires() != null;
-   }
-   
    public void decodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig) throws SOAPException
    {
       Config config = getActualConfig(configuration, operationConfig);
@@ -307,4 +193,130 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       }
    }
 
+   public void cleanup()
+   {
+      //Reset username/password since they're stored using a ThreadLocal
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
+      securityAdaptor.setPrincipal(null);
+      securityAdaptor.setCredential(null);
+   }
+   
+   private List<Target> convertTargets(List<org.jboss.ws.metadata.wsse.Target> targets)
+   {
+      if (targets == null)
+         return null;
+
+      ArrayList<Target> newList = new ArrayList<Target>(targets.size());
+
+      for (org.jboss.ws.metadata.wsse.Target target : targets)
+      {
+         if ("qname".equals(target.getType()))
+         {
+            QNameTarget qnameTarget = new QNameTarget(QName.valueOf(target.getValue()), target.isContentOnly());
+            newList.add(qnameTarget);
+         }
+         else if ("wsuid".equals(target.getType()))
+         {
+            newList.add(new WsuIdTarget(target.getValue()));
+         }
+      }
+
+      return newList;
+   }
+
+   private CommonSOAPFaultException convertToFault(WSSecurityException e)
+   {
+      return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
+   }
+
+   private List<RequireOperation> buildRequireOperations(Config operationConfig)
+   {
+      if (operationConfig == null)
+         return null;
+      
+      Requires requires = operationConfig.getRequires();
+      if (requires == null)
+         return null;
+
+      ArrayList<RequireOperation> operations = new ArrayList<RequireOperation>();
+      RequireTimestamp requireTimestamp = requires.getRequireTimestamp();
+      if (requireTimestamp != null)
+         operations.add(new RequireTimestampOperation(requireTimestamp.getMaxAge()));
+
+      RequireSignature requireSignature = requires.getRequireSignature();
+      if (requireSignature != null)
+      {
+         List<Target> targets = convertTargets(requireSignature.getTargets());
+         operations.add(new RequireSignatureOperation(targets));
+      }
+
+      RequireEncryption requireEncryption = requires.getRequireEncryption();
+      if (requireEncryption != null)
+      {
+         List<Target> targets = convertTargets(requireEncryption.getTargets());
+         operations.add(new RequireEncryptionOperation(targets));
+      }
+
+      return operations;
+   }
+
+   private Config getActualConfig(WSSecurityConfiguration configuration, Config operationConfig)
+   {
+      if (operationConfig == null)
+      {
+         //if no configuration override, we try getting the right operation config
+         //according to the invoked operation that can be found using the context
+         CommonMessageContext ctx = MessageContextAssociation.peekMessageContext();
+         if (ctx != null)
+         {
+            EndpointMetaData epMetaData = ctx.getEndpointMetaData();
+            QName port = epMetaData.getPortName();
+            
+            OperationMetaData opMetaData = ctx.getOperationMetaData();
+            if (opMetaData == null)
+            {
+               // Get the operation meta data from the soap message
+               // for the server side inbound message.
+               SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
+               try
+               {
+                  opMetaData = soapMessage.getOperationMetaData(epMetaData);
+               }
+               catch (SOAPException e)
+               {
+                  throw new WebServiceException("Error while looking for the operation meta data: " + e);
+               }
+            }
+            if (opMetaData != null)
+               operationConfig = selectOperationConfig(configuration, port, opMetaData.getQName());
+         }
+      }
+      //null operationConfig means default behavior
+      return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
+   }
+   
+   private Config selectOperationConfig(WSSecurityConfiguration configuration, QName portName, QName opName)
+   {
+      Port port = configuration.getPorts().get(portName != null ? portName.getLocalPart() : null);
+      if (port == null)
+         return configuration.getDefaultConfig();
+
+      Operation operation = port.getOperations().get(opName != null ? opName.toString() : null);
+      if (operation == null)
+      {
+         //if the operation name was not available or didn't match any wsse configured operation,
+         //we fall back to the port wsse config (if available) or the default config.
+         Config portConfig = port.getDefaultConfig();
+         return (portConfig == null) ? configuration.getDefaultConfig() : portConfig;
+
+      }
+      return operation.getConfig();
+   }
+   
+   
+   private boolean hasRequirements(Config config)
+   {
+      return config != null && config.getRequires() != null;
+   }
 }
