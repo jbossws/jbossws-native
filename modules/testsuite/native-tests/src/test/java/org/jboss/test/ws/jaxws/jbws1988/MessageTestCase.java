@@ -40,6 +40,10 @@ import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.invocation.SecurityAdaptor;
+import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Element;
@@ -121,6 +125,14 @@ public class MessageTestCase extends JBossWSTest
       {
          //OK
       }
+      finally
+      {
+         //Reset username/password since they're stored using a ThreadLocal
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         SecurityAdaptor securityAdaptor = spiProvider.getSPI(SecurityAdaptorFactory.class).newSecurityAdapter();
+         securityAdaptor.setPrincipal(null);
+         securityAdaptor.setCredential(null);
+      }
    }
    
    private SOAPMessage getMessage(Calendar created, String envStr) throws Exception
@@ -130,7 +142,6 @@ public class MessageTestCase extends JBossWSTest
       MessageFactory factory = new MessageFactoryImpl();
       return factory.createMessage(null, inputStream);
    }
-   
    
    public void testEncodeMessageWithNonceAndCreated() throws Exception
    {
