@@ -7,7 +7,7 @@
 
   <enterprise-beans>
     <session>
-      <ejb-name>RoleSecuredSLSB</ejb-name>
+      <ejb-name>JBWS723RoleSecuredSLSB</ejb-name>
       <home>org.jboss.test.ws.jaxrpc.jbws723.OrganizationHome</home>
       <remote>org.jboss.test.ws.jaxrpc.jbws723.OrganizationRemote</remote>
       <service-endpoint>org.jboss.test.ws.jaxrpc.jbws723.OrganizationService</service-endpoint>
@@ -19,7 +19,7 @@
       </security-role-ref>
     </session>
     <session>
-      <ejb-name>BasicSecuredSLSB</ejb-name>
+      <ejb-name>JBWS723BasicSecuredSLSB</ejb-name>
       <home>org.jboss.test.ws.jaxrpc.jbws723.OrganizationHome</home>
       <remote>org.jboss.test.ws.jaxrpc.jbws723.OrganizationRemote</remote>
       <service-endpoint>org.jboss.test.ws.jaxrpc.jbws723.OrganizationService</service-endpoint>
@@ -28,7 +28,7 @@
       <transaction-type>Container</transaction-type>
     </session>
     <session>
-      <ejb-name>ConfidentialSLSB</ejb-name>
+      <ejb-name>JBWS723ConfidentialSLSB</ejb-name>
       <home>org.jboss.test.ws.jaxrpc.jbws723.OrganizationHome</home>
       <remote>org.jboss.test.ws.jaxrpc.jbws723.OrganizationRemote</remote>
       <service-endpoint>org.jboss.test.ws.jaxrpc.jbws723.OrganizationService</service-endpoint>
@@ -45,21 +45,21 @@
     <method-permission>
       <role-name>friend</role-name>
       <method>
-        <ejb-name>RoleSecuredSLSB</ejb-name>
+        <ejb-name>JBWS723RoleSecuredSLSB</ejb-name>
         <method-name>*</method-name>
       </method>
     </method-permission>
     <method-permission>
       <unchecked/>
       <method>
-        <ejb-name>BasicSecuredSLSB</ejb-name>
+        <ejb-name>JBWS723BasicSecuredSLSB</ejb-name>
         <method-name>*</method-name>
       </method>
     </method-permission>
     <method-permission>
       <unchecked/>
       <method>
-        <ejb-name>ConfidentialSLSB</ejb-name>
+        <ejb-name>JBWS723ConfidentialSLSB</ejb-name>
         <method-name>*</method-name>
       </method>
     </method-permission>

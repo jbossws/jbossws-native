@@ -93,7 +93,7 @@ public class JBWS723TestCase extends JBossWSTest
    public void testBasicSecuredSLSB() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
-      OrganizationHome home = (OrganizationHome)iniCtx.lookup("ejb/BasicSecuredSLSB");
+      OrganizationHome home = (OrganizationHome)iniCtx.lookup("ejb/JBWS723BasicSecuredSLSB");
 
       OrganizationRemote bean = home.create();
       String info = bean.getContactInfo("mafia");

@@ -8,8 +8,8 @@
 
   <enterprise-beans>
     <session>
-      <ejb-name>RoleSecuredSLSB</ejb-name>
-      <jndi-name>ejb/RoleSecuredSLSB</jndi-name>
+      <ejb-name>JBWS723RoleSecuredSLSB</ejb-name>
+      <jndi-name>ejb/JBWS723RoleSecuredSLSB</jndi-name>
       <port-component>
         <port-component-name>RoleSecured</port-component-name>
         <port-component-uri>/jaxrpc-jbws723/RoleSecured</port-component-uri>
@@ -19,8 +19,8 @@
       </port-component>
     </session>
     <session>
-      <ejb-name>BasicSecuredSLSB</ejb-name>
-      <jndi-name>ejb/BasicSecuredSLSB</jndi-name>
+      <ejb-name>JBWS723BasicSecuredSLSB</ejb-name>
+      <jndi-name>ejb/JBWS723BasicSecuredSLSB</jndi-name>
       <port-component>
         <port-component-name>BasicSecured</port-component-name>
         <port-component-uri>/jaxrpc-jbws723/BasicSecured</port-component-uri>
@@ -30,8 +30,8 @@
       </port-component>
     </session>
     <session>
-      <ejb-name>ConfidentialSLSB</ejb-name>
-      <jndi-name>ejb/ConfidentialSLSB</jndi-name>
+      <ejb-name>JBWS723ConfidentialSLSB</ejb-name>
+      <jndi-name>ejb/JBWS723ConfidentialSLSB</jndi-name>
       <port-component>
         <port-component-name>ConfidentialSecured</port-component-name>
         <port-component-uri>/jaxrpc-jbws723/ConfidentialSecured</port-component-uri>

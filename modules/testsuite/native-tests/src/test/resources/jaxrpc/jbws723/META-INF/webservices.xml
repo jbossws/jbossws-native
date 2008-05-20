@@ -15,7 +15,7 @@
       <wsdl-port>impl:RoleSecuredPort</wsdl-port>
       <service-endpoint-interface>org.jboss.test.ws.jaxrpc.jbws723.OrganizationService</service-endpoint-interface>
       <service-impl-bean>
-        <ejb-link>RoleSecuredSLSB</ejb-link>
+        <ejb-link>JBWS723RoleSecuredSLSB</ejb-link>
       </service-impl-bean>
     </port-component>
     <port-component>
@@ -23,7 +23,7 @@
       <wsdl-port>impl:BasicSecuredPort</wsdl-port>
       <service-endpoint-interface>org.jboss.test.ws.jaxrpc.jbws723.OrganizationService</service-endpoint-interface>
       <service-impl-bean>
-        <ejb-link>BasicSecuredSLSB</ejb-link>
+        <ejb-link>JBWS723BasicSecuredSLSB</ejb-link>
       </service-impl-bean>
     </port-component>
     <port-component>
@@ -31,7 +31,7 @@
       <wsdl-port>impl:ConfidentialPort</wsdl-port>
       <service-endpoint-interface>org.jboss.test.ws.jaxrpc.jbws723.OrganizationService</service-endpoint-interface>
       <service-impl-bean>
-        <ejb-link>ConfidentialSLSB</ejb-link>
+        <ejb-link>JBWS723ConfidentialSLSB</ejb-link>
       </service-impl-bean>
     </port-component>
   </webservice-description>
