@@ -40,6 +40,11 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class JBWS1857TestCase extends JBossWSTest
 {
+   public void setUp() throws Exception
+   {
+      JAXBContextFactory.resetContextCount();
+   }
+   
    public void testPortCreation() throws Exception
    {
       File wsdlFile = getResourceFile("jaxws/jbws1857/StammdatenService.wsdl");
