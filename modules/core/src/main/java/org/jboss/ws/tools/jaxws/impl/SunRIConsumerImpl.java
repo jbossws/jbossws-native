@@ -209,40 +209,49 @@ public class SunRIConsumerImpl extends WSContractConsumer
       args.add(wsdl.toString());
 
       // See WsimportTool#compileGeneratedClasses()
-      if(!additionalCompilerClassPath.isEmpty())
+      String orgJavaClassPath = System.getProperty("java.class.path");
+      String javaClassPath = (orgJavaClassPath != null ? orgJavaClassPath : "");
+      if(additionalCompilerClassPath.isEmpty() == false)
       {
-         StringBuffer javaCP = new StringBuffer();
-         for(String s : additionalCompilerClassPath)
+         for(String pathElement : additionalCompilerClassPath)
          {
-            javaCP.append(s).append(File.pathSeparator);
+            javaClassPath += pathElement + File.pathSeparator;
          }
-         System.setProperty("java.class.path", javaCP.toString());
+         System.setProperty("java.class.path", javaClassPath);
       }
 
       try
       {
-         // enforce woodstox
-         if (null == System.getProperty("javax.xml.stream.XMLInputFactory"))
-            System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
-
-
-
          WsimportTool compileTool = new WsimportTool(stream);
          boolean success = compileTool.run(args.toArray(new String[args.size()]));
 
          if (!success)
             throw new IllegalStateException("WsImport invocation failed. Try the verbose switch for more information");
       }
-      catch (Throwable t)
+      catch (RuntimeException rte)
       {
          if (messageStream != null)
          {
             messageStream.println("Failed to invoke WsImport");
-            t.printStackTrace(messageStream);
+            rte.printStackTrace(messageStream);
          }
          else
          {
-            t.printStackTrace();
+            rte.printStackTrace();
+         }
+         
+         throw rte;
+      }
+      finally
+      {
+         // restore the original value of the java.class.path property
+         if (orgJavaClassPath != null)
+         {
+            System.setProperty("java.class.path", orgJavaClassPath);
+         }
+         else
+         {
+            System.clearProperty("java.class.path");
          }
       }
    }
