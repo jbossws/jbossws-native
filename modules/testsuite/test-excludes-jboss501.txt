@@ -69,3 +69,6 @@ org/jboss/test/ws/jaxws/samples/wseventing/**
 
 # [JBWS-2171] JBossClientMetaData.class not found
 org/jboss/test/ws/jaxws/webserviceref/ServiceRefOverridesTestCase.*
+
+# [JBWS-2175] wsconsume cannot run with jaxws-api from build output
+org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
