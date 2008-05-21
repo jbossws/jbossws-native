@@ -85,11 +85,11 @@
       </fileset>
     </jar>
     <war jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/dar/WEB-INF-jms/web.xml">
-      <fileset dir="${tests.output.dir}/test-classes">
+      <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/JMSClient.class"/>
-      </fileset>
+      </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/WEB-INF-jms">
         <include name="jboss-web.xml"/>
       </webinf>
