@@ -210,14 +210,14 @@ public class SunRIConsumerImpl extends WSContractConsumer
 
       // See WsimportTool#compileGeneratedClasses()
       String orgJavaClassPath = System.getProperty("java.class.path");
-      String javaClassPath = (orgJavaClassPath != null ? orgJavaClassPath : "");
       if(additionalCompilerClassPath.isEmpty() == false)
       {
-         for(String pathElement : additionalCompilerClassPath)
+         StringBuffer javaCP = new StringBuffer();
+         for(String s : additionalCompilerClassPath)
          {
-            javaClassPath += pathElement + File.pathSeparator;
+            javaCP.append(s).append(File.pathSeparator);
          }
-         System.setProperty("java.class.path", javaClassPath);
+         System.setProperty("java.class.path", javaCP.toString());
       }
 
       try
@@ -239,20 +239,11 @@ public class SunRIConsumerImpl extends WSContractConsumer
          {
             rte.printStackTrace();
          }
-         
          throw rte;
       }
       finally
       {
-         // restore the original value of the java.class.path property
-         if (orgJavaClassPath != null)
-         {
-            System.setProperty("java.class.path", orgJavaClassPath);
-         }
-         else
-         {
-            System.clearProperty("java.class.path");
-         }
+         System.setProperty("java.class.path", orgJavaClassPath);
       }
    }
 }
