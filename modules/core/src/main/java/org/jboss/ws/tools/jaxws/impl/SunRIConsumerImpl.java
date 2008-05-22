@@ -244,16 +244,20 @@ public class SunRIConsumerImpl extends WSContractConsumer
          {
             rte.printStackTrace();
          }
-         
-         // Investigate, why this cannot be thrown
-         // throw rte;
+         throw rte;
       }
       finally
       {
-         System.setProperty("java.class.path", javaClassPath);
-         
-         if (xmlInputFactory != null)
-            System.setProperty("javax.xml.stream.XMLInputFactory", xmlInputFactory);
+         resetSystemProperty("java.class.path", javaClassPath);
+         resetSystemProperty("javax.xml.stream.XMLInputFactory", xmlInputFactory);
       }
+   }
+
+   private void resetSystemProperty(String key, String value)
+   {
+      if (value != null)
+         System.setProperty(key, value);
+      else
+         System.clearProperty(key);
    }
 }
