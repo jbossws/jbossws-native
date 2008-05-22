@@ -29,21 +29,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+import javax.management.ObjectName;
+
 import junit.framework.Test;
 
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Invokes the DAR JMS client
- * (this is actually a weak test since we don't check if the 
- * response queue actually receives the response)
  *
  * @author alessio.soldano@jboss.org
  * @since 01-May-2008
  */
 public class JMSClientTestCase extends JBossWSTest
 {
+   private static final int TEST_RUN_TIME = 6000;
+   
    public static Test suite()
    {
       return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client.sar,jaxws-samples-dar-jms.jar");
@@ -52,6 +58,7 @@ public class JMSClientTestCase extends JBossWSTest
    public void test() throws Exception
    {
       String url = "http://" + getServerHost() + ":8080/dar-jms-client/JMSClient";
+      int count = getMessageCount("DarResponseQueue");
       Date start = new Date();
       HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
       int responseCode = connection.getResponseCode();
@@ -67,6 +74,26 @@ public class JMSClientTestCase extends JBossWSTest
       }
       assertTrue(buffer.toString().contains("Request message sent, doing something interesting in the mean time... ;-) "));
       Date stop = new Date();
-      assertTrue(stop.getTime() - start.getTime() < 3000);
+      assertTrue(stop.getTime() - start.getTime() < TEST_RUN_TIME / 2);
+      Thread.sleep(TEST_RUN_TIME);
+      assertEquals(count + 1, getMessageCount("DarResponseQueue"));
+   }
+   
+   private int getMessageCount(String queue) throws Exception
+   {
+      ObjectName oname = ObjectNameFactory.create("jboss.mq.destination:service=Queue,name=" + queue);
+      String result = (String)getServer().invoke(oname, "listMessageCounter", null, null);
+      Element table = DOMUtils.parse(result);
+      NodeList ths = table.getFirstChild().getChildNodes();
+      int p = -1;
+      for (int i=0; i<ths.getLength(); i++)
+      {
+         if (ths.item(i).getTextContent().equalsIgnoreCase("Count"))
+            p = i;
+      }
+      if (p == -1)
+         throw new Exception("Cannot read the queue message count!");
+      String count = table.getLastChild().getChildNodes().item(p).getTextContent();
+      return Integer.parseInt(count);
    }
 }
