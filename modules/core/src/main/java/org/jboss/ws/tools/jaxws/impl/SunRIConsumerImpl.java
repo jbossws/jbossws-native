@@ -251,7 +251,9 @@ public class SunRIConsumerImpl extends WSContractConsumer
       finally
       {
          System.setProperty("java.class.path", javaClassPath);
-         System.setProperty("javax.xml.stream.XMLInputFactory", xmlInputFactory);
+         
+         if (xmlInputFactory != null)
+            System.setProperty("javax.xml.stream.XMLInputFactory", xmlInputFactory);
       }
    }
 }
