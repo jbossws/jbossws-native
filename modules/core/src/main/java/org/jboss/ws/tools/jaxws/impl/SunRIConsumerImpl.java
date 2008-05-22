@@ -244,7 +244,9 @@ public class SunRIConsumerImpl extends WSContractConsumer
          {
             rte.printStackTrace();
          }
-         throw rte;
+         
+         // Investigate, why this cannot be thrown
+         // throw rte;
       }
       finally
       {
