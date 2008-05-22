@@ -73,7 +73,11 @@ public class InteropConfigFactory {
    public ClientScenario createClientScenario(String scenarioName)
    {
       InteropClientConfig clientConfig = createClientConfig();
-      ClientScenario sc = clientConfig.getScenario(scenarioName);
+      ClientScenario sc = null;
+      if (scenarioName != null)
+      {
+         sc = clientConfig.getScenario(scenarioName);
+      }
       if(null==sc)
          sc = clientConfig.getScenario("default");
 

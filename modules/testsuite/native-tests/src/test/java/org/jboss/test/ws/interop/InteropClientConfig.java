@@ -76,7 +76,7 @@ public class InteropClientConfig {
       }
       catch (Exception e)
       {
-         throw new IllegalArgumentException(e.getMessage());
+         throw new IllegalArgumentException(e);
       }
 
       return cs;
