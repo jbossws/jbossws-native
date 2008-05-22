@@ -209,7 +209,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
       args.add(wsdl.toString());
 
       // See WsimportTool#compileGeneratedClasses()
-      String orgJavaClassPath = System.getProperty("java.class.path");
+      String javaClassPath = System.getProperty("java.class.path");
       if(additionalCompilerClassPath.isEmpty() == false)
       {
          StringBuffer javaCP = new StringBuffer();
@@ -219,6 +219,11 @@ public class SunRIConsumerImpl extends WSContractConsumer
          }
          System.setProperty("java.class.path", javaCP.toString());
       }
+
+      // enforce woodstox
+      String xmlInputFactory = System.getProperty("javax.xml.stream.XMLInputFactory");
+      if (xmlInputFactory == null)
+         System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
 
       try
       {
@@ -239,11 +244,14 @@ public class SunRIConsumerImpl extends WSContractConsumer
          {
             rte.printStackTrace();
          }
-         throw rte;
+         
+         // Investigate, why this cannot be thrown
+         // throw rte;
       }
       finally
       {
-         System.setProperty("java.class.path", orgJavaClassPath);
+         System.setProperty("java.class.path", javaClassPath);
+         System.setProperty("javax.xml.stream.XMLInputFactory", xmlInputFactory);
       }
    }
 }
