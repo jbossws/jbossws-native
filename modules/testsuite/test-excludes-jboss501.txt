@@ -29,9 +29,6 @@ org/jboss/test/ws/jaxws/samples/dar/**
 org/jboss/test/ws/jaxws/samples/news/**
 org/jboss/test/ws/jaxws/jbws1840/**
 
-# [JBWS-1526] Automated testing and availablity checks of public endpoints (interop)
-org/jboss/test/ws/interop/**
-
 # [EJBTHREE-1150] WebServiceContext injection requires mapped-name
 org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
 
