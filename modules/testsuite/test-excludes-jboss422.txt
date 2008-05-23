@@ -7,7 +7,7 @@ org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
 
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
-org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase/*
+org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
 # [JBWS-1762] web/xml modified to web/xml/org - Subsequent runs fail
 # This requires changes to the AS web meta data (servlet init params)
