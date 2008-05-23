@@ -21,9 +21,7 @@
  */
 package org.jboss.test.ws.interop.nov2007.wsse;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -36,7 +34,6 @@ import org.jboss.test.ws.interop.nov2007.wsse.EchoDataSet.Request;
 import org.jboss.test.ws.interop.nov2007.wsse.EchoDataSetResponse.EchoDataSetResult;
 import org.jboss.test.ws.interop.nov2007.wsse.EchoXmlResponse.EchoXmlResult;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 
 /**
  * @author Alessio Soldano <alessio.soldano@jboss.com>
@@ -115,23 +112,6 @@ public abstract class AbstractWSSEBase extends JBossWSTest
 
    }
 
-   protected static ClassLoader addClientConfToClasspath(String s)
-   {
-      try
-      {
-         // wrap the classloader upfront to allow inclusion of the client.jar
-         JBossWSTestHelper helper = new JBossWSTestHelper();
-         ClassLoader parent = Thread.currentThread().getContextClassLoader();
-         URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveURL(s) }, parent);
-         Thread.currentThread().setContextClassLoader(replacement);
-         return parent;
-      }
-      catch (MalformedURLException e)
-      {
-         throw new IllegalStateException(e);
-      }
-   }
-   
    public void testEcho() throws Exception
    {
       String text = "Hello!";

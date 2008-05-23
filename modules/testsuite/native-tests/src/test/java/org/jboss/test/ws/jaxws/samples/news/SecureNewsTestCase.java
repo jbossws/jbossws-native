@@ -23,14 +23,9 @@ package org.jboss.test.ws.jaxws.samples.news;
 
 //$Id$
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-
 import junit.framework.Test;
-
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -43,21 +38,13 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class SecureNewsTestCase extends JBossWSTest
 {
-   private ClassLoader origCL;
-   
    public static Test suite()
    {
-      return new JBossWSTestSetup(SecureNewsTestCase.class, "jaxws-samples-news-step2-newspaper.jar");
-   }
-   
-   protected void setUp() throws Exception
-   {
-      origCL = addClientConfToClasspath("jaxws-samples-news-step2-agency.jar"); //this way the ws-security conf is available 
-   }
-   
-   protected void tearDown() throws Exception
-   {
-      Thread.currentThread().setContextClassLoader(origCL);
+      return new JBossWSTestSetup
+      (
+         SecureNewsTestCase.class,
+         "jaxws-samples-news-step2-newspaper.jar, jaxws-samples-news-step2-agency-client.jar"
+      );
    }
    
    public void testAgency() throws Exception
@@ -65,22 +52,5 @@ public class SecureNewsTestCase extends JBossWSTest
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/news/pressRelease?wsdl");
       SecureAgency agency = new SecureAgency(wsdlURL);
       agency.run("Press release title", "Press release body");
-   }
-   
-   protected static ClassLoader addClientConfToClasspath(String s)
-   {
-      try
-      {
-         // wrap the classloader upfront to allow inclusion of the client.jar
-         JBossWSTestHelper helper = new JBossWSTestHelper();
-         ClassLoader parent = Thread.currentThread().getContextClassLoader();
-         URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveFile(s).toURL() }, parent);
-         Thread.currentThread().setContextClassLoader(replacement);
-         return parent;
-      }
-      catch (MalformedURLException e)
-      {
-         throw new IllegalStateException(e);
-      }
    }
 }

@@ -51,24 +51,24 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class UsernameTokenHTTPSTestCase extends AbstractWSSEBase
 {
-   private ClassLoader origCL;
-
    public static Test suite()
    {
-      return new JBossWSTestSetup(UsernameTokenHTTPSTestCase.class, "jbossws-interop-nov2007-wsseUsernameTokenHTTPS.war");
+      return new JBossWSTestSetup
+      (
+         UsernameTokenHTTPSTestCase.class,
+         "jbossws-interop-nov2007-wsseUsernameTokenHTTPS.war, jbossws-interop-nov2007-wsseUsernameTokenHTTPS-client.jar"
+      );
    }
 
    @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseUsernameTokenHTTPS-client.jar");
       super.setUp();
    }
    
    @Override
    protected void tearDown() throws Exception
    {
-      Thread.currentThread().setContextClassLoader(origCL);
       super.tearDown();
    }
 

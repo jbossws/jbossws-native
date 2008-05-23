@@ -175,7 +175,7 @@
         <include name="wsse10.truststore"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step2-agency.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step2-agency-client.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/news/generated/agency/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/Agency.class"/>

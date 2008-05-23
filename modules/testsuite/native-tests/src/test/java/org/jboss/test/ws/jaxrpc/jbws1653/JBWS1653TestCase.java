@@ -133,8 +133,8 @@ public class JBWS1653TestCase extends JBossWSTest
             return resURL;
          }
       };
+      
       Thread.currentThread().setContextClassLoader(urlLoader);
-
       try
       {
          URL configURL = urlLoader.findResource("META-INF/standard-jaxrpc-client-config.xml");
@@ -179,8 +179,8 @@ public class JBWS1653TestCase extends JBossWSTest
             return resURL;
          }
       };
+      
       Thread.currentThread().setContextClassLoader(urlLoader);
-
       try
       {
          ServiceFactoryImpl factory = new ServiceFactoryImpl();
@@ -224,8 +224,8 @@ public class JBWS1653TestCase extends JBossWSTest
             return resURL;
          }
       };
+      
       Thread.currentThread().setContextClassLoader(urlLoader);
-
       try
       {
          ServiceFactoryImpl factory = new ServiceFactoryImpl();

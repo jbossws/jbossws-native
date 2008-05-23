@@ -60,24 +60,24 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class Encrypt3DESTestCase extends AbstractWSSEBase
 {
-   private ClassLoader origCL;
-   
    public static Test suite()
    {
-      return new JBossWSTestSetup(Encrypt3DESTestCase.class, "jbossws-interop-nov2007-wsseEncrypt3DES.war");
+      return new JBossWSTestSetup
+      (
+         Encrypt3DESTestCase.class,
+         "jbossws-interop-nov2007-wsseEncrypt3DES.war, jbossws-interop-nov2007-wsseEncrypt3DES-client.jar"
+      );
    }
    
    @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsseEncrypt3DES-client.jar");
       super.setUp();
    }
    
    @Override
    protected void tearDown() throws Exception
    {
-      Thread.currentThread().setContextClassLoader(origCL);
       super.tearDown();
    }
 

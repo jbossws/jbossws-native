@@ -21,11 +21,9 @@
  */
 package org.jboss.test.ws.interop.wsse;
 
-// $Id: $
+// $Id: AbstractWSSEBase.java 2064 2007-01-24 11:30:23Z heiko.braun@jboss.com $
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -33,7 +31,6 @@ import javax.xml.ws.Service;
 
 import org.jboss.ws.core.StubExt;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 
 /**
  * @author Heiko.Braun@jboss.org
@@ -61,7 +58,6 @@ public abstract class AbstractWSSEBase extends JBossWSTest
          port = service.getPort(IPingService.class);
 
          ((BindingProvider)port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, getEndpointURL());
-         configureClient();
       }
 
       defaultSetup(port);
@@ -99,39 +95,5 @@ public abstract class AbstractWSSEBase extends JBossWSTest
       System.setProperty("org.jboss.ws.wsse.keyStoreType", keyStoreType);
       System.setProperty("org.jboss.ws.wsse.trustStoreType", trustStoreType);
       super.tearDown();
-   }
-
-   protected void configureClient()
-   {
-
-      /*InteropConfigFactory factory = InteropConfigFactory.newInstance();
-      ClientScenario scenario = factory.createClientScenario(System.getProperty("client.scenario"));
-      if(scenario!=null)
-      {
-         log.info("Using scenario: " + scenario);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, scenario.getTargetEndpoint().toString());
-      }
-      else
-      {
-         throw new IllegalStateException("Failed to load client scenario");
-      }
-      */
-   }
-
-   protected static ClassLoader addClientConfToClasspath(String s)
-   {
-      try
-      {
-         // wrap the classloader upfront to allow inclusion of the client.jar
-         JBossWSTestHelper helper = new JBossWSTestHelper();
-         ClassLoader parent = Thread.currentThread().getContextClassLoader();
-         URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveURL(s) }, parent);
-         Thread.currentThread().setContextClassLoader(replacement);
-         return parent;
-      }
-      catch (MalformedURLException e)
-      {
-         throw new IllegalStateException(e);
-      }
    }
 }

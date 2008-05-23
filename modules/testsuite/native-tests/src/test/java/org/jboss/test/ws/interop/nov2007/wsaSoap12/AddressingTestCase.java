@@ -21,10 +21,8 @@
  */
 package org.jboss.test.ws.interop.nov2007.wsaSoap12;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -46,7 +44,6 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;
 
@@ -80,21 +77,14 @@ public class AddressingTestCase extends JBossWSTest {
    private Element extraStuff;
    private Element wsdl1Param;
    private Element wsdl2Param;
-   private ClassLoader origCL;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-nov2007-wsaSoap12.war");
+      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-nov2007-wsaSoap12.war, jbossws-interop-nov2007-wsaSoap12-client.jar");
    }
    
-   protected void tearDown() throws Exception
-   {
-      Thread.currentThread().setContextClassLoader(origCL);
-   }
-
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-nov2007-wsaSoap12-client.jar"); 
       if (echoPort==null || notifyPort==null)
       {
          wsdlLocation = getResourceURL("interop/nov2007/wsaSoap12/WEB-INF/wsdl/service.wsdl");
@@ -109,29 +99,11 @@ public class AddressingTestCase extends JBossWSTest {
          configureClient();
       }
 
-
       customerParam = DOMUtils.parse("<customer:CustomerKey xmlns:customer=\"http://example.org/customer\">Key#123456789</customer:CustomerKey>");
       faultParam = DOMUtils.parse("<customer:CustomerKey xmlns:customer=\"http://example.org/customer\">Fault#123456789</customer:CustomerKey>");
       wsdl1Param = DOMUtils.parse("<definitions xmlns=\"http://schemas.xmlsoap.org/wsdl/\">insert WSDL 1.1 here!</definitions>");
       wsdl2Param = DOMUtils.parse("<description xmlns=\"http://www.w3.org/2006/01/wsdl\">insert WSDL 2.0 here!</description>");
       extraStuff = DOMUtils.parse("<customer:extraStuff xmlns:customer=\"http://example.org/customer\">This should be ignored</customer:extraStuff>");
-   }
-   
-   protected static ClassLoader addClientConfToClasspath(String s)
-   {
-      try
-      {
-         // wrap the classloader upfront to allow inclusion of the client.jar
-         JBossWSTestHelper helper = new JBossWSTestHelper();
-         ClassLoader parent = Thread.currentThread().getContextClassLoader();
-         URLClassLoader replacement = new URLClassLoader(new URL[] { helper.getArchiveURL(s) }, parent);
-         Thread.currentThread().setContextClassLoader(replacement);
-         return parent;
-      }
-      catch (MalformedURLException e)
-      {
-         throw new IllegalStateException(e);
-      }
    }
    
    private void configureClient() {

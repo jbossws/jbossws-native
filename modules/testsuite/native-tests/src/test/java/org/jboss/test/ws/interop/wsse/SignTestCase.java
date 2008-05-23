@@ -29,36 +29,37 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * @author Heiko Braun, <heiko@openj.net>
  * @since 07-Mar-2006
  */
-public class SignTestCase extends AbstractWSSEBase {
-   private ClassLoader origCL;
-
+public class SignTestCase extends AbstractWSSEBase
+{
    public static Test suite()
    {
-      return new JBossWSTestSetup(SignTestCase.class, "jbossws-interop-wsse10Sign.war");
+      return new JBossWSTestSetup
+      (
+         SignTestCase.class,
+         "jbossws-interop-wsse10Sign.war, jbossws-interop-wsse10Sign-client.jar"
+      );
    }
 
    @Override
    protected void setUp() throws Exception
    {
-      origCL = addClientConfToClasspath("jbossws-interop-wsse10Sign-client.jar");
       super.setUp();
    }
    
    @Override
    protected void tearDown() throws Exception
    {
-      Thread.currentThread().setContextClassLoader(origCL);
       super.tearDown();
    }
 
-   String getEndpointURL() {
+   String getEndpointURL()
+   {
       return "http://"+getServerHost()+":8080/wsse10Sign/endpoint";
    }
 
    // Scenario 3.2. X509 Mutual Authentication, Sign Only
-   public void testSignOnly() throws Exception{
-
-      //
+   public void testSignOnly() throws Exception
+   {
       Ping request = new Ping();
 
       request.setScenario("testSignOnly");
