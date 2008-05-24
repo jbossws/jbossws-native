@@ -20,3 +20,6 @@ org/jboss/test/ws/jaxws/samples/jmstransport/**
 
 # [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
+
+# [JBWS-1907] Authorization based on certificate used for wsse signature
+org/jboss/test/ws/jaxws/jbws2116/**
