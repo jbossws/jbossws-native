@@ -35,15 +35,6 @@ org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
 # [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
 org/jboss/test/ws/jaxws/endpoint/**
 
-# [JBAS-5359] mapped-name is required for context of deployment
-org/jboss/test/ws/jaxws/binding/**
-org/jboss/test/ws/jaxws/handlerlifecycle/**
-org/jboss/test/ws/jaxws/jbws1611/**
-org/jboss/test/ws/jaxws/jbws1733/**
-org/jboss/test/ws/jaxws/namespace/**
-org/jboss/test/ws/jaxws/samples/wsaddressing/**
-org/jboss/test/ws/jaxws/samples/wssecurity/*TestCase.*
-
 # [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
 org/jboss/test/ws/jaxrpc/jbws720/**
 
