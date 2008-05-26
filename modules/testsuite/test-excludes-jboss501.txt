@@ -74,3 +74,6 @@ org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
 
 # [EJBTHREE-1377] Callback objects are improperly setup - ServiceRefMetaData.getServiceInterface() returns null
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
+
+# [JBWS-1907] Authorization based on certificate used for wsse signature
+org/jboss/test/ws/jaxws/jbws2116/**
