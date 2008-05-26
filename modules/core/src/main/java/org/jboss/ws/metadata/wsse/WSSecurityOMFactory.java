@@ -304,6 +304,10 @@ public class WSSecurityOMFactory implements ObjectModelFactory
 
          return new Username(digestPassword, useNonce, useCreated);
       }
+      else if ("authenticate".equals(localName))
+      {
+         return new Authenticate();
+      }
 
       return null;
    }
@@ -351,6 +355,33 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    {
       log.trace("addChild: [obj=" + config + ",child=" + requires + "]");
       config.setRequires(requires);
+   }
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(Config config, Authenticate authenticate, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      log.trace("addChild: [obj=" + config + ",child=" + authenticate + "]");
+      config.setAuthenticate(authenticate);
+   }
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(Authenticate authenticate, UsernameAuth usernameAuth, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      log.trace("addChild: [obj=" + authenticate + ",child=" + usernameAuth + "]");
+      authenticate.setUsernameAuth(usernameAuth);
+   }
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(Authenticate authenticate, SignatureCertAuth signatureCertAuth, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      log.trace("addChild: [obj=" + authenticate + ",child=" + signatureCertAuth + "]");
+      authenticate.setSignatureCertAuth(signatureCertAuth);
    }
 
    private Object handleTargets(Object object, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
@@ -400,6 +431,24 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       else if ("timestamp".equals(localName))
       {
          return new RequireTimestamp(attrs.getValue("", "maxAge"));
+      }
+
+      return null;
+   }
+   
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(Authenticate authenticate, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      log.trace("newChild: " + localName);
+      if ("usernameAuth".equals(localName))
+      {
+         return new UsernameAuth();
+      }
+      else if ("signatureCertAuth".equals(localName))
+      {
+         return new SignatureCertAuth(attrs.getValue("", "certificatePrincipal"));
       }
 
       return null;

@@ -37,11 +37,13 @@ import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.nonce.NonceFactory;
 import org.jboss.ws.extensions.security.operation.DecryptionOperation;
 import org.jboss.ws.extensions.security.operation.ReceiveUsernameOperation;
+import org.jboss.ws.extensions.security.operation.ReceiveX509Certificate;
 import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
 import org.jboss.ws.extensions.security.operation.RequireOperation;
 import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
 import org.jboss.ws.extensions.security.operation.SignatureVerificationOperation;
 import org.jboss.ws.extensions.security.operation.TimestampVerificationOperation;
+import org.jboss.ws.metadata.wsse.Authenticate;
 import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,17 +67,20 @@ public class SecurityDecoder
    private SecurityStore store;
    
    private TimestampVerification timestampVerification;
+   
+   private Authenticate authenticate;
 
    private HashSet<String> signedIds = new HashSet<String>();
 
    private HashSet<String> encryptedIds = new HashSet<String>();
 
-   public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory, TimestampVerification timestampVerification)
+   public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory, TimestampVerification timestampVerification, Authenticate authenticate)
    {
       org.apache.xml.security.Init.init();
       this.store = store;
       this.nonceFactory = nonceFactory;
       this.timestampVerification = timestampVerification;
+      this.authenticate = authenticate;
    }
 
    /**
@@ -85,9 +90,9 @@ public class SecurityDecoder
     * @param SecurityStore the security store that contains key and trust information
     * @param now The timestamp to use as the current time when validating a message expiration
     */
-   public SecurityDecoder(SecurityStore store, Calendar now, NonceFactory nonceFactory, TimestampVerification timestampVerification)
+   public SecurityDecoder(SecurityStore store, Calendar now, NonceFactory nonceFactory, TimestampVerification timestampVerification, Authenticate authenticate)
    {
-      this(store, nonceFactory, timestampVerification);
+      this(store, nonceFactory, timestampVerification, authenticate);
       this.now = now;
    }
 
@@ -118,10 +123,13 @@ public class SecurityDecoder
          operation.process(message, timestamp);
       }
 
-      for (Token token : header.getTokens())
+      if (authenticate == null || authenticate.isUsernameAuth())
       {
-         if (token instanceof UsernameToken)
-            new ReceiveUsernameOperation(header, store, (nonceFactory != null ? nonceFactory.getStore() : null)).process(message, token);
+         for (Token token : header.getTokens())
+         {
+            if (token instanceof UsernameToken)
+               new ReceiveUsernameOperation(header, store, (nonceFactory != null ? nonceFactory.getStore() : null)).process(message, token);
+         }
       }
 
       signedIds.clear();
@@ -135,9 +143,12 @@ public class SecurityDecoder
          // If this list gets much larger it should probably be a hash lookup
          if (process instanceof Signature)
          {
-            Collection<String> ids = signatureVerifier.process(message, process);
+            Signature signature = (Signature)process;
+            Collection<String> ids = signatureVerifier.process(message, signature);
             if (ids != null)
               signedIds.addAll(ids);
+            if (authenticate != null && authenticate.isSignatureCertAuth())
+               new ReceiveX509Certificate(authenticate.getSignatureCertAuth().getCertificatePrincipal()).process(message, signature.getSecurityToken());
          }
          else if (process instanceof EncryptedKey)
          {
@@ -146,6 +157,8 @@ public class SecurityDecoder
                encryptedIds.addAll(ids);
          }
       }
+      
+      
    }
 
    public void verify(List<RequireOperation> requireOperations) throws WSSecurityException

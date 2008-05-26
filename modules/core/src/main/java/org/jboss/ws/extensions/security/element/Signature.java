@@ -25,6 +25,7 @@ import java.security.PublicKey;
 
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.signature.XMLSignature;
+import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.security.KeyResolver;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
@@ -36,10 +37,13 @@ import org.w3c.dom.Element;
  */
 public class Signature implements SecurityProcess
 {
+   private static Logger log = Logger.getLogger(Signature.class);
    private XMLSignature signature;
 
    /* Used only for decoding */
    private PublicKey publicKey;
+   /* Used only for jaas authentication */
+   private BinarySecurityToken securityToken;
 
    private Element cachedElement;
 
@@ -54,6 +58,15 @@ public class Signature implements SecurityProcess
       {
          signature = new XMLSignature(element, null);
          publicKey = resolver.resolvePublicKey(signature.getKeyInfo());
+         try
+         {
+            securityToken = resolver.resolve(signature.getKeyInfo());
+         }
+         catch (Exception e)
+         {
+            //log exception and ignore, KeyInfo might not reference a security token
+            log.debug("KeyInfo does not contain any reference to a binary security token.", e);
+         }
       }
       catch (XMLSecurityException e)
       {
@@ -83,5 +96,10 @@ public class Signature implements SecurityProcess
    public PublicKey getPublicKey()
    {
       return publicKey;
+   }
+   
+   public BinarySecurityToken getSecurityToken()
+   {
+      return securityToken;
    }
 }
