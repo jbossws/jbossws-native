@@ -12,5 +12,8 @@
     <requires>
       <signature/>
     </requires>
+    <authenticate>
+      <signatureCertAuth certificatePrincipal="org.jboss.security.auth.certs.SubjectCNMapping"/>
+    </authenticate>
   </config>
 </jboss-ws-security>
