@@ -31,6 +31,9 @@ org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
 # [JBWS-2167] Fix samples jaxr for maven build
 org/jboss/test/ws/jaxws/samples/jaxr/**
 
+# [JBWS-2168] Fix samples bpel for maven build
+org/jboss/test/ws/jaxrpc/samples/wsbpel/**
+
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
 
