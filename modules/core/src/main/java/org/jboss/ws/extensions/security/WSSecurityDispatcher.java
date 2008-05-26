@@ -100,7 +100,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
                configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
          NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
-         SecurityDecoder decoder = new SecurityDecoder(securityStore, factory, configuration.getTimestampVerification(), config.getAuthenticate());
+         SecurityDecoder decoder = new SecurityDecoder(securityStore, factory, configuration.getTimestampVerification(), config == null ? null : config.getAuthenticate());
 
          decoder.decode(message.getSOAPPart(), secHeaderElement);
          
