@@ -74,6 +74,3 @@ org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
 
 # [EJBTHREE-1377] Callback objects are improperly setup - ServiceRefMetaData.getServiceInterface() returns null
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
-
-# [EJBTHREE-1378] comp.ejb3 not bound
-org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefEJB3TestCase.*
