@@ -48,9 +48,6 @@ org/jboss/test/ws/jaxws/samples/wssecurity/*TestCase.*
 org/jboss/test/ws/jaxrpc/jbws1762/**
 org/jboss/test/ws/jaxws/jbws1762/**
 
-# [JBAS-5387] EJB21 name not bound
-org/jboss/test/ws/jaxrpc/jbws331/**
-
 # [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
 org/jboss/test/ws/jaxrpc/jbws720/**
 
