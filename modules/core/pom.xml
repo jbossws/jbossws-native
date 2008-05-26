@@ -144,6 +144,14 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>org.jboss.ws</groupId>
+                  <artifactId>jbossws-jboss421</artifactId>
+                  <version>${jbossws.jboss421.version}</version>
+                  <classifier>resources</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/resources/jbossws-jboss421</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.jboss.ws</groupId>
                   <artifactId>jbossws-jboss422</artifactId>
                   <version>${jbossws.jboss422.version}</version>
                   <classifier>resources</classifier>

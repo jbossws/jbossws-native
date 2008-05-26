@@ -46,6 +46,7 @@
     <jbossws.common.version>3.0.0-SNAPSHOT</jbossws.common.version>
     <jbossws.framework.version>3.0.2-SNAPSHOT</jbossws.framework.version>
     <jbossws.spi.version>3.0.0-SNAPSHOT</jbossws.spi.version>
+    <jbossws.jboss421.version>3.0.0-SNAPSHOT</jbossws.jboss421.version>
     <jbossws.jboss422.version>3.0.0-SNAPSHOT</jbossws.jboss422.version>
     <jbossws.jboss423.version>3.0.0-SNAPSHOT</jbossws.jboss423.version>
     <jbossws.jboss500.version>3.0.0-SNAPSHOT</jbossws.jboss500.version>
@@ -104,7 +105,21 @@
         <classifier>testsuite</classifier>
         <type>zip</type>
       </dependency>
-      <dependency>
+       
+       <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss421</artifactId>
+          <version>${jbossws.jboss421.version}</version>
+       </dependency>
+       <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss421</artifactId>
+          <version>${jbossws.jboss421.version}</version>
+          <classifier>resources</classifier>
+          <type>zip</type>
+       </dependency>
+
+       <dependency>
         <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-jboss422</artifactId>
         <version>${jbossws.jboss422.version}</version>
@@ -333,6 +348,18 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-jboss421</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-jboss421</artifactId>
+      <classifier>resources</classifier>
+      <scope>provided</scope>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss422</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -508,7 +535,19 @@
         </plugins>
       </build>
     </profile>
-    
+
+    <!--
+    Name:  jboss421
+    Descr: JBoss-4.2.1 specific options
+    -->
+    <profile>
+      <id>jboss421</id>
+      <properties>
+        <jbossws.integration.target>jboss421</jbossws.integration.target>
+        <jboss.home>${jboss421.home}</jboss.home>
+      </properties>
+    </profile>
+
     <!-- 
     Name:  jboss422
     Descr: JBoss-4.2.2 specific options  

@@ -44,7 +44,7 @@
     <xmlproperty file="${stack.output.dir}/effective-settings.xml" keeproot="false"/>
     <condition property="jboss421.home" value="${profiles.profile.properties.jboss421.home}">
       <isset property="profiles.profile.properties.jboss421.home"/>
-    </condition>
+    </condition>   
     <condition property="jboss422.home" value="${profiles.profile.properties.jboss422.home}">
       <isset property="profiles.profile.properties.jboss422.home"/>
     </condition>

@@ -29,6 +29,7 @@
       <unpack>false</unpack>
       <includes>
         <include>*:jbossws-framework:jar</include>
+        <include>*:jbossws-jboss421:jar:*</include>
         <include>*:jbossws-jboss422:jar:*</include>
         <include>*:jbossws-jboss423:jar:*</include>
         <include>*:jbossws-jboss500:jar:*</include>
