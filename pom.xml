@@ -105,21 +105,20 @@
         <classifier>testsuite</classifier>
         <type>zip</type>
       </dependency>
-       
-       <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss421</artifactId>
-          <version>${jbossws.jboss421.version}</version>
-       </dependency>
-       <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss421</artifactId>
-          <version>${jbossws.jboss421.version}</version>
-          <classifier>resources</classifier>
-          <type>zip</type>
-       </dependency>
-
-       <dependency>
+      
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss421</artifactId>
+        <version>${jbossws.jboss421.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss421</artifactId>
+        <version>${jbossws.jboss421.version}</version>
+        <classifier>resources</classifier>
+        <type>zip</type>
+      </dependency>
+      <dependency>
         <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-jboss422</artifactId>
         <version>${jbossws.jboss422.version}</version>
@@ -222,6 +221,12 @@
         <groupId>org.jboss.microcontainer</groupId>
         <artifactId>jboss-kernel</artifactId>
         <version>${jboss.microcontainer.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss</groupId>
+            <artifactId>jbossxb</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       
       <!-- transitve dependencies -->
