@@ -9,9 +9,6 @@ org/jboss/test/ws/jaxws/webserviceref/**
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
-# [JBWS-2167] Fix samples jaxr for maven build
-org/jboss/test/ws/jaxws/samples/jaxr/**
-
 # [JBWS-2168] Fix samples bpel for maven build
 org/jboss/test/ws/jaxrpc/samples/wsbpel/**
 
