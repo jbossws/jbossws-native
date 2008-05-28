@@ -795,15 +795,18 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                throw new WSException("Cannot obtain java/xml type mapping for: " + xmlType);
 
             Map<String, String> map = createVariableMappingMap(javaXmlTypeMapping.getVariableMappings());
-            String elementName = returnValueMapping.getWsdlMessagePartName();
-            String variable = map.get(elementName);
-            if (variable == null)
-               throw new IllegalArgumentException("Could not determine variable name for element: " + elementName);
+            if (map.size() > 0)
+            {
+               String elementName = returnValueMapping.getWsdlMessagePartName();
+               String variable = map.get(elementName);
+               if (variable == null)
+                  throw new IllegalArgumentException("Could not determine variable name for element: " + elementName);
 
-            String wrappedType = returnValueMapping.getMethodReturnValue();
-            QName element = new QName(elementName);
-            WrappedParameter wrappedParameter = new WrappedParameter(element, wrappedType, variable, WrappedParameter.RETURN);
-            wrappedResponseParameters.add(0, wrappedParameter);
+               String wrappedType = returnValueMapping.getMethodReturnValue();
+               QName element = new QName(elementName);
+               WrappedParameter wrappedParameter = new WrappedParameter(element, wrappedType, variable, WrappedParameter.RETURN);
+               wrappedResponseParameters.add(0, wrappedParameter);
+            }
          }
 
          outMetaData.setWrappedParameters(wrappedResponseParameters);
