@@ -141,8 +141,7 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <!-- http://jira.jboss.org/jira/browse/JBWS-2176
-          <forkMode>pertest</forkMode-->
+          <failIfNoTests>false</failIfNoTests>
           <systemProperties>
             <property>
               <name>java.naming.provider.url</name>
