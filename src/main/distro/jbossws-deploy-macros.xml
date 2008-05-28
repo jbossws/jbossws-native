@@ -248,6 +248,23 @@
       </copy>
     </sequential>
   </macrodef>
+
+  <!-- ================================================================== -->
+  <!-- Deploy JUDDI Service                                               -->
+  <!-- ================================================================== -->
+  
+  <macrodef name="macro-deploy-juddi-sar">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <mkdir dir="@{targetdir}"/>
+      <unzip dest="@{targetdir}">
+        <fileset dir="@{thirdpartydir}">
+          <include name="juddi-service.sar"/>
+        </fileset>
+      </unzip>
+    </sequential>
+  </macrodef>
   
   <!-- ================================================================== -->
   <!-- Deploy JBossWS Service                                             -->
@@ -372,6 +389,7 @@
     <macro-deploy-jbossws-lib42 targetdir="${installserver}/../../lib" thirdpartydir="${artifactsdir}/lib"/>
     <macro-deploy-jbossws-server-lib42 targetdir="${installserver}/lib" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-sar42 targetdir="${installserver}/deploy/jbossws.sar" artifactsdir="${artifactsdir}" jbossid="${jbossid}"/>
+    <macro-deploy-juddi-sar targetdir="${installserver}/deploy/juddi-service.sar" thirdpartydir="${artifactsdir}/lib"/>
   </target>
   
   <target name="deploy-jbossws-native50" depends="deploy-jbossws-endorsed">
@@ -382,6 +400,7 @@
     <macro-deploy-jbossws-sar50 targetdir="${installserver}/deploy/jbossws.sar" artifactsdir="${artifactsdir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-deployers50 targetdir="${installserver}/deployers/jbossws.deployer/" artifactsdir="${artifactsdir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-deploy50 targetdir="${installserver}/deploy" thirdpartydir="${artifactsdir}/lib" jbossid="${jbossid}"/>
+    <macro-deploy-juddi-sar targetdir="${installserver}/deploy/juddi-service.sar" thirdpartydir="${artifactsdir}/lib"/>
   </target>
   
   <target name="deploy-jbossws-endorsed" if="HAVE_JDK_1.6">
@@ -421,6 +440,9 @@
       
       <!-- delete jbossws.sar -->
       <delete dir="@{targetdir}"/>
+      
+      <!-- delete juddi-service.sar -->
+      <delete dir="@{targetdir}/../juddi-service.sar"/>
       
     </sequential>
   </macrodef>
