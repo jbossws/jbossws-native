@@ -34,6 +34,7 @@
         <include>*:jbossws-jboss423:jar:*</include>
         <include>*:jbossws-jboss500:jar:*</include>
         <include>*:jbossws-jboss501:jar:*</include>
+        <include>*:juddi-service:sar:*</include>
       </includes>
     </dependencySet>
     <dependencySet>

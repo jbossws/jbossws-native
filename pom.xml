@@ -178,7 +178,7 @@
         <classifier>resources</classifier>
         <type>zip</type>
       </dependency>
-      
+            
       <!-- provided apis -->
       <dependency>
         <groupId>javax.ejb</groupId>
@@ -422,6 +422,12 @@
       <classifier>resources</classifier>
       <scope>provided</scope>
       <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>jboss.jaxr</groupId>
+      <artifactId>juddi-service</artifactId>
+      <scope>provided</scope>
+      <type>sar</type>
     </dependency>
   </dependencies>
   
