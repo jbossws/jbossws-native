@@ -12,7 +12,7 @@
       <outputDirectory>lib</outputDirectory>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <useStrictFiltering>true</useStrictFiltering>
-      <!--scope>provided</scope-->
+      <scope>test</scope>
       <unpack>false</unpack>
       <includes>
         <include>*:bpel:sar</include>

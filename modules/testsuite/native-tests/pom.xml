@@ -22,14 +22,13 @@
       <version>1.4</version>
       <scope>test</scope>
     </dependency>
-    <!--
     <dependency>
       <groupId>jboss.jbpm</groupId>
       <artifactId>bpel</artifactId>
       <version>1.1.0.Beta5</version>
+      <scope>test</scope>
       <type>sar</type>
     </dependency>
-    -->
   </dependencies>
   
   <!-- Profiles -->
