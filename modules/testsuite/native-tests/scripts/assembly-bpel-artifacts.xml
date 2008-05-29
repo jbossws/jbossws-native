@@ -1,0 +1,29 @@
+<assembly xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0-SNAPSHOT.xsd">
+  
+  <id>bpel-artifacts</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <useStrictFiltering>true</useStrictFiltering>
+      <!--scope>provided</scope-->
+      <unpack>false</unpack>
+      <includes>
+        <include>*:bpel:sar</include>
+        <include>*:commons-collections:jar</include>
+        <include>*:dom4j:jar</include>
+        <include>*:jaxen:jar</include>
+        <include>*:jboss-common-logging-log4j:jar</include>
+        <include>*:commons-logging:jar</include>
+        <include>*:wsdl4j:jar</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+  
+</assembly>
