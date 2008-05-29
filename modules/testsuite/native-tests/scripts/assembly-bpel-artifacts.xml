@@ -9,19 +9,12 @@
   
   <dependencySets>
     <dependencySet>
-      <outputDirectory>lib</outputDirectory>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <useStrictFiltering>true</useStrictFiltering>
       <scope>test</scope>
       <unpack>false</unpack>
       <includes>
         <include>*:bpel:sar</include>
-        <include>*:commons-collections:jar</include>
-        <include>*:dom4j:jar</include>
-        <include>*:jaxen:jar</include>
-        <include>*:jboss-common-logging-log4j:jar</include>
-        <include>*:commons-logging:jar</include>
-        <include>*:wsdl4j:jar</include>
       </includes>
     </dependencySet>
   </dependencySets>

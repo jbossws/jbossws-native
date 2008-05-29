@@ -47,7 +47,6 @@
       </activation>
       <build>
         <plugins>
-          <!--
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
             <configuration>
@@ -55,24 +54,22 @@
               <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
               <appendAssemblyId>false</appendAssemblyId>
               <descriptors>
-                <descriptor>src/main/scripts/assembly-bpel-artifacts.xml</descriptor>
+                <descriptor>scripts/assembly-bpel-artifacts.xml</descriptor>
               </descriptors>
             </configuration>
             <executions>
               <execution>
                 <id>make-assembly</id>
-                <phase>generate-sources</phase>
+                <phase>validate</phase>
                 <goals>
                   <goal>directory-inline</goal>
                 </goals>
               </execution>
             </executions>
           </plugin>
-          -->
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
-              <!--
               <execution>
                 <id>bpel</id>
                 <phase>generate-sources</phase>
@@ -88,7 +85,6 @@
                   </tasks>
                 </configuration>
               </execution>
-              -->
               <execution>
                 <id>wsconsume</id>
                 <phase>generate-sources</phase>
