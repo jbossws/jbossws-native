@@ -38,9 +38,6 @@ org/jboss/test/ws/jaxws/endpoint/**
 # [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
 org/jboss/test/ws/jaxrpc/jbws720/**
 
-# [JBWS-2168] Fix samples bpel for maven build
-org/jboss/test/ws/jaxrpc/samples/wsbpel/**
-
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
 

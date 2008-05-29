@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<!-- $Id$ -->
+
+<project>
+  
+  <!-- ================================================================== -->
+  <!-- BPEL                                                               -->
+  <!-- ================================================================== -->
+  
+  <target name="bpel" description="Generate jBPM-BPEL artifacts">
+
+    <property name="thirdparty.dir" value="${tests.output.dir}/../../../../target/deploy-artifacts/lib/"/>
+
+    <!-- ensure classpath preconditions -->
+    <fail message="File ${thirdparty.dir}/bpel.sar is not available">
+      <condition><not><available file="${thirdparty.dir}/bpel.sar"/></not></condition>
+    </fail>
+    <fail message="File ${thirdparty.dir}/commons-collections.jar is not available">
+      <condition><not><available file="${thirdparty.dir}/commons-collections.jar"/></not></condition>
+    </fail>
+    <fail message="File ${thirdparty.dir}/dom4j.jar is not available">
+      <condition><not><available file="${thirdparty.dir}/dom4j.jar"/></not></condition>
+    </fail>
+    <fail message="File ${thirdparty.dir}/jaxen.jar is not available">
+      <condition><not><available file="${thirdparty.dir}/jaxen.jar"/></not></condition>
+    </fail>
+    <fail message="File ${thirdparty.dir}/jboss-common-logging-log4j.jar is not available">
+      <condition><not><available file="${thirdparty.dir}/jboss-common-logging-log4j.jar"/></not></condition>
+    </fail>
+    <fail message="File ${thirdparty.dir}/commons-logging.jar is not available">
+      <condition><not><available file="${thirdparty.dir}/commons-logging.jar"/></not></condition>
+    </fail>
+    <fail message="File ${thirdparty.dir}/wsdl4j.jar is not available">
+      <condition><not><available file="${thirdparty.dir}/wsdl4j.jar"/></not></condition>
+    </fail>
+
+    <!-- The jBPM BPEL classpath -->
+    <unzip src="${thirdparty.dir}/bpel.sar" dest="${thirdparty.dir}/jbpm-bpel"/>
+    <path id="jbpm.bpel.classpath">
+      <pathelement path="${maven.test.classpath}"/>
+      <pathelement location="${thirdparty.dir}/jbpm-bpel"/> <!-- jbpm.cfg.xml -->
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
+      <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
+      <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
+      <pathelement location="${thirdparty.dir}/dom4j.jar"/>
+      <pathelement location="${thirdparty.dir}/jaxen.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-common-logging-log4j.jar"/>
+      <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
+      <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
+    </path>
+
+    <!-- create jBPM process archives -->
+    <mkdir dir="${tests.output.dir}/test-libs"/>
+    <zip destfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsbpel-hello-process.zip">
+      <fileset dir="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/bpel" />
+    </zip>
+
+    <!-- Copy the BPEL sar to tests lib directory -->
+    <copy file="${thirdparty.dir}/bpel.sar" tofile="${tests.output.dir}/test-libs/jbpm-bpel.sar"/>
+
+    <!-- generate wsdl binding and service definitions for bpel processes -->
+    <taskdef name="servicegen" classname="org.jbpm.bpel.ant.ServiceGeneratorTask">
+      <classpath refid="jbpm.bpel.classpath"/>
+    </taskdef>
+
+    <servicegen
+      processfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsbpel-hello-process.zip"
+      outputdir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF/wsdl"
+      bindingfile="hello-binding-.wsdl"
+      servicefile="hello-service.wsdl"/>
+
+  </target>
+
+</project>

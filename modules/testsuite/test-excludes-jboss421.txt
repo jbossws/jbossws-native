@@ -28,9 +28,6 @@ org/jboss/test/ws/jaxws/samples/jmstransport/**
 # [JBWS-2175] wsconsume cannot run with jaxws-api from build output
 org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
 
-# [JBWS-2168] Fix samples bpel for maven build
-org/jboss/test/ws/jaxrpc/samples/wsbpel/**
-
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
 

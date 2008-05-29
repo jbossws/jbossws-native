@@ -35,6 +35,11 @@
         <include>*:jbossws-jboss500:jar</include>
         <include>*:jbossws-jboss501:jar</include>
         <include>*:juddi-service:sar</include>
+        <include>*:bpel:sar</include>
+        <include>*:commons-collections:jar</include>
+        <include>*:dom4j:jar</include>
+        <include>*:jaxen:jar</include>
+        <include>*:jboss-common-logging-log4j:jar</include>
       </includes>
     </dependencySet>
     <dependencySet>
