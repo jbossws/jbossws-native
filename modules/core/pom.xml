@@ -108,6 +108,12 @@
     <dependency>
       <groupId>org.codehaus.jettison</groupId>
       <artifactId>jettison</artifactId>
+       <exclusions>
+          <exclusion>
+             <groupId>stax</groupId>
+             <artifactId>stax-api</artifactId>
+          </exclusion>          
+       </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.xml.bind</groupId>
