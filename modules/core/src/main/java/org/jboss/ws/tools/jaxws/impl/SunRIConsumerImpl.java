@@ -246,7 +246,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
          }
          
          // Investigate, why this cannot be thrown
-         // throw rte;
+         throw rte;
       }
       finally
       {
