@@ -14,4 +14,12 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   
+  <!-- Dependencies -->
+  <dependencies>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+  </dependencies>
+  
 </project>

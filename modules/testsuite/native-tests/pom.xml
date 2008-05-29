@@ -43,6 +43,7 @@
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
+              <!--
               <execution>
                 <id>bpel</id>
                 <phase>generate-sources</phase>
@@ -58,6 +59,7 @@
                   </tasks>
                 </configuration>
               </execution>
+              -->
               <execution>
                 <id>wsconsume</id>
                 <phase>generate-sources</phase>

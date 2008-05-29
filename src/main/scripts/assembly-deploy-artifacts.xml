@@ -35,11 +35,13 @@
         <include>*:jbossws-jboss500:jar</include>
         <include>*:jbossws-jboss501:jar</include>
         <include>*:juddi-service:sar</include>
+        <!-- 
         <include>*:bpel:sar</include>
         <include>*:commons-collections:jar</include>
         <include>*:dom4j:jar</include>
         <include>*:jaxen:jar</include>
         <include>*:jboss-common-logging-log4j:jar</include>
+        -->
       </includes>
     </dependencySet>
     <dependencySet>
@@ -115,7 +117,7 @@
             <useStrictFiltering>true</useStrictFiltering>
             <scope>provided</scope>
             <includes>
-              <include>org.jboss:jbossxb:jar:1.0.0.SP1</include>
+              <include>org.jboss:jbossxb:jar:1.0.0.SP2</include>
             </includes>
           </dependencySet>
         </dependencySets>

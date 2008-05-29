@@ -55,16 +55,19 @@
     <commons.logging.version>1.1.1</commons.logging.version>
     <commons.collections.version>3.1</commons.collections.version>
     <dom4j.version>1.6.1</dom4j.version>
+    <javassist.version>3.6.0.GA</javassist.version>
+    <jaxb.api.version>2.1</jaxb.api.version>
+    <jaxb.impl.version>2.1.6</jaxb.impl.version>
     <jaxen.version>1.1-beta-11</jaxen.version>
     <jboss.common.logging.log4j.version>2.0.4.GA</jboss.common.logging.log4j.version>
-    <javassist.version>3.6.0.GA</javassist.version>
     <jboss.common.version>1.2.1.GA</jboss.common.version>
     <jboss.jaxbintros.version>1.0.0.beta2</jboss.jaxbintros.version>
+    <jboss.jbosssx.version>2.0.2.Beta4</jboss.jbosssx.version>
+    <jboss.jbossxb.version>1.0.0.SP2</jboss.jbossxb.version>
     <jboss.logging.version>2.0.5.GA</jboss.logging.version>
     <jboss.microcontainer.version>2.0.0.Beta11</jboss.microcontainer.version>
     <jboss.remoting.version>2.4.0.CR1</jboss.remoting.version>
-    <jaxb.api.version>2.1</jaxb.api.version>
-    <jaxb.impl.version>2.1.6</jaxb.impl.version>
+    <jbpm.bpel.version>1.1.0.Beta5</jbpm.bpel.version>
     <juddi.service.version>1.2.0.GA</juddi.service.version>
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
     <sun.jaxws.version>2.1.3</sun.jaxws.version>
@@ -73,7 +76,7 @@
     <wsdl4j.version>1.6.1</wsdl4j.version>
     <xmlsec.version>1.3.0</xmlsec.version>
     <xalan.version>2.7.0</xalan.version>
-    <jbpm.bpel.version>1.1.0.Beta5</jbpm.bpel.version>
+    <xerces.version>2.8.1</xerces.version>
   </properties>
   
   <!-- DependencyManagement -->
@@ -186,6 +189,16 @@
             
       <!-- provided apis -->
       <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
         <groupId>javax.ejb</groupId>
         <artifactId>ejb-api</artifactId>
         <version>3.0</version>
@@ -216,6 +229,16 @@
         <groupId>jboss.common</groupId>
         <artifactId>jboss-common</artifactId>
         <version>${jboss.common.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss</groupId>
+        <artifactId>jbossxb</artifactId>
+        <version>${jboss.jbossxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.security</groupId>
+        <artifactId>jbosssx</artifactId>
+        <version>${jboss.jbosssx.version}</version>
       </dependency>
       <dependency>
         <groupId>jboss.remoting</groupId>
@@ -316,6 +339,11 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${jaxb.api.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
         <version>${jaxb.impl.version}</version>
@@ -324,11 +352,6 @@
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-xjc</artifactId>
         <version>${jaxb.impl.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>${jaxb.api.version}</version>
       </dependency>
       <dependency>
         <groupId>jboss.jaxbintros</groupId>
@@ -372,6 +395,11 @@
         <version>${xalan.version}</version>
       </dependency>
       <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>${xerces.version}</version>
+      </dependency>
+      <dependency>
         <groupId>xml-security</groupId>
         <artifactId>xmlsec</artifactId>
         <version>${xmlsec.version}</version>
@@ -385,8 +413,15 @@
     </dependencies>
   </dependencyManagement>
   
-  <!-- Runtime dependencies, not visible at compile time -->
   <dependencies>
+    <!-- Provided dependencies, visible to all modules -->
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jbossxb</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Runtime dependencies, not visible at compile time -->
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-framework</artifactId>
@@ -484,6 +519,7 @@
       <scope>runtime</scope>
       <type>sar</type>
     </dependency>
+    <!--
     <dependency>
       <groupId>jboss.jbpm</groupId>
       <artifactId>bpel</artifactId>
@@ -510,6 +546,7 @@
       <artifactId>jboss-common-logging-log4j</artifactId>
       <scope>provided</scope>
     </dependency>
+    -->
   </dependencies>
   
   <!-- Plugins -->

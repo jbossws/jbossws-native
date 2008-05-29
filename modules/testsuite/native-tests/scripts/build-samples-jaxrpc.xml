@@ -633,7 +633,7 @@
       </metainf>
     </jar>
     
-    <!-- jaxrpc-samples-wsbpel -->
+    <!-- jaxrpc-samples-wsbpel - ->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsbpel-hello.war" webxml="${tests.output.dir}/test-resources/jaxrpc/samples/wsbpel/hello/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/HelloWorldService.class"/>
@@ -661,7 +661,7 @@
       <metainf dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
-    </jar>
+    </jar-->
     
     <!-- jaxrpc-samples-wssecurity-sign -->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-sign.war" webxml="${tests.output.dir}/test-resources/jaxrpc/samples/wssecurity/WEB-INF/web.xml">

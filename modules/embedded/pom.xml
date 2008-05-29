@@ -18,6 +18,14 @@
   <dependencies>
     <!-- jbossws dependencies -->
     <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-spi</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-jaxws-ext</artifactId>
       <version>${version}</version>
@@ -40,8 +48,7 @@
           <showWarnings>false</showWarnings>
         </configuration>
       </plugin>
-      
     </plugins>
-    
   </build>
+  
 </project>
