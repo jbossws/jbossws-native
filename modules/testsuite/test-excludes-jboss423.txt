@@ -5,6 +5,7 @@
 # EJB3/Injection excludes
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
+org/jboss/test/ws/jaxws/enventry/**
 
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
