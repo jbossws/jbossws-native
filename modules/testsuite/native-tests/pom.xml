@@ -22,6 +22,14 @@
       <version>1.4</version>
       <scope>test</scope>
     </dependency>
+    <!--
+    <dependency>
+      <groupId>jboss.jbpm</groupId>
+      <artifactId>bpel</artifactId>
+      <version>1.1.0.Beta5</version>
+      <type>sar</type>
+    </dependency>
+    -->
   </dependencies>
   
   <!-- Profiles -->
@@ -40,6 +48,28 @@
       </activation>
       <build>
         <plugins>
+          <!--
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <finalName>bpel-artifacts</finalName>
+              <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/main/scripts/assembly-bpel-artifacts.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <executions>
+              <execution>
+                <id>make-assembly</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>directory-inline</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          -->
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>

@@ -16,13 +16,13 @@
   
   <target name="bpel" description="Generate jBPM-BPEL artifacts">
 
-    <property name="thirdparty.dir" value="${tests.output.dir}/../../../../target/deploy-artifacts/lib/"/>
+    <property name="thirdparty.dir" value="${tests.output.dir}/bpel-artifacts/lib"/>
 
     <!-- ensure classpath preconditions -->
     <fail message="File ${thirdparty.dir}/bpel.sar is not available">
       <condition><not><available file="${thirdparty.dir}/bpel.sar"/></not></condition>
     </fail>
-    <fail message="File ${thirdparty.dir}/commons-collections.jar is not available">
+    <!--fail message="File ${thirdparty.dir}/commons-collections.jar is not available">
       <condition><not><available file="${thirdparty.dir}/commons-collections.jar"/></not></condition>
     </fail>
     <fail message="File ${thirdparty.dir}/dom4j.jar is not available">
@@ -39,7 +39,7 @@
     </fail>
     <fail message="File ${thirdparty.dir}/wsdl4j.jar is not available">
       <condition><not><available file="${thirdparty.dir}/wsdl4j.jar"/></not></condition>
-    </fail>
+    </fail-->
 
     <!-- The jBPM BPEL classpath -->
     <unzip src="${thirdparty.dir}/bpel.sar" dest="${thirdparty.dir}/jbpm-bpel"/>
@@ -49,12 +49,12 @@
       <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-bpel.jar" />
       <pathelement location="${thirdparty.dir}/jbpm-bpel/jbpm-jpdl.jar" />
       <pathelement location="${thirdparty.dir}/jbpm-bpel/commons-lang.jar" />
-      <pathelement location="${thirdparty.dir}/commons-collections.jar"/>
+      <!--pathelement location="${thirdparty.dir}/commons-collections.jar"/>
       <pathelement location="${thirdparty.dir}/dom4j.jar"/>
       <pathelement location="${thirdparty.dir}/jaxen.jar"/>
       <pathelement location="${thirdparty.dir}/jboss-common-logging-log4j.jar"/>
       <pathelement location="${thirdparty.dir}/commons-logging.jar"/>
-      <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
+      <pathelement location="${thirdparty.dir}/wsdl4j.jar"/-->
     </path>
 
     <!-- create jBPM process archives -->
