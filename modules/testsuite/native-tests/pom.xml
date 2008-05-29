@@ -52,8 +52,7 @@
                 <configuration>
                   <tasks>
                     <property name="maven.test.classpath" refid="maven.test.classpath"/>
-                    <property name="tests.resources.dir" value="${test.resources.directory}"/>
-                    <!--property name="tests.resources.dir" value="${basedir}/src/test/resources"/-->
+                    <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
                     <property name="tests.output.dir" value="${project.build.directory}"/>
                     <ant antfile="scripts/antrun-bpel.xml" target="bpel"/>
                   </tasks>
@@ -68,8 +67,7 @@
                 <configuration>
                   <tasks>
                     <property name="maven.test.classpath" refid="maven.test.classpath"/>
-                    <property name="tests.resources.dir" value="${test.resources.directory}"/>
-                    <!--property name="tests.resources.dir" value="${basedir}/src/test/resources"/-->
+                    <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
                     <property name="tests.output.dir" value="${project.build.directory}"/>
                     <property name="project.version" value="${project.version}"/>
                     <ant antfile="scripts/antrun-wsconsume.xml" target="wsconsume"/>
@@ -86,7 +84,6 @@
                   <tasks>
                     <property name="maven.test.classpath" refid="maven.test.classpath"/>
                     <property name="tests.resources.dir" value="${test.resources.directory}"/>
-                    <!--property name="tests.resources.dir" value="${basedir}/src/test/resources"/-->
                     <property name="tests.output.dir" value="${project.build.directory}"/>
                     <property name="jboss.bind.address" value="${jboss.bind.address}"/>
                     <property name="java.jdk15.home" value="${java.jdk15.home}"/>
@@ -104,7 +101,6 @@
                   <tasks>
                     <property name="maven.test.classpath" refid="maven.test.classpath"/>
                     <property name="tests.resources.dir" value="${test.resources.directory}"/>
-                    <!--property name="tests.resources.dir" value="${basedir}/src/test/resources"/-->
                     <property name="tests.output.dir" value="${project.build.directory}"/>
                     <ant antfile="scripts/antrun-wsprovide.xml" target="wsprovide"/>
                   </tasks>
@@ -120,7 +116,6 @@
                   <tasks>
                     <property name="tests.output.dir" value="${project.build.directory}"/>
                     <property name="tests.resources.dir" value="${test.resources.directory}"/>
-                    <!--property name="tests.resources.dir" value="${basedir}/src/test/resources"/-->
                     <ant antfile="scripts/build-jars-jaxrpc.xml" target="build-jars-jaxrpc"/>
                     <ant antfile="scripts/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
                     <ant antfile="scripts/build-jars-jaxws.xml" target="build-jars-jaxws"/>
