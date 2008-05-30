@@ -43,7 +43,8 @@ import org.jboss.wsf.spi.annotation.WebContext;
             serviceName = "DarService")
 @SOAPBinding(style = SOAPBinding.Style.RPC,
              use = SOAPBinding.Use.LITERAL)
-@SecurityDomain("JBossWS")
+//We're declaring the domain in the jboss.xml since we have different annotation packages for AS5 and AS42 
+//@SecurityDomain("JBossWS")
 @WebContext(contextRoot="/dar",
             urlPattern="/*",
             authMethod="BASIC",

@@ -28,7 +28,6 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
-import org.jboss.annotation.security.SecurityDomain;
 import org.jboss.logging.Logger;
 import org.jboss.wsf.spi.annotation.WebContext;
 
@@ -37,7 +36,8 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @SOAPBinding(style = Style.RPC)
 
 @WebContext(contextRoot="/jaxws-webserviceref-secure", urlPattern="/*", authMethod = "BASIC", transportGuarantee = "NONE", secureWSDLAccess = false)
-@SecurityDomain("JBossWS")
+//We're declaring the domain in the jboss.xml since we have different annotation packages for AS5 and AS42 
+//@SecurityDomain("JBossWS")
 @RolesAllowed("friend")
 public class SecureEndpointImpl
 {
