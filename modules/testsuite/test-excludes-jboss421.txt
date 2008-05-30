@@ -32,9 +32,6 @@ org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
 
-# [JBWS-2175] wsconsume cannot run with jaxws-api from build output
-org/jboss/test/ws/jaxws/smoke/tools/WSConsumerTestCase.*
-
 # [JBWS-1911] Support the JMS transport with JAX-WS
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
