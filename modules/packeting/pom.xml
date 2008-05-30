@@ -4,7 +4,7 @@
   
   <name>JBoss Web Services - Stack Native Packeting</name>
   <artifactId>jbossws-native-packeting</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   
   <!-- Parent -->
   <parent>
