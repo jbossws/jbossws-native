@@ -39,7 +39,6 @@
     <module>modules/client</module>
     <module>modules/embedded</module>
     <module>modules/management</module>
-    <module>modules/packeting</module>
   </modules>
   
   <!-- Properties -->
