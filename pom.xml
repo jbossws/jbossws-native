@@ -39,6 +39,7 @@
     <module>modules/client</module>
     <module>modules/embedded</module>
     <module>modules/management</module>
+    <module>modules/packeting</module>
   </modules>
   
   <!-- Properties -->
@@ -59,7 +60,6 @@
     <jboss.common.version>1.2.1.GA</jboss.common.version>
     <jboss.jaxbintros.version>1.0.0.beta2</jboss.jaxbintros.version>
     <jboss.jbosssx.version>2.0.2.Beta4</jboss.jbosssx.version>
-    <jboss.jbossxb.version>1.0.0.SP2</jboss.jbossxb.version>
     <jboss.logging.version>2.0.5.GA</jboss.logging.version>
     <jboss.microcontainer.version>2.0.0.Beta11</jboss.microcontainer.version>
     <jboss.remoting.version>2.4.0.CR1</jboss.remoting.version>
@@ -226,11 +226,6 @@
         <version>${jboss.common.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss</groupId>
-        <artifactId>jbossxb</artifactId>
-        <version>${jboss.jbossxb.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.jboss.security</groupId>
         <artifactId>jbosssx</artifactId>
         <version>${jboss.jbosssx.version}</version>
@@ -358,114 +353,6 @@
     </dependencies>
   </dependencyManagement>
   
-  <dependencies>
-    <!-- Provided dependencies, visible to all modules -->
-    <dependency>
-      <groupId>org.jboss</groupId>
-      <artifactId>jbossxb</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    
-    <!-- Runtime dependencies, not visible at compile time -->
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-framework</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-framework</artifactId>
-      <classifier>scripts</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-framework</artifactId>
-      <classifier>testsuite</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss421</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss421</artifactId>
-      <classifier>resources</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss422</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss422</artifactId>
-      <classifier>resources</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss423</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss423</artifactId>
-      <classifier>resources</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss500</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss500</artifactId>
-      <classifier>container</classifier>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss500</artifactId>
-      <classifier>resources</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss501</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss501</artifactId>
-      <classifier>container</classifier>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss501</artifactId>
-      <classifier>resources</classifier>
-      <scope>runtime</scope>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>jboss.jaxr</groupId>
-      <artifactId>juddi-service</artifactId>
-      <scope>runtime</scope>
-      <type>sar</type>
-    </dependency>
-  </dependencies>
-  
   <!-- Plugins -->
   <build>
     <plugins>
@@ -537,34 +424,14 @@
   <profiles>
     
     <!-- 
-    Name:  jdk16
-    Descr: Compile with jdk1.6  
-    -->
-    <profile>
-      <id>jdk16</id>
-      <activation>
-        <jdk>1.6</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerVersion>1.5</compilerVersion>
-              <executable>${java.jdk15.home}/bin/javac</executable>
-              <fork>true</fork>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    
-    <!-- 
     Name:  bindist
     Descr: Build the binary distribution  
     -->
     <profile>
       <id>bindist</id>
+      <modules>
+        <module>modules/deployment</module>
+      </modules>
       <build>
         <plugins>
           <plugin>
@@ -640,6 +507,29 @@
         <jbossws.integration.target>jboss501</jbossws.integration.target>
         <jboss.home>${jboss501.home}</jboss.home>
       </properties>
+    </profile>
+    
+    <!-- 
+    Name:  jdk16
+    Descr: Compile with jdk1.6  
+    -->
+    <profile>
+      <id>jdk16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerVersion>1.5</compilerVersion>
+              <executable>${java.jdk15.home}/bin/javac</executable>
+              <fork>true</fork>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     
     <!-- 

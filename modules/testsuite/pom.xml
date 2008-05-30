@@ -35,6 +35,10 @@
   <!-- Dependencies -->
   <dependencies>
     <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-framework</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-client</artifactId>
       <version>${version}</version>
@@ -50,16 +54,6 @@
       <version>1.5.0</version>
       <scope>system</scope>
       <systemPath>${java.home}/../lib/tools.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-framework</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-framework</artifactId>
-      <classifier>testsuite</classifier>
-      <type>zip</type>
     </dependency>
     <dependency>
       <groupId>javax.ejb</groupId>
@@ -412,6 +406,10 @@
       </properties>
       <dependencies>
         <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss500</artifactId>
+        </dependency>
+        <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
           <version>${hibernate.version}</version>
@@ -420,10 +418,6 @@
           <groupId>org.jboss.client</groupId>
           <artifactId>jbossall-client</artifactId>
           <version>${jboss.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss500</artifactId>
         </dependency>
       </dependencies>
       <build>
