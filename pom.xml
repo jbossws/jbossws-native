@@ -428,9 +428,6 @@
     -->
     <profile>
       <id>bindist</id>
-      <modules>
-        <module>modules/deployment</module>
-      </modules>
       <build>
         <plugins>
           <plugin>
