@@ -19,7 +19,7 @@
    </bean>
 
    <!-- The registry for web service endpoints -->
-   <bean name="WSEndpointRegistry" class="org.jboss.wsf.framework.management.DefaultEndpointRegistry"/>   
+   <bean name="WSEndpointRegistry" class="org.jboss.wsf.framework.management.DefaultEndpointRegistry"/>
 
    <!--
       ======================================================================
@@ -49,7 +49,7 @@
       <property name="requires">RegisteredEndpoint</property>
       <property name="provides">HttpTransport</property>
    </bean>
-            
+
    <bean name="WSDeploymentAspectInstallerJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
       <property name="manager"><inject bean="WSDeploymentAspectManagerJSE"/></property>
       <property name="sortAspectsOnCreate">false</property>
@@ -66,7 +66,7 @@
       Stack deployment aspects
       ==============================================================================
    -->
-   
+
    <bean name="WSNativeEagerInitializeDeploymentAspect" class="org.jboss.wsf.stack.jbws.EagerInitializeDeploymentAspect">
       <property name="requires">UnifiedMetaDataModel</property>
       <property name="provides">InitializedMetaDataModel</property>
@@ -75,7 +75,7 @@
    <bean name="WSNativeEndpointHandlerDeploymentAspect" class="org.jboss.wsf.framework.deployment.EndpointHandlerDeploymentAspect">
       <!--property name="requires">ContainerEndpointHandler, ContainerMetaData</property-->
       <property name="provides">StackEndpointHandler</property>
-   </bean>   
+   </bean>
 
    <bean name="WSNativeEventingDeploymentAspect" class="org.jboss.wsf.stack.jbws.EventingDeploymentAspect">
       <property name="requires">UnifiedMetaDataModel</property>
@@ -97,7 +97,7 @@
    <bean name="WSNativeUnifiedMetaDataDeploymentAspect" class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
       <property name="provides">UnifiedMetaDataModel</property>
    </bean>
-   
+
    <!-- Deployment aspect installer -->
 
    <bean name="WSNativeDeploymentAspectInstallerJSE" class="org.jboss.wsf.framework.deployment.DeploymentAspectInstaller">
@@ -105,7 +105,7 @@
       <property name="sortAspectsOnCreate">true</property>
       <property name="aspects">
          <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">
-            <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>            
+            <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
             <inject bean="WSNativeEventingDeploymentAspect"/>
             <inject bean="WSNativePublishContractDeploymentAspect"/>
             <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
@@ -128,5 +128,5 @@
    <bean name="WSSubscriptionManager" class="org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager">
       <property name="bindAddress">localhost</property>
    </bean>
-   
+
 </deployment>

@@ -26,19 +26,21 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.WSFRuntime;
 import org.jboss.wsf.stack.jbws.embedded.DeploymentModelBuilder;
 import org.jboss.wsf.stack.jbws.embedded.EmbeddableWSFRuntime;
+import org.jboss.wsf.test.JBossWSTest;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 
 /**
  * @author Heiko.Braun <heiko.braun@jboss.com>
  */
-public class EmbeddedTestCase extends TestCase
+public class EmbeddedTestCase extends JBossWSTest
 {
 
    /**
@@ -55,7 +57,7 @@ public class EmbeddedTestCase extends TestCase
         .addEndpoint("org.jboss.test.ws.embedded.HelloWorldEndpoint", "/endpoint")
         .build();
 
-      // Publish
+      // Publish      
       WSFRuntime container = EmbeddableWSFRuntime.bootstrap( EmbeddableWSFRuntime.DEFAULT_CONFIG_URL);
       container.create(dep);
       container.start(dep);

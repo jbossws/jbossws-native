@@ -13,7 +13,13 @@
     <version>3.0.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
+   
+   <properties>
+      <version.org.jboss.microcontainer>2.0.0.Beta14</version.org.jboss.microcontainer>
+   </properties>
+
+
   <!-- Dependencies -->
   <dependencies>
     <dependency>
@@ -29,6 +35,19 @@
       <scope>test</scope>
       <type>sar</type>
     </dependency>
+     
+     <dependency>
+        <groupId>org.jboss.microcontainer</groupId>
+        <artifactId>jboss-dependency</artifactId>
+        <version>${version.org.jboss.microcontainer}</version>
+     </dependency>
+
+     <dependency>
+        <groupId>org.jboss.microcontainer</groupId>
+        <artifactId>jboss-kernel</artifactId>
+        <version>${version.org.jboss.microcontainer}</version>
+     </dependency>
+
   </dependencies>
   
   <!-- Profiles -->
