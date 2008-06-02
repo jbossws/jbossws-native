@@ -173,6 +173,10 @@
               <value>${jboss.home}</value>
             </property>
             <property>
+              <name>java.home</name>
+              <value>${java.jdk15.home}</value>
+            </property>
+            <property>
               <name>jbossws.integration.target</name>
               <value>${jbossws.integration.target}</value>
             </property>
