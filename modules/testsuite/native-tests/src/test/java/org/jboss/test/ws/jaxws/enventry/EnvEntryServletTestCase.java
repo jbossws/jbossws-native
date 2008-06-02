@@ -21,10 +21,9 @@
   */
 package org.jboss.test.ws.jaxws.enventry;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
@@ -37,22 +36,20 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * @author Thomas.Diesler@jboss.org
  * @since 29-May-2008
  */
-public class EnvEntryJSETestCase extends JBossWSTest
+public class EnvEntryServletTestCase extends JBossWSTest
 {
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(EnvEntryJSETestCase.class, "jaxws-enventry-jse.war");
+      return new JBossWSTestSetup(EnvEntryServletTestCase.class, "jaxws-enventry-servlet.war");
    }
 
    public void testEndpoint() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-enventry-jse?wsdl");
-      QName serviceName = new QName("http://org.jboss.ws/enventry", "EnvEntryService");
-      Service service = Service.create(wsdlURL, serviceName);
-
-      EnvEntryEndpoint port = service.getPort(EnvEntryEndpoint.class);
-      String res = port.helloEnvEntry("InitalMessage");
-      //assertEquals("InitalMessage:endpoint:web:8", res);
+      URL url = new URL("http://" + getServerHost() + ":8080/jaxws-enventry-servlet");
+      BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+      String line = br.readLine();
+      
+      assertEquals("web:8", line);
    }
 }

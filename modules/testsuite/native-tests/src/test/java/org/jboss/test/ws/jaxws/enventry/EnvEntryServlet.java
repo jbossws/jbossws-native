@@ -21,38 +21,27 @@
   */
 package org.jboss.test.ws.jaxws.enventry;
 
-import java.net.URL;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.Test;
-
-import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
-
-/**
- * Test env entry access
- *
- * @author Thomas.Diesler@jboss.org
- * @since 29-May-2008
- */
-public class EnvEntryJSETestCase extends JBossWSTest
+public class EnvEntryServlet extends HttpServlet
 {
+   @Resource(name = "jaxws/entry1")
+   String strValue;
 
-   public static Test suite()
+   @Resource(name = "jaxws/entry2")
+   Integer intValue;
+
+   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
    {
-      return new JBossWSTestSetup(EnvEntryJSETestCase.class, "jaxws-enventry-jse.war");
-   }
-
-   public void testEndpoint() throws Exception
-   {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-enventry-jse?wsdl");
-      QName serviceName = new QName("http://org.jboss.ws/enventry", "EnvEntryService");
-      Service service = Service.create(wsdlURL, serviceName);
-
-      EnvEntryEndpoint port = service.getPort(EnvEntryEndpoint.class);
-      String res = port.helloEnvEntry("InitalMessage");
-      //assertEquals("InitalMessage:endpoint:web:8", res);
+      PrintWriter pw = new PrintWriter(res.getWriter());
+      pw.print(strValue + ":" + intValue);
+      pw.close();
    }
 }

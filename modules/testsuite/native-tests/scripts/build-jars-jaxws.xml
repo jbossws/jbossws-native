@@ -61,12 +61,17 @@
       </fileset>
     </jar>
     
-    <!-- jaxws-enventry.war -->
-    <war warfile="${tests.output.dir}/test-libs/jaxws-enventry.war" webxml="${tests.output.dir}/test-resources/jaxws/enventry/WEB-INF/web.xml">
+    <!-- jaxws-enventry -->
+    <war warfile="${tests.output.dir}/test-libs/jaxws-enventry-jse.war" webxml="${tests.output.dir}/test-resources/jaxws/enventry/WEB-INF/jse-web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/enventry/EnvEntryBeanJSE.class"/>
         <include name="org/jboss/test/ws/jaxws/enventry/ServerSideHandler.class"/>
         <include name="org/jboss/test/ws/jaxws/enventry/EnvEntryHandler.class"/>
+      </classes>
+    </war>
+    <war warfile="${tests.output.dir}/test-libs/jaxws-enventry-servlet.war" webxml="${tests.output.dir}/test-resources/jaxws/enventry/WEB-INF/servlet-web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/enventry/EnvEntryServlet.class"/>
       </classes>
     </war>
     
