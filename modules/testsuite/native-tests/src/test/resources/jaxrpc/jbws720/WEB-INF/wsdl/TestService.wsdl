@@ -13,7 +13,7 @@
           <element name="strElement" type="string" minOccurs="0"/>
           <any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
         </sequence>
-        <attribute name="strAttr" type="string" use="required"/>
+        <attribute name="strAttr" type="string"/>
         <attribute ref="xml:lang"/>
       </complexType>
       <complexType name="getPropertyResponse">

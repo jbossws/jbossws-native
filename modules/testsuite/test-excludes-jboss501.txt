@@ -35,9 +35,6 @@ org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
 # [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
 org/jboss/test/ws/jaxws/endpoint/**
 
-# [JBAS-5388] JBossXBRuntimeException: Missing value for the required attribute
-org/jboss/test/ws/jaxrpc/jbws720/**
-
 # [JBWS-2171] ServiceRef injection in EJB3 clients
 org/jboss/test/ws/jaxws/webserviceref/ServiceRefOverridesTestCase.*
 
