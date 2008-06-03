@@ -34,20 +34,7 @@
       <version>1.1.0.Beta5</version>
       <scope>test</scope>
       <type>sar</type>
-    </dependency>
-     
-     <dependency>
-        <groupId>org.jboss.microcontainer</groupId>
-        <artifactId>jboss-dependency</artifactId>
-        <version>${version.org.jboss.microcontainer}</version>
-     </dependency>
-
-     <dependency>
-        <groupId>org.jboss.microcontainer</groupId>
-        <artifactId>jboss-kernel</artifactId>
-        <version>${version.org.jboss.microcontainer}</version>
-     </dependency>
-
+    </dependency>   
   </dependencies>
   
   <!-- Profiles -->
