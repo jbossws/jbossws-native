@@ -14,12 +14,6 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-   
-   <properties>
-      <version.org.jboss.microcontainer>2.0.0.Beta14</version.org.jboss.microcontainer>
-   </properties>
-
-
   <!-- Dependencies -->
   <dependencies>
     <dependency>
