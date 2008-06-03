@@ -331,7 +331,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
          if (chunkSizeValue > 0)
          {
-            clientConfig.put("chunkedLength", new Integer(chunkSizeValue).toString());
+            clientConfig.put("chunkedLength", String.valueOf(chunkSizeValue));
          }
          else
          {
