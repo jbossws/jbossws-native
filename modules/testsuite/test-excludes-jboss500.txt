@@ -23,3 +23,5 @@ org/jboss/test/ws/jaxws/samples/dar/**
 # [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
 
+# [JBWS-2170] Fix embedded for maven build
+org/jboss/test/ws/embedded/**
