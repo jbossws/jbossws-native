@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.core.client;
 
-// $Id$
+// $Id: $
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -105,14 +105,18 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    }
 
    private boolean closed;
-   
+   private Integer chunkedLength;
+
    private static final RMChannel RM_CHANNEL = RMChannel.getInstance();
-   
+
    public HTTPRemotingConnection()
    {
       // HTTPClientInvoker conect sends gratuitous POST
       // http://jira.jboss.com/jira/browse/JBWS-711
       clientConfig.put(Client.ENABLE_LEASE, false);
+
+      // Enable chunked encoding. This is the default size. 
+      clientConfig.put("chunkedLength", "1024");
    }
 
    public boolean isClosed()
@@ -123,6 +127,16 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    public void setClosed(boolean closed)
    {
       this.closed = closed;
+   }
+
+   public Integer getChunkedLength()
+   {
+      return chunkedLength;
+   }
+
+   public void setChunkedLength(Integer chunkedLength)
+   {
+      this.chunkedLength = chunkedLength;
    }
 
    /** 
@@ -174,7 +188,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       {
          // Get the invoker from Remoting for a given endpoint address
          log.debug("Get locator for: " + endpoint);
-         
+
          /** 
           * [JBWS-1704] The Use Of Remoting Causes An Additional 'datatype' Parameter To Be Sent On All Requests
           * 
@@ -206,16 +220,16 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
             RMMetadata rmMetadata = new RMMetadata(getRemotingVersion(), targetAddress, marshaller, unmarshaller, callProps, metadata, clientConfig);
             return RM_CHANNEL.send(reqMessage, rmMetadata);
          }
-         else 
+         else
          {
             Client client = new Client(locator, "jbossws", clientConfig);
             client.connect();
 
             client.setMarshaller(marshaller);
 
-            if (oneway == false)  
+            if (oneway == false)
                client.setUnMarshaller(unmarshaller);
-         
+
             if (log.isDebugEnabled())
                log.debug("Remoting metadata: " + metadata);
 
@@ -235,7 +249,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
             // Disconnect the remoting client
             client.disconnect();
- 
+
             callProps.clear();
             callProps.putAll(metadata);
 
@@ -257,7 +271,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          throw io;
       }
    }
-   
+
    private String addURLParameter(String urlStr, String key, String value) throws MalformedURLException
    {
       URL url = new URL(urlStr);
@@ -267,7 +281,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
    private String getRemotingVersion()
    {
-      String version = null; 
+      String version = null;
       try
       {
          // Access the constant dynamically, otherwise it will be the compile time value
@@ -278,7 +292,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       {
          throw new RuntimeException("Cannot obtain remoting version", ex);
       }
-      
+
       if (version == null)
       {
          URL codeURL = Version.class.getProtectionDomain().getCodeSource().getLocation();
@@ -301,11 +315,11 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       {
          populateHeaders(reqMessage, metadata);
 
-         // Enable chunked encoding. This is the default size. 
-         clientConfig.put("chunkedLength", "1024");
-         
-         // May be overridden through endpoint config
-         if (msgContext != null)
+         if (chunkedLength != null)
+         {
+            clientConfig.put("chunkedLength", chunkedLength.toString());
+         }
+         else if (msgContext != null)
          {
             EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
             CommonConfig config = epMetaData.getConfig();
@@ -316,7 +330,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
             boolean isFastInfoset = epMetaData.isFeatureEnabled(FastInfosetFeature.class);
             if (chunkSize > 0 && isFastInfoset == false)
             {
-               clientConfig.put(EndpointProperty.CHUNKED_ENCODING_SIZE, chunkSizeValue);
+               clientConfig.put("chunkedLength", chunkSizeValue);
             }
             else
             {
@@ -328,7 +342,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       {
          metadata.put("TYPE", "GET");
       }
-
+      
       if (callProps != null)
       {
          Iterator it = callProps.entrySet().iterator();
