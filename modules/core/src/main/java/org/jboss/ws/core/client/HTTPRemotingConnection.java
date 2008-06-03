@@ -114,9 +114,6 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       // HTTPClientInvoker conect sends gratuitous POST
       // http://jira.jboss.com/jira/browse/JBWS-711
       clientConfig.put(Client.ENABLE_LEASE, false);
-
-      // Enable chunked encoding. This is the default size. 
-      clientConfig.put("chunkedLength", "1024");
    }
 
    public boolean isClosed()
@@ -315,34 +312,37 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       {
          populateHeaders(reqMessage, metadata);
 
-         if (chunkedLength != null)
-         {
-            clientConfig.put("chunkedLength", chunkedLength.toString());
-         }
-         else if (msgContext != null)
+         // Enable chunked encoding. This is the default size. 
+         int chunkSizeValue = (chunkedLength != null ? chunkedLength : 1024);
+
+         // Overwrite, through endpoint config
+         if (msgContext != null)
          {
             EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
             CommonConfig config = epMetaData.getConfig();
 
-            // chunksize settings
-            String chunkSizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
-            int chunkSize = chunkSizeValue != null ? Integer.valueOf(chunkSizeValue) : -1;
-            boolean isFastInfoset = epMetaData.isFeatureEnabled(FastInfosetFeature.class);
-            if (chunkSize > 0 && isFastInfoset == false)
-            {
-               clientConfig.put("chunkedLength", chunkSizeValue);
-            }
-            else
-            {
-               clientConfig.remove("chunkedLength");
-            }
+            String sizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
+            if (sizeValue != null)
+               chunkSizeValue = Integer.valueOf(sizeValue);
+
+            if (epMetaData.isFeatureEnabled(FastInfosetFeature.class))
+               chunkSizeValue = 0;
+         }
+
+         if (chunkSizeValue > 0)
+         {
+            clientConfig.put("chunkedLength", new Integer(chunkSizeValue));
+         }
+         else
+         {
+            clientConfig.remove("chunkedLength");
          }
       }
       else
       {
          metadata.put("TYPE", "GET");
       }
-      
+
       if (callProps != null)
       {
          Iterator it = callProps.entrySet().iterator();
