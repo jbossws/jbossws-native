@@ -35,3 +35,8 @@ org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
+
+# [JBWS-2107] Resolve dependency on @SecurityDomain
+org/jboss/test/ws/jaxws/samples/dar/AddressingClientTestCase.*
+org/jboss/test/ws/jaxws/samples/dar/ClientTestCase.*
+
