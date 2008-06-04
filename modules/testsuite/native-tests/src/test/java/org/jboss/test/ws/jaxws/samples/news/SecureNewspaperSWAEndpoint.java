@@ -26,6 +26,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.annotation.security.SecurityDomain;
 
 
 @Stateless
@@ -35,8 +36,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
       serviceName = "NewspaperSWAService")
 @SOAPBinding(style = SOAPBinding.Style.RPC,
        use = SOAPBinding.Use.LITERAL)
-//We're declaring the domain in the jboss.xml since we have different annotation packages for AS5 and AS42 
-//@SecurityDomain("JBossWS")
+@SecurityDomain("JBossWS")
 @WebContext(contextRoot="/news",
       urlPattern="/newspaper/swa",
       authMethod="BASIC",

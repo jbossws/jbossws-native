@@ -10,6 +10,11 @@ org/jboss/test/ws/jaxws/enventry/**
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
+# Exclude endpoint with AS5 @SecurityDomain
+org/jboss/test/ws/jaxws/samples/securityDomain/SecureEndpointAS5Impl.*
+org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAAS5Endpoint.*
+org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.*
+
 # [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
 # This requires changes to the AS web meta data (servlet init params)
 org/jboss/test/ws/jaxws/jbws1762/**
@@ -26,10 +31,6 @@ org/jboss/test/ws/jaxws/jbws1841/**
 # [JBWS-1911] Support the JMS transport with JAX-WS
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
-
-# [JBWS-2107] Resolve dependency on @SecurityDomain
-org/jboss/test/ws/jaxws/samples/dar/AddressingClientTestCase.*
-org/jboss/test/ws/jaxws/samples/dar/ClientTestCase.*
 
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**

@@ -39,8 +39,6 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebContext(contextRoot = "/jaxws-jbws1988", urlPattern = "/*")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
-//We're declaring the domain in the jboss.xml since we have different annotation packages for AS5 and AS42
-//@SecurityDomain("JBossWSDigest")
 @RolesAllowed({"friend"}) 
 public class HelloJavaBean
 {

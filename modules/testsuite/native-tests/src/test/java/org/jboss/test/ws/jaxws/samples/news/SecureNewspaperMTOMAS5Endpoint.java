@@ -19,37 +19,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1991;
+package org.jboss.test.ws.jaxws.samples.news;
 
-import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.BindingType;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.wsf.spi.annotation.WebContext;
 
 
 @Stateless
-@WebService(name = "Hello", serviceName = "HelloService", targetNamespace = "http://org.jboss.ws/jbws1991")
-@SOAPBinding(style = SOAPBinding.Style.RPC)
-@WebContext(contextRoot = "/jaxws-jbws1991", urlPattern = "/*")
-@EndpointConfig(configName = "Standard WSSecurity Endpoint")
-@RolesAllowed({"friend"}) 
-public class HelloJavaBean
+@WebService(endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperMTOM",
+      name = "NewspaperMTOMEndpoint",
+      targetNamespace = "http://org.jboss.ws/samples/news",
+      serviceName = "NewspaperMTOMService")
+@SOAPBinding(style = SOAPBinding.Style.RPC,
+       use = SOAPBinding.Use.LITERAL)
+@SecurityDomain("JBossWS")
+@WebContext(contextRoot="/news",
+      urlPattern="/newspaper/mtom",
+      authMethod="BASIC",
+      transportGuarantee="CONFIDENTIAL",
+      secureWSDLAccess=false)
+@BindingType(value = "http://schemas.xmlsoap.org/wsdl/soap/http?mtom=true")
+public class SecureNewspaperMTOMAS5Endpoint extends AbstractNewspaperMTOMEndpoint implements NewspaperMTOM
 {
-   private Logger log = Logger.getLogger(HelloJavaBean.class);
-   @Resource
-   private WebServiceContext ctx;
-
-   @WebMethod
-   public String echo(String par)
-   {
-      log.info("User principal: " + ctx.getUserPrincipal());
-      return par;
-   }
+   
 }

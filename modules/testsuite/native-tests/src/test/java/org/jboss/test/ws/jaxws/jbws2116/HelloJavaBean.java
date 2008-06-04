@@ -39,8 +39,6 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebContext(contextRoot = "/jaxws-jbws2116", urlPattern = "/*")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
-//We're declaring the domain in the jboss.xml since we have different annotation packages for AS5 and AS42
-//@SecurityDomain("JBossWS")
 public class HelloJavaBean
 {
    private Logger log = Logger.getLogger(HelloJavaBean.class);

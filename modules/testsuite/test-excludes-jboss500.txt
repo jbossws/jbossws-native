@@ -8,6 +8,11 @@ org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
+# Exclude endpoints with AS42 @SecurityDomain
+org/jboss/test/ws/jaxws/samples/securityDomain/SecureEndpointImpl.*
+org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAEndpoint.*
+org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMEndpoint.*
+
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 

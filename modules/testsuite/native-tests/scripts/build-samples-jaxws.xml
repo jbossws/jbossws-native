@@ -30,6 +30,9 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
       </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+        <include name="jboss.xml"/>
+      </metainf>
     </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-client.jar">
       <fileset dir="${tests.output.dir}/test-classes">
@@ -53,6 +56,9 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/reply/*.class"/>
       </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+        <include name="jboss.xml"/>
+      </metainf>
     </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-addressing-client.jar">
       <fileset dir="${tests.output.dir}/test-classes">
@@ -165,6 +171,27 @@
         <include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOM.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperMTOMEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/EditionSWA.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/EditionMTOM.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/jaxws-handlers-server.xml"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/news/META-INF">
+        <include name="jboss-wsse-server.xml"/>
+        <include name="bob-sign_enc.jks"/>
+        <include name="wsse10.truststore"/>
+      </metainf>
+    </jar>
+  	<jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step2-newspaper-as5.jar">
+      <fileset dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/samples/news/PressRelease.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractPressReleaseEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/SecurePressReleaseEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/NewspaperSWA.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperSWAEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAAS5Endpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOM.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperMTOMEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/EditionSWA.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/EditionMTOM.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/jaxws-handlers-server.xml"/>

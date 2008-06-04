@@ -8,6 +8,11 @@ org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
+# Exclude endpoints with AS42 @SecurityDomain
+org/jboss/test/ws/jaxws/samples/securityDomain/SecureEndpointImpl.*
+org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAEndpoint.*
+org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMEndpoint.*
+
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
@@ -22,12 +27,6 @@ org/jboss/test/ws/jaxws/samples/dar/**
 
 # [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
-
-# [JBWS-2107] Resolve dependency on @SecurityDomain
-org/jboss/test/ws/jaxws/webserviceref/Secure**
-org/jboss/test/ws/jaxws/samples/dar/**
-org/jboss/test/ws/jaxws/samples/news/**
-org/jboss/test/ws/jaxws/jbws1840/**
 
 # [EJBTHREE-1150] WebServiceContext injection requires mapped-name
 org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
