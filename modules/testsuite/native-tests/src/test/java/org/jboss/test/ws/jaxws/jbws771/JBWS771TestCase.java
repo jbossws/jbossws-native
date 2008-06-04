@@ -23,8 +23,11 @@ package org.jboss.test.ws.jaxws.jbws771;
 
 // $Id: JBWS771TestCase.java 3729 2007-06-26 19:38:00Z thomas.diesler@jboss.com $
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
@@ -81,7 +84,7 @@ public class JBWS771TestCase extends JBossWSTest
 
       JBOSS_HOME = System.getProperty("jboss.home");
       RESOURCES_DIR = createResourceFile(".").getPath();
-      JDK_HOME = System.getProperty("java.home");
+      JDK_HOME = System.getProperty("java.home") + "/..";
       OS = System.getProperty("os.name").toLowerCase();
    }
 
@@ -155,7 +158,7 @@ public class JBWS771TestCase extends JBossWSTest
       Process p = executeCommand(command);
 
       // check status code
-      printStatusCode(p, "wsconsume");
+      checkStatusCode(p, "wsconsume");
       
       File javaSource = getResourceFile("wsconsume/java/org/jboss/test/ws/jaxws/jbws771/JBWS771Service.java");
       assertTrue("Service endpoint interface not generated", javaSource.exists());
@@ -180,10 +183,30 @@ public class JBWS771TestCase extends JBossWSTest
       return p;
    }
 
-   private void printStatusCode(Process p, String s) throws InterruptedException
+   private void checkStatusCode(Process p, String s) throws InterruptedException, IOException
    {
       // check status code
       int status = p.waitFor();
-      System.out.println(s + " did exit with status " + status);
+      if (p.exitValue() != 0)
+      {
+         System.out.println("Input stream");
+         printStream(p.getInputStream());
+         System.out.println("Error stream");
+         printStream(p.getErrorStream());
+      }
+      assertTrue(s + " did exit with status " + status, status == 0);
+   }
+
+   private void printStream(InputStream is) throws IOException
+   {
+      System.out.println();
+      BufferedReader in = new BufferedReader(new InputStreamReader(is));
+      StringBuffer buffer = new StringBuffer();
+      String line;
+      while ((line = in.readLine()) != null) {
+        buffer.append(line + "\n");
+      }
+      System.out.println(buffer.toString() + "\n");
+      System.out.println();
    }
 }
