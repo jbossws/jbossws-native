@@ -187,7 +187,7 @@ public class JBWS771TestCase extends JBossWSTest
    {
       // check status code
       int status = p.waitFor();
-      if (p.exitValue() != 0)
+      if (status != 0)
       {
          System.out.println("Input stream");
          printStream(p.getInputStream());
