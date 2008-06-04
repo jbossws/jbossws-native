@@ -29,6 +29,13 @@
     <version>1.0.0.GA</version>
   </parent>
   
+  <!-- Source Control Management -->
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/trunk</developerConnection>
+    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/trunk</url>
+  </scm>
+  
   <!-- Modules -->
   <modules>
     <module>modules/saaj</module>
@@ -555,12 +562,5 @@
       </modules>
     </profile>
   </profiles>
-  
-  <!-- Source Control Management -->
-  <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/trunk</url>
-  </scm>
   
 </project>
