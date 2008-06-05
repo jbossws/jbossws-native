@@ -39,3 +39,6 @@ org/jboss/test/ws/jaxws/webserviceref/ServiceRefOverridesTestCase.*
 
 # [EJBTHREE-1377] Callback objects are improperly setup - ServiceRefMetaData.getServiceInterface() returns null
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
+
+# [EJBTHREE-1404] Wrong business interface detection
+org/jboss/test/ws/jaxws/jbws944/**
