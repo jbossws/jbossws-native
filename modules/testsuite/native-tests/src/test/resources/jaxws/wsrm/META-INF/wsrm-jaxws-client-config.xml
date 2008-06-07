@@ -29,7 +29,7 @@
   <client-config>
     <config-name>Standard Addressable WSRM Client</config-name>
     <reliable-messaging>
-      <backports-server port="7777"/>
+      <backports-server port="8888"/>
       <message-retransmission attempts="10" interval="5" timeout="3"/>
     </reliable-messaging>	
     <post-handler-chains>
@@ -74,7 +74,7 @@
   <client-config>
     <config-name>Secured Addressable WSRM Client</config-name>
     <reliable-messaging>
-      <backports-server port="7777"/>
+      <backports-server port="8888"/>
       <message-retransmission attempts="10" interval="5" timeout="3"/>
     </reliable-messaging>	
     <post-handler-chains>
