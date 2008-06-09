@@ -16,11 +16,6 @@ org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMEndpoint.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [JBAS-5055] Failed to load users/passwords/role files
-org/jboss/test/ws/jaxws/webserviceref/StubPropertyTestCase.*
-org/jboss/test/ws/jaxws/jbws1840/**
-org/jboss/test/ws/jaxws/samples/dar/**
-
 # [JBAS-5114] MessageDriven EJB3 does not create destination automatically
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/**
