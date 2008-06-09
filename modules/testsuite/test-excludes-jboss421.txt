@@ -35,5 +35,8 @@ org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
+# [JBWS-2162] wsprovide for maven build
+org/jboss/test/ws/jaxws/smoke/tools/**
+
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**

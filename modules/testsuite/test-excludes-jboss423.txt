@@ -15,5 +15,8 @@ org/jboss/test/ws/jaxws/samples/securityDomain/SecureEndpointAS5Impl.*
 org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAAS5Endpoint.*
 org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.*
 
+# [JBWS-2162] wsprovide for maven build
+org/jboss/test/ws/jaxws/smoke/tools/**
+
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
