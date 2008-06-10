@@ -7,16 +7,15 @@ org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
 org/jboss/test/ws/jaxws/enventry/EnvEntryServletTestCase.*
 
-# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
-org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
-
 # Exclude endpoint with AS5 @SecurityDomain
 org/jboss/test/ws/jaxws/samples/securityDomain/SecureEndpointAS5Impl.*
 org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAAS5Endpoint.*
 org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.*
 
+# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
+org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
+
 # [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
-# This requires changes to the AS web meta data (servlet init params)
 org/jboss/test/ws/jaxws/jbws1762/**
 
 # [JBWS-1797] Setting .NET friendly Endpoint in web.xml
