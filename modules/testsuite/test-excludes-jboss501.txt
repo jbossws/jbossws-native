@@ -42,3 +42,10 @@ org/jboss/test/ws/jaxws/webserviceref/ServiceRefOverridesTestCase.*
 
 # [EJBTHREE-1377] Callback objects are improperly setup - ServiceRefMetaData.getServiceInterface() returns null
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
+
+[JBAS-5614] Cannot access <service-ref> in nested jar
+org/jboss/test/ws/jaxrpc/jbws331/**
+org/jboss/test/ws/jaxrpc/jbws626/**
+org/jboss/test/ws/jaxrpc/jbws772/**
+org/jboss/test/ws/jaxrpc/jbws1121/**
+
