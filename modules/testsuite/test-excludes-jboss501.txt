@@ -2,9 +2,6 @@
 # $Id$
 #
 
-# Fix BPEL before AS50 goes final
-org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
-
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
@@ -33,6 +30,9 @@ org/jboss/test/ws/jaxws/samples/context/WebServiceContextJSETestCase.*
 
 # [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
 org/jboss/test/ws/jaxws/endpoint/**
+
+# [JBWS-2217] Fix BPEL samples before AS50 goes final
+org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
 # [JBWS-2162] wsprovide for maven build
 org/jboss/test/ws/jaxws/smoke/tools/**
