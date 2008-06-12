@@ -379,7 +379,18 @@
         <include name="org/jboss/test/ws/jaxws/jbws1762/JBWS1762Impl.class"/>
       </fileset>
     </copy>
-    
+
+    <!-- jaxws-jbws1798 -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jbws1798.war" webxml="${tests.output.dir}/resources/jaxws/jbws1798/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws1798/**/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws1798/*TestCase.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbws1798/WEB-INF">
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>    	
+  	
     <!-- jaxws-jbws1854 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1854.war" webxml="${tests.output.dir}/resources/jaxws/jbws1854/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

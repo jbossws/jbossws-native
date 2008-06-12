@@ -552,9 +552,9 @@ public class WSDL11Reader
       return tmpFile != null ? tmpFile.toURL() : null;
    }
 
-   private void handleSchemaImports(Element schemaEl, URL wsdlLoc) throws MalformedURLException, WSDLException
+   private void handleSchemaImports(Element schemaEl, URL parentURL) throws WSDLException, IOException
    {
-      if (wsdlLoc == null)
+      if (parentURL == null)
          throw new IllegalArgumentException("Cannot process import, parent location not set");
 
       Iterator it = DOMUtils.getChildElements(schemaEl, new QName(Constants.NS_SCHEMA_XSD, "import"));
@@ -569,8 +569,15 @@ public class WSDL11Reader
          // Skip, let the entity resolver resolve these
          if (namespace != null && schemaLocation != null)
          {
-            URL currLoc = getLocationURL(wsdlLoc, schemaLocation);
-            schemaLocationsMap.put(namespace, currLoc);
+            URL currLoc = getLocationURL(parentURL, schemaLocation);
+            if (schemaLocationsMap.get(namespace) == null)
+            {
+               schemaLocationsMap.put(namespace, currLoc);
+               
+               // Recursively handle schema imports
+               Element importedSchema = DOMUtils.parse(currLoc.openStream());
+               handleSchemaImports(importedSchema, currLoc);
+            }
          }
          else
          {
