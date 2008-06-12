@@ -4,7 +4,7 @@
   <namespaceURI>http://test.jboss.org/ws/jbws1691</namespaceURI>
  </package-mapping>
  <service-interface-mapping>
-  <service-interface>org.jboss.test.ws.jbws1691.phoneBook_Service</service-interface>
+  <service-interface>org.jboss.test.ws.jbws1691.PhoneBook_Service</service-interface>
   <wsdl-service-name xmlns:serviceNS='http://test.jboss.org/ws/jbws1691'>serviceNS:phoneBook</wsdl-service-name>
   <port-mapping>
    <port-name>PhoneBookPort</port-name>
@@ -12,7 +12,7 @@
   </port-mapping>
  </service-interface-mapping>
  <service-endpoint-interface-mapping>
-  <service-endpoint-interface>org.jboss.test.ws.jbws1691.phoneBook_PortType</service-endpoint-interface>
+  <service-endpoint-interface>org.jboss.test.ws.jbws1691.PhoneBook_PortType</service-endpoint-interface>
   <wsdl-port-type xmlns:portTypeNS='http://test.jboss.org/ws/jbws1691'>portTypeNS:phoneBook</wsdl-port-type>
   <wsdl-binding xmlns:bindingNS='http://test.jboss.org/ws/jbws1691'>bindingNS:PhoneBookBinding</wsdl-binding>
   <service-endpoint-method-mapping>

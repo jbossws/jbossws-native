@@ -149,7 +149,8 @@ public class MappingFileGeneratorHelper
       String targetNS = wsdlDefinitions.getTargetNamespace();
       String prefix = WSToolsConstants.WSTOOLS_CONSTANT_MAPPING_SERVICE_PREFIX;
       ServiceInterfaceMapping sim = new ServiceInterfaceMapping(jwm);
-      sim.setServiceInterface(packageName + "." + javaServiceName);
+      String className = ToolsUtils.firstLetterUpperCase(javaServiceName);
+      sim.setServiceInterface(packageName + "." + className);
       sim.setWsdlServiceName(new QName(targetNS, serviceName, prefix));
 
       WSDLEndpoint[] endpoints = ser.getEndpoints();
@@ -195,7 +196,8 @@ public class MappingFileGeneratorHelper
             javaPortName += "_PortType";
 
          ServiceEndpointInterfaceMapping seim = new ServiceEndpointInterfaceMapping(jwm);
-         seim.setServiceEndpointInterface(packageName + "." + javaPortName);
+         String className = ToolsUtils.firstLetterUpperCase(javaPortName);
+         seim.setServiceEndpointInterface(packageName + "." + className);
          seim.setWsdlPortType(new QName(targetNS, portName, "portTypeNS"));
          seim.setWsdlBinding(new QName(targetNS, bindName, "bindingNS"));
          constructServiceEndpointMethodMapping(seim, wsdlintf);
