@@ -20,14 +20,14 @@
   <property name="stack.dir" value="${basedir}"/>
   <property name="stack.distro.dir" value="${stack.dir}/src/main/distro"/>
   <property name="stack.output.dir" value="${stack.dir}/target"/>
-  
+  <property name="stack.resources.dir" value="${stack.dir}/modules/resources/src/main/resources"/>
   <property name="deploy.artifacts.dir" value="${stack.output.dir}/deploy-artifacts"/>
   
   <import file="${stack.distro.dir}/build-setup.xml"/>
   <import file="${stack.distro.dir}/build-deploy.xml"/>
-  <import file="${stack.distro.dir}/jbossws-deploy-macros.xml"/>
+  <import file="${stack.resources.dir}/resources/jbossws-deploy-macros.xml"/>
   
-  <property name="jbossws.default.deploy.conf" value="${stack.dir}/modules/resources/src/main/resources/bin/jbossws-default-deploy.conf"/>
+  <property name="jbossws.default.deploy.conf" value="${stack.resources.dir}/resources/jbossws-default-deploy.conf"/>
   <property name="target.properties.file" value="${basedir}/target.properties"/>
   
   <!-- ================================================================== -->
