@@ -46,6 +46,7 @@
     <module>modules/client</module>
     <module>modules/embedded</module>
     <module>modules/management</module>
+    <module>modules/resources</module>
   </modules>
   
   <!-- Properties -->
