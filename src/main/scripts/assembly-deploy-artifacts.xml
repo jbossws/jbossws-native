@@ -118,7 +118,7 @@
   <fileSets>
     <!-- bin -->
     <fileSet>
-      <directory>src/main/etc</directory>
+      <directory>modules/resources/src/main/resources/bin</directory>
       <outputDirectory>bin</outputDirectory>
       <includes>
         <include>wsconsume.*</include>

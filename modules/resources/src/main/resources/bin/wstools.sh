@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: wstools.sh 2157 2007-01-27 06:03:58Z jason.greene@jboss.com $
+# $Id$
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`

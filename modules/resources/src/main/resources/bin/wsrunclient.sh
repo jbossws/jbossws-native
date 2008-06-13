@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: wsprovide 2325 2007-02-09 22:14:15Z jason.greene@jboss.com $
+# $Id$
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
 
