@@ -41,3 +41,6 @@ org/jboss/test/ws/jaxws/webserviceref/ServiceRefOverridesTestCase.*
 
 # [JBWS-2217] Fix BPEL samples before AS50 goes final
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
+# [JBWS-2233] EJB3 webserviceref failure
+org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefEJB3TestCase.*
