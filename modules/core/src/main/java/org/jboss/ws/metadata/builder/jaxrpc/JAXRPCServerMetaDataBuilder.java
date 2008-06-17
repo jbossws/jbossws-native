@@ -145,6 +145,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                initEndpointEncodingStyle(sepMetaData);
 
                initEndpointAddress(dep, sepMetaData);
+               initEndpointBinding(wsdlEndpoint, sepMetaData);
 
                EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
                JSEArchiveMetaData webMetaData = dep.getAttachment(JSEArchiveMetaData.class);

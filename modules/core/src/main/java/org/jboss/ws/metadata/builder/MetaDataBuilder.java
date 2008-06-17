@@ -92,7 +92,7 @@ public abstract class MetaDataBuilder
    private final static Logger log = Logger.getLogger(MetaDataBuilder.class);
 
    /** Inititialize the endpoint binding */
-   protected void initEndpointBinding(WSDLEndpoint wsdlEndpoint, ClientEndpointMetaData epMetaData)
+   protected void initEndpointBinding(WSDLEndpoint wsdlEndpoint, EndpointMetaData epMetaData)
    {
       WSDLDefinitions wsdlDefinitions = wsdlEndpoint.getWsdlService().getWsdlDefinitions();
       WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
