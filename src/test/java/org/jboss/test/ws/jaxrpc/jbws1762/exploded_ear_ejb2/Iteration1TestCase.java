@@ -19,14 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762;
+package org.jboss.test.ws.jaxrpc.jbws1762.exploded_ear_ejb2;
 
-import javax.jws.WebService;
+import junit.framework.Test;
 
-@WebService
-public interface JBWS1762
+import org.jboss.test.ws.jaxrpc.jbws1762.AbstractEJB2Test;
+import org.jboss.wsf.test.JBossWSTestSetup;
+
+/**
+ * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
+ *
+ * @author richard.opalka@jboss.com
+ *
+ * @since Oct 20, 2007
+ */
+public class Iteration1TestCase extends AbstractEJB2Test
 {
-
-   String echo(String toEcho);
-
+   public static Test suite() throws Exception
+   {
+      return new JBossWSTestSetup(Iteration1TestCase.class, "jaxrpc-jbws1762-exploded.ear");
+   }
+   
+   public String getWSDLLocation()
+   {
+      return "jaxrpc-jbws1762-exploded-jar/EJB2Bean?wsdl";
+   }
 }

@@ -19,51 +19,53 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762;
+package org.jboss.test.ws.jaxrpc.jbws1762;
 
+import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Service;
 
-import junit.framework.Test;
-
+import org.jboss.test.ws.jaxrpc.jbws1762.services.EJB2Iface;
+import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
+import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * [JBWS-1762] web.xml modified to web.xml.org - subsequent runs fail
  *
- * @author Richard.Opalka@jboss.com
- * @since 13-Aug-2007
+ * @author richard.opalka@jboss.com
+ *
+ * @since Oct 20, 2007
  */
-public class JBWS1762TestCase1 extends JBossWSTest
+public abstract class AbstractEJB2Test extends JBossWSTest
 {
 
-   private String targetNS = "http://jbws1762.jaxws.ws.test.jboss.org/";
-   private JBWS1762 proxy;
-
-   public static Test suite()
-   {
-      return new JBossWSTestSetup(JBWS1762TestCase1.class, "jaxws-jbws1762.war");
-   }
-
+   private EJB2Iface ejb2Proxy;
+   
    @Override
    protected void setUp() throws Exception
    {
-      super.setUp();
-
-      QName serviceName = new QName(targetNS, "JBWS1762Service");
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1762/JBWS1762Service?wsdl");
-
-      Service service = Service.create(wsdlURL, serviceName);
-      proxy = (JBWS1762)service.getPort(JBWS1762.class);
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/" + getWSDLLocation());
+      URL mappingURL = new File("resources/jaxrpc/jbws1762/META-INF/jaxrpc-mapping.xml").toURL();
+      QName serviceName = new QName("http://org.jboss.test.webservice/jbws1762", "EJB2Bean");
+      
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, serviceName, mappingURL);
+      this.ejb2Proxy = (EJB2Iface)service.getPort(EJB2Iface.class);
    }
-
-   public void testIssue() throws Exception
+   
+   @Override
+   protected void tearDown() throws Exception
    {
-      assertEquals(proxy.echo("Hello!"), "Hello!");
+      this.ejb2Proxy = null;
    }
-
+   
+   protected abstract String getWSDLLocation();
+   
+   public void testEJB2() throws Exception
+   {
+      assertEquals(this.ejb2Proxy.echo("Hello!"), "Hello!");
+   }
+   
 }

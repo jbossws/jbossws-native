@@ -19,17 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1762;
+package org.jboss.test.ws.jaxrpc.jbws1762.services;
 
-import javax.jws.WebService;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-@WebService(name = "JBWS1762", serviceName = "JBWS1762Service", endpointInterface = "org.jboss.test.ws.jaxws.jbws1762.JBWS1762")
-public class JBWS1762Impl implements JBWS1762
+/**
+ * POJO interface
+ *
+ * @author richard.opalka@jboss.com
+ *
+ * @since Oct 18, 2007
+ */
+public interface POJOIface extends Remote
 {
-
-   public String echo(String toEcho)
-   {
-      return toEcho;
-   }
-
+   String echo(String toEcho) throws RemoteException;
 }

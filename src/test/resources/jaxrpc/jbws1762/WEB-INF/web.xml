@@ -7,7 +7,7 @@
     <servlet-class>org.jboss.wsf.stack.jbws.EndpointServlet</servlet-class>
     <init-param>
       <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.jboss.test.ws.jaxws.jbws1762.services.POJOBean</param-value>
+      <param-value>org.jboss.test.ws.jaxrpc.jbws1762.services.POJOBean</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -15,3 +15,4 @@
     <url-pattern>/POJOBean</url-pattern>
   </servlet-mapping>
 </web-app>
+
