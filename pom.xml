@@ -20,7 +20,7 @@
   <artifactId>jbossws-native</artifactId>
   <packaging>pom</packaging>
   
-  <version>3.0.2-SNAPSHOT</version>
+  <version>3.0.2.GA</version>
   
   <!-- Parent -->
   <parent>
@@ -51,14 +51,14 @@
   
   <!-- Properties -->
   <properties>
-    <jbossws.common.version>1.0.5-SNAPSHOT</jbossws.common.version>
-    <jbossws.framework.version>3.0.2-SNAPSHOT</jbossws.framework.version>
-    <jbossws.spi.version>1.0.4-SNAPSHOT</jbossws.spi.version>
-    <jbossws.jboss421.version>3.0.2-SNAPSHOT</jbossws.jboss421.version>
-    <jbossws.jboss422.version>3.0.2-SNAPSHOT</jbossws.jboss422.version>
-    <jbossws.jboss423.version>3.0.2-SNAPSHOT</jbossws.jboss423.version>
-    <jbossws.jboss500.version>3.0.2-SNAPSHOT</jbossws.jboss500.version>
-    <jbossws.jboss501.version>3.0.2-SNAPSHOT</jbossws.jboss501.version>
+    <jbossws.common.version>1.0.5.GA</jbossws.common.version>
+    <jbossws.framework.version>3.0.2.GA</jbossws.framework.version>
+    <jbossws.spi.version>1.0.4.GA</jbossws.spi.version>
+    <jbossws.jboss421.version>3.0.2.GA</jbossws.jboss421.version>
+    <jbossws.jboss422.version>3.0.2.GA</jbossws.jboss422.version>
+    <jbossws.jboss423.version>3.0.2.GA</jbossws.jboss423.version>
+    <jbossws.jboss500.version>3.0.2.GA</jbossws.jboss500.version>
+    <jbossws.jboss501.version>3.0.2.GA</jbossws.jboss501.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.6.0.GA</javassist.version>
@@ -135,48 +135,48 @@
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss423</artifactId>
+        <artifactId>jbossws-jboss423x</artifactId>
         <version>${jbossws.jboss423.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss423</artifactId>
+        <artifactId>jbossws-jboss423x</artifactId>
         <version>${jbossws.jboss423.version}</version>
         <classifier>resources</classifier>
         <type>zip</type>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss500</artifactId>
+        <artifactId>jbossws-jboss500Beta4</artifactId>
         <version>${jbossws.jboss500.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss500</artifactId>
+        <artifactId>jbossws-jboss500Beta4</artifactId>
         <version>${jbossws.jboss500.version}</version>
         <classifier>container</classifier>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss500</artifactId>
+        <artifactId>jbossws-jboss500Beta4</artifactId>
         <version>${jbossws.jboss500.version}</version>
         <classifier>resources</classifier>
         <type>zip</type>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss501</artifactId>
+        <artifactId>jbossws-jboss500x</artifactId>
         <version>${jbossws.jboss501.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss501</artifactId>
+        <artifactId>jbossws-jboss500x</artifactId>
         <version>${jbossws.jboss501.version}</version>
         <classifier>container</classifier>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss501</artifactId>
+        <artifactId>jbossws-jboss500x</artifactId>
         <version>${jbossws.jboss501.version}</version>
         <classifier>resources</classifier>
         <type>zip</type>
