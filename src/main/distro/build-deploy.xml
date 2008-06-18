@@ -23,6 +23,7 @@
       <param name="installserver" value="${deploy.structure}/server/${jboss.server.instance}"/>
       <param name="jbossid" value="${jbossws.integration.target}"/>
       <param name="artifactsdir" value="${deploy.artifacts.dir}"/>
+      <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
     </antcall>
     <macro-create-deploy-conf deploystructure="${deploy.structure}"/>
   </target>
@@ -116,6 +117,7 @@
       <param name="installserver" value="${deploy.structure}/server/${jboss.server.instance}"/>
       <param name="jbossid" value="${jbossws.integration.target}"/>
       <param name="artifactsdir" value="${deploy.artifacts.dir}"/>
+      <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
     </antcall>
     <macro-create-deploy-conf deploystructure="${deploy.structure}"/>
   </target>
@@ -142,7 +144,7 @@
     <macro-undeploy-jbossws targetdir="${jboss500.server.deploy}/jbossws.sar" defaultconf="${jbossws.default.deploy.conf}"/>
     <!-- [JBWS-2177] Test clients fail with xml-apis.jar in lib/endorsed -->
     <delete file="${jboss500.home}/lib/endorsed/xml-apis.jar"/>
-     <!-- wsconsume will fail with a LinkageError too -->
+    <!-- wsconsume will fail with a LinkageError too -->
     <delete file="${jboss500.home}/lib/endorsed/jaxb-api.jar"/>
   </target>
   
