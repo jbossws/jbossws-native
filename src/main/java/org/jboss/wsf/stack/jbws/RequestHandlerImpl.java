@@ -91,6 +91,7 @@ import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Document;
 
 /**
@@ -316,6 +317,7 @@ public class RequestHandlerImpl implements RequestHandler
 
          // clear thread local storage
          ThreadLocalAssociation.clear();
+         DOMUtils.clearThreadLocals();
       }
    }
 
