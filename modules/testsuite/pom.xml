@@ -373,7 +373,7 @@
         </dependency>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss423</artifactId>
+          <artifactId>jbossws-jboss423x</artifactId>
         </dependency>
       </dependencies>
       <build>
@@ -408,7 +408,7 @@
       <dependencies>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss500</artifactId>
+          <artifactId>jbossws-jboss500Beta4</artifactId>
         </dependency>
         <dependency>
           <groupId>org.hibernate</groupId>
@@ -463,7 +463,7 @@
         </dependency>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss501</artifactId>
+          <artifactId>jbossws-jboss500x</artifactId>
         </dependency>
       </dependencies>
       <build>
