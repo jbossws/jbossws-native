@@ -13,7 +13,7 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [EJBTHREE-1377] Callback objects are improperly setup - ServiceRefMetaData.getServiceInterface() returns null
+# [JBMETA-64] Default WebServiceRef name parameter changed
 org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
 
 # [JBAS-5055] Failed to load users/passwords/role files
