@@ -116,6 +116,13 @@
     <exec dir="${basedir}" executable="mvn" failonerror="true">
       <arg line="${maven.opts} -Pbindist package assembly:directory"/>
     </exec>
+
+    <zip destfile="${stack.output.dir}/jbossws-native-dist.zip">
+      <zipfileset
+        dir="${stack.output.dir}/jbossws-native-dist"
+        includes="build/ deploy/ docs/ tests/ build.xml ant.properties"
+        prefix="jbossws-native-dist"/>
+    </zip>
   </target>
   
 </project>
