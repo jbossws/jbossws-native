@@ -518,8 +518,22 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return super.hasAttributes();
    }
 
-   // END Node interface ***********************************************************************************************
+   public org.w3c.dom.Node getPreviousSibling()
+   {
+      log.trace("getPreviousSibling");
+      expandToDOM();
+      return super.getPreviousSibling();
+   }
 
+   public org.w3c.dom.Node getNextSibling()
+   {
+      log.trace("getNextSibling");
+      expandToDOM();
+      return super.getNextSibling();
+   }
+
+   // END Node interface ***********************************************************************************************
+   
    public void writeElement(Writer writer) throws IOException
    {      
       if (soapContent instanceof DOMContent)
