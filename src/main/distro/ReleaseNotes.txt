@@ -25,7 +25,21 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-native-${project.version}
 ----------------------------------
 
-See: TODO
+Feature Request
+
+    TODO: enumerate
+
+Bug
+
+    TODO: enumerate
+
+Task
+
+    TODO: enumerate
+
+Errata
+
+    See: TODO: reference to associated JIRA issue
     
 Enjoy,
 The JBossWS Team
@@ -35,7 +49,35 @@ Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 What's new in jbossws-native-3.0.2.GA
 ----------------------------------------
 
-See: http://jira.jboss.org/jira/browse/JBWS-2220
+Feature Request
+
+    * [JBWS-652]  - Add JAAS certificate authentication support to ws-security implementation
+    * [JBWS-1278] - WSDL To Java, add a configuration option so all generated types can implement java.io.Serializable
+    * [JBWS-1316] - Add support for a configurable time tolerance value that handles clock skew
+    * [JBWS-1907] - authorization based on certificate used for wsse signature
+    * [JBWS-2156] - Allow JBossWS users to include xml declaration processing instruction in SOAP messages
+
+Bug
+
+    * [JBWS-2012] - Attachment support for JAX-WS collections
+    * [JBWS-2014] - MTOM + WS-Security not working
+    * [JBWS-2035] - Cannot determine variable name for void wrapper
+    * [JBWS-2089] - isXOPPackage() is returning an incorrect value
+    * [JBWS-2103] - JBoss tools classpath problem
+    * [JBWS-2153] - Cannot Extract Schema Definition
+    * [JBWS-2159] - Faults not handled correctly for WS-RM services
+    * [JBWS-2172] - Additional \n when restoring XOP elements
+
+Task
+
+    * [JBWS-2013] - Implement standard message context properties
+    * [JBWS-2116] - Sample for certificate authentication
+    * [JBWS-2123] - Update to jaxb-2.1.6  
+    * [JBWS-2124] - Expose http chunking through SOAPConnection
+
+Errata
+
+    See: http://jira.jboss.org/jira/browse/JBWS-2220
 
 What's new in jbossws-3.0.1-native-2.0.4
 ----------------------------------------
