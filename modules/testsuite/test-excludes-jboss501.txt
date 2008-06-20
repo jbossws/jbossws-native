@@ -27,7 +27,7 @@ org/jboss/test/ws/jaxws/samples/dar/**
 # [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
 
-# [JBAS-5257] jboss:service=defaultClassLoader is not registered with dynamic webapp deployment
+# [JBAS-5257] Cannot deploy through jax-ws endpoint API
 org/jboss/test/ws/jaxws/endpoint/**
 
 # [JBAS-5614] Cannot access <service-ref> in nested jar
