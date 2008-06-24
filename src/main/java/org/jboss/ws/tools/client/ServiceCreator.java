@@ -33,6 +33,7 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
+import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.interfaces.ServiceCreatorIntf;
 import org.jboss.wsf.common.JavaUtils;
 
@@ -239,13 +240,27 @@ public class ServiceCreator implements ServiceCreatorIntf
       writer.close();
    }
 
+   public static String convertInvalidCharacters(final String component)
+   {
+      String result = component;
+      for (int i = 0; i < result.length(); i++)
+      {
+         if (Character.isJavaIdentifierPart(result.charAt(i)) == false)
+         {
+            result = result.replace(result.charAt(i), '_');
+         }
+      }
+
+      return result;
+   }
+
    private String generateServiceMethodForWSDLEndpoint(WSDLEndpoint endpt)
    {
       StringBuilder buf = new StringBuilder("     public ");
       QName bindName = endpt.getBinding();
       WSDLBinding wbind = wsdl.getBinding(bindName);
 
-      buf.append(getReturnType(wbind)).append(" get");
+      buf.append(ToolsUtils.convertInvalidCharacters(getReturnType(wbind))).append(" get");
       buf.append(endpt.getName().getLocalPart()).append("()").append(" throws ServiceException;").append(newLine(1));
       return buf.toString();
    }
