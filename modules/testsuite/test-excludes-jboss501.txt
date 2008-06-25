@@ -13,11 +13,7 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [JBMETA-64] Default WebServiceRef name parameter changed
-org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase.*
-
 # [JBAS-5055] Failed to load users/passwords/role files
-org/jboss/test/ws/jaxws/webserviceref/StubPropertyTestCase.*
 org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase.*
 
 # [JBAS-5114] MessageDriven EJB3 does not create destination automatically
@@ -30,14 +26,5 @@ org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
 # [JBAS-5257] Cannot deploy through jax-ws endpoint API
 org/jboss/test/ws/jaxws/endpoint/**
 
-# [JBAS-5614] Cannot access <service-ref> in nested jar
-org/jboss/test/ws/jaxrpc/jbws331/**
-org/jboss/test/ws/jaxrpc/jbws626/**
-org/jboss/test/ws/jaxrpc/jbws772/**
-org/jboss/test/ws/jaxrpc/jbws1121/**
-
 # [JBWS-2217] Fix BPEL samples before AS50 goes final
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
-
-# [JBWS-2233] EJB3 webserviceref failure
-org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefEJB3TestCase.*
