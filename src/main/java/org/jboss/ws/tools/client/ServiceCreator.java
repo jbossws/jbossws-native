@@ -215,6 +215,7 @@ public class ServiceCreator implements ServiceCreatorIntf
       if (wsdl.getInterface(new QName(wsdl.getTargetNamespace(), serviceName)) != null)
          serviceName = new StringBuilder(serviceName).insert(serviceName.lastIndexOf("Service"), '_').toString();
 
+      serviceName = ToolsUtils.convertInvalidCharacters(serviceName);
       serviceName = JavaUtils.capitalize(serviceName);
 
       StringBuilder buf = new StringBuilder();
@@ -240,12 +241,12 @@ public class ServiceCreator implements ServiceCreatorIntf
       writer.close();
    }
 
-   public static String convertInvalidCharacters(final String component)
+   public static String removeHyphens(final String component)
    {
       String result = component;
       for (int i = 0; i < result.length(); i++)
       {
-         if (Character.isJavaIdentifierPart(result.charAt(i)) == false)
+         if (result.charAt(i) == '-')
          {
             result = result.replace(result.charAt(i), '_');
          }
@@ -260,7 +261,7 @@ public class ServiceCreator implements ServiceCreatorIntf
       QName bindName = endpt.getBinding();
       WSDLBinding wbind = wsdl.getBinding(bindName);
 
-      buf.append(ToolsUtils.convertInvalidCharacters(getReturnType(wbind))).append(" get");
+      buf.append(removeHyphens(getReturnType(wbind))).append(" get"); 
       buf.append(endpt.getName().getLocalPart()).append("()").append(" throws ServiceException;").append(newLine(1));
       return buf.toString();
    }

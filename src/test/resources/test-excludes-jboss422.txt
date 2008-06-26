@@ -1,0 +1,3 @@
+# EJB3/Injection excludes
+org/jboss/test/ws/jaxws/samples/webserviceref/**
+org/jboss/test/ws/jaxws/webserviceref/**

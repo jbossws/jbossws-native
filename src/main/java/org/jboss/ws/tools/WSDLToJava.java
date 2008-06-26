@@ -309,8 +309,8 @@ public class WSDLToJava implements WSDLToJavaIntf
          if (returnType == null)
             returnType = "void";
 
-         buf.append("  public " + ToolsUtils.convertInvalidCharacters(returnType) + "  ");
-         buf.append(ToolsUtils.convertInvalidCharacters(ToolsUtils.firstLetterLowerCase(op.getName().getLocalPart())));
+         buf.append("  public " + returnType + "  ");
+         buf.append(ToolsUtils.firstLetterLowerCase(op.getName().getLocalPart()));
          buf.append("(").append(paramBuffer);
 
          buf.append(") throws ");
@@ -646,7 +646,7 @@ public class WSDLToJava implements WSDLToJavaIntf
             className = holderWriter.getOrCreateHolder(className, getLocationForJavaGeneration());
          }
 
-         buf.append(ToolsUtils.convertInvalidCharacters(className));
+         buf.append(className);
 
          if (xt instanceof XSComplexTypeDefinition)
             generateJavaSource((XSComplexTypeDefinition)xt, xsmodel, containingElement);
@@ -655,16 +655,16 @@ public class WSDLToJava implements WSDLToJavaIntf
 
    private void createSEIFile(WSDLInterface intf, File loc) throws IOException
    {
-      String seiName = getServiceEndpointInterfaceName(intf);
+      String seiName = ToolsUtils.convertInvalidCharacters(getServiceEndpointInterfaceName(intf));
 
       StringBuilder buf = new StringBuilder();
       utils.writeJbossHeader(buf);
-      buf.append("package " + ToolsUtils.convertInvalidCharacters(seiPkgName) + ";" + newline);
-      buf.append("public interface  " + ToolsUtils.convertInvalidCharacters(seiName) + " extends java.rmi.Remote" + newline + "{" + newline);
+      buf.append("package " + seiPkgName + ";" + newline);
+      buf.append("public interface  " + seiName + " extends java.rmi.Remote" + newline + "{" + newline);
       appendMethods(intf, buf);
       buf.append("}" + newline);
 
-      File sei = utils.createPhysicalFile(loc, ToolsUtils.convertInvalidCharacters(seiName));
+      File sei = utils.createPhysicalFile(loc, seiName);
       FileWriter writer = new FileWriter(sei);
       writer.write(buf.toString());
       writer.flush();
