@@ -198,7 +198,7 @@ public class JavaWriter
       if (needToCreatePackageStructure(location, packageName))
          newLoc = utils.createPackage(location.getPath(), packageName);
       else newLoc = location;
-      String classname = utils.chop(filename, ".java");
+      String classname = utils.chop(ToolsUtils.convertInvalidCharacters(filename), ".java");
       File sei = utils.createPhysicalFile(newLoc, classname);
       StringBuilder buffer = new StringBuilder();
       utils.writeJbossHeader(buffer);

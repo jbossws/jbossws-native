@@ -33,6 +33,7 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
+import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.interfaces.ServiceCreatorIntf;
 import org.jboss.wsf.common.JavaUtils;
 
@@ -214,6 +215,7 @@ public class ServiceCreator implements ServiceCreatorIntf
       if (wsdl.getInterface(new QName(wsdl.getTargetNamespace(), serviceName)) != null)
          serviceName = new StringBuilder(serviceName).insert(serviceName.lastIndexOf("Service"), '_').toString();
 
+      serviceName = ToolsUtils.convertInvalidCharacters(serviceName);
       serviceName = JavaUtils.capitalize(serviceName);
 
       StringBuilder buf = new StringBuilder();
@@ -239,13 +241,27 @@ public class ServiceCreator implements ServiceCreatorIntf
       writer.close();
    }
 
+   public static String removeHyphens(final String component)
+   {
+      String result = component;
+      for (int i = 0; i < result.length(); i++)
+      {
+         if (result.charAt(i) == '-')
+         {
+            result = result.replace(result.charAt(i), '_');
+         }
+      }
+
+      return result;
+   }
+
    private String generateServiceMethodForWSDLEndpoint(WSDLEndpoint endpt)
    {
       StringBuilder buf = new StringBuilder("     public ");
       QName bindName = endpt.getBinding();
       WSDLBinding wbind = wsdl.getBinding(bindName);
 
-      buf.append(getReturnType(wbind)).append(" get");
+      buf.append(removeHyphens(getReturnType(wbind))).append(" get"); 
       buf.append(endpt.getName().getLocalPart()).append("()").append(" throws ServiceException;").append(newLine(1));
       return buf.toString();
    }
