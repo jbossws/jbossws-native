@@ -644,6 +644,17 @@
         <include name="*.*"/>
       </fileset>
     </war>
+
+    <!-- jaxws-jbws2250 -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jbws2250.war" webxml="${tests.output.dir}/resources/jaxws/jbws2250/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2250/**/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws2250/*TestCase.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbws2250/WEB-INF">
+        <include name="jboss-web.xml"/>
+      </webinf>
+    </war>
     
     <!-- jbossws-interop-wsa10.war -->
     <war warfile="${tests.output.dir}/libs/jbossws-interop-wsa10.war" webxml="${tests.output.dir}/resources/interop/wsa/WEB-INF/web.xml">

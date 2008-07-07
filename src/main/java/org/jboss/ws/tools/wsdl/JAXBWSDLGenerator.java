@@ -21,7 +21,14 @@
 */
 package org.jboss.ws.tools.wsdl;
 
-import com.sun.xml.bind.api.JAXBRIContext;
+import java.io.IOException;
+
+import javax.xml.bind.SchemaOutputResolver;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMResult;
+
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.extensions.security.Util;
@@ -29,12 +36,7 @@ import org.jboss.ws.metadata.wsdl.DOMTypes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.bind.SchemaOutputResolver;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
-import java.io.IOException;
+import com.sun.xml.bind.api.JAXBRIContext;
 
 /**
  * JAXBWSDLGenerator provides a JAXB based WSDLGenerator.
@@ -69,8 +71,7 @@ public class JAXBWSDLGenerator extends WSDLGenerator
          final Element element = types.getElement();
          final Element throwAway = doc.createElement("throw-away");
 
-         ctx.generateSchema(new SchemaOutputResolver()
-         {
+         ctx.generateSchema(new SchemaOutputResolver() {
             @Override
             public Result createOutput(String namespace, String file) throws IOException
             {
@@ -79,8 +80,18 @@ public class JAXBWSDLGenerator extends WSDLGenerator
                   wsdl.registerNamespaceURI(namespace, null);
 
                // JAXB creates an empty namespace due to type references, ignore it
-               DOMResult result = new DOMResult((namespace == null || namespace.length() == 0) ? throwAway : element);
-               result.setSystemId("replace-me");
+               DOMResult result = null;
+               if (namespace == null || namespace.length() == 0)
+               {
+                  result = new DOMResult(throwAway);
+                  result.setSystemId("remove-me");
+               }
+               else
+               {
+                  result = new DOMResult(element);
+                  result.setSystemId("replace-me");
+               }
+
                return result;
             }
          });
@@ -100,9 +111,15 @@ public class JAXBWSDLGenerator extends WSDLGenerator
    {
       for (Element child = Util.getFirstChildElement(element); child != null; child = Util.getNextSiblingElement(child))
       {
-         if ("import".equals(child.getLocalName()) && Constants.NS_SCHEMA_XSD.equals(child.getNamespaceURI()) && "replace-me".equals(child.getAttribute("schemaLocation")))
+         if ("import".equals(child.getLocalName()) && Constants.NS_SCHEMA_XSD.equals(child.getNamespaceURI())
+               && "replace-me".equals(child.getAttribute("schemaLocation")))
          {
             child.removeAttribute("schemaLocation");
+         }
+         else if ("import".equals(child.getLocalName()) && Constants.NS_SCHEMA_XSD.equals(child.getNamespaceURI())
+               && "remove-me".equals(child.getAttribute("schemaLocation")))
+         {
+            element.removeChild(child);
          }
          else
          {
