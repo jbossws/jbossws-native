@@ -402,13 +402,13 @@
     <profile>
       <id>jboss500</id>
       <properties>
-        <jboss.version>5.0.0.Beta4</jboss.version>
+        <jboss.version>5.0.0.CR1</jboss.version>
         <jbossws.integration.target>jboss500</jbossws.integration.target>
       </properties>
       <dependencies>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss500Beta4</artifactId>
+          <artifactId>jbossws-jboss500x</artifactId>
         </dependency>
         <dependency>
           <groupId>org.hibernate</groupId>
