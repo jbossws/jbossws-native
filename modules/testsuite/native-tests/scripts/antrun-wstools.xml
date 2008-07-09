@@ -26,6 +26,7 @@
       </classpath>
     </taskdef>
     
+    <macro-wstools dest="tools/jbpapp921" config="tools/jbpapp921/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/docstyle/wrapped/WEB-INF" config="jaxrpc/samples/docstyle/wrapped/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/docstyle/bare/WEB-INF" config="jaxrpc/samples/docstyle/bare/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/dynamichandler/WEB-INF" config="jaxrpc/samples/dynamichandler/wstools-config.xml"/>

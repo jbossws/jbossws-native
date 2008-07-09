@@ -22,6 +22,7 @@
 package org.jboss.test.ws.tools.jbpapp921;
 
 import java.io.File;
+import java.util.Arrays;
 
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
@@ -30,21 +31,21 @@ import org.jboss.wsf.test.JBossWSTest;
 
 public class JBPAPP921TestCase extends JBossWSTest
 {
-
-   private static final String resourceDir = "resources/tools/jbpapp921";
-   private static final String toolsDir = "tools/jbpapp921";
+   private static final String resourceDir = "tools/jbpapp921";
+   private static final String toolsDir = "target/wstools/jbpapp921/output";
 
    public void testGenerate() throws Exception
    {
-      String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
+      String realResourceDir = getResourceFile("tools/jbpapp921").getAbsolutePath(); 
+      String[] args = new String[] { "-dest", toolsDir, "-config", realResourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
       compareSource("Models_ServiceIM_ServiceProxyService.java");
       compareSource("ValidationEvent_test.java");
    }
 
-   private static void compareSource(final String fileName) throws Exception
+   private void compareSource(final String fileName) throws Exception
    {
-      File expected = new File(resourceDir + "/" + fileName);
+      File expected = getResourceFile(resourceDir + "/" + fileName);
       File generated = new File(toolsDir + "/org/jboss/test/ws/jbpapp921/" + fileName);
 
       JBossSourceComparator sc = new JBossSourceComparator(expected, generated);

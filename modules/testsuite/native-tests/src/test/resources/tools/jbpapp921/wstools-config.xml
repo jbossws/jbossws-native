@@ -1,4 +1,4 @@
 <configuration>
-  <wsdl-java location="resources/tools/jbpapp921/test.wsdl">
+  <wsdl-java location="@test.resources.directory@/tools/jbpapp921/test.wsdl">
   </wsdl-java>
 </configuration>
