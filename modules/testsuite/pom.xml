@@ -415,6 +415,11 @@
           <artifactId>hibernate</artifactId>
           <version>${hibernate.version}</version>
         </dependency>
+        <dependency>
+          <groupId>org.jboss.client</groupId>
+          <artifactId>jbossall-client</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
       </dependencies>
       <build>
         <plugins>
@@ -454,6 +459,11 @@
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss500x</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.client</groupId>
+          <artifactId>jbossall-client</artifactId>
+          <version>${jboss.version}</version>
         </dependency>
       </dependencies>
       <build>
