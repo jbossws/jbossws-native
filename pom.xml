@@ -52,7 +52,7 @@
   <!-- Properties -->
   <properties>
     <jbossws.common.version>1.0.5.GA</jbossws.common.version>
-    <jbossws.framework.version>3.0.2.GA</jbossws.framework.version>
+    <jbossws.framework.version>3.0.3-SNAPSHOT</jbossws.framework.version>
     <jbossws.spi.version>1.0.4.GA</jbossws.spi.version>
     <jbossws.jboss421.version>3.0.2.GA</jbossws.jboss421.version>
     <jbossws.jboss422.version>3.0.2.GA</jbossws.jboss422.version>
