@@ -434,10 +434,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
-              <!-- TODO: shouldn't jboss-ejb3-core be defined as dependency in jbossall-client pom? -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/server/default/lib/jboss-ejb3-core.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -483,10 +479,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
-              <!-- TODO: shouldn't jboss-ejb3-core be defined as dependency in jbossall-client pom? -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/server/default/lib/jboss-ejb3-core.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
