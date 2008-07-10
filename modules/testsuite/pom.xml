@@ -493,7 +493,8 @@
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
               <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/client/jboss-client.jar</additionalClasspathElement>
+                <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
+                <additionalClasspathElement>${jboss.home}/server/default/lib/jboss-ejb3-core.jar</additionalClasspathElement>
               </additionalClasspathElements>
             </configuration>
           </plugin>
