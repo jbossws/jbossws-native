@@ -416,8 +416,13 @@
           <version>${hibernate.version}</version>
         </dependency>
         <dependency>
-          <groupId>org.jboss.client</groupId>
-          <artifactId>jbossall-client</artifactId>
+          <groupId>org.jboss.jbossas</groupId>
+          <artifactId>jboss-as-ejb3</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.javaee</groupId>
+          <artifactId>jboss-javaee</artifactId>
           <version>${jboss.version}</version>
         </dependency>
       </dependencies>
@@ -434,6 +439,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/client/jboss-client.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -461,8 +469,13 @@
           <version>${hibernate.version}</version>
         </dependency>
         <dependency>
-          <groupId>org.jboss.client</groupId>
-          <artifactId>jbossall-client</artifactId>
+          <groupId>org.jboss.jbossas</groupId>
+          <artifactId>jboss-as-ejb3</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.javaee</groupId>
+          <artifactId>jboss-javaee</artifactId>
           <version>${jboss.version}</version>
         </dependency>
       </dependencies>
@@ -479,6 +492,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/client/jboss-client.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
