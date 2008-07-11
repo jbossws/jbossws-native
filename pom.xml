@@ -70,7 +70,7 @@
     <jboss.logging.version>2.0.5.GA</jboss.logging.version>
     <jboss.microcontainer.version>2.0.0.Beta11</jboss.microcontainer.version>
     <jboss.remoting.version>2.4.0.CR1</jboss.remoting.version>
-    <juddi.service.version>1.2.0.GA</juddi.service.version>
+    <juddi.service.version>1.2.0.SP2-SNAPSHOT</juddi.service.version>
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
     <sun.jaxws.version>2.1.3</sun.jaxws.version>
     <woodstox.version>3.1.1</woodstox.version>
@@ -305,7 +305,7 @@
         <version>${jboss.jaxbintros.version}</version>
       </dependency>
       <dependency>
-        <groupId>jboss.jaxr</groupId>
+        <groupId>org.jboss.jaxr</groupId>
         <artifactId>juddi-service</artifactId>
         <version>${juddi.service.version}</version>
         <type>sar</type>
