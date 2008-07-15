@@ -57,7 +57,7 @@
     <jbossws.jboss421.version>3.0.2.GA</jbossws.jboss421.version>
     <jbossws.jboss422.version>3.0.2.GA</jbossws.jboss422.version>
     <jbossws.jboss423.version>3.0.2.GA</jbossws.jboss423.version>
-    <jbossws.jboss500.version>3.0.2-SNAPSHOT</jbossws.jboss500.version>
+    <jbossws.jboss500.version>3.0.2.GA</jbossws.jboss500.version>
     <jbossws.jboss501.version>3.0.2-SNAPSHOT</jbossws.jboss501.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
@@ -147,18 +147,18 @@
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss500x</artifactId>
+        <artifactId>jbossws-jboss500CR1</artifactId>
         <version>${jbossws.jboss500.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss500x</artifactId>
+        <artifactId>jbossws-jboss500CR1</artifactId>
         <version>${jbossws.jboss500.version}</version>
         <classifier>container</classifier>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss500x</artifactId>
+        <artifactId>jbossws-jboss500CR1</artifactId>
         <version>${jbossws.jboss500.version}</version>
         <classifier>resources</classifier>
         <type>zip</type>
