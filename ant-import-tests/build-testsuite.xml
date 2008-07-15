@@ -144,11 +144,19 @@
 		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/oneway/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/oneway/wstools-config.xml"/>
 		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/rpcstyle/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/rpcstyle/wstools-config.xml"/>
 		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/secureejb/META-INF" config="${tests.resources.dir}/jaxrpc/samples/secureejb/wstools-config.xml"/>
+        <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsaddr/hello/wstools-config.xml"/>
+        <wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsaddr/replyto/wstools-config.xml"/>
 		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsbpel/hello/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wsbpel/hello/wstools-config.xml"/>
 		<wstools dest="${tests.output.dir}/wstools/resources/jaxrpc/samples/wssecurity/WEB-INF" config="${tests.resources.dir}/jaxrpc/samples/wssecurity/wstools-config.xml"/>
 		<move todir="${tests.output.dir}/wstools/java">
 			<fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
 		</move>
+        <move todir="${tests.output.dir}/wstools/java">
+            <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" includes="org/**"/>
+        </move>
+        <move todir="${tests.output.dir}/wstools/java">
+            <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" includes="org/**"/>
+        </move>        
 
 		<!-- Copy generated resources -->
 		<copy todir="${tests.output.dir}/resources">
