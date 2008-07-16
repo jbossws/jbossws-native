@@ -165,12 +165,5 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
 
       // secure wsdl access
       sepMetaData.setSecureWSDLAccess(anWebContext.secureWSDLAccess());
-
-      // virtual hosts
-      String[] virtualHosts = anWebContext.virtualHosts();
-      if (virtualHosts != null & virtualHosts.length > 0)
-      {
-         sepMetaData.setVirtualHosts(virtualHosts);
-      }
    }
 }

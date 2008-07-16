@@ -64,8 +64,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
    private ObjectName sepID;
    // The HTTP context root
    private String contextRoot;
-   // The HTTP virtual hosts 
-   private String[] virtualHosts;
    // The HTTP url parttern
    private String urlPattern;
    // The optional transport guarantee
@@ -133,16 +131,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setServiceEndpointID(ObjectName endpointID)
    {
       this.sepID = endpointID;
-   }
-
-   public String[] getVirtualHosts()
-   {
-      return virtualHosts;
-   }
-
-   public void setVirtualHosts(String[] virtualHosts)
-   {
-      this.virtualHosts = virtualHosts;
    }
 
    public String getContextRoot()
