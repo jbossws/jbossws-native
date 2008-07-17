@@ -41,7 +41,6 @@ import org.jboss.ws.metadata.jaxrpcmapping.VariableMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlMessageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.WsdlReturnValueMapping;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.wsf.test.JBossWSTest;
 
 /**
  *  Validates a JAXRPC Mapping File against another

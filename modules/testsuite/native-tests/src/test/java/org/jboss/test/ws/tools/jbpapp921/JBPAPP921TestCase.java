@@ -22,12 +22,13 @@
 package org.jboss.test.ws.tools.jbpapp921;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.JaxrpcMappingValidator;
 import org.jboss.ws.tools.WSTools;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
+import org.w3c.dom.Element;
 
 public class JBPAPP921TestCase extends JBossWSTest
 {
@@ -36,11 +37,19 @@ public class JBPAPP921TestCase extends JBossWSTest
 
    public void testGenerate() throws Exception
    {
-      String realResourceDir = getResourceFile("tools/jbpapp921").getAbsolutePath(); 
+      String realResourceDir = getResourceFile("tools/jbpapp921").getAbsolutePath();
       String[] args = new String[] { "-dest", toolsDir, "-config", realResourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
       compareSource("Models_ServiceIM_ServiceProxyService.java");
       compareSource("ValidationEvent_test.java");
+
+      JaxrpcMappingValidator mappingValidator = new JaxrpcMappingValidator();
+      File jaxrpcMapping = getResourceFile(resourceDir + "/jaxrpc-mapping.xml");
+      mappingValidator.validate(jaxrpcMapping.getAbsolutePath(), toolsDir + "/jaxrpc-mapping.xml");
+
+      Element exp = DOMUtils.parse(getResourceFile(resourceDir + "/webservices.xml").toURL().openStream());
+      Element act = DOMUtils.parse(new File(toolsDir + "/webservices.xml").toURL().openStream());
+      assertEquals(exp, act);
    }
 
    private void compareSource(final String fileName) throws Exception

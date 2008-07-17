@@ -200,6 +200,7 @@ public class MappingFileGeneratorHelper
          String javaPortName = utils.chopPortType(portName);
          if (wsdlDefinitions.getService(javaPortName) != null)
             javaPortName += "_PortType";
+         javaPortName = ToolsUtils.convertInvalidCharacters(javaPortName);
 
          ServiceEndpointInterfaceMapping seim = new ServiceEndpointInterfaceMapping(jwm);
          String className = ToolsUtils.firstLetterUpperCase(javaPortName);
