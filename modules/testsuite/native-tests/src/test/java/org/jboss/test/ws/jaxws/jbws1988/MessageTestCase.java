@@ -138,6 +138,42 @@ public class MessageTestCase extends JBossWSTest
       }
    }
    
+   public void testDecodeMessageDefaulNoncetEncoding() throws Exception
+   {
+      String envStr = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
+            "<env:Header>" +
+            "<wsse:Security env:mustUnderstand='1' xmlns:wsse='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' " +
+            "xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>" +
+            "<wsse:UsernameToken wsu:Id='token-1-1205341951321-19004769'>" +
+            "<wsse:Username>kermit</wsse:Username>" +
+            "<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
+            "<wsse:Nonce>gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=</wsse:Nonce>" +
+            "<wsse:Created>CREATED</wsse:Created>" +
+            "</wsse:UsernameToken>" +
+            "</wsse:Security>" +
+            "</env:Header>" +
+            "<env:Body><ns1:echo xmlns:ns1='http://org.jboss.ws/jbws1988'><arg0>Hi!</arg0></ns1:echo></env:Body>" +
+            "</env:Envelope>";
+
+      WSSecurityConfiguration configuration = WSSecurityOMFactory.newInstance().parse(new StringReader(serverConf));
+      
+      //"2008-03-12T17:12:31.310Z"
+      Calendar created = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+      
+      sec.decodeMessage(configuration, getMessage(created, envStr), null);
+      created.add(Calendar.MINUTE, -10);
+      
+      try
+      {
+         sec.decodeMessage(configuration, getMessage(created, envStr), null);
+         fail();
+      }
+      catch (Exception e)
+      {
+         //OK
+      }
+   }
+   
    private SOAPMessage getMessage(Calendar created, String envStr) throws Exception
    {
       envStr = envStr.replaceAll("CREATED", SimpleTypeBindings.marshalDateTime(created));

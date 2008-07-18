@@ -95,7 +95,7 @@ public class UsernameToken implements Token
       {
          Element elem = itNonce.next();
          String encodingType = elem.getAttribute("EncodingType");
-         if (encodingType != null && !Constants.BASE64_ENCODING_TYPE.equalsIgnoreCase(encodingType))
+         if (encodingType != null && encodingType.length() > 0 && !Constants.BASE64_ENCODING_TYPE.equalsIgnoreCase(encodingType))
             throw new WSSecurityException("Unsupported nonce encoding type: " + encodingType);
          this.nonce = XMLUtils.getFullTextChildrenFromElement(elem);
       }
