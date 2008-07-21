@@ -74,6 +74,7 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -154,9 +155,10 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
          if (handlerResolver == null)
          {
             handlerResolver = new HandlerResolverImpl();
-            handlerResolver.initHandlerChain(epMetaData, HandlerType.PRE, true);
-            handlerResolver.initHandlerChain(epMetaData, HandlerType.ENDPOINT, true);
-            handlerResolver.initHandlerChain(epMetaData, HandlerType.POST, true);
+            EndpointConfigMetaData ecmd = epMetaData.getEndpointConfigMetaData();
+            handlerResolver.initHandlerChain(ecmd, HandlerType.PRE, true);
+            handlerResolver.initHandlerChain(ecmd, HandlerType.ENDPOINT, true);
+            handlerResolver.initHandlerChain(ecmd, HandlerType.POST, true);
             
             PortInfo portInfo = epMetaData.getPortInfo();
             List<Handler> preChain = handlerResolver.getHandlerChain(portInfo, HandlerType.PRE);

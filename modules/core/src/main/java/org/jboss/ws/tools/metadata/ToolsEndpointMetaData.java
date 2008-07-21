@@ -24,6 +24,7 @@ package org.jboss.ws.tools.metadata;
 // $Id$
 
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 
@@ -43,8 +44,10 @@ public class ToolsEndpointMetaData extends EndpointMetaData
    public ToolsEndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
    {
       super(service, portName, portTypeName, Type.JAXRPC);
-      super.configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
-      super.configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
+     
+      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
+      ecmd.setConfigFile(ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE);
+      ecmd.setConfigName(ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME);
    }
    
    public String getEndpointAddress()

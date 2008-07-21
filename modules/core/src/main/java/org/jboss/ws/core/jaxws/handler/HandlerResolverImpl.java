@@ -45,7 +45,7 @@ import javax.xml.ws.soap.SOAPBinding;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -79,12 +79,28 @@ public class HandlerResolverImpl implements HandlerResolver
       protocolMap.put("##XML_HTTP", HTTPBinding.HTTP_BINDING);
    }
 
-   private List<ScopedHandler> preHandlers = new ArrayList<ScopedHandler>();
-   private List<ScopedHandler> jaxwsHandlers = new ArrayList<ScopedHandler>();
-   private List<ScopedHandler> postHandlers = new ArrayList<ScopedHandler>();
+   private final List<ScopedHandler> preHandlers;
+   private final List<ScopedHandler> jaxwsHandlers;
+   private final List<ScopedHandler> postHandlers;
 
    // understood headers
-   Set<QName> headers = new HashSet<QName>();
+   private final Set<QName> headers;
+
+   public HandlerResolverImpl()
+   {
+      preHandlers = new ArrayList<ScopedHandler>();
+      jaxwsHandlers = new ArrayList<ScopedHandler>();
+      postHandlers = new ArrayList<ScopedHandler>();
+      headers = new HashSet<QName>();
+   }
+
+   public HandlerResolverImpl(HandlerResolverImpl parent)
+   {
+      preHandlers = new ArrayList<ScopedHandler>(parent.preHandlers);
+      jaxwsHandlers = new ArrayList<ScopedHandler>(parent.jaxwsHandlers);
+      postHandlers = new ArrayList<ScopedHandler>(parent.postHandlers);
+      headers = new HashSet<QName>(parent.headers);
+   }
 
    public Set<QName> getHeaders()
    {
@@ -122,7 +138,7 @@ public class HandlerResolverImpl implements HandlerResolver
          addHandler(classLoader, HandlerType.ENDPOINT, handlerMetaData);
    }
 
-   public void initHandlerChain(EndpointMetaData epMetaData, HandlerType type, boolean clearExistingHandlers)
+   public void initHandlerChain(EndpointConfigMetaData epConfigMetaData, HandlerType type, boolean clearExistingHandlers)
    {
       log.debug("initHandlerChain: " + type);
 
@@ -131,8 +147,8 @@ public class HandlerResolverImpl implements HandlerResolver
       if (clearExistingHandlers)
          handlerMap.clear();
 
-      ClassLoader classLoader = epMetaData.getClassLoader();
-      for (HandlerMetaData handlerMetaData : epMetaData.getHandlerMetaData(type))
+      ClassLoader classLoader = epConfigMetaData.getEndpointMetaData().getClassLoader();
+      for (HandlerMetaData handlerMetaData : epConfigMetaData.getHandlerMetaData(type))
          addHandler(classLoader, type, handlerMetaData);
    }
 
@@ -185,7 +201,7 @@ public class HandlerResolverImpl implements HandlerResolver
          log.debug("Cannot inject resources: " + th.toString());
          return;
       }
-      
+
       Class<? extends Handler> handlerClass = handler.getClass();
       for (Field field : handlerClass.getFields())
       {
@@ -211,7 +227,7 @@ public class HandlerResolverImpl implements HandlerResolver
          log.debug("Cannot call post construct: " + th.toString());
          return;
       }
-      
+
       Class<? extends Handler> handlerClass = handler.getClass();
       for (Method method : handlerClass.getMethods())
       {
@@ -253,7 +269,8 @@ public class HandlerResolverImpl implements HandlerResolver
          handlers = jaxwsHandlers;
       else if (type == HandlerType.POST)
          handlers = postHandlers;
-      else throw new IllegalArgumentException("Illegal handler type: " + type);
+      else
+         throw new IllegalArgumentException("Illegal handler type: " + type);
 
       return handlers;
    }

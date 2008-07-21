@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 import java.util.Set;
 
 import javax.activation.DataHandler;
@@ -53,7 +52,6 @@ import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 import javax.xml.ws.wsaddressing.BindingProvider21;
 
-import org.jboss.logging.Logger;
 import org.jboss.remoting.transport.http.HTTPMetadataConstants;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
@@ -79,9 +77,8 @@ import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequenceResponse;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequence;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
-import org.jboss.ws.metadata.config.Configurable;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
@@ -92,13 +89,12 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jul-2006
  */
-public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.wsrm.api.RMProvider, BindingProvider21, Configurable
+public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.wsrm.api.RMProvider, BindingProvider21
 {
-   // provide logging
-   private static Logger log = Logger.getLogger(ClientImpl.class);
 
    // the associated endpoint meta data
    private final ClientEndpointMetaData epMetaData;
+   private EndpointConfigMetaData epConfigMetaData;
 
    // Keep a handle on the resolver so that updateConfig calls may revisit the associated chains
    private final HandlerResolver handlerResolver;
@@ -125,14 +121,18 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       setTargetEndpointAddress(epMetaData.getEndpointAddress());
 
       this.epMetaData = (ClientEndpointMetaData)epMetaData;
-      this.handlerResolver = handlerResolver;
+      this.epConfigMetaData = epMetaData.getEndpointConfigMetaData();
+
+      if (handlerResolver instanceof HandlerResolverImpl)
+      {
+         this.handlerResolver = new HandlerResolverImpl((HandlerResolverImpl)handlerResolver);
+      }
+      else
+      {
+         this.handlerResolver = handlerResolver;
+      }
 
       initBindingHandlerChain(false);
-
-      // The config may change at some later point in time
-      // when applications utilize the ServiceDecorator API
-      // When clients change the config-name, we need reset the handlerchain
-      ((ConfigurationProvider)epMetaData).registerConfigObserver(this);
    }
 
    /**
@@ -152,9 +152,9 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          if (jbossHandlerResolver) // knows about PRE and POST handlers
          {
             HandlerResolverImpl impl = (HandlerResolverImpl)handlerResolver;
-            impl.initHandlerChain(epMetaData, HandlerType.PRE, clearExistingHandlers);
-            impl.initHandlerChain(epMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
-            impl.initHandlerChain(epMetaData, HandlerType.POST, clearExistingHandlers);
+            impl.initHandlerChain(epConfigMetaData, HandlerType.PRE, clearExistingHandlers);
+            impl.initHandlerChain(epConfigMetaData, HandlerType.ENDPOINT, clearExistingHandlers);
+            impl.initHandlerChain(epConfigMetaData, HandlerType.POST, clearExistingHandlers);
 
             List<Handler> preChain = impl.getHandlerChain(portInfo, HandlerType.PRE);
             List<Handler> postChain = impl.getHandlerChain(portInfo, HandlerType.POST);
@@ -167,17 +167,6 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          List<Handler> endpointChain = handlerResolver.getHandlerChain(portInfo);
          binding.setHandlerChain(endpointChain);
       }
-   }
-
-   /**
-    * Callback when the config-name or config-file changes.
-    */
-   public void update(Observable observable, Object object)
-   {
-      log.debug("Configuration change event received. Reconfigure handler chain: " + object);
-
-      // re-populate the binding handler chain
-      initBindingHandlerChain(true);
    }
 
    @Override
@@ -325,7 +314,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
             {
                if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
                {
-                  Map<String, Object> wsrmResCtx = (Map<String, Object>) msgContext.get(RMConstant.RESPONSE_CONTEXT);
+                  Map<String, Object> wsrmResCtx = (Map<String, Object>)msgContext.get(RMConstant.RESPONSE_CONTEXT);
                   if (wsrmResCtx != null)
                   {
                      RMConstants wsrmConstants = RMProvider.get().getConstants();
@@ -475,10 +464,29 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       throw new NotImplementedException();
    }
 
+   public EndpointConfigMetaData getEndpointConfigMetaData()
+   {
+      return epConfigMetaData;
+   }
+
    public void setConfigName(String configName, String configFile)
    {
-      ConfigurationProvider configProvider = (ConfigurationProvider)getEndpointMetaData();
-      configProvider.setConfigName(configName, configFile);
+      if (configName == null)
+         throw new IllegalArgumentException("Config name cannot be null");
+
+      String orgConfigName = epConfigMetaData.getConfigName();
+      String orgConfigFile = epConfigMetaData.getConfigFile();
+
+      if (configFile == null)
+      {
+         configFile = orgConfigFile;
+      }
+
+      if (orgConfigName.equals(configName) == false || orgConfigFile.equals(configFile) == false)
+      {
+         epConfigMetaData = this.epMetaData.createEndpointConfigMetaData(configName, configFile);
+         initBindingHandlerChain(true);
+      }
    }
 
    /**
@@ -522,7 +530,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
       try
       {
          // set up addressing data
-         RMClientSequence candidateSequence = new RMClientSequence(getEndpointMetaData().getConfig().getRMMetaData());
+         RMClientSequence candidateSequence = new RMClientSequence(this.epConfigMetaData.getConfig().getRMMetaData());
          String address = getEndpointMetaData().getEndpointAddress();
          String action = RMAddressingConstants.CREATE_SEQUENCE_WSA_ACTION;
          AddressingProperties addressingProps = null;
@@ -550,7 +558,8 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          invoke(createSequenceQN, new Object[] {}, getBindingProvider().getResponseContext());
          // read WSRM sequence id from response context
          Map rmResponseContext = (Map)getBindingProvider().getResponseContext().get(RMConstant.RESPONSE_CONTEXT);
-         RMCreateSequenceResponse createSequenceResponse = ((RMCreateSequenceResponse)((Map)rmResponseContext.get(RMConstant.PROTOCOL_MESSAGES_MAPPING)).get(RMProvider.get().getConstants().getCreateSequenceResponseQName())); 
+         RMCreateSequenceResponse createSequenceResponse = ((RMCreateSequenceResponse)((Map)rmResponseContext.get(RMConstant.PROTOCOL_MESSAGES_MAPPING)).get(RMProvider
+               .get().getConstants().getCreateSequenceResponseQName()));
          String outboundId = createSequenceResponse.getIdentifier();
          candidateSequence.setClient(this);
          candidateSequence.setOutboundId(outboundId);
@@ -563,7 +572,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          throw new RMException("Unable to create WSRM sequence", e);
       }
    }
-   
+
    public void closeSequence()
    {
       try

@@ -63,7 +63,6 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
-import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
@@ -109,19 +108,14 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // The parent meta data.
    private ServiceMetaData serviceMetaData;
 
-   // The REQUIRED endpoint config
-   private CommonConfig config;
-
+   // The REQUIRED configuration meta data.
+   private EndpointConfigMetaData configMetaData;
    // The REQUIRED name
    private QName portName;
    // The REQUIRED binding id
    private String bindingId;
    // The REQUIRED name of the WSDL interface/portType
    private QName portTypeName;
-   // The REQUIRED config-name
-   protected String configName;
-   // The REQUIRED config-file
-   protected String configFile;
    // The endpoint interface name
    private String seiName;
    // The endpoint interface
@@ -142,10 +136,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private Type type;
    // The list of service meta data
    private List<OperationMetaData> operations = new ArrayList<OperationMetaData>();
-   // The optional handlers
-   private List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
-   // True if the handlers are initialized
-   private boolean handlersInitialized;
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
    // All of the registered types
@@ -162,7 +152,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private JAXBContextCache jaxbCache = new JAXBContextCache();
 
    private List<BindingCustomization> bindingCustomization = new ArrayList<BindingCustomization>();
-   
+
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
    {
       this.serviceMetaData = service;
@@ -373,7 +363,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       return features.isFeatureEnabled(key);
    }
-   
+
    public FeatureSet getFeatures()
    {
       return features;
@@ -393,7 +383,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       this.documentation = documentation;
    }
-   
+
    public List<OperationMetaData> getOperations()
    {
       return new ArrayList<OperationMetaData>(operations);
@@ -498,48 +488,37 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void addHandlers(List<HandlerMetaData> configHandlers)
    {
-      for (HandlerMetaData handler : configHandlers)
-         handler.setEndpointMetaData(this);
-      handlers.addAll(configHandlers);
+      getEndpointConfigMetaData().addHandlers(configHandlers);
    }
 
    public void addHandler(HandlerMetaData handler)
    {
-      handler.setEndpointMetaData(this);
-      handlers.add(handler);
+      getEndpointConfigMetaData().addHandler(handler);
    }
 
    public void clearHandlers()
    {
-      handlers.clear();
-      handlersInitialized = false;
+      getEndpointConfigMetaData().clearHandlers();
    }
 
    public List<HandlerMetaData> getHandlerMetaData(HandlerType type)
    {
-      List<HandlerMetaData> typeHandlers = new ArrayList<HandlerMetaData>();
-      for (HandlerMetaData hmd : handlers)
-      {
-         if (hmd.getHandlerType() == type || type == HandlerType.ALL)
-            typeHandlers.add(hmd);
-      }
-      return typeHandlers;
+      return getEndpointConfigMetaData().getHandlerMetaData(type);
    }
 
    public boolean isHandlersInitialized()
    {
-      return handlersInitialized;
+      return getEndpointConfigMetaData().isHandlersInitialized();
    }
 
    public void setHandlersInitialized(boolean flag)
    {
-      this.handlersInitialized = flag;
+      getEndpointConfigMetaData().setHandlersInitialized(flag);
    }
 
    public void validate()
    {
-      for (HandlerMetaData handler : handlers)
-         handler.validate();
+      getEndpointConfigMetaData().validate();
 
       for (OperationMetaData opMetaData : operations)
          opMetaData.validate();
@@ -558,9 +537,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       // reset sei class
       seiClass = null;
 
-      // Initialize handlers
-      for (HandlerMetaData handler : handlers)
-         handler.eagerInitialize();
+      getEndpointConfigMetaData().initializeInternal();
 
       eagerInitializeOperations();
       eagerInitializeTypes();
@@ -663,21 +640,21 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
             if (factoryCreator instanceof JAXBAccessorFactoryCreator)
                useJAXBAccessorFactory = true;
-            
+
             types.add(paramMetaData.getJavaType());
          }
-         
+
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
          {
             AccessorFactoryCreator factoryCreator = retParam.getAccessorFactoryCreator();
             if (factoryCreator instanceof JAXBAccessorFactoryCreator)
                useJAXBAccessorFactory = true;
-            
+
             types.add(retParam.getJavaType());
          }
       }
-      
+
       // Create a JAXBContext for those types
       JAXBRIContext jaxbCtx = null;
       if (useJAXBAccessorFactory)
@@ -685,7 +662,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          Class[] typeArr = new Class[types.size()];
          jaxbCtx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(types.toArray(typeArr));
       }
-      
+
       // Create the accessors using a shared JAXBContext 
       for (OperationMetaData opMetaData : operations)
       {
@@ -693,7 +670,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             createAccessor(paramMetaData, jaxbCtx);
          }
-         
+
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
             createAccessor(retParam, jaxbCtx);
@@ -705,7 +682,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
       if (factoryCreator instanceof JAXBAccessorFactoryCreator)
          ((JAXBAccessorFactoryCreator)factoryCreator).setJAXBContext(jaxbCtx);
-      
+
       if (paramMetaData.getWrappedParameters() != null)
       {
          AccessorFactory factory = factoryCreator.create(paramMetaData);
@@ -713,7 +690,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             wParam.setAccessor(factory.create(wParam));
       }
    }
-   
+
    // ---------------------------------------------------------------
    // Configuration provider impl
 
@@ -722,9 +699,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
     */
    public void configure(Configurable configurable)
    {
-      // Make sure we have a configuration
-      if (config == null)
-         initEndpointConfig();
+      CommonConfig config = getConfig();
 
       // SOAPBinding configuration
       if (configurable instanceof CommonBindingProvider)
@@ -762,19 +737,34 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public String getConfigFile()
    {
-      return configFile;
+      return getEndpointConfigMetaData().getConfigFile();
    }
 
    public String getConfigName()
    {
-      return configName;
+      return getEndpointConfigMetaData().getConfigName();
+   }
+
+   public EndpointConfigMetaData getEndpointConfigMetaData()
+   {
+      if (configMetaData == null)
+         configMetaData = new EndpointConfigMetaData(this);
+
+      return this.configMetaData;
    }
 
    public CommonConfig getConfig()
    {
+      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
+      CommonConfig config = ecmd.getConfig();
+
       // Make sure we have a configuration
       if (config == null)
-         initEndpointConfig();
+      {
+         // No base configuration. 
+         initEndpointConfigMetaData(ecmd, null);
+         config = ecmd.getConfig();
+      }
 
       return config;
    }
@@ -794,39 +784,82 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (configName == null)
          throw new IllegalArgumentException("Config name cannot be null");
 
-      if (configFile != null)
-         this.configFile = configFile;
-
-      if (configName.equals(this.configName) == false)
+      if (configFile == null)
       {
-         this.configName = configName;
+         configFile = getEndpointConfigMetaData().getConfigFile();
+      }
 
-         log.debug("Reconfiguration forced, new config is '" + configName + "'");
-         initEndpointConfig();
+      if (configName.equals(getEndpointConfigMetaData().getConfigName()) == false || configFile.equals(getEndpointConfigMetaData().getConfigFile()) == false)
+      {
+         log.debug("Reconfiguration forced, new config is '" + configName + "' file is '" + configFile + "'");
+
+         this.configMetaData = createEndpointConfigMetaData(configName, configFile);
          configObservable.doNotify(configName);
       }
    }
 
-   public void initEndpointConfig()
+   /**
+    * The factory method to create and initialise a new EndpointConfigMetaData, the current 
+    * EndpointConfigMetaData will be used as the base to backup the RMMD.
+    * 
+    * This method does not set the EndpointConfigMetaData as it can be used by clients to create 
+    * a local configuration not stored in the EndpointMetaData.
+    */
+   protected EndpointConfigMetaData createEndpointConfigMetaData(String configName, String configFile)
    {
-      log.debug("Create new config [name=" + getConfigName() + ",file=" + getConfigFile() + "]");
-      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      List<RMPortConfig> rmPortMetaData = backupRMMD();
-      config = factory.getConfig(getRootFile(), getConfigName(), getConfigFile());
-      propagateRMMD(rmPortMetaData);
+      EndpointConfigMetaData ecmd = new EndpointConfigMetaData(this);
+      ecmd.setConfigName(configName);
+      ecmd.setConfigFile(configFile);
 
-      reconfigHandlerMetaData();
+      initEndpointConfigMetaData(ecmd, configMetaData);
+
+      return ecmd;
    }
 
-   private List<RMPortConfig> backupRMMD()
+   public void initEndpointConfig()
+   {
+      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
+      // At the time this method is called initialisation may have already happened
+      // always take the current ECMD as a base in case there is anything to backup. 
+      initEndpointConfigMetaData(ecmd, ecmd);
+   }
+
+   /**
+    * Initialise the toInitialise EndpointConfigMeta but first backup the RM Meta Data from
+    * the base EndpointConfigMetaData.
+    * 
+    * @param toInitialise - The EndpointConfigMetaData to initialise.
+    * @param base - The base EndpointConfigMetaData to take the RMMD from.
+    */
+   private void initEndpointConfigMetaData(EndpointConfigMetaData toInitialise, EndpointConfigMetaData base)
+   {
+      String configName = toInitialise.getConfigName();
+      String configFile = toInitialise.getConfigFile();
+
+      log.debug("Create new config [name=" + configName + ",file=" + configFile + "]");
+
+      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
+      List<RMPortConfig> rmPortMetaData = null;
+      if (base != null)
+      {
+         rmPortMetaData = backupRMMD(base.getConfig());
+      }
+      CommonConfig config = factory.getConfig(getRootFile(), configName, configFile);
+      propagateRMMD(rmPortMetaData, config);
+      toInitialise.setConfig(config);
+
+      toInitialise.configHandlerMetaData();
+   }
+
+   private List<RMPortConfig> backupRMMD(CommonConfig config)
    {
       if ((config != null) && (config.getRMMetaData() != null))
          return config.getRMMetaData().getPorts();
 
       return null;
    }
-   
-   private void propagateRMMD(List<RMPortConfig> backedUpMD)
+
+   private void propagateRMMD(List<RMPortConfig> backedUpMD, CommonConfig config)
    {
       if ((backedUpMD != null) && (backedUpMD.size() > 0))
       {
@@ -835,7 +868,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             config.setRMMetaData(new RMConfig());
             config.getRMMetaData().getPorts().addAll(backedUpMD);
          }
-         else 
+         else
          {
             // RM policy specified in config file will be always used
             List<RMPortConfig> ports = config.getRMMetaData().getPorts();
@@ -850,7 +883,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          }
       }
    }
-   
+
    private boolean contains(List<RMPortConfig> ports, QName portName)
    {
       for (RMPortConfig pMD : ports)
@@ -858,27 +891,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          if (pMD.getPortName().equals(portName))
             return true;
       }
-      
+
       return false;
-   }
-
-   private void reconfigHandlerMetaData()
-   {
-      log.debug("Configure EndpointMetaData");
-
-      List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
-      clearHandlers();
-
-      List<HandlerMetaData> preHandlers = config.getHandlers(this, HandlerType.PRE);
-      List<HandlerMetaData> postHandlers = config.getHandlers(this, HandlerType.POST);
-
-      addHandlers(preHandlers);
-      addHandlers(sepHandlers);
-      addHandlers(postHandlers);
-
-      log.debug("Added " + preHandlers.size() + " PRE handlers");
-      log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
-      log.debug("Added " + postHandlers.size() + " POST handlers");
    }
 
    public List<Class> getRegisteredTypes()
@@ -899,15 +913,15 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       public synchronized void addObserver(Observer o)
       {
-         observer.add( new WeakReference(o));
+         observer.add(new WeakReference(o));
       }
 
       public synchronized void deleteObserver(Observer o)
       {
-         for(WeakReference<Observer> w : observer)
+         for (WeakReference<Observer> w : observer)
          {
             Observer tmp = w.get();
-            if(tmp.equals(o))
+            if (tmp.equals(o))
             {
                observer.remove(o);
                break;
@@ -923,9 +937,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       public void notifyObservers(Object arg)
       {
-         if(hasChanged())
+         if (hasChanged())
          {
-            for(WeakReference<Observer> w : observer)
+            for (WeakReference<Observer> w : observer)
             {
                Observer tmp = w.get();
                tmp.update(this, arg);

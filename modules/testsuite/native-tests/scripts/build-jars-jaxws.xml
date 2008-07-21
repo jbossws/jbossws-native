@@ -316,7 +316,18 @@
         <include name="wsse.keystore"/>
       </metainf>
     </jar>
-  	
+
+    <!-- jaxws-jbws2187 -->
+    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2187.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2187/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2187/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws2187/TestEndpointImpl.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2187/WEB-INF">
+        <include name="jboss-web.xml"/>
+      </webinf>
+    </war>
+      	
     <!-- jaxws-jbws2221 -->
     <jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2221.jar">
       <fileset dir="${tests.output.dir}/test-classes">

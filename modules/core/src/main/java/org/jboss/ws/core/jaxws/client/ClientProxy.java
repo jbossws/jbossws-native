@@ -162,8 +162,8 @@ public class ClientProxy implements InvocationHandler
    }
 
    private Object invoke(QName opName, Object[] args, Class retType, Map<String, Object> resContext) throws RemoteException
-   {
-      boolean rmDetected = this.client.getEndpointMetaData().getConfig().getRMMetaData() != null;
+   {      
+      boolean rmDetected = this.client.getEndpointConfigMetaData().getConfig().getRMMetaData() != null;
       boolean rmActivated = client.getWSRMSequence() != null;
       if (rmDetected && !rmActivated)
       {

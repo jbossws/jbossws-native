@@ -40,17 +40,21 @@ public class ClientEndpointMetaData extends EndpointMetaData
 {
    // The endpoint address
    private String endpointAddress;
-   private String documentation;
-   
+
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName, Type type)
    {
       super(service, qname, portTypeName, type);
-      configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
+      String configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
 
+      String configFile;
       if (type == Type.JAXRPC)
          configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
       else
          configFile = ConfigurationProvider.DEFAULT_JAXWS_CLIENT_CONFIG_FILE;
+
+      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
+      ecmd.setConfigName(configName);
+      ecmd.setConfigFile(configFile);
    }
 
    public String getEndpointAddress()
@@ -71,7 +75,12 @@ public class ClientEndpointMetaData extends EndpointMetaData
       PortInfo portInfo = new PortInfoImpl(serviceName, portName, bindingID);
       return portInfo;
    }
-   
+
+   public EndpointConfigMetaData createEndpointConfigMetaData(String configName, String configFile)
+   {
+      return super.createEndpointConfigMetaData(configName, configFile);
+   }
+
    public String toString()
    {
       StringBuilder buffer = new StringBuilder("\nClientEndpointMetaData:");

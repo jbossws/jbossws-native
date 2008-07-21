@@ -38,6 +38,7 @@ import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.extensions.xop.XOPContext;
@@ -84,9 +85,10 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
          {
             if (isInitialized() == false)
             {
-               resolver.initHandlerChain(sepMetaData, HandlerType.PRE, true);
-               resolver.initHandlerChain(sepMetaData, HandlerType.ENDPOINT, true);
-               resolver.initHandlerChain(sepMetaData, HandlerType.POST, true);
+               EndpointConfigMetaData ecmd = sepMetaData.getEndpointConfigMetaData();
+               resolver.initHandlerChain(ecmd, HandlerType.PRE, true);
+               resolver.initHandlerChain(ecmd, HandlerType.ENDPOINT, true);
+               resolver.initHandlerChain(ecmd, HandlerType.POST, true);
                setInitialized(true);
             }
          }
