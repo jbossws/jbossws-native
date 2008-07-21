@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: test-excludes-jboss423.txt 7835 2008-07-16 17:20:43Z darran.lofthouse@jboss.com $
 #
 
 # EJB3/Injection excludes
@@ -14,22 +14,6 @@ org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.*
 
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
-
-# [JBWS-1762] web.xml modified to web.xml.org - Subsequent runs fail
-org/jboss/test/ws/jaxws/jbws1762/**
-
-# [JBWS-1797] Setting .NET friendly Endpoint in web.xml
-org/jboss/test/ws/jaxws/jbws1797/**
-
-# [JBWS-1813] context-root from jboss.xml
-org/jboss/test/ws/jaxws/jbws1813/**
-
-# [JBWS-1841] WebServiceRef injection from DD doesn't work
-org/jboss/test/ws/jaxws/jbws1841/**
-
-# [JBWS-1911] Support the JMS transport with JAX-WS
-org/jboss/test/ws/jaxws/samples/jmstransport/**
-org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**

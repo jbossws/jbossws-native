@@ -54,9 +54,9 @@
     <jbossws.common.version>1.0.5.GA</jbossws.common.version>
     <jbossws.framework.version>3.0.3-SNAPSHOT</jbossws.framework.version>
     <jbossws.spi.version>1.0.5-SNAPSHOT</jbossws.spi.version>
-    <jbossws.jboss421.version>3.0.2.GA</jbossws.jboss421.version>
     <jbossws.jboss422.version>3.0.2.GA</jbossws.jboss422.version>
     <jbossws.jboss423.version>3.0.2.GA</jbossws.jboss423.version>
+    <jbossws.jboss424.version>3.0.2.GA</jbossws.jboss424.version>
     <jbossws.jboss500.version>3.0.2.GA</jbossws.jboss500.version>
     <jbossws.jboss501.version>3.0.3-SNAPSHOT</jbossws.jboss501.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
@@ -111,18 +111,6 @@
       
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss421</artifactId>
-        <version>${jbossws.jboss421.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss421</artifactId>
-        <version>${jbossws.jboss421.version}</version>
-        <classifier>resources</classifier>
-        <type>zip</type>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-jboss422</artifactId>
         <version>${jbossws.jboss422.version}</version>
       </dependency>
@@ -135,13 +123,25 @@
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss423x</artifactId>
+        <artifactId>jbossws-jboss423</artifactId>
         <version>${jbossws.jboss423.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss423x</artifactId>
+        <artifactId>jbossws-jboss423</artifactId>
         <version>${jbossws.jboss423.version}</version>
+        <classifier>resources</classifier>
+        <type>zip</type>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss424x</artifactId>
+        <version>${jbossws.jboss424.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss424x</artifactId>
+        <version>${jbossws.jboss424.version}</version>
         <classifier>resources</classifier>
         <type>zip</type>
       </dependency>
@@ -446,18 +446,6 @@
       </build>
     </profile>
 
-    <!--
-    Name:  jboss421
-    Descr: JBoss-4.2.1 specific options
-    -->
-    <profile>
-      <id>jboss421</id>
-      <properties>
-        <jbossws.integration.target>jboss421</jbossws.integration.target>
-        <jboss.home>${jboss421.home}</jboss.home>
-      </properties>
-    </profile>
-
     <!-- 
     Name:  jboss422
     Descr: JBoss-4.2.2 specific options  
@@ -472,7 +460,7 @@
     
     <!-- 
     Name:  jboss423
-    Descr: JBoss-4.2.2 specific options  
+    Descr: JBoss-4.2.3 specific options  
     -->
     <profile>
       <id>jboss423</id>
@@ -482,6 +470,18 @@
       </properties>
     </profile>
     
+    <!--
+    Name:  jboss424
+    Descr: JBoss-4.2.4 specific options
+    -->
+    <profile>
+      <id>jboss424</id>
+      <properties>
+        <jbossws.integration.target>jboss424</jbossws.integration.target>
+        <jboss.home>${jboss424.home}</jboss.home>
+      </properties>
+    </profile>
+
     <!-- 
     Name:  jboss500
     Descr: JBoss-5.0.0 specific options  

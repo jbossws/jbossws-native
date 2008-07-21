@@ -183,14 +183,6 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>org.jboss.ws</groupId>
-                  <artifactId>jbossws-jboss421</artifactId>
-                  <version>${jbossws.jboss421.version}</version>
-                  <classifier>resources</classifier>
-                  <type>zip</type>
-                  <outputDirectory>${project.build.directory}/resources/jbossws-jboss421</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.jboss.ws</groupId>
                   <artifactId>jbossws-jboss422</artifactId>
                   <version>${jbossws.jboss422.version}</version>
                   <classifier>resources</classifier>
@@ -199,11 +191,19 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.jboss.ws</groupId>
-                  <artifactId>jbossws-jboss423x</artifactId>
+                  <artifactId>jbossws-jboss423</artifactId>
                   <version>${jbossws.jboss423.version}</version>
                   <classifier>resources</classifier>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}/resources/jbossws-jboss423</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.jboss.ws</groupId>
+                  <artifactId>jbossws-jboss424x</artifactId>
+                  <version>${jbossws.jboss424.version}</version>
+                  <classifier>resources</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/resources/jbossws-jboss424</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.jboss.ws</groupId>

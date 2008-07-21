@@ -91,19 +91,19 @@
             <unpack>false</unpack>
             <includes>
               <include>*:jbossws-framework:jar</include>
-              <include>*:jbossws-jboss421:jar</include>
               <include>*:jbossws-jboss422:jar</include>
+              <include>*:jbossws-jboss423:jar</include>
               <include>*:juddi-service:sar</include>
             </includes>
           </dependencySet>
           <dependencySet>
             <outputDirectory>lib</outputDirectory>
-            <outputFileNameMapping>jbossws-jboss423.${module.extension}</outputFileNameMapping>
+            <outputFileNameMapping>jbossws-jboss424.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>runtime</scope>
             <unpack>false</unpack>
             <includes>
-              <include>*:jbossws-jboss423x:jar</include>
+              <include>*:jbossws-jboss424x:jar</include>
             </includes>
           </dependencySet>
           <dependencySet>
