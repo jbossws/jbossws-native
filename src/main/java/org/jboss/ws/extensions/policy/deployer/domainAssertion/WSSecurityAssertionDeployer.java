@@ -67,7 +67,6 @@ public class WSSecurityAssertionDeployer implements AssertionDeployer
             
             //set up handler chain as defined in standard file
             ep.setConfigName("Standard WSSecurity Endpoint");
-            ep.initEndpointConfig();
       
          }
          catch (Exception e)
@@ -96,7 +95,6 @@ public class WSSecurityAssertionDeployer implements AssertionDeployer
                serviceMetaData.setSecurityConfiguration(securityConfiguration);
                
                epMetaData.setConfigName("Standard WSSecurity Client");
-               epMetaData.initEndpointConfig();
             }
             catch (Exception e)
             {
