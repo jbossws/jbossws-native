@@ -156,7 +156,14 @@ public class RequestHandlerImpl implements RequestHandler
             }
             catch (IOException ioex)
             {
-               log.error("Cannot close output stream");
+               if (log.isTraceEnabled() == true)
+               {
+                  log.trace("Cannot close output stream", ioex);
+               }
+               else
+               {
+                  log.debug("Cannot close output stream");
+               }
             }
          }
       }
@@ -204,7 +211,14 @@ public class RequestHandlerImpl implements RequestHandler
          }
          catch (IOException ioex)
          {
-            log.error("Cannot close output stream");
+            if (log.isTraceEnabled() == true)
+            {
+               log.trace("Cannot close output stream", ioex);
+            }
+            else
+            {
+               log.debug("Cannot close output stream");
+            }
          }
       }
    }
