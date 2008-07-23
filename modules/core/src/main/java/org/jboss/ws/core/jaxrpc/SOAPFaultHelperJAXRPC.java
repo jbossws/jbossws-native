@@ -33,7 +33,6 @@ import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConstants;
@@ -50,11 +49,11 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
@@ -310,7 +309,7 @@ public class SOAPFaultHelperJAXRPC
 
    private static SOAPMessageImpl createSOAPMessage() throws SOAPException
    {
-      MessageFactoryImpl factory = (MessageFactoryImpl)MessageFactory.newInstance();
+      MessageFactoryImpl factory = new MessageFactoryImpl();
 
       if (isSOAP12() == true)
       {
