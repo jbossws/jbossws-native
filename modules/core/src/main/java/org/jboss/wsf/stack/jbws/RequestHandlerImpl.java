@@ -44,7 +44,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -167,7 +166,14 @@ public class RequestHandlerImpl implements RequestHandler
             }
             catch (IOException ioex)
             {
-               log.error("Cannot close output stream");
+               if (log.isTraceEnabled() == true)
+               {
+                  log.trace("Cannot close output stream", ioex);
+               }
+               else
+               {
+                  log.debug("Cannot close output stream");
+               }
             }
          }
       }
@@ -191,7 +197,7 @@ public class RequestHandlerImpl implements RequestHandler
       ClassLoader classLoader = endpoint.getService().getDeployment().getRuntimeClassLoader();
       if (classLoader == null)
          throw new IllegalStateException("Deployment has no classloader associated");
-      
+
       // Set the thread context class loader
       ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(classLoader);
@@ -208,14 +214,21 @@ public class RequestHandlerImpl implements RequestHandler
       {
          // Reset the thread context class loader
          Thread.currentThread().setContextClassLoader(ctxClassLoader);
-         
+
          try
          {
             out.close();
          }
          catch (IOException ioex)
          {
-            log.error("Cannot close output stream");
+            if (log.isTraceEnabled() == true)
+            {
+               log.trace("Cannot close output stream", ioex);
+            }
+            else
+            {
+               log.debug("Cannot close output stream");
+            }
          }
       }
    }
@@ -229,7 +242,7 @@ public class RequestHandlerImpl implements RequestHandler
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 
       Type type = sepMetaData.getType();
-      
+
       // Build the message context
       CommonMessageContext msgContext;
       if (type == EndpointMetaData.Type.JAXRPC)
@@ -251,12 +264,12 @@ public class RequestHandlerImpl implements RequestHandler
       if (invContext instanceof ServletRequestContext)
       {
          ServletRequestContext reqContext = (ServletRequestContext)invContext;
-         
+
          ServletContext servletContext = reqContext.getServletContext();
          HttpServletRequest httpRequest = reqContext.getHttpServletRequest();
          httpResponse = reqContext.getHttpServletResponse();
          headerSource = new ServletHeaderSource(httpRequest, httpResponse);
-         
+
          if (type == EndpointMetaData.Type.JAXRPC)
          {
             msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
@@ -314,7 +327,7 @@ public class RequestHandlerImpl implements RequestHandler
             }
          }
 
-         Map<String, Object> rmResCtx = (Map<String, Object>)msgContext.get(RMConstant.RESPONSE_CONTEXT);  
+         Map<String, Object> rmResCtx = (Map<String, Object>)msgContext.get(RMConstant.RESPONSE_CONTEXT);
          boolean isWsrmMessage = rmResCtx != null;
          boolean isWsrmOneWay = isWsrmMessage && (Boolean)rmResCtx.get(RMConstant.ONE_WAY_OPERATION);
          if ((outStream != null) && (isWsrmOneWay == false)) // RM hack
@@ -328,7 +341,7 @@ public class RequestHandlerImpl implements RequestHandler
       {
 
          // Cleanup outbound attachments
-         CommonMessageContext.cleanupAttachments( MessageContextAssociation.peekMessageContext() );         
+         CommonMessageContext.cleanupAttachments(MessageContextAssociation.peekMessageContext());
 
          // Reset the message context association
          MessageContextAssociation.popMessageContext();
@@ -344,7 +357,7 @@ public class RequestHandlerImpl implements RequestHandler
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
       MessageAbstraction resMessage = msgContext.getMessageAbstraction();
-      
+
       String wsaTo = null;
 
       // Get the destination from the AddressingProperties
@@ -370,7 +383,7 @@ public class RequestHandlerImpl implements RequestHandler
             SOAPMessage soapMessage = (SOAPMessage)resMessage;
             if (soapMessage.getAttachments().hasNext())
                throw new IllegalStateException("Attachments not supported with FastInfoset");
-            
+
             SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
             DOMDocumentSerializer serializer = new DOMDocumentSerializer();
             serializer.setOutputStream(output);
@@ -382,7 +395,7 @@ public class RequestHandlerImpl implements RequestHandler
             SOAPMessage soapMessage = (SOAPMessage)resMessage;
             if (soapMessage.getAttachments().hasNext())
                throw new IllegalStateException("Attachments not supported with JSON");
-            
+
             SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
             BadgerFishDOMDocumentSerializer serializer = new BadgerFishDOMDocumentSerializer(output);
             serializer.serialize(soapBody.getBodyElement());
@@ -397,8 +410,7 @@ public class RequestHandlerImpl implements RequestHandler
    /**
     * Handle a request to this web service endpoint
     */
-   private MessageAbstraction processRequest(Endpoint ep, MimeHeaderSource headerSource, InvocationContext reqContext, InputStream inputStream)
-         throws BindingException
+   private MessageAbstraction processRequest(Endpoint ep, MimeHeaderSource headerSource, InvocationContext reqContext, InputStream inputStream) throws BindingException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
 
@@ -524,11 +536,11 @@ public class RequestHandlerImpl implements RequestHandler
    private long initRequestMetrics(Endpoint endpoint)
    {
       long beginTime = 0;
-      
+
       EndpointMetrics metrics = endpoint.getEndpointMetrics();
       if (metrics != null)
          beginTime = metrics.processRequestMessage();
-      
+
       return beginTime;
    }
 
@@ -584,7 +596,7 @@ public class RequestHandlerImpl implements RequestHandler
             String epAddress = endpoint.getAddress();
             if (epAddress == null)
                throw new IllegalArgumentException("Invalid endpoint address: " + epAddress);
-            
+
             URL wsdlUrl = new URL(epAddress + "?wsdl");
             InputStream inStream = wsdlUrl.openStream();
             IOUtils.copyStream(outStream, inStream);
@@ -608,7 +620,7 @@ public class RequestHandlerImpl implements RequestHandler
 
       ServletRequestContext reqContext = (ServletRequestContext)context;
       HttpServletRequest req = reqContext.getHttpServletRequest();
-      
+
       // For the base document the resourcePath should be null
       String resPath = (String)req.getParameter("resource");
       URL reqURL = new URL(req.getRequestURL().toString());
@@ -619,7 +631,7 @@ public class RequestHandlerImpl implements RequestHandler
 
       if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
          wsdlHost = serverConfig.getWebServiceHost();
-      
+
       log.debug("WSDL request, using host: " + wsdlHost);
 
       WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
