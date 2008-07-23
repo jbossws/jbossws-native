@@ -341,7 +341,7 @@
         <include name="org/jboss/test/ws/jaxws/jbws1505/*.*"/>
       </fileset>
     </jar>
-    
+        
     <!-- jaxws-jbws1611 -->
     <war destfile="${tests.output.dir}/libs/jaxws-jbws1611.war" webxml="${tests.output.dir}/resources/jaxws/jbws1611/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
@@ -479,6 +479,18 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>  	
+
+    <!-- jaxws-jbws2234 -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jbws2234.war" webxml="${tests.output.dir}/resources/jaxws/jbws2234/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2234/*.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws2234/JBWS2234TestCase.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbws2234/WEB-INF">
+        <include name="jboss-web.xml"/>
+        <include name="wsdl/*"/>
+      </webinf>
+    </war> 
 
     <!-- jaxws namespace -->
     <war warfile="${tests.output.dir}/libs/jaxws-namespace.war" webxml="${tests.output.dir}/resources/jaxws/namespace/WEB-INF/web.xml">

@@ -2708,6 +2708,35 @@
       </metainf>
     </jar>    	
   	
+    <!-- jaxrpc-jbws2234 -->
+    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws2234.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws2234/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/jbws2234/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws2234/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws2234/TestException.class"/>
+      	<include name="org/jboss/test/ws/jaxrpc/jbws2234/TestHandler.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws2234/WEB-INF">
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="custom-endpoint-config.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
+    <jar destfile="${tests.output.dir}/libs/jaxrpc-jbws2234-client.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jbws2234/TestEndpoint.class"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws2234/META-INF">
+        <include name="application-client.xml"/>
+        <include name="jboss-client.xml"/>
+      </metainf>
+      <metainf dir="${tests.output.dir}/resources/jaxrpc/jbws2234/WEB-INF">
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+    </jar>  	
+    
     <!-- jaxrpc-marshall-doclit.war -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-marshall-doclit.war" webxml="${tests.output.dir}/resources/jaxrpc/marshall-doclit/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

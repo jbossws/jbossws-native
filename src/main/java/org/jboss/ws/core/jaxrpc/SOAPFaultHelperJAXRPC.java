@@ -33,26 +33,27 @@ import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
@@ -61,6 +62,7 @@ import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -191,7 +193,15 @@ public class SOAPFaultHelperJAXRPC
       }
       else
       {
-         QName faultCode = Constants.SOAP11_FAULT_CODE_SERVER;
+         QName faultCode;
+         if (isSOAP12() == false)
+         {
+            faultCode = Constants.SOAP11_FAULT_CODE_SERVER;
+         }
+         else
+         {
+            faultCode = SOAPConstants.SOAP_RECEIVER_FAULT;
+         }
          String faultString = (reqEx.getMessage() != null ? reqEx.getMessage() : reqEx.toString());
          faultEx = new SOAPFaultException(faultCode, faultString, null, null);
          faultEx.initCause(reqEx);
@@ -224,8 +234,7 @@ public class SOAPFaultHelperJAXRPC
       SerializationContext serContext = (msgContext != null ? msgContext.getSerializationContext() : new SerializationContextJAXRPC());
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
+      SOAPMessageImpl soapMessage = createSOAPMessage();
 
       SOAPEnvelopeImpl soapEnvelope = (SOAPEnvelopeImpl)soapMessage.getSOAPPart().getEnvelope();
       SOAPBody soapBody = soapEnvelope.getBody();
@@ -296,6 +305,34 @@ public class SOAPFaultHelperJAXRPC
       }
 
       return soapMessage;
+   }
+
+   private static SOAPMessageImpl createSOAPMessage() throws SOAPException
+   {
+      MessageFactoryImpl factory = new MessageFactoryImpl();
+
+      if (isSOAP12() == true)
+      {
+         factory.setEnvNamespace(Constants.NS_SOAP12_ENV);
+      }
+
+      return (SOAPMessageImpl)factory.createMessage();
+   }
+
+   private static boolean isSOAP12()
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null)
+      {
+         EndpointMetaData emd = msgContext.getEndpointMetaData();
+         String bindingId = emd.getBindingId();
+         if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId) || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    private static String getValidFaultString(SOAPFaultException faultEx)

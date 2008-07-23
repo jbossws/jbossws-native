@@ -23,6 +23,7 @@ import javax.xml.soap.DetailEntry;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
@@ -30,6 +31,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
@@ -44,13 +46,17 @@ import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Element;
+
+import com.ibm.wsdl.extensions.soap12.SOAP12Constants;
 
 /**
  * Helper methods to translate between SOAPFault and SOAPFaultException
@@ -133,7 +139,8 @@ public class SOAPFaultHelperJAXWS
                   throw new WebServiceException(e);
                }
             }
-            else log.debug("Cannot find fault meta data for: " + xmlName);
+            else
+               log.debug("Cannot find fault meta data for: " + xmlName);
          }
       }
 
@@ -172,8 +179,7 @@ public class SOAPFaultHelperJAXWS
 
    private static SOAPMessageImpl toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
    {
-      MessageFactory factory = MessageFactory.newInstance();
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
+      SOAPMessageImpl soapMessage = createSOAPMessage();
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
       populateSOAPFault(soapBody, faultEx);
@@ -228,8 +234,7 @@ public class SOAPFaultHelperJAXWS
 
    private static SOAPMessageImpl toSOAPMessage(Exception ex) throws SOAPException
    {
-      MessageFactory factory = MessageFactory.newInstance();
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
+      SOAPMessageImpl soapMessage = createSOAPMessage();
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
       SOAPFault soapFault;
@@ -268,9 +273,38 @@ public class SOAPFaultHelperJAXWS
          SOAPElement detailEntry = toDetailEntry(faultBean, serContext, faultMetaData);
          detail.addChildElement(detailEntry);
       }
-      else log.debug("Cannot obtain fault meta data for: " + exClass);
+      else
+         log.debug("Cannot obtain fault meta data for: " + exClass);
 
       return soapMessage;
+   }
+
+   private static SOAPMessageImpl createSOAPMessage() throws SOAPException
+   {
+      MessageFactoryImpl factory = (MessageFactoryImpl)MessageFactory.newInstance();
+
+      if (isSOAP12() == true)
+      {
+         factory.setEnvNamespace(Constants.NS_SOAP12_ENV);
+      }
+
+      return (SOAPMessageImpl)factory.createMessage();
+   }
+
+   private static boolean isSOAP12()
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null)
+      {
+         EndpointMetaData emd = msgContext.getEndpointMetaData();
+         String bindingId = emd.getBindingId();
+         if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId) || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    private static Name getFallbackFaultCode()
@@ -278,7 +312,14 @@ public class SOAPFaultHelperJAXWS
       /* faultcode
        * X. SOAPFaultException.getFault().getFaultCodeAsQName()
        * 2. env:Server (Subcode omitted for SOAP 1.2) */
-      return new NameImpl(Constants.SOAP11_FAULT_CODE_SERVER);
+      if (isSOAP12() == false)
+      {
+         return new NameImpl(Constants.SOAP11_FAULT_CODE_SERVER);
+      }
+      else
+      {
+         return new NameImpl(SOAPConstants.SOAP_RECEIVER_FAULT);
+      }
    }
 
    private static String getFallbackFaultString(Exception ex)
