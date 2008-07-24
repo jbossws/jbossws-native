@@ -56,7 +56,7 @@
     <jbossws.spi.version>1.0.5-SNAPSHOT</jbossws.spi.version>
     <jbossws.jboss422.version>3.0.2.GA</jbossws.jboss422.version>
     <jbossws.jboss423.version>3.0.2.GA</jbossws.jboss423.version>
-    <jbossws.jboss424.version>3.0.2.GA</jbossws.jboss424.version>
+    <jbossws.jboss424.version>3.0.3-SNAPSHOT</jbossws.jboss424.version>
     <jbossws.jboss500.version>3.0.2.GA</jbossws.jboss500.version>
     <jbossws.jboss501.version>3.0.3-SNAPSHOT</jbossws.jboss501.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
