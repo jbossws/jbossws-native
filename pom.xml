@@ -57,8 +57,11 @@
     <jbossws.jboss422.version>3.0.2.GA</jbossws.jboss422.version>
     <jbossws.jboss423.version>3.0.2.GA</jbossws.jboss423.version>
     <jbossws.jboss424.version>3.0.3-SNAPSHOT</jbossws.jboss424.version>
+    <!-- JBWS-2263 -->
+    <!--
     <jbossws.jboss500.version>3.0.2.GA</jbossws.jboss500.version>
     <jbossws.jboss501.version>3.0.3-SNAPSHOT</jbossws.jboss501.version>
+    -->
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.6.0.GA</javassist.version>
@@ -145,6 +148,8 @@
         <classifier>resources</classifier>
         <type>zip</type>
       </dependency>
+      <!-- JBWS-2263 -->
+      <!--
       <dependency>
         <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-jboss500CR1</artifactId>
@@ -181,6 +186,7 @@
         <classifier>resources</classifier>
         <type>zip</type>
       </dependency>
+      -->
             
       <!-- provided apis -->
       <dependency>
