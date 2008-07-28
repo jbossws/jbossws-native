@@ -58,9 +58,9 @@ public class Constants
 
    public static final String BASE64_ENCODING_TYPE = WSS_SOAP_NS + "#Base64Binary";
    
-   public static final String PASSWORD_TEXT_TYPE = WSSE_NS + "#PasswordText";
+   public static final String PASSWORD_TEXT_TYPE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0#PasswordText";
    
-   public static final String PASSWORD_DIGEST_TYPE = WSSE_NS + "#PasswordDigest";
+   public static final String PASSWORD_DIGEST_TYPE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0#PasswordDigest";
 
    public static final String WSSE_HEADER = WSSE_PREFIX + ":Security";
 
