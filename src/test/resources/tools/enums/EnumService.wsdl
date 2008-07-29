@@ -38,7 +38,7 @@
    </simpleType>
   </schema>
  </types>
- <message name='EnumEndpoint_echoEnum'>
+ <message name='EnumEndpoint_echoEnum' xmlns='http://schemas.xmlsoap.org/wsdl/'>
   <part name='EyeColor_1' type='ns1:EyeColor'/>
  </message>
  <message name='EnumEndpoint_echoEnumResponse'>
