@@ -288,9 +288,12 @@ public class NodeImpl implements javax.xml.soap.Node
       org.w3c.dom.Node domChild = domNode.getFirstChild();
       if (domChild != null)
       {
-         child = (NodeImpl)soapChildren.get(0);
-         if (domChild != child.domNode)
-            throw new WSException("Inconsistent node, child lists not synchronized");
+         if (!soapChildren.isEmpty()) //see JBWS-2186
+         {
+            child = (NodeImpl)soapChildren.get(0);
+            if (domChild != child.domNode)
+               throw new WSException("Inconsistent node, child lists not synchronized");
+         }
       }
       return child;
    }
