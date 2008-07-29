@@ -21,23 +21,26 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id$
+import org.jboss.logging.Logger;
 
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.addressing.EndpointReference;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
+import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
+import org.jboss.ws.core.client.SOAPProtocolConnectionJMS;
 
 /**
  * SOAPConnection implementation
- *
+ * 
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
- *
+ * 
  * @since 02-Feb-2005
  */
 public class SOAPConnectionImpl extends SOAPConnection
@@ -45,17 +48,20 @@ public class SOAPConnectionImpl extends SOAPConnection
    // provide logging
    private static Logger log = Logger.getLogger(SOAPConnectionImpl.class);
 
-   private HTTPRemotingConnection remotingConnection;
+   private RemoteConnection remotingConnection;
+
+   // private RemotingConnection remotingConnection;
 
    public SOAPConnectionImpl()
    {
-      remotingConnection = new SOAPProtocolConnectionHTTP();
+      // remotingConnection = new SOAPProtocolConnectionHTTP();
    }
 
    /**
     * Sends the given message to the specified endpoint and blocks until it has
     * returned the response.
     */
+   @Override
    public SOAPMessage call(SOAPMessage reqMessage, Object endpoint) throws SOAPException
    {
       if (reqMessage == null)
@@ -66,8 +72,9 @@ public class SOAPConnectionImpl extends SOAPConnection
    }
 
    /**
-    * Sends an HTTP GET request to an endpoint and blocks until a SOAP message is received 
+    * Sends an HTTP GET request to an endpoint and blocks until a SOAP message is received
     */
+   @Override
    public SOAPMessage get(Object endpoint) throws SOAPException
    {
       MessageAbstraction resMessage = callInternal(null, endpoint, false);
@@ -83,27 +90,64 @@ public class SOAPConnectionImpl extends SOAPConnection
       if (reqMessage == null)
          throw new IllegalArgumentException("Given SOAPMessage cannot be null");
 
-      MessageAbstraction resMessage = callInternal((SOAPMessageImpl)reqMessage, endpoint, true);
+      MessageAbstraction resMessage = callInternal(reqMessage, endpoint, true);
       return (SOAPMessage)resMessage;
    }
 
-   /** Closes this SOAPConnection
+   private RemoteConnection getRemotingConnection(Object endpoint)
+   {
+      if (endpoint == null)
+         throw new IllegalArgumentException("Given endpoint cannot be null");
+
+      String targetAddress = null;
+      if (endpoint instanceof EndpointInfo)
+      {
+         targetAddress = ((EndpointInfo) endpoint).getTargetAddress();
+      }
+      else if (endpoint instanceof EndpointReference)
+      {
+         EndpointReference epr = (EndpointReference) endpoint;
+         targetAddress = epr.getAddress().toString();
+      }
+      else
+      {
+         targetAddress = endpoint.toString();
+      }
+
+      if (targetAddress.startsWith("jms"))
+      {
+         return new SOAPProtocolConnectionJMS();
+      }
+      else
+      {
+         return new SOAPProtocolConnectionHTTP();
+      }
+   }
+
+   /**
+    * Closes this SOAPConnection
     */
+   @Override
    public void close() throws SOAPException
    {
-      if (remotingConnection.isClosed())
-         throw new SOAPException("SOAPConnection is already closed");
+      if (remotingConnection != null && remotingConnection instanceof HTTPRemotingConnection)
+      {
+         HTTPRemotingConnection conn = (HTTPRemotingConnection) remotingConnection;
+         if (conn.isClosed())
+            throw new SOAPException("SOAPConnection is already closed");
 
-      remotingConnection.setClosed(true);
+         conn.setClosed(true);
+      }
    }
 
    private MessageAbstraction callInternal(SOAPMessage reqMessage, Object endpoint, boolean oneway) throws SOAPException
    {
       try
       {
+         remotingConnection = getRemotingConnection(endpoint);
          MessageAbstraction resMessage = remotingConnection.invoke((SOAPMessageImpl)reqMessage, endpoint, oneway);
          return resMessage;
-      }    
+      }
       catch (Exception ex)
       {
          Throwable cause = ex.getCause();
@@ -113,4 +157,5 @@ public class SOAPConnectionImpl extends SOAPConnection
          throw new SOAPException(ex);
       }
    }
+
 }
