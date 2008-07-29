@@ -40,7 +40,7 @@ public class EnumTestCase extends JBossWSTest
       String config = getResourceFile("tools/enums/wstools-config.xml").getAbsolutePath();
       new WSTools().generate(new String[] {"-dest", "tools/enums", "-config", config});
       
-      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService15.wsdl").getAbsolutePath()));
+      Element exp = DOMUtils.parse(new FileInputStream(getResourceFile("tools/enums/EnumService.wsdl").getAbsolutePath()));
       Element was = DOMUtils.parse(new FileInputStream("tools/enums/wsdl/EnumService.wsdl"));
       System.out.println("FIXME [JBWS-2258] - Fix testcase org.jboss.test.ws.tools.enums.EnumTestCase");
       //assertEquals(exp, was);

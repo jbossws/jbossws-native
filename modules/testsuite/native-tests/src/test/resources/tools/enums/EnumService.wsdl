@@ -25,20 +25,20 @@
    </simpleType>
    <simpleType name='PlanetRadius'>
     <restriction base='decimal'>
-     <enumeration value='2.4397E+6'/>
-     <enumeration value='6.0518E+6'/>
-     <enumeration value='6.37814E+6'/>
-     <enumeration value='3.3972E+6'/>
-     <enumeration value='7.1492E+7'/>
-     <enumeration value='6.0268E+7'/>
-     <enumeration value='2.5559E+7'/>
-     <enumeration value='2.4746E+7'/>
-     <enumeration value='1.137E+6'/>
+     <enumeration value='2439700'/>
+     <enumeration value='6051800'/>
+     <enumeration value='6378140'/>
+     <enumeration value='3397200'/>
+     <enumeration value='71492000'/>
+     <enumeration value='60268000'/>
+     <enumeration value='25559000'/>
+     <enumeration value='24746000'/>
+     <enumeration value='1137000'/>
     </restriction>
    </simpleType>
   </schema>
  </types>
- <message name='EnumEndpoint_echoEnum'>
+ <message name='EnumEndpoint_echoEnum' xmlns='http://schemas.xmlsoap.org/wsdl/'>
   <part name='EyeColor_1' type='ns1:EyeColor'/>
  </message>
  <message name='EnumEndpoint_echoEnumResponse'>
