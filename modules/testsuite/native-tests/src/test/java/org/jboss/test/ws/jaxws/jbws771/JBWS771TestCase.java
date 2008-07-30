@@ -56,6 +56,10 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS771TestCase extends JBossWSTest
 {
+   private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
+   private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
+   private static final String LS = System.getProperty("line.separator"); // '\n' on unix, '\r\n' on windows
+
    private static final String TARGET_NAMESPACE = "http://jbws771.jaxws.ws.test.jboss.org/";
    private static URL wsdlURL;
    private static IWebsvc port;
@@ -84,7 +88,7 @@ public class JBWS771TestCase extends JBossWSTest
 
       JBOSS_HOME = System.getProperty("jboss.home");
       RESOURCES_DIR = createResourceFile(".").getPath();
-      JDK_HOME = System.getProperty("java.home") + "/..";
+      JDK_HOME = System.getProperty("java.home") + FS + "..";
       OS = System.getProperty("os.name").toLowerCase();
    }
 
@@ -153,14 +157,14 @@ public class JBWS771TestCase extends JBossWSTest
    public void testWSConsume() throws Exception
    {
       // use absolute path for the output to be re-usable
-      String absOutput = createResourceFile("wsconsume/java").getAbsolutePath();
-      String command = JBOSS_HOME + "/bin/wsconsume.sh -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + "/jaxws/jbws771/binding.xml " + wsdlURL.toExternalForm();
+      String absOutput = createResourceFile("wsconsume" + FS + "java").getAbsolutePath();
+      String command = JBOSS_HOME + FS + "bin" + FS + "wsconsume.sh -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + FS + "jaxws" + FS + "jbws771" + FS + "binding.xml " + wsdlURL.toExternalForm();
       Process p = executeCommand(command);
 
       // check status code
       checkStatusCode(p, "wsconsume");
       
-      File javaSource = getResourceFile("wsconsume/java/org/jboss/test/ws/jaxws/jbws771/JBWS771Service.java");
+      File javaSource = getResourceFile("wsconsume" + FS + "java" + FS + "org" + FS + "jboss" + FS + "test" + FS + "ws" + FS + "jaxws" + FS + "jbws771" + FS + "JBWS771Service.java");
       assertTrue("Service endpoint interface not generated", javaSource.exists());
    }
 
@@ -204,9 +208,10 @@ public class JBWS771TestCase extends JBossWSTest
       StringBuffer buffer = new StringBuffer();
       String line;
       while ((line = in.readLine()) != null) {
-        buffer.append(line + "\n");
+        buffer.append(line + LS);
       }
-      System.out.println(buffer.toString() + "\n");
+      System.out.println(buffer.toString());
+      System.out.println();
       System.out.println();
    }
 }

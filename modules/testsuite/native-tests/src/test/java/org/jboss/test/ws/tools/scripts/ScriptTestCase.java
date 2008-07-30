@@ -34,6 +34,9 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class ScriptTestCase extends JBossWSTest
 {
+   private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
+   private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
+   private static final String LS = System.getProperty("line.separator"); // '\n' on unix, '\r\n' on windows
    private String TOOLS_CONFIG = getResourceFile("tools/scripts/wstools-config.xml").getAbsolutePath();
 
    private String JBOSS_HOME;
@@ -53,22 +56,17 @@ public class ScriptTestCase extends JBossWSTest
 
    public void testWSToolsFromCommandLine() throws Exception
    {
-      if (isWindowsOS())
-      {
-         fail("This test has not been verified on windows");
-      }
-
       // use absolute path for the output to be re-usable      
       File dest = createResourceFile("wstools/java");
       dest.mkdirs();
 
-      String command = JBOSS_HOME + "/bin/wstools.sh -config " + TOOLS_CONFIG + " -dest "+ dest.getAbsolutePath();
+      String command = JBOSS_HOME + FS + "bin" + FS + "wstools.sh -config " + TOOLS_CONFIG + " -dest "+ dest.getAbsolutePath();
       Process p = executeCommand(command);
 
       // check status code
       assertStatusCode(p, "wstools");
 
-      File javaSource = getResourceFile("wstools/java/org/jboss/test/ws/jbws810/PhoneBookService.java");
+      File javaSource = getResourceFile("wstools" + FS + "java" + FS + "org" + FS + "jboss" + FS + "test" + FS + "ws" + FS + "jbws810" + FS + "PhoneBookService.java");
 
       assertTrue("Service endpoint interface not generated", javaSource.exists());
    }
@@ -88,10 +86,5 @@ public class ScriptTestCase extends JBossWSTest
       // check status code
       int status = p.waitFor();
       assertTrue(s + " did exit with status " + status, status == 0);
-   }
-
-   private boolean isWindowsOS()
-   {
-      return ((OS.indexOf("nt") > -1) || (OS.indexOf("windows") > -1));
    }
 }

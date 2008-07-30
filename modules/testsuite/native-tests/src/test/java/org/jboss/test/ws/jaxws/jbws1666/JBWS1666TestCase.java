@@ -43,6 +43,12 @@ import org.jboss.wsf.common.IOUtils;
  */
 public class JBWS1666TestCase extends JBossWSTest
 {
+
+   private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
+   private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
+
+   java.util.Properties props = System.getProperties();
+   
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1666TestCase.class, "jaxws-jbws1666.war");
@@ -56,30 +62,30 @@ public class JBWS1666TestCase extends JBossWSTest
 
    public void testClientAccess() throws Exception
    {
-      File javaFile = new File (System.getProperty("java.home") + "/bin/java");
+      File javaFile = new File (System.getProperty("java.home") + FS + "bin" + FS + "java");
       String javaCmd = javaFile.exists() ? javaFile.getCanonicalPath() : "java";
       
       String jbh = System.getProperty("jboss.home");
-      String jbc = jbh + "/client";
-      String jbl = jbh + "/lib";
+      String jbc = jbh + FS + "client";
+      String jbl = jbh + FS + "lib";
       
       // Setup the classpath - do not modify this lightheartedly. 
       // Maybe you should extend the Class-Path in the MANIFEST instead.
       StringBuffer cp = new StringBuffer(System.getProperty("test.classes.directory"));
-      cp.append(":" + jbc + "/jbossws-native-client.jar");
+      cp.append(PS + jbc + FS + "jbossws-native-client.jar");
       if (isTargetJBoss50())
       {
-         cp.append(":" + jbc + "/jboss-common-core.jar");
-         cp.append(":" + jbc + "/jboss-logging-spi.jar");
+         cp.append(PS + jbc + FS + "jboss-common-core.jar");
+         cp.append(PS + jbc + FS + "jboss-logging-spi.jar");
       }
       else
       {
-         cp.append(":" + jbc + "/jboss-common-client.jar");
+         cp.append(PS + jbc + FS + "jboss-common-client.jar");
       }
 
       Runtime rt = Runtime.getRuntime();
 
-      String command = javaCmd + " -Djava.endorsed.dirs=" + jbl + "/endorsed -cp " + cp + " " + TestClient.class.getName() + " " + getServerHost();
+      String command = javaCmd + " -Djava.endorsed.dirs=" + jbl + FS + "endorsed -cp " + cp + " " + TestClient.class.getName() + " " + getServerHost();
       Process proc = rt.exec(command);
       int status = proc.waitFor();
       if (status == 0)
