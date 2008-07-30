@@ -22,11 +22,14 @@
 package org.jboss.ws.core.jaxws;
 
 import java.beans.Introspector;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Base class for JAX-WS wrapper generation.
@@ -58,13 +61,13 @@ public abstract class AbstractWrapperGenerator implements WrapperGenerator
       excludedGetters.add("getStackTrace");
    }
 
-   protected SortedMap<String, Class<?>> getExceptionProperties(Class<?> exception)
+   protected SortedMap<String, ExceptionProperty> getExceptionProperties(Class<?> exception)
    {
       if (! Exception.class.isAssignableFrom(exception))
          throw new IllegalArgumentException("Not an exception");
 
-      TreeMap<String, Class<?>> sortedGetters = new TreeMap<String, Class<?>>();
-
+      TreeMap<String, ExceptionProperty> sortedGetters = new TreeMap<String, ExceptionProperty>();
+      
       for (Method method : exception.getMethods())
       {
          if (java.lang.reflect.Modifier.isStatic(method.getModifiers()))
@@ -78,6 +81,8 @@ public abstract class AbstractWrapperGenerator implements WrapperGenerator
          if (excludedGetters.contains(name))
             continue;
 
+         boolean isTransient = method.isAnnotationPresent(XmlTransient.class);
+         
          int offset;
          if (name.startsWith("get"))
             offset = 3;
@@ -87,9 +92,64 @@ public abstract class AbstractWrapperGenerator implements WrapperGenerator
             continue;
 
          name = Introspector.decapitalize(name.substring(offset));
-         sortedGetters.put(name, returnType);
+         
+         if (!isTransient)
+         {
+            try
+            {
+               Field field = exception.getDeclaredField(name);
+               isTransient = field.getAnnotation(XmlTransient.class) != null;
+            }
+            catch (Exception e) {}
+         }
+         
+         sortedGetters.put(name, new ExceptionProperty(name, returnType, isTransient));
       }
 
       return sortedGetters;
+   }
+   
+   protected class ExceptionProperty
+   {
+      private String name;
+      private Class<?> returnType;
+      private boolean transientAnnotated;
+      
+      public ExceptionProperty()
+      {
+         
+      }
+      
+      public ExceptionProperty(String name, Class<?> returnType, boolean transientAnnotated)
+      {
+         this.name = name;
+         this.returnType = returnType;
+         this.transientAnnotated = transientAnnotated;
+      }
+      
+      public String getName()
+      {
+         return name;
+      }
+      public void setName(String name)
+      {
+         this.name = name;
+      }
+      public Class<?> getReturnType()
+      {
+         return returnType;
+      }
+      public void setReturnType(Class<?> returnType)
+      {
+         this.returnType = returnType;
+      }
+      public boolean isTransientAnnotated()
+      {
+         return transientAnnotated;
+      }
+      public void setTransientAnnotated(boolean transientAnnotated)
+      {
+         this.transientAnnotated = transientAnnotated;
+      }
    }
 }

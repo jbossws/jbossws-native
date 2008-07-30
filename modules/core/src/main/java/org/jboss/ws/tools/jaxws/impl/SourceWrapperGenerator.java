@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import java.io.File;
@@ -105,7 +106,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
          addClassAnnotations(clazz, parameterMD.getXmlName(), parameterMD.getXmlType(), null);
          for (WrappedParameter wrapped : wrappedParameters)
          {
-            addProperty(clazz, wrapped.getType(), wrapped.getName(), wrapped.getVariable(), loader);
+            addProperty(clazz, wrapped.getType(), wrapped.getName(), wrapped.getVariable(), false, loader);
          }
       }
       catch (Exception e)
@@ -121,7 +122,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
 
       try
       {
-         SortedMap<String, Class<?>> properties = getExceptionProperties(exception);
+         SortedMap<String, ExceptionProperty> properties = getExceptionProperties(exception);
          String[] propertyOrder = properties.keySet().toArray(new String[0]);
 
          JDefinedClass clazz = codeModel._class(faultBeanName);
@@ -129,7 +130,8 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
 
          for (String property : propertyOrder)
          {
-            addProperty(clazz, properties.get(property).getName(), new QName(property), property, loader);
+            ExceptionProperty p = properties.get(property);
+            addProperty(clazz, p.getReturnType().getName(), new QName(property), property, p.isTransientAnnotated(), loader);
          }
       }
       catch (Exception e)
@@ -143,7 +145,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
       return (Boolean.TYPE == type || Boolean.class == type) ? "is" : "get";
    }
 
-   private static void addProperty(JDefinedClass clazz, String typeName, QName name, String variable, ClassLoader loader)
+   private static void addProperty(JDefinedClass clazz, String typeName, QName name, String variable, boolean xmlTransient, ClassLoader loader)
    throws ClassNotFoundException
    {
       // be careful about reserved keywords when generating variable names
@@ -153,12 +155,20 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
       Class<?> type = JavaUtils.loadJavaType(typeName, loader);
       JFieldVar field = clazz.field(JMod.PRIVATE, type, realVariableName);
       
-      // define XmlElement annotation for variable
-      JAnnotationUse annotation = field.annotate(XmlElement.class);
-      annotation.param("name", name.getLocalPart());
-      if (name.getNamespaceURI() != null)
+      if (xmlTransient == false)
       {
-         annotation.param("namespace", name.getNamespaceURI());
+         // define XmlElement annotation for variable
+         JAnnotationUse annotation = field.annotate(XmlElement.class);
+         annotation.param("name", name.getLocalPart());
+         if (name.getNamespaceURI() != null)
+         {
+            annotation.param("namespace", name.getNamespaceURI());
+         }
+      }
+      else
+      {
+         //XmlTransient
+         field.annotate(XmlTransient.class);
       }
 
       // generate acessor get method for variable

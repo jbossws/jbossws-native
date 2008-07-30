@@ -23,6 +23,8 @@ package org.jboss.ws.core.jaxws;
 
 import java.util.List;
 import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -35,7 +37,14 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.ConstPool;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttachmentRef;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlMimeType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
@@ -112,7 +121,8 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
                   clazz, parameter.getType(),
                   parameter.getName(), parameter.getVariable(),
                   parameter.getTypeArguments(),
-                  new boolean[] {parameter.isSwaRef(), parameter.isXop()}
+                  new boolean[] {parameter.isSwaRef(), parameter.isXop()},
+                  false
             );
          }
          clazz.stopPruning(!prune);
@@ -139,18 +149,17 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       Class exception = fmd.getJavaType();
       try
       {
-         SortedMap<String, Class<?>> properties = getExceptionProperties(exception);
-         String[] propertyOrder = properties.keySet().toArray(new String[0]);
+         SortedMap<String, ExceptionProperty> properties = getExceptionProperties(exception);
 
          CtClass clazz = pool.makeClass(faultBeanName);
          clazz.getClassFile().setVersionToJava5();
-         addClassAnnotations(clazz, fmd.getXmlName(), fmd.getXmlType(), propertyOrder);
+         addClassAnnotations(clazz, fmd.getXmlName(), fmd.getXmlType(), getPropertyOrder(properties));
 
-         for (String property : propertyOrder)
+         for (ExceptionProperty prop : properties.values())
             addProperty(
-                  clazz, properties.get(property).getName(),
-                  new QName(property), property, null,
-                  new boolean[] {false, false}
+                  clazz, prop.getReturnType().getName(),
+                  new QName(prop.getName()), prop.getName(), null,
+                  new boolean[] {false, false}, prop.isTransientAnnotated()
             );
 
          clazz.stopPruning(!prune);
@@ -170,6 +179,18 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
    private static String getterPrefix(CtClass type)
    {
       return type == CtClass.booleanType || "java.lang.Boolean".equals(type.getName()) ? "is" : "get";
+   }
+   
+   //get the propertyOrder list (iow excludes the XmlTransient annotated properties)
+   private String[] getPropertyOrder(SortedMap<String, ExceptionProperty> sortedProperties)
+   {
+      SortedSet<String> set = new TreeSet<String>();
+      for (String prop : sortedProperties.keySet())
+      {
+         if (sortedProperties.get(prop).isTransientAnnotated() == false)
+            set.add(prop);
+      }
+      return set.toArray(new String[0]);
    }
 
    private String typeSignature(String type, String[] arguments)
@@ -195,7 +216,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 
    private void addProperty(CtClass clazz, String typeName,
                             QName name, String variable, String[] typeArguments,
-                            boolean[] attachments)
+                            boolean[] attachments, boolean xmlTransient)
          throws CannotCompileException, NotFoundException
    {
       ConstPool constPool = clazz.getClassFile().getConstPool();
@@ -211,12 +232,16 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
          JavassistUtils.addSignature(field, typeSignature);
       }
 
+      JavassistUtils.Annotation annotation;
       // Add @XmlElement
-      JavassistUtils.Annotation annotation = JavassistUtils.createAnnotation(XmlElement.class, constPool);
-      if (name.getNamespaceURI() != null)
-         annotation.addParameter("namespace", name.getNamespaceURI());
-      annotation.addParameter("name", name.getLocalPart());
-      annotation.markField(field);
+      if (!xmlTransient)
+      {
+         annotation = JavassistUtils.createAnnotation(XmlElement.class, constPool);
+         if (name.getNamespaceURI() != null)
+            annotation.addParameter("namespace", name.getNamespaceURI());
+         annotation.addParameter("name", name.getLocalPart());
+         annotation.markField(field);
+      }
       // @XmlAttachmentRef
       if(attachments[0])
       {
@@ -228,6 +253,12 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       {
          annotation = JavassistUtils.createAnnotation(XmlMimeType.class, constPool);
          annotation.addParameter("value", "application/octet-stream"); // TODO: default mime 
+         annotation.markField(field);
+      }
+      // @XmlTransient
+      if(xmlTransient)
+      {
+         annotation = JavassistUtils.createAnnotation(XmlTransient.class, constPool);
          annotation.markField(field);
       }
       clazz.addField(field);
