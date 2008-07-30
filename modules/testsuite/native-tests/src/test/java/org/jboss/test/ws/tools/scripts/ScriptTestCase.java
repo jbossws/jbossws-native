@@ -37,7 +37,7 @@ public class ScriptTestCase extends JBossWSTest
    private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
    private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
    private static final String LS = System.getProperty("line.separator"); // '\n' on unix, '\r\n' on windows
-   private String TOOLS_CONFIG = getResourceFile("tools/scripts/wstools-config.xml").getAbsolutePath();
+   private String TOOLS_CONFIG = getResourceFile("tools" + FS + "scripts" + FS + "wstools-config.xml").getAbsolutePath();
 
    private String JBOSS_HOME;
    private String JDK_HOME;
@@ -57,7 +57,7 @@ public class ScriptTestCase extends JBossWSTest
    public void testWSToolsFromCommandLine() throws Exception
    {
       // use absolute path for the output to be re-usable      
-      File dest = createResourceFile("wstools/java");
+      File dest = createResourceFile("wstools" + FS + "java");
       dest.mkdirs();
 
       String command = JBOSS_HOME + FS + "bin" + FS + "wstools.sh -config " + TOOLS_CONFIG + " -dest "+ dest.getAbsolutePath();
