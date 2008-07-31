@@ -30,7 +30,6 @@ import javax.xml.rpc.ServiceException;
  * 
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma (javadoc)
- * @version $Revision$
  */
 public interface ServiceLifecycle
 {

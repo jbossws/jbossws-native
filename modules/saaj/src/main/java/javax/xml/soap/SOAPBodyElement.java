@@ -31,7 +31,6 @@ package javax.xml.soap;
  SOAPBodyElement sbe = sb.addBodyElement(myName);
  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPBodyElement extends SOAPElement
 {

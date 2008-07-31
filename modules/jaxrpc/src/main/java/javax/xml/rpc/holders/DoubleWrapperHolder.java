@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for Doubles.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class DoubleWrapperHolder implements Holder
 {

@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for longs.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class LongHolder implements Holder
 {

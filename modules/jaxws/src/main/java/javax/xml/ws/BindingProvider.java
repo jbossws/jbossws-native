@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import java.util.Map;
 
 /** The <code>BindingProvider</code> interface provides access to the

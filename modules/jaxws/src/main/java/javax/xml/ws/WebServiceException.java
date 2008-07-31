@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 /** The <code>WebServiceException</code> class is the base 
  *  exception class for all JAX-WS API runtime exceptions.
  *

@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.spi;
 
-// $Id$
-
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;

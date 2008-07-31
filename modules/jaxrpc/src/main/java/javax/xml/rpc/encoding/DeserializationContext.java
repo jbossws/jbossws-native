@@ -25,7 +25,6 @@ package javax.xml.rpc.encoding;
  * information during the deserialization.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface DeserializationContext
 {

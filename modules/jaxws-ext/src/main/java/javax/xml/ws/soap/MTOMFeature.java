@@ -21,11 +21,8 @@
  */
 package javax.xml.ws.soap;
 
-// $Id$
-
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
-
 
 /**
  * This feature represents the use of MTOM with a 

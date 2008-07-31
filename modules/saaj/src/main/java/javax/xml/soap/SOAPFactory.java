@@ -21,8 +21,6 @@
  */
 package javax.xml.soap;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
@@ -36,7 +34,6 @@ import org.w3c.dom.Element;
  * SOAPFactory also has methods to create javax.xml.soap.Detail objects as well as java.xml.soap.Name objects.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public abstract class SOAPFactory
 {

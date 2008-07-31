@@ -26,7 +26,6 @@ import javax.xml.namespace.QName;
 /** A holder for QNames.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class QNameHolder implements Holder
 {

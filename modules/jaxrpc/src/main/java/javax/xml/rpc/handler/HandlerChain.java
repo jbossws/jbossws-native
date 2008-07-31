@@ -34,7 +34,6 @@ import javax.xml.rpc.JAXRPCException;
  * 
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma (javadoc)
- * @version $Revision$
  */
 public interface HandlerChain extends List
 {

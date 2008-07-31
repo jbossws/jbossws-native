@@ -41,7 +41,6 @@ import javax.xml.rpc.handler.MessageContext;
  * 
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma, Roberto Chinnici (javadoc)
- * @version $Revision$
  */
 public interface ServletEndpointContext
 {

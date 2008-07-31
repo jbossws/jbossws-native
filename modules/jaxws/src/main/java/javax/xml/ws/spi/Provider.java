@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.spi;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.WebServiceException;

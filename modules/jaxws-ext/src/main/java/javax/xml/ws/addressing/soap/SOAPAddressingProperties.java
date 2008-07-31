@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing.soap;
 
-//$Id$
-
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.addressing.AddressingException;
 import javax.xml.ws.addressing.AddressingProperties;

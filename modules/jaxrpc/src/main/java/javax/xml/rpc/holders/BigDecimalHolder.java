@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 /** A holder for BigDecimals.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class BigDecimalHolder implements Holder
 {

@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.wsaddressing;
 
-// $Id$
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import java.io.StringWriter;
 
 import javax.xml.transform.Result;

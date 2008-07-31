@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.Provider;
 import java.util.List;

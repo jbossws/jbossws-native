@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for booleans.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class BooleanHolder implements Holder
 {

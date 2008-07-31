@@ -32,7 +32,6 @@ import java.util.Iterator;
  * 
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma, Roberto Chinnici (javadoc)
- * @version $Revision$
  */
 public interface MessageContext
 {

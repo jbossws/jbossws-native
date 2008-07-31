@@ -28,7 +28,6 @@ import java.io.Serializable;
  * and based on the specified type mapping and encoding style.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface Deserializer extends Serializable
 {

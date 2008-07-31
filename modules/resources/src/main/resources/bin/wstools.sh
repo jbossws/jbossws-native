@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# $Id$
-
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
 

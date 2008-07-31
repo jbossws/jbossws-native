@@ -21,8 +21,6 @@
  */
 package javax.jws.soap;
 
-// $Id$
-
 /**
  * A single SOAP message handler
  *

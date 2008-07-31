@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import java.util.Map;
 import java.util.concurrent.Future;
 

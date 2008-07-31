@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for Shorts.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class ShortWrapperHolder implements Holder
 {

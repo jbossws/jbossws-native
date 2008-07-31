@@ -37,7 +37,6 @@ import javax.xml.namespace.QName;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision$
  */
 public interface SOAPFault extends SOAPBodyElement
 {

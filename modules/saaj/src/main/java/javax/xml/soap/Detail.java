@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
       Iterator it = d.getDetailEntries();
 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface Detail extends SOAPFaultElement
 {

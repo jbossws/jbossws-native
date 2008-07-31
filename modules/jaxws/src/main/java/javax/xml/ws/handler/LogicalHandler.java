@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.handler;
 
-// $Id$
-
 /** The <code>LogicalHandler</code> extends
  *  Handler to provide typesafety for the message context parameter.
  * 

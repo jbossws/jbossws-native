@@ -30,7 +30,6 @@ import javax.xml.bind.JAXBContext;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public abstract class ServiceDelegate21 extends ServiceDelegate
 {

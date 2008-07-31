@@ -36,7 +36,6 @@ package javax.xml.soap;
  * That is, messages are sent using the method call, which sends the message and then waits until it gets a reply.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public abstract class SOAPConnection
 {

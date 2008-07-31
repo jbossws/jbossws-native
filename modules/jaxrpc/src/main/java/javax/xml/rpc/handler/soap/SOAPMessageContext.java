@@ -30,7 +30,6 @@ import javax.xml.soap.SOAPMessage;
  * 
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma (javadoc)
- * @version $Revision$
  */
 public interface SOAPMessageContext extends MessageContext
 {

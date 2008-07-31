@@ -32,7 +32,6 @@ import java.util.Iterator;
  *
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision$
  */
 public interface Stub
 {

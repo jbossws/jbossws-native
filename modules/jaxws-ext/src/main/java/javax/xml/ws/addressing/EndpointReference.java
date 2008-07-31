@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing;
 
-//$Id$
-
 public interface EndpointReference extends AddressingType, AttributeExtensible, ElementExtensible
 {
    public AttributedURI getAddress();

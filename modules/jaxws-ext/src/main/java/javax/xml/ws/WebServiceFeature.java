@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 /**
  * A WebServiceFeature is used to represent a feature that can be 
  * enabled or disabled for a web service.  

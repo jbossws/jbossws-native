@@ -49,7 +49,6 @@ import java.io.InputStream;
  
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public abstract class MessageFactory
 {

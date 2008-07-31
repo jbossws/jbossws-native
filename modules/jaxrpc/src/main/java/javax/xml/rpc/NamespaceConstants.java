@@ -24,7 +24,6 @@ package javax.xml.rpc;
 /** Constants used in JAX-RPC for namespace prefixes and URIs
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class NamespaceConstants
 {

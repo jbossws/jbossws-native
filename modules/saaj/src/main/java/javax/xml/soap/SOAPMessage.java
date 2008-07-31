@@ -75,7 +75,6 @@ import javax.activation.DataHandler;
  * correctly relative the the version of the specification against which it was written.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public abstract class SOAPMessage
 {

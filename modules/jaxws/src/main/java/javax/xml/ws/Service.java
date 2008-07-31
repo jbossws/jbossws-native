@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import java.net.URL;
 import java.util.Iterator;
 

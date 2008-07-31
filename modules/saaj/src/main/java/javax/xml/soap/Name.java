@@ -55,7 +55,6 @@ package javax.xml.soap;
  element.addChildElement(name);
 
  @author Scott.Stark@jboss.org
- @version $Revision$
  */
 public interface Name
 {

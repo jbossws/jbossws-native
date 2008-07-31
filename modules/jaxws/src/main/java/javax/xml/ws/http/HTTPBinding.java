@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.http;
 
-// $Id$
-
 import javax.xml.ws.Binding;
 
 /** The <code>HTTPBinding</code> interface is an 

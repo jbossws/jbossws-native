@@ -55,7 +55,6 @@ import javax.xml.namespace.QName;
  *    SOAPHeaderElement shElement = sh.addHeaderElement(name);
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPHeader extends SOAPElement
 {

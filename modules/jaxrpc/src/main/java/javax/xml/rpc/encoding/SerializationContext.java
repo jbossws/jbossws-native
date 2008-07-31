@@ -30,7 +30,6 @@ package javax.xml.rpc.encoding;
  * @see Serializer
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SerializationContext
 {

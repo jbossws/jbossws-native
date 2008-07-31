@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.soap;
 
-// $Id$
-
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.Binding;

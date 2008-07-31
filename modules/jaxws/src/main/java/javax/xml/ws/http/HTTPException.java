@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.http;
 
-// $Id$
-
 /** The <code>HTTPException</code> exception represents a 
  *  XML/HTTP fault.
  *

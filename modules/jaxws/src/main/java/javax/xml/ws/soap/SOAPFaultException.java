@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.soap;
 
-// $Id$
-
 import javax.xml.soap.SOAPFault;
 
 /** The <code>SOAPFaultException</code> exception represents a

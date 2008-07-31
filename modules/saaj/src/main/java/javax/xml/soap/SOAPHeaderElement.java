@@ -28,7 +28,6 @@ package javax.xml.soap;
  * A SOAPHeaderElement object can have other SOAPElement objects as its children. 
 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPHeaderElement extends SOAPElement
 {

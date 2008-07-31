@@ -27,7 +27,6 @@ package javax.xml.rpc.holders;
  *  
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma (javadoc)
- * @version $Revision$
  */
 public interface Holder
 {

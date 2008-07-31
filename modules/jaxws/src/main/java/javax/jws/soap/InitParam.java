@@ -21,8 +21,6 @@
  */
 package javax.jws.soap;
 
-// $Id$
-
 /** An initialization parameter
  *
  * @author thomas.diesler@jboss.org

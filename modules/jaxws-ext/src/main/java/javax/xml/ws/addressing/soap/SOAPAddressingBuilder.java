@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing.soap;
 
-//$Id$
-
 import javax.xml.ws.addressing.AddressingBuilder;
 
 public abstract class SOAPAddressingBuilder extends AddressingBuilder

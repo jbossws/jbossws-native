@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for Objects.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class ObjectHolder implements Holder
 {

@@ -26,7 +26,6 @@ import java.util.Calendar;
 /** A holder for Calendars.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class CalendarHolder implements Holder
 {

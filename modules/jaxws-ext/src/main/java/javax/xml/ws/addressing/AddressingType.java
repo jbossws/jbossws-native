@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing;
 
-//$Id$
-
 public interface AddressingType
 {
    public String getNamespaceURI();

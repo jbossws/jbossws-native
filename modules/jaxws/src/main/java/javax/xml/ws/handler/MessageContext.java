@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.handler;
 
-// $Id$
-
 import java.util.Map;
 
 /**

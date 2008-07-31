@@ -25,7 +25,6 @@ package javax.xml.soap;
  * MimeHeader objects may be contained in a MimeHeaders object.
  *  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class MimeHeader
 {

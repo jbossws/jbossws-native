@@ -27,7 +27,6 @@ package javax.xml.soap;
  * removing a node
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface Node extends org.w3c.dom.Node
 {

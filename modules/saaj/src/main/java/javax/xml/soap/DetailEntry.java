@@ -26,7 +26,6 @@ package javax.xml.soap;
  * SOAPBody object that contains it, is application-specific.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface DetailEntry extends SOAPElement
 {

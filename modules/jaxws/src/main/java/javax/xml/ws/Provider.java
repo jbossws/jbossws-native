@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 /**
  *  <p>Service endpoints may implement the <code>Provider</code>
  *  interface as a dynamic alternative to an SEI.

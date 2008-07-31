@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing;
 
-//$Id$
-
 import static javax.xml.ws.addressing.JAXWSAConstants.ADDRESSING_BUILDER_PROPERTY;
 import static javax.xml.ws.addressing.JAXWSAConstants.DEFAULT_ADDRESSING_BUILDER;
 

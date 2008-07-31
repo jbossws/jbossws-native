@@ -31,9 +31,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
 
-
-// $Id$
-
 /**
  * Load a factory using this ordered lookup procedure
  *

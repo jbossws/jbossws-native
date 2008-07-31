@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 /** The <code>AsyncHandler</code> interface is implemented by
  * clients that wish to receive callback notification of the completion of
  * service endpoint operations invoked asynchronously.

@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing;
 
-//$Id$
-
 import javax.xml.namespace.QName;
 
 public class MapRequiredException extends AddressingException

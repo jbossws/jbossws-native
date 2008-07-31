@@ -25,7 +25,6 @@ package javax.xml.soap;
  * text that is content or text that is a comment.
  *  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface Text extends javax.xml.soap.Node, org.w3c.dom.Text
 {

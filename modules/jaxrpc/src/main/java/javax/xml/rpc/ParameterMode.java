@@ -24,7 +24,6 @@ package javax.xml.rpc;
 /** A type-safe enumeration for parameter passing modes.
  *  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class ParameterMode
 {

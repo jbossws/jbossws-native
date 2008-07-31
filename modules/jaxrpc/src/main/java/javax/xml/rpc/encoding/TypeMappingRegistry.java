@@ -28,7 +28,6 @@ import java.io.Serializable;
  *  
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision$
  */
 public interface TypeMappingRegistry extends Serializable
 {

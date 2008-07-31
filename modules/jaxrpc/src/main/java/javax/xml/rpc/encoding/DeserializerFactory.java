@@ -32,7 +32,6 @@ import java.util.Iterator;
  * @see TypeMappingRegistry
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface DeserializerFactory extends Serializable
 {

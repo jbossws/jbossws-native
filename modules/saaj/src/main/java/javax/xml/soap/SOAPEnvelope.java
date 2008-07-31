@@ -71,7 +71,6 @@ package javax.xml.soap;
  * </code>
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPEnvelope extends SOAPElement
 {

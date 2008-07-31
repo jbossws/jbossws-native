@@ -38,7 +38,6 @@ import javax.xml.namespace.QName;
  * 
  * @author Scott.Stark@jboss.org
  * @author Rahul Sharma (javadoc)
- * @version $Revision$
  */
 public interface HandlerRegistry extends Serializable
 {

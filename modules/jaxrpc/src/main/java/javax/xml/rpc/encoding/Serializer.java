@@ -29,7 +29,6 @@ import java.io.Serializable;
  * style.
  *  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface Serializer extends Serializable
 {

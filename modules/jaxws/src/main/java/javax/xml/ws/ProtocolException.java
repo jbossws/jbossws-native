@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 /** The <code>ProtocolException</code> class is a
  *  base class for exceptions related to a specific protocol binding. Subclasses
  *  are used to communicate protocol level fault information to clients and may

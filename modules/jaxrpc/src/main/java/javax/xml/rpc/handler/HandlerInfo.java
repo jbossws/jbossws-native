@@ -34,7 +34,6 @@ import javax.xml.namespace.QName;
  * Handler instance.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class HandlerInfo implements Serializable
 {

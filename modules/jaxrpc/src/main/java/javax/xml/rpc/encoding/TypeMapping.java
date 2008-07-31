@@ -31,7 +31,6 @@ import javax.xml.namespace.QName;
  * tuples of the type {Java Class, SerializerFactory, DeserializerFactory, XML type-QName}.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface TypeMapping
 {

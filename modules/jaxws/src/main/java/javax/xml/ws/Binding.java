@@ -21,9 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
-
 /** The <code>Binding</code> interface is the base interface
  *  for JAX-WS protocol bindings.
  *

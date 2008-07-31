@@ -30,7 +30,6 @@ package javax.xml.soap;
  * XML document tree when they are inserted. 
 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class SOAPElementFactory
 {

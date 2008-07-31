@@ -26,7 +26,6 @@ import javax.xml.namespace.QName;
 /** The definition of constants pertaining to the SOAP protocol. 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision$
  */
 public interface SOAPConstants
 {

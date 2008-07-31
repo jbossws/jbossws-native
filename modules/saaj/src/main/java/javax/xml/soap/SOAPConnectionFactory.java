@@ -34,7 +34,6 @@ import java.util.logging.Logger;
  *  
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision$
  */
 public abstract class SOAPConnectionFactory
 {

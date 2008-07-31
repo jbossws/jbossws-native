@@ -23,7 +23,6 @@ package javax.xml.ws.handler;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public interface MessageContext21 extends MessageContext
 {

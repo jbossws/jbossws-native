@@ -28,7 +28,6 @@ package javax.xml.soap;
  * addTextNode.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPFaultElement extends SOAPElement
 {

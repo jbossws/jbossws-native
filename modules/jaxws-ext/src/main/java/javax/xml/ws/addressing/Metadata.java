@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing;
 
-//$Id$
-
 public interface Metadata extends AttributeExtensible, ElementExtensible
 {
 

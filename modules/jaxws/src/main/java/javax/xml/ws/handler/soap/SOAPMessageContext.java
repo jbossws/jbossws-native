@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.handler.soap;
 
-// $Id$
-
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;

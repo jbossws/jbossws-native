@@ -21,8 +21,6 @@
  */
 package javax.xml.soap;
 
-// $Id$
-
 /**
  * The access point for the implementation classes of the factories defined in the SAAJ API.
  * All of the newInstance methods defined on factories in SAAJ 1.3 defer to instances of this class to do the actual object creation.

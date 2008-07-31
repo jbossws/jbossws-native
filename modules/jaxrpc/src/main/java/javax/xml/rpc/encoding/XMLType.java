@@ -26,7 +26,6 @@ import javax.xml.namespace.QName;
 /** Constants for common XML Schema and SOAP 1.1 types.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class XMLType
 {

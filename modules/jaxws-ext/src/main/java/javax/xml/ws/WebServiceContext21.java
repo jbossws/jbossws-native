@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public interface WebServiceContext21 extends WebServiceContext
 {

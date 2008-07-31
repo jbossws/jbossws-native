@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.spi.ServiceDelegate21;
 import javax.xml.bind.JAXBContext;
@@ -30,7 +28,6 @@ import java.net.URL;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public class Service21 extends Service
 {

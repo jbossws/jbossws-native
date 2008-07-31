@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import javax.xml.ws.WebServiceFeature;
 
 /**

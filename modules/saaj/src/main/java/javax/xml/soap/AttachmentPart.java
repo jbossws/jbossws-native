@@ -87,7 +87,6 @@ import javax.activation.DataHandler;
     ap1.clearContent();
  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public abstract class AttachmentPart
 {

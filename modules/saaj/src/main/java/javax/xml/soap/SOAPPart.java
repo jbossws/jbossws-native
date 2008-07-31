@@ -53,7 +53,6 @@ import org.w3c.dom.Document;
  * The SOAPPart method getEnvelope can be used to retrieve the SOAPEnvelope object.
  *  
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public abstract class SOAPPart implements Document, Node
 {

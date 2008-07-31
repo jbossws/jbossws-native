@@ -38,7 +38,6 @@ import javax.xml.rpc.handler.HandlerRegistry;
  *
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision$
  */
 public interface Service
 {

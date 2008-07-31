@@ -32,7 +32,6 @@ import java.util.List;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public abstract class Provider21 extends Provider
 {

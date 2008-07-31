@@ -26,7 +26,6 @@ import javax.xml.ws.EndpointReference;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public interface BindingProvider21 extends BindingProvider
 {

@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for Bytes.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class ByteWrapperHolder implements Holder
 {

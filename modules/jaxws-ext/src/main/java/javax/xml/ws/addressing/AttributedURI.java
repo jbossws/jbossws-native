@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing;
 
-//$Id$
-
 import java.net.URI;
 
 import javax.xml.namespace.QName;

@@ -34,7 +34,6 @@ import javax.xml.namespace.QName;
  * Once a Call instance is created, various setter and getter methods may be used to configure this Call instance.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface Call
 {

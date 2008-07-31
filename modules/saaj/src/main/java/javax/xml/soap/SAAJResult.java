@@ -21,8 +21,6 @@
  */
 package javax.xml.soap;
 
-// $Id$
-
 import javax.xml.transform.dom.DOMResult;
 
 import org.w3c.dom.Element;

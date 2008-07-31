@@ -36,7 +36,6 @@ import org.w3c.dom.Document;
  * information, is an example of a SOAPBodyElement object.
 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPBody extends SOAPElement
 {

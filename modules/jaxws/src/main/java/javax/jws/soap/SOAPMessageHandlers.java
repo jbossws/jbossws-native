@@ -21,8 +21,6 @@
  */
 package javax.jws.soap;
 
-// $Id$
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -43,6 +41,5 @@ import java.lang.annotation.Target;
 @Deprecated
 public @interface SOAPMessageHandlers
 {
-
    SOAPMessageHandler[] value();
 };

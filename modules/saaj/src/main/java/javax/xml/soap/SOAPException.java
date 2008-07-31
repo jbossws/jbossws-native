@@ -21,10 +21,8 @@
  */
 package javax.xml.soap;
 
-
 /**
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class SOAPException extends Exception
 {

@@ -38,7 +38,6 @@ import org.w3c.dom.Element;
  * details.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public interface SOAPElement extends Node, Element
 {

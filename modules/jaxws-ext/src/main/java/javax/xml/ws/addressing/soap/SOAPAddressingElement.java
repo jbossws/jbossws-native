@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.addressing.soap;
 
-//$Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.ws.addressing.AddressingException;

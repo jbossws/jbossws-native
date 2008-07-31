@@ -24,7 +24,6 @@ package javax.xml.rpc.holders;
 /** A holder for floats.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class FloatHolder implements Holder
 {

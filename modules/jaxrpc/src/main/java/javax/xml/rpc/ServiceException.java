@@ -21,10 +21,8 @@
  */
 package javax.xml.rpc;
 
-
 /**
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public class ServiceException extends Exception
 {

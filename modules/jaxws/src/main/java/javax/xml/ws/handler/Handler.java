@@ -21,8 +21,6 @@
  */
 package javax.xml.ws.handler;
 
-// $Id$
-
 import javax.xml.ws.ProtocolException;
 
 /** The <code>Handler</code> interface

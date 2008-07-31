@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 import java.util.concurrent.Future;
 
 /** The <code>Dispatch</code> interface provides support 

@@ -26,7 +26,6 @@ import java.math.BigInteger;
 /** A holder for BigIntegers.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision$
  */
 public final class BigIntegerHolder implements Holder
 {

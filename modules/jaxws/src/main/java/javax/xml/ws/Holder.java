@@ -21,8 +21,6 @@
  */
 package javax.xml.ws;
 
-// $Id$
-
 /** 
  *  Holds a value of type <code>T</code>.
  *
