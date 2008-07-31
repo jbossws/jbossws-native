@@ -44,7 +44,6 @@ import org.jboss.wsf.common.IOUtils;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id:XOPBase.java 1321 2006-10-27 11:47:18Z heiko.braun@jboss.com $
  * @since Sep 25, 2006
  */
 public abstract class XOPBase extends JBossWSTest

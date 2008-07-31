@@ -30,7 +30,6 @@ import org.jboss.wsf.test.JBossWSTest;
  * JBWS-1793: Provide a test case for the tools scripts that reside under JBOSS_HOME/bin
  * 
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public class ScriptTestCase extends JBossWSTest
 {

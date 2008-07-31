@@ -27,7 +27,6 @@ import org.jboss.logging.Logger;
  * A test that tests overloaded service methods.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class OverloadedBean implements Overloaded
 {

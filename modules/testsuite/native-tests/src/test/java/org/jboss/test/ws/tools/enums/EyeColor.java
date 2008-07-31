@@ -25,7 +25,6 @@ package org.jboss.test.ws.tools.enums;
  * A JAX-RPC 1.1 Enum Type
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class EyeColor
 {

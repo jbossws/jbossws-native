@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
-//$Id$
-
 import java.net.URL;
 
 import org.jboss.ws.core.StubExt;

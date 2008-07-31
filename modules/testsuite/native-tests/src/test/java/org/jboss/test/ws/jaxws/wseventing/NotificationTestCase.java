@@ -21,8 +21,6 @@
   */
 package org.jboss.test.ws.jaxws.wseventing;
 
-// $Id: NotificationTestCase.java 1757 2006-12-22 15:40:24Z thomas.diesler@jboss.com $
-
 import javax.naming.InitialContext;
 
 import junit.framework.Test;

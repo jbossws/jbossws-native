@@ -35,7 +35,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * Test business process behavior based on web services.
  * 
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public class BpelHelloTestCase extends JBossWSTest
 {

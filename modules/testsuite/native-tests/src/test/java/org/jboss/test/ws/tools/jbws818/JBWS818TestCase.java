@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
  * Test cross package inheritence (JBWS-818)
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class JBWS818TestCase extends JBossWSTest
 {

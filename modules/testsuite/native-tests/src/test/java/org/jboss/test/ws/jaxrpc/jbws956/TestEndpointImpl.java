@@ -21,8 +21,6 @@
   */
 package org.jboss.test.ws.jaxrpc.jbws956;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 
 public class TestEndpointImpl 

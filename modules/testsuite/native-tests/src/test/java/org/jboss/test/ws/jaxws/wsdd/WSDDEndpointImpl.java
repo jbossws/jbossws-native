@@ -21,14 +21,11 @@
  */
 package org.jboss.test.ws.jaxws.wsdd;
 
-import org.jboss.ws.extensions.xop.XOPContext;
-
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 12, 2007
  */
 @WebService

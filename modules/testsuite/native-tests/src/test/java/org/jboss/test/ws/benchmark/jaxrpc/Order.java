@@ -13,7 +13,6 @@ import java.util.Calendar;
  * A Order.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class Order implements Serializable
 {

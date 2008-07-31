@@ -33,7 +33,6 @@ import org.jboss.ws.annotation.EndpointConfig;
  * 
  * @author Alessio Soldano <alessio.soldano@jboss.com>
  * 
- * @version $Id$
  * @since 29-Oct-2007
  */
 @WebService(

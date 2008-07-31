@@ -27,7 +27,6 @@ import org.jboss.test.ws.tools.jbws818.two.Parent;
  * Child Class
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Child extends Parent
 {

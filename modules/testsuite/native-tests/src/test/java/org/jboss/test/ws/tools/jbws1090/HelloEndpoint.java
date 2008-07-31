@@ -26,7 +26,6 @@ import java.rmi.RemoteException;
 
 /**
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public interface HelloEndpoint extends Remote
 {

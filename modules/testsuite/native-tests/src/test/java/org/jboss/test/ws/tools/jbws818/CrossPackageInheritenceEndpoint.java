@@ -28,7 +28,6 @@ import java.rmi.RemoteException;
  * An endpoint that tests cross-package inheritence.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface CrossPackageInheritenceEndpoint extends Remote
 {

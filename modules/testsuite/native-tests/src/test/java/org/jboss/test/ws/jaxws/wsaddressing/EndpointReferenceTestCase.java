@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsaddressing;
 
-//$Id$
-
 import org.jboss.ws.extensions.addressing.EndpointReferenceImpl;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.common.DOMUtils;

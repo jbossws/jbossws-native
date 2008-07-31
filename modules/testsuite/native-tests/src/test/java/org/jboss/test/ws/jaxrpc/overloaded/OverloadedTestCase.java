@@ -33,7 +33,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * A test that tests overloaded methods.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class OverloadedTestCase extends JBossWSTest
 {

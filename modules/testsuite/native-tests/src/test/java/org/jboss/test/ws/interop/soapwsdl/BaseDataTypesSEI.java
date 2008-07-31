@@ -4,7 +4,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id:$
  * @since 29.01.2007
  */
 public interface BaseDataTypesSEI {

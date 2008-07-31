@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.jbws771;
 
-// $Id: JBWS771TestCase.java 3729 2007-06-26 19:38:00Z thomas.diesler@jboss.com $
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws807;
 
-// $Id$
-
 import java.rmi.RemoteException;
 
 import javax.naming.InitialContext;

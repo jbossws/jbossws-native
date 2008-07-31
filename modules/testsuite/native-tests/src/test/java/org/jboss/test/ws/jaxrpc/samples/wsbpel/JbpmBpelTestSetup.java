@@ -35,7 +35,6 @@ import org.jboss.wsf.common.ObjectNameFactory;
  * 
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
  * @author Thomas.Diesler@jboss.com
- * @version $Revision$
  */
 public class JbpmBpelTestSetup extends JBossWSTestSetup
 {

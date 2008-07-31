@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxws.jbws1809;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public class DocResponse
 {

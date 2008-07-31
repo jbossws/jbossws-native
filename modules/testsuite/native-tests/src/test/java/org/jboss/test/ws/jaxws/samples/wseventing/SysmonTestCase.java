@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.wseventing;
 
-// $Id: SysmonTestCase.java 1994 2007-01-18 12:54:34Z heiko.braun@jboss.com $
-
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;

@@ -27,7 +27,6 @@ import javax.jws.soap.SOAPBinding;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 @Remote
 @WebService(targetNamespace = "http://org.jboss.ws/jaxbintro/wsdl")

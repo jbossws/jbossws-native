@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsdd;
 
-// $Id: $
-
 import java.io.InputStream;
 import java.net.URL;
 

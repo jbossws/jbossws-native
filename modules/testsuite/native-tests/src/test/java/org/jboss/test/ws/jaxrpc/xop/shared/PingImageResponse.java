@@ -25,7 +25,6 @@ import java.awt.Image;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: PingImageResponse.java 1296 2006-10-24 14:06:00Z heiko.braun@jboss.com $
  * @since Oct 17, 2006
  */
 public class PingImageResponse {

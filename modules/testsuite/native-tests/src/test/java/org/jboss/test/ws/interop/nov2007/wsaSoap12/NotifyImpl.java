@@ -33,7 +33,6 @@ import javax.xml.ws.BindingType;
 
 /**
  * @author Alessio Soldano, alessio.soldano@jboss.com
- * @version $Id$
  * @since 31-Oct-2007
  */
 @WebService(

@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.wsaddr.replyto;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 

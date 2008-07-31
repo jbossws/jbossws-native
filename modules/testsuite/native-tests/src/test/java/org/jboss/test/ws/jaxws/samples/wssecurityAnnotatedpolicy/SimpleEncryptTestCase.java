@@ -38,7 +38,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * Test WS-Security with RPC/Literal
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision: 2385 $
  */
 public class SimpleEncryptTestCase extends JBossWSTest
 {

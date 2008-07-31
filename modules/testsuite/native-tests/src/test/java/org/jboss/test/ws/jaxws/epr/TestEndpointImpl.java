@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.epr;
 
-// $Id$
-
 import java.io.ByteArrayOutputStream;
 
 import javax.annotation.Resource;
@@ -40,7 +38,6 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
-import org.w3c.dom.Element;
 
 @WebService(serviceName = "TestEndpointService", name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/epr")
 @SOAPBinding(style = SOAPBinding.Style.RPC)

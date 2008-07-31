@@ -21,8 +21,6 @@
   */
 package org.jboss.test.ws.jaxrpc.jbws950;
 
-//$Id$
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

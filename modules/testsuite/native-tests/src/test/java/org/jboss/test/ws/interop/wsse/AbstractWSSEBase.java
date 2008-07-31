@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.interop.wsse;
 
-// $Id: AbstractWSSEBase.java 2064 2007-01-24 11:30:23Z heiko.braun@jboss.com $
-
 import java.net.URL;
 
 import javax.xml.namespace.QName;

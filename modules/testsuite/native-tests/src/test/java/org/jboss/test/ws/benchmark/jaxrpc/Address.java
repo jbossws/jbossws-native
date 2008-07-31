@@ -10,7 +10,6 @@ package org.jboss.test.ws.benchmark.jaxrpc;
  * A Address.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class Address {
     protected String firstName;

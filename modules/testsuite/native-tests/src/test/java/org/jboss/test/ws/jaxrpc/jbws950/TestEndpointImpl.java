@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws950;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;

@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import java.net.URL;
 
 import javax.ejb.ActivationConfigProperty;

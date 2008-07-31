@@ -21,11 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.wsaddressing.action;
 
-//$Id$
-
 import javax.jws.WebService;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 
 /**
  * WS-Addressing service endpoint interface

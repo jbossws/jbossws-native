@@ -38,7 +38,6 @@ import org.jboss.wsf.test.JBossWSTest;
 /**
  * @author Alessio Soldano <alessio.soldano@jboss.com>
  * 
- * @version $Id$
  * @since 26-Oct-2007
  */
 public abstract class AbstractWSSEBase extends JBossWSTest

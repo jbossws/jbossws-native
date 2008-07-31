@@ -13,7 +13,6 @@ import java.util.GregorianCalendar;
  * A OrderBL.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class OrderBL {
    

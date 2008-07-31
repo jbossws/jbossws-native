@@ -35,7 +35,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * Test WS-Security service handling of a non signed/encrypted client
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class NotEncodedTestCase extends JBossWSTest
 {

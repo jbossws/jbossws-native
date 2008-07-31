@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.jbws2014;
 
-//$Id$
-
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 

@@ -40,7 +40,6 @@ import com.sun.xml.bind.api.JAXBRIContext;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public class AnnotationReaderTestCase extends JBossWSTest
 {

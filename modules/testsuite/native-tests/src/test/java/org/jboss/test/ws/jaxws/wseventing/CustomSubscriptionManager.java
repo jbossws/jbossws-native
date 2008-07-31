@@ -29,7 +29,6 @@ import org.jboss.ws.extensions.eventing.jaxws.AbstractSubscriptionManagerEndpoin
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 18.01.2007
  */
 @WebService(

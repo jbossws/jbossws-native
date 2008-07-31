@@ -34,7 +34,6 @@ import java.util.List;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id:$
  * @since 31.01.2007
  */
 @WebService(

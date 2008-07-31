@@ -29,7 +29,6 @@ import javax.jws.WebService;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: TestService.java 1757 2006-12-22 15:40:24Z thomas.diesler@jboss.com $
  * @since Aug 24, 2006
  */
 @WebService(

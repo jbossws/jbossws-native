@@ -31,7 +31,6 @@ import org.jboss.wsf.test.JBossWSTest;
  * [JBWS-1170] Test elements with illegal characters for Java identifiers
  *
  * @author <a href="mailto:david.boeren@jboss.com">David Boeren</a>
- * @version $Revision: 921 $
  */
 public class JBWS1170TestCase extends JBossWSTest
 {

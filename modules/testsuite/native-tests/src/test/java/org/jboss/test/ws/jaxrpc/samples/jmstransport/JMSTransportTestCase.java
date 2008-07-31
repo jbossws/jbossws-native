@@ -6,8 +6,6 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jmstransport;
 
-// $Id$
-
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;

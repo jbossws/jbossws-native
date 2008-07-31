@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.wspolicy;
 
-//$Id$
-
 import java.io.ByteArrayInputStream;
 
 import org.apache.ws.policy.Policy;

@@ -49,7 +49,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author Alessio Soldano, alessio.soldano@jboss.com
- * @version $Id$
  * @since 31-Oct-2007
  */
 public class AddressingTestCase extends JBossWSTest {

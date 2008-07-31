@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import java.util.List;
 
 import javax.annotation.Resource;

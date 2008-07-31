@@ -12,7 +12,6 @@ import java.io.Serializable;
  * A Synthetic.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class Synthetic implements Serializable
 {

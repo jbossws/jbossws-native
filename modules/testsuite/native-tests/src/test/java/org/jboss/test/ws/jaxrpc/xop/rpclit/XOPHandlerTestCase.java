@@ -31,7 +31,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Sep 22, 2006
  */
 public class XOPHandlerTestCase extends XOPBase  {

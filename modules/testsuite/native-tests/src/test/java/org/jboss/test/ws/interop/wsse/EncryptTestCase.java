@@ -27,7 +27,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: EncryptTestCase.java 2064 2007-01-24 11:30:23Z heiko.braun@jboss.com $
  * @since Aug 23, 2006
  */
 public class EncryptTestCase extends AbstractWSSEBase

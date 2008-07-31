@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxrpc.samples.mtom;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: Status.java 1323 2006-10-27 14:55:38Z heiko.braun@jboss.com $
  * @since Oct 27, 2006
  */
 public class Status {

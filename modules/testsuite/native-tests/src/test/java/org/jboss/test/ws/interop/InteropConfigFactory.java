@@ -35,7 +35,6 @@ import java.net.URLClassLoader;
  * Create an object model frpom test scenario descriptors.
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Aug 22, 2006
  */
 public class InteropConfigFactory {

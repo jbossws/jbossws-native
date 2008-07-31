@@ -21,9 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsaddressing;
 
-// $Id: SOAPAddressingPropertiesTestCase.java,v 1.2 2005/11/24 21:40:55 tdiesler
-// Exp $
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;

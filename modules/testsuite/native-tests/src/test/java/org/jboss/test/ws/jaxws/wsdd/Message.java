@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxws.wsdd;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 12, 2007
  */
 public class Message {

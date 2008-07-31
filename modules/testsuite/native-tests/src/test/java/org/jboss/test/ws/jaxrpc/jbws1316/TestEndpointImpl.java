@@ -26,7 +26,6 @@ package org.jboss.test.ws.jaxrpc.jbws1316;
  * Simple TestEndpoint to test the handling to WSSE timestamps.
  *
  * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
- * @version $Revision$
  * @since Aril 14 2008
  */
 public class TestEndpointImpl implements TestEndpoint

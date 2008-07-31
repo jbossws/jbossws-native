@@ -21,8 +21,6 @@
   */
 package org.jboss.test.ws.jaxws.wseventing;
 
-// $Id: EventingTestCase.java 1757 2006-12-22 15:40:24Z thomas.diesler@jboss.com $
-
 import java.util.Date;
 
 import javax.xml.ws.BindingProvider;

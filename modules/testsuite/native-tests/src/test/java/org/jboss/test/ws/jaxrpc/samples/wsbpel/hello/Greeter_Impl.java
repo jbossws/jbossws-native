@@ -33,7 +33,6 @@ import java.rmi.RemoteException;
  * Service implementation bean of the Greeter endpoint.
  *  
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public class Greeter_Impl implements Greeter
 {

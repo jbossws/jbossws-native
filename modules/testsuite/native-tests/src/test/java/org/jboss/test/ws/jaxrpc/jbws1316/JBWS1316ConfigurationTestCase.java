@@ -34,7 +34,6 @@ import org.jboss.wsf.test.JBossWSTest;
  * Test case to test reading the TimestampVerification configuration.
  *
  * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
- * @version $Revision$
  * @since Aril 14 2008
  */
 public class JBWS1316ConfigurationTestCase extends JBossWSTest

@@ -30,7 +30,6 @@ import java.io.BufferedReader;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 24.01.2007
  */
 public class ReplyToServlet extends HttpServlet {

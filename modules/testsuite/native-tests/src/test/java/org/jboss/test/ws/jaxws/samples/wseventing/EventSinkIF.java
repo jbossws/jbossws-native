@@ -27,7 +27,6 @@ import javax.ejb.Remote;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 @Remote
 @WebService(name = "SampleEventSink", targetNamespace = "http://www.jboss.org/sysmon")

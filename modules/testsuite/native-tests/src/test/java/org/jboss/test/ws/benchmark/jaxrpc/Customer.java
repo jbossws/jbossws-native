@@ -8,12 +8,10 @@ package org.jboss.test.ws.benchmark.jaxrpc;
 
 import java.util.Calendar;
 
-
 /**
  * A Customer.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class Customer {
     protected int customerId;

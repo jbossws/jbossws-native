@@ -25,7 +25,6 @@ package org.jboss.test.ws.tools.jbws818.two;
  * Parent Class
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Parent
 {

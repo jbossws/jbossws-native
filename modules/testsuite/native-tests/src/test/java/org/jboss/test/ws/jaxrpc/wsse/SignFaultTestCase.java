@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.wsse;
 
-// $Id$
-
 import junit.framework.Test;
 
 import org.jboss.wsf.test.JBossWSTestSetup;
@@ -33,7 +31,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * http://jira.jboss.org/jira/browse/JBWS-1119
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class SignFaultTestCase extends RpcTestCase
 {

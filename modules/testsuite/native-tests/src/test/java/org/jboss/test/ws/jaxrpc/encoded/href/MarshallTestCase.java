@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.encoded.href;
 
-// $Id$
-
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 

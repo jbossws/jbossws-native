@@ -32,7 +32,6 @@ import java.util.Iterator;
  * Represents a interop test client configuration model.
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Aug 22, 2006
  */
 public class InteropClientConfig {

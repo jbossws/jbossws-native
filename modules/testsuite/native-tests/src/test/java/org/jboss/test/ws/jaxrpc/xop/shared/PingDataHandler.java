@@ -25,7 +25,6 @@ import javax.activation.DataHandler;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: PingDataHandler.java 1296 2006-10-24 14:06:00Z heiko.braun@jboss.com $
  * @since Oct 23, 2006
  */
 public class PingDataHandler {

@@ -26,7 +26,6 @@ import javax.jws.WebService;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 @Stateless
 @WebService(name = "SampleEventSink", targetNamespace = "http://www.jboss.org/sysmon", endpointInterface = "org.jboss.test.ws.jaxws.samples.wseventing.EventSinkIF")

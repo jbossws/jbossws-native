@@ -42,7 +42,6 @@ import java.util.List;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: AddressingTestCase.java 1947 2007-01-12 16:39:05Z heiko.braun@jboss.com $
  * @since Sep 28, 2006
  */
 public class AddressingTestCase extends JBossWSTest {

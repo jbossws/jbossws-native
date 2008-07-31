@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.handlerlifecycle;
 
-// $Id$
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

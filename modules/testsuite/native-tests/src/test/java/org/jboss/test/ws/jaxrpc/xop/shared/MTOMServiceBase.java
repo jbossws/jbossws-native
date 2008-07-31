@@ -30,7 +30,6 @@ import org.jboss.ws.extensions.xop.XOPContext;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Sep 25, 2006
  */
 public class MTOMServiceBase {

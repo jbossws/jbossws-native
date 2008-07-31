@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.handlerlifecycle;
 
-//$Id$
-
 import java.util.Vector;
 
 import javax.xml.ws.handler.Handler;

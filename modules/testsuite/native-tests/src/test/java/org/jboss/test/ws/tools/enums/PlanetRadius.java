@@ -31,7 +31,6 @@ import java.util.Map;
  * for an enum index
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class PlanetRadius
 {

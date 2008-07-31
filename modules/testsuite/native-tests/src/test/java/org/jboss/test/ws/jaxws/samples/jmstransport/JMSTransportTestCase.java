@@ -6,8 +6,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.jmstransport;
 
-// $Id$
-
 import java.io.File;
 import java.net.URL;
 

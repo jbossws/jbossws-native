@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1125;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 
 import javax.naming.InitialContext;

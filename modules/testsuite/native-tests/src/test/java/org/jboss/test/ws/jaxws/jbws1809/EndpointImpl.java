@@ -27,7 +27,6 @@ import javax.jws.soap.SOAPBinding;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 @Stateless
 @WebService(

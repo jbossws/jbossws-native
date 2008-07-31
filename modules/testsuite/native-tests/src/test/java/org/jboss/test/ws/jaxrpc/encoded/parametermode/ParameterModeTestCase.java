@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.encoded.parametermode;
 
-// $Id$
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;

@@ -40,7 +40,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * using encrypted passwords for the store passwords.
  *
  * @author <a href="mailto:mbojan@redhat.com">Magesh Kumar B</a>
- * @version $Revision$
  */
 public class StorePassEncryptTestCase extends JBossWSTest
 {

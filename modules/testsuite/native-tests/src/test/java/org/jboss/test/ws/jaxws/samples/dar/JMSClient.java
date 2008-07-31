@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import java.io.IOException;
 import java.io.PrintStream;
 

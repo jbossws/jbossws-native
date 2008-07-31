@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.jms.Message;

@@ -46,7 +46,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * 
  * @author Alessio Soldano <alessio.soldano@jboss.com>
  * 
- * @version $Id$
  * @since 26-Oct-2007
  */
 public class UsernameTokenHTTPSTestCase extends AbstractWSSEBase

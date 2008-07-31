@@ -6,8 +6,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.jmstransport;
 
-// $Id$
-
 import java.rmi.RemoteException;
 
 import javax.ejb.ActivationConfigProperty;

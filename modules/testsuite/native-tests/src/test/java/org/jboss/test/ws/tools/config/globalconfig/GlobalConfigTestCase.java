@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.tools.config.globalconfig;
 
-// $Id$
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

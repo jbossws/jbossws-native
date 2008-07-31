@@ -34,7 +34,6 @@ import org.jboss.remoting.transport.Connector;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 19.01.2007
  */
 public class SimpleServer implements Runnable {

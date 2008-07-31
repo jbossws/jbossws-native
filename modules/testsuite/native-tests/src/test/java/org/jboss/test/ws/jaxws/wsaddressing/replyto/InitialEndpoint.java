@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsaddressing.replyto;
 
-//$Id$
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

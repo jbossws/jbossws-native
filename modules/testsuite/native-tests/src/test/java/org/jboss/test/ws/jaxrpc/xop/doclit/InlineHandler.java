@@ -35,7 +35,6 @@ import org.jboss.ws.core.soap.NameImpl;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Sep 25, 2006
  */
 public class InlineHandler extends GenericHandler

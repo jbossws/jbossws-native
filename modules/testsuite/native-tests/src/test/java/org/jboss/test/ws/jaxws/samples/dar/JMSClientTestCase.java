@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;

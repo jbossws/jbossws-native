@@ -9,12 +9,10 @@ package org.jboss.test.ws.benchmark.jaxrpc;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-
 /**
  * BenchmarkService.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public interface BenchmarkService extends Remote {
    

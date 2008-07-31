@@ -5,7 +5,6 @@ import javax.jws.WebService;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 12, 2007
  */
 @WebService

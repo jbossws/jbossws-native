@@ -34,7 +34,6 @@ import java.net.URL;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 12, 2007
  */
 public class TestDDOverrides extends JBossWSTest {

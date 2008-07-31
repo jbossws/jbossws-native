@@ -16,7 +16,6 @@ import java.rmi.RemoteException;
  * A BenchmarkEJBEndpoint.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class BenchmarkEJBEndpoint implements SessionBean, BenchmarkService
 {

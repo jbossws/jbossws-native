@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
-//$Id$
-
 import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;

@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
-//$Id$
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.GregorianCalendar;

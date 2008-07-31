@@ -34,7 +34,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * Test WS-Security with RPC/Literal from a web client.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WebClientTestCase extends JBossWSTest
 {

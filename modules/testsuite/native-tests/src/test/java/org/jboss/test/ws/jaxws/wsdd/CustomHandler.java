@@ -35,7 +35,6 @@ import javax.xml.soap.*;
  * outbound it changes the boolean value of the checkMTOM invocation. 
  * 
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 12, 2007
  */
 public class CustomHandler extends GenericSOAPHandler {

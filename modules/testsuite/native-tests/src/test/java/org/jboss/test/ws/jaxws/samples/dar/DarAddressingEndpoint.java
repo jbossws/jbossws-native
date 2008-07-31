@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.jms.ObjectMessage;

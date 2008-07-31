@@ -31,7 +31,6 @@ import javax.jws.soap.SOAPBinding;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 23.01.2007
  */
 @WebService(

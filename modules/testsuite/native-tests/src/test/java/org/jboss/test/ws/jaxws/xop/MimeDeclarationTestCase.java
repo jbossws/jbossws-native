@@ -37,7 +37,6 @@ import java.util.List;
  * Test the ReflectiveXOPScanner.
  * 
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since 04.12.2006
  */
 public class MimeDeclarationTestCase extends TestCase {

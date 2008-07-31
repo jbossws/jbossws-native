@@ -21,16 +21,12 @@
  */
 package org.jboss.test.ws.jaxws.samples.wsaddressing;
 
-//$Id$
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-
-import org.jboss.ws.annotation.EndpointConfig;
 
 /**
  * WS-Addressing stateful service endpoint interface

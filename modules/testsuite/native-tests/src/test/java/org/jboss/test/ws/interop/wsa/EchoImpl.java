@@ -31,7 +31,6 @@ import javax.jws.soap.SOAPBinding;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: EchoImpl.java 1757 2006-12-22 15:40:24Z thomas.diesler@jboss.com $
  * @since Sep 27, 2006
  */
 @WebService(

@@ -21,8 +21,6 @@
 */
 package org.jboss.test.ws.tools.jaxws;
 
-// $Id$
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;

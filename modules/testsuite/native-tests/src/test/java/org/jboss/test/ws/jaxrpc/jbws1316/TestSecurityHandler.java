@@ -43,7 +43,6 @@ import org.w3c.dom.Element;
  * way to test JBWS-1316 implementation.
  *
  * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
- * @version $Revision$
  * @since Aril 14 2008
  */
 public class TestSecurityHandler extends GenericHandler

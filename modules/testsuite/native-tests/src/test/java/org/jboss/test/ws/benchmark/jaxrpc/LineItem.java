@@ -6,12 +6,10 @@
  */
 package org.jboss.test.ws.benchmark.jaxrpc;
 
-
 /**
  * A LineItem.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class LineItem {
     protected int orderId;

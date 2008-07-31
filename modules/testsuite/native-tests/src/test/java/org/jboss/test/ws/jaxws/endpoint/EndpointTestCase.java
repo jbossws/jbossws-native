@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.endpoint;
 
-// $Id$
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;

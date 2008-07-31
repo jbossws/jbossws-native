@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.wsaddressing;
 
-//$Id$
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

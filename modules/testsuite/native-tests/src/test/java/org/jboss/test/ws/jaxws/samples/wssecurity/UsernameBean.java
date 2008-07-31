@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.wssecurity;
 
-// $Id$
-
 import java.security.Principal;
 
 import javax.annotation.Resource;

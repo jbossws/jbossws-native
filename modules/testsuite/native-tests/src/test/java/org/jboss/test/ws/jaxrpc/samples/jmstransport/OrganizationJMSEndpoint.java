@@ -6,8 +6,6 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jmstransport;
 
-// $Id$
-
 import java.rmi.RemoteException;
 
 import org.jboss.logging.Logger;

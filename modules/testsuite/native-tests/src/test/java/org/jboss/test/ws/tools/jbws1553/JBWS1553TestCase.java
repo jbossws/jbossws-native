@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.tools.jbws1553;
 
-// $Id$
-
 import java.net.URL;
 
 import javax.xml.namespace.QName;

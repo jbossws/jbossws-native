@@ -33,7 +33,6 @@ import java.io.PrintWriter;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id:$
  * @since 05.02.2007
  */
 public class XMLFragmentTestCase extends TestCase {

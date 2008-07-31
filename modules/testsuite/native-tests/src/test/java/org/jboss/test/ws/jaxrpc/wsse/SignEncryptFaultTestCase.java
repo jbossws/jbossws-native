@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.wsse;
 
-// $Id$
-
 import junit.framework.Test;
 
 import org.jboss.wsf.test.JBossWSTestSetup;

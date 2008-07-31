@@ -55,7 +55,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  * 
  * @author Alessio Soldano <alessio.soldano@jboss.com>
  * 
- * @version $Id$
  * @since 29-Oct-2007
  */
 public class Encrypt3DESTestCase extends AbstractWSSEBase

@@ -25,7 +25,6 @@ import javax.xml.transform.Source;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: PingSourceResponse.java 1296 2006-10-24 14:06:00Z heiko.braun@jboss.com $
  * @since Oct 19, 2006
  */
 public class PingSourceResponse {

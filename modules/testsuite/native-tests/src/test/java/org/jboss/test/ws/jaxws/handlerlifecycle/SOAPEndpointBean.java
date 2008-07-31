@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.handlerlifecycle;
 
-// $Id$
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 

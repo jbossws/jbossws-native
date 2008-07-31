@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebService;

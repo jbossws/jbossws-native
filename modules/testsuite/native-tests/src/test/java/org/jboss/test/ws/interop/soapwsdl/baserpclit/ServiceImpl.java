@@ -33,7 +33,6 @@ import java.math.BigInteger;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id:$
  * @since 29.01.2007
  */
 @WebService(

@@ -35,7 +35,6 @@ import org.jboss.test.ws.interop.nov2007.wsse.EchoXmlResponse.EchoXmlResult;
  * 
  * @author Alessio Soldano <alessio.soldano@jboss.com>
  * 
- * @version $Id$
  * @since 26-Oct-2007
  */
 public class TestService

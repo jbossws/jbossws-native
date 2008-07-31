@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wseventing;
 
-// $Id: SubscriptionManagerTestCase.java 1971 2007-01-15 16:31:58Z heiko.braun@jboss.com $
-
 import java.net.URI;
 import java.util.Date;
 

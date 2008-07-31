@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.jbws1909;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

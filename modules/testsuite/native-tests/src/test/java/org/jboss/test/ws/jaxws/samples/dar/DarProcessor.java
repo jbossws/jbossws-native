@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.dar;
 
-//$Id$
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;

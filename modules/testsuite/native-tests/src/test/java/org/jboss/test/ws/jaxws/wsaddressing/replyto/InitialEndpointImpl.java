@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.wsaddressing.replyto;
 
-//$Id$
-
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;

@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws434;
 
-// $Id$
-
 import java.util.Iterator;
 
 import javax.naming.InitialContext;

@@ -12,7 +12,6 @@ import java.io.Serializable;
  * A SimpleUserType.
  * 
  * @author <a href="anders.hedstrom@home.se">Anders Hedstrom</a>
- * @version $Revision: 1757 $
  */
 public class SimpleUserType implements Serializable
 {

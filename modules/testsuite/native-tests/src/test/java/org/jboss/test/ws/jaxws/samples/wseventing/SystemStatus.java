@@ -27,7 +27,6 @@ import java.util.Date;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 @XmlRootElement(name="SystemStatus", namespace = "http://www.jboss.org/sysmon")
 public class SystemStatus

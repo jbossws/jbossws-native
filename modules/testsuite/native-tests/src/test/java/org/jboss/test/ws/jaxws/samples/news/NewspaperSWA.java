@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.news;
 
-//$Id$
-
 import java.util.Date;
 
 import javax.jws.WebMethod;

@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.xop.doclit;
 
-// $Id$
-
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 

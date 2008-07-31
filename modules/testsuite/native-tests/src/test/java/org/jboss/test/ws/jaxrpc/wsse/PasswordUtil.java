@@ -34,7 +34,6 @@ import javax.crypto.spec.PBEParameterSpec;
  * This is a simple decode utility for using along with the jboss-ws-security keystore and truststore use cases
  *
  * @author <a href="mailto:magesh.bojan@jboss.com">Magesh Kumar B</a>
- * @version $Revision$
  */
 public class PasswordUtil
 {

@@ -35,7 +35,6 @@ import org.w3c.dom.Element;
  * Test append web service descriptions to existing webservices.xml (JBWS-1090)
  * 
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public class JBWS1090TestCase extends JBossWSTest
 {
