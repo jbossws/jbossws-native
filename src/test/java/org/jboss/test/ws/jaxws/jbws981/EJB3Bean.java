@@ -28,6 +28,7 @@ import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.annotation.WebContext;
 
 /**
  *
@@ -36,6 +37,7 @@ import org.jboss.logging.Logger;
  */
 @Stateless
 @WebService(endpointInterface = "org.jboss.test.ws.jaxws.jbws981.EndpointInterface", targetNamespace = "http://www.jboss.org/test/ws/jaxws/jbws981", serviceName = "TestService")
+@WebContext(virtualHosts = { "localhost", "www.jboss.org" })
 public class EJB3Bean implements EJB3RemoteInterface
 {
 
@@ -45,7 +47,7 @@ public class EJB3Bean implements EJB3RemoteInterface
    {
       try
       {
-         MBeanServer mbeanServer = (MBeanServer)MBeanServerFactory.findMBeanServer("jboss").get(0);
+         MBeanServer mbeanServer = (MBeanServer)MBeanServerFactory.findMBeanServer(null).get(0);
          ObjectName on = new ObjectName("jboss.web:J2EEApplication=none,J2EEServer=none,WebModule=//www.jboss.org/jaxws-jbws981,j2eeType=Servlet,name=EJB3Bean");
          mbeanServer.getMBeanInfo(on);
       }

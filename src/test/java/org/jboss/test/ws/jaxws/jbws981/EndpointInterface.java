@@ -16,7 +16,6 @@ import org.jboss.wsf.spi.annotation.WebContext;
 
 @WebService(targetNamespace = "http://www.jboss.org/test/ws/jaxws/jbws981")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-@WebContext(virtualHosts = { "localhost", "www.jboss.org" })
 public interface EndpointInterface
 {
    String hello(String msg);

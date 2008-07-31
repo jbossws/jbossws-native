@@ -50,7 +50,6 @@ public class JBWS981TestCase extends JBossWSTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      if (true) return;
       if (port == null)
       {
          URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws981/EJB3Bean?wsdl");
@@ -63,10 +62,7 @@ public class JBWS981TestCase extends JBossWSTest
 
    public void testCall() throws Exception
    {
-      System.out.println("FIXME: [JBWS-981] Virtual host configuration for EJB endpoints");
-      if (true) return;
-
-      String message = "hello";
+      String message = "Web service mapped to virtual host.";
       assertEquals("Web service mapped to virtual host.", port.hello(message));
    }
 }
