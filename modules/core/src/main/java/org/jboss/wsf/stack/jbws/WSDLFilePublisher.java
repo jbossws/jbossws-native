@@ -21,8 +21,6 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-// $Id$
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;

@@ -29,7 +29,6 @@ import org.xml.sax.ContentHandler;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Jul 5, 2006
  */
 public interface JBossXBMarshaller {

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.annotation;
 
-// $Id: $
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.binding.jbossxb;
 
-// $Id$
-
 /** JBossXB Constants
  *
  * @author Thomas.Diesler@jboss.org

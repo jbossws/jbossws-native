@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.addressing;
 
-//$Id$
-
 import java.util.List;
 import java.util.Map;
 

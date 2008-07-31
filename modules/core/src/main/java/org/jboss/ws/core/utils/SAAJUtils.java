@@ -30,7 +30,6 @@ import javax.xml.soap.SOAPException;
 /**
  * SAAJ utilities.
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public class SAAJUtils
 {

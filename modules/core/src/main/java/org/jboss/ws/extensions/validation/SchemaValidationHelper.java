@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.validation;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;

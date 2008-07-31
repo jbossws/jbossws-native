@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.feature;
 
-// $Id$
-
 import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.ws.Constants;

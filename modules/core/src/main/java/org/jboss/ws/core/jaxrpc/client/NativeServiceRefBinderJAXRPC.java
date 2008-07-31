@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.client;
 
-// $Id$
-
 import java.lang.reflect.AnnotatedElement;
 
 import javax.naming.Context;

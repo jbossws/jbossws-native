@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.config.binding;
 
-//$Id$
-
 import java.util.List;
 
 import org.jboss.logging.Logger;

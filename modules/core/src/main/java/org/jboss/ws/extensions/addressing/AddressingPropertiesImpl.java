@@ -37,8 +37,6 @@ import javax.xml.ws.addressing.EndpointReference;
 import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.addressing.Relationship;
 
-// $Id$
-
 /** 
  * Each instance is associated with a particular WS-Addressing schema whose 
  * namespace URI is returned by its <code>getAddressingVersion</code> method.

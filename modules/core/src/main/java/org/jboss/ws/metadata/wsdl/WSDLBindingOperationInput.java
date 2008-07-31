@@ -23,8 +23,6 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
 
-// $Id$
-
 /**
  * A Binding Message Reference component describes a concrete binding of a particular message
  * participating in an operation to a particular concrete message format.

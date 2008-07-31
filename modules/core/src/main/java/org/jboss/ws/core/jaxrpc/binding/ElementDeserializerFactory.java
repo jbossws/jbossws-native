@@ -24,10 +24,6 @@ package org.jboss.ws.core.jaxrpc.binding;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
 import org.jboss.ws.core.binding.DeserializerSupport;
 
-
-// $Id$
-
-
 /**
  * A factory for a Deserializer that can handle XMLSchema simple types.
  *

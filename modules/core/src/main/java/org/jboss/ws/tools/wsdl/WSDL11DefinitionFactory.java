@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.tools.wsdl;
 
-// $Id$
-
 import java.net.URL;
 
 import javax.wsdl.Definition;

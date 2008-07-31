@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-//$Id$
-
 import javax.xml.namespace.QName;
 
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;

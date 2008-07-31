@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.validation;
 
-//$Id$
-
 import org.jboss.logging.Logger;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;

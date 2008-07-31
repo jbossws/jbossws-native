@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id: $
-
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
@@ -32,7 +30,6 @@ import org.jboss.logging.Logger;
  * Represents the DOM_VALID state of an {@link SOAPContentElement}.<br>
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 05.02.2007
  */
 public class DOMContent extends SOAPContent

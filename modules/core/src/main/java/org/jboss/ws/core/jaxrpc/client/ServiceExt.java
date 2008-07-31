@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.client;
 
-//$Id$
-
 import javax.xml.rpc.Service;
 import javax.xml.rpc.handler.HandlerRegistry;
 

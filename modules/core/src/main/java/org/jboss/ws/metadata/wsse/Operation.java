@@ -28,7 +28,6 @@ import java.io.Serializable;
  * operation configurations.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Operation implements Serializable
 {

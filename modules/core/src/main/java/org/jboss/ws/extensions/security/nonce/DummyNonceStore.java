@@ -23,8 +23,6 @@ package org.jboss.ws.extensions.security.nonce;
 
 import org.jboss.logging.Logger;
 
-//$Id$
-
 /**
  * A dummy nonce store providing no actual
  * security increase against replay attacks.

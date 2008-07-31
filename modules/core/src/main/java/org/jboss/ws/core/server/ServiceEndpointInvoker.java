@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.server;
 
-// $Id$
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;

@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.metadata.config.jaxrpc;
 
-
-// $Id$
-
 /** 
  * A JBossWS client configuration 
  *

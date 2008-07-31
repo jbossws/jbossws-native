@@ -21,8 +21,6 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-//$Id: UnifiedMetaDataDeployer.java 3186 2007-05-22 15:39:58Z thomas.diesler@jboss.com $
-
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;

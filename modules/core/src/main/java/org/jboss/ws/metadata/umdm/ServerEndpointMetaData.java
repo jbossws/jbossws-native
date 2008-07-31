@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.wsf.spi.deployment.Endpoint;

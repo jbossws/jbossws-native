@@ -23,8 +23,6 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
 
-// $Id$
-
 /**
  * A feature component describes an abstract piece of functionality typically associated with the exchange of
  * messages between communicating parties. Although WSDL poses no constraints on the potential scope of

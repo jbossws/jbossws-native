@@ -33,7 +33,6 @@ import org.w3c.dom.UserDataHandler;
  * An implementation of a DOM Document fragment. This just delegates to 
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class DocumentFragmentImpl implements DocumentFragment
 {

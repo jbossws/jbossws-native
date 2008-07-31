@@ -21,11 +21,8 @@
 */
 package org.jboss.ws.core.jaxrpc.handler;
 
-// $Id$
-
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * Represents a list of handlers. All elements in the

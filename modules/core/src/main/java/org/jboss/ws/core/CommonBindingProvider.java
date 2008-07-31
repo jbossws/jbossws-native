@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id$
-
 import java.util.Observable;
 
 import javax.xml.ws.http.HTTPBinding;

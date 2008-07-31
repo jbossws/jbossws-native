@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-// $Id$
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

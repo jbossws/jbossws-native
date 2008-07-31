@@ -50,7 +50,6 @@ import org.apache.xerces.xs.XSTypeDefinition;
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
  * @since Jun 9, 2006
- * @version $Id$
  */
 public class XOPScanner {
 

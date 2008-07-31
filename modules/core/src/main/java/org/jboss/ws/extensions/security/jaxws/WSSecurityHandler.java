@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.jaxws;
 
-// $Id$
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;

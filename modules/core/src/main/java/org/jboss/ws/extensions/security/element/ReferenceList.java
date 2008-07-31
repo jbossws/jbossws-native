@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public class ReferenceList
 {

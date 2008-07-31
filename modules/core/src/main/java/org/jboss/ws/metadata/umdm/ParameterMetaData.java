@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +39,6 @@ import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
 import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
-import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;

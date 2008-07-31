@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.metadata;
 
-// $Id$
-
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;

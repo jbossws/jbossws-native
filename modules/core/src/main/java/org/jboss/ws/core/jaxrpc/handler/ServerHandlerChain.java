@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.handler;
 
-// $Id$
-
 import java.util.List;
 import java.util.Set;
 

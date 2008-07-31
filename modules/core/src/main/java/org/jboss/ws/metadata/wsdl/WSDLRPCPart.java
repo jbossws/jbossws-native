@@ -28,7 +28,6 @@ import javax.xml.namespace.QName;
  * only used for WSDL 1.1 compatibility.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WSDLRPCPart
 {

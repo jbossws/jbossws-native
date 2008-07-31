@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;

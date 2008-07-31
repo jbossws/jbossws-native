@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-// $Id$
-
 /**
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  */

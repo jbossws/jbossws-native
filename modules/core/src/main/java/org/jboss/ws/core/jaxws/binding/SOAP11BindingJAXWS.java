@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
-// $Id: SOAPBindingImpl.java 716 2006-08-09 16:42:10Z thomas.diesler@jboss.com $
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

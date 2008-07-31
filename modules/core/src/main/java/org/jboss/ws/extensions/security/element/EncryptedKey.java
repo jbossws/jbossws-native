@@ -41,7 +41,6 @@ import org.w3c.dom.Element;
  * <code>EncryptedKey</code> represents the am XMLSecurity encrypted key.
  *
  * @author Jason T. Greene
- * @version $Id$
  */
 public class EncryptedKey implements SecurityProcess
 {

@@ -42,7 +42,6 @@ import org.jboss.wsf.common.JavaUtils;
  * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 05.02.2007
  */
 public class ObjectContent extends SOAPContent

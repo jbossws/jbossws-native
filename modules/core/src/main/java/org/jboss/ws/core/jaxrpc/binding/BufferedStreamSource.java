@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;

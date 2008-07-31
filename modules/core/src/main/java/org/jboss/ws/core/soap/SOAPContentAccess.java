@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-//$Id: $
-
 import javax.xml.transform.Source;
 
 /**

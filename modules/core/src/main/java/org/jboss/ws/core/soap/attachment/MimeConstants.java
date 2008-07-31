@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.soap.attachment;
 
-// $Id$
-
 /**
  * Generic mime related constants.
  *

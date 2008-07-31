@@ -25,8 +25,6 @@ import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
-// $Id$
-
 /**
  * Created by IntelliJ IDEA.
  *

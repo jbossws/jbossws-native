@@ -25,9 +25,6 @@ import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
-// $Id$
-
-
 /**
  * A "property" in the Features and Properties architecture represents a named runtime value which affects
  * the behaviour of some aspect of a Web service interaction, much like an environment variable. For

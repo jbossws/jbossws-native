@@ -32,7 +32,6 @@ import java.util.List;
  * message format.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public abstract class WSDLBindingMessageReference extends Extendable
 {

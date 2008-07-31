@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools;
 
-// $Id$
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,7 +29,6 @@ import java.net.URLClassLoader;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.tools.config.ToolsSchemaConfigReader;
 import org.jboss.ws.tools.helpers.ToolsHelper;
 

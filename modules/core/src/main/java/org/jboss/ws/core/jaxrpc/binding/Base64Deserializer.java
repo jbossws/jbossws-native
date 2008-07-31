@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.binding;
 
-// $Id$
-
 import java.io.IOException;
 
 import javax.xml.namespace.QName;

@@ -23,8 +23,6 @@ package org.jboss.ws.core.soap;
 
 import org.jboss.ws.Constants;
 
-// $Id$
-
 /** A type-safe enumeration for encoding use.
  *  
  * @author Thomas.Diesler@jboss.org

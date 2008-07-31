@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-//$Id: $
-
 import java.lang.reflect.Field;
 
 import org.jboss.ws.WSException;
@@ -31,7 +29,6 @@ import org.jboss.ws.WSException;
  * A simple Java field accessor that uses ordinary reflection.
  *
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision: 1760 $
  */
 @SuppressWarnings("unchecked")
 public class ReflectiveFieldAccessor implements Accessor

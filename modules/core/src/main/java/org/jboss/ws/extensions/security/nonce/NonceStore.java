@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.nonce;
 
-//$Id$
-
 /**
  * A nonce store collects recently used nonces.
  * 

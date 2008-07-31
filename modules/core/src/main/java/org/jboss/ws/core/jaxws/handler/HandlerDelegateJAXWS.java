@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-// $Id:HandlerDelegateJAXWS.java 710 2006-08-08 20:19:52Z thomas.diesler@jboss.com $
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;

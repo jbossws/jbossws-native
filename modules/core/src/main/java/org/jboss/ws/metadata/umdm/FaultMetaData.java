@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;

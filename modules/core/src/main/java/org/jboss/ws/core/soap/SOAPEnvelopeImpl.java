@@ -21,12 +21,9 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Name;
 import javax.xml.soap.Node;
 import javax.xml.soap.SOAPBody;

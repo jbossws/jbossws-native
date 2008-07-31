@@ -54,7 +54,6 @@ import org.jboss.xb.binding.sunday.unmarshalling.UnmarshallingContext;
  * @see XOPMarshallerImpl
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: JBossXBContentAdapter.java 1322 2006-10-27 13:27:04Z heiko.braun@jboss.com $
  * @since Oct 19, 2006
  */
 public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, TermBeforeSetParentCallback {

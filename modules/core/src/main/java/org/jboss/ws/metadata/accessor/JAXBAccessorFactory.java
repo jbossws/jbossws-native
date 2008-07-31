@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-//$Id$
-
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;

@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.nonce;
 
-//$Id$
-
 /**
  * Simple interface for a generator of nonces.
  * 

@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.tools;
 
-// $Id$
-
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;

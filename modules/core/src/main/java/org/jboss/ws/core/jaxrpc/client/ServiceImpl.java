@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.client;
 
-// $Id$
-
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.rmi.Remote;

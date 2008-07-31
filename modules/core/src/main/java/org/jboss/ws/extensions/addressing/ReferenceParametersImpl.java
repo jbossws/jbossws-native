@@ -23,8 +23,6 @@ package org.jboss.ws.extensions.addressing;
 
 import javax.xml.ws.addressing.ReferenceParameters;
 
-// $Id$
-
 /** 
  * Abstraction of ReferenceParameters bucket in an
  * <code>EndpointReference</code>.

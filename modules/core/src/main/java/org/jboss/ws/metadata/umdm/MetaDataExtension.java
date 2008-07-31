@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
 /**
  * Operation metaData extension.
  *

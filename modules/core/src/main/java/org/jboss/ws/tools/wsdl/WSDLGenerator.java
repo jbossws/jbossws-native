@@ -72,12 +72,10 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
-
 /**
  * Generates a WSDL object model.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public abstract class WSDLGenerator
 {

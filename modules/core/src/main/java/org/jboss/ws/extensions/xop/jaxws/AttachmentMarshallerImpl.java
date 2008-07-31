@@ -47,7 +47,6 @@ import org.jboss.ws.extensions.xop.XOPContext;
  * being called by the marshaller for each JAXB property related to {http://ws-i.org/profiles/basic/1.1/xsd}swaRef.
  *
  * @author <a href="heiko.braun@jboss.com">Heiko Braun</a>
- * @version $Revision: 3220 $
  */
 public class AttachmentMarshallerImpl extends AttachmentMarshaller
 {

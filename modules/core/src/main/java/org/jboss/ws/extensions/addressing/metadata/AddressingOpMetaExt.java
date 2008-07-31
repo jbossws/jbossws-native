@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.addressing.metadata;
 
-// $Id$
-
 import org.jboss.ws.metadata.umdm.MetaDataExtension;
 
 /**

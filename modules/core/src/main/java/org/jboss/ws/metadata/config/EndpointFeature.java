@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.config;
 
-// $Id: $
-
 /**
  * @author Heiko.Braun@jboss.org
  * @author Thomas.Diesler@jboss.org

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.binding;
 
-// $Id$
-
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 

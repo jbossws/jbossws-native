@@ -24,10 +24,6 @@ package org.jboss.ws.core.jaxrpc.binding;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
 import org.jboss.ws.core.binding.DeserializerSupport;
 
-
-// $Id$
-
-
 /**
  * DeserializerFactory for base64.
  *

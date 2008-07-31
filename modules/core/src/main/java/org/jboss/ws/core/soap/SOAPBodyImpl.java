@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 import java.util.Iterator;
 import java.util.Locale;
 

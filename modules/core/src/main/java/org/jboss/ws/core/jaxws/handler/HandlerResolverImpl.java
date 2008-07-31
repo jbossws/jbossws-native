@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-// $Id$
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

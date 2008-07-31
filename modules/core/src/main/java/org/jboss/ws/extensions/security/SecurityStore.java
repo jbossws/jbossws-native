@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.security;
 
-// $Id$
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;

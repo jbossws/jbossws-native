@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
-//$Id$
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;

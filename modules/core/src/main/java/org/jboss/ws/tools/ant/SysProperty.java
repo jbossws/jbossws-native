@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.ant;
 
-// $Id$
-
 /**
  *  Nested sysproperty
  *  

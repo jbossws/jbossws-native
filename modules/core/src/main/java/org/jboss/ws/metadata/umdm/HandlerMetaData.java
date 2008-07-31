@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id:HandlerMetaData.java 915 2006-09-08 08:40:45Z thomas.diesler@jboss.com $
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;

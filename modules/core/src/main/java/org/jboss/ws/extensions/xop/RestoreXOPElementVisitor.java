@@ -39,7 +39,6 @@ import org.jboss.ws.core.soap.SOAPElementImpl;
  * the XOP contents are being restored upon request and response.
  * 
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Sep 26, 2006
  */
 public class RestoreXOPElementVisitor implements SAAJVisitor {

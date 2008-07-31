@@ -46,7 +46,6 @@ import org.w3c.dom.UserDataHandler;
  * enscapsulates a single ThreadLocal Document object.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class SOAPDocument implements Document
 {

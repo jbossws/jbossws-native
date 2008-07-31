@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.builder;
 
-// $Id: $
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;

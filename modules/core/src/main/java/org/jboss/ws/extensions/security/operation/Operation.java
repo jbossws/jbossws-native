@@ -25,7 +25,6 @@ package org.jboss.ws.extensions.security.operation;
  * Marker interface for all WS-Security operations
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface Operation
 {

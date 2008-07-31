@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
-// $Id$
-
 import java.util.HashSet;
 import java.util.Set;
 

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id$
-
 /**
  * Provides configuration for JAXRPC/JAXWS ports
  *  

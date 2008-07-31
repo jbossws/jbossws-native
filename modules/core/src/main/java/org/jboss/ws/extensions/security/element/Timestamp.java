@@ -35,7 +35,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Timestamp implements SecurityElement
 {

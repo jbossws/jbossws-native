@@ -26,7 +26,6 @@ package org.jboss.ws.metadata.config;
  * Currently this is implemented by <code>EndpointMetaData</code>.
  *
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 15.12.2006
  *
  * @see org.jboss.ws.metadata.umdm.EndpointMetaData

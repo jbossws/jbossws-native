@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-// $Id$
-
 import java.security.Principal;
 
 import javax.servlet.ServletContext;

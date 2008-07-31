@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
 import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;

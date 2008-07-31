@@ -29,7 +29,6 @@ import java.util.HashMap;
  * security configuration.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Port implements Serializable
 {

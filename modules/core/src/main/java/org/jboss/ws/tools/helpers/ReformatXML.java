@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Sep 27, 2006
  */
 public class ReformatXML {

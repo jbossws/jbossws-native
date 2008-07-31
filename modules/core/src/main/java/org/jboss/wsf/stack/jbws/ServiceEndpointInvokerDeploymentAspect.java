@@ -21,8 +21,6 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-//$Id: ServiceEndpointInvokerDeployer.java 3146 2007-05-18 22:55:26Z thomas.diesler@jboss.com $
-
 import org.jboss.ws.core.server.ServiceEndpointInvoker;
 import org.jboss.ws.core.server.ServiceEndpointInvokerEJB21;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;

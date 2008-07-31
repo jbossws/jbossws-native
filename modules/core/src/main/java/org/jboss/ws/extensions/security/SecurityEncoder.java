@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security;
 
-//$Id$
-
 import java.util.List;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
@@ -31,13 +29,11 @@ import org.jboss.ws.extensions.security.operation.EncodingOperation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 /**
  * <code>SecurityEncoder</code> is responsible for transforming a SOAP message
  * into a WS-Security encoded message.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class SecurityEncoder
 {

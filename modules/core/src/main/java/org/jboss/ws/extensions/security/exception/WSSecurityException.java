@@ -27,7 +27,6 @@ import org.jboss.ws.extensions.security.Constants;
 
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WSSecurityException extends Exception
 {

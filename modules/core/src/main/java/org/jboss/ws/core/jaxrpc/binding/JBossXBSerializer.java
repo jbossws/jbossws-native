@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-// $Id$
-
 import java.io.StringWriter;
 
 import javax.xml.namespace.QName;

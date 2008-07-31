@@ -26,8 +26,6 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.Relationship;
 
-// $Id$
-
 /** 
  * Abstraction of the RelatesToType defined by WS-Addressing. Includes an ID
  * property that references the MessageID of the related message and a Type

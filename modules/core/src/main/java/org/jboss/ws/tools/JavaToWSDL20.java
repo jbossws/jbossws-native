@@ -29,8 +29,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 
-// $Id$
-
 /**
  * Generates a WSDL-2.0 from a Service Endpoint Interface
  * @author Thomas.Diesler@jboss.org

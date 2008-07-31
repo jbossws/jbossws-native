@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.addressing;
 
-//$Id$
-
 import java.net.URI;
 import java.net.URISyntaxException;
 

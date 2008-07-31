@@ -37,7 +37,6 @@ import java.util.List;
  *
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  * @author <a href="heiko.braun@jboss.com">Heiko Braun</a>
- * @version $Revision$
  */
 public class SunRIConsumerImpl extends WSContractConsumer
 {

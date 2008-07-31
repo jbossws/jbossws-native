@@ -29,8 +29,6 @@ import javax.xml.soap.AttachmentPart;
 
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
-// $Id$
-
 /**
  * An extension of the standard JAXRPC/JAXWS stubs.
  *

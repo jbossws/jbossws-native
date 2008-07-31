@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.client;
 
-// $Id: $
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;

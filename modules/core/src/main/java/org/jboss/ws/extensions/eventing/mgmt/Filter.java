@@ -21,8 +21,6 @@
   */
 package org.jboss.ws.extensions.eventing.mgmt;
 
-// $Id$
-
 import java.net.URI;
 
 /**

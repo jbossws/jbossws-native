@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-//$Id$
-
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 

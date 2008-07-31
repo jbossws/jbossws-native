@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.binding;
 
-// $Id: SerializationContext.java 2634 2007-03-16 23:44:09Z jason.greene@jboss.com $
-
 import java.util.HashMap;
 import java.util.Map;
 

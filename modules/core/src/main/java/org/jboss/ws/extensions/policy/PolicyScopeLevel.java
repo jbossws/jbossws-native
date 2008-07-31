@@ -21,7 +21,6 @@
  */
 package org.jboss.ws.extensions.policy;
 
-
 /**
  * When attaching a Policy to a WSDL element, a Policy Scope is implied for that attachment.
  * PolicyScopeLevel enumerates all kind of element a Policy can be attached to in wsdl 1.1. 

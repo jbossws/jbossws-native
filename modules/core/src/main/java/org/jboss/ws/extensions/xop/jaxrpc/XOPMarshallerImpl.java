@@ -44,7 +44,6 @@ import org.jboss.xb.binding.sunday.xop.XOPObject;
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
  * @since May 9, 2006
- * @version $Id$
  */
 public class XOPMarshallerImpl implements XOPMarshaller {
 

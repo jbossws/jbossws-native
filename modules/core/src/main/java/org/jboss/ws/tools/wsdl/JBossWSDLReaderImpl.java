@@ -51,15 +51,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-
 /**
  * A WSDLReader fork of the original wsdl4j 1.6.2 package
  * that delegates to the JBossWSEntityResolver  in
  * <code>private static Document getDocument(InputSource inputSource,String desc)</code>
  * <p>
  * Original authors: Matthew J. Duftler,Nirmal Mukhi
- * 
- * @version $Revision$
  */
 public class JBossWSDLReaderImpl implements WSDLReader
 {

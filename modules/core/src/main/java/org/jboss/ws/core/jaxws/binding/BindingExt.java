@@ -21,15 +21,12 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
-//$Id$
-
 import java.util.List;
 
 import javax.xml.ws.Binding21;
 import javax.xml.ws.handler.Handler;
 
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-
 
 /**
  * Extension to JAXWS protocol bindings. 

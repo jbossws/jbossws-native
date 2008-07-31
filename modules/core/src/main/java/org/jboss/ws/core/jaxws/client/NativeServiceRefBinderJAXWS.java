@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-// $Id$
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;

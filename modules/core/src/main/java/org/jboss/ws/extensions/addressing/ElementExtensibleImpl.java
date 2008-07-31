@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.addressing;
 
-//$Id$
-
 import java.util.ArrayList;
 import java.util.List;
 

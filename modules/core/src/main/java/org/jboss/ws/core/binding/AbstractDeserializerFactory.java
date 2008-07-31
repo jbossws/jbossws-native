@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.binding;
 
-// $Id: DeserializerFactoryBase.java 2210 2007-01-31 09:51:54Z thomas.diesler@jboss.com $
-
 import java.util.Iterator;
 
 import javax.xml.rpc.encoding.Deserializer;

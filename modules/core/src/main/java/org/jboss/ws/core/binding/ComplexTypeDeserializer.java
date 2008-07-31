@@ -26,8 +26,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 
-// $Id$
-
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.
  *

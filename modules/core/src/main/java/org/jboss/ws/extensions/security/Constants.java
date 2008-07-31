@@ -25,10 +25,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.xml.security.utils.EncryptionConstants;
 
-
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public class Constants
 {

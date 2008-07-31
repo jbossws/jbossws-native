@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.spi;
 
-// $Id$
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Proxy;

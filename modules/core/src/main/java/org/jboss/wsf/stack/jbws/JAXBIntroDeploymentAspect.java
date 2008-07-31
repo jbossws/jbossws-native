@@ -36,7 +36,6 @@ import java.io.InputStream;
 
 /**
  * @author Heiko.Braun@jboss.com
- * @version $Revision$
  */
 public class JAXBIntroDeploymentAspect extends DeploymentAspect
 {

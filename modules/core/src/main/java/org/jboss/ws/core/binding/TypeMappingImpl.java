@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.binding;
 
-// $Id$
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;

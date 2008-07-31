@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-// $Id$
-
 import javax.xml.rpc.Call;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;

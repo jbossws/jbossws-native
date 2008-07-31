@@ -25,9 +25,6 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
 import org.jboss.ws.core.binding.DeserializerSupport;
 
-
-// $Id$
-
 /**
  * A factory for a Deserializer that can handle SOAP encoded arrays.
  *

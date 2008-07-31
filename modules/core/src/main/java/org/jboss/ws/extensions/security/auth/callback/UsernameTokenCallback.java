@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.security.auth.callback;
 
-//$Id$
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.HashMap;

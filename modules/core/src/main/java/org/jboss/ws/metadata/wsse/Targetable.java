@@ -29,7 +29,6 @@ import java.util.ArrayList;
  * tags as child elements.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Targetable implements Serializable
 {

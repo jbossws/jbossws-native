@@ -39,13 +39,11 @@ import org.jboss.ws.extensions.security.exception.SecurityTokenUnavailableExcept
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 
-
 /**
  * <code>KeyResolver</code> is responsible for locating security tokens
  * within a WS-Security message.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class KeyResolver
 {

@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
  * thread safety.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class DOMTypes extends WSDLTypes
 {

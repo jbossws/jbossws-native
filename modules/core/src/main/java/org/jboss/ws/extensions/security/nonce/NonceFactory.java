@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.nonce;
 
-//$Id$
-
 /**
  * Generic interface for a factory of nonce generator and nonce store.
  * 

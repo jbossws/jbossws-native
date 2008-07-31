@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
 import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.TypeMappingImpl;

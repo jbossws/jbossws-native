@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.metadata.config.jaxws;
 
-
-// $Id$
-
 /** 
  * A JBossWS endpoint configuration 
  *

@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
-
 /**
  * Metadata that is Inizializable
  * 

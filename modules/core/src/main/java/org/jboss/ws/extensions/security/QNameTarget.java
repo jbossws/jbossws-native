@@ -23,11 +23,8 @@ package org.jboss.ws.extensions.security;
 
 import javax.xml.namespace.QName;
 
-
-
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class QNameTarget extends Target
 {

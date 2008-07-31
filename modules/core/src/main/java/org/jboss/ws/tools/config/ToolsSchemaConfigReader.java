@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.config;
 
-// $Id$
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

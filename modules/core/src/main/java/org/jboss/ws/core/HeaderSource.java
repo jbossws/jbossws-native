@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
  * HeaderSource provides header information to the binding layer.
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface HeaderSource
 {

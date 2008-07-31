@@ -27,7 +27,6 @@ import java.util.Set;
  * RoleSource provides role information to the binding layer.
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface RoleSource
 {

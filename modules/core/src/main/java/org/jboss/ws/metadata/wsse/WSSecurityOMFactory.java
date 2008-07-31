@@ -42,7 +42,6 @@ import org.xml.sax.Attributes;
  * configuration. See the jboss-ws-security_1_0.xsd file for more info.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WSSecurityOMFactory implements ObjectModelFactory
 {

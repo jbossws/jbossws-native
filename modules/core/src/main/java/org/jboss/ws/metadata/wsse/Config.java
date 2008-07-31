@@ -27,7 +27,6 @@ import java.io.Serializable;
  * <code>Config</code> represents the config tag.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Config implements Serializable
 {

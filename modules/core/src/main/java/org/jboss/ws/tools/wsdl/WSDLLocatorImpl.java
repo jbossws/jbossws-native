@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.wsdl;
 
-// $Id$
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

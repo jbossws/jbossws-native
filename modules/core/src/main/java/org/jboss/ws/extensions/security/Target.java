@@ -21,10 +21,8 @@
 */
 package org.jboss.ws.extensions.security;
 
-
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 abstract public class Target
 {

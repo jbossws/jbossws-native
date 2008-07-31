@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.addressing;
 
-//$Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingConstants;
 

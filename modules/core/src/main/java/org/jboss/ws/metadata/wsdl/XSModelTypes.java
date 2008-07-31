@@ -33,7 +33,6 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  * A JBossXSModel based type definition.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class XSModelTypes extends WSDLTypes
 {

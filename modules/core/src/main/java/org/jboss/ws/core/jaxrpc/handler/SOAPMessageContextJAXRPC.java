@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.handler;
 
-// $Id$
-
 import javax.xml.rpc.handler.soap.SOAPMessageContext;
 import javax.xml.soap.SOAPMessage;
 

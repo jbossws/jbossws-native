@@ -31,7 +31,6 @@ import org.jboss.ws.core.soap.SOAPElementImpl;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id: CreateAttachmentVisitor.java 1408 2006-11-07 13:42:25Z heiko.braun@jboss.com $
  * @since Nov 7, 2006
  */
 public class CreateAttachmentVisitor implements SAAJVisitor {

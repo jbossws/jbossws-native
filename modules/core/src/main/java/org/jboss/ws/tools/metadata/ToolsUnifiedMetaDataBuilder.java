@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.metadata;
 
-// $Id$
-
 import java.rmi.Remote;
 import java.util.List;
 import java.util.Map;

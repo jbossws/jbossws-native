@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-// $Id:HandlerChainExecutor.java 710 2006-08-08 20:19:52Z thomas.diesler@jboss.com $
-
 import java.util.ArrayList;
 import java.util.List;
 

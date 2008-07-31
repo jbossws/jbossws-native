@@ -33,7 +33,6 @@ import org.w3c.dom.Document;
  * message.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface DecodingOperation extends Operation
 {

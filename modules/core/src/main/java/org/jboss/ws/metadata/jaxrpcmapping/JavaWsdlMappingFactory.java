@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.metadata.jaxrpcmapping;
 
-// $Id$
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

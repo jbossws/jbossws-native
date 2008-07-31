@@ -26,7 +26,6 @@ package org.jboss.ws.metadata.wsse;
  * should be signed.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class RequireSignature extends Targetable
 {

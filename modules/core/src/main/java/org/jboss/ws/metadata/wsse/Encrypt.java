@@ -28,7 +28,6 @@ import java.io.Serializable;
  * message should be encrypted.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Encrypt extends Targetable implements Serializable
 {

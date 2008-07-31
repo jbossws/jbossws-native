@@ -45,7 +45,6 @@ import org.jboss.xb.binding.sunday.xop.XOPUnmarshaller;
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
  * @since May 9, 2006
- * @version $Id$
  */
 public class XOPUnmarshallerImpl implements XOPUnmarshaller {
 

@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id:CommonClient.java 660 2006-08-01 16:29:43Z thomas.diesler@jboss.com $
-
-
 /**
  * A holder for the message direction
  *

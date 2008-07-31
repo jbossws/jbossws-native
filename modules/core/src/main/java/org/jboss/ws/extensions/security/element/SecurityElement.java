@@ -24,10 +24,8 @@ package org.jboss.ws.extensions.security.element;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 
-
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface SecurityElement
 {

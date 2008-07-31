@@ -21,12 +21,9 @@
  */
 package org.jboss.ws.extensions.security.jaxrpc;
 
-// $Id$
-
 import javax.xml.rpc.handler.MessageContext;
 
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-
 
 /**
  * A JAXRPC handler that delegates to the WSSecurityDispatcher

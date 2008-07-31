@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.extensions.eventing.common;
 
-
-// $Id$ 
-
 import javax.xml.namespace.QName;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.ws.addressing.AddressingBuilder;

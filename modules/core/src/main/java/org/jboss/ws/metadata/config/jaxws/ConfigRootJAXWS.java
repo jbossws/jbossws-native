@@ -24,7 +24,6 @@ package org.jboss.ws.metadata.config.jaxws;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /** 
  * A JBossWS configuration 
  *

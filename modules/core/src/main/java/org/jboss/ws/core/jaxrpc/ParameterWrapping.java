@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-// $Id$
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -254,7 +252,6 @@ public class ParameterWrapping
     * document/literal wrapped type
     *
     * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
-    * @version $Revision$
     */
    public static class WrapperType
    {

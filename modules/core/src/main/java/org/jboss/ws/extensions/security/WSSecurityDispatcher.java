@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.security;
 
-// $Id$
-
 import java.util.ArrayList;
 import java.util.List;
 

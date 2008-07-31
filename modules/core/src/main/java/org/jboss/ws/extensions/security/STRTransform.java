@@ -42,7 +42,6 @@ import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-
 /**
  * <code>STRTransform</code> implements the STR-Transform specified in the
  * WS-Security specification. This class dynamically registers itself with
@@ -52,7 +51,6 @@ import org.xml.sax.SAXException;
  * this class.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class STRTransform extends TransformSpi
 {

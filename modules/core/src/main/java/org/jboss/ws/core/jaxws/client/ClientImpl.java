@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-// $Id$
-
 import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;

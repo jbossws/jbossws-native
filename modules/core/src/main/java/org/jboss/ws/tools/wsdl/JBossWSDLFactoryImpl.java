@@ -36,8 +36,6 @@ import javax.wsdl.xml.WSDLWriter;
  * that delegates to the {@link JBossWSDLReaderImpl}.
  * <p>
  * Original author: Matthew J. Duftler (duftler@us.ibm.com)
- *
- * @version $Revision$
  */
 public class JBossWSDLFactoryImpl extends WSDLFactory
 {

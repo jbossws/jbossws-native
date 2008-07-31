@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id: SOAPFaultException.java 3509 2007-06-08 15:50:12Z thomas.diesler@jboss.com $
-
 import javax.xml.namespace.QName;
 
 /** 

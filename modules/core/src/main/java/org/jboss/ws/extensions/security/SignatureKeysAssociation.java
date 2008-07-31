@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security;
 
-//$Id$
-
 import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.List;

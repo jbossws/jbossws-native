@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.policy;
 
-//$Id$
-
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Document;

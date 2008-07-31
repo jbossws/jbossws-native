@@ -26,8 +26,6 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 
-// $Id: ComplexTypeSerializer.java 1757 2006-12-22 15:40:24Z thomas.diesler@jboss.com $
-
 /**
  * A Serializer that can handle complex types by delegating to JAXB.
  *

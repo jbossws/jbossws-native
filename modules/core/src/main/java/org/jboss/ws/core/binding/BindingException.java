@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.binding;
 
-// $Id$
-
 /** An exception that may occur during message binding
  *
  * @author Thomas.Diesler@jboss.org

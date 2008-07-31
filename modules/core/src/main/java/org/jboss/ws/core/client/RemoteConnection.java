@@ -21,14 +21,12 @@
  */
 package org.jboss.ws.core.client;
 
-
 import java.io.IOException;
 
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.MessageAbstraction;
 
-// $Id$
 
 /**
  * A remote connection 

@@ -33,7 +33,6 @@ import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 public class X509Token extends BinarySecurityToken
 {
    private X509Certificate cert;

@@ -21,15 +21,12 @@
  */
 package org.jboss.ws.metadata.wsse;
 
-// $Id: $
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**

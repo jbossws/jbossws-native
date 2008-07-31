@@ -27,7 +27,6 @@ import java.io.Serializable;
  * <code>Requires</code> represents the require tag.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Requires implements Serializable
 {

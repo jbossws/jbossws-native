@@ -27,7 +27,6 @@ import java.io.Serializable;
  * <code>Target</code> represents the target tag.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class Target implements Serializable
 {

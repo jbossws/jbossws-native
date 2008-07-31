@@ -21,10 +21,8 @@
 */
 package org.jboss.ws.extensions.security.element;
 
-
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public interface SecurityProcess extends SecurityElement
 {

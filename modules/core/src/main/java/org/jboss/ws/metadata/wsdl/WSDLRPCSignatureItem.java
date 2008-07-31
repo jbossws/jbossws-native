@@ -26,7 +26,6 @@ package org.jboss.ws.metadata.wsdl;
  * Represents an individual item of a wrpc:signature
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WSDLRPCSignatureItem
 {

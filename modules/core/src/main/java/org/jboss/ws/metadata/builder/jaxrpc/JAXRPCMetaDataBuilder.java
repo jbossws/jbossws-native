@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.builder.jaxrpc;
 
-//$Id$
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc;
 
-// $Id$
-
 import java.awt.Image;
 
 import javax.activation.DataHandler;

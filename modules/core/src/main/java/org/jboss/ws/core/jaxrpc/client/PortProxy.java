@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.client;
 
-// $Id$
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;

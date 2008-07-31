@@ -23,10 +23,6 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
 
-
-// $Id$
-
-
 /**
  * The WSDL include element information item allows for the separation of different components of a
  * service definition, belonging the same target namespace, into independent WSDL documents which can be

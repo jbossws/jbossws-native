@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 /** A type-safe enumeration for encoding style.
  *  
  * @author Thomas.Diesler@jboss.org

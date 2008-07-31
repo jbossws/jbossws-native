@@ -26,7 +26,6 @@ package org.jboss.ws.extensions.security.element;
  * WS-Security message.
  *
  * @author Jason T. Greene
- * @version $Id$
  */
 public interface Token extends SecurityElement
 {

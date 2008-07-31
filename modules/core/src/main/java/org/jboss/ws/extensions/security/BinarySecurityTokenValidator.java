@@ -30,7 +30,6 @@ import org.jboss.ws.extensions.security.exception.WSSecurityException;
  * <code>BinarySecurityTokenValidator</code> is responsible for validating BSTs
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class BinarySecurityTokenValidator
 {

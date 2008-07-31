@@ -23,7 +23,6 @@ package org.jboss.ws.core.soap;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Sep 26, 2006
  */
 public interface SAAJVisitable {

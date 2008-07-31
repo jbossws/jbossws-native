@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.addressing;
 
-//$Id$
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;

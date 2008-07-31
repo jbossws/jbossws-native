@@ -22,8 +22,6 @@
 package org.jboss.ws.extensions.addressing.jaxrpc;
 
 import java.net.URISyntaxException;
-import java.util.Set;
-import java.util.HashSet;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.GenericHandler;

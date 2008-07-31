@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.utils;
 
-// $Id$
-
 import java.security.PublicKey;
 import java.util.List;
 import java.util.Stack;

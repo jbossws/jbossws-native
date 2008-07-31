@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.security.jaxrpc;
 
-// $Id$
-
 import java.io.IOException;
 
 import javax.xml.namespace.QName;

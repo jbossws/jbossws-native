@@ -64,7 +64,6 @@ import org.jboss.xb.binding.sunday.xop.XOPObject;
  *
  * @author Heiko Braun <heiko.braun@jboss.com>
  * @since May 10, 2006
- * @version $Id$
  */
 public class XOPContext
 {

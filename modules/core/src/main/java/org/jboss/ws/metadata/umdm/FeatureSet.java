@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-// $Id$
-
 import java.util.HashSet;
 import java.util.Set;
 

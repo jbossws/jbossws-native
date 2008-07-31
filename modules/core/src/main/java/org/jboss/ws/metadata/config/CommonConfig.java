@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.config;
 
-//$Id$
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;

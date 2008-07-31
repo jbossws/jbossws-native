@@ -32,7 +32,6 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSStringList;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 15.01.2007
  */
 public class EventingUtils {

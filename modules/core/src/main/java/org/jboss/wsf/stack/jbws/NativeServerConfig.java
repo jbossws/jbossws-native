@@ -21,8 +21,6 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-//$Id: DefaultServerConfig.java 4023 2007-07-28 07:14:06Z thomas.diesler@jboss.com $
-
 import org.jboss.logging.Logger;
 import org.jboss.wsf.common.management.AbstractServerConfig;
 

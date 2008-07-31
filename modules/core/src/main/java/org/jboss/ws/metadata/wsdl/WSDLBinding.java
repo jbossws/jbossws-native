@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.metadata.wsdl;
 
-// $Id$
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id$
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

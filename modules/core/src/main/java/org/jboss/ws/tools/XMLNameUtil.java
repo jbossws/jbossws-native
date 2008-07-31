@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.tools;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 
 /**

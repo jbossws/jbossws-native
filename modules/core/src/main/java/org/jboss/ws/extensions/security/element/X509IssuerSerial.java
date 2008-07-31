@@ -40,7 +40,6 @@ import org.w3c.dom.Element;
  * @see org.jboss.ws.extensions.security.element.BinarySecurityToken
  *
  * @author Jason T. Greene
- * @version $Id$
  */
 public class X509IssuerSerial extends Reference
 {

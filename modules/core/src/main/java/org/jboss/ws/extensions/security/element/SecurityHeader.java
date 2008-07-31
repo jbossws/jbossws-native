@@ -34,13 +34,11 @@ import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 /**
  * <code>SecurityHeader</code> represents the wsse:security element of WS-Security,
  * and is responsible for storing the processing state of a message.
  *
  * @author Jason T. Greene
- * @version $Id$
  */
 public class SecurityHeader implements SecurityElement
 {

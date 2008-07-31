@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.config;
 
-//$Id$
-
 import java.io.IOException;
 import java.net.URL;
 

@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.Name;

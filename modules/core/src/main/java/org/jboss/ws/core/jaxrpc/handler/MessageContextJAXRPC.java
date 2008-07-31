@@ -21,14 +21,11 @@
  */
 package org.jboss.ws.core.jaxrpc.handler;
 
-// $Id$
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.rpc.handler.MessageContext;
-import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;

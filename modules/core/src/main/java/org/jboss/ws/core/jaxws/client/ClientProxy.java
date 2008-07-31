@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-// $Id:ClientProxy.java 1054 2006-09-26 10:33:43Z thomas.diesler@jboss.com $
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;

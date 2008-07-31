@@ -32,8 +32,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 
-// $Id$
-
 /**
  * An Interface Operation component describes an operation that a given interface supports. An operation is
  * an interaction with the service consisting of a set (ordinary and fault) messages exchanged between the

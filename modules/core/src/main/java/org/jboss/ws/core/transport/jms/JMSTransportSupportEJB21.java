@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.transport.jms;
 
-// $Id:JMSTransportSupport.java 915 2006-09-08 08:40:45Z thomas.diesler@jboss.com $
-
 import javax.ejb.EJBException;
 import javax.ejb.MessageDrivenBean;
 import javax.ejb.MessageDrivenContext;

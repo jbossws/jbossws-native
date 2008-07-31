@@ -54,7 +54,6 @@ import java.util.SortedMap;
  * Generates source for wrapper beans
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class SourceWrapperGenerator extends AbstractWrapperGenerator implements WritableWrapperGenerator
 {

@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
  * Represents a WSDL 1.1 MIME Multipart attachment.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WSDLMIMEPart implements Serializable
 {

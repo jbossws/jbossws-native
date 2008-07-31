@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.client;
 
-// $Id$
-
 import java.net.URL;
 import java.util.Properties;
 

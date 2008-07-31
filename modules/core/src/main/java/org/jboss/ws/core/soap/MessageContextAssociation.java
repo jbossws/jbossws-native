@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 import java.util.Stack;
 
 import org.jboss.logging.Logger;

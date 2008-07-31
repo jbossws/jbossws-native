@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.client;
 
-// $Id: ServiceRefBinderJAXWS.java 4049 2007-08-01 11:26:30Z thomas.diesler@jboss.com $
-
 import org.jboss.ws.core.jaxrpc.client.NativeServiceRefBinderJAXRPC;
 import org.jboss.ws.core.jaxws.client.NativeServiceRefBinderJAXWS;
 import org.jboss.wsf.spi.serviceref.ServiceRefBinder;

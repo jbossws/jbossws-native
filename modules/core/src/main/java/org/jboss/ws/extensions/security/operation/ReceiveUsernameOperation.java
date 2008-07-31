@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.security.operation;
 
-// $Id$
-
 import java.util.Calendar;
 
 import javax.security.auth.callback.CallbackHandler;

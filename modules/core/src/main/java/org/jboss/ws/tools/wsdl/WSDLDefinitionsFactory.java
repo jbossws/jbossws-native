@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.wsdl;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;

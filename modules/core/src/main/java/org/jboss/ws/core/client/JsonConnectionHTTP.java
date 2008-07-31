@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.client;
 
-// $Id$
-
 import java.util.Map;
 
 import javax.xml.soap.MimeHeaders;

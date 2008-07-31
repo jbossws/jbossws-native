@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.handler;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.handler.Handler;

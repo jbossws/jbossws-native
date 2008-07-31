@@ -30,10 +30,8 @@ import org.jboss.ws.extensions.security.KeyResolver;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Element;
 
-
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public class Signature implements SecurityProcess
 {

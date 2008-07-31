@@ -23,8 +23,6 @@ package org.jboss.ws.metadata.jaxrpcmapping;
 
 import java.io.Serializable;
 
-// $Id$
-
 /**
  * XML mapping of the java-wsdl-mapping/service-interface-mapping/port-mapping element.
  *

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 

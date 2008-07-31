@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.soap.attachment;
 
-//$Id$
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 

@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.policy;
 
-//$Id$
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

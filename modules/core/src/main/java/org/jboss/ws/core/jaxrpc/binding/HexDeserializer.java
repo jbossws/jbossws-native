@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.core.jaxrpc.binding;
 
-// $Id$
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 

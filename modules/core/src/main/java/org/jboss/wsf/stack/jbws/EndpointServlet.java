@@ -21,11 +21,8 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
 import org.jboss.wsf.spi.SPIProvider;

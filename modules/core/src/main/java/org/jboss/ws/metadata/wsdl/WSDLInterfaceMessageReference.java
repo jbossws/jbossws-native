@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.metadata.wsdl;
 
-// $Id: WSDLInterfaceOperationPart.java 275 2006-05-04 21:36:29Z
-// jason.greene@jboss.com $
-
 import java.util.Collection;
 import java.util.LinkedHashMap;
 

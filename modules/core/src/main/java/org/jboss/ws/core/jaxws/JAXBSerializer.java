@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
 import org.jboss.ws.core.binding.BindingException;

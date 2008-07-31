@@ -21,8 +21,6 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-//$Id: EventingDeployer.java 3146 2007-05-18 22:55:26Z thomas.diesler@jboss.com $
-
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.deployment.EventingEndpointDeployment;
 import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;

@@ -31,7 +31,6 @@ import org.w3c.dom.TypeInfo;
  * after DOM calls are made.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class AttrImpl extends NodeImpl implements Attr
 {

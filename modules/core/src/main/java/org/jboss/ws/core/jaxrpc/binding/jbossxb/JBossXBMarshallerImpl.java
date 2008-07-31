@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.binding.jbossxb;
 
-// $Id$
-
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;

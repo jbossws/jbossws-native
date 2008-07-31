@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-// $Id$
-
 import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
-// $Id$
-
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceProvider;
 

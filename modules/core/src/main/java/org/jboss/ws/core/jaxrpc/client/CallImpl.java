@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.client;
 
-// $Id$
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +59,6 @@ import org.jboss.ws.core.jaxrpc.handler.HandlerChainBaseImpl;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;

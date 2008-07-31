@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.server;
 
-// $Id$
-
 import org.jboss.ws.core.HeaderSource;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;

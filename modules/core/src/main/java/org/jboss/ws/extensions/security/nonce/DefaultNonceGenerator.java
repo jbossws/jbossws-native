@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.nonce;
 
-//$Id$
-
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 

@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-//$Id$
-
 import java.beans.PropertyDescriptor;
 
 import org.jboss.ws.WSException;

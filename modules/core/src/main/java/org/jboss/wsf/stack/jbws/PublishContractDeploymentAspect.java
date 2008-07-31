@@ -21,8 +21,6 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-//$Id: PublishContractDeployer.java 3146 2007-05-18 22:55:26Z thomas.diesler@jboss.com $
-
 import java.io.IOException;
 
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;

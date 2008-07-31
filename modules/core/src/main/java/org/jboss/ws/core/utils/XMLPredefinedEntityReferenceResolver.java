@@ -27,7 +27,6 @@ import java.util.HashMap;
  * Utility class for resolving predefined XML entity and character references.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class XMLPredefinedEntityReferenceResolver
 {

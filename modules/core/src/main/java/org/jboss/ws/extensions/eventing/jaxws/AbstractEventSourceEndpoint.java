@@ -45,7 +45,6 @@ import org.jboss.ws.extensions.eventing.mgmt.SubscriptionTicket;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 16.01.2007
  */
 @WebService(

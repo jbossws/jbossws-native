@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-// $Id: MessageContextImpl.java 275 2006-05-04 21:36:29Z jason.greene@jboss.com $
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;

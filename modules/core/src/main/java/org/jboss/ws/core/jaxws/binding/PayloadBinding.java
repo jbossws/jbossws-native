@@ -21,14 +21,10 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
-// $Id$
-
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.handler.Handler;

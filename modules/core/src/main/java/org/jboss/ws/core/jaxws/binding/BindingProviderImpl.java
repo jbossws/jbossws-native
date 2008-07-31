@@ -21,13 +21,10 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
-// $Id$
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.wsaddressing.BindingProvider21;

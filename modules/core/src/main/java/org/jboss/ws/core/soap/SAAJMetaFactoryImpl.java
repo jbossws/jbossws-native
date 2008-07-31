@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id$
-
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SAAJMetaFactory;
 import javax.xml.soap.SOAPException;

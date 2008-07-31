@@ -24,10 +24,6 @@ package org.jboss.ws.core.jaxrpc.binding;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
 import org.jboss.ws.core.binding.DeserializerSupport;
 
-
-// $Id$
-
-
 /**
  * @author Thomas.Diesler@jboss.org
  * @since 04-Dec-2004

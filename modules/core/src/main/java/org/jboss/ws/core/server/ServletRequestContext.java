@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.server;
 
-// $Id$
-
 import org.jboss.wsf.spi.invocation.InvocationContext;
 
 import javax.servlet.ServletContext;

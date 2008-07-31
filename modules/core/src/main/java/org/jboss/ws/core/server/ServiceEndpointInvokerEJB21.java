@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.server;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;

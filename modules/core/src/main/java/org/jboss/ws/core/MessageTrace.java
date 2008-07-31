@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 
 import javax.xml.soap.SOAPEnvelope;

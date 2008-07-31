@@ -35,7 +35,6 @@ import javax.xml.bind.annotation.XmlTransient;
  * Base class for JAX-WS wrapper generation.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public abstract class AbstractWrapperGenerator implements WrapperGenerator
 {

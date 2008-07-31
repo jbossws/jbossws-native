@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
-// $Id$
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;

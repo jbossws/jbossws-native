@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
-// $Id$
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

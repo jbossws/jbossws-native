@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-// $Id$
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;

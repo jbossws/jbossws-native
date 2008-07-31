@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-//$Id:SOAP11BindingJAXRPC.java 1054 2006-09-26 10:33:43Z thomas.diesler@jboss.com $
-
 import java.util.Set;
 
 import javax.xml.soap.SOAPMessage;

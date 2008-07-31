@@ -28,7 +28,6 @@ import org.jboss.wsf.spi.tools.WSContractConsumerFactory;
  * Creates a WSContractConsumer that delegates to the Sun RI.
  *
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision:2311 $
  */
 public class SunRIConsumerFactoryImpl implements WSContractConsumerFactory
 {

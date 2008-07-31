@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security;
 
-//$Id$
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,6 @@ import org.w3c.dom.Node;
 
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public class Util
 {

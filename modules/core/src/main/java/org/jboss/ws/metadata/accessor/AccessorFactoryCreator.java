@@ -21,14 +21,11 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-//$Id$
-
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
 /**
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface AccessorFactoryCreator
 {

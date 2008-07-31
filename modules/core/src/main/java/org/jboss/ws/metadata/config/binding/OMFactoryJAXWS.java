@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.config.binding;
 
-//$Id$
-
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;

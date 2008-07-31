@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.server;
 
-// $Id$
-
 import java.io.Serializable;
 import java.util.Date;
 

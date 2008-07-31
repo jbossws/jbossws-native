@@ -25,7 +25,6 @@ import java.net.URI;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 14.12.2006
  */
 

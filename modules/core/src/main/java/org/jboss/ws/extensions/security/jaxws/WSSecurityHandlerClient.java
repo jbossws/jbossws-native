@@ -25,8 +25,6 @@ import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 
-// $Id$
-
 /**
  * A JAXWS handler that delegates to the WSSecurityDispatcher
  *

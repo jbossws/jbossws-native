@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.metadata.wsdl;
 
-// $Id$
-
 /**
  * An exception that may occur during WSDL processing.
  *

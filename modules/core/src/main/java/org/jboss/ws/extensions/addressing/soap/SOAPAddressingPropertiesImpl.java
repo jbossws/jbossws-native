@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.extensions.addressing.soap;
 
-//$Id$
-
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;

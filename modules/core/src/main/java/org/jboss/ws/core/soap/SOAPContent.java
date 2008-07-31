@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-// $Id: $
-
 /**
  * Represent SOAP message payload that can transition from
  * one representation to the next.

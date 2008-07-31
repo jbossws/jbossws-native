@@ -23,7 +23,6 @@ package org.jboss.ws.extensions.xop.jaxws;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since Mar 7, 2007
  */
 public final class AttachmentScanResult {

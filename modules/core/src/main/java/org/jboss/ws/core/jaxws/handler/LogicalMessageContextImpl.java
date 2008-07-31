@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-// $Id:LogicalMessageContextImpl.java 888 2006-09-02 00:37:13Z thomas.diesler@jboss.com $
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

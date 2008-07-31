@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.metadata.wsdl;
 
-// $Id$
-
 /**
  * A Message Reference component associates a defined type with a message exchanged in an operation. By
  * default, the type system is based upon the XML Infoset

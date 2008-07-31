@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.wsdl;
 
-// $Id$
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

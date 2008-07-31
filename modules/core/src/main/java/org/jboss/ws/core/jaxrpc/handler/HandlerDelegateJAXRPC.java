@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.handler;
 
-// $Id$
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

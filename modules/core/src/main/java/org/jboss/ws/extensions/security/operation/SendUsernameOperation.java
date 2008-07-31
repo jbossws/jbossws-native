@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.operation;
 
-//$Id$
-
 import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.GregorianCalendar;

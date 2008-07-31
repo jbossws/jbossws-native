@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.transport.jms;
 
-// $Id:JMSTransportSupport.java 915 2006-09-08 08:40:45Z thomas.diesler@jboss.com $
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

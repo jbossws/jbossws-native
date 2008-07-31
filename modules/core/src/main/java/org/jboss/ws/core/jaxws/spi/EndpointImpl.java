@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.spi;
 
-// $Id$
-
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;

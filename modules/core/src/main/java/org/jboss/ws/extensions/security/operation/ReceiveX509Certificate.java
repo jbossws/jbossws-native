@@ -26,7 +26,6 @@ import java.security.cert.X509Certificate;
 
 import org.jboss.logging.Logger;
 import org.jboss.security.CertificatePrincipal;
-import org.jboss.security.auth.certs.SubjectCNMapping;
 import org.jboss.security.auth.certs.SubjectDNMapping;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.X509Token;

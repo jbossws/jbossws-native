@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.utils.HashCodeUtil;

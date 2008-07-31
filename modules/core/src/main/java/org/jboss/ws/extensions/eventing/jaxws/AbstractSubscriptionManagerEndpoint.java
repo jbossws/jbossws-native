@@ -49,7 +49,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author Heiko.Braun@jboss.org
- * @version $Id$
  * @since 16.01.2007
  */
 @WebService(

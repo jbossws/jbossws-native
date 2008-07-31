@@ -31,7 +31,6 @@ import org.w3c.dom.Document;
  * Marker interface for all requirement based WS-Security operations.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public interface RequireOperation extends Operation
 {

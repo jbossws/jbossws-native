@@ -23,9 +23,6 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
 
-
-// $Id$
-
 /**
  * The WSDL import element information item, like the include element information item (see 4.1 Including Descriptions [p.73] )
  * also allows for the separation of the different components of a WSDL description into independent descriptions,

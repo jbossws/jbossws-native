@@ -33,10 +33,8 @@ import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public class UsernameToken implements Token
 {

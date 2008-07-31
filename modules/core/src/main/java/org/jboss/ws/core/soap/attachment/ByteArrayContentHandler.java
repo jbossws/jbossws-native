@@ -37,7 +37,6 @@ import org.jboss.wsf.common.IOUtils;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
- * @version $Id$
  * @since Jul 31, 2006
  */
 public class ByteArrayContentHandler implements DataContentHandler {

@@ -62,7 +62,6 @@ import com.ibm.wsdl.extensions.soap12.SOAP12Constants;
  * Helper methods to translate between SOAPFault and SOAPFaultException
  * as well as between Exception and SOAPMessage containing a fault.
  * @author <a href="mailto:alex.guizar@jboss.com">Alejandro Guizar</a>
- * @version $Revision$
  */
 public class SOAPFaultHelperJAXWS
 {

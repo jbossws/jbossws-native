@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.utils;
 
-// $Id$
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

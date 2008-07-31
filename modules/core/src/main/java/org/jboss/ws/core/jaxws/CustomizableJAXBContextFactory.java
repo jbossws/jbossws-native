@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-// $Id$
-
 import java.util.Collection;
 
 import javax.xml.bind.JAXBContext;

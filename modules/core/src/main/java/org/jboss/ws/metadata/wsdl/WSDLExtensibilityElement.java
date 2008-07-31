@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
  * 
  * @author Alessio Soldano, <alessio.soldano@javalinux.it>
  * @since 24-Apr-2007
- *
  */
 public class WSDLExtensibilityElement implements Serializable
 {

@@ -32,7 +32,6 @@ import javax.xml.namespace.QName;
  * in the message.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 public class WSDLSOAPHeader implements Serializable
 {

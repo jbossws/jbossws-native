@@ -25,8 +25,6 @@ import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.wsf.spi.util.ServiceLoader;
 
-// $Id$
-
 /**
  * A factory for remote connections 
  *

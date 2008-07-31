@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.accessor;
 
-//$Id$
-
 import java.lang.reflect.Method;
 
 import org.jboss.ws.WSException;
@@ -31,7 +29,6 @@ import org.jboss.ws.WSException;
  * A simple JavaBean accessor that uses ordinary reflection.
  *
  * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
- * @version $Revision$
  */
 @SuppressWarnings("unchecked")
 public class ReflectiveMethodAccessor implements Accessor

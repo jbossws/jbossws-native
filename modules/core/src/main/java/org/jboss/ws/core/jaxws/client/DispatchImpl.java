@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-// $Id$
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

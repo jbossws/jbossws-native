@@ -24,10 +24,6 @@ package org.jboss.ws.core.jaxrpc.binding;
 import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 
-
-// $Id$
-
-
 /**
  * SerializerFactory for Date primitives
  *

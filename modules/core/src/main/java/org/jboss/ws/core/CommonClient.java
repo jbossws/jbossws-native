@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id:CommonClient.java 660 2006-08-01 16:29:43Z thomas.diesler@jboss.com $
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -27,10 +27,8 @@ import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 /**
  * @author Jason T. Greene
- * @version $Id$
  */
 public class SecurityTokenReference
 {

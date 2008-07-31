@@ -21,8 +21,6 @@
 */
 package org.jboss.ws.extensions.security.nonce;
 
-//$Id$
-
 /**
  * The default nonce factory
  * 

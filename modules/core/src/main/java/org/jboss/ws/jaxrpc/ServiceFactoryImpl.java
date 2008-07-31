@@ -21,9 +21,6 @@
 */
 package org.jboss.ws.jaxrpc;
 
-// $Id$
-
-
 /**
  * Included for backwards compatibility
  * @deprecated
