@@ -215,6 +215,11 @@ public class MessageFactoryImpl extends MessageFactory
       log.debug("createMessage: [contentType=" + contentType + "]");
 
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
+      String encoding = contentType.getParameterList().get("charset");
+      if (encoding != null)
+      {
+         soapMessage.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, encoding);
+      }
       if (inputStream != null)
       {
          // Debug the incoming message

@@ -82,11 +82,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       try
       {
          InputSource inputSource = new InputSource(ins);
-         String encoding = getEncoding(soapMessage);
-         if (encoding != null)
-         {
-            inputSource.setEncoding(encoding);
-         }
+         inputSource.setEncoding(getEncoding(soapMessage));
          domEnv = DOMUtils.parse(inputSource);
       }
       catch (IOException ex)
@@ -109,11 +105,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       try
       {
          InputSource inputSource = new InputSource( reader );
-         String encoding = getEncoding(soapMessage);
-         if (encoding != null)
-         {
-            inputSource.setEncoding(encoding);
-         }
+         inputSource.setEncoding(getEncoding(soapMessage));
          domEnv = DOMUtils.parse(inputSource);
       }
       catch (IOException ex)
@@ -131,7 +123,12 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
    private String getEncoding(SOAPMessage soapMessage) throws SOAPException
    {
-      return (String)soapMessage.getProperty(SOAPMessage.CHARACTER_SET_ENCODING);
+      String encoding = (String)soapMessage.getProperty(SOAPMessage.CHARACTER_SET_ENCODING);
+      if (encoding == null)
+      {
+         encoding = "UTF-8";
+      }
+      return encoding;  
    }
    
    public SOAPEnvelope build(SOAPMessage soapMessage, Element domEnv) throws SOAPException
