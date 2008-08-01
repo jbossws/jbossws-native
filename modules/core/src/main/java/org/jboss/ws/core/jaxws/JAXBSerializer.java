@@ -21,14 +21,8 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
-import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.binding.ComplexTypeSerializer;
-import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.binding.BufferedStreamResult;
-import org.jboss.wsf.spi.binding.BindingCustomization;
-import org.w3c.dom.NamedNodeMap;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -37,6 +31,15 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.ws.WebServiceException;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.BufferedStreamResult;
+import org.jboss.ws.core.binding.ComplexTypeSerializer;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
+import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.w3c.dom.NamedNodeMap;
 
 /**
  * A Serializer that can handle complex types by delegating to JAXB.
@@ -61,11 +64,9 @@ public class JAXBSerializer extends ComplexTypeSerializer
       Result result = null;
       try
       {
-         // The serialization context contains the base type, which is needed for JAXB to marshall xsi:type correctly.
-         // This should be more efficient and accurate than searching the type mapping
          Class expectedType = serContext.getJavaType();
-         Class actualType = value.getClass();
-         Class[] types = shouldFilter(actualType) ? new Class[]{expectedType} : new Class[]{expectedType, actualType};
+         Class[] types = getClassesForContextCreation(serContext, value);
+         
          JAXBContext jaxbContext = getJAXBContext(types);
 
          Marshaller marshaller = jaxbContext.createMarshaller();
@@ -87,7 +88,27 @@ public class JAXBSerializer extends ComplexTypeSerializer
 
       return result;
    }
-
+   
+   /**
+    * Selects the array of classes to use to create the JAXBContext, as
+    * using the array of types registered for the current endpoint saves time.
+    * 
+    * @param serContext
+    * @param value
+    * @return
+    */
+   private Class[] getClassesForContextCreation(SerializationContext serContext, Object value)
+   {
+      // The serialization context contains the base type, which is needed for JAXB to marshall xsi:type correctly.
+      // This should be more efficient and accurate than searching the type mapping
+      Class expectedType = serContext.getJavaType();
+      Class actualType = value.getClass();
+      Class[] types = shouldFilter(actualType) ? new Class[]{expectedType} : new Class[]{expectedType, actualType};
+      Class[] registeredTypes = (Class[])serContext.getProperty(SerializationContextJAXWS.JAXB_CONTEXT_TYPES);
+      List<Class> typesList = Arrays.asList(registeredTypes);
+      return typesList.containsAll(Arrays.asList(types)) ? registeredTypes : types;
+   }
+   
    /**
     * Retrieve JAXBContext from cache or create new one and cache it.
     * @param types

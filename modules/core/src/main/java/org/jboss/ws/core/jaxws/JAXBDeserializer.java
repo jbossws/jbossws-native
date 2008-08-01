@@ -21,24 +21,20 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
-import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.binding.TypeMappingImpl;
-import org.jboss.ws.core.binding.ComplexTypeDeserializer;
-import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.binding.BindingCustomization;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.ws.WebServiceException;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.binding.ComplexTypeDeserializer;
+import org.jboss.ws.core.binding.SerializationContext;
+import org.jboss.ws.core.binding.TypeMappingImpl;
+import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
+import org.jboss.wsf.spi.binding.BindingCustomization;
 
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.
