@@ -323,4 +323,6 @@ public interface Constants
    static final String WSDL20_PATTERN_OUT_OPT_IN = "http://www.w3.org/2004/08/wsdl/out-opt-in";
 
    static final String ASYNC_METHOD_SUFFIX = "Async";
+   
+   static final String EAGER_INITIALIZE_JAXB_CONTEXT_CACHE = "org.jboss.ws.eagerInitializeJAXBContextCache";
 }
