@@ -71,12 +71,14 @@ public class XSDTypeToJava
    //Additional variables
    protected String containingElement = "";
    protected String fname = "";
-   protected File loc = null;
+   protected String loc = null;
    protected String pkgname = "";
 
    private Set<String> generatedFiles = new HashSet<String>();
 
    protected boolean serializableTypes;
+
+   protected Map<String, String> namespacePackageMap = null;
 
    /**
     * List that is used for exception inheritance case wherein the variables
@@ -85,12 +87,13 @@ public class XSDTypeToJava
     */
    private Map<String, List> typeNameToBaseVARList = new HashMap<String, List>();
 
-   public XSDTypeToJava(boolean serializableTypes)
+   public XSDTypeToJava(Map<String, String> map, boolean serializableTypes)
    {
+      this.namespacePackageMap = map;
       this.serializableTypes = serializableTypes;
    }
 
-   public void createJavaFile(XSComplexTypeDefinition type, File loc, String pkgname, XSModel schema) throws IOException
+   public void createJavaFile(XSComplexTypeDefinition type, String loc, String pkgname, XSModel schema) throws IOException
    {
       if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
@@ -103,7 +106,7 @@ public class XSDTypeToJava
       createJavaFile(type, schema, false);
    }
 
-   public void createJavaFile(XSComplexTypeDefinition type, String containingElement, File loc, String pkgname, XSModel schema, boolean isExceptionType)
+   public void createJavaFile(XSComplexTypeDefinition type, String containingElement, String loc, String pkgname, XSModel schema, boolean isExceptionType)
          throws IOException
    {
       if (typeMapping == null)
@@ -118,7 +121,7 @@ public class XSDTypeToJava
       createJavaFile(type, schema, isExceptionType);
    }
 
-   public void createJavaFile(XSSimpleTypeDefinition type, File loc, String pkgname, XSModel schema) throws IOException
+   public void createJavaFile(XSSimpleTypeDefinition type, String loc, String pkgname, XSModel schema) throws IOException
    {
       if (typeMapping == null)
          throw new WSException("TypeMapping has not been set");
@@ -156,9 +159,16 @@ public class XSDTypeToJava
       vars = this.getVARList(type, schema, isExceptionType);
 
       if (baseName == null && isExceptionType)
+      {
          baseName = "Exception";
-      jwriter.createJavaFile(loc, fname, pkgname, vars, null, baseName, isExceptionType, serializableTypes, typeNameToBaseVARList);
-
+      }
+      else if (baseName != null)
+      {
+         baseName = getPackageName(baseType.getNamespace()) + "." + baseName;
+      }
+      String packageName = getPackageName(type.getNamespace());
+      jwriter.createJavaFile(getLocationForJavaGeneration(packageName), fname, packageName, vars, null, baseName, isExceptionType, serializableTypes,
+            typeNameToBaseVARList);
    }
 
    public void createJavaFile(XSSimpleTypeDefinition xsSimple, XSModel schema) throws IOException
@@ -175,7 +185,8 @@ public class XSDTypeToJava
          if (slist != null && slist.getLength() > 0)
          {
             //Enumerated List
-            jwriter.createJavaFileForEnumeratedValues(fname, slist, loc, pkgname, xsSimple);
+            String packageName = getPackageName(xsSimple.getNamespace());
+            jwriter.createJavaFileForEnumeratedValues(fname, slist, getLocationForJavaGeneration(packageName), packageName, xsSimple);
          }
          else
          {
@@ -270,6 +281,16 @@ public class XSDTypeToJava
    public void setTypeMapping(LiteralTypeMapping tm)
    {
       this.typeMapping = tm;
+   }
+
+   public Map<String, String> getNamespacePackageMap()
+   {
+      return namespacePackageMap;
+   }
+
+   public void setNamespacePackageMap(Map<String, String> map)
+   {
+      this.namespacePackageMap = map;
    }
 
    //PRIVATE METHODS
@@ -429,7 +450,7 @@ public class XSDTypeToJava
             XSSimpleTypeDefinition xstype = att.getTypeDefinition();
             QName qn = SchemaUtils.handleSimpleType(xstype);
             boolean primitive = obj.getRequired();
-            VAR v = createVAR(qn, att.getName(), pkgname, primitive);
+            VAR v = createVAR(qn, att.getName(), getPackageName(xstype.getNamespace()), primitive);
             if (vars == null)
                vars = new ArrayList();
             vars.add(v);
@@ -569,7 +590,7 @@ public class XSDTypeToJava
       {
          // it is a composite type
          QName qn = new QName(origType.getNamespace(), origType.getName());
-         VAR vr = createVAR(qn, elem, (XSComplexTypeDefinition)xstypedef, tname, pkgname, arrayType);
+         VAR vr = createVAR(qn, elem, (XSComplexTypeDefinition)xstypedef, tname, getPackageName(origType.getNamespace()), arrayType);
          vars.add(vr);
          return vars;
       }
@@ -608,7 +629,7 @@ public class XSDTypeToJava
          this.fname = tempfname;
          // Bypass rest of processing
          QName anonqn = new QName(anonName);
-         VAR vr = createVAR(anonqn, elem, xsc, tname, pkgname, arrayType);
+         VAR vr = createVAR(anonqn, elem, xsc, tname, getPackageName(xsc.getNamespace()), arrayType);
          vars.add(vr);
          return vars;
       }
@@ -647,7 +668,7 @@ public class XSDTypeToJava
             this.fname = temp;
          }
 
-         VAR v = createVAR(qn, elem, xstypedef, tname, pkgname, arrayType);
+         VAR v = createVAR(qn, elem, xstypedef, tname, getPackageName(xstypedef.getNamespace()), arrayType);
          vars.add(v);
       }
       return vars;
@@ -767,5 +788,26 @@ public class XSDTypeToJava
       {
          isArrayType = arrayType;
       }
+   }
+
+   private File getLocationForJavaGeneration(String packageName)
+   {
+      File locdir = new File(this.loc);
+      locdir = wsdlUtils.createPackage(locdir.getAbsolutePath(), packageName);
+      return locdir;
+   }
+
+   private String getPackageName(String targetNamespace)
+   {
+      //Get it from global config
+      if (namespacePackageMap != null)
+      {
+         String pkg = namespacePackageMap.get(targetNamespace);
+         if (pkg != null)
+         {
+            return pkg;
+         }
+      }
+      return this.pkgname;
    }
 }

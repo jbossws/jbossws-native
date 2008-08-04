@@ -8,6 +8,15 @@
   <namespaceURI>http://test.jboss.org/ws/jbws1881</namespaceURI>
  </package-mapping>
  <java-xml-type-mapping>
+  <java-type>org.jboss.test.ws.jbws1881.Base</java-type>
+  <root-type-qname xmlns:typeNS='http://test.jboss.org/ws/jbws1881/types'>typeNS:base</root-type-qname>
+  <qname-scope>complexType</qname-scope>
+  <variable-mapping>
+   <java-variable-name>id</java-variable-name>
+   <xml-element-name>id</xml-element-name>
+  </variable-mapping>
+ </java-xml-type-mapping>
+ <java-xml-type-mapping>
   <java-type>org.jboss.test.ws.jbws1881.Person</java-type>
   <root-type-qname xmlns:typeNS='http://test.jboss.org/ws/jbws1881/types'>typeNS:Person</root-type-qname>
   <qname-scope>complexType</qname-scope>
