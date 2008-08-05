@@ -9,9 +9,6 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [JBWS-2194] Cannot get security domain declared through jboss.xml DD
-org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase.*
-
 # [JBAS-5114] MessageDriven EJB3 does not create destination automatically
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/**
