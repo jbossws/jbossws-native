@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.soap;
 
-import org.jboss.logging.Logger;
-
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -45,16 +43,12 @@ import org.jboss.ws.core.client.SOAPProtocolConnectionJMS;
  */
 public class SOAPConnectionImpl extends SOAPConnection
 {
-   // provide logging
-   private static Logger log = Logger.getLogger(SOAPConnectionImpl.class);
 
    private RemoteConnection remotingConnection;
 
-   // private RemotingConnection remotingConnection;
-
    public SOAPConnectionImpl()
    {
-      // remotingConnection = new SOAPProtocolConnectionHTTP();
+      remotingConnection = new SOAPProtocolConnectionHTTP();
    }
 
    /**
@@ -116,12 +110,13 @@ public class SOAPConnectionImpl extends SOAPConnection
 
       if (targetAddress.startsWith("jms"))
       {
-         return new SOAPProtocolConnectionJMS();
+         if (false == (remotingConnection instanceof SOAPProtocolConnectionJMS))
+         {
+            remotingConnection = new SOAPProtocolConnectionJMS();
+         }
       }
-      else
-      {
-         return new SOAPProtocolConnectionHTTP();
-      }
+
+      return remotingConnection;
    }
 
    /**
