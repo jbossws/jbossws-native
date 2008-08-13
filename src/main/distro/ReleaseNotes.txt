@@ -46,6 +46,44 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+What's new in jbossws-native-3.0.3.GA
+----------------------------------------
+
+Feature Request
+
+    * [JBWS-981]  - Virtual host configuration for EJB endpoints
+    * [JBWS-2191] - Provide junit tests for the record management tools
+    * [JBWS-2207] - Allow to fully initialize the WS stack
+    * [JBWS-2270] - Re-use JAXBContext whenever possible
+
+Bug
+
+    * [JBWS-1987] - NoClassDefFoundError with testsuite against SOA-P
+    * [JBWS-2152] - @WebFault does not behave like @XmlType
+    * [JBWS-2155] - Not supporting JMS endpoints for WS-Addressing
+    * [JBWS-2186] - Transforming from SAAJ SOAPBody to StreamResult throws IndexOutOfBoundsException 
+    * [JBWS-2187] - Handler Chain Management Prevents Service Re-Use
+    * [JBWS-2189] - Attribute EncodingType is required for Nonce element
+    * [JBWS-2190] - Default encoding is used to decode responses
+    * [JBWS-2194] - Cannot get security domain declared through jboss.xml DD
+    * [JBWS-2216] - Soap address incorrect for https
+    * [JBWS-2233] - EJB3 webserviceref failure
+    * [JBWS-2234] - SOAP 1.2 Endpoint sends SOAP 1.1 messages
+    * [JBWS-2240] - PortComponent from jboss.xml descriptor is not parsed
+    * [JBWS-2242] - WSDL To Java doesn't handle hyphens in PortType properly
+    * [JBWS-2250] - Reference to JAXBElement Causes NullPointerException on deployment
+    * [JBWS-2260] - WSDL to Java, hyphen in PortType not being mapped correctly in generated descriptors
+    * [JBWS-2265] - Wrong UsernameTokenProfile namespace in Password Type attribute
+
+Task
+
+    * [JBWS-2182] - Provide a partial encryption test case
+    * [JBWS-2255] - Upgrade JAXR from 1.2.0.GA to 1.2.0.SP2
+
+Errata
+
+    See: TODO: http://jira.jboss.org/jira/browse/JBWS-2281
+    
 What's new in jbossws-native-3.0.2.GA
 ----------------------------------------
 
