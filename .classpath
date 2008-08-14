@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="output/tests/wsconsume/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test-framework/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="thirdparty/activation.jar"/>
 	<classpathentry kind="lib" path="thirdparty/getopt.jar"/>
