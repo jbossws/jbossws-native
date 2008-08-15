@@ -33,6 +33,7 @@
     </import>
     <import componentref="jbpm/bpel">
       <compatible version="@jbpm-bpel@"/>
+      <compatible version="1.0.0.GA"/>
     </import>
     <import componentref="stax-api">
       <compatible version="@stax-api@"/>

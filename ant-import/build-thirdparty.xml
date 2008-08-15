@@ -126,46 +126,49 @@
     
     <checksum file="${core.dir}/version.properties" fileext=".md5"/>
   </target>
-  
+
   <target name="thirdparty-classpath" depends="thirdparty-get">
-    
+
     <!-- The compile classpath for jbossws core -->
-     <path id="thirdparty.classpath">
-        <!-- A stack MUST NOT have a compile time dependency on jbossws-framework.jar -->
-        <pathelement location="${thirdparty.dir}/jbossws-common.jar"/>
-        <pathelement location="${thirdparty.dir}/jbossws-spi.jar"/>
-       
-        <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar"/>
-        <pathelement location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar"/>
-  		  <pathelement location="${thirdparty.dir}/ant.jar"/>
-		    <pathelement location="${thirdparty.dir}/activation.jar"/>
-        <pathelement location="${thirdparty.dir}/dom4j.jar"/>
-        <pathelement location="${thirdparty.dir}/getopt.jar"/>
-        <pathelement location="${thirdparty.dir}/javassist.jar"/>
-        <pathelement location="${thirdparty.dir}/jaxb-api.jar"/>
-        <pathelement location="${thirdparty.dir}/jaxb-impl.jar"/>
-        <pathelement location="${thirdparty.dir}/jaxb-xjc.jar"/>
-        <pathelement location="${thirdparty.dir}/jaxws-rt.jar"/>
-        <pathelement location="${thirdparty.dir}/jaxws-tools.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-common-core.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-dependency.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-j2ee.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-logging-spi.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-microcontainer.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-remoting.jar"/>
-        <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar"/>
-        <pathelement location="${thirdparty.dir}/jbosssx.jar"/>
-        <pathelement location="${thirdparty.dir}/mail.jar"/>
-        <pathelement location="${thirdparty.dir}/policy.jar"/>
-        <pathelement location="${thirdparty.dir}/servlet-api.jar"/>
-        <pathelement location="${thirdparty.dir}/stax-api.jar"/>
-        <pathelement location="${thirdparty.dir}/wsdl4j.jar"/>
-        <pathelement location="${thirdparty.dir}/wstx.jar"/>
-        <pathelement location="${thirdparty.dir}/xalan.jar"/>
-        <pathelement location="${thirdparty.dir}/xmlsec.jar"/>
-        <pathelement location="${thirdparty.dir}/xercesImpl.jar"/>
-       <pathelement location="${thirdparty.dir}/jboss-jaxb-intros.jar"/>
-     </path>
+    <path id="thirdparty.classpath">
+      <!-- A stack MUST NOT have a compile time dependency on jbossws-framework.jar -->
+      <pathelement location="${thirdparty.dir}/jbossws-common.jar" />
+      <pathelement location="${thirdparty.dir}/jbossws-spi.jar" />
+
+      <pathelement
+        location="${thirdparty.dir}/ejb3.deployer/jboss-annotations-ejb3.jar" />
+      <pathelement
+        location="${thirdparty.dir}/ejb3.deployer/jboss-ejb3x.jar" />
+      <pathelement location="${thirdparty.dir}/ant.jar" />
+      <pathelement location="${thirdparty.dir}/activation.jar" />
+      <pathelement location="${thirdparty.dir}/dom4j.jar" />
+      <pathelement location="${thirdparty.dir}/getopt.jar" />
+      <pathelement location="${thirdparty.dir}/javassist.jar" />
+      <pathelement location="${thirdparty.dir}/jaxb-api.jar" />
+      <pathelement location="${thirdparty.dir}/jaxb-impl.jar" />
+      <pathelement location="${thirdparty.dir}/jaxb-xjc.jar" />
+      <pathelement location="${thirdparty.dir}/jaxws-rt.jar" />
+      <pathelement location="${thirdparty.dir}/jaxws-tools.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-common-core.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-dependency.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-j2ee.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-logging-spi.jar" />
+      <pathelement
+        location="${thirdparty.dir}/jboss-microcontainer.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-remoting.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-xml-binding.jar" />
+      <pathelement location="${thirdparty.dir}/jbosssx.jar" />
+      <pathelement location="${thirdparty.dir}/mail.jar" />
+      <pathelement location="${thirdparty.dir}/policy.jar" />
+      <pathelement location="${thirdparty.dir}/servlet-api.jar" />
+      <pathelement location="${thirdparty.dir}/stax-api.jar" />
+      <pathelement location="${thirdparty.dir}/wsdl4j.jar" />
+      <pathelement location="${thirdparty.dir}/wstx.jar" />
+      <pathelement location="${thirdparty.dir}/xalan.jar" />
+      <pathelement location="${thirdparty.dir}/xmlsec.jar" />
+      <pathelement location="${thirdparty.dir}/xercesImpl.jar" />
+      <pathelement location="${thirdparty.dir}/jboss-jaxb-intros.jar" />
+    </path>
 
   </target>
 
