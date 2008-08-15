@@ -16,7 +16,6 @@
     </import>
     <import componentref="jboss/remoting">
       <compatible version="@jboss-remoting-jboss42@"/>
-      <compatible version="@jboss-remoting-jboss42@-brew"/>
     </import>
     
     <export>
