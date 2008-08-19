@@ -23,16 +23,22 @@ package org.jboss.ws.core.jaxws.handler;
 
 // $Id: MessageContextImpl.java 275 2006-05-04 21:36:29Z jason.greene@jboss.com $
 
+import java.io.IOException;
+import java.net.URL;
+
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
+import org.xml.sax.InputSource;
 
 /**
  * The interface MessageContext abstracts the message context that is processed by a handler in the handle  method.
@@ -105,12 +111,43 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
       MessageContextAssociation.popMessageContext();
       SOAPMessageContextJAXWS resContext = new SOAPMessageContextJAXWS(reqContext);
       resContext.setSOAPMessage(null);
-      
+
       // Reverse the direction
       resContext.put(MessageContext.MESSAGE_OUTBOUND_PROPERTY, new Boolean(!outbound));
-      
+
       MessageContextAssociation.pushMessageContext(resContext);
 
       return resContext;
+   }
+   @Override
+   public void setOperationMetaData(OperationMetaData opMetaData)
+   {
+      super.setOperationMetaData(opMetaData);
+
+      // [JBWS-2031] Implement standard message context properties
+      if (opMetaData != null)
+      {
+         EndpointMetaData epMetaData = opMetaData.getEndpointMetaData();
+         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
+
+         URL wsdlURL = serviceMetaData.getWsdlFileOrLocation();
+         if (wsdlURL != null)
+         {
+            try
+            {
+               InputSource inputSource = new InputSource(wsdlURL.openStream());
+               put(MessageContext.WSDL_DESCRIPTION, inputSource);
+            }
+            catch (IOException ex)
+            {
+               throw new WSException("Cannot open: " + wsdlURL);
+            }
+         }
+
+         put(MessageContext.WSDL_SERVICE, serviceMetaData.getServiceName());
+         put(MessageContext.WSDL_PORT, epMetaData.getPortName());
+         put(MessageContext.WSDL_INTERFACE, epMetaData.getPortTypeName());
+         put(MessageContext.WSDL_OPERATION, opMetaData.getQName());
+      }
    }
 }

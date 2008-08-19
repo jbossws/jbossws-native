@@ -78,7 +78,7 @@ public class ServiceMetaData implements InitalizableMetaData
    private String wsdlFile;
    private URL mappingLocation;
    private String wsdlPublishLocation;
-   
+
    // The optional service handlers
    private List<HandlerMetaDataJAXWS> handlers = new ArrayList<HandlerMetaDataJAXWS>();
 
@@ -89,16 +89,16 @@ public class ServiceMetaData implements InitalizableMetaData
 
    // Arbitrary properties given by <call-property>
    private Properties properties;
-   
+
    // derived cached encoding style
    private Use encStyle;
-   
+
    // The security configuration
    private WSSecurityConfiguration securityConfig;
-   
+
    // The key to the wsdl cache
    private String wsdlCacheKey;
-   
+
    public ServiceMetaData(UnifiedMetaData wsMetaData, QName serviceName)
    {
       this.wsMetaData = wsMetaData;
@@ -190,7 +190,7 @@ public class ServiceMetaData implements InitalizableMetaData
    {
       handlers.add(handler);
    }
-   
+
    public List<HandlerMetaDataJAXWS> getHandlerMetaData()
    {
       return Collections.unmodifiableList(handlers);
@@ -279,6 +279,28 @@ public class ServiceMetaData implements InitalizableMetaData
     */
    public WSDLDefinitions getWsdlDefinitions()
    {
+      URL wsdlURL = getWsdlFileOrLocation();
+
+      WSDLDefinitions wsdlDefinitions = null;
+      if (wsdlURL != null)
+      {
+         // The key should not after it is assigned
+         if (wsdlCacheKey == null)
+            wsdlCacheKey = "#" + (wsdlLocation != null ? wsdlLocation : wsdlFile);
+
+         wsdlDefinitions = (WSDLDefinitions)wsMetaData.getWsdlDefinition(wsdlCacheKey);
+         if (wsdlDefinitions == null)
+         {
+            WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
+            wsdlDefinitions = factory.parse(wsdlURL);
+            wsMetaData.addWsdlDefinition(wsdlCacheKey, wsdlDefinitions);
+         }
+      }
+      return wsdlDefinitions;
+   }
+
+   public URL getWsdlFileOrLocation()
+   {
       URL wsdlURL = wsdlLocation;
       if (wsdlURL == null && wsdlFile != null)
       {
@@ -291,7 +313,7 @@ public class ServiceMetaData implements InitalizableMetaData
          {
             // ignore
          }
-         
+
          // Try wsdlFile as child from root 
          if (wsdlURL == null)
          {
@@ -306,23 +328,8 @@ public class ServiceMetaData implements InitalizableMetaData
             }
          }
       }
-      
-      WSDLDefinitions wsdlDefinitions = null;
-      if (wsdlURL != null)
-      {
-         // The key should not after it is assigned
-         if (wsdlCacheKey == null)
-            wsdlCacheKey = "#" + (wsdlLocation != null ? wsdlLocation : wsdlFile);
-         
-         wsdlDefinitions = (WSDLDefinitions)wsMetaData.getWsdlDefinition(wsdlCacheKey);
-         if (wsdlDefinitions == null)
-         {
-            WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-            wsdlDefinitions = factory.parse(wsdlURL);
-            wsMetaData.addWsdlDefinition(wsdlCacheKey, wsdlDefinitions);
-         }
-      }
-      return wsdlDefinitions;
+
+      return wsdlURL;
    }
 
    public TypeMappingImpl getTypeMapping()
