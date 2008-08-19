@@ -151,7 +151,7 @@ public class LogicalMessageImpl implements LogicalMessage
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
 
-         SOAPContentElement bodyElement = getBodyElement(soapBody);
+         SOAPContentElement bodyElement = (SOAPContentElement)getBodyElement(soapBody);
          if (bodyElement != null)
          {
             payload = bodyElement.getObjectValue();
@@ -171,7 +171,7 @@ public class LogicalMessageImpl implements LogicalMessage
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
 
-         SOAPContentElement bodyElement = getBodyElement(soapBody);
+         SOAPContentElement bodyElement = (SOAPContentElement)getBodyElement(soapBody);
          if (bodyElement != null)
          {
             bodyElement.setObjectValue(payload);
@@ -184,17 +184,17 @@ public class LogicalMessageImpl implements LogicalMessage
       }
    }
 
-   private SOAPContentElement getBodyElement(final SOAPBodyImpl soapBody)
+   private SOAPElement getBodyElement(final SOAPBodyImpl soapBody)
    {
-      SOAPContentElement bodyElement = null;
+      SOAPElement bodyElement = null;
 
       NodeList nodes = soapBody.getChildNodes();
       for (int i = 0; i < nodes.getLength() && bodyElement == null; i++)
       {
          Node current = nodes.item(i);
-         if (current instanceof SOAPContentElement)
+         if (current instanceof SOAPElement)
          {
-            bodyElement = (SOAPContentElement)current;
+            bodyElement = (SOAPElement)current;
          }
       }
 
