@@ -49,6 +49,8 @@ import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.spi.util.ServiceLoader;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * The LogicalMessageContext interface extends MessageContext to provide access to a the 
@@ -78,7 +80,7 @@ public class LogicalMessageImpl implements LogicalMessage
       {
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
-         SOAPElement bodyElement = (SOAPElement)soapBody.getFirstChild();
+         SOAPElement bodyElement = getBodyElement(soapBody);
 
          if (style == Style.RPC)
          {
@@ -104,7 +106,7 @@ public class LogicalMessageImpl implements LogicalMessage
       {
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
-         SOAPElement bodyElement = (SOAPElement)soapBody.getFirstChild();
+         SOAPElement bodyElement = getBodyElement(soapBody);
          try
          {
             if (style == Style.RPC)
@@ -138,9 +140,9 @@ public class LogicalMessageImpl implements LogicalMessage
          HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
          httpMessage.setXmlFragment(new XMLFragment(source));
       }
-      
+
       MessageContextAssociation.peekMessageContext().setModified(true);
-      
+
    }
 
    public Object getPayload(JAXBContext jaxbContext)
@@ -151,7 +153,7 @@ public class LogicalMessageImpl implements LogicalMessage
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
 
-         SOAPContentElement bodyElement = (SOAPContentElement)soapBody.getFirstChild();
+         SOAPContentElement bodyElement = (SOAPContentElement)getBodyElement(soapBody);
          if (bodyElement != null)
          {
             payload = bodyElement.getObjectValue();
@@ -171,7 +173,7 @@ public class LogicalMessageImpl implements LogicalMessage
          SOAPMessage soapMessage = (SOAPMessage)message;
          SOAPBodyImpl soapBody = getSOAPBody(soapMessage);
 
-         SOAPContentElement bodyElement = (SOAPContentElement)soapBody.getFirstChild();
+         SOAPContentElement bodyElement = (SOAPContentElement)getBodyElement(soapBody);
          if (bodyElement != null)
          {
             bodyElement.setObjectValue(payload);
@@ -182,6 +184,23 @@ public class LogicalMessageImpl implements LogicalMessage
       {
          throw new NotImplementedException();
       }
+   }
+
+   private SOAPElement getBodyElement(final SOAPBodyImpl soapBody)
+   {
+      SOAPElement bodyElement = null;
+
+      NodeList nodes = soapBody.getChildNodes();
+      for (int i = 0; i < nodes.getLength() && bodyElement == null; i++)
+      {
+         Node current = nodes.item(i);
+         if (current instanceof SOAPElement)
+         {
+            bodyElement = (SOAPElement)current;
+         }
+      }
+
+      return bodyElement;
    }
 
    private SOAPBodyImpl getSOAPBody(SOAPMessage soapMessage)
