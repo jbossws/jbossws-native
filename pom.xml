@@ -253,7 +253,7 @@
         </exclusions>
       </dependency>
       
-      <!-- transitve dependencies -->
+      <!-- transitive dependencies -->
       <dependency>
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
@@ -287,6 +287,10 @@
           <exclusion>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.stream</groupId>
+            <artifactId>sjsxp</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
