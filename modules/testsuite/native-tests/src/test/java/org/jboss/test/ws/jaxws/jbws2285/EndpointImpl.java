@@ -31,7 +31,7 @@ import javax.jws.WebService;
  * @since 19th August 2008
  */
 @WebService(name = "Endpoint", targetNamespace = "http://ws.jboss.org/jbws2285", endpointInterface = "org.jboss.test.ws.jaxws.jbws2285.Endpoint")
-@HandlerChain(file = "WEB-INF/server-handlers.xml")
+@HandlerChain(file = "server-handlers.xml")
 public class EndpointImpl implements Endpoint
 {
 
