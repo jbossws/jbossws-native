@@ -21,3 +21,6 @@ org/jboss/test/ws/jaxws/endpoint/**
 
 # [JBWS-2217] Fix BPEL samples before AS50 goes final
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
+# [JBAS-5673] Metadata processing needs to be redone
+org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefServletTestCase.*
