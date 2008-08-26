@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.webserviceref;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.io.InputStream;
 
@@ -77,41 +79,62 @@ public class StubPropertyTestCase extends JBossWSTest
    {
       String reqMsg = "SecureService1";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg, "kermit", "thefrog" });
-      assertEquals(reqMsg, SecureEndpointClient.retStr);
+      assertResult(reqMsg);
    }
 
    public void testExplicitSecureService2() throws Throwable
    {
       String reqMsg = "SecureService2";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg, "kermit", "thefrog" });
-      assertEquals(reqMsg, SecureEndpointClient.retStr);
+      assertResult(reqMsg);
    }
 
    public void testExplicitSecurePort1() throws Throwable
    {
       String reqMsg = "SecurePort1";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg, "kermit", "thefrog" });
-      assertEquals(reqMsg, SecureEndpointClient.retStr);
+      assertResult(reqMsg);
    }
 
    public void testImplicitSecureService1() throws Throwable
    {
       String reqMsg = "SecureService1";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg });
-      assertEquals(reqMsg, SecureEndpointClient.retStr);
+      assertResult(reqMsg);
    }
 
    public void testImplicitSecureService2() throws Throwable
    {
       String reqMsg = "SecureService2";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg });
-      assertEquals(reqMsg, SecureEndpointClient.retStr);
+      assertResult(reqMsg);
    }
 
    public void testImplicitSecurePort1() throws Throwable
    {
       String reqMsg = "SecurePort1";
       new ClientLauncher().launch(SecureEndpointClient.class.getName(), "jbossws-client", new String[] { reqMsg });
-      assertEquals(reqMsg, SecureEndpointClient.retStr);
+      assertResult(reqMsg);
+   }
+   
+   private static void assertResult(String expected) throws Exception
+   {
+      Class<?> empty[] = {};
+      try
+      {
+         //Use reflection to compile on AS 5.0.0.CR1 too
+         Method getMainClassMethod = ClientLauncher.class.getMethod("getTheMainClass", empty);
+         //At least JBoss AS 5.0.0.CR2
+         //Use reflection to prevent double loading of the client class
+         Class<?> clientClass = (Class<?>)getMainClassMethod.invoke(null, empty);
+         Field field = clientClass.getField("retStr");
+         String result = (String)field.get(clientClass);
+         assertEquals(expected, result);
+      }
+      catch (NoSuchMethodException e)
+      {
+         //JBoss AS 5.0.0.CR1
+         assertEquals(expected, SecureEndpointClient.retStr);
+      }
    }
 }

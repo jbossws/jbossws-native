@@ -25,7 +25,9 @@ import org.jboss.logging.Logger;
 import org.jboss.test.ws.jaxws.webserviceref.TestEndpoint;
 import org.jboss.test.ws.jaxws.webserviceref.TestEndpointService;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceRef;
@@ -33,6 +35,7 @@ import javax.xml.ws.WebServiceRefs;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 @WebServiceRef(name = "Service1")
@@ -60,7 +63,19 @@ public class TestEndpointClientTwo
    static TestEndpoint port3;
 
    static InitialContext iniCtx;
-   static Map<String, String> testResult = new HashMap<String, String>();
+   public static Map<String, String> testResult = new HashMap<String, String>();
+   
+   private static void setInitialCtx() throws NamingException
+   {
+      if (iniCtx == null)
+      {
+         InitialContext ctx = new InitialContext();
+         Hashtable env = ctx.getEnvironment();
+         env.put(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
+         env.put("j2ee.clientName", "jbossws-client");
+         iniCtx = new InitialContext(env);
+      }
+   }
 
    public static void main(String[] args) throws Exception
    {
@@ -89,6 +104,7 @@ public class TestEndpointClientTwo
     */
    public String testService1(String reqStr) throws Exception
    {
+      setInitialCtx();
       TestEndpointService service = (TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service1");
       TestEndpoint port = service.getTestEndpointPort();
       return port.echo(reqStr);
@@ -99,6 +115,7 @@ public class TestEndpointClientTwo
     */
    public String testService2(String reqStr) throws Exception
    {
+      setInitialCtx();
       Service service = (Service)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service2");
 
       TestEndpoint port = service.getPort(TestEndpoint.class);
@@ -115,6 +132,7 @@ public class TestEndpointClientTwo
       TestEndpoint port = ((TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.service3).getTestEndpointPort();
       String resStr1 = port.echo(reqStr);
 
+      setInitialCtx();
       TestEndpointService service = (TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service3");
       port = service.getTestEndpointPort();
 
@@ -132,6 +150,7 @@ public class TestEndpointClientTwo
       String resStr1 = port.echo(reqStr);
       //verifyConfig((ConfigProvider)port);
 
+      setInitialCtx();
       TestEndpointService service = (TestEndpointService)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Service4");
       port = service.getTestEndpointPort();
       //verifyConfig((ConfigProvider)port);
@@ -146,6 +165,7 @@ public class TestEndpointClientTwo
     */
    public String testPort1(String reqStr) throws Exception
    {
+      setInitialCtx();
       TestEndpoint port = (TestEndpoint)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Port1");
       //verifyConfig((ConfigProvider)port);
 
@@ -160,6 +180,7 @@ public class TestEndpointClientTwo
       //verifyConfig((ConfigProvider)port2);
       String resStr1 = org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.port2.echo(reqStr);
 
+      setInitialCtx();
       TestEndpoint port = (TestEndpoint)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Port2");
       //verifyConfig((ConfigProvider)port);
 
@@ -178,6 +199,7 @@ public class TestEndpointClientTwo
       BindingProvider bp = (BindingProvider)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.port3;
       verifyProperties(bp.getRequestContext());
 
+      setInitialCtx();
       TestEndpoint port = (TestEndpoint)org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.iniCtx.lookup("java:comp/env/Port3");
       String resStr2 = port.echo(reqStr);
 

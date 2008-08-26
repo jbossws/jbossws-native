@@ -21,6 +21,10 @@
  */
 package org.jboss.test.ws.jaxws.webserviceref;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Map;
+
 import junit.framework.Test;
 
 import org.jboss.ejb3.client.ClientLauncher;
@@ -40,14 +44,6 @@ public class ServiceRefOverridesTestCase extends JBossWSTest
    public static Test suite()
    {
       return new JBossWSTestSetup(ServiceRefOverridesTestCase.class, "jaxws-webserviceref.war, jaxws-webserviceref-override-client.jar");
-   }
-
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-
-      if (TestEndpointClientTwo.iniCtx == null)
-         TestEndpointClientTwo.iniCtx = getInitialContext();
    }
 
    public void testService1() throws Throwable
@@ -92,9 +88,25 @@ public class ServiceRefOverridesTestCase extends JBossWSTest
       assertEquals(getName() + getName(), resStr);
    }
 
+   @SuppressWarnings("unchecked")
    private String invokeTest(String reqStr) throws Throwable
    {
       new ClientLauncher().launch(TestEndpointClientTwo.class.getName(), "jbossws-client", new String[] { reqStr });
-      return TestEndpointClientTwo.testResult.get(reqStr);
+      Class<?> empty[] = {};
+      try
+      {
+         //Use reflection to compile on AS 5.0.0.CR1 too
+         Method getMainClassMethod = ClientLauncher.class.getMethod("getTheMainClass", empty);
+         //At least JBoss AS 5.0.0.CR2
+         //Use reflection to prevent double loading of the client class
+         Class<?> clientClass = (Class<?>)getMainClassMethod.invoke(null, empty);
+         Field field = clientClass.getField("testResult");
+         return ((Map<String, String>)field.get(clientClass)).get(reqStr);
+      }
+      catch (NoSuchMethodException e)
+      {
+         //JBoss AS 5.0.0.CR1
+         return TestEndpointClientTwo.testResult.get(reqStr);
+      }
    }
 }

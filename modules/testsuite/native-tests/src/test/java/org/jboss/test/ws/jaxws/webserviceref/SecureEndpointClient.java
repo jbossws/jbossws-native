@@ -42,7 +42,7 @@ public class SecureEndpointClient
    @WebServiceRef(name = "SecurePort1")
    static SecureEndpoint securePort1;
 
-   static String retStr;
+   public static String retStr;
 
    public static void main(String[] args)
    {
