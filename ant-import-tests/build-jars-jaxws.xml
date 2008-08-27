@@ -498,6 +498,18 @@
       </webinf>
     </war>  	
 
+    <!-- jaxws-jbws2009 -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jbws2009.war" webxml="${tests.output.dir}/resources/jaxws/jbws2009/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2009/**/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws2009/*TestCase.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbws2009/WEB-INF">
+        <include name="wsdl/**"/>
+        <include name="schema/**"/>
+      </webinf>
+    </war>
+    
     <!-- jaxws-jbws2234 -->
     <war warfile="${tests.output.dir}/libs/jaxws-jbws2234.war" webxml="${tests.output.dir}/resources/jaxws/jbws2234/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">
