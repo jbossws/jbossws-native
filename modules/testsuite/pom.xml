@@ -422,6 +422,11 @@
           <version>${jboss.version}</version>
         </dependency>
         <dependency>
+          <groupId>org.jboss.jbossas</groupId>
+          <artifactId>jboss-as-security</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
           <groupId>org.jboss.javaee</groupId>
           <artifactId>jboss-javaee</artifactId>
           <version>${jboss.version}</version>
@@ -475,6 +480,11 @@
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-ejb3</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.jbossas</groupId>
+          <artifactId>jboss-as-security</artifactId>
           <version>${jboss.version}</version>
         </dependency>
         <dependency>
