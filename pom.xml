@@ -71,7 +71,6 @@
     <jboss.jaxbintros.version>1.0.0.beta2</jboss.jaxbintros.version>
     <jboss.jbosssx.version>2.0.2.CR6</jboss.jbosssx.version>
     <jboss.logging.version>2.0.5.GA</jboss.logging.version>
-    <jboss.microcontainer.version>2.0.0.Beta17</jboss.microcontainer.version>
     <jboss.remoting.version>2.4.0.CR1</jboss.remoting.version>
     <jboss.jaxr.version>1.2.0.SP2</jboss.jaxr.version>
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
@@ -240,17 +239,6 @@
         <groupId>jboss.remoting</groupId>
         <artifactId>jboss-remoting</artifactId>
         <version>${jboss.remoting.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.microcontainer</groupId>
-        <artifactId>jboss-kernel</artifactId>
-        <version>${jboss.microcontainer.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.jboss</groupId>
-            <artifactId>jbossxb</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       
       <!-- transitive dependencies -->

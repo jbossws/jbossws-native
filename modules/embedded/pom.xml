@@ -5,7 +5,7 @@
   <name>JBoss Web Services - Stack Native Embedded</name>
   <artifactId>jbossws-native-embedded</artifactId>
   <packaging>jar</packaging>
-  
+
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.ws.native</groupId>
@@ -13,6 +13,10 @@
     <version>3.0.4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
+  
+  <properties>
+    <jboss.microcontainer.version>2.0.0.Beta17</jboss.microcontainer.version>
+  </properties>
   
   <!-- Dependencies -->
   <dependencies>
@@ -36,6 +40,7 @@
       <groupId>org.jboss.microcontainer</groupId>
       <artifactId>jboss-kernel</artifactId>
       <scope>provided</scope>
+      <version>${jboss.microcontainer.version}</version>
     </dependency>
   </dependencies>
   
