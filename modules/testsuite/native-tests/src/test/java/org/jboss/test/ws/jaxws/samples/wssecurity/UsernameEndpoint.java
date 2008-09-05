@@ -31,7 +31,6 @@ import javax.jws.soap.SOAPBinding;
  *
  * @author <a href="mailto:mageshbk@jboss.com">Magesh Kumar B</a>
  * @since 15-Aug-2007
- * @version $Revision$ 
  */
 @WebService(name = "UsernameEndpoint", targetNamespace = "http://org.jboss.ws/samples/wssecurity")
 @SOAPBinding(style = SOAPBinding.Style.RPC)

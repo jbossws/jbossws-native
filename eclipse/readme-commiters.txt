@@ -1,7 +1,3 @@
-#
-# $Id$ 
-#
-
 1. Edit your subversion config ~/.subversion/config and set the following in each section:
 
 [miscellany]
