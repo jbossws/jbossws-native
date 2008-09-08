@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id$ -->
-
 <jaxrpc-config xmlns="urn:jboss:jaxrpc-config:2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"

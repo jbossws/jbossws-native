@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id$ -->
-
 <webservices
   xmlns="http://java.sun.com/xml/ns/j2ee"
   xmlns:impl="http://org.jboss.test.webservice/jbas897"
