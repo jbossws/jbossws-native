@@ -56,23 +56,9 @@ public class RpcJSETestCase extends JBossWSTest
 
       if (port == null)
       {
-         if (!isTargetJBoss50())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");
-            port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
-         }
-         else
-         {
-            System.out.println("FIXME [JBWS-1397] Fix <wsdl-publish-location> for jboss-5.0.x");
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = getResourceURL("jaxrpc/samples/jsr109pojo/rpclit//WEB-INF/wsdl/TestService.wsdl");
-            URL mappingURL = getResourceURL("jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml");
-            QName qname = new QName("http://org.jboss.ws/samples/jsr109pojo", "TestService");
-            Service service = factory.createService(wsdlURL, qname, mappingURL);
-            port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-jsr109pojo-rpc");
-         }
+         InitialContext iniCtx = getInitialContext();
+         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");
+         port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
       }
    }
 
