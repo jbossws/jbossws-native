@@ -406,7 +406,7 @@
     <profile>
       <id>jboss500</id>
       <properties>
-        <jboss.version>5.0.0.CR1</jboss.version>
+        <jboss.version>5.0.0.CR2</jboss.version>
         <jbossws.integration.target>jboss500</jbossws.integration.target>
       </properties>
       <dependencies>
@@ -435,11 +435,6 @@
           <artifactId>jboss-javaee</artifactId>
           <version>${jboss.version}</version>
         </dependency>
-        <dependency>
-          <groupId>org.jboss.client</groupId>
-          <artifactId>jboss-client</artifactId>
-          <version>${jboss.version}</version>
-        </dependency>
       </dependencies>
       <build>
         <plugins>
@@ -454,6 +449,11 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
+              <!-- TODO: replace with maven dependencies -->
+              <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
+                <additionalClasspathElement>${jboss.home}/server/default/lib/jboss-ejb3-core.jar</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
