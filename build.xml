@@ -105,21 +105,38 @@
   </target>
   
   <target name="build-bin-dist" depends="prepare-deploy" description="Build the binary distribution">
-    
     <echo/>
     <echo message="mvn ${maven.opts} -Pbindist package assembly:directory"/>
     <echo/>
     
-    <delete dir="${stack.output.dir}/jbossws-native-dist"/>
+    <delete dir="${stack.output.dir}/jbossws-native-bin-dist"/>
     <exec dir="${basedir}" executable="mvn" failonerror="true">
       <arg line="${maven.opts} -Pbindist package assembly:directory"/>
     </exec>
 
-    <zip destfile="${stack.output.dir}/jbossws-native-dist.zip">
+    <zip destfile="${stack.output.dir}/jbossws-native-bin-dist.zip">
       <zipfileset
-        dir="${stack.output.dir}/jbossws-native-dist"
+        dir="${stack.output.dir}/jbossws-native-bin-dist"
         includes="build/ deploy/ docs/ tests/ build.xml ant.properties"
-        prefix="jbossws-native-dist"/>
+        prefix="jbossws-native-bin-dist"/>
+    </zip>
+  </target>
+  
+  <target name="build-src-dist" depends="prepare-deploy" description="Build the source distribution">
+    <echo/>
+    <echo message="mvn ${maven.opts} -Psrcdist package assembly:directory"/>
+    <echo/>
+    
+    <delete dir="${stack.output.dir}/jbossws-native-src-dist"/>
+    <exec dir="${basedir}" executable="mvn" failonerror="true">
+      <arg line="${maven.opts} -Psrcdist package assembly:directory"/>
+    </exec>
+
+    <zip destfile="${stack.output.dir}/jbossws-native-src-dist.zip">
+      <zipfileset
+        dir="${stack.output.dir}/jbossws-native-src-dist"
+        includes="modules/ src/ build.xml pom.xml profiles.xml.example"
+        prefix="jbossws-native-src-dist"/>
     </zip>
   </target>
   
