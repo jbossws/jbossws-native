@@ -46,13 +46,13 @@ import org.w3c.dom.UserDataHandler;
 
 /**
  * A representation of a node (element) in an XML document.
- * This interface extnends the standard DOM Node interface with methods for getting and setting the value of a node,
+ * This interface extends the standard DOM Node interface with methods for getting and setting the value of a node,
  * for getting and setting the parent of a node, and for removing a node.
  *
  * When creating a DOM2 tree the objects maintained by the tree are <code>org.w3c.dom.Node</code> objects
  * and not <code>javax.xml.soap.Node</code> objects.
  * <p/>
- * This implementation schields the client from the the underlying DOM2 tree, returning <code>javax.xml.soap.Node</code>
+ * This implementation shields the client from the the underlying DOM2 tree, returning <code>javax.xml.soap.Node</code>
  * objects.
  *
  * @author Thomas.Diesler@jboss.org

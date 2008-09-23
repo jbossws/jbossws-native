@@ -66,7 +66,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
       log.trace("addChildElement: " + child.getElementName());
-      
+
       if ((child instanceof SOAPBodyElement) == false)
          child = convertToBodyElement(child);
 
@@ -192,7 +192,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       }
       return bodyElement;
    }
-   
+
    public Node appendChild(Node newChild) throws DOMException
    {
       log.trace("appendChild: " + newChild.getNodeName());
@@ -236,22 +236,33 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 
       Iterator childElements = getChildElements();
 
+      SOAPElementImpl childElement = null;
+
+      while (childElements.hasNext() == true)
+      {
+         Object current = childElements.next();
+         if (current instanceof SOAPElementImpl)
+            childElement = (SOAPElementImpl)current;
+      }
+
       // zero child elements?
-      if (!childElements.hasNext())
+      if (childElement == null)
          throw new SOAPException("Cannot find SOAPBodyElement");
 
-      SOAPElementImpl childElement = (SOAPElementImpl)childElements.next();
-
       // more than one child element?
-      if (childElements.hasNext())
-         throw new SOAPException("Multiple SOAPBodyElement");
+      while (childElements.hasNext() == true)
+      {
+         Object current = childElements.next();
+         if (current instanceof SOAPElementImpl)
+            throw new SOAPException("Multiple SOAPBodyElement");
+      }
 
       if (childElement instanceof SOAPContentElement)
       {
          // cause expansion to DOM
          SOAPContentElement contentElement = (SOAPContentElement)childElement;
          // TODO change visibility of SOAPContentElement.expandToDOM() to package? 
-         contentElement.getPayload();
+         contentElement.hasChildNodes();
       }
 
       // child SOAPElement is removed as part of this process
