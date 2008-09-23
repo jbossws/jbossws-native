@@ -110,7 +110,7 @@ public class MessageTestCase extends JBossWSTest
       		"xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>" +
       		"<wsse:UsernameToken wsu:Id='token-1-1205341951321-19004769'>" +
       		"<wsse:Username>kermit</wsse:Username>" +
-      		"<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
+      		"<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
       		"<wsse:Nonce EncodingType='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary'>gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=</wsse:Nonce>" +
       		"<wsse:Created>CREATED</wsse:Created>" +
       		"</wsse:UsernameToken>" +
@@ -146,7 +146,7 @@ public class MessageTestCase extends JBossWSTest
             "xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'>" +
             "<wsse:UsernameToken wsu:Id='token-1-1205341951321-19004769'>" +
             "<wsse:Username>kermit</wsse:Username>" +
-            "<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
+            "<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
             "<wsse:Nonce>gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=</wsse:Nonce>" +
             "<wsse:Created>CREATED</wsse:Created>" +
             "</wsse:UsernameToken>" +
@@ -244,6 +244,6 @@ public class MessageTestCase extends JBossWSTest
       Element passwordEl = (Element)DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSSE_NS, "Password")).next();
       assertNotNull(passwordEl);
       assertNotNull(DOMUtils.getTextContent(passwordEl));
-      assertEquals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0#PasswordDigest", passwordEl.getAttribute("Type"));
+      assertEquals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest", passwordEl.getAttribute("Type"));
    }
 }
