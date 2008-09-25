@@ -21,10 +21,14 @@
  */
 package org.jboss.test.ws.tools.scripts;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.common.concurrent.CopyJob; 
 
 /**
  * JBWS-1793: Provide a test case for the tools scripts that reside under JBOSS_HOME/bin
@@ -37,6 +41,7 @@ public class ScriptTestCase extends JBossWSTest
    private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
    private static final String LS = System.getProperty("line.separator"); // '\n' on unix, '\r\n' on windows
    private String TOOLS_CONFIG = getResourceFile("tools" + FS + "scripts" + FS + "wstools-config.xml").getAbsolutePath();
+   private static final String EXT = ":".equals( PS ) ? ".sh" : ".bat";
 
    private String JBOSS_HOME;
    private String JDK_HOME;
@@ -59,7 +64,7 @@ public class ScriptTestCase extends JBossWSTest
       File dest = createResourceFile("wstools" + FS + "java");
       dest.mkdirs();
 
-      String command = JBOSS_HOME + FS + "bin" + FS + "wstools.sh -config " + TOOLS_CONFIG + " -dest "+ dest.getAbsolutePath();
+      String command = JBOSS_HOME + FS + "bin" + FS + "wstools" + EXT + " -config " + TOOLS_CONFIG + " -dest "+ dest.getAbsolutePath();
       Process p = executeCommand(command);
 
       // check status code
@@ -80,10 +85,42 @@ public class ScriptTestCase extends JBossWSTest
       return p;
    }
 
-   private void assertStatusCode(Process p, String s) throws InterruptedException
+   private void assertStatusCode(Process p, String s) throws InterruptedException, IOException
    {
+	   CopyJob job = new CopyJob(p.getInputStream(), System.out);
+	   new Thread( job ).start();
+	   int status = -1;
+	   try
+	   {
+	      status = p.waitFor();
+	   }
+	   finally
+	   {
+	      job.kill();
+         p.destroy();
+      }
+
       // check status code
-      int status = p.waitFor();
+      if (status != 0)
+      {
+         System.out.println("Error stream");
+         printStream(p.getErrorStream());
+      }
       assertTrue(s + " did exit with status " + status, status == 0);
    }
+
+   private void printStream(InputStream is) throws IOException
+   {
+      System.out.println();
+      BufferedReader in = new BufferedReader(new InputStreamReader(is));
+      StringBuffer buffer = new StringBuffer();
+      String line;
+      while ((line = in.readLine()) != null) {
+        buffer.append(line + LS);
+      }
+      System.out.println(buffer.toString());
+      System.out.println();
+      System.out.println();
+   }
+
 }

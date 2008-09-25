@@ -43,6 +43,7 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.common.concurrent.CopyJob; 
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -57,6 +58,7 @@ public class JBWS771TestCase extends JBossWSTest
    private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
    private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
    private static final String LS = System.getProperty("line.separator"); // '\n' on unix, '\r\n' on windows
+   private static final String EXT = ":".equals( PS ) ? ".sh" : ".bat";
 
    private static final String TARGET_NAMESPACE = "http://jbws771.jaxws.ws.test.jboss.org/";
    private static URL wsdlURL;
@@ -156,7 +158,7 @@ public class JBWS771TestCase extends JBossWSTest
    {
       // use absolute path for the output to be re-usable
       String absOutput = createResourceFile("wsconsume" + FS + "java").getAbsolutePath();
-      String command = JBOSS_HOME + FS + "bin" + FS + "wsconsume.sh -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + FS + "jaxws" + FS + "jbws771" + FS + "binding.xml " + wsdlURL.toExternalForm();
+      String command = JBOSS_HOME + FS + "bin" + FS + "wsconsume" + EXT + " -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + FS + "jaxws" + FS + "jbws771" + FS + "binding.xml " + wsdlURL.toExternalForm();
       Process p = executeCommand(command);
 
       // check status code
@@ -187,12 +189,22 @@ public class JBWS771TestCase extends JBossWSTest
 
    private void checkStatusCode(Process p, String s) throws InterruptedException, IOException
    {
+      CopyJob job = new CopyJob(p.getInputStream(), System.out);
+      new Thread( job ).start();
+      int status = -1;
+      try
+      {
+         status = p.waitFor();
+      }
+      finally
+      {
+         job.kill();
+         p.destroy();
+      }
+
       // check status code
-      int status = p.waitFor();
       if (status != 0)
       {
-         System.out.println("Input stream");
-         printStream(p.getInputStream());
          System.out.println("Error stream");
          printStream(p.getErrorStream());
       }
