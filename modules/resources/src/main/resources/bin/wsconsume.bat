@@ -23,7 +23,7 @@ REM         goto loop
 REM :endloop
 
 set JAVA=%JAVA_HOME%\bin\java
-set JBOSS_HOME=%DIRNAME%\..
+@if "%JBOSS_HOME%" == "" set JBOSS_HOME=%DIRNAME%\..
 rem Setup the java endorsed dirs
 set JBOSS_ENDORSED_DIRS=%JBOSS_HOME%\lib\endorsed
 
