@@ -88,6 +88,7 @@ public class ScriptTestCase extends JBossWSTest
    private void assertStatusCode(Process p, String s) throws InterruptedException, IOException
    {
 	   CopyJob job = new CopyJob(p.getInputStream(), System.out);
+      // unfortunately the following thread is needed (otherwise this test will not work on windows)
 	   new Thread( job ).start();
 	   int status = -1;
 	   try
