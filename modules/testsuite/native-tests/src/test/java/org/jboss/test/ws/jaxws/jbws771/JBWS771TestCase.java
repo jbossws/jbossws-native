@@ -21,11 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.jbws771;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
@@ -43,7 +39,6 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.common.concurrent.CopyJob; 
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -57,7 +52,6 @@ public class JBWS771TestCase extends JBossWSTest
 {
    private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
    private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
-   private static final String LS = System.getProperty("line.separator"); // '\n' on unix, '\r\n' on windows
    private static final String EXT = ":".equals( PS ) ? ".sh" : ".bat";
 
    private static final String TARGET_NAMESPACE = "http://jbws771.jaxws.ws.test.jboss.org/";
@@ -65,9 +59,7 @@ public class JBWS771TestCase extends JBossWSTest
    private static IWebsvc port;
 
    private String JBOSS_HOME;
-   private String JDK_HOME;
    private String RESOURCES_DIR;
-   private String OS;
 
    public static Test suite()
    {
@@ -88,8 +80,6 @@ public class JBWS771TestCase extends JBossWSTest
 
       JBOSS_HOME = System.getProperty("jboss.home");
       RESOURCES_DIR = createResourceFile(".").getPath();
-      JDK_HOME = System.getProperty("java.home") + FS + "..";
-      OS = System.getProperty("os.name").toLowerCase();
    }
 
    public void testSubmit() throws Exception
@@ -159,11 +149,7 @@ public class JBWS771TestCase extends JBossWSTest
       // use absolute path for the output to be re-usable
       String absOutput = createResourceFile("wsconsume" + FS + "java").getAbsolutePath();
       String command = JBOSS_HOME + FS + "bin" + FS + "wsconsume" + EXT + " -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + FS + "jaxws" + FS + "jbws771" + FS + "binding.xml " + wsdlURL.toExternalForm();
-      Process p = executeCommand(command);
-
-      // check status code
-      checkStatusCode(p, "wsconsume");
-      
+      executeCommand(command);
       File javaSource = getResourceFile("wsconsume" + FS + "java" + FS + "org" + FS + "jboss" + FS + "test" + FS + "ws" + FS + "jaxws" + FS + "jbws771" + FS + "JBWS771Service.java");
       assertTrue("Service endpoint interface not generated", javaSource.exists());
    }
@@ -175,54 +161,5 @@ public class JBWS771TestCase extends JBossWSTest
 
       Definition definition = wsdlReader.readWSDL(null, wsdlLocation);
       return definition;
-   }
-
-   private Process executeCommand(String command) throws IOException
-   {
-      // be verbose
-      System.out.println("cmd: " + command);
-      System.out.println("resources dir: " + RESOURCES_DIR);
-
-      Process p = Runtime.getRuntime().exec(command, new String[] { "JBOSS_HOME=" + JBOSS_HOME, "JAVA_HOME=" + JDK_HOME });
-      return p;
-   }
-
-   private void checkStatusCode(Process p, String s) throws InterruptedException, IOException
-   {
-      CopyJob job = new CopyJob(p.getInputStream(), System.out);
-      // unfortunately the following thread is needed (otherwise this test will not work on windows)
-      new Thread( job ).start();
-      int status = -1;
-      try
-      {
-         status = p.waitFor();
-      }
-      finally
-      {
-         job.kill();
-         p.destroy();
-      }
-
-      // check status code
-      if (status != 0)
-      {
-         System.out.println("Error stream");
-         printStream(p.getErrorStream());
-      }
-      assertTrue(s + " did exit with status " + status, status == 0);
-   }
-
-   private void printStream(InputStream is) throws IOException
-   {
-      System.out.println();
-      BufferedReader in = new BufferedReader(new InputStreamReader(is));
-      StringBuffer buffer = new StringBuffer();
-      String line;
-      while ((line = in.readLine()) != null) {
-        buffer.append(line + LS);
-      }
-      System.out.println(buffer.toString());
-      System.out.println();
-      System.out.println();
    }
 }
