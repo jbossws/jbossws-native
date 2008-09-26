@@ -85,7 +85,6 @@ public class JBWS1188TestCase extends JBossWSTest
       SOAPMessage resMessage = con.call(reqMessage, "http://" + getServerHost() + ":8080/jaxrpc-jbws1188");
       SOAPElement soapElement = (SOAPElement)resMessage.getSOAPBody().getChildElements().next();
       soapElement = (SOAPElement)soapElement.getChildElements().next();
-      System.out.println(soapElement);
       assertEquals("Hello Jimbo!", soapElement.getValue());
    }
 
@@ -115,7 +114,6 @@ public class JBWS1188TestCase extends JBossWSTest
       SOAPMessage resMessage = con.call(reqMessage, "http://" + getServerHost() + ":8080/jaxrpc-jbws1188");
       SOAPElement soapElement = (SOAPElement)resMessage.getSOAPBody().getChildElements().next();
       soapElement = (SOAPElement)soapElement.getChildElements().next();
-      System.out.println(soapElement);
       assertEquals("Hello Jimbo!", soapElement.getValue());
    }
 }
