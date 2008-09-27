@@ -56,10 +56,8 @@ public class UsernameToken implements Token
    {
       this.doc = element.getOwnerDocument();
       String id = element.getAttributeNS(Constants.WSU_NS, Constants.ID);
-      if (id == null || id.length() == 0)
-         throw new WSSecurityException("Invalid message, UsernameToken is missing an id");
-
-      setId(id);
+      if (id != null && id.length() > 0)
+         setId(id);
 
       Element child = Util.getFirstChildElement(element);
       if (child == null || ! Constants.WSSE_NS.equals(child.getNamespaceURI()) || ! "Username".equals(child.getLocalName()))

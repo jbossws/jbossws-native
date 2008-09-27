@@ -2293,6 +2293,20 @@
       </webinf>
     </war>
     
+    <!-- jaxrpc-jbws1188 -->
+    <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1188.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1188/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxrpc/jbws1188/TestEndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1188/TestEndpoint.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxrpc/jbws1188/WEB-INF">
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+        <include name="jboss-wsse-server.xml"/>
+      </webinf>
+    </war>
+    
     <!-- jaxrpc-jbws1190 -->
     <war warfile="${tests.output.dir}/libs/jaxrpc-jbws1190.war" webxml="${tests.output.dir}/resources/jaxrpc/jbws1190/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/classes">

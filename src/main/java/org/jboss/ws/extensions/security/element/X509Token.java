@@ -51,10 +51,8 @@ public class X509Token extends BinarySecurityToken
       super(element.getOwnerDocument());
 
       String id = element.getAttributeNS(Constants.WSU_NS, Constants.ID);
-      if (id == null || id.length() == 0)
-         throw new WSSecurityException("Invalid message, BinarySecurityToken is missing an id");
-
-      setId(id);
+      if (id != null && id.length() > 0)
+         setId(id);
 
       if (! Constants.BASE64_ENCODING_TYPE.equals(element.getAttribute("EncodingType")))
          throw new WSSecurityException("Invalid encoding type (only base64 is supported) for token:" + id);

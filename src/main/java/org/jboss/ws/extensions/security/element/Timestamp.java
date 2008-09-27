@@ -62,10 +62,8 @@ public class Timestamp implements SecurityElement
    {
       this.doc = element.getOwnerDocument();
       String id = element.getAttributeNS(Constants.WSU_NS, Constants.ID);
-      if (id == null || id.length() == 0)
-         throw new WSSecurityException("Invalid message, Timestamp is missing an id");
-
-      this.id = id;
+      if (id != null && id.length() > 0)
+         this.id = id;
 
       Element child = Util.getFirstChildElement(element);
       if (child == null || !Constants.WSU_NS.equals(child.getNamespaceURI()) || !"Created".equals(child.getLocalName()))
