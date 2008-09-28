@@ -55,11 +55,13 @@ public class JbpmBpelTestSetup extends JBossWSTestSetup
    {
       // Deploy jbpm-bpel.sar if it is not deployed already
       JBossWSTestHelper helper = new JBossWSTestHelper();
+      JBossWSTestHelper.login();
       if (JBossWSTestHelper.getServer().isRegistered(oname) == false)
       {
          helper.deploy("jbpm-bpel.sar");
          undeployOnTearDown = true;
       }
+      JBossWSTestHelper.logout();
       
       for (int i = 0; i < processFiles.length; i++)
       {

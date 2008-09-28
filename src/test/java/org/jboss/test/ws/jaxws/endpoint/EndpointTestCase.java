@@ -61,6 +61,7 @@ public class EndpointTestCase extends JBossWSTest
          protected void setUp() throws Exception
          {
             MBeanServerConnection server = JBossWSTestHelper.getServer();
+            JBossWSTestHelper.login();
             useJBossWebLoader = (Boolean)server.getAttribute(new ObjectName("jboss.web:service=WebServer"), "UseJBossWebLoader");
             server.setAttribute(new ObjectName("jboss.web:service=WebServer"), new Attribute("UseJBossWebLoader", Boolean.TRUE));
             super.setUp();
@@ -71,6 +72,7 @@ public class EndpointTestCase extends JBossWSTest
             super.tearDown();
             MBeanServerConnection server = JBossWSTestHelper.getServer();
             server.setAttribute(new ObjectName("jboss.web:service=WebServer"), new Attribute("UseJBossWebLoader", useJBossWebLoader));
+            JBossWSTestHelper.logout();
          }
       };
    }

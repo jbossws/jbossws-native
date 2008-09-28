@@ -92,6 +92,7 @@ public class EventingSupport extends JBossWSTest
 
    protected void setUp() throws Exception
    {
+      login();
       if (eventSourcePort == null)
       {
          eventSourceURI = new URI(EVENT_SOURCE_NAME);
@@ -115,6 +116,7 @@ public class EventingSupport extends JBossWSTest
       /*ObjectName oname = EventingConstants.getSubscriptionManagerName();
        getServer().invoke(oname, "removeEventSource", new Object[] { new URI(eventSourceURI) }, new String[] { "java.net.URI" });
        */
+      logout();
    }
 
    // ----------------------------------------------------------------------------

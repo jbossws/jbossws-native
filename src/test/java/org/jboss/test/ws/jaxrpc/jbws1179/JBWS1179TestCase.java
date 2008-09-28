@@ -87,6 +87,10 @@ public class JBWS1179TestCase extends JBossWSTest
       MBeanServerConnection server = getServer();
       ObjectName objectName = new ObjectName("jboss.web:host=localhost,path=/jaxrpc-jbws1179,type=Manager");
 
-      return ((Integer)server.getAttribute(objectName, "activeSessions")).intValue();
+      login();
+      int asessions = ((Integer)server.getAttribute(objectName, "activeSessions")).intValue();
+      logout();
+
+      return asessions;
    }
 }

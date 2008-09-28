@@ -54,6 +54,7 @@ public class AddressRewriteTestCase extends JBossWSTest
    {
       wsdlLocation = "http://" + getServerHost() + ":8080/jaxrpc-addressrewrite/ValidURL?wsdl";
       wsdlLocationSec = "http://" + getServerHost() + ":8080/jaxrpc-addressrewrite-sec/ValidURL?wsdl";
+      login();
       modifySOAPAddress = (Boolean)getServer().getAttribute(SERVER_CONFIG_OBJECT_NAME, "ModifySOAPAddress");
       webServiceHost = (String)getServer().getAttribute(SERVER_CONFIG_OBJECT_NAME, "WebServiceHost");
    }
@@ -62,6 +63,7 @@ public class AddressRewriteTestCase extends JBossWSTest
    {
       Attribute attr = new Attribute("ModifySOAPAddress", modifySOAPAddress);
       getServer().setAttribute(SERVER_CONFIG_OBJECT_NAME, attr);
+      logout();
    }
 
    public void testRewrite() throws Exception

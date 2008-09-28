@@ -41,6 +41,16 @@ public class JBWS1115TestCase extends JBossWSTest
 {
    private final ObjectName manager = ObjectNameFactory.create("jboss.ws:service=ServerConfig");
 
+   public void setUp() throws Exception
+   {
+      login();
+   }
+
+   public void tearDown() throws Exception
+   {
+      logout();
+   }
+
    public void testDiscoverWebServicePort() throws Exception
    {
       MBeanServerConnection server = getServer();

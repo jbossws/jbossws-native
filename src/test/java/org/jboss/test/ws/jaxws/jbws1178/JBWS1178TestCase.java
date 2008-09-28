@@ -57,6 +57,7 @@ public class JBWS1178TestCase extends JBossWSTest
 
          public void setUp() throws Exception
          {
+            login();
             // Setting the WebServiceHost to an empty string, causes the request host to be used.  
             // This must be done before deploy time.
             webServiceHost = (String)getServer().getAttribute(objectName, "WebServiceHost");
@@ -68,6 +69,8 @@ public class JBWS1178TestCase extends JBossWSTest
          {
             super.tearDown();
             getServer().setAttribute(objectName, new Attribute("WebServiceHost", webServiceHost));
+            logout();
+
          }
       };
       return testSetup;
