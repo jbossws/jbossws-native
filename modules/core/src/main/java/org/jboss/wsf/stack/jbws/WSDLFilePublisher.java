@@ -271,16 +271,8 @@ public class WSDLFilePublisher
                   log.debug("XMLSchema import published to: " + xsdURL);
 
                   // recursively publish imports
-                  InputStream xsdStream = xsdURL.openStream();
-                  try
-                  {
-                     Element subdoc = DOMUtils.parse(xsdStream);
-                     publishSchemaImports(xsdURL, subdoc, published);
-                  }
-                  finally
-                  {
-                     xsdStream.close();
-                  }
+                  Element subdoc = DOMUtils.parse(xsdURL.openStream());
+                  publishSchemaImports(xsdURL, subdoc, published);
                }
             }
          }
