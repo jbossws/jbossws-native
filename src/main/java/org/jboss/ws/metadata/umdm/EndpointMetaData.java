@@ -39,6 +39,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.Service.Mode;
@@ -505,6 +506,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       eagerInitializeOperations();
       eagerInitializeTypes();
       eagerInitializeAccessors();
+      eagerInitializeJAXBContextCache();
    }
 
    private void eagerInitializeOperations()
@@ -637,6 +639,30 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
             createAccessor(retParam, jaxbCtx);
+      }
+   }
+
+   private void eagerInitializeJAXBContextCache()
+   {
+      // initialize jaxb context cache
+      if ("true".equalsIgnoreCase(System.getProperty(Constants.EAGER_INITIALIZE_JAXB_CONTEXT_CACHE)))
+      {
+         log.debug("Initializing JAXBContext cache...");
+         BindingCustomization bindingCustomization = null;
+         if (this instanceof ServerEndpointMetaData)
+         {
+            bindingCustomization = ((ServerEndpointMetaData)this).getEndpoint().getAttachment(BindingCustomization.class);
+         }
+         try
+         {
+            Class[] classes = getRegisteredTypes().toArray(new Class[0]);
+            JAXBContext context = JAXBContextFactory.newInstance().createContext(classes, bindingCustomization);
+            jaxbCache.add(classes, context);
+         }
+         catch (Exception e)
+         {
+            // ignore
+         }
       }
    }
 

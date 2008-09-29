@@ -22,6 +22,7 @@
 package org.jboss.ws.core.soap;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
@@ -36,6 +37,9 @@ import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
+import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.wsf.common.JavaUtils;
 
 /**
@@ -140,6 +144,10 @@ public class ObjectContent extends SOAPContent
 
       SerializationContext serContext = msgContext.getSerializationContext();
       serContext.setJavaType(javaType);
+      ParameterMetaData pmd = container.getParamMetaData();
+      OperationMetaData opMetaData = pmd.getOperationMetaData();
+      List<Class> registeredTypes = opMetaData.getEndpointMetaData().getRegisteredTypes();
+      serContext.setProperty(SerializationContextJAXWS.JAXB_CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
 
       TypeMappingImpl typeMapping = serContext.getTypeMapping();
       XMLFragment xmlFragment = null;
