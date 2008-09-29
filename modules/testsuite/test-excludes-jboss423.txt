@@ -14,6 +14,9 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [JBWS-2170] Fix embedded for maven build
 org/jboss/test/ws/embedded/**
 
+# [JBWS-2240] PortComponent from jboss.xml descriptor is not parsed
+org/jboss/test/ws/jaxws/jbws2241/**
+
 # [JBWS-981] @WebContext defined virtual hosts only being fixed for JBoss 5 
 org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*
 
