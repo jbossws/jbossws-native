@@ -347,6 +347,14 @@ public class RequestHandlerImpl implements RequestHandler
          // clear thread local storage
          ThreadLocalAssociation.clear();
          DOMUtils.clearThreadLocals();
+         try
+         {
+            outStream.close();
+         }
+         catch (IOException ex)
+         {
+            WSException.rethrow(ex);
+         }
       }
    }
 
@@ -384,8 +392,15 @@ public class RequestHandlerImpl implements RequestHandler
 
             SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
             DOMDocumentSerializer serializer = new DOMDocumentSerializer();
-            serializer.setOutputStream(output);
-            serializer.serialize(soapEnv);
+            try
+            {
+               serializer.setOutputStream(output);
+               serializer.serialize(soapEnv);
+            }
+            finally
+            {
+               output.close();
+            }
          }
          // JSON support
          else if (epMetaData.isFeatureEnabled(JsonEncodingFeature.class) && resMessage instanceof SOAPMessage)
@@ -400,7 +415,14 @@ public class RequestHandlerImpl implements RequestHandler
          }
          else
          {
-            resMessage.writeTo(output);
+            try
+            {
+               resMessage.writeTo(output);
+            }
+            finally
+            {
+               output.close();
+            }
          }
       }
    }
@@ -583,6 +605,7 @@ public class RequestHandlerImpl implements RequestHandler
    {
       log.debug("handleWSDLRequest: " + endpoint.getName());
 
+      InputStream inStream = null;
       try
       {
          if (context instanceof ServletRequestContext)
@@ -596,7 +619,7 @@ public class RequestHandlerImpl implements RequestHandler
                throw new IllegalArgumentException("Invalid endpoint address: " + epAddress);
 
             URL wsdlUrl = new URL(epAddress + "?wsdl");
-            InputStream inStream = wsdlUrl.openStream();
+            inStream = wsdlUrl.openStream();
             IOUtils.copyStream(outStream, inStream);
          }
       }
@@ -607,6 +630,31 @@ public class RequestHandlerImpl implements RequestHandler
       catch (IOException ex)
       {
          throw new WSException(ex);
+      }
+      finally
+      {
+         try
+         {
+            outStream.close();
+         }
+         catch (IOException ioe)
+         {
+            throw new WSException(ioe);
+         }
+         finally
+         {
+            if (inStream != null)
+            {
+               try
+               {
+                  inStream.close();
+               }
+               catch (IOException ioe)
+               {
+                  throw new WSException(ioe);
+               }
+            }
+         }
       }
    }
 
@@ -635,8 +683,16 @@ public class RequestHandlerImpl implements RequestHandler
       WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
 
-      OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-      new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
+      OutputStreamWriter writer = null;
+      try
+      {
+         writer = new OutputStreamWriter(outputStream);
+         new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
+      }
+      finally
+      {
+         writer.close();
+      }
    }
 
    private void handleException(Exception ex) throws ServletException
