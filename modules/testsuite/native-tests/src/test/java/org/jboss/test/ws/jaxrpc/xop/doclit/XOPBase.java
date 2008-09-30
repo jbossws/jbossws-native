@@ -28,7 +28,7 @@ import javax.activation.DataHandler;
 import javax.xml.rpc.Stub;
 import javax.xml.transform.Source;
 
-import org.jboss.test.ws.jaxrpc.xop.XOPTestSupport;
+import org.jboss.wsf.test.XOPTestSupport;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingDataHandler;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingDataHandlerResponse;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingImage;

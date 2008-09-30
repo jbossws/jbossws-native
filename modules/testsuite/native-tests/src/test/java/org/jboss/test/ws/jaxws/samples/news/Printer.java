@@ -22,6 +22,7 @@
 package org.jboss.test.ws.jaxws.samples.news;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.GregorianCalendar;
 
@@ -89,7 +90,12 @@ public class Printer
             EditionSWA edition = swaEndpoint.getNewspaperEdition(id);
             DataHandler dh = edition.getContent();
             System.out.println("Content type: " + dh.getContentType());
-            System.out.println("Content: " + dh.getContent());
+            Object dataContent = dh.getContent();
+            System.out.println("Content: " + dataContent);
+            if (dataContent instanceof InputStream)
+            {
+               ((InputStream)dataContent).close();
+            }
          }
       }
    }

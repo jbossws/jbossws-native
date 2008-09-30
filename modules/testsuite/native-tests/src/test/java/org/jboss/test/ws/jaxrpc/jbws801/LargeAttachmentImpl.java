@@ -47,14 +47,22 @@ public class LargeAttachmentImpl implements LargeAttachment, ServiceLifecycle
          {
             AttachmentPart part = (AttachmentPart) iter.next();
 
-            InputStream inputStream = part.getDataHandler().getInputStream();
-            int read = 0;
-            do
+            InputStream inputStream = null;
+            try
             {
-               count += read;
-               read = inputStream.read(buffer);
+               inputStream = part.getDataHandler().getInputStream();
+               int read = 0;
+               do
+               {
+                  count += read;
+                  read = inputStream.read(buffer);
+               }
+               while (read != -1);
             }
-            while (read != -1);
+            finally
+            {
+               if (inputStream != null) inputStream.close();
+            }
          }
       }
       catch (Exception e)
