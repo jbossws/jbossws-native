@@ -8,7 +8,6 @@ if "%OS%" == "Windows_NT" set DIRNAME=%~dp0%
 set PROGNAME=run.bat
 if "%OS%" == "Windows_NT" set PROGNAME=%~nx0%
 
-
 if not [%1] == [] goto start
     echo %PROGNAME% is a command line tool that invokes a JBossWS JAX-WS Web Service client.
     echo It builds the correct classpath and endorsed libs for you. Feel free to use

@@ -57,18 +57,7 @@ else
 	LIBDIR=$PARENT/lib
 fi
 
-# is it a JBossWS-native or SunRI installation?
-if [ -f $LIBDIR/jbossws-native-client.jar ]; then
-    JBOSSWS_NATIVE="true"
-fi
-
-###
-# Setup the wsprovide classpath
-# The classpath is dynamically build depending on the stack that
-# is deployed. See $JBOSSWS_NATIVE above.
-###
-
-# shared libs
+# Shared libs
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$JAVA_HOME/lib/tools.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jbossws-spi.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jbossws-common.jar"
@@ -79,7 +68,7 @@ WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jbossall-client.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/log4j.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/mail.jar"
 
-# shared jaxws libs
+# Shared jaxws libs
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jaxb-api.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jaxb-impl.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jaxb-xjc.jar"
@@ -88,10 +77,7 @@ WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jaxws-rt.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/streambuffer.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/stax-ex.jar"
 
-###
-# stack specific dependencies
-###
-
+# Stack specific dependencies
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jboss-xml-binding.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/javassist.jar"
 WSPROVIDE_CLASSPATH="$WSPROVIDE_CLASSPATH:$LIBDIR/jbossall-client.jar"

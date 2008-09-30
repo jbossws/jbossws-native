@@ -8,22 +8,9 @@ if "%OS%" == "Windows_NT" set DIRNAME=%~dp0%
 set PROGNAME=run.bat
 if "%OS%" == "Windows_NT" set PROGNAME=%~nx0%
 
-rem Read all command line arguments
-
-REM
-REM The %ARGS% env variable commented out in favor of using %* to include
-REM all args in java command line. See bug #840239. [jpl]
-REM
-REM set ARGS=
-REM :loop
-REM if [%1] == [] goto endloop
-REM         set ARGS=%ARGS% %1
-REM         shift
-REM         goto loop
-REM :endloop
-
 set JAVA=%JAVA_HOME%\bin\java
 if "%JBOSS_HOME%" == "" set JBOSS_HOME=%DIRNAME%\..
+
 rem Setup the java endorsed dirs
 set JBOSS_ENDORSED_DIRS=%JBOSS_HOME%\lib\endorsed
 
@@ -58,11 +45,10 @@ echo   JAVA: %JAVA%
 echo .
 echo   JAVA_OPTS: %JAVA_OPTS%
 echo .
-echo   CLASSPATH: %WSTOOLS_CLASSPATH%
+rem echo   CLASSPATH: %WSTOOLS_CLASSPATH%
 rem echo .
 echo ========================================================================="
 echo .
 
 rem Execute the JVM
 "%JAVA%" %JAVA_OPTS% -Djava.endorsed.dirs="%JBOSS_ENDORSED_DIRS%" -Dlog4j.configuration=wstools-log4j.xml -classpath "%WSTOOLS_CLASSPATH%" org.jboss.ws.tools.WSTools %*
-
