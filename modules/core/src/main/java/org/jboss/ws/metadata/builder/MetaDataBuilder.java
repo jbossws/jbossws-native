@@ -94,6 +94,11 @@ public abstract class MetaDataBuilder
       WSDLDefinitions wsdlDefinitions = wsdlEndpoint.getWsdlService().getWsdlDefinitions();
       WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
       WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
+      initEndpointBinding(wsdlBinding, epMetaData);
+   }
+   
+   protected void initEndpointBinding(WSDLBinding wsdlBinding, EndpointMetaData epMetaData)
+   {
       String bindingType = wsdlBinding.getType();
       if (Constants.NS_SOAP11.equals(bindingType))
          epMetaData.setBindingId(Constants.SOAP11HTTP_BINDING);

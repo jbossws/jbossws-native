@@ -197,7 +197,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             }
 
             // Init the endpoint binding
-            initEndpointBinding(wsdlEndpoint, epMetaData);
+            initEndpointBinding(wsdlBinding, epMetaData);
 
             // Init the service encoding style
             initEndpointEncodingStyle(epMetaData);
