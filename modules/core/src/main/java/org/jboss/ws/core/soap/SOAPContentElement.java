@@ -33,6 +33,7 @@ import javax.xml.transform.Source;
 import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.SOAPContent.State;
@@ -538,7 +539,15 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
    {      
       if (soapContent instanceof DOMContent)
       {
-         new DOMWriter(writer).print(this);
+         DOMWriter dw = new DOMWriter(writer);
+         CommonMessageContext ctx = MessageContextAssociation.peekMessageContext();
+         if (ctx != null && Boolean.TRUE == ctx.get(Constants.DOM_CONTENT_CANONICAL_NORMALIZATION))
+         {
+            if (log.isTraceEnabled())
+               log.trace("Forcing canonical normalization of DOMContent...");
+            dw.setCanonical(true);
+         }
+         dw.print(this);
       }
       else
       {

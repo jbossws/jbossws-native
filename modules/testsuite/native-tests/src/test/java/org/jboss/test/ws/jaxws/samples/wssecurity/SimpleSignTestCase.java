@@ -57,15 +57,6 @@ public class SimpleSignTestCase extends JBossWSTest
       performTest(hello, "Kermit");
    }
    
-   public void testEndpointWithCRLFs() throws Exception
-   {
-      Hello hello = getPort();
-      System.out.println("FIXME: [JBWS-2011] Signature is invalid error when the message contains \r");
-//      performTest(hello, "Kermit\nmy friend");
-//      performTest(hello, "Kermit\rmy friend");
-//      performTest(hello, "Kermit\r\nmy friend");
-   }
-   
    private void performTest(Hello hello, String msg) throws Exception
    {
       UserType in0 = new UserType();
