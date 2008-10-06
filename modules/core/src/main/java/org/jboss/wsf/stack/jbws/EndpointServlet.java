@@ -47,7 +47,7 @@ import java.io.IOException;
 
 /**
  * A servlet that is installed for every web service endpoint.
- *
+ * @author richard.opalka@jboss.com
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
@@ -62,18 +62,36 @@ public class EndpointServlet extends HttpServlet
    public void init(ServletConfig servletConfig) throws ServletException
    {
       super.init(servletConfig);
+      this.initRegistry();
+      this.initDeploymentAspectManager();
+      String contextPath = servletConfig.getServletContext().getContextPath();
+      initServiceEndpoint(contextPath);
+   }
+   
+   protected void initRegistry()
+   {
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
       epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).getEndpointRegistry();
    }
-
+   
+   /**
+    * Template method
+    */
+   protected void initDeploymentAspectManager()
+   {
+      // does nothing (because of BC)
+   }
+   
+   /**
+    * Template method
+    */
+   protected void callRuntimeAspects()
+   {
+      // does nothing (because of BC)
+   }
+   
    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
    {
-      if (endpoint == null)
-      {
-         String contextPath = req.getContextPath();
-         initServiceEndpoint(contextPath);
-      }
-
       try
       {
          EndpointAssociation.setEndpoint(endpoint);
@@ -90,9 +108,22 @@ public class EndpointServlet extends HttpServlet
     */
    protected void initServiceEndpoint(String contextPath)
    {
-      initEndpoint(contextPath, getServletName());
-      initEndpointConfig();
-      startEndpoint();
+      this.initEndpoint(contextPath, getServletName());
+      this.setRuntimeLoader();
+      this.callRuntimeAspects();
+      this.initEndpointConfig();
+      this.startEndpoint();
+   }
+   
+   private void setRuntimeLoader()
+   {
+      // Set the runtime classloader for JSE endpoints, this should be the tomcat classloader
+      Deployment dep = endpoint.getService().getDeployment();
+      if (dep.getType() == Deployment.DeploymentType.JAXRPC_JSE || dep.getType() == Deployment.DeploymentType.JAXWS_JSE)
+      {
+         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+         dep.setRuntimeClassLoader(classLoader);
+      }
    }
 
    private void startEndpoint()
