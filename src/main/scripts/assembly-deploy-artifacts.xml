@@ -106,7 +106,9 @@
               <include>*:jbossws-jboss424x:jar</include>
             </includes>
           </dependencySet>
-          <!--dependencySet>
+          <!-- [JBWS-2263] -->
+          <!-- START -->
+          <dependencySet>
             <outputDirectory>lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss500.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
@@ -145,7 +147,8 @@
             <includes>
               <include>*:jbossws-jboss500x:jar:container</include>
             </includes>
-          </dependencySet-->
+          </dependencySet>
+          <!-- END -->
         </dependencySets>
       </binaries>
     </moduleSet>
