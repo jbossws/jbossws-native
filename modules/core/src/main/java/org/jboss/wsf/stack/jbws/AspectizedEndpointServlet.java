@@ -28,7 +28,7 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentAspectManager;
 
 /**
- * Endpoint servlet that has WS framework aspects support
+ * Endpoint servlet with WS framework aspects support called on servlet lifecycle methods
  * @author richard.opalka@jboss.com
  */
 public class AspectizedEndpointServlet extends EndpointServlet
