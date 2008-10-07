@@ -22,37 +22,42 @@
 package org.jboss.wsf.stack.jbws;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
-import org.jboss.wsf.framework.deployment.AbstractAspectizedEndpointServlet;
-import org.jboss.wsf.spi.management.EndpointResolver;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
- * An aspectized Native endpoint servlet that is installed for every web service endpoint on AS 5.x series
+ * Native servlet configuration helper
  * @author richard.opalka@jboss.com
  */
-public final class AspectizedEndpointServlet extends AbstractAspectizedEndpointServlet
+public final class ServletConfigHelper
 {
-
+   
    /**
-    * Provides Native specific endpoint resolver
-    * @param servletContext servlet context
-    * @param servletName servlet name
-    * @return new Native specific endpoint resolver
+    * Constructor
     */
-   @Override
-   protected final EndpointResolver newEndpointResolver(String servletContext, String servletName)
-   {
-      return new WebAppResolver(servletContext, servletName);
-   }
-
+   private ServletConfigHelper() {}
+   
    /**
-    * Post init phase hook using template method
+    * Reads the config name/file from web.xml
     * @param servletConfig servlet config
+    * @param endpoint endpoint instance
     */
-   @Override
-   protected final void postInit(ServletConfig servletConfig)
+   public static void initEndpointConfig(ServletConfig servletConfig, Endpoint endpoint)
    {
-      ServletConfigHelper.initEndpointConfig(servletConfig, endpoint);
+      final ServletContext servletContext = servletConfig.getServletContext();
+      final String configName = servletContext.getInitParameter("jbossws-config-name");
+      final String configFile = servletContext.getInitParameter("jbossws-config-file");
+
+      if (configName != null || configFile != null)
+      {
+         ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
+         if (epMetaData == null)
+            throw new IllegalStateException("Cannot obtain endpoint meta data");
+
+         epMetaData.setConfigName(configName, configFile);
+      }
    }
 
 }
