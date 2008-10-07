@@ -22,6 +22,7 @@
 package org.jboss.ws.metadata.config;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
@@ -69,6 +70,7 @@ public class JBossWSConfigFactory
       if(log.isDebugEnabled()) log.debug("parse: " + configURL);
 
       Object wsConfig;
+      InputStream is = null;
       try
       {
          Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
@@ -76,13 +78,14 @@ public class JBossWSConfigFactory
          unmarshaller.setSchemaValidation(true);
 
          String nsURI = getNamespaceURI(configURL);
+         is = configURL.openStream();
          if (URN_JAXRPC_CONFIG.equals(nsURI))
          {
-            wsConfig = unmarshaller.unmarshal(configURL.openStream(), new OMFactoryJAXRPC(), null);
+            wsConfig = unmarshaller.unmarshal(is, new OMFactoryJAXRPC(), null);
          }
          else if (URN_JAXWS_CONFIG.equals(nsURI))
          {
-            wsConfig = unmarshaller.unmarshal(configURL.openStream(), new OMFactoryJAXWS(), null);
+            wsConfig = unmarshaller.unmarshal(is, new OMFactoryJAXWS(), null);
          }
          else
          {
@@ -97,6 +100,20 @@ public class JBossWSConfigFactory
       catch (IOException e)
       {
          throw new WSException("Failed to read config file: " + configURL, e);
+      }
+      finally
+      {
+         if (is != null)
+         {
+            try
+            {
+               is.close();
+            }
+            catch (IOException ioe)
+            {
+               if(log.isDebugEnabled()) log.warn(ioe.getMessage(), ioe);
+            }
+         }
       }
 
       return wsConfig;

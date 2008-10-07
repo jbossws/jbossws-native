@@ -605,7 +605,6 @@ public class RequestHandlerImpl implements RequestHandler
    {
       log.debug("handleWSDLRequest: " + endpoint.getName());
 
-      InputStream inStream = null;
       try
       {
          if (context instanceof ServletRequestContext)
@@ -619,8 +618,7 @@ public class RequestHandlerImpl implements RequestHandler
                throw new IllegalArgumentException("Invalid endpoint address: " + epAddress);
 
             URL wsdlUrl = new URL(epAddress + "?wsdl");
-            inStream = wsdlUrl.openStream();
-            IOUtils.copyStream(outStream, inStream);
+            IOUtils.copyStream(outStream, wsdlUrl.openStream());
          }
       }
       catch (RuntimeException rte)
@@ -640,20 +638,6 @@ public class RequestHandlerImpl implements RequestHandler
          catch (IOException ioe)
          {
             throw new WSException(ioe);
-         }
-         finally
-         {
-            if (inStream != null)
-            {
-               try
-               {
-                  inStream.close();
-               }
-               catch (IOException ioe)
-               {
-                  throw new WSException(ioe);
-               }
-            }
          }
       }
    }

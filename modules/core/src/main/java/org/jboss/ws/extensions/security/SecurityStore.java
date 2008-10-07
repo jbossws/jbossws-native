@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.security;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -137,11 +138,12 @@ public class SecurityStore
       if (storeType == null)
          storeType = "jks";
 
-      KeyStore keyStore = null; 
+      KeyStore keyStore = null;
+      InputStream stream = null;
       try
       {
          log.debug("loadStore: " + storeURL);
-         InputStream stream = storeURL.openStream();
+         stream = storeURL.openStream();
          if (stream == null)
             throw new WSSecurityException("Cannot load store from: " + storeURL);
 
@@ -166,6 +168,20 @@ public class SecurityStore
       catch (Exception ex)
       {
          throw new WSSecurityException("Problems loading " + type + ": " + ex.getMessage(), ex);
+      }
+      finally
+      {
+         if (stream != null)
+         {
+            try
+            {
+               stream.close();
+            }
+            catch (IOException ioe)
+            {
+               log.warn(ioe.getMessage(), ioe);
+            }
+         }
       }
 
       return keyStore;

@@ -258,14 +258,7 @@ public class WSDLFilePublisher
                   }
                   finally
                   {
-                     try
-                     {
-                        if (fos != null) fos.close();
-                     }
-                     finally
-                     {
-                        is.close();
-                     }
+                     if (fos != null) fos.close();
                   }
 
                   log.debug("XMLSchema import published to: " + xsdURL);

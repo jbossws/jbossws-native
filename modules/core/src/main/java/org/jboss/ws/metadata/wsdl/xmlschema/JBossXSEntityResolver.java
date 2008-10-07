@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -34,6 +36,7 @@ import org.apache.xerces.xni.parser.XMLInputSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.utils.ResourceURL;
+import org.jboss.wsf.common.IOUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -155,15 +158,19 @@ public class JBossXSEntityResolver implements XMLEntityResolver
 
    private XMLInputSource getXMLInputSource(URL url, XMLResourceIdentifier resId) throws IOException
    {
-      InputStream inputStream = new ResourceURL(url).openStream();
-      InputSource inputSource = new InputSource(inputStream);
+      InputStream urlStream = new ResourceURL(url).openStream();
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      IOUtils.copyStream(baos, urlStream); // [JBWS-2325]
+      InputSource inputSource = new InputSource(new ByteArrayInputStream(baos.toByteArray()));
       return getXMLInputSource(inputSource, resId);
    }
 
-   private XMLInputSource getXMLInputSource(InputSource inputSource, XMLResourceIdentifier resId)
+   private XMLInputSource getXMLInputSource(InputSource inputSource, XMLResourceIdentifier resId) throws IOException
    {
       String encoding = inputSource.getEncoding();
-      InputStream byteStream = inputSource.getByteStream();
-      return new XMLInputSource(resId.getPublicId(), resId.getExpandedSystemId(), resId.getBaseSystemId(), byteStream, encoding);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      IOUtils.copyStream(baos, inputSource.getByteStream()); // [JBWS-2325]
+      InputStream is = new ByteArrayInputStream(baos.toByteArray());
+      return new XMLInputSource(resId.getPublicId(), resId.getExpandedSystemId(), resId.getBaseSystemId(), is, encoding);
    }
 }
