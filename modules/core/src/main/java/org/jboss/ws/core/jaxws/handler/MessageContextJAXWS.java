@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -35,6 +37,7 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
+import org.jboss.wsf.common.IOUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.xml.sax.InputSource;
 
@@ -135,7 +138,9 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
          {
             try
             {
-               InputSource inputSource = new InputSource(wsdlURL.openStream());
+               ByteArrayOutputStream baos = new ByteArrayOutputStream();
+               IOUtils.copyStream(baos, wsdlURL.openStream()); // [JBWS-2325] ensure file descriptors are closed
+               InputSource inputSource = new InputSource(new ByteArrayInputStream(baos.toByteArray()));
                put(MessageContext.WSDL_DESCRIPTION, inputSource);
             }
             catch (IOException ex)
