@@ -410,7 +410,7 @@
       <properties>
         <jboss.version>5.0.0.CR2</jboss.version>
         <jbossws.integration.target>jboss500</jbossws.integration.target>
-        <endpoint.servlet>org.jboss.wsf.stack.jbws.EndpointServlet</endpoint.servlet>
+        <endpoint.servlet>org.jboss.wsf.stack.jbws.AspectizedEndpointServlet</endpoint.servlet>
       </properties>
       <dependencies>
         <!-- [JBWS-2263] -->
@@ -479,7 +479,7 @@
       <properties>
         <jboss.version>5.0.0-SNAPSHOT</jboss.version>
         <jbossws.integration.target>jboss501</jbossws.integration.target>
-        <endpoint.servlet>org.jboss.wsf.stack.jbws.EndpointServlet</endpoint.servlet>
+        <endpoint.servlet>org.jboss.wsf.stack.jbws.AspectizedEndpointServlet</endpoint.servlet>
       </properties>
       <dependencies>
         <!-- [JBWS-2263] -->

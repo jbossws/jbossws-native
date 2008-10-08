@@ -101,10 +101,6 @@
     <property name="provides">JAXBIntros</property>
   </bean>
 
-  <bean name="WSEndpointServletLifecycleDeploymentAspect" class="org.jboss.wsf.framework.deployment.EndpointServletLifecycleDeploymentAspect">
-    <property name="requires">LAST_DEPLOYMENT_ASPECT</property>
-  </bean>
-
   <!-- This is hacky DA because endpoint servlet DAs depend on deployers DAs. But servlet DAs and deployers DAs are not in the same DA chain -->
   <bean name="WSNativeDeployersProvidedDeploymentAspect" class="org.jboss.wsf.framework.deployment.IdentityDeploymentAspect">
     <property name="provides">RuntimeLoader,ContainerMetaData,URLPattern,VFSRoot,JAXBIntros,StackEndpointHandler</property>
@@ -176,7 +172,6 @@
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeRMDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
-        <inject bean="WSEndpointServletLifecycleDeploymentAspect"/>
       </set>
     </property>
   </bean>
