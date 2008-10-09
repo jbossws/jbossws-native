@@ -41,6 +41,11 @@ public class StandaloneServerConfig implements ServerConfig
    {
       return "3.0.0";
    }
+   
+   public File getHomeDir()
+   {
+      return new File("/tmp"); // TODO: change to default
+   }
 
    public File getServerTempDir()
    {
