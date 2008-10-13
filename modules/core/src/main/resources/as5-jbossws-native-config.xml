@@ -47,7 +47,7 @@
     <property name="provides">ContextProperties,StackDescriptor</property>
     <property name="contextProperties">
       <map keyClass="java.lang.String" valueClass="java.lang.String">
-        <entry><key>org.jboss.ws.webapp.ServletClass</key><value>org.jboss.wsf.stack.jbws.AspectizedEndpointServlet</value></entry>
+        <entry><key>org.jboss.ws.webapp.ServletClass</key><value>org.jboss.wsf.stack.jbws.EndpointServlet</value></entry>
         <entry><key>org.jboss.ws.webapp.ServletAspectManagerName</key><value>WSNativeServletAspectManager</value></entry>
       </map>
     </property>

@@ -21,13 +21,13 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-import org.jboss.wsf.framework.deployment.AbstractEndpointServlet;
 import org.jboss.wsf.spi.management.EndpointResolver;
+import org.jboss.wsf.common.servlet.AbstractEndpointServlet;
 
 import javax.servlet.ServletConfig;
 
 /**
- * A Native endpoint servlet that is installed for every web service endpoint on AS 4.2.x series
+ * A Native endpoint servlet that is installed for every web service endpoint
  * @author thomas.diesler@jboss.com
  * @author heiko.braun@jboss.com
  * @author richard.opalka@jboss.com
