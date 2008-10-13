@@ -31,10 +31,6 @@
       <artifactId>jbossws-spi</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-framework</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-jaxws-ext</artifactId>
       <version>${version}</version>
