@@ -16,7 +16,7 @@
 
   <properties>
     <jboss.jbosssx.version>2.0.2.CR6</jboss.jbosssx.version>
-    <jboss.microcontainer.version>2.0.0.CR1</jboss.microcontainer.version>
+    <jboss.microcontainer.version>2.0.0.CR2</jboss.microcontainer.version>
   </properties>
   
   <!-- Dependencies -->
