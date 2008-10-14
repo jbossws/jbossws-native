@@ -27,9 +27,6 @@ org/jboss/test/ws/jaxws/jbws1841/**
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
-# [JBWS-2170] Fix embedded for maven build
-org/jboss/test/ws/embedded/**
-
 # [JBWS-2240] PortComponent from jboss.xml descriptor is not parsed
 org/jboss/test/ws/jaxws/jbws2241/**
 
