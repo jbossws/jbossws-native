@@ -127,7 +127,7 @@
     <zip destfile="${stack.output.dir}/jbossws-native-bin-dist.zip">
       <zipfileset
         dir="${stack.output.dir}/jbossws-native-bin-dist"
-        includes="build/ deploy/ docs/ tests/ build.xml ant.properties"
+        includes="build/ deploy/ docs/ tests/ build.xml ant.properties.example"
         prefix="jbossws-native-bin-dist"/>
     </zip>
   </target>
