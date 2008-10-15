@@ -242,7 +242,10 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       {
          Object current = childElements.next();
          if (current instanceof SOAPElementImpl)
+         {
             childElement = (SOAPElementImpl)current;
+            break;
+         }
       }
 
       // zero child elements?
