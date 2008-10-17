@@ -46,6 +46,40 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+What's new in jbossws-native-3.0.4.GA
+-------------------------------------
+
+Bug
+
+    * [JBWS-1188] - Relax requirement for wsu:id for UsernameToken
+    * [JBWS-2011] - Signature is invalid error when the message contains \r
+    * [JBWS-2245] - test cannot find temp directory
+    * [JBWS-2246] - NPE deploying web services in service archive in CR1 release
+    * [JBWS-2264] - NPE when web services are shut down
+    * [JBWS-2267] - Some Tests are Failing on Machines Without Internet Access
+    * [JBWS-2278] - JBossWS is picking the wrong binding when both Soap1.1 and Soap1.2 bindings are provided for a port
+    * [JBWS-2285] - ClassCastException: org.jboss.ws.core.soap.TextImpl in LogicalMessageImpl.getPayload
+    * [JBWS-2290] - Missing property jbossws.integration.target during ant eclipse
+    * [JBWS-2309] - PasswordType element uses wss-wssecurity-secext NS instead of wss-username-token-profile
+    * [JBWS-2322] - Commandline JBossWS Native Tests Are Not Cross Platform
+    * [JBWS-2326] - wsrunclient shell script is unfunctional due to incorrect classpath
+    * [JBWS-2319] - ClassCastException in SOAPBody.extractContentAsDocument();
+    * [JBWS-2325] - Each request results to an open file descriptor
+    * [JBWS-2336] - Fix JSE deployers ordering
+    * [JBWS-2363] - Binary distribution has ant.properties instead of ant.properties.example
+
+Task
+
+    * [JBWS-1397] - Fix <wsdl-publish-location> for jboss-5.0.x 
+    * [JBWS-2286] - Provide source distributions
+    * [JBWS-2289] - Update source code headers
+    * [JBWS-2310] - Restore hudson job cleaning maven repository
+    * [JBWS-2320] - JBossWS ant and maven targets don't work on Windows OS
+
+Errata
+
+    See: https://jira.jboss.org/jira/browse/JBWS-2352
+
 What's new in jbossws-native-3.0.3.GA
 ----------------------------------------
 
