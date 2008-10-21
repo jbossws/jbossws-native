@@ -76,13 +76,13 @@
     <dependency>
       <groupId>apache-scout</groupId>
       <artifactId>scout</artifactId>
-      <version>0.7rc2</version>
+      <version>${apache.scout.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>juddi</groupId>
       <artifactId>juddi</artifactId>
-      <version>0.9RC4</version>
+      <version>${juddi.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

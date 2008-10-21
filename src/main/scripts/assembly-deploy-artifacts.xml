@@ -94,6 +94,8 @@
               <include>*:jbossws-jboss422:jar</include>
               <include>*:jbossws-jboss423:jar</include>
               <include>*:juddi-service:sar</include>
+              <include>*:juddi:jar</include>
+              <include>*:scout:jar</include>
             </includes>
           </dependencySet>
           <dependencySet>

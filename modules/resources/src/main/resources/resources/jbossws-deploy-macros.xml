@@ -236,6 +236,12 @@
           <include name="**/juddi-service.sar"/>
         </fileset>
       </unzip>
+      <copy todir="@{targetdir}" flatten="true" overwrite="true">
+        <fileset dir="@{thirdpartydir}">
+          <include name="**/juddi.jar"/>
+          <include name="**/scout.jar"/>
+        </fileset>
+      </copy>
     </sequential>
   </macrodef>
   
