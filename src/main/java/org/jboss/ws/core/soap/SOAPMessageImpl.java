@@ -23,6 +23,7 @@ package org.jboss.ws.core.soap;
 
 // $Id$
 
+import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.SOAPMessageAbstraction;
 import org.jboss.ws.core.CommonMessageContext;
@@ -208,6 +209,24 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
 
       return new MimeMatchingAttachmentsIterator(headers, attachments);
    }
+   
+   private String getSOAPContentType() throws SOAPException
+   {
+      //Check binding type in the endpoint metadata
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null && Constants.SOAP12HTTP_BINDING.equalsIgnoreCase(msgContext.getEndpointMetaData().getBindingId()))
+      {
+         return SOAPConstants.SOAP_1_2_CONTENT_TYPE;
+      }
+      //Check the message envelope
+      SOAPEnvelope env = soapPart != null ? soapPart.getEnvelope() : null;
+      if (env != null && SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE.equals(env.getNamespaceURI()))
+      {
+         return SOAPConstants.SOAP_1_2_CONTENT_TYPE;
+      }
+      //Default to soap 1.1
+      return SOAPConstants.SOAP_1_1_CONTENT_TYPE;
+   }
 
    public void saveChanges() throws SOAPException
    {
@@ -221,7 +240,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
                throw new IllegalStateException("XOP parameter not properly inlined");
 
             // default content-type
-            String contentType = MimeConstants.TYPE_SOAP11 + "; charset=" + getCharSetEncoding();
+            String contentType = getSOAPContentType() + "; charset=" + getCharSetEncoding();
 
             if (hasAttachments)
             {

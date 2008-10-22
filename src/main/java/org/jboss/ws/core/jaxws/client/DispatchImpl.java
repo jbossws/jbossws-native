@@ -45,12 +45,15 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.ConfigProvider;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemotingConnection;
 import org.jboss.ws.core.client.SOAPRemotingConnection;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
+import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
+import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 
@@ -180,6 +183,9 @@ public class DispatchImpl<T> implements Dispatch<T>
 
    public void invokeOneWay(T msg)
    {
+      CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
+      MessageContextAssociation.pushMessageContext(msgContext);
+      msgContext.setEndpointMetaData(epMetaData);
       try
       {
          MessageAbstraction reqMsg = getRequestMessage(msg);
@@ -189,6 +195,10 @@ public class DispatchImpl<T> implements Dispatch<T>
       catch (Exception ex)
       {
          handleInvokeException(ex);
+      }
+      finally
+      {
+         MessageContextAssociation.popMessageContext();
       }
    }
 
