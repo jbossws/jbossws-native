@@ -13,7 +13,7 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/**
 
-# [JBAS-5115] Valid jboss-app.xml file not recognized correctly by jbossxb runtime
+# [EJBTHREE-1537] NPE in org.jboss.ejb3.javaee.JavaEEComponentHelper.createObjectName() method
 org/jboss/test/ws/jaxws/jbws1822/JBWS1822TestCase.*
 
 # [JBAS-5257] Cannot deploy through jax-ws endpoint API
