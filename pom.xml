@@ -327,7 +327,7 @@
         <version>${wscommons.policy.version}</version>
       </dependency>
       <dependency>
-        <groupId>woodstox</groupId>
+        <groupId>org.codehaus.woodstox</groupId>
         <artifactId>wstx-lgpl</artifactId>
         <version>${woodstox.version}</version>
       </dependency>
