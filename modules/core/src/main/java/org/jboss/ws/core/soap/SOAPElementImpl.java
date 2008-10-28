@@ -738,7 +738,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public NodeList getElementsByTagName(String name)
    {
-      return new NodeListImpl(DOMUtils.getChildElements(this, name));
+      return new NodeListImpl(DOMUtils.getChildElements(this, name, true));
    }
 
    public String getAttributeNS(String namespaceURI, String localName)
@@ -764,7 +764,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
    {
-      return new NodeListImpl(DOMUtils.getChildElements(this, new QName(namespaceURI, localName)));
+      return new NodeListImpl(DOMUtils.getChildElements(this, new QName(namespaceURI, localName), true));
    }
 
    public TypeInfo getSchemaTypeInfo()
