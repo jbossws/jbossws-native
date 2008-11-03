@@ -28,7 +28,6 @@ import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.WSFDeploymentException;
-import org.jboss.wsf.spi.WSFRuntime;
 
 /**
  * A deployer that publishes the wsdl 
@@ -39,7 +38,7 @@ import org.jboss.wsf.spi.WSFRuntime;
 public class PublishContractDeploymentAspect extends DeploymentAspect
 {
    @Override
-   public void start(Deployment dep, WSFRuntime runtime)
+   public void start(Deployment dep)
    {
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)

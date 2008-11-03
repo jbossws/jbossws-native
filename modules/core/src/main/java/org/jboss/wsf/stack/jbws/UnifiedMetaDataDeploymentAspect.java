@@ -33,7 +33,6 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
-import org.jboss.wsf.spi.WSFRuntime;
 
 /**
  * A deployer that builds the UnifiedDeploymentInfo 
@@ -44,7 +43,7 @@ import org.jboss.wsf.spi.WSFRuntime;
 public class UnifiedMetaDataDeploymentAspect extends DeploymentAspect
 {
    @Override
-   public void start(Deployment dep, WSFRuntime runtime)
+   public void start(Deployment dep)
    {
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)
