@@ -21,9 +21,9 @@
  */
 package org.jboss.ws.extensions.validation;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 
 /**
  * [JBWS-1172] Support schema validation for incoming messages
@@ -57,8 +58,7 @@ public class SchemaValidationHelper
 
    public void validateDocument(String inxml) throws Exception
    {
-      ByteArrayInputStream bais = new ByteArrayInputStream(inxml.getBytes());
-      validateDocument(bais);
+      validateDocument(new InputSource(new StringReader(inxml)));
    }
 
    public void validateDocument(Element inxml) throws Exception
@@ -68,6 +68,12 @@ public class SchemaValidationHelper
    }
    
    public void validateDocument(InputStream inxml) throws Exception
+   {
+      DocumentBuilder builder = getDocumentBuilder();
+      builder.parse(inxml);
+   }
+   
+   public void validateDocument(InputSource inxml) throws Exception
    {
       DocumentBuilder builder = getDocumentBuilder();
       builder.parse(inxml);
