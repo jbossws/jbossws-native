@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxrpc.binding;
+package org.jboss.ws.util.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,11 +37,11 @@ import org.jboss.wsf.common.IOUtils;
 
 /**
  * A StreamSource that can be read repeatedly. 
- * 
  * @author Thomas.Diesler@jboss.org
+ * @author Richard.Opalka@jboss.org
  * @since 29-Mar-2007
  */
-public class BufferedStreamSource extends StreamSource
+public final class BufferedStreamSource extends StreamSource
 {
    private byte[] bytes;
    private char[] chars;
@@ -50,26 +50,26 @@ public class BufferedStreamSource extends StreamSource
    {
       try
       {
-         InputStream ins = source.getInputStream();
-         if (ins != null)
+         final InputStream sourceInputStream = source.getInputStream();
+         if (sourceInputStream != null)
          {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-            IOUtils.copyStream(baos, ins);
+            IOUtils.copyStream(baos, sourceInputStream);
             bytes = baos.toByteArray();
          }
 
-         Reader rd = source.getReader();
-         if (ins == null && rd != null)
+         final Reader sourceReader = source.getReader();
+         if ((sourceInputStream == null) && (sourceReader != null))
          {
-            char[] auxbuf = new char[1024];
-            CharArrayWriter wr = new CharArrayWriter(auxbuf.length);
-            int r = rd.read(auxbuf);
-            while (r > 0)
+            final char[] buffer = new char[1024];
+            final CharArrayWriter charArrayWriter = new CharArrayWriter(buffer.length);
+            int countOfReadChars = sourceReader.read(buffer);
+            while (countOfReadChars > 0)
             {
-               wr.write(auxbuf, 0, r);
-               r = rd.read(auxbuf);
+               charArrayWriter.write(buffer, 0, countOfReadChars);
+               countOfReadChars = sourceReader.read(buffer);
             }
-            chars = wr.toCharArray();
+            chars = charArrayWriter.toCharArray();
          }
       }
       catch (IOException ex)
@@ -84,37 +84,26 @@ public class BufferedStreamSource extends StreamSource
    }
 
    @Override
-   public InputStream getInputStream()
+   public final InputStream getInputStream()
    {
       return (bytes != null ? new ByteArrayInputStream(bytes) : null);
    }
 
    @Override
-   public Reader getReader()
+   public final Reader getReader()
    {
       return (chars != null ? new CharArrayReader(chars) : null);
    }
 
    @Override
-   public void setInputStream(InputStream inputStream)
+   public final String toString()
    {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public void setReader(Reader reader)
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   public String toString()
-   {
-      String retStr = null;
+      String retVal = null;
       if (bytes != null)
       {
          try
          {
-            retStr = new String(bytes, "UTF-8");
+            retVal = new String(bytes, "UTF-8");
          }
          catch (UnsupportedEncodingException e)
          {
@@ -122,7 +111,23 @@ public class BufferedStreamSource extends StreamSource
          }
       }
       else if (chars != null)
-         retStr = new String(chars);
-      return "" + retStr;
+      {
+         retVal = new String(chars);
+      }
+         
+      return "" + retVal;
    }
+
+   @Override
+   public final void setInputStream(InputStream inputStream)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public final void setReader(Reader reader)
+   {
+      throw new UnsupportedOperationException();
+   }
+
 }

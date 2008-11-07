@@ -24,7 +24,7 @@ package org.jboss.ws.core.jaxws.client;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.binding.BufferedStreamResult;
+import org.jboss.ws.util.xml.BufferedStreamResult;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;

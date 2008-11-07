@@ -28,7 +28,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.binding.BufferedStreamResult;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
@@ -37,6 +36,7 @@ import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
+import org.jboss.ws.util.xml.BufferedStreamResult;
 import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.NamedNodeMap;
 

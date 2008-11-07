@@ -30,7 +30,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.binding.BufferedStreamResult;
 import org.jboss.ws.core.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
@@ -39,6 +38,7 @@ import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshaller;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.JBossXBMarshallerImpl;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
+import org.jboss.ws.util.xml.BufferedStreamResult;
 import org.w3c.dom.NamedNodeMap;
 
 /**
