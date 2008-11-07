@@ -185,7 +185,6 @@ public class WSDLRequestHandler
 
                   URL orgURL = new URL(orgLocation);
                   String orgHost = orgURL.getHost();
-                  int orgPort = orgURL.getPort();
                   String orgPath = orgURL.getPath();
 
                   if (ServerConfig.UNDEFINED_HOSTNAME.equals(orgHost))
@@ -198,8 +197,6 @@ public class WSDLRequestHandler
                      String newLocation = newProtocol + "://" + newHost;
                      if (newPort != -1)
                         newLocation += ":" + newPort;
-                     else if (orgPort != -1)
-                        newLocation += ":" + orgPort;
                      
                      newLocation += orgPath;
                      locationAttr.setNodeValue(newLocation);
