@@ -85,7 +85,7 @@ public final class BufferedStreamResult extends StreamResult
    @Override
    public final Writer getWriter()
    {
-      throw new UnsupportedOperationException();
+      return null;
    }
 
    @Override
