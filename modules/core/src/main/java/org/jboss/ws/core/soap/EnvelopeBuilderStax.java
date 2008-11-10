@@ -43,8 +43,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.jboss.util.NotImplementedException;
 import org.w3c.dom.Element;
 
-import com.ctc.wstx.stax.WstxInputFactory;
-
 /**
  * A SOAPEnvelope builder for JAXRPC based on Stax
  *  
@@ -152,10 +150,8 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
       if (null == factory)
       {
          System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
-         //System.setProperty("javax.xml.stream.XMLInputFactory", "com.sun.xml.stream.ZephyrParserFactory");
          factory = XMLInputFactory.newInstance();
          factory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
-         ((WstxInputFactory)factory).configureForSpeed();
       }
       return factory;
 
