@@ -65,7 +65,7 @@
     <jaxb.api.version>2.1</jaxb.api.version>
     <jaxb.impl.version>2.1.6</jaxb.impl.version>
     <jboss.common.version>1.2.1.GA</jboss.common.version>
-    <jboss.jaxbintros.version>1.0.0.beta2</jboss.jaxbintros.version>
+    <jboss.jaxbintros.version>1.0.0.GA</jboss.jaxbintros.version>
     <jboss.logging.version>2.0.5.GA</jboss.logging.version>
     <jboss.remoting.version>2.5.0.SP1</jboss.remoting.version>
     <jboss.jaxr.version>1.2.1.GA</jboss.jaxr.version>
