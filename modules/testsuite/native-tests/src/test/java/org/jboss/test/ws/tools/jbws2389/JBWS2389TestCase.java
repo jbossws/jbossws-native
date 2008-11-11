@@ -88,7 +88,6 @@ public class JBWS2389TestCase extends JBossWSTest
          for (int j = 0; j < expectedFiles.length && (matched == false); j++)
             matched = currentFile.equals(expectedFiles[j]);
 
-         System.out.println(packageDir.getAbsolutePath());
          assertTrue("File '" + currentFile + "' was not expected to be generated", matched);
       }
 
