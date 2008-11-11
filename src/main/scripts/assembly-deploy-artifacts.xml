@@ -61,15 +61,6 @@
               <include>*:wstx-lgpl:jar</include>
             </includes>
           </dependencySet>
-          <!-- required for AS4.2.1 only -->
-          <dependencySet>
-            <outputFileNameMapping>jboss-xml-binding.jar</outputFileNameMapping>
-            <useStrictFiltering>true</useStrictFiltering>
-            <scope>provided</scope>
-            <includes>
-              <include>org.jboss:jbossxb:jar:1.0.0.SP2</include>
-            </includes>
-          </dependencySet>
         </dependencySets>
       </binaries>
     </moduleSet>
