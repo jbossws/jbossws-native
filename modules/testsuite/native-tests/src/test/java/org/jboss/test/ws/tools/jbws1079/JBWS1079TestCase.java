@@ -40,7 +40,7 @@ public class JBWS1079TestCase extends JBossWSTest
    {
       File resourceFile = createResourceFile("tools/jbws1079");
       String resourceDir = resourceFile.getAbsolutePath();
-      String toolsDir = resourceDir;
+      String toolsDir = "target/wstools/jbws1079/output";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 

@@ -40,7 +40,7 @@ public class JBWS1217TestCase extends JBossWSTest
    public final void testMultiplePackageNameSpace() throws Exception
    {
       String resourceDir = createResourceFile("tools/jbws1217").getAbsolutePath();
-      String toolsDir = resourceDir; //"tools/jbws1217";
+      String toolsDir = "target/wstools/jbws1217/output";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 

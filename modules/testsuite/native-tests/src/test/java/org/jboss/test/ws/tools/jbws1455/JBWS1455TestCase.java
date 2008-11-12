@@ -37,7 +37,7 @@ public class JBWS1455TestCase extends JBossWSTest
 {
 
    private String resourceDir = createResourceFile("tools/jbws1455").getAbsolutePath();
-   private String toolsDir = resourceDir; //"tools/jbws1455";
+   private String toolsDir = "target/wstools/jbws1455/output";
 
    public void testGenerate() throws Exception
    {

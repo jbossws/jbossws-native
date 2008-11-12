@@ -43,7 +43,7 @@ public class JBWS810TestCase extends JBossWSTest
    {
       resourceDir = createResourceFile("tools/jbws810");
       resourceDir.mkdirs();
-      toolsDir = resourceDir.getAbsolutePath();
+      toolsDir = "target/wstools/jbws810";
    }
 
    public void testDocument() throws Exception

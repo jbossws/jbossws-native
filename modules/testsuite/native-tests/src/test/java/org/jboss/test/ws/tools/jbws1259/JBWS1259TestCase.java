@@ -132,7 +132,7 @@ public class JBWS1259TestCase extends JBossWSTest
       File resourceDir= createResourceFile("tools/jbws1259/scenario_" + scenario);
       resourceDir.mkdirs();
 
-      String toolsDir = resourceDir.getAbsolutePath(); 
+      String toolsDir = "target/wstools/jbws1259/scenario_" + scenario; 
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir.getAbsolutePath() + "/wstools-config.xml" };
       new WSTools().generate(args);
 

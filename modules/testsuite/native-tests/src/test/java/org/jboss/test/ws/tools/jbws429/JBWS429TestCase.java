@@ -78,7 +78,7 @@ public class JBWS429TestCase extends WSToolsBase
       File resourceDir = createResourceFile("tools/jbws429/" + scenario);
       resourceDir.mkdirs();
 
-      String toolsDir = resourceDir.getAbsolutePath();
+      String toolsDir = "target/wstools/jbws429/" + scenario;
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir.getAbsolutePath() + "/wstools-config.xml" };
       new WSTools().generate(args);
 

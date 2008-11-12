@@ -39,7 +39,7 @@ public class JBWS1253TestCase extends JBossWSTest
    public final void testPortTypePort() throws Exception
    {
       File resourceDir = createResourceFile("tools/jbws1253");
-      String toolsDir = resourceDir.getAbsolutePath();
+      String toolsDir = "target/wstools/jbws1253/output";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir.getAbsolutePath() + "/wstools-config.xml" };
       new WSTools().generate(args);
 

@@ -38,7 +38,7 @@ public class JBWS1428TestCase extends WSToolsBase
    public void testGenerate() throws Exception
    {
       String resourceDir = createResourceFile("tools/jbws1428").getAbsolutePath();
-      String toolsDir = resourceDir; //"tools/jbws1428";
+      String toolsDir = "target/wstools/jbws1428/output";
       String[] args = new String[] { "-dest", toolsDir, "-config", resourceDir + "/wstools-config.xml" };
       new WSTools().generate(args);
 
