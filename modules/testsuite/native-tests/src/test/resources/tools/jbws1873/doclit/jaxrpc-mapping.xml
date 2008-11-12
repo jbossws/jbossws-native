@@ -18,7 +18,7 @@
  </java-xml-type-mapping>
  <java-xml-type-mapping>
   <java-type>org.jboss.test.ws.jbws1873.LookupRequest</java-type>
-  <anonymous-type-qname xmlns:typeNS='http://test.jboss.org/ws/jbws1873/types'>typeNS:&gt;Person&gt;request</anonymous-type-qname>
+  <anonymous-type-qname xmlns:typeNS='http://test.jboss.org/ws/jbws1873/types'>typeNS:Person&gt;request</anonymous-type-qname>
   <qname-scope>complexType</qname-scope>
   <variable-mapping>
    <java-variable-name>surname</java-variable-name>
@@ -36,7 +36,7 @@
  </java-xml-type-mapping>
  <java-xml-type-mapping>
   <java-type>org.jboss.test.ws.jbws1873.LookupResponseResponse</java-type>
-  <anonymous-type-qname xmlns:typeNS='http://test.jboss.org/ws/jbws1873/types'>typeNS:&gt;TelephoneNumber&gt;response</anonymous-type-qname>
+  <anonymous-type-qname xmlns:typeNS='http://test.jboss.org/ws/jbws1873/types'>typeNS:TelephoneNumber&gt;response</anonymous-type-qname>
   <qname-scope>complexType</qname-scope>
   <variable-mapping>
    <java-variable-name>number</java-variable-name>
