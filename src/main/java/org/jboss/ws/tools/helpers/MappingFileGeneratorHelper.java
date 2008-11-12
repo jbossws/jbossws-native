@@ -100,7 +100,7 @@ public class MappingFileGeneratorHelper
    private String typeNamespace;
    private String serviceName = null;
    private String packageName = null;
-   private Map<String, String> namespacePackageMap = new HashMap<String,String>();
+   private Map<String, String> namespacePackageMap = new HashMap<String, String>();
    private Set<String> registeredTypes = new HashSet<String>();
    private Set<String> registeredExceptions = new HashSet<String>();
 
@@ -718,10 +718,11 @@ public class MappingFileGeneratorHelper
          XSComplexTypeDefinition xc = (XSComplexTypeDefinition)xt;
          XSTypeDefinition baseType = xc.getBaseType();
          short der = xc.getDerivationMethod();
+         String typeQName = "";
 
          if ((baseType != null) && !utils.isBaseTypeIgnorable(baseType, xc))
          {
-               addJavaXMLTypeMap(baseType, baseType.getName(), "", "", jwm, skipWrapperArray); //Recurse for base types
+            addJavaXMLTypeMap(baseType, baseType.getName(), "", "", jwm, skipWrapperArray); //Recurse for base types
          }
 
          // handleContentTypeElementsWithDerivationNone
@@ -749,15 +750,17 @@ public class MappingFileGeneratorHelper
                javaType = getJavaTypeAsString(null, new QName(tempName), xt.getNamespace(), false, true);
                StringBuilder temp = new StringBuilder();
                if (containingType != null && containingType.length() > 0)
-                  temp.append(">").append(containingType);
+                  temp.append(containingType);
                temp.append(">").append(name);
                localName = temp.toString();
                jxtm.setAnonymousTypeQName(new QName(xt.getNamespace(), localName, "typeNS"));
+               typeQName = localName;
             }
             else
             {
                javaType = getJavaTypeAsString(null, new QName(localName), xt.getNamespace(), false, true);
                jxtm.setRootTypeQName(new QName(xt.getNamespace(), xt.getName(), "typeNS"));
+               typeQName = xc.getName();
             }
 
             if (typeNamespace == null)
@@ -794,7 +797,15 @@ public class MappingFileGeneratorHelper
          }
 
          if (xm != null)
-            addGroup(xm, name, xc.getName(), jwm);
+         {
+            String container = containingElement;
+            if (container == null || container.length() == 0)
+            {
+               container = name;
+            }
+
+            addGroup(xm, container, typeQName, jwm);
+         }
       }
 
       // Add enum simpleType support
@@ -816,7 +827,7 @@ public class MappingFileGeneratorHelper
             XSElementDeclaration xe = (XSElementDeclaration)xsterm;
             VariableMapping vm = new VariableMapping(jxtm);
             String name = xe.getName();
-            
+
             // JBWS-1170 Convert characters which are illegal in Java identifiers
             vm.setJavaVariableName(ToolsUtils.convertInvalidCharacters(Introspector.decapitalize(name)));
             vm.setXmlElementName(name);
@@ -924,7 +935,8 @@ public class MappingFileGeneratorHelper
          {
             jtype = JavaUtils.getSourceName(javaType);
          }
-         else jtype = javaType.getName();
+         else
+            jtype = javaType.getName();
       }
 
       return jtype + arraySuffix;
