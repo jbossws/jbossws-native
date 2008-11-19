@@ -265,7 +265,7 @@ public abstract class MetaDataBuilder
                {
                   for (String currentUrlPattern : currentCollection.getUrlPatterns())
                   {
-                     if (urlPattern.equals(currentUrlPattern))
+                     if (urlPattern.equals(currentUrlPattern) || "/*".equals(currentUrlPattern))
                      {
                         transportGuarantee = currentSecurity.getTransportGuarantee();
                      }
