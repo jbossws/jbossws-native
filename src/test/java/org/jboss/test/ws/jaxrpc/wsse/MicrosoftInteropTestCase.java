@@ -95,7 +95,8 @@ public class MicrosoftInteropTestCase extends JBossWSTest
       cal.set(Calendar.MINUTE, 22);
       cal.set(Calendar.SECOND, 25);
 
-      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), cal, null);
+      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), cal, null, null);
+
       decoder.decode(soapEnv.getOwnerDocument());
       decoder.complete();
 

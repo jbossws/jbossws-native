@@ -309,6 +309,30 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
+  	
+  	<!-- jaxws-jbws2116-->
+    <jar destfile="${tests.output.dir}/libs/jaxws-jbws2116.jar">
+      <fileset dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2116/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws2116/*TestCase.class"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/resources/jaxws/jbws2116/META-INF">
+        <include name="jboss-wsse-server.xml"/>
+      	<include name="jboss.xml"/>
+      </metainf>
+      <metainf dir="${tests.output.dir}/resources/jaxws/jbws2116/">
+        <include name="wsse10.truststore"/>
+      	<include name="bob-sign.jks"/>
+      </metainf>
+    </jar>
+  	<jar jarfile="${tests.output.dir}/libs/jaxws-jbws2116.sar">
+      <metainf dir="${tests.output.dir}/resources/jaxws/jbws2116/META-INF">
+        <include name="jboss-service.xml"/>
+        <include name="login-config.xml"/>
+        <include name="keystore.jks"/>
+        <include name="jbossws-roles.properties"/>
+      </metainf>
+    </jar>
     
     <!-- jaxws-jbws1283 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws1283.jar">

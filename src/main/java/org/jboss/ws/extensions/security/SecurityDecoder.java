@@ -34,6 +34,7 @@ import org.jboss.ws.extensions.security.element.Signature;
 import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.ws.metadata.wsse.Authenticate;
 import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -46,26 +47,28 @@ public class SecurityDecoder
 {
    private Element headerElement;
 
-   private Calendar now =  null;
+   private Calendar now = null;
 
    private SecurityHeader header;
 
    private Document message;
 
    private SecurityStore store;
-   
+
    private TimestampVerification timestampVerification;
+
+   private Authenticate authenticate;
 
    private HashSet<String> signedIds = new HashSet<String>();
 
    private HashSet<String> encryptedIds = new HashSet<String>();
 
-
-   public SecurityDecoder(SecurityStore store, TimestampVerification timestampVerification)
+   public SecurityDecoder(SecurityStore store, TimestampVerification timestampVerification, Authenticate authenticate)
    {
       org.apache.xml.security.Init.init();
       this.store = store;
       this.timestampVerification = timestampVerification;
+      this.authenticate = authenticate;
    }
 
    /**
@@ -76,9 +79,9 @@ public class SecurityDecoder
     * @param now The timestamp to use as the current time when validating a message expiration
     */
 
-   public SecurityDecoder(SecurityStore store, Calendar now, TimestampVerification timestampVerification)
+   public SecurityDecoder(SecurityStore store, Calendar now, TimestampVerification timestampVerification, Authenticate authenticate)
    {
-      this(store, timestampVerification);
+      this(store, timestampVerification, authenticate);
       this.now = now;
    }
 
@@ -96,7 +99,6 @@ public class SecurityDecoder
       headerElement.getParentNode().removeChild(headerElement);
    }
 
-
    private void decode() throws WSSecurityException
    {
       // Validate a timestamp if it is present
@@ -104,15 +106,17 @@ public class SecurityDecoder
 
       if (timestamp != null)
       {
-         TimestampVerificationOperation operation =
-            (now == null) ? new TimestampVerificationOperation(timestampVerification) : new TimestampVerificationOperation(now);
+         TimestampVerificationOperation operation = (now == null) ? new TimestampVerificationOperation(timestampVerification) : new TimestampVerificationOperation(now);
          operation.process(message, timestamp);
       }
 
-      for (Token token : header.getTokens())
+      if (authenticate == null || authenticate.isUsernameAuth())
       {
-         if (token instanceof UsernameToken)
-            new ReceiveUsernameOperation(header, store).process(message, token);
+         for (Token token : header.getTokens())
+         {
+            if (token instanceof UsernameToken)
+               new ReceiveUsernameOperation(header, store).process(message, token);
+         }
       }
 
       signedIds.clear();
@@ -126,9 +130,12 @@ public class SecurityDecoder
          // If this list gets much larger it should probably be a hash lookup
          if (process instanceof Signature)
          {
-            Collection<String> ids = signatureVerifier.process(message, process);
+            Signature signature = (Signature)process;
+            Collection<String> ids = signatureVerifier.process(message, signature);
             if (ids != null)
-              signedIds.addAll(ids);
+               signedIds.addAll(ids);
+            if (authenticate != null && authenticate.isSignatureCertAuth())
+               new ReceiveX509Certificate(authenticate.getSignatureCertAuth().getCertificatePrincipal()).process(message, signature.getSecurityToken());
          }
          else if (process instanceof EncryptedKey)
          {
@@ -137,6 +144,7 @@ public class SecurityDecoder
                encryptedIds.addAll(ids);
          }
       }
+
    }
 
    public void verify(List<OperationDescription<RequireOperation>> requireOperations) throws WSSecurityException

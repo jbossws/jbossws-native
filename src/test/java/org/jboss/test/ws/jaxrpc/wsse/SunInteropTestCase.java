@@ -72,7 +72,8 @@ public class SunInteropTestCase extends JBossWSTest
       cal.set(Calendar.MINUTE, 32);
       cal.set(Calendar.SECOND, 25);
 
-      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), cal, null);
+      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), cal, null, null);
+
       decoder.decode(doc);
       decoder.complete();
 
@@ -106,8 +107,8 @@ public class SunInteropTestCase extends JBossWSTest
       cal.set(Calendar.MINUTE, 8);
       cal.set(Calendar.SECOND, 40);
 
+      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), cal, null, null);
 
-      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), cal, null);
       decoder.decode(doc);
       decoder.complete();
 

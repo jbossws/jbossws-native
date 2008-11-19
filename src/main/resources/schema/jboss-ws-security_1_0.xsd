@@ -126,6 +126,11 @@
           <xs:documentation>Specifies the security requirements that should be applied when receiving a response from the communicating party. If this is not specified, all messages will be allowed through.</xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element name="authenticate" type="authenticateType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Specifies the token to be used for JAAS authentication. If this is not specified, the username token will be used if available.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:all>
   </xs:complexType>
   <xs:complexType name="requireTimestampType">
@@ -276,5 +281,27 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="authenticateType">
+    <xs:choice minOccurs="1" maxOccurs="1">
+      <xs:element name="usernameAuth" type="usernameAuthType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Specifies that the username token should be used for JAAS authentication.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="signatureCertAuth" type="signatureCertAuthType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Specifies that the certificate token referenced from the signature should be used for JAAS authentication.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="usernameAuthType"/>
+  <xs:complexType name="signatureCertAuthType">
+    <xs:attribute name="certificatePrincipal" use="optional">
+      <xs:annotation>
+        <xs:documentation>This specifies the class to be used to map certificates to principal. It must implement org.jboss.security.auth.certs.CertificatePrincipal. Default is org.jboss.security.auth.certs.SubjectCNMapping</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 </xs:schema>

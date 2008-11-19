@@ -92,7 +92,7 @@ public class KeyResolver
          return resolveX509IssuerSerial(issuerSerial);
       }
 
-      throw new NotImplementedException("Currently only DirectReference is supported!");
+      throw new NotImplementedException("Currently only DirectReference, KeyIdentifier and X509IssuerSerial are supported!");
    }
 
    private BinarySecurityToken resolveDirectReference(DirectReference direct) throws WSSecurityException
