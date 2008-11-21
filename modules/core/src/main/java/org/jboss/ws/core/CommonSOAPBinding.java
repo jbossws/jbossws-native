@@ -150,7 +150,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
          // Disable MTOM for rpc/encoded
          if (opMetaData.isRPCEncoded())
             XOPContext.setMTOMEnabled(false);
-         else XOPContext.setMTOMEnabled(isMTOMEnabled());
+         else
+            XOPContext.setMTOMEnabled(isMTOMEnabled());
 
          // Associate current message with message context
          SOAPMessageImpl reqMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -168,7 +169,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (style == Style.RPC)
          {
             boolean serialize = true;
-            
+
             if (opMetaData.getEndpointMetaData().getConfig().getRMMetaData() != null)
             {
                // RM hack to JAX-RPC serialization
@@ -177,7 +178,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   serialize = false;
                }
             }
-            
+
             if (serialize)
             {
                QName opQName = opMetaData.getQName();
@@ -244,10 +245,10 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   log.debug("Add unboundHeader element: " + soapName);
                   SOAPContentElement contentElement = new SOAPHeaderElementImpl(soapName);
                   contentElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
-                  
+
                   if (soapHeader == null)
                      soapHeader = soapEnvelope.addHeader();
-                  
+
                   soapHeader.addChildElement(contentElement);
                   contentElement.setObjectValue(value);
                }
@@ -316,7 +317,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                      payloadParent = (SOAPElement)childNode;
                   }
                }
-               
+
                if (RMHelper.isRMOperation(opMetaData.getQName()) == false) // RM hack
                {
                   if (payloadParent == null)
@@ -414,7 +415,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
          // Disable MTOM for rpc/encoded
          if (opMetaData.isRPCEncoded())
             XOPContext.setMTOMEnabled(false);
-         else XOPContext.setMTOMEnabled(isMTOMEnabled());
+         else
+            XOPContext.setMTOMEnabled(isMTOMEnabled());
 
          // Associate current message with message context
          SOAPMessageImpl resMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -848,7 +850,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             SOAPContentElement aux = (SOAPContentElement)childElement;
             Name elName = aux.getElementName();
 
-            if (xmlName.equals(elName))
+            if (xmlName.getLocalName().equals("") || xmlName.equals(elName))
             {
                soapContentElement = aux;
                soapContentElement.setParamMetaData(paramMetaData);

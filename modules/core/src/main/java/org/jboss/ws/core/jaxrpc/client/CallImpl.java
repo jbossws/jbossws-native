@@ -213,6 +213,7 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       paramMetaData.setMode(mode);
       paramMetaData.setInHeader(inHeader);
       paramMetaData.setIndex(opMetaData.getParameters().size());
+
       opMetaData.addParameter(paramMetaData);
 
       registerParameterType(xmlType, javaType);
@@ -245,7 +246,7 @@ public class CallImpl extends CommonClient implements Call, RoleSource
          throw new IllegalArgumentException("Invalid null parameter");
 
       OperationMetaData opMetaData = getOperationMetaData();
-      QName xmlName = new QName(Constants.DEFAULT_RPC_RETURN_NAME);
+      QName xmlName = new QName("");
       String javaTypeName = javaType.getName();
       ParameterMetaData retMetaData = new ParameterMetaData(opMetaData, xmlName, xmlType, javaTypeName);
       opMetaData.setReturnParameter(retMetaData);
@@ -473,7 +474,8 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       ParameterMetaData paramMetaData = opMetaData.getParameter(new QName(paramName));
       if (paramMetaData != null)
          return paramMetaData.getXmlType();
-      else return null;
+      else
+         return null;
    }
 
    protected CommonBindingProvider getCommonBindingProvider()

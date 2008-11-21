@@ -2706,6 +2706,19 @@
       </metainf>
     </jar>
     
+	<!-- jaxrpc-jbws1862 -->
+    <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws1862.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws1862/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxrpc/jbws1862/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/jbws1862/TestEndpointImpl.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/test-resources/jaxrpc/jbws1862/WEB-INF">
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>    
+    
     <!-- jaxrpc-jbws2234 -->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws2234.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws2234/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">

@@ -158,11 +158,13 @@ public class SOAPBindingTestCase extends JBossWSTest
       call.setOperationName(new QName("http://org.jboss.ws/2004", opName));
 
       call.addParameter("String_1", Constants.TYPE_LITERAL_STRING, String.class, ParameterMode.IN);
-      call.setReturnType(Constants.TYPE_LITERAL_STRING, String.class);
 
       opMetaData = call.getOperationMetaData();
       opMetaData.getEndpointMetaData().setServiceEndpointInterfaceName(SOAPBindingTestService.class.getName());
 
+      ParameterMetaData returnParam = new ParameterMetaData(opMetaData, new QName(Constants.DEFAULT_RPC_RETURN_NAME), Constants.TYPE_LITERAL_STRING, "java.lang.String");
+      opMetaData.setReturnParameter(returnParam);
+      
       // Associate a message context with the current thread
       SOAPMessageContextJAXRPC messageContext = new SOAPMessageContextJAXRPC();
       MessageContextAssociation.pushMessageContext(messageContext);
@@ -355,7 +357,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(resMessage);
 
-      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
+      EndpointInvocation epInv = new EndpointInvocation(opMetaData);     
       binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
       assertEquals("Hello World!", epInv.getReturnValue());
    }
