@@ -44,6 +44,7 @@ import org.jboss.remoting.Version;
 import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.remoting.transport.http.HTTPClientInvoker;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
@@ -109,9 +110,10 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
    public HTTPRemotingConnection()
    {
-      // HTTPClientInvoker conect sends gratuitous POST
+      // HTTPClientInvoker connect sends gratuitous POST
       // http://jira.jboss.com/jira/browse/JBWS-711
       clientConfig.put(Client.ENABLE_LEASE, false);
+      clientConfig.put(HTTPClientInvoker.UNMARSHAL_NULL_STREAM, true);
    }
 
    public boolean isClosed()
@@ -222,8 +224,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
             client.setMarshaller(marshaller);
 
-            if (oneway == false)
-               client.setUnMarshaller(unmarshaller);
+            client.setUnMarshaller(unmarshaller);
 
             if (log.isDebugEnabled())
                log.debug("Remoting metadata: " + metadata);
