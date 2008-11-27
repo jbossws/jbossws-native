@@ -21,3 +21,6 @@ org/jboss/test/ws/jaxws/endpoint/**
 
 # [JBWS-2217] Fix BPEL samples before AS50 goes final
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
+# [JBWS-2409] Fix jbws771 testcase binding customization file
+org/jboss/test/ws/jaxws/jbws771/**
