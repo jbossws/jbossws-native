@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.jboss.ws.native</groupId>
     <artifactId>jbossws-native-testsuite</artifactId>
-    <version>3.0.4.GA</version>
+    <version>3.0.4.SP1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
