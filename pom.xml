@@ -29,9 +29,9 @@
   
   <!-- Source Control Management -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.0.4.GA</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.0.4.GA</developerConnection>
-    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/tags/jbossws-native-3.0.4.GA</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.0.4.SP1</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.0.4.SP1</developerConnection>
+    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/tags/jbossws-native-3.0.4.SP1</url>
   </scm>
   
   <!-- Modules -->
@@ -57,7 +57,7 @@
     <!-- [JBWS-2263] -->
     <!-- START -->
     <jbossws.jboss500.version>3.0.4.GA</jbossws.jboss500.version>
-    <jbossws.jboss501.version>3.0.4.GA</jbossws.jboss501.version>
+    <jbossws.jboss501.version>3.0.4.SP1</jbossws.jboss501.version>
     <!-- END -->
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
@@ -67,7 +67,7 @@
     <jboss.common.version>1.2.1.GA</jboss.common.version>
     <jboss.jaxbintros.version>1.0.0.beta2</jboss.jaxbintros.version>
     <jboss.logging.version>2.0.5.GA</jboss.logging.version>
-    <jboss.remoting.version>2.5.0.GA</jboss.remoting.version>
+    <jboss.remoting.version>2.5.0.SP2</jboss.remoting.version>
     <jboss.jaxr.version>1.2.0.SP2</jboss.jaxr.version>
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
     <sun.jaxws.version>2.1.3</sun.jaxws.version>
