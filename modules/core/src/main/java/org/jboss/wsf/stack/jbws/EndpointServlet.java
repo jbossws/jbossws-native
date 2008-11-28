@@ -21,7 +21,14 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.EndpointResolver;
+import org.jboss.wsf.common.javax.JavaxAnnotationHelper;
+import org.jboss.wsf.common.javax.PreDestroyHolder;
 import org.jboss.wsf.common.servlet.AbstractEndpointServlet;
 
 import javax.servlet.ServletConfig;
@@ -35,6 +42,11 @@ import javax.servlet.ServletConfig;
 public final class EndpointServlet extends AbstractEndpointServlet
 {
    
+   // provide logging
+   protected static final Logger log = Logger.getLogger(EndpointServlet.class);
+
+   private List<PreDestroyHolder> preDestroyRegistry = new LinkedList<PreDestroyHolder>();
+
    /**
     * Provides Native specific endpoint resolver
     * @param servletContext servlet context
@@ -55,6 +67,50 @@ public final class EndpointServlet extends AbstractEndpointServlet
    protected final void postInit(ServletConfig servletConfig)
    {
       ServletConfigHelper.initEndpointConfig(servletConfig, endpoint);
+   }
+   
+   @Override
+   protected final void postService()
+   {
+      registerForPreDestroy(endpoint);
+   }
+
+   @Override
+   public final void destroy()
+   {
+      synchronized(this.preDestroyRegistry)
+      {
+         for (PreDestroyHolder holder : this.preDestroyRegistry)
+         {
+            try
+            {
+               JavaxAnnotationHelper.callPreDestroyMethod(holder.getObject());
+            }
+            catch (Exception exception)
+            {
+               log.error(exception.getMessage(), exception);
+            }
+         }
+         this.preDestroyRegistry.clear();
+         this.preDestroyRegistry = null;
+      }
+      super.destroy();
+   }
+
+   private void registerForPreDestroy(Endpoint ep)
+   {
+      PreDestroyHolder holder = (PreDestroyHolder)ep.getAttachment(PreDestroyHolder.class);
+      if (holder != null)
+      {
+         synchronized(this.preDestroyRegistry)
+         {
+            if (!this.preDestroyRegistry.contains(holder))
+            {
+               this.preDestroyRegistry.add(holder);
+            }
+         }
+         ep.removeAttachment(PreDestroyHolder.class);
+      }
    }
 
 }
