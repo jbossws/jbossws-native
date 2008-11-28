@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
@@ -41,7 +37,6 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
@@ -49,6 +44,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.wsf.common.handler.GenericHandler;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.wsf.common.javax.JavaxAnnotationHelper;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -169,11 +165,11 @@ public class HandlerResolverImpl implements HandlerResolver
          if (handler instanceof GenericSOAPHandler)
             ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
 
-         // Inject resources 
-         injectResources(handler);
+         // Inject resources
+         JavaxAnnotationHelper.injectResources(handler);
 
          // Call @PostConstruct
-         callPostConstruct(handler);
+         JavaxAnnotationHelper.callPostConstructMethod(handler);
 
          addHandler(jaxwsMetaData, handler, type);
       }
@@ -184,55 +180,6 @@ public class HandlerResolverImpl implements HandlerResolver
       catch (Exception ex)
       {
          throw new WSException("Cannot load handler: " + className, ex);
-      }
-   }
-
-   private void injectResources(Handler handler)
-   {
-      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-      try
-      {
-         ctxLoader.loadClass("javax.annotation.Resource");
-      }
-      catch (Throwable th)
-      {
-         log.debug("Cannot inject resources: " + th.toString());
-         return;
-      }
-
-      Class<? extends Handler> handlerClass = handler.getClass();
-      for (Field field : handlerClass.getFields())
-      {
-         if (field.isAnnotationPresent(Resource.class))
-            throw new NotImplementedException("@Resource not implemented for handler: " + handlerClass.getName());
-      }
-      for (Method method : handlerClass.getMethods())
-      {
-         if (method.isAnnotationPresent(Resource.class))
-            throw new NotImplementedException("@Resource not implemented for handler: " + handlerClass.getName());
-      }
-   }
-
-   private void callPostConstruct(Handler handler) throws Exception
-   {
-      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-      try
-      {
-         ctxLoader.loadClass("javax.annotation.PostConstruct");
-      }
-      catch (Throwable th)
-      {
-         log.debug("Cannot call post construct: " + th.toString());
-         return;
-      }
-
-      Class<? extends Handler> handlerClass = handler.getClass();
-      for (Method method : handlerClass.getMethods())
-      {
-         if (method.isAnnotationPresent(PostConstruct.class))
-         {
-            method.invoke(handler, new Object[] {});
-         }
       }
    }
 
