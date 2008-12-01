@@ -86,6 +86,11 @@ import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
+import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.common.IOUtils;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
 import org.jboss.wsf.spi.invocation.InvocationContext;
@@ -93,11 +98,6 @@ import org.jboss.wsf.spi.invocation.RequestHandler;
 import org.jboss.wsf.spi.management.EndpointMetrics;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.common.DOMWriter;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Document;
 
 import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
@@ -337,7 +337,6 @@ public class RequestHandlerImpl implements RequestHandler
       }
       finally
       {
-
          // Cleanup outbound attachments
          CommonMessageContext.cleanupAttachments(MessageContextAssociation.peekMessageContext());
 
@@ -346,7 +345,6 @@ public class RequestHandlerImpl implements RequestHandler
 
          // clear thread local storage
          ThreadLocalAssociation.clear();
-         DOMUtils.clearThreadLocals();
          try
          {
             outStream.close();

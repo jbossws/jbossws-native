@@ -109,7 +109,7 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
       if (outbound == null)
          throw new IllegalStateException("Cannot find property: " + MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
-      MessageContextAssociation.popMessageContext();
+      MessageContextAssociation.popMessageContext(false);
       SOAPMessageContextJAXWS resContext = new SOAPMessageContextJAXWS(reqContext);
       resContext.setSOAPMessage(null);
 
