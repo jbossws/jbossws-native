@@ -28,6 +28,7 @@ import java.util.Stack;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * A thread local association with the current message context
@@ -39,11 +40,11 @@ public class MessageContextAssociation
 {
    // provide logging
    private static Logger log = Logger.getLogger(MessageContextAssociation.class);
-  
 
    public static void pushMessageContext(CommonMessageContext msgContext)
    {
-      if(log.isDebugEnabled()) log.debug("pushMessageContext: " + msgContext + " (Thread " +Thread.currentThread().getName()+ ")");
+      if (log.isDebugEnabled())
+         log.debug("pushMessageContext: " + msgContext + " (Thread " + Thread.currentThread().getName() + ")");
       Stack<CommonMessageContext> stack = ThreadLocalAssociation.localMsgContextAssoc().get();
       if (stack == null)
       {
@@ -66,13 +67,24 @@ public class MessageContextAssociation
 
    public static CommonMessageContext popMessageContext()
    {
+      return popMessageContext(true);
+   }
+   
+   public static CommonMessageContext popMessageContext(boolean clearDOMIfEmpty)
+   {
       CommonMessageContext msgContext = null;
       Stack<CommonMessageContext> stack = ThreadLocalAssociation.localMsgContextAssoc().get();
       if (stack != null && stack.isEmpty() == false)
       {
          msgContext = stack.pop();
+         if (stack.isEmpty() == true && clearDOMIfEmpty == true)
+         {
+            DOMUtils.clearThreadLocals();
+         }
       }
-      if(log.isDebugEnabled()) log.debug("popMessageContext: " + msgContext +" (Thread " +Thread.currentThread().getName()+ ")");
+      if (log.isDebugEnabled())
+         log.debug("popMessageContext: " + msgContext + " (Thread " + Thread.currentThread().getName() + ")");
       return msgContext;
    }
+
 }

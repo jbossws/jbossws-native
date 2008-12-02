@@ -73,6 +73,7 @@ class XMLContent extends SOAPContent
 
    // The well formed XML content of this element.
    private XMLFragment xmlFragment;
+   private Document document = DOMUtils.getOwnerDocument();
 
    protected XMLContent(SOAPContentElement container)
    {
@@ -329,10 +330,29 @@ class XMLContent extends SOAPContent
          short childType = child.getNodeType();
          if (childType == Node.ELEMENT_NODE)
          {
-            SOAPElement soapElement = soapFactory.createElement((Element)child);
-            container.addChildElement(soapElement);
-            if (Constants.NAME_XOP_INCLUDE.equals(qname) || container.isXOPParameter())
-               XOPContext.inlineXOPData(soapElement);
+
+            boolean setOwnerDocument = (DOMUtils.peekOwnerDocument() == null);
+
+            try
+            {
+               if (setOwnerDocument)
+               {                 
+                  DOMUtils.setOwnerDocument(document);
+               }
+               SOAPElement soapElement = soapFactory.createElement((Element)child);
+               container.addChildElement(soapElement);
+               if (Constants.NAME_XOP_INCLUDE.equals(qname) || container.isXOPParameter())
+                  XOPContext.inlineXOPData(soapElement);
+
+            }
+            finally
+            {
+               if (setOwnerDocument)
+               {
+                  DOMUtils.clearThreadLocals();
+               }
+            }
+
          }
          else if (childType == Node.TEXT_NODE)
          {
