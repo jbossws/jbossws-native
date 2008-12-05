@@ -86,6 +86,7 @@
               <include>org.jboss.ws:jbossws-jboss423:jar</include>
               <include>org.jboss.jaxr:juddi-service:sar</include>
               <include>apache-scout:scout:jar</include>
+              <include>apache-xmlbeans:xmlbeans:jar</include>
               <include>juddi:juddi:jar</include>
             </includes>
           </dependencySet>
