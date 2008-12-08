@@ -42,14 +42,14 @@
     <property name="jboss500.lib" value="${jboss500.home}/lib"/>
     <property name="jboss500.client" value="${jboss500.home}/client"/>
     <property name="jboss500.server" value="${jboss500.home}/server/${jboss.server.instance}"/>
-    <property name="jboss500.server.lib" value="${jboss500.server}/lib"/>
+    <property name="jboss500.server.lib" value="${jboss500.home}/common/lib"/>
     <property name="jboss500.server.deploy" value="${jboss500.server}/deploy"/>
     <property name="jboss500.server.deployers" value="${jboss500.server}/deployers"/>
     
     <property name="jboss501.lib" value="${jboss501.home}/lib"/>
     <property name="jboss501.client" value="${jboss501.home}/client"/>
     <property name="jboss501.server" value="${jboss501.home}/server/${jboss.server.instance}"/>
-    <property name="jboss501.server.lib" value="${jboss501.home}/common/lib"/> <!-- Using AS5 common server lib -->
+    <property name="jboss501.server.lib" value="${jboss501.home}/common/lib"/>
     <property name="jboss501.server.deploy" value="${jboss501.server}/deploy"/>
     <property name="jboss501.server.deployers" value="${jboss501.server}/deployers"/>
 
