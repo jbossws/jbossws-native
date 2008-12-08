@@ -64,11 +64,6 @@
       <scope>runtime</scope>
       <type>sar</type>
     </dependency>
-    <dependency>
-      <groupId>apache-xmlbeans</groupId>
-      <artifactId>xmlbeans</artifactId>
-      <scope>runtime</scope>
-    </dependency>
   </dependencies>
   
   <!-- Build -->

@@ -240,7 +240,6 @@
         <fileset dir="@{thirdpartydir}">
           <include name="**/juddi.jar"/>
           <include name="**/scout.jar"/>
-          <include name="**/xmlbeans.jar"/>
         </fileset>
       </copy>
     </sequential>
