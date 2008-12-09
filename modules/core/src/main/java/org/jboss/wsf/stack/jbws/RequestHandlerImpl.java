@@ -345,14 +345,6 @@ public class RequestHandlerImpl implements RequestHandler
 
          // clear thread local storage
          ThreadLocalAssociation.clear();
-         try
-         {
-            outStream.close();
-         }
-         catch (IOException ex)
-         {
-            WSException.rethrow(ex);
-         }
       }
    }
 
@@ -390,15 +382,8 @@ public class RequestHandlerImpl implements RequestHandler
 
             SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
             DOMDocumentSerializer serializer = new DOMDocumentSerializer();
-            try
-            {
-               serializer.setOutputStream(output);
-               serializer.serialize(soapEnv);
-            }
-            finally
-            {
-               output.close();
-            }
+            serializer.setOutputStream(output);
+            serializer.serialize(soapEnv);
          }
          // JSON support
          else if (epMetaData.isFeatureEnabled(JsonEncodingFeature.class) && resMessage instanceof SOAPMessage)
@@ -413,14 +398,7 @@ public class RequestHandlerImpl implements RequestHandler
          }
          else
          {
-            try
-            {
-               resMessage.writeTo(output);
-            }
-            finally
-            {
-               output.close();
-            }
+            resMessage.writeTo(output);
          }
       }
    }
@@ -627,17 +605,6 @@ public class RequestHandlerImpl implements RequestHandler
       {
          throw new WSException(ex);
       }
-      finally
-      {
-         try
-         {
-            outStream.close();
-         }
-         catch (IOException ioe)
-         {
-            throw new WSException(ioe);
-         }
-      }
    }
 
    private void handleWSDLRequestFromServletContext(Endpoint endpoint, OutputStream outputStream, InvocationContext context) throws MalformedURLException, IOException
@@ -665,16 +632,8 @@ public class RequestHandlerImpl implements RequestHandler
       WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
 
-      OutputStreamWriter writer = null;
-      try
-      {
-         writer = new OutputStreamWriter(outputStream);
-         new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
-      }
-      finally
-      {
-         writer.close();
-      }
+      OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+      new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
    }
 
    private void handleException(Exception ex) throws ServletException
