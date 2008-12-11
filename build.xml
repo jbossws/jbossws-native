@@ -10,7 +10,7 @@
 <!-- ====================================================================== -->
 
 <project basedir="." name="JBossWS-Native">
-  
+
   <!-- ================================================================== -->
   <!-- Setup                                                              -->
   <!-- ================================================================== -->
@@ -20,15 +20,15 @@
   <property name="stack.output.dir" value="${stack.dir}/target"/>
   <property name="stack.resources.dir" value="${stack.dir}/modules/resources/src/main/resources"/>
   <property name="deploy.artifacts.dir" value="${stack.output.dir}/deploy-artifacts"/>
-  
+
   <import file="${stack.distro.dir}/build-setup.xml"/>
   <import file="${stack.distro.dir}/build-deploy.xml"/>
   <import file="${stack.resources.dir}/resources/jbossws-deploy-macros.xml"/>
-  
-  <property name="jbossws.default.deploy.conf" value="${stack.resources.dir}/resources/jbossws-default-deploy.conf"/>
+
+  <property name="jbossws.as4.default.deploy.conf" value="${stack.resources.dir}/resources/jbossws-as4-default-deploy.conf"/>
   <property name="jbossws.as5.default.deploy.conf" value="${stack.resources.dir}/resources/jbossws-as5-default-deploy.conf"/>
   <property name="target.properties.file" value="${basedir}/target.properties"/>
-  
+
   <!-- ================================================================== -->
   <!-- Initialization                                                     -->
   <!-- ================================================================== -->
@@ -66,7 +66,10 @@
     <condition property="jboss501.home" value="${profiles.profile.properties.jboss501.home}">
       <isset property="profiles.profile.properties.jboss501.home"/>
     </condition>
-    
+    <condition property="jboss510.home" value="${profiles.profile.properties.jboss510.home}">
+      <isset property="profiles.profile.properties.jboss510.home"/>
+    </condition>
+
     <!-- Loads the properties from the user profile -->
     <xmlproperty file="${basedir}/profiles.xml" keeproot="false"/>
     <property name="jboss422.home" value="${profiles.profile.properties.jboss422.home}"/>
@@ -74,52 +77,54 @@
     <property name="jboss424.home" value="${profiles.profile.properties.jboss424.home}"/>
     <property name="jboss500.home" value="${profiles.profile.properties.jboss500.home}"/>
     <property name="jboss501.home" value="${profiles.profile.properties.jboss501.home}"/>
-    
+    <property name="jboss510.home" value="${profiles.profile.properties.jboss510.home}"/>
+
     <echo/>
     <echo message="jboss422.home=${jboss422.home}"/>
     <echo message="jboss423.home=${jboss423.home}"/>
     <echo message="jboss424.home=${jboss424.home}"/>
     <echo message="jboss500.home=${jboss500.home}"/>
     <echo message="jboss501.home=${jboss501.home}"/>
+    <echo message="jboss501.home=${jboss510.home}"/>
   </target>
-  
+
   <target name="init" depends="mvn-settings,prepare,os-init">
-    
+
     <xmlproperty file="${stack.dir}/pom.xml"/>
     <property name="version.id" value="${project.version}"/>
-    
+
     <echo message="java.version=${java.version}"/>          
     <echo message="version.id=${version.id}"/>
     <echo message="integration.target=${jbossws.integration.target}"/>
-    
+
     <fail message="jbossws.integration.target not set" unless="jbossws.integration.target"/>
     <property name="deploy.structure" value="${stack.output.dir}/deploy-${jbossws.integration.target}"/>
   </target>
-  
+
   <!-- ================================================================== -->
   <!-- Distribution                                                       -->
   <!-- ================================================================== -->
-  
+
   <target name="prepare-deploy" depends="prepare,os-init">
-    
+
     <!-- Use a system property to overwrite the empty default value -->
     <property name="maven.opts" value=""/>
-    
+
     <echo/>
     <echo message="${mvn} ${maven.opts} package assembly:directory"/>
     <echo/>
-    
+
     <delete dir="${deploy.artifacts.dir}"/>
     <exec dir="${basedir}" executable="${mvn}" failonerror="true">
       <arg line="${maven.opts} package assembly:directory"/>
     </exec>
   </target>
-  
+
   <target name="build-bin-dist" depends="prepare-deploy,os-init" description="Build the binary distribution">
     <echo/>
     <echo message="${mvn} ${maven.opts} -Pbindist package assembly:directory"/>
     <echo/>
-    
+
     <delete dir="${stack.output.dir}/jbossws-native-bin-dist"/>
     <exec dir="${basedir}" executable="${mvn}" failonerror="true">
       <arg line="${maven.opts} -Pbindist package assembly:directory"/>
@@ -132,12 +137,12 @@
         prefix="jbossws-native-bin-dist"/>
     </zip>
   </target>
-  
+
   <target name="build-src-dist" depends="prepare-deploy,os-init" description="Build the source distribution">
     <echo/>
     <echo message="${mvn} ${maven.opts} -Psrcdist package assembly:directory"/>
     <echo/>
-    
+
     <delete dir="${stack.output.dir}/jbossws-native-src-dist"/>
     <exec dir="${basedir}" executable="${mvn}" failonerror="true">
       <arg line="${maven.opts} -Psrcdist package assembly:directory"/>
@@ -150,5 +155,5 @@
         prefix="jbossws-native-src-dist"/>
     </zip>
   </target>
-  
+
 </project>
