@@ -73,7 +73,7 @@ public class JBWS1666TestCase extends JBossWSTest
       // Maybe you should extend the Class-Path in the MANIFEST instead.
       StringBuffer cp = new StringBuffer(System.getProperty("test.classes.directory"));
       cp.append(PS + jbc + FS + "jbossws-native-client.jar");
-      if (isTargetJBoss50())
+      if (isTargetJBoss5())
       {
          cp.append(PS + jbc + FS + "jboss-common-core.jar");
          cp.append(PS + jbc + FS + "jboss-logging-spi.jar");

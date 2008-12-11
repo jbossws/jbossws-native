@@ -60,7 +60,7 @@ public class JMSTransportTestCase extends JBossWSTest
     */
    public void testSOAPMessageToEndpointQueue() throws Exception
    {
-      if (isTargetJBoss50())
+      if (isTargetJBoss5())
       {
          System.out.println("FIXME [JBWS-1312] Fix JMS transport in trunk");
          return;

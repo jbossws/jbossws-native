@@ -147,7 +147,7 @@ public class SecureEJBTestCase extends JBossWSTest
          stub._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-ejb/ConfidentialSecured");
          port.getContactInfo("mafia");
 
-         if (isTargetJBoss50())
+         if (isTargetJBoss5())
             System.out.println("FIXME [JBAS-3595] - Tomcat allows http access with transport guarantie CONFIDENTIAL");
          else fail("Security exception expected");
       }
