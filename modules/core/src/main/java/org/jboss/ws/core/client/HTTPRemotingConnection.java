@@ -113,7 +113,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       // HTTPClientInvoker connect sends gratuitous POST
       // http://jira.jboss.com/jira/browse/JBWS-711
       clientConfig.put(Client.ENABLE_LEASE, false);
-      clientConfig.put(HTTPClientInvoker.UNMARSHAL_NULL_STREAM, true);
+      clientConfig.put(HTTPClientInvoker.UNMARSHAL_NULL_STREAM, "true");
    }
 
    public boolean isClosed()
