@@ -46,6 +46,40 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+What's new in jbossws-native-3.0.5.GA
+-------------------------------------
+
+Feature Request
+
+    * [JBWS-2323] - Allow the Xerces defer-node-expansion optimisation to be disabled
+    * [JBWS-2373] - Dynamic address re-writing if the request URL does not have a port do not add a port to the generated address
+    * [JBWS-2375] - Add getChildren fuctionality to UnifiedVirtualFile
+    * [JBWS-2401] - Drop port from URL for endpoint where default port for the protocol is being used
+
+Bug
+
+    * [JBWS-1862] - RPC DII Calls Assume response parameter is called 'result' in the response message
+    * [JBWS-2266] - Schema Validation Feature Fails for Special Characters
+    * [JBWS-2268] - Implement @PostConstruct and @Predestroy annotations support for POJO based endpoints (JSR 109 conformance)
+    * [JBWS-2304] - DOMUtils ThreadLocals not cleared for client calls
+    * [JBWS-2346] - Issue with SAAJ API: SOAPBody.getElementsByTagNameNS() appears non-recursive
+    * [JBWS-2372] - Protocol not considered when re-writing address in WSDL based on request address
+    * [JBWS-2378] - Fix remoting client usage for one-way invocations
+    * [JBWS-2389] - WSDL To Java - Anonymous types nested within anonymous types generated JAX-RPC mapping does not match generated source
+    * [JBWS-2399] - Specify groupId explicitly in assembly creating deploy-artifacts directory
+
+Task
+
+    * [JBWS-2339] - Improve endpoint lifecycle management
+    * [JBWS-2340] - Refactor JAXBIntroDA
+    * [JBWS-2355] - Remove Aspect Manager support from AbstractEndpointServlet
+    * [JBWS-2371] - Fix maven build to include right woodstox artifact
+    * [JBWS-2383] - Fix JBossWS deployment macros for new JBossAS trunk directory structure
+
+Errata
+
+    See: https://jira.jboss.org/jira/browse/JBWS-2422
+
 What's new in jbossws-native-3.0.4.GA
 -------------------------------------
 
