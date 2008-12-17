@@ -9,7 +9,7 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [JBAS-5114] MessageDriven EJB3 does not create destination automatically
+# [JBWS-2433] Investigate why MessageDriven EJB3 tests are failing
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/**
 
