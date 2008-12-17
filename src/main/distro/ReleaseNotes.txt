@@ -73,6 +73,7 @@ Task
     * [JBWS-2339] - Improve endpoint lifecycle management
     * [JBWS-2340] - Refactor JAXBIntroDA
     * [JBWS-2355] - Remove Aspect Manager support from AbstractEndpointServlet
+    * [JBWS-2366] - Restore missing images on wiki
     * [JBWS-2371] - Fix maven build to include right woodstox artifact
     * [JBWS-2383] - Fix JBossWS deployment macros for new JBossAS trunk directory structure
 
