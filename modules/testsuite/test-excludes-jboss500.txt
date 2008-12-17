@@ -16,5 +16,5 @@ org/jboss/test/ws/jaxws/samples/dar/**
 # [JBAS-5257] Cannot deploy through jax-ws endpoint API
 org/jboss/test/ws/jaxws/endpoint/**
 
-# [JBWS-2217] Fix BPEL samples before AS50 goes final
+# [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
