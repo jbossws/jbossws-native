@@ -502,7 +502,11 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          for (Handler bindingHandler : binding.getHandlerChain(type))
          {
             if (bindingHandler instanceof SOAPHandler)
-               headers.addAll(((SOAPHandler)bindingHandler).getHeaders());
+            {
+               Set<QName> understoodHeaders = ((SOAPHandler)bindingHandler).getHeaders();
+               if (understoodHeaders != null)
+                  headers.addAll(understoodHeaders);
+            }
          }
       }
 
