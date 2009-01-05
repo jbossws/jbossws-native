@@ -85,11 +85,22 @@ public class WSDLRequestHandler
       // get some imported resource
       else
       {
-         String impResourcePath = new File(wsdlLocation.getPath()).getParent() + File.separatorChar + resPath;
+         File wsdlLocFile = new File(wsdlLocation.getPath());
+         String impResourcePath = wsdlLocFile.getParent() + File.separatorChar + resPath;
          File impResourceFile = new File(impResourcePath);
+         String wsdlPublishLoc = epMetaData.getServiceMetaData().getWsdlPublishLocation();
 
-         Element wsdlElement = DOMUtils.parse(impResourceFile.toURL().openStream());
-         wsdlDoc = wsdlElement.getOwnerDocument();
+         if (impResourceFile.getCanonicalPath().indexOf(wsdlLocFile.getParentFile().getCanonicalPath()) >= 0
+             || (wsdlPublishLoc != null 
+                  && impResourceFile.getCanonicalPath().indexOf(new File(new URL(wsdlPublishLoc).getPath()).getCanonicalPath()) >= 0))
+         {
+            Element wsdlElement = DOMUtils.parse(impResourceFile.toURL().openStream());
+            wsdlDoc = wsdlElement.getOwnerDocument();
+         }
+         else
+         {
+            throw new IOException("Access to this resource is not allowed");
+         }
       }
 
       modifyAddressReferences(reqURL, wsdlHost, resPath, wsdlDoc.getDocumentElement());
