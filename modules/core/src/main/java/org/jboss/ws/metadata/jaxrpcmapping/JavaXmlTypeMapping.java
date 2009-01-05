@@ -126,21 +126,21 @@ public class JavaXmlTypeMapping implements Serializable
 
    public String serialize()
    {
-      StringBuffer sb = new StringBuffer();
+      StringBuffer sb = new StringBuffer(100);
       sb.append("<java-xml-type-mapping>");
       sb.append("<java-type>").append(javaType).append("</java-type>");
 
       if (rootTypeQName != null)
       {
          sb.append("<root-type-qname xmlns:typeNS='").append(rootTypeQName.getNamespaceURI()).append("'>");
-         sb.append(rootTypeQName.getPrefix()).append(":").append(rootTypeQName.getLocalPart());
+         sb.append(rootTypeQName.getPrefix()).append(':').append(rootTypeQName.getLocalPart());
          sb.append("</root-type-qname>");
       }
 
       if (anonymousTypeQName != null)
       {
          sb.append("<anonymous-type-qname xmlns:typeNS='").append(anonymousTypeQName.getNamespaceURI()).append("'>");
-         sb.append(anonymousTypeQName.getPrefix()).append(":").append(anonymousTypeQName.getLocalPart());
+         sb.append(anonymousTypeQName.getPrefix()).append(':').append(anonymousTypeQName.getLocalPart());
          sb.append("</anonymous-type-qname>");
       }
 

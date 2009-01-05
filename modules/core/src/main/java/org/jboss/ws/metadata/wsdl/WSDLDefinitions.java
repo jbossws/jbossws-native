@@ -113,10 +113,10 @@ public class WSDLDefinitions extends Extendable implements Serializable
    public String registerNamespaceURI(String nsURI, String prefix)
    {
       String pre = namespaces.getPrefix(nsURI);
-      if (pre == null || pre == "")
+      if (pre == null || 0 == pre.length())
       {
          pre = namespaces.registerURI(nsURI, prefix);
-         log.trace("registerNamespaceURI: " + pre + "=" + nsURI);
+         log.trace("registerNamespaceURI: " + pre + '=' + nsURI);
       }
       return pre;
    }

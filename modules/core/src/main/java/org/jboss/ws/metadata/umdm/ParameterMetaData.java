@@ -563,32 +563,32 @@ public class ParameterMetaData implements InitalizableMetaData
    {
       boolean isReturn = (opMetaData.getReturnParameter() == this);
       StringBuilder buffer = new StringBuilder("\n" + (isReturn ? "ReturnMetaData:" : "ParameterMetaData:"));
-      buffer.append("\n xmlName=" + getXmlName());
-      buffer.append("\n partName=" + getPartName());
-      buffer.append("\n xmlType=" + getXmlType());
+      buffer.append("\n xmlName=").append(getXmlName());
+      buffer.append("\n partName=").append(getPartName());
+      buffer.append("\n xmlType=").append(getXmlType());
 
       if (soapArrayParam)
-         buffer.append("\n soapArrayCompType=" + soapArrayCompType);
+         buffer.append("\n soapArrayCompType=").append(soapArrayCompType);
 
-      buffer.append("\n javaType=" + getJavaTypeName());
-      buffer.append("\n mode=" + getMode());
-      buffer.append("\n inHeader=" + isInHeader());
-      buffer.append("\n index=" + index);
+      buffer.append("\n javaType=").append(getJavaTypeName());
+      buffer.append("\n mode=").append(getMode());
+      buffer.append("\n inHeader=").append(isInHeader());
+      buffer.append("\n index=").append(index);
 
       if (isSwA())
       {
-         buffer.append("\n isSwA=" + isSwA());
-         buffer.append("\n mimeTypes=" + getMimeTypes());
+         buffer.append("\n isSwA=").append(isSwA());
+         buffer.append("\n mimeTypes=").append(getMimeTypes());
       }
 
       if (isXOP())
       {
-         buffer.append("\n isXOP=" + isXOP());
-         buffer.append("\n mimeTypes=" + getMimeTypes());
+         buffer.append("\n isXOP=").append(isXOP());
+         buffer.append("\n mimeTypes=").append(getMimeTypes());
       }
 
       if (wrappedParameters != null)
-         buffer.append("\n wrappedParameters=" + wrappedParameters);
+         buffer.append("\n wrappedParameters=").append(wrappedParameters);
 
       return buffer.toString();
    }

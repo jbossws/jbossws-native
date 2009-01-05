@@ -227,9 +227,9 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          String resourcePath = packagePath + "/" + filepath;
          while (filepath.startsWith("../"))
          {
-            packagePath = packagePath.substring(0, packagePath.lastIndexOf("/"));
+            packagePath = packagePath.substring(0, packagePath.lastIndexOf('/'));
             filepath = filepath.substring(3);
-            resourcePath = packagePath + "/" + filepath;
+            resourcePath = packagePath + '/' + filepath;
          }
          fileURL = wsClass.getClassLoader().getResource(resourcePath);
       }
