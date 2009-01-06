@@ -75,6 +75,7 @@ import javax.xml.namespace.QName;
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.Style;
+import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.core.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.Extendable;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
@@ -111,6 +112,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * A helper that translates a WSDL-1.1 object graph into a WSDL-2.0 object graph.
@@ -126,6 +128,7 @@ public class WSDL11Reader
    private static final Logger log = Logger.getLogger(WSDL11Reader.class);
 
    private WSDLDefinitions destWsdl;
+   private JBossWSEntityResolver entityResolver = new JBossWSEntityResolver();
 
    // Maps wsdl message parts to their corresponding element names
    private Map<String, QName> messagePartToElementMap = new HashMap<String, QName>();
@@ -575,7 +578,23 @@ public class WSDL11Reader
                schemaLocationsMap.put(namespace, currLoc);
                
                // Recursively handle schema imports
-               Element importedSchema = DOMUtils.parse(currLoc.openStream());
+               Element importedSchema = null;
+               String schema = currLoc.toString();
+               if (entityResolver.getEntityMap().containsKey(schema))
+               {
+                  try
+                  {
+                     importedSchema = DOMUtils.parse(entityResolver.resolveEntity(schema, schema).getByteStream());
+                  }
+                  catch (SAXException se)
+                  {
+                     log.error(se.getMessage(), se);
+                  }
+               }
+               if (importedSchema == null)
+               {
+                  importedSchema = DOMUtils.parse(currLoc.openStream());
+               }
                handleSchemaImports(importedSchema, currLoc);
             }
          }
