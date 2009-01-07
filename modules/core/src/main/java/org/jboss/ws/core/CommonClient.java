@@ -401,6 +401,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
       catch (Exception ex)
       {
+         log.error("Exception caught while (preparing for) performing the invocation: ", ex);
+         
          // Reverse the message direction
          processPivotInternal(msgContext, direction);
 
