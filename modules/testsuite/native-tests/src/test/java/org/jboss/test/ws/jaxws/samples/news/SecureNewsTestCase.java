@@ -39,7 +39,7 @@ public class SecureNewsTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      String newspaperJar = new JBossWSTestHelper().isTargetJBoss5() ? "jaxws-samples-news-step2-newspaper-as5.jar" : "jaxws-samples-news-step2-newspaper.jar";
+      String newspaperJar = new JBossWSTestHelper().isTargetJBoss5OrGreater() ? "jaxws-samples-news-step2-newspaper-as5.jar" : "jaxws-samples-news-step2-newspaper.jar";
       return new JBossWSTestSetup
       (
          SecureNewsTestCase.class,
