@@ -558,11 +558,12 @@
   <!-- Deploy JBossWS                                                     -->
   <!-- ================================================================== -->
 
-  <target name="deploy-jbossws-native42" depends="check-parameters">
+  <available classname="java.io.Console" property="HAVE_JDK16_OR_ABOVE"/>
+
+  <target name="deploy-jbossws-native42" depends="check-parameters,deploy-jbossws-endorsed">
     <macro-deploy-jbossws-bin targetdir="${installserver}/../../bin" artifactsdir="${artifactsdir}"/>
     <macro-deploy-jbossws-client42 targetdir="${installserver}/../../client" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-lib42 targetdir="${installserver}/../../lib" thirdpartydir="${thirdpartydir}"/>
-    <macro-deploy-jbossws-endorsed targetdir="${installserver}/../../lib/endorsed" thirdpartydir="${thirdpartydir}"/>
     <macro-deploy-jbossws-server-lib42 targetdir="${installserver}/lib" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-sar42 targetdir="${installserver}/deploy/jbossws.sar" artifactsdir="${artifactsdir}" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-juddi-sar targetdir="${installserver}/deploy/juddi-service.sar" thirdpartydir="${thirdpartydir}"/>
@@ -599,6 +600,10 @@
     <macro-deploy-jbossws-sar60 targetdir="${installserver}/deploy/jbossws.sar" artifactsdir="${artifactsdir}" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-jbossws-deployers60 targetdir="${installserver}/deployers/jbossws.deployer/" artifactsdir="${artifactsdir}" thirdpartydir="${thirdpartydir}" jbossid="${jbossid}"/>
     <macro-deploy-juddi-sar targetdir="${installserver}/deploy/juddi-service.sar" thirdpartydir="${thirdpartydir}"/>
+  </target>
+
+  <target name="deploy-jbossws-endorsed" if="HAVE_JDK16_OR_ABOVE">
+    <macro-deploy-jbossws-endorsed targetdir="${installserver}/../../lib/endorsed" thirdpartydir="${thirdpartydir}"/>
   </target>
 
   <target name="check-parameters">
