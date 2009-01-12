@@ -39,6 +39,7 @@ import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.nonce.DefaultNonceFactory;
 import org.jboss.ws.extensions.security.nonce.NonceFactory;
+import org.jboss.ws.extensions.security.operation.AuthorizeOperation;
 import org.jboss.ws.extensions.security.operation.EncodingOperation;
 import org.jboss.ws.extensions.security.operation.EncryptionOperation;
 import org.jboss.ws.extensions.security.operation.RequireEncryptionOperation;
@@ -50,6 +51,8 @@ import org.jboss.ws.extensions.security.operation.SignatureOperation;
 import org.jboss.ws.extensions.security.operation.TimestampOperation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.wsse.Authenticate;
+import org.jboss.ws.metadata.wsse.Authorize;
 import org.jboss.ws.metadata.wsse.Config;
 import org.jboss.ws.metadata.wsse.Encrypt;
 import org.jboss.ws.metadata.wsse.Operation;
@@ -79,7 +82,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       Config config = getActualConfig(configuration, operationConfig);
       SOAPHeader soapHeader = message.getSOAPHeader();
       QName secQName = new QName(Constants.WSSE_NS, "Security");
-      Element secHeaderElement = (soapHeader != null) ? Util.findElement(soapHeader, secQName) : null; 
+      Element secHeaderElement = (soapHeader != null) ? Util.findElement(soapHeader, secQName) : null;
 
       if (secHeaderElement == null)
       {
@@ -89,45 +92,76 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
          if (hasRequirements(config))
             throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
-
-         return;
       }
 
       try
       {
-         SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
-               configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
-         NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
-         SecurityDecoder decoder = new SecurityDecoder(securityStore, factory, configuration.getTimestampVerification(), config == null ? null : config.getAuthenticate());
+         if (secHeaderElement != null)
+         {
+            decodeHeader(configuration, config, message, secHeaderElement);
+         }
 
-         decoder.decode(message.getSOAPPart(), secHeaderElement);
-         
-         if (log.isTraceEnabled())
-            log.trace("Decoded Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
-
-         List<RequireOperation> operations = buildRequireOperations(config);
-
-         decoder.verify(operations);
-         if(log.isDebugEnabled()) log.debug("Verification is successful");
-
-         decoder.complete();
+         authorize(config);
       }
       catch (WSSecurityException e)
       {
          if (e.isInternalError())
             log.error("Internal error occured handling inbound message:", e);
-         else if(log.isDebugEnabled()) log.debug("Returning error to sender: " + e.getMessage());
+         else if (log.isDebugEnabled())
+            log.debug("Returning error to sender: " + e.getMessage());
 
          throw convertToFault(e);
       }
-      
+
+   }
+
+   private void decodeHeader(WSSecurityConfiguration configuration, Config config, SOAPMessage message, Element secHeaderElement) throws WSSecurityException
+   {
+      SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
+            configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
+      NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
+
+      Authenticate authenticate = null;
+
+      if (config != null)
+      {
+         authenticate = config.getAuthenticate();
+      }
+
+      SecurityDecoder decoder = new SecurityDecoder(securityStore, factory, configuration.getTimestampVerification(), authenticate);
+
+      decoder.decode(message.getSOAPPart(), secHeaderElement);
+
+      if (log.isTraceEnabled())
+         log.trace("Decoded Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
+
+      List<RequireOperation> operations = buildRequireOperations(config);
+
+      decoder.verify(operations);
+      if (log.isDebugEnabled())
+         log.debug("Verification is successful");
+
+      decoder.complete();
+   }
+
+   private void authorize(Config config) throws WSSecurityException
+   {
+      if (config != null)
+      {
+         Authorize authorize = config.getAuthorize();
+         if (authorize != null)
+         {
+            AuthorizeOperation authorizeOp = new AuthorizeOperation(authorize);
+            authorizeOp.process();
+         }
+      }
    }
 
    public void encodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig, String user, String password) throws SOAPException
    {
       Config config = getActualConfig(configuration, operationConfig);
       log.debug("WS-Security config: " + config);
-      
+
       // Nothing to process
       if (config == null)
          return;
@@ -172,12 +206,13 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       if (operations.size() == 0)
          return;
 
-      if(log.isDebugEnabled()) log.debug("Encoding Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
+      if (log.isDebugEnabled())
+         log.debug("Encoding Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
 
       try
       {
          SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
-               configuration.getKeyPasswords() , configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
+               configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
          SecurityEncoder encoder = new SecurityEncoder(operations, securityStore);
          encoder.encode(message.getSOAPPart());
       }
@@ -185,7 +220,8 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       {
          if (e.isInternalError())
             log.error("Internal error occured handling outbound message:", e);
-         else if(log.isDebugEnabled()) log.debug("Returning error to sender: " + e.getMessage());
+         else if (log.isDebugEnabled())
+            log.debug("Returning error to sender: " + e.getMessage());
 
          throw convertToFault(e);
       }
@@ -199,7 +235,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       securityAdaptor.setPrincipal(null);
       securityAdaptor.setCredential(null);
    }
-   
+
    private List<Target> convertTargets(List<org.jboss.ws.metadata.wsse.Target> targets)
    {
       if (targets == null)
@@ -232,7 +268,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
    {
       if (operationConfig == null)
          return null;
-      
+
       Requires requires = operationConfig.getRequires();
       if (requires == null)
          return null;
@@ -270,7 +306,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          {
             EndpointMetaData epMetaData = ctx.getEndpointMetaData();
             QName port = epMetaData.getPortName();
-            
+
             OperationMetaData opMetaData = ctx.getOperationMetaData();
             if (opMetaData == null)
             {
@@ -293,7 +329,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       //null operationConfig means default behavior
       return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
    }
-   
+
    private Config selectOperationConfig(WSSecurityConfiguration configuration, QName portName, QName opName)
    {
       Port port = configuration.getPorts().get(portName != null ? portName.getLocalPart() : null);
@@ -311,8 +347,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       }
       return operation.getConfig();
    }
-   
-   
+
    private boolean hasRequirements(Config config)
    {
       return config != null && config.getRequires() != null;

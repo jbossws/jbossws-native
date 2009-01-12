@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,20 +19,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.jbws1316;
+package org.jboss.test.ws.jaxws.jbws1999;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import javax.jws.WebService;
 
 /**
- * Simple TestEndpoint to test the handling to WSSE timestamps.
- *
- * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
- * @since April 14 2008
+ * Test Endpoint to test UsernameToken authorization / authentication
+ * for POJO endpoints.
+ * 
+ * @author darran.lofthouse@jboss.com
+ * @since 12th January 2008
+ * @see https://jira.jboss.org/jira/browse/JBWS-1999
  */
-public interface TestEndpoint extends Remote
+@WebService(name = "Endpoint", targetNamespace = "http://ws.jboss.org/jbws1999")
+public interface Endpoint
 {
 
-   public String echoMessage(final String message) throws RemoteException;
+   public String echoUnchecked(final String message);
+
+   public String echoFriendRequired(final String message);
+
+   public String echoEnemyRequired(final String message);
+
+   public String echoNoSecurity(final String message);
 
 }

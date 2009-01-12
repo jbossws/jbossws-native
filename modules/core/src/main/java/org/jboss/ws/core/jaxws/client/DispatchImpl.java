@@ -595,7 +595,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
    private boolean callRequestHandlerChain(QName portName, HandlerType type)
    {
       BindingExt binding = (BindingExt)bindingProvider.getBinding();
-      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type));
+      HandlerChainExecutor executor = new HandlerChainExecutor(epMetaData, binding.getHandlerChain(type), false);
       executorMap.put(type, executor);
 
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();

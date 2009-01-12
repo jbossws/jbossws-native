@@ -65,8 +65,6 @@ public class ReceiveUsernameOperation implements TokenOperation
    {
       UsernameToken user = (UsernameToken)token;
       SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
-      Logger.getLogger(this.getClass()).info("Username: " + user.getUsername());
-      Logger.getLogger(this.getClass()).info("Password: " + user.getPassword());
       if (user.isDigest())
       {
          verifyUsernameToken(user);

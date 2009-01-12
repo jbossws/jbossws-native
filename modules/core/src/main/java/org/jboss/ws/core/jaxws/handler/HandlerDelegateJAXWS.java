@@ -161,8 +161,8 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
    {
       if (type == HandlerType.ALL)
          throw new IllegalArgumentException("Invalid handler type: " + type);
-      
-      HandlerChainExecutor executor = new HandlerChainExecutor(sepMetaData, getHandlerChain(sepMetaData, type));
+
+      HandlerChainExecutor executor = new HandlerChainExecutor(sepMetaData, getHandlerChain(sepMetaData, type), true);
       if (type == HandlerType.PRE)
          preExecutor.set(executor);
       else if (type == HandlerType.ENDPOINT)

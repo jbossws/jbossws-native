@@ -82,6 +82,12 @@
       <version>${jboss.jbosssx.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.jboss.security</groupId>
+      <artifactId>jboss-security-spi</artifactId>
+      <scope>provided</scope>
+      <version>${jboss.jbosssx.version}</version>
+    </dependency>    
+    <dependency>
       <groupId>org.jboss</groupId>
       <artifactId>jbossxb</artifactId>
       <scope>provided</scope>
