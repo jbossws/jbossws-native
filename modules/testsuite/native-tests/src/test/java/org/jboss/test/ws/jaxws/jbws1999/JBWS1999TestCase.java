@@ -172,7 +172,6 @@ public class JBWS1999TestCase extends JBossWSTest
       {
          SOAPFault fault = sfe.getFault();
          String faultCode = fault.getFaultCode();
-         System.out.println(faultCode);
          assertEquals("Fault Code", FAULT_CODE, faultCode);
          String faultString = fault.getFaultString();
          assertEquals("Fault Message", FAULT_STRING, faultString);
