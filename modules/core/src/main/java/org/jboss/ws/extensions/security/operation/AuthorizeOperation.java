@@ -36,6 +36,7 @@ import javax.security.auth.Subject;
 import org.jboss.logging.Logger;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
+import org.jboss.security.SecurityAssociation;
 import org.jboss.security.SecurityContext;
 import org.jboss.security.SecurityContextAssociation;
 import org.jboss.security.SimplePrincipal;
@@ -110,7 +111,8 @@ public class AuthorizeOperation
          SecurityException e = new SecurityException(msg);
          throw new FailedAuthenticationException(e);
       }
-      pushSubjectContext(principal, credential, subject);
+      securityAdaptor.pushSubjectContext(subject, principal, credential);
+
       if (TRACE)
          log.trace("Authenticated, principal=" + principal);
 
@@ -156,31 +158,6 @@ public class AuthorizeOperation
       }
 
       return expectedRoles;
-   }
-
-   private static SecurityContext getSecurityContext()
-   {
-      return (SecurityContext)AccessController.doPrivileged(new PrivilegedAction() {
-         public Object run()
-         {
-            return SecurityContextAssociation.getSecurityContext();
-         }
-      });
-   }
-
-   private static void pushSubjectContext(final Principal p, final Object cred, final Subject s)
-   {
-      AccessController.doPrivileged(new PrivilegedAction() {
-
-         public Object run()
-         {
-            SecurityContext sc = getSecurityContext();
-            if (sc == null)
-               throw new IllegalStateException("Security Context is null");
-            sc.getUtil().createSubjectInfo(p, cred, s);
-            return null;
-         }
-      });
    }
 
 }
