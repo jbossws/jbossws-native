@@ -553,6 +553,10 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       String javaName = method.getName();
 
+      // Methods added by JBoss AOP will be marked as synthetic and should be skipped.
+      if (method.isSynthetic() == true)
+    	  return;
+      
       // skip asnyc methods, they dont need meta data representation
       if (method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
          return;
