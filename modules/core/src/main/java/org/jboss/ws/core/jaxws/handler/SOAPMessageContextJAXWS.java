@@ -98,14 +98,14 @@ public class SOAPMessageContextJAXWS extends MessageContextJAXWS implements SOAP
                Name hName = hElement.getElementName();
                if (qname.equals(new QName(hName.getURI(), hName.getLocalName())))
                {
-                  URI actor = new URI(hElement.getActor());
+                  URI actor = null;
+                  if (hElement.getActor() != null)
+                  {
+                     actor = new URI(hElement.getActor());
+                  }
                   if (roles.contains(actor) || allRoles)
                   {
                      headers.add(hElement);
-
-                     // FIXME
-                     // SOAPMessageContext.getHeaders should return unmarshalled objects
-                     // http://jira.jboss.org/jira/browse/JBWS-1105
                   }
                }
             }
