@@ -19,31 +19,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.annotation;
+package javax.xml.ws;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.xml.ws.spi.WebServiceFeatureAnnotation;
-
-import org.jboss.ws.feature.FastInfosetFeature;
-
 /**
- * This feature represents the use of FastInfoset
+ * The <code>FaultAction</code> annotation is used inside an <a href="Action.html">
+ * Action</a> annotation to allow an explicit association of <code>Action</code> message
+ * addressing property with the <code>fault</code> messages of the WSDL operation mapped from
+ * the exception class.
+ * <p>
+ * In this version of JAX-WS there is no standard way to specify Action values in a WSDL and
+ * there is no standard default value. It is intended that, after the W3C WG on WS-Addressing
+ * has defined these items in a recommendation, a future version of JAX-WS will require the
+ * new standards.
  * 
- * @author Thomas.Diesler@jboss.com
- * @since 29-Feb-2008
+ * @since JAX-WS 2.1
  */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.TYPE })
-@EndpointFeature( id = FastInfosetFeature.ID)
-@WebServiceFeatureAnnotation(id = FastInfosetFeature.ID, bean = FastInfosetFeature.class)
-public @interface FastInfoset {
-   
+
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface FaultAction {
    /**
-    * Specifies if the feature is enabled or disabled
+    * Name of the exception class
     */
-   boolean enabled() default true;
+   Class className();
+
+   /**
+    * Value of <code>Action</code> message addressing property for the exception
+    */
+   String value() default "";
 }

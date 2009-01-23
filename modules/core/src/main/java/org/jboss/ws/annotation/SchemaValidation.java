@@ -26,6 +26,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.xml.ws.spi.WebServiceFeatureAnnotation;
+
 import org.jboss.ws.extensions.validation.StrictlyValidErrorHandler;
 import org.jboss.ws.feature.SchemaValidationFeature;
 
@@ -39,6 +41,7 @@ import org.jboss.ws.feature.SchemaValidationFeature;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })
 @EndpointFeature( id = SchemaValidationFeature.ID)
+@WebServiceFeatureAnnotation(id = SchemaValidationFeature.ID, bean = SchemaValidationFeature.class)
 public @interface SchemaValidation 
 {
    /**

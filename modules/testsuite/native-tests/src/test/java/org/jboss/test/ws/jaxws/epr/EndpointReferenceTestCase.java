@@ -24,8 +24,10 @@ package org.jboss.test.ws.jaxws.epr;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service;
-import javax.xml.ws.Service21;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
@@ -75,7 +77,32 @@ public class EndpointReferenceTestCase extends JBossWSTest
       builder.referenceParameter(DOMUtils.parse("<fabrikam:ShoppingCart xmlns:fabrikam='http://example.com/fabrikam'>ABCDEFG</fabrikam:ShoppingCart>"));
       W3CEndpointReference epr = builder.build();
 
-      Service21 service = Service21.create(wsdlURL, serviceName);
+      Service service = Service.create(wsdlURL, serviceName);
+      TestEndpoint port = service.getPort(epr, TestEndpoint.class);
+      ((StubExt)port).setConfigName("Standard WSAddressing Client");
+      String retStr = port.echo("hello");
+      assertEquals("hello|123456789|ABCDEFG", retStr);
+   }
+   
+   public void testEndpointReferenceFromSource() throws Exception
+   {
+      String address = "http://" + getServerHost() + ":8080/jaxws-epr/TestEndpointImpl";
+      URL wsdlURL = new URL(address + "?wsdl");
+      QName serviceName = new QName("http://org.jboss.ws/epr", "TestEndpointService");
+
+      StringBuilder sb = new StringBuilder();
+      sb.append("<EndpointReference xmlns=\"http://www.w3.org/2005/08/addressing\">");
+      sb.append("<Address>").append(address).append("</Address>");
+      sb.append("<ServiceName>").append(serviceName).append("</ServiceName>");
+      sb.append("<ReferenceParameters>");
+      sb.append("<fabrikam:CustomerKey xmlns:fabrikam='http://example.com/fabrikam'>123456789</fabrikam:CustomerKey>");
+      sb.append("<fabrikam:ShoppingCart xmlns:fabrikam='http://example.com/fabrikam'>ABCDEFG</fabrikam:ShoppingCart>");
+      sb.append("</ReferenceParameters>");
+      sb.append("</EndpointReference>");
+      Source eprInfoset = new StreamSource(new java.io.StringReader(sb.toString()));
+      EndpointReference epr = EndpointReference.readFrom(eprInfoset);
+
+      Service service = Service.create(wsdlURL, serviceName);
       TestEndpoint port = service.getPort(epr, TestEndpoint.class);
       ((StubExt)port).setConfigName("Standard WSAddressing Client");
       String retStr = port.echo("hello");

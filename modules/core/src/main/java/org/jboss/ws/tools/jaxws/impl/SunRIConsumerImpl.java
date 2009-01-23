@@ -198,8 +198,8 @@ public class SunRIConsumerImpl extends WSContractConsumer
       args.add(outputDir.getAbsolutePath());
 
       // Always set the target
-       if(!target.equals("2.0"))
-         throw new IllegalArgumentException("WSConsume (native) only supports JAX-WS 2.0");
+       if(!target.equals("2.0") && !target.equals("2.1"))
+         throw new IllegalArgumentException("WSConsume (native) only supports JAX-WS 2.0 and 2.1");
       
       args.add("-target");
       args.add(target);

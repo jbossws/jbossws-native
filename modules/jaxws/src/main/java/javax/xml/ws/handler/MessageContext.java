@@ -144,6 +144,16 @@ public interface MessageContext extends Map<String, Object>
    public static final String PATH_INFO = "javax.xml.ws.http.request.pathinfo";
    
    /**
+    * Standard property: WS Addressing Reference Parameters.
+    * The list MUST include all SOAP headers marked with the
+    * wsa:IsReferenceParameter="true" attribute.
+    * <p>Type: List<Element>
+    *
+    * @since JAX-WS 2.1
+    */
+   public static final String REFERENCE_PARAMETERS = "javax.xml.ws.reference.parameters";
+   
+   /**
     * Property scope. Properties scoped as <code>APPLICATION</code> are
     * visible to handlers,
     * client applications and service endpoints; properties scoped as

@@ -32,14 +32,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Endpoint;
+import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service;
 import javax.xml.ws.soap.SOAPBinding;
+import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
+import org.jboss.logging.Logger;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.http.HttpContext;
 import org.jboss.wsf.spi.http.HttpServer;
 import org.jboss.wsf.spi.http.HttpServerFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Test Endpoint deployment
@@ -50,6 +56,7 @@ import org.jboss.wsf.spi.http.HttpServerFactory;
 public class EndpointServlet extends HttpServlet
 {
    private Endpoint endpoint;
+   private static final String TEST_ELEMENT = "<fabrikam:CustomerKey xmlns:fabrikam='http://example.com/fabrikam'>123456789</fabrikam:CustomerKey>";
    
    @Override
    public void init(ServletConfig config) throws ServletException
@@ -90,9 +97,32 @@ public class EndpointServlet extends HttpServlet
       // Invoke the endpoint
       String param = req.getParameter("param");
       String retStr = port.echo(param);
+      
+      //Test epr
+      assertEndpointReference(endpoint.getEndpointReference(DOMUtils.parse(TEST_ELEMENT)), TEST_ELEMENT);
+      assertEndpointReference(endpoint.getEndpointReference(W3CEndpointReference.class, (Element[])null), null);
 
       // Return the result
       PrintWriter pw = new PrintWriter(res.getWriter());
       pw.print(retStr);
+   }
+   
+
+   
+   private void assertEndpointReference(EndpointReference epr, String refPar) throws IOException
+   {
+      Logger.getLogger(this.getClass()).info("epr: "+epr);
+      assert(W3CEndpointReference.class.getName().equals(epr.getClass().getName()));
+      Element endpointReference = DOMUtils.parse(epr.toString());
+      assert("EndpointReference".equals(endpointReference.getNodeName()));
+      assert("http://www.w3.org/2005/08/addressing".equals(endpointReference.getAttribute("xmlns")));
+      NodeList addresses = endpointReference.getElementsByTagName("Address");
+      assert(addresses.getLength() == 1);
+      assert("http://127.0.0.1:8080/jaxws-endpoint".equals(addresses.item(0).getFirstChild().getNodeValue()));
+      if (refPar != null)
+      {
+         //TODO enhance this check
+         assert(epr.toString().contains(refPar));
+      }
    }
 }

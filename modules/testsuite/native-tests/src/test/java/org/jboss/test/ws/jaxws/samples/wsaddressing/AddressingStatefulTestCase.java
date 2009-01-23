@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.handler.Handler;
+import javax.xml.ws.soap.AddressingFeature;
 
 import junit.framework.Test;
 
@@ -71,11 +72,10 @@ public class AddressingStatefulTestCase extends JBossWSTest
          bindingProvider.getBinding().setHandlerChain(customHandlerChain);
 
          Service service2 = Service.create(wsdlURL, serviceName);
-         port2 = (StatefulEndpoint)service2.getPort(StatefulEndpoint.class);
+         port2 = (StatefulEndpoint)service2.getPort(StatefulEndpoint.class, new AddressingFeature(true, true));
          bindingProvider = (BindingProvider)port2;
          List<Handler> customHandlerChain2 = new ArrayList<Handler>();
          customHandlerChain2.add(new ClientHandler());
-         customHandlerChain2.add(new WSAddressingClientHandler());
          bindingProvider.getBinding().setHandlerChain(customHandlerChain2);
 
       }

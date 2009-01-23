@@ -23,12 +23,16 @@ package org.jboss.ws.core;
 
 import java.util.Observable;
 
+import javax.xml.ws.EndpointReference;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
+import javax.xml.ws.wsaddressing.W3CEndpointReference;
+import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.SOAP11BindingJAXRPC;
 import org.jboss.ws.core.jaxrpc.SOAP12BindingJAXRPC;
+import org.jboss.ws.core.jaxws.binding.EndpointReferenceUtil;
 import org.jboss.ws.core.jaxws.binding.HTTPBindingJAXWS;
 import org.jboss.ws.core.jaxws.binding.SOAP11BindingJAXWS;
 import org.jboss.ws.core.jaxws.binding.SOAP12BindingJAXWS;
@@ -101,6 +105,42 @@ public class CommonBindingProvider implements Configurable
    public CommonBinding getCommonBinding()
    {
       return binding;
+   }
+
+   public EndpointReference getEndpointReference()
+   {
+      if (binding instanceof HTTPBinding )
+      {
+         throw new UnsupportedOperationException("Cannot get EPR for BindingProvider instances using the XML/HTTP binding");
+      }
+      return getEndpointReference(W3CEndpointReference.class);
+   }
+
+   public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
+   {
+      // Conformance 4.5 (javax.xml.ws.BindingProvider.getEndpointReference): An implementation
+      // MUST be able to return an javax.xml.ws.EndpointReference for the target endpoint if a SOAP binding
+      // is being used. If the BindingProvider instance has a binding that is either SOAP 1.1/HTTP or
+      // SOAP 1.2/HTTP, then a W3CEndpointReference MUST be returned. If the binding is XML/HTTP an
+      // java.lang.UnsupportedOperationExceptionMUST be thrown.
+
+      if (binding instanceof HTTPBinding )
+      {
+         throw new UnsupportedOperationException("Cannot get epr for BindingProvider instances using the XML/HTTP binding");
+      }
+      W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
+      if (epMetaData != null)
+      {
+         builder.address(epMetaData.getEndpointAddress());
+         builder.serviceName(epMetaData.getServiceMetaData().getServiceName());
+         builder.endpointName(epMetaData.getPortName());
+         builder.wsdlDocumentLocation(epMetaData.getEndpointAddress() + "?wsdl");
+      }
+      else
+      {
+         log.warn("Cannot get endpoint reference info from endpoint metadata!");
+      }
+      return EndpointReferenceUtil.transform(clazz, builder.build());
    }
 
    public void update(Observable observable, Object object)

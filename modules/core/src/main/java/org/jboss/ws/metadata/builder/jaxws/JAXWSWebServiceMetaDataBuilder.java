@@ -186,6 +186,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             processHandlerChain(sepMetaData, sepClass);
          else if (seiClass.isAnnotationPresent(HandlerChain.class))
             processHandlerChain(sepMetaData, seiClass);
+         
+         //setup web service feature contributions
+         epFeatureProcessor.setupEndpointFeatures(sepMetaData);
 
          // process webservices.xml contributions
          processWSDDContribution(sepMetaData);

@@ -38,7 +38,6 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
-import javax.xml.ws.Binding21;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
@@ -306,7 +305,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
 
    private RemoteConnection getRemotingConnection()
    {
-      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
+      String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
@@ -433,7 +432,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
          }
       }
 
-      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
+      String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
@@ -455,7 +454,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
 
    private Object getReturnObject(MessageAbstraction resMsg)
    {
-      String bindingID = ((Binding21)bindingProvider.getBinding()).getBindingID();
+      String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
@@ -535,12 +534,12 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider
 
    public EndpointReference getEndpointReference()
    {
-      throw new NotImplementedException();
+      return bindingProvider.getEndpointReference();
    }
 
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
    {
-      throw new NotImplementedException();
+      return bindingProvider.getEndpointReference(clazz);
    }
 
    public String getConfigFile()

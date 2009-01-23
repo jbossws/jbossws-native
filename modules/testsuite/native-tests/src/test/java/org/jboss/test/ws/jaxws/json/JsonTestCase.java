@@ -24,7 +24,7 @@ package org.jboss.test.ws.jaxws.json;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Service21;
+import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
@@ -49,7 +49,7 @@ public class JsonTestCase extends JBossWSTest
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-json?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/json", "JsonEndpointService");
-      Service21 service = Service21.create(wsdlURL, serviceName);
+      Service service = Service.create(wsdlURL, serviceName);
 
       JsonEncodingFeature feature = new JsonEncodingFeature();
       JsonPort port = service.getPort(JsonPort.class, feature);

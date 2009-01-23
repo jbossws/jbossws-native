@@ -31,6 +31,7 @@ import javassist.bytecode.FieldInfo;
 import javassist.bytecode.MethodInfo;
 import javassist.bytecode.SignatureAttribute;
 import javassist.bytecode.annotation.ArrayMemberValue;
+import javassist.bytecode.annotation.ClassMemberValue;
 import javassist.bytecode.annotation.EnumMemberValue;
 import javassist.bytecode.annotation.StringMemberValue;
 
@@ -104,6 +105,12 @@ public class JavassistUtils
          enumValue.setType(value.getClass().getName());
          enumValue.setValue(value.name());
          annotation.addMemberValue(name, enumValue);
+      }
+      
+      public void addClassParameter(String name, String value)
+      {
+         ClassMemberValue classValue = new ClassMemberValue(value, constPool);
+         annotation.addMemberValue(name, classValue);
       }
 
       public void addParameter(String name, String[] values)

@@ -34,9 +34,9 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.soap.Addressing;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 
 /**
  * WS-Addressing stateful service endpoint
@@ -45,7 +45,7 @@ import org.jboss.ws.annotation.EndpointConfig;
  * @since 24-Nov-2005
  */
 @WebService(name = "StatefulEndpoint", targetNamespace = "http://org.jboss.ws/samples/wsaddressing", serviceName = "TestService")
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+@Addressing
 @HandlerChain(file = "jaxws-handlers.xml")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class StatefulEndpointImpl implements StatefulEndpoint

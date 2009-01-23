@@ -21,22 +21,6 @@
  */
 package org.jboss.ws.core.jaxws.spi;
 
-import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
-import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.http.HttpContext;
-import org.jboss.wsf.spi.http.HttpServer;
-import org.jboss.wsf.spi.http.HttpServerFactory;
-import org.w3c.dom.Element;
-
-import javax.xml.transform.Source;
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Endpoint21;
-import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServicePermission;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -45,13 +29,35 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
 
+import javax.xml.transform.Source;
+import javax.xml.ws.Binding;
+import javax.xml.ws.Endpoint;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServicePermission;
+import javax.xml.ws.http.HTTPBinding;
+import javax.xml.ws.wsaddressing.W3CEndpointReference;
+import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
+import org.jboss.ws.core.jaxws.binding.EndpointReferenceUtil;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.http.HttpContext;
+import org.jboss.wsf.spi.http.HttpServer;
+import org.jboss.wsf.spi.http.HttpServerFactory;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.w3c.dom.Element;
+
 /**
  * A Web service endpoint implementation.
  *  
  * @author Thomas.Diesler@jboss.com
  * @since 07-Jul-2006
  */
-public class EndpointImpl extends Endpoint21
+public class EndpointImpl extends Endpoint
 {
    // provide logging
    private final Logger log = Logger.getLogger(EndpointImpl.class);
@@ -62,11 +68,12 @@ public class EndpointImpl extends Endpoint21
    private Object implementor;
    private Executor executor;
    private List<Source> metadata;
-   private BindingProvider bindingProvider;
+   private BindingProviderImpl bindingProvider;
    private Map<String, Object> properties = new HashMap<String, Object>();
    private HttpContext serverContext;
    private boolean isPublished;
    private boolean isDestroyed;
+   private URI address;
 
    public EndpointImpl(String bindingId, Object implementor)
    {
@@ -99,18 +106,17 @@ public class EndpointImpl extends Endpoint21
     * @param address specifying the address to use. The address must be compatible with the binding specified at the time the endpoint was created.
     */
    @Override
-   public void publish(String address)
+   public void publish(String addr)
    {
-      log.debug("publish: " + address);
+      log.debug("publish: " + addr);
 
-      URI addrURI;
       try
       {
-         addrURI = new URI(address);
+         this.address = new URI(addr);
       }
       catch (URISyntaxException e)
       {
-         throw new IllegalArgumentException("Invalid address: " + address);
+         throw new IllegalArgumentException("Invalid address: " + addr);
       }
 
       // Check with the security manger
@@ -122,7 +128,7 @@ public class EndpointImpl extends Endpoint21
       httpServer.setProperties(properties);
       httpServer.start();
 
-      String path = addrURI.getPath();
+      String path = address.getPath();
       String contextRoot = "/" + new StringTokenizer(path, "/").nextToken();
       HttpContext context = httpServer.createContext(contextRoot);
 
@@ -168,9 +174,28 @@ public class EndpointImpl extends Endpoint21
       if (context instanceof HttpContext)
       {
          serverContext = (HttpContext)context;
+         address = getAddressFromConfigAndContext(serverContext);
          HttpServer httpServer = serverContext.getHttpServer();
          httpServer.publish(serverContext, this);
          isPublished = true;
+      }
+   }
+   
+   private static URI getAddressFromConfigAndContext(HttpContext context)
+   {
+      try
+      {
+         SPIProvider provider = SPIProviderResolver.getInstance().getProvider();
+         ServerConfigFactory spi = provider.getSPI(ServerConfigFactory.class);
+         ServerConfig serverConfig = spi.getServerConfig();
+         String host = serverConfig.getWebServiceHost();
+         int port = serverConfig.getWebServicePort();
+         String hostAndPort = host + (port > 0 ? ":" + port : ""); 
+         return new URI("http://" + hostAndPort + context.getContextRoot());
+      }
+      catch (URISyntaxException e)
+      {
+         throw new WebServiceException("Error while getting endpoint address from context!", e);
       }
    }
 
@@ -261,12 +286,27 @@ public class EndpointImpl extends Endpoint21
    @Override
    public EndpointReference getEndpointReference(Element... referenceParameters)
    {
-      throw new NotImplementedException();
+      return getEndpointReference(W3CEndpointReference.class, referenceParameters);
    }
 
    @Override
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz, Element... referenceParameters)
    {
-      throw new NotImplementedException();
+      if (isDestroyed || !isPublished)
+         throw new WebServiceException("Cannot get EPR for an unpubblished or already destroyed endpoint!");
+      if (getBinding() instanceof HTTPBinding )
+      {
+         throw new UnsupportedOperationException("Cannot get epr when using the XML/HTTP binding");
+      }
+      W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
+      builder.address(address.toString());
+      builder.wsdlDocumentLocation(address.toString() +  "?wsdl");
+      //TODO set other parameters in the builder
+      if (referenceParameters != null && W3CEndpointReference.class.getName().equals(clazz.getName()))
+      {
+         for (Element el : referenceParameters)
+            builder.referenceParameter(el);
+      }
+      return EndpointReferenceUtil.transform(clazz, builder.build());
    }
 }

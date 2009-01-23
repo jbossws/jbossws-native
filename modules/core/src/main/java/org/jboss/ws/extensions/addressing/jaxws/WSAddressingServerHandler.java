@@ -27,6 +27,7 @@ import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;
@@ -40,6 +41,8 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,8 +85,23 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 		addrProps.readHeaders(soapMessage);
 		msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
 		msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
-
+		msgContext.put(MessageContext.REFERENCE_PARAMETERS, convertToElementList(addrProps.getReferenceParameters().getElements()));
+		msgContext.setScope(MessageContext.REFERENCE_PARAMETERS, Scope.APPLICATION);
 		return true;
+	}
+	
+	private static List<Element> convertToElementList(List<Object> objects)
+	{
+	   if (objects == null) return null;
+	   List<Element> elements = new LinkedList<Element>();
+	   for (Object o : objects)
+	   {
+	      if (o instanceof Element)
+	      {
+	         elements.add((Element)o);
+	      }
+	   }
+	   return elements;
 	}
 
 	protected boolean handleOutbound(MessageContext msgContext)

@@ -22,6 +22,9 @@
 package javax.xml.ws;
 
 import javax.xml.ws.handler.MessageContext;
+
+import org.w3c.dom.Element;
+
 import java.security.Principal;
 
 /**
@@ -91,5 +94,52 @@ public interface WebServiceContext
     *         being serviced.
     **/
    public boolean isUserInRole(String role);
+   
+   /**
+    * Returns the <code>WEndpointReference</code> for this
+    * endpoint.
+    *
+    * @param referenceParameters Reference parameters to be associated with the
+    * returned <code>EndpointReference</code> instance.
+    * @return EndpointReference of the endpoint associated with this
+    * <code>WebServiceContext</code>.
+    * If the returned <code>EndpointReference</code> is of type
+    * <code>W3CEndpointReference</code> then it MUST contain the
+    * the specified <code>referenceParameters</code>.
+    *
+    * @throws IllegalStateException This exception is thrown
+    *         if the method is called while no request is
+    *         being serviced.
+    *
+    * @see javax.xml.ws.wsaddressing.W3CEndpointReference
+    *
+    * @since JAX-WS 2.1
+    */
+   public EndpointReference getEndpointReference(Element... referenceParameters);
+
+   /**
+    * Returns the <code>EndpointReference</code> associated with
+    * this endpoint.
+    * <p>
+    *
+    * @param clazz The type of <code>EndpointReference</code> that
+    * MUST be returned.
+    * @param referenceParameters Reference parameters to be associated with the
+    * returned <code>EndpointReference</code> instance.
+    * @return EndpointReference of type <code>clazz</code> of the endpoint
+    * associated with this <code>WebServiceContext</code> instance.
+    * If the returned <code>EndpointReference</code> is of type
+    * <code>W3CEndpointReference</code> then it MUST contain the
+    * the specified <code>referenceParameters</code>.
+    *
+    * @throws IllegalStateException This exception is thrown
+    *         if the method is called while no request is
+    *         being serviced.
+    * @throws WebServiceException If the <code>clazz</code> type of
+    * <code>EndpointReference</code> is not supported.
+    *
+    * @since JAX-WS 2.1
+    **/
+   public abstract <T extends EndpointReference> T getEndpointReference(Class<T> clazz, Element... referenceParameters);
 
 }

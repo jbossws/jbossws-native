@@ -313,32 +313,77 @@ public class WSDL11Reader
       for (int i = 0; i < extElements.size(); i++)
       {
          ExtensibilityElement extElement = (ExtensibilityElement)extElements.get(i);
-         processPolicyElements(extElement, dest);
-         //add processing of further extensibility element types below
+         if (extElement instanceof UnknownExtensibilityElement)
+         {
+            UnknownExtensibilityElement uee = (UnknownExtensibilityElement)extElement;
+            boolean understood = false;
+            understood = understood || processPolicyElements(uee, dest);
+            understood = understood || processUseAddressing(uee, dest);
+            //add processing of further extensibility element types below
+            
+            if (!understood)
+            {
+               processNotUnderstoodExtesibilityElement(uee, dest);
+            }
+         }
       }
    }
 
-   private void processPolicyElements(ExtensibilityElement extElement, Extendable dest)
+   /**
+    * Process the provided extensibility element looking for policies or policy references.
+    * Returns true if the provided element is policy related, false otherwise.
+    * 
+    * @param extElement
+    * @param dest
+    * @return
+    */
+   private boolean processPolicyElements(UnknownExtensibilityElement extElement, Extendable dest)
    {
-      if (extElement instanceof UnknownExtensibilityElement)
+      boolean result = false;
+      Element srcElement = extElement.getElement();
+      if (Constants.URI_WS_POLICY.equals(srcElement.getNamespaceURI()))
       {
-         Element srcElement = ((UnknownExtensibilityElement)extElement).getElement();
-         if (Constants.URI_WS_POLICY.equals(srcElement.getNamespaceURI()))
+         //copy missing namespaces from the source element to our element
+         Element element = (Element)srcElement.cloneNode(true);
+         copyMissingNamespaceDeclarations(element, srcElement);
+         if (element.getLocalName().equals("Policy"))
          {
-            //copy missing namespaces from the source element to our element
-            Element element = (Element)srcElement.cloneNode(true);
-            copyMissingNamespaceDeclarations(element, srcElement);
-            if (element.getLocalName().equals("Policy"))
-            {
-               dest.addExtensibilityElement(new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICY, element));
-            }
-            else if (element.getLocalName().equals("PolicyReference"))
-            {
-               dest.addExtensibilityElement(new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICYREFERENCE, element));
-            }
-
+            WSDLExtensibilityElement el = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICY, element);
+            el.setRequired("true".equalsIgnoreCase(element.getAttribute("required")));
+            dest.addExtensibilityElement(el);
+            result = true;
+         }
+         else if (element.getLocalName().equals("PolicyReference"))
+         {
+            WSDLExtensibilityElement el = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICYREFERENCE, element);
+            el.setRequired("true".equalsIgnoreCase(element.getAttribute("required")));
+            dest.addExtensibilityElement(el);
+            result = true;
          }
       }
+      return result;
+   }
+   
+   /**
+    * Process the provided extensibility element looking for UsingAddressing.
+    * Returns true if the provided element is UsingAddressing, false otherwise.
+    * 
+    * @param extElement
+    * @param dest
+    * @return
+    */
+   private boolean processUseAddressing(UnknownExtensibilityElement extElement, Extendable dest)
+   {
+      log.warn("UsingAddressing extensibility element not supported yet.");
+      return false;
+   }
+   
+   private void processNotUnderstoodExtesibilityElement(UnknownExtensibilityElement extElement, Extendable dest)
+   {
+      Element element = (Element)extElement.getElement().cloneNode(true);
+      WSDLExtensibilityElement notUnderstoodElement = new WSDLExtensibilityElement("notUnderstoodExtensibilityElement", element);
+      notUnderstoodElement.setRequired("true".equalsIgnoreCase(element.getAttributeNS(Constants.NS_WSDL11, "required")));
+      dest.addNotUnderstoodExtElement(notUnderstoodElement);
    }
 
    private void processTypes(Definition srcWsdl, URL wsdlLoc) throws IOException, WSDLException

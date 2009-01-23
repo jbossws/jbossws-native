@@ -23,7 +23,7 @@ package org.jboss.ws.core.jaxws.binding;
 
 import java.util.List;
 
-import javax.xml.ws.Binding21;
+import javax.xml.ws.Binding;
 import javax.xml.ws.handler.Handler;
 
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
@@ -34,7 +34,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public interface BindingExt extends Binding21
+public interface BindingExt extends Binding
 {
    /** Get the handler chain for a given type */
    List<Handler> getHandlerChain(HandlerType handlerType);

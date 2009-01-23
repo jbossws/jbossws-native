@@ -41,10 +41,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttachmentRef;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
@@ -122,7 +124,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
                   parameter.getName(), parameter.getVariable(),
                   parameter.getTypeArguments(),
                   new boolean[] {parameter.isSwaRef(), parameter.isXop()},
-                  false
+                  false, parameter.isXmlList(), parameter.getAdapter()
             );
          }
          clazz.stopPruning(!prune);
@@ -159,7 +161,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
             addProperty(
                   clazz, prop.getReturnType().getName(),
                   new QName(prop.getName()), prop.getName(), null,
-                  new boolean[] {false, false}, prop.isTransientAnnotated()
+                  new boolean[] {false, false}, prop.isTransientAnnotated(), false, null
             );
 
          clazz.stopPruning(!prune);
@@ -216,7 +218,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 
    private void addProperty(CtClass clazz, String typeName,
                             QName name, String variable, String[] typeArguments,
-                            boolean[] attachments, boolean xmlTransient)
+                            boolean[] attachments, boolean xmlTransient, boolean xmlList, String adapter)
          throws CannotCompileException, NotFoundException
    {
       ConstPool constPool = clazz.getClassFile().getConstPool();
@@ -232,6 +234,12 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
          JavassistUtils.addSignature(field, typeSignature);
       }
 
+      
+      // Conformance 3.14 (use of JAXB annotations): An implementation MUST honor any JAXB annotation that
+      // exists on an SEI method or parameter to assure that the proper XML infoset is used when marshalling/
+      // unmarshalling the the return value or parameters of the method. The set of JAXB annotations that MUST be
+      // supported are: javax.xml.bind.annotation.XmlAttachementRef,javax.xml.bind.annotation.XmlList,
+      // javax.xml.bind.XmlMimeType and javax.xml.bind.annotation.adapters.Xml.JavaTypeAdapter
       JavassistUtils.Annotation annotation;
       // Add @XmlElement
       if (!xmlTransient)
@@ -259,6 +267,19 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
       if(xmlTransient)
       {
          annotation = JavassistUtils.createAnnotation(XmlTransient.class, constPool);
+         annotation.markField(field);
+      }
+      //@XmlList
+      if(xmlList)
+      {
+         annotation = JavassistUtils.createAnnotation(XmlList.class, constPool);
+         annotation.markField(field);
+      }
+      //@XmlJavaTypeAdapter
+      if (adapter != null)
+      {
+         annotation = JavassistUtils.createAnnotation(XmlJavaTypeAdapter.class, constPool);
+         annotation.addClassParameter("value", adapter);
          annotation.markField(field);
       }
       clazz.addField(field);

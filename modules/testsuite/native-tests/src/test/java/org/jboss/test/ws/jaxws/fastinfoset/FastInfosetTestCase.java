@@ -28,7 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Service21;
+import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
@@ -85,7 +85,7 @@ public class FastInfosetTestCase extends JBossWSTest
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-fastinfoset?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/fastinfoset", "FastInfosetEndpointService");
-      Service21 service = Service21.create(wsdlURL, serviceName);
+      Service service = Service.create(wsdlURL, serviceName);
 
       FastInfosetFeature feature = new FastInfosetFeature();
       FastInfoset port = service.getPort(FastInfoset.class, feature);

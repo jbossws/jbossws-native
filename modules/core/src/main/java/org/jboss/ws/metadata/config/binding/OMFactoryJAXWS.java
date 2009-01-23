@@ -41,7 +41,7 @@ import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 
 /**
- * ObjectModelFactory for JAXRPC configurations.
+ * ObjectModelFactory for JAXWS configurations.
  *
  * @author Thomas.Diesler@jboss.org
  * @author Heiko.Braun@jboss.org

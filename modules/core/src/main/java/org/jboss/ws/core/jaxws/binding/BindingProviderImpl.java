@@ -25,13 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.ws.Binding;
-import javax.xml.ws.EndpointReference;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.wsaddressing.BindingProvider21;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.http.HTTPBinding;
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -43,7 +41,7 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class BindingProviderImpl extends CommonBindingProvider implements BindingProvider21
+public class BindingProviderImpl extends CommonBindingProvider implements BindingProvider
 {
    private Map<String, Object> requestContext = new HashMap<String, Object>();
    private Map<String, Object> responseContext = new HashMap<String, Object>();
@@ -93,15 +91,5 @@ public class BindingProviderImpl extends CommonBindingProvider implements Bindin
    public Binding getBinding()
    {
       return (Binding)binding;
-   }
-
-   public EndpointReference getEndpointReference()
-   {
-      throw new NotImplementedException();
-   }
-
-   public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
-   {
-      throw new NotImplementedException();
    }
 }

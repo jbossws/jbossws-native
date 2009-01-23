@@ -21,14 +21,12 @@
  */
 package org.jboss.test.ws.jaxws.jbws1172;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-import javax.xml.ws.Service21;
 
 import junit.framework.Test;
 
@@ -96,7 +94,7 @@ public class JBWS1172TestCase extends JBossWSTest
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       
-      Service21 service = Service21.create(wsdlURL, SERVICE_NAME);
+      Service service = Service.create(wsdlURL, SERVICE_NAME);
       SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
       MyTest port = service.getPort(MyTest.class, feature);
       try
@@ -117,7 +115,7 @@ public class JBWS1172TestCase extends JBossWSTest
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
       URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       
-      Service21 service = Service21.create(wsdlURL, SERVICE_NAME);
+      Service service = Service.create(wsdlURL, SERVICE_NAME);
       SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
       
       TestErrorHandler errorHandler = new TestErrorHandler();

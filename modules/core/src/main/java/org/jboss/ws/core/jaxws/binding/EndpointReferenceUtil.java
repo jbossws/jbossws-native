@@ -19,20 +19,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package javax.xml.ws;
+package org.jboss.ws.core.jaxws.binding;
+
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 /**
- * @author Heiko.Braun@jboss.com
+ * Transforms an EPR to an instance of a given EndpointReference class 
+ * 
+ * @since 12-Jan-2009
+ * @author alessio.soldano@jboss.com
+ *
  */
-public interface Binding21 extends Binding
-{
-   /**
-    * Get the URI for this binding instance.
-    *
-    * @return String The binding identifier for the port.
-    *    Never returns <code>null</code>
-    *
-    * @since JAX-WS 2.1
-    */
-   String getBindingID();
+public class EndpointReferenceUtil {
+   
+   public static <T extends EndpointReference> T transform(Class<T> clazz, EndpointReference epr) {
+       assert epr != null;
+       if (clazz.isAssignableFrom(W3CEndpointReference.class)) {
+           if (epr instanceof W3CEndpointReference) {
+               return (T) epr;
+           }
+           else
+           {
+              throw new WebServiceException("Unsupported EndpointReference: " + epr);
+           }
+       }
+       //transformations from different types of EndpointReference could be supported in future...
+       
+       throw new WebServiceException("EndpointReference of type " + clazz + " not supported.");
+   }
 }
