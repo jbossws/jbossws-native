@@ -164,7 +164,7 @@ public class WSDLFilePublisher
                // infinity loops prevention
                if (published.contains(locationURI))
                {
-                  return;
+                  continue;
                }
                else
                {
@@ -215,7 +215,7 @@ public class WSDLFilePublisher
                   // infinity loops prevention
                   if (published.contains(schemaLocation))
                   {
-                     return;
+                     continue;
                   }
                   else
                   {
