@@ -18,7 +18,7 @@
   <artifactId>jbossws-native</artifactId>
   <packaging>pom</packaging>
 
-  <version>3.1.0-SNAPSHOT</version>
+  <version>3.1.0.CR1</version>
 
   <!-- Parent -->
   <parent>
@@ -29,9 +29,9 @@
 
   <!-- Source Control Management -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/trunk</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.1.0.CR1</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.1.0.CR1</developerConnection>
+    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/tags/jbossws-native-3.1.0.CR1</url>
   </scm>
 
   <!-- Modules -->
@@ -48,17 +48,17 @@
 
   <!-- Properties -->
   <properties>
-    <jbossws.common.version>1.0.9-SNAPSHOT</jbossws.common.version>
-    <jbossws.framework.version>3.1.0-SNAPSHOT</jbossws.framework.version>
-    <jbossws.spi.version>1.1.0-SNAPSHOT</jbossws.spi.version>
-    <jbossws.jboss422.version>3.1.0-SNAPSHOT</jbossws.jboss422.version>
-    <jbossws.jboss423.version>3.1.0-SNAPSHOT</jbossws.jboss423.version>
-    <jbossws.jboss424.version>3.1.0-SNAPSHOT</jbossws.jboss424.version>
-    <jbossws.jboss500.version>3.1.0-SNAPSHOT</jbossws.jboss500.version>
+    <jbossws.common.version>1.0.9.CR1</jbossws.common.version>
+    <jbossws.framework.version>3.1.0.CR1</jbossws.framework.version>
+    <jbossws.spi.version>1.1.0.CR1</jbossws.spi.version>
+    <jbossws.jboss422.version>3.1.0-SNAPSHOT</jbossws.jboss422.version> <!-- don't care, we install this CR1 to AS5.1 and AS 6 only -->
+    <jbossws.jboss423.version>3.1.0-SNAPSHOT</jbossws.jboss423.version> <!-- don't care, we install this CR1 to AS5.1 and AS 6 only -->
+    <jbossws.jboss424.version>3.1.0-SNAPSHOT</jbossws.jboss424.version> <!-- don't care, we install this CR1 to AS5.1 and AS 6 only -->
+    <jbossws.jboss500.version>3.1.0-SNAPSHOT</jbossws.jboss500.version> <!-- don't care, we install this CR1 to AS5.1 and AS 6 only -->
     <!-- [JBWS-2263] -->
     <!-- START -->
-    <jbossws.jboss510.version>3.1.0-SNAPSHOT</jbossws.jboss510.version>
-    <jbossws.jboss600.version>3.1.0-SNAPSHOT</jbossws.jboss600.version>
+    <jbossws.jboss510.version>3.1.0.CR1</jbossws.jboss510.version>
+    <jbossws.jboss600.version>3.1.0.CR1</jbossws.jboss600.version>
     <!-- END -->
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
