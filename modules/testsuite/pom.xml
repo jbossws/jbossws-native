@@ -411,6 +411,12 @@
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss500</artifactId>
+          <exclusions>
+            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
+              <groupId>jboss.jbossws</groupId>
+              <artifactId>jboss-jaxws</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <!--dependency>
           <groupId>org.jboss.jbossas</groupId>
@@ -485,6 +491,12 @@
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss510x</artifactId>
+          <exclusions>
+            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
+              <groupId>jboss.jbossws</groupId>
+              <artifactId>jboss-jaxws</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <!--dependency>
           <groupId>org.jboss.jbossas</groupId>
@@ -559,6 +571,12 @@
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss600x</artifactId>
+          <exclusions>
+            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
+              <groupId>jboss.jbossws</groupId>
+              <artifactId>jboss-jaxws</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <!--dependency>
           <groupId>org.jboss.jbossas</groupId>
