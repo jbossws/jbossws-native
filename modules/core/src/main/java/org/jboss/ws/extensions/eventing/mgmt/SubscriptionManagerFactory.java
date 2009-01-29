@@ -21,19 +21,19 @@
  */
 package org.jboss.ws.extensions.eventing.mgmt;
 
-import org.jboss.kernel.spi.registry.KernelRegistry;
-import org.jboss.kernel.spi.registry.KernelRegistryEntry;
+import org.jboss.dependency.spi.ControllerContext;
+import org.jboss.kernel.spi.dependency.KernelController;
 import org.jboss.wsf.spi.util.KernelLocator;
 
 /**
+ * Subscription manager factory impl
+ * @author richard.opalka@jboss.com
  * @author Heiko Braun, <heiko@openj.net>
- * @since 22-Mar-2006
  */
 public class SubscriptionManagerFactory
 {
    private static SubscriptionManagerFactory instance = new SubscriptionManagerFactory();
 
-   // Hide ctor
    protected SubscriptionManagerFactory()
    {
    }
@@ -45,8 +45,9 @@ public class SubscriptionManagerFactory
 
    public SubscriptionManagerMBean getSubscriptionManager()
    {
-      KernelRegistry registry = KernelLocator.getKernel().getRegistry();
-      KernelRegistryEntry entry = registry.getEntry(SubscriptionManagerMBean.BEAN_NAME);
-      return (SubscriptionManagerMBean)entry.getTarget();
+      
+      KernelController controller = KernelLocator.getKernel().getController();
+      ControllerContext ctx = controller.getInstalledContext(SubscriptionManagerMBean.BEAN_NAME);
+      return (SubscriptionManagerMBean)ctx.getTarget();
    }
 }
