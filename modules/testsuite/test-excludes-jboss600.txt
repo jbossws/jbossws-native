@@ -12,6 +12,7 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 # [JBWS-2433] Investigate why MessageDriven EJB3 tests are failing
 org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/**
+org/jboss/test/ws/jaxrpc/samples/jmstransport/**
 
 # [JBAS-5257] Cannot deploy through jax-ws endpoint API
 org/jboss/test/ws/jaxws/endpoint/**
