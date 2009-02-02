@@ -7,8 +7,8 @@
     <message-driven>
       <ejb-name>OrganizationMDB</ejb-name>
       <ejb-class>org.jboss.test.ws.jaxrpc.samples.jmstransport.OrganizationJMSEndpoint</ejb-class>
-      <message-selector></message-selector>
       <transaction-type>Container</transaction-type>
+      <message-selector></message-selector>
       <acknowledge-mode>AUTO_ACKNOWLEDGE</acknowledge-mode>
       <message-driven-destination>
         <destination-type>javax.jms.Queue</destination-type>
