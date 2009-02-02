@@ -10,7 +10,6 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
 # [JBWS-2433] Investigate why MessageDriven EJB3 tests are failing
-org/jboss/test/ws/jaxws/samples/jmstransport/**
 org/jboss/test/ws/jaxws/samples/dar/**
 
 # [JBWS-2217] Fix BPEL jaxrpc samples
