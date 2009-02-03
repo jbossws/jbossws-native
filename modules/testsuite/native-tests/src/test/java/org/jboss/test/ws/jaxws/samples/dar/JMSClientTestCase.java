@@ -34,6 +34,7 @@ import junit.framework.Test;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -50,7 +51,8 @@ public class JMSClientTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client.sar,jaxws-samples-dar-jms.jar");
+      String suffix = new JBossWSTestHelper().isTargetJBoss4() ? "-as4" : ""; 
+      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client" + suffix + ".sar,jaxws-samples-dar-jms.jar");
    }
    
    public void test() throws Exception

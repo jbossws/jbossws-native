@@ -103,12 +103,21 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponseMessageBean.class"/>
       </fileset>
     </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client-as4.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxws-samples-dar-jms-client.war"/>
+        <include name="jaxws-samples-dar-jms-client.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/jboss4x/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client.sar">
       <fileset dir="${tests.output.dir}/test-libs">
         <include name="jaxws-samples-dar-jms-client.war"/>
         <include name="jaxws-samples-dar-jms-client.jar"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/jboss5x/META-INF">
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
@@ -120,15 +129,23 @@
         <include name="org/jboss/test/ws/jaxws/samples/jmstransport/OrganizationJMSEndpoint.class"/>
       </fileset>
     </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport-as4.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxws-samples-jmstransport.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/jboss4x/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport.sar">
       <fileset dir="${tests.output.dir}/test-libs">
         <include name="jaxws-samples-jmstransport.jar"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/META-INF">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/jboss5x/META-INF">
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
-    
+
     <!-- jaxws-samples-news -->
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step1-newspaper.jar">
       <fileset dir="${tests.output.dir}/test-classes">
