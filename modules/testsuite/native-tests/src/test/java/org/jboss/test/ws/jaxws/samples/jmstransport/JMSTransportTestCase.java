@@ -123,12 +123,12 @@ public class JMSTransportTestCase extends JBossWSTest
       message.setJMSReplyTo(resQueue);
 
       waitForResponse = true;
-      
+
       QueueSender sender = session.createSender(reqQueue);
       sender.send(message);
       sender.close();
 
-      int timeout = 5000;
+      int timeout = 30000;
       while (waitForResponse && timeout > 0)
       {
          Thread.sleep(100);

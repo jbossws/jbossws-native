@@ -135,7 +135,7 @@ public class SOAPProtocolConnectionJMS implements RemoteConnection
          MessageAbstraction resMessage = null;
          if (responseListener != null)
          {
-            int timeout = 5000;
+            int timeout = 30000;
             while (waitForResponse && timeout > 0)
             {
                Thread.sleep(100);
