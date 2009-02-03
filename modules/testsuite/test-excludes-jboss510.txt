@@ -9,8 +9,9 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [JBWS-2433] Investigate why MessageDriven EJB3 tests are failing
-org/jboss/test/ws/jaxws/samples/dar/**
-
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
+# [JBWS-2509] dar.JMSClientTestCase contains AS4 specific code
+org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
+
