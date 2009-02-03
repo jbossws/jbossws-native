@@ -28,7 +28,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/jboss5x/META-INF">
         <include name="jboss.xml"/>
       </metainf>
     </jar>
@@ -54,7 +54,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/reply/*.class"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/jboss5x/META-INF">
         <include name="jboss.xml"/>
       </metainf>
     </jar>
