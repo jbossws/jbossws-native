@@ -9,7 +9,7 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
-# [JBAS-5257] Cannot deploy through jax-ws endpoint API
+# [JBWS-1967] Implement in memory webapp deployment
 org/jboss/test/ws/jaxws/endpoint/**
 
 # [JBWS-2217] Fix BPEL jaxrpc samples
