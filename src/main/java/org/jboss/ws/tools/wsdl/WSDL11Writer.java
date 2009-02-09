@@ -137,8 +137,14 @@ public class WSDL11Writer extends WSDLWriter
 
                appendDefinitions(builder, namespace);
                appendBody(builder, namespace);
-               writeBuilder(builder, resolved.writer, resolved.charset);
-               resolved.writer.close();
+               try
+               {
+                  writeBuilder(builder, resolved.writer, resolved.charset);
+               }
+               finally
+               {
+                  resolved.writer.close();
+               }
             }
          }
 

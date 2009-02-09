@@ -105,9 +105,10 @@ public class WSDLFilePublisher
          wsdlFile.getParentFile().mkdirs();
 
          // Get the wsdl definition and write it to the wsdl publish location
+         Writer fWriter = null;
          try
          {
-            Writer fWriter = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
+            fWriter = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
             WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
             new WSDLWriter(wsdlDefinitions).write(fWriter, Constants.DEFAULT_XML_CHARSET);
 
@@ -140,6 +141,13 @@ public class WSDLFilePublisher
          catch (Exception e)
          {
             throw new WSException("Cannot publish wsdl to: " + wsdlFile, e);
+         }
+         finally
+         {
+            if (fWriter != null)
+            {
+               fWriter.close();
+            }
          }
       }
    }
@@ -245,15 +253,21 @@ public class WSDLFilePublisher
                   if (is == null)
                      throw new IllegalArgumentException("Cannot find schema import in deployment: " + resourcePath);
 
-                  FileOutputStream fos = new FileOutputStream(targetFile);
-                  IOUtils.copyStream(fos, is);
-                  fos.close();
-                  is.close();
+                  FileOutputStream fos = null;
+                  try
+                  {
+                     fos = new FileOutputStream(targetFile);
+                     IOUtils.copyStream(fos, is);
+                  }
+                  finally
+                  {
+                     if (fos != null) fos.close();
+                  }
 
                   if (log.isDebugEnabled())
                      log.debug("XMLSchema import published to: " + xsdURL);
 
-                  // recursivly publish imports
+                  // recursively publish imports
                   Element subdoc = DOMUtils.parse(xsdURL.openStream());
                   publishSchemaImports(xsdURL, subdoc, published);
                }

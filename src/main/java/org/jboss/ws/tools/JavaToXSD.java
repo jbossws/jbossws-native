@@ -165,6 +165,7 @@ public class JavaToXSD implements JavaToXSDIntf
       Iterator<String> it = locs.keySet().iterator();
       while (it.hasNext())
       {
+         InputStream in = null;
          try
          {
             String nsURI = it.next();
@@ -176,7 +177,7 @@ public class JavaToXSD implements JavaToXSDIntf
             XMLInputSource inputSource = new XMLInputSource(null, url.toExternalForm(), null);
 
             InputSource tmpSrc = resolver.resolveEntity(null, url.toExternalForm());
-            InputStream in = tmpSrc.getByteStream() != null ? tmpSrc.getByteStream() : new ResourceURL(url).openStream();
+            in = tmpSrc.getByteStream() != null ? tmpSrc.getByteStream() : new ResourceURL(url).openStream();
             inputSource.setByteStream(in);
             
             SchemaGrammar grammar = (SchemaGrammar)loader.loadGrammar(inputSource);
@@ -192,6 +193,20 @@ public class JavaToXSD implements JavaToXSDIntf
          catch (Exception ex)
          {
             throw new IllegalStateException("Cannot parse schema", ex);
+         }
+         finally
+         {
+            if (in != null)
+            {
+               try
+               {
+                  in.close();
+               }
+               catch (IOException ioe)
+               {
+                  log.warn(ioe.getMessage(), ioe);
+               }
+            }
          }
       }
       XSModel xsmodel = new XSModelImpl(gs);
@@ -242,46 +257,4 @@ public class JavaToXSD implements JavaToXSDIntf
       helper.setWsdlStyle(style);
    }
 
-   //******************************************************************
-   //             PRIVATE METHODS
-   //******************************************************************
-
-   /**
-    * FIXME: JBXB-33
-    */
-   private SchemaBindingResolver getSchemaBindingResolver(final Map<String, URL> map)
-   {
-      return new SchemaBindingResolver()
-      {
-         public String getBaseURI()
-         {
-            throw new UnsupportedOperationException("getBaseURI is not implemented.");
-         }
-
-         public void setBaseURI(String baseURI)
-         {
-            throw new UnsupportedOperationException("setBaseURI is not implemented.");
-         }
-
-         public SchemaBinding resolve(String nsUri, String baseURI, String schemaLocation)
-         {
-            throw new UnsupportedOperationException("resolve is not implemented.");
-         }
-
-         public LSInput resolveAsLSInput(String nsUri, String baseUri, String schemaLocation)
-         {
-            URL url = map.get(nsUri);
-            if (url != null)
-               try
-               {
-                  return new LSInputAdaptor(url.openStream(), null);
-               }
-               catch (IOException e)
-               {
-                  log.error("URL is bad for schema parsing");
-               }
-            return null;
-         }
-      };
-   }
 }
