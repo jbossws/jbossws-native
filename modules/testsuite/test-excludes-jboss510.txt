@@ -12,6 +12,10 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
+# [JBWS-2433] Investigate why JMS related tests are sometimes failing and sometimes not
+org/jboss/test/ws/jaxrpc/samples/jmstransport/*TestCase.*
+org/jboss/test/ws/jaxws/samples/jmstransport/*TestCase.*
+
 # [JBWS-2509] dar.JMSClientTestCase contains AS4 specific code
 org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
