@@ -11,14 +11,19 @@ org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.*
 # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration
 org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
-# [JBWS-2240] PortComponent from jboss.xml descriptor is not parsed
-org/jboss/test/ws/jaxws/jbws2241/**
-
 # [JBWS-981] @WebContext defined virtual hosts only being fixed for JBoss 5 
 org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*
 
 # [JBWS-2258] Fix EnumTestCase (fixed in AS trunk)
 org/jboss/test/ws/tools/enums/EnumTestCase.*
 
+# [JBWS-2240] PortComponent from jboss.xml descriptor is not parsed
+org/jboss/test/ws/jaxws/jbws2241/**
+
+# [JBWS-2307] Stub properties not propagated through service-ref (fixed in AS 5.x and above)
+org/jboss/test/ws/jaxws/jbws2307/JBWS2307TestCase.*
+
 # [JBWS-2491] Enable JAXWS 2.1 WebServiceContext methods 
 org/jboss/test/ws/jaxws/jbws2257/**
+
+
