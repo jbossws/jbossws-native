@@ -82,18 +82,26 @@ public class JMSClientTestCase extends JBossWSTest
    private int getMessageCount(String queue) throws Exception
    {
       ObjectName oname = ObjectNameFactory.create("jboss.mq.destination:service=Queue,name=" + queue);
-      String result = (String)getServer().invoke(oname, "listMessageCounter", null, null);
-      Element table = DOMUtils.parse(result);
-      NodeList ths = table.getFirstChild().getChildNodes();
-      int p = -1;
-      for (int i=0; i<ths.getLength(); i++)
+      if (isTargetJBoss5OrGreater())
       {
-         if (ths.item(i).getTextContent().equalsIgnoreCase("Count"))
-            p = i;
+         return (Integer)getServer().getAttribute(oname, "MessageCount");
       }
-      if (p == -1)
-         throw new Exception("Cannot read the queue message count!");
-      String count = table.getLastChild().getChildNodes().item(p).getTextContent();
-      return Integer.parseInt(count);
+      else
+      {
+         String result = (String)getServer().invoke(oname, "listMessageCounter", null, null);
+         Element table = DOMUtils.parse(result);
+         NodeList ths = table.getFirstChild().getChildNodes();
+         int p = -1;
+         for (int i=0; i<ths.getLength(); i++)
+         {
+            if (ths.item(i).getTextContent().equalsIgnoreCase("Count"))
+               p = i;
+         }
+         if (p == -1)
+            throw new Exception("Cannot read the queue message count!");
+         String count = table.getLastChild().getChildNodes().item(p).getTextContent();
+         return Integer.parseInt(count);
+      }
    }
+   
 }
