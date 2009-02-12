@@ -13,7 +13,7 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
 # [JBWS-2433] Investigate why JMS related tests are sometimes failing and sometimes not
-#org/jboss/test/ws/jaxrpc/samples/jmstransport/*TestCase.*
-#org/jboss/test/ws/jaxws/samples/jmstransport/*TestCase.*
-#org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
+org/jboss/test/ws/jaxrpc/samples/jmstransport/*TestCase.*
+org/jboss/test/ws/jaxws/samples/jmstransport/*TestCase.*
+org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
