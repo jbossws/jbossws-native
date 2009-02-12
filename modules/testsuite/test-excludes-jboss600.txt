@@ -12,8 +12,8 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
-# [JBWS-2433] Investigate why JMS related tests are sometimes failing and sometimes not
-org/jboss/test/ws/jaxrpc/samples/jmstransport/*TestCase.*
-org/jboss/test/ws/jaxws/samples/jmstransport/*TestCase.*
-org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
+# [JBAOP-703] NPE in ScopedVFSClassLoaderDomain
+#org/jboss/test/ws/jaxrpc/samples/jmstransport/*TestCase.*
+#org/jboss/test/ws/jaxws/samples/jmstransport/*TestCase.*
+#org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
 
