@@ -15,4 +15,4 @@ org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 # [JBAOP-703] NPE in ScopedVFSClassLoaderDomain
 org/jboss/test/ws/jaxrpc/samples/jmstransport/*TestCase.*
 org/jboss/test/ws/jaxws/samples/jmstransport/*TestCase.*
-
+org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
