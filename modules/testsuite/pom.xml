@@ -499,8 +499,6 @@
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
-          </exclusions>
-          <exclusions>
             <exclusion>
               <groupId>org.jboss.security</groupId>
               <artifactId>jbosssx</artifactId>
@@ -591,8 +589,6 @@
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
-          </exclusions>
-          <exclusions>
             <exclusion>
               <groupId>org.jboss.security</groupId>
               <artifactId>jbosssx</artifactId>
@@ -683,8 +679,6 @@
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
-          </exclusions>
-          <exclusions>
             <exclusion>
               <groupId>org.jboss.security</groupId>
               <artifactId>jbosssx</artifactId>
