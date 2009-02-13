@@ -225,9 +225,7 @@
           <patternset refid="jbossws.client.patternset"/>
           <!-- JBWS-2505 -->
           <!-- START -->
-          <!--
           <include name="**/jbossws-@{jbossid}.jar"/>
-          -->
           <!-- END -->
         </fileset>
       </copy>
@@ -245,9 +243,7 @@
           <patternset refid="jbossws.client.patternset"/>
           <!-- JBWS-2505 -->
           <!-- START -->
-          <!--
           <include name="**/jbossws-@{jbossid}.jar"/>
-          -->
           <!-- END -->
         </fileset>
       </copy>
@@ -265,9 +261,7 @@
           <patternset refid="jbossws.client.patternset"/>
           <!-- JBWS-2505 -->
           <!-- START -->
-          <!--
           <include name="**/jbossws-@{jbossid}.jar"/>
-          -->
           <!-- END -->
         </fileset>
       </copy>
@@ -511,21 +505,17 @@
           <include name="**/jbossws-framework.jar"/>
           <!-- [JBWS-2505] -->
           <!-- START -->
-          <!--
           <include name="**/jbossws-@{jbossid}.jar"/>
-          -->
           <!-- END -->
         </fileset>
       </copy>
       <!-- [JBWS-2505] -->
       <!-- START -->
-      <!--
       <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true"> 
         <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}">
           <include name="**/jbossws-deployer-jboss-beans.xml"/>
         </fileset>
       </copy>
-      -->
       <!-- END -->
     </sequential>
   </macrodef>
@@ -558,21 +548,17 @@
           <include name="**/jbossws-framework.jar"/>
           <!-- [JBWS-2505] -->
           <!-- START -->
-          <!--
           <include name="**/jbossws-@{jbossid}.jar"/>
-          -->
           <!-- END -->
         </fileset>
       </copy>
       <!-- [JBWS-2505] -->
       <!-- START -->
-      <!--
       <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true"> 
         <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}">
           <include name="**/jbossws-deployer-jboss-beans.xml"/>
         </fileset>
       </copy>
-      -->
       <!-- END -->
     </sequential>
   </macrodef>
@@ -605,21 +591,17 @@
           <include name="**/jbossws-framework.jar"/>
           <!-- [JBWS-2505] -->
           <!-- START -->
-          <!--
           <include name="**/jbossws-@{jbossid}.jar"/>
-          -->
           <!-- END -->
         </fileset>
       </copy>
       <!-- [JBWS-2505] -->
       <!-- START -->
-      <!--
       <copy todir="@{targetdir}/META-INF" flatten="true" overwrite="true"> 
         <fileset dir="@{artifactsdir}/resources/jbossws-@{jbossid}">
           <include name="**/jbossws-deployer-jboss-beans.xml"/>
         </fileset>
       </copy>
-      -->
       <!-- END -->
     </sequential>
   </macrodef>
@@ -784,7 +766,6 @@
       <!-- [JBWS-2505] -->
       <!-- START -->
       <!-- delete stale container integration jars -->
-      <!--
       <delete>
         <fileset dir="${jboss.server.home}">
           <include name="**/jbossws-jboss*.jar"/>
@@ -793,7 +774,6 @@
           <include name="jbossws-jboss*.jar"/>
         </fileset>
       </delete>
-      -->
       <!-- END -->
 
       <!-- delete content of last deployment -->
@@ -825,7 +805,6 @@
       <!-- [JBWS-2505] -->
       <!-- START -->
       <!-- delete stale container integration jars -->
-      <!--
       <delete>
         <fileset dir="${jboss.server.home}">
           <include name="**/jbossws-jboss*.jar"/>
@@ -834,7 +813,6 @@
           <include name="jbossws-jboss*.jar"/>
         </fileset>
       </delete>
-      -->
       <!-- END -->
 
       <!-- delete content of last deployment -->
@@ -866,7 +844,6 @@
       <!-- [JBWS-2505] -->
       <!-- START -->
       <!-- delete stale container integration jars -->
-      <!--
       <delete>
         <fileset dir="${jboss.server.home}">
           <include name="**/jbossws-jboss*.jar"/>
@@ -875,7 +852,6 @@
           <include name="jbossws-jboss*.jar"/>
         </fileset>
       </delete>
-      -->
       <!-- END -->
 
       <!-- delete content of last deployment -->
