@@ -59,9 +59,12 @@
     </condition>
     <condition property="jboss424.home" value="${profiles.profile.properties.jboss424.home}">
       <isset property="profiles.profile.properties.jboss424.home"/>
-    </condition>   
+    </condition>
     <condition property="jboss500.home" value="${profiles.profile.properties.jboss500.home}">
       <isset property="profiles.profile.properties.jboss500.home"/>
+    </condition>
+    <condition property="jboss501.home" value="${profiles.profile.properties.jboss501.home}">
+      <isset property="profiles.profile.properties.jboss501.home"/>
     </condition>
     <condition property="jboss510.home" value="${profiles.profile.properties.jboss510.home}">
       <isset property="profiles.profile.properties.jboss510.home"/>
@@ -76,6 +79,7 @@
     <property name="jboss423.home" value="${profiles.profile.properties.jboss423.home}"/>
     <property name="jboss424.home" value="${profiles.profile.properties.jboss424.home}"/>
     <property name="jboss500.home" value="${profiles.profile.properties.jboss500.home}"/>
+    <property name="jboss501.home" value="${profiles.profile.properties.jboss501.home}"/>
     <property name="jboss510.home" value="${profiles.profile.properties.jboss510.home}"/>
     <property name="jboss600.home" value="${profiles.profile.properties.jboss600.home}"/>
 
@@ -84,6 +88,7 @@
     <echo message="jboss423.home=${jboss423.home}"/>
     <echo message="jboss424.home=${jboss424.home}"/>
     <echo message="jboss500.home=${jboss500.home}"/>
+    <echo message="jboss501.home=${jboss501.home}"/>
     <echo message="jboss510.home=${jboss510.home}"/>
     <echo message="jboss600.home=${jboss600.home}"/>
   </target>
