@@ -478,8 +478,6 @@
         <jbossws.integration.target>jboss501</jbossws.integration.target>
       </properties>
       <dependencies>
-        <!-- [JBWS-2505] -->
-        <!-- START -->
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss501x</artifactId>
@@ -490,22 +488,6 @@
             </exclusion>
           </exclusions>
         </dependency>
-        <!--dependency>
-          <groupId>org.jboss.jbossas</groupId>
-          <artifactId>jboss-as-webservices</artifactId>
-          <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion> Exclude old jaxws impl transitive dependency brought in by jboss-metadata
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.security</groupId>
-              <artifactId>jbosssx</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency-->
-        <!-- END -->
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
@@ -570,22 +552,24 @@
       <dependencies>
         <!-- [JBWS-2505] -->
         <!-- START -->
+        <!--
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss510x</artifactId>
           <exclusions>
-            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
+            <exclusion>
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
           </exclusions>
         </dependency>
-        <!--dependency>
+        -->
+        <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-webservices</artifactId>
           <version>${jboss.version}</version>
           <exclusions>
-            <exclusion> Exclude old jaxws impl transitive dependency brought in by jboss-metadata
+            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
@@ -594,7 +578,7 @@
               <artifactId>jbosssx</artifactId>
             </exclusion>
           </exclusions>
-        </dependency-->
+        </dependency>
         <!-- END -->
         <dependency>
           <groupId>org.hibernate</groupId>
@@ -660,22 +644,24 @@
       <dependencies>
         <!-- [JBWS-2505] -->
         <!-- START -->
+        <!--
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss600x</artifactId>
           <exclusions>
-            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
+            <exclusion>
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
           </exclusions>
         </dependency>
-        <!--dependency>
+        -->
+        <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-webservices</artifactId>
           <version>${jboss.version}</version>
           <exclusions>
-            <exclusion> Exclude old jaxws impl transitive dependency brought in by jboss-metadata
+            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
               <groupId>jboss.jbossws</groupId>
               <artifactId>jboss-jaxws</artifactId>
             </exclusion>
@@ -684,7 +670,7 @@
               <artifactId>jbosssx</artifactId>
             </exclusion>
           </exclusions>
-        </dependency-->
+        </dependency>
         <!-- END -->
         <dependency>
           <groupId>org.hibernate</groupId>
