@@ -58,6 +58,8 @@ public class BoundaryDelimitedInputStream extends FilterInputStream
    
    private boolean bufferingCompleted;
    
+   private boolean checkLeadingCRLF;
+   
    /**
     * Constructs a <code>BoundaryDelimitedInputStream</code> using the passed
     * <code>InputStream</code> as the source for the outer stream.
@@ -71,6 +73,7 @@ public class BoundaryDelimitedInputStream extends FilterInputStream
       source = in;
       this.boundary = (byte[]) boundary.clone();
       boyerMoore = new SimpleBoyerMoore(this.boundary);
+      checkLeadingCRLF = boundary.length > 0 && boundary[0] != '\r';
    }
 
    /*
@@ -201,6 +204,13 @@ public class BoundaryDelimitedInputStream extends FilterInputStream
       } 
       else 
       {
+         if (checkLeadingCRLF && boundaryPosition > 1)
+         {
+            if (buffer[boundaryPosition - 1] == '\n' && buffer[boundaryPosition - 2] == '\r')
+            {
+               boundaryPosition -= 2;
+            }
+         }
          returnLength = boundaryPosition;
          createLeftOvers(buffer, returnLength + boundary.length, position);
          
