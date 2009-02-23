@@ -29,6 +29,7 @@ package org.jboss.ws.core.soap.attachment;
 public class MimeConstants
 {
    // Header constants
+   public static final String ACCEPT = "Accept";
    public static final String CONTENT_ID = "Content-Id";
    public static final String CONTENT_TYPE = "Content-Type";
    public static final String CONTENT_LOCATION = "Content-Location";
@@ -43,6 +44,7 @@ public class MimeConstants
    public static final String TYPE_XML_UTF8 = TYPE_TEXT_XML + "; charset=UTF-8";
    public static final String TYPE_SOAP11 = TYPE_TEXT_XML;
    public static final String TYPE_SOAP12 = "application/soap+xml";
+   public static final String TYPE_FASTINFOSET = "application/fastinfoset";
 
    // Encoding
    public static final String TEXT_8BIT_ENCODING = "8bit";

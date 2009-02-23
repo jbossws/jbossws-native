@@ -256,6 +256,13 @@ public class MessageFactoryImpl extends MessageFactory
             inputStream = decoder.getRootPart().getDataHandler().getInputStream();
             attachments = decoder.getRelatedParts();
          }
+         else if (isFastInfosetContent(contentType))
+         {
+            if (!features.isFeatureEnabled(FastInfosetFeature.class))
+            {
+               throw new SOAPException("FastInfoset support is not enabled, use FastInfosetFeature to enable it.");
+            }
+         }
          else if (isSoapContent(contentType) == false)
          {
             throw new SOAPException("Unsupported content type: " + contentType);
@@ -312,6 +319,12 @@ public class MessageFactoryImpl extends MessageFactory
    {
       String baseType = type.getBaseType();
       return MimeConstants.TYPE_SOAP11.equalsIgnoreCase(baseType) || MimeConstants.TYPE_SOAP12.equalsIgnoreCase(baseType);
+   }
+   
+   private boolean isFastInfosetContent(ContentType type)
+   {
+      String baseType = type.getBaseType();
+      return MimeConstants.TYPE_FASTINFOSET.equalsIgnoreCase(baseType);
    }
 
    private boolean isMultipartRelatedContent(ContentType type)
