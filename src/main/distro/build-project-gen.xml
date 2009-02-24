@@ -106,6 +106,7 @@
     </copy>
     <copy tofile="${project.home}/build.properties" file="${basedir}/user-project.properties"/>
   	<path id="project.classpath">
+	<pathelement location="${jboss.client}/jaxb-api.jar"/>
         <pathelement location="${jboss.client}/jbossws-common.jar"/>
         <pathelement location="${jboss.client}/jbossws-spi.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-jaxrpc.jar"/>
