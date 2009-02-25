@@ -38,6 +38,8 @@ import org.jboss.logging.Logger;
  */
 public abstract class Extendable implements Serializable
 {
+   private static final long serialVersionUID = -3164210175211099488L;
+
    // provide logging
    private Logger log = Logger.getLogger(getClass());
    
@@ -117,6 +119,10 @@ public abstract class Extendable implements Serializable
 
    public List<WSDLExtensibilityElement> getNotUnderstoodExtElements()
    {
+      if (notUnderstoodExtElements == null)
+      {
+         notUnderstoodExtElements = new LinkedList<WSDLExtensibilityElement>();
+      }
       return notUnderstoodExtElements;
    }
 
@@ -127,6 +133,10 @@ public abstract class Extendable implements Serializable
    
    public void addNotUnderstoodExtElement(WSDLExtensibilityElement element)
    {
+      if (notUnderstoodExtElements == null)
+      {
+         notUnderstoodExtElements = new LinkedList<WSDLExtensibilityElement>();
+      }
       notUnderstoodExtElements.add(element);
    }
 }
