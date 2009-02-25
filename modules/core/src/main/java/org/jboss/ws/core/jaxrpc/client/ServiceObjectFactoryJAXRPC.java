@@ -204,6 +204,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
                InputStream is = new URL(servletPath).openStream();
                BufferedReader br = new BufferedReader(new InputStreamReader(is));
                endpointAddress = br.readLine();
+               br.close();
                is.close();
             }
 

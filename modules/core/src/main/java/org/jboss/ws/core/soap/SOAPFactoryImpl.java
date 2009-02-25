@@ -121,8 +121,7 @@ public class SOAPFactoryImpl extends SOAPFactory
       SOAPFactory factory = SOAPFactory.newInstance();
       SOAPElement soapElement = factory.createElement(localName, prefix, nsURI);
 
-      if (domElement instanceof Element)
-         DOMUtils.copyAttributes(soapElement, (Element)domElement);
+      DOMUtils.copyAttributes(soapElement, domElement);
 
       if (deep)
       {

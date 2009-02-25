@@ -46,9 +46,9 @@ import org.xml.sax.Attributes;
 public class WSSecurityOMFactory implements ObjectModelFactory
 {
 
-   public static String SERVER_RESOURCE_NAME = "jboss-wsse-server.xml";
+   public static final String SERVER_RESOURCE_NAME = "jboss-wsse-server.xml";
 
-   public static String CLIENT_RESOURCE_NAME = "jboss-wsse-client.xml";
+   public static final String CLIENT_RESOURCE_NAME = "jboss-wsse-client.xml";
 
    private static HashMap options = new HashMap(7);
 
@@ -181,7 +181,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       if ("timestamp-verification".equals(localName))
       {
          //By default, the createdTolerance should be '0'
-         Long createdTolerance = new Long(0);
+         Long createdTolerance = Long.valueOf(0);
          String createdToleranceAttr = attrs.getValue("", "createdTolerance");
          if (createdToleranceAttr != null)
             createdTolerance = (Long)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_LONG_NAME, createdToleranceAttr, null);
@@ -193,13 +193,13 @@ public class WSSecurityOMFactory implements ObjectModelFactory
             warnCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, warnCreatedAttr, null);
 
          //By default, the expiresTolerance should be '0'
-         Long expiresTolerance = new Long(0);
+         Long expiresTolerance = Long.valueOf(0);
          String expiresToleranceAttr = attrs.getValue("", "expiresTolerance");
          if (expiresToleranceAttr != null)
             expiresTolerance = (Long)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_LONG_NAME, expiresToleranceAttr, null);
 
          //By default, we do log warnings if the tolerance is used.
-         Boolean warnExpires = new Boolean(true);
+         Boolean warnExpires = Boolean.valueOf(true);
          String warnExpiresAttr = attrs.getValue("", "warnExpires");
          if (warnExpiresAttr != null)
             warnExpires = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, warnExpiresAttr, null);
@@ -284,19 +284,19 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       else if ("username".equals(localName))
       {
          //By default, we do not use password digest
-         Boolean digestPassword = new Boolean(false);
+         Boolean digestPassword = Boolean.valueOf(false);
          String digestPasswordAttr = attrs.getValue("", "digestPassword");
          if (digestPasswordAttr != null)
             digestPassword = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, digestPasswordAttr, null);
 
          //if password digest is enabled, we use nonces by default
-         Boolean useNonce = new Boolean(true);
+         Boolean useNonce = Boolean.valueOf(true);
          String useNonceAttr = attrs.getValue("", "useNonce");
          if (useNonceAttr != null)
             useNonce = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useNonceAttr, null);
 
          //if password digest is enabled, we use the created element by default
-         Boolean useCreated = new Boolean(true);
+         Boolean useCreated = Boolean.valueOf(true);
          String useCreatedAttr = attrs.getValue("", "useCreated");
          if (useCreatedAttr != null)
             useCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useCreatedAttr, null);

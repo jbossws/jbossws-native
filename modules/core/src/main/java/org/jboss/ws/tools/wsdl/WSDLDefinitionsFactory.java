@@ -85,7 +85,7 @@ public class WSDLDefinitionsFactory
     */
    public void setFeature(String name, boolean value) throws IllegalArgumentException
    {
-      features.put(name, new Boolean(value));
+      features.put(name, Boolean.valueOf(value));
    }
 
    /**

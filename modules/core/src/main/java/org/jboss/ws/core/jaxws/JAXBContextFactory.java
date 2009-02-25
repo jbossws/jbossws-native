@@ -42,7 +42,7 @@ public abstract class JAXBContextFactory
 {
    public final static String DEFAULT_JAXB_CONTEXT_FACTORY = "org.jboss.ws.core.jaxws.CustomizableJAXBContextFactory";
    
-   private static ThreadLocal threadContextCount = new ThreadLocal(); 
+   private static ThreadLocal<Integer> threadContextCount = new ThreadLocal<Integer>(); 
 
    public abstract JAXBContext createContext(Class[] clazzes, BindingCustomization bindingCustomization) throws WSException;
 
@@ -56,21 +56,21 @@ public abstract class JAXBContextFactory
    protected void incrementContextCount()
    {
       Integer count = getContextCount();
-      threadContextCount.set(new Integer(count + 1));
+      threadContextCount.set(Integer.valueOf(count + 1));
    }
    
    public static Integer getContextCount()
    {
       Integer count = (Integer)threadContextCount.get();
       if (count == null)
-         count = new Integer(0);
+         count = Integer.valueOf(0);
       
       return count;
    }
    
    public static void resetContextCount()
    {
-      threadContextCount.set(new Integer(0));
+      threadContextCount.set(Integer.valueOf(0));
    }
    
    /**

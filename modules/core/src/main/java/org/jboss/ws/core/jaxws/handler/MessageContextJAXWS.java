@@ -114,7 +114,7 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
       resContext.setSOAPMessage(null);
 
       // Reverse the direction
-      resContext.put(MessageContext.MESSAGE_OUTBOUND_PROPERTY, new Boolean(!outbound));
+      resContext.put(MessageContext.MESSAGE_OUTBOUND_PROPERTY, Boolean.valueOf(!outbound));
 
       MessageContextAssociation.pushMessageContext(resContext);
       cleanupAttachments(reqContext);

@@ -52,9 +52,9 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
    // expandToDOM in the SOAPContentElement should not happen during normal operation 
    // This property should be set the message context when it is ok to do so.
-   public static String ALLOW_EXPAND_TO_DOM = "org.jboss.ws.allow.expand.dom";
+   public static final String ALLOW_EXPAND_TO_DOM = "org.jboss.ws.allow.expand.dom";
 
-   public static String REMOTING_METADATA = "org.jboss.ws.remoting.metadata";
+   public static final String REMOTING_METADATA = "org.jboss.ws.remoting.metadata";
 
    // The serialization context for this message ctx
    private SerializationContext serContext;

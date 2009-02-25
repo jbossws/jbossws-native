@@ -251,7 +251,7 @@ public class RequestHandlerImpl implements RequestHandler
       else
       {
          msgContext = new SOAPMessageContextJAXWS();
-         msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, new Boolean(false));
+         msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.valueOf(false));
          msgContext.put(MessageContextJAXWS.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
          invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
       }

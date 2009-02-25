@@ -249,6 +249,7 @@ public class SecurityStore
                log.error(line);
                line = reader.readLine();
             }
+            reader.close();
             stderr.close();
          }
          log.debug("Command exited with: " + status);

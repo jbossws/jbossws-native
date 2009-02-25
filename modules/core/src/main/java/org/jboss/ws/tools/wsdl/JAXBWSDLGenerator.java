@@ -76,7 +76,7 @@ public class JAXBWSDLGenerator extends WSDLGenerator
             public Result createOutput(String namespace, String file) throws IOException
             {
                // JBWS-1295, getKnownNamespaceURIs is not accurate
-               if (namespace.length() > 0 && wsdl.getPrefix(namespace) == null)
+               if (namespace != null && namespace.length() > 0 && wsdl.getPrefix(namespace) == null)
                   wsdl.registerNamespaceURI(namespace, null);
 
                // JAXB creates an empty namespace due to type references, ignore it

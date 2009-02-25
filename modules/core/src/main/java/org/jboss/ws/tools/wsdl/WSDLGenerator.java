@@ -563,7 +563,6 @@ public abstract class WSDLGenerator
       int index = classname.lastIndexOf(".");
       if (index < 0)
          index = classname.length();
-      else index = index;
       return classname.substring(0,index);
    }
 }

@@ -171,11 +171,15 @@ public class XMLFragment
          else if (source instanceof StreamSource || source instanceof SAXSource)
          {
             StreamSource streamSource = (StreamSource)source;
+            boolean newReader = false;
 
             Reader reader = streamSource.getReader();
             {
                if (reader == null)
+               {
                   reader = new InputStreamReader(streamSource.getInputStream(), "UTF-8");
+                  newReader = true;
+               }
             }
 
             char[] cbuf = new char[1024];
@@ -206,6 +210,9 @@ public class XMLFragment
                len = reader.read(cbuf);
                off = 0;
             }
+            
+            if (newReader)
+               reader.close();
          }
          else
          {

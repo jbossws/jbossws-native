@@ -79,7 +79,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
 
-   public static String SESSION_COOKIES = "org.jboss.ws.maintain.session.cookies";
+   public static final String SESSION_COOKIES = "org.jboss.ws.maintain.session.cookies";
 
    // The endpoint together with the operationName uniquely identify the call operation
    protected EndpointMetaData epMetaData;

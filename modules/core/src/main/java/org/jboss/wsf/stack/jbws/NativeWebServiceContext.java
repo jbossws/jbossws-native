@@ -66,7 +66,7 @@ public abstract class NativeWebServiceContext extends ExtensibleWebServiceContex
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       String address = epMetaData.getEndpointAddress();
       builder.address(address);
-      builder.wsdlDocumentLocation(address.toString() +  "?wsdl");
+      builder.wsdlDocumentLocation(address +  "?wsdl");
       //TODO set other parameters in the builder
       if (referenceParameters != null && W3CEndpointReference.class.getName().equals(clazz.getName()))
       {

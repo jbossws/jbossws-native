@@ -268,7 +268,7 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
       JAnnotationUse xmlTypeAnnotation = clazz.annotate(XmlType.class); 
       xmlTypeAnnotation.param("name", xmlType.getLocalPart());
       String xmlTypeNS = xmlType.getNamespaceURI();
-      if (xmlTypeNS != null & xmlTypeNS.length() > 0)
+      if (xmlTypeNS != null && xmlTypeNS.length() > 0)
       {
          xmlTypeAnnotation.param("namespace", xmlTypeNS);
       }

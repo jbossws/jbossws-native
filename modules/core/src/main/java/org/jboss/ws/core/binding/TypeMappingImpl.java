@@ -355,7 +355,7 @@ public abstract class TypeMappingImpl implements TypeMapping
       int nullHash = HashCodeUtil.hash(result, "null");
       result = javaType!= null ? HashCodeUtil.hash(result, javaType.getName()) : HashCodeUtil.hash(result, nullHash);
       result = xmlType!= null ? HashCodeUtil.hash(result, xmlType.hashCode()): HashCodeUtil.hash(result, nullHash);
-      return new Integer(result);
+      return Integer.valueOf(result);
    }
 
    private List<KeyPair> getKeyPairsInternal(IQName xmlType, Class javaType)
