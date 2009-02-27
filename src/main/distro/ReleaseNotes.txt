@@ -46,6 +46,58 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+What's new in jbossws-native-3.1.0.GA
+-------------------------------------
+
+Feature Request
+
+    * [JBWS-2441] - Complete JAX-WS 2.1 implementation
+    * [JBWS-2446] - Complete support for WebServiceFeature
+    * [JBWS-2451] - Support JAXB annotations on SEI when producing wsdls
+    * [JBWS-2452] - Implement EndpointReference related methods
+    * [JBWS-2454] - Add javax.xml.ws.reference.parameters values in message context
+    * [JBWS-2477] - Support generics in wrapper classes
+    * [JBWS-2491] - Enable JAXWS 2.1 WebServiceContext methods
+
+Bug
+
+    * [JBWS-2195] - MTOM services seem to return two extra bytes at the end
+    * [JBWS-2288] - Exception handling issue in org.jboss.ws.core.CommonClient.
+    * [JBWS-2368] - JAX-WS Deployments Fail For AOP Instrumented Endpoints
+    * [JBWS-2377] - jbossws-deploy.conf in 'all' configuration links libraries in 'default' conf
+    * [JBWS-2412] - WSDL schema imports do not published successfully
+    * [JBWS-2416] - Search is not working on the mediawiki
+    * [JBWS-2419] - MTOM/XOP message use always "text/xml" for start-info regardless of content type associated with the content (SOAP message)
+    * [JBWS-2432] - NullPointerException processing headers without actor
+    * [JBWS-2437] - WSDL access url with resource suffix allows any arbitrary xml file to be viewed
+    * [JBWS-2443] - services page does not correctly update host address of endpoints
+    * [JBWS-2482] - Fix WSConsumerPlugin.testTarget() classloading issues
+    * [JBWS-2509] - dar.JMSClientTestCase contains AS4 specific code
+
+Patch
+
+    * [JBWS-2404] - Efficient string handling
+
+Task
+
+    * [JBWS-1312] - Fix JMS transport in trunk
+    * [JBWS-1999] - WS-Security Usename Token Profile JAAS Implementation for JSE based WebServices
+    * [JBWS-2150] - Migrate AddressRewritingTestCase to jaxws
+    * [JBWS-2196] - FastInfoset interoperability
+    * [JBWS-2431] - Update native deployment macros to don't publish jaxb-api.jar and stax-api.jar to JBOSS_HOME/lib directory
+    * [JBWS-2444] - Update hudson, deploy scripts, etc. for new AS repository layout
+    * [JBWS-2445] - Move jaxws 2.1 partial impl from jaxws-ext to jaxws module
+    * [JBWS-2450] - Enable target 2.1 option when using WSImport
+    * [JBWS-2455] - Conformance Requirements JAX-WS 2.1
+    * [JBWS-2483] - Add smoke tools tests to the binary distro
+    * [JBWS-2504] - Use ControllerContext instead of KernelRegistryEntry which will be deprecated
+    * [JBWS-2505] - Remove container integration layer for AS 5.1.0 and AS 6.0.0
+
+Errata
+
+    See: https://jira.jboss.org/jira/browse/JBWS-2545
+
+
 What's new in jbossws-native-3.0.5.GA
 -------------------------------------
 
