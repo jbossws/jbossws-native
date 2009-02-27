@@ -444,7 +444,7 @@
       <dependencies>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss501x</artifactId>
+          <artifactId>jbossws-jboss501</artifactId>
           <exclusions>
             <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
               <groupId>jboss.jbossws</groupId>
