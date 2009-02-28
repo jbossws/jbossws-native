@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.spi.Provider;
 
 import org.w3c.dom.Element;
 
@@ -260,13 +261,8 @@ public final class W3CEndpointReferenceBuilder
     */
    public W3CEndpointReference build()
    {
-      W3CEndpointReference epr = new W3CEndpointReference();
-      epr.setAddress(address);
-      epr.setServiceName(serviceName);
-      epr.setEndpointName(endpointName);
-      epr.setMetadata(metadata);
-      epr.setWsdlLocation(wsdlLocation);
-      epr.setReferenceParameters(parameters);
-      return epr;
+      return Provider.provider().createW3CEndpointReference(address,
+            serviceName, endpointName, metadata, wsdlLocation,
+            parameters);
    }
 }

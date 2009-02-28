@@ -41,7 +41,7 @@ import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.jaxws.binding.EndpointReferenceUtil;
+import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.http.HttpContext;

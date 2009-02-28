@@ -36,8 +36,9 @@ import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.Provider;
 import javax.xml.ws.spi.ServiceDelegate;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
-import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
+import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
+import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
@@ -112,13 +113,14 @@ public class ProviderImpl extends Provider
    public W3CEndpointReference createW3CEndpointReference(String address, QName serviceName, QName portName, List<Element> metadata, String wsdlDocumentLocation,
          List<Element> referenceParameters)
    {
-      W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
-      builder = builder.address(address).serviceName(serviceName).endpointName(portName).wsdlDocumentLocation(wsdlDocumentLocation);
-      for (Element el : metadata)
-         builder = builder.metadata(el);
-      for (Element el : referenceParameters)
-         builder = builder.referenceParameter(el);
-      return builder.build();
+      NativeEndpointReference epr = new NativeEndpointReference();
+      epr.setAddress(address);
+      epr.setServiceName(serviceName);
+      epr.setEndpointName(portName);
+      epr.setMetadata(metadata);
+      epr.setWsdlLocation(wsdlDocumentLocation);
+      epr.setReferenceParameters(referenceParameters);
+      return EndpointReferenceUtil.transform(W3CEndpointReference.class, epr);
    }
 
    @Override
@@ -126,12 +128,10 @@ public class ProviderImpl extends Provider
    {
       URL wsdlLocation = null;
       QName serviceName = null;
-      if (epr instanceof W3CEndpointReference)
-      {
-         W3CEndpointReference w3c = (W3CEndpointReference)epr;
-         wsdlLocation = w3c.getWsdlLocation();
-         serviceName = w3c.getServiceName();
-      }
+      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
+      
+      wsdlLocation = nepr.getWsdlLocation();
+      serviceName = nepr.getServiceName();
       ServiceDelegate delegate = createServiceDelegate(wsdlLocation, serviceName, Service.class);
       return delegate.getPort(epr, sei, features);
    }

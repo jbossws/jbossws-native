@@ -94,7 +94,7 @@ public final class RespectBindingFeature extends WebServiceFeature
     * 
     * Constant value identifying the RespectBindingFeature
     */
-   public static final String ID = "javax.xml.ws.InspectBindingFeature";
+   public static final String ID = "javax.xml.ws.RespectBindingFeature";
 
    /**
     * Create an <code>RespectBindingFeature</code>.

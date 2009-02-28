@@ -19,8 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package javax.xml.ws.wsaddressing;
+package org.jboss.ws.core.jaxws.wsaddressing;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -44,31 +45,26 @@ import javax.xml.ws.WebServiceException;
 import org.w3c.dom.Element;
 
 /**
- * This class represents a W3C Addressing EndpointReferece which is
- * a remote reference to a web service endpoint that supports the
- * W3C WS-Addressing 1.0 - Core Recommendation.
- * <p>
- * Developers should use this class in their SEIs if they want to
- * pass/return endpoint references that represent the W3C WS-Addressing
- * recommendation.
- * <p>
- * JAXB will use the JAXB annotations and bind this class to XML infoset
- * that is consistent with that defined by WS-Addressing.  See
- * <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509/">
- * WS-Addressing</a> 
- * for more information on WS-Addressing EndpointReferences.
- *
- * @since JAX-WS 2.1
+ * Internal representation of the W3CEndpointReference.
+ * This allows the W3CEndpointReference to programmatically
+ * build an EndpointReference specifying every parameter.
+ * Instances of this class are converted to (and can be
+ * created from) W3CEndpointReference using the
+ * @see EndpointReferenceUtil class.
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 28-Feb-2009
+ * 
  */
 
 // XmlRootElement allows this class to be marshalled on its own
-@XmlRootElement(name = "EndpointReference", namespace = W3CEndpointReference.NS)
-@XmlType(name = "EndpointReferenceType", namespace = W3CEndpointReference.NS)
-public final class W3CEndpointReference extends EndpointReference
+@XmlRootElement(name = "EndpointReference", namespace = NativeEndpointReference.NS)
+@XmlType(name = "EndpointReferenceType", namespace = NativeEndpointReference.NS)
+public final class NativeEndpointReference extends EndpointReference
 {
    protected static final String NS = "http://www.w3.org/2005/08/addressing";
    
-   private final static JAXBContext w3cjc = getW3CJaxbContext();
+   private final static JAXBContext jc = getJaxbContext();
    
    // private but necessary properties for databinding
    @XmlElement(name = "Address", namespace = NS)
@@ -81,8 +77,13 @@ public final class W3CEndpointReference extends EndpointReference
    Map<QName, String> attributes;
    @XmlAnyElement
    List<Element> elements;
+
+   // not marshalled
+   private QName serviceName;
+   private QName endpointName;
+   private URL wsdlLocation;
    
-   protected W3CEndpointReference()
+   public NativeEndpointReference()
    {
    }
 
@@ -99,22 +100,116 @@ public final class W3CEndpointReference extends EndpointReference
     * @throws NullPointerException
     *   If the <code>null</code> <code>source</code> value is given
     */
-   public W3CEndpointReference(Source source)
+   public NativeEndpointReference(Source source)
    {
       try
       {
-         W3CEndpointReference epr = w3cjc.createUnmarshaller().unmarshal(source, W3CEndpointReference.class).getValue();
+         NativeEndpointReference epr = jc.createUnmarshaller().unmarshal(source, NativeEndpointReference.class).getValue();
          this.address = epr.address;
          this.metadata = epr.metadata;
          this.referenceParameters = epr.referenceParameters;
       }
       catch (JAXBException e)
       {
-         throw new WebServiceException("Error unmarshalling W3CEndpointReference ", e);
+         throw new WebServiceException("Error unmarshalling NativeEndpointReference ", e);
       }
       catch (ClassCastException e)
       {
-         throw new WebServiceException("Source did not contain W3CEndpointReference", e);
+         throw new WebServiceException("Source did not contain NativeEndpointReference", e);
+      }
+   }
+
+   @XmlTransient
+   public String getAddress()
+   {
+      return address != null ? address.getUri() : null;
+   }
+
+   public void setAddress(String address)
+   {
+      this.address = new Address(address);
+   }
+   
+   @XmlTransient
+   public QName getServiceName()
+   {
+      return serviceName;
+   }
+
+   public void setServiceName(QName serviceName)
+   {
+      this.serviceName = serviceName;
+   }
+
+   @XmlTransient
+   public QName getEndpointName()
+   {
+      return endpointName;
+   }
+
+   public void setEndpointName(QName endpointName)
+   {
+      this.endpointName = endpointName;
+   }
+
+   @XmlTransient
+   public List<Element> getMetadata()
+   {
+      return metadata != null ? metadata.getElements() : null;
+   }
+
+   public void setMetadata(List<Element> metadata)
+   {
+      this.metadata = new Elements(metadata);
+   }
+
+   @XmlTransient
+   public URL getWsdlLocation()
+   {
+      return wsdlLocation;
+   }
+
+   public void setWsdlLocation(String wsdlLocation)
+   {
+      try
+      {
+         this.wsdlLocation = wsdlLocation != null ? new URL(wsdlLocation) : null;
+      }
+      catch (MalformedURLException e)
+      {
+         throw new IllegalArgumentException("Invalid URL: " + wsdlLocation);
+      }
+   }
+
+   @XmlTransient
+   public List<Element> getReferenceParameters()
+   {
+      return referenceParameters != null ? referenceParameters.getElements() : null;
+   }
+
+   public void setReferenceParameters(List<Element> metadata)
+   {
+      this.referenceParameters = new Elements(metadata);
+   }
+   
+   /**
+    * Directly read a NativeEndpointReference from the given source
+    * instead of leveraging the Provider's readEndpointReference method.
+    * 
+    * @param eprInfoset
+    * @return
+    */
+   public static EndpointReference readFrom(Source eprInfoset)
+   {
+      if (eprInfoset == null)
+         throw new NullPointerException("Provided eprInfoset cannot be null");
+      try
+      {
+         return new NativeEndpointReference(eprInfoset);
+      }
+      catch (Exception e)
+      {
+         throw new WebServiceException(e);
       }
    }
 
@@ -125,21 +220,21 @@ public final class W3CEndpointReference extends EndpointReference
    {
       try
       {
-         Marshaller marshaller = w3cjc.createMarshaller();
+         Marshaller marshaller = jc.createMarshaller();
          marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
          marshaller.marshal(this, result);
       }
       catch (JAXBException e)
       {
-         throw new WebServiceException("Error marshalling W3CEndpointReference. ", e);
+         throw new WebServiceException("Error marshalling NativeEndpointReference. ", e);
       }
    }
 
-   private static JAXBContext getW3CJaxbContext()
+   private static JAXBContext getJaxbContext()
    {
       try
       {
-         return JAXBContext.newInstance(new Class[] { W3CEndpointReference.class });
+         return JAXBContext.newInstance(new Class[] { NativeEndpointReference.class });
       }
       catch (JAXBException ex)
       {
