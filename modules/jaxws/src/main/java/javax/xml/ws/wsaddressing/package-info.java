@@ -19,34 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxws.binding;
-
-import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.wsaddressing.W3CEndpointReference;
-
-/**
- * Transforms an EPR to an instance of a given EndpointReference class 
- * 
- * @since 12-Jan-2009
- * @author alessio.soldano@jboss.com
- *
- */
-public class EndpointReferenceUtil {
-   
-   public static <T extends EndpointReference> T transform(Class<T> clazz, EndpointReference epr) {
-       assert epr != null;
-       if (clazz.isAssignableFrom(W3CEndpointReference.class)) {
-           if (epr instanceof W3CEndpointReference) {
-               return (T) epr;
-           }
-           else
-           {
-              throw new WebServiceException("Unsupported EndpointReference: " + epr);
-           }
-       }
-       //transformations from different types of EndpointReference could be supported in future...
-       
-       throw new WebServiceException("EndpointReference of type " + clazz + " not supported.");
-   }
-}
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.w3.org/2005/08/addressing",
+                                     location = "http://www.w3.org/2006/03/addressing/ws-addr.xsd")
+package javax.xml.ws.wsaddressing;

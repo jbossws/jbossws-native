@@ -50,7 +50,6 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.ServiceDelegate;
-import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.StubExt;
@@ -60,6 +59,8 @@ import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
+import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
+import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
@@ -471,11 +472,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public <T> Dispatch<T> createDispatch(EndpointReference epr, Class<T> type, Mode mode, WebServiceFeature... features)
    {
       QName portName = null;
-      if (epr instanceof W3CEndpointReference)
-      {
-         W3CEndpointReference w3c = (W3CEndpointReference)epr;
-         portName = w3c.getEndpointName();
-      }
+      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
+      portName = nepr.getEndpointName();
       
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
       initAddressingProperties(dispatch, epr);
@@ -495,11 +493,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public Dispatch<Object> createDispatch(EndpointReference epr, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
       QName portName = null;
-      if (epr instanceof W3CEndpointReference)
-      {
-         W3CEndpointReference w3c = (W3CEndpointReference)epr;
-         portName = w3c.getEndpointName();
-      }
+      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
+      portName = nepr.getEndpointName();
 
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
       initAddressingProperties(dispatch, epr);
@@ -551,33 +546,26 @@ public class ServiceDelegateImpl extends ServiceDelegate
       AddressingBuilder builder = AddressingBuilder.getAddressingBuilder();
       AddressingProperties addrProps = builder.newAddressingProperties();
       reqContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
-
-      if (epr instanceof W3CEndpointReference)
+      
+      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
+      try
       {
-         try
+         if (nepr.getAddress() != null)
+            addrProps.setTo(builder.newURI(nepr.getAddress()));
+
+         List<Element> w3cRefParams = nepr.getReferenceParameters();
+         if (w3cRefParams != null)
          {
-            W3CEndpointReference w3cepr = (W3CEndpointReference)epr;
-            if (w3cepr.getAddress() != null)
-               addrProps.setTo(builder.newURI(w3cepr.getAddress()));
-            
-            List<Element> w3cRefParams = w3cepr.getReferenceParameters();
-            if (w3cRefParams != null)
+            ReferenceParameters refParams = addrProps.getReferenceParameters();
+            for (Element w3cRefParam : w3cRefParams)
             {
-               ReferenceParameters refParams = addrProps.getReferenceParameters();
-               for (Element w3cRefParam : w3cRefParams)
-               {
-                  refParams.addElement(w3cRefParam);
-               }
+               refParams.addElement(w3cRefParam);
             }
          }
-         catch (URISyntaxException ex)
-         {
-            throw new IllegalArgumentException(ex);
-         }
       }
-      else
+      catch (URISyntaxException ex)
       {
-         throw new IllegalArgumentException("Unsupported EPR type: " + epr);
+         throw new IllegalArgumentException(ex);
       }
    }
 }

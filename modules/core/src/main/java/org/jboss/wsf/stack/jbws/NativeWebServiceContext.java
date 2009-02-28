@@ -29,7 +29,7 @@ import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxws.binding.EndpointReferenceUtil;
+import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.wsf.spi.invocation.ExtensibleWebServiceContext;
 import org.w3c.dom.Element;
