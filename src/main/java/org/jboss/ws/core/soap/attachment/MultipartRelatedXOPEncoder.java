@@ -27,6 +27,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.ParameterList;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 
@@ -57,10 +58,14 @@ public class MultipartRelatedXOPEncoder extends MultipartRelatedEncoder
 
    public void encodeMultipartRelatedMessage() throws SOAPException, MessagingException
    {
+      SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
+      boolean isSoap12 = SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE.equals(soapEnv.getElementQName().getNamespaceURI());
+      String soapType = isSoap12 ? MimeConstants.TYPE_SOAP12 : MimeConstants.TYPE_SOAP11;
+
       ParameterList p = new ParameterList();
       p.set("type", MimeConstants.TYPE_APPLICATION_XOP_XML);
       p.set("start", MimeConstants.ROOTPART_CID);
-      p.set("start-info", MimeConstants.START_INFO_XOP);
+      p.set("start-info", soapType);
       
       MimeMultipart multipart = new MimeMultipart("related" + p);
       MimeBodyPart rootPart = new MimeBodyPart();
@@ -71,12 +76,11 @@ public class MultipartRelatedXOPEncoder extends MultipartRelatedEncoder
        * to marshall the message. In this way the root part can be lazily written to the output
        * stream.
        */
-      SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
       String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, false);
       rootPart.setText(envStr, "UTF-8");
 
       rootPart.setContentID(MimeConstants.ROOTPART_CID);
-      rootPart.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_APPLICATION_XOP_XML + "; type=\"text/xml\""); 
+      rootPart.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_APPLICATION_XOP_XML + "; type=\"" + soapType + "\""); 
       rootPart.setHeader(MimeConstants.CONTENT_TRANSFER_ENCODING, MimeConstants.TEXT_8BIT_ENCODING);
 
       multipart.addBodyPart(rootPart);
