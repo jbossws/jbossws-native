@@ -38,6 +38,7 @@ public class EndpointInfo
 {
    private String targetAddress;
    private Map<String, Object> properties;
+   
    public EndpointInfo(EndpointMetaData epMetaData, String targetAddress, Map<String, Object> callProps)
    {
       this.targetAddress = targetAddress;

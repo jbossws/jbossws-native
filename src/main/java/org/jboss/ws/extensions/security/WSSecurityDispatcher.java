@@ -85,13 +85,13 @@ public class WSSecurityDispatcher
       return newList;
    }
 
-   private static Config getConfig(WSSecurityConfiguration config, String portName, String operationName)
+   private static Config getConfig(WSSecurityConfiguration config, String portName, String opName)
    {
       Port port = config.getPorts().get(portName);
       if (port == null)
          return config.getDefaultConfig();
 
-      Operation operation = port.getOperations().get(operationName);
+      Operation operation = port.getOperations().get(opName);
       if (operation == null)
       {
          Config portConfig = port.getDefaultConfig();
@@ -132,8 +132,14 @@ public class WSSecurityDispatcher
             opMetaData = soapMessage.getOperationMetaData(epMetaData);
          }
 
-         String operation = opMetaData.getQName().toString();
-         String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
+         String operation = null;
+         String port = null;
+         if (opMetaData != null)
+         {
+            operation = opMetaData.getQName().toString();
+            port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
+         }
+          
 
          if (hasRequirements(config, operation, port))
             throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
@@ -161,8 +167,13 @@ public class WSSecurityDispatcher
             opMetaData = soapMessage.getOperationMetaData(epMetaData);
          }
 
-         String operation = opMetaData.getQName().toString();
-         String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
+         String operation = null;
+         String port = null;
+         if (opMetaData != null)
+         {
+            operation = opMetaData.getQName().toString();
+            port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
+         }
 
          List<OperationDescription<RequireOperation>> operations = buildRequireOperations(config, operation, port);
 
@@ -288,26 +299,29 @@ public class WSSecurityDispatcher
       WSSecurityConfiguration config = getSecurityConfig(ctx);
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)ctx.getSOAPMessage();
 
+      EndpointMetaData epMetaData = ctx.getEndpointMetaData();
+      String port = epMetaData.getPortName().getLocalPart();
+      
+      String opName = null;
       OperationMetaData opMetaData = ctx.getOperationMetaData();
-      String operation = opMetaData.getQName().toString();
-      String port = opMetaData.getEndpointMetaData().getPortName().getLocalPart();
+      if (opMetaData != null)
+         opName = opMetaData.getQName().toString();
 
-      Config operationConfig = getConfig(config, port, operation);
-
-      log.debug("WS-Security config: " + operationConfig);
+      Config opConfig = getConfig(config, port, opName);
+      log.debug("WS-Security config: " + opConfig);
 
       // Nothing to process
-      if (operationConfig == null)
+      if (opConfig == null)
          return;
 
       ArrayList<OperationDescription<EncodingOperation>> operations = new ArrayList<OperationDescription<EncodingOperation>>();
-      Timestamp timestamp = operationConfig.getTimestamp();
+      Timestamp timestamp = opConfig.getTimestamp();
       if (timestamp != null)
       {
          operations.add(new OperationDescription<EncodingOperation>(TimestampOperation.class, null, null, timestamp.getTtl(), null));
       }
 
-      if (operationConfig.getUsername() != null)
+      if (opConfig.getUsername() != null)
       {
          Object user = ctx.get(Stub.USERNAME_PROPERTY);
          Object pass = ctx.get(Stub.PASSWORD_PROPERTY);
@@ -325,7 +339,7 @@ public class WSSecurityDispatcher
          }
       }
 
-      Sign sign = operationConfig.getSign();
+      Sign sign = opConfig.getSign();
       if (sign != null)
       {
          List<Target> targets = convertTargets(sign.getTargets());
@@ -341,7 +355,7 @@ public class WSSecurityDispatcher
          operations.add(new OperationDescription<EncodingOperation>(SignatureOperation.class, targets, sign.getAlias(), null, null));
       }
 
-      Encrypt encrypt = operationConfig.getEncrypt();
+      Encrypt encrypt = opConfig.getEncrypt();
       if (encrypt != null)
       {
          List<Target> targets = convertTargets(encrypt.getTargets());

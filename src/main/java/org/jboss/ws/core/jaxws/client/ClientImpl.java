@@ -56,7 +56,6 @@ import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
-import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -76,7 +75,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
 {
 
    // the associated endpoint meta data
-   private final EndpointMetaData epMetaData;
+   private final ClientEndpointMetaData epMetaData;
    private EndpointConfigMetaData epConfigMetaData;
 
    // Keep a handle on the resolver so that updateConfig calls may revisit the associated chains
@@ -91,7 +90,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
       super(epMetaData);
       setTargetEndpointAddress(epMetaData.getEndpointAddress());
 
-      this.epMetaData = epMetaData;
+      this.epMetaData = (ClientEndpointMetaData)epMetaData;
       this.epConfigMetaData = epMetaData.getEndpointConfigMetaData();
 
       if (handlerResolver instanceof HandlerResolverImpl)
@@ -113,7 +112,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
    {
       BindingExt binding = (BindingExt)getBindingProvider().getBinding();
 
-      PortInfo portInfo = getPortInfo(epMetaData);
+      PortInfo portInfo = epMetaData.getPortInfo();
 
       if (handlerResolver != null)
       {
@@ -427,12 +426,4 @@ public class ClientImpl extends CommonClient implements BindingProvider
       return Boolean.TRUE.equals(bool);
    }
 
-   private PortInfo getPortInfo(EndpointMetaData epMetaData)
-   {
-      QName serviceName = epMetaData.getServiceMetaData().getServiceName();
-      QName portName = epMetaData.getPortName();
-      String bindingID = epMetaData.getBindingId();
-      PortInfo portInfo = new PortInfoImpl(serviceName, portName, bindingID);
-      return portInfo;
-   }
 }

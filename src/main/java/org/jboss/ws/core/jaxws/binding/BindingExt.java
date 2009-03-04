@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.jaxws.binding;
 
+//$Id$
+
 import java.util.List;
 
 import javax.xml.ws.Binding;
@@ -28,7 +30,6 @@ import javax.xml.ws.handler.Handler;
 
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
-// $Id$
 
 /**
  * Extension to JAXWS protocol bindings. 
@@ -38,7 +39,9 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public interface BindingExt extends Binding
 {
+   /** Get the handler chain for a given type */
    List<Handler> getHandlerChain(HandlerType handlerType);
-   
+
+   /** Set the handler chain for a given type */
    void setHandlerChain(List<Handler> handlerChain, HandlerType handlerType);
 }

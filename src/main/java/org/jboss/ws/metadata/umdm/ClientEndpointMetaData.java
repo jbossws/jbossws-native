@@ -24,7 +24,9 @@ package org.jboss.ws.metadata.umdm;
 // $Id$
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.handler.PortInfo;
 
+import org.jboss.ws.core.jaxws.handler.PortInfoImpl;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -64,11 +66,20 @@ public class ClientEndpointMetaData extends EndpointMetaData
       this.endpointAddress = endpointAddress;
    }
 
+   public PortInfo getPortInfo()
+   {
+      QName serviceName = getServiceMetaData().getServiceName();
+      QName portName = getPortName();
+      String bindingID = getBindingId();
+      PortInfo portInfo = new PortInfoImpl(serviceName, portName, bindingID);
+      return portInfo;
+   }
+
    public EndpointConfigMetaData createEndpointConfigMetaData(String configName, String configFile)
    {
       return super.createEndpointConfigMetaData(configName, configFile);
    }
-
+   
    public String toString()
    {
       StringBuilder buffer = new StringBuilder("\nClientEndpointMetaData:");

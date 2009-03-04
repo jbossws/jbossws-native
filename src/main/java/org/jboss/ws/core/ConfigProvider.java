@@ -50,4 +50,14 @@ public interface ConfigProvider
     * Set the port configuration name and file
     */
    void setConfigName(String configName, String configFile);
+
+   /** 
+    * Get the WS-Security configuration  
+    */
+   String getSecurityConfig();
+
+   /** 
+    * Set the WS-Security configuration  
+    */
+   void setSecurityConfig(String securityConfig);
 }
