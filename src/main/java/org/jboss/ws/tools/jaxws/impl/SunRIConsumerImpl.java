@@ -41,6 +41,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
 {
    private List<File> bindingFiles;
    private File catalog;
+   private boolean extension;
    private boolean generateSource;
    private File outputDir = new File("output");
    private File sourceDir;
@@ -60,6 +61,12 @@ public class SunRIConsumerImpl extends WSContractConsumer
    public void setCatalog(File catalog)
    {
       this.catalog = catalog;
+   }
+
+   @Override
+   public void setExtension(boolean extension)
+   {
+      this.extension = extension;
    }
 
    @Override
@@ -126,6 +133,11 @@ public class SunRIConsumerImpl extends WSContractConsumer
       {
          args.add("-catalog");
          args.add(catalog.getAbsolutePath());
+      }
+
+      if (extension)
+      {
+         args.add("-extension");
       }
 
       if (generateSource)
