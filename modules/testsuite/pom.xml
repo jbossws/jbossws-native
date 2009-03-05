@@ -492,16 +492,6 @@
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-webservices</artifactId>
           <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.security</groupId>
-              <artifactId>jbosssx</artifactId>
-            </exclusion>
-          </exclusions>
         </dependency>
         <!-- END -->
         <dependency>
@@ -513,22 +503,11 @@
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-ejb3</artifactId>
           <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.security</groupId>
-              <artifactId>jbosssx</artifactId>
-            </exclusion>
-          </exclusions>
         </dependency>
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-security</artifactId>
           <version>${jboss.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.javaee</groupId>
-          <artifactId>jboss-javaee</artifactId>
-          <version>${jboss.javaee.version}</version>
         </dependency>
       </dependencies>
       <build>
@@ -544,11 +523,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss510.home}/lib/endorsed</argLine>
-              <!-- TODO: replace with maven dependencies -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
-                <additionalClasspathElement>${jboss.home}/common/lib/jboss-ejb3-core.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
@@ -584,16 +558,6 @@
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-webservices</artifactId>
           <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.security</groupId>
-              <artifactId>jbosssx</artifactId>
-            </exclusion>
-          </exclusions>
         </dependency>
         <!-- END -->
         <dependency>
@@ -605,22 +569,11 @@
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-ejb3</artifactId>
           <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.security</groupId>
-              <artifactId>jbosssx</artifactId>
-            </exclusion>
-          </exclusions>
         </dependency>
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-security</artifactId>
           <version>${jboss.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.javaee</groupId>
-          <artifactId>jboss-javaee</artifactId>
-          <version>${jboss.javaee.version}</version>
         </dependency>
       </dependencies>
       <build>
@@ -636,11 +589,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</argLine>
-              <!-- TODO: replace with maven dependencies -->
-              <additionalClasspathElements>
-                <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
-                <additionalClasspathElement>${jboss.home}/common/lib/jboss-ejb3-core.jar</additionalClasspathElement>
-              </additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
