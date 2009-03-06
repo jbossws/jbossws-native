@@ -36,11 +36,6 @@ public class JBWS751TestCase extends JBossWSTest
 {
    private static ITranHistory port;
 
-//   public static Test suite() throws Exception
-//   {
-//      return new JBossWSTestSetup(JBWS751TestCase.class, "jaxrpc-jbws751.war, jaxrpc-jbws751-client.jar");
-//   }
-
    public void setUp() throws Exception
    {
       if (true)
