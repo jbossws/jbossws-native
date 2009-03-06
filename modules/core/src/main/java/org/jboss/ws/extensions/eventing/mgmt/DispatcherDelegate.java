@@ -92,7 +92,7 @@ public class DispatcherDelegate implements EventDispatcher, Referenceable
          }
          catch (Exception e)
          {
-            throw new WSException("Failed to access subscription manager: " + e.getMessage());
+            throw new WSException("Failed to access subscription manager: " + e.getMessage(), e);
          }
       }
 
@@ -133,7 +133,7 @@ public class DispatcherDelegate implements EventDispatcher, Referenceable
       for (Iterator i = MBeanServerFactory.findMBeanServer(null).iterator(); i.hasNext(); )
       {
          MBeanServer server = (MBeanServer) i.next();
-         if (server.getDefaultDomain().equals("jboss"))
+         if ("jboss".equals(server.getDefaultDomain()))
          {
             jboss = server;
          }
