@@ -15,35 +15,35 @@
 
   <dependencies>
     <!--
-      These runtime dependencies are picked up by the assembly-deploy-artifacts
-      descriptor. They have no real relevants to this module. 
+      These dependencies are picked up by the assembly-deploy-artifacts
+      descriptor. They have no real and relevant meaning for this module
     -->
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-framework</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-framework</artifactId>
       <classifier>testsuite</classifier>
-      <scope>runtime</scope>
+      <scope>provided</scope>
       <type>zip</type>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss423</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss500</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss501</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     <!-- [JBWS-2505] -->
     <!-- START -->
@@ -51,19 +51,19 @@
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss510x</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss600x</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     -->
     <!-- END -->
     <dependency>
       <groupId>org.jboss.jaxr</groupId>
       <artifactId>juddi-service</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
       <type>sar</type>
     </dependency>
   </dependencies>
@@ -94,7 +94,6 @@
       <plugin>
          <artifactId>maven-war-plugin</artifactId>
          <configuration>
-           <warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>
            <webResources>
              <resource>
                <directory>src/main/webapp</directory>
