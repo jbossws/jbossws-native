@@ -77,11 +77,17 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
       // Initialize the handler chain
       if (isInitialized() == false)
       {
-         EndpointConfigMetaData ecmd = sepMetaData.getEndpointConfigMetaData();
-         resolver.initHandlerChain(ecmd, HandlerType.PRE, true);
-         resolver.initHandlerChain(ecmd, HandlerType.ENDPOINT, true);
-         resolver.initHandlerChain(ecmd, HandlerType.POST, true);
-         setInitialized(true);
+         synchronized (resolver)
+         {
+            if (isInitialized() == false)
+            {
+               EndpointConfigMetaData ecmd = sepMetaData.getEndpointConfigMetaData();
+               resolver.initHandlerChain(ecmd, HandlerType.PRE, true);
+               resolver.initHandlerChain(ecmd, HandlerType.ENDPOINT, true);
+               resolver.initHandlerChain(ecmd, HandlerType.POST, true);
+               setInitialized(true);
+            }
+         }
       }
 
       HandlerChainExecutor executor = createExecutor(sepMetaData, type);
