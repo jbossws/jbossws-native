@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.common.DOMWriter;
-import org.jboss.wsf.test.GenericLogicalHandler;
+import org.jboss.wsf.common.handler.GenericLogicalHandler;
 
 /**
  * Logical handler implementation.
