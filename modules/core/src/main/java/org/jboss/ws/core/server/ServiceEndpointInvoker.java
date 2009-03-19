@@ -224,6 +224,14 @@ public class ServiceEndpointInvoker
                   Throwable targetEx = th.getTargetException();
                   throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
                }
+               finally
+               {
+                  // JBWS-2486
+                  if (endpoint.getAttachment(Object.class) == null)
+                  {
+                     endpoint.addAttachment(Object.class, inv.getInvocationContext().getTargetBean());
+                  }
+               }
 
                // Handler processing might have replaced the endpoint invocation
                sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
@@ -335,6 +343,8 @@ public class ServiceEndpointInvoker
       Invocation wsInv = new DelegatingInvocation();
       wsInv.setInvocationContext(invContext);
       wsInv.setJavaMethod(getImplMethod(endpoint, epInv));
+      // JBWS-2486, see endpoint attachment initialization above
+      wsInv.getInvocationContext().setTargetBean(endpoint.getAttachment(Object.class));
 
       return wsInv;
    }
