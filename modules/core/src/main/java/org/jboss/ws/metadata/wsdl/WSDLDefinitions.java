@@ -112,6 +112,19 @@ public class WSDLDefinitions extends Extendable implements Serializable
    /** Register the given namespaceURI/prefix combination */
    public String registerNamespaceURI(String nsURI, String prefix)
    {
+      if (Constants.NS_XML.equalsIgnoreCase(nsURI))
+      {
+         //"http://www.w3.org/XML/1998/namespace" is always bound to "xml" prefix
+         //and does not need to be registered.
+         return Constants.PREFIX_XML;
+      }
+      else if (Constants.PREFIX_XML.equalsIgnoreCase(prefix))
+      {
+         throw new IllegalArgumentException("The prefix " + Constants.PREFIX_XML +
+               " cannot be bound to any namespace other than its usual namespace (trying to bind to "
+               + nsURI + " )");
+      }
+      
       String pre = namespaces.getPrefix(nsURI);
       if (pre == null || 0 == pre.length())
       {
