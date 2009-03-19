@@ -35,7 +35,7 @@ public class RemoteConnectionFactory
 {
    public RemoteConnection getRemoteConnection(EndpointInfo epInfo)
    {
-      String targetAddress = epInfo.getTargetAddress();
+      String targetAddress = epInfo.getTargetAddress().toLowerCase();
       if (targetAddress == null)
          throw new IllegalArgumentException("Cannot obtain target address from: " + epInfo);
       
