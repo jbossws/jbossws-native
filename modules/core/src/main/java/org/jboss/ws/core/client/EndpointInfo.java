@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.client;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -44,7 +46,7 @@ public class EndpointInfo
    public EndpointInfo(EndpointMetaData epMetaData, String targetAddress, Map<String, Object> callProps)
    {
       this.features = epMetaData.getFeatures();
-      this.targetAddress = targetAddress;
+      this.targetAddress = this.lowerCaseProtocol(targetAddress);
       this.properties = callProps;
 
       // Add the service properties
@@ -104,5 +106,12 @@ public class EndpointInfo
    public String toString()
    {
       return "[addr=" + targetAddress + ",props=" + properties + "]";
+   }
+   
+   private String lowerCaseProtocol(String targetAddress)
+   {
+      int colonIndex = targetAddress.indexOf(':');
+      String lowerCasedProtocol = targetAddress.substring(0, colonIndex).toLowerCase();
+      return lowerCasedProtocol + targetAddress.substring(colonIndex);
    }
 }
