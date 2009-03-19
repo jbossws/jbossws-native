@@ -33,7 +33,7 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * [JBWS-2248] OutOfMemoryExecption in WSDL11Reader when loading xml schemas with circular references
+ * [JBWS-2248] RemoteConnectionFactory rejects uppercased protocol identifiers
  *
  * @author richard.opalka@jboss.com
  */
