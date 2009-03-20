@@ -605,11 +605,16 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
    private MBeanServer getJMXServer()
    {
       MBeanServer server = null;
-      ArrayList servers = MBeanServerFactory.findMBeanServer(null);
-      if (servers.size() > 0)
+      ArrayList<MBeanServer> servers = MBeanServerFactory.findMBeanServer(null);
+      for (MBeanServer current : servers)
       {
-         server = (MBeanServer)servers.get(0);
+         if (current.getClass().getName().startsWith("org.jboss")) // JBWS-2580
+         {
+            server = current;
+            break;
+         }
       }
+
       return server;
    }
 
