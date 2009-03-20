@@ -35,11 +35,12 @@ public class RemoteConnectionFactory
 {
    public RemoteConnection getRemoteConnection(EndpointInfo epInfo)
    {
-      String targetAddress = epInfo.getTargetAddress().toLowerCase();
+      String targetAddress = epInfo.getTargetAddress();
       if (targetAddress == null)
          throw new IllegalArgumentException("Cannot obtain target address from: " + epInfo);
       
       String key = null;
+      targetAddress = targetAddress.toLowerCase();
       if (targetAddress.startsWith("http"))
          key = RemoteConnection.class.getName() + ".http";
       else if (targetAddress.startsWith("jms"))
