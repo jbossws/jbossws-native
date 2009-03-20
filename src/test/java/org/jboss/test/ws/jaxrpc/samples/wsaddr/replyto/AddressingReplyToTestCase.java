@@ -93,15 +93,12 @@ public class AddressingReplyToTestCase extends JBossWSTest
       assertEquals("ReplyTo", replyto.getLastMessage());
    }
 
-   public void testInital() throws Exception
+   public void testReplyTo() throws Exception
    {
       String message = initial.sayHello("Addressing TestCase");
       assertNull("Expected null, but was: " + message, message);
-   }
 
-   public void testReplyTo() throws Exception
-   {
-      String message = replyto.getLastMessage();
-      assertEquals("Hello Addressing TestCase", message);
+      String reply = replyto.getLastMessage();
+      assertEquals("Hello Addressing TestCase", reply);
    }
 }
