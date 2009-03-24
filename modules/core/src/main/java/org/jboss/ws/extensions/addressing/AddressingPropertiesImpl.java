@@ -178,7 +178,7 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
       {
          SOAPElement soapElement = (SOAPElement)obj;
          soapElement.setAttributeNS(getNamespaceURI(), "wsa:IsReferenceParameter", "true");
-         addElement(soapElement);
+         addElement(soapElement.cloneNode(true));
       }
 
 		this.initialized = true;
@@ -213,7 +213,7 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
          {
             SOAPElement soapElement = (SOAPElement)obj;
             soapElement.setAttributeNS(getNamespaceURI(), "wsa:IsReferenceParameter", "true");
-            addElement(soapElement);
+            addElement(soapElement.cloneNode(true));
          }
       }      
       if (props.getMessageID() != null)
