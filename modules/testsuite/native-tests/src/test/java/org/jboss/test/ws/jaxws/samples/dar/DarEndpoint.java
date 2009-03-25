@@ -26,6 +26,8 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
+import org.jboss.wsf.spi.annotation.AuthMethod;
+import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 
 /**
@@ -35,16 +37,25 @@ import org.jboss.wsf.spi.annotation.WebContext;
  * @since 31-Jan-2008
  */
 @Stateless
-@WebService(name = "DarEndpoint",
-            targetNamespace = "http://org.jboss.ws/samples/dar",
-            serviceName = "DarService")
-@SOAPBinding(style = SOAPBinding.Style.RPC,
-             use = SOAPBinding.Use.LITERAL)
-@WebContext(contextRoot="/dar",
-            urlPattern="/*",
-            authMethod="BASIC",
-            transportGuarantee="NONE",
-            secureWSDLAccess=false)
+@SOAPBinding
+(
+   style = SOAPBinding.Style.RPC,
+   use = SOAPBinding.Use.LITERAL
+)
+@WebService
+(
+   name = "DarEndpoint",
+   serviceName = "DarService",
+   targetNamespace = "http://org.jboss.ws/samples/dar"
+)
+@WebContext
+(
+   contextRoot = "/dar",
+   urlPattern = "/*",
+   authMethod = AuthMethod.BASIC,
+   transportGuarantee = TransportGuarantee.NONE,
+   secureWSDLAccess = false
+)
 public class DarEndpoint
 {
    @WebMethod(operationName = "process", action = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn")

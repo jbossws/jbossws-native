@@ -19,40 +19,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.samples.news;
+package org.jboss.test.ws.jaxws.jbws2565;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
+import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
-import org.jboss.wsf.spi.annotation.AuthMethod;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
-import org.jboss.ejb3.annotation.SecurityDomain;
 
 @Stateless
-@SecurityDomain("JBossWS")
-@SOAPBinding
-(
-   style = SOAPBinding.Style.RPC,
-   use = SOAPBinding.Use.LITERAL
-)
+@PermitAll
 @WebService
 (
-   name = "NewspaperSWAEndpoint",
-   serviceName = "NewspaperSWAService",
-   targetNamespace = "http://org.jboss.ws/samples/news",
-   endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperSWA"
+   name = "MyWebService",
+   targetNamespace = "http://my.services.web",
+   serviceName = "MyWebServiceName"
 )
 @WebContext
 (
-   contextRoot = "/news",
-   urlPattern = "/newspaper/swa",
-   authMethod = AuthMethod.BASIC,
-   transportGuarantee = TransportGuarantee.CONFIDENTIAL,
-   secureWSDLAccess = false
+   contextRoot = "/jaxws-jbws2565",
+   transportGuarantee = TransportGuarantee.NONE
 )
-public class SecureNewspaperSWAAS5Endpoint extends AbstractNewspaperSWAEndpoint implements NewspaperSWA
+@SOAPBinding
+(
+   use = SOAPBinding.Use.LITERAL,
+   style = SOAPBinding.Style.DOCUMENT,
+   parameterStyle = SOAPBinding.ParameterStyle.WRAPPED
+)
+public final class MyWebServiceBean
 {
-   
+    @WebMethod
+    @PermitAll
+    public final String doStuff()
+    {
+        return "i've done stuff";
+    }
 }

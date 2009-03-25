@@ -30,15 +30,28 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.logging.Logger;
+import org.jboss.wsf.spi.annotation.AuthMethod;
+import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 
-@WebService(name = "SecureEndpoint", serviceName = "SecureEndpointService", targetNamespace = "http://org.jboss.ws/wsref")
 @Stateless(name = "SecureEndpoint")
 @SOAPBinding(style = Style.RPC)
-
-@WebContext(contextRoot="/jaxws-webserviceref-secure", urlPattern="/*", authMethod = "BASIC", transportGuarantee = "NONE", secureWSDLAccess = false)
 @SecurityDomain("JBossWS")
 @RolesAllowed("friend")
+@WebService
+(
+   name = "SecureEndpoint", 
+   serviceName = "SecureEndpointService", 
+   targetNamespace = "http://org.jboss.ws/wsref"
+)
+@WebContext
+(
+   contextRoot="/jaxws-webserviceref-secure",
+   urlPattern="/*",
+   authMethod = AuthMethod.BASIC,
+   transportGuarantee = TransportGuarantee.NONE,
+   secureWSDLAccess = false
+)
 public class SecureEndpointImpl
 {
    // Provide logging

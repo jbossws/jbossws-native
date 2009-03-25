@@ -27,22 +27,32 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.BindingType;
 
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.wsf.spi.annotation.AuthMethod;
+import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 
-
 @Stateless
-@WebService(endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperMTOM",
-      name = "NewspaperMTOMEndpoint",
-      targetNamespace = "http://org.jboss.ws/samples/news",
-      serviceName = "NewspaperMTOMService")
-@SOAPBinding(style = SOAPBinding.Style.RPC,
-       use = SOAPBinding.Use.LITERAL)
 @SecurityDomain("JBossWS")
-@WebContext(contextRoot="/news",
-      urlPattern="/newspaper/mtom",
-      authMethod="BASIC",
-      transportGuarantee="CONFIDENTIAL",
-      secureWSDLAccess=false)
+@SOAPBinding
+(
+   style = SOAPBinding.Style.RPC,
+   use = SOAPBinding.Use.LITERAL
+)
+@WebService
+(
+   name = "NewspaperMTOMEndpoint",
+   serviceName = "NewspaperMTOMService",
+   targetNamespace = "http://org.jboss.ws/samples/news",
+   endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperMTOM"
+)
+@WebContext
+(
+   contextRoot = "/news",
+   urlPattern = "/newspaper/mtom",
+   authMethod = AuthMethod.BASIC,
+   transportGuarantee = TransportGuarantee.CONFIDENTIAL,
+   secureWSDLAccess = false
+)
 @BindingType(value = "http://schemas.xmlsoap.org/wsdl/soap/http?mtom=true")
 public class SecureNewspaperMTOMAS5Endpoint extends AbstractNewspaperMTOMEndpoint implements NewspaperMTOM
 {

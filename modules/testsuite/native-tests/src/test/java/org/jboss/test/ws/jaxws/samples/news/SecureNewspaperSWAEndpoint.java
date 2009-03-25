@@ -25,23 +25,33 @@ import javax.ejb.Stateless;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
+import org.jboss.wsf.spi.annotation.AuthMethod;
+import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 import org.jboss.annotation.security.SecurityDomain;
 
-
 @Stateless
-@WebService(endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperSWA",
-      name = "NewspaperSWAEndpoint",
-      targetNamespace = "http://org.jboss.ws/samples/news",
-      serviceName = "NewspaperSWAService")
-@SOAPBinding(style = SOAPBinding.Style.RPC,
-       use = SOAPBinding.Use.LITERAL)
 @SecurityDomain("JBossWS")
-@WebContext(contextRoot="/news",
-      urlPattern="/newspaper/swa",
-      authMethod="BASIC",
-      transportGuarantee="CONFIDENTIAL",
-      secureWSDLAccess=false)
+@SOAPBinding
+(
+   style = SOAPBinding.Style.RPC,
+   use = SOAPBinding.Use.LITERAL
+)
+@WebService
+(
+   name = "NewspaperSWAEndpoint",
+   serviceName = "NewspaperSWAService",
+   targetNamespace = "http://org.jboss.ws/samples/news",
+   endpointInterface = "org.jboss.test.ws.jaxws.samples.news.NewspaperSWA"
+)
+@WebContext
+(
+   contextRoot = "/news",
+   urlPattern = "/newspaper/swa",
+   authMethod = AuthMethod.BASIC,
+   transportGuarantee = TransportGuarantee.CONFIDENTIAL,
+   secureWSDLAccess = false
+)
 public class SecureNewspaperSWAEndpoint extends AbstractNewspaperSWAEndpoint implements NewspaperSWA
 {
    
