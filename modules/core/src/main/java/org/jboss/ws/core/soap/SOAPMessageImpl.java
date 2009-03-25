@@ -23,6 +23,8 @@ package org.jboss.ws.core.soap;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,6 +42,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
@@ -63,6 +66,8 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  */
 public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstraction
 {
+   private static Logger log = Logger.getLogger(SOAPMessageImpl.class);
+   
    private boolean saveRequired = true;
    private MimeHeaders mimeHeaders = new MimeHeaders();
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
@@ -128,25 +133,49 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
 
    public AttachmentPart getAttachmentByContentId(String cid) throws SOAPException
    {
+      String cidDecoded = decode(cid);
+      
       for (AttachmentPart part : attachments)
       {
-         String contentId = part.getContentId();
-         if (contentId.equals(cid))
+         String contentIdDecoded = decode(part.getContentId());
+         if (contentIdDecoded.equals(cidDecoded))
             return part;
       }
+
       return null;
+   }
+   
+   public String decode(String cid)
+   {
+      String cidDecoded = cid;
+      
+      try
+      {
+         cidDecoded = URLDecoder.decode(cid, "UTF-8");
+      }
+      catch (UnsupportedEncodingException ex)
+      {
+         log.error("Cannot decode name for cid: " + ex);
+      }
+      
+      return cidDecoded;
    }
 
    public AttachmentPart removeAttachmentByContentId(String cid)
    {
-      for (AttachmentPart part : attachments)
+      try
       {
-         String contentId = part.getContentId();
-         if (contentId.equals(cid))
+         AttachmentPart part = getAttachmentByContentId(cid);
+         if (part != null)
          {
             attachments.remove(part);
             return part;
          }
+      }
+      catch (SOAPException ex)
+      {
+         // this used to not throw SOAPException
+         log.error("Ignore SOAPException: " + ex);
       }
 
       return null;
