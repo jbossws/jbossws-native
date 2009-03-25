@@ -32,7 +32,7 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * [JBWS-2565] Problems with security after moving from AS 4.2.x series to AS 5.0.x series
+ * [JBWS-2565] Wrong WebContext authMethod or transportGuarantee annotatoin field values are not detected at deploy time.
  *  
  * @author richard.opalka@jboss.com
  */
