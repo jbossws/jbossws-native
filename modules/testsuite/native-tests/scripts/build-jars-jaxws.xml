@@ -440,6 +440,19 @@
         <include name="wsdl/*"/>
       </webinf>
     </war>
+    
+    <!-- jaxws-jbws2259 -->
+    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2259.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2259/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2259/Endpoint.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws2259/EndpointImpl.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws2259/CustomHandler.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws2259/Photo.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2259/WEB-INF">
+        <include name="jaxws-endpoint-config.xml"/>
+      </webinf>
+    </war>    
 
     <!-- jaxws-jbws2268 -->
     <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2268.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2268/WEB-INF/web.xml">

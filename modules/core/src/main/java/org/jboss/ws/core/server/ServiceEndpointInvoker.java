@@ -165,6 +165,9 @@ public class ServiceEndpointInvoker
          CommonBinding binding = bindingProvider.getCommonBinding();
          binding.setHeaderSource(delegate);
 
+         if (binding instanceof CommonSOAPBinding)
+            XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
+         
          // call the request handler chain
          boolean handlersPass = callRequestHandlerChain(sepMetaData, handlerType[0]);
 
@@ -246,10 +249,7 @@ public class ServiceEndpointInvoker
 
             // Set the required outbound context properties
             setOutboundContextProperties();
-
-            if (binding instanceof CommonSOAPBinding)
-               XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
-
+               
             // Bind the response message
             MessageAbstraction resMessage = binding.bindResponseMessage(opMetaData, sepInv);
             msgContext.setMessageAbstraction(resMessage);
