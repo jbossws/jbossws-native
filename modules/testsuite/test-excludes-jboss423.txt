@@ -14,6 +14,9 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 # [JBWS-981] @WebContext defined virtual hosts only being fixed for JBoss 5 
 org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*
 
+# [JBWS-2074] Resource injection in jaxws endpoints and handlers
+org/jboss/test/ws/jaxws/jbws2074/**
+
 # [JBWS-2240] PortComponent from jboss.xml descriptor is not parsed
 org/jboss/test/ws/jaxws/jbws2241/**
 org/jboss/test/ws/jaxws/jbws1309/**
