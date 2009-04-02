@@ -41,10 +41,13 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.wsf.common.handler.GenericHandler;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.jboss.wsf.common.javax.JavaxAnnotationHelper;
+import org.jboss.wsf.spi.metadata.injection.InjectionMetaData;
+import org.jboss.wsf.spi.metadata.injection.InjectionsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -129,7 +132,7 @@ public class HandlerResolverImpl implements HandlerResolver
 
       ClassLoader classLoader = serviceMetaData.getUnifiedMetaData().getClassLoader();
       for (HandlerMetaData handlerMetaData : serviceMetaData.getHandlerMetaData())
-         addHandler(classLoader, HandlerType.ENDPOINT, handlerMetaData);
+         addHandler(classLoader, HandlerType.ENDPOINT, handlerMetaData, null);
    }
 
    public void initHandlerChain(EndpointConfigMetaData epConfigMetaData, HandlerType type, boolean clearExistingHandlers)
@@ -142,11 +145,12 @@ public class HandlerResolverImpl implements HandlerResolver
          handlerMap.clear();
 
       ClassLoader classLoader = epConfigMetaData.getEndpointMetaData().getClassLoader();
+      InjectionsMetaData injectionsMD = getInjectionsMetaData(epConfigMetaData);
       for (HandlerMetaData handlerMetaData : epConfigMetaData.getHandlerMetaData(type))
-         addHandler(classLoader, type, handlerMetaData);
+         addHandler(classLoader, type, handlerMetaData, injectionsMD);
    }
 
-   private void addHandler(ClassLoader classLoader, HandlerType type, HandlerMetaData handlerMetaData)
+   private void addHandler(ClassLoader classLoader, HandlerType type, HandlerMetaData handlerMetaData, InjectionsMetaData injections)
    {
       HandlerMetaDataJAXWS jaxwsMetaData = (HandlerMetaDataJAXWS)handlerMetaData;
       String handlerName = jaxwsMetaData.getHandlerName();
@@ -166,7 +170,10 @@ public class HandlerResolverImpl implements HandlerResolver
             ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
 
          // Inject resources
-         JavaxAnnotationHelper.injectResources(handler);
+         if (injections != null)
+         {
+            JavaxAnnotationHelper.injectResources(handler, injections);
+         }
 
          // Call @PostConstruct
          JavaxAnnotationHelper.callPostConstructMethod(handler);
@@ -282,4 +289,18 @@ public class HandlerResolverImpl implements HandlerResolver
          return match;
       }
    }
+   
+   private InjectionsMetaData getInjectionsMetaData(EndpointConfigMetaData endpointConfigMD)
+   {
+      if (endpointConfigMD.getEndpointMetaData() instanceof ServerEndpointMetaData)
+      {
+         ServerEndpointMetaData endpointMD = ((ServerEndpointMetaData)endpointConfigMD.getEndpointMetaData()); 
+         return endpointMD.getEndpoint().getService().getAttachment(InjectionsMetaData.class);
+      }
+      else
+      {
+         return null;
+      }
+   }
+
 }
