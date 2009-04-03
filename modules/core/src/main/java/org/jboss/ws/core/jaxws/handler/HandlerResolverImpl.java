@@ -46,7 +46,6 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.wsf.common.handler.GenericHandler;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.jboss.wsf.common.javax.JavaxAnnotationHelper;
-import org.jboss.wsf.spi.metadata.injection.InjectionMetaData;
 import org.jboss.wsf.spi.metadata.injection.InjectionsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -169,13 +168,7 @@ public class HandlerResolverImpl implements HandlerResolver
          if (handler instanceof GenericSOAPHandler)
             ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
 
-         // Inject resources
-         if (injections != null)
-         {
-            JavaxAnnotationHelper.injectResources(handler, injections);
-         }
-
-         // Call @PostConstruct
+         JavaxAnnotationHelper.injectResources(handler, injections);
          JavaxAnnotationHelper.callPostConstructMethod(handler);
 
          addHandler(jaxwsMetaData, handler, type);
