@@ -24,16 +24,11 @@
       <injection-target-name>strValue</injection-target-name>
     </injection-target>
   </env-entry>
-  
+
   <env-entry>
-   <env-entry-name>jaxws/entry2</env-entry-name>
-   <env-entry-type>java.lang.Integer</env-entry-type>
-   <env-entry-value>8</env-entry-value>
-    <injection-target>
-      <injection-target-class>org.jboss.test.ws.jaxws.enventry.EnvEntryBeanJSE</injection-target-class>
-      <injection-target-name>intValue</injection-target-name>
-    </injection-target>
+    <env-entry-name>jaxws/entry2</env-entry-name>
+    <env-entry-type>java.lang.Integer</env-entry-type>
+    <env-entry-value>8</env-entry-value>
   </env-entry>
 
 </web-app>
-

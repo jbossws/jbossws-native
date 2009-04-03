@@ -35,10 +35,10 @@ public class EnvEntryBeanJSE
    // Provide logging
    private static Logger log = Logger.getLogger(EnvEntryBeanJSE.class);
 
-   @Resource
+   // XML driven injection
    public String strValue;
 
-   @Resource
+   @Resource( name="jaxws/entry2" )
    public Integer intValue;
 
    @WebMethod
