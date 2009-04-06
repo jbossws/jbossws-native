@@ -50,5 +50,5 @@ rem echo .
 echo ========================================================================="
 echo .
 
-rem Execute the JVM
+rem Execute the command
 "%JAVA%" %JAVA_OPTS% -Djava.endorsed.dirs="%JBOSS_ENDORSED_DIRS%" -classpath "%WSTOOLS_CLASSPATH%" org.jboss.ws.tools.WSTools %*

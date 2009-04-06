@@ -89,7 +89,7 @@ echo ""
 echo "========================================================================="
 echo ""
 
-# Execute the JVM
+# Execute the command
 "$JAVA" $JAVA_OPTS \
    -Djava.endorsed.dirs="$JBOSS_ENDORSED_DIRS" \
    -classpath "$WSTOOLS_CLASSPATH" \
