@@ -27,6 +27,7 @@ import java.net.URL;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXWS;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
@@ -76,6 +77,7 @@ public class JBossWSConfigFactory
          Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
          unmarshaller.setValidation(true);
          unmarshaller.setSchemaValidation(true);
+         unmarshaller.setEntityResolver(new JBossWSEntityResolver());
 
          String nsURI = getNamespaceURI(configURL);
          is = configURL.openStream();

@@ -644,12 +644,11 @@ public class WSDL11Reader
                
                // Recursively handle schema imports
                Element importedSchema = null;
-               String schema = currLoc.toString();
-               if (entityResolver.getEntityMap().containsKey(schema))
+               if (entityResolver.getEntityMap().containsKey(namespace))
                {
                   try
                   {
-                     importedSchema = DOMUtils.parse(entityResolver.resolveEntity(schema, schema).getByteStream());
+                     importedSchema = DOMUtils.parse(entityResolver.resolveEntity(namespace, namespace).getByteStream());
                   }
                   catch (SAXException se)
                   {

@@ -15,7 +15,7 @@
       xmlns="http://www.w3.org/2001/XMLSchema"
       xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd"
       elementFormDefault="qualified">
-      <import namespace="http://ws-i.org/profiles/basic/1.1/xsd" schemaLocation="WS-ISwA.xsd"/>
+      <import namespace="http://ws-i.org/profiles/basic/1.1/xsd"/>
       <element name="InputRequestGet" type="tns:InputRequestGet"/>
       <complexType name="InputRequestGet">
 	<sequence>

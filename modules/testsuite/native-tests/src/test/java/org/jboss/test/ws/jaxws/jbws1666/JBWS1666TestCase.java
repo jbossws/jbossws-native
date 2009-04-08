@@ -86,6 +86,7 @@ public class JBWS1666TestCase extends JBossWSTest
       Runtime rt = Runtime.getRuntime();
 
       String command = javaCmd + " -Djava.endorsed.dirs=" + jbl + FS + "endorsed -cp " + cp + " " + TestClient.class.getName() + " " + getServerHost();
+      System.out.println("Executing command: " + command);
       Process proc = rt.exec(command);
       int status = proc.waitFor();
       if (status == 0)
