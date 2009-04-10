@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
   <name>JBoss Web Services - Stack Native Framework Tests</name>
@@ -94,11 +93,11 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <property name="maven.test.classpath" refid="maven.test.classpath"/>
-                    <property name="tests.resources.dir" value="${basedir}/src/test/resources"/>
-                    <property name="tests.output.dir" value="${project.build.directory}"/>
-                    <property name="project.version" value="${project.version}"/>
-                    <ant antfile="scripts/antrun-wsconsume.xml" target="wsconsume"/>
+                    <property name="maven.test.classpath" refid="maven.test.classpath" />
+                    <property name="tests.resources.dir" value="${basedir}/src/test/resources" />
+                    <property name="tests.output.dir" value="${project.build.directory}" />
+                    <property name="project.version" value="${project.version}" />
+                    <ant antfile="scripts/antrun-wsconsume.xml" target="wsconsume" />
                   </tasks>
                 </configuration>
               </execution>
@@ -109,9 +108,9 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <property name="tests.output.dir" value="${project.build.directory}"/>
-                    <ant antfile="src/test/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws"/>
-                    <ant antfile="src/test/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws"/>
+                    <property name="tests.output.dir" value="${project.build.directory}" />
+                    <ant antfile="src/test/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" />
+                    <ant antfile="src/test/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws" />
                   </tasks>
                 </configuration>
               </execution>
