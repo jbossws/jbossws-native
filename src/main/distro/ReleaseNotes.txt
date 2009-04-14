@@ -46,6 +46,49 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+What's new in jbossws-native-3.1.1.GA
+-------------------------------------
+
+Feature Request
+
+    * [JBWS-2405] - MTOM/XOP Interoperability - cid href URLEncode/URLDecode
+    * [JBWS-2579] - Implement property file driven JBossWS entities resolving
+
+Bug
+
+    * [JBWS-1665] - incorrect wsdl generation
+    * [JBWS-2074] - Resource injection in jaxws endpoints and handlers
+    * [JBWS-2166] - WSA client handler throws exception when installing reference parameters
+    * [JBWS-2208] - Impossible to deploy WS containing binding objects that are defined by XmlAttribute from "http://www.w3.org/XML/1998/namespace"
+    * [JBWS-2248] - RemoteConnectionFactory rejects uppercased protocol identifiers
+    * [JBWS-2409] - Fix jbws771 testcase binding customization file
+    * [JBWS-2411] - OutOfMemoryExecption in WSDL11Reader when loading xml schemas with circular references
+    * [JBWS-2433] - Fix JMS tests on AS 5.x and above
+    * [JBWS-2486] - POJO service should be shared
+    * [JBWS-2555] - Miscellaneous issues reported by FindBugs
+    * [JBWS-2564] - Use Server MBean instead of ServerConfig to get JBoss version
+    * [JBWS-2565] - Wrong WebContext authMethod or transportGuarantee annotatoin field values are not detected at deploy time
+    * [JBWS-2573] - Fix JBossWS builds with Maven 2.0.10
+    * [JBWS-2580] - NPE in JBossWS when passing only -Dcom.sun.management.jmxremote on commandline
+    * [JBWS-2585] - JBossWS commandline tools reference not existing log4j config
+    * [JBWS-2589] - Some deployment failures prevent re-deployment
+    * [JBWS-2598] - JBossWSEntityResolver don't recognize all JBossWS specific XML schemas
+
+Task
+
+    * [JBWS-2259] - Enable MTOM for incomming requests where the type of the content type is 'application/xop+xml'
+    * [JBWS-2327] - Provide tests for wsrunclient shell script
+    * [JBWS-2524] - Sort out / remove GenericSOAPHandler duplicity
+    * [JBWS-2537] - Simplify Hudson Jobs
+    * [JBWS-2559] - Correct WeakReference handling in ConfigObservable to remove cleared WeakReferences
+    * [JBWS-2566] - Add Maven Release plugin
+    * [JBWS-2568] - Remove AS 4.2 branch support (424 target)
+
+Errata
+
+    See: https://jira.jboss.org/jira/browse/JBWS-2608
+
+
 What's new in jbossws-native-3.1.0.GA
 -------------------------------------
 
