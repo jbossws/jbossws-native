@@ -38,7 +38,6 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.wsf.common.DOMUtils;
 
@@ -56,8 +55,7 @@ public class JMSTransportTestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      String suffix = new JBossWSTestHelper().isTargetJBoss4() ? "-as4" : ""; 
-      return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxws-samples-jmstransport" + suffix + ".sar");
+      return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxws-samples-jmstransport.sar");
    }
 
    public void testJMSEndpointPort() throws Exception

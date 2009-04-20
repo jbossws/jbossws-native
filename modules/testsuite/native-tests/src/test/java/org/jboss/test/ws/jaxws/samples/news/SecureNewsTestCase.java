@@ -24,7 +24,6 @@ package org.jboss.test.ws.jaxws.samples.news;
 import java.net.URL;
 import junit.framework.Test;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -39,11 +38,10 @@ public class SecureNewsTestCase extends JBossWSTest
 {
    public static Test suite()
    {
-      String newspaperJar = new JBossWSTestHelper().isTargetJBoss5OrGreater() ? "jaxws-samples-news-step2-newspaper-as5.jar" : "jaxws-samples-news-step2-newspaper.jar";
       return new JBossWSTestSetup
       (
          SecureNewsTestCase.class,
-         newspaperJar + ", jaxws-samples-news-step2-agency-client.jar"
+         "jaxws-samples-news-step2-newspaper.jar, jaxws-samples-news-step2-agency-client.jar"
       );
    }
    

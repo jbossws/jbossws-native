@@ -21,11 +21,8 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.wssecurity;
 
-import java.io.File;
 import java.net.URL;
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
-import javax.xml.rpc.Service;
 import javax.xml.rpc.Stub;
 import junit.framework.Test;
 
@@ -50,30 +47,17 @@ public class StorePassEncryptTestCase extends JBossWSTest
       return new JBossWSTestSetup(StorePassEncryptTestCase.class, "jaxrpc-samples-store-pass-encrypt.war, jaxrpc-samples-store-pass-encrypt-client.jar");
    }
 
-
    public void setUp() throws Exception
    {
-      if (port == null)
-      {
-         if (isTargetJBoss42())
-         {
-            InitialContext iniCtx = getInitialContext();
-            Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-            port = (Hello)service.getPort(Hello.class);
-         }
-         else
-         {
-            ServiceFactoryImpl factory = new ServiceFactoryImpl();
-            URL wsdlURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/wsdl/HelloService.wsdl");
-            URL mappingURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/jaxrpc-mapping.xml");
-            URL securityURL = getResourceURL("jaxrpc/samples/wssecurity/store-pass-encrypt/META-INF/jboss-wsse-client.xml");
-            QName qname = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
-            ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, qname, mappingURL, securityURL);
-            port = (Hello)service.getPort(Hello.class);
-            ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-store-pass-encrypt");
-            ((StubExt)port).setConfigName("Standard WSSecurity Client");
-         }
-      }
+      ServiceFactoryImpl factory = new ServiceFactoryImpl();
+      URL wsdlURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/wsdl/HelloService.wsdl");
+      URL mappingURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/jaxrpc-mapping.xml");
+      URL securityURL = getResourceURL("jaxrpc/samples/wssecurity/store-pass-encrypt/META-INF/jboss-wsse-client.xml");
+      QName qname = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
+      ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, qname, mappingURL, securityURL);
+      port = (Hello)service.getPort(Hello.class);
+      ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-store-pass-encrypt");
+      ((StubExt)port).setConfigName("Standard WSSecurity Client");
    }
    
    public void testEndpoint() throws Exception

@@ -31,13 +31,9 @@ import javax.management.ObjectName;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Invokes the DAR JMS client
@@ -51,8 +47,7 @@ public class JMSClientTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      String suffix = new JBossWSTestHelper().isTargetJBoss4() ? "-as4" : ""; 
-      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client" + suffix + ".sar,jaxws-samples-dar-jms.jar");
+      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client.sar,jaxws-samples-dar-jms.jar");
    }
    
    public void test() throws Exception
@@ -82,26 +77,7 @@ public class JMSClientTestCase extends JBossWSTest
    private int getMessageCount(String queue) throws Exception
    {
       ObjectName oname = ObjectNameFactory.create("jboss.mq.destination:service=Queue,name=" + queue);
-      if (isTargetJBoss5OrGreater())
-      {
-         return (Integer)getServer().getAttribute(oname, "MessageCount");
-      }
-      else
-      {
-         String result = (String)getServer().invoke(oname, "listMessageCounter", null, null);
-         Element table = DOMUtils.parse(result);
-         NodeList ths = table.getFirstChild().getChildNodes();
-         int p = -1;
-         for (int i=0; i<ths.getLength(); i++)
-         {
-            if (ths.item(i).getTextContent().equalsIgnoreCase("Count"))
-               p = i;
-         }
-         if (p == -1)
-            throw new Exception("Cannot read the queue message count!");
-         String count = table.getLastChild().getChildNodes().item(p).getTextContent();
-         return Integer.parseInt(count);
-      }
+      return (Integer)getServer().getAttribute(oname, "MessageCount");
    }
    
 }

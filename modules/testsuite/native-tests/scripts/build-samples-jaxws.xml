@@ -103,21 +103,12 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponseMessageBean.class"/>
       </fileset>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client-as4.sar">
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxws-samples-dar-jms-client.war"/>
-        <include name="jaxws-samples-dar-jms-client.jar"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/jboss4x/META-INF">
-        <include name="jboss-service.xml"/>
-      </metainf>
-    </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client.sar">
       <fileset dir="${tests.output.dir}/test-libs">
         <include name="jaxws-samples-dar-jms-client.war"/>
         <include name="jaxws-samples-dar-jms-client.jar"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/jboss5x/META-INF">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
@@ -129,19 +120,11 @@
         <include name="org/jboss/test/ws/jaxws/samples/jmstransport/OrganizationJMSEndpoint.class"/>
       </fileset>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport-as4.sar">
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxws-samples-jmstransport.jar"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/jboss4x/META-INF">
-        <include name="jboss-service.xml"/>
-      </metainf>
-    </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport.sar">
       <fileset dir="${tests.output.dir}/test-libs">
         <include name="jaxws-samples-jmstransport.jar"/>
       </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/jboss5x/META-INF">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/META-INF">
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
@@ -186,27 +169,6 @@
         <include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOM.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperMTOMEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/EditionSWA.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/EditionMTOM.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/jaxws-handlers-server.xml"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/news/META-INF">
-        <include name="jboss-wsse-server.xml"/>
-        <include name="bob-sign_enc.jks"/>
-        <include name="wsse10.truststore"/>
-      </metainf>
-    </jar>
-  	<jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step2-newspaper-as5.jar">
-      <fileset dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxws/samples/news/PressRelease.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractPressReleaseEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/SecurePressReleaseEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/NewspaperSWA.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperSWAEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperSWAAS5Endpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/NewspaperMTOM.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/AbstractNewspaperMTOMEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/news/SecureNewspaperMTOMAS5Endpoint.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/EditionSWA.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/EditionMTOM.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/jaxws-handlers-server.xml"/>
