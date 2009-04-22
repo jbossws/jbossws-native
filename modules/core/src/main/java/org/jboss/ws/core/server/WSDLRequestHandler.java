@@ -101,17 +101,18 @@ public class WSDLRequestHandler
          String wsdlDataLoc = serverConfig.getServerDataDir().getCanonicalPath() + File.separatorChar + "wsdl";
 
          //allow wsdl file's parent or server's data/wsdl or overriden wsdl publish directories only
-         if (impResourceFile.getCanonicalPath().indexOf(wsdlLocFilePath) >= 0
-             || impResourceFile.getCanonicalPath().indexOf(wsdlDataLoc) >= 0
+         String resourceAbsPath = impResourceFile.getCanonicalPath(); 
+         if (resourceAbsPath.indexOf(wsdlLocFilePath) >= 0
+             || resourceAbsPath.indexOf(wsdlDataLoc) >= 0
              || (wsdlPublishLoc != null 
-                  && impResourceFile.getCanonicalPath().indexOf(new File(new URL(wsdlPublishLoc).getPath()).getCanonicalPath()) >= 0))
+                  && resourceAbsPath.indexOf(new File(new URL(wsdlPublishLoc).getPath()).getCanonicalPath()) >= 0))
          {
             Element wsdlElement = DOMUtils.parse(impResourceFile.toURL().openStream());
             wsdlDoc = wsdlElement.getOwnerDocument();
          }
          else
          {
-            throw new IOException("Access to this resource is not allowed");
+            throw new IOException("Access to '" + resourceAbsPath + "' resource is not allowed");
          }
       }
 
