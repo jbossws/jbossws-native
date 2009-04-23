@@ -11,4 +11,4 @@ org/jboss/test/ws/jaxws/endpoint/**
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
 # [JBWS-2631] Fix resource injection in JAX-WS handlers associated with EJB3 endpoints
-org/jboss/test/ws/jaxws/jbws2074/usecase4/*TestCase.*
+org/jboss/test/ws/jaxws/jbws2074/usecase4/client/JBWS2074TestCase.*
