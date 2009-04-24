@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.io.StringReader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -86,6 +87,7 @@ public class SchemaValidationHelper
       factory.setNamespaceAware(true);
       factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
       factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", xsdURL.toExternalForm());
+      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setErrorHandler(errorHandler);
       return builder;

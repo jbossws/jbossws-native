@@ -37,6 +37,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.codehaus.jettison.badgerfish.BadgerFishXMLInputFactory;
+import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -69,7 +70,7 @@ public class BadgerFishDOMDocumentParser
          
          // This parsing step should not be necessary, if we could output to a DOMResult
          ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-         return getDocumentBuilder().parse(bais);
+         return DOMUtils.getDocumentBuilder().parse(bais);
       }
       catch (XMLStreamException ex)
       {
@@ -85,19 +86,4 @@ public class BadgerFishDOMDocumentParser
       }
    }
    
-   private DocumentBuilder getDocumentBuilder()
-   {
-      try
-      {
-         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-         factory.setValidating(false);
-         factory.setNamespaceAware(true);
-         DocumentBuilder builder = factory.newDocumentBuilder();
-         return builder;
-      }
-      catch (ParserConfigurationException e)
-      {
-         throw new RuntimeException("Failed to create DocumentBuilder", e);
-      }
-   }
 }
