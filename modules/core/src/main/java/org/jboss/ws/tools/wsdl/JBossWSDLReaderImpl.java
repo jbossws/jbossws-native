@@ -2115,19 +2115,10 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	private static Document getDocument(InputSource inputSource,
 													String desc) throws WSDLException
 	{
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-		factory.setNamespaceAware(true);
-		factory.setValidating(false);
-
 		try
 		{
-	      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			builder.setEntityResolver( new JBossWSEntityResolver() );
-			Document doc = builder.parse(inputSource);
-
-			return doc;
+			DocumentBuilder builder = org.jboss.wsf.common.DOMUtils.getDocumentBuilder();
+			return builder.parse(inputSource);
 		}
 		catch (RuntimeException e)
 		{
