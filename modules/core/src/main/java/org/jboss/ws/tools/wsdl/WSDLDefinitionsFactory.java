@@ -35,7 +35,10 @@ import org.xml.sax.EntityResolver;
 import javax.wsdl.Definition;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.ConnectException;
@@ -164,7 +167,14 @@ public class WSDLDefinitionsFactory
          InputStream inputStream = new ResourceURL(wsdlLocation).openStream();
          try
          {
-            DocumentBuilder builder = DOMUtils.getDocumentBuilder();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+            factory.setNamespaceAware(true);
+            factory.setValidating(false);
+
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setEntityResolver( new JBossWSEntityResolver() );
             return builder.parse(inputStream);
          }
          finally
