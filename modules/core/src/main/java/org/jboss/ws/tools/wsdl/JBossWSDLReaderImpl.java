@@ -44,6 +44,7 @@ import javax.wsdl.extensions.schema.SchemaReference;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -2114,10 +2115,18 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	private static Document getDocument(InputSource inputSource,
 													String desc) throws WSDLException
 	{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+		factory.setNamespaceAware(true);
+		factory.setValidating(false);
+
 		try
 		{
-			DocumentBuilder builder = org.jboss.wsf.common.DOMUtils.getDocumentBuilder();
+	      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setEntityResolver( new JBossWSEntityResolver() );
 			Document doc = builder.parse(inputSource);
+
 			return doc;
 		}
 		catch (RuntimeException e)
