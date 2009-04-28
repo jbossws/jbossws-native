@@ -288,7 +288,7 @@ public class HandlerResolverImpl implements HandlerResolver
       if (endpointConfigMD.getEndpointMetaData() instanceof ServerEndpointMetaData)
       {
          ServerEndpointMetaData endpointMD = ((ServerEndpointMetaData)endpointConfigMD.getEndpointMetaData()); 
-         return endpointMD.getEndpoint().getService().getAttachment(InjectionsMetaData.class);
+         return endpointMD.getEndpoint().getAttachment(InjectionsMetaData.class);
       }
       else
       {
