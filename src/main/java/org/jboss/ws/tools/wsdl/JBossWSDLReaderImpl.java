@@ -44,6 +44,7 @@ import javax.wsdl.extensions.schema.SchemaReference;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -2124,6 +2125,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 
 		try
 		{
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			builder.setEntityResolver( new JBossWSEntityResolver() );
 			Document doc = builder.parse(inputSource);

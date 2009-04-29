@@ -23,6 +23,7 @@ package org.jboss.ws.core.utils;
 
 // $Id$
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,6 +54,7 @@ public class DocumentBuilderFactoryImpl extends DocumentBuilderFactory
 
          // namespace aware by default
          delegate.setNamespaceAware(true);			
+         delegate.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 		}
       catch (Exception ex)
       {

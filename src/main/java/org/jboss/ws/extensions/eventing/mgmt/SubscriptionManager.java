@@ -45,6 +45,7 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -522,6 +523,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
          DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
          factory.setNamespaceAware(true);
          factory.setValidating(true);
+         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
          factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
 
          String[] notificationSchemas = es.getNotificationSchema();
