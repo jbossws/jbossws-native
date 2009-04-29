@@ -145,7 +145,7 @@
   <env:Header/>
   <env:Body>
     <ns1:echoString xmlns:ns1='http://jbws1582.jaxws.ws.test.jboss.org/'>
-      <arg0>&hello12;</arg0>
+      <arg0>&hello128;</arg0>
     </ns1:echoString>
   </env:Body>
 </env:Envelope>

@@ -77,7 +77,8 @@ public class JBWS1582TestCase extends JBossWSTest
    {
       String response = getResponse("jaxws/jbws1582/attack-message.xml");
       assertTrue(response.contains("HTTP/1.1 500"));
-      assertTrue(response.contains("DOCTYPE is disallowed when the feature"));
+      assertTrue(response.contains("The parser has encountered more than"));
+      assertTrue(response.contains("entity expansions in this document"));
    }
    
    private String getResponse(String requestFile) throws Exception
@@ -116,6 +117,10 @@ public class JBWS1582TestCase extends JBossWSTest
       {
          e.printStackTrace();
          log.warn(e.getMessage(), e);
+      }
+      finally
+      {
+         this.undeploy("jaxws-jbws1582-attacked.war");
       }
    }
       
