@@ -161,7 +161,7 @@
       <artifactId>wsdl4j</artifactId>
     </dependency>
     <dependency>
-      <groupId>xml-security</groupId>
+      <groupId>org.apache</groupId>
       <artifactId>xmlsec</artifactId>
     </dependency>
     <dependency>

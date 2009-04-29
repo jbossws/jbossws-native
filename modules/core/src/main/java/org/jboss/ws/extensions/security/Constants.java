@@ -48,7 +48,7 @@ public class Constants
 
    public static final String XML_ENCRYPTION_NS = EncryptionConstants.EncryptionSpecNS;
 
-   public static final String XML_ENCRYPTION_PREFIX = "xenc";
+   public static final String XML_ENCRYPTION_PREFIX = "ds"; //xmlsec 1.4.2 requires this to be "ds" to correctly create KeyInfo elements
 
    public static final String ID = "Id";
 

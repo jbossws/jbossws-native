@@ -170,6 +170,7 @@ public class SecurityHeader implements SecurityElement
       Element element = document.createElementNS(Constants.WSSE_NS, Constants.WSSE_HEADER);
       Util.addNamespace(element, Constants.WSSE_PREFIX, Constants.WSSE_NS);
       Util.addNamespace(element, Constants.WSU_PREFIX, Constants.WSU_NS);
+      Util.addNamespace(element, Constants.XML_ENCRYPTION_PREFIX, Constants.XML_SIGNATURE_NS);
 
       if (timestamp != null)
          element.appendChild(timestamp.getElement());
