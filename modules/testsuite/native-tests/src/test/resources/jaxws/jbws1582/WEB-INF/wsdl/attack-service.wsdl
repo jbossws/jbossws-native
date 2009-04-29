@@ -1,145 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE definitions [
-  <!ENTITY ha1 "Hello">
-  <!ENTITY ha2 "&ha1; &ha1;">
-  <!ENTITY ha3 "&ha2; &ha2;">
-  <!ENTITY ha4 "&ha3; &ha3;">
-  <!ENTITY ha5 "&ha4; &ha4;">
-  <!ENTITY ha6 "&ha5; &ha5;">
-  <!ENTITY ha7 "&ha6; &ha6;">
-  <!ENTITY ha8 "&ha7; &ha7;">
-  <!ENTITY ha9 "&ha8; &ha8;">
-  <!ENTITY ha10 "&ha9; &ha9;">
+  <!ENTITY hello1 "Hello">
+  <!ENTITY hello2 "&hello1; &hello1;">
+  <!ENTITY hello3 "&hello2; &hello2;">
+  <!ENTITY hello4 "&hello3; &hello3;">
+  <!ENTITY hello5 "&hello4; &hello4;">
+  <!ENTITY hello6 "&hello5; &hello5;">
+  <!ENTITY hello7 "&hello6; &hello6;">
+  <!ENTITY hello8 "&hello7; &hello7;">
+  <!ENTITY hello9 "&hello8; &hello8;">
+  <!ENTITY hello10 "&hello9; &hello9;">
 
-  <!ENTITY ha11 "&ha10; &ha10;">
-  <!ENTITY ha12 "&ha11; &ha11;">
-  <!ENTITY ha13 "&ha12; &ha12;">
-  <!ENTITY ha14 "&ha13; &ha13;">
-  <!ENTITY ha15 "&ha14; &ha14;">
-  <!ENTITY ha16 "&ha15; &ha15;">
-  <!ENTITY ha17 "&ha16; &ha16;">
-  <!ENTITY ha18 "&ha17; &ha17;">
-  <!ENTITY ha19 "&ha18; &ha18;">
-  <!ENTITY ha20 "&ha19; &ha19;">
+  <!ENTITY hello11 "&hello10; &hello10;">
+  <!ENTITY hello12 "&hello11; &hello11;">
+  <!ENTITY hello13 "&hello12; &hello12;">
+  <!ENTITY hello14 "&hello13; &hello13;">
+  <!ENTITY hello15 "&hello14; &hello14;">
+  <!ENTITY hello16 "&hello15; &hello15;">
+  <!ENTITY hello17 "&hello16; &hello16;">
+  <!ENTITY hello18 "&hello17; &hello17;">
+  <!ENTITY hello19 "&hello18; &hello18;">
+  <!ENTITY hello20 "&hello19; &hello19;">
 
-  <!ENTITY ha21 "&ha20; &ha20;">
-  <!ENTITY ha22 "&ha21; &ha21;">
-  <!ENTITY ha23 "&ha22; &ha22;">
-  <!ENTITY ha24 "&ha23; &ha23;">
-  <!ENTITY ha25 "&ha24; &ha24;">
-  <!ENTITY ha26 "&ha25; &ha25;">
-  <!ENTITY ha27 "&ha26; &ha26;">
-  <!ENTITY ha28 "&ha27; &ha27;">
-  <!ENTITY ha29 "&ha28; &ha28;">
-  <!ENTITY ha30 "&ha29; &ha29;">
+  <!ENTITY hello21 "&hello20; &hello20;">
+  <!ENTITY hello22 "&hello21; &hello21;">
+  <!ENTITY hello23 "&hello22; &hello22;">
+  <!ENTITY hello24 "&hello23; &hello23;">
+  <!ENTITY hello25 "&hello24; &hello24;">
+  <!ENTITY hello26 "&hello25; &hello25;">
+  <!ENTITY hello27 "&hello26; &hello26;">
+  <!ENTITY hello28 "&hello27; &hello27;">
+  <!ENTITY hello29 "&hello28; &hello28;">
+  <!ENTITY hello30 "&hello29; &hello29;">
 
-  <!ENTITY ha31 "&ha30; &ha30;">
-  <!ENTITY ha32 "&ha31; &ha31;">
-  <!ENTITY ha33 "&ha32; &ha32;">
-  <!ENTITY ha34 "&ha33; &ha33;">
-  <!ENTITY ha35 "&ha34; &ha34;">
-  <!ENTITY ha36 "&ha35; &ha35;">
-  <!ENTITY ha37 "&ha36; &ha36;">
-  <!ENTITY ha38 "&ha37; &ha37;">
-  <!ENTITY ha39 "&ha38; &ha38;">
-  <!ENTITY ha40 "&ha39; &ha39;">
+  <!ENTITY hello31 "&hello30; &hello30;">
+  <!ENTITY hello32 "&hello31; &hello31;">
+  <!ENTITY hello33 "&hello32; &hello32;">
+  <!ENTITY hello34 "&hello33; &hello33;">
+  <!ENTITY hello35 "&hello34; &hello34;">
+  <!ENTITY hello36 "&hello35; &hello35;">
+  <!ENTITY hello37 "&hello36; &hello36;">
+  <!ENTITY hello38 "&hello37; &hello37;">
+  <!ENTITY hello39 "&hello38; &hello38;">
+  <!ENTITY hello40 "&hello39; &hello39;">
 
-  <!ENTITY ha41 "&ha40; &ha40;">
-  <!ENTITY ha42 "&ha41; &ha41;">
-  <!ENTITY ha43 "&ha42; &ha42;">
-  <!ENTITY ha44 "&ha43; &ha43;">
-  <!ENTITY ha45 "&ha44; &ha44;">
-  <!ENTITY ha46 "&ha45; &ha45;">
-  <!ENTITY ha47 "&ha46; &ha46;">
-  <!ENTITY ha48 "&ha47; &ha47;">
-  <!ENTITY ha49 "&ha48; &ha48;">
-  <!ENTITY ha50 "&ha49; &ha49;">
+  <!ENTITY hello41 "&hello40; &hello40;">
+  <!ENTITY hello42 "&hello41; &hello41;">
+  <!ENTITY hello43 "&hello42; &hello42;">
+  <!ENTITY hello44 "&hello43; &hello43;">
+  <!ENTITY hello45 "&hello44; &hello44;">
+  <!ENTITY hello46 "&hello45; &hello45;">
+  <!ENTITY hello47 "&hello46; &hello46;">
+  <!ENTITY hello48 "&hello47; &hello47;">
+  <!ENTITY hello49 "&hello48; &hello48;">
+  <!ENTITY hello50 "&hello49; &hello49;">
 
-  <!ENTITY ha51 "&ha50; &ha50;">
-  <!ENTITY ha52 "&ha51; &ha51;">
-  <!ENTITY ha53 "&ha52; &ha52;">
-  <!ENTITY ha54 "&ha53; &ha53;">
-  <!ENTITY ha55 "&ha54; &ha54;">
-  <!ENTITY ha56 "&ha55; &ha55;">
-  <!ENTITY ha57 "&ha56; &ha56;">
-  <!ENTITY ha58 "&ha57; &ha57;">
-  <!ENTITY ha59 "&ha58; &ha58;">
-  <!ENTITY ha60 "&ha59; &ha59;">
+  <!ENTITY hello51 "&hello50; &hello50;">
+  <!ENTITY hello52 "&hello51; &hello51;">
+  <!ENTITY hello53 "&hello52; &hello52;">
+  <!ENTITY hello54 "&hello53; &hello53;">
+  <!ENTITY hello55 "&hello54; &hello54;">
+  <!ENTITY hello56 "&hello55; &hello55;">
+  <!ENTITY hello57 "&hello56; &hello56;">
+  <!ENTITY hello58 "&hello57; &hello57;">
+  <!ENTITY hello59 "&hello58; &hello58;">
+  <!ENTITY hello60 "&hello59; &hello59;">
 
-  <!ENTITY ha61 "&ha60; &ha60;">
-  <!ENTITY ha62 "&ha61; &ha61;">
-  <!ENTITY ha63 "&ha62; &ha62;">
-  <!ENTITY ha64 "&ha63; &ha63;">
-  <!ENTITY ha65 "&ha64; &ha64;">
-  <!ENTITY ha66 "&ha65; &ha65;">
-  <!ENTITY ha67 "&ha66; &ha66;">
-  <!ENTITY ha68 "&ha67; &ha67;">
-  <!ENTITY ha69 "&ha68; &ha68;">
-  <!ENTITY ha70 "&ha69; &ha69;">
+  <!ENTITY hello61 "&hello60; &hello60;">
+  <!ENTITY hello62 "&hello61; &hello61;">
+  <!ENTITY hello63 "&hello62; &hello62;">
+  <!ENTITY hello64 "&hello63; &hello63;">
+  <!ENTITY hello65 "&hello64; &hello64;">
+  <!ENTITY hello66 "&hello65; &hello65;">
+  <!ENTITY hello67 "&hello66; &hello66;">
+  <!ENTITY hello68 "&hello67; &hello67;">
+  <!ENTITY hello69 "&hello68; &hello68;">
+  <!ENTITY hello70 "&hello69; &hello69;">
 
-  <!ENTITY ha71 "&ha70; &ha70;">
-  <!ENTITY ha72 "&ha71; &ha71;">
-  <!ENTITY ha73 "&ha72; &ha72;">
-  <!ENTITY ha74 "&ha73; &ha73;">
-  <!ENTITY ha75 "&ha74; &ha74;">
-  <!ENTITY ha76 "&ha75; &ha75;">
-  <!ENTITY ha77 "&ha76; &ha76;">
-  <!ENTITY ha78 "&ha77; &ha77;">
-  <!ENTITY ha79 "&ha78; &ha78;">
-  <!ENTITY ha80 "&ha79; &ha79;">
+  <!ENTITY hello71 "&hello70; &hello70;">
+  <!ENTITY hello72 "&hello71; &hello71;">
+  <!ENTITY hello73 "&hello72; &hello72;">
+  <!ENTITY hello74 "&hello73; &hello73;">
+  <!ENTITY hello75 "&hello74; &hello74;">
+  <!ENTITY hello76 "&hello75; &hello75;">
+  <!ENTITY hello77 "&hello76; &hello76;">
+  <!ENTITY hello78 "&hello77; &hello77;">
+  <!ENTITY hello79 "&hello78; &hello78;">
+  <!ENTITY hello80 "&hello79; &hello79;">
 
-  <!ENTITY ha81 "&ha80; &ha80;">
-  <!ENTITY ha82 "&ha81; &ha81;">
-  <!ENTITY ha83 "&ha82; &ha82;">
-  <!ENTITY ha84 "&ha83; &ha83;">
-  <!ENTITY ha85 "&ha84; &ha84;">
-  <!ENTITY ha86 "&ha85; &ha85;">
-  <!ENTITY ha87 "&ha86; &ha86;">
-  <!ENTITY ha88 "&ha87; &ha87;">
-  <!ENTITY ha89 "&ha88; &ha88;">
-  <!ENTITY ha90 "&ha89; &ha89;">
+  <!ENTITY hello81 "&hello80; &hello80;">
+  <!ENTITY hello82 "&hello81; &hello81;">
+  <!ENTITY hello83 "&hello82; &hello82;">
+  <!ENTITY hello84 "&hello83; &hello83;">
+  <!ENTITY hello85 "&hello84; &hello84;">
+  <!ENTITY hello86 "&hello85; &hello85;">
+  <!ENTITY hello87 "&hello86; &hello86;">
+  <!ENTITY hello88 "&hello87; &hello87;">
+  <!ENTITY hello89 "&hello88; &hello88;">
+  <!ENTITY hello90 "&hello89; &hello89;">
 
-  <!ENTITY ha91 "&ha90; &ha90;">
-  <!ENTITY ha92 "&ha91; &ha91;">
-  <!ENTITY ha93 "&ha92; &ha92;">
-  <!ENTITY ha94 "&ha93; &ha93;">
-  <!ENTITY ha95 "&ha94; &ha94;">
-  <!ENTITY ha96 "&ha95; &ha95;">
-  <!ENTITY ha97 "&ha96; &ha96;">
-  <!ENTITY ha98 "&ha97; &ha97;">
-  <!ENTITY ha99 "&ha98; &ha98;">
-  <!ENTITY ha100 "&ha99; &ha99;">
+  <!ENTITY hello91 "&hello90; &hello90;">
+  <!ENTITY hello92 "&hello91; &hello91;">
+  <!ENTITY hello93 "&hello92; &hello92;">
+  <!ENTITY hello94 "&hello93; &hello93;">
+  <!ENTITY hello95 "&hello94; &hello94;">
+  <!ENTITY hello96 "&hello95; &hello95;">
+  <!ENTITY hello97 "&hello96; &hello96;">
+  <!ENTITY hello98 "&hello97; &hello97;">
+  <!ENTITY hello99 "&hello98; &hello98;">
+  <!ENTITY hello100 "&hello99; &hello99;">
 
-  <!ENTITY ha101 "&ha100; &ha100;">
-  <!ENTITY ha102 "&ha101; &ha101;">
-  <!ENTITY ha103 "&ha102; &ha102;">
-  <!ENTITY ha104 "&ha103; &ha103;">
-  <!ENTITY ha105 "&ha104; &ha104;">
-  <!ENTITY ha106 "&ha105; &ha105;">
-  <!ENTITY ha107 "&ha106; &ha106;">
-  <!ENTITY ha108 "&ha107; &ha107;">
-  <!ENTITY ha109 "&ha108; &ha108;">
-  <!ENTITY ha110 "&ha109; &ha109;">
+  <!ENTITY hello101 "&hello100; &hello100;">
+  <!ENTITY hello102 "&hello101; &hello101;">
+  <!ENTITY hello103 "&hello102; &hello102;">
+  <!ENTITY hello104 "&hello103; &hello103;">
+  <!ENTITY hello105 "&hello104; &hello104;">
+  <!ENTITY hello106 "&hello105; &hello105;">
+  <!ENTITY hello107 "&hello106; &hello106;">
+  <!ENTITY hello108 "&hello107; &hello107;">
+  <!ENTITY hello109 "&hello108; &hello108;">
+  <!ENTITY hello110 "&hello109; &hello109;">
 
-  <!ENTITY ha111 "&ha110; &ha110;">
-  <!ENTITY ha112 "&ha111; &ha111;">
-  <!ENTITY ha113 "&ha112; &ha112;">
-  <!ENTITY ha114 "&ha113; &ha113;">
-  <!ENTITY ha115 "&ha114; &ha114;">
-  <!ENTITY ha116 "&ha115; &ha115;">
-  <!ENTITY ha117 "&ha116; &ha116;">
-  <!ENTITY ha118 "&ha117; &ha117;">
-  <!ENTITY ha119 "&ha118; &ha118;">
-  <!ENTITY ha120 "&ha119; &ha119;">
+  <!ENTITY hello111 "&hello110; &hello110;">
+  <!ENTITY hello112 "&hello111; &hello111;">
+  <!ENTITY hello113 "&hello112; &hello112;">
+  <!ENTITY hello114 "&hello113; &hello113;">
+  <!ENTITY hello115 "&hello114; &hello114;">
+  <!ENTITY hello116 "&hello115; &hello115;">
+  <!ENTITY hello117 "&hello116; &hello116;">
+  <!ENTITY hello118 "&hello117; &hello117;">
+  <!ENTITY hello119 "&hello118; &hello118;">
+  <!ENTITY hello120 "&hello119; &hello119;">
 
-  <!ENTITY ha121 "&ha120; &ha120;">
-  <!ENTITY ha122 "&ha121; &ha121;">
-  <!ENTITY ha123 "&ha122; &ha122;">
-  <!ENTITY ha124 "&ha123; &ha123;">
-  <!ENTITY ha125 "&ha124; &ha124;">
-  <!ENTITY ha126 "&ha125; &ha125;">
-  <!ENTITY ha127 "&ha126; &ha126;">
-  <!ENTITY ha128 "&ha127; &ha127;">
+  <!ENTITY hello121 "&hello120; &hello120;">
+  <!ENTITY hello122 "&hello121; &hello121;">
+  <!ENTITY hello123 "&hello122; &hello122;">
+  <!ENTITY hello124 "&hello123; &hello123;">
+  <!ENTITY hello125 "&hello124; &hello124;">
+  <!ENTITY hello126 "&hello125; &hello125;">
+  <!ENTITY hello127 "&hello126; &hello126;">
+  <!ENTITY hello128 "&hello127; &hello127;">
 ]>
 <definitions name="EndpointService" targetNamespace="http://jbws1582.jaxws.ws.test.jboss.org/" xmlns:tns="http://jbws1582.jaxws.ws.test.jboss.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
@@ -174,7 +174,7 @@
   </binding>
   <service name="EndpointService">
     <port name="EndpointPort" binding="tns:EndpointBinding">
-      <soap:address location="&h12;"/>
+      <soap:address location="&hello128;"/>
     </port>
   </service>
 </definitions>
