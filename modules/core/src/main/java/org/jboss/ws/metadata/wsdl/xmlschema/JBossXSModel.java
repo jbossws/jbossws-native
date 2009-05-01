@@ -560,8 +560,8 @@ public class JBossXSModel implements XSModel, Cloneable
       private HashMap<String, XSElementDeclaration> anonymousElementMap;
 
       // not really a stack, but it does contain items on the stack
-      private HashSet<XSComplexTypeDefinition> stack = new HashSet<XSComplexTypeDefinition>();
-
+      private HashSet<XSComplexTypeDefinition> processed = new HashSet<XSComplexTypeDefinition>();
+      
       /**
        * Triggers a rebuild of anonymous types only if a build has occured before.
        */
@@ -582,6 +582,9 @@ public class JBossXSModel implements XSModel, Cloneable
 
          anonymousElementMap = new HashMap<String, XSElementDeclaration>();
 
+         
+         processed.clear();
+         
          XSNamedMap namedMap = model.getComponents(XSConstants.TYPE_DEFINITION);
          for (int i = 0; i < namedMap.getLength(); i++)
          {
@@ -598,6 +601,7 @@ public class JBossXSModel implements XSModel, Cloneable
             XSElementDeclaration element = (XSElementDeclaration)namedMap.item(i);
             analyzeElement(element, null, element.getNamespace(), null, null);
          }
+         processed.clear();
       }
 
       private void analyzeElement(XSElementDeclaration element, String parentName, String namespace, Integer minOccurs, Integer maxOccurs)
@@ -674,13 +678,14 @@ public class JBossXSModel implements XSModel, Cloneable
       private void analyzeComplexType(XSComplexTypeDefinition complexType, String parentName, String namespace)
       {
          // Prevent reentrancy
-         if (stack.contains(complexType))
+         if (processed.contains(complexType))
+         {
             return;
+         }
 
-         stack.add(complexType);
+         processed.add(complexType);
          String name = analyzeType(complexType, parentName, namespace);
          analyzeParticle(complexType.getParticle(), name, namespace);
-         stack.remove(complexType);
       }
 
       private void analyzeParticle(XSParticle particle, String parentName, String namespace)
