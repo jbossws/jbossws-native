@@ -27,8 +27,8 @@ import java.util.List;
 import org.jboss.logging.Logger;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.EndpointResolver;
-import org.jboss.wsf.common.javax.JavaxAnnotationHelper;
-import org.jboss.wsf.common.javax.PreDestroyHolder;
+import org.jboss.wsf.common.injection.InjectionHelper;
+import org.jboss.wsf.common.injection.PreDestroyHolder;
 import org.jboss.wsf.common.servlet.AbstractEndpointServlet;
 
 import javax.servlet.ServletConfig;
@@ -84,7 +84,7 @@ public final class EndpointServlet extends AbstractEndpointServlet
          {
             try
             {
-               JavaxAnnotationHelper.callPreDestroyMethod(holder.getObject());
+               InjectionHelper.callPreDestroyMethod(holder.getObject());
             }
             catch (Exception exception)
             {
