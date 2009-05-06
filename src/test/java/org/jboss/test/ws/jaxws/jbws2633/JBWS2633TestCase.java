@@ -44,12 +44,6 @@ public class JBWS2633TestCase extends JBossWSTest
 
    public void testWSConsume() throws Exception
    {
-      if (true)
-      {
-         System.out.println("FIXME [JBWS-2633] wscompile fails to create valid package name where namespace contains capitalised reserved keyword.");
-         return;
-      }
-
       // use absolute path for the output to be re-usable
       String absOutput = "target/wsconsume/jbws2633";
       String wsdlFile = new File("resources/jaxws/jbws2633/PhoneBook.wsdl").getAbsolutePath();
