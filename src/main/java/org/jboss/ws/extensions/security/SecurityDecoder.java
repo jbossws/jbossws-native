@@ -39,6 +39,8 @@ import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+
+
 /**
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @version $Revision$
@@ -55,7 +57,7 @@ public class SecurityDecoder
 
    private SecurityStore store;
 
-   private TimestampVerification timestampVerification;
+   private TimestampVerification timestampVerification;        
 
    private Authenticate authenticate;
 
@@ -143,7 +145,8 @@ public class SecurityDecoder
             if (ids != null)
                encryptedIds.addAll(ids);
          }
-      }
+      }      
+
 
    }
 

@@ -39,6 +39,7 @@ public class Config implements Serializable
    private Encrypt encrypt;
    private Requires requires;
    private Authenticate authenticate;
+   private Authorize authorize;
 
    public Encrypt getEncrypt()
    {
@@ -99,4 +100,15 @@ public class Config implements Serializable
    {
       this.authenticate = authenticate;
    }
+
+   public Authorize getAuthorize()
+   {
+      return this.authorize;
+   }
+
+   public void setAuthorize(Authorize authorize)
+   {
+      this.authorize = authorize;
+   }
+
 }

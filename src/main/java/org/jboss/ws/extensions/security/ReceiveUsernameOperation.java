@@ -52,6 +52,7 @@ public class ReceiveUsernameOperation implements TokenOperation
    {
       UsernameToken user = (UsernameToken)token;
       SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
+
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
    }

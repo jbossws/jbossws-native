@@ -288,6 +288,10 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       {
          return new Authenticate();
       }
+      else if ("authorize".equals(localName))
+      {
+         return new Authorize();
+      }
 
       return null;
    }
@@ -364,6 +368,35 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       authenticate.setSignatureCertAuth(signatureCertAuth);
    }
 
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(Config config, Authorize authorize, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      log.trace("addChild: [obj=" + config + ",child=" + authorize + "]");
+      config.setAuthorize(authorize);
+   }
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(Authorize authorize, Unchecked unchecked, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      log.trace("addChild: [obj=" + authorize + ",child=" + unchecked + "]");
+      authorize.setUnchecked(unchecked);
+   }
+   
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(Authorize authorize, Role role, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      log.trace("addChild: [obj=" + authorize + ",child=" + role + "]");
+      authorize.addRole(role);
+   }   
+   
+
    private Object handleTargets(Object object, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
    {
       log.trace("newChild: " + localName);
@@ -434,6 +467,25 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       return null;
    }
 
+
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(Authorize authorize, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      log.trace("newChild: " + localName);
+      if ("unchecked".equals(localName))
+      {
+         return new Unchecked();
+      }
+      else if ("role".equals(localName))
+      {
+         return new Role();
+      }
+
+      return null;
+   }   
+
    /**
     * Called when parsing of a new element started.
     */
@@ -456,6 +508,13 @@ public class WSSecurityOMFactory implements ObjectModelFactory
 
       target.setValue(value);
    }
+   
+   public void setValue(Role role, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   {
+      log.trace("setValue: [obj=" + role + ",value=" + value + "]");
+
+      role.setName(value);
+   }   
 
    /**
     * Called when parsing character is complete.

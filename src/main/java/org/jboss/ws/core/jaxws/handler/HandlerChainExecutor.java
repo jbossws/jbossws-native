@@ -63,10 +63,14 @@ public class HandlerChainExecutor
    protected int falseIndex = -1;
    // True if the current direction is outbound
    protected Boolean isOutbound;
+   // True if this is for the server/endpoint side, used to determine client side specific
+   // conformance requirements.
+   private boolean serverSide;
 
-   public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> unsortedChain)
+   public HandlerChainExecutor(EndpointMetaData epMetaData, List<Handler> unsortedChain, boolean serverSide)
    {
       this.epMetaData = epMetaData;
+      this.serverSide = serverSide;
 
       // Sort handler logical handlers first
       List<Handler> sortedChain = new ArrayList<Handler>();
@@ -266,9 +270,17 @@ public class HandlerChainExecutor
    // the client MUST be passed on to the application. If the exception in question is a subclass of WebService-
    // Exception then an implementation MUST rethrow it as-is, without any additional wrapping, otherwise it
    // MUST throw a WebServiceException whose cause is set to the exception that was thrown during handler processing.
-   private void processHandlerFailure(Exception ex)
+   private void processHandlerFailure(RuntimeException ex)
    {
       log.error("Exception during handler processing", ex);
+      
+      // If this call is server side then the conformance requirement specific to
+      // clients can be avoided.
+      if (serverSide == true)
+      {
+         throw ex;
+      }
+      
       if (ex instanceof WebServiceException)
       {
          throw (WebServiceException)ex;
