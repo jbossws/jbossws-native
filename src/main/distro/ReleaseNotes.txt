@@ -44,7 +44,35 @@ Errata
 Enjoy,
 The JBossWS Team
 
+
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What's new in jbossws-native-3.1.2.GA
+-------------------------------------
+
+Feature Request
+
+    * [JBWS-2619] - Consider DeploymentUnit's metadataLocation in
+    * ArchiveDeployment.getMetadataFileURL(..)
+
+Bug
+
+    * [JBWS-2074] - Resource injection in jaxws endpoints and handlers
+    * [JBWS-2558] - Component's resources defined in the \<env-entry\> are not available to the EJB3 JAX-WS handlers
+    * [JBWS-2616] - handlerscope testcase is (native) stack specific
+    * [JBWS-2631] - Fix resource injection in JAX-WS handlers associated with EJB3 endpoints
+    * [JBWS-2634] - Implement support for @EJB annotations in WS components
+    * [JBWS-2638] - Insufficient optimisation in JBossXSModel traversing XML schema
+
+Task
+
+    * [JBWS-2612] - Remove AS 4.2.x support from all stacks
+    * [JBWS-2618] - Update to xmlsec 1.4.2
+
+Errata
+
+    See: https://jira.jboss.org/jira/browse/JBWS-2643
+
 
 What's new in jbossws-native-3.1.1.GA
 -------------------------------------
