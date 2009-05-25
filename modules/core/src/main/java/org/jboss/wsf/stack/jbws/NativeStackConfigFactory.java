@@ -21,17 +21,37 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-import org.jboss.wsf.common.management.AbstractServerConfigMBean;
+import org.jboss.wsf.spi.management.StackConfig;
+import org.jboss.wsf.spi.management.StackConfigFactory;
 
 /**
- * Basic implementation of a ServerConfig 
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 25-May-2009
  *
- * @author Thomas.Diesler@jboss.org
- * @since 08-May-2006
  */
-public interface NativeServerConfigMBean extends AbstractServerConfigMBean
+public class NativeStackConfigFactory extends StackConfigFactory
 {
-   String getImplementationTitle();
 
-   String getImplementationVersion();
+   @Override
+   public StackConfig getStackConfig()
+   {
+      return new NativeStackConfig();
+   }
+
+}
+
+class NativeStackConfig implements StackConfig
+{
+
+   public String getImplementationTitle()
+   {
+      return getClass().getPackage().getImplementationTitle();
+   }
+
+   public String getImplementationVersion()
+   {
+      return getClass().getPackage().getImplementationVersion();
+   }
+   
 }
