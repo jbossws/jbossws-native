@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.stack.addressing;
+package org.jboss.ws.extensions.addressing.map;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,11 +32,11 @@ import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.EndpointReference;
 import javax.xml.ws.handler.MessageContext;
 
-import org.jboss.wsf.spi.addressing.MAP;
-import org.jboss.wsf.spi.addressing.MAPBuilder;
-import org.jboss.wsf.spi.addressing.MAPConstants;
-import org.jboss.wsf.spi.addressing.MAPEndpoint;
-import org.jboss.wsf.spi.addressing.MAPRelatesTo;
+import org.jboss.wsf.common.addressing.MAP;
+import org.jboss.wsf.common.addressing.MAPBuilder;
+import org.jboss.wsf.common.addressing.MAPConstants;
+import org.jboss.wsf.common.addressing.MAPEndpoint;
+import org.jboss.wsf.common.addressing.MAPRelatesTo;
 
 /**
  * 
@@ -50,6 +50,12 @@ public class NativeMAPBuilder implements MAPBuilder
    private AddressingBuilder addressingBuilder;
 
    private static MAPBuilder theBuilder = new NativeMAPBuilder();
+
+   private NativeMAPBuilder()
+   {
+      AddressingBuilder implementation = AddressingBuilder.getAddressingBuilder();
+      this.addressingBuilder = implementation;
+   }
 
    public static MAPBuilder getBuilder()
    {
@@ -113,12 +119,6 @@ public class NativeMAPBuilder implements MAPBuilder
    public MAPRelatesTo newRelatesTo(String id, QName type)
    {
       return new NativeMAPRelatesTo(id, type);
-   }
-
-   private NativeMAPBuilder()
-   {
-      AddressingBuilder implementation = AddressingBuilder.getAddressingBuilder();
-      this.addressingBuilder = implementation;
    }
 
 }

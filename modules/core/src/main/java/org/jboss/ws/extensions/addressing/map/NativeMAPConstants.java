@@ -19,12 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.stack.addressing;
+package org.jboss.ws.extensions.addressing.map;
 
 import javax.xml.ws.addressing.AddressingConstants;
 import javax.xml.ws.addressing.JAXWSAConstants;
 
-import org.jboss.wsf.spi.addressing.MAPConstants;
+import org.jboss.wsf.common.addressing.MAPConstants;
 
 public class NativeMAPConstants implements MAPConstants
 {

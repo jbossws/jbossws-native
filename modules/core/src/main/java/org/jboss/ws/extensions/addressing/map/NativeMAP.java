@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.stack.addressing;
+package org.jboss.ws.extensions.addressing.map;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,10 +33,10 @@ import javax.xml.ws.addressing.AttributedURI;
 import javax.xml.ws.addressing.EndpointReference;
 import javax.xml.ws.addressing.Relationship;
 
-import org.jboss.wsf.spi.addressing.MAP;
-import org.jboss.wsf.spi.addressing.MAPBuilder;
-import org.jboss.wsf.spi.addressing.MAPEndpoint;
-import org.jboss.wsf.spi.addressing.MAPRelatesTo;
+import org.jboss.wsf.common.addressing.MAP;
+import org.jboss.wsf.common.addressing.MAPBuilder;
+import org.jboss.wsf.common.addressing.MAPEndpoint;
+import org.jboss.wsf.common.addressing.MAPRelatesTo;
 import org.w3c.dom.Element;
 
 /**
@@ -100,7 +100,7 @@ public class NativeMAP implements MAP
 
    public MAPRelatesTo getRelatesTo()
    {
-      MAPBuilder builder = NativeMAPBuilder.getBuilder();
+      MAPBuilder builder =  NativeMAPBuilder.getBuilder();
       Relationship[] relationship = implementation.getRelatesTo();
       if (relationship != null)
       {
@@ -286,7 +286,7 @@ public class NativeMAP implements MAP
       }
    }
 
-   public void installOutboundMap(Map<String, Object> requestContext, MAP map)
+   public void installOutboundMapOnClientSide(Map<String, Object> requestContext, MAP map)
    {
       if (!(map instanceof NativeMAP))
       {
@@ -296,5 +296,16 @@ public class NativeMAP implements MAP
 
       requestContext.put(NativeMAPConstants.CLIENT_ADDRESSING_PROPERTIES, addressingProperties);
       requestContext.put(NativeMAPConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addressingProperties);
+   }
+   
+   public void installOutboundMapOnServerSide(Map<String, Object> requestContext, MAP map)
+   {
+      if (!(map instanceof NativeMAP))
+      {
+         throw new IllegalArgumentException("Unsupported MAP: " + map);
+      }
+      AddressingProperties addressingProperties = ((NativeMAP)map).implementation;
+
+      requestContext.put(NativeMAPConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, addressingProperties);
    }
 }

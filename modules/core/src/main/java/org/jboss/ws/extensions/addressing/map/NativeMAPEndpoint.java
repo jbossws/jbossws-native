@@ -19,11 +19,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.stack.addressing;
+package org.jboss.ws.extensions.addressing.map;
 
-import javax.xml.namespace.QName;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.jboss.wsf.spi.addressing.MAPRelatesTo;
+import javax.xml.ws.addressing.EndpointReference;
+
+import org.jboss.wsf.common.addressing.MAPEndpoint;
+import org.w3c.dom.Element;
 
 /**
  * 
@@ -32,29 +36,38 @@ import org.jboss.wsf.spi.addressing.MAPRelatesTo;
  * @since 25-May-2009
  *
  */
-public class NativeMAPRelatesTo implements MAPRelatesTo
+public class NativeMAPEndpoint implements MAPEndpoint
 {
-   private String relatesTo;
-   private QName type;
+   private EndpointReference implementation;
 
-   NativeMAPRelatesTo(String relatesTo, QName type)
+   NativeMAPEndpoint(EndpointReference implementation)
    {
-      this.relatesTo = relatesTo;
-      this.type = type;
+      this.implementation = implementation;
    }
 
-   public String getRelatesTo()
+   public String getAddress()
    {
-      return relatesTo;
+      return implementation.getAddress().getURI().toString();
    }
 
-   public QName getType()
+   public void addReferenceParameter(Element element)
    {
-      return type;
+      implementation.getReferenceParameters().addElement(element);
+   }
+   
+   public List<Element> getReferenceParameters()
+   {
+      List<Element> list = new LinkedList<Element>();
+      for (Object obj : implementation.getReferenceParameters().getElements())
+      {
+         list.add((Element)obj);
+      }
+      return list;
    }
 
-   public void setType(QName type)
+   EndpointReference getImplementation()
    {
-      this.type = type;
+      return implementation;
    }
+
 }

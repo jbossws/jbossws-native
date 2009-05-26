@@ -19,42 +19,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.stack.addressing;
+package org.jboss.ws.extensions.addressing.map;
 
-import javax.xml.ws.addressing.EndpointReference;
-
-import org.jboss.wsf.spi.addressing.MAPEndpoint;
-import org.w3c.dom.Element;
+import org.jboss.wsf.common.addressing.MAPBuilder;
+import org.jboss.wsf.common.addressing.MAPBuilderFactory;
 
 /**
  * 
- * @author Andrew Dinn - adinn@redhat.com
  * @author alessio.soldano@jboss.com
- * @since 25-May-2009
+ * @since 26-May-2009
  *
  */
-public class NativeMAPEndpoint implements MAPEndpoint
+public class NativeMAPBuilderFactory extends MAPBuilderFactory
 {
-   private EndpointReference implementation;
-
-   NativeMAPEndpoint(EndpointReference implementation)
+   public MAPBuilder getBuilderInstance()
    {
-      this.implementation = implementation;
+      return NativeMAPBuilder.getBuilder();
    }
-
-   public String getAddress()
-   {
-      return implementation.getAddress().getURI().toString();
-   }
-
-   public void addReferenceParameter(Element element)
-   {
-      implementation.getReferenceParameters().addElement(element);
-   }
-
-   EndpointReference getImplementation()
-   {
-      return implementation;
-   }
-
 }
