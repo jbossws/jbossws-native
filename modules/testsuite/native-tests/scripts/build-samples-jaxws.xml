@@ -212,16 +212,6 @@
           prefix="WEB-INF/wsdl"/>
     </war>
 
-    <!-- jaxws-samples-wsaddressing -->
-    <war warfile="${tests.output.dir}/test-libs/jaxws-samples-wsaddressing.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/wsaddressing/WEB-INF/web.xml">
-      <classes dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxws/samples/wsaddressing/StatefulEndpointImpl.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/wsaddressing/StatefulEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/wsaddressing/ServerHandler.class"/>
-        <include name="org/jboss/test/ws/jaxws/samples/wsaddressing/jaxws-handlers.xml"/>
-      </classes>
-    </war>
-    
     <!-- jaxws-samples-wseventing -->
     <war warfile="${tests.output.dir}/test-libs/jaxws-samples-wseventing.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/wseventing/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
