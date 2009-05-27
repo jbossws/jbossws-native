@@ -73,7 +73,7 @@ public class NativeMAPBuilder implements MAPBuilder
     * @param ctx the server message context
     * @return
     */
-   public MAP inboundMap(MessageContext ctx)
+   public MAP inboundMap(Map<String, Object> ctx)
    {
       AddressingProperties implementation = (AddressingProperties)ctx.get(NativeMAPConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
       return newMap(implementation);

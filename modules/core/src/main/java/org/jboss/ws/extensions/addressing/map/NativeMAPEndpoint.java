@@ -55,12 +55,12 @@ public class NativeMAPEndpoint implements MAPEndpoint
       implementation.getReferenceParameters().addElement(element);
    }
    
-   public List<Element> getReferenceParameters()
+   public List<Object> getReferenceParameters()
    {
-      List<Element> list = new LinkedList<Element>();
-      for (Object obj : implementation.getReferenceParameters().getElements())
+      List<Object> list = new LinkedList<Object>();
+      if (implementation.getReferenceParameters() != null)
       {
-         list.add((Element)obj);
+         list.addAll(implementation.getReferenceParameters().getElements());
       }
       return list;
    }
