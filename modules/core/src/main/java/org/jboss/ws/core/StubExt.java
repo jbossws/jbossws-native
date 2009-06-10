@@ -49,6 +49,8 @@ public interface StubExt extends ConfigProvider
    static final String PROPERTY_KEY_STORE_PASSWORD = "org.jboss.ws.keyStorePassword";
    /** KeyStoreType property: org.jboss.ws.keyStoreType */
    static final String PROPERTY_KEY_STORE_TYPE = "org.jboss.ws.keyStoreType";
+   /** SocketFactory property: org.jboss.ws.socketFactory */
+   static final String PROPERTY_SOCKET_FACTORY = "org.jboss.ws.socketFactory";
    /** Remoting SSL Protocol property: org.jboss.ws.sslProtocol */
    static final String PROPERTY_SSL_PROTOCOL = "org.jboss.ws.sslProtocol";
    /** Remoting SSL Provider Name property: org.jboss.ws.sslProviderName */
