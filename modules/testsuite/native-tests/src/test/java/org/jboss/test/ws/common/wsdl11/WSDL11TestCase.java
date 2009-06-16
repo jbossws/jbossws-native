@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
 
 import org.jboss.test.ws.tools.validation.WSDLValidator;
 import org.jboss.ws.Constants;
-import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
@@ -155,32 +154,6 @@ public class WSDL11TestCase extends JBossWSTest
       assertEquals(new QName(TARGET_NAMESPACE, "SimpleUserType"), childPart.getType());
    }
 
-
-   public void testEventSourceBinding() throws Exception
-   {
-      File wsdlFile = getResourceFile("common/wsdl11/inherit/wind_inherit.wsdl");
-      assertTrue(wsdlFile.exists());
-
-      WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
-
-      WSDLService service = wsdlDefinitions.getService(new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "EventingService"));
-      assertNotNull(service);
-      WSDLEndpoint[] endpoints = service.getEndpoints();
-      for (int i = 0; i < endpoints.length; i++)
-      {
-         WSDLEndpoint ep = endpoints[i];
-         assertEquals(EventingConstants.NS_EVENTING, ep.getName().getNamespaceURI());
-      }
-
-      WSDLInterface warningsInterface = wsdlDefinitions.getInterface(new QName(wsdlDefinitions.getTargetNamespace(), "Warnings"));
-      assertNotNull("Event source port type not parsed", warningsInterface);
-      assertEquals(warningsInterface.getName().getNamespaceURI(), "http://www.example.org/oceanwatch");
-
-      WSDLInterface eventSourceInterface = wsdlDefinitions.getInterface(new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "EventSource"));
-      assertNotNull(eventSourceInterface);
-      assertEquals(eventSourceInterface.getName().getNamespaceURI(), EventingConstants.NS_EVENTING);
-   }
 
    public void testSwaMessages() throws Exception
    {

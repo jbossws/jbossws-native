@@ -28,11 +28,6 @@
     <property name="mbeanServer"><inject bean="WSMBeanServerLocator" property="mbeanServer"/></property>
   </bean>
   
-  <!-- A subscription manager for WS-Eventing -->
-  <bean name="WSSubscriptionManager" class="org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager">
-    <property name="bindAddress">${jboss.bind.address}</property>
-  </bean>
-  
   <!-- Installed Record Processors-->
   <bean name="WSMemoryBufferRecorder" class="org.jboss.wsf.framework.management.recording.MemoryBufferRecorder">
     <property name="recording">false</property>
@@ -73,10 +68,6 @@
         <inject bean="WSLogRecorder"/>
       </list>
     </property>
-  </bean>
-  
-  <bean name="WSNativeEventingDeploymentAspect" class="org.jboss.wsf.stack.jbws.EventingDeploymentAspect">
-    <property name="requires">UnifiedMetaDataModel</property>
   </bean>
   
   <bean name="WSNativePublishContractDeploymentAspect" class="org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect">
@@ -121,7 +112,6 @@
       <set class="java.util.HashSet" elementClass="org.jboss.wsf.spi.deployment.DeploymentAspect">        
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
         <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
-        <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeRMDeploymentAspect"/>
@@ -142,7 +132,6 @@
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
         <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
-        <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeRMDeploymentAspect"/>
@@ -162,7 +151,6 @@
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
         <inject bean="WSNativeEndpointHandlerDeploymentAspect"/>
         <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
-        <inject bean="WSNativeEventingDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
         <inject bean="WSNativeRMDeploymentAspect"/>

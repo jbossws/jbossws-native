@@ -750,17 +750,6 @@
       </classes>
     </war>
     
-    <!-- jaxws-wseventing -->
-    <war warfile="${tests.output.dir}/test-libs/jaxws-wseventing.war" webxml="${tests.output.dir}/test-resources/jaxws/wseventing/WEB-INF/web.xml">
-      <classes dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/ws/eventing/*.class"/>
-        <include name="org/jboss/test/ws/jaxws/wseventing/*.class"/>
-      </classes>
-      <webinf dir="${tests.output.dir}/test-resources/jaxws/wseventing/WEB-INF">
-        <include name="wsdl/**"/>
-      </webinf>
-    </war>
-    
     <!-- jaxws-wsrm -->
     <war warfile="${tests.output.dir}/test-libs/jaxws-wsrm.war" webxml="${tests.output.dir}/test-resources/jaxws/wsrm/WEB-INF/unsecure/web.xml">
       <classes dir="${tests.output.dir}/test-classes">

@@ -46,9 +46,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
-import org.jboss.ws.extensions.eventing.EventingConstants;
-import org.jboss.ws.extensions.eventing.EventingUtils;
-import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -58,11 +55,8 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
-import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
@@ -73,9 +67,9 @@ import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.MDBMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.MDBMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData.JSEResourceCollection;
 
 /** An abstract meta data builder.
@@ -443,40 +437,7 @@ public abstract class MetaDataBuilder
 
    protected void processEndpointMetaDataExtensions(EndpointMetaData epMetaData, WSDLDefinitions wsdlDefinitions)
    {
-      for (WSDLInterface wsdlInterface : wsdlDefinitions.getInterfaces())
-      {
-         WSDLProperty eventSourceProp = wsdlInterface.getProperty(Constants.WSDL_PROPERTY_EVENTSOURCE);
-         if (eventSourceProp != null && epMetaData instanceof ServerEndpointMetaData)
-         {
-            ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)epMetaData;
-            String eventSourceNS = wsdlInterface.getName().getNamespaceURI() + "/" + wsdlInterface.getName().getLocalPart();
-
-            // extract the schema model
-            JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
-            String[] notificationSchema = EventingUtils.extractNotificationSchema(schemaModel);
-
-            // extract the root element NS
-            String notificationRootElementNS = null;
-            WSDLInterfaceOperation wsdlInterfaceOperation = wsdlInterface.getOperations()[0];
-            if (wsdlInterfaceOperation.getOutputs().length > 0)
-            {
-               WSDLInterfaceOperationOutput wsdlInterfaceOperationOutput = wsdlInterfaceOperation.getOutputs()[0];
-               notificationRootElementNS = wsdlInterfaceOperationOutput.getElement().getNamespaceURI();
-            }
-            else
-            {
-               // WSDL operation of an WSDL interface that is marked as an event source
-               // requires to carry an output message.
-               throw new WSException("Unable to resolve eventing root element NS. No operation output found at " + wsdlInterfaceOperation.getName());
-            }
-
-            EventingEpMetaExt ext = new EventingEpMetaExt(EventingConstants.NS_EVENTING);
-            ext.setEventSourceNS(eventSourceNS);
-            ext.setNotificationSchema(notificationSchema);
-            ext.setNotificationRootElementNS(notificationRootElementNS);
-            sepMetaData.addExtension(ext);
-         }
-      }
+	   //nothing to do; WS-Eventing processing removed as it's not supported (JBPAPP-1888)
    }
 
    /** Process operation meta data extensions. */

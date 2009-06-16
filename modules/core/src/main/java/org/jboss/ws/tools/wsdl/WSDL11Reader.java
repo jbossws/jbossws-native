@@ -720,13 +720,6 @@ public class WSDL11Reader
             destInterface.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_POLICYURIS, policyURIsProp.getLocalPart()));
          }
 
-         // eventing extensions
-         QName eventSourceProp = (QName)srcPortType.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSE_EVENTSOURCE);
-         if (eventSourceProp != null && eventSourceProp.getLocalPart().equals(Boolean.TRUE.toString()))
-         {
-            destInterface.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_EVENTSOURCE, eventSourceProp.getLocalPart()));
-         }
-         
          // documentation
          Element documentationElement = srcPortType.getDocumentationElement();
          if (documentationElement != null && documentationElement.getTextContent() != null)
