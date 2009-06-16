@@ -45,13 +45,11 @@ import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLImport;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
-import org.jboss.ws.metadata.wsdl.WSDLInterfaceFault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
-import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLRPCPart;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
@@ -184,18 +182,8 @@ public class WSDL11Writer extends WSDLWriter
    {
       for (WSDLExtensibilityElement ext : extendable.getAllExtensibilityElements())
       {
-         appendPolicyElements(builder, ext);
          appendJAXWSCustomizationElements(builder, ext);
          //add processing of further extensibility element types below
-      }
-   }
-   
-   private void appendPolicyElements(StringBuilder builder, WSDLExtensibilityElement extElem)
-   {
-      if (Constants.WSDL_ELEMENT_POLICY.equalsIgnoreCase(extElem.getUri()) ||
-            Constants.WSDL_ELEMENT_POLICYREFERENCE.equalsIgnoreCase(extElem.getUri()))
-      {
-         appendElementSkippingKnownNs(builder, extElem.getElement());
       }
    }
    
@@ -388,18 +376,6 @@ public class WSDL11Writer extends WSDLWriter
             continue;
 
          buffer.append("<portType name='" + intf.getName().getLocalPart() + "'");
-         WSDLProperty policyProp = intf.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
-         if (policyProp != null)
-         {
-            String prefix = wsdl.getPrefix(Constants.URI_WS_POLICY);
-            buffer.append(" ");
-            buffer.append(prefix);
-            buffer.append(":");
-            buffer.append(Constants.WSDL_ATTRIBUTE_WSP_POLICYURIS.getLocalPart());
-            buffer.append("='");
-            buffer.append(policyProp.getValue());
-            buffer.append("'");
-         }
          buffer.append(">");
          appendDocumentation(buffer, intf.getDocumentationElement());
          appendUnknownExtensibilityElements(buffer, intf);

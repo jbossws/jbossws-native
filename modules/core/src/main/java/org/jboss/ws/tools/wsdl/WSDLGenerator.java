@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.tools.wsdl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -32,21 +30,13 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.soap.SOAPBinding;
 
-import org.apache.ws.policy.Policy;
-import org.apache.ws.policy.util.PolicyFactory;
-import org.apache.ws.policy.util.PolicyWriter;
 import org.jboss.ws.Constants;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.extensions.policy.PolicyScopeLevel;
-import org.jboss.ws.extensions.policy.metadata.PolicyMetaExtension;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
-import org.jboss.ws.metadata.umdm.MetaDataExtension;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.wsdl.Extendable;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingFault;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
@@ -63,7 +53,6 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
-import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLRPCPart;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
@@ -137,82 +126,6 @@ public abstract class WSDLGenerator
       for (OperationMetaData operation : endpoint.getOperations())
       {
          processOperation(wsdlInterface, wsdlBinding, operation);
-      }
-      
-      //Policies
-      MetaDataExtension ext = endpoint.getExtension(Constants.URI_WS_POLICY);
-      if (ext != null)
-      {
-         PolicyMetaExtension policyExt = (PolicyMetaExtension)ext;
-         for (Policy policy : policyExt.getPolicies(PolicyScopeLevel.WSDL_PORT))
-         {
-            addPolicyDefinition(policy);
-            addPolicyReference(policy, wsdlEndpoint);
-         }
-         for (Policy policy : policyExt.getPolicies(PolicyScopeLevel.WSDL_PORT_TYPE))
-         {
-            addPolicyDefinition(policy);
-            addPolicyURIAttribute(policy, wsdlInterface);
-         }
-         for (Policy policy : policyExt.getPolicies(PolicyScopeLevel.WSDL_BINDING))
-         {
-            addPolicyDefinition(policy);
-            addPolicyReference(policy, wsdlBinding);
-         }
-      }
-   }
-   
-   protected void addPolicyDefinition(Policy policy)
-   {
-      try
-      {
-         PolicyWriter writer = PolicyFactory.getPolicyWriter(PolicyFactory.StAX_POLICY_WRITER);
-         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-         writer.writePolicy(policy, outputStream);
-         Element element = DOMUtils.parse(outputStream.toString(Constants.DEFAULT_XML_CHARSET));
-         WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICY, element);
-         wsdl.addExtensibilityElement(ext);
-         //optional: to obtain a better looking wsdl, register ws-policy
-         //prefix in wsdl:definitions if it is not defined there yet
-         if (wsdl.getPrefix(element.getNamespaceURI())==null)
-         {
-            wsdl.registerNamespaceURI(element.getNamespaceURI(),element.getPrefix());
-         }
-      }
-      catch (IOException ioe)
-      {
-         throw new WSException("Error while converting policy to element!");
-      }
-   }
-   
-   protected void addPolicyReference(Policy policy, Extendable extendable)
-   {
-      QName policyRefQName = Constants.WSDL_ELEMENT_WSP_POLICYREFERENCE;
-      String prefix = wsdl.getPrefix(policyRefQName.getNamespaceURI());
-      if (prefix == null)
-      {
-         prefix = "wsp";
-         wsdl.registerNamespaceURI(policyRefQName.getNamespaceURI(), prefix);
-      }
-      Element element = DOMUtils.createElement(policyRefQName.getLocalPart(), prefix);
-      element.setAttribute("URI", policy.getPolicyURI());
-      //TODO!! we need to understand if the policy is local or not...
-      WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICYREFERENCE, element);
-      extendable.addExtensibilityElement(ext);
-   }
-   
-   protected void addPolicyURIAttribute(Policy policy, Extendable extendable)
-   {
-      //TODO!! we need to understand if the policy is local or not...
-      WSDLProperty prop = extendable.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
-      if (prop == null)
-      {
-         extendable.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_POLICYURIS, policy.getPolicyURI()));
-      }
-      else
-      {
-         //PolicyURIs ships a comma separated list of URIs...
-         prop.setValue(prop.getValue() + "," + policy.getPolicyURI());
       }
       
    }

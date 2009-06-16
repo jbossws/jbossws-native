@@ -23,7 +23,9 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
@@ -31,9 +33,9 @@ import javax.xml.ws.BindingType;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -56,7 +58,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.jboss.ws.annotation.EndpointConfig;
 
 /**
  * A client side meta data builder.
@@ -85,13 +86,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions);
 
-         //Setup policies for each endpoint
-         for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
-         {
-            PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getClientSidePolicyMetaDataBuilder();
-            policyBuilder.processPolicyExtensions(epMetaData, wsdlDefinitions);
-         }
-         
          // Read the WSDL and initialize the schema model
          // This should only be needed for debuging purposes of the UMDM
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
