@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConnection;
