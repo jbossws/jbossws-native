@@ -53,7 +53,6 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -356,14 +355,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
          // Get the return object
          Object retObj = null;
-         boolean isWsrmMessage = msgContext.get(RMConstant.REQUEST_CONTEXT) != null;
-         boolean wsrmOneWay = false;
-         if (isWsrmMessage)
-         {
-            Boolean temp = (Boolean)((Map<String, Object>)msgContext.get(RMConstant.REQUEST_CONTEXT)).get(RMConstant.ONE_WAY_OPERATION);
-            wsrmOneWay = (temp == null) ? Boolean.FALSE : temp.booleanValue();
-         }
-         if ((oneway == false && handlerPass) || (isWsrmMessage && (wsrmOneWay == false)))
+         if (oneway == false && handlerPass)
          {
             // Verify 
             if (binding instanceof CommonSOAPBinding)

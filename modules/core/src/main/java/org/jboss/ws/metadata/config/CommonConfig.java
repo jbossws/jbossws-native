@@ -26,7 +26,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
@@ -40,7 +39,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 public abstract class CommonConfig
 {
    private String configName;
-   private RMConfig wsrmCfg;
    private List<URI> features = new ArrayList<URI>();
    private List<EndpointProperty> properties = new ArrayList<EndpointProperty>();
 
@@ -72,16 +70,6 @@ public abstract class CommonConfig
       }
       else
          features.remove(nameToURI(type));
-   }
-
-   public void setRMMetaData(RMConfig wsrmCfg)
-   {
-      this.wsrmCfg = wsrmCfg;
-   }
-   
-   public RMConfig getRMMetaData()
-   {
-      return this.wsrmCfg;
    }
 
    public void addProperty(String name, String value)

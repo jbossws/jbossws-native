@@ -51,9 +51,6 @@ import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.wsrm.transport.RMChannel;
-import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
-import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.EndpointProperty;
@@ -106,8 +103,6 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
    private boolean closed;
    private Integer chunkedLength;
-
-   private static final RMChannel RM_CHANNEL = RMChannel.getInstance();
 
    public HTTPRemotingConnection()
    {
@@ -213,48 +208,40 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
       try
       {
-         if (RMTransportHelper.isRMMessage(callProps))
-         {
-            RMMetadata rmMetadata = new RMMetadata(getRemotingVersion(), targetAddress, marshaller, unmarshaller, callProps, metadata, clientConfig);
-            return RM_CHANNEL.send(reqMessage, rmMetadata);
-         }
-         else
-         {
-            Client client = new Client(locator, "jbossws", clientConfig);
-            client.connect();
+    	  Client client = new Client(locator, "jbossws", clientConfig);
+    	  client.connect();
 
-            client.setMarshaller(marshaller);
+    	  client.setMarshaller(marshaller);
 
-            client.setUnMarshaller(unmarshaller);
+    	  client.setUnMarshaller(unmarshaller);
 
-            if (log.isDebugEnabled())
-               log.debug("Remoting metadata: " + metadata);
+    	  if (log.isDebugEnabled())
+    		  log.debug("Remoting metadata: " + metadata);
 
-            // debug the outgoing message
-            MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
+    	  // debug the outgoing message
+    	  MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
 
-            MessageAbstraction resMessage = null;
+    	  MessageAbstraction resMessage = null;
 
-            if (oneway == true)
-            {
-               client.invokeOneway(reqMessage, metadata, false);
-            }
-            else
-            {
-               resMessage = (MessageAbstraction)client.invoke(reqMessage, metadata);
-            }
+    	  if (oneway == true)
+    	  {
+    		  client.invokeOneway(reqMessage, metadata, false);
+    	  }
+    	  else
+    	  {
+    		  resMessage = (MessageAbstraction)client.invoke(reqMessage, metadata);
+    	  }
 
-            // Disconnect the remoting client
-            client.disconnect();
+    	  // Disconnect the remoting client
+    	  client.disconnect();
 
-            callProps.clear();
-            callProps.putAll(metadata);
+    	  callProps.clear();
+    	  callProps.putAll(metadata);
 
-            // trace the incomming response message
-            MessageTrace.traceMessage("Incoming Response Message", resMessage);
+    	  // trace the incomming response message
+    	  MessageTrace.traceMessage("Incoming Response Message", resMessage);
 
-            return resMessage;
-         }
+    	  return resMessage;
       }
       catch (Throwable th)
       {

@@ -39,21 +39,4 @@
 
    </endpoint-config>
 
-   <endpoint-config>
-
-      <config-name>Standard WSRM Endpoint</config-name>
-      <reliable-messaging>
-         <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
-         <backports-server host="realhostname.realdomain" port="9999"/>
-         <message-retransmission attempts="50" interval="10" timeout="3"/>
-         <port name="{http://custom/namespace/}Port1">
-            <delivery-assurance inOrder="false" quality="AtMostOnce"/>
-         </port>
-         <port name="{http://custom/namespace/}Port2">
-            <delivery-assurance inOrder="true" quality="ExactlyOnce"/>
-         </port>
-      </reliable-messaging>	
-	
-   </endpoint-config>
-
 </jaxws-config>

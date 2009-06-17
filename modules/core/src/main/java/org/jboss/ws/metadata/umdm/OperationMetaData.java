@@ -36,7 +36,6 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
-import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
 import org.jboss.wsf.common.JavaUtils;
 import org.w3c.dom.Element;
 
@@ -184,7 +183,7 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
             }
          }
 
-         if ((tmpMethod == null) && (epMetaData.getConfig().getRMMetaData() == null)) // RM hack
+         if (tmpMethod == null)
             throw new WSException("Cannot find java method: " + javaName);
       }
       return tmpMethod;
@@ -479,8 +478,7 @@ return false;
       }
 
       // Report unsynchronized java method
-      boolean isRMMethod = RMProvider.get().getConstants().getNamespaceURI().equals(qname.getNamespaceURI());
-      if ((javaMethod == null) && (isRMMethod == false)) // RM hack
+      if (javaMethod == null)
       {
          StringBuilder errMsg = new StringBuilder("Cannot synchronize to any of these methods:");
          for (Method method : unsynchronizedMethods)

@@ -36,7 +36,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -304,12 +303,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       // Eager initialization
       epMetaData.eagerInitialize();
-
-      // wsrm initialization
-      if (epMetaData.getConfig().getRMMetaData() != null)
-      {
-         RMHelper.setupRMOperations(epMetaData);
-      }
 
       if(log.isDebugEnabled()) log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
    }

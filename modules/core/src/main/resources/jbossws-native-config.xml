@@ -79,10 +79,6 @@
     <property name="requires">UnifiedMetaDataModel</property>
   </bean>
   
-  <bean name="WSNativeRMDeploymentAspect" class="org.jboss.ws.extensions.wsrm.server.RMDeploymentAspect">
-    <property name="requires">StackEndpointHandler, UnifiedMetaDataModel</property>
-  </bean>
-  
   <bean name="WSNativeUnifiedMetaDataDeploymentAspect" class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
     <property name="requires">RuntimeLoader, ContainerMetaData, URLPattern, VFSRoot, JAXBIntros</property>
     <property name="provides">UnifiedMetaDataModel</property>
@@ -114,7 +110,6 @@
         <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
-        <inject bean="WSNativeRMDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
         <inject bean="WSNativeEagerInitializeDeploymentAspect"/>
         <inject bean="WSJAXBIntroDeploymentAspect"/>
@@ -134,7 +129,6 @@
         <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
-        <inject bean="WSNativeRMDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
         <inject bean="WSJAXBIntroDeploymentAspect"/>
       </set>
@@ -153,7 +147,6 @@
         <inject bean="WSNativeEndpointRecordProcessorDeploymentAspect"/>
         <inject bean="WSNativePublishContractDeploymentAspect"/>
         <inject bean="WSNativeServiceEndpointInvokerDeploymentAspect"/>
-        <inject bean="WSNativeRMDeploymentAspect"/>
         <inject bean="WSNativeUnifiedMetaDataDeploymentAspect"/>
         <inject bean="WSJAXBIntroDeploymentAspect"/>
       </set>

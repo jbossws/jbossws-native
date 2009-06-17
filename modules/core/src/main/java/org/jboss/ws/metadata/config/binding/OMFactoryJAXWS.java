@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.config.binding;
 
-import javax.xml.namespace.QName;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.jaxws.ClientConfigJAXWS;
@@ -34,11 +32,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
-import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
-import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
-import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
-import org.jboss.ws.extensions.wsrm.config.RMConfig;
-import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 
 /**
  * ObjectModelFactory for JAXWS configurations.
@@ -127,112 +120,8 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          commonConfig.setPostHandlerChains(postHandlerChains);
          return postHandlerChains;
       }
-      if ("reliable-messaging".equals(localName))
-      {
-         RMConfig wsrmCfg = new RMConfig();
-         commonConfig.setRMMetaData(wsrmCfg);
-         return wsrmCfg;
-      }
 
       return null;
-   }
-   
-   public Object newChild(RMConfig wsrmConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
-   {
-      int countOfAttributes = attrs.getLength();
-
-      if (localName.equals("delivery-assurance"))
-      {
-         RMDeliveryAssuranceConfig deliveryAssurance = getDeliveryAssurance(attrs);
-         wsrmConfig.setDeliveryAssurance(deliveryAssurance);
-         return deliveryAssurance;
-      }
-      if (localName.equals("message-retransmission"))
-      {
-         int interval = 0, attempts = 0, timeout=0;
-         for (int i = 0; i < countOfAttributes; i++)
-         {
-            String attrLocalName = attrs.getLocalName(i); 
-            if (attrLocalName.equals("interval"))
-               interval = Integer.valueOf(attrs.getValue(i));
-            if (attrLocalName.equals("attempts"))
-               attempts = Integer.valueOf(attrs.getValue(i));
-            if (attrLocalName.equals("timeout"))
-               timeout = Integer.valueOf(attrs.getValue(i));
-         }
-         
-         RMMessageRetransmissionConfig retransmissionConfig = new RMMessageRetransmissionConfig();
-         retransmissionConfig.setCountOfAttempts(attempts);
-         retransmissionConfig.setRetransmissionInterval(interval);
-         retransmissionConfig.setMessageTimeout(timeout);
-         wsrmConfig.setMessageRetransmission(retransmissionConfig);
-         return retransmissionConfig;
-      }
-      if (localName.equals("backports-server"))
-      {
-         String host = null, port = null;
-         for (int i = 0; i < countOfAttributes && (host == null || port == null); i++)
-         {
-            String attrLocalName = attrs.getLocalName(i); 
-            if (attrLocalName.equals("host"))
-               host = attrs.getValue(i);
-            if (attrLocalName.equals("port"))
-               port = attrs.getValue(i);
-         }
-         
-         RMBackPortsServerConfig backportsServer = new RMBackPortsServerConfig();
-         backportsServer.setHost(host);
-         backportsServer.setPort(port);
-         wsrmConfig.setBackPortsServer(backportsServer);
-         return backportsServer;
-      }
-      if (localName.equals("port"))
-      {
-         String portName = null;
-         for (int i = 0; i < countOfAttributes; i++)
-         {
-            if (attrs.getLocalName(i).equals("name"))
-            {
-               portName = attrs.getValue(i);
-               break;
-            }
-         }
-         RMPortConfig port = new RMPortConfig();
-         port.setPortName(QName.valueOf(portName));
-         wsrmConfig.getPorts().add(port);
-         return port;
-      }
-      
-      return null;
-   }
-   
-   public Object newChild(RMPortConfig port, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
-   {
-      if (localName.equals("delivery-assurance"))
-      {
-         RMDeliveryAssuranceConfig deliveryAssurance = getDeliveryAssurance(attrs);
-         port.setDeliveryAssurance(deliveryAssurance);
-         return deliveryAssurance;
-      }
-      
-      return null;
-   }
-   
-   private RMDeliveryAssuranceConfig getDeliveryAssurance(Attributes attrs)
-   {
-      String inOrder = null, quality = null;
-      for (int i = 0; i < attrs.getLength() && (inOrder == null || quality == null); i++)
-      {
-         String attrLocalName = attrs.getLocalName(i); 
-         if (attrLocalName.equals("inOrder"))
-            inOrder = attrs.getValue(i);
-         if (attrLocalName.equals("quality"))
-            quality = attrs.getValue(i);
-      }
-      RMDeliveryAssuranceConfig deliveryAssurance = new RMDeliveryAssuranceConfig();
-      deliveryAssurance.setQuality(quality);
-      deliveryAssurance.setInOrder(inOrder);
-      return deliveryAssurance;
    }
    
    /**
