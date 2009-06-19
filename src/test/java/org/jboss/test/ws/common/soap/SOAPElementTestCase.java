@@ -22,8 +22,12 @@
 package org.jboss.test.ws.common.soap;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Iterator;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
@@ -33,6 +37,9 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.wsf.test.JBossWSTest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Test the SOAPElement
@@ -88,6 +95,33 @@ public class SOAPElementTestCase extends JBossWSTest
 
       SOAPElement se2 = (SOAPElement)body.getChildElements().next();
       assertEquals(se, se2);
+   }
+   
+   //JBWS-2346
+   public void testGetElementByTagNameNS() throws Exception
+   {      
+      InputStream is = new File("resources/common/soap/jbws2346.xml").toURL().openStream();
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      dbf.setNamespaceAware(true);
+      DocumentBuilder db = dbf.newDocumentBuilder();
+      Document doc = db.parse(is);
+      MessageFactory factory = MessageFactory.newInstance();
+      SOAPMessage msg = factory.createMessage();
+      msg.getSOAPBody().addDocument(doc);
+      SOAPBody body = msg.getSOAPBody();
+      NodeList list = body.getElementsByTagNameNS("http://org.jboss.ws/testNS", "elementA");
+      assertEquals(1, list.getLength());
+      list = body.getElementsByTagNameNS("http://org.jboss.ws/testNS", "elementC");
+      assertEquals(2, list.getLength());
+      list = body.getElementsByTagNameNS("http://org.jboss.ws/testNS", "String_1");
+      StringBuilder sb = new StringBuilder();
+      for (int i=0; i<list.getLength(); i++)
+      {
+         Node n = list.item(i);
+         sb.append(n.getFirstChild().getNodeValue());
+         sb.append(" ");
+      }
+      assertEquals("Strawberry Apple Banana Orange Raspberry ", sb.toString());
    }
 
    // http://jira.jboss.com/jira/browse/JBWS-773
