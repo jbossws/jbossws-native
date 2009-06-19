@@ -55,7 +55,8 @@ public class JBWS2682TestCase extends JBossWSTest
 
    private String badMsgString = 
       "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:jbw='http://ws.jboss.org/jbws2682'>" + 
-      "  <soapenv:Header/>" + "  <soapenv:Body>" + 
+      "  <soapenv:Header/>" + 
+      "  <soapenv:Body>" + 
       "    <jbw:echo>" + 
       "      <arg0>1-1</arg0>" + 
       "    </jbw:echo>" + 

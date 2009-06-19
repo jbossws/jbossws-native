@@ -123,6 +123,38 @@ public class SOAPElementTestCase extends JBossWSTest
       }
       assertEquals("Strawberry Apple Banana Orange Raspberry ", sb.toString());
    }
+   
+   // JBPAPP-2127
+   public void testGetTextContent() throws Exception
+   {
+      InputStream is = new File("resources/common/soap/jbpapp2127.xml").toURL().openStream();
+      MessageFactory messageFactory = MessageFactory.newInstance();
+      SOAPMessage soapMessage = messageFactory.createMessage(null, is);
+      NodeList nl = soapMessage.getSOAPBody().getChildNodes();
+      SOAPElement echo = null;
+      for (int i = 0; i < nl.getLength() && echo == null; i++)
+      {
+         Object current = nl.item(i);
+         if (current instanceof SOAPElement)
+         {
+            echo = (SOAPElement)current;
+         }
+      }
+      nl = echo.getChildNodes();
+      SOAPElement arg0 = null;
+      for (int i = 0; i < nl.getLength() && arg0 == null; i++)
+      {
+         Object current = nl.item(i);
+         if (current instanceof SOAPElement)
+         {
+            arg0 = (SOAPElement)current;
+         }
+      }
+
+      String value = arg0.getTextContent();
+
+      assertEquals("Expected value", "123", value);
+   }
 
    // http://jira.jboss.com/jira/browse/JBWS-773
    public void testGetNamespaceURI() throws Exception
