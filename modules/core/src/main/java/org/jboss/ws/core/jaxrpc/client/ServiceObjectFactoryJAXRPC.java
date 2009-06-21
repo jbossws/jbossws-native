@@ -228,8 +228,8 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
           ********************************************************/
 
          // load the service interface class
-         ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
-         Class siClass = contextCL.loadClass(serviceRef.getServiceInterface());
+         ClassLoader contextCL = SecurityActions.getContextClassLoader();
+         Class<?> siClass = SecurityActions.loadClass(contextCL, serviceRef.getServiceInterface());
          if (Service.class.isAssignableFrom(siClass) == false)
             throw new JAXRPCException("The service interface does not implement javax.xml.rpc.Service: " + siClass.getName());
 

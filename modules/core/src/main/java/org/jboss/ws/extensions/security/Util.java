@@ -218,13 +218,13 @@ public class Util
    @SuppressWarnings("unchecked")
    public static <T> T loadFactory(Class<T> factoryType, String factoryClassName, Class<? extends T> defaultFactoryClassName)
    {
-      ClassLoader loader = Thread.currentThread().getContextClassLoader();
-      String name = factoryClassName != null ? factoryClassName : System.getProperty(factoryType.getName());
+      ClassLoader loader = SecurityActions.getContextClassLoader();
+      String name = factoryClassName != null ? factoryClassName : SecurityActions.getSystemProperty(factoryType.getName());
       if (name == null)
          name = defaultFactoryClassName.getName();
       try
       {
-         Class<T> cl = (Class<T>)loader.loadClass(name);
+         Class<T> cl = (Class<T>)SecurityActions.loadClass(loader, name);
          return cl.newInstance();
       }
       catch (Exception e)

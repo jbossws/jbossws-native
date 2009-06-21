@@ -288,8 +288,8 @@ public class ToolsHelper
 
          if (wsdlURL == null)
          {
-            ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-            wsdlURL = ctxLoader.getResource(w2jc.wsdlLocation);
+            ClassLoader ctxLoader = SecurityActions.getContextClassLoader();
+            wsdlURL = SecurityActions.getResource(ctxLoader, w2jc.wsdlLocation);
          }
 
          if (wsdlURL == null)
@@ -378,9 +378,9 @@ public class ToolsHelper
       Class clazz = null;
       try
       {
-         clazz = Thread.currentThread().getContextClassLoader().loadClass(cls);
+         clazz = SecurityActions.loadClass(SecurityActions.getContextClassLoader(), cls);
       }
-      catch (ClassNotFoundException e)
+      catch (Exception e)
       {
          log.error("Cannot load endpoint:" + e.getLocalizedMessage());
       }

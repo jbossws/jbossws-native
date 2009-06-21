@@ -95,8 +95,8 @@ public class wstools extends MatchingTask
 
    public void execute() throws BuildException
    {
-      ClassLoader prevCL = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+      ClassLoader prevCL = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(this.getClass().getClassLoader());
       try
       {
          String[] args = new String[] { "-dest", dest, "-config", config };
@@ -116,7 +116,7 @@ public class wstools extends MatchingTask
       }
       finally
       {
-         Thread.currentThread().setContextClassLoader(prevCL);
+         SecurityActions.setContextClassLoader(prevCL);
       }
    }
 }

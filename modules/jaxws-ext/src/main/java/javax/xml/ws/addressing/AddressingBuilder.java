@@ -26,6 +26,10 @@ import static javax.xml.ws.addressing.JAXWSAConstants.DEFAULT_ADDRESSING_BUILDER
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -44,7 +48,7 @@ public abstract class AddressingBuilder implements AddressingType
       ClassLoader classLoader;
       try
       {
-         classLoader = Thread.currentThread().getContextClassLoader();
+         classLoader = getContextClassLoader();
       }
       catch (Exception x)
       {
@@ -56,7 +60,7 @@ public abstract class AddressingBuilder implements AddressingType
       // Use the system property first
       try
       {
-         name = System.getProperty(ADDRESSING_BUILDER_PROPERTY);
+         name = getSystemProperty(ADDRESSING_BUILDER_PROPERTY);
          if (name != null)
          {
             return newInstance(name, classLoader);
@@ -82,7 +86,7 @@ public abstract class AddressingBuilder implements AddressingType
          }
          else
          {
-            cls = classLoader.loadClass(className);
+            cls = loadClass(classLoader, className);
          }
          return (AddressingBuilder)cls.newInstance();
       }
@@ -109,4 +113,78 @@ public abstract class AddressingBuilder implements AddressingType
    public abstract AddressingProperties newAddressingProperties();
 
    public abstract AddressingConstants newAddressingConstants();
+   
+   /**
+    * Get a system property
+    * 
+    * @param name
+    * @param defaultValue
+    * @return
+    */
+   private static String getSystemProperty(final String name)
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return System.getProperty(name);
+      }
+      else
+      {
+         PrivilegedAction<String> action = new PrivilegedAction<String>() {
+            public String run()
+            {
+               return System.getProperty(name);
+            }
+         };
+         return AccessController.doPrivileged(action);
+      }
+   }
+   
+   private static Class<?> loadClass(final ClassLoader cl, final String name) throws PrivilegedActionException, ClassNotFoundException
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return cl.loadClass(name);
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
+            public Class<?> run() throws PrivilegedActionException
+            {
+               try
+               {
+                  return cl.loadClass(name);
+               }
+               catch (Exception e)
+               {
+                  throw new PrivilegedActionException(e);
+               }
+            }
+         });
+      }
+   }
+   
+   /**
+    * Get context classloader.
+    * 
+    * @return the current context classloader
+    */
+   private static ClassLoader getContextClassLoader()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         });
+      }
+   }
 }

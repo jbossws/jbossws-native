@@ -99,8 +99,8 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
          log.debug("[name=" + serviceRefName + ",service=" + serviceImplClass + ",target=" + targetClassName + "]");
 
          // Load the service class
-         ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-         Class serviceClass = ctxLoader.loadClass(serviceImplClass);
+         ClassLoader ctxLoader = SecurityActions.getContextClassLoader();
+         Class serviceClass = SecurityActions.loadClass(ctxLoader, serviceImplClass);
          Class targetClass = (targetClassName != null ? ctxLoader.loadClass(targetClassName) : null);
 
          if (Service.class.isAssignableFrom(serviceClass) == false)

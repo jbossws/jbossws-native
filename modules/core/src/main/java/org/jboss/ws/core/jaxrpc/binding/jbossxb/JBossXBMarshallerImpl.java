@@ -113,7 +113,7 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
                   if (variableMappings != null)
                   {
                      String clsName = javaXmlMapping.getJavaType();
-                     Class cls = JavaUtils.loadJavaType(clsName, Thread.currentThread().getContextClassLoader());
+                     Class cls = JavaUtils.loadJavaType(clsName, SecurityActions.getContextClassLoader());
                      QName clsQName = javaXmlMapping.getRootTypeQName();
 
                      if (clsQName != null)

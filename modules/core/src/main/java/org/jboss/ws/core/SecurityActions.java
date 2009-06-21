@@ -19,34 +19,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.eventing.mgmt;
+package org.jboss.ws.core;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
- * Creates event dispatcher delegates.
- *
- * @see DispatcherDelegate
+ * Security actions for this package
  * 
- * @author Heiko Braun, <heiko@openj.net>
- * @since 11-Jan-2006
+ * @author alessio.soldano@jboss.com
+ * @since 19-Jun-2009
+ *
  */
-public class DispatcherFactory implements ObjectFactory
+class SecurityActions
 {
-   public Object getObjectInstance(Object object, Name name, Context context, Hashtable<?, ?> hashtable) throws Exception
+   /**
+    * Get context classloader.
+    * 
+    * @return the current context classloader
+    */
+   static ClassLoader getContextClassLoader()
    {
-      Reference ref = (Reference)object;
-      String hostname = (String)ref.get(DispatcherDelegate.MANAGER_HOSTNAME).getContent();
-
-      ClassLoader loader = SecurityActions.getContextClassLoader();
-      Class<?> cls = SecurityActions.loadClass(loader, ref.getClassName());
-      DispatcherDelegate delegate = (DispatcherDelegate)cls.newInstance();
-      delegate.setHostname(hostname);
-      return delegate;
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         });
+      }
    }
 }

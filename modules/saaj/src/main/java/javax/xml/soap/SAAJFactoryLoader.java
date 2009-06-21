@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Properties;
 
 /**
@@ -42,6 +44,7 @@ import java.util.Properties;
  * </ol>
  *
  * @author Thomas.Diesler@jboss.com
+ * @author alessio.soldano@jboss.com
  * @since 14-Dec-2006
  */
 class SAAJFactoryLoader
@@ -49,7 +52,7 @@ class SAAJFactoryLoader
    private SAAJFactoryLoader()
    {
    }
-
+   
    /**   
     *  
     *  @return the factory impl, or null 
@@ -57,7 +60,7 @@ class SAAJFactoryLoader
    public static Object loadFactory(String propertyName, String defaultFactory) 
    {
       Object factory = null;
-      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      ClassLoader loader = getContextClassLoader();
 
       // Use the system property
       PrivilegedAction action = new PropertyAccessAction(propertyName);
@@ -67,7 +70,7 @@ class SAAJFactoryLoader
          try
          {
             //if(log.isDebugEnabled()) log.debug("Load from system property: " + factoryName);
-            Class factoryClass = loader.loadClass(factoryName);
+            Class factoryClass = loadClass(loader, factoryName);
             factory = factoryClass.newInstance();
          }
          catch (Throwable t)
@@ -83,7 +86,7 @@ class SAAJFactoryLoader
          action = new PropertyAccessAction("java.home");
          String javaHome = (String)AccessController.doPrivileged(action);
          File jaxmFile = new File(javaHome + "/lib/jaxm.properties");
-         if (jaxmFile.exists())
+         if ((Boolean)AccessController.doPrivileged(new PropertyFileExistAction(jaxmFile)))
          {
             try
             {
@@ -93,7 +96,7 @@ class SAAJFactoryLoader
                if (factoryName != null)
                {
                   //if(log.isDebugEnabled()) log.debug("Load from " + jaxmFile + ": " + factoryName);
-                  Class factoryClass = loader.loadClass(factoryName);
+                  Class factoryClass = loadClass(loader, factoryName);
                   factory = factoryClass.newInstance();
                }
             }
@@ -108,7 +111,7 @@ class SAAJFactoryLoader
       if (factory == null)
       {
          String filename = "META-INF/services/" + propertyName;
-         InputStream inStream = loader.getResourceAsStream(filename);
+         InputStream inStream = getResourceAsStream(loader, filename);
          if (inStream != null)
          {
             try
@@ -119,7 +122,7 @@ class SAAJFactoryLoader
                if (factoryName != null)
                {
                   //if(log.isTraceEnabled()) log.trace("Load from Service API " + filename + ": " + factoryName);
-                  Class factoryClass = loader.loadClass(factoryName);
+                  Class factoryClass = loadClass(loader, factoryName);
                   factory = factoryClass.newInstance();
                }
             }
@@ -137,7 +140,7 @@ class SAAJFactoryLoader
          {
             factoryName = defaultFactory;
             //if(log.isDebugEnabled()) log.debug("Load from default: " + factoryName);
-            Class factoryClass = loader.loadClass(factoryName);
+            Class factoryClass = loadClass(loader, factoryName);
             factory = factoryClass.newInstance();
          }
          catch (Throwable t)
@@ -188,4 +191,81 @@ class SAAJFactoryLoader
          }
       }
    }
+   
+   private static class PropertyFileExistAction implements PrivilegedAction
+   {
+      private File file;
+
+      PropertyFileExistAction(File file)
+      {
+         this.file = file;
+      }
+
+      public Object run()
+      {
+         return file.exists();
+      }
+   }
+   
+   private static ClassLoader getContextClassLoader()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         });
+      }
+   }
+   
+   private static Class<?> loadClass(final ClassLoader cl, final String name) throws PrivilegedActionException, ClassNotFoundException
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return cl.loadClass(name);
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
+            public Class<?> run() throws PrivilegedActionException
+            {
+               try
+               {
+                  return cl.loadClass(name);
+               }
+               catch (Exception e)
+               {
+                  throw new PrivilegedActionException(e);
+               }
+            }
+         });
+      }
+   }
+   
+   private static InputStream getResourceAsStream(final ClassLoader cl, final String filename)
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return cl.getResourceAsStream(filename);
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<InputStream>() {
+            public InputStream run()
+            {
+               return cl.getResourceAsStream(filename);
+            }
+         });
+      }
+   }
+
 }

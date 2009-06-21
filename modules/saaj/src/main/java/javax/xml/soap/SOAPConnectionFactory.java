@@ -23,6 +23,8 @@ package javax.xml.soap;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.logging.Logger;
 
 /** A factory for creating SOAPConnection objects. Implementation of this class
@@ -55,12 +57,12 @@ public abstract class SOAPConnectionFactory
       PrivilegedAction action = new PropertyAccessAction(SOAPConnectionFactory.class.getName(), DEFAULT_SOAP_CONNECTION_FACTORY);
       String factoryName = (String)AccessController.doPrivileged(action);
 
-      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      ClassLoader loader = getContextClassLoader();
       try
       {
          try
          {
-            Class factoryClass = loader.loadClass(factoryName);
+            Class<?> factoryClass = loadClass(loader, factoryName);
             return (SOAPConnectionFactory)factoryClass.newInstance();
          }
          catch (ClassNotFoundException e)
@@ -108,6 +110,49 @@ public abstract class SOAPConnectionFactory
       public Object run()
       {
          return System.getProperty(name, defaultValue);
+      }
+   }
+   
+   private static ClassLoader getContextClassLoader()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         });
+      }
+   }
+   
+   private static Class<?> loadClass(final ClassLoader cl, final String name) throws PrivilegedActionException, ClassNotFoundException
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return cl.loadClass(name);
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
+            public Class<?> run() throws PrivilegedActionException
+            {
+               try
+               {
+                  return cl.loadClass(name);
+               }
+               catch (Exception e)
+               {
+                  throw new PrivilegedActionException(e);
+               }
+            }
+         });
       }
    }
 }

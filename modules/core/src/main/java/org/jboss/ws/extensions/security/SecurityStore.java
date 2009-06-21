@@ -97,7 +97,7 @@ public class SecurityStore
    private void loadKeyStore(URL keyStoreURL, String keyStoreType, String keyStorePassword) throws WSSecurityException
    {
       if (keyStorePassword == null)
-         keyStorePassword = System.getProperty("org.jboss.ws.wsse.keyStorePassword");
+         keyStorePassword = SecurityActions.getSystemProperty("org.jboss.ws.wsse.keyStorePassword");
 
       keyStore = loadStore("org.jboss.ws.wsse.keyStore", "Keystore", keyStoreURL, keyStoreType, keyStorePassword);
       this.keyStorePassword = keyStorePassword;
@@ -106,7 +106,7 @@ public class SecurityStore
    private void loadTrustStore(URL trustStoreURL, String trustStoreType, String trustStorePassword) throws WSSecurityException
    {
       if (trustStorePassword == null)
-         trustStorePassword = System.getProperty("org.jboss.ws.wsse.trustStorePassword");
+         trustStorePassword = SecurityActions.getSystemProperty("org.jboss.ws.wsse.trustStorePassword");
 
       trustStore = loadStore("org.jboss.ws.wsse.trustStore", "Truststore", trustStoreURL, trustStoreType, trustStorePassword);
       this.trustStorePassword = trustStorePassword;
@@ -116,7 +116,7 @@ public class SecurityStore
    {
       if (storeURL == null)
       {
-         String defaultStore = System.getProperty(property);
+         String defaultStore = SecurityActions.getSystemProperty(property);
          if (defaultStore == null)
          {
             return null;
@@ -134,7 +134,7 @@ public class SecurityStore
       }
 
       if (storeType == null)
-         storeType = System.getProperty(property + "Type");
+         storeType = SecurityActions.getSystemProperty(property + "Type");
       if (storeType == null)
          storeType = "jks";
 
@@ -275,7 +275,7 @@ public class SecurityStore
       log.debug("Loading class: " + classname + ", ctorArg=" + ctorArg);
       try
       {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+         ClassLoader loader = SecurityActions.getContextClassLoader();
          Class c = loader.loadClass(classname);
          Object instance = null;
          if (ctorArg != null)

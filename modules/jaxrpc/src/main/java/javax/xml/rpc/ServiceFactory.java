@@ -21,9 +21,12 @@
  */
 package javax.xml.rpc;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -76,12 +79,12 @@ public abstract class ServiceFactory
          PrivilegedAction action = new PropertyAccessAction(SERVICEFACTORY_PROPERTY, DEFAULT_SERVICE_FACTORY);
          String factoryName = (String)AccessController.doPrivileged(action);
 
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+         ClassLoader loader = getContextClassLoader();
          try
          {
             try
             {
-               Class factoryClass = loader.loadClass(factoryName);
+               Class factoryClass = loadClass(loader, factoryName);
                factory = (ServiceFactory)factoryClass.newInstance();
             }
             catch (ClassNotFoundException e)
@@ -95,7 +98,7 @@ public abstract class ServiceFactory
                   factoryName = alternativeFactories[i];
                   try
                   {
-                     Class factoryClass = loader.loadClass(factoryName);
+                     Class factoryClass = loadClass(loader, factoryName);
                      return (ServiceFactory)factoryClass.newInstance();
                   }
                   catch (ClassNotFoundException e1)
@@ -189,4 +192,53 @@ public abstract class ServiceFactory
          return System.getProperty(name, defaultValue);
       }
    }
+   
+   private static Class<?> loadClass(final ClassLoader cl, final String name) throws PrivilegedActionException, ClassNotFoundException
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return cl.loadClass(name);
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
+            public Class<?> run() throws PrivilegedActionException
+            {
+               try
+               {
+                  return cl.loadClass(name);
+               }
+               catch (Exception e)
+               {
+                  throw new PrivilegedActionException(e);
+               }
+            }
+         });
+      }
+   }
+   
+   /**
+    * Get context classloader.
+    * 
+    * @return the current context classloader
+    */
+   private static ClassLoader getContextClassLoader()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         });
+      }
+   }
+
 }

@@ -119,7 +119,7 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
    private ClassLoader getClassLoader()
    {
       // The EndpointMetaData classloader is not availabel for a handler associaated with a JAXWS Service.handlerResolver
-      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+      ClassLoader ctxLoader = SecurityActions.getContextClassLoader();
       return (epMetaData != null ? epMetaData.getClassLoader() : ctxLoader);
    }
 

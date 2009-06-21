@@ -118,8 +118,8 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
 
       if (configURL == null)
       {
-         ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-         configURL = ctxLoader.getResource(configLocation);
+         ClassLoader ctxLoader = SecurityActions.getContextClassLoader();
+         configURL = SecurityActions.getResource(ctxLoader, configLocation);
       }
 
       if (configURL == null)

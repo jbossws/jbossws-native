@@ -86,7 +86,6 @@ import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.SPIProvider;
@@ -197,8 +196,8 @@ public class RequestHandlerImpl implements RequestHandler
          throw new IllegalStateException("Deployment has no classloader associated");
 
       // Set the thread context class loader
-      ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(classLoader);
+      ClassLoader ctxClassLoader = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(classLoader);
       try
       {
          ServletRequestContext reqContext = new ServletRequestContext(context, req, res);
@@ -211,7 +210,7 @@ public class RequestHandlerImpl implements RequestHandler
       finally
       {
          // Reset the thread context class loader
-         Thread.currentThread().setContextClassLoader(ctxClassLoader);
+         SecurityActions.setContextClassLoader(ctxClassLoader);
 
          try
          {
@@ -415,7 +414,7 @@ public class RequestHandlerImpl implements RequestHandler
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 
       long beginProcessing = 0;
-      ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
+      ClassLoader ctxClassLoader = SecurityActions.getContextClassLoader();
       try
       {
          EndpointState state = ep.getState();
@@ -463,7 +462,7 @@ public class RequestHandlerImpl implements RequestHandler
 
          // Set the thread context class loader
          ClassLoader classLoader = sepMetaData.getClassLoader();
-         Thread.currentThread().setContextClassLoader(classLoader);
+         SecurityActions.setContextClassLoader(classLoader);
 
          // Get the Invoker
          ServiceEndpointInvoker epInvoker = ep.getAttachment(ServiceEndpointInvoker.class);
@@ -524,7 +523,7 @@ public class RequestHandlerImpl implements RequestHandler
          }
 
          // Reset the thread context class loader
-         Thread.currentThread().setContextClassLoader(ctxClassLoader);
+         SecurityActions.setContextClassLoader(ctxClassLoader);
          log.debug("END handleRequest: " + ep.getName());
       }
    }
