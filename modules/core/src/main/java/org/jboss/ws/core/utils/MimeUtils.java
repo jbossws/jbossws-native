@@ -22,15 +22,18 @@
 package org.jboss.ws.core.utils;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.ParseException;
@@ -41,10 +44,6 @@ import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.common.JavaUtils;
-
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageDecoder;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
  * Generic mime utility class.
@@ -218,15 +217,18 @@ public class MimeUtils
    {
       public Object readFrom(InputStream in) {
          Object converted = null;
+         
          try
          {
-            JPEGImageDecoder dec = JPEGCodec.createJPEGDecoder(in);
-            BufferedImage bim = dec.decodeAsBufferedImage();
+            ImageReader decoder = ImageIO.getImageReadersByFormatName("JPEG").next();
+            ImageInputStream iis = ImageIO.createImageInputStream(in);
+            decoder.setInput(iis);
+            BufferedImage bim = decoder.read(0);
             converted = bim;
          }
          catch (Exception e)
          {
-            // ignore
+            e.printStackTrace();
          }
 
          return converted;
@@ -235,10 +237,12 @@ public class MimeUtils
       public void writeTo(Object obj, OutputStream out) {
          if(obj instanceof BufferedImage)
          {
-            JPEGImageEncoder enc = JPEGCodec.createJPEGEncoder(out);
+            ImageWriter encoder = ImageIO.getImageWritersByFormatName("JPEG").next();
             try
             {
-               enc.encode((BufferedImage)obj);
+               ImageOutputStream ios = ImageIO.createImageOutputStream(out);
+               encoder.setOutput(ios);
+               encoder.write((BufferedImage)obj);
             }
             catch (IOException e)
             {
