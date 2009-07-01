@@ -657,8 +657,17 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public void setTextContent(String textContent) throws DOMException
    {
-      // FIXME setTextContent
-      throw new NotImplementedException("setTextContent");
+      NodeList nodes = getChildNodes();
+      for (int i = 0; i < nodes.getLength(); i++)
+      {
+         removeChild((Node)nodes.item(i));
+      }
+
+      if (textContent != null && textContent.length() > 0)
+      {
+         Node node = domNode.getOwnerDocument().createTextNode(textContent);
+         appendChild(node);
+      }
    }
 
    public Object setUserData(String key, Object data, UserDataHandler handler)

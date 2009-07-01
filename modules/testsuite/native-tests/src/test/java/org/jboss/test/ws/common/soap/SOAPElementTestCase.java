@@ -22,6 +22,7 @@
 package org.jboss.test.ws.common.soap;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
 
@@ -154,6 +155,40 @@ public class SOAPElementTestCase extends JBossWSTest
       Iterator it = bearElement.getAllAttributes();
       assertEquals(soapFactory.createName("name"), it.next());
       assertEquals(soapFactory.createName("species", null, "http://zoofan.net"), it.next());
+   }
+   
+   public void testSetTextContent() throws Exception
+   {
+      InputStream is = getResourceURL("common/soap/jbws2693.xml").openStream();
+      MessageFactory messageFactory = MessageFactory.newInstance();
+      SOAPMessage soapMessage = messageFactory.createMessage(null, is);
+      NodeList nl = soapMessage.getSOAPBody().getChildNodes();
+      SOAPElement echo = null;
+      for (int i = 0; i < nl.getLength() && echo == null; i++)
+      {
+         Object current = nl.item(i);
+         if (current instanceof SOAPElement)
+         {
+            echo = (SOAPElement)current;
+         }
+      }
+      nl = echo.getChildNodes();
+      SOAPElement arg0 = null;
+      for (int i = 0; i < nl.getLength() && arg0 == null; i++)
+      {
+         Object current = nl.item(i);
+         if (current instanceof SOAPElement)
+         {
+            arg0 = (SOAPElement)current;
+         }
+      }
+
+      String value = arg0.getTextContent();
+      assertEquals("Expected value", "123", value);
+
+      arg0.setTextContent("456");
+      value = arg0.getTextContent();
+      assertEquals("Expected value", "456", value);
    }
 
    /** Return the count of iterator elements, rendering the iterator unusable.
