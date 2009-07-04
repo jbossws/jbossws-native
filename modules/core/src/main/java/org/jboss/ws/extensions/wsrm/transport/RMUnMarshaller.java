@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.client.UnMarshaller;
 
 /**
  * Unmarshalls byte array from the input stream
@@ -41,13 +41,13 @@ public final class RMUnMarshaller implements UnMarshaller
    {
       return getInstance();
    }
-   
+
    public static UnMarshaller getInstance()
    {
       return instance;
    }
-   
-   public Object read(InputStream is, Map metadata) throws IOException, ClassNotFoundException
+
+   public Object read(InputStream is, Map metadata) throws IOException
    {
       if (is == null)
          return RMMessageFactory.newMessage(null, new RMMetadata(metadata)); // TODO: investigate why is == null (WSAddressing reply-to test)
@@ -64,10 +64,4 @@ public final class RMUnMarshaller implements UnMarshaller
       return RMMessageFactory.newMessage(baos.toByteArray(), new RMMetadata(metadata));
    }
 
-   public void setClassLoader(ClassLoader classloader)
-   {
-      // do nothing
-   }
-   
 }
-

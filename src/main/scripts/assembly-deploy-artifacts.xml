@@ -52,6 +52,7 @@
               <include>com.sun.xml.stream.buffer:streambuffer:jar</include>
               <include>wsdl4j:wsdl4j:jar</include>
               <include>org.apache:xmlsec:jar</include>
+              <include>org.jboss.netty:netty:jar</include>
             </includes>
           </dependencySet>
           <dependencySet>

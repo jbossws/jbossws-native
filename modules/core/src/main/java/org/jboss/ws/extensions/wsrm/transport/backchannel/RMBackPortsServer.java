@@ -21,20 +21,26 @@
  */
 package org.jboss.ws.extensions.wsrm.transport.backchannel;
 
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.logging.Logger;
-import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.transport.Connector;
+import org.jboss.netty.bootstrap.ServerBootstrap;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.group.ChannelGroup;
+import org.jboss.netty.channel.group.DefaultChannelGroup;
+import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.jboss.ws.core.client.WSServerPipelineFactory;
 import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.transport.RMMarshaller;
-import org.jboss.ws.extensions.wsrm.transport.RMUnMarshaller;
 
 /**
  * Back ports server used by addressable clients
  *
  * @author richard.opalka@jboss.com
+ * @author alessio.soldano@jboss.com
  *
  * @since Nov 20, 2007
  */
@@ -44,9 +50,9 @@ public final class RMBackPortsServer implements Runnable
    private static final Lock CLASS_LOCK = new ReentrantLock();
    private static final long WAIT_PERIOD = 100;
    private static RMBackPortsServer INSTANCE;
+   static final ChannelGroup channelGroup = new DefaultChannelGroup("rmBackPortsServer");
 
    private final Object instanceLock = new Object();
-   private final Connector connector;
    private final String scheme;
    private final String host;
    private final int port;
@@ -54,6 +60,7 @@ public final class RMBackPortsServer implements Runnable
    private boolean started;
    private boolean stopped;
    private boolean terminated;
+   private ChannelFactory factory;
    
    public final void registerCallback(RMCallbackHandler callbackHandler)
    {
@@ -70,8 +77,7 @@ public final class RMBackPortsServer implements Runnable
       return this.handler.getCallback(requestPath);
    }
    
-   private RMBackPortsServer(String scheme, String host, int port)
-   throws RMException
+   private RMBackPortsServer(String scheme, String host, int port) throws RMException
    {
       super();
       this.scheme = scheme;
@@ -79,17 +85,19 @@ public final class RMBackPortsServer implements Runnable
       this.port = port;
       try
       {
-         // we have to use custom unmarshaller because default one removes CRNLs
-         String customUnmarshaller = "/?unmarshaller=" + RMUnMarshaller.class.getName();
-         InvokerLocator il = new InvokerLocator(this.scheme + "://" + this.host + ":" + this.port + customUnmarshaller);
-         this.connector = new Connector();
-         this.connector.setInvokerLocator(il.getLocatorURI());
-         this.connector.create();
-   
+         factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+
+         ServerBootstrap bootstrap = new ServerBootstrap(factory);
          this.handler = new RMBackPortsInvocationHandler();
-         this.connector.addInvocationHandler("wsrmBackPortsHandler", this.handler);
-         this.connector.start();
-         LOG.debug("WS-RM Backports Server started on: " + il.getLocatorURI());
+         WSServerPipelineFactory channelPipelineFactory = new WSServerPipelineFactory();
+         channelPipelineFactory.setRequestHandler(this.handler);
+         bootstrap.setPipelineFactory(channelPipelineFactory);
+         bootstrap.setOption("child.tcpNoDelay", true);
+         bootstrap.setOption("child.keepAlive", true);
+         // Bind and start to accept incoming connections.
+         Channel c = bootstrap.bind(new InetSocketAddress(this.port));
+         channelGroup.add(c);
+         LOG.debug("WS-RM Backports Server started on port: " + this.port);
       }
       catch (Exception e)
       {
@@ -136,7 +144,13 @@ public final class RMBackPortsServer implements Runnable
          }
          try
          {
-            connector.stop();
+            //Close all connections and server sockets.
+            channelGroup.close().awaitUninterruptibly();
+            //Shutdown the selector loop (boss and worker).
+            if (factory != null)
+            {
+               factory.releaseExternalResources();
+            }
          }
          finally
          {
@@ -178,8 +192,7 @@ public final class RMBackPortsServer implements Runnable
     * @return WS-RM back ports server
     * @throws RMException
     */
-   public static RMBackPortsServer getInstance(String scheme, String host, int port)
-   throws RMException
+   public static RMBackPortsServer getInstance(String scheme, String host, int port) throws RMException
    {
       CLASS_LOCK.lock();
       try

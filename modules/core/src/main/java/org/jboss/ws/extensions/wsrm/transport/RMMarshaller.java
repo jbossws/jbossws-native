@@ -24,9 +24,7 @@ package org.jboss.ws.extensions.wsrm.transport;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.jboss.remoting.InvocationRequest;
-import org.jboss.remoting.invocation.OnewayInvocation;
-import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.ws.core.client.Marshaller;
 
 /**
  * Marshalls byte array to the output stream
@@ -49,12 +47,6 @@ public final class RMMarshaller implements Marshaller
    
    public void write(Object dataObject, OutputStream output) throws IOException
    {
-      if (dataObject instanceof InvocationRequest)
-         dataObject = ((InvocationRequest)dataObject).getParameter();
-
-      if (dataObject instanceof OnewayInvocation)
-         dataObject = ((OnewayInvocation)dataObject).getParameters()[0];
-
       if ((dataObject instanceof byte[]) == false)
          throw new IllegalArgumentException("Not a byte array: " + dataObject);
 

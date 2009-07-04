@@ -49,11 +49,11 @@ import javax.xml.ws.http.HTTPException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.jboss.remoting.transport.http.HTTPMetadataConstants;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.client.NettyClient;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.handler.HandlerChainExecutor;
@@ -216,7 +216,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          Map<?, ?> remotingMetadata = (Map)msgContext.get(CommonMessageContext.REMOTING_METADATA);
 
          // Get the HTTP_RESPONSE_CODE
-         Integer resposeCode = (Integer)remotingMetadata.get(HTTPMetadataConstants.RESPONSE_CODE);
+         Integer resposeCode = (Integer)remotingMetadata.get(NettyClient.RESPONSE_CODE);
          if (resposeCode != null)
             msgContext.put(MessageContextJAXWS.HTTP_RESPONSE_CODE, resposeCode);
 

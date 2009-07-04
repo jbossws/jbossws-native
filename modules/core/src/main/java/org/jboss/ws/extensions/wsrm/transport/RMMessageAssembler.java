@@ -28,9 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.jboss.remoting.marshal.Marshaller;
-import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.client.Marshaller;
+import org.jboss.ws.core.client.UnMarshaller;
 
 /**
  * Translates JBoss messages to RM sources and vice-versa.

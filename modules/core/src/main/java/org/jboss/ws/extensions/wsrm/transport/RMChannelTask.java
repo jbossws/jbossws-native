@@ -23,15 +23,13 @@ package org.jboss.ws.extensions.wsrm.transport;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.jboss.logging.Logger;
-import org.jboss.remoting.CannotConnectException;
-import org.jboss.remoting.Client;
-import org.jboss.remoting.InvokerLocator;
-import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.core.client.NettyClient;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFactory;
@@ -44,7 +42,6 @@ import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFacto
 final class RMChannelTask implements Callable<RMChannelResponse>
 {
    private static final Logger logger = Logger.getLogger(RMChannelTask.class);
-   private static final String JBOSSWS_SUBSYSTEM = "jbossws-wsrm";
    private final RMMessage rmRequest;
    
    RMChannelTask(RMMessage rmRequest)
@@ -58,14 +55,6 @@ final class RMChannelTask implements Callable<RMChannelResponse>
       try
       {
          String targetAddress = (String)rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT).get(RMChannelConstants.TARGET_ADDRESS);
-         String version = (String)rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT).get(RMChannelConstants.REMOTING_VERSION);
-
-         if (version.startsWith("1.4"))
-         {
-            MarshalFactory.addMarshaller("JBossWSMessage", RMMarshaller.getInstance(), RMUnMarshaller.getInstance());
-         }
-
-         InvokerLocator locator = new InvokerLocator(targetAddress);
          URI backPort = RMTransportHelper.getBackPortURI(rmRequest);
          String messageId = RMTransportHelper.getAddressingMessageId(rmRequest);
          
@@ -83,39 +72,19 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          }
          boolean oneWay = RMTransportHelper.isOneWayOperation(rmRequest);
          
-         Client client = new Client(locator, JBOSSWS_SUBSYSTEM, rmRequest.getMetadata().getContext(RMChannelConstants.REMOTING_CONFIGURATION_CONTEXT));
-         client.connect();
-
-         client.setMarshaller(RMMarshaller.getInstance());
-
-         if ((false == oneWay) && (null == backPort))  
-            client.setUnMarshaller(RMUnMarshaller.getInstance());
-      
-         Map<String, Object> remotingInvocationContext = rmRequest.getMetadata().getContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT);
-
-         // debug the outgoing request message
-         MessageTrace.traceMessage("Outgoing RM Request Message", rmRequest.getPayload());
- 
+         NettyClient client = new NettyClient(RMMarshaller.getInstance(), RMUnMarshaller.getInstance());
+         Map<String, Object> additionalHeaders = rmRequest.getMetadata().getContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT);
+         Map<String, Object> callProps = new HashMap<String, Object>();
+         callProps.putAll(rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT));
+         
          RMMessage rmResponse = null;
          if (oneWay && (null == backPort))
          {
-            client.invokeOneway(rmRequest.getPayload(), remotingInvocationContext, false);
+            client.invoke(rmRequest.getPayload(), targetAddress, false, additionalHeaders, callProps);
          }
          else
          {
-            Object retVal = null;
-            try
-            {
-               retVal = client.invoke(rmRequest.getPayload(), remotingInvocationContext);
-            }
-            catch (CannotConnectException cce)
-            {
-               // remoting hack - ignore NullPointerException cause
-               if (false == (cce.getCause() instanceof NullPointerException))
-               {
-                  throw cce;
-               }
-            }
+            Object retVal = client.invoke(rmRequest.getPayload(), targetAddress, true, additionalHeaders, callProps);
             if ((null != retVal) && (false == (retVal instanceof RMMessage)))
             {
                String msg = retVal.getClass().getName() + ": '" + retVal + "'";
@@ -124,9 +93,7 @@ final class RMChannelTask implements Callable<RMChannelResponse>
             }
             rmResponse = (RMMessage)retVal;
          }
-
-         // Disconnect the remoting client
-         client.disconnect();
+         rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT).putAll(callProps);
 
          // trace the incomming response message
          if ((rmResponse != null) && (backPort == null))

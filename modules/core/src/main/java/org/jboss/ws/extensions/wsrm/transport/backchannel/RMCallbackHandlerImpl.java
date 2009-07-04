@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.logging.Logger;
-import org.jboss.remoting.InvocationRequest;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.extensions.wsrm.transport.RMMessage;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
@@ -70,9 +69,8 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
       return this.handledPath;
    }
 
-   public final void handle(InvocationRequest request)
+   public final void handle(RMMessage message)
    {
-      RMMessage message = (RMMessage)request.getParameter();
       synchronized (instanceLock)
       {
          String requestMessage = new String(message.getPayload());

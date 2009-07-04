@@ -41,8 +41,6 @@ import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 import javax.xml.ws.addressing.EndpointReference;
 
-import org.jboss.remoting.marshal.Marshaller;
-import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
 import org.jboss.ws.core.soap.SOAPMessageUnMarshaller;
@@ -66,8 +64,13 @@ public class SOAPProtocolConnectionJMS implements RemoteConnection
    {
       return new SOAPMessageMarshaller();
    }
-
+   
    public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
+   {
+      return this.invoke(reqMessage, endpoint, oneway, true);
+   }
+
+   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway, boolean maintainSession) throws IOException
    {
       if (endpoint == null)
          throw new IllegalArgumentException("Given endpoint cannot be null");

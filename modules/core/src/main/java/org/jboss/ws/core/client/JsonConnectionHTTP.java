@@ -26,8 +26,6 @@ import java.util.Map;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 
-import org.jboss.remoting.marshal.Marshaller;
-import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxws.binding.JsonMessageMarshaller;
 import org.jboss.ws.core.jaxws.binding.JsonMessageUnMarshaller;
@@ -55,9 +53,11 @@ public class JsonConnectionHTTP extends HTTPRemotingConnection
    protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
    {
       // TODO: fix the content-type
-      MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
-      mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, SOAPConstants.SOAP_1_1_CONTENT_TYPE);
-      
+      if (reqMessage != null)
+      {
+         MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
+         mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, SOAPConstants.SOAP_1_1_CONTENT_TYPE);
+      }
       super.populateHeaders(reqMessage, metadata);
    }
 }

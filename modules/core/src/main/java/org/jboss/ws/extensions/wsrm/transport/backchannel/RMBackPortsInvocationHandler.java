@@ -21,38 +21,154 @@
  */
 package org.jboss.ws.extensions.wsrm.transport.backchannel;
 
+import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.management.MBeanServer;
-
 import org.jboss.logging.Logger;
-import org.jboss.remoting.InvocationRequest;
-import org.jboss.remoting.ServerInvocationHandler;
-import org.jboss.remoting.ServerInvoker;
-import org.jboss.remoting.callback.InvokerCallbackHandler;
-import org.jboss.remoting.transport.coyote.RequestMap;
-import org.jboss.remoting.transport.http.HTTPMetadataConstants;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBufferInputStream;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.ExceptionEvent;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.http.Cookie;
+import org.jboss.netty.handler.codec.http.CookieDecoder;
+import org.jboss.netty.handler.codec.http.CookieEncoder;
+import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.jboss.ws.extensions.wsrm.transport.RMMessage;
+import org.jboss.ws.extensions.wsrm.transport.RMUnMarshaller;
 
 /**
  * TODO: Add comment
  *
  * @author richard.opalka@jboss.com
+ * @author alessio.soldano@jboss.com
  *
  * @since Nov 20, 2007
  */
-public final class RMBackPortsInvocationHandler implements ServerInvocationHandler
+public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHandler
 {
    private static final Logger LOG = Logger.getLogger(RMBackPortsInvocationHandler.class);
    private final List<RMCallbackHandler> callbacks = new LinkedList<RMCallbackHandler>();
    private final Lock lock = new ReentrantLock();
-   
+
+
    public RMBackPortsInvocationHandler()
    {
    }
    
+   @Override
+   public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e)
+   {
+      // HERE: Add all accepted channels to the group
+      //       so that they are closed properly on shutdown
+      //       If the added channel is closed before shutdown,
+      //       it will be removed from the group automatically.
+      RMBackPortsServer.channelGroup.add(ctx.getChannel());
+   } 
+
+   @Override
+   public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception
+   {
+      HttpRequest request = (HttpRequest)e.getMessage();
+      ChannelBuffer content = request.getContent();
+
+      Map<String, Object> requestHeaders = new HashMap<String, Object>();
+      for (String headerName : request.getHeaderNames())
+      {
+         requestHeaders.put(headerName, request.getHeaders(headerName));
+      }
+      boolean error = false;
+      try
+      {
+         String requestPath = new URL(request.getUri()).getPath();
+         RMMessage message = (RMMessage)RMUnMarshaller.getInstance().read(content.readable() ? new ChannelBufferInputStream(content) : null, requestHeaders);
+         handle(requestPath, message);
+      }
+      catch (Throwable t)
+      {
+         error = true;
+         LOG.error("Error decoding request to the backport", t);
+      }
+      finally
+      {
+         writeResponse(e, request, error);
+      }
+   }
+   
+   
+   private void handle(String requestPath, RMMessage message)
+   {
+      this.lock.lock();
+      try
+      {
+         boolean handlerExists = false;
+         for (RMCallbackHandler handler : this.callbacks)
+         {
+            if (handler.getHandledPath().equals(requestPath))
+            {
+               handlerExists = true;
+               LOG.debug("Handling request path: " + requestPath);
+               handler.handle(message);
+               break;
+            }
+         }
+         if (handlerExists == false)
+            LOG.warn("No callback handler registered for path: " + requestPath);
+      }
+      finally
+      {
+         this.lock.unlock();
+      }
+   }
+   
+   private void writeResponse(MessageEvent e, HttpRequest request, boolean error)
+   {
+      // Build the response object.
+      HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, error ? HttpResponseStatus.INTERNAL_SERVER_ERROR : HttpResponseStatus.OK);
+      response.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
+
+      String cookieString = request.getHeader(HttpHeaders.Names.COOKIE);
+      if (cookieString != null)
+      {
+         CookieDecoder cookieDecoder = new CookieDecoder();
+         Set<Cookie> cookies = cookieDecoder.decode(cookieString);
+         if (!cookies.isEmpty())
+         {
+            // Reset the cookies if necessary.
+            CookieEncoder cookieEncoder = new CookieEncoder(true);
+            for (Cookie cookie : cookies)
+            {
+               cookieEncoder.addCookie(cookie);
+            }
+            response.addHeader(HttpHeaders.Names.SET_COOKIE, cookieEncoder.encode());
+         }
+      }
+
+      // Write the response.
+      e.getChannel().write(response);
+      e.getChannel().close();
+   }
+
+   @Override
+   public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
+   {
+      e.getCause().printStackTrace();
+      e.getChannel().close();
+   }
+
    public RMCallbackHandler getCallback(String requestPath)
    {
       this.lock.lock();
@@ -97,54 +213,4 @@ public final class RMBackPortsInvocationHandler implements ServerInvocationHandl
          this.lock.unlock();
       }
    }
-
-   public Object invoke(InvocationRequest request) throws Throwable
-   {
-      this.lock.lock();
-      try
-      {
-         RequestMap rm = (RequestMap)request.getRequestPayload();
-         String requestPath = (String)rm.get(HTTPMetadataConstants.PATH);
-         boolean handlerExists = false;
-         for (RMCallbackHandler handler : this.callbacks)
-         {
-            if (handler.getHandledPath().equals(requestPath))
-            {
-               handlerExists = true;
-               LOG.debug("Handling request path: " + requestPath);
-               handler.handle(request);
-               break;
-            }
-         }
-         if (handlerExists == false)
-            LOG.warn("No callback handler registered for path: " + requestPath);
-
-         return null;
-      }
-      finally
-      {
-         this.lock.unlock();
-      }
-   }
-
-   public void addListener(InvokerCallbackHandler callbackHandler)
-   {
-      // do nothing - we're using custom callback handlers
-   }
-
-   public void removeListener(InvokerCallbackHandler callbackHandler)
-   {
-      // do nothing - we're using custom callback handlers
-   }
-   
-   public void setInvoker(ServerInvoker arg0)
-   {
-      // do nothing
-   }
-
-   public void setMBeanServer(MBeanServer arg0)
-   {
-      // do nothing
-   }
-   
 }

@@ -21,7 +21,6 @@
  */
 package org.jboss.ws.extensions.wsrm.transport.backchannel;
 
-import org.jboss.remoting.InvocationRequest;
 import org.jboss.ws.extensions.wsrm.transport.RMMessage;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 
@@ -35,7 +34,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
 public interface RMCallbackHandler
 {
    String getHandledPath();
-   void handle(InvocationRequest payload);
+   void handle(RMMessage message);
    RMMessage getMessage(String messageId);
    Throwable getFault(String messageId);
    void addUnassignedMessageListener(RMUnassignedMessageListener listener);

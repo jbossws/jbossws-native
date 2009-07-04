@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
-import org.jboss.remoting.transport.http.HTTPMetadataConstants;
+import org.jboss.ws.core.client.NettyClient;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 
@@ -124,7 +124,7 @@ public final class RMSender
                      Map<String, Object> remotingCtx = result.getResponse().getMetadata().getContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT);
                      if (remotingCtx != null)
                      {
-                        if (Integer.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).equals(remotingCtx.get(HTTPMetadataConstants.RESPONSE_CODE)))
+                        if (Integer.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).equals(remotingCtx.get(NettyClient.RESPONSE_CODE)))
                         {
                            logger.debug("Response message received in " + (endTime - startTime) + " miliseconds, but contains internal server code, going to resend the request message");
                            continue;

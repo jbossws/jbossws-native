@@ -333,11 +333,12 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
             Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
-            if (shouldMaintainSession())
+            boolean maintainSession = shouldMaintainSession();
+            if (maintainSession)
                addSessionInfo(reqMessage, callProps);
 
             RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
-            MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
+            MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway, maintainSession);
 
             if (shouldMaintainSession())
                saveSessionInfo(callProps, getRequestContext());

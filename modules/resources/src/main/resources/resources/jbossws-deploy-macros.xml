@@ -44,6 +44,7 @@
     <include name="**/jbossws-native-saaj.jar"/>
     <include name="**/jbossws-spi.jar"/>
     <include name="**/jettison.jar"/>
+  	<include name="**/netty.jar"/>
     <include name="**/policy.jar"/>
     <include name="**/stax-api.jar"/>
     <include name="**/stax-ex.jar"/>
@@ -79,6 +80,7 @@
     <include name="**/jboss-jaxb-intros.jar"/>
     <include name="**/jbossws-native-core.jar"/>
     <include name="**/jettison.jar"/>
+  	<include name="**/netty.jar"/>
     <include name="**/policy.jar"/>
     <include name="**/wsdl4j.jar"/>
     <include name="**/xmlsec.jar"/>

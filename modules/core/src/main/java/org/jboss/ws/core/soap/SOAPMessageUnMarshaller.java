@@ -29,10 +29,11 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.remoting.marshal.UnMarshaller;
+import org.jboss.ws.core.client.UnMarshaller;
 
 /**
  * @author Thomas.Diesler@jboss.org
+ * @author alessio.soldano@jboss.com
  * @since 25-Nov-2004
  */
 public class SOAPMessageUnMarshaller implements UnMarshaller
@@ -40,7 +41,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
    // Provide logging
    private static Logger log = Logger.getLogger(SOAPMessageUnMarshaller.class);
 
-   public Object read(InputStream inputStream, Map metadata) throws IOException, ClassNotFoundException
+   public Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException
    {
       if (log.isTraceEnabled())
          log.trace("Read input stream with metadata=" + metadata);
@@ -63,14 +64,5 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
    protected MessageFactoryImpl getMessageFactory()
    {
       return new MessageFactoryImpl();
-   }
-
-   public void setClassLoader(ClassLoader classloader)
-   {
-   }
-
-   public UnMarshaller cloneUnMarshaller() throws CloneNotSupportedException
-   {
-      return new SOAPMessageUnMarshaller();
    }
 }

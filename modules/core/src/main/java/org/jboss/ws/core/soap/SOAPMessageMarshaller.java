@@ -27,12 +27,11 @@ import java.io.OutputStream;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.remoting.InvocationRequest;
-import org.jboss.remoting.invocation.OnewayInvocation;
-import org.jboss.remoting.marshal.Marshaller;
+import org.jboss.ws.core.client.Marshaller;
 
 /**
  * @author Thomas.Diesler@jboss.org
+ * @author alessio.soldano@jboss.com
  * @since 25-Nov-2004
  */
 public class SOAPMessageMarshaller implements Marshaller
@@ -51,21 +50,10 @@ public class SOAPMessageMarshaller implements Marshaller
     */
    public void write(Object dataObject, OutputStream output) throws IOException
    {
-      if (dataObject instanceof InvocationRequest)
-         dataObject = ((InvocationRequest)dataObject).getParameter();
-
-      if (dataObject instanceof OnewayInvocation)
-         dataObject = ((OnewayInvocation)dataObject).getParameters()[0];
-
       if ((dataObject instanceof SOAPMessage) == false)
          throw new IllegalArgumentException("Not a SOAPMessage: " + dataObject);
 
       SOAPMessageImpl soapMessage = (SOAPMessageImpl)dataObject;
       soapMessage.writeTo(output);
-   }
-
-   public Marshaller cloneMarshaller() throws CloneNotSupportedException
-   {
-      return new SOAPMessageMarshaller();
    }
 }

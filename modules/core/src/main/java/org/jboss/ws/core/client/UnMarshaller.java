@@ -21,42 +21,28 @@
  */
 package org.jboss.ws.core.client;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
-import javax.xml.soap.MimeHeaders;
-
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.soap.FastInfosetMarshaller;
-import org.jboss.ws.core.soap.FastInfosetUnMarshaller;
-import org.jboss.ws.core.soap.attachment.MimeConstants;
-
 /**
- * SOAPConnection implementation
+ * Takes a marshalled byte array and converts to a Java data object.
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 24-Jun-2009
  *
- * @author Thomas.Diesler@jboss.org
- * @since 12-Mar-2008
  */
-public class FastInfosetConnectionHTTP extends SOAPProtocolConnectionHTTP
+public interface UnMarshaller
 {
-   public UnMarshaller getUnmarshaller()
-   {
-      return new FastInfosetUnMarshaller();
-   }
-
-   public Marshaller getMarshaller()
-   {
-      return new FastInfosetMarshaller();
-   }
-   
-   @Override
-   protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
-   {
-      if (reqMessage != null)
-      {
-         MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
-         mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_FASTINFOSET);
-         mimeHeaders.addHeader(MimeConstants.ACCEPT, MimeConstants.TYPE_FASTINFOSET);
-      }
-      super.populateHeaders(reqMessage, metadata);
-   }
+   /**
+    * Will read from the inputstream and convert contents to java Object.
+    *
+    * @param inputStream stream to read data from to do conversion.
+    * @param metadata can be any transport specific metadata (such as headers from http transport).
+    *        This can be null, depending on if transport supports metadata.
+    *
+    * @return
+    * @throws IOException all specific i/o exceptions need to be thrown as this.
+    */
+   Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException;
 }

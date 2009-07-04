@@ -84,7 +84,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       if (reqMessage == null)
          throw new IllegalArgumentException("Given SOAPMessage cannot be null");
 
-      MessageAbstraction resMessage = callInternal(reqMessage, endpoint, true);
+      MessageAbstraction resMessage = callInternal(reqMessage, endpoint, false);
       return (SOAPMessage)resMessage;
    }
 
@@ -140,7 +140,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       try
       {
          remotingConnection = getRemotingConnection(endpoint);
-         MessageAbstraction resMessage = remotingConnection.invoke((SOAPMessageImpl)reqMessage, endpoint, oneway);
+         MessageAbstraction resMessage = remotingConnection.invoke((SOAPMessageImpl)reqMessage, endpoint, oneway, false);
          return resMessage;
       }
       catch (Exception ex)

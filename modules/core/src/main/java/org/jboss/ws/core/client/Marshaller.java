@@ -21,42 +21,29 @@
  */
 package org.jboss.ws.core.client;
 
-import java.util.Map;
-
-import javax.xml.soap.MimeHeaders;
-
-import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.soap.FastInfosetMarshaller;
-import org.jboss.ws.core.soap.FastInfosetUnMarshaller;
-import org.jboss.ws.core.soap.attachment.MimeConstants;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * SOAPConnection implementation
+ * Interface that all data marshallers must implements.
+ * Requires them to take Java data objects and convert
+ * primitive java data types (i.e. byte[]) and write
+ * to output provided.
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 24-Jun-2009
  *
- * @author Thomas.Diesler@jboss.org
- * @since 12-Mar-2008
  */
-public class FastInfosetConnectionHTTP extends SOAPProtocolConnectionHTTP
+public interface Marshaller
 {
-   public UnMarshaller getUnmarshaller()
-   {
-      return new FastInfosetUnMarshaller();
-   }
-
-   public Marshaller getMarshaller()
-   {
-      return new FastInfosetMarshaller();
-   }
-   
-   @Override
-   protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
-   {
-      if (reqMessage != null)
-      {
-         MimeHeaders mimeHeaders = reqMessage.getMimeHeaders();
-         mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_FASTINFOSET);
-         mimeHeaders.addHeader(MimeConstants.ACCEPT, MimeConstants.TYPE_FASTINFOSET);
-      }
-      super.populateHeaders(reqMessage, metadata);
-   }
+   /**
+    * Marshaller will need to take the dataObject and convert
+    * into primitive java data types and write to the
+    * given output.
+    *
+    * @param dataObject Object to be writen to output
+    * @param output     The data output to write the object
+    *                   data to.
+    */
+   public void write(Object dataObject, OutputStream output) throws IOException;
 }
