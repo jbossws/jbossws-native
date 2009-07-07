@@ -791,6 +791,13 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    {
       visitor.visitSOAPElement(this);
    }
+      
+   @Override
+   public void setPrefix(String prefix) throws DOMException
+   {
+      super.setPrefix(prefix);
+      elementName = null;
+   }
 
    /**
     * The default implementation uses a DOMWriter.
