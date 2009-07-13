@@ -22,24 +22,41 @@
 package org.jboss.ws.core.soap;
 
 // $Id$
-
-import org.jboss.ws.Constants;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.SOAPMessageAbstraction;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.soap.attachment.*;
-import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-
-import javax.mail.MessagingException;
-import javax.xml.soap.*;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.mail.MessagingException;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.SOAPMessageAbstraction;
+import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
+import org.jboss.ws.core.soap.attachment.CIDGenerator;
+import org.jboss.ws.core.soap.attachment.MimeConstants;
+import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
+import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
+import org.jboss.ws.core.soap.attachment.MultipartRelatedXOPEncoder;
+import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
  * The root class for all SOAP messages. As transmitted on the "wire", a SOAP message is an XML document or a
@@ -50,6 +67,8 @@ import java.util.List;
  */
 public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstraction
 {
+   private static Logger log = Logger.getLogger(SOAPMessageImpl.class);
+   
    private boolean saveRequired = true;
    private MimeHeaders mimeHeaders = new MimeHeaders();
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
@@ -115,25 +134,49 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
 
    public AttachmentPart getAttachmentByContentId(String cid) throws SOAPException
    {
+      String cidDecoded = decode(cid);
+      
       for (AttachmentPart part : attachments)
       {
-         String contentId = part.getContentId();
-         if (contentId.equals(cid))
+         String contentIdDecoded = decode(part.getContentId());
+         if (contentIdDecoded.equals(cidDecoded))
             return part;
       }
+
       return null;
+   }
+   
+   public String decode(String cid)
+   {
+      String cidDecoded = cid;
+      
+      try
+      {
+         cidDecoded = URLDecoder.decode(cid, "UTF-8");
+      }
+      catch (UnsupportedEncodingException ex)
+      {
+         log.error("Cannot decode name for cid: " + ex);
+      }
+      
+      return cidDecoded;
    }
 
    public AttachmentPart removeAttachmentByContentId(String cid)
    {
-      for (AttachmentPart part : attachments)
+      try
       {
-         String contentId = part.getContentId();
-         if (contentId.equals(cid))
+         AttachmentPart part = getAttachmentByContentId(cid);
+         if (part != null)
          {
             attachments.remove(part);
             return part;
          }
+      }
+      catch (SOAPException ex)
+      {
+         // this used to not throw SOAPException
+         log.error("Ignore SOAPException: " + ex);
       }
 
       return null;
