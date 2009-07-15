@@ -34,6 +34,7 @@ import org.jboss.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -58,6 +59,7 @@ import org.jboss.ws.extensions.wsrm.transport.RMUnMarshaller;
  *
  * @since Nov 20, 2007
  */
+@ChannelPipelineCoverage("one")
 public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHandler
 {
    private static final Logger LOG = Logger.getLogger(RMBackPortsInvocationHandler.class);

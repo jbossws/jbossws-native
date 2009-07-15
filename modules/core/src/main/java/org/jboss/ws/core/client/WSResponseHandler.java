@@ -31,6 +31,8 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.ws.core.utils.ThreadLocalAssociation;
+import org.jboss.wsf.common.DOMUtils;
 
 /**
  * A Netty channel upstream handler that receives MessageEvent
@@ -78,6 +80,8 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       }
       finally
       {
+         DOMUtils.clearThreadLocals();
+         ThreadLocalAssociation.clear();
          e.getChannel().close();
       }
    }

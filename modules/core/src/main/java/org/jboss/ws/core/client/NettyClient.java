@@ -184,11 +184,12 @@ public class NettyClient
          setActualChunkedLength(request);
          setAuthorization(request, callProps);
 
-         writeRequest(channel, request, reqMessage);
+         ChannelFuture writeFuture = writeRequest(channel, request, reqMessage);
 
          if (!waitForResponse)
          {
-            //No need to wait for the connection to be closed
+            //No need to wait for the connection to be closed, just wait for the write to be completed.
+            writeFuture.awaitUninterruptibly();
             return null;
          }
          //Wait for the server to close the connection
@@ -256,11 +257,11 @@ public class NettyClient
       return new InetSocketAddress(target.getHost(), port);
    }
 
-   private void writeRequest(Channel channel, HttpRequest request, Object reqMessage) throws IOException
+   private ChannelFuture writeRequest(Channel channel, HttpRequest request, Object reqMessage) throws IOException
    {
       if (reqMessage == null)
       {
-         channel.write(request);
+         return channel.write(request);
       }
       else
       {
@@ -286,13 +287,13 @@ public class NettyClient
                cur = to;
             }
             //write last chunk
-            channel.write(HttpChunk.LAST_CHUNK);
+            return channel.write(HttpChunk.LAST_CHUNK);
          }
          else
          {
             request.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(content.readableBytes()));
             request.setContent(content);
-            channel.write(request);
+            return channel.write(request);
          }
       }
    }
