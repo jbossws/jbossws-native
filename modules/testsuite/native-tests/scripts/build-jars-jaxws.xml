@@ -522,6 +522,18 @@
       </classes>
     </war>    
     
+    <!-- jaxws-jbws2526 -->
+    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2526.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/jbws2526/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbws2526/JBWS2526TestCase.class"/>
+        <include name="org/jboss/test/ws/jaxws/jbws2526/server-handlers.xml"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF">
+        <include name="wsdl/**"/>
+      </webinf>
+    </war>
+  	
     <!-- jaxws-jbws2565 -->
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2565.jar">
       <fileset dir="${tests.output.dir}/test-classes">

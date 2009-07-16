@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+               xmlns="urn:JBWS-2526-Schema">
+  <soap:Body>
+    <Request>
+      <!-- This is a comment node which may trigger a ClassCastException -->
+      <Value1>9</Value1>
+      <Value2>9</Value2>
+    </Request>
+  </soap:Body>
+</soap:Envelope>
