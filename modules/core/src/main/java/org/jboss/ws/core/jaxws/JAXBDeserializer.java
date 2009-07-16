@@ -24,6 +24,8 @@ package org.jboss.ws.core.jaxws;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.ws.WebServiceException;
@@ -67,6 +69,16 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
 
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
          unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());
+         
+         //workaround for https://jira.jboss.org/jira/browse/JBWS-2686 while waiting for Sun's bug to be fixed
+         unmarshaller.setEventHandler(new ValidationEventHandler() {
+            public boolean handleEvent(final ValidationEvent event)
+            {
+               int severity = event.getSeverity();
+               return (severity != ValidationEvent.FATAL_ERROR && severity != ValidationEvent.ERROR);
+            }
+
+         }); 
 
          JAXBElement jbe = unmarshaller.unmarshal(xmlFragment, javaType);
          value = jbe.getValue();
