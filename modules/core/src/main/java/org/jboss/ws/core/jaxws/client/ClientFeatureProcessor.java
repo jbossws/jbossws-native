@@ -22,6 +22,7 @@
 package org.jboss.ws.core.jaxws.client;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.RespectBindingFeature;
@@ -33,8 +34,10 @@ import javax.xml.ws.soap.MTOMFeature;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler;
+import org.jboss.ws.feature.ChunkedEncodingFeature;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.feature.SchemaValidationFeature;
@@ -70,6 +73,7 @@ public class ClientFeatureProcessor
       supportedFeatures.addFeature(new AddressingFeature());
       supportedFeatures.addFeature(new MTOMFeature());
       supportedFeatures.addFeature(new RespectBindingFeature());
+      supportedFeatures.addFeature(new ChunkedEncodingFeature());
    }
    
    public static <T> void processFeature(WebServiceFeature feature, EndpointMetaData epMetaData, T stub)
@@ -81,12 +85,12 @@ public class ClientFeatureProcessor
       processAddressingFeature(feature, epMetaData, stub);
       processMTOMFeature(feature, epMetaData, stub);
       processRespectBindingFeature(feature, epMetaData, stub);
+      processChunkedEncodingFeature(feature, epMetaData, stub);
       epMetaData.addFeature(feature);
    }
    
    /**
-    * Returns true or false depending on the provided WebServiceFeature being an AddressingFeature or not.
-    * In the former case, addressing is setup.
+    * Setup addressing
     * 
     * @param <T>
     * @param feature
@@ -107,8 +111,25 @@ public class ClientFeatureProcessor
    }
    
    /**
-    * Returns true or false depending on the provided WebServiceFeature being an MTOMFeature or not.
-    * In the former case, mtom is setup.
+    * Setup http chunked encoding
+    * 
+    * @param <T>
+    * @param feature
+    * @param epMetaData
+    * @param stub
+    * @return
+    */
+   private static <T> void processChunkedEncodingFeature(WebServiceFeature feature, EndpointMetaData epMetaData, T stub)
+   {
+      if (feature instanceof ChunkedEncodingFeature)
+      {
+         Map<String, Object> ctx = ((BindingProvider)stub).getRequestContext();
+         ctx.put(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE, ((ChunkedEncodingFeature)feature).getChunkSize());
+      }
+   }
+   
+   /**
+    * Setup MTOM
     * 
     * @param <T>
     * @param feature
@@ -126,8 +147,8 @@ public class ClientFeatureProcessor
    }
    
    /**
-    * Returns true or false depending on the provided WebServiceFeature being an RespectBindingFeature or not.
-    * In the former case, the respect binding checks are performed.
+    * 
+    * Perform respect binding checks
     * 
     * @param <T>
     * @param feature

@@ -34,6 +34,7 @@ import javax.net.ssl.SSLEngine;
 import javax.xml.rpc.Stub;
 import javax.xml.ws.BindingProvider;
 
+import org.jboss.logging.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
@@ -73,6 +74,7 @@ public class NettyClient
 {
    public static final String RESPONSE_CODE = "ResponseCode";
    public static final String RESPONSE_CODE_MESSAGE = "ResponseCodeMessage";
+   private static Logger log = Logger.getLogger(NettyClient.class);
    
    private Marshaller marshaller;
    private UnMarshaller unmarshaller;
@@ -181,7 +183,7 @@ public class NettyClient
          request.addHeader(HttpHeaders.Names.HOST, target.getHost());
          request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
          setAdditionalHeaders(request, additionalHeaders);
-         setActualChunkedLength(request);
+         setActualChunkedLength(request, callProps);
          setAuthorization(request, callProps);
 
          ChannelFuture writeFuture = writeRequest(channel, request, reqMessage);
@@ -326,7 +328,7 @@ public class NettyClient
     * 
     * @param message
     */
-   protected void setActualChunkedLength(HttpRequest message)
+   protected void setActualChunkedLength(HttpRequest message, Map<String, Object> callProps)
    {
       if (HttpMethod.POST.equals(message.getMethod()))
       {
@@ -340,6 +342,20 @@ public class NettyClient
             String sizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
             if (sizeValue != null)
                chunkSize = Integer.valueOf(sizeValue);
+
+            //override using call props
+            try
+            {
+               Object obj = callProps.get(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE);
+               if (obj != null) //explicit 0 value is required to disable chunked mode
+                  chunkSize = (Integer)obj;
+            }
+            catch (Exception e)
+            {
+               log.warn("Can't set chunk size from call properties, illegal value provided!");
+            }
+            
+            //fastinfoset always disable chunking
             if (epMetaData.isFeatureEnabled(FastInfosetFeature.class))
                chunkSize = 0;
          }
