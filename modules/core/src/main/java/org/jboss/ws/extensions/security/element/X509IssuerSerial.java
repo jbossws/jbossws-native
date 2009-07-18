@@ -130,13 +130,13 @@ public class X509IssuerSerial extends Reference
       Element issuerSerial = doc.createElementNS(Constants.XML_SIGNATURE_NS, "ds:X509IssuerSerial");
       element.appendChild(issuerSerial);
 
-      element = doc.createElementNS(Constants.XML_SIGNATURE_NS, "ds:X509IssuerName");
-      element.appendChild(doc.createTextNode(issuer));
-      issuerSerial.appendChild(element);
+      Element issuerName = doc.createElementNS(Constants.XML_SIGNATURE_NS, "ds:X509IssuerName");
+      issuerName.appendChild(doc.createTextNode(issuer));
+      issuerSerial.appendChild(issuerName);
 
-      element = doc.createElementNS(Constants.XML_SIGNATURE_NS, "ds:X509SerialNumber");
-      element.appendChild(doc.createTextNode(serial));
-      issuerSerial.appendChild(element);
+      Element serialNumber = doc.createElementNS(Constants.XML_SIGNATURE_NS, "ds:X509SerialNumber");
+      serialNumber.appendChild(doc.createTextNode(serial));
+      issuerSerial.appendChild(serialNumber);
 
       cachedElement = element;
       return cachedElement;
