@@ -58,7 +58,6 @@
   </patternset>
 
   <patternset id="jbossws.lib.endorsed.patternset">
-    <include name="**/jbossws-native-jaxrpc.jar"/>
     <include name="**/jbossws-native-jaxws.jar"/>
     <include name="**/jbossws-native-jaxws-ext.jar"/>
     <include name="**/jbossws-native-saaj.jar"/>
