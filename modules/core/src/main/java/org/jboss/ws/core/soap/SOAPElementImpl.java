@@ -739,7 +739,19 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public NodeList getElementsByTagName(String name)
    {
-      return new NodeListImpl(DOMUtils.getChildElements(this, name, true));
+      List<Element> nodes = DOMUtils.getChildElementsAsList(this, (QName)null, true);
+
+      List filtered = new LinkedList();
+
+      for (Element current : nodes)
+      {
+         if (current.getTagName().equals(name))
+         {
+            filtered.add(current);
+         }
+      }
+
+      return new NodeListImpl(filtered.iterator());
    }
 
    public String getAttributeNS(String namespaceURI, String localName)
