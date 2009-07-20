@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:jbw='http://ws.jboss.org/jbws2704'>
+  <soapenv:Header/>
+  <soapenv:Body>
+    <jbw:echo xmlns:ns1='http://org.jboss.ws/testNS1' xmlns:ns2='http://org.jboss.ws/testNS2'>
+      <ns1:String_1>Value_1</ns1:String_1>
+      <ns2:String_1>Value_2</ns2:String_1>
+      <ns1:String_2>Value_3</ns1:String_2>
+      <ns2:String_2>Value_4</ns2:String_2>            
+    </jbw:echo>
+  </soapenv:Body>
+</soapenv:Envelope>
