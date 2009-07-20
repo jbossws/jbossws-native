@@ -159,11 +159,10 @@ public class SOAPElementTestCase extends JBossWSTest
    // JBWS-2704
    public void testGetElementByTagNameNS_Wildcard() throws Exception
    {
-      InputStream is = new File("resources/common/soap/bws2704.xml").toURL().openStream();
+      InputStream is = new File("resources/common/soap/jbws2704.xml").toURL().openStream();
       MessageFactory messageFactory = MessageFactory.newInstance();
       SOAPMessage soapMessage = messageFactory.createMessage(null, is);
       SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
-
       NodeList nodes = envelope.getElementsByTagNameNS("*", "String_1");
       assertEquals("String_1 nodes", 2, nodes.getLength());
       assertEquals("String_1(0) text content", "Value_1", nodes.item(0).getTextContent());
@@ -191,9 +190,29 @@ public class SOAPElementTestCase extends JBossWSTest
       nodes = envelope.getElementsByTagNameNS("http://org.jboss.ws/testNS2", "String_1");
       assertEquals("http://org.jboss.ws/testNS2 String_1 nodes", 1, nodes.getLength());
       assertEquals("http://org.jboss.ws/testNS2 String_1(0) text content", "Value_2", nodes.item(0).getTextContent());
+   }            
+   
+   // JBWS-2703
+   public void testGetElementByTagName() throws Exception
+   {
+      InputStream is = new File("resources/common/soap/jbws2703.xml").toURL().openStream();
+      MessageFactory messageFactory = MessageFactory.newInstance();
+      SOAPMessage soapMessage = messageFactory.createMessage(null, is);
+      SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
+      
+      NodeList nodeList;
+      nodeList = envelope.getElementsByTagName("soapenv:Header");
+      assertEquals("soapenv:Header nodes.", 1, nodeList.getLength());
+      nodeList = envelope.getElementsByTagName("soapenv:Body");
+      assertEquals("soapenv:Body nodes.", 1, nodeList.getLength());
+      nodeList = envelope.getElementsByTagName("jbw:echo");
+      assertEquals("jbw:echo nodes.", 1, nodeList.getLength());
+      nodeList = envelope.getElementsByTagName("arg0");
+      assertEquals("arg0 nodes.", 2, nodeList.getLength());
+      assertEquals("arg0 text content", "111", nodeList.item(0).getTextContent());
+      assertEquals("arg0 text content", "222", nodeList.item(1).getTextContent());
    }
    
-
 
    // http://jira.jboss.com/jira/browse/JBWS-773
    public void testGetNamespaceURI() throws Exception
