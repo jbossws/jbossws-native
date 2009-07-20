@@ -123,6 +123,44 @@ public class SOAPElementTestCase extends JBossWSTest
       }
       assertEquals("Strawberry Apple Banana Orange Raspberry ", sb.toString());
    }
+   
+   // JBWS-2704
+   public void testGetElementByTagNameNS_Wildcard() throws Exception
+   {
+      InputStream is = getResourceURL("common/soap/jbws2704.xml").openStream();
+      MessageFactory messageFactory = MessageFactory.newInstance();
+      SOAPMessage soapMessage = messageFactory.createMessage(null, is);
+      SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
+
+      NodeList nodes = envelope.getElementsByTagNameNS("*", "String_1");
+      assertEquals("String_1 nodes", 2, nodes.getLength());
+      assertEquals("String_1(0) text content", "Value_1", nodes.item(0).getTextContent());
+      assertEquals("String_1(1) text content", "Value_2", nodes.item(1).getTextContent());
+
+      nodes = envelope.getElementsByTagNameNS("*", "String_2");
+      assertEquals("String_2 nodes", 2, nodes.getLength());
+      assertEquals("String_2(0) text content", "Value_3", nodes.item(0).getTextContent());
+      assertEquals("String_2(1) text content", "Value_4", nodes.item(1).getTextContent());
+
+      nodes = envelope.getElementsByTagNameNS("http://org.jboss.ws/testNS1", "*");
+      assertEquals("http://org.jboss.ws/testNS1 nodes", 2, nodes.getLength());
+      assertEquals("http://org.jboss.ws/testNS1(0) text content", "Value_1", nodes.item(0).getTextContent());
+      assertEquals("http://org.jboss.ws/testNS1(1) text content", "Value_3", nodes.item(1).getTextContent());
+
+      nodes = envelope.getElementsByTagNameNS("http://org.jboss.ws/testNS2", "*");
+      assertEquals("http://org.jboss.ws/testNS2 nodes", 2, nodes.getLength());
+      assertEquals("http://org.jboss.ws/testNS2(0) text content", "Value_2", nodes.item(0).getTextContent());
+      assertEquals("http://org.jboss.ws/testNS2(1) text content", "Value_4", nodes.item(1).getTextContent());
+
+      nodes = envelope.getElementsByTagNameNS("http://org.jboss.ws/testNS1", "String_1");
+      assertEquals("http://org.jboss.ws/testNS1 String_1 nodes", 1, nodes.getLength());
+      assertEquals("http://org.jboss.ws/testNS1 String_1(0) text content", "Value_1", nodes.item(0).getTextContent());
+
+      nodes = envelope.getElementsByTagNameNS("http://org.jboss.ws/testNS2", "String_1");
+      assertEquals("http://org.jboss.ws/testNS2 String_1 nodes", 1, nodes.getLength());
+      assertEquals("http://org.jboss.ws/testNS2 String_1(0) text content", "Value_2", nodes.item(0).getTextContent());
+   }
+   
 
    // http://jira.jboss.com/jira/browse/JBWS-773
    public void testGetNamespaceURI() throws Exception
