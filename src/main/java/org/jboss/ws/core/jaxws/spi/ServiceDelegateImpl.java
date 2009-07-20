@@ -175,7 +175,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
       // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service#GetPort1NegTest1WithWsdl
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
-      if (serviceMetaData.getEndpoints().size() > 0 && epMetaData == null)
+      if (epMetaData == null && serviceMetaData.getEndpoints().size() > 0)
          throw new WebServiceException("Cannot get port meta data for: " + portName);
 
       // This is the case when the service could not be created from wsdl
@@ -258,9 +258,15 @@ public class ServiceDelegateImpl extends ServiceDelegate
       // Adjust the endpoint meta data according to the annotations
       if (annotatedPorts.contains(portName) == false)
       {
-         JAXWSClientMetaDataBuilder metaDataBuilder = new JAXWSClientMetaDataBuilder();
-         metaDataBuilder.rebuildEndpointMetaData(epMetaData, seiClass);
-         annotatedPorts.add(portName);
+         synchronized (epMetaData)
+         {
+            if (annotatedPorts.contains(portName) == false)
+            {
+               JAXWSClientMetaDataBuilder metaDataBuilder = new JAXWSClientMetaDataBuilder();
+               metaDataBuilder.rebuildEndpointMetaData(epMetaData, seiClass);
+               annotatedPorts.add(portName);
+            }
+         }
       }
 
       return (T)createProxy(seiClass, epMetaData);
