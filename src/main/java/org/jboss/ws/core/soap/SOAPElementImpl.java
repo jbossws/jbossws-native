@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -766,7 +767,33 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
    {
-      return new NodeListImpl(DOMUtils.getChildElements(this, new QName(namespaceURI, localName), true));
+      Iterator nodes = DOMUtils.getChildElements(this, (QName)null, true);
+
+      List filtered = new LinkedList();
+
+      while (nodes.hasNext())
+      {
+         Element current = (Element)nodes.next();
+         boolean namespaceMatch = false;
+         boolean localNameMatch = false;
+
+         if ("*".equals(namespaceURI) || ((namespaceURI != null) && namespaceURI.equals(current.getNamespaceURI())))
+         {
+            namespaceMatch = true;
+         }
+
+         if ("*".equals(localName) || ((localName != null) && localName.equals(current.getLocalName())))
+         {
+            localNameMatch = true;
+         }
+
+         if (namespaceMatch == true && localNameMatch == true)
+         {
+            filtered.add(current);
+         }
+      }
+
+      return new NodeListImpl(filtered.iterator());
    }
 
    public TypeInfo getSchemaTypeInfo()
