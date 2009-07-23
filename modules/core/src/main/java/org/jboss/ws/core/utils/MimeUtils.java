@@ -23,6 +23,7 @@ package org.jboss.ws.core.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -186,7 +187,9 @@ public class MimeUtils
          converter = new StringConverter();
       else if (JavaUtils.isAssignableFrom(java.io.InputStream.class, targetClazz))
          converter = new StreamConverter();
-
+      else if (JavaUtils.isAssignableFrom(byte[].class, targetClazz))
+         converter = new RealByteArrayConverter();
+      
       if(null == converter)
          throw new WSException("No ByteArrayConverter for class: " + targetClazz.getName());
 
@@ -321,6 +324,49 @@ public class MimeUtils
       }
    }
 
+   public static class RealByteArrayConverter implements ByteArrayConverter
+   {
+      public Object readFrom(InputStream in)
+      {
+         Object converted = null;
+         try
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            IOUtils.copyStream(baos, in);
+
+            in.close();
+
+            converted = baos.toByteArray();
+         }
+         catch (IOException e)
+         {
+            throw new WSException("Failed to convert byte[]");
+         }
+
+         return converted;
+      }
+
+      public void writeTo(Object obj, OutputStream out)
+      {
+         if (obj instanceof byte[])
+         {
+            byte[] bytes = (byte[])obj;
+            try
+            {
+               out.write(bytes);
+            }
+            catch (IOException e)
+            {
+               throw new WSException("Failed to convert " + obj.getClass());
+            }
+         }
+         else
+         {
+            throw new WSException("Unable to convert " + obj.getClass());
+         }
+      }
+   }   
+   
    public static class StreamConverter implements ByteArrayConverter
    {
       public Object readFrom(InputStream in) {
