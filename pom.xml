@@ -71,7 +71,6 @@
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
     <sun.jaxws.version>2.1.3</sun.jaxws.version>
     <woodstox.version>3.2.6</woodstox.version>
-    <wscommons.policy.version>1.0</wscommons.policy.version>
     <wsdl4j.version>1.6.1</wsdl4j.version>
     <xmlsec.version>1.4.2</xmlsec.version>
     <xalan.version>2.7.0</xalan.version>
@@ -254,11 +253,6 @@
         <groupId>org.jboss.logging</groupId>
         <artifactId>jboss-logging-log4j</artifactId>
         <version>${jboss.logging.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>wscommons-policy</groupId>
-        <artifactId>policy</artifactId>
-        <version>${wscommons.policy.version}</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.woodstox</groupId>
