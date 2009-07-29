@@ -662,6 +662,7 @@ public class SubscriptionManager implements SubscriptionManagerMBean, EventDispa
       public void startup()
       {
          worker = new Thread(this, "SubscriptionWatchDog");
+         worker.setDaemon(true);
          worker.start();
       }
 
