@@ -149,10 +149,6 @@
       <artifactId>jboss-remoting</artifactId>
     </dependency>
     <dependency>
-      <groupId>wscommons-policy</groupId>
-      <artifactId>policy</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.woodstox</groupId>
       <artifactId>wstx-lgpl</artifactId>
     </dependency>
