@@ -4,11 +4,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
   <servlet>
     <servlet-name>POJOBean</servlet-name>
-    <servlet-class>@endpoint.servlet@</servlet-class>
-    <init-param>
-      <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.jboss.test.ws.jaxrpc.jbws1762.services.POJOBean</param-value>
-    </init-param>
+    <servlet-class>org.jboss.test.ws.jaxrpc.jbws1762.services.POJOBean</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>POJOBean</servlet-name>

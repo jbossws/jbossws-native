@@ -14,13 +14,13 @@
          <port-component-name>TestServicePort</port-component-name>
          <wsdl-port>impl:TestServicePort</wsdl-port>
          <service-endpoint-interface>org.jboss.test.ws.jaxrpc.xop.doclit.XOPPing</service-endpoint-interface>
+         <service-impl-bean>
+            <servlet-link>TestService</servlet-link>
+         </service-impl-bean>
          <handler>
             <handler-name>XOPInlineHandler</handler-name>
             <handler-class>org.jboss.test.ws.jaxrpc.xop.doclit.InlineHandler</handler-class>
          </handler>
-         <service-impl-bean>
-            <servlet-link>TestService</servlet-link>
-         </service-impl-bean>
       </port-component>
    </webservice-description>
 </webservices>

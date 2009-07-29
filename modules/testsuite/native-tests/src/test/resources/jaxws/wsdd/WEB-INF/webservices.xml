@@ -10,10 +10,10 @@
       <wsdl-service>wsdl:WSDDEndpointImplService</wsdl-service>
       <wsdl-port>wsdl:WSDDEndpointImplPort</wsdl-port>
       <!--service-endpoint-interface>com.sun.ts.tests.webservices12.ejb.descriptors.WSEjbOverrideWSRefHCWithDDsTest.Hello</service-endpoint-interface-->
+      <enable-mtom>true</enable-mtom>
       <service-impl-bean>
         <servlet-link>Endpoint</servlet-link>
       </service-impl-bean>
-      <enable-mtom>true</enable-mtom>
       <handler-chains>
         <handler-chain>
           <handler>

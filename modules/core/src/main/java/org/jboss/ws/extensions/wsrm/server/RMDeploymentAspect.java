@@ -60,7 +60,7 @@ public final class RMDeploymentAspect extends DeploymentAspect
    }
    
    @Override
-   public final void destroy(Deployment dep)
+   public final void stop(Deployment dep)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {

@@ -70,7 +70,7 @@ public class EventingDeploymentAspect extends DeploymentAspect
    }
 
    @Override
-   public void destroy(Deployment dep)
+   public void stop(Deployment dep)
    {
       for (Endpoint ep : dep.getService().getEndpoints())
       {
