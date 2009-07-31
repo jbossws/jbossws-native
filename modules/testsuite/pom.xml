@@ -94,6 +94,12 @@
       <version>${jboss.jaxr.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jboss.javaee</groupId>
+      <artifactId>jboss-javaee</artifactId>
+      <version>${jboss.javaee.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- Build -->
@@ -477,6 +483,7 @@
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss510.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/client/jboss-javaee.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/common/lib/jboss-ejb3-core.jar</additionalClasspathElement>
               </additionalClasspathElements>
@@ -548,6 +555,7 @@
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss520.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/client/jboss-javaee.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/common/lib/jboss-ejb3-core.jar</additionalClasspathElement>
               </additionalClasspathElements>
@@ -619,6 +627,7 @@
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
+                <additionalClasspathElement>${jboss.home}/client/jboss-javaee.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/common/lib/jboss-ejb3-core.jar</additionalClasspathElement>
               </additionalClasspathElements>
