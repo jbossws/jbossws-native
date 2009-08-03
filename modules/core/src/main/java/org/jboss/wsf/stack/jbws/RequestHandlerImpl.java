@@ -612,9 +612,7 @@ public class RequestHandlerImpl implements RequestHandler
       String resPath = (String)req.getParameter("resource");
       URL reqURL = new URL(req.getRequestURL().toString());
 
-      String wsdlHost = reqURL.getProtocol() + "://" + reqURL.getHost();
-      if (reqURL.getPort() != -1)
-         wsdlHost += ":" + reqURL.getPort();
+      String wsdlHost = reqURL.getHost();
 
       if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
          wsdlHost = serverConfig.getWebServiceHost();
