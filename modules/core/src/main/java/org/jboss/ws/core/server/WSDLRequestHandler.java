@@ -54,11 +54,14 @@ public class WSDLRequestHandler
    // provide logging
    private Logger log = Logger.getLogger(WSDLRequestHandler.class);
 
-   private EndpointMetaData epMetaData;
+   private final EndpointMetaData epMetaData;
+   private final ServerConfig config;
 
    public WSDLRequestHandler(EndpointMetaData epMetaData)
    {
       this.epMetaData = epMetaData;
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      this.config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
    }
 
    /**
@@ -208,24 +211,22 @@ public class WSDLRequestHandler
                   String orgLocation = locationAttr.getNodeValue();
 
                   URL orgURL = new URL(orgLocation);
-                  String orgHost = orgURL.getHost();
-                  String orgPath = orgURL.getPath();
+                  String protocol = orgURL.getProtocol();
+                  String host = wsdlHost;
+                  int port = getPortForProtocol(protocol);
+                  String path = orgURL.getPath();
+                  final boolean rewriteLocation =
+                     ServerConfig.UNDEFINED_HOSTNAME.equals(host) ||
+                     this.config.isModifySOAPAddress();
 
-                  if (ServerConfig.UNDEFINED_HOSTNAME.equals(orgHost))
+                  if (rewriteLocation)
                   {
-                     URL newURL = new URL(wsdlHost); 
-                     String newProtocol = newURL.getProtocol();
-                     String newHost = newURL.getHost();
-                     int newPort = newURL.getPort();
-                     
-                     String newLocation = newProtocol + "://" + newHost;
-                     if (newPort != -1)
-                        newLocation += ":" + newPort;
-                     
-                     newLocation += orgPath;
-                     locationAttr.setNodeValue(newLocation);
-
-                     log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                     String newLocation = new URL(protocol, host, port, path).toString();
+                     if (!newLocation.equals(orgLocation))
+                     {
+                        locationAttr.setNodeValue(newLocation);
+                        log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                     }
                   }
                }
             }
@@ -235,6 +236,28 @@ public class WSDLRequestHandler
             }
          }
       }
+   }
+
+   /**
+    * Returns real http and https protocol values. Returns -1 for non http(s) protocols.
+    *
+    * @param protocol to handle
+    * @return real http(s) value, or -1 if not http(s) protocol
+    */
+   private int getPortForProtocol( final String protocol )
+   {
+      final String lowerCasedProtocol = protocol.toLowerCase();
+
+      if ( "http".equals( lowerCasedProtocol ) )
+      {
+         return config.getWebServicePort();
+      }
+      else if ( "https".equals( lowerCasedProtocol ) )
+      {
+         return config.getWebServiceSecurePort();
+      }
+
+      return -1;
    }
 
 }
