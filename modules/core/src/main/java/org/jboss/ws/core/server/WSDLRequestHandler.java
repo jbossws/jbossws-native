@@ -212,7 +212,7 @@ public class WSDLRequestHandler
 
                   URL orgURL = new URL(orgLocation);
                   String protocol = orgURL.getProtocol();
-                  String host = wsdlHost;
+                  String host = orgURL.getHost();
                   int port = getPortForProtocol(protocol);
                   String path = orgURL.getPath();
                   final boolean rewriteLocation =
@@ -221,7 +221,7 @@ public class WSDLRequestHandler
 
                   if (rewriteLocation)
                   {
-                     String newLocation = new URL(protocol, host, port, path).toString();
+                     String newLocation = new URL(protocol, wsdlHost, port, path).toString();
                      if (!newLocation.equals(orgLocation))
                      {
                         locationAttr.setNodeValue(newLocation);
