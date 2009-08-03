@@ -74,6 +74,9 @@ public class JBWS1666TestCase extends JBossWSTest
       cp.append(PS + jbc + FS + "jbossws-native-client.jar");
       cp.append(PS + jbc + FS + "jboss-common-core.jar");
       cp.append(PS + jbc + FS + "jboss-logging-spi.jar");
+      cp.append(PS + jbc + FS + "jcl-over-slf4j.jar");
+      cp.append(PS + jbc + FS + "slf4j-api.jar");
+      cp.append(PS + jbc + FS + "slf4j-jboss-logging.jar");
 
       Runtime rt = Runtime.getRuntime();
 

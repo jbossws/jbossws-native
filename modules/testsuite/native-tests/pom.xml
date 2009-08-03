@@ -27,6 +27,12 @@
       <version>1.1.0.Beta5</version>
       <scope>test</scope>
       <type>sar</type>
+      <exclusions>
+        <exclusion>
+          <groupId>jboss</groupId>
+          <artifactId>jboss-common-logging-log4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>   
   </dependencies>
   
