@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.ClosedChannelException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -43,9 +44,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMessage;
 import org.jboss.netty.handler.codec.http.HttpMethod;
@@ -186,12 +185,23 @@ public class NettyClient
          setActualChunkedLength(request, callProps);
          setAuthorization(request, callProps);
 
-         ChannelFuture writeFuture = writeRequest(channel, request, reqMessage);
+         ChannelFuture writeFuture = null;
+         try
+         {
+            writeFuture = writeRequest(channel, request, reqMessage);
+         }
+         catch (ClosedChannelException cce)
+         {
+            log.debug("Channel closed by remote peer while sending message");
+         }
 
          if (!waitForResponse)
          {
             //No need to wait for the connection to be closed, just wait for the write to be completed.
-            writeFuture.awaitUninterruptibly();
+            if (writeFuture != null)
+            {
+               writeFuture.awaitUninterruptibly();
+            }
             return null;
          }
          //Wait for the server to close the connection
@@ -267,32 +277,25 @@ public class NettyClient
       }
       else
       {
-         ChannelBuffer content = ChannelBuffers.dynamicBuffer();
-         OutputStream os = new ChannelBufferOutputStream(content);
-         marshaller.write(reqMessage, os);
-
          int cs = chunkSize;
          if (cs > 0) //chunked encoding
          {
-            os.flush();
             request.addHeader(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
             //write headers
             channel.write(request);
             //write content chunks
-            int size = content.readableBytes();
-            int cur = 0;
-            while (cur < size)
-            {
-               int to = Math.min(cur + cs, size);
-               HttpChunk chunk = new DefaultHttpChunk(content.slice(cur, to - cur));
-               channel.write(chunk);
-               cur = to;
-            }
-            //write last chunk
-            return channel.write(HttpChunk.LAST_CHUNK);
+            NettyTransportOutputStream os = new NettyTransportOutputStream(channel, cs);
+            marshaller.write(reqMessage, os);
+            os.flush();
+            os.close();
+            return os.getChannelFuture();
          }
          else
          {
+            ChannelBuffer content = ChannelBuffers.dynamicBuffer();
+            OutputStream os = new ChannelBufferOutputStream(content);
+            marshaller.write(reqMessage, os);
+            os.flush();
             request.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(content.readableBytes()));
             request.setContent(content);
             return channel.write(request);

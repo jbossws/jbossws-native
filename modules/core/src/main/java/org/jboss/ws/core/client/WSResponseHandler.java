@@ -28,6 +28,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
+import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
@@ -83,6 +84,15 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          DOMUtils.clearThreadLocals();
          ThreadLocalAssociation.clear();
          e.getChannel().close();
+      }
+   }
+   
+   @Override
+   public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
+   {
+      if (this.error != null)
+      {
+         this.error = e.getCause();
       }
    }
    
