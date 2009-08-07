@@ -18,6 +18,7 @@
     <surefire.security.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.security.args>
     <surefire.jdwp.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdwp.args>
     <surefire.gc.args>-Xmx512m -XX:MaxPermSize=256m</surefire.gc.args>
+    <surefire.management.args>-Dcom.sun.management.jmxremote</surefire.management.args>
     <test.archive.directory>${project.build.directory}/test-libs</test.archive.directory>
     <test.classes.directory>${project.build.directory}/test-classes</test.classes.directory>
     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
@@ -270,6 +271,33 @@
     </profile>
 
     <!--
+    Name:  management
+    Descr: Enable remote jmx management (useful to attach JConsole, for instance)
+    -->
+    <profile>
+      <id>management</id>
+      <activation>
+        <property>
+          <name>management</name>
+        </property>
+      </activation>
+      <properties>
+        <surefire.jvm.management.args>${surefire.management.args}</surefire.jvm.management.args>
+      </properties>
+    </profile>
+    <profile>
+      <id>no-management</id>
+      <activation>
+        <property>
+          <name>!management</name>
+        </property>
+      </activation>
+      <properties>
+        <surefire.jvm.management.args> </surefire.jvm.management.args>
+      </properties>
+    </profile>
+
+    <!--
     Name:  hudson
     Descr: Ignore test failures on hudson
     -->
@@ -347,7 +375,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss500.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
@@ -419,7 +447,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss501.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
@@ -480,7 +508,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss510.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss510.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
@@ -551,7 +579,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss520.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss520.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
@@ -622,7 +650,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</argLine>
               <!-- TODO: replace with maven dependencies -->
               <additionalClasspathElements>
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
