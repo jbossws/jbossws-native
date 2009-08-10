@@ -86,6 +86,7 @@ public class ReflectiveAttachmentRefScanner {
          boolean exceptionToTheRule = isAttachmentDataType(type);
          if (! exceptionToTheRule) {
             type = getFieldComponentType(field);
+            exceptionToTheRule = isAttachmentDataType(type);
          }
          // only non JDK types are inspected except for byte[] and java.lang.String
          if( !alreadyScanned(field) && (exceptionToTheRule || !isJDKType(type)) )
