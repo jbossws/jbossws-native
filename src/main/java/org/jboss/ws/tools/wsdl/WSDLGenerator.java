@@ -23,7 +23,10 @@ package org.jboss.ws.tools.wsdl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
@@ -80,6 +83,8 @@ public abstract class WSDLGenerator
    protected WSDLDefinitions wsdl;
 
    protected abstract void processTypes();
+
+   protected Map<String,String> packageNamespaceMap = new HashMap<String,String>();
 
    protected void processEndpoint(WSDLService service, EndpointMetaData endpoint)
    {
@@ -216,7 +221,9 @@ public abstract class WSDLGenerator
          wsdlInterface.addFault(interfaceFault);
          
          WSDLInterfaceOperationOutfault outfault = new WSDLInterfaceOperationOutfault(interfaceOperation);
-         outfault.setRef(faultName);
+         String ns = getNamespace(fault.getJavaType(), operation.getQName().getNamespaceURI());
+         QName outFaultName = new QName(ns, fault.getXmlName().getLocalPart());
+         outfault.setRef(outFaultName);
          interfaceOperation.addOutfault(outfault);
 
          WSDLBindingFault bindingFault = new WSDLBindingFault(wsdlBinding);
@@ -355,7 +362,11 @@ public abstract class WSDLGenerator
             }
             else
             {
-               WSDLRPCPart part = new WSDLRPCPart(returnParameter.getPartName(), returnParameter.getXmlType());
+               QName xmlType = returnParameter.getXmlType();
+               String ns = getNamespace(returnParameter.getJavaType(), xmlType.getNamespaceURI());
+               QName newXmlType = new QName(ns, xmlType.getLocalPart());
+               WSDLRPCPart part = new WSDLRPCPart(partName, newXmlType);
+
                output.addChildPart(part);
             }
             addSignatureItem(interfaceOperation, returnParameter, true);
@@ -378,7 +389,11 @@ public abstract class WSDLGenerator
          }
          else
          {
-            WSDLRPCPart part = new WSDLRPCPart(param.getPartName(), param.getXmlType());
+            QName xmlType = param.getXmlType();
+
+            String ns = getNamespace(param.getJavaType(), xmlType.getNamespaceURI());
+            QName newXmlType = new QName(ns, xmlType.getLocalPart());
+            WSDLRPCPart part = new WSDLRPCPart(param.getPartName(), newXmlType);
             if (param.getMode() != ParameterMode.OUT)
                input.addChildPart(part);
             if (twoWay && param.getMode() != ParameterMode.IN)
@@ -428,6 +443,18 @@ public abstract class WSDLGenerator
       wsdl.registerNamespaceURI(ns, "tns");
       wsdl.registerNamespaceURI(Constants.NS_SCHEMA_XSD, "xsd");
 
+      // Register global namespaces
+      if (packageNamespaceMap != null)
+      {
+         Set<String> keys = packageNamespaceMap.keySet();
+         Iterator<String> iter = keys.iterator();
+         while (iter != null && iter.hasNext())
+         {
+            String pkg = iter.next();
+            wsdl.registerNamespaceURI(packageNamespaceMap.get(pkg), null);
+         }
+      }
+
       String soapURI = null;
       String soapPrefix = null;
       for (EndpointMetaData ep : service.getEndpoints())
@@ -452,5 +479,48 @@ public abstract class WSDLGenerator
       processService(service);
 
       return wsdl;
+   }
+
+   protected String getNamespace(String packageName, String defaultNS)
+   {
+      String retNS = defaultNS;
+      //Get it from global config if it is overriden
+      if (packageNamespaceMap != null)
+      {
+         String ns = packageNamespaceMap.get(packageName);
+         if (ns != null)
+         {
+            retNS =  ns;
+         }
+      }
+      return retNS;
+   }
+
+   protected String getNamespace(String packageName)
+   {
+      return getNamespace(packageName, wsdl.getTargetNamespace());
+   }
+
+   protected String getNamespace(Class type, String defaultNS)
+   {
+      while (type.isArray())
+      {
+         type = type.getComponentType();
+      }
+      Package pkg = type.getPackage();
+      String pkgName = null;
+      if (pkg != null)
+      {
+         pkgName = pkg.getName();
+      }
+      return getNamespace(pkgName, defaultNS);
+   }
+
+   protected String getJustPackageName(String classname)
+   {
+      int index = classname.lastIndexOf(".");
+      if (index < 0)
+         index = classname.length();
+      return classname.substring(0,index);
    }
 }

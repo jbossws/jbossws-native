@@ -29,6 +29,10 @@
   <java-type>org.jboss.test.ws.tools.jbws1231.CustomException</java-type>
   <root-type-qname xmlns:typeNS='http://org.jboss.test.ws/jbws1231/type'>typeNS:CustomException</root-type-qname>
   <qname-scope>complexType</qname-scope>
+  <variable-mapping>
+   <java-variable-name>wrappedException</java-variable-name>
+   <xml-element-name>wrappedException</xml-element-name>
+  </variable-mapping>
  </java-xml-type-mapping>
  <java-xml-type-mapping>
   <java-type>org.jboss.test.ws.tools.jbws1231.TestEndpoint_echoDataObject_ResponseStruct</java-type>
@@ -42,6 +46,9 @@
  <exception-mapping>
   <exception-type>org.jboss.test.ws.tools.jbws1231.CustomException</exception-type>
   <wsdl-message xmlns:exMsgNS='http://org.jboss.test.ws/jbws1231'>exMsgNS:CustomException</wsdl-message>
+  <constructor-parameter-order>
+   <element-name>wrappedException</element-name>
+  </constructor-parameter-order>
  </exception-mapping>
  <service-interface-mapping>
   <service-interface>org.jboss.test.ws.tools.jbws1231.TestService</service-interface>

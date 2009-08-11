@@ -304,12 +304,12 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       if (xmlType != null)
       {
          name = xmlType.getLocalPart();
-         namespace = xmlType.getNamespaceURI();
+         namespace = getNamespace(javaType, xmlType.getNamespaceURI());
       }
       else
       {
          name = WSDLUtils.getJustClassName(javaType);
-         namespace = getNamespace(javaType);
+         namespace = getNamespace(javaType, null);
       }
 
       // Check if it is a JAX-RPC enumeration
@@ -567,19 +567,19 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       if (xmlType != null)
       {
          name = xmlType.getLocalPart();
-         namespace = xmlType.getNamespaceURI();
+         namespace = getNamespace(componentType, xmlType.getNamespaceURI());
       }
       else
       {
          if (isComponentArray == false)
          {
             name = utils.getJustClassName(componentType.getName()) + ".Array";
-            namespace = getNamespace(componentType);
+            namespace = getNamespace(componentType, null);
          }
          else
          {
             name = xst.getName() + ".Array";
-            namespace = xst.getNamespace();
+            namespace = getNamespace(componentType, xst.getNamespace());
          }
       }
 
@@ -701,23 +701,42 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       }
    }
 
-   private String getNamespace(Class javaType)
+   private String getNamespace(Class javaType, String defaultNS)
    {
-      if (javaType.isPrimitive())
-         return Constants.NS_JBOSSWS_URI + "/primitives";
+      String retNS = defaultNS;
+      if (javaType.isPrimitive() && retNS == null)
+      {
+         retNS = Constants.NS_JBOSSWS_URI + "/primitives";
+      }
+      else
+      {
+         while (javaType.isArray())
+         {
+            javaType = javaType.getComponentType();
+         }
 
-      Package javaPackage = javaType.getPackage();
-      if (javaPackage == null)
-         throw new WSException("Cannot determine namespace, Class had no package");
-      String packageName = javaPackage.getName();
+         Package javaPackage = javaType.getPackage();
+         if (javaPackage != null)
+         {
+            String packageName = javaPackage.getName();
+            String ns = packageNamespaceMap.get(packageName);
+            if (ns != null)
+            {
+               retNS = ns;
+            }
+            else if (retNS == null)
+            {
+               retNS = utils.getTypeNamespace(packageName);
+            }
 
-      String ns = packageNamespaceMap.get(packageName);
-      if (ns == null)
-         ns = utils.getTypeNamespace(packageName);
-
-      allocatePrefix(ns);
-
-      return ns;
+            allocatePrefix(retNS);
+         }
+         else if (retNS == null)
+         {
+            throw new WSException("Cannot determine namespace, Class had no package");
+         }
+      }
+      return retNS;
    }
 
    private JBossXSComplexTypeDefinition getComplexTypeForJavaException(QName xmlType, Class javaType)
@@ -731,12 +750,12 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       String namespace;
       if (xmlType != null)
       {
-         namespace = xmlType.getNamespaceURI();
+         namespace = getNamespace(javaType, xmlType.getNamespaceURI());
          name = xmlType.getLocalPart();
       }
       else
       {
-         namespace = getNamespace(javaType);
+         namespace = getNamespace(javaType, null);
          name = WSDLUtils.getJustClassName(javaType);
       }
 
@@ -749,6 +768,8 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       xsModel.addXSComplexTypeDefinition(complexType);
       xsModel.addXSElementDeclaration(sutils.createGlobalXSElementDeclaration(name, complexType, namespace));
       typeMapping.register(javaType, new QName(namespace, name), null, null);
+      generateExceptionParticles(namespace, javaType, types, particles);
+
       registerJavaTypeMapping(new QName(namespace, name), javaType, "complexType", particles, null);
 
       Class superClass = javaType.getSuperclass();
@@ -758,7 +779,6 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          complexType.setBaseType(baseType);
       }
 
-      generateExceptionParticles(namespace, javaType, types, particles);
 
       boolean found = hasConstructor(javaType, types);
       boolean noarg = found && types.size() == 0;

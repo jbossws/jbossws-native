@@ -25,8 +25,10 @@ package org.jboss.ws.tools;
 
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.rpc.encoding.TypeMapping;
@@ -242,11 +244,18 @@ public class JavaToWSDL
     * think about changing just the type namespace as the types are
     * generated using the typenamespace.
     *
-    * @param pn  The Map
+    * @param map  The Map
     */
-   public void setPackageNamespaceMap(Map<String,String> pn)
+   public void setPackageNamespaceMap(Map<String,String> map)
    {
-      this.packageNamespaceMap = pn;
+      //Lets convert the namespace->package map to package->namespace map
+      Set<String> keys = map.keySet();
+      Iterator<String> iter = keys.iterator();
+      while (iter != null && iter.hasNext())
+      {
+         String pkg = iter.next();
+         packageNamespaceMap.put(map.get(pkg), pkg);
+      }
    }
 
    public void setOperationMap(Map<String, List<OperationConfig>> operationMap)
