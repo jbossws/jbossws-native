@@ -32,7 +32,6 @@ import org.jboss.wsf.common.injection.PreDestroyHolder;
 import org.jboss.wsf.common.servlet.AbstractEndpointServlet;
 
 import javax.servlet.ServletConfig;
-import javax.xml.rpc.server.ServiceLifecycle;
 
 /**
  * A Native endpoint servlet that is installed for every web service endpoint
@@ -86,14 +85,7 @@ public final class EndpointServlet extends AbstractEndpointServlet
             try
             {
                final Object targetBean = holder.getObject();
-               final boolean isJaxrpcLifecycleBean = targetBean instanceof ServiceLifecycle;
-               
                InjectionHelper.callPreDestroyMethod(targetBean);
-               if (isJaxrpcLifecycleBean)
-               {
-                  ((ServiceLifecycle)targetBean).destroy();
-               }
-               
             }
             catch (Exception exception)
             {
