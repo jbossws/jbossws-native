@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.extensions.wsrm;
 
+import java.net.URI;
 import java.util.Set;
 
 /**
@@ -38,5 +39,6 @@ public interface RMSequence
    long getLastMessageNumber();
    long getDuration();
    String getAcksTo();
+   void setAcksTo(URI uri);
    Set<Long> getReceivedInboundMessages();
 }

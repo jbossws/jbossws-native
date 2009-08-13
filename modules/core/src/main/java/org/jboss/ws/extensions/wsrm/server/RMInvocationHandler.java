@@ -33,6 +33,7 @@ import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.Relationship;
+import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
@@ -45,6 +46,7 @@ import org.jboss.ws.extensions.wsrm.RMFaultConstant;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
 import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
+import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequence;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMCloseSequence;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequence;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
@@ -149,7 +151,25 @@ public final class RMInvocationHandler extends InvocationHandler
       
       if (RMHelper.isCreateSequence(rmReqProps))
       {
-         sequence = new RMServerSequence();
+         Map<QName, RMSerializable> data = (Map<QName, RMSerializable>)rmReqProps.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
+         RMCreateSequence rmCreateSequence = (RMCreateSequence)data.get((rmConstants.getCreateSequenceQName()));
+         if (rmCreateSequence.getOffer() != null)
+         {
+            sequence = new RMServerSequence(rmCreateSequence.getOffer().getIdentifier());
+         }
+         else
+         {
+            sequence = new RMServerSequence();
+         }
+         
+         
+         // TODO: Find out how to get AcksTo address - here I reuse the incomming Addressing 'TO'
+         SOAPAddressingProperties clientInboundAddrProps = (SOAPAddressingProperties)msgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_INBOUND);
+         if (clientInboundAddrProps != null && clientInboundAddrProps.getTo() != null)
+         {
+            sequence.setAcksTo(clientInboundAddrProps.getTo().getURI());
+         }
+         
          RMStore.serialize(dataDir, sequence);
          protocolMessages.add(rmConstants.getCreateSequenceResponseQName());
          rmResponseContext.put(RMConstant.SEQUENCE_REFERENCE, sequence);

@@ -180,6 +180,12 @@ public final class RMHandlerHelper
       RMCreateSequenceResponse createSequenceResponse = rmFactory.newCreateSequenceResponse();
       createSequenceResponse.setIdentifier(seq.getInboundId());
       createSequenceResponse.setExpires(RMHelper.longToDuration(seq.getDuration()));
+      if (seq.getAcksTo() != null)
+      {
+         RMCreateSequenceResponse.RMAccept a = createSequenceResponse.newAccept();
+         a.setAcksTo(seq.getAcksTo().toString());
+         createSequenceResponse.setAccept(a);
+      }
       return createSequenceResponse;
    }
    

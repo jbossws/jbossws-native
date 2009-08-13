@@ -210,6 +210,10 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
       return (this.addressableClient) ? this.backPort.toString() : ANONYMOUS_URI;
    }
 
+   public final void setAcksTo(URI uri) {
+      this.backPort = uri;
+   }
+   
    public final long newMessageNumber()
    {
       // no need for synchronization
