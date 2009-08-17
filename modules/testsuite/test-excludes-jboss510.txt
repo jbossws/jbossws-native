@@ -7,8 +7,5 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
-# [JBWS-2630] Wrong context when deploying endpoint in war embedded in a jar
-org/jboss/test/ws/jaxws/jbws2630/**
-
 # [JBWS-2674] Implement javax.xml.ws.Endpoint
 org/jboss/test/ws/jaxws/endpoint/*TestCase.*
