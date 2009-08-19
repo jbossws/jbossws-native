@@ -88,7 +88,7 @@ public class JMSClient extends HttpServlet
                    "<to><node>845</node><time>2008-02-01T14:25:12.114+01:00</time></to>" +
                  "</requests>" +
                  "<requests>" +
-                   "<from><node>117</node><time>2008-02-01z...zT14:25:12.114+01:00</time></from>" +
+                   "<from><node>117</node><time>2008-02-01T14:25:12.114+01:00</time></from>" +
                    "<id>Req3</id>" +
                    "<people>2</people>" +
                    "<to><node>140</node><time>2008-02-01T14:25:12.114+01:00</time></to>" +
