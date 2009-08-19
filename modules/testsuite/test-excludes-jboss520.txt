@@ -13,3 +13,5 @@ org/jboss/test/ws/jaxws/endpoint/*TestCase.*
 # [JBWS-2587] Investigate why SimpleDispatchTestCase is failing
 org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase.*
 
+# [JBMESSAGING-1718] JMS Queue MessageCount attribute isn't increased on message retrieval
+org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
