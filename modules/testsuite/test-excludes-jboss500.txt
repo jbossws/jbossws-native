@@ -16,6 +16,3 @@ org/jboss/test/ws/jaxws/jbws2634/**
 # [JBWS-2674] Implement javax.xml.ws.Endpoint
 org/jboss/test/ws/jaxws/endpoint/*TestCase.*
 
-# [JBWS-2587] Investigate why SimpleDispatchTestCase is failing
-org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase.*
-
