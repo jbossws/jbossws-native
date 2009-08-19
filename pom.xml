@@ -303,6 +303,11 @@
         <version>${jboss.logging.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging-spi</artifactId>
+        <version>${jboss.logging.version}</version>
+      </dependency>
+      <dependency>
         <groupId>wscommons-policy</groupId>
         <artifactId>policy</artifactId>
         <version>${wscommons.policy.version}</version>
