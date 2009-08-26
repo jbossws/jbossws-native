@@ -22,12 +22,8 @@
 package org.jboss.test.ws.jaxws.samples.wsa;
 
 import javax.jws.WebService;
-import org.jboss.ws.annotation.EndpointConfig;
+import javax.xml.ws.soap.Addressing;
 
-@EndpointConfig
-(
-   configName = "Standard WSAddressing Endpoint"
-)
 @WebService
 (
    portName = "AddressingServicePort",
@@ -36,6 +32,7 @@ import org.jboss.ws.annotation.EndpointConfig;
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsaddressing",
    endpointInterface = "org.jboss.test.ws.jaxws.samples.wsa.ServiceIface"
 )
+@Addressing(enabled=true, required=true)
 public class ServiceImpl implements ServiceIface
 {
    public String sayHello()
