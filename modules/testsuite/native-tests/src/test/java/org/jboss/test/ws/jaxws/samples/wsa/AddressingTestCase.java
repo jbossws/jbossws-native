@@ -24,8 +24,9 @@ package org.jboss.test.ws.jaxws.samples.wsa;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import javax.xml.ws.soap.AddressingFeature;
+
 import junit.framework.Test;
-import org.jboss.ws.core.ConfigProvider;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -49,9 +50,7 @@ public final class AddressingTestCase extends JBossWSTest
       QName serviceName = new QName("http://www.jboss.org/jbossws/ws-extensions/wsaddressing", "AddressingService");
       URL wsdlURL = new URL(serviceURL + "?wsdl");
       Service service = Service.create(wsdlURL, serviceName);
-      ServiceIface proxy = (ServiceIface)service.getPort(ServiceIface.class);
-      // configure WS-Addressing
-      ((ConfigProvider)proxy).setConfigName("Standard WSAddressing Client");
+      ServiceIface proxy = (ServiceIface)service.getPort(ServiceIface.class, new AddressingFeature());
       // invoke method
       assertEquals("Hello World!", proxy.sayHello());
    }
