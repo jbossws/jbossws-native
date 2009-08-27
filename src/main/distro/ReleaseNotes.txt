@@ -26,30 +26,68 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-native-${project.version}
 ----------------------------------
 
-Feature Request
-
-    TODO: enumerate
-
 Bug
 
-    TODO: enumerate
+    * [JBWS-2526] - org.jboss.ws.core.soap.TextImpl does not implement org.w3c.dom.Comment
+    * [JBWS-2594] - X509IssuerSerial reference token creates invalid xml request
+    * [JBWS-2597] - XsiNilLoader throws NPE when using FastInfoset and nullable elements
+    * [JBWS-2630] - Invalid "Endpoint Address" in http://localhost:8080/jbossws/services, when a .war is embedded in a jar.
+    * [JBWS-2632] - SOAPHeader == null not caught // no good cast
+    * [JBWS-2662] - WebServiceContext injection into WS Provider leads to memory leaks
+    * [JBWS-2668] - Add missing privileged blocks
+    * [JBWS-2681] - Concurrency issues where multiple threads create Port using Service Simultaneously
+    * [JBWS-2689] - webservice.xml files are not validated against corresponding schema files
+    * [JBWS-2690] - Wrong JAXRPC deployment type detection
+    * [JBWS-2698] - Calling setPrefix(newPrefix) on any SOAPElement the prefix is not used for marshalling.
+    * [JBWS-2699] - BackwardCompatibleURLPatternDeploymentAspect is mangling URLs
+    * [JBWS-2703] - Node.getElementsByTagName only works with name local part
+    * [JBWS-2704] - Element.getElementsByTagNameNS should support wildcards for namespace, local name or both
+    * [JBWS-2706] - Unable to unmarshall attachment parts where the type is 'application/octet-stream'
+    * [JBWS-2708] - XmlAttachmentRef annotation on List<DataHandler> is not identified as an Attachment part
+
+Feature Request
+
+    * [JBWS-2106] - Unify Native and CXF api for JAX-WSA (JSR-261)
+    * [JBWS-2652] - jboss-bootstrap upgrade
+    * [JBWS-2657] - Provide testcase for common JSR-261 API
+    * [JBWS-2693] - Implement Node.setTextContent()
+    * [JBWS-2694] - Enable simpler approach to disable chunked encoding
+    * [JBWS-2723] - JBossWS-Native WSRM Server does not use Offer Identifier
+    * [JBWS-2724] - JBossWS-Native WSRM Server does not set Accept.AckstTo.Address on CreateSequenceResponse
+    * [JBWS-2739] - Make OneWay operation non-blocking (client side)
 
 Task
 
-    TODO: enumerate
+    * [JBWS-2402] - Upgrade JBoss-JAXR to 2.0.1 including its dependencies
+    * [JBWS-2435] - Move jbossws documentation to http://www.jboss.org/community/docs/
+    * [JBWS-2457] - Update WS-Addressing tutorials to use JAXWS 2.1 AddressingFeature
+    * [JBWS-2554] - Remove dependency on Remoting 2
+    * [JBWS-2587] - Investigate why SimpleDispatchTestCase is failing
+    * [JBWS-2685] - Remove dependency on Sun's JVM proprietary APIs
+    * [JBWS-2702] - Update Netty dependency
+    * [JBWS-2705] - Remove jbossws-native-jaxrpc.jar from endorsed dir
+    * [JBWS-2711] - Make SubscriptionManager.WatchDog a Daemon Thread and remove it at SubscriptionManager shutdown
+    * [JBWS-2719] - Allow jconsole to be attached to testsuite
+    * [JBWS-2333] - Refactor ArchiveDeployerHook.getWebservicesMetaData() to Separate Deployer
+    * [JBWS-2370] - Ensure correct JBossWS startup if there are Webservice archived in deploy directory during JBossAS bootstrap
+    * [JBWS-2382] - Fix JBossWS deployers processing
+    * [JBWS-2623] - Create new pages on jboss.org
+    * [JBWS-2625] - Redirect on jbossws.jboss.org
+    * [JBWS-2658] - Update jboss.org/jbossws home page
 
 Errata
 
-    See: TODO: reference to associated JIRA issue
-    
+    See: https://jira.jboss.org/jira/browse/JBWS-2738
+
 Enjoy,
 The JBossWS Team
 
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-What's new in jbossws-native-3.1.2.GA
--------------------------------------
+-----------------------
+jbossws-native-3.1.2.GA
+-----------------------
 
 Feature Request
 
@@ -74,9 +112,9 @@ Errata
 
     See: https://jira.jboss.org/jira/browse/JBWS-2643
 
-
-What's new in jbossws-native-3.1.1.GA
--------------------------------------
+-----------------------
+jbossws-native-3.1.1.GA
+-----------------------
 
 Feature Request
 
@@ -117,9 +155,9 @@ Errata
 
     See: https://jira.jboss.org/jira/browse/JBWS-2608
 
-
-What's new in jbossws-native-3.1.0.GA
--------------------------------------
+-----------------------
+jbossws-native-3.1.0.GA
+-----------------------
 
 Feature Request
 
@@ -169,9 +207,9 @@ Errata
 
     See: https://jira.jboss.org/jira/browse/JBWS-2545
 
-
-What's new in jbossws-native-3.0.5.GA
--------------------------------------
+-----------------------
+jbossws-native-3.0.5.GA
+-----------------------
 
 Feature Request
 
@@ -205,8 +243,9 @@ Errata
 
     See: https://jira.jboss.org/jira/browse/JBWS-2422
 
-What's new in jbossws-native-3.0.4.GA
--------------------------------------
+-----------------------
+jbossws-native-3.0.4.GA
+-----------------------
 
 Bug
 
@@ -239,8 +278,9 @@ Errata
 
     See: https://jira.jboss.org/jira/browse/JBWS-2352
 
-What's new in jbossws-native-3.0.3.GA
-----------------------------------------
+-----------------------
+jbossws-native-3.0.3.GA
+-----------------------
 
 Feature Request
 
@@ -275,10 +315,11 @@ Task
 
 Errata
 
-    See: TODO: http://jira.jboss.org/jira/browse/JBWS-2281
-    
-What's new in jbossws-native-3.0.2.GA
-----------------------------------------
+    See: http://jira.jboss.org/jira/browse/JBWS-2281
+
+-----------------------
+jbossws-native-3.0.2.GA
+-----------------------
 
 Feature Request
 
@@ -310,8 +351,9 @@ Errata
 
     See: http://jira.jboss.org/jira/browse/JBWS-2220
 
-What's new in jbossws-3.0.1-native-2.0.4
-----------------------------------------
+--------------------------
+jbossws-3.0.1-native-2.0.4
+--------------------------
 
 Feature Request
 
@@ -383,8 +425,9 @@ Errata
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-2044] Rewrite Server side file system based RM store    
 
-What's new in jbossws-2.0.3.GA
-------------------------------
+----------------
+jbossws-2.0.3.GA
+----------------
 
 Feature Request
 
@@ -429,8 +472,9 @@ Errata
     * FIXME [JBWS-798] Complete EventingTestCase
     * FIXME [JBWS-981] Virtual host configuration for EJB endpoints
 
-What's new in jbossws-2.0.2.GA
-------------------------------
+----------------
+jbossws-2.0.2.GA
+----------------
 
 Feature Request
 
@@ -482,9 +526,9 @@ Task
     * [JBWS-1835] - Schedule metro issues at java.net
     * [JBWS-1842] - JAXB based ServiceRef meta data
     * [JBWS-1846] - Release jbossws-2.0.2.GA binary
-    
+
 Errata
-    
+
     FIXME: [JBCTS-540] EJB3 proxy does not implement the Home interface
     FIXME: [JBWS-1460] @XmlMimeType on SEI parameter declarations
     FIXME: [JBWS-1665] incorrect wsdl generation
@@ -496,8 +540,9 @@ Errata
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
 
-What's new in jbossws-2.0.1.GA
-------------------------------
+----------------
+jbossws-2.0.1.GA
+----------------
 
 Feature Request
 
@@ -538,9 +583,10 @@ Errata
     FIXME: [JBWS-751] Multiple schema imports with the same namespace
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
-    
-What's new in jbossws-2.0.0
----------------------------
+
+-------------
+jbossws-2.0.0
+-------------
 
 Feature Request
 
@@ -626,9 +672,10 @@ Errata
     FIXME: [JBWS-751] Multiple schema imports with the same namespace
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-981] Virtual host configuration for EJB endpoints
-    
-What's new in JBossWS-1.2.1
----------------------------
+
+-------------
+jbossws-1.2.1
+-------------
 
 Feature Request
 
@@ -718,8 +765,9 @@ Errata
     FIXME: [JBWS-434] Support sequences of anys in JAXRPC
     FIXME: [JBWS-751] Multiple schema imports with the same namespace
 
-What's new in jbossws-1.0.4
----------------------------
+-------------
+jbossws-1.0.4
+-------------
 
     * [JBWS-660]  XOP inline base64Binary and sign message  
     * [JBWS-779]  Add webservices.xml support to wsdlTojava  
@@ -746,16 +794,18 @@ Errata
     FIXME: [JBWS-798] Complete EventingTestCase
     FIXME: [JBWS-940] Add wsdl-java support for jdk 1.4 typesafe enums
 
-What's new in jbossws-1.0.3
----------------------------
+-------------
+jbossws-1.0.3
+-------------
 
     * [JBWS-983]  Configure SOAPAction on the Call object  
     * [JBWS-1090] preventing override of webservices.xml when multiple web services are processed with wstools  
     * [JBWS-1160] XOP Inline base64 for doc/lit requests
     * Bug fixes
 
-What's new in jbossws-1.0.2
----------------------------
+-------------
+jbossws-1.0.2
+-------------
 
     * [JBWS-855] Provide MTOM for document/literal  
     * [JBWS-920] integrate wstools wsdl2java functionality
@@ -763,8 +813,9 @@ What's new in jbossws-1.0.2
     * [JBWS-932] Performance bottleneck when marshalling array types
     * Bug fixes
 
-What's new in jbossws-1.0.1
----------------------------
+-------------
+jbossws-1.0.1
+-------------
 
     * [JBWS-776] WSDLToJava Support wildcards
     * [JBWS-852] Integration with Mikrocontainer
