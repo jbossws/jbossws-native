@@ -104,7 +104,8 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
       }
 
       String wrapperName = parameterMD.getJavaTypeName();
-      log.debug("Generating wrapper: " + wrapperName);
+      if (log.isDebugEnabled())
+         log.debug("Generating wrapper: " + wrapperName);
 
       try
       {

@@ -342,7 +342,8 @@ public final class RMInvocationHandler extends InvocationHandler
       {
          if (inv.getJavaMethod() != null)
          {
-            logger.debug("Invoking method: " + inv.getJavaMethod().getName());
+            if (logger.isDebugEnabled())
+               logger.debug("Invoking method: " + inv.getJavaMethod().getName());
             this.delegate.invoke(ep, inv);
          }
          else

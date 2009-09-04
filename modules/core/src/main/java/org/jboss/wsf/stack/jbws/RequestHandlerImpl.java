@@ -186,7 +186,8 @@ public class RequestHandlerImpl implements RequestHandler
 
    private void doPost(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
    {
-      log.debug("doPost: " + req.getRequestURI());
+      if (log.isDebugEnabled())
+         log.debug("doPost: " + req.getRequestURI());
 
       ServletInputStream in = req.getInputStream();
       ServletOutputStream out = res.getOutputStream();
@@ -232,7 +233,8 @@ public class RequestHandlerImpl implements RequestHandler
 
    public void handleRequest(Endpoint endpoint, InputStream inStream, OutputStream outStream, InvocationContext invContext)
    {
-      log.debug("handleRequest: " + endpoint.getName());
+      if (log.isDebugEnabled())
+         log.debug("handleRequest: " + endpoint.getName());
 
       ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
@@ -366,7 +368,8 @@ public class RequestHandlerImpl implements RequestHandler
       }
       if (wsaTo != null)
       {
-         log.debug("Sending response to addressing destination: " + wsaTo);
+         if (log.isDebugEnabled())
+            log.debug("Sending response to addressing destination: " + wsaTo);
          SOAPMessage soapMessage = (SOAPMessage)resMessage;
          new SOAPConnectionImpl().callOneWay(soapMessage, wsaTo);
       }
@@ -414,6 +417,7 @@ public class RequestHandlerImpl implements RequestHandler
          throw new IllegalStateException("Cannot obtain endpoint meta data");
 
       long beginProcessing = 0;
+      boolean debugEnabled = log.isDebugEnabled();
       try
       {
          EndpointState state = ep.getState();
@@ -424,7 +428,8 @@ public class RequestHandlerImpl implements RequestHandler
             throw new CommonSOAPFaultException(faultCode, faultString);
          }
 
-         log.debug("BEGIN handleRequest: " + ep.getName());
+         if (debugEnabled)
+            log.debug("BEGIN handleRequest: " + ep.getName());
          beginProcessing = initRequestMetrics(ep);
 
          MimeHeaders headers = (headerSource != null ? headerSource.getMimeHeaders() : null);
@@ -517,7 +522,8 @@ public class RequestHandlerImpl implements RequestHandler
             log.error("Cannot process metrics", ex);
          }
 
-         log.debug("END handleRequest: " + ep.getName());
+         if (debugEnabled)
+            log.debug("END handleRequest: " + ep.getName());
       }
    }
 
@@ -571,7 +577,8 @@ public class RequestHandlerImpl implements RequestHandler
 
    public void handleWSDLRequest(Endpoint endpoint, OutputStream outStream, InvocationContext context)
    {
-      log.debug("handleWSDLRequest: " + endpoint.getName());
+      if (log.isDebugEnabled())
+         log.debug("handleWSDLRequest: " + endpoint.getName());
 
       try
       {
@@ -617,7 +624,8 @@ public class RequestHandlerImpl implements RequestHandler
       if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
          wsdlHost = serverConfig.getWebServiceHost();
 
-      log.debug("WSDL request, using host: " + wsdlHost);
+      if (log.isDebugEnabled())
+         log.debug("WSDL request, using host: " + wsdlHost);
 
       WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);

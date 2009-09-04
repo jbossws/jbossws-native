@@ -155,7 +155,9 @@ class XMLContent extends SOAPContent
       QName xmlType = container.getXmlType();
       Class javaType = container.getJavaType();
 
-      log.debug("getObjectValue [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+      boolean debugEnabled = log.isDebugEnabled();
+      if (debugEnabled)
+         log.debug("getObjectValue [xmlType=" + xmlType + ",javaType=" + javaType + "]");
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext == null)
@@ -218,7 +220,8 @@ class XMLContent extends SOAPContent
                try
                {
                   String contentType = MimeUtils.resolveMimeType(javaType);
-                  log.debug("Adopt DataHandler to " + javaType + ", contentType " + contentType);
+                  if (debugEnabled)
+                     log.debug("Adopt DataHandler to " + javaType + ", contentType " + contentType);
 
                   DataSource ds = new SwapableMemoryDataSource(((DataHandler)obj).getInputStream(), contentType);
                   DataHandler dh = new DataHandler(ds);
@@ -249,7 +252,8 @@ class XMLContent extends SOAPContent
          throw new WSException(e);
       }
 
-      log.debug("objectValue: " + (obj != null ? obj.getClass().getName() : null));
+      if (debugEnabled)
+         log.debug("objectValue: " + (obj != null ? obj.getClass().getName() : null));
 
       return obj;
    }

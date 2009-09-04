@@ -72,8 +72,6 @@ public class HTTPMessageUnMarshaller implements UnMarshaller
 
    private MimeHeaders getMimeHeaders(Map<String, Object> metadata)
    {
-      log.debug("getMimeHeaders from: " + metadata);
-
       MimeHeaders headers = new MimeHeaders();
       for (String key : metadata.keySet())
       {

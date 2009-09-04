@@ -97,7 +97,8 @@ public final class RMBackPortsServer implements Runnable
          // Bind and start to accept incoming connections.
          Channel c = bootstrap.bind(new InetSocketAddress(this.port));
          channelGroup.add(c);
-         LOG.debug("WS-RM Backports Server started on port: " + this.port);
+         if (LOG.isDebugEnabled())
+            LOG.debug("WS-RM Backports Server started on port: " + this.port);
       }
       catch (Exception e)
       {

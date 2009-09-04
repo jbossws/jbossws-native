@@ -317,12 +317,14 @@ public abstract class CommonClient implements StubExt, HeaderSource
                   try
                   {
                      URL wsaToURL = new URL(wsaTo);
-                     log.debug("Sending request to addressing destination: " + wsaToURL);
+                     if (log.isDebugEnabled())
+                        log.debug("Sending request to addressing destination: " + wsaToURL);
                      targetAddress = wsaToURL.toExternalForm();
                   }
                   catch (MalformedURLException ex)
                   {
-                     log.debug("Not a valid URL: " + wsaTo);
+                     if (log.isDebugEnabled())
+                        log.debug("Not a valid URL: " + wsaTo);
                   }
                }
             }
@@ -485,9 +487,11 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
    protected void addAttachmentParts(MessageAbstraction reqMessage)
    {
+      boolean debugEnabled = log.isDebugEnabled();
       for (AttachmentPart part : attachmentParts)
       {
-         log.debug("Adding attachment part: " + part.getContentId());
+         if (debugEnabled)
+            log.debug("Adding attachment part: " + part.getContentId());
          reqMessage.addAttachmentPart(part);
       }
    }

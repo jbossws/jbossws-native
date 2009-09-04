@@ -371,7 +371,7 @@ public class ParameterMetaData implements InitalizableMetaData
 
    public void setSOAPArrayCompType(QName compXmlType)
    {
-      if (compXmlType != null && !compXmlType.equals(soapArrayCompType))
+      if (log.isDebugEnabled() && compXmlType != null && !compXmlType.equals(soapArrayCompType))
       {
          String logmsg = "SOAPArrayCompType: [xmlType=" + xmlType + ",compType=" + compXmlType + "]";
          log.debug((soapArrayCompType == null ? "set" : "reset") + logmsg);

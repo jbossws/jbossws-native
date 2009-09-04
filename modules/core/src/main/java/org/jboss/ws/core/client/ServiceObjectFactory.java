@@ -103,7 +103,8 @@ public abstract class ServiceObjectFactory implements ObjectFactory
                for (QName q : narrowedEndpoints)
                {
                   EndpointMetaData removed = serviceMetaData.removeEndpoint(q);
-                  log.debug("Narrowed endpoint " + q + "(" + removed + ")");
+                  if (log.isDebugEnabled())
+                     log.debug("Narrowed endpoint " + q + "(" + removed + ")");
                }
             }
             else

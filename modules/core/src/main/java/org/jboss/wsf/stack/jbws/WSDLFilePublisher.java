@@ -188,7 +188,8 @@ public class WSDLFilePublisher
                wsdlWriter.writeWSDL(subdef, fw);
                fw.close();
 
-               log.debug("WSDL import published to: " + targetURL);
+               if (log.isDebugEnabled())
+                  log.debug("WSDL import published to: " + targetURL);
 
                // recursively publish imports
                publishWsdlImports(targetURL, subdef, published);
@@ -261,7 +262,8 @@ public class WSDLFilePublisher
                      if (fos != null) fos.close();
                   }
 
-                  log.debug("XMLSchema import published to: " + xsdURL);
+                  if (log.isDebugEnabled())
+                     log.debug("XMLSchema import published to: " + xsdURL);
 
                   // recursively publish imports
                   Element subdoc = DOMUtils.parse(xsdURL.openStream());
@@ -326,7 +328,8 @@ public class WSDLFilePublisher
       if (wsdlLocation == null)
          throw new IllegalStateException("Cannot obtain wsdl location for: " + serviceMetaData.getServiceName());
 
-      log.debug("Publish WSDL file: " + wsdlLocation);
+      if (log.isDebugEnabled())
+         log.debug("Publish WSDL file: " + wsdlLocation);
 
       // Only file URLs are supported in <wsdl-publish-location>
       String publishLocation = serviceMetaData.getWsdlPublishLocation();

@@ -138,7 +138,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
    public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
    {
-      if (log.isDebugEnabled())
+      boolean debugEnabled = log.isDebugEnabled();
+      if (debugEnabled)
          log.debug("bindRequestMessage: " + opMetaData.getQName());
 
       try
@@ -184,7 +185,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
                QName opQName = opMetaData.getQName();
                Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
 
-               if (log.isDebugEnabled())
+               if (debugEnabled)
                   log.debug("Create RPC body element: " + opName);
 
                soapBodyElement = new SOAPBodyElementRpc(opName);
@@ -242,7 +243,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   xmlName = namespaceRegistry.registerQName(xmlName);
                   Name soapName = new NameImpl(xmlName.getLocalPart(), xmlName.getPrefix(), xmlName.getNamespaceURI());
 
-                  log.debug("Add unboundHeader element: " + soapName);
+                  if (debugEnabled)
+                     log.debug("Add unboundHeader element: " + soapName);
                   SOAPContentElement contentElement = new SOAPHeaderElementImpl(soapName);
                   contentElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
 

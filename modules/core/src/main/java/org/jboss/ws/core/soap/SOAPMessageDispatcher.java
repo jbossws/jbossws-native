@@ -54,6 +54,7 @@ public class SOAPMessageDispatcher
    {
       OperationMetaData opMetaData = null;
 
+      boolean debugEnabled = log.isDebugEnabled();
       // Dispatch based on wsa:Action
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       AddressingProperties inProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
@@ -65,7 +66,8 @@ public class SOAPMessageDispatcher
             if (wsaAction.equals(opAux.getSOAPAction()))
             {
                opMetaData = opAux;
-               log.debug("Use wsa:Action dispatch: " + wsaAction);
+               if (debugEnabled)
+                  log.debug("Use wsa:Action dispatch: " + wsaAction);
                break;
             }
          }
@@ -134,7 +136,8 @@ public class SOAPMessageDispatcher
          }
       }
 
-      log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
+      if (debugEnabled)
+         log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
       return opMetaData;
    }
 }

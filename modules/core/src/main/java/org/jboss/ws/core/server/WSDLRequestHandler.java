@@ -96,7 +96,8 @@ public class WSDLRequestHandler
          File impResourceFile = new File(impResourcePath);
          String wsdlPublishLoc = epMetaData.getServiceMetaData().getWsdlPublishLocation();
 
-         log.debug("Importing resource file: " + impResourceFile.getCanonicalPath());
+         if (log.isDebugEnabled())
+            log.debug("Importing resource file: " + impResourceFile.getCanonicalPath());
 
          String wsdlLocFilePath = wsdlLocFile.getParentFile().getCanonicalPath();
          SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
@@ -225,7 +226,8 @@ public class WSDLRequestHandler
                      if (!newLocation.equals(orgLocation))
                      {
                         locationAttr.setNodeValue(newLocation);
-                        log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                        if (log.isDebugEnabled())
+                           log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
                      }
                   }
                }

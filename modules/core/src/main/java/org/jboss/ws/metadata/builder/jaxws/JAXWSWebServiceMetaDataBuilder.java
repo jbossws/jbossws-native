@@ -252,7 +252,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                   // PortQName overrides
                   if (portComp.getWsdlPort() != null)
                   {
-                     log.debug("Override EndpointMetaData portName " + sepMetaData.getPortName() + " with " + portComp.getWsdlPort());
+                     if (log.isDebugEnabled())
+                        log.debug("Override EndpointMetaData portName " + sepMetaData.getPortName() + " with " + portComp.getWsdlPort());
                      sepMetaData.setPortName(portComp.getWsdlPort());
                   }
 
@@ -264,7 +265,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                      {
                         for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
                         {
-                           log.debug("Contribute handler from webservices.xml: " + uhmd.getHandlerName());
+                           if (log.isDebugEnabled())
+                              log.debug("Contribute handler from webservices.xml: " + uhmd.getHandlerName());
                            HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
                            sepMetaData.addHandler(hmd);
                         }

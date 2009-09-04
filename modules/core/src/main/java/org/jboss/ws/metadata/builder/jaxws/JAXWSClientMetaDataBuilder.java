@@ -72,7 +72,8 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       if (wsdlURL == null)
          throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
 
-      log.debug("START buildMetaData: [service=" + serviceName + "]");
+      if (log.isDebugEnabled())
+         log.debug("START buildMetaData: [service=" + serviceName + "]");
       try
       {
          UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
@@ -97,7 +98,8 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
 
-         log.debug("END buildMetaData: " + wsMetaData);
+         if (log.isDebugEnabled())
+            log.debug("END buildMetaData: " + wsMetaData);
          return serviceMetaData;
       }
       catch (RuntimeException rte)
@@ -206,7 +208,8 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
          if(epMetaData.matches(portComp))
          {
-            log.debug("Processing service-ref contribution on portType: "+epMetaData.getPortTypeName());
+            if (log.isDebugEnabled())
+               log.debug("Processing service-ref contribution on portType: "+epMetaData.getPortTypeName());
 
             // process MTOM overrides
             if(portComp.getEnableMTOM())

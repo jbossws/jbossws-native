@@ -150,12 +150,14 @@ public class EndpointFeatureProcessor
          String bindingId = sepMetaData.getBindingId();
          if (SOAPBinding.SOAP11HTTP_BINDING.equals(bindingId))
          {
-            log.debug("MTOMFeature found, setting binding to " + SOAPBinding.SOAP11HTTP_MTOM_BINDING);
+            if (log.isDebugEnabled())
+               log.debug("MTOMFeature found, setting binding to " + SOAPBinding.SOAP11HTTP_MTOM_BINDING);
             sepMetaData.setBindingId(SOAPBinding.SOAP11HTTP_MTOM_BINDING);
          }
          else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
          {
-            log.debug("MTOMFeature found, setting binding to " + SOAPBinding.SOAP12HTTP_MTOM_BINDING);
+            if (log.isDebugEnabled())
+               log.debug("MTOMFeature found, setting binding to " + SOAPBinding.SOAP12HTTP_MTOM_BINDING);
             sepMetaData.setBindingId(SOAPBinding.SOAP12HTTP_MTOM_BINDING);
          }
       }

@@ -142,7 +142,8 @@ public class SecurityStore
       InputStream stream = null;
       try
       {
-         log.debug("loadStore: " + storeURL);
+         if (log.isDebugEnabled())
+            log.debug("loadStore: " + storeURL);
          stream = storeURL.openStream();
          if (stream == null)
             throw new WSSecurityException("Cannot load store from: " + storeURL);
@@ -225,7 +226,9 @@ public class SecurityStore
 
    private String execPasswordCmd(String keyStorePasswordCmd) throws WSSecurityException
    {
-      log.debug("Executing cmd: " + keyStorePasswordCmd);
+      boolean debugEnabled = log.isDebugEnabled();
+      if (debugEnabled)
+         log.debug("Executing cmd: " + keyStorePasswordCmd);
       try
       {
          String password = null;
@@ -252,7 +255,8 @@ public class SecurityStore
             reader.close();
             stderr.close();
          }
-         log.debug("Command exited with: " + status);
+         if (debugEnabled)
+            log.debug("Command exited with: " + status);
          return password;
       }
       catch (Exception e)
@@ -272,7 +276,8 @@ public class SecurityStore
          classname = keyStorePasswordCmd.substring(0, colon);
          ctorArg = keyStorePasswordCmd.substring(colon + 1);
       }
-      log.debug("Loading class: " + classname + ", ctorArg=" + ctorArg);
+      if (log.isDebugEnabled())
+         log.debug("Loading class: " + classname + ", ctorArg=" + ctorArg);
       try
       {
          ClassLoader loader = SecurityActions.getContextClassLoader();

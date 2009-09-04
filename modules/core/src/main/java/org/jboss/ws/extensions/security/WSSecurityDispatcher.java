@@ -160,7 +160,8 @@ public class WSSecurityDispatcher implements WSSecurityAPI
    public void encodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig, String user, String password) throws SOAPException
    {
       Config config = getActualConfig(configuration, operationConfig);
-      log.debug("WS-Security config: " + config);
+      if (log.isDebugEnabled())
+         log.debug("WS-Security config: " + config);
 
       // Nothing to process
       if (config == null)

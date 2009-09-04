@@ -59,7 +59,8 @@ public abstract class RMHandlerAbstractBase extends GenericSOAPHandler
       {
          msg.serializeTo(soapMessage);
          data.put(msgQN, msg);
-         log.debug(msgQN.getLocalPart() + " WSRM message was serialized to payload");
+         if (log.isDebugEnabled())
+            log.debug(msgQN.getLocalPart() + " WSRM message was serialized to payload");
       }
    }
    
@@ -73,7 +74,8 @@ public abstract class RMHandlerAbstractBase extends GenericSOAPHandler
             wsrmMsg.deserializeFrom(soapMessage);
             messages.add(msgQN);
             data.put(msgQN, wsrmMsg);
-            log.debug(msgQN.getLocalPart() + " WSRM message was deserialized from payload");
+            if (log.isDebugEnabled())
+               log.debug(msgQN.getLocalPart() + " WSRM message was deserialized from payload");
          }
       }
       catch (RMException ignore) {}
@@ -86,7 +88,8 @@ public abstract class RMHandlerAbstractBase extends GenericSOAPHandler
       {
          msg.serializeTo(soapMessage);
          data.put(msgQN, msg);
-         log.debug(msgQN.getLocalPart() + " WSRM message was serialized to payload");
+         if (log.isDebugEnabled())
+            log.debug(msgQN.getLocalPart() + " WSRM message was serialized to payload");
       }
    }
    

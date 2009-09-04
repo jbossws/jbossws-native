@@ -175,20 +175,23 @@ public class RMServerSequence implements RMSequence
          }
          
          this.receivedInboundMessages.add(messageId);
-         logger.debug("Inbound Sequence: " + this.inboundId + ", received message no. " + messageId);
+         if (logger.isDebugEnabled())
+            logger.debug("Inbound Sequence: " + this.inboundId + ", received message no. " + messageId);
       }
    }
 
    public final void addReceivedOutboundMessage(long messageId)
    {
       this.acknowledgedOutboundMessages.add(messageId);
-      logger.debug("Outbound Sequence: " + this.outboundId + ", message no. " + messageId + " acknowledged by server");
+      if (logger.isDebugEnabled())
+         logger.debug("Outbound Sequence: " + this.outboundId + ", message no. " + messageId + " acknowledged by server");
    }
 
    public final void ackRequested(boolean requested)
    {
       this.inboundMessageAckRequested = requested;
-      logger.debug("Inbound Sequence: " + this.inboundId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
+      if (logger.isDebugEnabled())
+         logger.debug("Inbound Sequence: " + this.inboundId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
    }
    
    public final long newMessageNumber()

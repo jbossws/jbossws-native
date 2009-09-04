@@ -394,7 +394,8 @@ public class FaultMetaData implements InitalizableMetaData
             for (int i = 0; i < propertyCount; i++)
                propertyValues[i] = faultBeanProperties[i].accessor().get(faultBean);
 
-            log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
+            if (log.isDebugEnabled())
+               log.debug("constructing " + javaType.getSimpleName() + ": " + Arrays.toString(propertyValues));
             serviceException = (Exception)serviceExceptionConstructor.newInstance(propertyValues);
          }
       }

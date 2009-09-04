@@ -99,7 +99,8 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
             if (host == null)
             {
                host = InetAddress.getLocalHost().getCanonicalHostName();
-               logger.debug("Backports server configuration omits host configuration - using autodetected " + host);
+               if (logger.isDebugEnabled())
+                  logger.debug("Backports server configuration omits host configuration - using autodetected " + host);
             }  
             String port = wsrmConfig.getBackPortsServer().getPort();
             String path = PATH_PREFIX + UUIDGenerator.generateRandomUUIDString();
@@ -122,8 +123,11 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
    {
       // we can't use objectLock in the method - possible deadlock
       this.countOfUnassignedMessagesAvailable.addAndGet(1);
-      logger.debug("Expected sequence expiration in " + ((System.currentTimeMillis() - this.creationTime) / 1000) + "seconds");
-      logger.debug("Unassigned message available in callback handler");
+      if (logger.isDebugEnabled())
+      {
+         logger.debug("Expected sequence expiration in " + ((System.currentTimeMillis() - this.creationTime) / 1000) + "seconds");
+         logger.debug("Unassigned message available in callback handler");
+      }
    }
    
    public final RMConfig getRMConfig()
@@ -144,13 +148,15 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
    public final void setFinal()
    {
       this.isFinal = true;
-      logger.debug("Sequence " + this.outgoingSequenceId + " state changed to final");
+      if (logger.isDebugEnabled())
+         logger.debug("Sequence " + this.outgoingSequenceId + " state changed to final");
    }
    
    public final void ackRequested(boolean requested)
    {
       this.inboundMessageAckRequested.set(requested);
-      logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
+      if (logger.isDebugEnabled())
+         logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", ack requested. Messages in the queue: " + this.receivedInboundMessages);
    }
    
    public final boolean isAckRequested()
@@ -161,13 +167,15 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
    public final void addReceivedInboundMessage(long messageId)
    {
       this.receivedInboundMessages.add(messageId);
-      logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", received message no. " + messageId);
+      if (logger.isDebugEnabled())
+         logger.debug("Inbound Sequence: " + this.incomingSequenceId + ", received message no. " + messageId);
    }
    
    public final void addReceivedOutboundMessage(long messageId)
    {
       this.acknowledgedOutboundMessages.add(messageId);
-      logger.debug("Outbound Sequence: " + this.outgoingSequenceId + ", message no. " + messageId + " acknowledged by server");
+      if (logger.isDebugEnabled())
+         logger.debug("Outbound Sequence: " + this.outgoingSequenceId + ", message no. " + messageId + " acknowledged by server");
    }
    
    public final void setOutboundId(String outboundId)

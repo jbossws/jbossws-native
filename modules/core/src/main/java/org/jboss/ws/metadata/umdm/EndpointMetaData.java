@@ -261,7 +261,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (use == null)
       {
          use = Use.getDefaultUse();
-         log.debug("Using default encoding style: " + use);
+         if (log.isDebugEnabled())
+            log.debug("Using default encoding style: " + use);
       }
       return use;
    }
@@ -280,7 +281,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (style == null)
       {
          style = Style.getDefaultStyle();
-         log.debug("Using default style: " + style);
+         if (log.isDebugEnabled())
+            log.debug("Using default style: " + style);
       }
       return style;
    }
@@ -290,7 +292,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (value != null && style != null && !style.equals(value))
          throw new WSException("Mixed styles not supported");
 
-      log.trace("setStyle: " + value);
+      if (log.isTraceEnabled())
+         log.trace("setStyle: " + value);
       this.style = value;
    }
 
@@ -299,7 +302,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (parameterStyle == null)
       {
          parameterStyle = ParameterStyle.WRAPPED;
-         log.debug("Using default parameter style: " + parameterStyle);
+         if (log.isDebugEnabled())
+            log.debug("Using default parameter style: " + parameterStyle);
       }
       return parameterStyle;
    }
@@ -309,7 +313,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (value != null && parameterStyle != null && !parameterStyle.equals(value))
          throw new WSException("Mixed SOAP parameter styles not supported");
 
-      log.debug("setParameterStyle: " + value);
+      if (log.isDebugEnabled())
+         log.debug("setParameterStyle: " + value);
       this.parameterStyle = value;
    }
 
@@ -737,7 +742,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             CommonBindingProvider provider = (CommonBindingProvider)configurable;
             ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
-            log.debug("Enable MTOM on endpoint " + getPortName());
+            if (log.isDebugEnabled())
+               log.debug("Enable MTOM on endpoint " + getPortName());
          }
       }
       else if (configurable instanceof DispatchBinding)
@@ -818,7 +824,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
       if (configName.equals(getEndpointConfigMetaData().getConfigName()) == false || configFile.equals(getEndpointConfigMetaData().getConfigFile()) == false)
       {
-         log.debug("Reconfiguration forced, new config is '" + configName + "' file is '" + configFile + "'");
+         if (log.isDebugEnabled())
+            log.debug("Reconfiguration forced, new config is '" + configName + "' file is '" + configFile + "'");
 
          this.configMetaData = createEndpointConfigMetaData(configName, configFile);
          configObservable.doNotify(configName);
@@ -863,7 +870,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       String configName = toInitialise.getConfigName();
       String configFile = toInitialise.getConfigFile();
 
-      log.debug("Create new config [name=" + configName + ",file=" + configFile + "]");
+      if (log.isDebugEnabled())
+         log.debug("Create new config [name=" + configName + ",file=" + configFile + "]");
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
       List<RMPortConfig> rmPortMetaData = null;

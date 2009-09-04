@@ -186,8 +186,7 @@ public class EndpointInvocation
 
    public Object getReturnValue()
    {
-      if (log.isDebugEnabled())
-         log.debug("getReturnValue");
+      log.debug("getReturnValue");
       Object paramValue = returnValue;
       ParameterMetaData paramMetaData = opMetaData.getReturnParameter();
       if (paramMetaData != null)

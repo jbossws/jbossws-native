@@ -88,7 +88,8 @@ public class PortComponentLinkServlet extends HttpServlet
       String endpointAddress = sepMetaData.getEndpointAddress();
       out.println(endpointAddress);
 
-      log.debug("Resolved " + pcLink + " to: " + endpointAddress);
+      if (log.isDebugEnabled())
+         log.debug("Resolved " + pcLink + " to: " + endpointAddress);
       out.close();
    }
 }

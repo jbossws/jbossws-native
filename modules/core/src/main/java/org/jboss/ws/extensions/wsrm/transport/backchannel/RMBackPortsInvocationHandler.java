@@ -122,7 +122,8 @@ public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHan
             if (handler.getHandledPath().equals(requestPath))
             {
                handlerExists = true;
-               LOG.debug("Handling request path: " + requestPath);
+               if (LOG.isDebugEnabled())
+                  LOG.debug("Handling request path: " + requestPath);
                handler.handle(message);
                break;
             }

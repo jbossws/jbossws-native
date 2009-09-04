@@ -177,7 +177,8 @@ public class DispatchSOAPBinding extends DispatchBinding
             SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
             SOAPElement soapElement = soapBody.getBodyElement();
 
-            log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
+            if (log.isDebugEnabled())
+               log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             retObj = unmarshaller.unmarshal(soapElement);
          }
