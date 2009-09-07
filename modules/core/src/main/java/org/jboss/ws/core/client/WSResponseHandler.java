@@ -23,6 +23,10 @@ package org.jboss.ws.core.client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
@@ -47,24 +51,30 @@ import org.jboss.wsf.common.DOMUtils;
 public class WSResponseHandler extends SimpleChannelUpstreamHandler
 {
    private UnMarshaller unmarshaller;
-   private Object responseMessage;
-   private Map<String, Object> responseHeaders;
-   private Throwable error;
+   private FutureResult future;
 
    public WSResponseHandler(UnMarshaller unmarshaller)
    {
       super();
       this.unmarshaller = unmarshaller;
+      this.future = new FutureResult();
    }
 
    @Override
    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception
    {
+      if (future.isCancelled())
+      {
+         return;
+      }
+      future.start();
+      ResultImpl result = new ResultImpl();
+      future.setResult(result);
       try
       {
-         reset();
          HttpResponse response = (HttpResponse)e.getMessage();
 
+         Map<String, Object> responseHeaders = result.getResponseHeaders();
          responseHeaders.put(NettyClient.RESPONSE_CODE, response.getStatus().getCode());
          responseHeaders.put(NettyClient.RESPONSE_CODE_MESSAGE, response.getStatus().getReasonPhrase());
          for (String headerName : response.getHeaderNames())
@@ -73,48 +83,180 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          }
 
          ChannelBuffer content = response.getContent();
-         this.responseMessage = unmarshaller.read(content.readable() ? new ChannelBufferInputStream(content) : null, responseHeaders);
+         result.setResponseMessage(unmarshaller.read(content.readable() ? new ChannelBufferInputStream(content) : null, responseHeaders));
       }
       catch (Throwable t)
       {
-         this.error = t;
+         result.setError(t);
       }
       finally
       {
          DOMUtils.clearThreadLocals();
          ThreadLocalAssociation.clear();
-         e.getChannel().close();
+         future.done();
       }
    }
    
    @Override
    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
    {
-      if (this.error != null)
+      if (future.isCancelled())
       {
-         this.error = e.getCause();
+         return;
+      }
+      future.start();
+      future.setException(e.getCause());
+      future.done();
+   }
+   
+   public Future<Result> getFutureResult()
+   {
+      return future;
+   }
+   
+   private class FutureResult implements Future<Result>
+   {
+      protected Result result;
+      protected Throwable exception;
+      protected boolean done = false;
+      protected boolean cancelled = false;
+      protected boolean started = false;
+
+      public FutureResult()
+      {
+      }
+
+      public void setResult(Result result)
+      {
+         this.result = result;
+      }
+      
+      public void setException(Throwable exception)
+      {
+         this.exception = exception;
+      }
+      
+      public void start()
+      {
+         started = true;
+      }
+
+      public void done()
+      {
+         done = true;
+         synchronized (this)
+         {
+            notifyAll();
+         }
+      }
+
+      public boolean cancel(boolean mayInterruptIfRunning)
+      {
+         if (!started)
+         {
+            cancelled = true;
+            synchronized (this)
+            {
+               notifyAll();
+            }
+            return true;
+         }
+         return false;
+      }
+
+      public Result get() throws InterruptedException, ExecutionException
+      {
+         synchronized (this)
+         {
+            if (!done)
+            {
+               wait();
+            }
+         }
+         if (cancelled)
+         {
+            throw new InterruptedException("Operation Cancelled");
+         }
+         if (exception != null)
+         {
+            throw new ExecutionException(exception);
+         }
+         return result;
+      }
+
+      public Result get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException
+      {
+         synchronized (this)
+         {
+            if (!done)
+            {
+               unit.timedWait(this, timeout);
+            }
+         }
+         if (cancelled)
+         {
+            throw new InterruptedException("Operation Cancelled");
+         }
+         if (!done)
+         {
+            throw new TimeoutException("Timeout Exceeded");
+         }
+         if (exception != null)
+         {
+            throw new ExecutionException(exception);
+         }
+         return result;
+      }
+
+      public boolean isCancelled()
+      {
+         return cancelled;
+      }
+
+      public boolean isDone()
+      {
+         return done;
       }
    }
    
-   private void reset()
+   public interface Result
    {
-      this.error = null;
-      this.responseMessage = null;
-      this.responseHeaders = new HashMap<String, Object>();
+      public Object getResponseMessage();
+      
+      public Map<String, Object> getResponseHeaders();
+      
+      public Throwable getError();
    }
-
-   public Object getResponseMessage()
+   
+   private class ResultImpl implements Result
    {
-      return this.responseMessage;
-   }
-
-   public Map<String, Object> getResponseHeaders()
-   {
-      return responseHeaders;
-   }
-
-   public Throwable getError()
-   {
-      return error;
+      private Object responseMessage;
+      private Map<String, Object> responseHeaders = new HashMap<String, Object>();
+      private Throwable error;
+      
+      public Object getResponseMessage()
+      {
+         return responseMessage;
+      }
+      public void setResponseMessage(Object responseMessage)
+      {
+         this.responseMessage = responseMessage;
+      }
+      public Map<String, Object> getResponseHeaders()
+      {
+         return responseHeaders;
+      }
+      public void setResponseHeaders(Map<String, Object> responseHeaders)
+      {
+         this.responseHeaders = responseHeaders;
+      }
+      public Throwable getError()
+      {
+         return error;
+      }
+      public void setError(Throwable error)
+      {
+         this.error = error;
+      }
    }
 }

@@ -30,6 +30,9 @@ import java.nio.channels.ClosedChannelException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.SSLEngine;
 import javax.xml.rpc.Stub;
@@ -55,6 +58,7 @@ import org.jboss.security.Base64Encoder;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
+import org.jboss.ws.core.client.WSResponseHandler.Result;
 import org.jboss.ws.core.client.ssl.SSLContextFactory;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.feature.FastInfosetFeature;
@@ -83,6 +87,9 @@ public class NettyClient
    private Integer chunkSize = new Integer(DEFAULT_CHUNK_SIZE);
    private Executor bossExecutor;
    private Executor workerExecutor;
+//   private static Executor bossExecutor = Executors.newCachedThreadPool();
+//   private static Executor workerExecutor = Executors.newCachedThreadPool();
+//   private static ChannelFactory factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
 
    /**
     * Construct a Netty client with the provided marshaller/unmarshaller.
@@ -204,18 +211,18 @@ public class NettyClient
             }
             return null;
          }
-         //Wait for the server to close the connection
-         ChannelFuture closeFuture = channel.getCloseFuture();
-         awaitUninterruptibly(closeFuture, timeout);
-         if (responseHandler.getError() != null)
-         {
-            throw responseHandler.getError();
-         }
+         
          Object resMessage = null;
          Map<String, Object> resHeaders = null;
          //Get the response
-         resMessage = responseHandler.getResponseMessage();
-         resHeaders = responseHandler.getResponseHeaders();
+         Future<Result> futureResult = responseHandler.getFutureResult();
+         Result result = timeout == null ? futureResult.get() : futureResult.get(timeout, TimeUnit.MILLISECONDS);
+         if (result.getError() != null)
+         {
+            throw result.getError();
+         }
+         resMessage = result.getResponseMessage();
+         resHeaders = result.getResponseHeaders();
          //Update props with response headers (required to maintain session using cookies)
          callProps.clear();
          if (resHeaders != null)
@@ -228,6 +235,10 @@ public class NettyClient
       catch (IOException ioe)
       {
          throw ioe;
+      }
+      catch (TimeoutException te)
+      {
+         throw new WSTimeoutException(te.getMessage(), timeout);
       }
       catch (WSTimeoutException toe)
       {
