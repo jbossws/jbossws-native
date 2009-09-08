@@ -78,6 +78,8 @@ public class JBWS1666TestCase extends JBossWSTest
       cp.append(PS + jbc + FS + "jcl-over-slf4j.jar");
       cp.append(PS + jbc + FS + "slf4j-api.jar");
       cp.append(PS + jbc + FS + "slf4j-jboss-logging.jar");
+      cp.append(PS + jbc + FS + "jbosssx-client.jar");
+      cp.append(PS + jbc + FS + "jboss-javaee.jar");
 
       Runtime rt = Runtime.getRuntime();
 
