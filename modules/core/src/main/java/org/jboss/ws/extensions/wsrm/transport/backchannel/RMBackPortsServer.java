@@ -33,7 +33,7 @@ import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.jboss.ws.core.client.WSServerPipelineFactory;
+import org.jboss.ws.core.client.transport.WSServerPipelineFactory;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 
 /**

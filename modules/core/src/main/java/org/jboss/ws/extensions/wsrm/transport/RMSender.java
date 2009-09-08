@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.client.NettyClient;
+import org.jboss.ws.core.client.transport.NettyClient;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 

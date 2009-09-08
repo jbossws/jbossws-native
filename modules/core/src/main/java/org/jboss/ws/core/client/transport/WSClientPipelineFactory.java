@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.client;
+package org.jboss.ws.core.client.transport;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
@@ -27,56 +27,60 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
-import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
-import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
+import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 
 /**
  * 
  * @author alessio.soldano@jboss.com
- * @since 01-Jul-2009
+ * @since 24-Jun-2009
  *
  */
-public class WSServerPipelineFactory implements ChannelPipelineFactory
+public class WSClientPipelineFactory implements ChannelPipelineFactory
 {
    private static final int MAX_CONTENT_SIZE = 1073741824;
-   private ChannelHandler requestHandler;
-   private ChannelHandler sshHandler;
-
+   private ChannelHandler responseHandler;
+   private ChannelHandler sslHandler;
+   
    public ChannelPipeline getPipeline() throws Exception
    {
       // Create a default pipeline implementation.
       ChannelPipeline pipeline = pipeline();
-      // Uncomment the following line if you want HTTPS
-      //SSLEngine engine = SecureChatSslContextFactory.getServerContext().createSSLEngine();
-      //engine.setUseClientMode(false);
-      //pipeline.addLast("ssl", new SslHandler(engine));
-
-      pipeline.addLast("decoder", new HttpRequestDecoder());
+      
+      if (sslHandler != null)
+      {
+         pipeline.addLast("ssl", sslHandler);
+      }
+      pipeline.addLast("decoder", new HttpResponseDecoder());
       // Uncomment the following line if you don't want to handle HttpChunks.
       pipeline.addLast("aggregator", new HttpChunkAggregator(MAX_CONTENT_SIZE));
-      pipeline.addLast("encoder", new HttpResponseEncoder());
-      pipeline.addLast("handler", requestHandler);
+      pipeline.addLast("encoder", new HttpRequestEncoder());
+      if (responseHandler != null)
+      {
+         pipeline.addLast("handler", responseHandler);
+      }
       return pipeline;
    }
 
-   public ChannelHandler getRequestHandler()
+   public ChannelHandler getResponseHandler()
    {
-      return requestHandler;
+      return responseHandler;
    }
 
-   public void setRequestHandler(ChannelHandler requestHandler)
+   public void setResponseHandler(ChannelHandler responseHandler)
    {
-      this.requestHandler = requestHandler;
+      this.responseHandler = responseHandler;
    }
 
-   public ChannelHandler getSshHandler()
+   public ChannelHandler getSslHandler()
    {
-      return sshHandler;
+      return sslHandler;
    }
 
-   public void setSshHandler(ChannelHandler sshHandler)
+   public void setSslHandler(ChannelHandler sslHandler)
    {
-      this.sshHandler = sshHandler;
+      this.sslHandler = sslHandler;
    }
-
+   
+   
 }

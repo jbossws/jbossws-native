@@ -29,7 +29,7 @@ import java.util.concurrent.Callable;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageTrace;
-import org.jboss.ws.core.client.NettyClient;
+import org.jboss.ws.core.client.transport.NettyClient;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandler;
 import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerFactory;

@@ -33,6 +33,7 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.core.client.transport.NettyClient;
 import org.jboss.ws.extensions.wsrm.transport.RMChannel;
 import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
 import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;

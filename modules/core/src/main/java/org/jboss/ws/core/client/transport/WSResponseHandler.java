@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.client;
+package org.jboss.ws.core.client.transport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +36,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.wsf.common.DOMUtils;
 

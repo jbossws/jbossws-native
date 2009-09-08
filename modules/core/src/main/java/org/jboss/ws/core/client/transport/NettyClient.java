@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.client;
+package org.jboss.ws.core.client.transport;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,8 +58,10 @@ import org.jboss.security.Base64Encoder;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
-import org.jboss.ws.core.client.WSResponseHandler.Result;
+import org.jboss.ws.core.client.Marshaller;
+import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.client.ssl.SSLContextFactory;
+import org.jboss.ws.core.client.transport.WSResponseHandler.Result;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.config.CommonConfig;
@@ -83,7 +85,7 @@ public class NettyClient
    private UnMarshaller unmarshaller;
    private Long timeout;
    private static final int DEFAULT_CHUNK_SIZE = 1024;
-   //We always use chunked transfer encoding unless explicitely disabled by user 
+   //We always use chunked transfer encoding unless explicitly disabled by user 
    private Integer chunkSize = new Integer(DEFAULT_CHUNK_SIZE);
    private Executor bossExecutor;
    private Executor workerExecutor;
@@ -201,7 +203,7 @@ public class NettyClient
 
          if (!waitForResponse)
          {
-            //No need to wait for the connection to be closed, just wait for the write to be completed.
+            //No need to wait for the result, just wait for the write to be completed.
             if (writeFuture != null)
             {
                writeFuture.awaitUninterruptibly();

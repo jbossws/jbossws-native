@@ -34,8 +34,8 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.client.NettyClient;
 import org.jboss.ws.core.client.UnMarshaller;
+import org.jboss.ws.core.client.transport.NettyClient;
 
 /**
  * @author Thomas.Diesler@jboss.org
