@@ -87,9 +87,6 @@ public class NettyClient
    private Integer chunkSize = new Integer(DEFAULT_CHUNK_SIZE);
    private Executor bossExecutor;
    private Executor workerExecutor;
-//   private static Executor bossExecutor = Executors.newCachedThreadPool();
-//   private static Executor workerExecutor = Executors.newCachedThreadPool();
-//   private static ChannelFactory factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
 
    /**
     * Construct a Netty client with the provided marshaller/unmarshaller.
