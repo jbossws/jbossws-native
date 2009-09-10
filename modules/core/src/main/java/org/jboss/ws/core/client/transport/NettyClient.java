@@ -208,7 +208,7 @@ public class NettyClient
       }
       finally
       {
-         if (channel != null)
+         if (channel != null && waitForResponse)
          {
             NettyHelper.clearResponseHandler(channel);
          }
