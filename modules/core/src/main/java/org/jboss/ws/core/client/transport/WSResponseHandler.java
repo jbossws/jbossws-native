@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.core.client.transport;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -36,13 +37,10 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.ws.core.client.UnMarshaller;
-import org.jboss.ws.core.utils.ThreadLocalAssociation;
-import org.jboss.wsf.common.DOMUtils;
 
 /**
  * A Netty channel upstream handler that receives MessageEvent
- * and extract the JBossWS message using the provided unmarshaller.
+ * and sends data back to the NettyClient.
  * 
  * @author alessio.soldano@jboss.com
  * @since 24-Jun-2009
@@ -51,13 +49,11 @@ import org.jboss.wsf.common.DOMUtils;
 @ChannelPipelineCoverage("one")
 public class WSResponseHandler extends SimpleChannelUpstreamHandler
 {
-   private UnMarshaller unmarshaller;
    private FutureResult future;
 
-   public WSResponseHandler(UnMarshaller unmarshaller)
+   public WSResponseHandler()
    {
       super();
-      this.unmarshaller = unmarshaller;
       this.future = new FutureResult();
    }
 
@@ -85,16 +81,10 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          }
 
          ChannelBuffer content = response.getContent();
-         result.setResponseMessage(unmarshaller.read(content.readable() ? new ChannelBufferInputStream(content) : null, responseHeaders));
-      }
-      catch (Throwable t)
-      {
-         result.setError(t);
+         result.setResponse(content.readable() ? new ChannelBufferInputStream(content) : null);
       }
       finally
       {
-         DOMUtils.clearThreadLocals();
-         ThreadLocalAssociation.clear();
          future.done();
       }
    }
@@ -223,26 +213,23 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
    
    public interface Result
    {
-      public Object getResponseMessage();
+      public InputStream getResponse();
       
       public Map<String, Object> getResponseHeaders();
-      
-      public Throwable getError();
    }
    
    private class ResultImpl implements Result
    {
-      private Object responseMessage;
+      private InputStream is;
       private Map<String, Object> responseHeaders = new HashMap<String, Object>();
-      private Throwable error;
       
-      public Object getResponseMessage()
+      public InputStream getResponse()
       {
-         return responseMessage;
+         return is;
       }
-      public void setResponseMessage(Object responseMessage)
+      public void setResponse(InputStream is)
       {
-         this.responseMessage = responseMessage;
+         this.is = is;
       }
       public Map<String, Object> getResponseHeaders()
       {
@@ -251,14 +238,6 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       public void setResponseHeaders(Map<String, Object> responseHeaders)
       {
          this.responseHeaders = responseHeaders;
-      }
-      public Throwable getError()
-      {
-         return error;
-      }
-      public void setError(Throwable error)
-      {
-         this.error = error;
       }
    }
 }

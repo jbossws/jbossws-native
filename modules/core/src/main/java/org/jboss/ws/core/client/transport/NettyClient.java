@@ -22,6 +22,7 @@
 package org.jboss.ws.core.client.transport;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -137,7 +138,7 @@ public class NettyClient
          WSResponseHandler responseHandler = null;
          if (waitForResponse)
          {
-            responseHandler = new WSResponseHandler(unmarshaller);
+            responseHandler = new WSResponseHandler();
             NettyHelper.setResponseHandler(channel, responseHandler);
          }
          
@@ -173,12 +174,10 @@ public class NettyClient
          //Get the response
          Future<Result> futureResult = responseHandler.getFutureResult();
          Result result = timeout == null ? futureResult.get() : futureResult.get(timeout, TimeUnit.MILLISECONDS);
-         if (result.getError() != null)
-         {
-            throw result.getError();
-         }
-         resMessage = result.getResponseMessage();
          resHeaders = result.getResponseHeaders();
+         InputStream is = result.getResponse();
+         resMessage = unmarshaller.read(is, resHeaders);
+         
          //Update props with response headers (required to maintain session using cookies)
          callProps.clear();
          if (resHeaders != null)
