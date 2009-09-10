@@ -76,6 +76,7 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          HttpResponse response = (HttpResponse)e.getMessage();
 
          Map<String, Object> responseHeaders = result.getResponseHeaders();
+         responseHeaders.put(NettyClient.PROTOCOL, response.getProtocolVersion());
          responseHeaders.put(NettyClient.RESPONSE_CODE, response.getStatus().getCode());
          responseHeaders.put(NettyClient.RESPONSE_CODE_MESSAGE, response.getStatus().getReasonPhrase());
          for (String headerName : response.getHeaderNames())
