@@ -42,17 +42,17 @@ public class ThreadLocalAssociation
     * SOAP message context
     * @see org.jboss.ws.core.soap.MessageContextAssociation
     */
-   private static ThreadLocal<Stack<CommonMessageContext>> msgContextAssoc = new InheritableThreadLocal<Stack<CommonMessageContext>>();
+   private static ThreadLocal<Stack<CommonMessageContext>> msgContextAssoc = new ThreadLocal<Stack<CommonMessageContext>>();
 
    /**
     * @see org.jboss.ws.extensions.security.STRTransform
     */
-   private static ThreadLocal<SecurityStore> strTransformAssoc = new InheritableThreadLocal<SecurityStore>();
+   private static ThreadLocal<SecurityStore> strTransformAssoc = new ThreadLocal<SecurityStore>();
    
    /**
     * Public keys used to sign incoming message
     */
-   private static ThreadLocal<List<PublicKey>> signatureKeysAssoc = new InheritableThreadLocal<List<PublicKey>>();
+   private static ThreadLocal<List<PublicKey>> signatureKeysAssoc = new ThreadLocal<List<PublicKey>>();
    
    public static ThreadLocal<Stack<CommonMessageContext>> localMsgContextAssoc()
    {
