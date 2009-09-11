@@ -84,7 +84,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       if (reqMessage == null)
          throw new IllegalArgumentException("Given SOAPMessage cannot be null");
 
-      MessageAbstraction resMessage = callInternal(reqMessage, endpoint, false);
+      MessageAbstraction resMessage = callInternal(reqMessage, endpoint, true);
       return (SOAPMessage)resMessage;
    }
 
