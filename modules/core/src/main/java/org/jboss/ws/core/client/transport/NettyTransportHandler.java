@@ -22,6 +22,7 @@
 package org.jboss.ws.core.client.transport;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.security.AccessController;
@@ -142,7 +143,7 @@ public class NettyTransportHandler
     * @return A Netty channel
     * @throws IOException
     */
-   public Channel getChannel() throws IOException
+   public Channel getChannel() throws ConnectException
    {
       return getChannel(null);
    }
@@ -154,16 +155,16 @@ public class NettyTransportHandler
     * @return A Netty channel
     * @throws IOException
     */
-   public Channel getChannel(Long timeout) throws IOException
+   public Channel getChannel(Long timeout) throws ConnectException
    {
       if (channel == null && connectFuture != null) //first call after connection attempt
       {
          NettyHelper.awaitUninterruptibly(connectFuture, timeout);
          if (!connectFuture.isSuccess())
          {
-            IOException io = new IOException("Could not connect to " + url.getHost());
-            io.initCause(connectFuture.getCause());
-            throw io;
+            ConnectException ce = new ConnectException("Could not connect to " + url.getHost());
+            ce.initCause(connectFuture.getCause());
+            throw ce;
          }
          channel = connectFuture.getChannel();
       }
@@ -297,7 +298,15 @@ public class NettyTransportHandler
    public void end()
    {
       keepingAlive = false;
-      channel.close();
+      if (channel == null)
+      {
+         channel = connectFuture.getChannel();
+         connectFuture.cancel();
+      }
+      if (channel != null)
+      {
+         channel.close();
+      }
       factory.releaseExternalResources();
    }
    

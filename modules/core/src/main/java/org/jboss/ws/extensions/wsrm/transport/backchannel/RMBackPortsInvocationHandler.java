@@ -33,6 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.jboss.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -161,8 +162,8 @@ public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHan
       }
 
       // Write the response.
-      e.getChannel().write(response);
-      e.getChannel().close();
+      ChannelFuture cf = e.getChannel().write(response);
+      cf.awaitUninterruptibly();
    }
 
    @Override

@@ -24,6 +24,7 @@ package org.jboss.ws.core.client.transport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -151,22 +152,16 @@ public class NettyClient
          setAuthorization(request, callProps);
 
          ChannelFuture writeFuture = null;
-         try
-         {
-            writeFuture = writeRequest(channel, request, reqMessage);
-         }
-         catch (ClosedChannelException cce)
-         {
-            log.debug("Channel closed by remote peer while sending message");
-         }
+         
+         writeFuture = writeRequest(channel, request, reqMessage);
 
+         if (writeFuture != null)
+         {
+            writeFuture.awaitUninterruptibly();
+         }
          if (!waitForResponse)
          {
             //No need to wait for the result, just wait for the write to be completed.
-            if (writeFuture != null)
-            {
-               writeFuture.awaitUninterruptibly();
-            }
             return null;
          }
          
@@ -187,6 +182,17 @@ public class NettyClient
 
          return resMessage;
       }
+      catch (ClosedChannelException cce)
+      {
+         log.error("Channel closed by remote peer while sending message");
+         transport.end();
+         throw cce;
+      }
+      catch (ConnectException ce)
+      {
+         transport.end();
+         throw ce;
+      }
       catch (IOException ioe)
       {
          throw ioe;
@@ -203,6 +209,7 @@ public class NettyClient
       {
          IOException io = new IOException("Could not transmit message");
          io.initCause(t);
+         transport.end();
          throw io;
       }
       finally
