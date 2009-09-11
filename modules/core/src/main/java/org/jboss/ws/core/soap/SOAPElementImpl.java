@@ -37,7 +37,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.Text;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.common.DOMUtils;
@@ -807,22 +806,22 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public TypeInfo getSchemaTypeInfo()
    {
-      throw new NotImplementedException("getSchemaTypeInfo");
+      return this.element.getSchemaTypeInfo();
    }
 
    public void setIdAttribute(String name, boolean isId) throws DOMException
    {
-      throw new NotImplementedException("setIdAttribute");
+      this.element.setIdAttribute(name, isId);
    }
 
    public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException
    {
-      throw new NotImplementedException("setIdAttributeNode");
+      this.element.setIdAttributeNode(idAttr, isId);
    }
 
    public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException
    {
-      throw new NotImplementedException("setIdAttributeNS");
+      this.element.setIdAttributeNS(namespaceURI, localName, isId);
    }
 
    public void accept(SAAJVisitor visitor)

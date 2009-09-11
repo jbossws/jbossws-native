@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.core.soap;
 
+import org.apache.xerces.dom.DocumentImpl;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -46,10 +47,11 @@ import org.w3c.dom.UserDataHandler;
  * enscapsulates a single ThreadLocal Document object.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public class SOAPDocument implements Document
+@SuppressWarnings("serial")
+public class SOAPDocument extends DocumentImpl implements Document
 {
-   // TODO Revisit methods that are restricted or not implemented.
 
    private Document doc = DOMUtils.getOwnerDocument();
 
@@ -57,18 +59,17 @@ public class SOAPDocument implements Document
 
    public DocumentType getDoctype()
    {
-      return doc.getDoctype();
+      return null;
    }
 
    public DOMImplementation getImplementation()
    {
-      // Should this be allowed?
-      return doc.getImplementation();
+      return this.doc.getImplementation();
    }
 
    public Element getDocumentElement()
    {
-      // The base SOAPDocument does not have an element, only SOAPPart will
+      // The base SOAPDocument does not have an element, only SOAPPart will have
       return null;
    }
 
@@ -79,50 +80,47 @@ public class SOAPDocument implements Document
 
    public DocumentFragment createDocumentFragment()
    {
-      return doc.createDocumentFragment();
+      return this.doc.createDocumentFragment();
    }
 
    public Text createTextNode(String data)
    {
-      return doc.createTextNode(data);
+      return this.doc.createTextNode(data);
    }
 
    public Comment createComment(String data)
    {
-      return doc.createComment(data);
+      return this.doc.createComment(data);
    }
 
    public CDATASection createCDATASection(String data) throws DOMException
    {
-      return doc.createCDATASection(data);
+      return this.doc.createCDATASection(data);
    }
 
    public ProcessingInstruction createProcessingInstruction(String target, String data) throws DOMException
    {
-      return doc.createProcessingInstruction(target, data);
+      return this.doc.createProcessingInstruction(target, data);
    }
 
    public Attr createAttribute(String name) throws DOMException
    {
-      return doc.createAttribute(name);
+      return this.doc.createAttribute(name);
    }
 
    public EntityReference createEntityReference(String name) throws DOMException
    {
-      // Not allowed
-      return null;
+      throw new UnsupportedOperationException("Entity References are not allowed in SOAP documents");
    }
 
    public NodeList getElementsByTagName(String tagname)
    {
-      // The base SOAPDocument does not have an element, only SOAPPart will
-      return null;
+      return this.doc.getElementsByTagName(tagname);
    }
 
    public Node importNode(Node importedNode, boolean deep) throws DOMException
    {
-      // This should never be needed
-      return doc.importNode(importedNode, deep);
+      return this.doc.importNode(importedNode, deep);
    }
 
    public Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException
@@ -140,300 +138,270 @@ public class SOAPDocument implements Document
 
    public Attr createAttributeNS(String namespaceURI, String qualifiedName) throws DOMException
    {
-      return doc.createAttributeNS(namespaceURI, qualifiedName);
+      return this.doc.createAttributeNS(namespaceURI, qualifiedName);
    }
 
    public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
    {
-      // The base SOAPDocument does not have an element, only SOAPPart will
-      return null;
-   }
-
-   public Element getElementById(String elementId)
-   {
-      // The base SOAPDocument does not have an element, only SOAPPart will
-      return null;
+      return this.doc.getElementsByTagNameNS(namespaceURI, localName);
    }
 
    // Node methods
    public String getNodeName()
    {
-      return doc.getNodeName();
+      return this.doc.getNodeName();
    }
 
    public String getNodeValue() throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getNodeValue();
    }
 
    public void setNodeValue(String nodeValue) throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      this.doc.setNodeValue(nodeValue);
    }
 
    public short getNodeType()
    {
-      return doc.getNodeType();
+      return this.doc.getNodeType();
    }
 
    public Node getParentNode()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getParentNode();
    }
 
    public NodeList getChildNodes()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getChildNodes();
    }
 
    public Node getFirstChild()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getFirstChild();
    }
 
    public Node getLastChild()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getLastChild();
    }
 
    public Node getPreviousSibling()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getPreviousSibling();
    }
 
    public Node getNextSibling()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getNextSibling();
    }
 
    public NamedNodeMap getAttributes()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
-   }
-
-   public Document getOwnerDocument()
-   {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getAttributes();
    }
 
    public Node insertBefore(Node newChild, Node refChild) throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.insertBefore(newChild, refChild);
    }
 
    public Node replaceChild(Node newChild, Node oldChild) throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.replaceChild(newChild, oldChild);
    }
 
    public Node removeChild(Node oldChild) throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.removeChild(oldChild);
    }
 
    public Node appendChild(Node newChild) throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.appendChild(newChild);
    }
 
    public boolean hasChildNodes()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.hasChildNodes();
    }
 
    public Node cloneNode(boolean deep)
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.cloneNode(deep);
    }
 
    public void normalize()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      this.doc.normalize();
    }
 
    public boolean isSupported(String feature, String version)
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.isSupported(feature, version);
    }
 
    public String getNamespaceURI()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getNamespaceURI();
    }
 
    public String getPrefix()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getPrefix();
    }
 
    public void setPrefix(String prefix) throws DOMException
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      this.doc.setPrefix(prefix);
    }
 
    public String getLocalName()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.getLocalName();
    }
 
    public boolean hasAttributes()
    {
-      throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Node operations not allowed on SOAPDocument");
+      return this.doc.hasAttributes();
    }
 
    // DOM3 methods
 
    public String getInputEncoding()
    {
-      // FIXME getInputEncoding
-      return null;
+      return this.doc.getInputEncoding();
    }
 
    public String getXmlEncoding()
    {
-      // FIXME getXmlEncoding
-      return null;
+      return this.doc.getXmlEncoding();
    }
 
    public boolean getXmlStandalone()
    {
-      // FIXME getXmlStandalone
-      return false;
+      return this.doc.getXmlStandalone();
    }
 
-   public void setXmlStandalone(boolean arg0) throws DOMException
+   public void setXmlStandalone(boolean xmlStandalone) throws DOMException
    {
-      // FIXME setXmlStandalone
+      this.doc.setXmlStandalone(xmlStandalone);
    }
 
    public String getXmlVersion()
    {
-      // FIXME getXmlVersion
-      return null;
+      return this.doc.getXmlVersion();
    }
 
-   public void setXmlVersion(String arg0) throws DOMException
+   public void setXmlVersion(String xmlVersion) throws DOMException
    {
-      // FIXME setXmlVersion
+      this.doc.setXmlVersion(xmlVersion);
    }
 
    public boolean getStrictErrorChecking()
    {
-      // FIXME getStrictErrorChecking
-      return false;
+      return this.doc.getStrictErrorChecking();
    }
 
-   public void setStrictErrorChecking(boolean arg0)
+   public void setStrictErrorChecking(boolean strictErrorChecking)
    {
-      // FIXME setStrictErrorChecking
-
+      this.doc.setStrictErrorChecking(strictErrorChecking);
    }
 
    public String getDocumentURI()
    {
-      // FIXME getDocumentURI
-      return null;
+      return this.doc.getDocumentURI();
    }
 
-   public void setDocumentURI(String arg0)
+   public void setDocumentURI(String documentURI)
    {
-      // FIXME setDocumentURI
-
+      this.doc.setDocumentURI(documentURI);
    }
 
-   public Node adoptNode(Node arg0) throws DOMException
+   public Node adoptNode(Node source) throws DOMException
    {
-      // FIXME adoptNode
-      return null;
+      return this.doc.adoptNode(source);
    }
 
    public DOMConfiguration getDomConfig()
    {
-      // FIXME getDomConfig
-      return null;
+      return this.doc.getDomConfig();
    }
 
    public void normalizeDocument()
    {
-      // FIXME normalizeDocument
-
+      this.doc.normalizeDocument();
    }
 
-   public Node renameNode(Node arg0, String arg1, String arg2) throws DOMException
+   public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException
    {
-      // FIXME renameNode
-      return null;
+      return this.doc.renameNode(n, namespaceURI, qualifiedName);
    }
 
    public String getBaseURI()
    {
-      // FIXME getBaseURI
-      return null;
+      return this.doc.getBaseURI();
    }
 
-   public short compareDocumentPosition(Node arg0) throws DOMException
+   public short compareDocumentPosition(Node other) throws DOMException
    {
-      // FIXME compareDocumentPosition
-      return 0;
+      return this.doc.compareDocumentPosition(other);
    }
 
    public String getTextContent() throws DOMException
    {
-      // FIXME getTextContent
-      return null;
+      return this.doc.getTextContent();
    }
 
-   public void setTextContent(String arg0) throws DOMException
+   public void setTextContent(String textContent) throws DOMException
    {
-      // FIXME setTextContent
-
+      this.doc.setTextContent(textContent);
    }
 
-   public boolean isSameNode(Node arg0)
+   public boolean isSameNode(Node other)
    {
-      // FIXME isSameNode
-      return false;
+      return this.doc.isSameNode(other);
    }
 
-   public String lookupPrefix(String arg0)
+   public String lookupPrefix(String namespaceURI)
    {
-      // FIXME lookupPrefix
-      return null;
+      return this.doc.lookupPrefix(namespaceURI);
    }
 
-   public boolean isDefaultNamespace(String arg0)
+   public boolean isDefaultNamespace(String namespaceURI)
    {
-      // FIXME isDefaultNamespace
-      return false;
+      return this.doc.isDefaultNamespace(namespaceURI);
    }
 
-   public String lookupNamespaceURI(String arg0)
+   public String lookupNamespaceURI(String prefix)
    {
-      // FIXME lookupNamespaceURI
-      return null;
+      return this.doc.lookupNamespaceURI(prefix);
    }
 
-   public boolean isEqualNode(Node arg0)
+   public boolean isEqualNode(Node arg)
    {
-      // FIXME isEqualNode
-      return false;
+      return this.doc.isEqualNode(arg);
    }
 
-   public Object getFeature(String arg0, String arg1)
+   public Object getFeature(String feature, String version)
    {
-      // FIXME hasFeature
-      return null;
+      return this.doc.getFeature(feature, version);
    }
 
-   public Object setUserData(String arg0, Object arg1, UserDataHandler arg2)
+   public Object setUserData(String key, Object data, UserDataHandler handler)
    {
-      // FIXME setUserData
-      return null;
+      return this.doc.setUserData(key, data, handler);
    }
 
    public Object getUserData(String arg0)
    {
-      // FIXME getUserData
-      return null;
+      return this.doc.getUserData(arg0);
    }
+
+   public Element getElementById(String elementId)
+   {
+      return this.doc.getElementById(elementId);
+   }
+
 }

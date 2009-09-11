@@ -39,7 +39,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.wsf.spi.util.ServiceLoader;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -61,8 +60,8 @@ import org.w3c.dom.UserDataHandler;
 
 /** An implementation of SOAPPart.
  * 
- *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
 public class SOAPPartImpl extends SOAPPart
 {
@@ -208,104 +207,104 @@ public class SOAPPartImpl extends SOAPPart
 
    public DOMImplementation getImplementation()
    {
-      return doc.getImplementation();
+      return this.doc.getImplementation();
    }
 
    public DocumentFragment createDocumentFragment()
    {
-      return doc.createDocumentFragment();
+      return this.doc.createDocumentFragment();
    }
 
    public DocumentType getDoctype()
    {
-      return doc.getDoctype();
+      return this.doc.getDoctype();
    }
 
    public Element getDocumentElement()
    {
-      return soapEnvelope;
+      return this.soapEnvelope;
    }
 
    public Attr createAttribute(String name) throws DOMException
    {
-      return doc.createAttribute(name);
+      return this.doc.createAttribute(name);
    }
 
    public CDATASection createCDATASection(String data) throws DOMException
    {
-      return doc.createCDATASection(data);
+      return this.doc.createCDATASection(data);
    }
 
    public Comment createComment(String data)
    {
-      return doc.createComment(data);
+      return this.doc.createComment(data);
    }
 
    public Element createElement(String tagName) throws DOMException
    {
-      return doc.createElement(tagName);
+      return this.doc.createElement(tagName);
    }
 
    public Element getElementById(String elementId)
    {
-      return doc.getElementById(elementId);
+      return this.doc.getElementById(elementId);
    }
 
    public EntityReference createEntityReference(String name) throws DOMException
    {
-      return doc.createEntityReference(name);
+      return this.doc.createEntityReference(name);
    }
 
    public org.w3c.dom.Node importNode(org.w3c.dom.Node importedNode, boolean deep) throws DOMException
    {
-      return doc.importNode(importedNode, deep);
+      return this.doc.importNode(importedNode, deep);
    }
 
    public NodeList getElementsByTagName(String tagname)
    {
-      return doc.getElementsByTagName(tagname);
+      return this.doc.getElementsByTagName(tagname);
    }
 
    public Text createTextNode(String data)
    {
-      return doc.createTextNode(data);
+      return this.doc.createTextNode(data);
    }
 
    public Attr createAttributeNS(String namespaceURI, String qualifiedName) throws DOMException
    {
-      return doc.createAttributeNS(namespaceURI, qualifiedName);
+      return this.doc.createAttributeNS(namespaceURI, qualifiedName);
    }
 
    public Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException
    {
-      return doc.createElementNS(namespaceURI, qualifiedName);
+      return this.doc.createElementNS(namespaceURI, qualifiedName);
    }
 
    public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
    {
-      return doc.getElementsByTagNameNS(namespaceURI, localName);
+      return this.doc.getElementsByTagNameNS(namespaceURI, localName);
    }
 
    public ProcessingInstruction createProcessingInstruction(String target, String data) throws DOMException
    {
-      return doc.createProcessingInstruction(target, data);
+      return this.doc.createProcessingInstruction(target, data);
    }
 
    // Node *********************************************************************************************************
 
-   public org.w3c.dom.Node appendChild(org.w3c.dom.Node node) throws DOMException
+   public org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws DOMException
    {
-      throw new NotImplementedException();
+      return this.doc.appendChild(newChild);
    }
 
-   public org.w3c.dom.Node cloneNode(boolean b)
+   public org.w3c.dom.Node cloneNode(boolean deep)
    {
-      throw new NotImplementedException();
+      return this.doc.cloneNode(deep);
    }
 
    public NamedNodeMap getAttributes()
    {
-      throw new NotImplementedException();
+      return this.doc.getAttributes();
    }
 
    public NodeList getChildNodes()
@@ -330,17 +329,17 @@ public class SOAPPartImpl extends SOAPPart
 
    public String getLocalName()
    {
-      throw new NotImplementedException();
+      return this.doc.getLocalName();
    }
 
    public String getNamespaceURI()
    {
-      throw new NotImplementedException();
+      return this.doc.getNamespaceURI();
    }
 
    public org.w3c.dom.Node getNextSibling()
    {
-      throw new NotImplementedException();
+      return this.doc.getNextSibling();
    }
 
    public String getNodeName()
@@ -355,237 +354,232 @@ public class SOAPPartImpl extends SOAPPart
 
    public String getNodeValue() throws DOMException
    {
-      throw new NotImplementedException();
+      return this.doc.getNodeValue();
    }
 
    public Document getOwnerDocument()
    {
-      return doc;
+      return this.doc;
    }
 
    public org.w3c.dom.Node getParentNode()
    {
-      throw new NotImplementedException();
+      return this.doc.getParentNode();
    }
 
    public String getPrefix()
    {
-      throw new NotImplementedException();
+      return this.doc.getPrefix();
    }
 
    public org.w3c.dom.Node getPreviousSibling()
    {
-      throw new NotImplementedException();
+      return this.doc.getPreviousSibling();
    }
 
    public boolean hasAttributes()
    {
-      throw new NotImplementedException();
+      return this.doc.hasAttributes();
    }
 
    public boolean hasChildNodes()
    {
-      throw new NotImplementedException();
+      return this.doc.hasChildNodes();
    }
 
-   public org.w3c.dom.Node insertBefore(org.w3c.dom.Node node, org.w3c.dom.Node node1) throws DOMException
+   public org.w3c.dom.Node insertBefore(org.w3c.dom.Node newChild, org.w3c.dom.Node refChild) throws DOMException
    {
-      throw new NotImplementedException();
+      return this.doc.insertBefore(newChild, refChild);
    }
 
-   public boolean isSupported(String s, String s1)
+   public boolean isSupported(String feature, String version)
    {
-      throw new NotImplementedException();
+      return this.doc.isSupported(feature, version);
    }
 
    public void normalize()
    {
-      throw new NotImplementedException();
+      this.doc.normalize();
    }
 
-   public org.w3c.dom.Node removeChild(org.w3c.dom.Node node) throws DOMException
+   public org.w3c.dom.Node removeChild(org.w3c.dom.Node oldChild) throws DOMException
    {
-      throw new NotImplementedException();
+      return this.doc.removeChild(oldChild);
    }
 
-   public org.w3c.dom.Node replaceChild(org.w3c.dom.Node node, org.w3c.dom.Node node1) throws DOMException
+   public org.w3c.dom.Node replaceChild(org.w3c.dom.Node newChild, org.w3c.dom.Node oldChild) throws DOMException
    {
-      throw new NotImplementedException();
+      return this.doc.replaceChild(newChild, oldChild);
    }
 
-   public void setNodeValue(String s) throws DOMException
+   public void setNodeValue(String nodeValue) throws DOMException
    {
-      throw new NotImplementedException();
+      this.doc.setNodeValue(nodeValue);
    }
 
    public void setPrefix(String s) throws DOMException
    {
-      throw new NotImplementedException();
+      this.doc.setPrefix(s);
    }
 
    public Node adoptNode(Node source) throws DOMException
    {
-      throw new NotImplementedException("adoptNode");
+      return this.doc.adoptNode(source);
    }
 
    public String getDocumentURI()
    {
-      throw new NotImplementedException("getDocumentURI");
+      return this.doc.getDocumentURI();
    }
 
    public DOMConfiguration getDomConfig()
    {
-      throw new NotImplementedException("getDomConfig");
+      return this.doc.getDomConfig();
    }
 
    public String getInputEncoding()
    {
-      throw new NotImplementedException("getInputEncoding");
+      return this.doc.getInputEncoding();
    }
 
    public boolean getStrictErrorChecking()
    {
-      throw new NotImplementedException("getStrictErrorChecking");
+      return this.doc.getStrictErrorChecking();
    }
 
    public String getXmlEncoding()
    {
-      throw new NotImplementedException("getXmlEncoding");
+      return this.doc.getXmlEncoding();
    }
 
    public boolean getXmlStandalone()
    {
-      throw new NotImplementedException("getXmlStandalone");
+      return this.doc.getXmlStandalone();
    }
 
    public String getXmlVersion()
    {
-      throw new NotImplementedException("getXmlVersion");
+      return this.doc.getXmlVersion();
    }
 
    public void normalizeDocument()
    {
-      throw new NotImplementedException("normalizeDocument");
+      this.doc.normalizeDocument();
    }
 
    public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException
    {
-      throw new NotImplementedException("renameNode");
+      return this.doc.renameNode(n, namespaceURI, qualifiedName);
    }
 
    public void setDocumentURI(String documentURI)
    {
-      throw new NotImplementedException("setDocumentURI");
+      this.doc.setDocumentURI(documentURI);
    }
 
    public void setStrictErrorChecking(boolean strictErrorChecking)
    {
-      throw new NotImplementedException("setStrictErrorChecking");
+      this.doc.setStrictErrorChecking(strictErrorChecking);
    }
 
    public void setXmlStandalone(boolean xmlStandalone) throws DOMException
    {
-      throw new NotImplementedException("setXmlStandalone");
+      this.doc.setXmlStandalone(xmlStandalone);
    }
 
    public void setXmlVersion(String xmlVersion) throws DOMException
    {
-      throw new NotImplementedException("setXmlVersion");
+      this.doc.setXmlVersion(xmlVersion);
    }
 
    public short compareDocumentPosition(Node other) throws DOMException
    {
-      throw new NotImplementedException("compareDocumentPosition");
+      return this.doc.compareDocumentPosition(other);
    }
 
    public String getBaseURI()
    {
-      throw new NotImplementedException("getBaseURI");
+      return this.doc.getBaseURI();
    }
 
    public Object getFeature(String feature, String version)
    {
-      throw new NotImplementedException("getFeature");
+      return this.doc.getFeature(feature, version);
    }
 
    public String getTextContent() throws DOMException
    {
-      throw new NotImplementedException("getTextContent");
+      return this.doc.getTextContent();
    }
 
    public Object getUserData(String key)
    {
-      throw new NotImplementedException("getUserData");
+      return this.doc.getUserData(key);
    }
 
    public boolean isDefaultNamespace(String namespaceURI)
    {
-      throw new NotImplementedException("isDefaultNamespace");
+      return this.doc.isDefaultNamespace(namespaceURI);
    }
 
    public boolean isEqualNode(Node arg)
    {
-      throw new NotImplementedException("isEqualNode");
+      return this.doc.isEqualNode(arg);
    }
 
    public boolean isSameNode(Node other)
    {
-      throw new NotImplementedException("isSameNode");
+      return this.doc.isSameNode(other);
    }
 
    public String lookupNamespaceURI(String prefix)
    {
-      throw new NotImplementedException("lookupNamespaceURI");
+      return this.doc.lookupNamespaceURI(prefix);
    }
 
    public String lookupPrefix(String namespaceURI)
    {
-      throw new NotImplementedException("lookupPrefix");
+      return this.doc.lookupPrefix(namespaceURI);
    }
 
    public void setTextContent(String textContent) throws DOMException
    {
-      throw new NotImplementedException("setTextContent");
+      this.doc.setTextContent(textContent);
    }
 
    public Object setUserData(String key, Object data, UserDataHandler handler)
    {
-      throw new NotImplementedException("setUserData");
+      return this.doc.setUserData(key, data, handler);
    }
 
    public void detachNode()
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      // does nothing
    }
 
    public SOAPElement getParentElement()
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      return null;
    }
 
    public String getValue()
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      return null;
    }
 
    public void recycleNode()
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      // does nothing
    }
 
    public void setParentElement(SOAPElement parent) throws SOAPException
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      throw new SOAPException("The parent element of a soap part is not defined");
    }
 
    public void setValue(String value)
    {
-      //TODO: SAAJ 1.3
-      throw new NotImplementedException();
+      throw new IllegalStateException("Setting value of a soap part is not defined");
    }
+
 }

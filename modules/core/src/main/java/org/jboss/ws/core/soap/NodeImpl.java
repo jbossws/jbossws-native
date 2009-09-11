@@ -31,7 +31,6 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
@@ -596,20 +595,17 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public short compareDocumentPosition(Node other) throws DOMException
    {
-      // FIXME compareDocumentPosition
-      throw new NotImplementedException("compareDocumentPosition");
+      return this.domNode.compareDocumentPosition(other);
    }
 
    public String getBaseURI()
    {
-      // FIXME getBaseURI
-      throw new NotImplementedException("getBaseURI");
+      return this.domNode.getBaseURI();
    }
 
    public Object getFeature(String feature, String version)
    {
-      // FIXME getFeature
-      throw new NotImplementedException("getFeature");
+      return this.domNode.getFeature(feature, version);
    }
 
    public String getTextContent() throws DOMException
@@ -628,8 +624,7 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public boolean isDefaultNamespace(String namespaceURI)
    {
-      // FIXME isDefaultNamespace
-      throw new NotImplementedException("isDefaultNamespace");
+      return this.domNode.isDefaultNamespace(namespaceURI);
    }
 
    public boolean isEqualNode(Node arg)
@@ -639,20 +634,17 @@ public class NodeImpl implements javax.xml.soap.Node
 
    public boolean isSameNode(Node other)
    {
-      // FIXME isSameNode
-      throw new NotImplementedException("isSameNode");
+      return this.domNode.isSameNode(other);
    }
 
    public String lookupNamespaceURI(String prefix)
    {
-      // FIXME lookupNamespaceURI
-      throw new NotImplementedException("lookupNamespaceURI");
+      return this.domNode.lookupNamespaceURI(prefix);
    }
 
    public String lookupPrefix(String namespaceURI)
    {
-      // FIXME lookupPrefix
-      throw new NotImplementedException("lookupPrefix");
+      return this.domNode.lookupPrefix(namespaceURI);
    }
 
    public void setTextContent(String textContent) throws DOMException
