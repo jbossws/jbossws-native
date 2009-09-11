@@ -15,6 +15,3 @@ org/jboss/test/ws/jaxws/jbws2634/**
 
 # [JBWS-2674] Implement javax.xml.ws.Endpoint
 org/jboss/test/ws/jaxws/endpoint/*TestCase.*
-
-# [JBWS-2753] Temporarly exclude due to keep-alive connection work 
-org/jboss/test/ws/jaxws/wsrm/**/*Addressable*.*
