@@ -62,7 +62,6 @@ WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/javassist.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jboss-xml-binding.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws-native-client.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws-native-core.jar"
-WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws-native-jaxws.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws-native-jaxrpc.jar"
 WSTOOLS_CLASSPATH="$WSTOOLS_CLASSPATH:$JBOSS_HOME/client/jbossws-native-saaj.jar"
 

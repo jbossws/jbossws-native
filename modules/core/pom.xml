@@ -105,6 +105,14 @@
     
     <!-- transitve dependencies -->
     <dependency>
+      <groupId>javax.xml.ws</groupId>
+      <artifactId>jaxws-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jws</groupId>
+      <artifactId>jsr181-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
     </dependency>

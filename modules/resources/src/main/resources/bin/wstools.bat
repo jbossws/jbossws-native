@@ -32,7 +32,6 @@ set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/javassist.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jboss-xml-binding.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jbossws-native-client.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jbossws-native-core.jar
-set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jbossws-native-jaxws.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jbossws-native-jaxrpc.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jbossws-native-saaj.jar
 
