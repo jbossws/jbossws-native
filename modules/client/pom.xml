@@ -48,7 +48,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Class-Path>jbossws-spi.jar jbossws-common.jar jbossws-framework.jar jbossws-native-core.jar jbossws-native-jaxrpc.jar jaxws-api.jar jsr181-api.jar jbossws-native-jaxws-ext.jar jbossws-native-saaj.jar activation.jar commons-logging.jar concurrent.jar javassist.jar jaxb-api.jar jaxb-impl.jar mail.jar jboss-xml-binding.jar netty.jar policy.jar stax-api.jar wsdl4j.jar</Class-Path>
+              <Class-Path>jbossws-spi.jar jbossws-common.jar jbossws-framework.jar jbossws-native-core.jar jbossws-native-jaxrpc.jar jbossws-native-jaxws.jar jaxws-api.jar jsr181-api.jar jbossws-native-jaxws-ext.jar jbossws-native-saaj.jar activation.jar commons-logging.jar concurrent.jar javassist.jar jaxb-api.jar jaxb-impl.jar mail.jar jboss-xml-binding.jar netty.jar policy.jar stax-api.jar wsdl4j.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>

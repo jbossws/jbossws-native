@@ -37,6 +37,7 @@
   <modules>
     <module>modules/saaj</module>
     <module>modules/jaxrpc</module>
+    <module>modules/jaxws</module>
     <module>modules/jaxws-ext</module>
     <module>modules/core</module>
     <module>modules/client</module>

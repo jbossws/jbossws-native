@@ -31,6 +31,11 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-jaxws</artifactId>
+      <version>${version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-jaxws-ext</artifactId>
       <version>${version}</version>
     </dependency>

@@ -41,6 +41,7 @@
     <include name="**/jbossws-native-client.jar"/>
     <include name="**/jbossws-native-core.jar"/>
     <include name="**/jbossws-native-jaxrpc.jar"/>
+    <include name="**/jbossws-native-jaxws.jar"/>
     <include name="**/jbossws-native-jaxws-ext.jar"/>
     <include name="**/jbossws-native-saaj.jar"/>
     <include name="**/jbossws-spi.jar"/>
@@ -59,6 +60,7 @@
   </patternset>
 
   <patternset id="jbossws.lib.endorsed.patternset">
+    <include name="**/jbossws-native-jaxws.jar"/>
     <include name="**/jbossws-native-saaj.jar"/>
     <include name="**/jaxb-api.jar"/>
   </patternset>
@@ -69,6 +71,7 @@
     <include name="**/jbossws-common.jar"/>
     <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-jaxrpc.jar"/>
+    <include name="**/jbossws-native-jaxws.jar"/>
     <include name="**/jbossws-native-jaxws-ext.jar"/>
     <include name="**/jbossws-native-saaj.jar"/>
     <include name="**/jbossws-spi.jar"/>

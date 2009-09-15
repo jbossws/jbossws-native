@@ -112,6 +112,7 @@
         <pathelement location="${jboss.client}/jbossws-common.jar"/>
         <pathelement location="${jboss.client}/jbossws-spi.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-jaxrpc.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-jaxws.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-jaxws-ext.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-saaj.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-core.jar"/>
