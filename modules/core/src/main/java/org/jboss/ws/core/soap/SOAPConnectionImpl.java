@@ -140,7 +140,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       try
       {
          remotingConnection = getRemotingConnection(endpoint);
-         MessageAbstraction resMessage = remotingConnection.invoke((SOAPMessageImpl)reqMessage, endpoint, oneway, false);
+         MessageAbstraction resMessage = remotingConnection.invoke((SOAPMessageImpl)reqMessage, endpoint, oneway);
          return resMessage;
       }
       catch (Exception ex)

@@ -22,16 +22,12 @@
 package org.jboss.ws.core.client.transport;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.ClosedChannelException;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -41,14 +37,11 @@ import javax.xml.rpc.Stub;
 import javax.xml.ws.BindingProvider;
 
 import org.jboss.logging.Logger;
-import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMessage;
@@ -108,15 +101,14 @@ public class NettyClient
     * 
     * @param reqMessage          The request message
     * @param targetAddress       The target address
-    * @param waitForResponse     A boolean saying if the method should wait for the results before returning. Waiting is required for two-ways invocations
+    * @param oneway              True for one-way message exchanges
     *                            and when maintaining sessions using cookies.
     * @param additionalHeaders   Additional http headers to be added to the request
     * @param callProps
     * @return
     * @throws IOException
     */
-   public Object invoke(Object reqMessage, String targetAddress, boolean waitForResponse, Map<String, Object> additionalHeaders, Map<String, Object> callProps)
-         throws IOException
+   public Object invoke(Object reqMessage, String targetAddress, boolean oneway, Map<String, Object> additionalHeaders, Map<String, Object> callProps) throws IOException
    {
       URL target;
       try
@@ -136,12 +128,8 @@ public class NettyClient
          setActualTimeout(callProps);
          channel = transport.getChannel(timeout);
          
-         WSResponseHandler responseHandler = null;
-         if (waitForResponse)
-         {
-            responseHandler = new WSResponseHandler();
-            NettyHelper.setResponseHandler(channel, responseHandler);
-         }
+         WSResponseHandler responseHandler = new WSResponseHandler();
+         NettyHelper.setResponseHandler(channel, responseHandler);
          
          //Send the HTTP request
          HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, reqMessage != null ? HttpMethod.POST : HttpMethod.GET, targetAddress);
@@ -159,19 +147,12 @@ public class NettyClient
          {
             writeFuture.awaitUninterruptibly();
          }
-         if (!waitForResponse)
-         {
-            //No need to wait for the result, just wait for the write to be completed.
-            return null;
-         }
          
-         Object resMessage = null;
          //Get the response
          Future<Result> futureResult = responseHandler.getFutureResult();
          Result result = timeout == null ? futureResult.get() : futureResult.get(timeout, TimeUnit.MILLISECONDS);
          resHeaders = result.getResponseHeaders();
-         InputStream is = result.getResponse();
-         resMessage = unmarshaller.read(is, resHeaders);
+         Object resMessage = oneway ? null : unmarshaller.read(result.getResponse(), resHeaders);
          
          //Update props with response headers (required to maintain session using cookies)
          callProps.clear();
@@ -214,7 +195,7 @@ public class NettyClient
       }
       finally
       {
-         if (channel != null && waitForResponse)
+         if (channel != null)
          {
             NettyHelper.clearResponseHandler(channel);
          }
@@ -365,16 +346,8 @@ public class NettyClient
    {
       for (String key : headers.keySet())
       {
-         try
-         {
-            String header = (String)headers.get(key);
-            message.addHeader(key, header.replaceAll("[\r\n\f]", " "));
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-         }
+         String header = (String)headers.get(key);
+         message.addHeader(key, header.replaceAll("[\r\n\f]", " "));
       }
    }
 

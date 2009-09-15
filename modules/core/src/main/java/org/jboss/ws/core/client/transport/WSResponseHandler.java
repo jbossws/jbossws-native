@@ -83,6 +83,10 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          ChannelBuffer content = response.getContent();
          result.setResponse(new ChannelBufferInputStream(content));
       }
+      catch (Throwable t)
+      {
+         future.setException(t);
+      }
       finally
       {
          future.done();

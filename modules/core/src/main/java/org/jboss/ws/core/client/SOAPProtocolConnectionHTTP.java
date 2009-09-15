@@ -53,7 +53,7 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
    }
 
    @Override
-   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway, boolean maintainSession) throws IOException
+   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
    {
       try
       {
@@ -66,7 +66,7 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
          if (reqMessage != null && soapMessage.saveRequired())
             soapMessage.saveChanges();
 
-         return super.invoke(reqMessage, endpoint, oneway, maintainSession);
+         return super.invoke(reqMessage, endpoint, oneway);
       }
       catch (SOAPException ex)
       {

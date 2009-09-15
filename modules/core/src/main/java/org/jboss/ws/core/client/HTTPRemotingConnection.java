@@ -87,17 +87,12 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       this.chunkSize = chunkSize;
    }
 
-   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
-   {
-      return this.invoke(reqMessage, endpoint, oneway, true);
-   }
-
    /** 
     * Sends the given message to the specified endpoint. 
     * 
     * A null reqMessage signifies a HTTP GET request.
     */
-   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway, boolean maintainSession) throws IOException
+   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
    {
       if (endpoint == null)
          throw new IllegalArgumentException("Given endpoint cannot be null");
@@ -152,7 +147,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          populateHeaders(reqMessage, additionalHeaders);
          //Trace the outgoing message
          MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
-         MessageAbstraction resMessage = (MessageAbstraction)client.invoke(reqMessage, targetAddress, !oneway || maintainSession, additionalHeaders, callProps);
+         MessageAbstraction resMessage = (MessageAbstraction)client.invoke(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
          //Trace the incoming response message
          MessageTrace.traceMessage("Incoming Response Message", resMessage);
          return resMessage;

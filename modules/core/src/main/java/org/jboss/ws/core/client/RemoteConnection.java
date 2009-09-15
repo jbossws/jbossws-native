@@ -39,6 +39,4 @@ public interface RemoteConnection
    UnMarshaller getUnmarshaller();
    
    MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException;
-
-   MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway, boolean maintainSession) throws IOException;
 }

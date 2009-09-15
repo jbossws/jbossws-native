@@ -340,7 +340,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
                addSessionInfo(reqMessage, callProps);
 
             RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
-            MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway, maintainSession);
+            MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
 
             if (shouldMaintainSession())
                saveSessionInfo(callProps, getRequestContext());
