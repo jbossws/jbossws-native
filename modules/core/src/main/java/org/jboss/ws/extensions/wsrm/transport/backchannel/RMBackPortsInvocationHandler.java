@@ -141,7 +141,7 @@ public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHan
    private void writeResponse(MessageEvent e, HttpRequest request, boolean error)
    {
       // Build the response object.
-      HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, error ? HttpResponseStatus.INTERNAL_SERVER_ERROR : HttpResponseStatus.OK);
+      HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, error ? HttpResponseStatus.INTERNAL_SERVER_ERROR : HttpResponseStatus.NO_CONTENT);
       response.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
 
       String cookieString = request.getHeader(HttpHeaders.Names.COOKIE);
