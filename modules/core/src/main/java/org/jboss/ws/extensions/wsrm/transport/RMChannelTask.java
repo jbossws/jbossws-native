@@ -77,14 +77,15 @@ final class RMChannelTask implements Callable<RMChannelResponse>
          Map<String, Object> callProps = new HashMap<String, Object>();
          callProps.putAll(rmRequest.getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT));
          
+         MessageTrace.traceMessage("Outgoing RM Response Message", rmRequest.getPayload());
          RMMessage rmResponse = null;
          if (oneWay && (null == backPort))
          {
-            client.invoke(rmRequest.getPayload(), targetAddress, false, additionalHeaders, callProps);
+            client.invoke(rmRequest.getPayload(), targetAddress, true, additionalHeaders, callProps);
          }
          else
          {
-            Object retVal = client.invoke(rmRequest.getPayload(), targetAddress, true, additionalHeaders, callProps);
+            Object retVal = client.invoke(rmRequest.getPayload(), targetAddress, false, additionalHeaders, callProps);
             if ((null != retVal) && (false == (retVal instanceof RMMessage)))
             {
                String msg = retVal.getClass().getName() + ": '" + retVal + "'";
