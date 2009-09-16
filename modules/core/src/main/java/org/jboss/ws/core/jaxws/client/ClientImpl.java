@@ -336,11 +336,7 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
             }
 
             // Copy the inbound msg properties to the binding's response context
-            for (String key : msgContext.keySet())
-            {
-               Object value = msgContext.get(key);
-               resContext.put(key, value);
-            }
+            resContext.putAll(msgContext);
          }
       }
       finally
