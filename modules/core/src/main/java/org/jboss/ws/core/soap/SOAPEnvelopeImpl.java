@@ -153,26 +153,12 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
 
    public SOAPBody getBody() throws SOAPException
    {
-      Iterator it = getChildElements();
-      while (it.hasNext())
-      {
-         Node node = (Node)it.next();
-         if ("Body".equals(node.getLocalName()))
-            return (SOAPBody)node;
-      }
-      return null;
+      return (SOAPBody)getFirstChildElementByLocalName("Body");
    }
 
    public SOAPHeader getHeader() throws SOAPException
    {
-      Iterator it = getChildElements();
-      while (it.hasNext())
-      {
-         Node node = (Node)it.next();
-         if ("Header".equals(node.getLocalName()))
-            return (SOAPHeader)node;
-      }
-      return null;
+      return (SOAPHeader)getFirstChildElementByLocalName("Header");
    }
 
    /**

@@ -30,7 +30,6 @@ import java.util.Map;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
@@ -58,9 +57,6 @@ import org.w3c.dom.UserDataHandler;
  */
 public class NodeImpl implements javax.xml.soap.Node
 {
-   // provide logging
-   private static Logger log = Logger.getLogger(NodeImpl.class);
-
    // The parent of this Node
    protected SOAPElementImpl soapParent;
    // This org.w3c.dom.Node
@@ -318,7 +314,8 @@ public class NodeImpl implements javax.xml.soap.Node
       if (soapParent != null)
       {
          List children = ((NodeImpl)soapParent).soapChildren;
-         for (int i = 0; i < children.size(); i++)
+         int len = children.size();
+         for (int i = 0; i < len; i++)
          {
             NodeImpl node = (NodeImpl)children.get(i);
             if (node == this && i > 0)
@@ -343,10 +340,11 @@ public class NodeImpl implements javax.xml.soap.Node
       if (soapParent != null)
       {
          List children = ((NodeImpl)soapParent).soapChildren;
-         for (int i = 0; i < children.size(); i++)
+         int len = children.size();
+         for (int i = 0; i < len; i++)
          {
             NodeImpl node = (NodeImpl)children.get(i);
-            if (node == this && (i + 1) < children.size())
+            if (node == this && (i + 1) < len)
             {
                sibling = (NodeImpl)children.get(i + 1);
                break;
