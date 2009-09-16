@@ -262,8 +262,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setOperationMetaData(opMetaData);
 
+      Map<String, Object> requestCtx = getRequestContext();
       // Copy properties to the message context
-      msgContext.putAll(getRequestContext());
+      msgContext.putAll(requestCtx);
 
       // The direction of the message
       DirectionHolder direction = new DirectionHolder(Direction.OutBound);
@@ -333,7 +334,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (targetAddress == null)
                throw new WSException("Target endpoint address not set");
 
-            Map<String, Object> callProps = new HashMap<String, Object>(getRequestContext());
+            Map<String, Object> callProps = new HashMap<String, Object>(requestCtx);
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
             boolean maintainSession = shouldMaintainSession();
             if (maintainSession)
@@ -342,8 +343,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
             MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
 
-            if (shouldMaintainSession())
-               saveSessionInfo(callProps, getRequestContext());
+            if (maintainSession)
+               saveSessionInfo(callProps, requestCtx);
 
             // At pivot the message context might be replaced
             msgContext = processPivotInternal(msgContext, direction);
