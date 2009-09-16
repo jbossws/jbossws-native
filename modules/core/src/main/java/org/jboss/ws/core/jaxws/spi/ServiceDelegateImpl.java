@@ -94,7 +94,7 @@ import org.w3c.dom.Element;
 public class ServiceDelegateImpl extends ServiceDelegate
 {
    // provide logging
-   private final Logger log = Logger.getLogger(ServiceDelegateImpl.class);
+   private static final Logger log = Logger.getLogger(ServiceDelegateImpl.class);
 
    // The executor service
    private static ExecutorService defaultExecutor = Executors.newCachedThreadPool();
