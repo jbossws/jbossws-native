@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLEngine;
 import javax.xml.rpc.Stub;
@@ -83,6 +84,8 @@ public class NettyClient
    private static final int DEFAULT_CHUNK_SIZE = 1024;
    //We always use chunked transfer encoding unless explicitly disabled by user 
    private Integer chunkSize = new Integer(DEFAULT_CHUNK_SIZE);
+   
+   private static final Pattern headerCleanerPattern = Pattern.compile("[\r\n\f]");
    
    /**
     * Construct a Netty client with the provided marshaller/unmarshaller.
@@ -347,7 +350,7 @@ public class NettyClient
       for (String key : headers.keySet())
       {
          String header = (String)headers.get(key);
-         message.addHeader(key, header.replaceAll("[\r\n\f]", " "));
+         message.addHeader(key, headerCleanerPattern.matcher(header).replaceAll(" "));
       }
    }
 
