@@ -166,7 +166,8 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          while (i.hasNext())
          {
             MimeHeader header = (MimeHeader)i.next();
-            Object currentValue = metadata.get(header.getName());
+            String hName = header.getName();
+            Object currentValue = metadata.get(hName);
 
             /*
              * Coalesce multiple headers into one
@@ -183,11 +184,11 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
              */
             if (currentValue != null)
             {
-               metadata.put(header.getName(), currentValue + "," + header.getValue());
+               metadata.put(hName, currentValue + "," + header.getValue());
             }
             else
             {
-               metadata.put(header.getName(), header.getValue());
+               metadata.put(hName, header.getValue());
             }
          }
       }
