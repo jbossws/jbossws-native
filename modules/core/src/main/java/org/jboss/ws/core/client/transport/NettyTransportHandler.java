@@ -28,6 +28,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.jboss.logging.Logger;
@@ -71,6 +72,9 @@ public class NettyTransportHandler
    //the keep alive timeout in seconds
    private int keepAliveTimeout;
    
+   private static Executor bossExecutor = Executors.newCachedThreadPool();
+   private static Executor workerExecutor = Executors.newCachedThreadPool();
+   
    static
    {
       String keepAlive = AccessController.doPrivileged(new java.security.PrivilegedAction<String>() {
@@ -93,7 +97,7 @@ public class NettyTransportHandler
    {
       this.url = url;
       
-      factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+      factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
       ClientBootstrap bootstrap = new ClientBootstrap(factory);
       bootstrap.setPipelineFactory(pipelineFactory);
       
@@ -307,7 +311,6 @@ public class NettyTransportHandler
       {
          channel.close();
       }
-      factory.releaseExternalResources();
    }
    
    public boolean getHttpKeepAliveSet()
