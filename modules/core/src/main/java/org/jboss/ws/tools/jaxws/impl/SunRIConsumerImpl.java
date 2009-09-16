@@ -211,7 +211,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
       String javaClassPath = System.getProperty("java.class.path");
       if(additionalCompilerClassPath.isEmpty() == false)
       {
-         StringBuffer javaCP = new StringBuffer();
+         StringBuilder javaCP = new StringBuilder();
          for(String s : additionalCompilerClassPath)
          {
             javaCP.append(s).append(File.pathSeparator);

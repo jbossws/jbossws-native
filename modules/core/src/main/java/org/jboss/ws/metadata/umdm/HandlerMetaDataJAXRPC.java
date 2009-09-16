@@ -81,7 +81,7 @@ public class HandlerMetaDataJAXRPC extends HandlerMetaData
 
    public String toString()
    {
-      StringBuffer buffer = new StringBuffer("\nHandlerMetaDataJAXRPC:");
+      StringBuilder buffer = new StringBuilder("\nHandlerMetaDataJAXRPC:");
       buffer.append("\n type=" + getHandlerType());
       buffer.append("\n name=" + getHandlerName());
       buffer.append("\n class=" + getHandlerClassName());
