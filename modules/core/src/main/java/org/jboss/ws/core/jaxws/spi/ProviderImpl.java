@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
+import javax.xml.ws.BindingType;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service;
@@ -68,7 +69,14 @@ public class ProviderImpl extends Provider
    @Override
    public Endpoint createEndpoint(String bindingId, Object implementor)
    {
-      return new EndpointImpl(bindingId == null ? SOAPBinding.SOAP11HTTP_BINDING : bindingId, implementor);
+      String realBindingId = bindingId;
+      if (realBindingId == null)
+      {
+         BindingType anBindingType = implementor.getClass().getAnnotation(BindingType.class);
+         realBindingId = (anBindingType != null) ? anBindingType.value() : SOAPBinding.SOAP11HTTP_BINDING; 
+      }
+      
+      return new EndpointImpl(realBindingId, implementor);
    }
 
    @Override
