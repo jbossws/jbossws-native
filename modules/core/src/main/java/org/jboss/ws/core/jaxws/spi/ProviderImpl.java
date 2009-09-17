@@ -68,8 +68,7 @@ public class ProviderImpl extends Provider
    @Override
    public Endpoint createEndpoint(String bindingId, Object implementor)
    {
-      EndpointImpl endpoint = new EndpointImpl(bindingId, implementor);
-      return endpoint;
+      return new EndpointImpl(bindingId == null ? SOAPBinding.SOAP11HTTP_BINDING : bindingId, implementor);
    }
 
    @Override
