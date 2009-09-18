@@ -56,19 +56,6 @@ public final class JBWS2565TestCase extends JBossWSTest
       final String[] serviceArgs = {};
       final String result = (String) call.invoke(serviceArgs);
       assertEquals("i've done stuff", result);
-   }
-   
-   public void testWrongArchiveDeployment() throws Exception
-   {
-      try
-      {
-         this.deploy("jaxws-jbws2565-wrong.ear");
-         fail("Deployment of this archive had to fail.");
-      }
-      catch (Exception ignore)
-      {
-         log.error("Expected exception caught:" + ignore.getMessage(), ignore);
-      }
-   }
+   }   
    
 }
