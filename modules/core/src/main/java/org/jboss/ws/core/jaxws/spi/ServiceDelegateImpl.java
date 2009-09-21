@@ -106,9 +106,17 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private HandlerResolver handlerResolver;
    // The executor service
    private ExecutorService executor;
+   // The features
+   private WebServiceFeature[] features;
 
    // A list of annotated ports
    private List<QName> annotatedPorts = new ArrayList<QName>();
+
+   public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass, WebServiceFeature[] features)
+   {
+      this(wsdlURL, serviceName, serviceClass);
+      this.features = features;
+   }
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass)
    {
@@ -470,6 +478,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Mode mode, WebServiceFeature... features)
    {
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
+      initWebserviceFeatures(dispatch, this.features);
       initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
@@ -483,6 +492,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
       initAddressingProperties(dispatch, epr);
+      initWebserviceFeatures(dispatch, this.features);
       initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
@@ -491,6 +501,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public Dispatch<Object> createDispatch(QName portName, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
+      initWebserviceFeatures(dispatch, this.features);
       initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
@@ -504,6 +515,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
       initAddressingProperties(dispatch, epr);
+      initWebserviceFeatures(dispatch, this.features);
       initWebserviceFeatures(dispatch, features);
       return dispatch;
    }
@@ -512,6 +524,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public <T> T getPort(QName portName, Class<T> sei, WebServiceFeature... features)
    {
       T port = getPort(portName, sei);
+      initWebserviceFeatures(port, this.features);
       initWebserviceFeatures(port, features);
       return port;
    }
@@ -521,6 +534,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       T port = getPort(sei);
       initAddressingProperties((BindingProvider)port, epr);
+      initWebserviceFeatures(port, this.features);
       initWebserviceFeatures(port, features);
       return port;
    }
@@ -529,6 +543,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public <T> T getPort(Class<T> sei, WebServiceFeature... features)
    {
       T port = getPort(sei);
+      initWebserviceFeatures(port, this.features);
       initWebserviceFeatures(port, features);
       return port;
    }

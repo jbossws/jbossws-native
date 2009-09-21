@@ -34,6 +34,7 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.WebServicePermission;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
@@ -67,6 +68,7 @@ public class EndpointImpl extends Endpoint
 
    private Object implementor;
    private Executor executor;
+   private WebServiceFeature[] features; // TODO: use features
    private List<Source> metadata;
    private BindingProviderImpl bindingProvider;
    private Map<String, Object> properties = new HashMap<String, Object>();
@@ -75,15 +77,14 @@ public class EndpointImpl extends Endpoint
    private boolean isDestroyed;
    private URI address;
 
-   public EndpointImpl(String bindingId, Object implementor)
+   public EndpointImpl(String bindingId, Object implementor, WebServiceFeature[] features)
    {
-      log.debug("new EndpointImpl(bindingId=" + bindingId + ",implementor=" + implementor + ")");
-
       if (implementor == null)
          throw new IllegalArgumentException("Implementor cannot be null");
 
       this.implementor = implementor;
       this.bindingProvider = new BindingProviderImpl(bindingId);
+      this.features = features;
    }
 
    @Override
