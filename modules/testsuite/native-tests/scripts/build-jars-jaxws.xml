@@ -537,20 +537,6 @@
         <include name="jboss-app.xml"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2565-wrong.jar">
-      <fileset dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxws/jbws2565/MyWebServiceBeanWrong.class"/>
-      </fileset>
-    </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2565-wrong.ear">
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxws-jbws2565-wrong.jar"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2565/wrong/META-INF">
-        <include name="application.xml"/>
-        <include name="jboss-app.xml"/>
-      </metainf>
-    </jar>
 
     <!-- jaxws-jbws2682 -->
     <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2682.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2682/WEB-INF/web.xml">
