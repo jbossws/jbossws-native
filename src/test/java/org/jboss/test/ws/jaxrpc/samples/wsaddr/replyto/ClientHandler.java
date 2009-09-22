@@ -34,9 +34,6 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
-import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-
-
 import org.jboss.logging.Logger;
 
 /**
@@ -59,9 +56,10 @@ public class ClientHandler extends GenericHandler
       {
          AddressingBuilder builder = SOAPAddressingBuilder.getAddressingBuilder();
          SOAPAddressingProperties outProps = (SOAPAddressingProperties)builder.newAddressingProperties();
-         outProps.setTo(builder.newURI("http://localhost:8080/jaxrpc-samples-wsaddr-hello"));
+         String hostname = System.getProperty("jboss.bind.address", "localhost");
+         outProps.setTo(builder.newURI("http://" + hostname + ":8080/jaxrpc-samples-wsaddr-hello"));
          outProps.setAction(builder.newURI("http://org.jboss.ws/jaxrpc/samples/wsaddr/replyto/sayHello"));
-         EndpointReference rp = builder.newEndpointReference(new URI("http://localhost:8080/jaxrpc-samples-wsaddr-replyto"));
+         EndpointReference rp = builder.newEndpointReference(new URI("http://" + hostname + ":8080/jaxrpc-samples-wsaddr-replyto"));
          outProps.setReplyTo(rp);
          outProps.setMessageID(builder.newURI("123456"));
          context.setProperty(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, outProps);
