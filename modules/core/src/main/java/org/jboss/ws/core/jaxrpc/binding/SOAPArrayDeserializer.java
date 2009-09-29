@@ -94,7 +94,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
          componentDeserializer = (DeserializerSupport)compDeserializerFactory.getDeserializer();
 
          if (arrDims.length < 1 || 2 < arrDims.length)
-            throw new WSException("Unsupported array dimensions: " + Arrays.asList(arrDims));
+            throw new WSException("Unsupported array dimensions: " + arrDims);
 
          Iterator it = DOMUtils.getChildElements(soapElement);
          if (arrDims.length == 1)

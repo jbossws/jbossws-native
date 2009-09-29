@@ -46,6 +46,7 @@ public final class EndpointServlet extends AbstractEndpointServlet
    protected static final Logger log = Logger.getLogger(EndpointServlet.class);
 
    private List<PreDestroyHolder> preDestroyRegistry = new LinkedList<PreDestroyHolder>();
+   private final Object lock = new Object();
 
    /**
     * Provides Native specific endpoint resolver
@@ -78,7 +79,7 @@ public final class EndpointServlet extends AbstractEndpointServlet
    @Override
    public final void destroy()
    {
-      synchronized(this.preDestroyRegistry)
+      synchronized(this.lock)
       {
          for (final PreDestroyHolder holder : this.preDestroyRegistry)
          {
@@ -103,7 +104,7 @@ public final class EndpointServlet extends AbstractEndpointServlet
       PreDestroyHolder holder = (PreDestroyHolder)ep.getAttachment(PreDestroyHolder.class);
       if (holder != null)
       {
-         synchronized(this.preDestroyRegistry)
+         synchronized(this.lock)
          {
             if (!this.preDestroyRegistry.contains(holder))
             {

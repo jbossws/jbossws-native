@@ -88,7 +88,7 @@ public class ToolsUtils
     */
    public static String firstLetterUpperCase(String fname)
    {
-      if (fname == "" || fname == null)
+      if (fname == null || fname.length() == 0)
          throw new WSException("String passed is null");
       //Ensure that the first character is uppercase
       if (Character.isLowerCase(fname.charAt(0)))
@@ -108,7 +108,7 @@ public class ToolsUtils
     */
    public static String firstLetterLowerCase(String fname)
    {
-      if (fname == "" || fname == null)
+      if (fname == null || fname.length() == 0)
          throw new WSException("String passed is null");
       //Ensure that the first character is lowercase
       if (Character.isUpperCase(fname.charAt(0)))
@@ -130,7 +130,7 @@ public class ToolsUtils
     */
    public static String getJavaIdentifier(String xmlName)
    {
-      if(xmlName == null || xmlName == "")
+      if(xmlName == null || xmlName.length() == 0)
          throw new IllegalArgumentException("xmlName is null");
       xmlName = xmlName.trim(); //Get rid of whitespaces
 

@@ -309,7 +309,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 
       // Add @XmlType;
       annotation = JavassistUtils.createAnnotation(XmlType.class, constPool);
-      if (xmlType.getNamespaceURI() != null & xmlType.getNamespaceURI().length() > 0)
+      if (xmlType.getNamespaceURI() != null && xmlType.getNamespaceURI().length() > 0)
          annotation.addParameter("namespace", xmlType.getNamespaceURI());
       annotation.addParameter("name", xmlType.getLocalPart());
       if (propertyOrder != null)
