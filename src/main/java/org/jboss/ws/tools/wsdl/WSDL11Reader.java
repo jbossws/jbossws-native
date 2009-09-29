@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -369,18 +370,21 @@ public class WSDL11Reader
             String localname = domElementClone.getLocalName();
             try
             {
+               List<URL> published = new LinkedList<URL>();
                if ("import".equals(localname))
                {
-                  processSchemaImport(destTypes, wsdlLoc, domElementClone);
+                  processSchemaImport(destTypes, wsdlLoc, domElementClone, published);
                }
                else if ("schema".equals(localname))
                {
-                  processSchemaInclude(destTypes, wsdlLoc, domElementClone);
+                  processSchemaInclude(destTypes, wsdlLoc, domElementClone, published);
                }
                else
                {
                   throw new IllegalArgumentException("Unsuported schema element: " + localname);
                }
+               published.clear();
+               published = null;
             }
             catch (IOException e)
             {
@@ -472,7 +476,7 @@ public class WSDL11Reader
       }
    }
 
-   private void processSchemaImport(WSDLTypes types, URL wsdlLoc, Element importEl) throws IOException, WSDLException
+   private void processSchemaImport(WSDLTypes types, URL wsdlLoc, Element importEl, List<URL> published) throws IOException, WSDLException
    {
       if (wsdlLoc == null)
          throw new IllegalArgumentException("Cannot process import, parent location not set");
@@ -485,12 +489,16 @@ public class WSDL11Reader
 
       URL locationURL = getLocationURL(wsdlLoc, location);
       Element rootElement = DOMUtils.parse(new ResourceURL(locationURL).openStream());
-      URL newloc = processSchemaInclude(types, locationURL, rootElement);
-      if (newloc != null)
-         importEl.setAttribute("schemaLocation", newloc.toExternalForm());
+      if (!published.contains(locationURL))
+      {
+         published.add(locationURL);
+         URL newloc = processSchemaInclude(types, locationURL, rootElement,  published);
+         if (newloc != null)
+            importEl.setAttribute("schemaLocation", newloc.toExternalForm());
+      }
    }
 
-   private URL processSchemaInclude(WSDLTypes types, URL wsdlLoc, Element schemaEl) throws IOException, WSDLException
+   private URL processSchemaInclude(WSDLTypes types, URL wsdlLoc, Element schemaEl, List<URL> published) throws IOException, WSDLException
    {
       if (wsdlLoc == null)
          throw new IllegalArgumentException("Cannot process iclude, parent location not set");
@@ -519,9 +527,13 @@ public class WSDL11Reader
 
          URL locationURL = getLocationURL(wsdlLoc, location);
          Element rootElement = DOMUtils.parse(new ResourceURL(locationURL).openStream());
-         URL newloc = processSchemaInclude(types, locationURL, rootElement);
-         if (newloc != null)
-            includeEl.setAttribute("schemaLocation", newloc.toExternalForm());
+         if (!published.contains(locationURL))
+         {
+            published.add(locationURL);
+            URL newloc = processSchemaInclude(types, locationURL, rootElement, published);
+            if (newloc != null)
+               includeEl.setAttribute("schemaLocation", newloc.toExternalForm());
+         }
       }
 
       String targetNS = getOptionalAttribute(schemaEl, "targetNamespace");
