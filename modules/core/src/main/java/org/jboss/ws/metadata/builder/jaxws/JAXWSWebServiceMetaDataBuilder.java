@@ -146,6 +146,8 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          
          // Process web methods
          processWebMethods(sepMetaData, seiClass);
+         
+         processXmlSeeAlso(seiClass);
 
          // Init the transport guarantee
          initTransportGuaranteeJSE(dep, sepMetaData, linkName);

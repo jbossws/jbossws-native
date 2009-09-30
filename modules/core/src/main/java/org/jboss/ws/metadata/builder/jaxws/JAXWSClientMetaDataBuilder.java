@@ -299,6 +299,8 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       // Process @WebMethod
       processWebMethods(epMetaData, wsClass);
+      
+      processXmlSeeAlso(wsClass);
 
       // Initialize types
       createJAXBContext(epMetaData);

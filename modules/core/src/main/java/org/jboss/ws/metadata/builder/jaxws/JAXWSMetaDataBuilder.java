@@ -44,6 +44,7 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPMessageHandlers;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
@@ -125,6 +126,18 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             log.debug("processBindingType on: " + wsClass.getName());
          BindingType anBindingType = (BindingType)wsClass.getAnnotation(BindingType.class);
          epMetaData.setBindingId(anBindingType.value());
+      }
+   }
+   
+   protected void processXmlSeeAlso(Class<?> wsClass)
+   {
+      if ((wsClass.isAnnotationPresent(XmlSeeAlso.class)))
+      {
+         XmlSeeAlso xsa = wsClass.getAnnotation(XmlSeeAlso.class);
+         for (Class<?> clazz : xsa.value())
+         {
+            javaTypes.add(clazz);
+         }
       }
    }
 
