@@ -10,6 +10,3 @@ org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 # [JBWS-2674] Implement javax.xml.ws.Endpoint
 org/jboss/test/ws/jaxws/endpoint/*TestCase.*
 
-# [JBMESSAGING-1718] JMS Queue MessageCount attribute isn't increased on message retrieval
-org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*
-
