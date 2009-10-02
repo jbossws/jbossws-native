@@ -27,11 +27,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-import javax.management.ObjectName;
+import javax.jms.MessageConsumer;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSession;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.naming.InitialContext;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -47,13 +53,12 @@ public class JMSClientTestCase extends JBossWSTest
    
    public static Test suite()
    {
-      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client.sar,jaxws-samples-dar-jms.jar");
+      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client-test.sar,jaxws-samples-dar-jms.jar");
    }
    
    public void test() throws Exception
    {
       String url = "http://" + getServerHost() + ":8080/dar-jms-client/JMSClient";
-      int count = getMessageCount("DarResponseQueue");
       Date start = new Date();
       HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
       int responseCode = connection.getResponseCode();
@@ -70,16 +75,18 @@ public class JMSClientTestCase extends JBossWSTest
       assertTrue(buffer.toString().contains("Request message sent, doing something interesting in the mean time... ;-) "));
       Date stop = new Date();
       assertTrue(stop.getTime() - start.getTime() < TEST_RUN_TIME / 2);
-      Thread.sleep(TEST_RUN_TIME);
-      assertEquals(count + 1, getMessageCount("DarResponseQueue"));
+      
+      //receive the message
+      InitialContext context = new InitialContext();
+      QueueConnectionFactory connectionFactory = (QueueConnectionFactory)context.lookup("ConnectionFactory");
+      QueueConnection con = connectionFactory.createQueueConnection();
+      QueueSession session = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+      Queue resQueue = (Queue)context.lookup("queue/DarResponseQueue");
+      con.start();
+      MessageConsumer consumer = session.createConsumer(resQueue);
+      TextMessage textMessage = (TextMessage)consumer.receive(TEST_RUN_TIME);
+      String result = textMessage.getText();
+      assertTrue(result != null);
+      con.stop();
    }
-   
-   private int getMessageCount(String queue) throws Exception
-   {
-      ObjectName oname = ObjectNameFactory.create("jboss.mq.destination:service=Queue,name=" + queue);
-      Integer retVal = (Integer)getServer().getAttribute(oname, "MessageCount");
-      System.out.println("MessageCount=" + retVal);
-      return retVal;
-   }
-   
 }
