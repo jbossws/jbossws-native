@@ -154,10 +154,6 @@
       <artifactId>mail</artifactId>
     </dependency>
     <dependency>
-      <groupId>jboss.jaxbintros</groupId>
-      <artifactId>jboss-jaxb-intros</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.netty</groupId>
       <artifactId>netty</artifactId>
     </dependency>

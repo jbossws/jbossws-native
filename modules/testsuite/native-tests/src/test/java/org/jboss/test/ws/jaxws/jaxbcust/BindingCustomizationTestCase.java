@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -23,10 +23,10 @@ package org.jboss.test.ws.jaxws.jaxbcust;
 
 import junit.framework.TestCase;
 
-import org.jboss.ws.core.jaxws.JAXBBindingCustomization;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.wsf.spi.binding.JAXBBindingCustomization;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Endpoint.EndpointState;
@@ -50,8 +50,8 @@ public class BindingCustomizationTestCase extends TestCase {
    public void testCustomizationWriteAccess() throws Exception
    {
       Endpoint endpoint = deploymentModelFactory.newEndpoint(null);
-      JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
-      jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
+      BindingCustomization jaxbCustomization = new JAXBBindingCustomization();
+      jaxbCustomization.put("com.sun.xml.bind.defaultNamespaceRemap", "http://org.jboss.bindingCustomization");
       endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
 
       // a started endpoint should deny customizations
@@ -71,8 +71,8 @@ public class BindingCustomizationTestCase extends TestCase {
    public void testCustomizationReadAccess() throws Exception
    {
       Endpoint endpoint = deploymentModelFactory.newEndpoint(null);
-      JAXBBindingCustomization jaxbCustomization = new JAXBBindingCustomization();
-      jaxbCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.bindingCustomization");
+      BindingCustomization jaxbCustomization = new JAXBBindingCustomization();
+      jaxbCustomization.put("com.sun.xml.bind.defaultNamespaceRemap", "http://org.jboss.bindingCustomization");
       endpoint.addAttachment(BindingCustomization.class, jaxbCustomization);
       endpoint.setState(EndpointState.STARTED);
 

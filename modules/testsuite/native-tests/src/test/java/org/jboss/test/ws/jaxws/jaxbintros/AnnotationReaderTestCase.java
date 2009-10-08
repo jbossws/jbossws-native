@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxws.jaxbintros;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -31,15 +30,12 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.jaxb.intros.IntroductionsAnnotationReader;
-import org.jboss.jaxb.intros.IntroductionsConfigParser;
-import org.jboss.jaxb.intros.configmodel.JaxbIntros;
+import org.jboss.jaxb.intros.BindingCustomizationFactory;
 import org.jboss.wsf.test.JBossWSTest;
-
-import com.sun.xml.bind.api.JAXBRIContext;
 
 /**
  * @author Heiko.Braun@jboss.com
+ * @author alessio.soldano@jboss.com
  */
 public class AnnotationReaderTestCase extends JBossWSTest
 {
@@ -50,14 +46,9 @@ public class AnnotationReaderTestCase extends JBossWSTest
          "      <qname>The Frog</qname>" + 
          "    </ns1:user>";
 
-      JaxbIntros config = IntroductionsConfigParser.parseConfig(new FileInputStream(getResourceFile("jaxws/jaxbintros/WEB-INF/jaxb-intros.xml").getPath()));
-
-      IntroductionsAnnotationReader reader = new IntroductionsAnnotationReader(config);
-      Map<String, Object> jaxbConfig = new HashMap<String, Object>();
-
-      jaxbConfig.put(JAXBRIContext.DEFAULT_NAMESPACE_REMAP, "http://org.jboss.ws/provider");
-      jaxbConfig.put(JAXBRIContext.ANNOTATION_READER, reader);
-
+      Map<String, Object> jaxbConfig = BindingCustomizationFactory.getBindingCustomization(new FileInputStream(getResourceFile(
+            "jaxws/jaxbintros/WEB-INF/jaxb-intros.xml").getPath()), "http://org.jboss.ws/provider");
+      
       JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] { UserType.class }, jaxbConfig);
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
