@@ -32,7 +32,7 @@ import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
- * [JBWS-2221]
+ * [JBWS-2221] FileNotFound when targetNamespace has parameters "?"
  * 
  * @author alessio.soldano@jboss.com
  */
