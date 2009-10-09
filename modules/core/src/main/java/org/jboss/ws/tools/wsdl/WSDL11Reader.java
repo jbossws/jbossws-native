@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -423,21 +422,19 @@ public class WSDL11Reader
             String localname = domElementClone.getLocalName();
             try
             {
-               List<URL> published = new LinkedList<URL>();
+               Map<URL,URL> publishedMapping = new HashMap<URL, URL>();
                if ("import".equals(localname))
                {
-                  processSchemaImport(destTypes, wsdlLoc, domElementClone, published);
+                  processSchemaImport(destTypes, wsdlLoc, domElementClone, publishedMapping);
                }
                else if ("schema".equals(localname))
                {
-                  processSchemaInclude(destTypes, wsdlLoc, domElementClone, published);
+                  processSchemaInclude(destTypes, wsdlLoc, domElementClone, publishedMapping);
                }
                else
                {
                   throw new IllegalArgumentException("Unsuported schema element: " + localname);
                }
-               published.clear();
-               published = null;
             }
             catch (IOException e)
             {
@@ -468,7 +465,8 @@ public class WSDL11Reader
          }
       }
 
-      log.trace("END processTypes: " + wsdlLoc + "\n" + destTypes);
+      if (log.isTraceEnabled())
+         log.trace("END processTypes: " + wsdlLoc + "\n" + destTypes);
    }
 
    private void copyParentNamespaceDeclarations(Element destElement, Element srcElement)
@@ -529,7 +527,7 @@ public class WSDL11Reader
       }
    }
 
-   private void processSchemaImport(WSDLTypes types, URL wsdlLoc, Element importEl, List<URL> published) throws IOException, WSDLException
+   private void processSchemaImport(WSDLTypes types, URL wsdlLoc, Element importEl, Map<URL, URL> publishedLocations) throws IOException, WSDLException
    {
       if (wsdlLoc == null)
          throw new IllegalArgumentException("Cannot process import, parent location not set");
@@ -541,22 +539,21 @@ public class WSDL11Reader
          throw new IllegalArgumentException("schemaLocation is null for xsd:import");
 
       URL locationURL = getLocationURL(wsdlLoc, location);
-      Element rootElement = DOMUtils.parse(new ResourceURL(locationURL).openStream());
-      if (!published.contains(locationURL))
+      if (!publishedLocations.containsKey(locationURL))
       {
-         published.add(locationURL);
-         URL newloc = processSchemaInclude(types, locationURL, rootElement,  published);
-         if (newloc != null)
-            importEl.setAttribute("schemaLocation", newloc.toExternalForm());
+         Element rootElement = DOMUtils.parse(new ResourceURL(locationURL).openStream());
+         processSchemaInclude(types, locationURL, rootElement, publishedLocations);
       }
+      URL newLoc = publishedLocations.get(locationURL);
+      if (newLoc != null)
+         importEl.setAttribute("schemaLocation", newLoc.toExternalForm());
    }
 
-   private URL processSchemaInclude(WSDLTypes types, URL wsdlLoc, Element schemaEl, List<URL> published) throws IOException, WSDLException
+   private void processSchemaInclude(WSDLTypes types, URL wsdlLoc, Element schemaEl, Map<URL, URL> publishedLocations) throws IOException, WSDLException
    {
       if (wsdlLoc == null)
          throw new IllegalArgumentException("Cannot process iclude, parent location not set");
 
-      File tmpFile = null;
       if (wsdlLoc == null)
          throw new IllegalArgumentException("Cannot process include, parent location not set");
 
@@ -569,6 +566,33 @@ public class WSDL11Reader
       importElement.setAttribute("namespace", Constants.URI_SOAP11_ENC);
       schemaEl.insertBefore(importElement, DOMUtils.getFirstChildElement(schemaEl));
 
+      String targetNS = getOptionalAttribute(schemaEl, "targetNamespace");
+      File tmpFile = null;
+
+      /*
+       *  The temporary file for the schema is named and created early before this method recurses.
+       * 
+       *  This allows the publishedLocations map to be updated with the known filename before
+       *  the file is actually written.
+       */
+      
+      if (targetNS != null)
+      {
+         log.trace("processSchemaInclude: [targetNS=" + targetNS + ",parentURL=" + wsdlLoc + "]");
+
+         tmpFile = SchemaUtils.getSchemaTempFile(targetNS);
+         tempFiles.add(tmpFile);
+
+         publishedLocations.put(wsdlLoc, tmpFile.toURL());
+      }
+      else
+      {
+         tmpFile = SchemaUtils.getSchemaTempFile("no_namespace");
+         tempFiles.add(tmpFile);
+
+         publishedLocations.put(wsdlLoc, tmpFile.toURL());
+      }
+
       // Handle schema includes
       Iterator it = DOMUtils.getChildElements(schemaEl, new QName(Constants.NS_SCHEMA_XSD, "include"));
       while (it.hasNext())
@@ -580,44 +604,36 @@ public class WSDL11Reader
 
          URL locationURL = getLocationURL(wsdlLoc, location);
          Element rootElement = DOMUtils.parse(new ResourceURL(locationURL).openStream());
-         if (!published.contains(locationURL))
+         if (!publishedLocations.containsKey(locationURL))
          {
-            published.add(locationURL);
-            URL newloc = processSchemaInclude(types, locationURL, rootElement, published);
-            if (newloc != null)
-               includeEl.setAttribute("schemaLocation", newloc.toExternalForm());
+            processSchemaInclude(types, locationURL, rootElement, publishedLocations);
+         }
+
+         URL newLoc = publishedLocations.get(locationURL);
+         if (newLoc != null)
+         {
+            includeEl.setAttribute("schemaLocation", newLoc.toExternalForm());
          }
       }
 
-      String targetNS = getOptionalAttribute(schemaEl, "targetNamespace");
-      if (targetNS != null)
+      if (tmpFile != null)
       {
-         log.trace("processSchemaInclude: [targetNS=" + targetNS + ",parentURL=" + wsdlLoc + "]");
-
-         tmpFile = SchemaUtils.getSchemaTempFile(targetNS);
-         tempFiles.add(tmpFile);
-
          FileWriter fwrite = new FileWriter(tmpFile);
          new DOMWriter(fwrite).setPrettyprint(true).print(schemaEl);
          fwrite.close();
 
-         schemaLocationsMap.put(targetNS, tmpFile.toURL());
       }
 
-      // schema elements that have no target namespace are skipped
-      //
-      //  <xsd:schema>
-      //    <xsd:import namespace="http://org.jboss.webservice/example/types" schemaLocation="Hello.xsd"/>
-      //    <xsd:import namespace="http://org.jboss.webservice/example/types/arrays/org/jboss/test/webservice/admindevel" schemaLocation="subdir/HelloArr.xsd"/>
-      //  </xsd:schema>
-      if (targetNS == null)
+      if (targetNS != null)
+      {
+         schemaLocationsMap.put(targetNS, tmpFile.toURL());
+      }
+      else
       {
          log.trace("Schema element without target namespace in: " + wsdlLoc);
       }
 
       handleSchemaImports(schemaEl, wsdlLoc);
-
-      return tmpFile != null ? tmpFile.toURL() : null;
    }
 
    private void handleSchemaImports(Element schemaEl, URL parentURL) throws WSDLException, IOException
