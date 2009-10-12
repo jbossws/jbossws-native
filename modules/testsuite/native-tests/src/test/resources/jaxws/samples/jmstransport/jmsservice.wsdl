@@ -47,7 +47,7 @@
     <port binding='tns:HTTPBinding' name='HTTPEndpointPort'>
       <soap:address location='http://@jboss.bind.address@:8080/jaxws-samples-jmstransport/OrganizationJMSEndpoint'/>
     </port>
-    <port binding='tns:JMSBinding' name='JMSEndpointPort'>
+    <port binding='tns:JMSBinding' name='OrganizationJMSEndpointPort'>
       <soap:address location='jms://queue/RequestQueue?replyToName=queue/ResponseQueue'/>
     </port>
   </service>

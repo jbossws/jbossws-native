@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxws.samples.jmstransport;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.jms.Message;
@@ -37,11 +39,11 @@ import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import junit.framework.Test;
+
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.common.DOMUtils;
-
-import junit.framework.Test;
 
 /**
  * A web service client that connects to a MDB endpoint.
@@ -57,12 +59,26 @@ public class JMSTransportTestCase extends JBossWSTest
    {
       return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxws-samples-jmstransport.sar");
    }
+   
+   public void testPublishedContract() throws Exception
+   {
+      //test the published contract using the 2nd port, which is an http one
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-samples-jmstransport/OrganizationJMSEndpoint?wsdl");
+      StringBuilder sb = new StringBuilder();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(wsdlURL.openStream()));
+      String line;
+      while ((line = reader.readLine()) != null)
+      {
+         sb.append(line);
+      }
+      assertTrue(sb.toString().contains("jms://queue/RequestQueue?replyToName=queue/ResponseQueue"));
+   }
 
    public void testJMSEndpointPort() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/samples/jmstransport/jmsservice.wsdl");
       QName serviceName = new QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointService");
-      QName portName = new QName("http://org.jboss.ws/samples/jmstransport", "JMSEndpointPort");
+      QName portName = new QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointPort");
       
       Service service = Service.create(wsdlURL, serviceName);
       Organization port = service.getPort(portName, Organization.class);

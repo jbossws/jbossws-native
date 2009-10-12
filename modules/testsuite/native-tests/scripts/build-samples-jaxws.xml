@@ -127,6 +127,9 @@
         <include name="org/jboss/test/ws/jaxws/samples/jmstransport/Organization.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/jmstransport/OrganizationJMSEndpoint.class"/>
       </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/META-INF">
+        <include name="wsdl/*.wsdl"/>
+      </metainf>
     </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport.sar">
       <fileset dir="${tests.output.dir}/test-libs">

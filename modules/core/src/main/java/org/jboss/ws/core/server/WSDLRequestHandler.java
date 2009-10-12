@@ -23,6 +23,8 @@ package org.jboss.ws.core.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
@@ -52,7 +54,7 @@ import org.w3c.dom.NodeList;
 public class WSDLRequestHandler
 {
    // provide logging
-   private Logger log = Logger.getLogger(WSDLRequestHandler.class);
+   private static Logger log = Logger.getLogger(WSDLRequestHandler.class);
 
    private final EndpointMetaData epMetaData;
    private final ServerConfig config;
@@ -211,23 +213,26 @@ public class WSDLRequestHandler
                {
                   String orgLocation = locationAttr.getNodeValue();
 
-                  URL orgURL = new URL(orgLocation);
-                  String protocol = orgURL.getProtocol();
-                  String host = orgURL.getHost();
-                  int port = getPortForProtocol(protocol);
-                  String path = orgURL.getPath();
-                  final boolean rewriteLocation =
-                     ServerConfig.UNDEFINED_HOSTNAME.equals(host) ||
-                     this.config.isModifySOAPAddress();
-
-                  if (rewriteLocation)
+                  if (isHttp(orgLocation))
                   {
-                     String newLocation = new URL(protocol, wsdlHost, port, path).toString();
-                     if (!newLocation.equals(orgLocation))
+                     URL orgURL = new URL(orgLocation);
+                     String protocol = orgURL.getProtocol();
+                     String host = orgURL.getHost();
+                     int port = getPortForProtocol(protocol);
+                     String path = orgURL.getPath();
+                     final boolean rewriteLocation =
+                        ServerConfig.UNDEFINED_HOSTNAME.equals(host) ||
+                        this.config.isModifySOAPAddress();
+   
+                     if (rewriteLocation)
                      {
-                        locationAttr.setNodeValue(newLocation);
-                        if (log.isDebugEnabled())
-                           log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                        String newLocation = new URL(protocol, wsdlHost, port, path).toString();
+                        if (!newLocation.equals(orgLocation))
+                        {
+                           locationAttr.setNodeValue(newLocation);
+                           if (log.isDebugEnabled())
+                              log.debug("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                        }
                      }
                   }
                }
@@ -237,6 +242,28 @@ public class WSDLRequestHandler
                modifyAddressReferences(reqURL, wsdlHost, resPath, childElement);
             }
          }
+      }
+   }
+   
+   private static boolean isHttp(String orgLocation)
+   {
+      try
+      {
+         String scheme = new URI(orgLocation).getScheme();
+         if (scheme != null && scheme.startsWith("http"))
+         {
+            return true;
+         }
+         else
+         {
+            log.info("Skipping rewrite of non-http address: " + orgLocation);
+            return false;
+         }
+      }
+      catch (URISyntaxException e)
+      {
+         log.error("Skipping rewrite of invalid address: " + orgLocation, e);
+         return false;
       }
    }
 

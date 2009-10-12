@@ -40,7 +40,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
  * @author Thomas.Diesler@jboss.org
  * @since 09-Jan-2008
  */
-@WebService (targetNamespace = "http://org.jboss.ws/samples/jmstransport")
+@WebService (targetNamespace = "http://org.jboss.ws/samples/jmstransport", wsdlLocation="META-INF/wsdl/jmsservice.wsdl")
 @WebContext (contextRoot = "/jaxws-samples-jmstransport")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 

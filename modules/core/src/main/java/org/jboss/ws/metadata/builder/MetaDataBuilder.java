@@ -319,15 +319,11 @@ public abstract class MetaDataBuilder
                if ("CONFIDENTIAL".equals(transportGuarantee))
                   uriScheme = "https";
 
-               String servicePath = sepMetaData.getContextRoot() + sepMetaData.getURLPattern();
-               String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath);
-
-               SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-               ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
-               boolean alwaysModify = config.isModifySOAPAddress();
-
-               if (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0)
+               if (requiresRewrite(orgAddress, uriScheme))
                {
+                  String servicePath = sepMetaData.getContextRoot() + sepMetaData.getURLPattern();
+                  String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath);
+
                   if (log.isDebugEnabled())
                      log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");
                   wsdlEndpoint.setAddress(serviceEndpointURL);
@@ -347,7 +343,8 @@ public abstract class MetaDataBuilder
                   }
                   catch (MalformedURLException e)
                   {
-                     throw new WSException("Malformed URL: " + orgAddress);
+                     log.warn("Malformed URL: " + orgAddress);
+                     sepMetaData.setEndpointAddress(orgAddress);
                   }
                }
             }
@@ -356,6 +353,23 @@ public abstract class MetaDataBuilder
 
       if (endpointFound == false)
          throw new WSException("Cannot find port in wsdl: " + portName);
+   }
+   
+   private static boolean requiresRewrite(String orgAddress, String uriScheme)
+   {
+      if (uriScheme != null)
+      {
+         if (!uriScheme.toLowerCase().startsWith("http"))
+         {
+            //perform rewrite on http/https addresses only
+            return false;
+         }
+      }
+      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      boolean alwaysModify = config.isModifySOAPAddress();
+      
+      return (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0);
    }
 
    private static void replaceWSDL11PortAddress(WSDLDefinitions wsdlDefinitions, QName portQName, String serviceEndpointURL)
