@@ -25,6 +25,9 @@ import java.net.URI;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.jboss.ws.core.server.netty.NettyHttpServer;
+import org.jboss.ws.core.server.netty.NettyHttpServerFactory;
+
 /**
  * Callback factory
  *
@@ -34,7 +37,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class RMCallbackHandlerFactory
 {
-   private static RMBackPortsServer server;
+   private static NettyHttpServer server;
    private static Lock lock = new ReentrantLock();
    
    private RMCallbackHandlerFactory()
@@ -49,9 +52,9 @@ public final class RMCallbackHandlerFactory
       {
          if (server == null)
          {
-            server = RMBackPortsServer.getInstance(backPort.getScheme(), backPort.getHost(), backPort.getPort());
+            server = NettyHttpServerFactory.getNettyHttpServer(backPort.getPort(), RMRequestHandlerFactory.getInstance());
          }
-         RMCallbackHandler callbackHandler = server.getCallback(backPort.getPath());
+         RMCallbackHandler callbackHandler = (RMCallbackHandler)server.getCallback(backPort.getPath());
          if (callbackHandler == null)
          {
             callbackHandler = new RMCallbackHandlerImpl(backPort.getPath());

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,23 +19,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.wsrm.transport.backchannel;
+package org.jboss.ws.core.jaxws.spi.http;
 
-import org.jboss.ws.core.server.netty.NettyCallbackHandler;
-import org.jboss.ws.extensions.wsrm.transport.RMMessage;
-import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
+import org.jboss.wsf.spi.http.HttpServer;
+import org.jboss.wsf.spi.http.HttpServerFactory;
 
 /**
- * TODO: Add comment
+ * @see org.jboss.wsf.spi.http.HttpServerFactory 
  *
- * @author richard.opalka@jboss.com
- *
- * @since Nov 21, 2007
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public interface RMCallbackHandler extends NettyCallbackHandler
+public final class NettyHttpServerFactory extends HttpServerFactory
 {
-   void handle(RMMessage message);
-   RMMessage getMessage(String messageId);
-   Throwable getFault(String messageId);
-   void addUnassignedMessageListener(RMUnassignedMessageListener listener);
+
+   /** Netty HTTP server adapter singleton. */
+   private static final HttpServer NETTY_SERVER_ADAPTER_SINGLETON = new NettyHttpServerAdapter();
+
+   /**
+    * Constructor.
+    */
+   public NettyHttpServerFactory()
+   {
+      super();
+   }
+
+   /**
+    * Returns Netty based http server adapter.
+    * 
+    * @return Netty based http server adapter
+    */
+   @Override
+   public HttpServer getHttpServer()
+   {
+      return NettyHttpServerFactory.NETTY_SERVER_ADAPTER_SINGLETON;
+   }
+
 }

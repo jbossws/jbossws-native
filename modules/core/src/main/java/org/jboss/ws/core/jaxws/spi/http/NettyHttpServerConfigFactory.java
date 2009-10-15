@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,27 +19,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.stack.jbws;
+package org.jboss.ws.core.jaxws.spi.http;
 
-import org.jboss.wsf.spi.management.EndpointRegistryFactory;
-import org.jboss.wsf.spi.management.EndpointRegistry;
-import org.jboss.wsf.common.KernelAwareSPIFactory;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 
 /**
- * An EndpointRegistryFactory implementation that retrieves
- * the registry from MC kernel.
+ * Netty server configuration factory. 
  *
- * @see EndpointRegistry.BEAN_NAME
- *
- * @author Heiko.Braun@jboss.com
- *         Created: Jul 23, 2007
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public class EndpointRegistryFactoryImpl extends EndpointRegistryFactory
+public final class NettyHttpServerConfigFactory extends ServerConfigFactory
 {
-   public EndpointRegistry getEndpointRegistry()
+
+   /** Netty config singleton. */
+   private static final ServerConfig NETTY_CONFIG_SINGLETON = new NettyHttpServerConfig();
+
+   /**
+    * Constructor.
+    */
+   public NettyHttpServerConfigFactory()
    {
-      return new KernelAwareSPIFactory().getKernelProvidedSPI(
-        EndpointRegistry.BEAN_NAME, EndpointRegistry.class
-      );
+      super();
    }
+
+   /**
+    * Provides Netty server configuration.
+    * 
+    * @return Netty server configuration
+    */
+   @Override
+   public ServerConfig getServerConfig()
+   {
+      return NettyHttpServerConfigFactory.NETTY_CONFIG_SINGLETON;
+   }
+
 }

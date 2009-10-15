@@ -21,9 +21,10 @@
  */
 package org.jboss.ws.extensions.eventing.mgmt;
 
-import org.jboss.dependency.spi.ControllerContext;
-import org.jboss.kernel.spi.dependency.KernelController;
-import org.jboss.wsf.spi.util.KernelLocator;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.ioc.IoCContainerProxy;
+import org.jboss.wsf.spi.ioc.IoCContainerProxyFactory;
 
 /**
  * Subscription manager factory impl
@@ -43,11 +44,17 @@ public class SubscriptionManagerFactory
       return instance;
    }
 
+   /**
+    * Returns subscription manager registered in MC kernel.
+    * 
+    * @return subscription manager
+    */
    public SubscriptionManagerMBean getSubscriptionManager()
    {
+      final SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      final IoCContainerProxyFactory iocContainerFactory = spiProvider.getSPI(IoCContainerProxyFactory.class);
+      final IoCContainerProxy iocContainer = iocContainerFactory.getContainer();
       
-      KernelController controller = KernelLocator.getKernel().getController();
-      ControllerContext ctx = controller.getInstalledContext(SubscriptionManagerMBean.BEAN_NAME);
-      return (SubscriptionManagerMBean)ctx.getTarget();
+      return iocContainer.getBean(SubscriptionManagerMBean.BEAN_NAME, SubscriptionManagerMBean.class);
    }
 }

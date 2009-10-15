@@ -59,13 +59,23 @@ public final class RMCallbackHandlerImpl implements RMCallbackHandler
          logger.debug("Registered callback handler listening on '" + handledPath + "' request path");
    }
    
+   public void init()
+   {
+      // does nothing
+   }
+   
+   public void destroy()
+   {
+      // does nothing
+   }
+   
    public Throwable getFault(String messageId)
    {
       // TODO implement
       return null;
    }
 
-   public final String getHandledPath()
+   public final String getPath()
    {
       return this.handledPath;
    }

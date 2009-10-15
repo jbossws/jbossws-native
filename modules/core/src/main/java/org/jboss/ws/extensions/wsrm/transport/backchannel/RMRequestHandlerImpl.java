@@ -23,23 +23,15 @@ package org.jboss.ws.extensions.wsrm.transport.backchannel;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipelineCoverage;
-import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.CookieDecoder;
 import org.jboss.netty.handler.codec.http.CookieEncoder;
@@ -49,39 +41,28 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.jboss.ws.core.server.netty.AbstractNettyRequestHandler;
 import org.jboss.ws.extensions.wsrm.transport.RMMessage;
 import org.jboss.ws.extensions.wsrm.transport.RMUnMarshaller;
 
 /**
- * TODO: Add comment
+ * RM backports server request handler.
  *
  * @author richard.opalka@jboss.com
  * @author alessio.soldano@jboss.com
- *
- * @since Nov 20, 2007
  */
-@ChannelPipelineCoverage("one")
-public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHandler
+public final class RMRequestHandlerImpl extends AbstractNettyRequestHandler
 {
-   private static final Logger LOG = Logger.getLogger(RMBackPortsInvocationHandler.class);
-   private final List<RMCallbackHandler> callbacks = new LinkedList<RMCallbackHandler>();
-   private final Lock lock = new ReentrantLock();
+   private static final Logger LOG = Logger.getLogger(RMRequestHandlerImpl.class);
 
-
-   public RMBackPortsInvocationHandler()
+   /**
+    * Constructor.
+    */
+   public RMRequestHandlerImpl()
    {
+      super();
    }
    
-   @Override
-   public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e)
-   {
-      // HERE: Add all accepted channels to the group
-      //       so that they are closed properly on shutdown
-      //       If the added channel is closed before shutdown,
-      //       it will be removed from the group automatically.
-      RMBackPortsServer.channelGroup.add(ctx.getChannel());
-   } 
-
    @Override
    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception
    {
@@ -114,27 +95,14 @@ public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHan
    
    private void handle(String requestPath, RMMessage message)
    {
-      this.lock.lock();
-      try
+      RMCallbackHandler handler = (RMCallbackHandler)this.getCallback(requestPath);
+      if (handler != null)
       {
-         boolean handlerExists = false;
-         for (RMCallbackHandler handler : this.callbacks)
-         {
-            if (handler.getHandledPath().equals(requestPath))
-            {
-               handlerExists = true;
-               if (LOG.isDebugEnabled())
-                  LOG.debug("Handling request path: " + requestPath);
-               handler.handle(message);
-               break;
-            }
-         }
-         if (handlerExists == false)
-            LOG.warn("No callback handler registered for path: " + requestPath);
+         handler.handle(message);
       }
-      finally
+      else
       {
-         this.lock.unlock();
+         LOG.warn("No callback handler registered for path: " + requestPath);
       }
    }
    
@@ -166,55 +134,4 @@ public final class RMBackPortsInvocationHandler extends SimpleChannelUpstreamHan
       cf.awaitUninterruptibly();
    }
 
-   @Override
-   public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
-   {
-      e.getCause().printStackTrace();
-      e.getChannel().close();
-   }
-
-   public RMCallbackHandler getCallback(String requestPath)
-   {
-      this.lock.lock();
-      try
-      {
-         for (RMCallbackHandler handler : this.callbacks)
-         {
-            if (handler.getHandledPath().equals(requestPath))
-               return handler;
-         }
-      }
-      finally
-      {
-         this.lock.unlock();
-      }
-
-      return null;
-   }
-
-   public void registerCallback(RMCallbackHandler callbackHandler)
-   {
-      this.lock.lock();
-      try
-      {
-         this.callbacks.add(callbackHandler);
-      }
-      finally
-      {
-         this.lock.unlock();
-      }
-   }
-
-   public void unregisterCallback(RMCallbackHandler callbackHandler)
-   {
-      this.lock.lock();
-      try
-      {
-         this.callbacks.remove(callbackHandler);
-      }
-      finally
-      {
-         this.lock.unlock();
-      }
-   }
 }

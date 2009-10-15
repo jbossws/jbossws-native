@@ -146,6 +146,13 @@ public abstract class MetaDataBuilder
             urlPattern = endpoint.getURLPattern();
       }
 
+      // Endpoint API hack
+      Integer port = (Integer)dep.getService().getProperty("port");
+      if (port == null)
+      {
+         port = -1;
+      }
+
       // If not, derive the context root from the deployment
       if (contextRoot == null)
       {
@@ -175,7 +182,7 @@ public abstract class MetaDataBuilder
       sepMetaData.setURLPattern(urlPattern);
 
       String servicePath = contextRoot + urlPattern;
-      sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath));
+      sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath, port));
    }
 
    public static ObjectName createServiceEndpointID(Deployment dep, ServerEndpointMetaData sepMetaData)
@@ -214,7 +221,7 @@ public abstract class MetaDataBuilder
 
    /** Get the web service address for a given path
     */
-   public static String getServiceEndpointAddress(String uriScheme, String servicePath)
+   public static String getServiceEndpointAddress(String uriScheme, String servicePath, int servicePort)
    {
       if (servicePath == null || servicePath.length() == 0)
          throw new WSException("Service path cannot be null");
@@ -230,21 +237,28 @@ public abstract class MetaDataBuilder
 
       String host = config.getWebServiceHost();
       String port = "";
-      if ("https".equals(uriScheme))
+      if (servicePort != -1)
       {
-         int portNo = config.getWebServiceSecurePort();
-         if (portNo != 443)
-         {
-            port = ":" + portNo;
-         }
-
+         port = ":" + servicePort;
       }
       else
       {
-         int portNo = config.getWebServicePort();
-         if (portNo != 80)
+         if ("https".equals(uriScheme))
          {
-            port = ":" + portNo;
+            int portNo = config.getWebServiceSecurePort();
+            if (portNo != 443)
+            {
+               port = ":" + portNo;
+            }
+
+         }
+         else
+         {
+            int portNo = config.getWebServicePort();
+            if (portNo != 80)
+            {
+               port = ":" + portNo;
+            }
          }
       }
 
@@ -322,7 +336,7 @@ public abstract class MetaDataBuilder
                if (requiresRewrite(orgAddress, uriScheme))
                {
                   String servicePath = sepMetaData.getContextRoot() + sepMetaData.getURLPattern();
-                  String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath);
+                  String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath, -1);
 
                   if (log.isDebugEnabled())
                      log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");

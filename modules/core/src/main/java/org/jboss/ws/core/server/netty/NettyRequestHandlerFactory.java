@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,23 +19,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.wsrm.transport.backchannel;
-
-import org.jboss.ws.core.server.netty.NettyCallbackHandler;
-import org.jboss.ws.extensions.wsrm.transport.RMMessage;
-import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
+package org.jboss.ws.core.server.netty;
 
 /**
- * TODO: Add comment
+ * Netty request handler factory.
  *
- * @author richard.opalka@jboss.com
- *
- * @since Nov 21, 2007
+ * @param <T> netty request handler type
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public interface RMCallbackHandler extends NettyCallbackHandler
+public interface NettyRequestHandlerFactory<T extends AbstractNettyRequestHandler>
 {
-   void handle(RMMessage message);
-   RMMessage getMessage(String messageId);
-   Throwable getFault(String messageId);
-   void addUnassignedMessageListener(RMUnassignedMessageListener listener);
+
+   /**
+    * Creates new Netty request handler instance.
+    * @return handler instance
+    */
+   T newNettyRequestHandler();
+
 }

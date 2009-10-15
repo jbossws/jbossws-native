@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.ClosedChannelException;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -113,6 +114,26 @@ public class NettyClient
     */
    public Object invoke(Object reqMessage, String targetAddress, boolean oneway, Map<String, Object> additionalHeaders, Map<String, Object> callProps) throws IOException
    {
+	   try
+	   {
+		   return invokeInternal(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
+	   }
+	   catch (ClosedChannelException cce)
+	   {
+		   if (NettyTransportHandler.getHttpKeepAliveSet())
+		   {
+			   log.info("Retrying with a new connection..."); //because using keep-alive connections it's possible to try re-using closed connections before they've been evicted
+			   return invokeInternal(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
+		   }
+		   else
+		   {
+			   throw cce;
+		   }
+	   }
+   }
+   
+   private Object invokeInternal(Object reqMessage, String targetAddress, boolean oneway, Map<String, Object> additionalHeaders, Map<String, Object> callProps) throws IOException
+   {
       URL target;
       try
       {
@@ -153,7 +174,17 @@ public class NettyClient
          
          //Get the response
          Future<Result> futureResult = responseHandler.getFutureResult();
-         Result result = timeout == null ? futureResult.get() : futureResult.get(timeout, TimeUnit.MILLISECONDS);
+         Result result = null;
+         try
+         {
+        	 result = timeout == null ? futureResult.get() : futureResult.get(timeout, TimeUnit.MILLISECONDS);
+         }
+         catch (ExecutionException ee)
+         {
+        	 //unwrap ExecutionException
+        	 Throwable t = ee.getCause();
+        	 throw t != null ? t : ee;
+         }
          resHeaders = result.getResponseHeaders();
          Object resMessage = oneway ? null : unmarshaller.read(result.getResponse(), resHeaders);
          
@@ -205,7 +236,7 @@ public class NettyClient
          transport.finished(resHeaders);
       }
    }
-   
+      
    private static SslHandler getSSLHandler(URL target, Map<String, Object> callProps) throws IOException
    {
       SslHandler handler = null;

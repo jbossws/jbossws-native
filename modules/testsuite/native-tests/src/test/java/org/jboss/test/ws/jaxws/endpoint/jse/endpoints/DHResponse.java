@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,23 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.wsrm.transport.backchannel;
+package org.jboss.test.ws.jaxws.endpoint.jse.endpoints;
 
-import org.jboss.ws.core.server.netty.NettyCallbackHandler;
-import org.jboss.ws.extensions.wsrm.transport.RMMessage;
-import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
+import javax.activation.DataHandler;
+import javax.xml.bind.annotation.XmlMimeType;
+import javax.xml.bind.annotation.XmlType;
 
-/**
- * TODO: Add comment
- *
- * @author richard.opalka@jboss.com
- *
- * @since Nov 21, 2007
- */
-public interface RMCallbackHandler extends NettyCallbackHandler
-{
-   void handle(RMMessage message);
-   RMMessage getMessage(String messageId);
-   Throwable getFault(String messageId);
-   void addUnassignedMessageListener(RMUnassignedMessageListener listener);
+@XmlType
+(
+   name="dataResponse",
+   namespace = "http://org.jboss.ws/jaxws/endpoint/jse/endpoints/"
+)
+public class DHResponse {
+
+
+   private DataHandler dataHandler;
+
+
+   public DHResponse() {
+   }
+
+   public DHResponse(DataHandler dataHandler) {
+      this.dataHandler = dataHandler;
+   }
+
+   @XmlMimeType("text/plain")
+   public DataHandler getDataHandler() {
+      return dataHandler;
+   }
+
+   public void setDataHandler(DataHandler dataHandler) {
+      this.dataHandler = dataHandler;
+   }
 }

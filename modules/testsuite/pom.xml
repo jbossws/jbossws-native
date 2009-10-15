@@ -327,16 +327,6 @@
       </properties>
       <dependencies>
         <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss500</artifactId>
-          <exclusions>
-            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
           <version>${hibernate.version}</version>
@@ -398,16 +388,6 @@
         <jbossws.integration.target>jboss501</jbossws.integration.target>
       </properties>
       <dependencies>
-        <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss501</artifactId>
-          <exclusions>
-            <exclusion> <!-- Exclude old jaxws impl transitive dependency brought in by jboss-metadata -->
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
@@ -471,16 +451,6 @@
       </properties>
       <dependencies>
         <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss510</artifactId>
-          <exclusions>
-            <exclusion>
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
           <version>${hibernate.version}</version>
@@ -531,26 +501,6 @@
         <jbossws.integration.target>jboss520</jbossws.integration.target>
       </properties>
       <dependencies>
-        <!-- [JBWS-2505] -->
-        <!-- START -->
-        <!--
-        <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss520x</artifactId>
-          <exclusions>
-            <exclusion>
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        -->
-        <dependency>
-          <groupId>org.jboss.jbossas</groupId>
-          <artifactId>jboss-as-webservices</artifactId>
-          <version>${jboss.version}</version>
-        </dependency>
-        <!-- END -->
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
@@ -602,26 +552,6 @@
         <jbossws.integration.target>jboss600</jbossws.integration.target>
       </properties>
       <dependencies>
-        <!-- [JBWS-2505] -->
-        <!-- START -->
-        <!--
-        <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss600x</artifactId>
-          <exclusions>
-            <exclusion>
-              <groupId>jboss.jbossws</groupId>
-              <artifactId>jboss-jaxws</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        -->
-        <dependency>
-          <groupId>org.jboss.jbossas</groupId>
-          <artifactId>jboss-as-webservices</artifactId>
-          <version>${jboss.version}</version>
-        </dependency>
-        <!-- END -->
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>

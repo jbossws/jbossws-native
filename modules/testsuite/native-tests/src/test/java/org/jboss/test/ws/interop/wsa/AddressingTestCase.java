@@ -35,7 +35,6 @@ import javax.xml.ws.Service;
 import javax.xml.ws.addressing.*;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -90,12 +89,12 @@ public class AddressingTestCase extends JBossWSTest {
 
          ((BindingProvider)echoPort).getRequestContext().put(
 					BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-					"http://"+getServerHost()+":8080/wsa10/echo"
+					"http://"+getInteropServerHost()+":8080/wsa10/echo"
 			);
 
 			((BindingProvider)notifyPort).getRequestContext().put(
 					BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-					"http://"+getServerHost()+":8080/wsa10/notify"
+					"http://"+getInteropServerHost()+":8080/wsa10/notify"
 			);
 
          configureClient();
@@ -112,11 +111,11 @@ public class AddressingTestCase extends JBossWSTest {
    private void configureClient() {
 
       ((BindingProvider)echoPort).getRequestContext().put(
-         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/wsa10/echo"         
+         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getInteropServerHost()+":8080/wsa10/echo"         
       );
 
       ((BindingProvider)notifyPort).getRequestContext().put(
-         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getServerHost()+":8080/wsa10/notify"
+         BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://"+getInteropServerHost()+":8080/wsa10/notify"
       );
 
       /*
@@ -146,7 +145,7 @@ public class AddressingTestCase extends JBossWSTest {
    }
 
 
-   public String getServerHost()
+   private String getInteropServerHost()
    {
       String host = null;
       if("true".equals( System.getProperty("interop") ) )

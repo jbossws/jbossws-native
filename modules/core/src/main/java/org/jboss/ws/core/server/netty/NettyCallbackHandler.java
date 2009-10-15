@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,23 +19,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.extensions.wsrm.transport.backchannel;
-
-import org.jboss.ws.core.server.netty.NettyCallbackHandler;
-import org.jboss.ws.extensions.wsrm.transport.RMMessage;
-import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
+package org.jboss.ws.core.server.netty;
 
 /**
- * TODO: Add comment
+ * Netty callback handler abstraction.
  *
- * @author richard.opalka@jboss.com
- *
- * @since Nov 21, 2007
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public interface RMCallbackHandler extends NettyCallbackHandler
+public interface NettyCallbackHandler
 {
-   void handle(RMMessage message);
-   RMMessage getMessage(String messageId);
-   Throwable getFault(String messageId);
-   void addUnassignedMessageListener(RMUnassignedMessageListener listener);
+
+   /**
+    * Template method to initialize callback handler.
+    */
+   void init();
+
+   /**
+    * Returns path callback handler operates on.
+    *
+    * @return callback working path
+    */
+   String getPath();
+
+   /**
+    * Template method to destroy callback handler.
+    */
+   void destroy();
+
 }

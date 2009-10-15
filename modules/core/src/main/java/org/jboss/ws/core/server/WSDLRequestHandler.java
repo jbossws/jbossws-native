@@ -218,14 +218,14 @@ public class WSDLRequestHandler
                      URL orgURL = new URL(orgLocation);
                      String protocol = orgURL.getProtocol();
                      String host = orgURL.getHost();
-                     int port = getPortForProtocol(protocol);
-                     String path = orgURL.getPath();
                      final boolean rewriteLocation =
                         ServerConfig.UNDEFINED_HOSTNAME.equals(host) ||
                         this.config.isModifySOAPAddress();
-   
+
                      if (rewriteLocation)
                      {
+                        int port = getPortForProtocol(protocol);
+                        String path = orgURL.getPath();
                         String newLocation = new URL(protocol, wsdlHost, port, path).toString();
                         if (!newLocation.equals(orgLocation))
                         {
