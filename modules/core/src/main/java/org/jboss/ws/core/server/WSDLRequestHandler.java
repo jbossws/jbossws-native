@@ -216,7 +216,7 @@ public class WSDLRequestHandler
                   if (isHttp(orgLocation))
                   {
                      URL orgURL = new URL(orgLocation);
-                     String protocol = orgURL.getProtocol();
+                     String orgProtocol = orgURL.getProtocol();
                      String host = orgURL.getHost();
                      final boolean rewriteLocation =
                         ServerConfig.UNDEFINED_HOSTNAME.equals(host) ||
@@ -224,9 +224,14 @@ public class WSDLRequestHandler
 
                      if (rewriteLocation)
                      {
-                        int port = getPortForProtocol(protocol);
+                        //we stick with the original protocol (https) if the transport guarantee is CONFIDENTIAL
+                        //(if the original wsdl soap:address uses https we can't overwrite it with http)
+                        boolean confidential = "https".equalsIgnoreCase(orgProtocol);
+                        String reqProtocol = reqURL.getProtocol();
+                        
+                        int port = confidential ? getPortForProtocol("https") : getPortForProtocol(reqProtocol);
                         String path = orgURL.getPath();
-                        String newLocation = new URL(protocol, wsdlHost, port, path).toString();
+                        String newLocation = new URL(confidential ? "https" : reqProtocol, wsdlHost, port, path).toString();
                         if (!newLocation.equals(orgLocation))
                         {
                            locationAttr.setNodeValue(newLocation);
