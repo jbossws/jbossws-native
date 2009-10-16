@@ -57,14 +57,13 @@ public class Endpoint1Impl implements Endpoint1Iface
    @PostConstruct
    public void init()
    {
-      System.out.println("Endpoint initialized: " + this);
       this.initialized = true;
    }
 
    @PreDestroy
    public void destroy()
    {
-      System.out.println("Endpoint destroyed: " + this);
+      //nothing to do
    }
 
    public int getCount()
