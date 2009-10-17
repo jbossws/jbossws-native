@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="modules/testsuite/native-tests/src/test/java"/>
 	<classpathentry kind="src" output="modules/saaj/target/classes" path="modules/saaj/src/main/java"/>
 	<classpathentry kind="src" output="modules/jaxrpc/target/classes" path="modules/jaxrpc/src/main/java"/>
-	<classpathentry kind="src" output="modules/jaxws/target/classes" path="modules/jaxws/src/main/java"/>
 	<classpathentry kind="src" output="modules/jaxws-ext/target/classes" path="modules/jaxws-ext/src/main/java"/>
 	<classpathentry kind="src" output="modules/core/target/classes" path="modules/core/src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
