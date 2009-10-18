@@ -55,9 +55,6 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
    /** Indicates server is stopped. */
    private boolean stopped;
 
-   /** Indicates server is terminated. */
-   private boolean terminated;
-
    /** Channel factory. */
    private ChannelFactory channelFactory;
 
@@ -109,7 +106,7 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
     * 
     * @param callback new callback
     */
-   public void registerCallback(final NettyCallbackHandler callback)
+   public synchronized void registerCallback(final NettyCallbackHandler callback)
    {
       if (callback != null)
       {
@@ -123,7 +120,7 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
     *
     * @param callback old callback
     */
-   public void unregisterCallback(final NettyCallbackHandler callback)
+   public synchronized void unregisterCallback(final NettyCallbackHandler callback)
    {
       if (callback != null)
       {
@@ -148,7 +145,7 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
     * @param requestPath request path
     * @return callback handler associated with path
     */
-   public NettyCallbackHandler getCallback(final String requestPath)
+   public synchronized NettyCallbackHandler getCallback(final String requestPath)
    {
       if (requestPath == null)
       {
@@ -158,13 +155,13 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
       this.ensureUpAndRunning();
       return this.nettyRequestHandler.getCallback(requestPath);
    }
-
+   
    /**
     * @see NettyHttpServer#hasMoreCallbacks()
     * 
     * @return true if at least one callback handler is registered, false otherwise
     */
-   public boolean hasMoreCallbacks()
+   public synchronized boolean hasMoreCallbacks()
    {
       this.ensureUpAndRunning();
       return this.nettyRequestHandler.hasMoreCallbacks();
@@ -175,21 +172,10 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
     * 
     * @return server port
     */
-   public int getPort()
+   public synchronized int getPort()
    {
       this.ensureUpAndRunning();
       return this.port;
-   }
-
-   /**
-    * Ensures server is up and running.
-    */
-   private synchronized void ensureUpAndRunning()
-   {
-      if (this.stopped)
-      {
-         throw new IllegalStateException("Server is down");
-      }
    }
 
    /**
@@ -208,20 +194,6 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
             ie.printStackTrace();
          }
       }
-      try
-      {
-         //Close all connections and server sockets.
-         NettyHttpServerImpl.NETTY_CHANNEL_GROUP.close().awaitUninterruptibly();
-         //Shutdown the selector loop (boss and worker).
-         if (this.channelFactory != null)
-         {
-            this.channelFactory.releaseExternalResources();
-         }
-      }
-      finally
-      {
-         this.terminated = true;
-      }
    }
 
    /**
@@ -229,26 +201,40 @@ final class NettyHttpServerImpl implements NettyHttpServer, Runnable
     */
    public synchronized void terminate()
    {
-      if (this.stopped)
-      {
-         return;
-      }
-
-      this.stopped = true;
-      while (!this.terminated)
-      {
-         try
-         {
-            this.wait(NettyHttpServerImpl.WAIT_PERIOD);
-         }
-         catch (InterruptedException ie)
-         {
-            ie.printStackTrace();
-         }
-      }
       synchronized (NettyHttpServerFactory.SERVERS)
       {
-         NettyHttpServerFactory.SERVERS.remove(this.port);
+         if (this.stopped)
+         {
+            return;
+         }
+
+         this.stopped = true;
+
+         try
+         {
+            //Close all connections and server sockets.
+            NettyHttpServerImpl.NETTY_CHANNEL_GROUP.close().awaitUninterruptibly();
+            //Shutdown the selector loop (boss and worker).
+            if (this.channelFactory != null)
+            {
+               this.channelFactory.releaseExternalResources();
+            }
+         }
+         finally
+         {
+            NettyHttpServerFactory.SERVERS.remove(this.port);
+         }
+      }
+   }
+
+   /**
+    * Ensures server is up and running.
+    */
+   private void ensureUpAndRunning()
+   {
+      if (this.stopped)
+      {
+         throw new IllegalStateException("Server is down");
       }
    }
 

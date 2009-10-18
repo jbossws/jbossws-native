@@ -23,8 +23,6 @@ package org.jboss.ws.core.server.netty;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
@@ -45,9 +43,6 @@ public abstract class AbstractNettyRequestHandler extends SimpleChannelUpstreamH
 
    /** Callbacks registry. */
    private final List<NettyCallbackHandler> callbacks = new LinkedList<NettyCallbackHandler>();
-
-   /** Callback registry lock. */
-   private final Lock callbackRegistryLock = new ReentrantLock();
 
    /**
     * Constructor.
@@ -104,15 +99,7 @@ public abstract class AbstractNettyRequestHandler extends SimpleChannelUpstreamH
     */
    public final boolean hasMoreCallbacks()
    {
-      this.callbackRegistryLock.lock();
-      try
-      {
-         return this.callbacks.size() > 0;
-      }
-      finally
-      {
-         this.callbackRegistryLock.unlock();
-      }
+      return this.callbacks.size() > 0;
    }
 
    /**
@@ -123,20 +110,12 @@ public abstract class AbstractNettyRequestHandler extends SimpleChannelUpstreamH
     */
    public final NettyCallbackHandler getCallback(final String requestPath)
    {
-      this.callbackRegistryLock.lock();
-      try
+      for (final NettyCallbackHandler handler : this.callbacks)
       {
-         for (final NettyCallbackHandler handler : this.callbacks)
+         if (handler.getPath().equals(requestPath))
          {
-            if (handler.getPath().equals(requestPath))
-            {
-               return handler;
-            }
+            return handler;
          }
-      }
-      finally
-      {
-         this.callbackRegistryLock.unlock();
       }
 
       return null;
@@ -149,16 +128,8 @@ public abstract class AbstractNettyRequestHandler extends SimpleChannelUpstreamH
     */
    public final void registerCallback(final NettyCallbackHandler callback)
    {
-      this.callbackRegistryLock.lock();
-      try
-      {
-         callback.init();
-         this.callbacks.add(callback);
-      }
-      finally
-      {
-         this.callbackRegistryLock.unlock();
-      }
+      callback.init();
+      this.callbacks.add(callback);
    }
 
    /**
@@ -168,16 +139,8 @@ public abstract class AbstractNettyRequestHandler extends SimpleChannelUpstreamH
     */
    public final void unregisterCallback(final NettyCallbackHandler callback)
    {
-      this.callbackRegistryLock.lock();
-      try
-      {
-         this.callbacks.remove(callback);
-         callback.destroy();
-      }
-      finally
-      {
-         this.callbackRegistryLock.unlock();
-      }
+      this.callbacks.remove(callback);
+      callback.destroy();
    }
 
 }

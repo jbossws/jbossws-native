@@ -22,8 +22,6 @@
 package org.jboss.ws.extensions.wsrm.transport.backchannel;
 
 import java.net.URI;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.ws.core.server.netty.NettyHttpServer;
 import org.jboss.ws.core.server.netty.NettyHttpServerFactory;
@@ -37,9 +35,6 @@ import org.jboss.ws.core.server.netty.NettyHttpServerFactory;
  */
 public final class RMCallbackHandlerFactory
 {
-   private static NettyHttpServer server;
-   private static Lock lock = new ReentrantLock();
-   
    private RMCallbackHandlerFactory()
    {
       // no instances
@@ -47,25 +42,14 @@ public final class RMCallbackHandlerFactory
    
    public static RMCallbackHandler getCallbackHandler(URI backPort)
    {
-      lock.lock();
-      try
+      NettyHttpServer server = NettyHttpServerFactory.getNettyHttpServer(backPort.getPort(), RMRequestHandlerFactory.getInstance());
+      RMCallbackHandler callbackHandler = (RMCallbackHandler)server.getCallback(backPort.getPath());
+      if (callbackHandler == null)
       {
-         if (server == null)
-         {
-            server = NettyHttpServerFactory.getNettyHttpServer(backPort.getPort(), RMRequestHandlerFactory.getInstance());
-         }
-         RMCallbackHandler callbackHandler = (RMCallbackHandler)server.getCallback(backPort.getPath());
-         if (callbackHandler == null)
-         {
-            callbackHandler = new RMCallbackHandlerImpl(backPort.getPath());
-            server.registerCallback(callbackHandler);
-         }
+         callbackHandler = new RMCallbackHandlerImpl(backPort.getPath());
+         server.registerCallback(callbackHandler);
+      }
 
-         return callbackHandler;
-      }
-      finally
-      {
-         lock.unlock();
-      }
+      return callbackHandler;
    }
 }

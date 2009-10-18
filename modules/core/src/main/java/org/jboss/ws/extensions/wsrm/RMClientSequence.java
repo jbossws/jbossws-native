@@ -43,6 +43,9 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
+import org.jboss.ws.core.server.netty.NettyCallbackHandler;
+import org.jboss.ws.core.server.netty.NettyHttpServer;
+import org.jboss.ws.core.server.netty.NettyHttpServerFactory;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.api.RMException;
@@ -50,6 +53,7 @@ import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
 import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
 import org.jboss.ws.extensions.wsrm.protocol.spi.RMIncompleteSequenceBehavior;
 import org.jboss.ws.extensions.wsrm.transport.RMUnassignedMessageListener;
+import org.jboss.ws.extensions.wsrm.transport.backchannel.RMRequestHandlerFactory;
 import org.jboss.wsf.common.utils.UUIDGenerator;
 
 /**
@@ -274,6 +278,15 @@ public final class RMClientSequence implements RMSequence, RMUnassignedMessageLi
       catch (Exception e)
       {
          throw new RMException("Unable to terminate WSRM sequence", e);
+      }
+      finally
+      {
+         if (this.backPort != null)
+         {
+            NettyHttpServer server = NettyHttpServerFactory.getNettyHttpServer(backPort.getPort(), RMRequestHandlerFactory.getInstance());
+            NettyCallbackHandler callback = server.getCallback(this.backPort.getPath());
+            server.unregisterCallback(callback);
+         }
       }
    }
    

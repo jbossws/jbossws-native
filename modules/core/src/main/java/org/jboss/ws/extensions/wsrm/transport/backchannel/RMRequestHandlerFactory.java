@@ -28,7 +28,7 @@ import org.jboss.ws.core.server.netty.NettyRequestHandlerFactory;
  *
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-final class RMRequestHandlerFactory implements NettyRequestHandlerFactory<RMRequestHandlerImpl>
+public final class RMRequestHandlerFactory implements NettyRequestHandlerFactory<RMRequestHandlerImpl>
 {
    private static final NettyRequestHandlerFactory<RMRequestHandlerImpl> SINGLETON = new RMRequestHandlerFactory();
 
