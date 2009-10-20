@@ -704,7 +704,7 @@ public class RequestHandlerImpl implements RequestHandler
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
 
       OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-      new DOMWriter(writer).setPrettyprint(true).print(document.getDocumentElement());
+      new DOMWriter(writer, Constants.DEFAULT_XML_CHARSET).setPrettyprint(true).print(document);
    }
 
    private void handleException(Exception ex) throws ServletException
