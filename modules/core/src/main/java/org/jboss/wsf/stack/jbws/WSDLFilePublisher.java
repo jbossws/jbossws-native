@@ -241,7 +241,7 @@ public class WSDLFilePublisher
                   //check for sub-directories
                   resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("/") + 1);
 
-                  resourcePath = expLocation + resourcePath + schemaLocation;
+                  resourcePath = resourcePath + schemaLocation;
                   while (resourcePath.indexOf("//") != -1)
                   {
                      resourcePath = resourcePath.replace("//", "/");
@@ -355,19 +355,21 @@ public class WSDLFilePublisher
       File wsdlFile;
       if (wsdlLocation.indexOf(expLocation) >= 0)
       {
-         wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(expLocation) + expLocation.length());
+         wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(expLocation));
          wsdlFile = new File(locationFile + "/" + wsdlLocation);
       }
-      else if (wsdlLocation.startsWith("vfsfile:") || wsdlLocation.startsWith("file:") || wsdlLocation.startsWith("jar:"))
+      else if (wsdlLocation.startsWith("vfsfile:") || wsdlLocation.startsWith("file:") 
+            || wsdlLocation.startsWith("jar:") || wsdlLocation.startsWith("vfszip:"))
       {
-         wsdlLocation = wsdlLocation.substring(wsdlLocation.lastIndexOf("/") + 1);
+         wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(archiveName) + archiveName.length());
          wsdlFile = new File(locationFile + "/" + wsdlLocation);
       }
       else
       {
-         throw new WSException("Invalid wsdlFile '" + wsdlLocation + "', expected in: " + expLocation);
+         throw new WSException("Invalid wsdlFile '" + wsdlLocation + "' location, expected in: " + expLocation);
       }
 
       return wsdlFile;
    }
+   
 }
