@@ -7,7 +7,7 @@
 
   <service-ref>
     <service-ref-name>service/TestServiceJSE</service-ref-name>
-    <wsdl-override>file:@wsdl.publish.location@/jsr109pojo/TestService.wsdl</wsdl-override>
+    <wsdl-override>file:@wsdl.publish.location@/jsr109pojo/WEB-INF/wsdl/TestService.wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>
