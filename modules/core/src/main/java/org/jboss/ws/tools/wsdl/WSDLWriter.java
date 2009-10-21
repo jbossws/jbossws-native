@@ -111,7 +111,6 @@ public class WSDLWriter
 
    protected void appendDefinitions(StringBuilder buffer, String namespace)
    {
-      buffer.append("<?xml version=\"1.0\" encoding=\"" + Constants.DEFAULT_XML_CHARSET + "\"?>");
       buffer.append("<definitions");
       //Append service name as done by wscompile, if there is just one
       WSDLService[] services = wsdl.getServices();
