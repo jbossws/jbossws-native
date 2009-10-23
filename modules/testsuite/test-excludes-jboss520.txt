@@ -10,3 +10,6 @@ org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 # [JBAS-7384] EndpointTestCase fails because of beanvalidation deployer
 org/jboss/test/ws/jaxws/endpoint/*TestCase.*
 
+# [JBWS-2718] Loading artifacts from WEB-INF/wsdl1 fails
+org/jboss/test/ws/jaxws/jbws2718/**
+
