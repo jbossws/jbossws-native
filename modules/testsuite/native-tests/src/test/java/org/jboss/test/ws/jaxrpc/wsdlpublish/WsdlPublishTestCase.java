@@ -52,11 +52,11 @@ public class WsdlPublishTestCase extends JBossWSTest
       URL mappingURL = getResourceURL("jaxrpc/wsdlpublish/WEB-INF/jaxrpc-mapping.xml");
       QName serviceName = new QName("http://org.jboss.test.ws/wsdlpublish", "TestService");
       Service service = new ServiceFactoryImpl().createService(wsdlURL, serviceName, mappingURL);
-
+      
       TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
-
+      
       String dir = System.getProperty("wsdl.publish.location");
-      String resStr = port.echoSimple(new File(dir + "/some-wsdl-location/WEB-INF/wsdl/foo/bar/TestService.wsdl").getAbsolutePath());
+      String resStr = port.echoSimple(new File(dir + "/some-wsdl-location/foo/bar/TestService.wsdl").getAbsolutePath());
       assertEquals("{http://org.jboss.test.ws/wsdlpublish}TestEndpoint", resStr);
    }
 }

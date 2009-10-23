@@ -48,8 +48,7 @@ public class TestEndpointImpl implements TestEndpoint
       ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();      
 
       File dataDir = serverConfig.getServerDataDir();
-      String s = File.separator;
-      File wsdlDir = new File(dataDir.getAbsolutePath() + s + "wsdl" + s + archive + s + "WEB-INF" + s + "wsdl" + s );
+      File wsdlDir = new File(dataDir.getAbsolutePath() + File.separator + "wsdl" + File.separator + archive);
 
       if (wsdlDir.exists() == false)
       {
