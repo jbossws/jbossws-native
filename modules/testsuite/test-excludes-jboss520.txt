@@ -7,6 +7,3 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
 
-# [JBAS-7384] EndpointTestCase fails because of beanvalidation deployer
-org/jboss/test/ws/jaxws/endpoint/*TestCase.*
-
