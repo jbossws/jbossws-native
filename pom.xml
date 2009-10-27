@@ -214,17 +214,17 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
+        <groupId>sun-jaxb</groupId>
         <artifactId>jaxb-api</artifactId>
         <version>${jaxb.api.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.sun.xml.bind</groupId>
+        <groupId>sun-jaxb</groupId>
         <artifactId>jaxb-impl</artifactId>
         <version>${jaxb.impl.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.sun.xml.bind</groupId>
+        <groupId>sun-jaxb</groupId>
         <artifactId>jaxb-xjc</artifactId>
         <version>${jaxb.impl.version}</version>
       </dependency>
@@ -316,7 +316,7 @@
         <version>${wsdl4j.version}</version>
       </dependency>
       <dependency>
-        <groupId>xalan</groupId>
+        <groupId>apache-xalan</groupId>
         <artifactId>xalan</artifactId>
         <version>${xalan.version}</version>
       </dependency>

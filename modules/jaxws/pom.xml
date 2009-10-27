@@ -21,7 +21,7 @@
       <version>${version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.xml.bind</groupId>
+      <groupId>sun-jaxb</groupId>
       <artifactId>jaxb-api</artifactId>
     </dependency>
     <dependency>

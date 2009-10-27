@@ -49,13 +49,13 @@
     <dependency>
       <groupId>org.jboss.javaee</groupId>
       <artifactId>jboss-ejb-api</artifactId>
-      <version>5.0.1</version>
+      <version>3.0.0.GA</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.javaee</groupId>
       <artifactId>jboss-jms-api</artifactId>
-      <version>5.0.1</version>
+      <version>1.1.0.GA</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -95,7 +95,7 @@
       <version>1.0.0.SP2</version>
     </dependency>
     <dependency>
-      <groupId>xalan</groupId>
+      <groupId>apache-xalan</groupId>
       <artifactId>xalan</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -111,11 +111,11 @@
       <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.sun.xml.bind</groupId>
+      <groupId>sun-jaxb</groupId>
       <artifactId>jaxb-impl</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.sun.xml.bind</groupId>
+      <groupId>sun-jaxb</groupId>
       <artifactId>jaxb-xjc</artifactId>
     </dependency>
     <dependency>
@@ -135,7 +135,7 @@
       <artifactId>jettison</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.xml.bind</groupId>
+      <groupId>sun-jaxb</groupId>
       <artifactId>jaxb-api</artifactId>
     </dependency>
     <dependency>
