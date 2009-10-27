@@ -26,21 +26,50 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-native-${project.version}
 ----------------------------------
 
-Feature Request
-
-    TODO: enumerate
-
 Bug
 
-    TODO: enumerate
+    * [JBWS-2262] - WSDL is not correctly modified to use the configured https port
+    * [JBWS-2674] - Restore implementation of javax.xml.ws.Endpoint
+    * [JBWS-2701] - @XmlSeeAlso and generated wsdl
+    * [JBWS-2743] - Make sure all maven dependencies are downloaded only from JBoss repositories
+    * [JBWS-2745] - Issue with stack switch and binary distro install
+    * [JBWS-2747] - Implement unimplemented DOM related methods in JBossWS SAAJ Implementation
+    * [JBWS-2753] - Leverage keep-alive connections to improve client side perfomances
+    * [JBWS-2759] - JBossWS installation doesn't work for non default configurations
+    * [JBWS-2760] - wsconsume.bat and wsprovider.bat require JAVA_HOME environment variable in Winodws OS
+    * [JBWS-2761] - Wrong HTTP code sent by WS-RM backport server
+    * [JBWS-2762] - Relax restriction on @WebContext(authMethod)
+    * [JBWS-2767] - WSDL_DESCRIPTION population in MessageContext badly affects performances
+    * [JBWS-2773] - Remove JBossAS webservices integration layer from tests classpath
+    * [JBWS-2777] - WSDL11Reader issue with schemas with no namespace and improve optimisation for circular references.
+    * [JBWS-2783] - Malformed URL exception when deploying wsdl with jms address
+    * [JBWS-2784] - MetadataBuilder chokes on multiple imports: "Cannot find port with name ..."
+    * [JBWS-2789] - Investigate why Endpoint.publish() doesn't work on server side on AS Branch_5_x
+
+Feature Request
+
+    * [JBWS-2717] - Send XML declarations with WSDL
+    * [JBWS-2752] - Add 'nocompile' option to wsconsume (command line)
+    * [JBWS-2781] - Allow use of custom ClientSocketChannelFactory
+    * [JBWS-2785] - Upgrade to Netty 3.1.5.GA
 
 Task
 
-    TODO: enumerate
+    * [JBWS-2613] - Ensure correct line ends in windows shell scripts (CRNL)
+    * [JBWS-2726] - Rewrite dar/JMSClientTestCase
+    * [JBWS-2727] - Fix AS-Tests-AS-6.0.0 hudson job
+    * [JBWS-2741] - Remove JAXWS API interfaces from jbossws-native-jaxws
+    * [JBWS-2748] - Update to xmlsec 1.4.3
+    * [JBWS-2749] - Update Hudson jobs because of JDK1.5 finishing EOL transition period
+    * [JBWS-2750] - Reduce impact of logging on performances
+    * [JBWS-2757] - Update Class-Path attribute in manifest
+    * [JBWS-2763] - Miscellaneous performance optimizations
+    * [JBWS-2772] - Remove JBoss kernel dependencies from SPI, COMMON and all STACKS
+    * [JBWS-2792] - Update to latest available JAX-WS and JAXB RI
 
 Errata
 
-    See: TODO: reference to associated JIRA issue
+    See: https://jira.jboss.org/jira/browse/JBWS-2797
     
 Enjoy,
 The JBossWS Team
