@@ -23,6 +23,8 @@ package org.jboss.ws.core.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
@@ -52,7 +54,7 @@ import org.w3c.dom.NodeList;
 public class WSDLRequestHandler
 {
    // provide logging
-   private Logger log = Logger.getLogger(WSDLRequestHandler.class);
+   private static Logger log = Logger.getLogger(WSDLRequestHandler.class);
 
    private EndpointMetaData epMetaData;
 
@@ -207,25 +209,28 @@ public class WSDLRequestHandler
                {
                   String orgLocation = locationAttr.getNodeValue();
 
-                  URL orgURL = new URL(orgLocation);
-                  String orgHost = orgURL.getHost();
-                  String orgPath = orgURL.getPath();
-
-                  if (ServerConfig.UNDEFINED_HOSTNAME.equals(orgHost))
+                  if (isHttp(orgLocation))
                   {
-                     URL newURL = new URL(wsdlHost); 
-                     String newProtocol = newURL.getProtocol();
-                     String newHost = newURL.getHost();
-                     int newPort = newURL.getPort();
-                     
-                     String newLocation = newProtocol + "://" + newHost;
-                     if (newPort != -1)
-                        newLocation += ":" + newPort;
-                     
-                     newLocation += orgPath;
-                     locationAttr.setNodeValue(newLocation);
+                     URL orgURL = new URL(orgLocation);
+                     String orgHost = orgURL.getHost();
+                     String orgPath = orgURL.getPath();
 
-                     log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                     if (ServerConfig.UNDEFINED_HOSTNAME.equals(orgHost))
+                     {
+                        URL newURL = new URL(wsdlHost); 
+                        String newProtocol = newURL.getProtocol();
+                        String newHost = newURL.getHost();
+                        int newPort = newURL.getPort();
+                     
+                        String newLocation = newProtocol + "://" + newHost;
+                        if (newPort != -1)
+                           newLocation += ":" + newPort;
+                     
+                        newLocation += orgPath;
+                        locationAttr.setNodeValue(newLocation);
+
+                        log.trace("Mapping address from '" + orgLocation + "' to '" + newLocation + "'");
+                     }
                   }
                }
             }
@@ -234,6 +239,28 @@ public class WSDLRequestHandler
                modifyAddressReferences(reqURL, wsdlHost, resPath, childElement);
             }
          }
+      }
+   }
+
+   private static boolean isHttp(String orgLocation)
+   {
+      try
+      {
+         String scheme = new URI(orgLocation).getScheme();
+         if (scheme != null && scheme.startsWith("http"))
+         {
+            return true;
+         }
+         else
+         {
+            log.info("Skipping rewrite of non-http address: " + orgLocation);
+            return false;
+         }
+      }
+      catch (URISyntaxException e)
+      {
+         log.error("Skipping rewrite of invalid address: " + orgLocation, e);
+         return false;
       }
    }
 
