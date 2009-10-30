@@ -112,6 +112,14 @@
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client-test.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxws-samples-dar-jms-client.war"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+        <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
     
     <!-- jaxws-samples-jmstransport -->
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport.jar">
