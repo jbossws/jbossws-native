@@ -21,11 +21,8 @@
  */
 package org.jboss.ws.core.soap;
 
-import java.util.Iterator;
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
-import javax.xml.soap.Node;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
@@ -52,9 +49,9 @@ public class SOAPEnvelopeImpl extends SOAPElementImpl implements SOAPEnvelope
 
    /** Construct a SOAP envelope for the given SOAP version URI prefix, etc.
     */
-   public SOAPEnvelopeImpl(SOAPPartImpl soapPart, SOAPElement element, boolean addHeaderAndBody) throws SOAPException
+   public SOAPEnvelopeImpl(SOAPPartImpl soapPart, SOAPElementImpl element, boolean addHeaderAndBody) throws SOAPException
    {
-      super((SOAPElementImpl)element);
+      super(element);
 
       this.soapPart = soapPart;
       soapPart.setEnvelope(this);

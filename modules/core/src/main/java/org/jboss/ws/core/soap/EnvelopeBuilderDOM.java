@@ -134,7 +134,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
    {
       // Construct the envelope
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
-      SOAPEnvelopeImpl soapEnv = new SOAPEnvelopeImpl(soapPart, soapFactory.createElement(domEnv, false), false);
+      SOAPEnvelopeImpl soapEnv = new SOAPEnvelopeImpl(soapPart, (SOAPElementImpl)soapFactory.createElement(domEnv, false), false);
 
       DOMUtils.copyAttributes(soapEnv, domEnv);
 
