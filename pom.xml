@@ -568,8 +568,8 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerVersion>1.5</compilerVersion>
-              <executable>${java.jdk15.home}/bin/javac</executable>
+              <source>1.5</source>
+              <target>1.5</target>
               <fork>true</fork>
             </configuration>
           </plugin>

@@ -65,7 +65,7 @@
       http://jira.codehaus.org/browse/MANTRUN-91
     -->
     <javac destdir="${tests.output.dir}/test-classes" debug="true" encoding="utf-8" deprecation="true" fork="true"
-      executable="${java.jdk15.home}/bin/javac" compiler="javac1.5">
+      source="1.5" target="1.5">
       <src path="${tests.output.dir}/wstools/java"/>
       <classpath>
         <pathelement path="${maven.test.classpath}"/>
