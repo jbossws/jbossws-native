@@ -868,10 +868,19 @@ public abstract class CommonSOAPBinding implements CommonBinding
          childElements = soapElement.getChildElements();
          OperationMetaData opMetaData = paramMetaData.getOperationMetaData();
          TypesMetaData typesMetaData = opMetaData.getEndpointMetaData().getServiceMetaData().getTypesMetaData();
-         if (childElements.hasNext() && opMetaData.getStyle() == Style.DOCUMENT)
+         
+         SOAPElementImpl childElement = null;
+         while (childElement == null && childElements.hasNext())
          {
-            SOAPElementImpl childElement = (SOAPElementImpl)childElements.next();
+            Object current = childElements.next();
+            if (current instanceof SOAPElementImpl)
+            {
+               childElement = (SOAPElementImpl)current;
+            }
+         }
 
+         if (childElement != null && opMetaData.getStyle() == Style.DOCUMENT)
+         {
             // The parameters are expected to be lazy
             SOAPContentElement aux = (SOAPContentElement)childElement;
             Name elName = aux.getElementName();
