@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -51,8 +51,6 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.netty.handler.codec.http.HttpMessage;
-import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
@@ -234,6 +232,7 @@ public class RequestHandlerImpl implements RequestHandler
       }
    }
 
+   @SuppressWarnings("unchecked")
    public void handleRequest(Endpoint endpoint, InputStream inStream, OutputStream outStream, InvocationContext invContext)
    {
       if (log.isDebugEnabled())
@@ -691,17 +690,13 @@ public class RequestHandlerImpl implements RequestHandler
       ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (epMetaData == null)
          throw new IllegalStateException("Cannot obtain endpoint meta data");
+      
+      //The WSDLFilePublisher should set the location to an URL 
+      URL wsdlLocation = epMetaData.getServiceMetaData().getWsdlLocation();
+      String wsdlPublishLoc = epMetaData.getServiceMetaData().getWsdlPublishLocation();
 
-      String wsdlHost = reqURL.getHost();
-
-      if (ServerConfig.UNDEFINED_HOSTNAME.equals(serverConfig.getWebServiceHost()) == false)
-         wsdlHost = serverConfig.getWebServiceHost();
-
-      if (log.isDebugEnabled())
-         log.debug("WSDL request, using host: " + wsdlHost);
-
-      WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(epMetaData);
-      Document document = wsdlRequestHandler.getDocumentForPath(reqURL, wsdlHost, resPath);
+      WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(wsdlLocation, wsdlPublishLoc, serverConfig);
+      Document document = wsdlRequestHandler.getDocumentForPath(reqURL, resPath);
 
       OutputStreamWriter writer = new OutputStreamWriter(outputStream);
       new DOMWriter(writer, Constants.DEFAULT_XML_CHARSET).setPrettyprint(true).print(document);
