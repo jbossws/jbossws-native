@@ -91,8 +91,8 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
    }
 
    public SOAPEnvelope build(SOAPMessage soapMessage, InputStream in, boolean ignoreParseError) throws IOException, SOAPException
-   {
-      try
+   {   
+	  try
       {
          reader = getFactoryInstance().createXMLStreamReader(in);
       }
@@ -285,7 +285,9 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
       {
 
          SOAPBody soapBody = soapEnv.getBody();
-
+         if (soapBody == null)  {
+        	 soapBody = soapEnv.addBody();
+         }
          if (atPartMargin())
          {
             // the env:Body element

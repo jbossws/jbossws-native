@@ -79,7 +79,8 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
          if (resCode != HttpServletResponse.SC_NO_CONTENT)
          {
             MimeHeaders mimeHeaders = getMimeHeaders(metadata);
-            soapMsg = getMessageFactory().createMessage(mimeHeaders, inputStream, true);
+            //[JBWS-2651] modify the ignoreParseError to false
+            soapMsg = getMessageFactory().createMessage(mimeHeaders, inputStream, false);
          }
 
          return soapMsg;
