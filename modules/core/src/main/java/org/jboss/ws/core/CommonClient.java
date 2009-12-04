@@ -47,6 +47,7 @@ import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.RemoteConnectionFactory;
+import org.jboss.ws.core.client.transport.NettyClient;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.Style;
@@ -435,32 +436,36 @@ public abstract class CommonClient implements StubExt, HeaderSource
          requestContext.put(SESSION_COOKIES, cookies);
       }
 
-      List<String> setCookies = new ArrayList<String>();
-
-      List<String> setCookies1 = (List)remotingMetadata.get("Set-Cookie");
-      if (setCookies1 != null)
-         setCookies.addAll(setCookies1);
-
-      List<String> setCookies2 = (List)remotingMetadata.get("Set-Cookie2");
-      if (setCookies2 != null)
-         setCookies.addAll(setCookies2);
-
-      // TODO: The parsing here should be improved to be fully compliant with the RFC
-      for (String setCookie : setCookies)
+      Map<String, Object> headers = (Map<String, Object>)remotingMetadata.get(NettyClient.RESPONSE_HEADERS);
+      if (headers != null)
       {
-         int index = setCookie.indexOf(';');
-         if (index == -1)
-            continue;
+         List<String> setCookies = new ArrayList<String>();
 
-         String pair = setCookie.substring(0, index);
-         index = pair.indexOf('=');
-         if (index == -1)
-            continue;
+         List<String> setCookies1 = (List)headers.get("Set-Cookie");
+         if (setCookies1 != null)
+            setCookies.addAll(setCookies1);
 
-         String name = pair.substring(0, index);
-         String value = pair.substring(index + 1);
+         List<String> setCookies2 = (List)headers.get("Set-Cookie2");
+         if (setCookies2 != null)
+            setCookies.addAll(setCookies2);
 
-         cookies.put(name, value);
+         // TODO: The parsing here should be improved to be fully compliant with the RFC
+         for (String setCookie : setCookies)
+         {
+            int index = setCookie.indexOf(';');
+            if (index == -1)
+               continue;
+
+            String pair = setCookie.substring(0, index);
+            index = pair.indexOf('=');
+            if (index == -1)
+               continue;
+
+            String name = pair.substring(0, index);
+            String value = pair.substring(index + 1);
+
+            cookies.put(name, value);
+         }
       }
    }
 
