@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -49,7 +49,7 @@ import javax.xml.ws.http.HTTPException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.jboss.util.NotImplementedException;
+import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
@@ -63,8 +63,8 @@ import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
-import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.RMClientSequence;
+import org.jboss.ws.extensions.wsrm.RMConstant;
 import org.jboss.ws.extensions.wsrm.api.RMException;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
@@ -88,6 +88,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.wsrm.api.RMProvider, BindingProvider
 {
+   private static Logger log = Logger.getLogger(ClientImpl.class);
 
    // the associated endpoint meta data
    private final ClientEndpointMetaData epMetaData;
@@ -222,10 +223,18 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
 
          // [JBREM-728] Improve access to HTTP response headers
          Map<String, List> headers = new HashMap<String, List>();
-         for (Map.Entry en : remotingMetadata.entrySet())
+         Map<String, Object> metadataHeaders = (Map<String, Object>)remotingMetadata.get(NettyClient.RESPONSE_HEADERS);
+         if (metadataHeaders != null)
          {
-            if (en.getKey() instanceof String && en.getValue() instanceof List)
-               headers.put((String)en.getKey(), (List)en.getValue());
+            for (Map.Entry en : metadataHeaders.entrySet())
+            {
+               if (en.getKey() instanceof String && en.getValue() instanceof List)
+                  headers.put((String)en.getKey(), (List)en.getValue());
+            }
+         }
+         else
+         {
+            log.info("Cannot find response headers");
          }
          msgContext.put(MessageContext.HTTP_RESPONSE_HEADERS, headers);
       }

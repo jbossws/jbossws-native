@@ -27,6 +27,7 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.ClosedChannelException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -74,9 +75,10 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
  */
 public class NettyClient
 {
-   public static final String RESPONSE_CODE = "ResponseCode";
-   public static final String RESPONSE_CODE_MESSAGE = "ResponseCodeMessage";
-   public static final String PROTOCOL = "Protocol";
+   public static final String RESPONSE_CODE = "org.jboss.ws.core.client.transport.NettyClient#ResponseCode";
+   public static final String RESPONSE_CODE_MESSAGE = "org.jboss.ws.core.client.transport.NettyClient#ResponseCodeMessage";
+   public static final String PROTOCOL = "org.jboss.ws.core.client.transport.NettyClient#Protocol";
+   public static final String RESPONSE_HEADERS = "org.jboss.ws.core.client.transport.NettyClient#ResponseHeaders";
    private static Logger log = Logger.getLogger(NettyClient.class);
    
    private Marshaller marshaller;
@@ -147,6 +149,7 @@ public class NettyClient
       NettyTransportHandler transport = NettyTransportHandler.getInstance(target, NettyHelper.getChannelPipelineFactory(getSSLHandler(target, callProps)));
       Channel channel = null;
       Map<String, Object> resHeaders = null;
+      Map<String, Object> resMetadata = null;
       try
       {
          setActualTimeout(callProps);
@@ -186,13 +189,14 @@ public class NettyClient
         	 throw t != null ? t : ee;
          }
          resHeaders = result.getResponseHeaders();
-         Object resMessage = oneway ? null : unmarshaller.read(result.getResponse(), resHeaders);
+         resMetadata = result.getMetadata();
+         Object resMessage = oneway ? null : unmarshaller.read(result.getResponse(), resMetadata, resHeaders);
          
          //Update props with response headers (required to maintain session using cookies)
          callProps.clear();
-         if (resHeaders != null)
-         {
-            callProps.putAll(resHeaders);
+         callProps.put(RESPONSE_HEADERS, resHeaders != null ? resHeaders : new HashMap<String, Object>());
+         if (resMetadata != null) {
+            callProps.putAll(resMetadata);
          }
 
          return resMessage;
@@ -233,7 +237,7 @@ public class NettyClient
          {
             NettyHelper.clearResponseHandler(channel);
          }
-         transport.finished(resHeaders);
+         transport.finished(resMetadata, resHeaders); //provide both headers and metadata to the transport to allow for proper keepAlive checks
       }
    }
       

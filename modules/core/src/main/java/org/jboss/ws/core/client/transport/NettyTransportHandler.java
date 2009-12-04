@@ -180,9 +180,9 @@ public class NettyTransportHandler
     * 
     * @param headers The received message's headers
     */
-   public void goOn(Map<String, Object> headers)
+   public void goOn(Map<String, Object> metadata, Map<String, Object> headers)
    {
-      checkKeepAliveHeaders(headers);
+      checkKeepAliveHeaders(metadata, headers);
    }
    
    
@@ -195,9 +195,9 @@ public class NettyTransportHandler
     * @param headers The received message's headers
     * 
     */
-   public void finished(Map<String, Object> headers)
+   public void finished(Map<String, Object> metadata, Map<String, Object> headers)
    {
-      checkKeepAliveHeaders(headers);
+      checkKeepAliveHeaders(metadata, headers);
       keepAliveConnections--;
       if (keepAliveConnections > 0 && isKeepingAlive())
       {
@@ -217,9 +217,9 @@ public class NettyTransportHandler
     * 
     * @param headers The received message's headers
     */
-   protected void checkKeepAliveHeaders(Map<String, Object> headers)
+   protected void checkKeepAliveHeaders(Map<String, Object> metadata, Map<String, Object> headers)
    {
-      if (headers == null) return;
+      if (headers == null || metadata == null) return;
       keepAliveConnections = -1;
       keepAliveTimeout = 0;
       try
@@ -248,7 +248,7 @@ public class NettyTransportHandler
                }
             }
          }
-         else if (HttpVersion.HTTP_1_1.toString().equals(NettyHelper.getFirstHeaderAsString(headers, NettyClient.PROTOCOL)))
+         else if (HttpVersion.HTTP_1_1.toString().equals(NettyHelper.getFirstHeaderAsString(metadata, NettyClient.PROTOCOL)))
          {
             //Consider the only valid value for Connection in responses is "close" 
             keepAliveConnections = (connectionHeader == null) ? DEFAULT_KEEP_ALIVE_CONS : 1;

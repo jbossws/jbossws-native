@@ -78,7 +78,7 @@ public final class RMRequestHandlerImpl extends AbstractNettyRequestHandler
       try
       {
          String requestPath = new URL(request.getUri()).getPath();
-         RMMessage message = (RMMessage)RMUnMarshaller.getInstance().read(content.readable() ? new ChannelBufferInputStream(content) : null, requestHeaders);
+         RMMessage message = (RMMessage)RMUnMarshaller.getInstance().read(content.readable() ? new ChannelBufferInputStream(content) : null, null, requestHeaders);
          handle(requestPath, message);
       }
       catch (Throwable t)

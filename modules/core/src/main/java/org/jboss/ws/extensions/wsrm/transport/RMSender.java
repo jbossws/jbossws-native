@@ -121,7 +121,7 @@ public final class RMSender
                   endTime = System.currentTimeMillis();
                   if (result.getResponse() != null)
                   {
-                     Map<String, Object> remotingCtx = result.getResponse().getMetadata().getContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT);
+                     Map<String, Object> remotingCtx = result.getResponse().getMetadata().getContext(RMChannelConstants.INVOCATION_CONTEXT);
                      if (remotingCtx != null)
                      {
                         if (Integer.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).equals(remotingCtx.get(NettyClient.RESPONSE_CODE)))

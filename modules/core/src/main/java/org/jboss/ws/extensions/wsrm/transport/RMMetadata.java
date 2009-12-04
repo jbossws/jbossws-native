@@ -63,12 +63,14 @@ public final class RMMetadata
       setContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT, remotingInvocationContext);
    }
    
-   public RMMetadata(Map<String, Object> remotingInvocationContext)
+   public RMMetadata(Map<String, Object> invocationContext, Map<String, Object> remotingInvocationContext)
    {
       if (remotingInvocationContext == null)
          throw new IllegalArgumentException("Remoting invocation context cannot be null");
       
       setContext(RMChannelConstants.REMOTING_INVOCATION_CONTEXT, remotingInvocationContext);
+      
+      setContext(RMChannelConstants.INVOCATION_CONTEXT, invocationContext);
    }
    
    void setContext(String key, Map<String, Object> ctx)

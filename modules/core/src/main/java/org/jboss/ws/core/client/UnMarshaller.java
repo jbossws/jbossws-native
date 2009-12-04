@@ -44,5 +44,5 @@ public interface UnMarshaller
     * @return
     * @throws IOException all specific i/o exceptions need to be thrown as this.
     */
-   Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException;
+   Object read(InputStream inputStream, Map<String, Object> metadata, Map<String, Object> headers) throws IOException;
 }

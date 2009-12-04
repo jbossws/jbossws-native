@@ -43,7 +43,7 @@ public class JsonMessageUnMarshaller implements UnMarshaller
    // Provide logging
    private static Logger log = Logger.getLogger(JsonMessageUnMarshaller.class);
 
-   public Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException
+   public Object read(InputStream inputStream, Map<String, Object> metadata, Map<String, Object> headers) throws IOException
    {
       if (log.isTraceEnabled())
       {

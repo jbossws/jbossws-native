@@ -41,7 +41,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
    // Provide logging
    private static Logger log = Logger.getLogger(SOAPMessageUnMarshaller.class);
 
-   public Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException
+   public Object read(InputStream inputStream, Map<String, Object> metadata, Map<String, Object> headers) throws IOException
    {
       if (log.isTraceEnabled())
          log.trace("Read input stream with metadata=" + metadata);

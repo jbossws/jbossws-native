@@ -37,6 +37,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.HttpVersion;
 
 /**
  * A Netty channel upstream handler that receives MessageEvent
@@ -71,10 +72,11 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       {
          HttpResponse response = (HttpResponse)e.getMessage();
 
+         Map<String, Object> metadata = result.getMetadata();
+         metadata.put(NettyClient.PROTOCOL, response.getProtocolVersion());
+         metadata.put(NettyClient.RESPONSE_CODE, response.getStatus().getCode());
+         metadata.put(NettyClient.RESPONSE_CODE_MESSAGE, response.getStatus().getReasonPhrase());
          Map<String, Object> responseHeaders = result.getResponseHeaders();
-         responseHeaders.put(NettyClient.PROTOCOL, response.getProtocolVersion());
-         responseHeaders.put(NettyClient.RESPONSE_CODE, response.getStatus().getCode());
-         responseHeaders.put(NettyClient.RESPONSE_CODE_MESSAGE, response.getStatus().getReasonPhrase());
          for (String headerName : response.getHeaderNames())
          {
             responseHeaders.put(headerName, response.getHeaders(headerName));
@@ -220,12 +222,15 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       public InputStream getResponse();
       
       public Map<String, Object> getResponseHeaders();
+      
+      public Map<String, Object> getMetadata();
    }
    
    private class ResultImpl implements Result
    {
       private InputStream is;
       private Map<String, Object> responseHeaders = new HashMap<String, Object>();
+      private Map<String, Object> metadata = new HashMap<String, Object>();
       
       public InputStream getResponse()
       {
@@ -242,6 +247,10 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       public void setResponseHeaders(Map<String, Object> responseHeaders)
       {
          this.responseHeaders = responseHeaders;
+      }
+      public Map<String, Object> getMetadata()
+      {
+         return metadata;
       }
    }
 }

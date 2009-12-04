@@ -53,7 +53,7 @@ public class HTTPMessageUnMarshaller implements UnMarshaller
       validResponseCodes.add(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
    }
 
-   public Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException
+   public Object read(InputStream inputStream, Map<String, Object> metadata, Map<String, Object> headers) throws IOException
    {
       if (log.isTraceEnabled())
       {
@@ -65,7 +65,7 @@ public class HTTPMessageUnMarshaller implements UnMarshaller
       if (resCode != null && validResponseCodes.contains(resCode) == false)
          throw new WSException("Invalid HTTP server response [" + resCode + "] - " + resMessage);
 
-      MimeHeaders mimeHeaders = getMimeHeaders(metadata);
+      MimeHeaders mimeHeaders = getMimeHeaders(headers);
       HTTPMessageImpl soapMsg = new HTTPMessageImpl(mimeHeaders, inputStream);
       return soapMsg;
    }

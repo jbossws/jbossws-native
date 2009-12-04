@@ -146,7 +146,7 @@ public class SOAPProtocolConnectionJMS implements RemoteConnection
             }
 
             ByteArrayInputStream bais = new ByteArrayInputStream(responseListener.resMessage.getBytes());
-            resMessage = (MessageAbstraction)getUnmarshaller().read(bais, null);
+            resMessage = (MessageAbstraction)getUnmarshaller().read(bais, null, null);
          }
 
          con.stop();

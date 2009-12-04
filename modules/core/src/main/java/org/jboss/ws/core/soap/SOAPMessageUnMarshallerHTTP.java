@@ -56,7 +56,7 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
       validResponseCodes.add(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
    }
 
-   public Object read(InputStream inputStream, Map<String, Object> metadata) throws IOException
+   public Object read(InputStream inputStream, Map<String, Object> metadata, Map<String, Object> headers) throws IOException
    {
       if (log.isTraceEnabled())
          log.trace("Read input stream with metadata=" + metadata);
@@ -70,7 +70,7 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
             resCode = HttpServletResponse.SC_OK;
          }
          
-         String resMessage = (String)metadata.get("ResponseCodeMessage");
+         String resMessage = (String)metadata.get(NettyClient.RESPONSE_CODE_MESSAGE);
          if (validResponseCodes.contains(resCode) == false)
             throw new WSException("Invalid HTTP server response [" + resCode + "] - " + resMessage);
 
@@ -78,7 +78,7 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
          SOAPMessage soapMsg = null;
          if (resCode != HttpServletResponse.SC_NO_CONTENT)
          {
-            MimeHeaders mimeHeaders = getMimeHeaders(metadata);
+            MimeHeaders mimeHeaders = getMimeHeaders(headers);
             //[JBWS-2651] modify the ignoreParseError to false
             soapMsg = getMessageFactory().createMessage(mimeHeaders, inputStream, false);
          }
