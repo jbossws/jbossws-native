@@ -15,7 +15,7 @@
 
   <!-- Properties -->
   <properties>
-    <surefire.security.args>-Djava.security.manager -Djava.security.policy=src/test/etc/tst.policy</surefire.security.args>
+    <surefire.security.args>-Djava.home=${java.home} -DM2_REPO=${settings.localRepository} -Djava.security.debug=failure -Djava.security.manager -Djava.security.policy==${basedir}/../src/test/resources/securityMgr/client.policy </surefire.security.args>
     <surefire.jdwp.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdwp.args>
     <surefire.gc.args>-Xmx512m -XX:MaxPermSize=256m</surefire.gc.args>
     <surefire.management.args>-Dcom.sun.management.jmxremote</surefire.management.args>
