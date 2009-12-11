@@ -299,6 +299,7 @@ grant {
    permission javax.management.MBeanPermission "*", "addNotificationListener";
 
    //specific tests
+   permission java.lang.RuntimePermission "setContextClassLoader";
    permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
    permission java.lang.RuntimePermission "accessDeclaredMembers";
    permission java.lang.RuntimePermission "org.jboss.security.plugins.JBossSecurityContext.getData";
