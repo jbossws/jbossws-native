@@ -37,7 +37,9 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /** The base class for all Deserializers.
@@ -48,6 +50,7 @@ import org.w3c.dom.Node;
 public abstract class DeserializerSupport implements Deserializer
 {
    private static final Logger log = Logger.getLogger(DeserializerSupport.class);
+   private static final QName XSI_NIL = new QName("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
    public Object deserialize(SOAPContentElement soapElement, SerializationContext serContext) throws BindingException
    {
@@ -67,93 +70,54 @@ public abstract class DeserializerSupport implements Deserializer
     */
    public abstract Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException;
 
-   // TODO: remove when JBossXB supports unmarshall(Source)
-   // http://jira.jboss.org/jira/browse/JBXB-100
-   protected static String sourceToString(Source source)
+   protected String sourceToString(final Source source)
    {
       String xmlFragment = null;
-      try
+      if (source instanceof DOMSource)
       {
-         if (source instanceof DOMSource)
-         {
-            Node node = ((DOMSource)source).getNode();
-            xmlFragment = DOMWriter.printNode(node, false);
-         }
-         else
-         {
-            // Note, this code will not handler namespaces correctly that 
-            // are defined on a parent of the DOMSource
-            //
-            // <env:Envelope xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
-            //   <env:Body>
-            //     <myMethod>
-            //       <param xsi:type='xsd:string'>Hello World!</param>
-            //     </myMethod>
-            //   </env:Body>
-            // </env:Envelope>
-            //
-            TransformerFactory tf = TransformerFactory.newInstance();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-            StreamResult streamResult = new StreamResult(baos);
-            tf.newTransformer().transform(source, streamResult);
-            xmlFragment = new String(baos.toByteArray(),"UTF-8");
-            if (xmlFragment.startsWith("<?xml"))
-            {
-               int index = xmlFragment.indexOf(">");
-               xmlFragment = xmlFragment.substring(index + 1);
-            }
-         }
+         Node node = ((DOMSource)source).getNode();
+         xmlFragment = DOMWriter.printNode(node, false);
       }
-      catch (TransformerException e)
-      {
-         WSException.rethrow(e);
-      }
-      catch (UnsupportedEncodingException e)
-      {
-         WSException.rethrow(e);
-      }
+      else throw new UnsupportedOperationException();
 
       return xmlFragment;
    }
-
-   /** Unwrap the value string from the XML fragment
-    *
-    * @return The value string or null if the startTag contains a xsi:nil='true' attribute
-    */
-   protected String unwrapValueStr(String xmlFragment)
+   
+   protected Element sourceToElement(final Source source)
    {
-      // We only scan for :nil if the xmlFragment is an empty element
-      if (isEmptyElement(xmlFragment))
+      if (source instanceof DOMSource)
       {
-         return (isNil(xmlFragment) ? null : "");
+         Node node = ((DOMSource)source).getNode();
+         int nodeType = node.getNodeType();
+         if (nodeType == Node.ELEMENT_NODE)
+         {
+            return (Element)node;
+         } else throw new UnsupportedOperationException("Only element nodes are supported");
       }
-
-      int endOfStartTag = xmlFragment.indexOf(">");
-      int startOfEndTag = xmlFragment.lastIndexOf("</");
-      if (endOfStartTag < 0 || startOfEndTag < 0)
-         throw new IllegalArgumentException("Invalid XML fragment: " + xmlFragment);
-
-      String valueStr = xmlFragment.substring(endOfStartTag + 1, startOfEndTag);
-
-      return XMLPredefinedEntityReferenceResolver.resolve(valueStr);
+      else throw new UnsupportedOperationException("Only DOMSource is supported");
    }
+   
 
-   protected boolean isEmptyElement(String xmlFragment)
-   {
-      return xmlFragment.startsWith("<") && xmlFragment.endsWith("/>");
-   }
+  /** Unwrap the value string from the XML fragment
+   *
+   * @return The value string or null if the startTag contains a xsi:nil='true' attribute
+   */
+  protected String unwrapValueStr(Element xmlFragment)
+  {
+     String content = DOMUtils.getTextContent(xmlFragment);
+     if (content == null)
+     {
+        // We only scan for :nil if the xmlFragment is an empty element
+        return (isNil(xmlFragment) ? null : "");
+     }
 
-   protected boolean isNil(String xmlFragment)
+     return content;
+  }
+ 
+   private boolean isNil(final Element element)
    {
-      boolean isNil = false;
-      if (isEmptyElement(xmlFragment))
-      {
-         int endOfStartTag = xmlFragment.indexOf(">");
-         String startTag = xmlFragment.substring(0, endOfStartTag);
-         isNil = startTag.indexOf(":nil='1'") > 0 || startTag.indexOf(":nil=\"1\"") > 0;
-         isNil = isNil || startTag.indexOf(":nil='true'") > 0 || startTag.indexOf(":nil=\"true\"") > 0;
-      }
-      return isNil;
+      final String nilValue = DOMUtils.getAttributeValue(element, XSI_NIL);
+      return "1".equals(nilValue) || "true".equals(nilValue);
    }
 
    public String getMechanismType()

@@ -22,7 +22,7 @@
 package org.jboss.ws.core.jaxrpc.binding;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
@@ -30,7 +30,6 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
-import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -45,26 +44,19 @@ public class SOAPElementDeserializer extends DeserializerSupport
    private static final Logger log = Logger.getLogger(SOAPElementDeserializer.class);
 
    public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
-      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
+      return deserialize(xmlName, xmlType, sourceToElement(xmlFragment), serContext);
    }
 
-   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
+   private Object deserialize(QName xmlName, QName xmlType, Element xmlFragment, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       try
       {
-         // TODO: Better way for DOM to source conversion
-         Element domElement = DOMUtils.parse(xmlFragment);
-         SOAPElement soapElement = new SOAPFactoryImpl().createElement(domElement);
-         return soapElement;
+         return new SOAPFactoryImpl().createElement(xmlFragment);
       }
-      catch (RuntimeException rte)
+      catch (SOAPException se)
       {
-         throw rte;
-      }
-      catch (Exception ex)
-      {
-         throw new BindingException();
+         throw new BindingException(se);
       }
    }
 }
