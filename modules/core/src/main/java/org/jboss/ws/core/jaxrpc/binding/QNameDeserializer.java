@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import java.io.IOException;
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -30,7 +28,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.wsf.common.DOMUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Element;
@@ -47,19 +44,20 @@ public class QNameDeserializer extends DeserializerSupport
    private static final Logger log = Logger.getLogger(QNameDeserializer.class);
 
    public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
-      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
+      return deserialize(xmlName, xmlType, sourceToElement(xmlFragment), serContext);
    }
 
-   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
+   private Object deserialize(QName xmlName, QName xmlType, Element xmlFragment, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       QName value = null;
 
-      NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
-      String valueStr = unwrapValueStr(xmlFragment, nsRegistry);
+      String valueStr = unwrapValueStr(xmlFragment);
       if (valueStr != null)
       {
+         NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
+         updateNamespaceRegistry(xmlFragment, nsRegistry);
          value = SimpleTypeBindings.unmarshalQName(valueStr, nsRegistry);
       }
 
@@ -69,33 +67,19 @@ public class QNameDeserializer extends DeserializerSupport
    /** Unwrap the value string from the XML fragment
     * @return The value string or null if the startTag contains a xsi:nil='true' attribute
     */
-   protected String unwrapValueStr(String xmlFragment, NamespaceRegistry nsRegistry)
+   private void updateNamespaceRegistry(Element xmlFragment, NamespaceRegistry nsRegistry)
    {
-      if (isEmptyElement(xmlFragment) == false)
+      NamedNodeMap attribs = xmlFragment.getAttributes();
+      for (int i = 0; i < attribs.getLength(); i++)
       {
-         // Register namespace declarations
-         try
+         Node attr = attribs.item(i);
+         String nodeName = attr.getNodeName();
+         if (nodeName.startsWith("xmlns:"))
          {
-            Element el = DOMUtils.parse(xmlFragment);
-            NamedNodeMap attribs = el.getAttributes();
-            for (int i = 0; i < attribs.getLength(); i++)
-            {
-               Node attr = attribs.item(i);
-               String nodeName = attr.getNodeName();
-               if (nodeName.startsWith("xmlns:"))
-               {
-                  String prefix = nodeName.substring(6);
-                  String nsURI = attr.getNodeValue();
-                  nsRegistry.registerURI(nsURI, prefix);
-               }
-            }
-         }
-         catch (IOException e)
-         {
-            throw new IllegalArgumentException("Cannot parse xmlFragment: " + xmlFragment);
+            String prefix = nodeName.substring(6);
+            String nsURI = attr.getNodeValue();
+            nsRegistry.registerURI(nsURI, prefix);
          }
       }
-
-      return super.unwrapValueStr(xmlFragment);
    }
 }

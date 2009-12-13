@@ -21,13 +21,10 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import java.io.IOException;
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
@@ -37,6 +34,7 @@ import org.jboss.wsf.common.DOMUtils;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.jboss.xb.binding.sunday.xop.XOPUnmarshaller;
 import org.w3c.dom.Element;
+
 /**
  * Deserializer for Base64
  *
@@ -49,33 +47,27 @@ public class Base64Deserializer extends DeserializerSupport
    private static final Logger log = Logger.getLogger(Base64Deserializer.class);
 
    public Object deserialize(QName xmlName, QName xmlType, Source xmlFragment, SerializationContext serContext) throws BindingException {
-      return deserialize(xmlName, xmlType, sourceToString(xmlFragment), serContext);
+      return deserialize(xmlName, xmlType, sourceToElement(xmlFragment), serContext);
    }
 
-   private Object deserialize(QName xmlName, QName xmlType, String xmlFragment, SerializationContext serContext) throws BindingException
+   private Object deserialize(QName xmlName, QName xmlType, Element xmlFragment, SerializationContext serContext) throws BindingException
    {
       if(log.isDebugEnabled()) log.debug("deserialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
 
       byte[] value = null;
 
-      String valueStr = unwrapValueStr(xmlFragment);
       if(XOPContext.isXOPMessage())
       {
-         try
-         {
-            Element xopInclude = DOMUtils.parse(valueStr);
-            String cid = xopInclude.getAttribute("href");
-            XOPUnmarshaller xopUnmarshaller = new XOPUnmarshallerImpl();
-            value = xopUnmarshaller.getAttachmentAsByteArray(cid);
-         }
-         catch (IOException e)
-         {
-            throw new WSException("Failed to parse xopInclude element");
-         }
+         Element xopInclude = DOMUtils.getFirstChildElement(xmlFragment);
+         String cid = xopInclude.getAttribute("href");
+         XOPUnmarshaller xopUnmarshaller = new XOPUnmarshallerImpl();
+         value = xopUnmarshaller.getAttachmentAsByteArray(cid);
       }
-      else if (valueStr != null)
+      else
       {
-         value = SimpleTypeBindings.unmarshalBase64(valueStr);
+         String valueStr = unwrapValueStr(xmlFragment);
+         if (valueStr != null)
+            value = SimpleTypeBindings.unmarshalBase64(valueStr);
       }
       return value;
    }
