@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
@@ -44,6 +44,7 @@ import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.xb.binding.NamespaceRegistry;
 
@@ -83,7 +84,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(String.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       String out = (String)des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(value, out);
@@ -101,7 +102,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(Calendar.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       Calendar out = (Calendar)des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(value.getTime(), out.getTime());
@@ -120,7 +121,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(BigInteger.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       BigInteger out = (BigInteger)des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(value, out);
@@ -138,7 +139,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(BigDecimal.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       BigDecimal out = (BigDecimal)des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(value, out);
@@ -161,7 +162,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(QName.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       QName out = (QName)des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(value, out);
@@ -179,7 +180,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(URI.class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       URI out = (URI)des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(value, out);
@@ -197,7 +198,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(byte[].class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       byte[] out = (byte[])des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(new String(value), new String(out));
@@ -215,7 +216,7 @@ public class SerializerDeserializerTestCase extends JBossWSTest
 
       AbstractDeserializerFactory deserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(byte[].class, xmlType);
       DeserializerSupport des = (DeserializerSupport)deserializerFactory.getDeserializer();
-      Source source = new StreamSource(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes()));
+      Source source = new DOMSource(DOMUtils.parse(new ByteArrayInputStream( new XMLFragment(result).toXMLString().getBytes())));
       byte[] out = (byte[])des.deserialize(xmlName, xmlType, source, serContext);
 
       assertEquals(new String(value), new String(out));

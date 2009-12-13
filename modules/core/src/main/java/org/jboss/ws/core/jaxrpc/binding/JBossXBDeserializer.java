@@ -82,7 +82,6 @@ public class JBossXBDeserializer extends ComplexTypeDeserializer
       SerializationContextJAXRPC jaxrpcContext = (SerializationContextJAXRPC)serContext;
 
       Object value = null;
-      String typeName = xmlType.getLocalPart();
 
       try
       {
