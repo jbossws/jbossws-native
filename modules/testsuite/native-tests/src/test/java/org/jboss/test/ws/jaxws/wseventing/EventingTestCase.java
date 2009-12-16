@@ -227,7 +227,7 @@ public class EventingTestCase extends EventingSupport {
    //
    public void testSubscriptionEndMessage()
    {
-      System.out.println("FIXME [JBWS-798] Complete EventingTestCase");
+      // System.out.println("FIXME [JBWS-798] Complete EventingTestCase");
    }
 
    //
@@ -239,7 +239,7 @@ public class EventingTestCase extends EventingSupport {
    //
    public void testShutdownMessage()
    {
-      System.out.println("FIXME [JBWS-798] Complete EventingTestCase");
+      // System.out.println("FIXME [JBWS-798] Complete EventingTestCase");
    }
 
    //
@@ -249,6 +249,6 @@ public class EventingTestCase extends EventingSupport {
    //
    public void testCancelMessage()
    {
-      System.out.println("FIXME [JBWS-798] Complete EventingTestCase");
+      // System.out.println("FIXME [JBWS-798] Complete EventingTestCase");
    }
 }
