@@ -47,7 +47,7 @@ public final class PersistenceTestCase extends JBossWSTest
       
       if (true)
       {
-         System.out.println("FIXME [JBWS-2044] Rewrite Server side file system based RM store");
+         // System.out.println("FIXME [JBWS-2044] Rewrite Server side file system based RM store");
          return;
       }
       
