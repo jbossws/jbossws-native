@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <name>JBoss Web Services - Stack Native Specific Tests</name>
   <artifactId>jbossws-native-specific-tests</artifactId>
   <packaging>jar</packaging>
-  
+
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.ws.native</groupId>
@@ -21,25 +21,12 @@
       <version>1.4</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>jboss.jbpm</groupId>
-      <artifactId>bpel</artifactId>
-      <version>1.1.0.Beta5</version>
-      <scope>test</scope>
-      <type>sar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>jboss</groupId>
-          <artifactId>jboss-common-logging-log4j</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>   
   </dependencies>
-  
+
   <!-- Profiles -->
   <profiles>
-    
-    <!-- 
+
+    <!--
     Name:  noprepare
     Descr: Skip test preparation with -Dnoprepare  
     -->
@@ -53,43 +40,8 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-              <finalName>bpel-artifacts</finalName>
-              <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>scripts/assembly-bpel-artifacts.xml</descriptor>
-              </descriptors>
-            </configuration>
-            <executions>
-              <execution>
-                <id>make-assembly</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>directory-inline</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
-              <execution>
-                <id>bpel</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <property name="maven.test.classpath" refid="maven.test.classpath" />
-                    <property name="tests.resources.dir" value="${basedir}/src/test/resources" />
-                    <property name="tests.output.dir" value="${project.build.directory}" />
-                    <ant antfile="scripts/antrun-bpel.xml" target="bpel" />
-                  </tasks>
-                </configuration>
-              </execution>
               <execution>
                 <id>wsconsume</id>
                 <phase>generate-sources</phase>
