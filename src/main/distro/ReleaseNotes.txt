@@ -49,6 +49,43 @@ The JBossWS Team
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -----------------------
+jbossws-native-3.2.2.GA
+-----------------------
+
+Bug
+
+    * [JBWS-2651] - ClassCast Exception in case of malformed webservice response
+    * [JBWS-2746] - ClassCastException because SOAPEnvelopeImpl blindly casts to o.j.ws.core.soap.SOAPElementImpl
+    * [JBWS-2769] - Make sure our test suites for all stacks pass on Windows XP
+    * [JBWS-2771] - Importes XSD´s schemaLocation URL Port not changed when "webServicePort" property set in stack-agnostic-jboss-beans.xml
+    * [JBWS-2841] - ClassCastException TextImpl cannot be cast to SOAPElementImpl in CommonSOAPBinding.getParameterFromMessage
+    * [JBWS-2842] - Soap address rewrite does not use request url port when jbossws.undefined.host is setup
+    * [JBWS-2847] - JBossWSEntityResolver should cache properties
+    * [JBWS-2849] - Failed to parse response code in netty based http client
+    * [JBWS-2853] - Ineffective implementation of string normalize method
+    * [JBWS-2859] - Optimize DefaultEndpoint.getTargetBeanClass() method
+    * [JBWS-2860] - Remove useless DOMUtils.parse() method calls during deserialization process
+
+Feature Request
+
+    * [JBWS-2751] - JAXBIntroductions: support @XmlTransient, @XmlID, @XmlIDREF, @XmlElementWrapper and @XmlJavaTypeAdapter
+
+Task
+
+    * [JBWS-2647] - Reference to jboss-xml-binding.jar in ws scripts should be changed to match name in repository.
+    * [JBWS-2692] - Define client/server security policy for JBWS testsuite and run it under a security manager
+    * [JBWS-2770] - Rewrite org.jboss.test.ws.jaxws.binding testcase to get SOAPMessageContext from handlers
+    * [JBWS-2821] - Remove jbossws.sar from deploy directory
+    * [JBWS-2826] - Give more time to copy the process inputstream and error stream in JBossWSTest
+    * [JBWS-2835] - Remove deployers ordering workaround forAS 6.x series
+    * [JBWS-2840] - Implement support for SOAP12 protocol in wsprovide
+    * [JBWS-2848] - Fix build/testsuite for supporting AS 6.0.0.M1 integration target
+
+Errata
+
+    See: https://jira.jboss.org/jira/browse/JBWS-2865
+
+-----------------------
 jbossws-native-3.2.1.GA
 -----------------------
 
