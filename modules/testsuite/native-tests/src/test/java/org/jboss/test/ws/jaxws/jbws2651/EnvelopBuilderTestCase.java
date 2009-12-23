@@ -22,24 +22,18 @@
 package org.jboss.test.ws.jaxws.jbws2651;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.soap.SOAPException;
-
+import junit.framework.TestCase;
 
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.soap.EnvelopeBuilderDOM;
-import org.jboss.ws.core.soap.EnvelopeBuilderStax;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-
-import junit.framework.TestCase;
 
 public class EnvelopBuilderTestCase extends TestCase {
 	
 	EnvelopeBuilderDOM domBuilder = new EnvelopeBuilderDOM();
-	EnvelopeBuilderStax staxBuilder = new EnvelopeBuilderStax();
 	MessageFactoryImpl factory = new MessageFactoryImpl();
 
 	public void testEmptyInputStream() throws Exception {		
@@ -60,22 +54,6 @@ public class EnvelopBuilderTestCase extends TestCase {
 		SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
 	    InputStream ins = new ByteArrayInputStream(soapMsg.getBytes());
 		assertNotNull(domBuilder.build(soapMessage, ins, false));
-	}
-	
-	
-	public void testStaxInputStream() throws Exception {
-		String soapMsg  =
-	         "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
-	         "  <env:Header/>" +
-	         "  <env:Body>" +
-	         "    <ns1:addItemResponse xmlns:ns1='http://org.jboss.ws/addressing/replyto'>" +
-	         "      <result>Mars Bar</result>" +
-	         "    </ns1:addItemResponse>" +
-	         "  </env:Body>" +
-	         "</env:Envelope>";
-		SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
-	    InputStream ins = new ByteArrayInputStream(soapMsg.getBytes());
-		assertNotNull(staxBuilder.build(soapMessage, ins, false));
 	}
 	
 	
@@ -101,25 +79,4 @@ public class EnvelopBuilderTestCase extends TestCase {
 	}
 	
 	
-	public void testStaxErroStream(){
-		String soapMsg  =
-	         "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
-	         "  <env:Header/>" +
-	         "  <env:Body>" +
-	         "    <ns1:addItemResponse xmlns:ns1='http://org.jboss.ws/addressing/replyto'>" +
-	         "      <result>Mars Bar</result>" +
-	         "    </ns1:addItemResponse>" +
-	         "  </env:Body>" +
-	         "</env:Envelope";
-	    
-		try {
-			SOAPMessageImpl soapMessage = (SOAPMessageImpl)factory.createMessage();
-			InputStream ins = new ByteArrayInputStream(soapMsg.getBytes());
-			staxBuilder.build(soapMessage, ins, false);
-			fail("expected IOException");
-		} catch (Exception e) {
-			assertTrue(e instanceof IOException);
-		}
-	}
-
 }
