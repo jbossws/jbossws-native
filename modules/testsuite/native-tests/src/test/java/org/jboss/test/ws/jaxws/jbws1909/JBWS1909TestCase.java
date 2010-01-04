@@ -33,7 +33,7 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * [JBWS-1909] RequestHandler.handlerWSDLResquest has dependency on Servlet API
- * 
+ *
  * http://jira.jboss.org/jira/browse/JBWS-1909
  *
  * @author Thomas.Diesler@jboss.com
@@ -48,7 +48,7 @@ public class JBWS1909TestCase extends JBossWSTest
 
    public void testWSDLSchema() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1909/TestEndpointImpl?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1909/TestEndpoint?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/jbws1909", "TestEndpointService");
       Service service = Service.create(wsdlURL, serviceName);
       TestEndpoint port = service.getPort(TestEndpoint.class);

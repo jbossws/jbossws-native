@@ -33,12 +33,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * [JBWS-2565] Wrong WebContext authMethod or transportGuarantee annotatoin field values are not detected at deploy time.
- *  
+ *
  * @author richard.opalka@jboss.com
  */
 public final class JBWS2565TestCase extends JBossWSTest
 {
-   
+
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS2565TestCase.class, "jaxws-jbws2565.ear");
@@ -49,13 +49,13 @@ public final class JBWS2565TestCase extends JBossWSTest
       final ServiceFactory factory = ServiceFactory.newInstance();
       final Service service = factory.createService(new QName("http://my.services.web", "MyWebServiceName"));
       final Call call = service.createCall(new QName("http://my.services.web", "MyWebServicePort"));
-      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxws-jbws2565/MyWebServiceBean?wsdl");
+      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxws-jbws2565/MyWebService?wsdl");
       call.setOperationName(new QName("http://my.services.web", "doStuff"));
       final QName QNAME_TYPE_STRING = new QName("http://www.w3.org/2001/XMLSchema", "string");
       call.setReturnType(QNAME_TYPE_STRING);
       final String[] serviceArgs = {};
       final String result = (String) call.invoke(serviceArgs);
       assertEquals("i've done stuff", result);
-   }   
-   
+   }
+
 }

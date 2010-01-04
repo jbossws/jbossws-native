@@ -110,7 +110,7 @@ public class JBAS897TestCase extends JBossWSTest
       try
       {
          ServiceFactory serviceFactory = ServiceFactory.newInstance();
-         Service service = serviceFactory.createService(new URL("http://" + getServerHost() + ":8080/jaxrpc-jbas897/HelloEJB?wsdl"), SERVICE_NAME);
+         Service service = serviceFactory.createService(new URL("http://" + getServerHost() + ":8080/jaxrpc-jbas897/HelloSLSB?wsdl"), SERVICE_NAME);
          Call call = (Call)service.createCall(new QName(NAMESPACE, "HelloPort"), "sayHello");
          String retstr = (String)call.invoke(new Object[] { "Hello" });
          assertEquals("'Hello' to you too!", retstr);

@@ -29,11 +29,9 @@ import junit.framework.Test;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
-
-
 /**
  * Web services deployment can fail when deploying multiple EJB JARs
- * 
+ *
  * http://jira.jboss.com/jira/browse/JBWS-772
  *
  * @author Thomas.Diesler@jboss.org
@@ -52,17 +50,17 @@ public class JBWS772TestCase extends JBossWSTest
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
       Hello port = (Hello)service.getPort(Hello.class);
-      
+
       String resStr = port.sayHello("Hello");
       assertEquals("'Hello' to you too!", resStr);
    }
-   
+
    public void testRemoteAccess() throws Exception
    {
       InitialContext iniCtx = getInitialContext();
       HelloHome home = (HelloHome)iniCtx.lookup("java:comp/env/ejb/HelloEJBTwo");
       HelloRemote remote = home.create();
-      
+
       String resStr = remote.sayHello("Hello");
       assertEquals("'Hello' to you too!", resStr);
    }

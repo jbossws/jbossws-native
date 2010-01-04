@@ -11,10 +11,10 @@
     <ejb-ref-name>ejb/HelloEJBTwo</ejb-ref-name>
     <jndi-name>HelloEJBTwo</jndi-name>
   </ejb-ref>
-  
+
   <service-ref>
     <service-ref-name>service/TestService</service-ref-name>
-    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws772/HelloEJBOne?wsdl</wsdl-override>
+    <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws772/HelloSLSB?wsdl</wsdl-override>
   </service-ref>
 
 </jboss-client>

@@ -33,9 +33,9 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
  * EAR deployment of ejb.jar + ws-ejb.jar
- * 
+ *
  * http://jira.jboss.com/jira/browse/JBWS-331
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 30-Nov-2005
  */
@@ -51,7 +51,7 @@ public class JBWS331TestCase extends JBossWSTest
       InitialContext iniCtx = getInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
       Hello endpoint = (Hello)service.getPort(Hello.class);
-      
+
       String retStr = endpoint.hello("Hello Server");
       assertEquals("Hello Server", retStr);
    }
@@ -61,7 +61,7 @@ public class JBWS331TestCase extends JBossWSTest
       InitialContext iniCtx = getInitialContext();
       HelloHome home = (HelloHome)iniCtx.lookup("java:comp/env/ejb/Hello");
       HelloRemote slsb = home.create();
-      
+
       String retStr = slsb.hello("Hello Server");
       assertEquals("Hello Server", retStr);
    }
