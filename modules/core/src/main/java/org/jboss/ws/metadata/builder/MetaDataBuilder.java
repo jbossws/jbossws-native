@@ -236,40 +236,42 @@ public abstract class MetaDataBuilder
       ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
 
       String host = config.getWebServiceHost();
-      String port = "";
-      if (servicePort != -1)
-      {
-         port = ":" + servicePort;
-      }
-      else
+
+      int port = servicePort;
+      if (servicePort == -1)
       {
          if ("https".equals(uriScheme))
          {
-            int portNo = config.getWebServiceSecurePort();
-            if (portNo != 443)
-            {
-               port = ":" + portNo;
-            }
-
+            port = config.getWebServiceSecurePort();
          }
          else
          {
-            int portNo = config.getWebServicePort();
-            if (portNo != 80)
-            {
-               port = ":" + portNo;
-            }
+            port = config.getWebServicePort();
          }
       }
 
-      String urlStr = uriScheme + "://" + host + port + servicePath;
+      // Reset port if using the default for the scheme.
+      if (("http".equals(uriScheme) && port == 80) || ("https".equals(uriScheme) && port == 443))
+      {
+         port = -1;
+      }
+
+      URL url = null;
       try
       {
-         return new URL(urlStr).toExternalForm();
+         if (port > -1)
+         {
+            url = new URL(uriScheme, host, port, servicePath);
+         }
+         else
+         {
+            url = new URL(uriScheme, host, servicePath);
+         }
+         return url.toExternalForm();
       }
       catch (MalformedURLException e)
       {
-         throw new WSException("Malformed URL: " + urlStr);
+         throw new WSException("Malformed URL: uriScheme={" + uriScheme + "} host={" + host + "} port={" + port + "} servicePath={" + servicePath + "}", e);
       }
    }
 
