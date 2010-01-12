@@ -376,10 +376,13 @@ public abstract class MetaDataBuilder
       String tnsURI = wsdlOneOneDefinition.getTargetNamespace();
 
       // search for matching portElement and replace the address URI
-      Port wsdlOneOnePort = modifyPortAddress(tnsURI, portQName, serviceEndpointURL, wsdlOneOneDefinition.getServices());
+      if (modifyPortAddress(tnsURI, portQName, serviceEndpointURL, wsdlOneOneDefinition.getServices()))
+      {
+         return;
+      }
 
-      // recursivly process imports if none can be found
-      if (wsdlOneOnePort == null && !wsdlOneOneDefinition.getImports().isEmpty())
+      // recursively process imports if none can be found
+      if (!wsdlOneOneDefinition.getImports().isEmpty())
       {
 
          Iterator imports = wsdlOneOneDefinition.getImports().values().iterator();
@@ -390,19 +393,28 @@ public abstract class MetaDataBuilder
             while (importsByNS.hasNext())
             {
                Import anImport = (Import)importsByNS.next();
-               wsdlOneOnePort = modifyPortAddress(anImport.getNamespaceURI(), portQName, serviceEndpointURL, anImport.getDefinition().getServices());
+               if (modifyPortAddress(anImport.getNamespaceURI(), portQName, serviceEndpointURL, anImport.getDefinition().getServices()))
+               {
+                  return;
+               }
             }
          }
       }
-
-      // if it still doesn't exist something is wrong
-      if (wsdlOneOnePort == null)
-         throw new IllegalArgumentException("Cannot find port with name '" + portQName + "' in wsdl document");
+      
+      throw new IllegalArgumentException("Cannot find port with name '" + portQName + "' in wsdl document");
    }
 
-   private static Port modifyPortAddress(String tnsURI, QName portQName, String serviceEndpointURL, Map services)
+   /**
+    * Try matching the port and modify it. Return true if the port is actually matched.
+    * 
+    * @param tnsURI
+    * @param portQName
+    * @param serviceEndpointURL
+    * @param services
+    * @return
+    */
+   private static boolean modifyPortAddress(String tnsURI, QName portQName, String serviceEndpointURL, Map services)
    {
-      Port wsdlOneOnePort = null;
       Iterator itServices = services.values().iterator();
       while (itServices.hasNext())
       {
@@ -414,7 +426,7 @@ public abstract class MetaDataBuilder
             String portLocalName = (String)itPorts.next();
             if (portQName.equals(new QName(tnsURI, portLocalName)))
             {
-               wsdlOneOnePort = (Port)wsdlOneOnePorts.get(portLocalName);
+               Port wsdlOneOnePort = (Port)wsdlOneOnePorts.get(portLocalName);
                List extElements = wsdlOneOnePort.getExtensibilityElements();
                for (Object extElement : extElements)
                {
@@ -434,11 +446,11 @@ public abstract class MetaDataBuilder
                      address.setLocationURI(serviceEndpointURL);
                   }
                }
+               return true;
             }
          }
       }
-
-      return wsdlOneOnePort;
+      return false;
    }
 
    private static String getUriScheme(String addrStr)
