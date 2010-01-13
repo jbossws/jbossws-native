@@ -35,10 +35,7 @@
 
   <!-- Modules -->
   <modules>
-    <module>modules/saaj</module>
-    <module>modules/jaxrpc</module>
-    <module>modules/jaxws</module>
-    <module>modules/jaxws-ext</module>
+    <module>modules/endorsed</module>
     <module>modules/core</module>
     <module>modules/client</module>
     <module>modules/management</module>
@@ -63,6 +60,8 @@
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.6.0.GA</javassist.version>
     <jaxws.api.version>2.1</jaxws.api.version>
+    <jaxrpc.api.version>1.1</jaxrpc.api.version>
+    <saaj.api.version>1.3</saaj.api.version>
     <jsr181.api.version>1.0-MR1</jsr181.api.version>
     <jaxb.api.version>2.1</jaxb.api.version>
     <jaxb.impl.version>2.1.12</jaxb.impl.version>
@@ -269,6 +268,28 @@
           <exclusion>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml</groupId>
+        <artifactId>jaxrpc-api</artifactId>
+        <version>${jaxrpc.api.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>saaj-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.soap</groupId>
+        <artifactId>saaj-api</artifactId>
+        <version>${saaj.api.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
