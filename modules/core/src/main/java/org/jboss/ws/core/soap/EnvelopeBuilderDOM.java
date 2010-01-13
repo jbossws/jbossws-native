@@ -189,6 +189,10 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             DOMUtils.copyAttributes(destElement, srcElement);
             destElement.setXMLFragment(xmlFragment);
          }
+         else if (childType == Node.TEXT_NODE) 
+         {
+            log.debug("Ignore child type: " + childType);
+         }
          else
          {
             log.warn("Ignore child type: " + childType);
