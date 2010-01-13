@@ -535,6 +535,7 @@ public class SchemaUtils
       fname = fname.replace('/', '_');
       fname = fname.replace(':', '_');
       fname = fname.replace('?', '_');
+      fname = fname.replace('#', '_');
       
       return File.createTempFile("JBossWS_" + fname, ".xsd", tmpdir);
    }
