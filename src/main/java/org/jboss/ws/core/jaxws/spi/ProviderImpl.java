@@ -31,6 +31,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.Provider;
@@ -59,9 +60,16 @@ public class ProviderImpl extends Provider
    @Override
    public ServiceDelegate createServiceDelegate(URL wsdlLocation, QName serviceName, Class serviceClass)
    {
-      ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
-      DOMUtils.clearThreadLocals();
-      return delegate;
+      try
+      {
+         ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
+         DOMUtils.clearThreadLocals();
+         return delegate;
+      }
+      catch (RuntimeException e)
+      {
+         throw new WebServiceException(e);
+      }
    }
 
    @Override
