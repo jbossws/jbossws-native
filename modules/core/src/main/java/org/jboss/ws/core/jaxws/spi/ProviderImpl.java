@@ -60,9 +60,16 @@ public class ProviderImpl extends Provider
    @Override
    public ServiceDelegate createServiceDelegate(URL wsdlLocation, QName serviceName, Class serviceClass)
    {
-      ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
-      DOMUtils.clearThreadLocals();
-      return delegate;
+      try
+      {
+         ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass);
+         DOMUtils.clearThreadLocals();
+         return delegate;
+      }
+      catch (RuntimeException e)
+      {
+         throw new WebServiceException(e);
+      }
    }
 
    @Override
