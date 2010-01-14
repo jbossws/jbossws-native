@@ -105,12 +105,20 @@ public final class ProviderImpl extends Provider
    }
 
    // @Override TODO: comment out override on switch to JAX-WS 2.2
-   public ServiceDelegate createServiceDelegate(final URL wsdlLocation, final QName serviceName, final Class serviceClass,
+   // TODO - If this createServiceDelegate is removed from a future version the exception wrapping should be retained.
+   public ServiceDelegate createServiceDelegate(final URL wsdlLocation, final QName serviceName, final Class serviceClass, 
          final WebServiceFeature... features)
    {
-      ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass, features);
-      DOMUtils.clearThreadLocals();
-      return delegate;
+      try
+      {
+         ServiceDelegateImpl delegate = new ServiceDelegateImpl(wsdlLocation, serviceName, serviceClass, features);
+         DOMUtils.clearThreadLocals();
+         return delegate;
+      }
+      catch (RuntimeException e)
+      {
+         throw new WebServiceException(e);
+      }
    }
 
    // @Override TODO: comment out override on switch to JAX-WS 2.2
