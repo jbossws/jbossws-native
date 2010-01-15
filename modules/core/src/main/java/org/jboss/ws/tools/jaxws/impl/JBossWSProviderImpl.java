@@ -27,6 +27,9 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import javax.jws.WebService;
+import javax.xml.ws.WebServiceProvider;
+
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -80,6 +83,12 @@ final class JBossWSProviderImpl extends WSContractProvider
 
       messageStream.println("Output directory: " + outputDir.getAbsolutePath());
       messageStream.println("Source directory: " + sourceDir.getAbsolutePath());
+      
+      if (!endpointClass.isAnnotationPresent(WebService.class) && endpointClass.isAnnotationPresent(WebServiceProvider.class))
+      {
+         messageStream.println("@WebServiceProvider endpoint specified.");
+         return;
+      }
 
       // Create a dummy classloader to catch generated classes
       ClassLoader loader = new URLClassLoader(new URL[0], this.loader);
