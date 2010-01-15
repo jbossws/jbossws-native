@@ -85,6 +85,15 @@ public class UnifiedMetaData implements InitalizableMetaData
       this.classLoader = SecurityActions.getContextClassLoader();
    }
 
+   public UnifiedMetaData(UnifiedVirtualFile vfsRoot, ClassLoader classLoader)
+   {
+      if (vfsRoot == null)
+         throw new IllegalArgumentException("VFS root cannot be null");
+
+      this.vfsRoot = vfsRoot;
+      this.classLoader = classLoader;
+   }
+
    public ClassLoader getClassLoader()
    {
       if (classLoader == null)

@@ -66,8 +66,12 @@ import org.jboss.ws.annotation.EndpointConfig;
  */
 public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 {
-
    public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL, UnifiedVirtualFile vfsRoot)
+   {
+      return this.buildMetaData(serviceName, wsdlURL, vfsRoot, null);
+   }
+
+   public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL, UnifiedVirtualFile vfsRoot, ClassLoader classLoader)
    {
       if (wsdlURL == null)
          throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
@@ -76,7 +80,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          log.debug("START buildMetaData: [service=" + serviceName + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
+         UnifiedMetaData wsMetaData = classLoader != null ? new UnifiedMetaData(vfsRoot, classLoader) : new UnifiedMetaData(vfsRoot);
 
          ServiceMetaData serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
