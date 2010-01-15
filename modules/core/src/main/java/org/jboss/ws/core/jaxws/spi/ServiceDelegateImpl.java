@@ -147,7 +147,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
       else
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot, serviceClass.getClassLoader());
+         UnifiedMetaData wsMetaData = new UnifiedMetaData(vfsRoot);
          serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
          wsMetaData.addService(serviceMetaData);
       }
