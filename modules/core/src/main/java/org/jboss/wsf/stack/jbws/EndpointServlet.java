@@ -94,7 +94,6 @@ public final class EndpointServlet extends AbstractEndpointServlet
             }
          }
          this.preDestroyRegistry.clear();
-         this.preDestroyRegistry = null;
       }
       super.destroy();
    }
