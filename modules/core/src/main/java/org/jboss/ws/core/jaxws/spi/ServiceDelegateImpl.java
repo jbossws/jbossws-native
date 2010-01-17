@@ -52,6 +52,7 @@ import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.ServiceDelegate;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.core.EndpointMetadataProvider;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientFeatureProcessor;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
@@ -552,7 +553,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       if (features != null)
       {
-         EndpointMetaData epMetaData = ((StubExt)stub).getEndpointMetaData();
+         EndpointMetaData epMetaData = ((EndpointMetadataProvider)stub).getEndpointMetaData();
          for (WebServiceFeature feature : features)
          {
             ClientFeatureProcessor.processFeature(feature, epMetaData, stub);
