@@ -94,12 +94,6 @@ public class JBWS2682TestCase extends JBossWSTest
 
    public void testBadMessage() throws Exception
    {
-      if (true)
-      {
-         System.out.println("FIXME [JBWS-2682] Incorrect Parsing of Badly Formed int.");
-         return;
-      }
-      
       SOAPMessage response = sendMessage(this.badMsgString);
       SOAPEnvelope resEnv = response.getSOAPPart().getEnvelope();
       SOAPFault fault = resEnv.getBody().getFault();

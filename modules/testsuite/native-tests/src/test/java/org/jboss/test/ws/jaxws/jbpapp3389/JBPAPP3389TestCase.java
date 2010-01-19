@@ -28,7 +28,6 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.jaxws.jbws1309.EndpointInterface;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -50,11 +49,6 @@ public class JBPAPP3389TestCase extends JBossWSTest {
 	}
 
 	public void testCall() throws Exception {
-		if (true) {
-			System.out.println("FIXME [JBPAPP-3389] Mixed up namespace prefixes when marshalling response with Element containing attributes.");
-			return;
-		}
-
 		URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
 		QName serviceName = new QName("http://ws.jboss.org/jbpapp3389",
 				"EndpointImplService");
