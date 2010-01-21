@@ -57,13 +57,6 @@
               <include>commons-beanutils:commons-beanutils:jar</include>
             </includes>
           </dependencySet>
-          <dependencySet>
-            <outputFileNameMapping>wstx.jar</outputFileNameMapping>
-            <useStrictFiltering>true</useStrictFiltering>
-            <includes>
-              <include>org.codehaus.woodstox:wstx-lgpl:jar</include>
-            </includes>
-          </dependencySet>
         </dependencySets>
       </binaries>
     </moduleSet>

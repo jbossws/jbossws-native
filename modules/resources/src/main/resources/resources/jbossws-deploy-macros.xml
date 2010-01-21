@@ -50,12 +50,10 @@
     <include name="**/stax-ex.jar"/>
     <include name="**/streambuffer.jar"/>
     <include name="**/wsdl4j.jar"/>
-    <include name="**/wstx.jar"/>
   </patternset>
 
   <patternset id="jbossws.lib.patternset">
     <include name="**/jaxb-impl.jar"/>
-    <include name="**/wstx.jar"/>
   </patternset>
 
   <patternset id="jbossws.lib.endorsed.patternset">

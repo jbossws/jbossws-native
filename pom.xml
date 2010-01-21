@@ -73,7 +73,6 @@
     <netty.version>3.1.5.GA</netty.version>
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
     <sun.jaxws.version>2.1.7</sun.jaxws.version>
-    <woodstox.version>3.2.6</woodstox.version>
     <wscommons.policy.version>1.0</wscommons.policy.version>
     <wsdl4j.version>1.6.1</wsdl4j.version>
     <xmlsec.version>1.4.3</xmlsec.version>
@@ -343,11 +342,6 @@
         <groupId>wscommons-policy</groupId>
         <artifactId>policy</artifactId>
         <version>${wscommons.policy.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.woodstox</groupId>
-        <artifactId>wstx-lgpl</artifactId>
-        <version>${woodstox.version}</version>
       </dependency>
       <dependency>
         <groupId>wsdl4j</groupId>

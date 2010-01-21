@@ -164,10 +164,6 @@
       <artifactId>policy</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>wstx-lgpl</artifactId>
-    </dependency>
-    <dependency>
       <groupId>wsdl4j</groupId>
       <artifactId>wsdl4j</artifactId>
     </dependency>
