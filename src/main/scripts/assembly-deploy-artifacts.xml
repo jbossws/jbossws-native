@@ -148,14 +148,6 @@
 
     <!-- resources -->
     <fileSet>
-      <directory>modules/client/src/main/resources/META-INF</directory>
-      <outputDirectory>resources</outputDirectory>
-      <includes>
-        <include>standard-jaxrpc-*-config.xml</include>
-        <include>standard-jaxws-*-config.xml</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>modules/core/target/resources</directory>
       <outputDirectory>resources</outputDirectory>
       <includes>

@@ -230,11 +230,6 @@
           <include name="META-INF/**"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/META-INF">
-        <fileset dir="@{artifactsdir}/resources">
-          <include name="standard-*-config.xml"/>
-        </fileset>
-      </copy>
       <antcall target="modify-jboss-integration">
         <param name="targetdir" value="@{targetdir}"/>
       </antcall>
