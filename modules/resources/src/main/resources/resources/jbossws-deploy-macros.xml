@@ -58,6 +58,7 @@
   <patternset id="jbossws.lib.endorsed.patternset">
     <include name="**/jbossws-native-factories.jar"/>
     <include name="**/jaxb-api.jar"/>
+    <include name="**/jaxws-api.jar"/>
   </patternset>
 
   <patternset id="jbossws.server.lib.patternset">
