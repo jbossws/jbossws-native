@@ -160,8 +160,8 @@
       <artifactId>netty</artifactId>
     </dependency>
     <dependency>
-      <groupId>wscommons-policy</groupId>
-      <artifactId>policy</artifactId>
+      <groupId>org.apache.ws.policy</groupId>
+      <artifactId>wscommons-policy</artifactId>
     </dependency>
     <dependency>
       <groupId>wsdl4j</groupId>

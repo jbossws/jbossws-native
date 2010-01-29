@@ -345,8 +345,8 @@
         <version>${jboss.logging.version}</version>
       </dependency>
       <dependency>
-        <groupId>wscommons-policy</groupId>
-        <artifactId>policy</artifactId>
+        <groupId>org.apache.ws.policy</groupId>
+        <artifactId>wscommons-policy</artifactId>
         <version>${wscommons.policy.version}</version>
       </dependency>
       <dependency>
