@@ -35,6 +35,7 @@
     <include name="**/jaxb-xjc.jar"/>
     <include name="**/jaxws-tools.jar"/>
     <include name="**/jaxws-rt.jar"/>
+    <include name="**/policy.jar"/>
     <include name="**/jbossws-common.jar"/>
     <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-client.jar"/>
@@ -44,7 +45,7 @@
     <include name="**/saaj-api.jar"/>
     <include name="**/jettison.jar"/>
     <include name="**/netty.jar"/>
-    <include name="**/policy.jar"/>
+    <include name="**/wscommons-policy.jar"/>
     <include name="**/stax-api.jar"/>
     <include name="**/stax-ex.jar"/>
     <include name="**/streambuffer.jar"/>
@@ -78,7 +79,7 @@
     <include name="**/jbossws-native-core.jar"/>
     <include name="**/jettison.jar"/>
     <include name="**/netty.jar"/>
-    <include name="**/policy.jar"/>
+    <include name="**/wscommons-policy.jar"/>
     <include name="**/wsdl4j.jar"/>
     <include name="**/xmlsec.jar"/>
   </patternset>
