@@ -32,7 +32,7 @@ import javax.xml.ws.addressing.AddressingException;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
-import org.jboss.util.xml.DOMUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
 
