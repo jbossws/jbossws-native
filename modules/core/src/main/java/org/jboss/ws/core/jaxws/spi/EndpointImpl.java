@@ -365,4 +365,18 @@ public class EndpointImpl extends Endpoint
       return this.dep;
    }
    
+   public void publish(final javax.xml.ws.spi.http.HttpContext serverContext)
+   {
+      // JAX-WS Endpoint API is broken by design and reveals many implementation details 
+      // of JAX-WS RI that are not portable cross different application servers :(
+      log.warn("publish(javax.xml.ws.spi.http.HttpContext) not implemented"); // TODO implement?
+   }
+
+   public void setEndpointContext(final javax.xml.ws.EndpointContext endpointContext)
+   {
+      // JAX-WS Endpoint API is broken by design and reveals many implementation details 
+      // of JAX-WS RI that are not portable cross different application servers :(
+      log.warn("setEndpointContext(javax.xml.ws.EndpointContext) not implemented"); // TODO implement?
+   }
+
 }
