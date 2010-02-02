@@ -281,10 +281,6 @@
             <artifactId>jaxb-api</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>com.sun.xml.stream.buffer</groupId>
-            <artifactId>streambuffer</artifactId>
-          </exclusion>
-          <exclusion>
             <groupId>org.jvnet</groupId>
             <artifactId>mimepull</artifactId>
           </exclusion>
