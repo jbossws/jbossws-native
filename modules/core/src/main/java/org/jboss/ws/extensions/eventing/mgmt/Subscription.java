@@ -30,10 +30,11 @@ import java.util.Date;
 import javax.xml.bind.JAXBElement;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
-import org.apache.xpath.XPathAPI;
-import org.apache.xpath.objects.XObject;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.extensions.eventing.EventingConstants;
@@ -112,17 +113,16 @@ class Subscription
 
    public boolean accepts(Element event)
    {
-
       boolean b = true;
       if (filter != null)
       {
 
          try
          {
-            XObject o = XPathAPI.eval(event, filter.getExpression());
-            b = o.bool();
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            b = (Boolean)xpath.evaluate(filter.getExpression(), event, XPathConstants.BOOLEAN);
          }
-         catch (TransformerException e)
+         catch (XPathExpressionException e)
          {
             log.error("Failed to evalute xpath expression", e);
          }
