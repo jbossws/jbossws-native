@@ -32,14 +32,13 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPBinding;
 
+import org.jboss.test.ws.jaxws.samples.dar.XMLGregorianCalendarHelper;
 import org.jboss.test.ws.jaxws.samples.news.generated.printer.mtom.EditionMTOM;
 import org.jboss.test.ws.jaxws.samples.news.generated.printer.mtom.NewspaperMTOMService;
 import org.jboss.test.ws.jaxws.samples.news.generated.printer.mtom.NewspaperMTOMEndpoint;
 import org.jboss.test.ws.jaxws.samples.news.generated.printer.swa.EditionSWA;
 import org.jboss.test.ws.jaxws.samples.news.generated.printer.swa.NewspaperSWAService;
 import org.jboss.test.ws.jaxws.samples.news.generated.printer.swa.NewspaperSWAEndpoint;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * The printer client
@@ -70,8 +69,8 @@ public class Printer
    
    public void run() throws IOException
    {
-      XMLGregorianCalendar from = new XMLGregorianCalendarImpl(new GregorianCalendar(2008,1,10));
-      XMLGregorianCalendar to = new XMLGregorianCalendarImpl(new GregorianCalendar(2008,1,14));
+      XMLGregorianCalendar from = XMLGregorianCalendarHelper.convert(new GregorianCalendar(2008,1,10));
+      XMLGregorianCalendar to = XMLGregorianCalendarHelper.convert(new GregorianCalendar(2008,1,14));
       if (mtom)
       {
          ((SOAPBinding)(((BindingProvider)mtomEndpoint).getBinding())).setMTOMEnabled(true);
