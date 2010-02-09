@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingException;
 import javax.xml.ws.addressing.JAXWSAConstants;
@@ -104,7 +105,14 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
          try
          {
             OperationMetaData opMetaData = ((CommonMessageContext)msgContext).getOperationMetaData();
-            addrProps.setAction(ADDR_BUILDER.newURI(opMetaData.getJavaName()));
+            if (msgContext.get(BindingProvider.SOAPACTION_URI_PROPERTY) != null) 
+            {
+                addrProps.setAction(ADDR_BUILDER.newURI(msgContext.get(BindingProvider.SOAPACTION_URI_PROPERTY).toString()));
+            }
+            else 
+            {
+                addrProps.setAction(ADDR_BUILDER.newURI(opMetaData.getJavaName()));
+            }
          }
          catch (URISyntaxException ex)
          {
