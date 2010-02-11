@@ -141,6 +141,7 @@ public final class ProviderImpl extends Provider
       epr.setAddress(address);
       epr.setServiceName(serviceName);
       epr.setEndpointName(portName);
+      epr.setInterfaceName(interfaceName);
       epr.setMetadata(metadata);
       epr.setWsdlLocation(wsdlDocumentLocation);
       epr.setReferenceParameters(referenceParameters);
@@ -158,10 +159,6 @@ public final class ProviderImpl extends Provider
    public <T> T getPort(final EndpointReference epr, final Class<T> sei, final WebServiceFeature... features)
    {
       final NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
-      if (nepr.getWsdlLocation() == null)
-      {
-         nepr.setWsdlLocation(nepr.getAddress() + "?wsdl");
-      }
       final URL wsdlLocation = nepr.getWsdlLocation();
       final QName serviceName = nepr.getServiceName();
       final ServiceDelegate delegate = createServiceDelegate(wsdlLocation, serviceName, Service.class);
