@@ -17,6 +17,16 @@
         <outputDirectory>lib</outputDirectory>
         <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
         <unpack>false</unpack>
+        <dependencySets>
+          <dependencySet>
+            <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+            <useStrictFiltering>true</useStrictFiltering>
+            <includes>
+              <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
+              <include>org.jboss.ws.native:jbossws-native-services:jar</include>
+            </includes>
+          </dependencySet>
+        </dependencySets>
       </binaries>
     </moduleSet>
     <moduleSet>
@@ -44,7 +54,6 @@
               <include>org.jboss.ws:jbossws-common:jar</include>
               <include>org.jboss.ws:jbossws-spi:jar</include>
               <include>javax.xml:jaxrpc-api:jar</include>
-              <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
               <include>javax.xml.soap:saaj-api:jar</include>
               <include>org.codehaus.jettison:jettison:jar</include>
               <include>com.sun.xml.ws:policy:jar</include>

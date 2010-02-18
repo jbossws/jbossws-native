@@ -167,10 +167,20 @@
   <!-- Create jbossws-deploy.conf                                         -->
   <!-- ================================================================== -->
 
+  <patternset id="jbossws.deploy.conf.exclude.patternset">
+    <exclude name="**/juddi-service.sar/**"/>
+    <exclude name="**/client/jbossws-native-core.jar"/>
+    <exclude name="**/client/netty.jar"/>
+    <exclude name="**/common/lib/jbossws-native-core.jar"/>
+    <exclude name="**/common/lib/netty.jar"/>
+  </patternset>
+
   <macrodef name="macro-create-deploy-conf">
     <attribute name="deploystructure"/>
     <sequential>
-      <fileset id="jbossws.deploy.fileset" dir="@{deploystructure}" excludes="**/juddi-service.sar/**"/>
+      <fileset id="jbossws.deploy.fileset" dir="@{deploystructure}">
+      	<patternset refid="jbossws.deploy.conf.exclude.patternset"/>
+      </fileset>
       <property name="jbossws.deploy.fileset" refid="jbossws.deploy.fileset"/>
       <property name="jbossws.deployers.dir" value="@{deploystructure}/server/${jboss.server.instance}/deployers/jbossws.deployer"/>
       <echo file="${jbossws.deployers.dir}/jbossws-deploy.conf" message="${jbossws.deploy.fileset}"/>

@@ -24,9 +24,9 @@ package org.jboss.wsf.stack.jbws;
 import java.io.IOException;
 
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.WSFDeploymentException;
 
 /**
@@ -35,7 +35,7 @@ import org.jboss.wsf.spi.deployment.WSFDeploymentException;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class PublishContractDeploymentAspect extends DeploymentAspect
+public class PublishContractDeploymentAspect extends AbstractDeploymentAspect
 {
    @Override
    public void start(Deployment dep)

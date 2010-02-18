@@ -115,6 +115,7 @@
         <pathelement location="${jboss.client}/saaj-api.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-factories.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-core.jar"/>
+        <pathelement location="${jboss.client}/jbossws-native-services.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-client.jar"/>
         <path refid="integration.target.javac.classpath" />
 	</path>

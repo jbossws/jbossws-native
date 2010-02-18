@@ -23,9 +23,9 @@ package org.jboss.ws.extensions.wsrm.server;
 
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
 
@@ -36,7 +36,7 @@ import org.jboss.wsf.spi.invocation.InvocationHandler;
  *
  * @since Dec 11, 2007
  */
-public final class RMDeploymentAspect extends DeploymentAspect
+public final class RMDeploymentAspect extends AbstractDeploymentAspect
 {
 
    @Override

@@ -22,7 +22,7 @@
 package org.jboss.wsf.stack.jbws;
 
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsf.spi.deployment.DeploymentAspect;
+import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.Deployment;
 
 /**
@@ -31,7 +31,7 @@ import org.jboss.wsf.spi.deployment.Deployment;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class EagerInitializeDeploymentAspect extends DeploymentAspect
+public class EagerInitializeDeploymentAspect extends AbstractDeploymentAspect
 {
    @Override
    public void start(Deployment dep)

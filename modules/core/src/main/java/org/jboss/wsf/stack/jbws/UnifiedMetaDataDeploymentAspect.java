@@ -28,9 +28,9 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 
@@ -40,7 +40,7 @@ import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class UnifiedMetaDataDeploymentAspect extends DeploymentAspect
+public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
 {
    @Override
    public void start(Deployment dep)

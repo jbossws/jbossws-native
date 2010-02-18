@@ -23,7 +23,7 @@ package org.jboss.wsf.stack.jbws;
 
 import org.jboss.ws.core.server.ServiceEndpointInvoker;
 import org.jboss.ws.core.server.ServiceEndpointInvokerEJB21;
-import org.jboss.wsf.spi.deployment.DeploymentAspect;
+import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
@@ -34,7 +34,7 @@ import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
  * @author Thomas.Diesler@jboss.org
  * @since 25-Apr-2007
  */
-public class ServiceEndpointInvokerDeploymentAspect extends DeploymentAspect
+public class ServiceEndpointInvokerDeploymentAspect extends AbstractDeploymentAspect
 {
    @Override
    public void start(Deployment dep)
