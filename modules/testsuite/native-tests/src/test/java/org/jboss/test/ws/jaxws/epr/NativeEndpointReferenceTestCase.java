@@ -71,24 +71,16 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
 
    public void testNativeEndpointReferenceFromSource() throws Exception
    {
-      System.out.println(getXml(DOMUtils.parse(XML)));
+      System.out.println(DOMUtils.node2String(DOMUtils.parse(XML)));
       final Source xml = new DOMSource(DOMUtils.parse(XML));
       NativeEndpointReference epr = new NativeEndpointReference(xml);
       DOMResult dr = new DOMResult(); 
       epr.writeTo(dr);
       Node endpointReferenceElement = dr.getNode();
-      System.out.println(getXml(endpointReferenceElement));
+      System.out.println(DOMUtils.node2String(endpointReferenceElement));
       assertMetaData(endpointReferenceElement);
       assertRefParam(endpointReferenceElement, PARAM1_QNAME, "Hello");
       assertRefParam(endpointReferenceElement, PARAM2_QNAME, "World");
-   }
-   
-   private static String getXml(final Node node) throws Exception
-   {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      PrintWriter pw = new PrintWriter(baos);
-      new DOMWriter(pw, Constants.DEFAULT_XML_CHARSET).setPrettyprint(true).print(node);
-      return baos.toString("utf-8");
    }
    
    private static void assertRefParam(final Node root, final QName nodeName, final String refParamValue)
