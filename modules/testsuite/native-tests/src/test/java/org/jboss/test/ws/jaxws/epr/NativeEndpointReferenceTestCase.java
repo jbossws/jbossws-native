@@ -81,6 +81,9 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
       assertMetaData(endpointReferenceElement);
       assertRefParam(endpointReferenceElement, PARAM1_QNAME, "Hello");
       assertRefParam(endpointReferenceElement, PARAM2_QNAME, "World");
+      assertEquals(new QName(MY_NS, "HelloService", MY_PREFIX), epr.getServiceName());
+      assertEquals(new QName(MY_NS, "Hello", MY_PREFIX), epr.getInterfaceName());
+      assertEquals(new QName(MY_NS, "HelloPort", MY_PREFIX), epr.getEndpointName());
    }
    
    private static void assertRefParam(final Node root, final QName nodeName, final String refParamValue)

@@ -135,21 +135,18 @@ public final class NativeEndpointReference extends EndpointReference
                {
                   if (WSAM_NS.equals(e.getNamespaceURI()))
                   {
-                     if (e.getNodeName().equals(SERVICE_QNAME.getLocalPart()))
+                     if (e.getLocalName().equals(SERVICE_QNAME.getLocalPart()))
                      {
-                        QName serviceQName = this.getQName(e, e.getNodeValue());
-                        this.setServiceName(serviceQName);
+                        this.serviceName = this.getQName(e, e.getTextContent());
                         String endpointName = e.getAttribute(ENDPOINT_ATTRIBUTE); 
                         if (endpointName != null)
                         {
-                           QName endpointQName = this.getQName(e, endpointName);
-                           this.setEndpointName(endpointQName);
+                           this.endpointName = this.getQName(e, endpointName);
                         }
                      }
-                     if (e.getNodeName().equals(INTERFACE_QNAME.getLocalPart()))
+                     if (e.getLocalName().equals(INTERFACE_QNAME.getLocalPart()))
                      {
-                        QName interfaceQName = this.getQName(e, e.getNodeValue());
-                        this.setServiceName(interfaceQName);
+                        this.interfaceName = this.getQName(e, e.getTextContent());
                      }
                   }
                }
@@ -193,7 +190,7 @@ public final class NativeEndpointReference extends EndpointReference
       
       this.serviceName = serviceName;
       this.serviceNameElement = DOMUtils.createElement(SERVICE_QNAME);
-      final String attrName = "xmlns:" + serviceName.getPrefix();
+      final String attrName = this.getNamespaceAttributeName(serviceName.getPrefix());
       this.serviceNameElement.setAttribute(attrName, serviceName.getNamespaceURI());
       this.serviceNameElement.setTextContent(this.toString(serviceName));
       this.metadata.addElement(this.serviceNameElement);
@@ -226,7 +223,7 @@ public final class NativeEndpointReference extends EndpointReference
          
       this.interfaceName = interfaceName;
       Element interfaceNameElement  = DOMUtils.createElement(INTERFACE_QNAME);
-      final String attrName = "xmlns:" + interfaceName.getPrefix();
+      final String attrName = this.getNamespaceAttributeName(interfaceName.getPrefix());
       interfaceNameElement.setAttribute(attrName, interfaceName.getNamespaceURI());
       interfaceNameElement.setTextContent(this.toString(interfaceName));
       this.metadata.addElement(interfaceNameElement);
@@ -314,7 +311,7 @@ public final class NativeEndpointReference extends EndpointReference
     */
    public void writeTo(Result result)
    {
-      if (this.endpointName != null && this.serviceName != null)
+      if (this.endpointName != null && this.serviceNameElement != null)
       {
          this.serviceNameElement.setAttribute(ENDPOINT_ATTRIBUTE, this.toString(this.endpointName));
       }
@@ -368,10 +365,14 @@ public final class NativeEndpointReference extends EndpointReference
    
    private QName getQName(Element e, String nodeValue)
    {
+      if (nodeValue == null)
+         throw new RuntimeException("Missing text content for element: " + e.getNodeName());
+      
       final int separatorIndex = nodeValue.indexOf(':');
       if (separatorIndex == -1)
       {
-         return new QName(nodeValue);
+         final String namespace = e.getAttribute("xmlns");
+         return new QName(namespace, nodeValue);
       }
       else
       {
@@ -382,6 +383,14 @@ public final class NativeEndpointReference extends EndpointReference
       }
    }
 
+   private String getNamespaceAttributeName(final String prefix)
+   {
+      if (prefix == null || "".equals(prefix))
+         return "xmlns";
+      
+      return "xmlns:" + prefix;
+   }
+   
    private static class Address
    {
       @XmlValue
