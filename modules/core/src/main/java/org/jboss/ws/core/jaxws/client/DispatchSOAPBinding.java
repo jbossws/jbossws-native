@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.soap.MessageFactory;
@@ -181,6 +182,10 @@ public class DispatchSOAPBinding extends DispatchBinding
                log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             retObj = unmarshaller.unmarshal(soapElement);
+            if (retObj instanceof JAXBElement<?>)
+            {
+               retObj = ((JAXBElement<?>)retObj).getValue();
+            }
          }
       }
       catch (RuntimeException rte)
