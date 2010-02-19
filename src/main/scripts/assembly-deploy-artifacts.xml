@@ -67,6 +67,13 @@
               <include>org.apache.ws.policy:wscommons-policy:jar</include>
             </includes>
           </dependencySet>
+          <dependencySet>
+            <outputFileNameMapping>wstx.jar</outputFileNameMapping>
+            <useStrictFiltering>true</useStrictFiltering>
+            <includes>
+              <include>org.codehaus.woodstox:wstx-lgpl:jar</include>
+            </includes>
+          </dependencySet>
         </dependencySets>
       </binaries>
     </moduleSet>
