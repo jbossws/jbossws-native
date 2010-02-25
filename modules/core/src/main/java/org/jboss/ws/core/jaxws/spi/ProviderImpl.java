@@ -173,8 +173,9 @@ public final class ProviderImpl extends Provider
 
       try
       {
-         //we currently support W3CEndpointReference only
-         return new W3CEndpointReference(eprInfoset);
+         final NativeEndpointReference nativeEPR = new NativeEndpointReference(eprInfoset);
+         final Source source = EndpointReferenceUtil.getSourceFromEndpointReference(nativeEPR);
+         return new W3CEndpointReference(source);
       }
       catch (Exception e)
       {

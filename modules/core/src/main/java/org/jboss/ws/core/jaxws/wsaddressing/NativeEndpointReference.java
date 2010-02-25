@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  * @see EndpointReferenceUtil class.
  * 
  * @author alessio.soldano@jboss.com
- * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>ok
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  * @since 28-Feb-2009
  */
 @XmlRootElement(name = "EndpointReference", namespace = NativeEndpointReference.WSA_NS)
@@ -75,9 +75,9 @@ public final class NativeEndpointReference extends EndpointReference
    @XmlElement(name = "Address", namespace = WSA_NS)
    private Address address;
    @XmlElement(name = "ReferenceParameters", namespace = WSA_NS)
-   private Elements referenceParameters = new Elements();
+   private Elements referenceParameters;
    @XmlElement(name = "Metadata", namespace = WSA_NS)
-   private Elements metadata = new Elements();
+   private Elements metadata;
    @XmlAnyAttribute
    private Map<QName, String> attributes;
    @XmlAnyElement
@@ -113,8 +113,14 @@ public final class NativeEndpointReference extends EndpointReference
       {
          NativeEndpointReference epr = jc.createUnmarshaller().unmarshal(source, NativeEndpointReference.class).getValue();
          this.address = epr.address;
-         this.referenceParameters = epr.referenceParameters;
-         this.metadata = epr.metadata;
+         if ((epr.referenceParameters != null) && (!epr.referenceParameters.isEmpty()))
+         {
+            this.referenceParameters = epr.referenceParameters;
+         }
+         if ((epr.metadata != null) && (!epr.metadata.isEmpty()))
+         {
+            this.metadata = epr.metadata;
+         }
          this.attributes = epr.attributes;
          this.elements = epr.elements;
          if (epr.metadata != null)
@@ -193,6 +199,9 @@ public final class NativeEndpointReference extends EndpointReference
       final String attrName = this.getNamespaceAttributeName(serviceName.getPrefix());
       this.serviceNameElement.setAttribute(attrName, serviceName.getNamespaceURI());
       this.serviceNameElement.setTextContent(this.toString(serviceName));
+      if (this.metadata == null)
+         this.metadata = new Elements();
+      
       this.metadata.addElement(this.serviceNameElement);
    }
 
@@ -226,12 +235,18 @@ public final class NativeEndpointReference extends EndpointReference
       final String attrName = this.getNamespaceAttributeName(interfaceName.getPrefix());
       interfaceNameElement.setAttribute(attrName, interfaceName.getNamespaceURI());
       interfaceNameElement.setTextContent(this.toString(interfaceName));
+      if (this.metadata == null)
+         this.metadata = new Elements();
+      
       this.metadata.addElement(interfaceNameElement);
    }
    
    @XmlTransient
    public List<Element> getMetadata()
    {
+      if (this.metadata == null)
+         return null;
+      
       return this.metadata.getElements();
    }
 
@@ -239,6 +254,9 @@ public final class NativeEndpointReference extends EndpointReference
    {
       if ((metadata == null) || (metadata.size() == 0))
          return;
+      
+      if (this.metadata == null)
+         this.metadata = new Elements();
       
       this.metadata.setElements(metadata);
    }
@@ -268,12 +286,18 @@ public final class NativeEndpointReference extends EndpointReference
          return;
       
       this.wsdlLocation = wsdlLocation;
+      if (this.metadata == null)
+         this.metadata = new Elements();
+      
       this.metadata.addAttribute(WSDL_LOCATION_QNAME, wsdlLocation);
    }
 
    @XmlTransient
    public List<Element> getReferenceParameters()
    {
+      if (this.referenceParameters == null)
+         return null;
+      
       return this.referenceParameters.getElements();
    }
 
@@ -281,6 +305,9 @@ public final class NativeEndpointReference extends EndpointReference
    {
       if ((metadata == null) || (metadata.size() == 0))
          return;
+      
+      if (this.referenceParameters == null)
+         this.referenceParameters = new Elements();
       
       this.referenceParameters.setElements(metadata);
    }
@@ -498,6 +525,15 @@ public final class NativeEndpointReference extends EndpointReference
             this.attributes = new HashMap<QName, String>();
          }
          this.attributes.put(attrName, attrValue);
+      }
+      
+      @XmlTransient
+      public boolean isEmpty()
+      {
+         final boolean noAttributes = this.attributes == null || this.attributes.size() == 0;
+         final boolean noElements = this.elements == null || this.elements.size() == 0;
+         
+         return noAttributes && noElements;
       }
    }
    
