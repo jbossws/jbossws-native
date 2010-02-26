@@ -33,6 +33,8 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.EJBSecurityMetaData;
 
 /**
  * Builds ServiceEndpointMetaData for a JAX-WS endpoint.
@@ -87,6 +89,14 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
             configName = ejbMetaData.getConfigName();
          if (ejbMetaData.getConfigFile() != null)
             configFile = ejbMetaData.getConfigFile();
+
+         EJBMetaData ejbMD = ejbMetaData.getBeanByEjbName(linkName);
+         EJBSecurityMetaData ejbSecurityMD = ejbMD != null ? ejbMD.getSecurityMetaData() : null;
+
+         if (ejbSecurityMD != null)
+         {
+            sepMetaData.setTransportGuarantee(ejbSecurityMD.getTransportGuarantee());
+         }
       }
       
       if (configName != null || configFile != null)

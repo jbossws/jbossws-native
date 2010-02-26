@@ -56,6 +56,7 @@ import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
+import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
@@ -144,8 +145,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Process web methods
          processWebMethods(sepMetaData, seiClass);
 
-         // Init the transport guarantee
-         initTransportGuaranteeJSE(dep, sepMetaData, linkName);
+         // Init the transport guarantee for JSE deployments.
+         if (dep.getType() == DeploymentType.JAXWS_JSE)
+            initTransportGuaranteeJSE(dep, sepMetaData, linkName);
 
          // Initialize types
          createJAXBContext(sepMetaData);
