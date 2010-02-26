@@ -79,8 +79,7 @@
     <wscommons.policy.version>1.0</wscommons.policy.version>
     <wsdl4j.version>1.6.1</wsdl4j.version>
     <xmlsec.version>1.4.3</xmlsec.version>
-    <xalan.version>2.7.0</xalan.version>
-    <xerces.version>2.8.1</xerces.version>
+    <xerces.version>2.9.1</xerces.version>
   </properties>
 
   <!-- DependencyManagement -->
@@ -402,11 +401,6 @@
         <groupId>wsdl4j</groupId>
         <artifactId>wsdl4j</artifactId>
         <version>${wsdl4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>xalan</groupId>
-        <artifactId>xalan</artifactId>
-        <version>${xalan.version}</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>

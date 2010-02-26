@@ -115,10 +115,10 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
    private static void assertNamespaces(final Element e)
    {
       String myNamespace = e.lookupNamespaceURI(MY_PREFIX);
-      assertNotNull("namespace is null for prefix " + MY_PREFIX + ", isn't xalan in endorsed directory?", myNamespace);
+      assertNotNull("namespace is null for prefix " + MY_PREFIX + ", are you using our patched xalan?", myNamespace);
       assertEquals("namespace mismatch", myNamespace, MY_NS);
       String wsamNamespace = e.lookupNamespaceURI(WSAM_PREFIX);
-      assertNotNull("namespace is null for prefix " + WSAM_PREFIX + ", isn't xalan in endorsed directory?", wsamNamespace);
+      assertNotNull("namespace is null for prefix " + WSAM_PREFIX + ", are you using our patched xalan?", wsamNamespace);
       assertEquals("namespace mismatch", wsamNamespace, WSAM_NS);
    }
 }
