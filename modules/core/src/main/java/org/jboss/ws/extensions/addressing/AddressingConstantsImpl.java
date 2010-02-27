@@ -155,7 +155,7 @@ public class AddressingConstantsImpl implements AddressingConstants
 
    public QName getMapRequiredQName()
    {
-      return new QName(URI_ADDRESSING, "MessageInformationHeaderRequired", PREFIX_ADDRESSING);
+      return new QName(URI_ADDRESSING, "MessageAddressingHeaderRequired", PREFIX_ADDRESSING);
    }
 
    public QName getDestinationUnreachableQName()
@@ -200,6 +200,6 @@ public class AddressingConstantsImpl implements AddressingConstants
 
    public String getMapRequiredText()
    {
-      return "Map Required";
+      return "A required header representing a Message Addressing Property is not present";
    }
 }

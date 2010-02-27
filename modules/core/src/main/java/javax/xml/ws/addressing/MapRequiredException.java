@@ -38,7 +38,8 @@ public class MapRequiredException extends AddressingException
 
    public MapRequiredException(QName name)
    {
-      super(fMessage + ": " + name);
+      //TODO:Add the exact missing header qname in soap header
+      super(fMessage);
    }
 
    public QName getSubcode()

@@ -39,6 +39,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.addressing.AddressingConstants;
 import javax.xml.ws.addressing.AddressingException;
 import javax.xml.ws.addressing.AttributedURI;
+import javax.xml.ws.addressing.MapRequiredException;
 import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.addressing.Relationship;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
@@ -79,10 +80,10 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 	private String getRequiredHeaderContent(SOAPHeader soapHeader, QName qname)
 	{
 		Element element = DOMUtils.getFirstChildElement(soapHeader, qname);
-		if(null == element) throw new AddressingException("Required element "+qname+" is missing");
+		if(null == element) throw new MapRequiredException(qname);
 
 		String value = DOMUtils.getTextContent(element);
-		if(null == value || value.equals("")) throw new AddressingException("Required element "+qname+" is missing");
+		if(null == value || value.equals("")) throw new MapRequiredException(qname);
 		
 		return value;
 	}
