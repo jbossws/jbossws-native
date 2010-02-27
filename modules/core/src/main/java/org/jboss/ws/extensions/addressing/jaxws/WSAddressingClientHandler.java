@@ -137,6 +137,7 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
 			{
 				SOAPAddressingBuilder builder = (SOAPAddressingBuilder)SOAPAddressingBuilder.getAddressingBuilder();
 				SOAPAddressingProperties addrProps = (SOAPAddressingProperties)builder.newAddressingProperties();
+				soapMessage.setProperty("isClientInbound", "true");
 				addrProps.readHeaders(soapMessage);
             msgContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES, addrProps);
             msgContext.setScope(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES, Scope.APPLICATION);

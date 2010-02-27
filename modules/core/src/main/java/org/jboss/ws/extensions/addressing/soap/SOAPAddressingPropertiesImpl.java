@@ -149,8 +149,19 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 			// wsa:Action
 			// This REQUIRED element of type xs:anyURI conveys the [action] property.
 			// The [children] of this element convey the value of this property.
-			String action = getRequiredHeaderContent(soapHeader, ADDR.getActionQName());
-			setAction(builder.newURI(action));
+	         if (message.getProperty("isClientInbound") != null)
+	         {
+	            String action = getOptionalHeaderContent(soapHeader, ADDR.getActionQName());
+	            if (action != null)
+	            {
+	               setAction(builder.newURI(action));
+	            }
+	         }
+	         else
+	         {
+	            String action = getRequiredHeaderContent(soapHeader, ADDR.getActionQName());
+	            setAction(builder.newURI(action));
+	         }
 
 			// Read wsa:MessageID
 			// This OPTIONAL element (whose content is of type xs:anyURI) conveys the [message id] property.
