@@ -38,6 +38,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.addressing.MapRequiredException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -257,7 +258,16 @@ public class SOAPFaultHelperJAXWS
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
 
-      SOAPFault soapFault = soapBody.addFault(getFallbackFaultCode(), getFallbackFaultString(ex));
+      SOAPFault soapFault  = null;
+      if(ex instanceof MapRequiredException) 
+      {  
+         MapRequiredException addrException = (MapRequiredException)ex;
+         soapFault = soapBody.addFault(addrException.getSubcode(), addrException.getMessage());
+      } 
+      else 
+      {
+         soapFault = soapBody.addFault(getFallbackFaultCode(), getFallbackFaultString(ex));
+      }
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       SerializationContext serContext = msgContext.getSerializationContext();

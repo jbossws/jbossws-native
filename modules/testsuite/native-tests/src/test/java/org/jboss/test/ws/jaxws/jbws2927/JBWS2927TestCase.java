@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,32 +19,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package javax.xml.ws.addressing;
+package org.jboss.test.ws.jaxws.jbws2927;
 
-import javax.xml.namespace.QName;
 
-public class MapRequiredException extends AddressingException
+/**
+ * JBWS2927TestCase.
+ * 
+ * @author <a href="ema@redhat.com">Jim Ma</a>
+ */
+public class JBWS2927TestCase extends TestCase
 {
-   private static final long serialVersionUID = 7593796661805754938L;
 
-   static
-   {
-      fMessage = ac.getMapRequiredText();
-   }
-
-   public MapRequiredException()
-   {
-   }
-
-   public MapRequiredException(QName name)
-   {
-      //TODO:Add the exact missing header qname in soap header
-      super(fMessage);
-
-   }
-
-   public QName getSubcode()
-   {
-      return ac.getMapRequiredQName();
-   }
 }
