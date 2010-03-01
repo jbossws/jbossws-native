@@ -29,6 +29,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -37,6 +39,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 /**
@@ -66,16 +69,20 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          return;
       }
       future.start();
-      ResultImpl result = new ResultImpl();
-      future.setResult(result);
       try
       {
          HttpResponse response = (HttpResponse)e.getMessage();
-
+         HttpResponseStatus responseStatus = response.getStatus();
+         if (HttpServletResponse.SC_CONTINUE == responseStatus.getCode())
+         {
+        	 //[JBWS-2947] Even if we do not send any Expect request-header, we should not fail on HTTP 100 replies, so we just go on to the following message ignoring them
+        	 return;
+         }
+         ResultImpl result = new ResultImpl();
          Map<String, Object> metadata = result.getMetadata();
          metadata.put(NettyClient.PROTOCOL, response.getProtocolVersion());
-         metadata.put(NettyClient.RESPONSE_CODE, response.getStatus().getCode());
-         metadata.put(NettyClient.RESPONSE_CODE_MESSAGE, response.getStatus().getReasonPhrase());
+         metadata.put(NettyClient.RESPONSE_CODE, responseStatus.getCode());
+         metadata.put(NettyClient.RESPONSE_CODE_MESSAGE, responseStatus.getReasonPhrase());
          Map<String, Object> responseHeaders = result.getResponseHeaders();
          for (String headerName : response.getHeaderNames())
          {
@@ -84,13 +91,12 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
 
          ChannelBuffer content = response.getContent();
          result.setResponse(new ChannelBufferInputStream(content));
+         future.setResult(result);
+         future.done();
       }
       catch (Throwable t)
       {
          future.setException(t);
-      }
-      finally
-      {
          future.done();
       }
    }
