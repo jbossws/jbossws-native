@@ -150,8 +150,8 @@ public class SOAPAddressingPropertiesTestCase extends JBossWSTest
 	public void testReplyToWithoutAction() throws Exception
 	{
 		MessageFactory mf = MessageFactory.newInstance();
-		SOAPMessage message = mf.createMessage(null, new ByteArrayInputStream(ERRORNOUS_XML.getBytes()));
-
+		SOAPMessage  message= mf.createMessage(null, new ByteArrayInputStream(ERRORNOUS_XML.getBytes()));
+        message.setProperty("isRequired", true);
 		SOAPAddressingPropertiesImpl props = new SOAPAddressingPropertiesImpl();
 		try
 		{

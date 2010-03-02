@@ -1,6 +1,1 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:jbw="http://ws.jboss.org/jbws2927">
-   <soapenv:Header/>
-   <soapenv:Body>
-     <jbw:addNumbersResponse><return>20</return><arg0>ClientEnabledServerNotEnabled</arg0></jbw:addNumbersResponse>
-   </soapenv:Body>
-</soapenv:Envelope>
+<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'><env:Header></env:Header><env:Body><ns2:echo xmlns:ns2="http://ws.jboss.org/jbws2927"><arg0>testJBWS2927</arg0></ns2:echo></env:Body></env:Envelope>

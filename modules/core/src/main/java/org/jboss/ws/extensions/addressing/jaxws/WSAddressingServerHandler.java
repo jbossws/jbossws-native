@@ -26,6 +26,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.w3c.dom.Element;
 
@@ -38,6 +39,8 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import javax.xml.ws.soap.AddressingFeature;
+
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -82,7 +85,22 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
 		SOAPAddressingProperties addrProps = (SOAPAddressingProperties)ADDR_BUILDER.newAddressingProperties();
 		SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
-		addrProps.readHeaders(soapMessage);
+        CommonMessageContext commonMsgContext = (CommonMessageContext)msgContext;
+        ServerEndpointMetaData serverMetaData = (ServerEndpointMetaData)commonMsgContext.getEndpointMetaData();
+        AddressingFeature addrFeature = serverMetaData.getFeature(AddressingFeature.class);
+        if (addrFeature != null && addrFeature.isRequired())
+        {
+           try 
+           {
+               soapMessage.setProperty("isRequired", true);
+           }
+           catch (Exception e) 
+           {
+              //ignore 
+           }
+           
+        }
+        addrProps.readHeaders(soapMessage);
 		msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
 		msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
 		msgContext.put(MessageContext.REFERENCE_PARAMETERS, convertToElementList(addrProps.getReferenceParameters().getElements()));
@@ -138,7 +156,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 			msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND, Scope.APPLICATION);
 		}
 
-		outProps.initializeAsReply(inProps, isFault);
+		if (inProps != null) outProps.initializeAsReply(inProps, isFault);
 
 		try
 		{
