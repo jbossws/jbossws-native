@@ -147,18 +147,16 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 			// wsa:Action
 			// This REQUIRED element of type xs:anyURI conveys the [action] property.
 			// The [children] of this element convey the value of this property.
-            if (message.getProperty("isClientInbound") != null)
+            if (message.getProperty("isRequired") != null && (Boolean)message.getProperty("isRequired")) 
             {
-               String action = getOptionalHeaderContent(soapHeader, ADDR.getActionQName());
-               if (action != null)
-               {
-                  setAction(builder.newURI(action));
-               }
-            }
-            else
-            {
+               //check the action header only if the required value is true
                String action = getRequiredHeaderContent(soapHeader, ADDR.getActionQName());
                setAction(builder.newURI(action));
+            } 
+            else
+            {
+               String action = getOptionalHeaderContent(soapHeader, ADDR.getActionQName());
+               if (action != null) setAction(builder.newURI(action));
             }
 
 			// Read wsa:MessageID

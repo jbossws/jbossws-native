@@ -601,7 +601,19 @@
 	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2845/WEB-INF">
 	        <include name="jboss-web.xml"/>
 	      </webinf>
-	    </war>			
+	    </war>	
+
+	    <!-- jaxws-jbws2927 -->
+	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2927.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF/web.xml">
+	      <classes dir="${tests.output.dir}/test-classes">
+	        <include name="org/jboss/test/ws/jaxws/jbws2927/*.class"/>
+	        <exclude name="org/jboss/test/ws/jaxws/jbws2927/JBWS2927TestCase.class"/>
+	      </classes>
+	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF">
+	        <include name="jboss-web.xml"/>
+	      </webinf>
+	    </war>
+		
 		
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">
