@@ -87,6 +87,7 @@ import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLMIMEPart;
+import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -586,11 +587,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    {
       String javaName = method.getName();
 
-      // Methods added by JBoss AOP will be marked as synthetic and should be skipped.
-      if (method.isSynthetic() == true)
-    	  return;
-      
-      // skip asnyc methods, they dont need meta data representation
+      // skip async methods, they dont need meta data representation
       if (method.getName().endsWith(Constants.ASYNC_METHOD_SUFFIX))
          return;
 
@@ -932,35 +929,18 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       epMetaData.clearOperations();
 
       // Process @WebMethod annotations
-      int webMethodCount = 0;
+      boolean webMethodFound = false;
       for (Method method : wsClass.getMethods())
       {
-         WebMethod annotation = method.getAnnotation(WebMethod.class);
-         boolean exclude = annotation != null && annotation.exclude();
-         if (!exclude && (annotation != null || wsClass.isInterface()))
+         if (WSDLUtils.isWebMethod(method))
          {
             processWebMethod(epMetaData, method);
-            webMethodCount++;
+            webMethodFound = true;
          }
       }
 
-      // @WebService should expose all inherited methods if @WebMethod is never specified
-      if (webMethodCount == 0 && !wsClass.isInterface())
-      {
-         for (Method method : wsClass.getMethods())
-         {
-            WebMethod annotation = method.getAnnotation(WebMethod.class);
-            boolean exclude = annotation != null && annotation.exclude();
-            if (!exclude && method.getDeclaringClass() != Object.class)
-            {
-               processWebMethod(epMetaData, method);
-               webMethodCount++;
-            }
-         }
-      }
-
-      if (webMethodCount == 0)
-         throw new WSException("No exposable methods found");
+      if (!webMethodFound)
+         throw new WSException("Exposable methods not found: " + wsClass);
    }
 
    protected void initWrapperGenerator(ClassLoader loader)
