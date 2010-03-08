@@ -53,7 +53,7 @@ public class MyWebServiceBean
 {
     @WebMethod
     @PermitAll
-    public final String doStuff()
+    public String doStuff()
     {
         return "i've done stuff";
     }
