@@ -23,6 +23,7 @@ package org.jboss.ws.tools.jaxws.impl;
 
 import com.sun.tools.ws.wscompile.WsimportTool;
 
+import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.tools.io.NullPrintStream;
 import org.jboss.wsf.spi.tools.WSContractConsumer;
 
@@ -229,6 +230,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
       try
       {
          WsimportTool compileTool = new WsimportTool(stream);
+         compileTool.setEntityResolver(new JBossWSEntityResolver());
          boolean success = compileTool.run(args.toArray(new String[args.size()]));
 
          if (!success)
