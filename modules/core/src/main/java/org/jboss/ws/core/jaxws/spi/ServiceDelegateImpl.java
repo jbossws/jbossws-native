@@ -23,7 +23,10 @@ package org.jboss.ws.core.jaxws.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
@@ -156,6 +160,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
       handlerResolver = new HandlerResolverImpl();
 
+      String filename = null;
       if (usRef != null)
       {
          serviceMetaData.setServiceRefName(usRef.getServiceRefName());
@@ -163,18 +168,36 @@ public class ServiceDelegateImpl extends ServiceDelegate
          // Setup the service handlers
          if (usRef.getHandlerChain() != null)
          {
-            String filename = usRef.getHandlerChain();
-            UnifiedHandlerChainsMetaData handlerChainsMetaData = JAXWSMetaDataBuilder.getHandlerChainsMetaData(serviceClass, filename);
-            for (UnifiedHandlerChainMetaData UnifiedHandlerChainMetaData : handlerChainsMetaData.getHandlerChains())
-            {
-               for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
-               {
-                  HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
-                  serviceMetaData.addHandler(hmd);
-               }
-            }
-            ((HandlerResolverImpl)handlerResolver).initServiceHandlerChain(serviceMetaData);
+            filename = usRef.getHandlerChain();
          }
+      }
+      
+      if (serviceClass != null && serviceClass.getAnnotation(HandlerChain.class) != null)
+      {
+         HandlerChain anHandlerChain = (HandlerChain)serviceClass.getAnnotation(HandlerChain.class);
+         if (anHandlerChain != null && anHandlerChain.file().length() > 0) {
+            filename = anHandlerChain.file();
+            try
+            {
+               new URL(filename);
+            }
+            catch (MalformedURLException ex)
+            {
+               filename = serviceClass.getPackage().getName().replace('.', '/') + "/" + filename;
+            }         
+         }     
+      }
+      if (filename != null) {
+         UnifiedHandlerChainsMetaData handlerChainsMetaData = JAXWSMetaDataBuilder.getHandlerChainsMetaData(serviceClass, filename);
+         for (UnifiedHandlerChainMetaData UnifiedHandlerChainMetaData : handlerChainsMetaData.getHandlerChains())
+         {
+            for (UnifiedHandlerMetaData uhmd : UnifiedHandlerChainMetaData.getHandlers())
+            {
+               HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
+               serviceMetaData.addHandler(hmd);
+            }
+         }
+         ((HandlerResolverImpl)handlerResolver).initServiceHandlerChain(serviceMetaData);
       }
    }
 
