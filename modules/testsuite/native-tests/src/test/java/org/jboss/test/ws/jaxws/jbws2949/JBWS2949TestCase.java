@@ -35,7 +35,6 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.jaxws.jbws2927.WSAEndpoint;
 import org.jboss.ws.core.soap.NodeImpl;
 
 import org.jboss.wsf.test.JBossWSTest;
@@ -49,7 +48,7 @@ public class JBWS2949TestCase extends JBossWSTest
    
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-jbws2949";
 
-   private static WSAEndpoint port;
+   private static Endpoint port;
 
    public static Test suite() throws Exception
    {
@@ -63,7 +62,7 @@ public class JBWS2949TestCase extends JBossWSTest
       QName serviceName = new QName("http://ws.jboss.org/jbws2949", "EndpointService");
 
       Service service = Service.create(wsdlURL, serviceName);
-      port = service.getPort(WSAEndpoint.class);
+      port = service.getPort(Endpoint.class);
    }
 
    public void testCall() throws Exception
