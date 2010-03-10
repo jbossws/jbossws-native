@@ -16,6 +16,7 @@
   <properties>
     <jboss.jbosssx.version>2.0.2.SP3</jboss.jbosssx.version>
     <jboss.microcontainer.version>2.0.2.GA</jboss.microcontainer.version>
+    <jboss.jbossxb.version>2.0.1.GA</jboss.jbossxb.version>
   </properties>
 
   <!-- Dependencies -->
@@ -84,7 +85,7 @@
       <groupId>org.jboss</groupId>
       <artifactId>jbossxb</artifactId>
       <scope>provided</scope>
-      <version>1.0.0.SP2</version>
+      <version>${jboss.jbossxb.version}</version>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>
