@@ -132,8 +132,11 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
    private void addProperty(JDefinedClass clazz, String typeName, QName name, String variable)
          throws ClassNotFoundException
    {
+      // be careful about reserved keywords when generating variable names
+      String realVariableName = JavaUtils.isReservedKeyword(variable) ? "_" + variable : variable;
+
       Class type = JavaUtils.loadJavaType(typeName, loader);
-      JFieldVar field = clazz.field(JMod.PRIVATE, type, variable);
+      JFieldVar field = clazz.field(JMod.PRIVATE, type, realVariableName);
       JAnnotationUse annotation = field.annotate(XmlElement.class);
       if (name.getNamespaceURI() != null)
          annotation.param("namespace", name.getNamespaceURI());
@@ -141,10 +144,10 @@ public class SourceWrapperGenerator extends AbstractWrapperGenerator implements 
 
       // Add acessor methods
       JMethod method = clazz.method(JMod.PUBLIC, type, getterPrefix(type) + JavaUtils.capitalize(variable));
-      method.body()._return(JExpr._this().ref(variable));
+      method.body()._return(JExpr._this().ref(realVariableName));
 
       method = clazz.method(JMod.PUBLIC, void.class, "set" + JavaUtils.capitalize(variable));
-      method.body().assign(JExpr._this().ref(variable), method.param(type, variable));
+      method.body().assign(JExpr._this().ref(realVariableName), method.param(type, realVariableName));
    }
 
    private static void addClassAnnotations(JDefinedClass clazz, QName xmlName, QName xmlType, String[] propertyOrder)
