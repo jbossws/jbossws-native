@@ -369,7 +369,7 @@ public class WSDLFilePublisher
          wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(expLocation) + expLocation.length());
          wsdlFile = new File(locationFile + "/" + wsdlLocation);
       }
-      else if (wsdlLocation.startsWith("vfsfile:") || wsdlLocation.startsWith("file:") || wsdlLocation.startsWith("jar:"))
+      else if (wsdlLocation.startsWith("vfsfile:") || wsdlLocation.startsWith("file:") || wsdlLocation.startsWith("jar:") || wsdlLocation.startsWith("vfszip:"))
       {
          wsdlLocation = wsdlLocation.substring(wsdlLocation.lastIndexOf("/") + 1);
          wsdlFile = new File(locationFile + "/" + wsdlLocation);
