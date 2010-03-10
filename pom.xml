@@ -66,7 +66,6 @@
     <jsr181.api.version>1.0-MR1</jsr181.api.version>
     <jaxb.api.version>2.2</jaxb.api.version>
     <jaxb.impl.version>2.2</jaxb.impl.version>
-    <jboss.common.version>2.2.16.GA</jboss.common.version>
     <jboss.logging.version>2.2.0.CR1</jboss.logging.version>
     <jboss.jaxr.version>2.0.1</jboss.jaxr.version>
     <apache.scout.version>1.1.1</apache.scout.version>
@@ -197,11 +196,6 @@
         <groupId>javassist</groupId>
         <artifactId>javassist</artifactId>
         <version>${javassist.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>jboss.common</groupId>
-        <artifactId>jboss-common</artifactId>
-        <version>${jboss.common.version}</version>
       </dependency>
       <!-- transitive dependencies -->
       <dependency>
