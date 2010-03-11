@@ -37,8 +37,10 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
+import javax.xml.ws.ProtocolException;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
+import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -76,7 +78,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 public abstract class CommonClient implements StubExt, HeaderSource
 {
    // provide logging
-   private static Logger log = Logger.getLogger(CommonClient.class);
+   private static java.util.logging.Logger log = Logger.getLogger(CommonClient.class);
 
    public static final String SESSION_COOKIES = "org.jboss.ws.maintain.session.cookies";
 
@@ -393,18 +395,25 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
       catch (Exception ex)
       {
-         log.error("Exception caught while (preparing for) performing the invocation: ", ex);
-         
-         // Reverse the message direction
-         processPivotInternal(msgContext, direction);
-
-         if (faultType[2] != null)
-            callFaultHandlerChain(portName, faultType[2], ex);
-         if (faultType[1] != null)
-            callFaultHandlerChain(portName, faultType[1], ex);
-         if (faultType[0] != null)
-            callFaultHandlerChain(portName, faultType[0], ex);
-         throw ex;
+         Boolean isOutbound = (Boolean)msgContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+         if (oneway && isOutbound && ex instanceof ProtocolException)
+         {
+            //swallow the outbound SOAPException threw in hanlders
+            return null;
+         }
+         else
+         {
+            log.error("Exception caught while (preparing for) performing the invocation: ", ex);
+            // Reverse the message direction
+            processPivotInternal(msgContext, direction);
+            if (faultType[2] != null)
+               callFaultHandlerChain(portName, faultType[2], ex);
+            if (faultType[1] != null)
+               callFaultHandlerChain(portName, faultType[1], ex);
+            if (faultType[0] != null)
+               callFaultHandlerChain(portName, faultType[0], ex);
+            throw ex;
+         } 
       }
       finally
       {
