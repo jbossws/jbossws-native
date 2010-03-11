@@ -78,7 +78,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 public abstract class CommonClient implements StubExt, HeaderSource
 {
    // provide logging
-   private static java.util.logging.Logger log = Logger.getLogger(CommonClient.class);
+   private static Logger log = Logger.getLogger(CommonClient.class);
 
    public static final String SESSION_COOKIES = "org.jboss.ws.maintain.session.cookies";
 
