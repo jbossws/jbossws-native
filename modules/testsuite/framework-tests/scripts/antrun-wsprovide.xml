@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<project>
+
+  <!-- ================================================================== -->
+  <!-- Generating sources                                                 -->
+  <!-- ================================================================== -->
+
+  <target name="wsprovide" depends="prepend-jars" description="Provide JAX-WS contracts">
+
+    <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.WSProvideTask">
+      <classpath>
+        <pathelement path="${wsprovide.classpath}"/>
+      </classpath>
+    </taskdef>
+
+    <wsprovide
+      genwsdl="true"
+      sei="org.jboss.test.ws.jaxws.jbws2960.AddNumbersImpl"
+      classpath="${tests.output.dir}/test-classes"
+      resourcedestdir="${tests.output.dir}/test-resources/jaxws/jbws2960"
+    />
+  </target>
+
+  <target name="prepend-jars">
+    <property name="wsprovide.classpath" value="${maven.test.classpath}"/>
+  </target>
+
+</project>
