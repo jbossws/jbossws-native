@@ -39,8 +39,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
@@ -322,6 +322,7 @@ class XMLContent extends SOAPContent
 
       Document ownerDoc = container.getOwnerDocument();
       DOMUtils.copyAttributes(container, domElement);
+      container.setPrefix(domElement.getPrefix());
 
       SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
 
