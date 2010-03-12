@@ -111,6 +111,10 @@ public class EndpointInfo
    private String lowerCaseProtocol(String targetAddress)
    {
       int colonIndex = targetAddress.indexOf(':');
+      if (colonIndex == -1)
+      {
+    	  return targetAddress;
+      }
       String lowerCasedProtocol = targetAddress.substring(0, colonIndex).toLowerCase();
       return lowerCasedProtocol + targetAddress.substring(colonIndex);
    }
