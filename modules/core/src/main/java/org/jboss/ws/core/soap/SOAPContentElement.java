@@ -186,42 +186,48 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
-      log.trace("addChildElement: " + child);
+      if (log.isTraceEnabled())
+         log.trace("addChildElement: " + child);
       expandToDOM();
       return super.addChildElement(child);
    }
 
    public SOAPElement addChildElement(String localName, String prefix) throws SOAPException
    {
-      log.trace("addChildElement: [localName=" + localName + ",prefix=" + prefix + "]");
+      if (log.isTraceEnabled())
+         log.trace("addChildElement: [localName=" + localName + ",prefix=" + prefix + "]");
       expandToDOM();
       return super.addChildElement(localName, prefix);
    }
 
    public SOAPElement addChildElement(String localName, String prefix, String uri) throws SOAPException
    {
-      log.trace("addChildElement: [localName=" + localName + ",prefix=" + prefix + ",uri=" + uri + "]");
+      if (log.isTraceEnabled())
+         log.trace("addChildElement: [localName=" + localName + ",prefix=" + prefix + ",uri=" + uri + "]");
       expandToDOM();
       return super.addChildElement(localName, prefix, uri);
    }
 
    public SOAPElement addChildElement(Name name) throws SOAPException
    {
-      log.trace("addChildElement: [name=" + name + "]");
+      if (log.isTraceEnabled())
+         log.trace("addChildElement: [name=" + name + "]");
       expandToDOM();
       return super.addChildElement(name);
    }
 
    public SOAPElement addChildElement(String name) throws SOAPException
    {
-      log.trace("addChildElement: [name=" + name + "]");
+      if (log.isTraceEnabled())
+         log.trace("addChildElement: [name=" + name + "]");
       expandToDOM();
       return super.addChildElement(name);
    }
 
    public SOAPElement addTextNode(String value) throws SOAPException
    {
-      log.trace("addTextNode: [value=" + value + "]");
+      if (log.isTraceEnabled())
+         log.trace("addTextNode: [value=" + value + "]");
       expandToDOM();
       return super.addTextNode(value);
    }
@@ -235,7 +241,8 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public Iterator getChildElements(Name name)
    {
-      log.trace("getChildElements: [name=" + name + "]");
+      if (log.isTraceEnabled())
+         log.trace("getChildElements: [name=" + name + "]");
       expandToDOM();
       return super.getChildElements(name);
    }
@@ -279,14 +286,16 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public SOAPElement addAttribute(Name name, String value) throws SOAPException
    {
-      log.trace("addAttribute: [name=" + name + ",value=" + value + "]");
+      if (log.isTraceEnabled())
+         log.trace("addAttribute: [name=" + name + ",value=" + value + "]");
       expandToDOM();
       return super.addAttribute(name, value);
    }
 
    public SOAPElement addNamespaceDeclaration(String prefix, String nsURI)
    {
-      log.trace("addNamespaceDeclaration: [prefix=" + prefix + ",nsURI=" + nsURI + "]");
+      if (log.isTraceEnabled())
+         log.trace("addNamespaceDeclaration: [prefix=" + prefix + ",nsURI=" + nsURI + "]");
       expandToDOM();
       return super.addNamespaceDeclaration(prefix, nsURI);
    }
@@ -298,14 +307,16 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public NodeList getElementsByTagName(String name)
    {
-      log.trace("getElementsByTagName: [name=" + name + "]");
+      if (log.isTraceEnabled())
+         log.trace("getElementsByTagName: [name=" + name + "]");
       expandToDOM();
       return super.getElementsByTagName(name);
    }
 
    public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
    {
-      log.trace("getElementsByTagName: [nsURI=" + namespaceURI + ",localName=" + localName + "]");
+      if (log.isTraceEnabled())
+         log.trace("getElementsByTagName: [nsURI=" + namespaceURI + ",localName=" + localName + "]");
       expandToDOM();
       return super.getElementsByTagNameNS(namespaceURI, localName);
    }
@@ -352,84 +363,96 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public boolean removeAttribute(Name name)
    {
-      log.trace("removeAttribute: " + name.getQualifiedName());
+      if (log.isTraceEnabled())
+         log.trace("removeAttribute: " + name.getQualifiedName());
       expandToDOM();
       return super.removeAttribute(name);
    }
 
    public void removeAttribute(String name) throws DOMException
    {
-      log.trace("removeAttribute: " + name);
+      if (log.isTraceEnabled())
+         log.trace("removeAttribute: " + name);
       expandToDOM();
       super.removeAttribute(name);
    }
 
    public Attr removeAttributeNode(Attr oldAttr) throws DOMException
    {
-      log.trace("removeAttribute: " + oldAttr.getNodeName());
+      if (log.isTraceEnabled())
+         log.trace("removeAttribute: " + oldAttr.getNodeName());
       expandToDOM();
       return super.removeAttributeNode(oldAttr);
    }
 
    public void removeAttributeNS(String namespaceURI, String localName) throws DOMException
    {
-      log.trace("removeAttributeNS: {" + namespaceURI + "}" + localName);
+      if (log.isTraceEnabled())
+         log.trace("removeAttributeNS: {" + namespaceURI + "}" + localName);
       expandToDOM();
       super.removeAttributeNS(namespaceURI, localName);
    }
 
    public boolean removeNamespaceDeclaration(String prefix)
    {
-      log.trace("removeNamespaceDeclaration: " + prefix);
+      if (log.isTraceEnabled())
+         log.trace("removeNamespaceDeclaration: " + prefix);
       expandToDOM();
       return super.removeNamespaceDeclaration(prefix);
    }
 
    public void setAttribute(String name, String value) throws DOMException
    {
-      log.trace("setAttribute: [name=" + name + ",value=" + value + "]");
+      if (log.isTraceEnabled())
+         log.trace("setAttribute: [name=" + name + ",value=" + value + "]");
       expandToDOM();
       super.setAttribute(name, value);
    }
 
    public Attr setAttributeNode(Attr newAttr) throws DOMException
    {
-      log.trace("setAttributeNode: " + newAttr);
+      if (log.isTraceEnabled())
+         log.trace("setAttributeNode: " + newAttr);
       expandToDOM();
       return super.setAttributeNode(newAttr);
    }
 
    public Attr setAttributeNodeNS(Attr newAttr) throws DOMException
    {
-      log.trace("setAttributeNodeNS: " + newAttr);
+      if (log.isTraceEnabled())
+         log.trace("setAttributeNodeNS: " + newAttr);
       expandToDOM();
       return super.setAttributeNodeNS(newAttr);
    }
 
    public void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws DOMException
    {
-      log.trace("setAttribute: [nsURI=" + namespaceURI + ",name=" + qualifiedName + ",value=" + value + "]");
+      if (log.isTraceEnabled())
+         log.trace("setAttribute: [nsURI=" + namespaceURI + ",name=" + qualifiedName + ",value=" + value + "]");
       expandToDOM();
       super.setAttributeNS(namespaceURI, qualifiedName, value);
    }
 
    public void setIdAttribute(String name, boolean isId) throws DOMException
    {
-      log.trace("setIdAttribute: [name=" + name + ",value=" + isId + "]");
+      if (log.isTraceEnabled())
+         log.trace("setIdAttribute: [name=" + name + ",value=" + isId + "]");
       expandToDOM();
       super.setIdAttribute(name, isId);
    }
 
    public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException
    {
-      log.trace("setIdAttributeNode: [idAttr=" + idAttr + ",value=" + isId + "]");
+      if (log.isTraceEnabled())
+         log.trace("setIdAttributeNode: [idAttr=" + idAttr + ",value=" + isId + "]");
       expandToDOM();
       super.setIdAttributeNode(idAttr, isId);
    }
 
    public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException
    {
-      log.trace("setIdAttributeNS: [nsURI=" + namespaceURI + ",name=" + localName + ",value=" + isId + "]");
+      if (log.isTraceEnabled())
+         log.trace("setIdAttributeNS: [nsURI=" + namespaceURI + ",name=" + localName + ",value=" + isId + "]");
       expandToDOM();
       super.setIdAttributeNS(namespaceURI, localName, isId);
    }
@@ -438,14 +461,16 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public Node appendChild(Node newChild) throws DOMException
    {
-      log.trace("appendChild: " + newChild);
+      if (log.isTraceEnabled())
+         log.trace("appendChild: " + newChild);
       expandToDOM();
       return super.appendChild(newChild);
    }
 
    public Node cloneNode(boolean deep)
    {
-      log.trace("cloneNode: deep=" + deep);
+      if (log.isTraceEnabled())
+         log.trace("cloneNode: deep=" + deep);
       expandToDOM();
       return super.cloneNode(deep);
    }
@@ -487,14 +512,16 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public Node removeChild(Node oldChild) throws DOMException
    {
-      log.trace("removeChild: " + oldChild);
+      if (log.isTraceEnabled())
+         log.trace("removeChild: " + oldChild);
       expandToDOM();
       return super.removeChild(oldChild);
    }
 
    public Node replaceChild(Node newChild, Node oldChild) throws DOMException
    {
-      log.trace("replaceChild: [new=" + newChild + ",old=" + oldChild + "]");
+      if (log.isTraceEnabled())
+         log.trace("replaceChild: [new=" + newChild + ",old=" + oldChild + "]");
       expandToDOM();
       return super.replaceChild(newChild, oldChild);
    }
@@ -507,7 +534,8 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    public void setValue(String value)
    {
-      log.trace("setValue: " + value);
+      if (log.isTraceEnabled())
+         log.trace("setValue: " + value);
       expandToDOM();
       super.setValue(value);
    }
@@ -546,8 +574,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
          CommonMessageContext ctx = MessageContextAssociation.peekMessageContext();
          if (ctx != null && Boolean.TRUE == ctx.get(Constants.DOM_CONTENT_CANONICAL_NORMALIZATION))
          {
-            if (log.isTraceEnabled())
-               log.trace("Forcing canonical normalization of DOMContent...");
+            log.trace("Forcing canonical normalization of DOMContent...");
             dw.setCanonical(true);
          }
          dw.print(this);
