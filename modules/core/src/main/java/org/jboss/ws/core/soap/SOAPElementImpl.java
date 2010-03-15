@@ -335,9 +335,9 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     *
     * @return an iterator over the names of the attributes
     */
-   public Iterator getAllAttributes()
+   public Iterator<Name> getAllAttributes()
    {
-      ArrayList list = new ArrayList();
+      ArrayList<Name> list = new ArrayList<Name>();
       NamedNodeMap nnm = getAttributes();
       int len = nnm.getLength();
       for (int i = 0; i < len; i++)
@@ -363,9 +363,9 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       return list.iterator();
    }
 
-   public Iterator getAllAttributesAsQNames()
+   public Iterator<QName> getAllAttributesAsQNames()
    {
-      ArrayList list = new ArrayList();
+      ArrayList<QName> list = new ArrayList<QName>();
       NamedNodeMap nnm = getAttributes();
       int len = nnm.getLength();
       for (int i = 0; i < len; i++)
@@ -450,9 +450,9 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     *
     * @return an iterator with the content of this SOAPElement object
     */
-   public Iterator getChildElements()
+   public Iterator<org.w3c.dom.Node> getChildElements()
    {
-      List list = new ArrayList();
+      List<org.w3c.dom.Node> list = new ArrayList<org.w3c.dom.Node>();
       NodeList nodeList = getChildNodes();
       int len = nodeList.getLength();
       for (int i = 0; i < len; i++)
@@ -504,15 +504,15 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     * @param name a Name object with the name of the child elements to be returned
     * @return an Iterator object over all the elements in this SOAPElement object with the specified name
     */
-   public Iterator getChildElements(Name name)
+   public Iterator<SOAPElement> getChildElements(Name name)
    {
       return getChildElements(((NameImpl)name).toQName());
    }
 
-   public Iterator getChildElements(QName qname)
+   public Iterator<SOAPElement> getChildElements(QName qname)
    {
       List<SOAPElement> list = new ArrayList<SOAPElement>();
-      Iterator it = getChildElements();
+      Iterator<org.w3c.dom.Node> it = getChildElements();
       while (it.hasNext())
       {
          Object elementOrTextNode = it.next();
@@ -558,15 +558,15 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     *
     * @return an iterator over the namespace prefixes in this SOAPElement object
     */
-   public Iterator getNamespacePrefixes()
+   public Iterator<String> getNamespacePrefixes()
    {
-      ArrayList list = getNamespacePrefixList();
+      ArrayList<String> list = getNamespacePrefixList();
       return list.iterator();
    }
 
-   private ArrayList getNamespacePrefixList()
+   private ArrayList<String> getNamespacePrefixList()
    {
-      ArrayList list = new ArrayList();
+      ArrayList<String> list = new ArrayList<String>();
       NamedNodeMap attrMap = element.getAttributes();
       int len = attrMap.getLength();
       for (int i = 0; i < len; i++)
@@ -601,9 +601,9 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     *
     * @return an iterator over the namespace prefixes are within scope of this SOAPElement object
     */
-   public Iterator getVisibleNamespacePrefixes()
+   public Iterator<String> getVisibleNamespacePrefixes()
    {
-      ArrayList list = getNamespacePrefixList();
+      ArrayList<String> list = getNamespacePrefixList();
       SOAPElementImpl parent = (SOAPElementImpl)getParentElement();
       while (parent != null)
       {
@@ -644,7 +644,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public void removeContents()
    {
-      Iterator it = getChildElements();
+      Iterator<org.w3c.dom.Node> it = getChildElements();
       while (it.hasNext())
       {
          Node el = (Node)it.next();
@@ -750,6 +750,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       return element.setAttributeNodeNS(newAttr);
    }
 
+   @SuppressWarnings("unchecked")
    public NodeList getElementsByTagName(String name)
    {
       List<Element> nodes = DOMUtils.getChildElementsAsList(this, (QName)null, true);
@@ -788,6 +789,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       return (attr == null) ? null : new AttrImpl(this, attr);
    }
 
+   @SuppressWarnings("unchecked")
    public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
    {
       List<Element> nodes = DOMUtils.getChildElementsAsList(this, (QName)null, true);
@@ -860,7 +862,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       writer.write("<" + qualName);
 
       // namespaces
-      Iterator nsPrefixes = getNamespacePrefixes();
+      Iterator<String> nsPrefixes = getNamespacePrefixes();
       while (nsPrefixes.hasNext())
       {
          String prefix = (String)nsPrefixes.next();
@@ -868,7 +870,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       }
 
       // attributes
-      Iterator attNames = getAllAttributes();
+      Iterator<Name> attNames = getAllAttributes();
       while (attNames.hasNext())
       {
          NameImpl name = (NameImpl)attNames.next();
@@ -885,7 +887,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    protected void writeElementContent(Writer out) throws IOException
    {
-      Iterator it = getChildElements();
+      Iterator<org.w3c.dom.Node> it = getChildElements();
       if (it.hasNext())
       {
          while (it.hasNext())

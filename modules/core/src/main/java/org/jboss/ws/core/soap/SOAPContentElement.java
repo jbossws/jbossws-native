@@ -232,14 +232,14 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return super.addTextNode(value);
    }
 
-   public Iterator getChildElements()
+   public Iterator<org.w3c.dom.Node> getChildElements()
    {
       log.trace("getChildElements");
       expandToDOM();
       return super.getChildElements();
    }
 
-   public Iterator getChildElements(Name name)
+   public Iterator<SOAPElement> getChildElements(Name name)
    {
       if (log.isTraceEnabled())
          log.trace("getChildElements: [name=" + name + "]");
@@ -254,7 +254,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       super.removeContents();
    }
 
-   public Iterator getAllAttributes()
+   public Iterator<Name> getAllAttributes()
    {
       return super.getAllAttributes();
    }
@@ -326,7 +326,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return super.getEncodingStyle();
    }
 
-   public Iterator getNamespacePrefixes()
+   public Iterator<String> getNamespacePrefixes()
    {
       return super.getNamespacePrefixes();
    }
@@ -346,7 +346,7 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
       return super.getTagName();
    }
 
-   public Iterator getVisibleNamespacePrefixes()
+   public Iterator<String> getVisibleNamespacePrefixes()
    {
       return super.getVisibleNamespacePrefixes();
    }
