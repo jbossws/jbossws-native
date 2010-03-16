@@ -52,6 +52,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
    private PrintStream messageStream;
    private String wsdlLocation;
    private List<String> additionalCompilerClassPath = new ArrayList<String>();
+   private boolean additionalHeaders = false;
    private String target;
 
    @Override
@@ -113,6 +114,12 @@ public class SunRIConsumerImpl extends WSContractConsumer
    {
       this.additionalCompilerClassPath = additionalCompilerClassPath;
    }
+   
+   @Override
+   public void setAdditionalHeaders(boolean additionalHeaders)
+   {
+      this.additionalHeaders = additionalHeaders;
+   }
 
    @Override
    public void setTarget(String target)
@@ -149,6 +156,11 @@ public class SunRIConsumerImpl extends WSContractConsumer
       if (extension)
       {
          args.add("-extension");
+      }
+      
+      if (additionalHeaders)
+      {
+         args.add("-XadditionalHeaders");
       }
 
       if (nocompile)
