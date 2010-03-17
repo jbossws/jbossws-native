@@ -26,9 +26,9 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.ws.soap.Addressing;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 
 /**
  * WS-Addressing service endpoint
@@ -39,7 +39,7 @@ import org.jboss.ws.annotation.EndpointConfig;
  */
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebService(name = "InitialEndpoint", serviceName = "InitialEndpointService", targetNamespace = "http://org.jboss.ws/addressing/replyto")
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+@Addressing
 public class InitialEndpointImpl implements InitialEndpoint
 {
    // provide logging

@@ -59,6 +59,7 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.common.addressing.AddressingConstants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -185,6 +186,7 @@ public class WSDL11Writer extends WSDLWriter
       for (WSDLExtensibilityElement ext : extendable.getAllExtensibilityElements())
       {
          appendPolicyElements(builder, ext);
+         appendAddressingPolicyElements(builder, ext);
          appendJAXWSCustomizationElements(builder, ext);
          //add processing of further extensibility element types below
       }
@@ -194,6 +196,14 @@ public class WSDL11Writer extends WSDLWriter
    {
       if (Constants.WSDL_ELEMENT_POLICY.equalsIgnoreCase(extElem.getUri()) ||
             Constants.WSDL_ELEMENT_POLICYREFERENCE.equalsIgnoreCase(extElem.getUri()))
+      {
+         appendElementSkippingKnownNs(builder, extElem.getElement());
+      }
+   }
+   
+   private void appendAddressingPolicyElements(StringBuilder builder, WSDLExtensibilityElement extElem)
+   {
+      if (WSDLGenerator.WSP_NS.equalsIgnoreCase(extElem.getUri()))
       {
          appendElementSkippingKnownNs(builder, extElem.getElement());
       }
@@ -427,6 +437,8 @@ public class WSDL11Writer extends WSDLWriter
    protected void appendPortOperations(StringBuilder buffer, WSDLInterface intf)
    {
       String prefix = wsdl.getPrefix(intf.getName().getNamespaceURI());
+      String wsamPrefix = wsdl.getPrefix(AddressingConstants.Metadata.NS);
+
       WSDLInterfaceOperation[] operations = intf.getSortedOperations();
       for (int i = 0; i < operations.length; i++)
       {
@@ -449,20 +461,45 @@ public class WSDL11Writer extends WSDLWriter
          String interfaceName = operation.getWsdlInterface().getName().getLocalPart();
          String msgEl = prefix + ":" + interfaceName + "_" + opname;
 
-         buffer.append("<input message='" + msgEl + "'>").append("</input>");
+         String inputAction = operation.getInputs()[0].getAction();
+         if (inputAction == null)
+         {
+            buffer.append("<input message='" + msgEl + "'>").append("</input>");
+         }
+         else
+         {
+            buffer.append("<input message='" + msgEl + "' " + wsamPrefix + ":" + AddressingConstants.Metadata.Attributes.ACTION + "='" + inputAction + "'/>");
+         }
 
          if (! Constants.WSDL20_PATTERN_IN_ONLY.equals(operation.getPattern()))
          {
-            buffer.append("<output message='" + msgEl + "Response'>");
-            buffer.append("</output>");
+            String outputAction = operation.getOutputs()[0].getAction();
+            if (outputAction == null)
+            {
+               buffer.append("<output message='" + msgEl + "Response'>").append("</output>");
+            }
+            else
+            {
+               buffer.append("<output message='" + msgEl + "Response' " + wsamPrefix + ":" + AddressingConstants.Metadata.Attributes.ACTION + "='" + outputAction + "'/>");
+            }
          }
 
          //Append the Faults
          for (WSDLInterfaceOperationOutfault fault : operation.getOutfaults())
          {
             QName element = fault.getRef();
-            buffer.append("<fault  message='" + prefix + ":" + element.getLocalPart());
-            buffer.append("' name='" + element.getLocalPart() + "'/>");
+            String faultAction = fault.getAction();
+            if (faultAction == null)
+            {
+               buffer.append("<fault  message='" + prefix + ":" + element.getLocalPart());
+               buffer.append("' name='" + element.getLocalPart() + "'/>");
+            }
+            else
+            {
+               buffer.append("<fault  message='" + prefix + ":" + element.getLocalPart());
+               buffer.append("' name='" + element.getLocalPart() + "' ");
+               buffer.append(wsamPrefix + ":" + AddressingConstants.Metadata.Attributes.ACTION + "='" + faultAction + "'/>");
+            }
          }
 
          buffer.append("</operation>");

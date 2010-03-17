@@ -24,6 +24,7 @@ package org.jboss.test.ws.jaxws.samples.wsrm.service;
 import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.xml.ws.soap.Addressing;
 
 import org.jboss.ws.annotation.EndpointConfig;
 
@@ -39,6 +40,7 @@ import org.jboss.ws.annotation.EndpointConfig;
    configFile = "META-INF/wsrm-jaxws-endpoint-config.xml",
    configName = "Standard WSRM Endpoint"
 )
+@Addressing
 public class SimpleServiceImpl
 {
    @Oneway

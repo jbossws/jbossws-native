@@ -49,6 +49,20 @@ public class WSDLInterfaceOperationOutfault extends Extendable
     */
    private String messageLabel;
 
+   /** An OPTIONAL wsam:Action
+    */
+   private String action;
+
+   public String getAction()
+   {
+      return this.action;
+   }
+
+   public void setAction(String action)
+   {
+      this.action = action;
+   }
+
    public WSDLInterfaceOperationOutfault(WSDLInterfaceOperation wsdlInterfaceOperation)
    {
       this.wsdlInterfaceOperation = wsdlInterfaceOperation;

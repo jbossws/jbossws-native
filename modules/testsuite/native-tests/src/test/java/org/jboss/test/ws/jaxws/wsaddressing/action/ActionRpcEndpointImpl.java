@@ -26,9 +26,9 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.ws.soap.Addressing;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 
 /**
  * WS-Addressing service endpoint
@@ -43,7 +43,7 @@ import org.jboss.ws.annotation.EndpointConfig;
 		targetNamespace = "http://org.jboss.ws/addressing/action",		
 		endpointInterface = "org.jboss.test.ws.jaxws.wsaddressing.action.ActionEndpoint"
 )
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+@Addressing
 public class ActionRpcEndpointImpl implements ActionEndpoint
 {
    // provide logging

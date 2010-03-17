@@ -24,6 +24,7 @@ package org.jboss.test.ws.jaxws.wsrm.services;
 import java.util.Arrays;
 import javax.jws.Oneway;
 import javax.jws.WebService;
+import javax.xml.ws.soap.Addressing;
 
 @WebService
 (
@@ -33,6 +34,7 @@ import javax.jws.WebService;
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm",
    endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.SecuredOneWayServiceIface"
 )
+@Addressing
 public class SecuredOneWayServiceImpl implements SecuredOneWayServiceIface
 {
    @Oneway

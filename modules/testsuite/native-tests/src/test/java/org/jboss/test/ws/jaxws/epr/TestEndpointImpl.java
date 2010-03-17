@@ -35,14 +35,14 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import javax.xml.ws.soap.Addressing;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 
 @WebService(serviceName = "TestEndpointService", name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/epr")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @Stateless
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+@Addressing
 public class TestEndpointImpl implements TestEndpoint
 {
    // provide logging

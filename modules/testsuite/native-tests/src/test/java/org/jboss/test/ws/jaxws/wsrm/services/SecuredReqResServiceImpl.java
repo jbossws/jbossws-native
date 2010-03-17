@@ -23,6 +23,7 @@ package org.jboss.test.ws.jaxws.wsrm.services;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.xml.ws.soap.Addressing;
 
 @WebService
 (
@@ -32,6 +33,7 @@ import javax.jws.WebService;
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wsrm",
    endpointInterface = "org.jboss.test.ws.jaxws.wsrm.services.SecuredReqResServiceIface"
 )
+@Addressing
 public class SecuredReqResServiceImpl
 {
    @WebMethod

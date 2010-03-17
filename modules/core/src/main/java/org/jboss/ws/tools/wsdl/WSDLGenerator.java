@@ -30,6 +30,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.addressing.AddressingProperties;
+import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.apache.ws.policy.Policy;
@@ -38,6 +40,8 @@ import org.apache.ws.policy.util.PolicyWriter;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
+import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
+import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaExtension;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -70,6 +74,8 @@ import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.wsf.common.DOMUtils;
+import org.jboss.wsf.common.addressing.AddressingConstants;
+import org.jboss.wsf.common.utils.UUIDGenerator;
 import org.w3c.dom.Element;
 
 /**
@@ -79,6 +85,10 @@ import org.w3c.dom.Element;
  */
 public abstract class WSDLGenerator
 {
+   private static final AddressingProperties WSA_PROPERTIES = new AddressingPropertiesImpl();
+   public static final String WSU_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+   public static final String WSAM_NS = AddressingConstants.Metadata.NS;
+   public static final String WSP_NS = "http://www.w3.org/ns/ws-policy";
    protected WSDLDefinitions wsdl;
    
    protected boolean extension;
@@ -116,6 +126,14 @@ public abstract class WSDLGenerator
       wsdlBinding.setType(endpoint.getBindingId());
       wsdl.addBinding(wsdlBinding);
       wsdlEndpoint.setBinding(bindingQName);
+      if (endpoint.isFeatureEnabled(AddressingFeature.class))
+      {
+         // register WSAM namespace
+         if (wsdl.getPrefix(WSAM_NS) == null)
+         {
+            wsdl.registerNamespaceURI(WSAM_NS, "wsa");
+         }
+      }
 
       if (endpoint.getDocumentation() != null)
       {
@@ -164,6 +182,16 @@ public abstract class WSDLGenerator
             addPolicyReference(policy, wsdlBinding);
          }
       }
+      
+      // Addressing policies - http://ws.apache.org/commons/neethi/ is not usable thus hacking the code ATM :(
+      // TODO: implement WS-P facade?
+      if (endpoint.isFeatureEnabled(AddressingFeature.class))
+      {
+         AddressingFeature addressingFeature = endpoint.getFeature(AddressingFeature.class);
+         
+         String policyId = this.addAddressingPolicyDefinition(addressingFeature);
+         this.addAddressingPolicyReference(policyId, wsdlBinding);
+      }      
    }
    
    protected void addPolicyDefinition(Policy policy)
@@ -189,6 +217,37 @@ public abstract class WSDLGenerator
       }
    }
    
+   /*
+    * <wsp:Policy wsu:Id="SOME_ID">
+    *   <wsam:Addressing wsp:Optional="true">
+    *     <wsp:Policy/>
+    *   </wsam:Addressing>
+    * </wsp:Policy>
+    */
+   private String addAddressingPolicyDefinition(final AddressingFeature addressing)
+   {
+      // construct addressing policy
+      String policyId = UUIDGenerator.generateRandomUUIDString();
+      Element policyElement = DOMUtils.createElement(new QName(WSP_NS, "Policy", "wsp"));
+      policyElement.setAttribute("xmlns:wsu", WSU_NS);
+      policyElement.setAttribute("xmlns:wsp", WSP_NS);
+      policyElement.setAttribute("wsu:Id", policyId);
+      Element addressingElement = DOMUtils.createElement(new QName(WSAM_NS, "Addressing", "wsam"));
+      addressingElement.setAttribute("xmlns:wsam", WSAM_NS);
+      policyElement.appendChild(addressingElement);
+      if (!addressing.isRequired())
+      {
+         addressingElement.setAttributeNS(WSP_NS, "wsp:Optional", "true");
+      }
+      Element nestedPolicyElement = DOMUtils.createElement(new QName(WSP_NS, "Policy", "wsp"));
+      addressingElement.appendChild(nestedPolicyElement);
+      
+      // bind policy to WSDL
+      wsdl.addExtensibilityElement(new WSDLExtensibilityElement(WSP_NS, policyElement));
+
+      return policyId;
+   }
+   
    protected void addPolicyReference(Policy policy, Extendable extendable)
    {
       QName policyRefQName = Constants.WSDL_ELEMENT_WSP_POLICYREFERENCE;
@@ -203,6 +262,17 @@ public abstract class WSDLGenerator
       //TODO!! we need to understand if the policy is local or not...
       WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_POLICYREFERENCE, element);
       extendable.addExtensibilityElement(ext);
+   }
+   
+   /*
+    * <wsp:PolicyReference URI="#SOME_ID"/>
+    */
+   protected void addAddressingPolicyReference(String policyId, Extendable extendable)
+   {
+      Element policyReferenceElement = DOMUtils.createElement(new QName(WSP_NS, "PolicyReference", "wsp"));
+      policyReferenceElement.setAttribute("xmlns:wsp", WSP_NS);
+      policyReferenceElement.setAttribute("URI", "#" + policyId);
+      extendable.addExtensibilityElement(new WSDLExtensibilityElement(WSP_NS, policyReferenceElement));
    }
    
    protected void addPolicyURIAttribute(Policy policy, Extendable extendable)
@@ -248,6 +318,7 @@ public abstract class WSDLGenerator
          String ns = getNamespace(fault.getJavaType(), operation.getQName().getNamespaceURI());
          QName outFaultName = new QName(ns, fault.getXmlName().getLocalPart());
          outfault.setRef(outFaultName);
+         this.setAddressingAction(outfault, fault, operation);
          interfaceOperation.addOutfault(outfault);
 
          WSDLBindingFault bindingFault = new WSDLBindingFault(wsdlBinding);
@@ -342,6 +413,7 @@ public abstract class WSDLGenerator
          // If there is no return parameter, it will most likely be set later with an INOUT or OUT parameter.
          // Otherwise, a null element means there is a 0 body element part, which is allowed by BP 1.0
          interfaceOperation.addOutput(output);
+         this.setAddressingAction(output, operation);
          bindingOperation.addOutput(bindingOutput);
       }
 
@@ -373,6 +445,7 @@ public abstract class WSDLGenerator
       }
 
       interfaceOperation.addInput(input);
+      this.setAddressingAction(input, operation);
       bindingOperation.addInput(bindingInput);
    }
 
@@ -419,6 +492,7 @@ public abstract class WSDLGenerator
          }
 
          interfaceOperation.addOutput(output);
+         this.setAddressingAction(output, operation);
          bindingOperation.addOutput(bindingOutput);
       }
 
@@ -449,7 +523,43 @@ public abstract class WSDLGenerator
       }
 
       interfaceOperation.addInput(input);
+      this.setAddressingAction(input, operation);
       bindingOperation.addInput(bindingInput);
+   }
+
+   private void setAddressingAction(WSDLInterfaceOperationInput input, OperationMetaData operationMD)
+   {
+      AddressingOpMetaExt addrExt = this.getAddressingMD(operationMD);
+      if (addrExt != null)
+      {
+         input.setAction(addrExt.getInboundAction());
+      }
+   }
+   
+   private void setAddressingAction(WSDLInterfaceOperationOutput output, OperationMetaData operationMD)
+   {
+      AddressingOpMetaExt addrExt = this.getAddressingMD(operationMD);
+      if (addrExt != null)
+      {
+         output.setAction(addrExt.getOutboundAction());
+      }
+   }
+
+   private void setAddressingAction(WSDLInterfaceOperationOutfault fault, FaultMetaData faultMD, OperationMetaData operationMD)
+   {
+      AddressingOpMetaExt addrExt = this.getAddressingMD(operationMD);
+      if (addrExt != null)
+      {
+         fault.setAction(addrExt.getFaultAction(faultMD.getFaultBeanName()));
+      }
+   }
+   
+   private AddressingOpMetaExt getAddressingMD(OperationMetaData operationMD)
+   {
+      if (operationMD.getEndpointMetaData().isFeatureEnabled(AddressingFeature.class))
+         return (AddressingOpMetaExt)operationMD.getExtension(WSA_PROPERTIES.getNamespaceURI());
+
+      return null;
    }
 
    protected void processService(ServiceMetaData service)

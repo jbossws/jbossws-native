@@ -21,13 +21,12 @@
  */
 package org.jboss.test.ws.interop.wsa;
 
-import org.jboss.ws.annotation.EndpointConfig;
-
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.ws.soap.Addressing;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>
@@ -41,7 +40,7 @@ import javax.jws.soap.SOAPBinding;
    portName = "EchoPort"
 )
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+@Addressing
 public class EchoImpl implements EchoPortType {
 
    @WebMethod(operationName = "EchoOp", action = "http://example.org/action/echoIn")
