@@ -36,6 +36,7 @@
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/XMLGregorianCalendarHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/Client.class"/>
       </fileset>
     </jar>
@@ -49,6 +50,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/dar/DarRequest.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/DarResponse.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/ReplyConverter.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/XMLGregorianCalendarHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/Route.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/Stop.class"/>
@@ -62,6 +64,7 @@
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/XMLGregorianCalendarHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/AddressingClient.class"/>
       </fileset>
     </jar>
@@ -92,6 +95,7 @@
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/dar/XMLGregorianCalendarHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/dar/JMSClient.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/WEB-INF-jms">
@@ -161,12 +165,14 @@
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/news/generated/agency/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/Agency.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/XMLGregorianCalendarHelper.class"/>
       </fileset>
     </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step1-printer.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/news/generated/printer/**/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/Printer.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/XMLGregorianCalendarHelper.class"/>
       </fileset>
     </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-news-step2-newspaper.jar">
@@ -194,6 +200,7 @@
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/news/generated/agency/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/Agency.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/XMLGregorianCalendarHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/SecureAgency.class"/>
       </fileset>
       <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/news/META-INF">
@@ -206,6 +213,7 @@
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/news/generated/printer/**/*.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/Printer.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/news/XMLGregorianCalendarHelper.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/news/SecurePrinter.class"/>
       </fileset>
     </jar>

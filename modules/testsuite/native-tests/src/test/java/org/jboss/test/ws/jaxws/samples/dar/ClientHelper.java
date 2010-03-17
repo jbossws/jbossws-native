@@ -34,8 +34,6 @@ import org.jboss.test.ws.jaxws.samples.dar.generated.Route;
 import org.jboss.test.ws.jaxws.samples.dar.generated.ServiceRequest;
 import org.jboss.test.ws.jaxws.samples.dar.generated.Stop;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
 public class ClientHelper
 {
    public static void setUsernamePassword(BindingProvider bp, String username, String password)
@@ -53,10 +51,10 @@ public class ClientHelper
          ServiceRequest serviceRequest = new ServiceRequest();
          Stop up = new Stop();
          up.setNode(new Double(Math.random()*1000).intValue());
-         up.setTime(new XMLGregorianCalendarImpl(new GregorianCalendar()));
+         up.setTime(XMLGregorianCalendarHelper.convert(new GregorianCalendar()));
          Stop down = new Stop();
          down.setNode(new Double(Math.random()*1000).intValue());
-         down.setTime(new XMLGregorianCalendarImpl(new GregorianCalendar()));
+         down.setTime(XMLGregorianCalendarHelper.convert(new GregorianCalendar()));
          serviceRequest.setFrom(up);
          serviceRequest.setTo(down);
          serviceRequest.setPeople(new Double(Math.random()*3).intValue()+1);

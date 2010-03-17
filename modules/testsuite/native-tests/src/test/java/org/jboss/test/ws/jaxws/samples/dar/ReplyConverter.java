@@ -23,7 +23,8 @@ package org.jboss.test.ws.jaxws.samples.dar;
 
 import java.util.GregorianCalendar;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 
 public class ReplyConverter
 {
@@ -76,7 +77,7 @@ public class ReplyConverter
       s.setNode(stop.getNode());
       GregorianCalendar cal = new GregorianCalendar();
       cal.setTime(stop.getTime());
-      s.setTime(new XMLGregorianCalendarImpl(cal));
+      s.setTime(XMLGregorianCalendarHelper.convert(cal));
       return s;
    }
 }
