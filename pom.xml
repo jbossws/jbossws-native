@@ -69,6 +69,7 @@
     <jboss.logging.version>2.2.0.CR1</jboss.logging.version>
     <jboss.jaxr.version>2.0.1</jboss.jaxr.version>
     <apache.scout.version>1.1.1</apache.scout.version>
+    <hornetq.version>2.1.0.r8931</hornetq.version>
     <juddi.version>0.9RC4</juddi.version>
     <netty.version>3.1.5.GA</netty.version>
     <sun.fastinfoset.version>1.2.2</sun.fastinfoset.version>
@@ -197,6 +198,7 @@
         <artifactId>javassist</artifactId>
         <version>${javassist.version}</version>
       </dependency>
+      
       <!-- transitive dependencies -->
       <dependency>
         <groupId>commons-logging</groupId>
@@ -410,6 +412,21 @@
         <groupId>org.jboss.netty</groupId>
         <artifactId>netty</artifactId>
         <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hornetq</groupId>
+        <artifactId>hornetq-transports</artifactId>
+        <version>${hornetq.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hornetq</groupId>
+        <artifactId>hornetq-transports</artifactId>
+        <version>${hornetq.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hornetq</groupId>
+        <artifactId>hornetq-jms-client</artifactId>
+        <version>${hornetq.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
