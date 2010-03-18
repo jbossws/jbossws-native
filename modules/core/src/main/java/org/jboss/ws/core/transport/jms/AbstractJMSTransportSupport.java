@@ -46,6 +46,7 @@ import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.xml.soap.SOAPException;
 
+import org.hornetq.jms.client.HornetQDestination;
 import org.jboss.logging.Logger;
 import org.jboss.util.NestedRuntimeException;
 import org.jboss.wsf.spi.SPIProvider;
@@ -67,7 +68,7 @@ import org.jboss.wsf.spi.management.EndpointRegistryFactory;
 public abstract class AbstractJMSTransportSupport implements MessageListener
 {
    // logging support
-   protected Logger log = Logger.getLogger(AbstractJMSTransportSupport.class);
+   protected static Logger log = Logger.getLogger(AbstractJMSTransportSupport.class);
 
    private QueueConnectionFactory conFactory;
    
@@ -98,10 +99,12 @@ public abstract class AbstractJMSTransportSupport implements MessageListener
 
          String fromName = null;
          Destination destination = message.getJMSDestination();
-         if (destination instanceof Queue)
-            fromName = "queue/" + ((Queue)destination).getQueueName();
-         if (destination instanceof Topic)
-            fromName = "topic/" + ((Topic)destination).getTopicName();
+         if (destination instanceof HornetQDestination)
+            fromName = getFromName(destination, ((HornetQDestination)destination).isQueue());
+         else if (destination instanceof Queue)
+            fromName = getFromName(destination, true);
+         else if (destination instanceof Topic)
+            fromName = getFromName(destination, false);
 
          InputStream inputStream = new ByteArrayInputStream(msgStr.getBytes());
          ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
@@ -137,7 +140,12 @@ public abstract class AbstractJMSTransportSupport implements MessageListener
          throw new EJBException(e);
       }
    }
-
+   
+   private static String getFromName(Destination destination, boolean queue) throws JMSException
+   {
+      return queue ? "queue/" + ((Queue)destination).getQueueName() : "topic/" + ((Topic)destination).getTopicName();
+   }
+   
    protected void processSOAPMessage(String fromName, InputStream inputStream, OutputStream outStream) throws SOAPException, IOException, RemoteException
    {
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
