@@ -205,12 +205,35 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-jmstransport-as6.jar">
+      <fileset dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxrpc/samples/jmstransport/Organization.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/samples/jmstransport/OrganizationJMSEndpoint.class"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/jmstransport/META-INF">
+        <include name="webservices.xml"/>
+        <include name="jaxrpc-mapping.xml"/>
+        <include name="wsdl/**"/>
+      </metainf>
+      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/jmstransport/META-INF-AS6">
+        <include name="ejb-jar.xml"/>
+        <include name="jboss.xml"/>
+      </metainf>
+  	</jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-jmstransport.sar">
       <fileset dir="${tests.output.dir}/test-libs">
         <include name="jaxrpc-samples-jmstransport.jar"/>
       </fileset>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/jmstransport/META-INF">
         <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-jmstransport-as6.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-jmstransport-as6.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/jmstransport/META-INF-AS6">
+        <include name="hornetq-jms.xml"/>
       </metainf>
     </jar>
     

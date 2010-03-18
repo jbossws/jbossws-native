@@ -60,6 +60,11 @@
         <include name="jboss.xml"/>
       </metainf>
     </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-queue.sar">
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar">
+        <include name="hornetq-jms.xml"/>
+      </metainf>
+    </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-addressing-client.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/dar/generated/*.class"/>
@@ -116,12 +121,29 @@
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client-as6.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxws-samples-dar-jms-client.war"/>
+        <include name="jaxws-samples-dar-jms-client.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+        <include name="hornetq-jms.xml"/>
+      </metainf>
+    </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client-test.sar">
       <fileset dir="${tests.output.dir}/test-libs">
         <include name="jaxws-samples-dar-jms-client.war"/>
       </fileset>
       <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
         <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-jms-client-test-as6.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxws-samples-dar-jms-client.war"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
+        <include name="hornetq-jms.xml"/>
       </metainf>
     </jar>
     
@@ -141,6 +163,14 @@
       </fileset>
       <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/META-INF">
         <include name="jboss-service.xml"/>
+      </metainf>
+    </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport-as6.sar">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxws-samples-jmstransport.jar"/>
+      </fileset>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/META-INF">
+        <include name="hornetq-jms.xml"/>
       </metainf>
     </jar>
 
