@@ -346,8 +346,16 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
                   contentType = multipartRelatedEncoder.getContentType();
                }
             }
-
-            mimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, contentType);
+            //JBWS-2964:Create a new mimeHeaders to avoid changing another referenced mimeHeaders
+            MimeHeaders newMimeHeaders = new MimeHeaders();            
+            Iterator iterator = mimeHeaders.getAllHeaders();
+            while (iterator.hasNext())
+            {
+               MimeHeader mimeHeader = (MimeHeader) iterator.next();
+               newMimeHeaders.addHeader(mimeHeader.getName(), mimeHeader.getValue());
+            }
+            newMimeHeaders.setHeader(MimeConstants.CONTENT_TYPE, contentType);
+            setMimeHeaders(newMimeHeaders);
          }
          catch (MessagingException ex)
          {
