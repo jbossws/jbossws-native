@@ -128,6 +128,8 @@ public class JMSTransportTestCase extends JBossWSTest
       assertNotNull("Expected response message", responseListener.resMessage);
       assertEquals(DOMUtils.parse(resMessage), DOMUtils.parse(responseListener.resMessage));
 
+      sender.close();
+      receiver.close();
       con.stop();
       session.close();
       con.close();
