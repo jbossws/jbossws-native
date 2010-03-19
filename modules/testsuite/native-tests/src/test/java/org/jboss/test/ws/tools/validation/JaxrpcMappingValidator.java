@@ -62,8 +62,8 @@ public class JaxrpcMappingValidator
    public boolean validate(String mappingFile1, String mappingFile2) throws Exception
    {
       JavaWsdlMappingFactory mappingFactory = JavaWsdlMappingFactory.newInstance();
-      JavaWsdlMapping javaWsdlMapping1 = mappingFactory.parse( new File(mappingFile1).toURL());
-      JavaWsdlMapping javaWsdlMapping2 = mappingFactory.parse( new File(mappingFile2).toURL());
+      JavaWsdlMapping javaWsdlMapping1 = mappingFactory.parse( new File(mappingFile1).toURI().toURL());
+      JavaWsdlMapping javaWsdlMapping2 = mappingFactory.parse( new File(mappingFile2).toURI().toURL());
       return validate(javaWsdlMapping1, javaWsdlMapping2);
    }
 

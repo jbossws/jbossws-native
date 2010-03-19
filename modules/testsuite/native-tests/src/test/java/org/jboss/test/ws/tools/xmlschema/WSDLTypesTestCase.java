@@ -21,8 +21,8 @@
  */
 package org.jboss.test.ws.tools.xmlschema;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 
@@ -45,13 +45,13 @@ public class WSDLTypesTestCase extends JBossWSTest
    public void testXMLTypeReturned()
    {
       String filename = "StandardJavaTypesService_DOC_11.wsdl";
-      File wsdlFile = getResourceFile("tools/wsdlfixture/" + filename);
       WSDLTypes types = null;
       try
       {
+         URL wsdlFile = getResourceURL("tools/wsdlfixture/" + filename);
          WSDLToJavaIntf wsdljava = new WSDLToJava();
          wsdljava.setTypeMapping(new LiteralTypeMapping());
-         WSDLDefinitions wsdl = wsdljava.convertWSDL2Java(wsdlFile.toURL());
+         WSDLDefinitions wsdl = wsdljava.convertWSDL2Java(wsdlFile);
          types = wsdl.getWsdlTypes();
       }
       catch (IOException e)
@@ -69,13 +69,13 @@ public class WSDLTypesTestCase extends JBossWSTest
    public void testXMLSchemaReturned()
    {
       String filename = "StandardJavaTypesService_DOC_11.wsdl";
-      File wsdlFile = getResourceFile("tools/wsdlfixture/" + filename);
       WSDLTypes types = null;
       try
       {
+         URL wsdlFile = getResourceURL("tools/wsdlfixture/" + filename);
          WSDLToJavaIntf wsdljava = new WSDLToJava();
          wsdljava.setTypeMapping(new LiteralTypeMapping());
-         WSDLDefinitions wsdl = wsdljava.convertWSDL2Java(wsdlFile.toURL());
+         WSDLDefinitions wsdl = wsdljava.convertWSDL2Java(wsdlFile);
          types = wsdl.getWsdlTypes();
       }
       catch (IOException e)

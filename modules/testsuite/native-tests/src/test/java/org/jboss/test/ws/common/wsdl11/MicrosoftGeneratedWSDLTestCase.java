@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.common.wsdl11;
 
-import java.io.File;
+import java.net.URL;
 
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
@@ -40,12 +40,9 @@ public class MicrosoftGeneratedWSDLTestCase extends JBossWSTest
 {
 	public void testBaseRpcLit() throws Exception
 	{
-		File wsdlFile = getResourceFile("common/wsdl11/microsoft-interop/rpclit/BaseTypesRpcLit.wsdl");
-		assertTrue(wsdlFile.exists());
-		
-		
+		URL wsdlFile = getResourceURL("common/wsdl11/microsoft-interop/rpclit/BaseTypesRpcLit.wsdl");
 		WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-		WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+		WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
 		 
 		// check if the schema has been extracted
 		WSDLTypes wsdlTypes = wsdlDefinitions.getWsdlTypes();

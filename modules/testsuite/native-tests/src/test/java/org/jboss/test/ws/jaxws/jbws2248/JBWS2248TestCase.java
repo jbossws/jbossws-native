@@ -47,10 +47,10 @@ public class JBWS2248TestCase extends JBossWSTest
 
    public void testService() throws Exception
    {
-      File wsdlFile = getResourceFile("jaxws/jbws2248/WEB-INF/wsdl/TestService.wsdl");
+      URL wsdlFile = getResourceURL("jaxws/jbws2248/WEB-INF/wsdl/TestService.wsdl");
       QName serviceName = new QName("http://jbws2248.jaxws.ws.test.jboss.org/", "EndpointService");
 
-      Service service = Service.create(wsdlFile.toURL(), serviceName);
+      Service service = Service.create(wsdlFile, serviceName);
       EndpointInterface port = (EndpointInterface)service.getPort(EndpointInterface.class);
       assertEquals(port.hello("Hello!"), "Hello!");
    }

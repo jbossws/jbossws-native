@@ -21,8 +21,8 @@
  */
 package org.jboss.test.ws.tools.xmlschema;
 
-import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,8 +46,8 @@ public class XMLSchemaTestCase extends WSToolsBase
    public void testXMLTypeReturned() throws MalformedURLException
    {
       String filename = "CustomInterface20.xsd";
-      File xsdFile = getResourceFile("tools/wsdlfixture/" + filename);
-      XSModel xsmodel = parseSchema(xsdFile.toURL());
+      URL xsdFile = getResourceURL("tools/wsdlfixture/" + filename);
+      XSModel xsmodel = parseSchema(xsdFile);
       assertNotNull("XSModel is null?", xsmodel);
       XSNamedMap xsmap = xsmodel.getComponentsByNamespace(XSConstants.ELEMENT_DECLARATION, "http://org.jboss.ws/types");
       assertNotNull("XSNamedMap is null?", xsmap);
@@ -60,9 +60,8 @@ public class XMLSchemaTestCase extends WSToolsBase
    public void testXSDInclude() throws MalformedURLException
    {
       String filename = "SchemaMain.xsd";
-      File xsdFile = getResourceFile("tools/xsd/schemainclude/" + filename);
-      assertTrue("Does Schema file exist?", xsdFile.exists());
-      XSModel xsmodel = parseSchema(xsdFile.toURL());
+      URL xsdFile = getResourceURL("tools/xsd/schemainclude/" + filename);
+      XSModel xsmodel = parseSchema(xsdFile);
       assertNotNull("XSModel is null?", xsmodel);
       XSNamedMap xsmap = xsmodel.getComponentsByNamespace(XSConstants.TYPE_DEFINITION, "http://org.jboss.ws/types");
       assertNotNull("XSNamedMap is null?", xsmap);
@@ -73,13 +72,13 @@ public class XMLSchemaTestCase extends WSToolsBase
    /**
     * Check bad include in schema
     */
-   public void testBadXSDInclude()
+   public void testBadXSDInclude() throws Exception
    {
       String filename = "SchemaBadMain.xsd";
-      File xsdFile = getResourceFile("tools/xsd/schemainclude/" + filename);
+      URL xsdFile = getResourceURL("tools/xsd/schemainclude/" + filename);
       try
       {
-         XSModel xsmodel = parseSchema(xsdFile.toURL());
+         XSModel xsmodel = parseSchema(xsdFile);
          assertNotNull("XSModel is null?", xsmodel);
          fail("Test should have failed as we have a bad schema include");
       }
@@ -95,11 +94,9 @@ public class XMLSchemaTestCase extends WSToolsBase
     */
    public void testXSDImport() throws MalformedURLException
    {
-      String filename = "SchemaMain.xsd";
-      File xsdFile = getResourceFile("tools/xsd/schemaimport/" + filename);
       //Create an Hashmap of <namespace,URL>
       Map schemaMap = new HashMap();
-      schemaMap.put("http://org.jboss.ws/types", xsdFile.toURL());
+      schemaMap.put("http://org.jboss.ws/types", getResourceURL("tools/xsd/schemaimport/SchemaMain.xsd"));
       schemaMap.put("http://org.jboss.ws/types2", getResourceURL("/tools/xsd/schemaimport/SchemaImport.xsd"));
       XSModel xsmodel = parseSchema(schemaMap);
       assertNotNull("XSModel is null?", xsmodel);

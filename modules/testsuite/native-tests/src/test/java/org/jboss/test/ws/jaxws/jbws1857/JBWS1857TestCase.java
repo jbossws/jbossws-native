@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.jbws1857;
 
-import java.io.File;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -47,9 +47,9 @@ public class JBWS1857TestCase extends JBossWSTest
    
    public void testPortCreation() throws Exception
    {
-      File wsdlFile = getResourceFile("jaxws/jbws1857/StammdatenService.wsdl");
+      URL wsdlFile = getResourceURL("jaxws/jbws1857/StammdatenService.wsdl");
       QName serviceName = new QName("http://example.com", "StammdatenService");
-      Service service = Service.create(wsdlFile.toURL(), serviceName);
+      Service service = Service.create(wsdlFile, serviceName);
       
       service.getPort(Stammdaten.class);
       Integer ctxCount = JAXBContextFactory.getContextCount();

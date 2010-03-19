@@ -160,7 +160,7 @@ public class WSDLRequestHandlerTestCase extends JBossWSTest
       @Override
       protected InputStream openStreamToWSDL() throws IOException
       {
-         return testWsdl.toURL().openStream();
+         return testWsdl.toURI().toURL().openStream();
       }
       
    }

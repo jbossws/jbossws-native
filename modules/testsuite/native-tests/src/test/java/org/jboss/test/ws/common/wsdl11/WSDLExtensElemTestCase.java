@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.common.wsdl11;
 
-import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -47,11 +47,10 @@ public class WSDLExtensElemTestCase extends JBossWSTest
 {
    public void testPolicyEndpointExtensibilityElements() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/PolicyAttachment.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/PolicyAttachment.wsdl");
       
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       WSDLService wsdlService = wsdlDefinitions.getServices()[0];
       WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoints()[0];
       
@@ -78,11 +77,10 @@ public class WSDLExtensElemTestCase extends JBossWSTest
    
    public void testPolicyAndUnkwnownEndpointExtensibilityElements() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/PolicyAttachmentAndUnknownExtElem.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/PolicyAttachmentAndUnknownExtElem.wsdl");
       
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       WSDLService wsdlService = wsdlDefinitions.getServices()[0];
       WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoints()[0];
       

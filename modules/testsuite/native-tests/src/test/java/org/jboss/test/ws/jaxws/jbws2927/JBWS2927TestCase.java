@@ -112,11 +112,10 @@ public class JBWS2927TestCase extends JBossWSTest
 
    private SOAPMessage getRequestMessage() throws Exception
    {
-      URL reqMessage = getResourceFile("jaxws/jbws2927/request-message.xml").toURL();
+      URL reqMessage = getResourceURL("jaxws/jbws2927/request-message.xml");
       MessageFactory msgFactory = MessageFactory.newInstance();
 
-      SOAPMessage reqMsg = msgFactory.createMessage(null, reqMessage.openStream());
-      return reqMsg;
+      return msgFactory.createMessage(null, reqMessage.openStream());
    }
 
 }

@@ -47,10 +47,7 @@ public class DocumentStyleUnmarshallerTestCase extends WSToolsBase
 
    protected XSModel getSchemaModel() throws Exception
    {
-      File xsdFile = getResourceFile("common/jbossxb/DocumentStyle.xsd");
-      assertTrue(xsdFile.exists());
-
-      return parseSchema(xsdFile.toURL());
+      return parseSchema(getResourceURL("common/jbossxb/DocumentStyle.xsd"));
    }
 
    public void testEchoStringRequest() throws Exception

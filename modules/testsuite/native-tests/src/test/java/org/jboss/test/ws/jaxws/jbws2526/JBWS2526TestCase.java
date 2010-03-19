@@ -60,7 +60,7 @@ public class JBWS2526TestCase extends JBossWSTest
 
    private void test(String requestFile) throws Exception
    {
-      URL requestURL = getResourceFile(requestFile).toURL();
+      URL requestURL = getResourceURL(requestFile);
       MessageFactory messageFactory = MessageFactory.newInstance();
       SOAPMessage requestMessage = messageFactory.createMessage(null, requestURL.openStream());
       URL endpointURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws2526/");

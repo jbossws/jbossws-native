@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.jbws2285;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
@@ -113,11 +111,10 @@ public class JBWS2285TestCase extends JBossWSTest
 
    private SOAPMessage getRequestMessage() throws SOAPException, IOException
    {
-      URL reqMessage = getResourceFile("jaxws/jbws2285/request-message.xml").toURL();
+      URL reqMessage = getResourceURL("jaxws/jbws2285/request-message.xml");
       MessageFactory msgFactory = MessageFactory.newInstance();
 
-      SOAPMessage reqMsg = msgFactory.createMessage(null, reqMessage.openStream());
-      return reqMsg;
+      return msgFactory.createMessage(null, reqMessage.openStream());
    }
 
 }

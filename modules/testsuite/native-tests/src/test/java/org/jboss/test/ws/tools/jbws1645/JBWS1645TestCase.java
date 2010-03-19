@@ -195,8 +195,8 @@ public class JBWS1645TestCase extends JBossWSTest
    private void validateGeneratedWSDL(File wsdlFile, File expectedWsdlFile) throws Exception
    {
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdl = factory.parse(wsdlFile.toURL());
-      WSDLDefinitions expWsdl = factory.parse(expectedWsdlFile.toURL());
+      WSDLDefinitions wsdl = factory.parse(wsdlFile.toURI().toURL());
+      WSDLDefinitions expWsdl = factory.parse(expectedWsdlFile.toURI().toURL());
       assertNotNull(wsdl);
       assertNotNull(expWsdl);
       WSDLValidator validator = new WSDLValidator();

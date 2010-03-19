@@ -66,7 +66,7 @@ public class RpcDIIConfiguredCallTestCase extends JBossWSTest
          ServiceFactoryImpl factory = new ServiceFactoryImpl();
          URL wsdlLocation = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
          QName serviceName = new QName(TARGET_NAMESPACE, "TestService");
-         ServiceImpl service = (ServiceImpl)factory.createService(wsdlLocation, serviceName, javaWsdlMappingFile.toURL());
+         ServiceImpl service = (ServiceImpl)factory.createService(wsdlLocation, serviceName, javaWsdlMappingFile.toURI().toURL());
          call = service.createCall();
       }
    }

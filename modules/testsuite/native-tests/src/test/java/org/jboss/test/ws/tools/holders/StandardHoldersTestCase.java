@@ -23,6 +23,7 @@ package org.jboss.test.ws.tools.holders;
 
 import java.io.File;
 import java.io.Writer;
+import java.net.URL;
 
 import org.jboss.test.ws.common.jbossxb.holders.HoldersServiceInterface;
 import org.jboss.test.ws.tools.WSToolsBase;
@@ -97,18 +98,18 @@ public class StandardHoldersTestCase extends WSToolsBase
       {
          String fixturefile = getResourceFile("tools/holders/wsdl/HolderService.wsdl").getAbsolutePath();
          File wsdlfix = new File(fixturefile);
-         Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
+         Element exp = DOMUtils.parse(wsdlfix.toURI().toURL().openStream());
          File wsdlFile = getResourceFile(wsdlPath);
          assertNotNull("Generated WSDL File exists?", wsdlFile);
-         Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
+         Element was = DOMUtils.parse(wsdlFile.toURI().toURL().openStream());
          assertEquals(exp,was);
 
          //Now that we have figured out that the wsdl files are well formed,
          //lets do the semantic wsdl validation
          WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-         WSDLDefinitions wsdlExp = factory.parse(wsdlfix.toURL());
+         WSDLDefinitions wsdlExp = factory.parse(wsdlfix.toURI().toURL());
 
-         WSDLDefinitions wsdlActual = factory.parse(wsdlFile.toURL());
+         WSDLDefinitions wsdlActual = factory.parse(wsdlFile.toURI().toURL());
          WSDLValidator validator = new WSDL11Validator();
          try
          {
@@ -137,11 +138,10 @@ public class StandardHoldersTestCase extends WSToolsBase
 
    private WSDLDefinitions getWSDLDefinitions(String wsdlFileName) throws Exception
    {
-      File wsdlFile = getResourceFile("tools/holders/wsdl/" + wsdlFileName);
-      assertTrue("WSDL File exists?",wsdlFile.exists());
+      URL wsdlFile = getResourceURL("tools/holders/wsdl/" + wsdlFileName);
 
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = wsdlFactory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = wsdlFactory.parse(wsdlFile);
       return wsdlDefinitions;
    }
 

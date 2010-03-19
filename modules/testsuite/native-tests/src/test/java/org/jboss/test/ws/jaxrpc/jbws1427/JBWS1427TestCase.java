@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1427;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -73,10 +72,8 @@ public class JBWS1427TestCase extends JBossWSTest
    public final void testWsdlParser() throws Exception
    {
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      File wsdlFile = getResourceFile("jaxrpc/jbws1427/META-INF/wsdl/ProcessClaim.wsdl");
-      assertTrue("File exists: " + wsdlFile, wsdlFile.exists());
-
-      factory.parse(wsdlFile.toURL());
+      URL wsdlFile = getResourceURL("jaxrpc/jbws1427/META-INF/wsdl/ProcessClaim.wsdl");
+      factory.parse(wsdlFile);
    }
 
    public final void testEndpointAccess() throws Exception

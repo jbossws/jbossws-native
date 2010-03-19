@@ -47,8 +47,8 @@ public class JBPAPP921TestCase extends JBossWSTest
       File jaxrpcMapping = getResourceFile(resourceDir + "/jaxrpc-mapping.xml");
       mappingValidator.validate(jaxrpcMapping.getAbsolutePath(), toolsDir + "/jaxrpc-mapping.xml");
 
-      Element exp = DOMUtils.parse(getResourceFile(resourceDir + "/webservices.xml").toURL().openStream());
-      Element act = DOMUtils.parse(new File(toolsDir + "/webservices.xml").toURL().openStream());
+      Element exp = DOMUtils.parse(getResourceURL(resourceDir + "/webservices.xml").openStream());
+      Element act = DOMUtils.parse(getResourceURL(toolsDir + "/webservices.xml").openStream());
       assertEquals(exp, act);
    }
 

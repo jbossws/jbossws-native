@@ -52,7 +52,7 @@ public class DocumentStyleMarshallerTestCase extends WSToolsBase
       File xsdFile = getResourceFile("common/jbossxb/DocumentStyle.xsd");
       assertTrue(xsdFile.exists());
 
-      return parseSchema(xsdFile.toURL());
+      return parseSchema(xsdFile.toURI().toURL());
    }
 
    /** Release the schema URL, used for removing temp files */

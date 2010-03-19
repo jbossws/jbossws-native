@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jsr109pojo;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +59,13 @@ public class RpcDIIConfiguredCallTestCase extends JBossWSTest
 
       if (call == null)
       {
-         File javaWsdlMappingFile = getResourceFile("jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml");
-         assertTrue(javaWsdlMappingFile.exists());
+         URL javaWsdlMappingFile = getResourceURL("jaxrpc/samples/jsr109pojo/rpclit/WEB-INF/jaxrpc-mapping.xml");
+         assertNotNull(javaWsdlMappingFile);
 
          ServiceFactoryImpl factory = new ServiceFactoryImpl();
          URL wsdlLocation = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
          QName serviceName = new QName(TARGET_NAMESPACE, "TestService");
-         ServiceImpl service = (ServiceImpl)factory.createService(wsdlLocation, serviceName, javaWsdlMappingFile.toURL());
+         ServiceImpl service = (ServiceImpl)factory.createService(wsdlLocation, serviceName, javaWsdlMappingFile);
          call = service.createCall();
       }
    }

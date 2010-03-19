@@ -126,7 +126,7 @@ public class StubPropertyTestCase extends JBossWSTest
          Method getMainClassMethod = ClientLauncher.class.getMethod("getTheMainClass", empty);
          //At least JBoss AS 5.0.0.CR2
          //Use reflection to prevent double loading of the client class
-         Class<?> clientClass = (Class<?>)getMainClassMethod.invoke(null, empty);
+         Class<?> clientClass = (Class<?>)getMainClassMethod.invoke(null, new Object[] {});
          Field field = clientClass.getField("retStr");
          String result = (String)field.get(clientClass);
          assertEquals(expected, result);

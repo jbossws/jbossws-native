@@ -152,7 +152,7 @@ public class PolicyMetaDataBuilderTestCase extends JBossWSTest
       File wsdlFile = new File(filename);
       assertTrue(wsdlFile.exists());
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURI().toURL());
       assertNotNull(wsdlDefinitions);
       return wsdlDefinitions;
    }

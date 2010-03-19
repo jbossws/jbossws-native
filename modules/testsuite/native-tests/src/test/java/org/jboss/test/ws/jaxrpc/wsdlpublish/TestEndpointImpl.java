@@ -44,7 +44,7 @@ public class TestEndpointImpl implements TestEndpoint
       QName portType = null;
       try
       {
-         URL wsdlURL = new File(wsdlPath).toURL();
+         URL wsdlURL = new File(wsdlPath).toURI().toURL();
          WSDLDefinitions wsdl = WSDLDefinitionsFactory.newInstance().parse(wsdlURL);
          portType = wsdl.getInterfaces()[0].getName();
       }

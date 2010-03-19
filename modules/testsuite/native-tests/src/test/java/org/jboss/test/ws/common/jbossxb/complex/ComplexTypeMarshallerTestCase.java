@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.common.jbossxb.complex;
 
-import java.io.File;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.URL;
@@ -50,10 +49,7 @@ public class ComplexTypeMarshallerTestCase extends WSToolsBase
    /** Get the URL to the defining schema */
    protected XSModel getSchemaModel(QName xmlType, Class javaType) throws Exception
    {
-      File xsdFile = getResourceFile("common/jbossxb/ComplexTypesService_RPC.xsd");
-      assertTrue(xsdFile.exists());
-
-      return parseSchema(xsdFile.toURL());
+      return parseSchema(getResourceURL("common/jbossxb/ComplexTypesService_RPC.xsd"));
    }
 
    public void testBaseType() throws Exception

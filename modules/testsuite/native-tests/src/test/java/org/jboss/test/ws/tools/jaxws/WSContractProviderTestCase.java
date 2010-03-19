@@ -67,7 +67,7 @@ public class WSContractProviderTestCase extends JBossWSTest
    private void checkWrapperClasses(File outputDir) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException
    {
       // Use a different loader each time to make sure the files exist
-      URLClassLoader classLoader = new URLClassLoader(new URL[]{outputDir.toURL()}, Thread.currentThread().getContextClassLoader());
+      URLClassLoader classLoader = new URLClassLoader(new URL[]{outputDir.toURI().toURL()}, Thread.currentThread().getContextClassLoader());
       
       // Check request wrapper
       Class wrapper = JavaUtils.loadJavaType("org.jboss.test.ws.tools.jaxws.jaxws.SubmitPO", classLoader);      
@@ -123,7 +123,7 @@ public class WSContractProviderTestCase extends JBossWSTest
       
       File wsdlFile = createResourceFile(outputDir, "DocWrappedService.wsdl");
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
-      wsdlFactory.parse(wsdlFile.toURL());
+      wsdlFactory.parse(wsdlFile.toURI().toURL());
    }
    
    public void testResourceDir() throws Exception
@@ -147,6 +147,6 @@ public class WSContractProviderTestCase extends JBossWSTest
       
       wsdlFile = createResourceFile(wsdlDir, wsdlName);
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
-      wsdlFactory.parse(wsdlFile.toURL());
+      wsdlFactory.parse(wsdlFile.toURI().toURL());
    }
 }

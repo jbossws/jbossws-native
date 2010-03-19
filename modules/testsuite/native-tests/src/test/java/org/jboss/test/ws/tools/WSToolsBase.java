@@ -66,7 +66,7 @@ public class WSToolsBase extends JBossWSTest
 
    private TypeMapping typeMapping = null;
 
-   public Class loadClass(String cname) throws ClassNotFoundException
+   public Class<?> loadClass(String cname) throws ClassNotFoundException
    {
       return JavaUtils.loadJavaType(cname);
    }
@@ -77,9 +77,8 @@ public class WSToolsBase extends JBossWSTest
    }
 
    /** Get the Schema as a String */
-   public String generateSchema(QName xmlType, Class javaType) throws Exception
+   public String generateSchema(QName xmlType, Class<?> javaType) throws Exception
    {
-      String nsuri = xmlType.getNamespaceURI();
       JavaToXSD javaToXSD = new JavaToXSD();
       JBossXSModel xsmodel = javaToXSD.generateForSingleType(xmlType, javaType);
       return xsmodel.serialize();
@@ -88,7 +87,6 @@ public class WSToolsBase extends JBossWSTest
    /** Get the Schema as a String */
    public String generateSchema(QName xmlType, Class javaType, Map packageNamespace) throws Exception
    {
-      String nsuri = xmlType.getNamespaceURI();
       JavaToXSD javaToXSD = new JavaToXSD();
       javaToXSD.setPackageNamespaceMap(packageNamespace);
       JBossXSModel xsmodel = javaToXSD.generateForSingleType(xmlType, javaType);
@@ -138,7 +136,7 @@ public class WSToolsBase extends JBossWSTest
    protected WSDLDefinitions getWSDLDefinitions(File wsdlFile) throws MalformedURLException
    {
       WSDLDefinitionsFactory wsdlFactory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = wsdlFactory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = wsdlFactory.parse(wsdlFile.toURI().toURL());
       return wsdlDefinitions;
    }
 
@@ -203,10 +201,10 @@ public class WSToolsBase extends JBossWSTest
    protected void validateXML(String fixtureFile, String genFile) throws Exception
    {
       File wsdlfix = new File(fixtureFile);
-      Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
+      Element exp = DOMUtils.parse(wsdlfix.toURI().toURL().openStream());
       File wsdlFile = new File(genFile);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
-      Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
+      Element was = DOMUtils.parse(wsdlFile.toURI().toURL().openStream());
       assertEquals(exp, was);
    }
 
@@ -225,17 +223,17 @@ public class WSToolsBase extends JBossWSTest
    {
       boolean bool = true;
       File wsdlfix = new File(expPath);
-      Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
+      Element exp = DOMUtils.parse(wsdlfix.toURI().toURL().openStream());
       File wsdlFile = new File(genpath);
       assertTrue("Generated WSDL File exists", wsdlFile.exists());
-      Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
+      Element was = DOMUtils.parse(wsdlFile.toURI().toURL().openStream());
       //assertEquals(exp,was);
       //Now that we have figured out that the wsdl files are well formed,
       //lets do the semantic wsdl validation
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlExp = factory.parse(wsdlfix.toURL());
+      WSDLDefinitions wsdlExp = factory.parse(wsdlfix.toURI().toURL());
 
-      WSDLDefinitions wsdlActual = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlActual = factory.parse(wsdlFile.toURI().toURL());
       WSDLValidator validator = new WSDL11Validator();
       try
       {

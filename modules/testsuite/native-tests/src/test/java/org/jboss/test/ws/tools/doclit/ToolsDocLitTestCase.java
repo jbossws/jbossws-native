@@ -45,7 +45,7 @@ public class ToolsDocLitTestCase extends WSToolsBase
 {
    public void testTrivialCase() throws Exception
    {
-      Class seiClass = TrivialService.class;
+      Class<?> seiClass = TrivialService.class;
       String wsdlDir = createResourceFile("tools/").getAbsolutePath();
       String sname = "SampleService";
       String wsdlPath = wsdlDir+ "/" + sname + ".wsdl";
@@ -64,10 +64,10 @@ public class ToolsDocLitTestCase extends WSToolsBase
       String fixturefile = getResourceFile("tools/doc-lit/trivial/wsdl/SampleService.wsdl").getAbsolutePath();
       //Validate the generated WSDL
       File wsdlfix = new File(fixturefile);
-      Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
+      Element exp = DOMUtils.parse(wsdlfix.toURI().toURL().openStream());
       File wsdlFile = new File(wsdlPath);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
-      Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
+      Element was = DOMUtils.parse(wsdlFile.toURI().toURL().openStream());
       //assertEquals(exp, was);
       this.semanticallyValidateWSDL(fixturefile, wsdlFile.getPath());
    }

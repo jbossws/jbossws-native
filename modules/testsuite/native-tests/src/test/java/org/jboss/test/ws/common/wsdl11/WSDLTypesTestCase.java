@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.common.wsdl11;
 
-import java.io.File;
+import java.net.URL;
 
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
@@ -40,11 +40,10 @@ public class WSDLTypesTestCase extends JBossWSTest
 {
    public void testIncludedSchema() throws Exception
    {
-      File wsdlLocation = getResourceFile("tools/wsdl11/TestServiceXsdInclude.wsdl");
-      assertTrue(wsdlLocation.exists());
+      URL wsdlLocation = getResourceURL("tools/wsdl11/TestServiceXsdInclude.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlLocation.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlLocation);
 
       JBossXSModel xsModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
       XSTypeDefinition typeDefinition = xsModel.getTypeDefinition("SimpleUserType", "http://org.jboss.ws/jaxrpc/types");
@@ -53,11 +52,10 @@ public class WSDLTypesTestCase extends JBossWSTest
 
    public void testImportedSchema() throws Exception
    {
-      File wsdlLocation = getResourceFile("tools/wsdl11/TestServiceXsdImport.wsdl");
-      assertTrue(wsdlLocation.exists());
+      URL wsdlLocation = getResourceURL("tools/wsdl11/TestServiceXsdImport.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlLocation.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlLocation);
 
       JBossXSModel xsModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
       XSTypeDefinition typeDefinition = xsModel.getTypeDefinition("SimpleUserType", "http://org.jboss.ws/jaxrpc/types");

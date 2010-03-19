@@ -67,9 +67,9 @@ public class ClientSideArtifactsTestCase extends WSToolsBase
    public void testSimpleCase() throws Exception
    {
       WSDLToJava wsdlJava = new WSDLToJava();
-      File wsdlFile = getResourceFile("tools/jbws-161/wscompile/simple/wsdl/HelloWsService.wsdl");
+      URL wsdlFile = getResourceURL("tools/jbws-161/wscompile/simple/wsdl/HelloWsService.wsdl");
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
-      WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile.toURL());
+      WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile);
       wsdlJava.generateSEI(wsdl, createResourceFile("tools/jbws-160/jbossws/simple/sei"));
 
       //Create the Service File
@@ -120,19 +120,19 @@ public class ClientSideArtifactsTestCase extends WSToolsBase
       }
 
       //Compare mapping files
-      File expFile = getResourceFile("tools/jbws-160/wscompile/simple/mapping/jaxrpc-mapping.xml");
-      File genFile = createResourceFile("tools/jbws-160/jbossws/simple/mapping/jaxrpc-mapping.xml");
+      URL expFile = getResourceURL("tools/jbws-160/wscompile/simple/mapping/jaxrpc-mapping.xml");
+      URL genFile = getResourceURL("tools/jbws-160/jbossws/simple/mapping/jaxrpc-mapping.xml");
 
-      compareXMLFiles(expFile.toURL(), genFile.toURL());
+      compareXMLFiles(expFile, genFile);
    }
 
    /** Test a custom SEI that uses custom types */
    public void testCustomCase() throws Exception
    {
       WSDLToJava wsdlJava = new WSDLToJava();
-      File wsdlFile = getResourceFile("tools/jbws-161/wscompile/custom/wsdl/HelloCustomService.wsdl");
+      URL wsdlFile = getResourceURL("tools/jbws-161/wscompile/custom/wsdl/HelloCustomService.wsdl");
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
-      WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile.toURL());
+      WSDLDefinitions wsdl = wsdlJava.convertWSDL2Java(wsdlFile);
       wsdlJava.setTypeMapping(new LiteralTypeMapping());
       wsdlJava.generateSEI(wsdl, createResourceFile("tools/jbws-160/jbossws/custom/sei"));
 

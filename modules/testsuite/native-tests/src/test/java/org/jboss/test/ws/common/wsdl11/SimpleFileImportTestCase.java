@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.common.wsdl11;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.wsdl.Definition;
@@ -45,14 +44,11 @@ public class SimpleFileImportTestCase extends JBossWSTest
 
    public void testFileURL() throws Exception
    {
-      File wsdlFile = new File(WSDL_LOCATION);
-      assertTrue("File does not exist: " + wsdlFile.getCanonicalPath(), wsdlFile.exists());
-
       // Setting the URLStreamHandlerFactory simulates the behaviour in JBoss
       // [JBWS-2948] commented to prevent setting wrong stream handler with VFS3 
       //internalInitURLHandlers();
 
-      URL wsdlURL = wsdlFile.toURL();
+      URL wsdlURL = getResourceURL(WSDL_LOCATION);
       Definition wsdlDefinition = WSDL11DefinitionFactory.newInstance().parse(wsdlURL);
       assertNotNull(wsdlDefinition);
 

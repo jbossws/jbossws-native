@@ -68,7 +68,7 @@ public class TestEndpointImpl implements TestEndpoint
       WSDLDefinitions wsdl;
       try
       {
-         wsdl = factory.parse(wsdls[0].toURL());
+         wsdl = factory.parse(wsdls[0].toURI().toURL());
       }
       catch (MalformedURLException e)
       {

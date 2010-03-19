@@ -31,7 +31,6 @@ import org.jboss.ws.extensions.wsrm.config.RMConfig;
 import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
 import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
 import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
-import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
@@ -57,7 +56,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ConfigRootJAXRPC config = (ConfigRootJAXRPC)factory.parse(confFile.toURL());
+      ConfigRootJAXRPC config = (ConfigRootJAXRPC)factory.parse(confFile.toURI().toURL());
 
       assertNotNull("Null config", config);
 
@@ -84,7 +83,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertTrue(confFile.exists());
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
 
-      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURL());
+      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURI().toURL());
       assertNotNull("Null config", config);
 
       EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard MTOM Endpoint");
@@ -100,7 +99,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
       File confFile = getResourceFile("common/config/jaxrpc-endpoint-config.xml");
       assertTrue(confFile.exists());
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ConfigRootJAXRPC config = (ConfigRootJAXRPC)factory.parse(confFile.toURL());
+      ConfigRootJAXRPC config = (ConfigRootJAXRPC)factory.parse(confFile.toURI().toURL());
       assertNotNull("Null config", config);
 
       CommonConfigJAXRPC epConfig = (CommonConfigJAXRPC)config.getConfigByName("Standard MTOM Endpoint");
@@ -117,11 +116,11 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURL());
+      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURI().toURL());
       assertNotNull("Null config", config);
 
       EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard WSSecurity Endpoint");
-      String value = epConfig.getProperty(EndpointProperty.MTOM_THRESHOLD);
+      String value = epConfig.getProperty("http://org.jboss.ws/mtom#threshold");
       assertNotNull("Property does not exist", value);
       assertEquals("Wrong property valule", value, "5000");
    }
@@ -132,7 +131,7 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURL());
+      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURI().toURL());
       EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard WSRM Endpoint");
       RMConfig wsrmConfig = epConfig.getRMMetaData();
       assertNotNull(wsrmConfig);

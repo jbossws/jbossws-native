@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.handler;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -61,13 +60,11 @@ public class HeaderProxyTestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         File javaWsdlMappingFile = getResourceFile("jaxrpc/samples/handler/WEB-INF/jaxrpc-mapping.xml");
-         assertTrue(javaWsdlMappingFile.exists());
-
+         URL javaWsdlMappingFile = getResourceURL("jaxrpc/samples/handler/WEB-INF/jaxrpc-mapping.xml");
          QName serviceName = new QName(NAMESPACE_URI, "TestService");
          ServiceFactoryImpl factory = new ServiceFactoryImpl();
          URL wsdlLocation = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
-         ServiceImpl service = (ServiceImpl)factory.createService(wsdlLocation, serviceName, javaWsdlMappingFile.toURL());
+         ServiceImpl service = (ServiceImpl)factory.createService(wsdlLocation, serviceName, javaWsdlMappingFile);
          endpoint = (HeaderTestService)service.getPort(HeaderTestService.class);
       }
    }

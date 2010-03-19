@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.common.wsdl11;
 
-import java.io.File;
+import java.net.URL;
 
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
@@ -39,11 +39,9 @@ public class MultiSchemaTestCase extends JBossWSTest
 {
    public void testMultipleSchemas() throws Exception
    {
-      File wsdlFile = getResourceFile("jaxrpc/marshall-rpclit/WEB-INF/wsdl/MarshallService.wsdl");
-      assertTrue(wsdlFile.exists());
-
+      URL wsdlFile = getResourceURL("jaxrpc/marshall-rpclit/WEB-INF/wsdl/MarshallService.wsdl");
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
 
       // check if all schemas have been extracted
       WSDLTypes wsdlTypes = wsdlDefinitions.getWsdlTypes();

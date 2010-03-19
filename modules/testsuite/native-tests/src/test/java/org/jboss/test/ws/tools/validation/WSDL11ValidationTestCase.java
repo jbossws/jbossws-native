@@ -22,6 +22,7 @@
 package org.jboss.test.ws.tools.validation;
 
 import java.io.File;
+import java.net.URL;
 
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.exceptions.JBossWSToolsException;
@@ -41,14 +42,12 @@ public class WSDL11ValidationTestCase extends JBossWSTest
     */
    public void testSimpleCase() throws Exception
    {
-      //File wsdlFile = getResourceFile("wsdl11/DocLitSimple.wsdl");
-      File wsdlFile = getResourceFile("tools/wsdlfixture/CustomInterfaceService_RPC_11.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("tools/wsdlfixture/CustomInterfaceService_RPC_11.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlExp = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlExp = factory.parse(wsdlFile);
 
-      WSDLDefinitions wsdlActual = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlActual = factory.parse(wsdlFile);
       WSDLValidator validator = new WSDL11Validator();
       try
       {
@@ -73,13 +72,12 @@ public class WSDL11ValidationTestCase extends JBossWSTest
     */
    public void testDocLitCase() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/DocLitSimple.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/DocLitSimple.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlExp = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlExp = factory.parse(wsdlFile);
 
-      WSDLDefinitions wsdlActual = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlActual = factory.parse(wsdlFile);
       WSDLValidator validator = new WSDL11Validator();
       try
       {

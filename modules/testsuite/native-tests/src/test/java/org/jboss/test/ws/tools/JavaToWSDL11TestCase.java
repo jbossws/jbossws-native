@@ -136,10 +136,10 @@ public class JavaToWSDL11TestCase extends JBossWSTest
 
       //Validate the generated WSDL
       File wsdlfix = new File(fixturefile);
-      Element exp = DOMUtils.parse(wsdlfix.toURL().openStream());
+      Element exp = DOMUtils.parse(wsdlfix.toURI().toURL().openStream());
       File wsdlFile = new File(wsdlPath);
       assertNotNull("Generated WSDL File exists?", wsdlFile);
-      Element was = DOMUtils.parse(wsdlFile.toURL().openStream());
+      Element was = DOMUtils.parse(wsdlFile.toURI().toURL().openStream());
 
       assertEquals(exp, was);
       /*

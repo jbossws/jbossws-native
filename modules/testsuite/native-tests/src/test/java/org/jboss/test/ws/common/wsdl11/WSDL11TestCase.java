@@ -23,6 +23,7 @@ package org.jboss.test.ws.common.wsdl11;
 
 import java.io.File;
 import java.io.Writer;
+import java.net.URL;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -61,11 +62,10 @@ public class WSDL11TestCase extends JBossWSTest
 
    public void testDocLitSimple() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/DocLitSimple.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/DocLitSimple.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(new QName(wsdlDefinitions.getTargetNamespace(), "JaxRpcTestService"));
 
       // check if the schema has been extracted
@@ -107,21 +107,18 @@ public class WSDL11TestCase extends JBossWSTest
 
    public void testRpcLitSimple() throws Exception
    {
-      verifyRPC(getResourceFile("common/wsdl11/RpcLitSimple.wsdl").getPath());
+      verifyRPC(getResourceURL("common/wsdl11/RpcLitSimple.wsdl"));
    }
 
    public void testRpcLitImport() throws Exception
    {
-      verifyRPC(getResourceFile("common/wsdl11/RpcLitImport.wsdl").getPath());
+      verifyRPC(getResourceURL("common/wsdl11/RpcLitImport.wsdl"));
    }
 
-   private void verifyRPC(String fileName) throws Exception
+   private void verifyRPC(URL wsdlFile) throws Exception
    {
-      File wsdlFile = new File(fileName);
-      assertTrue(wsdlFile.exists());
-
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(new QName(wsdlDefinitions.getTargetNamespace(), "JaxRpcTestService"));
 
       // check if the schema has been extracted
@@ -158,11 +155,10 @@ public class WSDL11TestCase extends JBossWSTest
 
    public void testEventSourceBinding() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/inherit/wind_inherit.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/inherit/wind_inherit.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
 
       WSDLService service = wsdlDefinitions.getService(new QName("http://schemas.xmlsoap.org/ws/2004/08/eventing", "EventingService"));
       assertNotNull(service);
@@ -184,11 +180,10 @@ public class WSDL11TestCase extends JBossWSTest
 
    public void testSwaMessages() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/SwaTestService.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/SwaTestService.wsdl");
 
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       assertNotNull(wsdlDefinitions); // should throw an Exception when SWA parts are not skipped
    }
    
@@ -198,18 +193,16 @@ public class WSDL11TestCase extends JBossWSTest
    
    public void testPolicyAttachment() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/PolicyAttachment.wsdl");
-      assertTrue(wsdlFile.exists());
+      URL wsdlFile = getResourceURL("common/wsdl11/PolicyAttachment.wsdl");
       testPolicyAttachment(wsdlFile);
-      wsdlFile = getResourceFile("common/wsdl11/PolicyAttachmentFragment.wsdl");
-      assertTrue(wsdlFile.exists());
+      wsdlFile = getResourceURL("common/wsdl11/PolicyAttachmentFragment.wsdl");
       testPolicyAttachment(wsdlFile);
    }
    
-   private void testPolicyAttachment(File wsdlFile) throws Exception
+   private void testPolicyAttachment(URL wsdlFile) throws Exception
    {
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       assertNotNull(wsdlDefinitions);
       List<WSDLExtensibilityElement> list = wsdlDefinitions.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY);
       assertNotNull(list);
@@ -227,16 +220,16 @@ public class WSDL11TestCase extends JBossWSTest
    
    public void testServicePolicyRef() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/PolicyAttachment.wsdl");
+      URL wsdlFile = getResourceURL("common/wsdl11/PolicyAttachment.wsdl");
       testServicePolicyRef(wsdlFile);
-      wsdlFile = getResourceFile("common/wsdl11/PolicyAttachmentFragment.wsdl");
+      wsdlFile = getResourceURL("common/wsdl11/PolicyAttachmentFragment.wsdl");
       testServicePolicyRef(wsdlFile);
    }
    
-   public void testServicePolicyRef(File wsdlFile) throws Exception
+   public void testServicePolicyRef(URL wsdlFile) throws Exception
    {
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       WSDLService wsdlService = wsdlDefinitions.getServices()[0];
       List<WSDLExtensibilityElement> list = wsdlService.getExtensibilityElements(
             Constants.WSDL_ELEMENT_POLICYREFERENCE);
@@ -247,16 +240,16 @@ public class WSDL11TestCase extends JBossWSTest
    
    public void testEndpointPolicyRef() throws Exception
    {
-      File wsdlFile = getResourceFile("common/wsdl11/PolicyAttachment.wsdl");
+      URL wsdlFile = getResourceURL("common/wsdl11/PolicyAttachment.wsdl");
       testEndpointPolicyRef(wsdlFile);
-      wsdlFile = getResourceFile("common/wsdl11/PolicyAttachmentFragment.wsdl");
+      wsdlFile = getResourceURL("common/wsdl11/PolicyAttachmentFragment.wsdl");
       testEndpointPolicyRef(wsdlFile);
    }
    
-   public void testEndpointPolicyRef(File wsdlFile) throws Exception
+   public void testEndpointPolicyRef(URL wsdlFile) throws Exception
    {
       WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile.toURL());
+      WSDLDefinitions wsdlDefinitions = factory.parse(wsdlFile);
       WSDLService wsdlService = wsdlDefinitions.getServices()[0];
       WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoints()[0];
       
@@ -305,7 +298,7 @@ public class WSDL11TestCase extends JBossWSTest
       fw.close();
       
       //parse the obtained file and validate the resulting wsdl metadata model against the first one
-      WSDLDefinitions newWsdlDefinitions = factory.parse(new File(wsdlDir+"/GeneratedWsdlWithPolicies.wsdl").toURL());
+      WSDLDefinitions newWsdlDefinitions = factory.parse(new File(wsdlDir+"/GeneratedWsdlWithPolicies.wsdl").toURI().toURL());
       assertNotNull(newWsdlDefinitions);
       WSDLValidator validator = new WSDLValidator();
       assertTrue(validator.validate(wsdlDefinitions,newWsdlDefinitions));

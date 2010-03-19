@@ -21,15 +21,9 @@
  */
 package org.jboss.test.ws.tools.jbws2411;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.wsdl.Definition; 
-import javax.wsdl.WSDLException;
 
 import org.jboss.wsf.test.JBossWSTest;
 
@@ -46,7 +40,7 @@ public class JBWS2411TestCase extends JBossWSTest
 
    public void testIssue() throws Exception
    {
-      URL wsdlFile = getResourceFile("tools/jbws2411/wsdl/PRPA_AR201102UV01.wsdl").toURL();
+      URL wsdlFile = getResourceURL("tools/jbws2411/wsdl/PRPA_AR201102UV01.wsdl");
 
       WSDL11DefinitionFactory factory = WSDL11DefinitionFactory.newInstance();
       Definition impWsdl = factory.parse(wsdlFile);
