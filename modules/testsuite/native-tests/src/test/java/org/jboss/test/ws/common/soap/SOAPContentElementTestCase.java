@@ -32,10 +32,16 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.Text;
 
+import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
+import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.core.soap.SOAPElementImpl;
+import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.wsf.test.JBossWSTest;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Test the SOAPContentElement
@@ -186,5 +192,54 @@ public class SOAPContentElementTestCase extends JBossWSTest
 
       String expEnv = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'><env:Body><ns1:hello xmlns:ns1='http://handlerservice1.org/wsdl'><String_1>world::SOAP header was added</String_1></ns1:hello></env:Body></env:Envelope>";
       assertEquals(expEnv, baos.toString());
+   }
+   
+   
+   //JBWS-2940: JAXB marshalling of object model can lead to a slightly different yet equivalent XMLFragment
+   //The new fragment can have different namespace prefix declarations, which can cause major issues in unlucky situations like below
+   public void testAttributesHandlingOnModelTransition() throws Exception
+   {
+      String envStr =
+         "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>" +
+         "<env:Body>" +
+         "<ns2:Foo xmlns:ns2='firstNS'/>" +
+         "</env:Body>" +
+         "</env:Envelope>";
+      
+      MessageFactoryImpl factory = new MessageFactoryImpl();
+      factory.setStyle(Style.DOCUMENT);
+      SOAPMessage soapMessage = factory.createMessage(null, new ByteArrayInputStream(envStr.getBytes()));
+      
+      SOAPContentElement sce = getSOAPContentElement(soapMessage);
+      
+      //force transition to XML_VALID and set an equivalent XMLFragment (but having a new ns declaration that would overwrite the one in the original fragment)
+      sce.setXMLFragment(new XMLFragment("<Foo xmlns='firstNS' xmlns:ns2='secondNs'/>"));
+      
+      SOAPBody soapBody = soapMessage.getSOAPBody();
+      //force transition to DOM_VALID
+      soapBody.getFirstChild().getChildNodes();
+      
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      soapMessage.writeTo(baos);
+      
+      soapMessage = factory.createMessage(null, new ByteArrayInputStream(baos.toByteArray()));
+      Node foo = soapMessage.getSOAPBody().getFirstChild();
+      assertEquals("firstNS", foo.getNamespaceURI());
+   }
+   
+   private SOAPContentElement getSOAPContentElement(final SOAPMessage soapMessage) throws Exception
+   {
+      SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
+      SOAPElementImpl bodyElement = null;
+      NodeList nodes = soapBody.getChildNodes();
+      for (int i = 0; i < nodes.getLength() && bodyElement == null; i++)
+      {
+         Node current = nodes.item(i);
+         if (current instanceof SOAPElementImpl)
+         {
+            bodyElement = (SOAPElementImpl)current;
+         }
+      }
+      return (SOAPContentElement)bodyElement;
    }
 }

@@ -214,6 +214,11 @@ public class WSSecurityDispatcher implements WSSecurityAPI
          SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
                configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
          SecurityEncoder encoder = new SecurityEncoder(operations, securityStore);
+         
+         if ((sign != null || encrypt != null) && message instanceof SOAPMessageImpl)
+         {
+            ((SOAPMessageImpl)message).prepareForDOMAccess();
+         }
          encoder.encode(message.getSOAPPart());
       }
       catch (WSSecurityException e)
