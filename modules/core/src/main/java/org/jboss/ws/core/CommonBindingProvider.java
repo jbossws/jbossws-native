@@ -24,6 +24,7 @@ package org.jboss.ws.core;
 import java.util.Observable;
 
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
@@ -127,6 +128,10 @@ public class CommonBindingProvider implements Configurable
       if (binding instanceof HTTPBinding )
       {
          throw new UnsupportedOperationException("Cannot get epr for BindingProvider instances using the XML/HTTP binding");
+      }
+      if (!clazz.isAssignableFrom(W3CEndpointReference.class))
+      {
+         throw new WebServiceException("Unknow EndpointRefrence class : " + clazz.getClass());
       }
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       if (epMetaData != null)
