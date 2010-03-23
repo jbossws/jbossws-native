@@ -131,7 +131,7 @@ public class CommonBindingProvider implements Configurable
       }
       if (!clazz.isAssignableFrom(W3CEndpointReference.class))
       {
-         throw new WebServiceException("Unknow EndpointRefrence class : " + clazz.getClass());
+         throw new WebServiceException("Unknown EndpointRefrence class : " + clazz.getClass());
       }
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       if (epMetaData != null)
