@@ -129,10 +129,6 @@ public class CommonBindingProvider implements Configurable
       {
          throw new UnsupportedOperationException("Cannot get epr for BindingProvider instances using the XML/HTTP binding");
       }
-      if (!clazz.isAssignableFrom(W3CEndpointReference.class)) 
-      {
-         throw new WebServiceException("Unknown EndpointReference class: " + clazz.getClass());
-      }
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       if (epMetaData != null)
       {
