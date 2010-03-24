@@ -101,6 +101,9 @@ public class WSDLFilePublisher
       for (ServiceMetaData serviceMetaData : wsMetaData.getServices())
       {
          File wsdlFile = getPublishLocation(deploymentName, serviceMetaData);
+         if (wsdlFile == null)
+            continue;
+
          wsdlFile.getParentFile().mkdirs();
 
          // Get the wsdl definition and write it to the wsdl publish location
@@ -324,7 +327,10 @@ public class WSDLFilePublisher
          wsdlLocation = serviceMetaData.getWsdlFile();
 
       if (wsdlLocation == null)
-         throw new IllegalStateException("Cannot obtain wsdl location for: " + serviceMetaData.getServiceName());
+      {
+         log.warn("Cannot obtain wsdl location for: " + serviceMetaData.getServiceName());
+         return null;
+      }
 
       log.debug("Publish WSDL file: " + wsdlLocation);
 
