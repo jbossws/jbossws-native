@@ -51,7 +51,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
    private PrintStream messageStream;
    private String wsdlLocation;
    private List<String> additionalCompilerClassPath = new ArrayList<String>();
-   private String target = "2.0";
+   private String target = "2.1";
 
    @Override
    public void setBindingFiles(List<File> bindingFiles)
