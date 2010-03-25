@@ -6,3 +6,5 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+# [JBWS-2969] remove the BP-2211 violation test. The input parameter is null
+org/jboss/test/ws/jaxws/jbws871/JBWS871TestCase.*
