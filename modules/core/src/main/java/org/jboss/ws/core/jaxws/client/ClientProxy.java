@@ -22,6 +22,7 @@
 package org.jboss.ws.core.jaxws.client;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -100,8 +101,16 @@ public class ClientProxy implements InvocationHandler
       String methodName = method.getName();
       if (stubMethods.contains(method))
       {
-         Method stubMethod = ClientImpl.class.getMethod(methodName, method.getParameterTypes());
-         return stubMethod.invoke(client, args);
+         try
+         {
+            Method stubMethod = ClientImpl.class.getMethod(methodName, method.getParameterTypes());
+            return stubMethod.invoke(client, args);
+         }
+         catch (InvocationTargetException ite) //unwrap the cause and re-throw as is if it's a WebServiceException (spec requirement for getEndpointReference(..) for instance)
+         {
+            Throwable cause = ite.getCause();
+            throw (cause != null && cause instanceof WebServiceException) ? cause : ite;
+         }
       }
 
       // An invocation on proxy's Object class
