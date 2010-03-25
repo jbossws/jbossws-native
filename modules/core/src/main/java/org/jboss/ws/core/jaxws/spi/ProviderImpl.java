@@ -120,6 +120,11 @@ public class ProviderImpl extends Provider
    public W3CEndpointReference createW3CEndpointReference(String address, QName serviceName, QName portName, List<Element> metadata, String wsdlDocumentLocation,
          List<Element> referenceParameters)
    {
+      if ((serviceName == null) && (address == null) && (portName == null))
+         throw new IllegalStateException();
+      if ((portName != null) && (serviceName == null))
+         throw new IllegalStateException();
+
       NativeEndpointReference epr = new NativeEndpointReference();
       epr.setAddress(address);
       epr.setServiceName(serviceName);
