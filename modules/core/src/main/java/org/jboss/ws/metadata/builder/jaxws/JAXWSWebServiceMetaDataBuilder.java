@@ -32,6 +32,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPMessageHandlers;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceProvider;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -304,8 +305,9 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws ClassNotFoundException, IOException
    {
       WebService anWebService = sepClass.getAnnotation(WebService.class);
-      if (anWebService == null)
-         throw new WSException("Cannot obtain @WebService annotation from: " + sepClass.getName());
+      WebServiceProvider anWebServiceProvider = sepClass.getAnnotation(WebServiceProvider.class);
+      if ((anWebService == null) && (anWebServiceProvider == null))
+         throw new WSException("Cannot obtain neither @WebService nor @WebServiceProvider annotation from: " + sepClass.getName());
 
       Endpoint ep = dep.getService().getEndpointByName(linkName);
       
@@ -313,26 +315,26 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       String seiName;
       WSDLUtils wsdlUtils = WSDLUtils.getInstance();
 
-      String name = anWebService.name();
+      String name = (anWebService != null) ? anWebService.name() : "";
       if (name.length() == 0)
          name = WSDLUtils.getJustClassName(sepClass);
 
-      String serviceName = anWebService.serviceName();
+      String serviceName = (anWebService != null) ? anWebService.serviceName() : anWebServiceProvider.serviceName();
       if (serviceName.length() == 0)
          serviceName = WSDLUtils.getJustClassName(sepClass) + "Service";
 
-      String serviceNS = anWebService.targetNamespace();
+      String serviceNS = (anWebService != null) ? anWebService.targetNamespace() : anWebServiceProvider.targetNamespace();
       if (serviceNS.length() == 0)
          serviceNS = wsdlUtils.getTypeNamespace(sepClass);
 
-      String portName = anWebService.portName();
+      String portName = (anWebService != null) ? anWebService.portName() : anWebServiceProvider.portName();
       if (portName.length() == 0)
          portName = name + "Port";
 
-      String wsdlLocation = anWebService.wsdlLocation();
+      String wsdlLocation = (anWebService != null) ? anWebService.wsdlLocation() : anWebServiceProvider.wsdlLocation();
       String interfaceNS = serviceNS; // the default, but a SEI annotation may override this
 
-      if (anWebService.endpointInterface().length() > 0)
+      if (anWebService != null && anWebService.endpointInterface().length() > 0)
       {
          seiName = anWebService.endpointInterface();
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
