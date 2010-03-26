@@ -81,6 +81,7 @@ import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
    private boolean generateWsdl = true;
+   private boolean extension;
    private boolean toolMode = false;
    private File wsdlDirectory = null;
    private PrintStream messageStream = null;
@@ -97,6 +98,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
    public void setGenerateWsdl(boolean generateWsdl)
    {
       this.generateWsdl = generateWsdl;
+   }
+   
+   public void setExtension(boolean extension)
+   {
+      this.extension = extension;
    }
 
    public ServerEndpointMetaData buildWebServiceMetaData(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName)
@@ -371,6 +377,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       try
       {
          WSDLGenerator generator = new JAXBWSDLGenerator(jaxbCtx);
+         generator.setExtension(extension);
          if (wsdlLocation != null)
          {
             serviceMetaData.setWsdlLocation(wsdlLocation);
