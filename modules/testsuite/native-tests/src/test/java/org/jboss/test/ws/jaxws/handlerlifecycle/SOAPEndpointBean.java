@@ -39,7 +39,6 @@ import org.jboss.ws.annotation.EndpointConfig;
 @WebService(name = "SOAPEndpoint", targetNamespace = "http://org.jboss.ws/jaxws/handlerlifecycle")
 @HandlerChain(file = "jaxws-server-handlers.xml")
 @SOAPBinding(style = Style.RPC)
-
 @EndpointConfig(configName = "Custom Server Config", configFile = "WEB-INF/jaxws-endpoint-config.xml")
 public class SOAPEndpointBean
 {

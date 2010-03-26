@@ -21,36 +21,20 @@
  */
 package org.jboss.test.ws.jaxws.handlerlifecycle;
 
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.handler.MessageContext;
+import java.net.URL;
 
-public class ClientHandler2 extends LifecycleHandler
+import javax.jws.HandlerChain;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
+/**
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
+ */
+@HandlerChain(file = "jaxws-client-handlers.xml")
+public class SOAPEndpointService extends Service
 {
-   protected boolean handleOutboundMessage(MessageContext msgContext)
+   public SOAPEndpointService(URL wsdlLocation, QName serviceName)
    {
-      boolean doNext = true;
-      if (getTestMethod(msgContext).startsWith("testClientOutboundHandleMessageFalse"))
-      {
-         doNext = false;
-      }
-      else if (getTestMethod(msgContext).startsWith("testClientOutboundHandleMessageThrowsRuntimeException"))
-      {
-         throw new WebServiceException("ErrorIn" + this);
-      }
-      return doNext;
-   }
-   
-   protected boolean handleInboundMessage(MessageContext msgContext)
-   {
-      boolean doNext = true;
-      if (getTestMethod(msgContext).startsWith("testClientInboundHandleMessageFalse"))
-      {
-         doNext = false;
-      }
-      else if (getTestMethod(msgContext).startsWith("testClientInboundHandleMessageThrowsRuntimeException"))
-      {
-         throw new WebServiceException("ErrorIn" + this);
-      }
-      return doNext;
+      super(wsdlLocation, serviceName);
    }
 }
