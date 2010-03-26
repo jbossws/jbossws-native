@@ -284,9 +284,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       processEndpointConfig(epMetaData, wsClass);
       epMetaData.initEndpointConfig();
 
-      // Process an optional @HandlerChain annotation
-      processHandlerChain(epMetaData, wsClass);
-
       // Process @WebMethod
       processWebMethods(epMetaData, wsClass);
 

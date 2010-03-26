@@ -67,7 +67,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       {
          URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-handlerlifecycle/soap?wsdl");
          QName serviceName = new QName("http://org.jboss.ws/jaxws/handlerlifecycle", "SOAPEndpointBeanService");
-         Service service = Service.create(wsdlURL, serviceName);
+         Service service = new SOAPEndpointService(wsdlURL, serviceName);
          port = (SOAPEndpoint)service.getPort(SOAPEndpoint.class);
       }
    }
@@ -90,11 +90,11 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       String trackerMessages = HandlerTracker.getListMessages();
       List<String> expMessages = new ArrayList<String>();
 
-      expMessages.add("PreClientHandler1:PostConstruct");
-      expMessages.add("PreClientHandler2:PostConstruct");
       expMessages.add("ClientHandler1:PostConstruct");
       expMessages.add("ClientHandler2:PostConstruct");
       expMessages.add("ClientHandler3:PostConstruct");
+      expMessages.add("PreClientHandler1:PostConstruct");
+      expMessages.add("PreClientHandler2:PostConstruct");
       expMessages.add("PostClientHandler1:PostConstruct");
       expMessages.add("PostClientHandler2:PostConstruct");
 

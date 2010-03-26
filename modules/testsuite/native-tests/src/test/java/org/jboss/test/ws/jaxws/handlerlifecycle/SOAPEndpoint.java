@@ -21,14 +21,12 @@
  */
 package org.jboss.test.ws.jaxws.handlerlifecycle;
 
-import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.jboss.ws.annotation.EndpointConfig;
 
 @WebService
-@HandlerChain(file = "jaxws-client-handlers.xml")
 @EndpointConfig(configName = "Custom Client Config", configFile = "META-INF/jaxws-client-config.xml")
 public interface SOAPEndpoint
 {
