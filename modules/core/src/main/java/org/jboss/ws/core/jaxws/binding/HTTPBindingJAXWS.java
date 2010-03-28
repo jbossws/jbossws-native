@@ -26,7 +26,9 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.LogicalHandler;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
@@ -141,6 +143,13 @@ public class HTTPBindingJAXWS implements CommonBinding, BindingExt, HTTPBinding
 
    public void setHandlerChain(List<Handler> handlerChain)
    {
+      for (Handler handler : handlerChain)
+      {
+         if (!(handler instanceof LogicalHandler))
+         {
+            throw new WebServiceException("The adding handler in HTTPBinding is incompatiable " + handler.getClass());
+         }
+      }
       delegate.setHandlerChain(handlerChain);
    }
 
