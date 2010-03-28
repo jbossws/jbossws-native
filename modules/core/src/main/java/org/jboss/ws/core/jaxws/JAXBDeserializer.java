@@ -125,6 +125,7 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
             bindingCustomization.put("com.sun.xml.bind.defaultNamespaceRemap", defaultNS);
          }
          context = JAXBContextFactory.newInstance().createContext(types, bindingCustomization);
+         cache.add(types, context);
       }
       return context;
    }
