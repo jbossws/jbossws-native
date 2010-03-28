@@ -40,6 +40,7 @@ import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.WebServiceFeature;
@@ -55,6 +56,7 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
+import org.jboss.ws.core.jaxws.JAXBBindingCustomization;
 import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
@@ -692,6 +694,28 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          try
          {
             Class[] classes = getRegisteredTypes().toArray(new Class[0]);
+            String defaultNS = portTypeName.getNamespaceURI();
+            for (Class<?> clz : classes)
+            {
+               if (clz.getName().endsWith("ObjectFactory"))
+               {
+                  for (Method method : clz.getMethods())
+                  {
+                     XmlElementDecl elementDecl = method.getAnnotation(XmlElementDecl.class);
+                     if (elementDecl != null && XmlElementDecl.GLOBAL.class.equals(elementDecl.scope())
+                           && elementDecl.namespace() != null && elementDecl.namespace().length() > 0)
+                     {
+                        defaultNS = null;
+                     }
+                  }
+               }
+            }
+            if (defaultNS != null)
+            {
+               if (bindingCustomization == null)
+                  bindingCustomization = new JAXBBindingCustomization();
+               bindingCustomization.put(JAXBBindingCustomization.DEFAULT_NAMESPACE_REMAP, defaultNS);
+            }
             JAXBContext context = JAXBContextFactory.newInstance().createContext(classes, bindingCustomization);
             jaxbCache.add(classes, context);
          }

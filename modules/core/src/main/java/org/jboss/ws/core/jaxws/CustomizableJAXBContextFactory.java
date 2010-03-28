@@ -85,16 +85,35 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
 
    public JAXBContext createContext(Class[] clazzes, BindingCustomization bcust) throws WSException
    {
+      JAXBContext jaxbCtx = null;
       try
       {
-         JAXBContext jaxbCtx = JAXBContext.newInstance(clazzes, bcust);
-         incrementContextCount();
-         return jaxbCtx;
+         jaxbCtx = JAXBContext.newInstance(clazzes, bcust);
+         incrementContextCount();        
       }
       catch (JAXBException e)
-      {
-         throw new WSException("Failed to create JAXBContext", e);
+      {  
+         if (bcust != null && bcust.get("com.sun.xml.bind.defaultNamespaceRemap") != null)
+         {
+            String dns = (String) bcust.get("com.sun.xml.bind.defaultNamespaceRemap");
+            bcust.remove("com.sun.xml.bind.defaultNamespaceRemap");
+            bcust.put("com.sun.xml.internal.bind.defaultNamespaceRemap", dns);                       
+            try
+            {
+               jaxbCtx = JAXBContext.newInstance(clazzes, bcust);
+               incrementContextCount();
+            }
+            catch (JAXBException ex)
+            {
+               throw new WSException("Failed to create JAXBContext", ex);
+            }
+         }
+         else
+         {
+            throw new WSException("Failed to create JAXBContext", e);
+         }      
       }
+      return jaxbCtx;
    }
 
    public JAXBRIContext createContext(Class[] classes, Collection<TypeReference> refs, String defaultNS, boolean c14n, BindingCustomization bcust)
