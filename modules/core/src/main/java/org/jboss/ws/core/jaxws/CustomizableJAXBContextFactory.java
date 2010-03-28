@@ -88,9 +88,10 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
 
    public JAXBContext createContext(final Class[] clazzes, final BindingCustomization bcust) throws WSException
    {
+      JAXBContext jaxbCtx = null;
       try
       {
-         JAXBContext jaxbCtx = AccessController.doPrivileged(new PrivilegedExceptionAction<JAXBContext>() {
+         jaxbCtx = AccessController.doPrivileged(new PrivilegedExceptionAction<JAXBContext>() {
             public JAXBContext run() throws PrivilegedActionException
             {
                try
@@ -104,12 +105,42 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
             }
          });
          incrementContextCount();
-         return jaxbCtx;
       }
       catch (Exception e)
-      {
-         throw new WSException("Failed to create JAXBContext", e);
+      {  
+         if (bcust != null && bcust.get("com.sun.xml.bind.defaultNamespaceRemap") != null)
+         {
+            String dns = (String) bcust.get("com.sun.xml.bind.defaultNamespaceRemap");
+            bcust.remove("com.sun.xml.bind.defaultNamespaceRemap");
+            bcust.put("com.sun.xml.internal.bind.defaultNamespaceRemap", dns);                       
+            try
+            {
+               jaxbCtx = AccessController.doPrivileged(new PrivilegedExceptionAction<JAXBContext>() {
+                  public JAXBContext run() throws PrivilegedActionException
+                  {
+                     try
+                     {
+                        return JAXBContext.newInstance(clazzes, bcust);
+                     }
+                     catch (JAXBException e)
+                     {
+                        throw new PrivilegedActionException(e);
+                     }
+                  }
+               });
+               incrementContextCount();
+            }
+            catch (Exception ex)
+            {
+               throw new WSException("Failed to create JAXBContext", ex);
+            }
+         }
+         else
+         {
+            throw new WSException("Failed to create JAXBContext", e);
+         }      
       }
+      return jaxbCtx;
    }
 
    public JAXBRIContext createContext(Class[] classes, Collection<TypeReference> refs, String defaultNS, boolean c14n, BindingCustomization bcust)
