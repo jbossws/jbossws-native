@@ -280,6 +280,7 @@ public class ServiceEndpointInvoker
          CommonBinding binding = bindingProvider.getCommonBinding();
          try
          {
+            MessageContextAssociation.peekMessageContext().put("Exception", ex);
             binding.bindFaultMessage(ex);
 
             // call the fault handler chain

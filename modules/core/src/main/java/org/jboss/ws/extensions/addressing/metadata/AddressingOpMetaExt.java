@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.extensions.addressing.metadata;
 
+import javax.xml.ws.FaultAction;
+
 import org.jboss.ws.metadata.umdm.MetaDataExtension;
 
 /**
@@ -35,6 +37,7 @@ public class AddressingOpMetaExt extends MetaDataExtension
 {
    private String inboundAction;
    private String outboundAction;
+   private FaultAction[] faultActions;
 
    public AddressingOpMetaExt(String extensionNameSpace)
    {
@@ -59,6 +62,14 @@ public class AddressingOpMetaExt extends MetaDataExtension
    public void setOutboundAction(String outboundAction)
    {
       this.outboundAction = outboundAction;
+   }
+   
+   public void setFaultActions(FaultAction[] faultActions) {
+      this.faultActions = faultActions;
+   }
+   
+   public FaultAction[] getFaultActions() {
+      return this.faultActions;
    }
 
 }

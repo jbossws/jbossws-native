@@ -545,6 +545,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          addrExt.setInboundAction(anAction.input());
          addrExt.setOutboundAction(anAction.output());
+         addrExt.setFaultActions(anAction.fault());
       }
       else
       // default action values

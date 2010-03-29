@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.FaultAction;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
@@ -171,7 +172,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 				AddressingOpMetaExt addrExt = (AddressingOpMetaExt)opMetaData.getExtension(ADDR_CONSTANTS.getNamespaceURI());
 				if (addrExt != null)
 				{
-					outProps.setAction(ADDR_BUILDER.newURI(addrExt.getOutboundAction()));
+				    outProps.setAction(ADDR_BUILDER.newURI(addrExt.getOutboundAction()));
 				}
 				else
 				{
@@ -179,9 +180,25 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 				}
 
 			}
-			else if (isFault)
+			else if (isFault)			   
 			{
-				outProps.setAction(ADDR_BUILDER.newURI(ADDR_CONSTANTS.getDefaultFaultAction()));
+			   AddressingOpMetaExt addrExt = (AddressingOpMetaExt)opMetaData.getExtension(ADDR_CONSTANTS.getNamespaceURI());
+               if (addrExt != null && msgContext.get("Exception") != null 
+                     && addrExt.getFaultActions() != null && addrExt.getFaultActions().length > 0) 
+               {
+                  Exception ex = (Exception)msgContext.get("Exception");
+                  for(FaultAction faultAction  : addrExt.getFaultActions()) 
+                  {
+                     if (faultAction.className().getName().equals(ex.getClass().getName())) 
+                     {
+                        outProps.setAction(ADDR_BUILDER.newURI(faultAction.value()));
+                        break;
+                     }
+                  }                                           
+               }
+               if (outProps.getAction() == null) {
+                  outProps.setAction(ADDR_BUILDER.newURI(ADDR_CONSTANTS.getDefaultFaultAction()));
+               }				
 			}
 
 		}

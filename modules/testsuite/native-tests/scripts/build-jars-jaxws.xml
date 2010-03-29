@@ -624,7 +624,19 @@
 	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF">
 	        <include name="jboss-web.xml"/>
 	      </webinf>
-	    </war> 				
+	    </war>
+		
+	  	<!-- jaxws-jbws2977 -->
+	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2977.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2977/WEB-INF/web.xml">
+	      <classes dir="${tests.output.dir}/test-classes">
+	        <include name="org/jboss/test/ws/jaxws/jbws2977/AddNumbersImpl.class"/>
+	      	<include name="org/jboss/test/ws/jaxws/jbws2977/AddNumbersException.class"/>
+	      </classes>
+	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2977/WEB-INF">
+	        <include name="jboss-web.xml"/>
+	      </webinf>
+	    </war>
+		
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
