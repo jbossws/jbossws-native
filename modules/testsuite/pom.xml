@@ -26,7 +26,7 @@
     <wsdl.publish.location>${project.build.directory}/wsdl-publish</wsdl.publish.location>
     <hibernate.version>3.2.4.sp1</hibernate.version>
     <jboss.javaee.version>5.0.0.GA</jboss.javaee.version>
-    <hornetq.version>2.1.0.r8931</hornetq.version>
+    <hornetq.version>2.1.0.r9008</hornetq.version>
   </properties>
 
   <!-- Modules -->
