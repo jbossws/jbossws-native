@@ -128,6 +128,12 @@ public abstract class AbstractNettyMessage extends DefaultHttpMessage implements
       this.status = HttpResponseStatus.valueOf(sc);
    }
 
+   @Override
+   public final void setStatus(HttpResponseStatus sc)
+   {
+      this.status = sc;
+   }
+
    /**
     * Sets cookis to response.
     */
@@ -205,44 +211,8 @@ public abstract class AbstractNettyMessage extends DefaultHttpMessage implements
          key = header.getName();
          List<String> values = new LinkedList<String>();
          values.add(header.getValue());
-         values = this.removeProhibitedCharacters(values);
          this.setHeader(key, values);
       }
-   }
-
-   // TODO: https://jira.jboss.org/jira/browse/NETTY-237
-   /**
-    * Removes prohibited header value characters.
-    * 
-    * @param values header values before optimization
-    * @return optimized header values
-    */
-   private List<String> removeProhibitedCharacters(final List<String> values)
-   {
-      final List<String> retVal = new LinkedList<String>();
-      for (int i = 0; i < values.size(); i++)
-      {
-         retVal.add(i, this.removeProhibitedCharacters(values.get(i)));
-      }
-
-      return retVal;
-   }
-
-   // TODO: https://jira.jboss.org/jira/browse/NETTY-237
-   /**
-    * Removes prohibited header value characters.
-    * 
-    * @param value header value before optimization
-    * @return optimized header value
-    */
-   private String removeProhibitedCharacters(final String value)
-   {
-      String retVal = value;
-
-      retVal = retVal.replace('\r', ' ');
-      retVal = retVal.replace('\n', ' ');
-
-      return retVal;
    }
 
 }
