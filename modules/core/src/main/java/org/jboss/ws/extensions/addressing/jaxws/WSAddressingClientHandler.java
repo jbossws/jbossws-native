@@ -22,6 +22,7 @@
 package org.jboss.ws.extensions.addressing.jaxws;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -120,6 +121,12 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
          {
             // ignore
          }
+      }
+      
+      //Add this optional messageID
+      if (addrProps.getMessageID()== null)
+      {
+         addrProps.setMessageID(AddressingClientUtil.createMessageID());
       }
       
 		SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
