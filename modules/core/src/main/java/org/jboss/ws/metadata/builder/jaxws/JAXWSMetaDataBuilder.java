@@ -544,7 +544,16 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (anAction != null)
       {
          addrExt.setInboundAction(anAction.input());
-         addrExt.setOutboundAction(anAction.output());
+         if ("".equals(anAction.output()))
+         {
+            addrExt.setOutboundAction(epMetaData.getPortName().getNamespaceURI() 
+                  + "/" + opMetaData.getQName().getLocalPart() + "/" + opMetaData.getQName().getLocalPart() 
+                  + "Response");
+         }
+         else
+         {
+            addrExt.setOutboundAction(anAction.output());
+         }        
          addrExt.setFaultActions(anAction.fault());
       }
       else
