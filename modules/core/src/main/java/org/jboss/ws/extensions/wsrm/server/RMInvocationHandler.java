@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.naming.NamingException;
 import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
@@ -370,6 +372,12 @@ public final class RMInvocationHandler extends InvocationHandler
    public final InvocationHandler getDelegate()
    {
       return this.delegate;
+   }
+
+   @Override
+   public Context getJNDIContext(Endpoint ep) throws NamingException
+   {
+      return this.delegate.getJNDIContext(ep);
    }
 
 }
