@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.addressing.jaxws;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -31,7 +32,13 @@ import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.Detail;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.FaultAction;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
@@ -40,6 +47,7 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.AddressingFeature;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -101,11 +109,40 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
            
         }
         addrProps.readHeaders(soapMessage);
-		msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
-		msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
-		msgContext.put(MessageContext.REFERENCE_PARAMETERS, convertToElementList(addrProps.getReferenceParameters().getElements()));
-		msgContext.setScope(MessageContext.REFERENCE_PARAMETERS, Scope.APPLICATION);
-		return true;
+        msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
+        msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
+        msgContext.put(MessageContext.REFERENCE_PARAMETERS, convertToElementList(addrProps.getReferenceParameters().getElements()));
+        msgContext.setScope(MessageContext.REFERENCE_PARAMETERS, Scope.APPLICATION);
+        
+        //check if soap action matches wsa action
+        String[] soapActions = commonMsgContext.getMessageAbstraction().getMimeHeaders().getHeader("SOAPAction");
+        if (soapActions != null && soapActions.length > 0)
+        {
+         String soapAction = soapActions[0];
+         if (!soapAction.equals("\"\"")  && addrProps.getAction() != null)                
+         {
+            String wsaAction = addrProps.getAction().getURI().toString();
+            // R1109 The value of the SOAPAction HTTP header field in a HTTP request MESSAGE MUST be a quoted string.
+            if (!soapAction.equals(wsaAction) && !soapAction.equals("\"" + wsaAction + "\""))
+            {
+               try
+               {
+                  SOAPFault fault = new SOAPFaultImpl();
+                  fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ActionMismatch"));
+                  fault.setFaultString("Mismatch between soap action:" + soapAction + " and wsa action:\""
+                        + addrProps.getAction().getURI() + "\"");
+                  Detail detail = fault.addDetail();
+                  detail.addDetailEntry(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ProblemAction"));
+                  throw new SOAPFaultException(fault);
+               }
+               catch (SOAPException e)
+               {
+                  throw new WebServiceException(e);
+               }
+            }
+         }
+        }
+	    return true;
 	}
 	
 	private static List<Element> convertToElementList(List<Object> objects)

@@ -150,7 +150,12 @@ public class DispatchSOAPBinding extends DispatchBinding
       try
       {
          if (SOAPMessage.class.isAssignableFrom(type))
-         {
+         {  
+            //Throw Exception if this is soap fault message
+            SOAPBodyImpl soapBody = (SOAPBodyImpl)resMsg.getSOAPBody();
+            SOAPFault soapFault = soapBody.getFault();
+            if (soapFault != null)
+               throw new SOAPFaultException(soapFault);
             retObj = resMsg;
          }
          else if (Source.class.isAssignableFrom(type))
