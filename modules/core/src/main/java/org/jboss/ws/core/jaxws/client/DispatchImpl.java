@@ -191,16 +191,15 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       // R2745 A HTTP request MESSAGE MUST contain a SOAPAction HTTP header field
       // with a quoted empty string value, if in the corresponding WSDL description,
       // the soapAction attribute of soapbind:operation is either not present, or
-      // present with an empty string as its value.
-      String soapAction = null;
+      // present with an empty string as its value.      
       Map<String, Object> reqContext = getRequestContext();
-      Boolean useSOAPAction = (Boolean)reqContext.get(BindingProvider.SOAPACTION_USE_PROPERTY);
-      if (Boolean.TRUE.equals(useSOAPAction))
+      String soapAction = (String) reqContext.get(BindingProvider.SOAPACTION_URI_PROPERTY);;
+      Boolean useSOAPAction = (Boolean) reqContext.get(BindingProvider.SOAPACTION_USE_PROPERTY);
+      if (Boolean.TRUE.equals(useSOAPAction) && soapAction == null)
       {
-         soapAction = (String)reqContext.get(BindingProvider.SOAPACTION_URI_PROPERTY);
-         if (soapAction == null)
             throw new IllegalStateException("Cannot obtain: " + BindingProvider.SOAPACTION_URI_PROPERTY);
       }
+      
       MimeHeaders mimeHeaders = reqMsg.getMimeHeaders();
       mimeHeaders.addHeader("SOAPAction", soapAction != null ? soapAction : "");
 
