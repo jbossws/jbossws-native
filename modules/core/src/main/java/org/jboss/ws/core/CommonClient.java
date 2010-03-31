@@ -288,10 +288,11 @@ public abstract class CommonClient implements StubExt, HeaderSource
          {
             for (QName qname : epInv.getRequestParamNames())
             {
-               Object obj = epInv.getRequestParamValue(qname);
-               if (obj == null)
+               ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
+               if (paramMetaData.getMode().equals(ParameterMode.IN) && epInv.getRequestParamValue(qname) == null)
                {
-                  throw new WebServiceException("The RPC/Literal Operation [" + opName + "] Parameter can not be null");
+                  throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
+                        + "] parameters can not be null");
                }
             }
          }
@@ -400,29 +401,15 @@ public abstract class CommonClient implements StubExt, HeaderSource
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
-            //JBWS-2969: check if the RPC/Lit input/output paramter is null
+            //JBWS-2969: check if the RPC/Lit output paramter is null
             if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral())
-            {
-               if (epInv.getResponseParamNames() != null)
-               {
-                  for (QName qname : epInv.getResponseParamNames())
-                  {
-                     Object obj = epInv.getResponsePayLoadParamValue(qname);
-                     if (obj == null)
-                     {
-                        throw new WebServiceException("The RPC/Literal Operation [" + opName
-                              + "] response parameters can not be null");
-                     }
-                  }
-               }
-               
+            {               
                if (opMetaData.getReturnParameter() != null && epInv.getReturnValue() == null)
                {
                   throw new WebServiceException("The RPC/Literal Operation [" + opName
                         + "] return value can not be null");
                }
             }
-            
             
             retObj = syncOutputParams(inputParams, epInv);
          }

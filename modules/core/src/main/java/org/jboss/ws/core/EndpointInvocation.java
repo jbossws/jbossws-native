@@ -172,17 +172,7 @@ public class EndpointInvocation
       }
       return paramValue;
    }
-   
-   public Object getResponsePayLoadParamValue(QName xmlName) throws SOAPException
-   {
-      if (log.isDebugEnabled())
-         log.debug("getResponseParamValue: " + xmlName);
-      Object paramValue = resPayload.get(xmlName);
-      ParameterMetaData paramMetaData = opMetaData.getParameter(xmlName);
-      paramValue = transformPayloadValue(paramMetaData, paramValue);
-      return paramValue;
-   }
-
+  
    public void setReturnValue(Object value)
    {
       ParameterMetaData retMetaData = opMetaData.getReturnParameter();

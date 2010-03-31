@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 import javax.xml.soap.Name;
@@ -64,6 +65,7 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.SPIProvider;
@@ -216,11 +218,12 @@ public class ServiceEndpointInvoker
                //JBWS-2969:check if the RPC/Lit input paramter is null
                if (opMetaData.getEndpointMetaData().getType() != EndpointMetaData.Type.JAXRPC
                      && opMetaData.isRPCLiteral() && sepInv.getRequestParamNames() != null)
-               {
+               {  
+                  
                   for (QName qname : sepInv.getRequestParamNames())
                   {
-                     Object obj = sepInv.getRequestParamValue(qname);
-                     if (obj == null)
+                     ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
+                     if (paramMetaData.getMode().equals(ParameterMode.IN) && sepInv.getRequestParamValue(qname) == null)
                      {
                         throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
                               + "] parameters can not be null");
