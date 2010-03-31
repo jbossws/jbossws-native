@@ -213,7 +213,7 @@ public class ServiceEndpointInvoker
                   reqMessage = msgContext.getMessageAbstraction();
                   sepInv = binding.unbindRequestMessage(opMetaData, reqMessage);
                }
-               //JBWS-2969:check if the rpc/lit input paramter is null
+               //JBWS-2969:check if the RPC/Lit input paramter is null
                if (opMetaData.getEndpointMetaData().getType() != EndpointMetaData.Type.JAXRPC
                      && opMetaData.isRPCLiteral() && sepInv.getRequestParamNames() != null)
                {

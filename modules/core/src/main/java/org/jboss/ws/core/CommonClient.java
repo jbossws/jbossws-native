@@ -400,7 +400,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
-            //JBWS-2969: check if the rpc/lit input paramter is null
+            //JBWS-2969: check if the RPC/Lit input/output paramter is null
             if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral())
             {
                if (epInv.getResponseParamNames() != null)
@@ -415,7 +415,15 @@ public abstract class CommonClient implements StubExt, HeaderSource
                      }
                   }
                }
-            } 
+               
+               if (opMetaData.getReturnParameter() != null && epInv.getReturnValue() == null)
+               {
+                  throw new WebServiceException("The RPC/Literal Operation [" + opName
+                        + "] return value can not be null");
+               }
+            }
+            
+            
             retObj = syncOutputParams(inputParams, epInv);
          }
 
