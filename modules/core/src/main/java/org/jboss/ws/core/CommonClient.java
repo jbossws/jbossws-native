@@ -38,6 +38,7 @@ import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.ws.ProtocolException;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.handler.MessageContext;
@@ -255,10 +256,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
    {
       if (opName.equals(operationName) == false)
          setOperationName(opName);
-
       OperationMetaData opMetaData = getOperationMetaData();
       boolean oneway = forceOneway || opMetaData.isOneWay();
-
       // Associate a message context with the current thread
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setOperationMetaData(opMetaData);
@@ -284,6 +283,19 @@ public abstract class CommonClient implements StubExt, HeaderSource
          epInv = new EndpointInvocation(opMetaData);
          epInv.initInputParams(inputParams);
 
+         if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral()
+               && epInv.getRequestParamNames() != null)
+         {
+            for (QName qname : epInv.getRequestParamNames())
+            {
+               Object obj = epInv.getRequestParamValue(qname);
+               if (obj == null)
+               {
+                  throw new WebServiceException("The RPC/Literal Operation [" + opName + "] Parameter can not be null");
+               }
+            }
+         }
+         
          // Set the required outbound properties
          setOutboundContextProperties();
 
@@ -388,6 +400,22 @@ public abstract class CommonClient implements StubExt, HeaderSource
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
 
+            //JBWS-2969: check if the rpc/lit input paramter is null
+            if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral())
+            {
+               if (epInv.getResponseParamNames() != null)
+               {
+                  for (QName qname : epInv.getResponseParamNames())
+                  {
+                     Object obj = epInv.getResponsePayLoadParamValue(qname);
+                     if (obj == null)
+                     {
+                        throw new WebServiceException("The RPC/Literal Operation [" + opName
+                              + "] response parameters can not be null");
+                     }
+                  }
+               }
+            } 
             retObj = syncOutputParams(inputParams, epInv);
          }
 

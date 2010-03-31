@@ -35,6 +35,7 @@ import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.http.HTTPBinding;
 
@@ -75,6 +76,7 @@ import org.jboss.wsf.spi.invocation.InvocationHandler;
 import org.jboss.wsf.spi.invocation.InvocationType;
 import org.jboss.wsf.spi.invocation.WebServiceContextFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.serviceref.ServiceRefHandler.Type;
 
 /** An implementation handles invocations on the endpoint
  *
@@ -211,7 +213,21 @@ public class ServiceEndpointInvoker
                   reqMessage = msgContext.getMessageAbstraction();
                   sepInv = binding.unbindRequestMessage(opMetaData, reqMessage);
                }
-
+               //JBWS-2969:check if the rpc/lit input paramter is null
+               if (opMetaData.getEndpointMetaData().getType() != EndpointMetaData.Type.JAXRPC
+                     && opMetaData.isRPCLiteral() && sepInv.getRequestParamNames() != null)
+               {
+                  for (QName qname : sepInv.getRequestParamNames())
+                  {
+                     Object obj = sepInv.getRequestParamValue(qname);
+                     if (obj == null)
+                     {
+                        throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
+                              + "] parameters can not be null");
+                     }
+                  }
+               }
+               
                // Invoke an instance of the SEI implementation bean 
                Invocation inv = setupInvocation(endpoint, sepInv, invContext);
                InvocationHandler invHandler = endpoint.getInvocationHandler();
@@ -219,6 +235,7 @@ public class ServiceEndpointInvoker
                try
                {
                   invHandler.invoke(endpoint, inv);
+                  
                }
                catch (InvocationTargetException th)
                {
