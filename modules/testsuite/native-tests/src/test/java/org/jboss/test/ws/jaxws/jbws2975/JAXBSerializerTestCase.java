@@ -36,7 +36,6 @@ import org.jboss.ws.util.xml.BufferedStreamResult;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 
-import com.sun.org.apache.xerces.internal.util.DOMUtil;
 
 /**
  * A JAXBSerializerTestCase.
