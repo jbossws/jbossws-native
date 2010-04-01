@@ -132,6 +132,7 @@ public class HandlerDelegateJAXWS extends ServerHandlerDelegate
          log.debug("callFaultHandlerChain: " + type);
       HandlerChainExecutor executor =  getExecutor(type);
       MessageContext msgContext = (MessageContext)MessageContextAssociation.peekMessageContext();
+      ((CommonMessageContext)msgContext).setCurrentException(ex);
       boolean status = (executor != null ? executor.handleFault(msgContext, ex) : true);
 
       MessageAbstraction msg = ((CommonMessageContext)msgContext).getMessageAbstraction();

@@ -26,6 +26,7 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
+import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
@@ -36,8 +37,6 @@ import javax.xml.soap.Detail;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.FaultAction;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.JAXWSAConstants;
@@ -198,26 +197,24 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 		try
 		{
 			// supply the response action
+		    CommonMessageContext commonCtx = (CommonMessageContext)msgContext;
+			OperationMetaData operationMD = commonCtx.getOperationMetaData();
+			
+            AddressingOpMetaExt addressingMD = (AddressingOpMetaExt)operationMD.getExtension(ADDR_CONSTANTS.getNamespaceURI());
+            
+            if (addressingMD == null)
+               throw new IllegalStateException("Addressing meta data not available");
 
-			OperationMetaData opMetaData = ((CommonMessageContext)msgContext).getOperationMetaData();
-
-			if (!isFault && !opMetaData.isOneWay())
+            if (!isFault && !operationMD.isOneWay())
 			{
-
-				AddressingOpMetaExt addrExt = (AddressingOpMetaExt)opMetaData.getExtension(ADDR_CONSTANTS.getNamespaceURI());
-				if (addrExt != null)
-				{
-					outProps.setAction(ADDR_BUILDER.newURI(addrExt.getOutboundAction()));
-				}
-				else
-				{
-					log.warn("Unable to resolve replyAction for " + opMetaData.getQName());
-				}
-
+				outProps.setAction(ADDR_BUILDER.newURI(addressingMD.getOutboundAction()));
 			}
 			else if (isFault)
 			{
-				outProps.setAction(ADDR_BUILDER.newURI(ADDR_CONSTANTS.getDefaultFaultAction()));
+			   Throwable exception = commonCtx.getCurrentException();
+			   String faultAction = getFaultAction(operationMD, addressingMD, exception);
+
+			   outProps.setAction(ADDR_BUILDER.newURI(faultAction));
 			}
 
 		}
@@ -229,7 +226,20 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 		outProps.writeHeaders(soapMessage);
 	}
 
-	/* check wsa formal constraints */
+	private String getFaultAction(final OperationMetaData operationMD, final AddressingOpMetaExt addressingMD, final Throwable exception)
+	{
+	   final FaultMetaData faultMD = operationMD.getFaultMetaData(exception.getClass());
+	   
+	   if (faultMD != null)
+	   {
+	      final String beanName = faultMD.getFaultBeanName();
+	      return addressingMD.getFaultAction(beanName);
+	   }
+
+	   return ADDR_CONSTANTS.getDefaultFaultAction();
+	}
+
+   /* check wsa formal constraints */
 	private void validateRequest(SOAPAddressingProperties addrProps)
 	{
 		// If wsa:ReplyTo is supplied and the message lacks a [message id] property, the processor MUST fault.

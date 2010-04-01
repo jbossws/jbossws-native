@@ -24,6 +24,7 @@ package org.jboss.ws.extensions.addressing.jaxws;
 import org.jboss.logging.Logger;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -114,7 +115,13 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
             }
             else 
             {
-                addrProps.setAction(ADDR_BUILDER.newURI(opMetaData.getJavaName()));
+               AddressingOpMetaExt addressingMD = (AddressingOpMetaExt)opMetaData.getExtension(ADDR_CONSTANTS.getNamespaceURI());
+               if (addressingMD == null)
+                  throw new IllegalStateException("Addressing Meta Data not available");
+
+               String action = addressingMD.getInboundAction();
+               if (action == null) action = opMetaData.getJavaName();
+               addrProps.setAction(ADDR_BUILDER.newURI(action));
             }
          }
          catch (URISyntaxException ex)

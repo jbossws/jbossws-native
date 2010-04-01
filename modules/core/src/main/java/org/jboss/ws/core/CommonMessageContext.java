@@ -70,6 +70,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    protected Scope currentScope = Scope.APPLICATION;
 
    private boolean isModified;
+   private Throwable currentException;
 
    public CommonMessageContext()
    {
@@ -84,6 +85,16 @@ public abstract class CommonMessageContext implements Map<String, Object>
       this.serContext = msgContext.serContext;
       this.scopedProps = new HashMap<String, ScopedProperty>(msgContext.scopedProps);
       this.currentScope = msgContext.currentScope;
+   }
+   
+   public Throwable getCurrentException()
+   {
+      return currentException;
+   }
+   
+   public void setCurrentException(Throwable t)
+   {
+      this.currentException = t;
    }
 
    public Scope getCurrentScope()
