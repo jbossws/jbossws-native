@@ -79,7 +79,7 @@ public class JAXBSerializerTestCase extends junit.framework.TestCase
         List<Element> elements = DOMUtils.getChildElementsAsList(element, "return");
         for (Element ele : elements) 
         {
-           String typeValue = DOMUtil.getAttrValueNS(ele, "http://www.w3.org/2001/XMLSchema-instance", "type");
+           String typeValue = DOMUtils.getAttributeValue(ele, new QName("http://www.w3.org/2001/XMLSchema-instance", "type"));
            assertEquals("The namespace prefix is not serialized", true ,typeValue.indexOf(":") > 0);
         }
         //cleanup the mock object 
