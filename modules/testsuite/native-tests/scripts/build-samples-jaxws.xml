@@ -165,11 +165,13 @@
         <include name="jboss-service.xml"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport-as6.sar">
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxws-samples-jmstransport.jar"/>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-jmstransport-as6.jar">
+      <fileset dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/samples/jmstransport/Organization.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/jmstransport/OrganizationJMSEndpoint.class"/>
       </fileset>
       <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/jmstransport/META-INF">
+        <include name="wsdl/*.wsdl"/>
         <include name="hornetq-jms.xml"/>
       </metainf>
     </jar>

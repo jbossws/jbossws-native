@@ -61,7 +61,7 @@ public class JMSTransportTestCase extends JBossWSTest
    public static Test suite() throws Exception
    {
       //TODO: replace isHornetQAvailable call with JBossWSTestHelper.isTargetJBoss6() once AS 6 M3 is out and hence M2 is not supported anymore
-      return new JBossWSTestSetup(JMSTransportTestCase.class, isHornetQAvailable() ? "jaxws-samples-jmstransport-as6.sar" : "jaxws-samples-jmstransport.sar");
+      return new JBossWSTestSetup(JMSTransportTestCase.class, isHornetQAvailable() ? "jaxws-samples-jmstransport-as6.jar" : "jaxws-samples-jmstransport.sar");
    }
    
    private static boolean isHornetQAvailable()
