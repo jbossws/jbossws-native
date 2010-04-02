@@ -67,9 +67,11 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
       String deploymentName = dep.getCanonicalName();
 
       // For each service
-      for (ServiceMetaData serviceMetaData : wsMetaData.getServices())
+      for (ServiceMetaData serviceMD : wsMetaData.getServices())
       {
-         File wsdlFile = getPublishLocation(deploymentName, serviceMetaData.getWsdlFileOrLocation().toExternalForm(), serviceMetaData.getWsdlPublishLocation());
+         final String wsdlLocation = this.getWSDLLocation(serviceMD);
+         final String publishLocation = serviceMD.getWsdlPublishLocation();
+         final File wsdlFile = getPublishLocation(deploymentName, wsdlLocation, publishLocation);
          if (wsdlFile == null)
             continue;
 
@@ -80,14 +82,14 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
          try
          {
             fWriter = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
-            WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
+            WSDLDefinitions wsdlDefinitions = serviceMD.getWsdlDefinitions();
             new WSDLWriter(wsdlDefinitions).write(fWriter, Constants.DEFAULT_XML_CHARSET);
 
             URL wsdlPublishURL = wsdlFile.toURI().toURL();
             log.info("WSDL published to: " + wsdlPublishURL);
 
             // udpate the wsdl file location 
-            serviceMetaData.setWsdlLocation(wsdlPublishURL);
+            serviceMD.setWsdlLocation(wsdlPublishURL);
 
             // Process the wsdl imports
             Definition wsdl11Definition = wsdlDefinitions.getWsdlOneOneDefinition();
@@ -123,6 +125,14 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
       }
    }
    
+   private String getWSDLLocation(final ServiceMetaData serviceMD)
+   {
+      if (serviceMD.getWsdlFileOrLocation() == null)
+         return null;
+      
+      return serviceMD.getWsdlFileOrLocation().toExternalForm(); 
+   }
+
    /**
     * Get the file publish location
     */
