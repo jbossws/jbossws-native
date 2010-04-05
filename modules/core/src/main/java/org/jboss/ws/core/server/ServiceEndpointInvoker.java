@@ -223,7 +223,7 @@ public class ServiceEndpointInvoker
                   for (QName qname : sepInv.getRequestParamNames())
                   {
                      ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
-                     if (paramMetaData.getMode().equals(ParameterMode.IN) && sepInv.getRequestParamValue(qname) == null)
+                     if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) && sepInv.getRequestParamValue(qname) == null)
                      {
                         throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
                               + "] parameters can not be null");

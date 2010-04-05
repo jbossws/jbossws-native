@@ -289,7 +289,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             for (QName qname : epInv.getRequestParamNames())
             {
                ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
-               if (paramMetaData.getMode().equals(ParameterMode.IN) && epInv.getRequestParamValue(qname) == null)
+               if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) 
+            		   && epInv.getRequestParamValue(qname) == null)
                {
                   throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
                         + "] parameters can not be null");
@@ -400,20 +401,9 @@ public abstract class CommonClient implements StubExt, HeaderSource
                MessageAbstraction resMessage = msgContext.getMessageAbstraction();
                binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
             }
-
-            //JBWS-2969: check if the RPC/Lit output paramter is null
-            if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral())
-            {               
-               if (opMetaData.getReturnParameter() != null && epInv.getReturnValue() == null)
-               {
-                  throw new WebServiceException("The RPC/Literal Operation [" + opName
-                        + "] return value can not be null");
-               }
-            }
-            
             retObj = syncOutputParams(inputParams, epInv);
          }
-
+         
          return retObj;
       }
       catch (Exception ex)
@@ -535,6 +525,10 @@ public abstract class CommonClient implements StubExt, HeaderSource
          retValue = epInv.getReturnValue();
          if (opMetaData.isDocumentWrapped() && retMetaData.isMessageType() == false)
             retValue = ParameterWrapping.unwrapResponseParameters(retMetaData, retValue, inParams);
+         if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral() && retValue == null)
+            throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
+                  + "] return value can not be null, it's WS-BP:2211 violation)");
+            
       }
 
       // Set the holder values for INOUT parameters
@@ -547,6 +541,15 @@ public abstract class CommonClient implements StubExt, HeaderSource
          {
             QName xmlName = paramMetaData.getXmlName();
             Object value = epInv.getResponseParamValue(xmlName);
+            //JBWS-2969:Check if reponse parameter or return value is null
+            if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral()) 
+            {
+            	if (value == null) 
+            	{
+                    throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
+                            + "] response parameter value can not be null, it's WS-BP:2211 violation)");
+            	}
+            }
             // document/literal wrapped return value header
             if (index == -1)
             {
