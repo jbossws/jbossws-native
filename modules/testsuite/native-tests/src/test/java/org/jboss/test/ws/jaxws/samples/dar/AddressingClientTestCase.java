@@ -68,7 +68,18 @@ public class AddressingClientTestCase extends JBossWSTest
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
       AddressingClient client = new AddressingClient(wsdlURL, getServerHost());
       Date start = new Date();
-      client.run(false);
+      try
+      {
+         client.run(true);
+      }
+      catch (Exception e)
+      {
+         if (e.getMessage().indexOf("return value can not be null") == -1)
+         {
+            throw e ;
+         }
+         // do nothing, ingore the expected WebServiceException, See JBWS2969
+      }
       Date stop = new Date();
       assertTrue(stop.getTime() - start.getTime() > TEST_RUN_TIME / 2);
    }
@@ -78,7 +89,18 @@ public class AddressingClientTestCase extends JBossWSTest
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/dar?wsdl");
       AddressingClient client = new AddressingClient(wsdlURL, getServerHost());
       Date start = new Date();
-      client.run(true);
+      try
+      {
+         client.run(true);
+      }
+      catch (Exception e)
+      {
+         if (e.getMessage().indexOf("return value can not be null") == -1)
+         {
+            throw e ;
+         }
+         //do nothing, ingore the expected WebServiceException, See JBWS2969
+      }
       Date stop = new Date();
       assertTrue(stop.getTime() - start.getTime() > TEST_RUN_TIME / 2);
    }
