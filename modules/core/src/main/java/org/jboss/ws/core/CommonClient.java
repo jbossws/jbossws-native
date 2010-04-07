@@ -358,9 +358,13 @@ public abstract class CommonClient implements StubExt, HeaderSource
             boolean maintainSession = shouldMaintainSession();
             if (maintainSession)
                addSessionInfo(reqMessage, callProps);
+            
+            propagateRequestHeaders(reqMessage, msgContext);
 
             RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
             MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
+
+            propagateResponseHeaders(callProps, msgContext);
 
             if (maintainSession)
                saveSessionInfo(callProps, requestCtx);
@@ -451,6 +455,11 @@ public abstract class CommonClient implements StubExt, HeaderSource
          closeHandlerChain(portName, handlerType[0]);
       }
    }
+   
+   private void propagateResponseHeaders(Map<String, Object> remotingMetadata, Map<String, Object> responseContext)
+   {
+      responseContext.put(MessageContext.HTTP_RESPONSE_HEADERS, remotingMetadata.get(NettyClient.RESPONSE_HEADERS));
+   }
 
    private void saveSessionInfo(Map<String, Object> remotingMetadata, Map<String, Object> requestContext)
    {
@@ -502,6 +511,34 @@ public abstract class CommonClient implements StubExt, HeaderSource
          for (Map.Entry<String, String> cookie : cookies.entrySet())
          {
             reqMessage.getMimeHeaders().addHeader("Cookie", cookie.getKey() + "=" + cookie.getValue());
+         }
+      }
+   }
+   
+   private void propagateRequestHeaders(MessageAbstraction reqMessage, CommonMessageContext callProperties)
+   {
+      Map<String, List<String>> requestHeaders = (Map<String, List<String>>)callProperties.get(MessageContext.HTTP_REQUEST_HEADERS);
+      if (requestHeaders != null)
+      {
+         for (Map.Entry<String, List<String>> header : requestHeaders.entrySet())
+         {
+            final String key = header.getKey();
+            final List<String> values = header.getValue();
+            
+            if (key != null)
+            {
+               final StringBuilder sb = new StringBuilder();
+               for (int i = 0; i < values.size(); i++)
+               {
+                  boolean addLWS = (i != (values.size() - 1)); 
+                  sb.append(values.get(i));
+                  if (addLWS)
+                  {
+                     sb.append("\r\n ");
+                  }
+               }
+               reqMessage.getMimeHeaders().addHeader(key, sb.toString());
+            }
          }
       }
    }
