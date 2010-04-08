@@ -63,12 +63,15 @@
     <include name="**/jbossws-native-factories.jar"/>
     <include name="**/jaxb-api.jar"/>
     <include name="**/jaxws-api.jar"/>
+    <include name="**/stax-api.jar"/>
   </patternset>
 
   <patternset id="jbossws.server.lib.patternset">
     <include name="**/commons-beanutils.jar"/>
+    <include name="**/FastInfoset.jar"/>
     <include name="**/jaxws-api.jar"/>
     <include name="**/jsr181-api.jar"/>
+    <include name="**/jboss-jaxb-intros.jar"/>
     <include name="**/jbossws-common.jar"/>
     <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-core.jar"/>
@@ -76,19 +79,16 @@
     <include name="**/netty.jar"/>
     <include name="**/saaj-api.jar"/>
     <include name="**/jbossws-spi.jar"/>
-  </patternset>
-
-  <patternset id="jbossws.service.lib.patternset">
-    <include name="**/FastInfoset.jar"/>
-    <include name="**/jboss-jaxb-intros.jar"/>
-    <include name="**/jbossws-native-core.jar"/>
-    <include name="**/jbossws-native-factories.jar"/>
-    <include name="**/jbossws-native-services.jar"/>
+    <include name="**/wsdl4j.jar"/>
     <include name="**/jettison.jar"/>
     <include name="**/netty.jar"/>
     <include name="**/wscommons-policy.jar"/>
-    <include name="**/wsdl4j.jar"/>
     <include name="**/xmlsec.jar"/>
+  </patternset>
+
+  <patternset id="jbossws.service.lib.patternset">
+    <include name="**/jbossws-native-factories.jar"/>
+    <include name="**/jbossws-native-services.jar"/>
   </patternset>
 
   <!-- ================================================================== -->
