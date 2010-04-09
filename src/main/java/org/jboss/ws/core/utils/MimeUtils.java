@@ -396,3 +396,4 @@ public class MimeUtils
       Object readFrom(InputStream in);
       void writeTo(Object obj, OutputStream out);
    }
+}
