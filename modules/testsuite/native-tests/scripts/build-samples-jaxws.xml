@@ -59,6 +59,9 @@
       <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar/META-INF">
         <include name="jboss.xml"/>
       </metainf>
+      <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar">
+        <include name="jboss-service.xml"/>
+      </metainf>
     </jar>
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-dar-queue.sar">
       <metainf dir="${tests.output.dir}/test-resources/jaxws/samples/dar">
