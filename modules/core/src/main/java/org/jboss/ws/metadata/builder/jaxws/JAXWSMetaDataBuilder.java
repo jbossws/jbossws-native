@@ -586,16 +586,11 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (webMethodAction != null)
          return webMethodAction;
 
-      if (endpointMD.isFeatureEnabled(AddressingFeature.class))
-      {
-         String tns = endpointMD.getPortTypeName().getNamespaceURI();
-         String portTypeName = endpointMD.getPortTypeName().getLocalPart();
-         String opName = operationMD.getQName().getLocalPart();
+      String tns = this.getEndpointNamespace(endpointMD);
+      String portTypeName = endpointMD.getPortTypeName().getLocalPart();
+      String opName = operationMD.getQName().getLocalPart();
 
-         return tns + portTypeName + "/" + opName + "Request";
-      }
-
-      return null;
+      return tns + portTypeName + "/" + opName + "Request";
    }
 
    /*
@@ -614,16 +609,11 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if ((actionAnn != null) && (!"".equals(actionAnn.output())))
          return actionAnn.output();
       
-      if (endpointMD.isFeatureEnabled(AddressingFeature.class))
-      {
-         String tns = endpointMD.getPortTypeName().getNamespaceURI();
-         String portTypeName = endpointMD.getPortTypeName().getLocalPart();
-         String opName = operationMD.getQName().getLocalPart();
+      String tns = this.getEndpointNamespace(endpointMD);
+      String portTypeName = endpointMD.getPortTypeName().getLocalPart();
+      String opName = operationMD.getQName().getLocalPart();
 
-         return tns + portTypeName + "/" + opName + "Response";
-      }
-
-      return null;
+      return tns + portTypeName + "/" + opName + "Response";
    }
 
    /*
@@ -657,18 +647,22 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if ((faultActionAnn != null) && (!"".equals(faultActionAnn.value())))
          return faultActionAnn.value();
       
-      if (endpointMD.isFeatureEnabled(AddressingFeature.class))
-      {
-         String tns = endpointMD.getPortTypeName().getNamespaceURI();
-         String portTypeName = endpointMD.getPortTypeName().getLocalPart();
-         String opName = operationMD.getQName().getLocalPart();
-         int dotIndex = faultBeanName.lastIndexOf('.');
-         String excetionClassName = dotIndex == -1 ? faultBeanName : faultBeanName.substring(dotIndex + 1);
+      String tns = this.getEndpointNamespace(endpointMD);
+      String portTypeName = endpointMD.getPortTypeName().getLocalPart();
+      String opName = operationMD.getQName().getLocalPart();
+      int dotIndex = faultBeanName.lastIndexOf('.');
+      String excetionClassName = dotIndex == -1 ? faultBeanName : faultBeanName.substring(dotIndex + 1);
 
-         return tns + portTypeName + "/" + opName + "/Fault/" + excetionClassName;
-      }
+      return tns + portTypeName + "/" + opName + "/Fault/" + excetionClassName;
+   }
+   
+   private String getEndpointNamespace(final EndpointMetaData endpointMD)
+   {
+      String namespace = endpointMD.getPortTypeName().getNamespaceURI();
+      if (!namespace.endsWith("/"))
+         namespace += "/";
       
-      return null;
+      return namespace;
    }
 
    /**

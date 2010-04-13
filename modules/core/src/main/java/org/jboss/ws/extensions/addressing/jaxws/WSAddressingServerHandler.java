@@ -29,6 +29,7 @@ import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.common.addressing.AddressingConstants;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.w3c.dom.Element;
 
@@ -63,6 +64,7 @@ import java.util.Set;
  * @author Heiko.Braun@jboss.com
  * @since 24-Nov-2005
  */
+@SuppressWarnings("unchecked")
 public class WSAddressingServerHandler extends GenericSOAPHandler
 {
 	// Provide logging
@@ -90,12 +92,25 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 	{
 		if(log.isDebugEnabled()) log.debug("handleInbound");
 
+//		if (!this.isAddressingEnabled(msgContext))
+//		{
+//           try
+//           {
+//              SOAPFault fault = new SOAPFaultImpl();
+//              fault.setFaultCode(AddressingConstants.Core.Faults.MESSAGEADDRESSINGHEADERREQUIRED_QNAME);
+//              fault.setFaultString("A required header representing a Message Addressing Property is not present");
+//              throw new SOAPFaultException(fault);
+//           }
+//           catch (SOAPException e)
+//           {
+//              throw new WebServiceException(e);
+//           }
+//		}
+
 		SOAPAddressingProperties addrProps = (SOAPAddressingProperties)ADDR_BUILDER.newAddressingProperties();
 		SOAPMessage soapMessage = ((SOAPMessageContext)msgContext).getMessage();
         CommonMessageContext commonMsgContext = (CommonMessageContext)msgContext;
-        ServerEndpointMetaData serverMetaData = (ServerEndpointMetaData)commonMsgContext.getEndpointMetaData();
-        AddressingFeature addrFeature = serverMetaData.getFeature(AddressingFeature.class);
-        if (addrFeature != null && addrFeature.isRequired())
+        if (this.isAddressingRequired(msgContext))
         {
            try 
            {
@@ -108,38 +123,41 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
            
         }
         addrProps.readHeaders(soapMessage);
-        msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
-        msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
-        msgContext.put(MessageContext.REFERENCE_PARAMETERS, convertToElementList(addrProps.getReferenceParameters().getElements()));
-        msgContext.setScope(MessageContext.REFERENCE_PARAMETERS, Scope.APPLICATION);
-        
-        //check if soap action matches wsa action
-        String[] soapActions = commonMsgContext.getMessageAbstraction().getMimeHeaders().getHeader("SOAPAction");
-        if (soapActions != null && soapActions.length > 0)
+        if (addrProps.getAction() != null)
         {
-         String soapAction = soapActions[0];
-         if (!soapAction.equals("\"\"")  && addrProps.getAction() != null)                
-         {
-            String wsaAction = addrProps.getAction().getURI().toString();
-            // R1109 The value of the SOAPAction HTTP header field in a HTTP request MESSAGE MUST be a quoted string.
-            if (!soapAction.equals(wsaAction) && !soapAction.equals("\"" + wsaAction + "\""))
-            {
-               try
-               {
-                  SOAPFault fault = new SOAPFaultImpl();
-                  fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ActionMismatch"));
-                  fault.setFaultString("Mismatch between soap action:" + soapAction + " and wsa action:\""
-                        + addrProps.getAction().getURI() + "\"");
-                  Detail detail = fault.addDetail();
-                  detail.addDetailEntry(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ProblemAction"));
-                  throw new SOAPFaultException(fault);
-               }
-               catch (SOAPException e)
-               {
-                  throw new WebServiceException(e);
-               }
-            }
-         }
+           msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
+           msgContext.setScope(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, Scope.APPLICATION);
+           msgContext.put(MessageContext.REFERENCE_PARAMETERS, convertToElementList(addrProps.getReferenceParameters().getElements()));
+           msgContext.setScope(MessageContext.REFERENCE_PARAMETERS, Scope.APPLICATION);
+
+           //check if soap action matches wsa action
+           String[] soapActions = commonMsgContext.getMessageAbstraction().getMimeHeaders().getHeader("SOAPAction");
+           if (soapActions != null && soapActions.length > 0)
+           {
+              String soapAction = soapActions[0];
+              if (!soapAction.equals("\"\"")  && addrProps.getAction() != null)                
+              {
+                 String wsaAction = addrProps.getAction().getURI().toString();
+                 // R1109 The value of the SOAPAction HTTP header field in a HTTP request MESSAGE MUST be a quoted string.
+                 if (!soapAction.equals(wsaAction) && !soapAction.equals("\"" + wsaAction + "\""))
+                 {
+                    try
+                    {
+                       SOAPFault fault = new SOAPFaultImpl();
+                       fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ActionMismatch"));
+                       fault.setFaultString("Mismatch between soap action:" + soapAction + " and wsa action:\""
+                             + addrProps.getAction().getURI() + "\"");
+                       Detail detail = fault.addDetail();
+                       detail.addDetailEntry(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ProblemAction"));
+                       throw new SOAPFaultException(fault);
+                    }
+                    catch (SOAPException e)
+                    {
+                       throw new WebServiceException(e);
+                    }
+                 }
+              }
+           }
         }
 	    return true;
 	}
@@ -161,7 +179,13 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 	protected boolean handleOutbound(MessageContext msgContext)
 	{
 		if(log.isDebugEnabled()) log.debug("handleOutbound");
-		handleResponseOrFault(msgContext, false);
+        final boolean isAddressingEnabled = this.isAddressingEnabled(msgContext);
+        final boolean isAddressingRequest = this.isAddressingRequest(msgContext);
+		
+		if (isAddressingEnabled && isAddressingRequest)
+		{
+		   handleResponseOrFault(msgContext, false);
+		}
 		return true;
 	}
 
@@ -172,7 +196,14 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 	public boolean handleFault(MessageContext msgContext)
 	{
 		if(log.isDebugEnabled()) log.debug("handleFault");
-		handleResponseOrFault(msgContext, true);
+        final boolean isAddressingEnabled = this.isAddressingEnabled(msgContext);
+        final boolean isAddressingRequest = this.isAddressingRequest(msgContext);
+
+        if (isAddressingEnabled && isAddressingRequest)
+        {
+		   handleResponseOrFault(msgContext, true);
+        }
+        
 		return true;
 	}
 
@@ -239,12 +270,30 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 	   return ADDR_CONSTANTS.getDefaultFaultAction();
 	}
 
-   /* check wsa formal constraints */
-	private void validateRequest(SOAPAddressingProperties addrProps)
+	private boolean isAddressingRequired(final MessageContext msgContext)
 	{
-		// If wsa:ReplyTo is supplied and the message lacks a [message id] property, the processor MUST fault.
-		if (addrProps.getReplyTo() != null && addrProps.getMessageID() == null)
-			throw new IllegalArgumentException("wsa:MessageId is required when wsa:ReplyTo is supplied");
-
+       final AddressingFeature addrFeature = this.getAddressingFeature(msgContext);
+       
+       return addrFeature != null && addrFeature.isEnabled() && addrFeature.isRequired();
+	}
+	
+    private boolean isAddressingEnabled(final MessageContext msgContext)
+    {
+       final AddressingFeature addrFeature = this.getAddressingFeature(msgContext);
+       
+       return addrFeature != null && addrFeature.isEnabled();
+    }
+    
+	private AddressingFeature getAddressingFeature(final MessageContext msgContext)
+	{
+	   final CommonMessageContext commonMsgContext = (CommonMessageContext)msgContext;
+       final ServerEndpointMetaData serverMetaData = (ServerEndpointMetaData)commonMsgContext.getEndpointMetaData();
+       
+       return serverMetaData.getFeature(AddressingFeature.class);
+	}
+	
+	private boolean isAddressingRequest(final MessageContext msgContext)
+	{
+	   return msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND) != null;
 	}
 }

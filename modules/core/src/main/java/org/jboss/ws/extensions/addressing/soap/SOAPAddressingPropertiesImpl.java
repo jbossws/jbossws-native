@@ -33,21 +33,24 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingConstants;
 import javax.xml.ws.addressing.AddressingException;
 import javax.xml.ws.addressing.AttributedURI;
-import javax.xml.ws.addressing.MapRequiredException;
 import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.addressing.Relationship;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.EndpointReferenceImpl;
@@ -80,12 +83,27 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 	private String getRequiredHeaderContent(SOAPHeader soapHeader, QName qname)
 	{
 		Element element = DOMUtils.getFirstChildElement(soapHeader, qname);
-		if(null == element) throw new MapRequiredException(qname);
+		if(null == element) throwAddressingHeaderMissing();
 
 		String value = DOMUtils.getTextContent(element);
-		if(null == value || value.equals("")) throw new MapRequiredException(qname);
+		if(null == value || value.equals("")) throwAddressingHeaderMissing();
 		
 		return value;
+	}
+	
+	private void throwAddressingHeaderMissing()
+	{
+	   try
+	   {
+	      SOAPFault fault = new SOAPFaultImpl();
+	      fault.setFaultCode(org.jboss.wsf.common.addressing.AddressingConstants.Core.Faults.MESSAGEADDRESSINGHEADERREQUIRED_QNAME);
+	      fault.setFaultString("A required header representing a Message Addressing Property is not present");
+	      throw new SOAPFaultException(fault);
+	   }
+	   catch (SOAPException e)
+	   {
+	      throw new WebServiceException(e);
+	   }
 	}
 
 	private String getOptionalHeaderContent(SOAPHeader soapHeader, QName qname)
@@ -154,7 +172,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 	         {
 	            //check the action header only if the required value is true
 	            String action = getRequiredHeaderContent(soapHeader, ADDR.getActionQName());
-                setAction(builder.newURI(action));
+	            setAction(builder.newURI(action));
 	         } 
 	         else
 	         {
