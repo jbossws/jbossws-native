@@ -22,9 +22,9 @@
 package org.jboss.test.ws.jaxws.samples.wseventing;
 
 import javax.jws.WebService;
+import javax.xml.ws.soap.Addressing;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.extensions.eventing.jaxws.AbstractEventSourceEndpoint;
 
 /**
@@ -37,7 +37,7 @@ import org.jboss.ws.extensions.eventing.jaxws.AbstractEventSourceEndpoint;
    targetNamespace = "http://schemas.xmlsoap.org/ws/2004/08/eventing",
    wsdlLocation = "/WEB-INF/wsdl/sysmon.wsdl",
    endpointInterface = "org.jboss.ws.extensions.eventing.jaxws.EventSourceEndpoint")
-@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+@Addressing
 public class SysmonRegistrationEndpoint extends AbstractEventSourceEndpoint {
 
    private static final Logger log = Logger.getLogger(SysmonRegistrationEndpoint.class);

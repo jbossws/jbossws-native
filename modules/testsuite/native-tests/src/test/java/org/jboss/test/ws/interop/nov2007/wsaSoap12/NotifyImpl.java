@@ -21,8 +21,6 @@
  */
 package org.jboss.test.ws.interop.nov2007.wsaSoap12;
 
-import org.jboss.ws.annotation.EndpointConfig;
-
 import javax.jws.WebMethod;
 import javax.jws.Oneway;
 import javax.jws.WebParam;
@@ -30,6 +28,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.Action;
 import javax.xml.ws.BindingType;
+import javax.xml.ws.soap.Addressing;
 
 /**
  * @author Alessio Soldano, alessio.soldano@jboss.com
@@ -43,7 +42,7 @@ import javax.xml.ws.BindingType;
    portName = "CustomBinding_Notify1"
 )
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-@EndpointConfig(configName = "Standard SOAP 1.2 WSAddressing Endpoint")
+@Addressing
 @BindingType(javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 public class NotifyImpl implements Notify {
 
