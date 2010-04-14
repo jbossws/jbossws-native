@@ -46,7 +46,9 @@ public class AddressingClientTestCase extends JBossWSTest
    public static Test suite()
    {
       //TODO: replace isHornetQAvailable call with JBossWSTestHelper.isTargetJBoss6() once AS 6 M3 is out and hence M2 is not supported anymore
-      return new JBossWSTestSetup(AddressingClientTestCase.class, isHornetQAvailable() ? "jaxws-samples-dar-queue.sar,jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar" : "jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar");
+      return new JBossWSTestSetup(AddressingClientTestCase.class, isHornetQAvailable()
+          ? "jaxws-samples-dar-queue-as6.sar,jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar"
+          : "jaxws-samples-dar-queue.sar,jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar");
    }
    
    private static boolean isHornetQAvailable()
