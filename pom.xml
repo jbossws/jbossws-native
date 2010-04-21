@@ -16,14 +16,15 @@
   <groupId>org.jboss.ws.native</groupId>
   <artifactId>jbossws-native</artifactId>
   <packaging>pom</packaging>
+  <description>JBossWS Native stack</description>
 
   <version>3.3.0-SNAPSHOT</version>
 
   <!-- Parent -->
   <parent>
-    <groupId>org.jboss</groupId>
-    <artifactId>jboss-parent</artifactId>
-    <version>5</version>
+    <groupId>org.jboss.ws</groupId>
+    <artifactId>jbossws-parent</artifactId>
+    <version>1.0.6-SNAPSHOT</version>
   </parent>
 
   <!-- Source Control Management -->
@@ -57,7 +58,6 @@
     <jbossws.jboss601.version>3.2.1.GA</jbossws.jboss601.version>
     -->
     <!-- END -->
-    <maven.assembly.plugin.version>2.2-beta-2</maven.assembly.plugin.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.6.0.GA</javassist.version>
@@ -448,7 +448,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven.assembly.plugin.version}</version>
         <configuration>
           <finalName>deploy-artifacts</finalName>
           <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
@@ -495,7 +494,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>${maven.assembly.plugin.version}</version>
             <configuration>
               <finalName>jbossws-native-bin-dist</finalName>
               <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
@@ -519,7 +517,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>${maven.assembly.plugin.version}</version>
             <configuration>
               <finalName>jbossws-native-src-dist</finalName>
               <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
