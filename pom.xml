@@ -57,6 +57,7 @@
     <jbossws.jboss601.version>3.2.1.GA</jbossws.jboss601.version>
     -->
     <!-- END -->
+    <maven.assembly.plugin.version>2.2-beta-2</maven.assembly.plugin.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.6.0.GA</javassist.version>
@@ -447,6 +448,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>${maven.assembly.plugin.version}</version>
         <configuration>
           <finalName>deploy-artifacts</finalName>
           <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
@@ -480,24 +482,6 @@
     </plugins>
   </build>
 
-  <!-- Repositories -->
-  <repositories>
-    <repository>
-      <id>repository.jboss.org</id>
-      <url>http://repository.jboss.org/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>snapshots.jboss.org</id>
-      <url>http://snapshots.jboss.org/maven2</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  
   <!-- Profiles -->
   <profiles>
 
@@ -511,6 +495,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
+            <version>${maven.assembly.plugin.version}</version>
             <configuration>
               <finalName>jbossws-native-bin-dist</finalName>
               <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
@@ -534,6 +519,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
+            <version>${maven.assembly.plugin.version}</version>
             <configuration>
               <finalName>jbossws-native-src-dist</finalName>
               <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
