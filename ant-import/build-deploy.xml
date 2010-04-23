@@ -60,7 +60,7 @@
 				jbosshome="${jboss42.home}"/>
   </target>
   
-	<target name="deploy-jboss42-endorsed" depends="prepare" if="HAVE_JDK_1.6">
+	<target name="deploy-jboss42-endorsed" depends="prepare">
 		<macro-deploy-endorsed
 				jbosshome="${jboss42.home}"
 				stacklibs="${core.dir}/output/lib"
