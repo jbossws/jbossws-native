@@ -158,7 +158,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          if (callProps.containsKey(StubExt.PROPERTY_CLIENT_TIMEOUT))
          {
             timeout = callProps.get(StubExt.PROPERTY_CLIENT_TIMEOUT);
-            targetAddress = addURLParameter(targetAddress, "timeout", timeout.toString());
+            clientConfig.put("timeout", timeout.toString()); 
          }
 
       }
