@@ -117,10 +117,14 @@ public class JBossXSParticle extends JBossXSObject implements XSParticle, Compar
          JBossXSParticle w = (JBossXSParticle)o;
          String oname = w.getTerm().getName();
          String termName = term.getName();
-         if (termName != null)
+         if (termName != null && oname != null)
             c = termName.compareTo(oname);
+         else if (termName == null)
+        	c = -1;
+         else 
+        	c = 1;
          //In the case of doclit, need to be careful about String_1,SimpleType_2
-         if (termName != null)
+         if (termName != null && oname != null)
          {
             char num1 = termName.charAt(termName.length() - 1);
             char num2 = oname.charAt(oname.length() - 1);
