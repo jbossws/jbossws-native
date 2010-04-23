@@ -350,7 +350,6 @@
                <include name="jaxb-api.jar"/>
             </fileset>
             <fileset dir="@{stacklibs}">
-               <include name="jboss-jaxrpc.jar"/>
                <include name="jboss-jaxws.jar"/>
                <include name="jboss-saaj.jar"/>
             </fileset>
