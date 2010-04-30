@@ -199,7 +199,7 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
 
    private AttributedURI getAction(final MessageContext msgContext)
    {
-      String action = null;
+      String action = "UNSPECIFIED";
       
       if (msgContext.get(BindingProvider.SOAPACTION_URI_PROPERTY) != null)
          action = msgContext.get(BindingProvider.SOAPACTION_URI_PROPERTY).toString();

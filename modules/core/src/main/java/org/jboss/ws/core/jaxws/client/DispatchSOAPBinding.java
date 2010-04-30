@@ -142,7 +142,7 @@ public class DispatchSOAPBinding extends DispatchBinding
       return reqMsg;
    }
 
-   public Object getReturnObject(MessageAbstraction message)
+   public Object getReturnObject(MessageAbstraction message, boolean unwrap)
    {
       SOAPMessage resMsg = (SOAPMessage)message;
 
@@ -187,7 +187,7 @@ public class DispatchSOAPBinding extends DispatchBinding
                log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             retObj = unmarshaller.unmarshal(soapElement);
-            if (retObj instanceof JAXBElement<?>)
+            if ((retObj instanceof JAXBElement<?>) && unwrap)
             {
                retObj = ((JAXBElement<?>)retObj).getValue();
             }

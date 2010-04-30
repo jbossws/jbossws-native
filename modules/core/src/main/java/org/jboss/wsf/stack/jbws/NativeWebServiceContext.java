@@ -56,20 +56,22 @@ public final class NativeWebServiceContext extends ExtensibleWebServiceContext
 
    public <T extends EndpointReference> T getEndpointReference(final Class<T> clazz, final Element... referenceParameters)
    {
-      EndpointMetaData epMetaData = ((CommonMessageContext)getMessageContext()).getEndpointMetaData();
-      if (epMetaData == null)
+      EndpointMetaData endpointMD = ((CommonMessageContext)getMessageContext()).getEndpointMetaData();
+      if (endpointMD == null)
       {
          throw new WebServiceException("Cannot get EndpointMetaData!");
       }
-      if (HTTPBinding.HTTP_BINDING.equals(epMetaData.getBindingId()))
+      if (HTTPBinding.HTTP_BINDING.equals(endpointMD.getBindingId()))
       {
          throw new UnsupportedOperationException("Cannot get epr when using the XML/HTTP binding");
       }
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
-      String address = epMetaData.getEndpointAddress();
+      String address = endpointMD.getEndpointAddress();
       builder.address(address);
       builder.wsdlDocumentLocation(address +  "?wsdl");
-      //TODO set other parameters in the builder
+      builder.serviceName(endpointMD.getServiceMetaData().getServiceName());
+      builder.endpointName(endpointMD.getPortName());
+
       if (referenceParameters != null && W3CEndpointReference.class.getName().equals(clazz.getName()))
       {
          for (Element el : referenceParameters)

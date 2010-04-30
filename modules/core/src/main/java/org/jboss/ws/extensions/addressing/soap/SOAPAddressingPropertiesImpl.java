@@ -255,8 +255,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 			
 			if (soapHeader == null)
 			{
-			   log.warn("No SOAP headers found!");
-			   return;
+			   soapHeader = message.getSOAPPart().getEnvelope().addHeader();
 			}
 			
 			// Add the xmlns:wsa declaration
