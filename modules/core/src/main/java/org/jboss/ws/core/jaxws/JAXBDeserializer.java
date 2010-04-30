@@ -77,6 +77,16 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
 
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
          unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());
+         
+         //workaround for https://jira.jboss.org/jira/browse/JBWS-2686 while waiting for Sun's bug to be fixed
+         unmarshaller.setEventHandler(new ValidationEventHandler() {
+            public boolean handleEvent(final ValidationEvent event)
+            {
+               int severity = event.getSeverity();
+               return (severity != ValidationEvent.FATAL_ERROR && severity != ValidationEvent.ERROR);
+            }
+
+         }); 
 
          JAXBElement jbe = unmarshaller.unmarshal(xmlFragment, javaType);
          value = jbe.getValue();
