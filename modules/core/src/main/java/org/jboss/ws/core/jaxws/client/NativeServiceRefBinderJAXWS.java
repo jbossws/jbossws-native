@@ -192,6 +192,11 @@ public class NativeServiceRefBinderJAXWS implements ServiceRefBinder
             {
                WebServiceClient clientDecl = (WebServiceClient)serviceClass.getAnnotation(WebServiceClient.class);
                serviceRef.setServiceQName(new QName(clientDecl.targetNamespace(), clientDecl.name()));
+               //use the @WebServiceClien(wsdlLocation=...) if the service ref wsdl location returned at this time would be null
+               if (clientDecl.wsdlLocation().length() > 0 && serviceRef.getWsdlLocation() == null)
+               {
+                  serviceRef.setWsdlOverride(clientDecl.wsdlLocation());
+               }
             }
          }
          catch (ClassNotFoundException e)
