@@ -100,7 +100,11 @@ public class SimpleDispatchTestCase extends JBossWSTest
    {
       try
       {
-         String payload = "<ns1:getUsernameToken xmlns:ns1='http://org.jboss.ws/samples/wssecurity'/>";
+    	 //When testUsernameToken() execute before, need to clear reqContext 
+     	 Map<String, Object> reqContext = usernameDispatch.getRequestContext();
+       reqContext.remove(BindingProvider.USERNAME_PROPERTY);
+       reqContext.remove(BindingProvider.PASSWORD_PROPERTY);
+    	 String payload = "<ns1:getUsernameToken xmlns:ns1='http://org.jboss.ws/samples/wssecurity'/>";
          usernameDispatch.invoke(new StreamSource(new StringReader(payload)));
          fail("Server should respond with [401] - Unauthorized");
       }

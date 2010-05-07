@@ -339,6 +339,13 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+           <escapeWindowsPaths>false</escapeWindowsPaths>
+        </configuration>      
+     </plugin>
+      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>

@@ -71,7 +71,11 @@ public class SimpleUsernameTestCase extends JBossWSTest
    public void testUsernameTokenNegative() throws Exception
    {
       try
-      {
+      {  
+    	   //When testUsernameToken() execute before, need to clear reqContext  
+    	   Map<String, Object> reqContext = ((BindingProvider)port).getRequestContext();
+         reqContext.remove(BindingProvider.USERNAME_PROPERTY);
+         reqContext.remove(BindingProvider.PASSWORD_PROPERTY);
          port.getUsernameToken();
          fail("Server should respond with [401] - Unauthorized");
       }
