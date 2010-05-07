@@ -35,6 +35,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingBuilder;
+import javax.xml.ws.addressing.AttributedURI;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
@@ -96,7 +97,10 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties) ADDR_BUILDER.newAddressingProperties();
       SOAPMessage soapMessage = ((SOAPMessageContext) msgContext).getMessage();
+      //OperationMetaData operationMD = this.getOperationMetaData(msgContext);
+      //AddressingOpMetaExt addressingMD = this.getAddressingMetaData(msgContext);
       CommonMessageContext commonMsgContext = (CommonMessageContext) msgContext;
+
       if (this.isAddressingRequired(msgContext))
       {
          try
@@ -214,42 +218,60 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
       if (inProps != null)
          outProps.initializeAsReply(inProps, isFault);
 
-      try
+      OperationMetaData operationMD = this.getOperationMetaData(msgContext);
+      AddressingOpMetaExt addressingMD = this.getAddressingMetaData(msgContext);
+
+      if (!isFault && !operationMD.isOneWay())
       {
-         // supply the response action
-         CommonMessageContext commonCtx = (CommonMessageContext) msgContext;
-         OperationMetaData operationMD = commonCtx.getOperationMetaData();
-
-         AddressingOpMetaExt addressingMD = (AddressingOpMetaExt) operationMD.getExtension(ADDR_CONSTANTS
-               .getNamespaceURI());
-
-         if (addressingMD == null)
-            throw new IllegalStateException("Addressing meta data not available");
-
-         if (!isFault && !operationMD.isOneWay())
-         {
-            outProps.setAction(ADDR_BUILDER.newURI(addressingMD.getOutboundAction()));
-         }
-         else if (isFault)
-         {
-            Throwable exception = commonCtx.getCurrentException();
-            String faultAction = getFaultAction(operationMD, addressingMD, exception);
-
-            outProps.setAction(ADDR_BUILDER.newURI(faultAction));
-         }
-
+         outProps.setAction(this.newURI(addressingMD.getOutboundAction()));
       }
-      catch (URISyntaxException e)
+      else if (isFault)
       {
-         log.error("Error setting response action", e);
+         String faultAction = this.getFaultAction(msgContext);
+
+         outProps.setAction(this.newURI(faultAction));
       }
 
       outProps.writeHeaders(soapMessage);
    }
 
-   private String getFaultAction(final OperationMetaData operationMD, final AddressingOpMetaExt addressingMD,
-         final Throwable exception)
+   private AttributedURI newURI(final String uri) // TODO: client addressing handler have the same method - refactor it to some helper class
    {
+      try
+      {
+         return ADDR_BUILDER.newURI(uri);
+      }
+      catch (URISyntaxException e)
+      {
+         throw new WebServiceException(e.getMessage(), e);
+      }
+   }
+
+   private OperationMetaData getOperationMetaData(final MessageContext msgContext)
+   {
+      CommonMessageContext commonCtx = (CommonMessageContext) msgContext;
+
+      return commonCtx.getOperationMetaData();
+   }
+
+   private AddressingOpMetaExt getAddressingMetaData(final MessageContext msgContext)
+   {
+      OperationMetaData operationMD = this.getOperationMetaData(msgContext);
+
+      AddressingOpMetaExt addressingMD = (AddressingOpMetaExt) operationMD.getExtension(ADDR_CONSTANTS
+            .getNamespaceURI());
+
+      if (addressingMD == null)
+         throw new IllegalStateException("Addressing meta data not available");
+
+      return addressingMD;
+   }
+
+   private String getFaultAction(final MessageContext msgContext)
+   {
+      final OperationMetaData operationMD = this.getOperationMetaData(msgContext);
+      final AddressingOpMetaExt addressingMD = this.getAddressingMetaData(msgContext);
+      final Throwable exception = ((CommonMessageContext) msgContext).getCurrentException();
       final FaultMetaData faultMD = operationMD.getFaultMetaData(exception.getClass());
 
       if (faultMD != null)
