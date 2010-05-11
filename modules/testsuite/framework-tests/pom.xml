@@ -112,7 +112,6 @@
                     <property name="tests.resources.dir" value="${basedir}/src/test/resources" />
                     <property name="tests.output.dir" value="${project.build.directory}" />
                     <property name="project.version" value="${project.version}" />
-                    <ant antfile="scripts/antrun-wsprovide.xml" target="wsprovide" />
                     <ant antfile="src/test/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" />
                     <ant antfile="src/test/ant-import/build-samples-jaxws.xml" target="build-samples-jaxws" />
                     <ant antfile="src/test/ant-import/build-samples-jaxrpc.xml" target="build-samples-jaxrpc"/>
