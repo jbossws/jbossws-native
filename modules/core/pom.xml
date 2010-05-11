@@ -170,11 +170,31 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <showDeprecation>false</showDeprecation>
+          <compilerArguments>
+            <endorseddirs>${project.build.directory}/endorsed</endorseddirs>
+          </compilerArguments>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>javax.xml.ws</groupId>
+                  <artifactId>jaxws-api</artifactId>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
           <execution>
             <id>copy-dependencies</id>
             <goals>
