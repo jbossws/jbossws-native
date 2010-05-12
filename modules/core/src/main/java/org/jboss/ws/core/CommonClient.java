@@ -87,8 +87,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
    protected EndpointMetaData epMetaData;
    // The current operation name
    protected QName operationName;
-   // Output parameters
-   protected EndpointInvocation epInv;
    // The binding provider
    protected CommonBindingProvider bindingProvider;
    // A Map<QName,UnboundHeader> of header entries
@@ -242,6 +240,11 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
    protected abstract boolean shouldMaintainSession();
 
+   protected EndpointInvocation createEndpointInvocation(OperationMetaData opMetaData)
+   {
+      return new EndpointInvocation(opMetaData);
+   }
+   
    /** Call invokation goes as follows:
     *
     * 1) synchronize the operation name with the operation meta data
@@ -280,7 +283,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          binding.setHeaderSource(this);
 
          // Create the invocation and sync the input parameters
-         epInv = new EndpointInvocation(opMetaData);
+         EndpointInvocation epInv = createEndpointInvocation(opMetaData);
          epInv.initInputParams(inputParams);
 
          if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral()
