@@ -62,5 +62,18 @@ public class FeatureSet
    {
       this.features.add(feature);
    }
+   
+   public WebServiceFeature[] getFeatures()
+   {
+      final WebServiceFeature[] retVal = new WebServiceFeature[this.features.size()];
+      
+      int i = 0;
+      for (final WebServiceFeature feature : this.features)
+      {
+         retVal[i++] = feature; 
+      }
+      
+      return retVal;
+   }
 
 }

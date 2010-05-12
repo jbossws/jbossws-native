@@ -23,8 +23,6 @@ package org.jboss.ws.core.jaxws.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -201,78 +199,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
    }
 
-   /**
-    * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
-    * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
-    */
-   @Override
-   public <T> T getPort(QName portName, Class<T> seiClass)
-   {
-      assertSEIConstraints(seiClass);
-
-      if (serviceMetaData == null)
-         throw new WebServiceException("Service meta data not available");
-
-      // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service#GetPort1NegTest1WithWsdl
-      EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
-      if (epMetaData == null && serviceMetaData.getEndpoints().size() > 0)
-         throw new WebServiceException("Cannot get port meta data for: " + portName);
-
-      // This is the case when the service could not be created from wsdl
-      if (serviceMetaData.getEndpoints().size() == 0)
-      {
-         log.warn("Cannot get port meta data for: " + portName);
-
-         QName portType = getPortTypeName(seiClass);
-         epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
-      }
-
-      String seiClassName = seiClass.getName();
-      epMetaData.setServiceEndpointInterfaceName(seiClassName);
-
-      return getPortInternal(epMetaData, seiClass);
-   }
-
-   /**
-    * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
-    * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
-    */
-   @Override
-   public <T> T getPort(Class<T> seiClass)
-   {
-      assertSEIConstraints(seiClass);
-
-      if (serviceMetaData == null)
-         throw new WebServiceException("Service meta data not available");
-
-      String seiClassName = seiClass.getName();
-      EndpointMetaData epMetaData = serviceMetaData.getEndpointByServiceEndpointInterface(seiClassName);
-
-      if (epMetaData == null && serviceMetaData.getEndpoints().size() == 1)
-      {
-         epMetaData = serviceMetaData.getEndpoints().get(0);
-         epMetaData.setServiceEndpointInterfaceName(seiClassName);
-      }
-      else
-      {
-         QName portTypeName = getPortTypeName(seiClass);
-         for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
-         {
-            if (portTypeName.equals(epmd.getPortTypeName()))
-            {
-               epmd.setServiceEndpointInterfaceName(seiClass.getName());
-               epMetaData = epmd;
-               break;
-            }
-         }
-      }
-
-      if (epMetaData == null)
-         throw new WebServiceException("Cannot get port meta data for: " + seiClassName);
-
-      return getPortInternal(epMetaData, seiClass);
-   }
-
    private <T> QName getPortTypeName(Class<T> seiClass)
    {
       if (!seiClass.isAnnotationPresent(WebService.class))
@@ -309,7 +235,9 @@ public class ServiceDelegateImpl extends ServiceDelegate
          }
       }
 
-      return (T)createProxy(seiClass, epMetaData);
+      T port = (T)createProxy(seiClass, epMetaData); 
+      initWebserviceFeatures(port, epMetaData.getFeatures().getFeatures());
+      return port; 
    }
 
    private void assertSEIConstraints(Class seiClass)
@@ -571,6 +499,78 @@ public class ServiceDelegateImpl extends ServiceDelegate
       initWebserviceFeatures(port, this.features);
       initWebserviceFeatures(port, features);
       return port;
+   }
+
+   /**
+    * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
+    * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
+    */
+   @Override
+   public <T> T getPort(QName portName, Class<T> seiClass)
+   {
+      assertSEIConstraints(seiClass);
+
+      if (serviceMetaData == null)
+         throw new WebServiceException("Service meta data not available");
+
+      // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service#GetPort1NegTest1WithWsdl
+      EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
+      if (epMetaData == null && serviceMetaData.getEndpoints().size() > 0)
+         throw new WebServiceException("Cannot get port meta data for: " + portName);
+
+      // This is the case when the service could not be created from wsdl
+      if (serviceMetaData.getEndpoints().size() == 0)
+      {
+         log.warn("Cannot get port meta data for: " + portName);
+
+         QName portType = getPortTypeName(seiClass);
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
+      }
+
+      String seiClassName = seiClass.getName();
+      epMetaData.setServiceEndpointInterfaceName(seiClassName);
+
+      return getPortInternal(epMetaData, seiClass);
+   }
+
+   /**
+    * The getPort method returns a stub. A service client uses this stub to invoke operations on the target service endpoint.
+    * The serviceEndpointInterface specifies the service endpoint interface that is supported by the created dynamic proxy or stub instance.
+    */
+   @Override
+   public <T> T getPort(Class<T> seiClass)
+   {
+      assertSEIConstraints(seiClass);
+
+      if (serviceMetaData == null)
+         throw new WebServiceException("Service meta data not available");
+
+      String seiClassName = seiClass.getName();
+      EndpointMetaData epMetaData = serviceMetaData.getEndpointByServiceEndpointInterface(seiClassName);
+
+      if (epMetaData == null && serviceMetaData.getEndpoints().size() == 1)
+      {
+         epMetaData = serviceMetaData.getEndpoints().get(0);
+         epMetaData.setServiceEndpointInterfaceName(seiClassName);
+      }
+      else
+      {
+         QName portTypeName = getPortTypeName(seiClass);
+         for (EndpointMetaData epmd : serviceMetaData.getEndpoints())
+         {
+            if (portTypeName.equals(epmd.getPortTypeName()))
+            {
+               epmd.setServiceEndpointInterfaceName(seiClass.getName());
+               epMetaData = epmd;
+               break;
+            }
+         }
+      }
+
+      if (epMetaData == null)
+         throw new WebServiceException("Cannot get port meta data for: " + seiClassName);
+
+      return getPortInternal(epMetaData, seiClass);
    }
 
    private <T> void initWebserviceFeatures(T stub, WebServiceFeature... features)

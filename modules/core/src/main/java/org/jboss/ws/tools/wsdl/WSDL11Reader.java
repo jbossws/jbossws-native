@@ -341,7 +341,11 @@ public class WSDL11Reader
    {
       boolean result = false;
       Element srcElement = extElement.getElement();
-      if (Constants.URI_WS_POLICY.equals(srcElement.getNamespaceURI()))
+      final boolean is200409PolicyNamespace = Constants.URI_WS_POLICY.equals(srcElement.getNamespaceURI());
+      final boolean is200702PolicyNamespace = WSDLGenerator.WSP_NS.equals(srcElement.getNamespaceURI());
+      final boolean isPolicyNamespace = is200702PolicyNamespace || is200409PolicyNamespace;
+      
+      if (isPolicyNamespace)
       {
          //copy missing namespaces from the source element to our element
          Element element = (Element)srcElement.cloneNode(true);
@@ -361,6 +365,7 @@ public class WSDL11Reader
             result = true;
          }
       }
+      
       return result;
    }
    

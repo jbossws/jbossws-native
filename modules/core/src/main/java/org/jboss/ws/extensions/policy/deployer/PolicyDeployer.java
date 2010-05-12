@@ -33,6 +33,7 @@ import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.extensions.addressing.policy.AddressingPolicyAssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.AssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.WSSecurityAssertionDeployer;
@@ -42,6 +43,7 @@ import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
 import org.jboss.ws.extensions.wsrm.policy.RM10PolicyAssertionDeployer;
 import org.jboss.ws.extensions.wsrm.policy.RM11PolicyAssertionDeployer;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
+import org.jboss.wsf.common.addressing.AddressingConstants;
 
 /**
  * @author Stefano Maestri <mailto:stefano.maestri@javalinux.it>
@@ -60,6 +62,7 @@ public class PolicyDeployer
       me.domainDeployerMap.put("http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd", WSSecurityAssertionDeployer.class);
       me.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", RM11PolicyAssertionDeployer.class);
       me.domainDeployerMap.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", RM10PolicyAssertionDeployer.class);
+      me.domainDeployerMap.put(AddressingConstants.Metadata.NS, AddressingPolicyAssertionDeployer.class);
       me.domainDeployerMap.put("http://www.w3.org/2006/05/addressing/wsdl", NopAssertionDeployer.class);
    }
 
@@ -90,6 +93,7 @@ public class PolicyDeployer
       instance.domainDeployerMap.put("http://docs.oasis-open.org/ws-rx/wsrmp/200702", NopAssertionDeployer.class);
       instance.domainDeployerMap.put("http://schemas.xmlsoap.org/ws/2005/02/rm/policy", NopAssertionDeployer.class);
       instance.domainDeployerMap.put("http://www.w3.org/2006/05/addressing/wsdl", NopAssertionDeployer.class);
+      instance.domainDeployerMap.put(AddressingConstants.Metadata.NS, NopAssertionDeployer.class);
       return instance;
    }
 
