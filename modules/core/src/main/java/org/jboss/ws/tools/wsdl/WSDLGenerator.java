@@ -217,12 +217,21 @@ public abstract class WSDLGenerator
       }
    }
    
-   /*
-    * <wsp:Policy wsu:Id="SOME_ID">
-    *   <wsam:Addressing wsp:Optional="true">
-    *     <wsp:Policy/>
-    *   </wsam:Addressing>
-    * </wsp:Policy>
+   /**
+    * JAX-WS 3.11 Service and Ports
+    * <p>
+    * Conformance (Use of Addressing): Endpoint’s use of addressing, if any, MUST be indicated in the
+    * wsdl:binding or wsdl:port sections of the WSDL 1.1 as per WS-Addressing 1.0 - Metadata.
+    * </p>
+    * <pre>
+    * &lt;wsp:Policy wsu:Id="SOME_ID"&gt;
+    *   &lt;wsam:Addressing wsp:Optional="true"&gt;
+    *     &lt;wsp:Policy&gt;
+    *       &lt;wsam:NonAnonymousResponses/&gt;
+    *     &lt;/wsp:Policy&gt;
+    *   &lt;/wsam:Addressing&gt;
+    * &lt;/wsp:Policy&gt;
+    * <pre>
     */
    private String addAddressingPolicyDefinition(final AddressingFeature addressing)
    {
@@ -241,6 +250,16 @@ public abstract class WSDLGenerator
       }
       Element nestedPolicyElement = DOMUtils.createElement(new QName(WSP_NS, "Policy", "wsp"));
       addressingElement.appendChild(nestedPolicyElement);
+      if (addressing.getResponses() == AddressingFeature.Responses.ANONYMOUS)
+      {
+         Element anonymousResponsesElement = DOMUtils.createElement(new QName(WSAM_NS, "AnonymousResponses", "wsam"));
+         nestedPolicyElement.appendChild(anonymousResponsesElement);
+      }
+      else if (addressing.getResponses() == AddressingFeature.Responses.NON_ANONYMOUS)
+      {
+         Element anonymousResponsesElement = DOMUtils.createElement(new QName(WSAM_NS, "NonAnonymousResponses", "wsam"));
+         nestedPolicyElement.appendChild(anonymousResponsesElement);
+      }
       
       // bind policy to WSDL
       wsdl.addExtensibilityElement(new WSDLExtensibilityElement(WSP_NS, policyElement));
