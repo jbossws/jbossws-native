@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.extensions.addressing.jaxws;
 
+import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,18 +31,21 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AttributedURI;
+import javax.xml.ws.addressing.EndpointReference;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import javax.xml.ws.soap.Addressing;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -53,6 +57,7 @@ import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
+import org.jboss.wsf.common.addressing.AddressingConstants;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.w3c.dom.Element;
 
@@ -97,8 +102,6 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
       SOAPAddressingProperties addrProps = (SOAPAddressingProperties) ADDR_BUILDER.newAddressingProperties();
       SOAPMessage soapMessage = ((SOAPMessageContext) msgContext).getMessage();
-      //OperationMetaData operationMD = this.getOperationMetaData(msgContext);
-      //AddressingOpMetaExt addressingMD = this.getAddressingMetaData(msgContext);
       CommonMessageContext commonMsgContext = (CommonMessageContext) msgContext;
 
       if (this.isAddressingRequired(msgContext))
@@ -233,6 +236,8 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
       }
 
       outProps.writeHeaders(soapMessage);
+
+      this.ensureAnonymousPolicy(inProps, msgContext);
    }
 
    private AttributedURI newURI(final String uri) // TODO: client addressing handler have the same method - refactor it to some helper class
@@ -265,6 +270,72 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          throw new IllegalStateException("Addressing meta data not available");
 
       return addressingMD;
+   }
+   
+   private void ensureAnonymousPolicy(final SOAPAddressingProperties inProps, final MessageContext msgContext)
+   {
+      final AddressingFeature addressing = this.getOperationMetaData(msgContext).getEndpointMetaData().getFeature(AddressingFeature.class);
+      final boolean isOnlyAnonymousEnabled = addressing != null && addressing.getResponses() == AddressingFeature.Responses.ANONYMOUS;
+      final boolean isOnlyNonAnonymousEnabled =  addressing != null && addressing.getResponses() == AddressingFeature.Responses.NON_ANONYMOUS; 
+      final boolean isReplyToAnonymous = this.isAnonymous(inProps.getReplyTo());
+      final boolean isFaultToAnonymous = this.isAnonymous(inProps.getFaultTo());
+      
+      if ((isOnlyAnonymousEnabled) && (!isReplyToAnonymous || !isFaultToAnonymous))
+      {
+         try
+         {
+            this.addRelatesTo(inProps, msgContext);
+            SOAPFault fault = new SOAPFaultImpl();
+            fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "OnlyAnonymousAddressSupported"));
+            fault.setFaultString("A header representing a Message Addressing Property is not valid and the message cannot be processed");
+            this.addFaultDetail(fault, !isReplyToAnonymous ? AddressingConstants.Core.Elements.REPLYTO_QNAME : AddressingConstants.Core.Elements.FAULTTO_QNAME);
+            throw new SOAPFaultException(fault);
+         }
+         catch (SOAPException e)
+         {
+            throw new WebServiceException(e);
+         }
+      }
+      else if ((isOnlyNonAnonymousEnabled) && (isReplyToAnonymous || isFaultToAnonymous))
+      {
+         try
+         {
+            this.addRelatesTo(inProps, msgContext);
+            SOAPFault fault = new SOAPFaultImpl();
+            fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "OnlyNonAnonymousAddressSupported"));
+            fault.setFaultString("A header representing a Message Addressing Property is not valid and the message cannot be processed");
+            this.addFaultDetail(fault, isReplyToAnonymous ? AddressingConstants.Core.Elements.REPLYTO_QNAME : AddressingConstants.Core.Elements.FAULTTO_QNAME);
+            throw new SOAPFaultException(fault);
+         }
+         catch (SOAPException e)
+         {
+            throw new WebServiceException(e);
+         }
+      }
+   }
+   
+   private void addFaultDetail(final SOAPFault faultElement, final QName problemHeaderQName) throws SOAPException
+   {
+      final Detail detailElement = faultElement.addDetail();
+      final SOAPElement problemHeaderQNameElement = detailElement.addChildElement(AddressingConstants.Core.Elements.PROBLEMHEADERQNAME_QNAME);
+      problemHeaderQNameElement.setTextContent(problemHeaderQName.toString());
+   }
+   
+   private void addRelatesTo(final SOAPAddressingProperties inProps, final MessageContext msgContext) throws SOAPException
+   {
+      final String reqMessageID = inProps.getMessageID().getURI().toString();
+      final SOAPMessage soapMessage = ((SOAPMessageContext) msgContext).getMessage();
+      final SOAPElement relatesToElement = soapMessage.getSOAPHeader().addChildElement(AddressingConstants.Core.Elements.RELATESTO_QNAME);
+      
+      relatesToElement.setTextContent(reqMessageID);
+   }
+
+   private boolean isAnonymous(final EndpointReference epr)
+   {
+      if ((epr != null) && (epr.getAddress() != null))
+         return ADDR_CONSTANTS.getAnonymousURI().equals(epr.getAddress().getURI().toString());
+         
+      return true;
    }
 
    private String getFaultAction(final MessageContext msgContext)

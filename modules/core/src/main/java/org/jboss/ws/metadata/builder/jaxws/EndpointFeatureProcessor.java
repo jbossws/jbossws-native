@@ -54,7 +54,6 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
@@ -81,7 +80,7 @@ public class EndpointFeatureProcessor
             if (an.annotationType() == Addressing.class)
             {
                Addressing anFeature = sepClass.getAnnotation(Addressing.class);
-               AddressingFeature feature = new AddressingFeature(anFeature.enabled(), anFeature.required());
+               AddressingFeature feature = new AddressingFeature(anFeature.enabled(), anFeature.required(), anFeature.responses());
                sepMetaData.addFeature(feature);
             }
             else if (an.annotationType() == MTOM.class)

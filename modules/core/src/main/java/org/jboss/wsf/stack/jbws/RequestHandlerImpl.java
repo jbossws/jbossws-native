@@ -49,6 +49,7 @@ import javax.xml.soap.SOAPPart;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.http.HTTPBinding;
+import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
@@ -392,7 +393,9 @@ public class RequestHandlerImpl implements RequestHandler
       {
          AddressingConstantsImpl ADDR = new AddressingConstantsImpl();
          wsaTo = outProps.getTo().getURI().toString();
-         if (wsaTo.equals(ADDR.getAnonymousURI()))
+         final AddressingFeature addressing = epMetaData.getFeature(AddressingFeature.class);
+         final boolean onlyAnonymousAllowed = addressing != null && addressing.getResponses() == AddressingFeature.Responses.ANONYMOUS;
+         if (wsaTo.equals(ADDR.getAnonymousURI()) || onlyAnonymousAllowed)
             wsaTo = null;
       }
       if (wsaTo != null)
