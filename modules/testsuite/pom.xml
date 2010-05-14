@@ -27,6 +27,7 @@
     <hibernate.version>3.2.4.sp1</hibernate.version>
     <jboss.javaee.version>5.0.0.GA</jboss.javaee.version>
     <hornetq.version>2.1.0.BETA3</hornetq.version>
+    <log4j.output.dir>${project.build.directory}</log4j.output.dir>
   </properties>
 
   <!-- Modules -->
@@ -195,7 +196,7 @@
             </property>
             <property>
               <name>log4j.output.dir</name>
-              <value>${project.build.directory}</value>
+              <value>${log4j.output.dir}</value>
             </property>
             <property>
               <name>org.jboss.ws.wsse.keyStore</name>

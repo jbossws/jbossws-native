@@ -8,31 +8,21 @@
 
 <project>
 
-  <target name="wsprovide" description="Provide the JAX-WS contracts.">
+  <target name="wsprovide" description="Provide JAX-WS contracts">
 
     <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.WSProvideTask">
       <classpath>
         <pathelement path="${maven.test.classpath}"/>
       </classpath>
-      <classpath location="${tests.output.dir}/test-resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
     </taskdef>
 
     <wsprovide-macro
-      sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"
-      destDir=""
+      sei="org.jboss.test.ws.jaxws.jbws2960.AddNumbersImpl"
+      destdir="jaxws/jbws2960"
       jbossHome="${jboss.home}"
       outputDir="${tests.output.dir}"
       loggingDir="${log4j.output.dir}"
-      resourcesDir="wsprovide/jaxws/samples/wssecurity"
-    />
-
-    <wsprovide-macro
-      sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"
-      destDir=""
-      jbossHome="${jboss.home}"
-      outputDir="${tests.output.dir}"
-      loggingDir="${log4j.output.dir}"
-      resourcesDir="wsprovide/jaxws/samples/wssecurityAnnotatedpolicy"
+      resourcesDir="jaxws/jbws2960"
     />
 
   </target>
