@@ -27,6 +27,7 @@ import java.util.List;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
+import javax.xml.ws.ProtocolException;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.LogicalHandler;
@@ -154,9 +155,24 @@ public class HandlerChainExecutor
                   index = getNextIndex(index);
             }
          }
+         catch (ProtocolException pe)
+         {
+            // JAX-WS 2.2 specification
+            // 9.3.2.1 handleMessage chapter
+            // Throw ProtocolException or a subclass paragraph
+            doNext = false;
+            processHandlerFailure(pe);
+         }
          catch (RuntimeException ex)
          {
+            // JAX-WS 2.2 specification
+            // 9.3.2.1 handleMessage chapter
+            // Throw any other runtime exception paragraph
             doNext = false;
+            if (serverSide && !isOutbound)
+            {
+               index = index -1;
+            }
             processHandlerFailure(ex);
          }
          finally
@@ -164,7 +180,7 @@ public class HandlerChainExecutor
             // we start at this index in the response chain
             if (doNext == false)
                falseIndex = index;
-
+            
             if (debugEnabled)
                log.debug("Exit: handle" + (isOutbound ? "Out" : "In ") + "BoundMessage with status: " + doNext);
          }

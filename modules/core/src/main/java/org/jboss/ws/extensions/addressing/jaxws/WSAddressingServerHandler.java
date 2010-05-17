@@ -21,7 +21,6 @@
  */
 package org.jboss.ws.extensions.addressing.jaxws;
 
-import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,10 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
-import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.addressing.AddressingBuilder;
@@ -45,14 +41,13 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-import javax.xml.ws.soap.Addressing;
 import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.xml.DOMUtils;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.extensions.addressing.DetailedAddressingException;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -60,6 +55,7 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.common.addressing.AddressingConstants;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * A server side handler that reads/writes the addressing properties
@@ -117,6 +113,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
       }
       addrProps.readHeaders(soapMessage);
+
       if (addrProps.getAction() != null)
       {
          msgContext.put(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND, addrProps);
@@ -136,24 +133,20 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
                // R1109 The value of the SOAPAction HTTP header field in a HTTP request MESSAGE MUST be a quoted string.
                if (!soapAction.equals(wsaAction) && !soapAction.equals("\"" + wsaAction + "\""))
                {
-                  try
-                  {
-                     SOAPFault fault = new SOAPFaultImpl();
-                     fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ActionMismatch"));
-                     fault.setFaultString("Mismatch between soap action:" + soapAction + " and wsa action:\""
-                           + addrProps.getAction().getURI() + "\"");
-                     Detail detail = fault.addDetail();
-                     detail.addDetailEntry(new QName(ADDR_CONSTANTS.getNamespaceURI(), "ProblemAction"));
-                     throw new SOAPFaultException(fault);
-                  }
-                  catch (SOAPException e)
-                  {
-                     throw new WebServiceException(e);
-                  }
+                  final QName code = new QName(ADDR_CONSTANTS.getNamespaceURI(), "ActionMismatch");
+                  final String reason = "Mismatch between soap action:" + soapAction + " and wsa action:\""
+                        + addrProps.getAction().getURI() + "\"";
+                  final Node detail = DOMUtils.createElement(new QName(ADDR_CONSTANTS.getNamespaceURI(),
+                        "ProblemAction"));
+
+                  throw new DetailedAddressingException(code, reason, detail);
                }
             }
          }
       }
+
+      this.ensureAnonymousPolicy(addrProps, msgContext);
+
       return true;
    }
 
@@ -236,8 +229,6 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
       }
 
       outProps.writeHeaders(soapMessage);
-
-      this.ensureAnonymousPolicy(inProps, msgContext);
    }
 
    private AttributedURI newURI(final String uri) // TODO: client addressing handler have the same method - refactor it to some helper class
@@ -262,34 +253,41 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
    private AddressingOpMetaExt getAddressingMetaData(final MessageContext msgContext)
    {
       OperationMetaData operationMD = this.getOperationMetaData(msgContext);
+      AddressingOpMetaExt addressingMD = null;
 
-      AddressingOpMetaExt addressingMD = (AddressingOpMetaExt) operationMD.getExtension(ADDR_CONSTANTS
-            .getNamespaceURI());
+      if (operationMD != null)
+      {
+         addressingMD = (AddressingOpMetaExt) operationMD.getExtension(ADDR_CONSTANTS.getNamespaceURI());
 
-      if (addressingMD == null)
-         throw new IllegalStateException("Addressing meta data not available");
+         if (addressingMD == null)
+            throw new IllegalStateException("Addressing meta data not available");
+      }
 
       return addressingMD;
    }
-   
+
    private void ensureAnonymousPolicy(final SOAPAddressingProperties inProps, final MessageContext msgContext)
    {
-      final AddressingFeature addressing = this.getOperationMetaData(msgContext).getEndpointMetaData().getFeature(AddressingFeature.class);
-      final boolean isOnlyAnonymousEnabled = addressing != null && addressing.getResponses() == AddressingFeature.Responses.ANONYMOUS;
-      final boolean isOnlyNonAnonymousEnabled =  addressing != null && addressing.getResponses() == AddressingFeature.Responses.NON_ANONYMOUS; 
+      final CommonMessageContext commonCtx = (CommonMessageContext) msgContext;
+      final AddressingFeature addressing = commonCtx.getEndpointMetaData().getFeature(AddressingFeature.class);
+      final boolean isOnlyAnonymousEnabled = addressing != null
+            && addressing.getResponses() == AddressingFeature.Responses.ANONYMOUS;
+      final boolean isOnlyNonAnonymousEnabled = addressing != null
+            && addressing.getResponses() == AddressingFeature.Responses.NON_ANONYMOUS;
       final boolean isReplyToAnonymous = this.isAnonymous(inProps.getReplyTo());
       final boolean isFaultToAnonymous = this.isAnonymous(inProps.getFaultTo());
-      
+
       if ((isOnlyAnonymousEnabled) && (!isReplyToAnonymous || !isFaultToAnonymous))
       {
          try
          {
-            this.addRelatesTo(inProps, msgContext);
-            SOAPFault fault = new SOAPFaultImpl();
-            fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "OnlyAnonymousAddressSupported"));
-            fault.setFaultString("A header representing a Message Addressing Property is not valid and the message cannot be processed");
-            this.addFaultDetail(fault, !isReplyToAnonymous ? AddressingConstants.Core.Elements.REPLYTO_QNAME : AddressingConstants.Core.Elements.FAULTTO_QNAME);
-            throw new SOAPFaultException(fault);
+            final QName faultCode = new QName(ADDR_CONSTANTS.getNamespaceURI(), "OnlyAnonymousAddressSupported");
+            final String reason = "A header representing a Message Addressing Property is not valid and the message cannot be processed";
+            final Object detail = this.getProblemHeaderDetail(!isReplyToAnonymous
+                  ? AddressingConstants.Core.Elements.REPLYTO_QNAME
+                  : AddressingConstants.Core.Elements.FAULTTO_QNAME);
+
+            throw new DetailedAddressingException(faultCode, reason, detail);
          }
          catch (SOAPException e)
          {
@@ -300,12 +298,13 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
       {
          try
          {
-            this.addRelatesTo(inProps, msgContext);
-            SOAPFault fault = new SOAPFaultImpl();
-            fault.setFaultCode(new QName(ADDR_CONSTANTS.getNamespaceURI(), "OnlyNonAnonymousAddressSupported"));
-            fault.setFaultString("A header representing a Message Addressing Property is not valid and the message cannot be processed");
-            this.addFaultDetail(fault, isReplyToAnonymous ? AddressingConstants.Core.Elements.REPLYTO_QNAME : AddressingConstants.Core.Elements.FAULTTO_QNAME);
-            throw new SOAPFaultException(fault);
+            final QName faultCode = new QName(ADDR_CONSTANTS.getNamespaceURI(), "OnlyNonAnonymousAddressSupported");
+            final String reason = "A header representing a Message Addressing Property is not valid and the message cannot be processed";
+            final Object detail = this.getProblemHeaderDetail(isReplyToAnonymous
+                  ? AddressingConstants.Core.Elements.REPLYTO_QNAME
+                  : AddressingConstants.Core.Elements.FAULTTO_QNAME);
+
+            throw new DetailedAddressingException(faultCode, reason, detail);
          }
          catch (SOAPException e)
          {
@@ -313,37 +312,30 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          }
       }
    }
-   
-   private void addFaultDetail(final SOAPFault faultElement, final QName problemHeaderQName) throws SOAPException
+
+   private Node getProblemHeaderDetail(final QName problemHeaderQName) throws SOAPException
    {
-      final Detail detailElement = faultElement.addDetail();
-      final SOAPElement problemHeaderQNameElement = detailElement.addChildElement(AddressingConstants.Core.Elements.PROBLEMHEADERQNAME_QNAME);
+      final Element problemHeaderQNameElement = DOMUtils
+            .createElement(AddressingConstants.Core.Elements.PROBLEMHEADERQNAME_QNAME);
       problemHeaderQNameElement.setTextContent(problemHeaderQName.toString());
-   }
-   
-   private void addRelatesTo(final SOAPAddressingProperties inProps, final MessageContext msgContext) throws SOAPException
-   {
-      final String reqMessageID = inProps.getMessageID().getURI().toString();
-      final SOAPMessage soapMessage = ((SOAPMessageContext) msgContext).getMessage();
-      final SOAPElement relatesToElement = soapMessage.getSOAPHeader().addChildElement(AddressingConstants.Core.Elements.RELATESTO_QNAME);
-      
-      relatesToElement.setTextContent(reqMessageID);
+
+      return problemHeaderQNameElement;
    }
 
    private boolean isAnonymous(final EndpointReference epr)
    {
       if ((epr != null) && (epr.getAddress() != null))
          return ADDR_CONSTANTS.getAnonymousURI().equals(epr.getAddress().getURI().toString());
-         
+
       return true;
    }
 
    private String getFaultAction(final MessageContext msgContext)
    {
-      final OperationMetaData operationMD = this.getOperationMetaData(msgContext);
       final AddressingOpMetaExt addressingMD = this.getAddressingMetaData(msgContext);
       final Throwable exception = ((CommonMessageContext) msgContext).getCurrentException();
-      final FaultMetaData faultMD = operationMD.getFaultMetaData(exception.getClass());
+      final OperationMetaData operationMD = this.getOperationMetaData(msgContext);
+      final FaultMetaData faultMD = operationMD != null ? operationMD.getFaultMetaData(exception.getClass()) : null;
 
       if (faultMD != null)
       {

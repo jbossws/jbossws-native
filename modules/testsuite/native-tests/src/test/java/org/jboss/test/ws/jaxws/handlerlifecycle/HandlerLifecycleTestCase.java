@@ -332,6 +332,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       expMessages.add("PostServerHandler1:Message:InBound");
       expMessages.add("ServerHandler3:Message:InBound");
       expMessages.add("ServerHandler2:Message:InBound:ErrorInServerHandler2");
+      expMessages.add("ServerHandler2:Fault:OutBound");
       expMessages.add("ServerHandler3:Fault:OutBound");
       expMessages.add("PostServerHandler1:Fault:OutBound");
       expMessages.add("PostServerHandler2:Fault:OutBound");
@@ -601,7 +602,7 @@ public class HandlerLifecycleTestCase extends JBossWSTest
       expMessages.add("ClientHandler1:Close");
       expMessages.add("PreClientHandler2:Close");
       expMessages.add("PreClientHandler1:Close");
-      
+
       assertEquals(expMessages.toString(), trackerMessages);
 
       trackerMessages = trackerPort.getListMessages();
