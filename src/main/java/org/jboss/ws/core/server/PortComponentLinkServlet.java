@@ -81,7 +81,7 @@ public class PortComponentLinkServlet extends HttpServlet
 
       Endpoint endpoint = epRegistry.resolve( new PortComponentResolver(pcLink) );
       if (endpoint == null)
-         throw new WSException("Cannot resolve port-component-link: " + pcLink);
+         throw new WSException("Cannot resolve request parameter 'pcLink'");
 
       res.setContentType("text/plain");
       PrintWriter out = res.getWriter();
