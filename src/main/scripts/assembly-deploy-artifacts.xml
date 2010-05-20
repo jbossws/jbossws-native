@@ -33,9 +33,9 @@
             <useStrictFiltering>true</useStrictFiltering>
             <includes>
               <include>com.sun.xml.fastinfoset:FastInfoset:jar</include>
-              <include>sun-jaxb:jaxb-api:jar</include>
-              <include>sun-jaxb:jaxb-impl:jar</include>
-              <include>sun-jaxb:jaxb-xjc:jar</include>
+              <include>javax.xml.bind:jaxb-api:jar</include>
+              <include>com.sun.xml.bind:jaxb-impl:jar</include>
+              <include>com.sun.xml.bind:jaxb-xjc:jar</include>
               <include>com.sun.xml.ws:jaxws-tools:jar</include>
               <include>com.sun.xml.ws:jaxws-rt:jar</include>
               <include>jboss.jaxbintros:jboss-jaxb-intros:jar</include>
@@ -51,13 +51,7 @@
               <include>com.sun.xml.stream.buffer:streambuffer:jar</include>
               <include>wsdl4j:wsdl4j:jar</include>
               <include>org.apache:xmlsec:jar</include>
-            </includes>
-          </dependencySet>
-          <dependencySet>
-            <outputFileNameMapping>wstx.jar</outputFileNameMapping>
-            <useStrictFiltering>true</useStrictFiltering>
-            <includes>
-              <include>org.codehaus.woodstox:wstx-lgpl:jar</include>
+              <include>org.codehaus.woodstox:wstx:jar</include>
             </includes>
           </dependencySet>
         </dependencySets>

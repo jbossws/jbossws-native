@@ -59,8 +59,8 @@
     <codehaus.jettison.version>1.1</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.9.0.GA</javassist.version>
-    <jaxb.api.version>2.1.9.patch02</jaxb.api.version>
-    <jaxb.impl.version>2.1.9.patch02</jaxb.impl.version>
+    <jaxb.api.version>2.1</jaxb.api.version>
+    <jaxb.impl.version>2.1.12.patch01</jaxb.impl.version>
     <jboss.common.version>1.2.1.GA</jboss.common.version>
     <jboss.jaxbintros.version>1.0.0.GA</jboss.jaxbintros.version>
     <jboss.remoting.version>2.5.2.SP3</jboss.remoting.version>
@@ -70,7 +70,7 @@
     <juddi.version>2.0.1</juddi.version>
     <sun.fastinfoset.version>1.2.7</sun.fastinfoset.version>
     <sun.jaxws.version>2.1.7</sun.jaxws.version>
-    <woodstox.version>3.2.8</woodstox.version>
+    <woodstox.version>3.2.9</woodstox.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
     <xmlsec.version>1.4.3</xmlsec.version>
     <xalan.version>2.7.1.patch02</xalan.version>
@@ -149,7 +149,7 @@
       <dependency>
         <groupId>stax</groupId>
         <artifactId>stax-api</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
@@ -214,17 +214,17 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>sun-jaxb</groupId>
+        <groupId>javax.xml.bind</groupId>
         <artifactId>jaxb-api</artifactId>
         <version>${jaxb.api.version}</version>
       </dependency>
       <dependency>
-        <groupId>sun-jaxb</groupId>
+        <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
         <version>${jaxb.impl.version}</version>
       </dependency>
       <dependency>
-        <groupId>sun-jaxb</groupId>
+        <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-xjc</artifactId>
         <version>${jaxb.impl.version}</version>
       </dependency>
@@ -309,7 +309,7 @@
       </dependency>
       <dependency>
         <groupId>org.codehaus.woodstox</groupId>
-        <artifactId>wstx-lgpl</artifactId>
+        <artifactId>wstx</artifactId>
         <version>${woodstox.version}</version>
       </dependency>
       <dependency>
