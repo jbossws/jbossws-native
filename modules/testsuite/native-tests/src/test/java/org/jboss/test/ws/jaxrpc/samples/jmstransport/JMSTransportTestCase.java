@@ -31,16 +31,14 @@ import javax.jms.QueueSender;
 import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import junit.framework.Test;
+
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.ObjectNameFactory;
-
-import junit.framework.Test;
 
 
 /**
@@ -55,24 +53,9 @@ public class JMSTransportTestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      //TODO: replace isHornetQAvailable call with JBossWSTestHelper.isTargetJBoss6() once AS 6 M3 is out and hence M2 is not supported anymore
-      return new JBossWSTestSetup(JMSTransportTestCase.class, isHornetQAvailable() ? "jaxrpc-samples-jmstransport-as6.sar" : "jaxrpc-samples-jmstransport.sar");
+      return new JBossWSTestSetup(JMSTransportTestCase.class, JBossWSTestHelper.isTargetJBoss6() ? "jaxrpc-samples-jmstransport-as6.sar" : "jaxrpc-samples-jmstransport.sar");
    }
    
-   private static boolean isHornetQAvailable()
-   {
-      try
-      {
-         ObjectName oname = ObjectNameFactory.create("jboss.system:type=Server");
-         String jbossVersion = (String)getServer().getAttribute(oname, "VersionNumber");
-         return JBossWSTestHelper.isTargetJBoss6() && !jbossVersion.contains("M2");
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
-   }
-
    /**
     * Send the message to the specified queue
     */
