@@ -88,6 +88,9 @@ import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
+import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
+import org.jboss.ws.metadata.wsdl.WSDLInterface;
+import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLMIMEPart;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.wsf.common.JavaUtils;
@@ -341,7 +344,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       QName xmlName = new QName(namespace, name);
 
-      FaultMetaData fmd = new FaultMetaData(opMetaData, xmlName, xmlType, exception.getName());
+      FaultMetaData fmd = opMetaData.getFault(xmlName);
+      if (fmd == null)
+      {
+         fmd = new FaultMetaData(opMetaData, xmlName, xmlType, exception.getName());
+      }
+      fmd.setJavaTypeName(exception.getName());
       fmd.setFaultBeanName(faultBean);
 
       if (fmd.loadFaultBean() == null)
@@ -565,7 +573,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
     *    is generated using the metadata defaulting algorithm as if wsdl:input[@name] is
     *    not present in WSDL.
     */
-   private String getInputActionName(final Method method, final EndpointMetaData endpointMD, final OperationMetaData operationMD)
+   private String getInputActionName(final Method method, final EndpointMetaData endpointMD, final OperationMetaData operationMD, final AddressingOpMetaExt addrExt)
    {
       String actionInput = null;
       Action actionAnn = method.getAnnotation(Action.class);
@@ -586,6 +594,9 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       if (webMethodAction != null)
          return webMethodAction;
 
+      if (addrExt.getInboundAction() != null)
+         return addrExt.getInboundAction();
+      
       String tns = this.getEndpointNamespace(endpointMD);
       String portTypeName = endpointMD.getPortTypeName().getLocalPart();
       String opName = operationMD.getQName().getLocalPart();
@@ -600,7 +611,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
     *    is generated using the metadata defaulting algorithm as if wsdl:output[@name] is not present in
     *    WSDL.
     */
-   private String getOutputActionName(final Method method, final EndpointMetaData endpointMD, final OperationMetaData operationMD)
+   private String getOutputActionName(final Method method, final EndpointMetaData endpointMD, final OperationMetaData operationMD, final AddressingOpMetaExt addrExt)
    {
       if (operationMD.isOneWay())
          return null;
@@ -608,6 +619,9 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       Action actionAnn = method.getAnnotation(Action.class);
       if ((actionAnn != null) && (!"".equals(actionAnn.output())))
          return actionAnn.output();
+      
+      if (addrExt.getOutboundAction() != null)
+         return addrExt.getOutboundAction();
       
       String tns = this.getEndpointNamespace(endpointMD);
       String portTypeName = endpointMD.getPortTypeName().getLocalPart();
@@ -624,7 +638,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
     *    generated using the metadata defaulting algorithm as if wsdl:fault[@name] is the corresponding
     *    exception class name.
     */
-   private String getFaultActionName(final Method method, final EndpointMetaData endpointMD, final OperationMetaData operationMD, final FaultMetaData faultMD)
+   private String getFaultActionName(final Method method, final EndpointMetaData endpointMD, final OperationMetaData operationMD, final FaultMetaData faultMD, final AddressingOpMetaExt addrExt)
    {
       if (operationMD.isOneWay())
          return null;
@@ -646,6 +660,10 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       
       if ((faultActionAnn != null) && (!"".equals(faultActionAnn.value())))
          return faultActionAnn.value();
+      
+      final String faultAction = addrExt.getFaultAction(faultMD.getXmlName());
+      if (faultAction != null)
+         return faultAction;
       
       String tns = this.getEndpointNamespace(endpointMD);
       String portTypeName = endpointMD.getPortTypeName().getLocalPart();
@@ -671,16 +689,24 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
    private void processMetaExtensions(Method method, EndpointMetaData endpointMD, OperationMetaData operationMD)
    {
       AddressingProperties ADDR = new AddressingPropertiesImpl();
-      AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
 
-      addrExt.setInboundAction(this.getInputActionName(method, endpointMD, operationMD));
-      addrExt.setOutboundAction(this.getOutputActionName(method, endpointMD, operationMD));
-      for (FaultMetaData faultMD : operationMD.getFaults())
+      AddressingOpMetaExt addrExt = (AddressingOpMetaExt)operationMD.getExtension(ADDR.getNamespaceURI());
+      if (addrExt == null)
       {
-         addrExt.setFaultAction(faultMD.getFaultBeanName(), this.getFaultActionName(method, endpointMD, operationMD, faultMD));
+         addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
+         operationMD.addExtension(addrExt);
       }
 
-      operationMD.addExtension(addrExt);
+      final String inboundAction = this.getInputActionName(method, endpointMD, operationMD, addrExt);
+      addrExt.setInboundAction(inboundAction);
+      
+      final String outboundAction = this.getOutputActionName(method, endpointMD, operationMD, addrExt);
+      addrExt.setOutboundAction(outboundAction);
+      
+      for (FaultMetaData faultMD : operationMD.getFaults())
+      {
+         addrExt.setFaultAction(faultMD.getXmlName(), this.getFaultActionName(method, endpointMD, operationMD, faultMD, addrExt));
+      }
    }
 
    private void processWebMethod(EndpointMetaData epMetaData, Method method)
@@ -706,10 +732,19 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       }
 
       String targetNS = epMetaData.getPortTypeName().getNamespaceURI();
-      OperationMetaData opMetaData = new OperationMetaData(epMetaData, new QName(targetNS, operationName), javaName);
-      opMetaData.setOneWay(method.isAnnotationPresent(Oneway.class));
-      opMetaData.setSOAPAction(soapAction);
+      OperationMetaData opMetaData = epMetaData.getOperation(new QName(targetNS, operationName));
+      if (opMetaData == null)
+      {
+         opMetaData = new OperationMetaData(epMetaData, new QName(targetNS, operationName), javaName);
+         epMetaData.addOperation(opMetaData);
+         opMetaData.setSOAPAction(soapAction);
+      }
+      else
+      {
+         opMetaData.setJavaName(javaName);
+      }
 
+      opMetaData.setOneWay(method.isAnnotationPresent(Oneway.class));
       if (method.isAnnotationPresent(SOAPBinding.class))
       {
          SOAPBinding anBinding = method.getAnnotation(SOAPBinding.class);
@@ -722,8 +757,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       {
          opMetaData.setDocumentation(method.getAnnotation(Documentation.class).content());
       }
-
-      epMetaData.addOperation(opMetaData);
 
       // Build parameter meta data
       // Attachment annotations on SEI parameters
@@ -1025,7 +1058,8 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
    protected void processWebMethods(EndpointMetaData epMetaData, Class<?> wsClass)
    {
-      epMetaData.clearOperations();
+      if (epMetaData.getFeature(AddressingFeature.class) == null)
+         epMetaData.clearOperations();
 
       // Process @WebMethod annotations
       boolean webMethodFound = false;
@@ -1154,6 +1188,45 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          {
             populateXmlType(faultMetaData);
          }
+      }
+   }
+   
+   protected void setupOperationsFromWSDL(EndpointMetaData epMetaData, WSDLEndpoint wsdlEndpoint)
+   {
+      WSDLDefinitions wsdlDefinitions = wsdlEndpoint.getInterface().getWsdlDefinitions();
+
+      // For every WSDL interface operation build the OperationMetaData
+      WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
+      for (WSDLInterfaceOperation wsdlOperation : wsdlInterface.getOperations())
+      {
+         String opName = wsdlOperation.getName().toString();
+         QName opQName = wsdlOperation.getName();
+
+         // Set java method name
+         String javaName = opName.substring(0, 1).toLowerCase() + opName.substring(1);
+
+         OperationMetaData opMetaData = new OperationMetaData(epMetaData, opQName, javaName);
+         epMetaData.addOperation(opMetaData);
+
+         // Set the operation style
+         String style = wsdlOperation.getStyle();
+         epMetaData.setStyle((Constants.URI_STYLE_DOCUMENT.equals(style) ? Style.DOCUMENT : Style.RPC));
+
+         // Set the operation MEP
+         if (Constants.WSDL20_PATTERN_IN_ONLY.equals(wsdlOperation.getPattern()))
+            opMetaData.setOneWay(true);
+
+         // Set the operation SOAPAction
+         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
+         WSDLBindingOperation wsdlBindingOperation = wsdlBinding.getOperationByRef(opQName);
+         if (wsdlBindingOperation != null)
+            opMetaData.setSOAPAction(wsdlBindingOperation.getSOAPAction());
+
+         // Build operation faults
+         buildFaultMetaData(opMetaData, wsdlOperation);
+
+         // process further operation extensions
+         processOpMetaExtensions(opMetaData, wsdlOperation);
       }
    }
 

@@ -24,6 +24,8 @@ package org.jboss.ws.extensions.addressing.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.jboss.ws.metadata.umdm.MetaDataExtension;
 
 /**
@@ -38,7 +40,7 @@ public class AddressingOpMetaExt extends MetaDataExtension
 {
    private String inboundAction;
    private String outboundAction;
-   private Map<String, String> faultAction = new HashMap<String, String>();
+   private Map<QName, String> faultAction = new HashMap<QName, String>();
 
    public AddressingOpMetaExt(String extensionNameSpace)
    {
@@ -65,14 +67,14 @@ public class AddressingOpMetaExt extends MetaDataExtension
       this.outboundAction = outboundAction;
    }
    
-   public void setFaultAction(String beanName, String action)
+   public void setFaultAction(QName faultQName, String action)
    {
-      this.faultAction.put(beanName, action);
+      this.faultAction.put(faultQName, action);
    }
    
-   public String getFaultAction(String beanName)
+   public String getFaultAction(QName faultQName)
    {
-      return this.faultAction.get(beanName);
+      return this.faultAction.get(faultQName);
    }
 
 }

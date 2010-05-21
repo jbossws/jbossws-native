@@ -113,6 +113,11 @@ public class FaultMetaData implements InitalizableMetaData
 
       this.xmlType = xmlType;
    }
+   
+   public void setJavaTypeName(String javaTypeName)
+   {
+      this.javaTypeName = javaTypeName;
+   }
 
    public String getJavaTypeName()
    {

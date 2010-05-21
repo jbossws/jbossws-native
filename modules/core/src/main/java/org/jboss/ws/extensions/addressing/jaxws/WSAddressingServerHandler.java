@@ -339,8 +339,8 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 
       if (faultMD != null)
       {
-         final String beanName = faultMD.getFaultBeanName();
-         return addressingMD.getFaultAction(beanName);
+         final QName faultQName = faultMD.getXmlName();
+         return addressingMD.getFaultAction(faultQName);
       }
 
       return ADDR_CONSTANTS.getDefaultFaultAction();

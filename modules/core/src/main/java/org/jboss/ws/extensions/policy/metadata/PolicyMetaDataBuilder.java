@@ -149,7 +149,7 @@ public class PolicyMetaDataBuilder
       }
    }
 
-   public void processPolicyExtensions(EndpointMetaData epMetaData, WSDLDefinitions wsdlDefinitions)
+   public void processPolicyExtensions(EndpointMetaData endpointMD, WSDLDefinitions wsdlDefinitions)
    {
       //Collect all policies defined in our wsdl definitions
       DOMPolicyReader reader = (DOMPolicyReader)PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
@@ -159,56 +159,71 @@ public class PolicyMetaDataBuilder
          Policy policy = reader.readPolicy(policyElement.getElement());
          localPolicyRegistry.register(policy.getPolicyURI(), policy);
       }
+      
       //Port scope
-      WSDLService wsdlService = wsdlDefinitions.getService(epMetaData.getServiceMetaData().getServiceName());
+      WSDLService wsdlService = wsdlDefinitions.getService(endpointMD.getServiceMetaData().getServiceName());
       if (wsdlService != null)
       {
-         WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoint(epMetaData.getPortName());
+         WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoint(endpointMD.getPortName());
          if (wsdlEndpoint != null)
          {
-            List<WSDLExtensibilityElement> portPolicyRefList = wsdlEndpoint.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE);
-            processPolicies(portPolicyRefList, PolicyScopeLevel.WSDL_PORT, localPolicyRegistry, epMetaData);
+            // process Policy elements
+            List<WSDLExtensibilityElement> portPolicies = wsdlEndpoint.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY);
+            processPolicies(portPolicies, PolicyScopeLevel.WSDL_PORT, endpointMD);
+            
+            // process PolicyReference elements
+            List<WSDLExtensibilityElement> portPolicyReferences = wsdlEndpoint.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE);
+            processPolicyReferences(portPolicyReferences, PolicyScopeLevel.WSDL_PORT, localPolicyRegistry, endpointMD);
          }
          else
          {
-            log
-                  .warn("Cannot get port '" + epMetaData.getPortName()
-                        + "' from the given wsdl definitions! Eventual policies attached to this port won't be considered.");
+            log.warn("Cannot get port '" + endpointMD.getPortName()
+                  + "' from the given wsdl definitions! Eventual policies attached to this port won't be considered.");
          }
       }
       else
       {
-         log.warn("Cannot get service '" + epMetaData.getServiceMetaData().getServiceName()
+         log.warn("Cannot get service '" + endpointMD.getServiceMetaData().getServiceName()
                + "' from the given wsdl definitions!  Eventual policies attached to this service won't be considered.");
       }
 
       //Binding scope
-      WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(epMetaData.getPortTypeName());
+      WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(endpointMD.getPortTypeName());
       if (wsdlBinding != null)
       {
-         List<WSDLExtensibilityElement> bindingPolicyRefList = wsdlBinding.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE);
-         processPolicies(bindingPolicyRefList, PolicyScopeLevel.WSDL_BINDING, localPolicyRegistry, epMetaData);
+         // process Policy elements
+         List<WSDLExtensibilityElement> bindingPolicies = wsdlBinding.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY);
+         processPolicies(bindingPolicies, PolicyScopeLevel.WSDL_BINDING, endpointMD);
+
+         // process PolicyReference elements
+         List<WSDLExtensibilityElement> bindingPolicyReferences = wsdlBinding.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICYREFERENCE);
+         processPolicyReferences(bindingPolicyReferences, PolicyScopeLevel.WSDL_BINDING, localPolicyRegistry, endpointMD);
       }
       else
       {
-         log.warn("Cannot get binding for portType '" + epMetaData.getPortTypeName()
+         log.warn("Cannot get binding for portType '" + endpointMD.getPortTypeName()
                + "' from the given wsdl definitions!  Eventual policies attached to this binding won't be considered.");
       }
 
       //PortType scope
-      WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(epMetaData.getPortTypeName());
+      WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(endpointMD.getPortTypeName());
       if (wsdlInterface != null)
       {
-         WSDLProperty portTypePolicyProp = wsdlInterface.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
-         processPolicies(portTypePolicyProp, PolicyScopeLevel.WSDL_PORT_TYPE, localPolicyRegistry, epMetaData);
+         // process Policy elements
+         List<WSDLExtensibilityElement> portTypePolicies = wsdlInterface.getExtensibilityElements(Constants.WSDL_ELEMENT_POLICY);
+         processPolicies(portTypePolicies, PolicyScopeLevel.WSDL_PORT_TYPE, endpointMD);
+         
+         // process PolicyReference elements
+         WSDLProperty portTypePolicyReferences = wsdlInterface.getProperty(Constants.WSDL_PROPERTY_POLICYURIS);
+         processPolicies(portTypePolicyReferences, PolicyScopeLevel.WSDL_PORT_TYPE, localPolicyRegistry, endpointMD);
       }
       else
       {
-         log.warn("Cannot get portType '" + epMetaData.getPortTypeName()
+         log.warn("Cannot get portType '" + endpointMD.getPortTypeName()
                + "' from the given wsdl definitions! Eventual policies attached to this portType won't be considered.");
       }
    }
-
+   
    private void processPolicies(WSDLProperty policyProp, PolicyScopeLevel scope, PolicyRegistry localPolicies, ExtensibleMetaData extMetaData)
    {
       if (policyProp != null && policyProp.getValue() != null)
@@ -221,8 +236,21 @@ public class PolicyMetaDataBuilder
          }
       }
    }
+   
+   private void processPolicies(List<WSDLExtensibilityElement> policies, PolicyScopeLevel scope, ExtensibleMetaData extMetaData)
+   {
+      if (policies != null && policies.size() != 0)
+      {
+         DOMPolicyReader reader = (DOMPolicyReader)PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
+         for (WSDLExtensibilityElement policyElement : policies)
+         {
+            Policy policy = reader.readPolicy(policyElement.getElement());
+            deployPolicy(policy, scope, extMetaData);
+         }
+      }
+   }
 
-   private void processPolicies(List<WSDLExtensibilityElement> policyReferences, PolicyScopeLevel scope, PolicyRegistry localPolicies, ExtensibleMetaData extMetaData)
+   private void processPolicyReferences(List<WSDLExtensibilityElement> policyReferences, PolicyScopeLevel scope, PolicyRegistry localPolicies, ExtensibleMetaData extMetaData)
    {
       if (policyReferences != null && policyReferences.size() != 0)
       {

@@ -88,7 +88,7 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
       String localPart = qname.getLocalPart();
       this.responseName = new QName(nsURI, localPart + "Response");
    }
-
+   
    public EndpointMetaData getEndpointMetaData()
    {
       return epMetaData;
@@ -152,6 +152,11 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
    public boolean isDocumentWrapped()
    {
       return getStyle() == Style.DOCUMENT && getParameterStyle() == ParameterStyle.WRAPPED;
+   }
+
+   public void setJavaName(String javaName)
+   {
+      this.javaName = javaName;
    }
 
    public String getJavaName()

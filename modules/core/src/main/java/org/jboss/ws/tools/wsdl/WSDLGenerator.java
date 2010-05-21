@@ -569,7 +569,7 @@ public abstract class WSDLGenerator
       AddressingOpMetaExt addrExt = this.getAddressingMD(operationMD);
       if (addrExt != null)
       {
-         fault.setAction(addrExt.getFaultAction(faultMD.getFaultBeanName()));
+         fault.setAction(addrExt.getFaultAction(faultMD.getXmlName()));
       }
    }
    

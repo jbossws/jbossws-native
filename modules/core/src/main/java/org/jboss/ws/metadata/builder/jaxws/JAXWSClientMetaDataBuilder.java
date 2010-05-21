@@ -243,39 +243,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
    }
 
-   protected void setupOperationsFromWSDL(EndpointMetaData epMetaData, WSDLEndpoint wsdlEndpoint)
-   {
-      WSDLDefinitions wsdlDefinitions = wsdlEndpoint.getInterface().getWsdlDefinitions();
-
-      // For every WSDL interface operation build the OperationMetaData
-      WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
-      for (WSDLInterfaceOperation wsdlOperation : wsdlInterface.getOperations())
-      {
-         String opName = wsdlOperation.getName().toString();
-         QName opQName = wsdlOperation.getName();
-
-         // Set java method name
-         String javaName = opName.substring(0, 1).toLowerCase() + opName.substring(1);
-
-         OperationMetaData opMetaData = new OperationMetaData(epMetaData, opQName, javaName);
-         epMetaData.addOperation(opMetaData);
-
-         // Set the operation style
-         String style = wsdlOperation.getStyle();
-         epMetaData.setStyle((Constants.URI_STYLE_DOCUMENT.equals(style) ? Style.DOCUMENT : Style.RPC));
-
-         // Set the operation MEP
-         if (Constants.WSDL20_PATTERN_IN_ONLY.equals(wsdlOperation.getPattern()))
-            opMetaData.setOneWay(true);
-
-         // Set the operation SOAPAction
-         WSDLBinding wsdlBinding = wsdlDefinitions.getBindingByInterfaceName(wsdlInterface.getName());
-         WSDLBindingOperation wsdlBindingOperation = wsdlBinding.getOperationByRef(opQName);
-         if (wsdlBindingOperation != null)
-            opMetaData.setSOAPAction(wsdlBindingOperation.getSOAPAction());
-      }
-   }
-
    public void rebuildEndpointMetaData(EndpointMetaData epMetaData, Class<?> wsClass)
    {
       if(log.isDebugEnabled()) log.debug("START: rebuildMetaData");
