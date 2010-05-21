@@ -231,6 +231,10 @@
               <name>wsdl.publish.location</name>
               <value>${wsdl.publish.location}</value>
             </property>
+            <property>
+              <name>use.hornetq</name>
+              <value>${use.hornetq}</value>
+            </property>
           </systemProperties>
         </configuration>
       </plugin>
@@ -396,6 +400,25 @@
       </activation>
       <properties>
         <jboss.server.instance>default</jboss.server.instance>
+      </properties>
+    </profile>
+
+  <!--
+    Name:  no-use-hornetq
+    Descr: Set the default use.hornetq
+
+    command line cannot overwrite pom properties
+    http://jira.codehaus.org/browse/MNG-3546
+    -->
+    <profile>
+      <id>no-use-hornetq</id>
+      <activation>
+        <property>
+          <name>!use.hornetq</name>
+        </property>
+      </activation>
+      <properties>
+        <use.hornetq>false</use.hornetq>
       </properties>
     </profile>
   </profiles>

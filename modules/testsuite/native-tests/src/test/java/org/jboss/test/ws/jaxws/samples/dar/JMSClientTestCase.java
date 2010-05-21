@@ -51,9 +51,11 @@ public class JMSClientTestCase extends JBossWSTest
 {
    private static final int TEST_RUN_TIME = 6000;
    
-   public static Test suite()
+   public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JMSClientTestCase.class, "jaxws-samples-dar-jms-client-test.sar,jaxws-samples-dar-jms.jar");
+      Test test = new JBossWSTestSetup(JMSClientTestCase.class, Boolean.getBoolean("use.hornetq") ? "jaxws-samples-dar-jms-client-test-hq.sar,jaxws-samples-dar-jms.jar" : "jaxws-samples-dar-jms-client-test.sar,jaxws-samples-dar-jms.jar");
+      Thread.sleep(5000);
+      return test;
    }
    
    public void test() throws Exception

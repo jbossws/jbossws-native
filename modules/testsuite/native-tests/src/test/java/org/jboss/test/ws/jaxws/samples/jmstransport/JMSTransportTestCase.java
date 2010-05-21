@@ -57,7 +57,9 @@ public class JMSTransportTestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxws-samples-jmstransport.sar");
+      Test test = new JBossWSTestSetup(JMSTransportTestCase.class, Boolean.getBoolean("use.hornetq") ? "jaxws-samples-jmstransport-hq.jar" : "jaxws-samples-jmstransport.sar");
+      Thread.sleep(5000);
+      return test;
    }
    
    public void testPublishedContract() throws Exception
@@ -152,6 +154,7 @@ public class JMSTransportTestCase extends JBossWSTest
       assertNotNull("Expected response message", responseListener.resMessage);
       assertEquals(DOMUtils.parse(resMessage), DOMUtils.parse(responseListener.resMessage));
 
+      receiver.close();
       con.stop();
       session.close();
       con.close();

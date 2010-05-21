@@ -42,9 +42,13 @@ public class AddressingClientTestCase extends JBossWSTest
 {
    private static final int TEST_RUN_TIME = 6000;
    
-   public static Test suite()
+   public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(AddressingClientTestCase.class, "jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar");
+      Test test = new JBossWSTestSetup(AddressingClientTestCase.class, Boolean.getBoolean("use.hornetq") ?
+          "jaxws-samples-dar-queue-hq.sar,jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar"
+          : "jaxws-samples-dar-queue.sar,jaxws-samples-dar-addressing-client.war,jaxws-samples-dar-addressing.jar");
+      Thread.sleep(5000);
+      return test;
    }
 
    public void testSync() throws Exception

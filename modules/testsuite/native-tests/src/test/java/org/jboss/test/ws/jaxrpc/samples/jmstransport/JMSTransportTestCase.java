@@ -52,7 +52,7 @@ public class JMSTransportTestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JMSTransportTestCase.class, "jaxrpc-samples-jmstransport.sar");
+      return new JBossWSTestSetup(JMSTransportTestCase.class, Boolean.getBoolean("use.hornetq") ? "jaxrpc-samples-jmstransport-hq.sar" : "jaxrpc-samples-jmstransport.sar");
    }
 
    /**
@@ -110,6 +110,7 @@ public class JMSTransportTestCase extends JBossWSTest
       assertNotNull("Expected response message", responseListener.resMessage);
       assertEquals(DOMUtils.parse(resMessage), DOMUtils.parse(responseListener.resMessage));
 
+      receiver.close();
       con.stop();
       session.close();
       con.close();
