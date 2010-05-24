@@ -292,18 +292,32 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          return;
       }
 
-      // Build endpoint meta data
-
-      for (WSDLEndpoint wsdlEndpoint : wsdlService.getEndpoints())
+      WSDLEndpoint wsdlEndpoint = this.getWsdlEndpoint(wsdlDefinitions, epMetaData.getPortName());
+      if (wsdlEndpoint == null)
+         throw new WSException("Cannot find port in wsdl: " + epMetaData.getPortName());
+      
+      QName bindingName = wsdlEndpoint.getBinding();
+      WSDLBinding wsdlBinding = wsdlEndpoint.getWsdlService().getWsdlDefinitions().getBinding(bindingName);
+      String bindingType = wsdlBinding.getType();
+      if (Constants.NS_SOAP11.equals(bindingType) || Constants.NS_SOAP12.equals(bindingType))
       {
-         QName bindingName = wsdlEndpoint.getBinding();
-         WSDLBinding wsdlBinding = wsdlEndpoint.getWsdlService().getWsdlDefinitions().getBinding(bindingName);
-         String bindingType = wsdlBinding.getType();
-         if (Constants.NS_SOAP11.equals(bindingType) || Constants.NS_SOAP12.equals(bindingType))
+         setupOperationsFromWSDL(epMetaData, wsdlEndpoint);
+      }
+   }
+   
+   private WSDLEndpoint getWsdlEndpoint(WSDLDefinitions wsdlDefinitions, QName portName)
+   {
+      WSDLEndpoint wsdlEndpoint = null;
+      for (WSDLService wsdlService : wsdlDefinitions.getServices())
+      {
+         WSDLEndpoint auxEndpoint = wsdlService.getEndpoint(portName);
+         if (auxEndpoint != null)
          {
-            setupOperationsFromWSDL(epMetaData, wsdlEndpoint);
+            wsdlEndpoint = auxEndpoint;
+            break;
          }
       }
+      return wsdlEndpoint;
    }
 
    /**

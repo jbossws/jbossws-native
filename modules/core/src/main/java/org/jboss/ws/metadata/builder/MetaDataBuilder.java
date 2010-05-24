@@ -655,9 +655,10 @@ public abstract class MetaDataBuilder
       String operationName = wsdlOperation.getName().getLocalPart();
 
       final WSDLProperty faultName = fault.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_FAULT);
+      final String delimeter = this.getDelimeter(prefix);
       if (faultName != null && faultName.getValue() != null && !"".equals(faultName.getValue()))
       {
-         return prefix + operationName + "/Fault/" + faultName.getValue();
+         return prefix + operationName + delimeter + "Fault" + delimeter + faultName.getValue();
       }
       
       throw new IllegalStateException();
@@ -665,13 +666,19 @@ public abstract class MetaDataBuilder
    
    private String getActionPrefix(final WSDLInterfaceOperation wsdlOperation)
    {
-      String tns = wsdlOperation.getName().getNamespaceURI();
-      if (!tns.endsWith("/"))
-         tns += "/";
-      
       final String portTypeName = wsdlOperation.getWsdlInterface().getName().getLocalPart();
+      String namespace = wsdlOperation.getName().getNamespaceURI();
+      final String delimeter = this.getDelimeter(namespace);
+
+      if (!namespace.endsWith(delimeter))
+         namespace += delimeter;
       
-      return tns + portTypeName + "/";
+      return namespace + portTypeName + delimeter;
+   }
+   
+   private String getDelimeter(final String namespace)
+   {
+      return namespace.toLowerCase().startsWith("urn:") ? ":" : "/";
    }
    
    protected void buildFaultMetaData(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation)
