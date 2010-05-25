@@ -61,11 +61,11 @@
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.6.0.GA</javassist.version>
-    <jaxws.api.version>2.2</jaxws.api.version>
+    <jaxws.api.version>1.0.0.Beta1</jaxws.api.version>
     <jaxrpc.api.version>1.1</jaxrpc.api.version>
-    <saaj.api.version>1.3</saaj.api.version>
+    <saaj.api.version>1.0.0.Beta1</saaj.api.version>
     <jsr181.api.version>1.0-MR1</jsr181.api.version>
-    <jaxb.api.version>2.2</jaxb.api.version>
+    <jaxb.api.version>1.0.0.Beta1</jaxb.api.version>
     <jaxb.impl.version>2.2</jaxb.impl.version>
     <jboss.logging.version>2.2.0.CR1</jboss.logging.version>
     <jboss.jaxr.version>2.0.1</jboss.jaxr.version>
@@ -293,27 +293,9 @@
         <version>${jsr181.api.version}</version>
       </dependency>
       <dependency>
-        <groupId>javax.xml.ws</groupId>
-        <artifactId>jaxws-api</artifactId>
+        <groupId>org.jboss.spec.javax.xml.ws</groupId>
+        <artifactId>jboss-jaxws-api_2.2_spec</artifactId>
         <version>${jaxws.api.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.jws</groupId>
-            <artifactId>jsr181-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>javax.xml.soap</groupId>
-            <artifactId>saaj-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>javax.xml</groupId>
@@ -327,19 +309,13 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>javax.xml.soap</groupId>
-        <artifactId>saaj-api</artifactId>
+        <groupId>org.jboss.spec.javax.xml.soap</groupId>
+        <artifactId>jboss-saaj-api_1.3_spec</artifactId>
         <version>${saaj.api.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
+        <groupId>org.jboss.spec.javax.xml.bind</groupId>
+        <artifactId>jboss-jaxb-api_2.2_spec</artifactId>
         <version>${jaxb.api.version}</version>
       </dependency>
       <dependency>
