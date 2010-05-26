@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.naming.Context;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
@@ -46,6 +47,8 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.wsf.common.handler.GenericHandler;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
 import org.jboss.wsf.common.injection.InjectionHelper;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.invocation.EndpointAssociation;
 import org.jboss.wsf.spi.metadata.injection.InjectionsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -168,7 +171,12 @@ public class HandlerResolverImpl implements HandlerResolver
          if (handler instanceof GenericSOAPHandler)
             ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
 
-         InjectionHelper.injectResources(handler, injections);
+         if (injections != null)
+         {
+            Endpoint ep = EndpointAssociation.getEndpoint();
+            Context ctx = ep == null ? null : ep.getJNDIContext();
+            InjectionHelper.injectResources(handler, injections, ctx);
+         }
          InjectionHelper.callPostConstructMethod(handler);
 
          addHandler(jaxwsMetaData, handler, type);
