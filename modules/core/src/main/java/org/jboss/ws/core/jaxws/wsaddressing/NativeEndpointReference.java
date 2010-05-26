@@ -65,9 +65,10 @@ public final class NativeEndpointReference extends EndpointReference
 {
    protected static final String WSA_NS = "http://www.w3.org/2005/08/addressing";
    private static final String WSAM_NS = "http://www.w3.org/2007/05/addressing/metadata";
+   private static final String WSDLI_NS = "http://www.w3.org/ns/wsdl-instance";
    private static final QName SERVICE_QNAME = new QName(WSAM_NS, "ServiceName", "wsam");
    private static final QName INTERFACE_QNAME = new QName(WSAM_NS, "InterfaceName", "wsam");
-   private static final QName WSDL_LOCATION_QNAME = new QName("wsdlLocation");
+   private static final QName WSDL_LOCATION_QNAME = new QName(WSDLI_NS, "wsdlLocation", "wsdli");
    private static final String ENDPOINT_ATTRIBUTE = "EndpointName";
    private static final JAXBContext jc = getJaxbContext();
    
@@ -131,7 +132,11 @@ public final class NativeEndpointReference extends EndpointReference
                final String wsdlLocation = metadataAttributes.get(WSDL_LOCATION_QNAME);
                if (wsdlLocation != null)
                {
-                  this.setWsdlLocation(wsdlLocation);
+                  int spaceIndex = wsdlLocation.indexOf(" ");
+                  if (spaceIndex == -1)
+                     throw new IllegalArgumentException("wsdlLocation have to specify both wsdl namespace and target wsdl location");
+                  
+                  this.setWsdlLocation(wsdlLocation.substring(spaceIndex).trim());
                }
             }
             List<Element> metadataElements = epr.metadata.getElements();
@@ -286,10 +291,6 @@ public final class NativeEndpointReference extends EndpointReference
          return;
       
       this.wsdlLocation = wsdlLocation;
-      if (this.metadata == null)
-         this.metadata = new Elements();
-      
-      this.metadata.addAttribute(WSDL_LOCATION_QNAME, wsdlLocation);
    }
 
    @XmlTransient
@@ -341,6 +342,27 @@ public final class NativeEndpointReference extends EndpointReference
       if (this.endpointName != null && this.serviceNameElement != null)
       {
          this.serviceNameElement.setAttribute(ENDPOINT_ATTRIBUTE, this.toString(this.endpointName));
+         
+         if (this.wsdlLocation != null)
+         {
+            if (this.metadata == null)
+               this.metadata = new Elements();
+
+            String wsdlNamespace = null;
+            if (this.endpointName != null)
+            {
+               wsdlNamespace = this.endpointName.getNamespaceURI();
+            }
+            else if (this.serviceName != null)
+            {
+               wsdlNamespace = this.serviceName.getNamespaceURI();
+            }
+
+            if (wsdlNamespace == null && this.wsdlLocation != null)
+               throw new IllegalStateException("Either serviceName or endpointName have to be specified when providing wsdlLocation");
+            
+            this.metadata.addAttribute(WSDL_LOCATION_QNAME, wsdlNamespace + " " + this.wsdlLocation);
+         }
       }
       try
       {

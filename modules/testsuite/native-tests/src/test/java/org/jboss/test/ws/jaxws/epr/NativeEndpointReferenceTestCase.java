@@ -21,18 +21,13 @@
  */
 package org.jboss.test.ws.jaxws.epr;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,7 +58,7 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
       "    <ns1:param1 wsa:IsReferenceParameter='true' xmlns:ns1='http://helloservice.org/param1' xmlns:wsa='http://www.w3.org/2005/08/addressing'>Hello</ns1:param1>" +
       "    <ns2:param2 wsa:IsReferenceParameter='true' xmlns:ns2='http://helloservice.org/param2' xmlns:wsa='http://www.w3.org/2005/08/addressing'>World</ns2:param2>" +
       "  </ReferenceParameters>" +
-      "  <Metadata wsdlLocation='http://localhost:8080/hello?wsdl'>" +
+      "  <Metadata wsdli:wsdlLocation='http://helloservice.org/wsdl http://localhost:8080/hello?wsdl' xmlns:wsdli='http://www.w3.org/ns/wsdl-instance'>" +
       "    <wsam:ServiceName EndpointName='myns:HelloPort' xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:HelloService</wsam:ServiceName>" +
       "    <wsam:InterfaceName xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:Hello</wsam:InterfaceName>" +
       "  </Metadata>" +
@@ -100,7 +95,8 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
    private static void assertMetaData(final Node root)
    {
       Element metadataElement = (Element)DOMUtils.getFirstChildElement(root, METADATA_QNAME, true);
-      assertEquals("wsdlLocation mismatch", metadataElement.getAttribute("wsdlLocation"), WSDL_URL);
+      String wsdlLocationValue = metadataElement.getAttributeNodeNS("http://www.w3.org/ns/wsdl-instance", "wsdlLocation").getValue();
+      assertEquals("wsdlLocation mismatch", wsdlLocationValue, MY_NS + " " + WSDL_URL);
       Element serviceNameElement = (Element)DOMUtils.getFirstChildElement(metadataElement, WSAM_SERVICE_QNAME);
       assertNamespaces(serviceNameElement);
       assertEquals("wrong text content in ServiceName element", "myns:HelloService", DOMUtils.getTextContent(serviceNameElement));
