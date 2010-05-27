@@ -31,13 +31,12 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.BindingType;
-import javax.xml.ws.EndpointReference;
-import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
+import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -137,9 +136,12 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
                   throw new IllegalStateException("Only one EPR can be specified on port");
 
                Element eprElement = portEPRs.get(0).getElement();
+               
+               // construct Native EPR
                DOMSource eprInfoset = new DOMSource(eprElement);
-               EndpointReference epr = W3CEndpointReference.readFrom(eprInfoset);
-               endpointMD.setEndpointReference(epr);
+               NativeEndpointReference nativeEPR = (NativeEndpointReference)NativeEndpointReference.readFrom(eprInfoset);
+               nativeEPR.setAddress(endpointMD.getEndpointAddress());
+               endpointMD.setEndpointReference(nativeEPR);
             }
          }
       }

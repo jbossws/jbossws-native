@@ -43,7 +43,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 
@@ -62,6 +61,7 @@ import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
+import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.wsrm.config.RMConfig;
@@ -149,7 +149,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // The documentation edfined through the @Documentation annotation
    private String documentation;
    
-   private EndpointReference epr;
+   private NativeEndpointReference epr;
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -185,12 +185,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.portName = portName;
    }
 
-   public EndpointReference getEndpointReference()
+   public NativeEndpointReference getEndpointReference()
    {
       return epr;
    }
 
-   public void setEndpointReference(final EndpointReference epr)
+   public void setEndpointReference(final NativeEndpointReference epr)
    {
       this.epr = epr;
    }

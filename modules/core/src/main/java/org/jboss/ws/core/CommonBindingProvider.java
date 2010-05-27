@@ -24,7 +24,6 @@ package org.jboss.ws.core;
 import java.util.Observable;
 
 import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServiceException;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
