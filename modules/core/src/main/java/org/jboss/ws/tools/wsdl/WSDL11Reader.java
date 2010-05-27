@@ -319,7 +319,7 @@ public class WSDL11Reader
             UnknownExtensibilityElement uee = (UnknownExtensibilityElement)extElement;
             boolean understood = false;
             understood = understood || processPolicyElements(uee, dest);
-            understood = understood || processUseAddressing(uee, dest);
+            understood = understood || processEPR(uee, dest);
             //add processing of further extensibility element types below
             
             if (!understood)
@@ -378,10 +378,25 @@ public class WSDL11Reader
     * @param dest
     * @return
     */
-   private boolean processUseAddressing(UnknownExtensibilityElement extElement, Extendable dest)
+   private boolean processEPR(UnknownExtensibilityElement extElement, Extendable dest)
    {
-      log.warn("UsingAddressing extensibility element not supported yet.");
-      return false;
+      final Element srcElement = extElement.getElement();
+      final boolean isWSANamespace = AddressingConstants.Core.NS.equals(srcElement.getNamespaceURI());
+      final boolean isEPRLocalName = AddressingConstants.Core.Elements.ENDPOINTREFERENCE.equals(srcElement.getLocalName());
+      boolean result = false;
+
+      if (isWSANamespace && isEPRLocalName)
+      {
+         Element element = (Element) srcElement.cloneNode(true);
+         copyMissingNamespaceDeclarations(element, srcElement);
+
+         WSDLExtensibilityElement el = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_EPR, element);
+         el.setRequired(true);
+         dest.addExtensibilityElement(el);
+         result = true;
+      }
+
+      return result;
    }
    
    private void processNotUnderstoodExtesibilityElement(UnknownExtensibilityElement extElement, Extendable dest)

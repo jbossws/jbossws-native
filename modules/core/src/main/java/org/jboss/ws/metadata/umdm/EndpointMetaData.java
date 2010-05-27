@@ -43,6 +43,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 
@@ -147,6 +148,8 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private FeatureSet features = new FeatureSet();
    // The documentation edfined through the @Documentation annotation
    private String documentation;
+   
+   private EndpointReference epr;
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -180,6 +183,16 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setPortName(QName portName)
    {
       this.portName = portName;
+   }
+
+   public EndpointReference getEndpointReference()
+   {
+      return epr;
+   }
+
+   public void setEndpointReference(final EndpointReference epr)
+   {
+      this.epr = epr;
    }
 
    public QName getPortTypeName()

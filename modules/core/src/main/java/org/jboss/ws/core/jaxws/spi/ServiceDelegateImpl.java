@@ -235,7 +235,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
          }
       }
 
-      T port = (T)createProxy(seiClass, epMetaData); 
+      T port = (T)createProxy(seiClass, epMetaData);
+      EndpointReference epr = epMetaData.getEndpointReference();
+      if (epr != null)
+      {
+         initAddressingProperties((BindingProvider)port, epr);
+      }
       initWebserviceFeatures(port, epMetaData.getFeatures().getFeatures());
       return port; 
    }
