@@ -69,6 +69,8 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
+import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -277,8 +279,9 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       ExecutorService executor = (ExecutorService)getExecutor();
       EndpointMetaData epMetaData = getEndpointMetaData(portName);
-      DispatchImpl dispatch = new DispatchImpl(executor, epMetaData, type, mode);
-      return dispatch;
+      FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
+
+      return new DispatchImpl(executor, clientMetaDataAdapter, type, mode);
    }
 
    @Override
@@ -286,8 +289,9 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       ExecutorService executor = (ExecutorService)getExecutor();
       EndpointMetaData epMetaData = getEndpointMetaData(portName);
-      DispatchImpl dispatch = new DispatchImpl(executor, epMetaData, jbc, mode);
-      return dispatch;
+      FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
+
+      return new DispatchImpl(executor, clientMetaDataAdapter, jbc, mode);
    }
 
    private EndpointMetaData getEndpointMetaData(QName portName)
@@ -363,13 +367,14 @@ public class ServiceDelegateImpl extends ServiceDelegate
       try
       {
          ExecutorService executor = (ExecutorService)getExecutor();
-         ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
+         FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
+         ClientProxy handler = new ClientProxy(executor, new ClientImpl(clientMetaDataAdapter, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
 
          T proxy;
          try
          {
-            proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, RMProvider.class, BindingProvider.class, StubExt.class }, handler);
+            proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, RMProvider.class, BindingProvider.class, StubExt.class, FeatureAwareEndpointMetaData.class }, handler);
          }
          catch (RuntimeException rte)
          {

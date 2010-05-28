@@ -267,6 +267,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
       // Associate a message context with the current thread
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      msgContext.setEndpointMetaData(getEndpointMetaData());
       msgContext.setOperationMetaData(opMetaData);
 
       Map<String, Object> requestCtx = getRequestContext();

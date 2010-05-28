@@ -44,6 +44,7 @@ import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
@@ -75,6 +76,8 @@ import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
+import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
@@ -90,14 +93,14 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMetadataProvider
+public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMetadataProvider, FeatureAwareEndpointMetaData
 {
    // provide logging
    private final Logger log = Logger.getLogger(DispatchImpl.class);
 
    private BindingProvider bindingProvider;
    private HandlerResolverImpl handlerResolver;
-   private ClientEndpointMetaData epMetaData;
+   private FeatureAwareClientEndpointMetaDataAdapter epMetaData;
    private JAXBContext jaxbContext;
    private ExecutorService executor;
    private String securityConfig;
@@ -109,7 +112,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, Class<T> type, Mode mode)
    {
       this.bindingProvider = new BindingProviderImpl(epMetaData);
-      this.epMetaData = (ClientEndpointMetaData)epMetaData;
+      this.epMetaData = (FeatureAwareClientEndpointMetaDataAdapter)epMetaData;
       this.executor = executor;
       this.type = type;
       this.mode = mode;
@@ -119,7 +122,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, JAXBContext jbc, Mode mode)
    {
       this.bindingProvider = new BindingProviderImpl(epMetaData);
-      this.epMetaData = (ClientEndpointMetaData)epMetaData;
+      this.epMetaData = (FeatureAwareClientEndpointMetaDataAdapter)epMetaData;
       this.executor = executor;
       this.type = Object.class;
       this.jaxbContext = jbc;
@@ -658,4 +661,21 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    {
       return epMetaData;
    }
+
+   //////////////////////////////////////////
+   // FeatureAwareEndpointMetaData support //
+   //////////////////////////////////////////
+   
+   @Override
+   public <T extends WebServiceFeature> T getFeature(Class<T> key)
+   {
+      return this.epMetaData.getFeature(key);
+   }
+
+   @Override
+   public void setFeature(WebServiceFeature feature)
+   {
+      this.epMetaData.setFeature(feature);
+   }
+
 }
