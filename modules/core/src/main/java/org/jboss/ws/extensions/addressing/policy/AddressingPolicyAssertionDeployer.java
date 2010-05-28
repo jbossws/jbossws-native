@@ -68,12 +68,22 @@ public class AddressingPolicyAssertionDeployer implements AssertionDeployer
          if (addressingFeature == null)
          {
             final boolean enabled = true;
-            final boolean required = !assertion.isOptional();
+            final boolean required = isRequired(assertion);
             final Responses responses = getResponses(assertion);
             
             endpointMD.addFeature(new AddressingFeature(enabled, required, responses));
          }
       }
+   }
+   
+   private static boolean isRequired(final PrimitiveAssertion assertion)
+   {
+      Object optionalValue = assertion.getAttribute(new javax.xml.namespace.QName("http://www.w3.org/ns/ws-policy", "Optional"));
+      
+      if (optionalValue == null)
+         return true;
+      
+      return !Boolean.parseBoolean(optionalValue.toString());
    }
    
    @SuppressWarnings("unchecked")
