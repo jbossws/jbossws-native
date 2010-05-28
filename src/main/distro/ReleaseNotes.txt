@@ -28,19 +28,108 @@ What's new in jbossws-native-${project.version}
 
 Feature Request
 
-    TODO: enumerate
+    * [JBWS-3022] - Respect @Addressing.responses attribute
+    * [JBWS-3024] - Implement endorsing support for JBossWS ANT tools
+    * [JBWS-3031] - Use addressing meta data from WSDL if addressing related annotations are missing on SEI
+    * [JBWS-3040] - Default WSSecurity configurations should support both SOAP protocol versions
+    * [JBWS-3041] - Impement support for Endpoint References specified in WSDL
+    * [JBWS-3042] - Generated JAX-WS proxies and dispatches have to be feature aware
+    * [JBWS-2650] - Provide a Maven plugin for wsconsume/wsprovide
+    * [JBWS-2793] - Support of SOAP header code generation for implicit headers 
+    * [JBWS-2942] - Do not add empty Metadata tag to NativeEndpointReference
+    * [JBWS-2895] - Provide JAX-RPC features on top of stacks not having them
+
 
 Bug
 
-    TODO: enumerate
+    * [JBWS-2633] - wscompile fails to create valid package name where namespace contains capitalised reserved keyword
+    * [JBWS-3004] - JAX-WS Port injected using @WebServiceRef retains last message
+    * [JBWS-3008] - Dispatch doesn't respect @Addressing features
+    * [JBWS-3015] - wsdlLocation attribute from @WebServiceClient not considered when building up webservicerefs
+    * [JBWS-3027] - Throw RuntimeExceptions not Protocol exceptions in Addressing Handler
+    * [JBWS-3029] - Quote mismatch in JBossWS console index.html
+    * [JBWS-3037] - Fix NPE thrown from logging framework
+    * [JBWS-2969] - There is no WebServiceException thrown when the null value is passed as arguments to a rpc/literal operation
+    * [JBWS-2970] - InjectionMetaDataDeploymentAspect misuse of EJBContainer.getEnc()
+    * [JBWS-2972] - WSProvide tool throws WSExcepton for WebServiceProvider annotated endpoints
+    * [JBWS-2973] - Client side respects the @HandlerChain in service endpoint interface class
+    * [JBWS-2975] - JAXBSerializer does not use defaultNamespace to create JAXBContext 
+    * [JBWS-2976] - The incompatiable handler can be added in HTTPBinding
+    * [JBWS-2977] - Native does not repsect the fault value in @Action
+    * [JBWS-2978] - WSA implementation does not check mismatch between soap action and wsa action
+    * [JBWS-2980] - The wsa action in response message is not correct when the @Action output value is not specified 
+    * [JBWS-2982] - Native ignores user specified MessageContext.HTTP_REQUEST_HEADERS
+    * [JBWS-2983] - Fix regressions due to HornetQ update
+    * [JBWS-2984] - Benchmark tests are setting incorrect date
+    * [JBWS-2985] - Fix addressing action header to follow JAX-WS 2.2 specification
+    * [JBWS-2991] - Addressing handlers have to respect @AddressingFeature attributes
+    * [JBWS-2021] - app-client impl assumes client and server share the same filesystem
+    * [JBWS-2903] - MTOM/XOP root MIME part does not contain charset parameter
+    * [JBWS-2917] - We're using buggy xalan version causing namespaces issues
+    * [JBWS-2927] - WSAaddressingClientHandler and WSAaddressingServerHandler don't honor the required value in @Addressing annotation
+    * [JBWS-2940] - Wrong SOAPContentElement namespace prefix after multiple model transitions
+    * [JBWS-2943] - Inconsistent / Incomplete handling of CONFIDENTIAL transport-guarantee defined in jboss.xml compared to @WebContext annotation
+    * [JBWS-2944] - The soap fault message for missing wsa action header is not expected
+    * [JBWS-2947] - WSException on client side when server sends a 100-continue HTTP response code
+    * [JBWS-2949] - JBossWS native does not ignore handler chains containing illegal namespace prefix in handler chains configuration file
+    * [JBWS-2953] - Fix WebService method detection algorithm
+    * [JBWS-2954] - Use JBossWSEntityResolver in Native WSConsume tool
+    * [JBWS-2955] - Client handler chain configured by annotation does not work
+    * [JBWS-2956] - Swallow the outbound SoapFault threw by client side handler   
+    * [JBWS-2960] - @Action not taken into account when generating WSDL from endpoint
+    * [JBWS-2962] - Sign/encrypt verification can fail when the soap model performs transition during it
+    * [JBWS-2963] - JavaDoc inconsistency in WSConsume.java
+    * [JBWS-2964] - SOAPMessageImpl.saveChanges() changed the referenced mimeHeaders
+    * [JBWS-2810] - UnifiedMetaData uses thread context loader to find classes, this can lead to javassist.NotFoundException
+    * [JBWS-2845] - NullPointerException deploying JAX-WS endpoint with types in target namespace ending with '#'
+    * [JBWS-2846] - Service.create(java.net.URL, javax.xml.namespace.QName) should throw javax.xml.ws.WebServiceException not org.jboss.ws.metadata.wsdl.WSDLException
+    * [JBWS-2856] - wsprovide.sh fails while processing webservice annotated with @WebServiceProvider
+    * [JBWS-2875] - Remove jbossws-jbossXYZ.jar files from JBOSS_HOME/client directory
+    * [JBWS-2883] - WSException: Malformed URL when deploying to AS bound to IPv6 address
+    * [JBWS-2888] - ClassCastException when using Dispatch with WebServiceFeature
+    * [JBWS-2889] - BindingProvider.getEndpointReference throws InvocationTargetException instead of WebServiceException
+    * [JBWS-2902] - Fix JAX-WS 2.2 webserviceref clarification
+    * [JBWS-2918] - Remove dependency on Sun specific JVM classes
+    * [JBWS-2919] - Remove WSEventing implementation dependency on xalan implementation classes
+    * [JBWS-2934] - WebServiceContext injection have to be ThreadLocal aware
+    * [JBWS-2937] - Cannot create dispatch object using EPR based javax.xml.ws.Service.createDispatch methods
+    * [JBWS-2938] - Wrong return value when using JAXB based Dispatch
 
 Task
 
-    TODO: enumerate
+    * [JBWS-3030] - Refactor *-deploy.conf for supporting un-install of CXF stack
+    * [JBWS-3032] - Activate authentication for all HTTP verbs in management console
+    * [JBWS-2923] - Move out of deployers/jbossws.deployer jars that are not required to be in deployers
+    * [JBWS-2979] - Switch to Netty 3.2.0.BETA1
+    * [JBWS-2981] - Add <wsa:MessageID> element in request soap message 
+    * [JBWS-2986] - Factor out stack agnostic wsdl file publish procedure to jbossws-common
+    * [JBWS-2988] - Fix dependency on jboss-logging
+    * [JBWS-3003] - Fix maven [WARNING] Using platform encoding ...  build is platform dependent!
+    * [JBWS-3005] - Use new Maven repository at repository.jboss.org/nexus
+    * [JBWS-2948] - Fix regressions due to VFS3 update
+    * [JBWS-2950] - Implement support for JAX-WS 2.2 target in wsconsume tool
+    * [JBWS-2958] - Upgrade to wsdl4j 1.6.2
+    * [JBWS-2959] - Update obsolete jboss dependencies
+    * [JBWS-2965] - Allow nullable root element when building SchemaBinding
+    * [JBWS-2966] - Fix regressions due to HornetQ update
+    * [JBWS-2968] - Remove compilation warnings where possible
+    * [JBWS-2758] - Remove support for Java 5
+    * [JBWS-2830] - EnvelopeBuilderDOM: buildSOAPHeader, reduce log level to debug for text node types.
+    * [JBWS-2850] - Remove SAAJ API interfaces from jbossws-native-saaj
+    * [JBWS-2851] - Remove JAXRPC API interfaces from jbossws-native-jaxrpc
+    * [JBWS-2876] - Add xmldsig xsd to the schemas resolvable offline
+    * [JBWS-2881] - Increase DOMUtils performances optimizing DocumentBuilder creation
+    * [JBWS-2898] - Optimize DocumentBuilderFactory creation using DocumentBuilderFactory.newInstance(String s, ClassLoader c)
+    * [JBWS-2900] - Optimize EntityResolver setup in DOMUtils
+    * [JBWS-2913] - Upgrade jaxws tools from 2.1.7 to 2.2
+    * [JBWS-2916] - Properly setup deployment classloader
+    * [JBWS-2920] - Review install scripts / container integration to produce jbossws-jaxrpc.deployer
+    * [JBWS-2921] - Isolate factories/services configuration in descriptor only jars
+    * [JBWS-2922] - Add some basic JAX-RPC coverage to jbossws-framework testsuite
 
 Errata
 
-    See: TODO: reference to associated JIRA issue
+    See: https://jira.jboss.org/browse/JBWS-3044
     
 Enjoy,
 The JBossWS Team
