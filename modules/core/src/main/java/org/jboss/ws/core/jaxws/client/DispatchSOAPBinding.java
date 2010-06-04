@@ -186,10 +186,13 @@ public class DispatchSOAPBinding extends DispatchBinding
             if (log.isDebugEnabled())
                log.debug("JAXB unmarshal: " + DOMWriter.printNode(soapElement, false));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            retObj = unmarshaller.unmarshal(soapElement);
-            if ((retObj instanceof JAXBElement<?>) && unwrap)
+            if (soapElement != null)
             {
-               retObj = ((JAXBElement<?>)retObj).getValue();
+               retObj = unmarshaller.unmarshal(soapElement);
+               if ((retObj instanceof JAXBElement<?>) && unwrap)
+               {
+                  retObj = ((JAXBElement<?>)retObj).getValue();
+               }
             }
          }
       }

@@ -21,7 +21,9 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,9 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
@@ -82,8 +87,12 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 
 
 /**
@@ -276,8 +285,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
 
             if (handlerPass)
             {
-               boolean unwrap = !(obj instanceof JAXBElement);
-               retObj = getReturnObject(resMsg, unwrap);
+               retObj = getReturnObject(resMsg, obj);
             }
          }
          catch (Exception ex)
@@ -315,8 +323,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
          targetAddress = (String) callProps.get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
       }
       MessageAbstraction resMsg = getRemotingConnection().invoke(reqMsg, targetAddress, false);
-      boolean unwrap = !(obj instanceof JAXBElement);
-      Object retObj = getReturnObject(resMsg, unwrap);
+      Object retObj = getReturnObject(resMsg, obj);
       return retObj;
    }
 
@@ -469,24 +476,39 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       return message;
    }
 
-   private Object getReturnObject(MessageAbstraction resMsg, boolean unwrap)
+   private Object getReturnObject(MessageAbstraction resMsg, Object reqObj)
    {
       String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
          throw new IllegalStateException("Unsupported binding: " + bindingID);
 
-      Object retObj = null;
+      boolean unwrap = !(reqObj instanceof JAXBElement);
+      Object resObj = null;
       if (HTTPBinding.HTTP_BINDING.equals(bindingID))
       {
          DispatchHTTPBinding helper = new DispatchHTTPBinding(mode, type, jaxbContext);
-         retObj = helper.getReturnObject(resMsg);
+         resObj = helper.getReturnObject(resMsg);
       }
       else
       {
          DispatchSOAPBinding helper = new DispatchSOAPBinding(mode, type, jaxbContext);
-         retObj = helper.getReturnObject(resMsg, unwrap);
+         resObj = helper.getReturnObject(resMsg, unwrap);
       }
-      return retObj;
+      
+      // HACK - handle null because of TCK requirement
+      if ((reqObj instanceof Source) && (resObj instanceof DOMSource))
+      {
+         resObj = this.handleNull((DOMSource)resObj);
+      }
+      
+      return resObj;
+   }
+   
+   private Source handleNull(final DOMSource from)
+   {
+      final Node node = from.getNode();
+      
+      return node != null ? from : null;
    }
 
    class AsyncRunnable implements Runnable
