@@ -26,21 +26,13 @@ http://jira.jboss.com/jira/browse/JBWS?report=com.atlassian.jira.plugin.system.p
 What's new in jbossws-native-${project.version}
 ----------------------------------
 
-Feature Request
-
-    TODO: enumerate
-
 Bug
 
-    TODO: enumerate
-
-Task
-
-    TODO: enumerate
+    * [JBWS-3048] - bin-dist does not correctly undeploy previously installed stack
 
 Errata
 
-    See: TODO: reference to associated JIRA issue
+    See: https://jira.jboss.org/browse/JBWS-3044 (same as for 3.3.0.GA)
     
 Enjoy,
 The JBossWS Team
