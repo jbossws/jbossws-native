@@ -49,6 +49,19 @@ The JBossWS Team
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -----------------------
+jbossws-native-3.3.1.GA
+-----------------------
+
+Bug
+
+    * [JBWS-3048] - bin-dist does not correctly undeploy previously installed stack
+
+Errata
+
+    See: https://jira.jboss.org/browse/JBWS-3044 (same as for 3.3.0.GA)
+
+
+-----------------------
 jbossws-native-3.3.0.GA
 -----------------------
 
