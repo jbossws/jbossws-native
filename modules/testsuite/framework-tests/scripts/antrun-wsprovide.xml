@@ -21,6 +21,7 @@
       destdir="jaxws/jbws2960"
       jbossHome="${jboss.home}"
       outputDir="${tests.output.dir}"
+      log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
       resourcesDir="jaxws/jbws2960"
     />
@@ -33,6 +34,7 @@
     <attribute name="destDir"/>
     <attribute name="jbossHome"/>
     <attribute name="outputDir"/>
+    <attribute name="log4jConf"/>
     <attribute name="loggingDir"/>
     <attribute name="resourcesDir"/>
 
@@ -47,6 +49,7 @@
         resourcedestdir="@{outputDir}/test-resources/@{resourcesDir}"
       >
         <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
+        <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
         <jvmarg line="-Dlog4j.output.dir=@{loggingDir}"/>
       </wsprovide>
     </sequential>

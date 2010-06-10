@@ -21,6 +21,7 @@
       package="org.jboss.test.ws.jaxws.complex"
       outputDir="${tests.output.dir}"
       jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
     />
 
@@ -29,6 +30,7 @@
       package="org.jboss.test.ws.jaxws.holder"
       outputDir="${tests.output.dir}"
       jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
     />
 
@@ -40,6 +42,7 @@
     <attribute name="package"/>
     <attribute name="outputDir"/>
     <attribute name="jbossHome"/>
+    <attribute name="log4jConf"/>
     <attribute name="loggingDir"/>
 
     <sequential>
@@ -55,6 +58,7 @@
         fork="true"
       >
         <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
+        <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
         <jvmarg line="-Dlog4j.output.dir=@{loggingDir}"/>
       </wsconsume>
     </sequential>
