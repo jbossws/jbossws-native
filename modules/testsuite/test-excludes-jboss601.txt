@@ -3,3 +3,13 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
+
+# [JBWS-3067] issue with new scanning in AS trunk
+org/jboss/test/ws/jaxws/samples/wssecurity/MissingSecurityTestCase.*
+org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase.*
+org/jboss/test/ws/jaxws/samples/wssecurity/SimpleSignTestCase.*
+org/jboss/test/ws/jaxws/samples/wssecurity/SimpleEncryptTestCase.*
+org/jboss/test/ws/jaxws/samples/wssecurity/MissingSecurityTestCase.*
+org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/SimpleEncryptTestCase.*
+org/jboss/test/ws/jaxws/samples/wssecuritypolicy/SimpleEncryptTestCase.*
+
