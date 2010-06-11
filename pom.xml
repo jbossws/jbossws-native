@@ -60,7 +60,7 @@
     <!-- END -->
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
-    <javassist.version>3.6.0.GA</javassist.version>
+    <javassist.version>3.12.1.GA</javassist.version>
     <jaxws.api.version>1.0.0.Beta1</jaxws.api.version>
     <jaxrpc.api.version>1.1</jaxrpc.api.version>
     <saaj.api.version>1.0.0.Beta1</saaj.api.version>
