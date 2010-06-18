@@ -25,6 +25,7 @@ package org.jboss.ws.core.utils;
 
 import java.util.Stack;
 
+import org.jboss.security.auth.callback.CallbackHandlerPolicyContextHandler;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.security.SecurityStore;
 
@@ -47,7 +48,7 @@ public class ThreadLocalAssociation
     * @see org.jboss.ws.extensions.security.STRTransform
     */
    private static ThreadLocal<SecurityStore> strTransformAssoc = new ThreadLocal<SecurityStore>();
-
+   
    public static ThreadLocal<Stack<CommonMessageContext>> localMsgContextAssoc()
    {
       return msgContextAssoc;
@@ -57,10 +58,15 @@ public class ThreadLocalAssociation
    {
       return strTransformAssoc;
    }
-
+   
    public static void clear()
    {
       msgContextAssoc.remove();
       strTransformAssoc.remove();
+      //This removes a custom callback security handler that might have
+      //been set if using UsernameTokenProfile with digest; doing this
+      //here won't be required anymore once our custom security manager
+      //will be used in our wsse implementation.
+      CallbackHandlerPolicyContextHandler.setCallbackHandler(null);
    }
 }

@@ -57,6 +57,10 @@ public class Constants
    public static final String WSU_ID = WSU_PREFIX + ":" + ID;
 
    public static final String BASE64_ENCODING_TYPE = WSS_SOAP_NS + "#Base64Binary";
+   
+   public static final String PASSWORD_TEXT_TYPE = WSSE_NS + "#PasswordText";
+   
+   public static final String PASSWORD_DIGEST_TYPE = WSSE_NS + "#PasswordDigest";
 
    public static final String WSSE_HEADER = WSSE_PREFIX + ":Security";
 

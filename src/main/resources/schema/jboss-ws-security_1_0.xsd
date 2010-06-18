@@ -53,6 +53,11 @@
             <xs:documentation>The WSDL port.</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="nonce-factory-class" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>This specifies the nonce factory class name. It is used to get the custom generator and store of nonces.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -187,7 +192,21 @@
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="usernameType">
-    <xs:sequence/>
+    <xs:attribute name="digestPassword" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>If true a password digest will be used as password element. The default is false.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useNonce" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enables/disables nonce usage in the password digest. The default is true.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useCreated" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enables/disables usage of the Created element in the password digest. The default is true.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="encryptType">
     <xs:sequence>

@@ -125,7 +125,7 @@ public class EncryptionOperation implements EncodingOperation
       }
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm) throws WSSecurityException
+   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp) throws WSSecurityException
    {
       if (! algorithms.containsKey(algorithm))
          algorithm = DEFAULT_ALGORITHM;

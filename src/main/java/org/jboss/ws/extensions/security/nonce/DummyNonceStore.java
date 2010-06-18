@@ -19,40 +19,29 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.nonce;
 
-import java.util.List;
+import org.jboss.logging.Logger;
 
-import org.jboss.ws.extensions.security.element.SecurityHeader;
-import org.jboss.ws.extensions.security.element.Timestamp;
-import org.w3c.dom.Document;
+//$Id$
 
-public class TimestampOperation implements EncodingOperation
+/**
+ * A dummy nonce store providing no actual
+ * security increase against replay attacks.
+ * 
+ * @author alessio.soldano@jboss.com
+ */
+public class DummyNonceStore implements NonceStore
 {
-   private SecurityHeader header;
 
-   private SecurityStore store;
-
-   public TimestampOperation(SecurityHeader header, SecurityStore store)
+   public boolean hasNonce(String nonce)
    {
-      this.header = header;
-      this.store = store;
+      return false;
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp) throws WSSecurityException
+   public void putNonce(String nonce)
    {
-      Integer ttl = null;
-
-      try
-      {
-         // Time to live is stuffed in the credential field
-         ttl = Integer.valueOf(credential);
-      }
-      catch (NumberFormatException e)
-      {
-         // Eat
-      }
-
-      header.setTimestamp(new Timestamp(ttl, message));
+      Logger.getLogger(this.getClass()).warn("Please consider using a real nonce store to increase security against replay attacks.");
    }
+
 }

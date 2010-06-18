@@ -19,40 +19,42 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.nonce;
 
-import java.util.List;
+//$Id$
 
-import org.jboss.ws.extensions.security.element.SecurityHeader;
-import org.jboss.ws.extensions.security.element.Timestamp;
-import org.w3c.dom.Document;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
-public class TimestampOperation implements EncodingOperation
+import org.jboss.util.Base64;
+
+/**
+ * A simple nonce generator using a SecureRandom instance.
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 12-Mar-2008
+ */
+public class DefaultNonceGenerator implements NonceGenerator
 {
-   private SecurityHeader header;
-
-   private SecurityStore store;
-
-   public TimestampOperation(SecurityHeader header, SecurityStore store)
+   private static SecureRandom pseudoRng;
+   
+   static
    {
-      this.header = header;
-      this.store = store;
-   }
-
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp) throws WSSecurityException
-   {
-      Integer ttl = null;
-
       try
       {
-         // Time to live is stuffed in the credential field
-         ttl = Integer.valueOf(credential);
+         pseudoRng = SecureRandom.getInstance("SHA1PRNG");
+         pseudoRng.setSeed(System.currentTimeMillis());
       }
-      catch (NumberFormatException e)
+      catch (NoSuchAlgorithmException e)
       {
-         // Eat
       }
-
-      header.setTimestamp(new Timestamp(ttl, message));
    }
+
+   public String generateNonce()
+   {
+      byte[] bytes = new byte[32];
+      pseudoRng.nextBytes(bytes);
+      return Base64.encodeBytes(bytes);
+   }
+
 }

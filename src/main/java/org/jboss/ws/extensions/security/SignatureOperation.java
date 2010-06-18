@@ -119,7 +119,7 @@ public class SignatureOperation implements EncodingOperation
       }
    }
 
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm) throws WSSecurityException
+   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp) throws WSSecurityException
    {
       Element envelope = message.getDocumentElement();
       XMLSignature sig;

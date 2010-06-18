@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
 
 /**
  * Simple WS-Security round trip test
- *
+ * 
  * @author <a href="mailto:jason.greene@jboss.com>Jason T. Greene</a>
  */
 public class RoundTripTestCase extends JBossWSTest
@@ -92,7 +92,7 @@ public class RoundTripTestCase extends JBossWSTest
       env = soapMsg.getSOAPPart().getEnvelope();
       doc = env.getOwnerDocument();
 
-      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), null, null);
+      SecurityDecoder decoder = new SecurityDecoder(new SecurityStore(), null, null, null);
 
       decoder.decode(doc);
       decoder.verify(buildRequireOperations());
@@ -105,8 +105,6 @@ public class RoundTripTestCase extends JBossWSTest
       assertEquals(inputString, DOMWriter.printNode(doc, true));
    }
 
-   // WS-Security leaves wsu:id attributes arround on elements which are not cleaned
-   // up due to performance reasons. This, however, breaks comparisons, so we manually
    // fix this for tests.
    private void cleanupWsuIds(Element element)
    {
@@ -160,7 +158,7 @@ public class RoundTripTestCase extends JBossWSTest
       name = new QName("http://org.jboss.ws/2004", "someHeader");
       target = new QNameTarget(name);
       targets.add(target);
-      //targets.add(new WsuIdTarget("timestamp"));
+      // targets.add(new WsuIdTarget("timestamp"));
       LinkedList operations = new LinkedList();
       operations.add(new OperationDescription(RequireSignatureOperation.class, targets, null, null, null));
       operations.add(new OperationDescription(RequireEncryptionOperation.class, targets, null, null, null));

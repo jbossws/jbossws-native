@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.security.nonce.NonceGenerator;
 
 /**
  * <code>SecurityStore</code> holds and loads the keystore and truststore required for encyption and signing.
@@ -73,6 +74,8 @@ public class SecurityStore
 
    private HashMap<String, String> keyPasswords;
    
+   private NonceGenerator nonceGenerator;
+   
    public SecurityStore() throws WSSecurityException
    {
       this(null, null, null, null, null, null, null);
@@ -80,17 +83,30 @@ public class SecurityStore
 
    public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, HashMap<String, String> keyPasswords) throws WSSecurityException
    {
+      this(keyStoreURL, keyStoreType, keyStorePassword, keyPasswords, null);
+   }
+   
+   public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, HashMap<String, String> keyPasswords, NonceGenerator nonceGenerator) throws WSSecurityException
+   {
       loadKeyStore(keyStoreURL, keyStoreType, keyStorePassword);
       loadTrustStore(keyStoreURL, keyStoreType, keyStorePassword);
       this.keyPasswords = keyPasswords;
+      this.nonceGenerator = nonceGenerator;
    }
 
    public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, HashMap<String, String> keyPasswords, URL trustStoreURL, String trustStoreType, String trustStorePassword)
+   throws WSSecurityException
+   {
+      this(keyStoreURL, keyStoreType, keyStorePassword, keyPasswords, trustStoreURL, trustStoreType, trustStorePassword, null);  
+   }
+   
+   public SecurityStore(URL keyStoreURL, String keyStoreType, String keyStorePassword, HashMap<String, String> keyPasswords, URL trustStoreURL, String trustStoreType, String trustStorePassword, NonceGenerator nonceGenerator)
          throws WSSecurityException
    {
       loadKeyStore(keyStoreURL, keyStoreType, keyStorePassword);
       loadTrustStore(trustStoreURL, trustStoreType, trustStorePassword);
       this.keyPasswords = keyPasswords;
+      this.nonceGenerator = nonceGenerator;
    }
 
    private void loadKeyStore(URL keyStoreURL, String keyStoreType, String keyStorePassword) throws WSSecurityException
@@ -525,4 +541,10 @@ public class SecurityStore
          throw new WSSecurityException("Problems setting up certificate validation", e);
       }
    }
+
+   public NonceGenerator getNonceGenerator()
+   {
+      return nonceGenerator;
+   }
+         
 }

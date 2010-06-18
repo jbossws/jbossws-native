@@ -35,5 +35,5 @@ import org.w3c.dom.Document;
  */
 public interface EncodingOperation extends Operation
 {
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm) throws WSSecurityException;
+   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp) throws WSSecurityException;
 }

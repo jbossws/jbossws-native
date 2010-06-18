@@ -34,6 +34,7 @@ import org.jboss.ws.extensions.security.element.Signature;
 import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.ws.extensions.security.nonce.NonceFactory;
 import org.jboss.ws.metadata.wsse.Authenticate;
 import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
@@ -54,6 +55,8 @@ public class SecurityDecoder
    private SecurityHeader header;
 
    private Document message;
+   
+   private NonceFactory nonceFactory;
 
    private SecurityStore store;
 
@@ -65,10 +68,12 @@ public class SecurityDecoder
 
    private HashSet<String> encryptedIds = new HashSet<String>();
 
-   public SecurityDecoder(SecurityStore store, TimestampVerification timestampVerification, Authenticate authenticate)
+
+   public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory, TimestampVerification timestampVerification, Authenticate authenticate)
    {
       org.apache.xml.security.Init.init();
       this.store = store;
+      this.nonceFactory = nonceFactory;
       this.timestampVerification = timestampVerification;
       this.authenticate = authenticate;
    }
@@ -80,10 +85,9 @@ public class SecurityDecoder
     * @param SecurityStore the security store that contains key and trust information
     * @param now The timestamp to use as the current time when validating a message expiration
     */
-
-   public SecurityDecoder(SecurityStore store, Calendar now, TimestampVerification timestampVerification, Authenticate authenticate)
+   public SecurityDecoder(SecurityStore store, Calendar now, NonceFactory nonceFactory, TimestampVerification timestampVerification, Authenticate authenticate)
    {
-      this(store, timestampVerification, authenticate);
+      this(store, nonceFactory, timestampVerification, authenticate);
       this.now = now;
    }
 
@@ -117,8 +121,8 @@ public class SecurityDecoder
          for (Token token : header.getTokens())
          {
             if (token instanceof UsernameToken)
-               new ReceiveUsernameOperation(header, store).process(message, token);
-         }
+               new ReceiveUsernameOperation(header, store, (nonceFactory != null ? nonceFactory.getStore() : null)).process(message, token);
+         }         
       }
 
       signedIds.clear();

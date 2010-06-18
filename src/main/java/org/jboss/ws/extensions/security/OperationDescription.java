@@ -39,14 +39,28 @@ public class OperationDescription<T extends Operation>
    private String credential;
 
    private String algorithm;
+   
+   private boolean digest;
+   
+   private boolean useNonce;
+   
+   private boolean useTimestamp;
 
-   public OperationDescription(Class<? extends T> operation, List<Target> targets, String certicateAlias, String credential, String algorithm)
+   public OperationDescription(Class<? extends T> operation, List<Target> targets, String certicateAlias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp)
    {
       this.operation = operation;
       this.targets = targets;
       this.certificateAlias = certicateAlias;
       this.credential = credential;
       this.algorithm = algorithm;
+      this.digest = digest;
+      this.useNonce = useNonce;
+      this.useTimestamp = useTimestamp;
+   }
+   
+   public OperationDescription(Class<? extends T> operation, List<Target> targets, String certicateAlias, String credential, String algorithm)
+   {
+      this(operation, targets, certicateAlias, credential, algorithm, false, false, false);
    }
 
    public Class<? extends T> getOperation()
@@ -102,4 +116,34 @@ public class OperationDescription<T extends Operation>
       this.algorithm = algorithm;
    }
 
+   public boolean isDigest()
+   {
+      return digest;
+   }
+
+   public void setDigest(boolean digest)
+   {
+      this.digest = digest;
+   }
+
+   public boolean isUseNonce()
+   {
+      return useNonce;
+   }
+
+   public void setUseNonce(boolean useNonce)
+   {
+      this.useNonce = useNonce;
+   }
+
+   public boolean isUseTimestamp()
+   {
+      return useTimestamp;
+   }
+
+   public void setUseTimestamp(boolean useTimestamp)
+   {
+      this.useTimestamp = useTimestamp;
+   }
+      
 }

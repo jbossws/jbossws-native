@@ -21,11 +21,14 @@
 */
 package org.jboss.ws.extensions.security;
 
+//$Id$
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.jboss.ws.WSException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -36,7 +39,7 @@ import org.w3c.dom.Node;
 public class Util
 {
    public static int count = 0;
-
+   
    public static String assignWsuId(Element element)
    {
       String id = element.getAttributeNS(Constants.WSU_NS, Constants.ID);
@@ -213,5 +216,23 @@ public class Util
       id.append(prefix).append("-").append(count).append("-").append(time).append("-").append(id.hashCode());
 
       return id.toString();
+   }
+   
+   @SuppressWarnings("unchecked")
+   public static <T> T loadFactory(Class<T> factoryType, String factoryClassName, Class<? extends T> defaultFactoryClassName)
+   {
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      String name = factoryClassName != null ? factoryClassName : System.getProperty(factoryType.getName());
+      if (name == null)
+         name = defaultFactoryClassName.getName();
+      try
+      {
+         Class<T> cl = (Class<T>)loader.loadClass(name);
+         return cl.newInstance();
+      }
+      catch (Exception e)
+      {
+         throw new WSException(e);
+      }
    }
 }

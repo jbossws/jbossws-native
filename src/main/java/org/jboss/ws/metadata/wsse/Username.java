@@ -27,4 +27,32 @@ import java.io.Serializable;
 public class Username implements Serializable
 {
    private static final long serialVersionUID = 8273360977250180943L;
+   
+   private boolean digestPassword;
+   
+   private boolean useNonce;
+   
+   private boolean useCreated;
+   
+   public Username(boolean digestPassword, boolean useNonce, boolean useCreated)
+   {
+      this.digestPassword = digestPassword;
+      this.useNonce = useNonce;
+      this.useCreated = useCreated;
+   }
+
+   public boolean isDigestPassword()
+   {
+      return digestPassword;
+   }
+
+   public boolean isUseNonce()
+   {
+      return useNonce;
+   }
+
+   public boolean isUseCreated()
+   {
+      return useCreated;
+   }
 }

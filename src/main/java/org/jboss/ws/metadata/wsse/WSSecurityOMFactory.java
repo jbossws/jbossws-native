@@ -51,7 +51,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
 
    public static String CLIENT_RESOURCE_NAME = "jboss-wsse-client.xml";
 
-   private static HashMap options = new HashMap(6);
+   private static HashMap options = new HashMap(7);
 
    static
    {
@@ -61,6 +61,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       options.put("trust-store-file", "setTrustStoreFile");
       options.put("trust-store-type", "setTrustStoreType");
       options.put("trust-store-password", "setTrustStorePassword");
+      options.put("nonce-factory-class", "setNonceFactory");
    }
 
    // provide logging
@@ -147,7 +148,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       if (method == null)
          return;
 
-      // Dispatch to propper initializer
+      // Dispatch to proper initializer
       try
       {
          WSSecurityConfiguration.class.getMethod(method, new Class[] { String.class }).invoke(configuration, new Object[] { value });
@@ -282,7 +283,25 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
       else if ("username".equals(localName))
       {
-         return new Username();
+         //By default, we do not use password digest
+         Boolean digestPassword = new Boolean(false);
+         String digestPasswordAttr = attrs.getValue("", "digestPassword");
+         if (digestPasswordAttr != null)
+            digestPassword = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, digestPasswordAttr, null);
+         
+         //if password digest is enabled, we use nonces by default
+         Boolean useNonce = new Boolean(true);
+         String useNonceAttr = attrs.getValue("", "useNonce");
+         if (useNonceAttr != null)
+            useNonce = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useNonceAttr, null);
+         
+         //if password digest is enabled, we use the created element by default
+         Boolean useCreated = new Boolean(true);
+         String useCreatedAttr = attrs.getValue("", "useCreated");
+         if (useCreatedAttr != null)
+            useCreated = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useCreatedAttr, null);
+         
+         return new Username(digestPassword, useNonce, useCreated);
       }
       else if ("authenticate".equals(localName))
       {

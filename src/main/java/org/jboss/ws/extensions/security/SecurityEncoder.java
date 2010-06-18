@@ -79,7 +79,7 @@ public class SecurityEncoder
             throw new WSSecurityException("Error constructing operation: " + op.getOperation());
          }
 
-         operation.process(message, op.getTargets(), op.getCertificateAlias(), op.getCredential(), op.getAlgorithm());
+         operation.process(message, op.getTargets(), op.getCertificateAlias(), op.getCredential(), op.getAlgorithm(), op.isDigest(), op.isUseNonce(), op.isUseTimestamp());
       }
       attachHeader(header, message);
    }

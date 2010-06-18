@@ -19,40 +19,17 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
-package org.jboss.ws.extensions.security;
+package org.jboss.ws.extensions.security.nonce;
 
-import java.util.List;
+//$Id$
 
-import org.jboss.ws.extensions.security.element.SecurityHeader;
-import org.jboss.ws.extensions.security.element.Timestamp;
-import org.w3c.dom.Document;
-
-public class TimestampOperation implements EncodingOperation
+/**
+ * Simple interface for a generator of nonces.
+ * 
+ * @author alessio.soldano@jboss.com
+ * @since 12-Mar-2008
+ */
+public interface NonceGenerator
 {
-   private SecurityHeader header;
-
-   private SecurityStore store;
-
-   public TimestampOperation(SecurityHeader header, SecurityStore store)
-   {
-      this.header = header;
-      this.store = store;
-   }
-
-   public void process(Document message, List<Target> targets, String alias, String credential, String algorithm, boolean digest, boolean useNonce, boolean useTimestamp) throws WSSecurityException
-   {
-      Integer ttl = null;
-
-      try
-      {
-         // Time to live is stuffed in the credential field
-         ttl = Integer.valueOf(credential);
-      }
-      catch (NumberFormatException e)
-      {
-         // Eat
-      }
-
-      header.setTimestamp(new Timestamp(ttl, message));
-   }
+   public String generateNonce();
 }

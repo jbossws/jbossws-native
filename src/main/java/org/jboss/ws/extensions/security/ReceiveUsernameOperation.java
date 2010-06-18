@@ -23,29 +23,45 @@ package org.jboss.ws.extensions.security;
 
 // $Id$
 
+import java.util.Calendar;
+
+import javax.security.auth.callback.CallbackHandler;
+
+import org.jboss.security.auth.callback.CallbackHandlerPolicyContextHandler;
+import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallbackHandler;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
+import org.jboss.ws.extensions.security.nonce.NonceStore;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.invocation.SecurityAdaptor;
 import org.jboss.wsf.spi.invocation.SecurityAdaptorFactory;
+import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Document;
 
 public class ReceiveUsernameOperation implements TokenOperation
 {
    private SecurityHeader header;
    private SecurityStore store;
+   private NonceStore nonceStore;
+   private static final int TIMESTAMP_FRESHNESS_THRESHOLD = 300;
    
    private SecurityAdaptorFactory secAdapterfactory;
 
-   public ReceiveUsernameOperation(SecurityHeader header, SecurityStore store)
+   public ReceiveUsernameOperation(SecurityHeader header, SecurityStore store, NonceStore nonceStore)
    {
       this.header = header;
       this.store = store;
+      this.nonceStore = nonceStore;
 
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
       secAdapterfactory = spiProvider.getSPI(SecurityAdaptorFactory.class);
+   }
+   
+   public ReceiveUsernameOperation(SecurityHeader header, SecurityStore store)
+   {
+      this(header, store, null);
    }
 
    public void process(Document message, Token token) throws WSSecurityException
@@ -53,7 +69,32 @@ public class ReceiveUsernameOperation implements TokenOperation
       UsernameToken user = (UsernameToken)token;
       SecurityAdaptor securityAdaptor = secAdapterfactory.newSecurityAdapter();
 
+      if (user.isDigest())
+      {
+         verifyUsernameToken(user);
+         CallbackHandler handler = new UsernameTokenCallbackHandler(user.getNonce(), user.getCreated());
+         CallbackHandlerPolicyContextHandler.setCallbackHandler(handler);
+      }
       securityAdaptor.setPrincipal(new SimplePrincipal(user.getUsername()));
       securityAdaptor.setCredential(user.getPassword());
+   }
+   
+   private void verifyUsernameToken(UsernameToken token) throws WSSecurityException
+   {
+      if (token.getCreated() != null)
+      {
+         Calendar cal = SimpleTypeBindings.unmarshalDateTime(token.getCreated());
+         Calendar ref = Calendar.getInstance();
+         ref.add(Calendar.SECOND, -TIMESTAMP_FRESHNESS_THRESHOLD);
+         if (ref.after(cal))
+            throw new WSSecurityException("Request rejected since a stale timestamp has been provided: " + token.getCreated());
+      }
+      String nonce = token.getNonce();
+      if (nonce != null)
+      {
+         if (nonceStore.hasNonce(nonce))
+            throw new WSSecurityException("Request rejected since a message with the same nonce has been recently received; nonce = " + nonce);
+         nonceStore.putNonce(nonce);
+      }
    }
 }

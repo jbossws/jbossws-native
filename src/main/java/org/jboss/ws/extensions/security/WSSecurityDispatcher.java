@@ -41,6 +41,9 @@ import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.extensions.security.nonce.DefaultNonceFactory;
+import org.jboss.ws.extensions.security.nonce.NonceFactory;
+import org.jboss.ws.extensions.security.nonce.NonceGenerator;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.wsse.Authenticate;
@@ -55,6 +58,7 @@ import org.jboss.ws.metadata.wsse.RequireTimestamp;
 import org.jboss.ws.metadata.wsse.Requires;
 import org.jboss.ws.metadata.wsse.Sign;
 import org.jboss.ws.metadata.wsse.Timestamp;
+import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
@@ -175,7 +179,8 @@ public class WSSecurityDispatcher
    {
       SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
             configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
-
+      NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
+      
       Authenticate authenticate = null;
 
       if (operationConfig != null)
@@ -183,7 +188,7 @@ public class WSSecurityDispatcher
          authenticate = operationConfig.getAuthenticate();
       }
 
-      SecurityDecoder decoder = new SecurityDecoder(securityStore, configuration.getTimestampVerification(), authenticate);
+      SecurityDecoder decoder = new SecurityDecoder(securityStore, factory, configuration.getTimestampVerification(), authenticate);
 
       decoder.decode(message.getSOAPPart(), secHeaderElement);
 
@@ -310,7 +315,6 @@ public class WSSecurityDispatcher
          //we fall back to the port wsse config (if available) or the default config.
          Config portConfig = port.getDefaultConfig();
          return (portConfig == null) ? configuration.getDefaultConfig() : portConfig;
-
       }
       return operation.getConfig();
    }
@@ -380,7 +384,9 @@ public class WSSecurityDispatcher
          operations.add(new OperationDescription<EncodingOperation>(TimestampOperation.class, null, null, timestamp.getTtl(), null));
       }
 
-      if (opConfig.getUsername() != null)
+      NonceGenerator nonceGenerator = null;
+      Username username = opConfig.getUsername();
+      if (username != null)
       {
          Object user = ctx.get(Stub.USERNAME_PROPERTY);
          Object pass = ctx.get(Stub.PASSWORD_PROPERTY);
@@ -393,9 +399,12 @@ public class WSSecurityDispatcher
 
          if (user != null && pass != null)
          {
-            operations.add(new OperationDescription<EncodingOperation>(SendUsernameOperation.class, null, user.toString(), pass.toString(), null));
+            operations.add(new OperationDescription<EncodingOperation>(SendUsernameOperation.class, null, user.toString(), pass.toString(), null,username.isDigestPassword(), username.isUseNonce(), username.isUseCreated()));
             ctx.put(StubExt.PROPERTY_AUTH_TYPE, StubExt.PROPERTY_AUTH_TYPE_WSSE);
          }
+
+         NonceFactory factory = Util.loadFactory(NonceFactory.class, config.getNonceFactory(), DefaultNonceFactory.class);
+         nonceGenerator = factory.getGenerator();
       }
 
       Sign sign = opConfig.getSign();
@@ -430,7 +439,7 @@ public class WSSecurityDispatcher
       try
       {
          SecurityStore securityStore = new SecurityStore(config.getKeyStoreURL(), config.getKeyStoreType(), config.getKeyStorePassword(), config.getKeyPasswords(),
-               config.getTrustStoreURL(), config.getTrustStoreType(), config.getTrustStorePassword());
+               config.getTrustStoreURL(), config.getTrustStoreType(), config.getTrustStorePassword(), nonceGenerator);
          SecurityEncoder encoder = new SecurityEncoder(operations, securityStore);
          encoder.encode(soapMessage.getSOAPPart());
       }
