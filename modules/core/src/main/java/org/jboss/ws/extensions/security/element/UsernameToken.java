@@ -96,7 +96,7 @@ public class UsernameToken implements Token
          this.nonce = XMLUtils.getFullTextChildrenFromElement(elem);
       }
       
-      Iterator<Element> itCreated = DOMUtils.getChildElements(element, new QName(Constants.WSSE_NS, "Created"));
+      Iterator<Element> itCreated = DOMUtils.getChildElements(element, new QName(Constants.WSU_NS, "Created"));
       if (itCreated != null && itCreated.hasNext())
       {
          this.created = XMLUtils.getFullTextChildrenFromElement(itCreated.next());
@@ -163,7 +163,7 @@ public class UsernameToken implements Token
          }
          if (created != null)
          {
-            child = doc.createElementNS(Constants.WSSE_NS, Constants.WSSE_PREFIX + ":" + "Created");
+            child = doc.createElementNS(Constants.WSU_NS, Constants.WSU_PREFIX + ":" + "Created");
             child.appendChild(doc.createTextNode(created));
             element.appendChild(child);
          }
