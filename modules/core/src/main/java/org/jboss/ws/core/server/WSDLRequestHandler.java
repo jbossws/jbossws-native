@@ -205,25 +205,35 @@ public class WSDLRequestHandler
                         String resParent = resPath.substring(0, resPath.lastIndexOf("/"));
 
                         // replace parent traversal, results in resParent == null when successfully executed
-                        while (orgLocation.startsWith("../")  && resParent != null)
+                        if (orgLocation.startsWith("../") && resParent != null)
                         {
-                           if (resParent.indexOf("/") > 0)
+                           // replace parent traversal, results in resParent == null when successfully executed
+                           while (orgLocation.startsWith("../") && resParent != null)
                            {
-                              resParent = resParent.substring(0, resParent.lastIndexOf("/"));
-                              orgLocation = orgLocation.substring(3);
-                              newResourcePath = resParent + "/" + orgLocation;
+                              if (resParent.endsWith(".."))
+                              {
+                                 newResourcePath = resParent + "/" + orgLocation;
+                                 resParent = null;
+                              }
+                              else if (resParent.indexOf("/") > 0)
+                              {
+                                 resParent = resParent.substring(0, resParent.lastIndexOf("/"));
+                                 orgLocation = orgLocation.substring(3);
+                                 newResourcePath = resParent + "/" + orgLocation;
+                              }
+                              else
+                              {
+                                 orgLocation = orgLocation.substring(3);
+                                 newResourcePath = orgLocation;
+                                 resParent = null;
+                              }
                            }
-                           else
-                           {
-                              orgLocation = orgLocation.substring(3);
-                              newResourcePath = orgLocation;
-                              resParent = null;
-                           }
-                        }
 
-                        // no parent traversal happend
-                        if(resParent!=null)
-                           newResourcePath = resParent +"/"+ orgLocation;
+                        }
+                        else
+                        {
+                           newResourcePath = resParent + "/" + orgLocation;
+                        }
                      }
 
                      String reqPath = reqURL.getPath();
