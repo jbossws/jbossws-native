@@ -62,7 +62,6 @@
               <include>org.apache:xmlsec:jar</include>
               <include>org.jboss.netty:netty:jar</include>
               <include>commons-beanutils:commons-beanutils:jar</include>
-              <include>org.apache.ws.policy:wscommons-policy:jar</include>
             </includes>
           </dependencySet>
           <dependencySet>
@@ -91,6 +90,13 @@
             <useStrictFiltering>true</useStrictFiltering>
             <includes>
               <include>org.jboss.spec.javax.xml.soap:jboss-saaj-api_1.3_spec:jar</include>
+            </includes>
+          </dependencySet>
+          <dependencySet>
+            <outputFileNameMapping>wscommons-policy.jar</outputFileNameMapping>
+            <useStrictFiltering>true</useStrictFiltering>
+            <includes>
+              <include>ws-commons:policy:jar</include>
             </includes>
           </dependencySet>
         </dependencySets>
