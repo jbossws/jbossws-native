@@ -525,18 +525,18 @@
 				<exclude name="org/jboss/test/ws/jaxws/jbws2486/*TestCase.class" />
 			</classes>
 		</war>
-		
-	    <!-- jaxws-jbws2526 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2526.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2526/*.class"/>
-	        <exclude name="org/jboss/test/ws/jaxws/jbws2526/JBWS2526TestCase.class"/>
-	        <include name="org/jboss/test/ws/jaxws/jbws2526/server-handlers.xml"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF">
-	        <include name="wsdl/**"/>
-	      </webinf>
-	    </war>		
+
+		<!-- jaxws-jbws2526 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2526.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2526/*.class"/>
+				<exclude name="org/jboss/test/ws/jaxws/jbws2526/JBWS2526TestCase.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2526/server-handlers.xml"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF">
+				<include name="wsdl/**"/>
+			</webinf>
+		</war>
 
 		<!-- jaxws-jbws2565 -->
 		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2565.jar">
@@ -597,90 +597,102 @@
 			</metainf>
 		</jar>
 
-	    <!-- jaxws-jbws2845 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2845.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2845/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2845/*.class"/>
-	        <exclude name="org/jboss/test/ws/jaxws/jbws2845/JBWS2845TestCase.class"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2845/WEB-INF">
-	        <include name="jboss-web.xml"/>
-	      </webinf>
-	    </war>	
+		<!-- jaxws-jbws2845 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2845.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2845/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2845/*.class"/>
+				<exclude name="org/jboss/test/ws/jaxws/jbws2845/JBWS2845TestCase.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2845/WEB-INF">
+				<include name="jboss-web.xml"/>
+			</webinf>
+		</war>
 
-	    <!-- jaxws-jbws2927 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2927.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2927/*.class"/>
-	        <exclude name="org/jboss/test/ws/jaxws/jbws2927/JBWS2927TestCase.class"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF">
-	        <include name="jboss-web.xml"/>
-	      </webinf>
-	    </war>
-	
-	  	<!-- jaxws-jbws2949 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2949.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2949/*.class"/>
-	        <include name="org/jboss/test/ws/jaxws/jbws2949/server-handlers.xml"/>
-	        <exclude name="org/jboss/test/ws/jaxws/jbws2949/JBWS2949TestCase.class"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF">
-	        <include name="jboss-web.xml"/>
-	      </webinf>
-	    </war>
+		<!-- jaxws-jbws2927 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2927.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2927/*.class"/>
+				<exclude name="org/jboss/test/ws/jaxws/jbws2927/JBWS2927TestCase.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF">
+				<include name="jboss-web.xml"/>
+			</webinf>
+		</war>
 
-	  	<!-- jaxws-jbws2969 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2969.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2969/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2969/*.class"/>
-	        <exclude name="org/jboss/test/ws/jaxws/jbws2969/JBWS2969TestCase.class"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2969/WEB-INF">
-	        <include name="jboss-web.xml"/>
-	      </webinf>
-	    </war>
-		
-		
-	  	<!-- jaxws-jbws2977 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2977.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2977/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2977/AddNumbersImpl.class"/>
-	      	<include name="org/jboss/test/ws/jaxws/jbws2977/AddNumbersException.class"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2977/WEB-INF">
-	        <include name="jboss-web.xml"/>
-	      </webinf>
-	    </war>
+		<!-- jaxws-jbws2949 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2949.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2949/*.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2949/server-handlers.xml"/>
+				<exclude name="org/jboss/test/ws/jaxws/jbws2949/JBWS2949TestCase.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF">
+				<include name="jboss-web.xml"/>
+			</webinf>
+		</war>
 
-	  	<!-- jaxws-jbws2978 -->
-	    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2978.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2978/WEB-INF/web.xml">
-	      <classes dir="${tests.output.dir}/test-classes">
-	        <include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbers.class"/>
-	        <include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbersImpl.class"/>
-	      	<include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbersRequest.class"/>
-	      	<include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbersResponse.class"/>
-	      </classes>
-	      <webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2978/WEB-INF">
-	        <include name="jboss-web.xml"/>
-	      </webinf>
-	    </war>		
-		
-    <!-- jaxws-jbws2982 -->
-    <war warfile="${tests.output.dir}/test-libs/jaxws-jbws2982.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2982/WEB-INF/web.xml">
-      <classes dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxws/jbws2982/*.class" />
-        <exclude name="org/jboss/test/ws/jaxws/jbws2982/*TestCase*.class" />
-      </classes>
-    </war>
+		<!-- jaxws-jbws2969 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2969.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2969/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2969/*.class"/>
+				<exclude name="org/jboss/test/ws/jaxws/jbws2969/JBWS2969TestCase.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2969/WEB-INF">
+				<include name="jboss-web.xml"/>
+			</webinf>
+		</war>
+
+
+		<!-- jaxws-jbws2977 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2977.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2977/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2977/AddNumbersImpl.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2977/AddNumbersException.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2977/WEB-INF">
+				<include name="jboss-web.xml"/>
+			</webinf>
+		</war>
+
+		<!-- jaxws-jbws2978 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2978.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2978/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbers.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbersImpl.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbersRequest.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2978/AddNumbersResponse.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2978/WEB-INF">
+				<include name="jboss-web.xml"/>
+			</webinf>
+		</war>
+
+		<!-- jaxws-jbws2982 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2982.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2982/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2982/*.class" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws2982/*TestCase*.class" />
+			</classes>
+		</war>
+
+		<!-- jaxws-jbws3070 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws3070.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3070/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws3070/*.class" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws3070/*TestCase*.class" />
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3070/WEB-INF">
+				<include name="**/*.wsdl" />
+				<include name="**/*.xsd" />
+			</webinf>
+		</war>
 
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointImpl.class" />
 			</classes>
-		</war>
+		</war>		
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-client.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientOne.class" />
