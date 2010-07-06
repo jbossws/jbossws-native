@@ -14,7 +14,7 @@
         <include>org.jboss.ws.native:jbossws-native-client</include>
       </includes>
       <binaries>
-        <outputDirectory>lib</outputDirectory>
+        <outputDirectory>deploy-artifacts/lib</outputDirectory>
         <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
         <unpack>false</unpack>
         <dependencySets>
@@ -34,7 +34,7 @@
         <include>org.jboss.ws.native:jbossws-native-core</include>
       </includes>
       <binaries>
-        <outputDirectory>lib</outputDirectory>
+        <outputDirectory>deploy-artifacts/lib</outputDirectory>
         <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
         <unpack>false</unpack>
         <dependencySets>
@@ -107,13 +107,13 @@
         <include>org.jboss.ws.native:jbossws-native-management</include>
       </includes>
       <binaries>
-        <outputDirectory>lib</outputDirectory>
+        <outputDirectory>deploy-artifacts/lib</outputDirectory>
         <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
         <includeDependencies>false</includeDependencies>
         <unpack>false</unpack>
         <dependencySets>
           <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>provided</scope>
@@ -126,7 +126,7 @@
             </includes>
           </dependencySet>
           <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss501.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>provided</scope>
@@ -136,7 +136,7 @@
             </includes>
           </dependencySet>
           <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss510.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>provided</scope>
@@ -146,7 +146,7 @@
             </includes>
           </dependencySet>
           <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss600.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>provided</scope>
@@ -159,7 +159,7 @@
           <!-- START -->
           <!--
           <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss601.${module.extension}</outputFileNameMapping>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>provided</scope>
@@ -179,7 +179,7 @@
     <!-- bin -->
     <fileSet>
       <directory>modules/resources/src/main/resources/bin</directory>
-      <outputDirectory>bin</outputDirectory>
+      <outputDirectory>deploy-artifacts/bin</outputDirectory>
       <includes>
         <include>wsconsume.*</include>
         <include>wsprovide.*</include>        
@@ -191,7 +191,7 @@
     <!-- resources -->
     <fileSet>
       <directory>modules/core/target/resources</directory>
-      <outputDirectory>resources</outputDirectory>
+      <outputDirectory>deploy-artifacts/resources</outputDirectory>
       <includes>
         <include>jbossws-*/**</include>
       </includes>
