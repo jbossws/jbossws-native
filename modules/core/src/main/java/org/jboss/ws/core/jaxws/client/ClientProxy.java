@@ -171,7 +171,7 @@ public class ClientProxy implements InvocationHandler
    }
 
    private Object invoke(QName opName, Object[] args, Class retType, Map<String, Object> resContext) throws RemoteException
-   {      
+   {
       boolean rmDetected = this.client.getEndpointConfigMetaData().getConfig().getRMMetaData() != null;
       boolean rmActivated = client.getWSRMSequence() != null;
       if (rmDetected && !rmActivated)
@@ -195,7 +195,8 @@ public class ClientProxy implements InvocationHandler
       ResponseImpl response = new ResponseImpl();
       Runnable task = new AsyncRunnable(response, null, opName, args, retType);
 
-      if(log.isDebugEnabled()) log.debug("Schedule task " + ((AsyncRunnable)task).getTaskID().toString());
+      if (log.isDebugEnabled())
+         log.debug("Schedule task " + ((AsyncRunnable)task).getTaskID().toString());
 
       Future future = executor.submit(task);
       response.setFuture(future);
@@ -270,7 +271,8 @@ public class ClientProxy implements InvocationHandler
             Map<String, Object> resContext = response.getContext();
             Object result = invoke(opName, args, retType, resContext);
 
-            if(log.isDebugEnabled()) log.debug("Finished task " + getTaskID().toString()+": " + result);
+            if (log.isDebugEnabled())
+               log.debug("Finished task " + getTaskID().toString() + ": " + result);
 
             response.set(result);
 
@@ -284,28 +286,35 @@ public class ClientProxy implements InvocationHandler
          }
       }
 
-      // 4.18 Conformance (Failed Dispatch.invokeAsync): When an operation is invoked using an invokeAsync
-      // method, an implementation MUST throw a WebServiceException if there is any error in the configuration 
-      // of the Dispatch instance. Errors that occur during the invocation are reported when the client
-      // attempts to retrieve the results of the operation.
+      // 2.3.4.5 Conformance (Asychronous fault cause): An ExecutionException that is thrown by the get method
+      // of Response as a result of a WSDL fault MUST have as its cause the service specific exception mapped
+      // from the WSDL fault, if there is one, otherwise the ProtocolException mapped from the WSDL fault.      
       private void handleAsynInvokeException(Exception ex)
       {
-         String msg = "Cannot dispatch message";
-         log.error(msg, ex);
+         Exception toBeWrapped = ex;
+         if (ex instanceof SOAPFaultException)
+         {
+            // Unwrap the cause if it is an Application Exception, otherwise use a protocol exception
+            Throwable cause = ex.getCause();
+            if (cause instanceof Exception)
+            {
+               // Use unwrapped WebServiceException
+               if (cause instanceof WebServiceException)
+                  ex = (WebServiceException)cause;
 
-         WebServiceException wsex;
-         if (ex instanceof WebServiceException)
-         {
-            wsex = (WebServiceException)ex;
+               // Use application exception if possible.
+               if (((cause instanceof SOAPException) == false) && ((cause instanceof RuntimeException) == false))
+               {
+                  toBeWrapped = (Exception)cause;
+               }
+            }
          }
-         else
-         {
-            wsex = new WebServiceException(msg, ex);
-         }
-         response.setException(wsex);
+
+         response.setException(toBeWrapped);
       }
 
-      public UUID getTaskID() {
+      public UUID getTaskID()
+      {
          return uuid;
       }
    }
