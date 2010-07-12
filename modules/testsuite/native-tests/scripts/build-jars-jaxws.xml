@@ -686,6 +686,14 @@
 				<include name="**/*.xsd" />
 			</webinf>
 		</war>
+		
+		<!-- jaxws-jbws3071 -->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws3071.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3071/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws3071/TestEndpointImpl.class" />
+				<include name="org/jboss/test/ws/jaxws/jbws3071/TestException.class" />
+			</classes>
+		</war>		
 
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">
