@@ -44,11 +44,11 @@ public class ResponseImpl implements Response
 {
    private Future delegate;
    private Object result;
-   private WebServiceException exception;
+   private Exception exception;
    private Map<String, Object> context = new HashMap<String, Object>();
 
 
-   public void setException(WebServiceException ex)
+   public void setException(Exception ex)
    {
       this.exception = ex;
    }
@@ -59,7 +59,16 @@ public class ResponseImpl implements Response
          throw new IllegalStateException("Future not available");
 
       if (exception != null)
-         throw exception;
+      {
+         if (exception instanceof WebServiceException)
+         {
+            throw (WebServiceException)exception;
+         }
+         else
+         {
+            throw new WebServiceException(exception);
+         }
+      }
       
       return delegate;
    }

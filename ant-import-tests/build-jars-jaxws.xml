@@ -717,7 +717,15 @@
       <webinf dir="${tests.output.dir}/resources/jaxws/jbws2845/WEB-INF">
         <include name="jboss-web.xml"/>
       </webinf>
-    </war>    
+    </war>
+    
+	<!-- jaxws-jbws3071 -->
+	<war warfile="${tests.output.dir}/libs/jaxws-jbws3071.war" webxml="${tests.output.dir}/resources/jaxws/jbws3071/WEB-INF/web.xml">
+		<classes dir="${tests.output.dir}/classes">
+			<include name="org/jboss/test/ws/jaxws/jbws3071/TestEndpointImpl.class" />
+			<include name="org/jboss/test/ws/jaxws/jbws3071/TestException.class" />
+		</classes>
+	</war>	    
     
     <!-- jaxws namespace -->
     <war warfile="${tests.output.dir}/libs/jaxws-namespace.war" webxml="${tests.output.dir}/resources/jaxws/namespace/WEB-INF/web.xml">
