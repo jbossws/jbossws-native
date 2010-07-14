@@ -73,12 +73,6 @@ public class ResponseImpl implements Response
       return delegate;
    }
    
-   /*
-    * The get methods are required to throw any returned Exception as an
-    * ExecutionException so use this internal getFuture instead to avoid
-    * wrapping the exception with WebServiceException which is a 
-    * RuntimeException.
-    */
    private Future getFutureInternal()
    {
       if (delegate == null)
@@ -104,7 +98,7 @@ public class ResponseImpl implements Response
    
    public boolean cancel(boolean mayInterruptIfRunning)
    {
-      return getFuture().cancel(mayInterruptIfRunning);
+      return getFutureInternal().cancel(mayInterruptIfRunning);
    }
 
    public Object get() throws InterruptedException, ExecutionException
@@ -135,11 +129,11 @@ public class ResponseImpl implements Response
 
    public boolean isCancelled()
    {
-      return getFuture().isCancelled();
+      return getFutureInternal().isCancelled();
    }
 
    public boolean isDone()
    {
-      return getFuture().isDone();
+      return getFutureInternal().isDone();
    }
 }
