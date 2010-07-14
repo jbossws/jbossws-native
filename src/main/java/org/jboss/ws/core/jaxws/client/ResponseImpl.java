@@ -72,6 +72,20 @@ public class ResponseImpl implements Response
       
       return delegate;
    }
+   
+   /*
+    * The get methods are required to throw any returned Exception as an
+    * ExecutionException so use this internal getFuture instead to avoid
+    * wrapping the exception with WebServiceException which is a 
+    * RuntimeException.
+    */
+   private Future getFutureInternal()
+   {
+      if (delegate == null)
+         throw new IllegalStateException("Future not available");      
+      
+      return delegate;      
+   }
 
    public void setFuture(Future delegate)
    {
@@ -97,7 +111,7 @@ public class ResponseImpl implements Response
    {
       if (result == null)
       {
-         getFuture().get();
+         getFutureInternal().get();
       }
       
       if (exception != null)
@@ -110,7 +124,7 @@ public class ResponseImpl implements Response
    {
       if (result == null)
       {
-         getFuture().get(timeout, unit);
+         getFutureInternal().get(timeout, unit);
       }
 
       if (exception != null)
