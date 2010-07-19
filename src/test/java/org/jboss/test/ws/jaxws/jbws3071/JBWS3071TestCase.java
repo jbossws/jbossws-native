@@ -130,4 +130,26 @@ public class JBWS3071TestCase extends JBossWSTest
       }
    }
 
+   public void testEchoFailAsyncFuture_isDone() throws Exception
+   {
+      StringHandler handler = new StringHandler();
+      
+      Future future = port.echoAsync("FAIL SLEEP", handler);      
+      while (future.isDone() == false)
+      {
+         Thread.sleep(200);
+      }
+                  
+      try
+      {
+         handler.getResponse().get();
+         fail("Expected 'ExecutionException' not thrown.");
+      }
+      catch (ExecutionException ee)
+      {
+         Exception cause = (Exception)ee.getCause();
+         assertEquals("Cause Type", TestException.class, cause.getClass());
+      }
+   }
+   
 }

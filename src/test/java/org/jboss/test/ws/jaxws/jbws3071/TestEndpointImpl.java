@@ -34,7 +34,19 @@ public class TestEndpointImpl
 
    public String echo(String message) throws TestException
    {
-      if ("FAIL".equals(message))
+      if (message.contains("SLEEP"))
+      {
+         try
+         {
+            Thread.sleep(5000);
+         }
+         catch (InterruptedException e)
+         {
+            throw new RuntimeException("Unable to sleep", e);
+         }
+      }
+
+      if (message.contains("FAIL"))
       {
          throw new TestException(message);
       }

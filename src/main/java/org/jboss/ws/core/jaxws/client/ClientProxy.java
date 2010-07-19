@@ -258,15 +258,15 @@ public class ClientProxy implements InvocationHandler
                log.debug("Finished task " + getTaskID().toString() + ": " + result);
 
             response.set(result);
-
-            // Call the handler if available
-            if (handler != null)
-               handler.handleResponse(response);
          }
          catch (Exception ex)
          {
             handleAsynInvokeException(ex);
          }
+         
+         // Call the handler if available
+         if (handler != null)
+            handler.handleResponse(response);
       }
 
       // 2.3.4.5 Conformance (Asychronous fault cause): An ExecutionException that is thrown by the get method
