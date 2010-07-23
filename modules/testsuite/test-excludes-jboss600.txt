@@ -3,6 +3,3 @@ org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*
 
 # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored
 org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
-
-# [JBAS-8234] ClassCastException in RESTeasy deployer - fixed in AS trunk
-org/jboss/test/ws/jaxws/endpoint/EndpointTestCase.*
