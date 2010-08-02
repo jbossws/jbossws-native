@@ -25,7 +25,7 @@
     <hibernate.version>3.2.4.sp1</hibernate.version>
     <endpoint.servlet>org.jboss.wsf.stack.jbws.EndpointServlet</endpoint.servlet>
     <jboss.javaee.version>5.0.1.GA</jboss.javaee.version>
-    <hornetq.version>2.1.0.BETA3</hornetq.version>
+    <hornetq.version>2.1.1.Final</hornetq.version>
   </properties>
 
   <!-- Modules -->
