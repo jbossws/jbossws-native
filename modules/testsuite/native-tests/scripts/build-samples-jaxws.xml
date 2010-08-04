@@ -310,6 +310,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/Hello.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloJavaBean.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UserType.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/ObjectFactory.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/simple-encrypt/WEB-INF">
         <include name="jboss-wsse-server.xml"/>
@@ -326,6 +327,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/Hello.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloJavaBean.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UserType.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/ObjectFactory.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/simple-sign/WEB-INF">
         <include name="jboss-wsse-server.xml"/>
@@ -356,6 +358,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/Hello.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/HelloJavaBean.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/UserType.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurityAnnotatedpolicy/ObjectFactory.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurityAnnotatedpolicy">
         <include name="wsse.keystore"/>
@@ -373,6 +376,7 @@
         <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/Hello.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/HelloJavaBean.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/UserType.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecuritypolicy/ObjectFactory.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecuritypolicy">
         <include name="wsse.keystore"/>
@@ -382,9 +386,9 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    
+
     <!-- Please add alphabetically -->
-    
+
   </target>
-  
+
 </project>

@@ -53,11 +53,13 @@
       <wsprovide
         sei="@{sei}"
         fork="true"
+        keep="true"
         genwsdl="true"
         verbose="false"
         classpath="@{outputDir}/test-classes"
         destdir="@{outputDir}/test-classes/@{destDir}"
         resourcedestdir="@{outputDir}/test-resources/@{resourcesDir}"
+        sourcedestdir="@{outputDir}/test-sources/@{resourcesDir}"
       >
         <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
         <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
