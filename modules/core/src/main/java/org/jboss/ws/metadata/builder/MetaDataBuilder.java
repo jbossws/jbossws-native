@@ -188,7 +188,7 @@ public abstract class MetaDataBuilder
       sepMetaData.setURLPattern(urlPattern);
 
       String servicePath = contextRoot + urlPattern;
-      sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath, port));
+      sepMetaData.setEndpointAddress(getServiceEndpointAddress(null, servicePath, port, dep.getAttachment(ServerConfig.class)));
    }
 
    public static ObjectName createServiceEndpointID(Deployment dep, ServerEndpointMetaData sepMetaData)
@@ -227,7 +227,7 @@ public abstract class MetaDataBuilder
 
    /** Get the web service address for a given path
     */
-   public static String getServiceEndpointAddress(String uriScheme, String servicePath, int servicePort)
+   public static String getServiceEndpointAddress(String uriScheme, String servicePath, int servicePort, ServerConfig config)
    {
       if (servicePath == null || servicePath.length() == 0)
          throw new WSException("Service path cannot be null");
@@ -238,8 +238,11 @@ public abstract class MetaDataBuilder
       if (uriScheme == null)
          uriScheme = "http";
 
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      if (config == null)
+      {
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      }
 
       String host = config.getWebServiceHost();
 
@@ -341,10 +344,11 @@ public abstract class MetaDataBuilder
                if ("CONFIDENTIAL".equals(transportGuarantee))
                   uriScheme = "https";
 
-               if (requiresRewrite(orgAddress, uriScheme))
+               ServerConfig config = sepMetaData.getEndpoint().getService().getDeployment().getAttachment(ServerConfig.class);
+               if (requiresRewrite(orgAddress, uriScheme, config))
                {
                   String servicePath = sepMetaData.getContextRoot() + sepMetaData.getURLPattern();
-                  String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath, -1);
+                  String serviceEndpointURL = getServiceEndpointAddress(uriScheme, servicePath, -1, config);
 
                   if (log.isDebugEnabled())
                      log.debug("Replace service endpoint address '" + orgAddress + "' with '" + serviceEndpointURL + "'");
@@ -377,7 +381,7 @@ public abstract class MetaDataBuilder
          throw new WSException("Cannot find port in wsdl: " + portName);
    }
    
-   private static boolean requiresRewrite(String orgAddress, String uriScheme)
+   private static boolean requiresRewrite(String orgAddress, String uriScheme, ServerConfig config)
    {
       if (uriScheme != null)
       {
@@ -387,8 +391,11 @@ public abstract class MetaDataBuilder
             return false;
          }
       }
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      if (config == null)
+      {
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      }
       boolean alwaysModify = config.isModifySOAPAddress();
       
       return (alwaysModify || uriScheme == null || orgAddress.indexOf("REPLACE_WITH_ACTUAL_URL") >= 0);

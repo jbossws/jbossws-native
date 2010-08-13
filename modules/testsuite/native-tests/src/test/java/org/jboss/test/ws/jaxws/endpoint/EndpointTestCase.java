@@ -53,8 +53,8 @@ public class EndpointTestCase extends JBossWSTest
 
    public void testWSDLAccess() throws Exception
    {
-      readWSDL(new URL("http://" + getServerHost() + ":8080/jaxws-endpoint?wsdl"));
-      readWSDL(new URL("http://" + getServerHost() + ":8080/jaxws-endpoint2/endpoint/long/path?wsdl"));
+      readWSDL(new URL("http://" + getServerHost() + ":8081/jaxws-endpoint?wsdl"));
+      readWSDL(new URL("http://" + getServerHost() + ":8081/jaxws-endpoint2/endpoint/long/path?wsdl"));
    }
    
    public void testClientAccess() throws Exception

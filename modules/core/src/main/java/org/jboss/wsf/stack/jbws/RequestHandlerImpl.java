@@ -114,16 +114,31 @@ public class RequestHandlerImpl implements RequestHandler
    // provide logging
    private static final Logger log = Logger.getLogger(RequestHandlerImpl.class);
 
-   private ServerConfig serverConfig;
-   private MessageFactoryImpl msgFactory;
+   protected ServerConfig serverConfig;
+   protected MessageFactoryImpl msgFactory;
 
-   RequestHandlerImpl()
+   public RequestHandlerImpl()
    {
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
-      msgFactory = new MessageFactoryImpl();
+      final SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+      final ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+      
+      this.init(serverConfig);
+   }
+   
+   public RequestHandlerImpl(final ServerConfig serverConfig)
+   {
+      if (serverConfig == null) 
+         throw new IllegalArgumentException("server config cannot be null");
+      
+      this.init(serverConfig);
    }
 
+   private void init(final ServerConfig serverConfig)
+   {
+      this.serverConfig = serverConfig;
+      this.msgFactory = new MessageFactoryImpl();
+   }
+   
    public void handleHttpRequest(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
    {
       String method = req.getMethod();

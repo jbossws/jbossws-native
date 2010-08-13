@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2006, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -21,33 +21,22 @@
  */
 package org.jboss.ws.core.jaxws.spi.http;
 
+import javax.xml.ws.Endpoint;
+
 /**
- * Netty server factory. 
+ * An abstract HTTP Server.
  *
+ * @author <a href="mailto:tdiesler@redhat.com">Thomas Diesler</a>
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public final class NettyHttpServerFactory
+public interface HttpServer
 {
+   /** Create an HTTP context */
+   HttpContext createContext(String string);
 
-   /** Netty HTTP server adapter singleton. */
-   private static final HttpServer NETTY_SERVER_ADAPTER_SINGLETON = new NettyHttpServerAdapter();
+   /** Publish an JAXWS endpoint to the HTTP server */
+   void publish(HttpContext context, Endpoint endpoint);
 
-   /**
-    * Constructor.
-    */
-   private NettyHttpServerFactory()
-   {
-      super();
-   }
-
-   /**
-    * Returns Netty based http server adapter.
-    * 
-    * @return Netty based http server adapter
-    */
-   public static HttpServer getHttpServer()
-   {
-      return NettyHttpServerFactory.NETTY_SERVER_ADAPTER_SINGLETON;
-   }
-
+   /** Destroys an JAXWS endpoint on the HTTP server */
+   void destroy(HttpContext context, Endpoint endpoint);
 }

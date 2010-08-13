@@ -36,6 +36,8 @@ import org.jboss.wsf.spi.management.ServerConfig;
 final class NettyHttpServerConfig implements ServerConfig
 {
 
+   static final ServerConfig SINGLETON = new NettyHttpServerConfig();
+   
    /** Temporary directory location. */
    private static File tmpDir;
 

@@ -35,7 +35,6 @@ import org.jboss.wsf.common.ResourceLoaderAdapter;
 import org.jboss.wsf.framework.deployment.BackwardCompatibleContextRootDeploymentAspect;
 import org.jboss.wsf.framework.deployment.DeploymentAspectManagerImpl;
 import org.jboss.wsf.framework.deployment.EndpointAddressDeploymentAspect;
-import org.jboss.wsf.framework.deployment.EndpointHandlerDeploymentAspect;
 import org.jboss.wsf.framework.deployment.EndpointLifecycleDeploymentAspect;
 import org.jboss.wsf.framework.deployment.EndpointNameDeploymentAspect;
 import org.jboss.wsf.framework.deployment.EndpointRegistryDeploymentAspect;
@@ -47,9 +46,6 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
-import org.jboss.wsf.spi.http.HttpContext;
-import org.jboss.wsf.spi.http.HttpContextFactory;
-import org.jboss.wsf.spi.http.HttpServer;
 import org.jboss.wsf.stack.jbws.EagerInitializeDeploymentAspect;
 import org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect;
 import org.jboss.wsf.stack.jbws.ServiceEndpointInvokerDeploymentAspect;
@@ -65,10 +61,6 @@ final class NettyHttpServerAdapter implements HttpServer
 
    /** JBossWS SPI provider. */
    private static final SPIProvider SPI_PROVIDER = SPIProviderResolver.getInstance().getProvider();
-
-   /** JBossWS Http Context factory. */
-   private static final HttpContextFactory HTTP_CONTEXT_FACTORY = NettyHttpServerAdapter.SPI_PROVIDER
-         .getSPI(HttpContextFactory.class);
 
    /** Deployment model factory. */
    private static final DeploymentModelFactory DEPLOYMENT_FACTORY = NettyHttpServerAdapter.SPI_PROVIDER
@@ -94,7 +86,7 @@ final class NettyHttpServerAdapter implements HttpServer
     */
    public HttpContext createContext(final String ctx)
    {
-      return NettyHttpServerAdapter.HTTP_CONTEXT_FACTORY.newHttpContext(this, ctx);
+      return new NettyHttpContext(this, ctx);
    }
 
    /**
@@ -190,7 +182,7 @@ final class NettyHttpServerAdapter implements HttpServer
       final List<DeploymentAspect> retVal = new LinkedList<DeploymentAspect>();
 
       // TODO: native stack can't use framework classes directly
-      retVal.add(new EndpointHandlerDeploymentAspect());
+      retVal.add(new NettyHandlerDeploymentAspect());
       retVal.add(new BackwardCompatibleContextRootDeploymentAspect());
       retVal.add(new URLPatternDeploymentAspect());
       retVal.add(new EndpointAddressDeploymentAspect());

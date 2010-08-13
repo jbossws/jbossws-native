@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2006, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -21,38 +21,17 @@
  */
 package org.jboss.ws.core.jaxws.spi.http;
 
-import org.jboss.wsf.framework.management.DefaultEndpointRegistry;
-import org.jboss.wsf.spi.management.EndpointRegistry;
-import org.jboss.wsf.spi.management.EndpointRegistryFactory;
+import org.jboss.wsf.spi.deployment.Extensible;
 
 /**
- * Netty server endpoint registry factory for JSE environment.
+ * An abstract HTTP Context
  *
- * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
+ * @author Thomas.Diesler@jboss.org
+ * @since 07-Jul-2006
  */
-public final class NettyEndpointRegistryFactory extends EndpointRegistryFactory
+public interface HttpContext extends Extensible
 {
+   HttpServer getHttpServer();
 
-   /** Endpoing registry singleton. */
-   private static final EndpointRegistry ENDPOINT_REGISTRY = new DefaultEndpointRegistry();
-
-   /**
-    * Constructor.
-    */
-   public NettyEndpointRegistryFactory()
-   {
-      super();
-   }
-
-   /**
-    * Returns endpoint registry.
-    * 
-    * @return endpoint registry
-    */
-   @Override
-   public EndpointRegistry getEndpointRegistry()
-   {
-      return NettyEndpointRegistryFactory.ENDPOINT_REGISTRY;
-   }
-
+   String getContextRoot();
 }

@@ -48,6 +48,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:tdiesler@redhat.com">Thomas Diesler</a>
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
+@SuppressWarnings("serial")
 public class EndpointServlet extends HttpServlet
 {
    
@@ -61,8 +62,8 @@ public class EndpointServlet extends HttpServlet
       super.init(config);
       
       endpoint1 = Endpoint.create(SOAPBinding.SOAP11HTTP_BINDING, new EndpointBean());
-      endpoint1.publish("http://localhost:8080/jaxws-endpoint");
-      endpoint2 = Endpoint.publish("http://localhost:8080/jaxws-endpoint2/endpoint/long/path", EndpointBean.class);
+      endpoint1.publish("http://localhost:8081/jaxws-endpoint");
+      endpoint2 = Endpoint.publish("http://localhost:8081/jaxws-endpoint2/endpoint/long/path", EndpointBean.class);
    }
    
    @Override

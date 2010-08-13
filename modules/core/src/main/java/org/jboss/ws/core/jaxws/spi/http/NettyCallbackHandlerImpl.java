@@ -32,7 +32,6 @@ import javax.xml.ws.WebServiceException;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.server.netty.NettyCallbackHandler;
-import org.jboss.ws.extensions.wsrm.transport.backchannel.RMCallbackHandlerImpl;
 import org.jboss.wsf.common.injection.InjectionHelper;
 import org.jboss.wsf.common.injection.PreDestroyHolder;
 import org.jboss.wsf.spi.SPIProvider;
@@ -55,7 +54,7 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
 {
 
    /** Logger. */
-   private static final Logger LOGGER = Logger.getLogger(RMCallbackHandlerImpl.class);
+   private static final Logger LOGGER = Logger.getLogger(NettyCallbackHandlerImpl.class);
 
    /** SPI provider instance. */
    private static final SPIProvider SPI_PROVIDER = SPIProviderResolver.getInstance().getProvider();

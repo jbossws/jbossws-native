@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,39 +19,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jboss.ws.core.jaxws.spi.http;
 
-import org.jboss.wsf.spi.management.ServerConfig;
-import org.jboss.wsf.spi.management.ServerConfigFactory;
+import org.jboss.wsf.spi.deployment.AbstractExtensible;
 
 /**
- * Netty server configuration factory. 
+ * Netty HTTP context.
  *
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public final class NettyHttpServerConfigFactory extends ServerConfigFactory
+final class NettyHttpContext extends AbstractExtensible implements HttpContext
 {
+   private HttpServer server;
+   private String contextRoot;
 
-   /** Netty config singleton. */
-   private static final ServerConfig NETTY_CONFIG_SINGLETON = new NettyHttpServerConfig();
-
-   /**
-    * Constructor.
-    */
-   public NettyHttpServerConfigFactory()
+   NettyHttpContext(final HttpServer server, final String contextRoot)
    {
-      super();
+      this.server = server;
+      this.contextRoot = contextRoot;
    }
 
-   /**
-    * Provides Netty server configuration.
-    * 
-    * @return Netty server configuration
-    */
-   @Override
-   public ServerConfig getServerConfig()
+   public HttpServer getHttpServer()
    {
-      return NettyHttpServerConfigFactory.NETTY_CONFIG_SINGLETON;
+      return server;
    }
 
+   public String getContextRoot()
+   {
+      return contextRoot;
+   }
 }

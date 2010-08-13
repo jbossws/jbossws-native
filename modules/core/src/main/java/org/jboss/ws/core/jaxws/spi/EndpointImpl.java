@@ -46,9 +46,9 @@ import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.http.HttpContext;
-import org.jboss.wsf.spi.http.HttpServer;
-import org.jboss.wsf.spi.http.HttpServerFactory;
+import org.jboss.ws.core.jaxws.spi.http.HttpContext;
+import org.jboss.ws.core.jaxws.spi.http.HttpServer;
+import org.jboss.ws.core.jaxws.spi.http.NettyHttpServerFactory;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
@@ -126,11 +126,8 @@ public class EndpointImpl extends Endpoint
       this.checkPublishEndpointPermission();
 
       // Get HTTP server
-      final SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      final HttpServer httpServer = spiProvider.getSPI(HttpServerFactory.class).getHttpServer();
-
-      final String contextRoot = this.getContextRoot();
-      final HttpContext context = httpServer.createContext(contextRoot);
+      final HttpServer httpServer = NettyHttpServerFactory.getHttpServer();
+      final HttpContext context = httpServer.createContext(this.getContextRoot());
 
       this.publish(context);
    }
