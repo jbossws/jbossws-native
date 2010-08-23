@@ -158,7 +158,7 @@ public abstract class WSDLGenerator
          wsdlInterface.addFault(interfaceFault);
          
          WSDLInterfaceOperationOutfault outfault = new WSDLInterfaceOperationOutfault(interfaceOperation);
-         String ns = getNamespace(fault.getJavaType(), operation.getQName().getNamespaceURI());
+         String ns = getNamespace(fault.getJavaType(), fault.getXmlName().getNamespaceURI());
          QName outFaultName = new QName(ns, fault.getXmlName().getLocalPart());
          outfault.setRef(outFaultName);
          interfaceOperation.addOutfault(outfault);
