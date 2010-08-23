@@ -335,8 +335,8 @@
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/">
 				<include name="wsse.*" />
 			</metainf>
-		</jar>
-
+		</jar>					
+		
 		<!-- jaxws-jbws2116-->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2116.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
@@ -515,6 +515,17 @@
 			</metainf>
 		</jar>
 
+		<!-- jaxws-jbws2637-->
+		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2637.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2637/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2637/*.class" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws2637/*TestCase.class" />
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2637/WEB-INF">
+				<include name="*" />
+			</webinf>
+		</war>			
+		
 		<!-- jaxws-jbws2682 -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2682.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2682/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
