@@ -52,7 +52,7 @@ public class CertAuthTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(CertAuthTestCase.class, "jaxws-jbws2116.sar jaxws-jbws2116.jar");
+      return new JBossWSTestSetup(CertAuthTestCase.class, "jaxws-jbws2116-config.sar jaxws-jbws2116.jar");
    }
    
    protected void setUp() throws Exception

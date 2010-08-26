@@ -258,7 +258,7 @@
 				<include name="jboss.xml" />
 			</metainf>
 		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws1988.sar">
+		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws1988-config.sar">
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1988/META-INF">
 				<include name="jboss-service.xml" />
 				<include name="login-config.xml" />
@@ -352,7 +352,7 @@
 				<include name="bob-sign.jks" />
 			</metainf>
 		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2116.sar">
+		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2116-config.sar">
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2116/META-INF">
 				<include name="jboss-service.xml" />
 				<include name="login-config.xml" />

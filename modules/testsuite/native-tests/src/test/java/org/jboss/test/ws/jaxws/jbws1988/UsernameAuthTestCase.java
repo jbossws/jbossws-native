@@ -47,7 +47,7 @@ public class UsernameAuthTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(UsernameAuthTestCase.class, "jaxws-jbws1988.sar jaxws-jbws1988.jar");
+      return new JBossWSTestSetup(UsernameAuthTestCase.class, "jaxws-jbws1988-config.sar jaxws-jbws1988.jar");
    }
    
    public void testAuth() throws Exception
