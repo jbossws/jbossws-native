@@ -179,7 +179,9 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
          wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(expLocation) + expLocation.length());
          result = new File(locationFile + "/" + wsdlLocation);
       }
-      else if (wsdlLocation.startsWith("vfsfile:") || wsdlLocation.startsWith("file:") || wsdlLocation.startsWith("jar:") || wsdlLocation.startsWith("vfszip:"))
+      else if (wsdlLocation.startsWith("vfs:") || wsdlLocation.startsWith("vfsfile:")
+            || wsdlLocation.startsWith("file:") || wsdlLocation.startsWith("jar:")
+            || wsdlLocation.startsWith("vfszip:"))
       {
          wsdlLocation = wsdlLocation.substring(wsdlLocation.lastIndexOf("/") + 1);
          result = new File(locationFile + "/" + wsdlLocation);
