@@ -55,7 +55,7 @@ public class EndpointReferenceTestCase extends JBossWSTest
 
    public void testSimple() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-epr/TestEndpoint?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-epr/TestEndpointService/TestEndpoint?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/epr", "TestEndpointService");
       Service service = Service.create(wsdlURL, serviceName);
       TestEndpoint port = service.getPort(TestEndpoint.class);
@@ -66,7 +66,7 @@ public class EndpointReferenceTestCase extends JBossWSTest
 
    public void testEndpointReference() throws Exception
    {
-      String address = "http://" + getServerHost() + ":8080/jaxws-epr/TestEndpoint";
+      String address = "http://" + getServerHost() + ":8080/jaxws-epr/TestEndpointService/TestEndpoint";
       URL wsdlURL = new URL(address + "?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/epr", "TestEndpointService");
 
@@ -86,7 +86,7 @@ public class EndpointReferenceTestCase extends JBossWSTest
    
    public void testEndpointReferenceFromSource() throws Exception
    {
-      String address = "http://" + getServerHost() + ":8080/jaxws-epr/TestEndpoint";
+      String address = "http://" + getServerHost() + ":8080/jaxws-epr/TestEndpointService/TestEndpoint";
       URL wsdlURL = new URL(address + "?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/epr", "TestEndpointService");
 

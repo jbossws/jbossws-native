@@ -72,7 +72,7 @@ public class JBWS771TestCase extends JBossWSTest
       if (port == null)
       {
          QName serviceName = new QName(TARGET_NAMESPACE, "JBWS771Service");
-         wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws771/IWebsvcImpl?wsdl");
+         wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws771/JBWS771Service/IWebsvcImpl?wsdl");
 
          Service service = Service.create(wsdlURL, serviceName);
          port = service.getPort(IWebsvc.class);

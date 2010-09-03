@@ -49,7 +49,7 @@ public final class JBWS2565TestCase extends JBossWSTest
       final ServiceFactory factory = ServiceFactory.newInstance();
       final Service service = factory.createService(new QName("http://my.services.web", "MyWebServiceName"));
       final Call call = service.createCall(new QName("http://my.services.web", "MyWebServicePort"));
-      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxws-jbws2565/MyWebService?wsdl");
+      call.setTargetEndpointAddress("http://" + getServerHost() + ":8080/jaxws-jbws2565/MyWebServiceName/MyWebService?wsdl");
       call.setOperationName(new QName("http://my.services.web", "doStuff"));
       final QName QNAME_TYPE_STRING = new QName("http://www.w3.org/2001/XMLSchema", "string");
       call.setReturnType(QNAME_TYPE_STRING);

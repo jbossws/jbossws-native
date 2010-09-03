@@ -48,7 +48,7 @@ public class JBWS1909TestCase extends JBossWSTest
 
    public void testWSDLSchema() throws Exception
    {
-      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1909/TestEndpoint?wsdl");
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1909/TestEndpointService/TestEndpoint?wsdl");
       QName serviceName = new QName("http://org.jboss.ws/jbws1909", "TestEndpointService");
       Service service = Service.create(wsdlURL, serviceName);
       TestEndpoint port = service.getPort(TestEndpoint.class);
