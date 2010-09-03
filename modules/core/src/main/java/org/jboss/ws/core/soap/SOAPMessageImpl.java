@@ -26,9 +26,11 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.xml.soap.AttachmentPart;
@@ -72,7 +74,7 @@ import org.w3c.dom.NodeList;
 public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstraction
 {
    private static Logger log = Logger.getLogger(SOAPMessageImpl.class);
-   
+   private Map<String, Object> properties = new HashMap<String, Object>();
    private boolean saveRequired = true;
    private MimeHeaders mimeHeaders = new MimeHeaders();
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
@@ -91,6 +93,46 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
       soapPart = new SOAPPartImpl(this);
       setProperty(CHARACTER_SET_ENCODING, "UTF-8");
       setProperty(WRITE_XML_DECLARATION, writeXMLDeclaration);
+   }
+
+   public Object getProperty(String property) throws SOAPException
+   {
+      return properties.get(property);
+   }
+
+   public void setProperty(String property, Object value) throws SOAPException
+   {
+      properties.put(property, value);
+   }
+
+   public SOAPBody getSOAPBody() throws SOAPException
+   {
+      SOAPPart soapPart = getSOAPPart();
+      if (soapPart != null)
+      {
+         SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
+         if (soapEnvelope != null)
+         {
+            SOAPBody soapBody = soapEnvelope.getBody();
+            return soapBody;
+         }
+      }
+      throw new SOAPException("Cannot obtain SOAPBody from SOAPMessage");
+   }
+
+   public SOAPHeader getSOAPHeader() throws SOAPException
+   {
+      SOAPPart soapPart = getSOAPPart();
+      if (soapPart != null)
+      {
+         SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
+         if (soapEnvelope != null)
+         {
+            SOAPHeader soapHeader = soapEnvelope.getHeader();
+            return soapHeader;
+         }
+      }
+      throw new SOAPException("Cannot obtain SOAPHeader from SOAPMessage");
    }
 
    public CIDGenerator getCidGenerator()

@@ -38,11 +38,10 @@
     <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-client.jar"/>
     <include name="**/jbossws-native-core.jar"/>
-    <include name="**/jbossws-native-jaxrpc.jar"/>
-    <include name="**/jbossws-native-jaxws.jar"/>
-    <include name="**/jbossws-native-jaxws-ext.jar"/>
-    <include name="**/jbossws-native-saaj.jar"/>
+    <include name="**/jbossws-native-factories.jar"/>
     <include name="**/jbossws-spi.jar"/>
+    <include name="**/jaxrpc-api.jar"/>
+    <include name="**/saaj-api.jar"/>
     <include name="**/jettison.jar"/>
     <include name="**/stax-api.jar"/>
     <include name="**/stax-ex.jar"/>
@@ -56,19 +55,16 @@
   </patternset>
 
   <patternset id="jbossws.lib.endorsed.patternset">
-    <include name="**/jbossws-native-jaxws.jar"/>
-    <include name="**/jbossws-native-jaxws-ext.jar"/>
-    <include name="**/jbossws-native-saaj.jar"/>
+    <include name="**/jbossws-native-factories.jar"/>
     <include name="**/jaxb-api.jar"/>
   </patternset>
 
   <patternset id="jbossws.server.lib.patternset">
     <include name="**/jbossws-common.jar"/>
     <include name="**/jbossws-framework.jar"/>
-    <include name="**/jbossws-native-jaxrpc.jar"/>
-    <include name="**/jbossws-native-jaxws.jar"/>
-    <include name="**/jbossws-native-jaxws-ext.jar"/>
-    <include name="**/jbossws-native-saaj.jar"/>
+    <include name="**/jaxrpc-api.jar"/>
+    <include name="**/jbossws-native-factories.jar"/>
+    <include name="**/saaj-api.jar"/>
     <include name="**/jbossws-spi.jar"/>
   </patternset>
 

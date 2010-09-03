@@ -41,10 +41,9 @@
               <include>jboss.jaxbintros:jboss-jaxb-intros:jar</include>
               <include>org.jboss.ws:jbossws-common:jar</include>
               <include>org.jboss.ws:jbossws-spi:jar</include>
-              <include>org.jboss.ws.native:jbossws-native-jaxrpc:jar</include>
-              <include>org.jboss.ws.native:jbossws-native-jaxws:jar</include>
-              <include>org.jboss.ws.native:jbossws-native-jaxws-ext:jar</include>
-              <include>org.jboss.ws.native:jbossws-native-saaj:jar</include>
+              <include>javax.xml:jaxrpc-api:jar</include>
+              <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
+              <include>javax.xml.soap:saaj-api:jar</include>
               <include>org.codehaus.jettison:jettison:jar</include>
               <include>stax:stax-api:jar</include>
               <include>org.jvnet.staxex:stax-ex:jar</include>
