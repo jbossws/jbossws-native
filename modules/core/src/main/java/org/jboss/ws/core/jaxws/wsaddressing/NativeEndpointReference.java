@@ -152,7 +152,11 @@ public final class NativeEndpointReference extends EndpointReference
                         String endpointName = e.getAttribute(ENDPOINT_ATTRIBUTE); 
                         if (endpointName != null)
                         {
-                           this.endpointName = this.getQName(e, endpointName);
+                           this.endpointName = new QName(
+                              this.serviceName.getNamespaceURI(),
+                              endpointName,
+                              this.serviceName.getPrefix()
+                           );
                         }
                      }
                      if (e.getLocalName().equals(INTERFACE_QNAME.getLocalPart()))
@@ -341,7 +345,7 @@ public final class NativeEndpointReference extends EndpointReference
    {
       if (this.endpointName != null && this.serviceNameElement != null)
       {
-         this.serviceNameElement.setAttribute(ENDPOINT_ATTRIBUTE, this.toString(this.endpointName));
+         this.serviceNameElement.setAttribute(ENDPOINT_ATTRIBUTE, this.endpointName.getLocalPart());
          
          if (this.wsdlLocation != null)
          {
