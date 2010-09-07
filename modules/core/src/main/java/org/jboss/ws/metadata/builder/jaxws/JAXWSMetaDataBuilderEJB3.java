@@ -30,6 +30,8 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.Service;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
 
@@ -71,9 +73,10 @@ public class JAXWSMetaDataBuilderEJB3
             EJBMetaData beanMetaData = it.next();
             String ejbClassName = beanMetaData.getEjbClass();
             Class<?> beanClass = wsMetaData.getClassLoader().loadClass(ejbClassName);
-            if (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class))
+            Service service = dep.getService();
+            String ejbLink = beanMetaData.getEjbName();
+            if (service.getEndpointByName(ejbLink) != null && (beanClass.isAnnotationPresent(WebService.class) || beanClass.isAnnotationPresent(WebServiceProvider.class)))
             {
-               String ejbLink = beanMetaData.getEjbName();
                JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, beanClass, ejbLink);
 
                /* Resolve dependency on @SecurityDomain
