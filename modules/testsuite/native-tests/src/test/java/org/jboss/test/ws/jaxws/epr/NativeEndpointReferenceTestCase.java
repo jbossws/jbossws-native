@@ -59,7 +59,7 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
       "    <ns2:param2 wsa:IsReferenceParameter='true' xmlns:ns2='http://helloservice.org/param2' xmlns:wsa='http://www.w3.org/2005/08/addressing'>World</ns2:param2>" +
       "  </ReferenceParameters>" +
       "  <Metadata wsdli:wsdlLocation='http://helloservice.org/wsdl http://localhost:8080/hello?wsdl' xmlns:wsdli='http://www.w3.org/ns/wsdl-instance'>" +
-      "    <wsam:ServiceName EndpointName='myns:HelloPort' xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:HelloService</wsam:ServiceName>" +
+      "    <wsam:ServiceName EndpointName='HelloPort' xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:HelloService</wsam:ServiceName>" +
       "    <wsam:InterfaceName xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:Hello</wsam:InterfaceName>" +
       "  </Metadata>" +
       "</EndpointReference>";
@@ -102,7 +102,7 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
       assertEquals("wrong text content in ServiceName element", "myns:HelloService", DOMUtils.getTextContent(serviceNameElement));
       String endpointNameValue = DOMUtils.getAttributeValue(serviceNameElement, "EndpointName");
       assertNotNull("cannot find endpointName attribute value", endpointNameValue);
-      assertEquals("wrong endpointName attribute value", endpointNameValue, "myns:HelloPort");
+      assertEquals("wrong endpointName attribute value", endpointNameValue, "HelloPort");
       Element interfaceNameElement = (Element)DOMUtils.getFirstChildElement(metadataElement, WSAM_INTERFACE_QNAME);
       assertNamespaces(interfaceNameElement);
       assertEquals("wrong text content in InterfaceName element", "myns:Hello", DOMUtils.getTextContent(interfaceNameElement));
