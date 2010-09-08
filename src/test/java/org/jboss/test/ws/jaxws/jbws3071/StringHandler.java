@@ -21,6 +21,10 @@
 */
 package org.jboss.test.ws.jaxws.jbws3071;
 
+import java.util.concurrent.ExecutionException;
+
+import org.jboss.logging.Logger;
+
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Response;
 
@@ -30,11 +34,26 @@ import javax.xml.ws.Response;
  */
 public class StringHandler implements AsyncHandler<String>
 {
+   private static final Logger log = Logger.getLogger(StringHandler.class);
 
    private Response<String> response;
 
    public void handleResponse(Response<String> res)
    {
+      try
+      {
+         Object response = res.get();
+         log.debug("Obtained Response - " + response.toString());
+      }
+      catch (InterruptedException e)
+      {
+         log.debug("Caught InterruptedException", e);
+      }
+      catch (ExecutionException e)
+      {
+         log.debug("Caught ExecutionException", e);
+
+      }
       this.response = res;
    }
 
