@@ -45,7 +45,6 @@ public class ResponseImpl implements Response
    private Exception exception;
    private Map<String, Object> context = new HashMap<String, Object>();
 
-
    public void setException(Exception ex)
    {
       this.exception = ex;
@@ -67,16 +66,16 @@ public class ResponseImpl implements Response
             throw new WebServiceException(exception);
          }
       }
-      
+
       return delegate;
    }
-   
+
    private Future getFutureInternal()
    {
       if (delegate == null)
-         throw new IllegalStateException("Future not available");      
-      
-      return delegate;      
+         throw new IllegalStateException("Future not available");
+
+      return delegate;
    }
 
    public void setFuture(Future delegate)
@@ -93,7 +92,7 @@ public class ResponseImpl implements Response
    {
       this.result = result;
    }
-   
+
    public boolean cancel(boolean mayInterruptIfRunning)
    {
       return getFutureInternal().cancel(mayInterruptIfRunning);
@@ -101,24 +100,34 @@ public class ResponseImpl implements Response
 
    public Object get() throws InterruptedException, ExecutionException
    {
-      if (result == null)
+      Object response = getResult();
+      if (response != null)
       {
-         getFutureInternal().get();
+         return response;
       }
-      
-      if (exception != null)
-         throw new ExecutionException(exception);
 
-      return result;
+      getFutureInternal().get();
+      response = getResult();
+
+      return response;
    }
 
    public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException
    {
-      if (result == null)
+      Object response = getResult();
+      if (response != null)
       {
-         getFutureInternal().get(timeout, unit);
+         return response;
       }
 
+      getFutureInternal().get(timeout, unit);
+      response = getResult();
+
+      return response;
+   }
+
+   private Object getResult() throws ExecutionException
+   {
       if (exception != null)
          throw new ExecutionException(exception);
 

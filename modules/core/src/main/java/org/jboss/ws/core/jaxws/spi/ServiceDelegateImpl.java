@@ -101,8 +101,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceDelegateImpl.class);
 
+   // Lock to ensure only one thread can initialise the defaultExecutor.
+   private static final Object DEFAULT_EXECUTOR_LOCK = new Object();
    // The executor service
-   private static ExecutorService defaultExecutor = Executors.newCachedThreadPool();
+   private static ExecutorService defaultExecutor = null;
+         
    // The service meta data that is associated with this JAXWS Service
    private ServiceMetaData serviceMetaData;
    // The ServiceRefMetaData supplied by the ServiceObjectFactory 
@@ -340,12 +343,32 @@ public class ServiceDelegateImpl extends ServiceDelegate
       this.handlerResolver = handlerResolver;
    }
 
+   private ExecutorService getDefaultExecutor()
+   {
+      if (defaultExecutor == null)
+      {
+         synchronized (DEFAULT_EXECUTOR_LOCK)
+         {
+            if (defaultExecutor == null)
+            {
+               defaultExecutor = Executors.newCachedThreadPool();
+               if (log.isTraceEnabled())
+               {
+                  log.trace("Created new defaultExecutor", new Throwable("Call Trace"));
+               }
+            }
+         }
+      }
+
+      return defaultExecutor;
+   }
+   
    @Override
    public Executor getExecutor()
    {
       if (executor == null)
       {
-         executor = defaultExecutor;
+         executor = getDefaultExecutor();
       }
       return executor;
    }
