@@ -30,6 +30,9 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import javax.naming.*;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.soap.AddressingFeature;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -112,6 +115,20 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
 
          // Receives either a javax.xml.ws.Service or a dynamic proxy
          Object target;
+         
+         // configure addressing
+         AddressingFeature addressingFeature = null;
+         if (serviceRef.isAddressingEnabled()) {
+            final boolean enabled = serviceRef.isAddressingEnabled();
+            final boolean required = serviceRef.isAddressingRequired();
+            final String refResponses = serviceRef.getAddressingResponses();
+            AddressingFeature.Responses responses = AddressingFeature.Responses.ALL;
+            if ("ANONYMOUS".equals(refResponses))
+               responses = AddressingFeature.Responses.ANONYMOUS;
+            if ("NON_ANONYMOUS".equals(refResponses))
+               responses = AddressingFeature.Responses.NON_ANONYMOUS;
+            addressingFeature = new AddressingFeature(enabled, required, responses);
+         }
 
          // Get the URL to the wsdl
          URL wsdlURL = serviceRef.getWsdlLocation();
@@ -125,7 +142,11 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
             {
                if (wsdlURL != null)
                {
-                  target = Service.create(wsdlURL, serviceQName);
+                  if (addressingFeature != null) {
+                     target = Service.create(wsdlURL, serviceQName, new WebServiceFeature[] { addressingFeature });
+                  } else {
+                     target = Service.create(wsdlURL, serviceQName);
+                  }
                }
                else
                {
@@ -137,12 +158,22 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
             {
                if (wsdlURL != null)
                {
-                  Constructor ctor = serviceClass.getConstructor(new Class[] { URL.class, QName.class });
-                  target = ctor.newInstance(new Object[] { wsdlURL, serviceQName });
+                  if (addressingFeature != null) {
+                     Constructor ctor = serviceClass.getConstructor(new Class[] { URL.class, QName.class, WebServiceFeature[].class });
+                     target = ctor.newInstance(new Object[] { wsdlURL, serviceQName, new WebServiceFeature[] { addressingFeature } });
+                  } else {
+                     Constructor ctor = serviceClass.getConstructor(new Class[] { URL.class, QName.class });
+                     target = ctor.newInstance(new Object[] { wsdlURL, serviceQName });
+                  }
                }
                else
                {
-                  target = (Service)serviceClass.newInstance();
+                  if (addressingFeature != null) {
+                     Constructor ctor = serviceClass.getConstructor(new Class[] { WebServiceFeature[].class });
+                     target = ctor.newInstance(new Object[] { new WebServiceFeature[] { addressingFeature } });
+                  } else {
+                     target = (Service)serviceClass.newInstance();
+                  }
                }
             }
          }
