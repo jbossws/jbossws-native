@@ -399,6 +399,12 @@ public class RequestHandlerImpl implements RequestHandler
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
       MessageAbstraction resMessage = msgContext.getMessageAbstraction();
+      
+      if (resMessage == null)
+      {
+         log.debug("Null response message");
+         return;
+      }
 
       String wsaTo = null;
 
