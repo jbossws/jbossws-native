@@ -84,6 +84,8 @@ public class NettyClient
    private Marshaller marshaller;
    private UnMarshaller unmarshaller;
    private Long timeout;
+   private Long connectionTimeout;
+   private Long receiveTimeout;
    private static final int DEFAULT_CHUNK_SIZE = 1024;
    //We always use chunked transfer encoding unless explicitly disabled by user 
    private Integer chunkSize = new Integer(DEFAULT_CHUNK_SIZE);
@@ -153,7 +155,20 @@ public class NettyClient
       try
       {
          setActualTimeout(callProps);
-         channel = transport.getChannel(timeout);
+         //JBWS-3114:Provide the new connection timeout configuration
+         if (callProps.containsKey(StubExt.PROPERTY_CONNECTION_TIMEOUT))
+         {
+            connectionTimeout = new Long(callProps.get(StubExt.PROPERTY_CONNECTION_TIMEOUT).toString());
+         }
+         else
+         {
+            if (timeout != null)
+            {
+               connectionTimeout = timeout;
+            }
+         }
+       
+         channel = transport.getChannel(connectionTimeout);
          
          WSResponseHandler responseHandler = new WSResponseHandler();
          NettyHelper.setResponseHandler(channel, responseHandler);
@@ -178,9 +193,21 @@ public class NettyClient
          //Get the response
          Future<Result> futureResult = responseHandler.getFutureResult();
          Result result = null;
+         if (callProps.containsKey(StubExt.PROPERTY_RECEIVE_TIMEOUT))
+         {
+            receiveTimeout = new Long(callProps.get(StubExt.PROPERTY_RECEIVE_TIMEOUT).toString());
+         }
+         else
+         {
+            if (timeout != null)
+            {
+               receiveTimeout = timeout;
+            }
+         }
          try
          {
-        	 result = timeout == null ? futureResult.get() : futureResult.get(timeout, TimeUnit.MILLISECONDS);
+            result = receiveTimeout == null ? futureResult.get() : futureResult.get(receiveTimeout,
+                  TimeUnit.MILLISECONDS);
          }
          catch (ExecutionException ee)
          {
@@ -188,6 +215,10 @@ public class NettyClient
         	 Throwable t = ee.getCause();
         	 throw t != null ? t : ee;
          }
+	 catch (TimeoutException te) 
+	 {
+	    throw new WSTimeoutException("Receive timeout", receiveTimeout == null ? -1 : receiveTimeout);
+	 }
          resHeaders = result.getResponseHeaders();
          resMetadata = result.getMetadata();
          Object resMessage = oneway ? null : unmarshaller.read(result.getResponse(), resMetadata, resHeaders);
@@ -212,13 +243,13 @@ public class NettyClient
          transport.end();
          throw ce;
       }
+      catch (TimeoutException te) 
+      {
+	 throw new WSTimeoutException("Connection timeout", connectionTimeout == null ? -1 : connectionTimeout);
+      }
       catch (IOException ioe)
       {
          throw ioe;
-      }
-      catch (TimeoutException te)
-      {
-         throw new WSTimeoutException(te.getMessage(), timeout);
       }
       catch (WSTimeoutException toe)
       {

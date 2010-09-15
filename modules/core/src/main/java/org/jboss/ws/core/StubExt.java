@@ -71,6 +71,16 @@ public interface StubExt extends ConfigProvider, EndpointMetadataProvider
    static final String PROPERTY_MTOM_ENABLED= "org.jboss.ws.mtom.enabled";
    /** HTTP chunk size */
    static final String PROPERTY_CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
+   
+   //New added property to provide stack agnostic timeout configuration(JBWS-3114)
+   /** Client ConnectionTimeout property: javax.xml.ws.client.connectionTimeout */
+   static final String PROPERTY_CONNECTION_TIMEOUT = "javax.xml.ws.client.connectionTimeout";
+   
+   /** Client ReceiveTimeout property: javax.xml.ws.client.receiveTimeout */
+   static final String PROPERTY_RECEIVE_TIMEOUT = "javax.xml.ws.client.receiveTimeout";
+   
+   
+   
 
    /**
     * Add a header that is not bound to an input parameter.
