@@ -52,7 +52,6 @@
               <include>junit:junit:jar</include>
               <include>org.jboss.ws:jbossws-common:jar</include>
               <include>org.jboss.ws:jbossws-spi:jar</include>
-              <include>javax.xml:jaxrpc-api:jar</include>
               <include>org.codehaus.jettison:jettison:jar</include>
               <include>com.sun.xml.ws:policy:jar</include>
               <include>stax:stax-api:jar</include>
@@ -83,6 +82,13 @@
             <useStrictFiltering>true</useStrictFiltering>
             <includes>
               <include>org.jboss.spec.javax.xml.ws:jboss-jaxws-api_2.2_spec:jar</include>
+            </includes>
+          </dependencySet>
+          <dependencySet>
+            <outputFileNameMapping>jaxrpc-api.jar</outputFileNameMapping>
+            <useStrictFiltering>true</useStrictFiltering>
+            <includes>
+              <include>org.jboss.spec.javax.xml.rpc:jboss-jaxrpc-api_1.1_spec:jar</include>
             </includes>
           </dependencySet>
           <dependencySet>
