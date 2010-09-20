@@ -172,9 +172,11 @@ public class NettyClient
          
          WSResponseHandler responseHandler = new WSResponseHandler();
          NettyHelper.setResponseHandler(channel, responseHandler);
-         
+
          //Send the HTTP request
-         HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, reqMessage != null ? HttpMethod.POST : HttpMethod.GET, targetAddress);
+         String targetRequestUri = isProxyRequest(additionalHeaders) ? targetAddress : getRelativeRequestUri(target); 
+
+         HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, reqMessage != null ? HttpMethod.POST : HttpMethod.GET, targetRequestUri);
          request.addHeader(HttpHeaders.Names.HOST, target.getHost());
          request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
          setAdditionalHeaders(request, additionalHeaders);
@@ -271,7 +273,20 @@ public class NettyClient
          transport.finished(resMetadata, resHeaders); //provide both headers and metadata to the transport to allow for proper keepAlive checks
       }
    }
+
+   private static boolean isProxyRequest(Map<String, Object> additionalHeaders)
+   {
+       // callProps may also need to be checked
+       return additionalHeaders.containsKey(HttpHeaders.Names.PROXY_AUTHORIZATION);
+   }  
       
+   private static String getRelativeRequestUri(URL target) 
+   {
+      return target.getPath() + 
+         		    (target.getQuery() != null ? "?" + target.getQuery() : "") + 
+         		    (target.getRef() != null ? "#" + target.getRef() : "");      
+   }
+
    private static SslHandler getSSLHandler(URL target, Map<String, Object> callProps) throws IOException
    {
       SslHandler handler = null;
