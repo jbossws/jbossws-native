@@ -177,7 +177,7 @@ public class NettyClient
          String targetRequestUri = isProxyRequest(additionalHeaders) ? targetAddress : getRelativeRequestUri(target); 
 
          HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, reqMessage != null ? HttpMethod.POST : HttpMethod.GET, targetRequestUri);
-         request.addHeader(HttpHeaders.Names.HOST, target.getHost());
+         request.addHeader(HttpHeaders.Names.HOST, target.getAuthority());
          request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
          setAdditionalHeaders(request, additionalHeaders);
          setActualChunkedLength(request, callProps);
