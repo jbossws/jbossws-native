@@ -52,7 +52,7 @@ public class ServiceReferenceable implements Referenceable
    private String serviceImplClass;
    private String targetClassName;
    private UnifiedServiceRefMetaData serviceRef;
-   
+
    public ServiceReferenceable(String serviceImplClass, String targetClassName, UnifiedServiceRefMetaData serviceRef)
    {
       this.serviceImplClass = serviceImplClass;
@@ -76,7 +76,7 @@ public class ServiceReferenceable implements Referenceable
 
       return myRef;
    }
-   
+
    private byte[] marshall(Object obj) throws NamingException
    {
       ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
@@ -91,5 +91,14 @@ public class ServiceReferenceable implements Referenceable
          throw new NamingException("Cannot marshall object, cause: " + e.toString());
       }
       return baos.toByteArray();
+   }
+
+   public String toString() {
+      final StringBuilder sb = new StringBuilder();
+      sb.append("\n").append(getClass().getName());
+      sb.append("\n serviceImplClass=" + serviceImplClass);
+      sb.append("\n targetClassName=" + targetClassName);
+      sb.append("\n serviceRef=" + this.serviceRef);
+      return sb.toString();
    }
 }
