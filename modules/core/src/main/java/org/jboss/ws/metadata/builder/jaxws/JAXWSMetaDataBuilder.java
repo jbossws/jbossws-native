@@ -1066,7 +1066,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
       boolean webMethodFound = false;
       for (Method method : wsClass.getMethods())
       {
-         if (WSDLUtils.isWebMethod(method))
+         if (WSDLUtils.isWebMethod(method, wsClass.isInterface()))
          {
             processWebMethod(epMetaData, method);
             webMethodFound = true;

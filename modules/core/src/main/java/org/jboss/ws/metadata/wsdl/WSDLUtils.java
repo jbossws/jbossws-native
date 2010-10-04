@@ -261,7 +261,7 @@ public class WSDLUtils
       if (ignoredMethods == null)
       {
          ignoredMethods = new ArrayList<String>();
-         //Add the SessionBean Methods to the ignore list
+         //Add the SessionBean methods to the ignore list
          Method[] sbMethods = SessionBean.class.getMethods();
          for (int i = 0; i < sbMethods.length; i++)
          {
@@ -269,13 +269,7 @@ public class WSDLUtils
          }
       }
 
-      boolean ignoreMethod = ignoredMethods.contains(method.getName());
-
-      // FIXME: This code is a duplicate, it should read from the UMDM
-      if (!isWebMethod(method))
-         ignoreMethod = true;
-
-      return ignoreMethod;
+      return ignoredMethods.contains(method.getName());
    }
    
    /**
@@ -287,7 +281,7 @@ public class WSDLUtils
     * @param method to process
     * @return true if webmethod, false otherwise
     */
-   public static boolean isWebMethod(final Method method)
+   public static boolean isWebMethod(final Method method, final boolean definedInInterface)
    {
       if (!isWebMethodCandidate(method))
          return false;
@@ -297,6 +291,10 @@ public class WSDLUtils
       if (webMethodAnnotation != null)
       {
          return !webMethodAnnotation.exclude();
+      }
+      if (definedInInterface)
+      {
+         return true;
       }
       else
       {
