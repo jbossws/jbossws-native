@@ -21,7 +21,9 @@
  */
 package org.jboss.test.ws.tools.config;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 
 import org.jboss.ws.tools.Configuration;
@@ -70,7 +72,9 @@ public class ToolsSchemaConfigReaderTestCase extends JBossWSTest
       }
       catch (Exception ex)
       {
-         String msg = ex.getMessage();
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         ex.printStackTrace(new PrintStream(baos));
+         String msg = baos.toString();
          assertTrue("Unexpected message: " + msg, msg.indexOf("service-typo") > 0);
       }
    }

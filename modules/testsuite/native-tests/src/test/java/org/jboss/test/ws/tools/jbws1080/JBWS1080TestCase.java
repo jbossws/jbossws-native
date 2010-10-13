@@ -21,7 +21,9 @@
  */
 package org.jboss.test.ws.tools.jbws1080;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.jboss.ws.tools.WSTools;
 import org.jboss.wsf.test.JBossWSTest;
@@ -47,7 +49,9 @@ public class JBWS1080TestCase extends JBossWSTest
       }
       catch (IOException e)
       {
-         assertTrue("Expected error", e.getMessage().indexOf("'{\"http://www.jboss.org/jbossws-tools\":namespaces}' is expected.") > -1);
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         e.printStackTrace(new PrintStream(baos));
+         assertTrue("Expected error", baos.toString().indexOf("'{\"http://www.jboss.org/jbossws-tools\":namespaces}' is expected.") > -1);
       }
    }
 
