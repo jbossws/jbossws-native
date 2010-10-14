@@ -61,7 +61,7 @@ public class NativeServiceRefBinderJAXWS implements ServiceRefBinder
    // logging support
    private static Logger log = Logger.getLogger(NativeServiceRefBinderJAXWS.class);
    
-   public void setupServiceRef(Context encCtx, String encName, AnnotatedElement anElement, UnifiedServiceRefMetaData serviceRef, ClassLoader loader) throws NamingException
+   public void setupServiceRef(Context encCtx, String encName, UnifiedServiceRefMetaData serviceRef, ClassLoader loader) throws NamingException
    {
       WebServiceRef wsref = null;
 
@@ -74,6 +74,7 @@ public class NativeServiceRefBinderJAXWS implements ServiceRefBinder
       MTOM mtomAnnotation = null;
       RespectBinding respectBindingAnnotation = null;
 
+      AnnotatedElement anElement = (AnnotatedElement)serviceRef.getAnnotatedElement();
       if (anElement != null)
       {
          for (Annotation an : anElement.getAnnotations())

@@ -46,7 +46,7 @@ public class NativeServiceRefBinderJAXRPC implements ServiceRefBinder
    /**
     * Binds a Service into the callers ENC for every service-ref element
     */
-   public void setupServiceRef(Context encCtx, String encName, AnnotatedElement anElement, UnifiedServiceRefMetaData serviceRef, ClassLoader loader)
+   public void setupServiceRef(Context encCtx, String encName, UnifiedServiceRefMetaData serviceRef, ClassLoader loader)
          throws NamingException
    {
       String externalName = encCtx.getNameInNamespace() + "/" + encName;
