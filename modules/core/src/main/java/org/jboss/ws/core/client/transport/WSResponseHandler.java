@@ -34,13 +34,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipelineCoverage;
+import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.netty.handler.codec.http.HttpVersion;
 
 /**
  * A Netty channel upstream handler that receives MessageEvent
@@ -48,9 +47,8 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
  * 
  * @author alessio.soldano@jboss.com
  * @since 24-Jun-2009
- *
  */
-@ChannelPipelineCoverage("one")
+@Sharable
 public class WSResponseHandler extends SimpleChannelUpstreamHandler
 {
    private FutureResult future;
@@ -118,13 +116,13 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       return future;
    }
    
-   private class FutureResult implements Future<Result>
+   private static class FutureResult implements Future<Result>
    {
-      protected Result result;
-      protected Throwable exception;
-      protected boolean done = false;
-      protected boolean cancelled = false;
-      protected boolean started = false;
+      private volatile Result result;
+      private volatile Throwable exception;
+      private volatile boolean done = false;
+      private volatile boolean cancelled = false;
+      private volatile boolean started = false;
 
       public FutureResult()
       {
@@ -232,7 +230,7 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
       public Map<String, Object> getMetadata();
    }
    
-   private class ResultImpl implements Result
+   private static class ResultImpl implements Result
    {
       private InputStream is;
       private Map<String, Object> responseHeaders = new HashMap<String, Object>();
