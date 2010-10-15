@@ -1,1 +1,1 @@
-org.jboss.ws.core.client.ServiceRefBinderFactoryImpl
+org.jboss.ws.core.client.NativeServiceRefBinderFactoryImpl

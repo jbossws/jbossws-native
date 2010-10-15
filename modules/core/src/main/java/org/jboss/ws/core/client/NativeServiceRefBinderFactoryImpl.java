@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -31,12 +31,16 @@ import org.jboss.wsf.spi.serviceref.ServiceRefHandler.Type;
  * Binds a JAXWS Service object in the client's ENC
  *
  * @author Thomas.Diesler@jboss.org
- * @since 17-Jan-2007
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public class ServiceRefBinderFactoryImpl implements ServiceRefBinderFactory
+public final class NativeServiceRefBinderFactoryImpl implements ServiceRefBinderFactory
 {
-   public ServiceRefBinder newServiceRefBinder(Type type)
+   private static final ServiceRefBinder JAXRPC_BINDER = new NativeServiceRefBinderJAXRPC();
+
+   private static final ServiceRefBinder JAXWS_BINDER = new NativeServiceRefBinderJAXWS();
+
+   public ServiceRefBinder newServiceRefBinder(final Type type)
    {
-      return (type == Type.JAXRPC ? new NativeServiceRefBinderJAXRPC() : new NativeServiceRefBinderJAXWS());
+      return type == Type.JAXRPC ? JAXRPC_BINDER : JAXWS_BINDER;
    }
 }
