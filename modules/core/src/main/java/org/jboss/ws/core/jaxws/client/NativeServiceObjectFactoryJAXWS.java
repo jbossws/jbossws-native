@@ -60,10 +60,10 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  * @author Richard.Opalka@jboss.org
  * @since 24-Oct-2004
  */
-public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
+public class NativeServiceObjectFactoryJAXWS extends ServiceObjectFactory
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(ServiceObjectFactoryJAXWS.class);
+   private static final Logger log = Logger.getLogger(NativeServiceObjectFactoryJAXWS.class);
 
    // The ServiceRefMetaData association
    private static ThreadLocal<UnifiedServiceRefMetaData> serviceRefAssociation = new ThreadLocal<UnifiedServiceRefMetaData>();
@@ -172,7 +172,7 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
    {
       String serviceClassName = serviceRefMD.getServiceImplClass();
       if (serviceClassName == null)
-         serviceClassName = (String) ref.get(ServiceReferenceable.SERVICE_IMPL_CLASS).getContent();
+         serviceClassName = (String) ref.get(NativeServiceReferenceableJAXWS.SERVICE_IMPL_CLASS).getContent();
 
       return serviceClassName;
    }
@@ -182,7 +182,7 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
    {
       String targetClassName = serviceRefMD.getServiceRefType();
       if (targetClassName == null)
-         targetClassName = (String) ref.get(ServiceReferenceable.TARGET_CLASS_NAME).getContent();
+         targetClassName = (String) ref.get(NativeServiceReferenceableJAXWS.TARGET_CLASS_NAME).getContent();
 
       if (Service.class.getName().equals(targetClassName))
          targetClassName = serviceImplClass;
@@ -436,7 +436,7 @@ public class ServiceObjectFactoryJAXWS extends ServiceObjectFactory
          NamingException
    {
       final UnifiedServiceRefMetaData sref;
-      final RefAddr refAddr = ref.get(ServiceReferenceable.SERVICE_REF_META_DATA);
+      final RefAddr refAddr = ref.get(NativeServiceReferenceableJAXWS.SERVICE_REF_META_DATA);
       final ByteArrayInputStream bais = new ByteArrayInputStream((byte[]) refAddr.getContent());
       try
       {

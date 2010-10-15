@@ -21,23 +21,26 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-import javax.naming.Referenceable;
-
-import org.jboss.wsf.common.serviceref.AbstractServiceRefBinderJAXWS;
+import org.jboss.wsf.common.serviceref.AbstractServiceReferenceableJAXWS;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
- * Binds a JAXWS Service object to the client's ENC.
+ * {@inheritDoc}
  *
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public final class NativeServiceRefBinderJAXWS extends AbstractServiceRefBinderJAXWS
+public class NativeServiceReferenceableJAXWS extends AbstractServiceReferenceableJAXWS<NativeServiceObjectFactoryJAXWS>
 {
-   @Override
-   protected Referenceable createReferenceable(final String serviceImplClass, final String targetClassName,
+   public NativeServiceReferenceableJAXWS(final String serviceImplClass, final String targetClassName,
          final UnifiedServiceRefMetaData serviceRefUMDM)
    {
-      return new NativeServiceReferenceableJAXWS(serviceImplClass, targetClassName, serviceRefUMDM);
+      super(serviceImplClass, targetClassName, serviceRefUMDM);
+   }
+
+   @Override
+   protected Class<NativeServiceObjectFactoryJAXWS> getObjectFactory()
+   {
+      return NativeServiceObjectFactoryJAXWS.class;
    }
 }

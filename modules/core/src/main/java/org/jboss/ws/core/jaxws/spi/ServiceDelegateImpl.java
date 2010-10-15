@@ -60,7 +60,7 @@ import org.jboss.ws.core.jaxws.client.ClientFeatureProcessor;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
-import org.jboss.ws.core.jaxws.client.ServiceObjectFactoryJAXWS;
+import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
@@ -130,7 +130,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       // If this Service was constructed through the ServiceObjectFactory
       // this thread local association should be available
-      usRef = ServiceObjectFactoryJAXWS.getServiceRefAssociation();
+      usRef = NativeServiceObjectFactoryJAXWS.getServiceRefAssociation();
       UnifiedVirtualFile vfsRoot = (usRef != null ? vfsRoot = usRef.getVfsRoot() : new ResourceLoaderAdapter());
 
       // Verify wsdl access if this is not a generic Service
