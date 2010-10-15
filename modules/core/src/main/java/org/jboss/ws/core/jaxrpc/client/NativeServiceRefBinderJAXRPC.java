@@ -21,39 +21,22 @@
  */
 package org.jboss.ws.core.jaxrpc.client;
 
-import java.lang.reflect.AnnotatedElement;
+import javax.naming.Referenceable;
 
-import javax.naming.Context;
-import javax.naming.NamingException;
-
-import org.jboss.logging.Logger;
-import org.jboss.util.naming.Util;
+import org.jboss.wsf.common.serviceref.AbstractServiceRefBinderJAXRPC;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
 
 /**
- * Binds a JAXRPC Service object in the client's ENC for every service-ref element in the
- * deployment descriptor.
+ * Binds a JAXRPC Service object to the client's ENC.
  *
  * @author Thomas.Diesler@jboss.org
- * @since 04-Nov-2006
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public class NativeServiceRefBinderJAXRPC implements ServiceRefBinder
+public final class NativeServiceRefBinderJAXRPC extends AbstractServiceRefBinderJAXRPC
 {
-   // logging support
-   private static Logger log = Logger.getLogger(NativeServiceRefBinderJAXRPC.class);
-
-   /**
-    * Binds a Service into the callers ENC for every service-ref element
-    */
-   public void setupServiceRef(Context encCtx, String encName, AnnotatedElement ignored, UnifiedServiceRefMetaData serviceRef, ClassLoader loader)
-         throws NamingException
+   @Override
+   protected Referenceable createReferenceable(final UnifiedServiceRefMetaData serviceRefUMDM)
    {
-      String externalName = encCtx.getNameInNamespace() + "/" + encName;
-      log.info("setupServiceRef [jndi=" + externalName + "]");
-
-      // Do not use rebind, the binding should be unique
-      ServiceReferenceable ref = new ServiceReferenceable(serviceRef);
-      Util.bind(encCtx, encName, ref);
+      return new ServiceReferenceable(serviceRefUMDM);
    }
 }
