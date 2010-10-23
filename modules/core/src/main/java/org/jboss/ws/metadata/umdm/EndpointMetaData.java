@@ -235,7 +235,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (wsMetaData.isEagerInitialized())
       {
          if (UnifiedMetaData.isFinalRelease() == false)
-            log.warn("Set SEI name after eager initialization", new IllegalStateException());
+            log.warn("Set SEI name after eager initialization");
 
          // reinitialize
          initializeInternal();
