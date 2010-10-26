@@ -36,6 +36,6 @@ public final class NativeServiceRefBinderJAXRPC extends AbstractServiceRefBinder
    @Override
    protected Referenceable createJAXRPCReferenceable(final UnifiedServiceRefMetaData serviceRefUMDM)
    {
-      return new ServiceReferenceable(serviceRefUMDM);
+      return new NativeServiceReferenceableJAXRPC(serviceRefUMDM);
    }
 }

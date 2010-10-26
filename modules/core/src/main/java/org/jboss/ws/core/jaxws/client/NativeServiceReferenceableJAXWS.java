@@ -27,15 +27,13 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 /**
  * {@inheritDoc}
  *
- * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
 public class NativeServiceReferenceableJAXWS extends AbstractServiceReferenceableJAXWS<NativeServiceObjectFactoryJAXWS>
 {
-   public NativeServiceReferenceableJAXWS(final String serviceImplClass, final String targetClassName,
-         final UnifiedServiceRefMetaData serviceRefUMDM)
+   public NativeServiceReferenceableJAXWS(final UnifiedServiceRefMetaData serviceRefMD)
    {
-      super(serviceImplClass, targetClassName, serviceRefUMDM);
+      super(serviceRefMD);
    }
 
    @Override

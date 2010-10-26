@@ -107,7 +107,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
 
          // Unmarshall the ServiceRefMetaData
          UnifiedServiceRefMetaData serviceRef = null;
-         RefAddr metaRefAddr = ref.get(ServiceReferenceable.SERVICE_REF_META_DATA);
+         RefAddr metaRefAddr = ref.get(NativeServiceReferenceableJAXRPC.SERVICE_REF_META_DATA);
          ByteArrayInputStream bais = new ByteArrayInputStream((byte[])metaRefAddr.getContent());
          try
          {
@@ -124,7 +124,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
 
          // Unmarshall the WSSecurityConfiguration
          WSSecurityConfiguration securityConfig = null;
-         RefAddr wsseRefAddr = ref.get(ServiceReferenceable.SECURITY_CONFIG);
+         RefAddr wsseRefAddr = ref.get(NativeServiceReferenceableJAXRPC.SECURITY_CONFIG);
          if (wsseRefAddr != null)
          {
             bais = new ByteArrayInputStream((byte[])wsseRefAddr.getContent());
@@ -172,7 +172,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
 
          // The web service client using a port-component-link, the contet is the URL to
          // the PortComponentLinkServlet that will return the actual endpoint address
-         RefAddr pcLinkRef = ref.get(ServiceReferenceable.PORT_COMPONENT_LINK);
+         RefAddr pcLinkRef = ref.get(NativeServiceReferenceableJAXRPC.PORT_COMPONENT_LINK);
          if (pcLinkRef != null)
          {
             String pcLink = (String)pcLinkRef.getContent();
@@ -199,7 +199,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
             // We may be remote in the esoteric case where an appclient uses the port-comonent-link feature
             if (endpointAddress == null)
             {
-               String servletPath = (String)ref.get(ServiceReferenceable.PORT_COMPONENT_LINK_SERVLET).getContent();
+               String servletPath = (String)ref.get(NativeServiceReferenceableJAXRPC.PORT_COMPONENT_LINK_SERVLET).getContent();
                servletPath += "?pcLink=" + URLEncoder.encode(pcLink, "UTF-8");
                InputStream is = new URL(servletPath).openStream();
                BufferedReader br = new BufferedReader(new InputStreamReader(is));

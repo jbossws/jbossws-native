@@ -32,17 +32,16 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
-import org.jboss.logging.Logger;
+import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
 
 /**
  * A JNDI reference to a javax.xml.rpc.Service
@@ -53,11 +52,8 @@ import org.jboss.wsf.spi.SPIProviderResolver;
  * @author Thomas.Diesler@jboss.org
  * @since 15-April-2004
  */
-public class ServiceReferenceable implements Referenceable
+public class NativeServiceReferenceableJAXRPC implements Referenceable
 {
-   // provide logging
-   private static Logger log = Logger.getLogger(ServiceReferenceable.class);
-
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
    public static final String SECURITY_CONFIG = "SECURITY_CONFIG";
    public static final String PORT_COMPONENT_LINK = "PORT_COMPONENT_LINK";
@@ -69,7 +65,7 @@ public class ServiceReferenceable implements Referenceable
    /**
     * A service referenceable for a WSDL document that is part of the deployment
     */
-   public ServiceReferenceable(UnifiedServiceRefMetaData refMetaData)
+   public NativeServiceReferenceableJAXRPC(UnifiedServiceRefMetaData refMetaData)
    {
       this.refMetaData = refMetaData;
       this.vfsRoot = refMetaData.getVfsRoot();
@@ -83,7 +79,7 @@ public class ServiceReferenceable implements Referenceable
     */
    public Reference getReference() throws NamingException
    {
-      Reference myRef = new Reference(ServiceReferenceable.class.getName(), ServiceObjectFactoryJAXRPC.class.getName(), null);
+      Reference myRef = new Reference(NativeServiceReferenceableJAXRPC.class.getName(), ServiceObjectFactoryJAXRPC.class.getName(), null);
 
       // Add a reference to the ServiceRefMetaData and WSDLDefinitions
       myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshallServiceRef()));

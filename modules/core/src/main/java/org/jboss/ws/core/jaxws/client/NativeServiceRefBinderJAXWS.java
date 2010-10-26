@@ -34,9 +34,8 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 public final class NativeServiceRefBinderJAXWS extends AbstractServiceRefBinderJAXWS
 {
    @Override
-   protected Referenceable createJAXWSReferenceable(final String serviceImplClass, final String targetClassName,
-         final UnifiedServiceRefMetaData serviceRefUMDM)
+   protected Referenceable createJAXWSReferenceable(final UnifiedServiceRefMetaData serviceRefUMDM)
    {
-      return new NativeServiceReferenceableJAXWS(serviceImplClass, targetClassName, serviceRefUMDM);
+      return new NativeServiceReferenceableJAXWS(serviceRefUMDM);
    }
 }
