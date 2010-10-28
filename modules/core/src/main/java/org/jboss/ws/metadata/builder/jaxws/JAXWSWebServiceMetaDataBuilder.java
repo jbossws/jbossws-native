@@ -34,7 +34,10 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPMessageHandlers;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
+import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceProvider;
+import javax.xml.ws.soap.AddressingFeature;
+import javax.xml.ws.soap.MTOMFeature;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -209,11 +212,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          else if (seiClass.isAnnotationPresent(HandlerChain.class))
             processHandlerChain(sepMetaData, seiClass);
          
-         //setup web service feature contributions
-         epFeatureProcessor.setupEndpointFeatures(sepMetaData);
-
          // process webservices.xml contributions
          processWSDDContribution(sepMetaData);
+         
+         //setup web service feature contributions
+         epFeatureProcessor.setupEndpointFeatures(sepMetaData);
 
          // Init the endpoint address
          initEndpointAddress(dep, sepMetaData);
@@ -377,13 +380,22 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                   if (portComp.isEnableMtom())
                   {
                      log.debug("Enabling MTOM");
-
-                     String bindingId = sepMetaData.getBindingId();
-                     if (bindingId.equals(Constants.SOAP11HTTP_BINDING))
-                        sepMetaData.setBindingId(Constants.SOAP11HTTP_MTOM_BINDING);
-                     else if (bindingId.equals(Constants.SOAP12HTTP_BINDING))
-                        sepMetaData.setBindingId(Constants.SOAP12HTTP_MTOM_BINDING);
-
+                     MTOMFeature feature = new MTOMFeature(true, portComp.getMtomThreshold());
+                     sepMetaData.getFeatures().addFeature(feature);
+                  }
+                  
+                  if (portComp.isAddressingEnabled()) 
+                  {  log.debug("Enabling Addressing");
+                     AddressingFeature.Responses responses = getAddressFeatureResponses(portComp.getAddressingResponses());              
+                     AddressingFeature feature = new AddressingFeature(true, portComp.isAddressingRequired(), responses);
+                     sepMetaData.getFeatures().addFeature(feature);
+                  }
+                  
+                  if (portComp.isRespectBindingEnabled()) 
+                  {
+                     log.debug("Enabling RespectBinding Feature");
+                     RespectBindingFeature feature = new RespectBindingFeature(true);
+                     sepMetaData.getFeatures().addFeature(feature);
                   }
 
                }

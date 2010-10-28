@@ -654,6 +654,57 @@
 				<include name="org/jboss/test/ws/jaxws/jbws3071/TestException.class" />
 			</classes>
 		</war>
+		
+		<!-- jaxws-jbws3140 -->
+		<war warfile="${tests.output.dir}/test-libs/jbws3140-server.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3140/WEB-INF-Server/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws3140/*.class" />
+				<include name="org/jboss/test/ws/jaxws/jbws3140/server*.xml" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws3140/*TestCase.class" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws3140/*TestClient.class" />
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3140/WEB-INF-Server">
+				<include name="*.xml" />
+			</webinf>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3140">
+				<include name="wsdl/*.wsdl"/>
+		    </webinf>
+		</war>
+		
+		<war warfile="${tests.output.dir}/test-libs/jbws3140-responses-server.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3140/WEB-INF-Server/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws3140/*.class" />
+				<include name="org/jboss/test/ws/jaxws/jbws3140/server*.xml" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws3140/*TestCase.class" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws3140/*TestClient.class" />
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3140/WEB-INF-Responses-Server">
+				<include name="*.xml" />
+			</webinf>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3140">
+				<include name="wsdl/*.wsdl"/>
+		    </webinf>
+		</war>
+		
+		
+		
+		<war warfile="${tests.output.dir}/test-libs/jbws3140-client.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3140/WEB-INF-Client/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws3140/*.class" />
+				<include name="org/jboss/test/ws/jaxws/jbws3140/client*.xml" />
+				<exclude name="org/jboss/test/ws/jaxws/jbws3140/*TestCase.class" />
+			</classes>
+			<classes dir="${tests.output.dir}/test-resources/jaxws/jbws3140">
+				<include name="*.jpg" />
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3140/WEB-INF-Client">
+				<include name="jboss-web.xml" />
+			</webinf>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws3140">
+				<include name="wsdl/*.wsdl"/>
+		    </webinf>
+		</war>
+		
 
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">

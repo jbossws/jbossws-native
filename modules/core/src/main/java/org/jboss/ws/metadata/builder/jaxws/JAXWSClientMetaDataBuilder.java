@@ -31,6 +31,9 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.BindingType;
+import javax.xml.ws.RespectBindingFeature;
+import javax.xml.ws.soap.AddressingFeature;
+import javax.xml.ws.soap.MTOMFeature;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
@@ -249,13 +252,21 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
                log.debug("Processing service-ref contribution on portType: " + epMetaData.getPortTypeName());
 
             // process MTOM overrides
-            if (portComp.getEnableMTOM())
+            if (portComp.isMtomEnabled())
             {
-               String bindingId = epMetaData.getBindingId();
-               if (bindingId.equals(Constants.SOAP11HTTP_BINDING))
-                  epMetaData.setBindingId(Constants.SOAP11HTTP_MTOM_BINDING);
-               else if (bindingId.equals(Constants.SOAP12HTTP_BINDING))
-                  epMetaData.setBindingId(Constants.SOAP12HTTP_MTOM_BINDING);
+               epMetaData.addFeature(new MTOMFeature(true, portComp.getMtomThreshold()));
+            }
+            // process Addressing
+            if (portComp.isAddressingEnabled()) 
+            {
+               AddressingFeature.Responses response = getAddressFeatureResponses(portComp.getAddressingResponses());               
+               epMetaData.addFeature(new AddressingFeature(true, portComp.isAddressingRequired(), response));
+            }
+            
+            // process RespectBinding
+            if (portComp.isRespectBindingEnabled()) 
+            {
+               epMetaData.addFeature(new RespectBindingFeature(true));
             }
 
             // process stub properties

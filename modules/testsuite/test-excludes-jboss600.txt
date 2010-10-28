@@ -7,5 +7,8 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 # [JBAS-8363] Virtual host issue in JBossWeb
 org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*
 
+# [JBWS-3140] mtom, wsaddressing support in webservices.xml
+org/jboss/test/ws/jaxws/jbws3140/**
+
 # [JBWS-3150] This test causes hudson to freeze
 org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*

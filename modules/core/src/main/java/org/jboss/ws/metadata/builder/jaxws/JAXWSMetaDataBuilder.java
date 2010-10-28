@@ -203,6 +203,17 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          }
       }
    }
+   
+   protected AddressingFeature.Responses getAddressFeatureResponses(String responses)
+   {
+      
+      AddressingFeature.Responses result = AddressingFeature.Responses.ALL;
+      if ("ANONYMOUS".equals(responses))
+         result = AddressingFeature.Responses.ANONYMOUS;
+      if ("NON_ANONYMOUS".equals(responses))
+         result = AddressingFeature.Responses.NON_ANONYMOUS;
+      return result;
+   }
 
    public static UnifiedHandlerChainsMetaData getHandlerChainsMetaData(Class<?> wsClass, String filename)
    {
