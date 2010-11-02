@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?><chapter id="chap_JBossWS-WS-Securityoptions"><title>JBossWS-WS-Securityoptions</title><para>JBossWS implements WS-Security 1.0 specifications to provide users with message level security. The user guide explains <ulink url="http://community.jboss.org/docs/DOC-13532#JBossWS_Native_WS_extensions">how to configure WS-Security</ulink>  through declaration files and annotations; for this aim, a simple example shows how to sign (and require signature of) messages.</para><para>This page instead goes deeper into the JBossWS WS-Security configuration details, covering more advanced topics.</para><para/><para> </para><section id="JBossWS-WS-Securityoptions_Username_Token_Authentication"><title>Username Token Authentication</title><para>The following configuration allows clients to authenticate through a Username Token (1). Thanks to the <ulink url="http://jbossws.jboss.org/mediawiki/index.php?title=WS-Security_options#JAAS_integration">JAAS integration</ulink>, the received token will automatically be verified against the configured JBoss JAAS Security Domain.</para><screen xml:space="preserve">   &lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+                         xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+                         xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink> 
+                         <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+     &lt;config&gt;
+(1)    &lt;username/&gt;
+(2)    &lt;timestamp ttl="300"/&gt;
+     &lt;/config&gt;
+   &lt;/jboss-ws-security&gt;
+</screen><para>Line (2) states that a timestamp element must be present in the message and that the message can not be older than 300 seconds; this is used to prevent replay attacks.</para><para>On the server side you should have:</para><screen xml:space="preserve">  &lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+                   xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+                   xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>
+                   <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+     &lt;config&gt;
+          &lt;timestamp ttl="300"/&gt;
+          &lt;requires&gt;
+              &lt;username/&gt;
+          &lt;/requires&gt;
+     &lt;/config&gt;
+  &lt;/jboss-ws-security&gt;
+</screen><para>Please note that this way username and password appear as simple text in the SOAP header. Thus it is strongly suggested to use a <link linkend="chap_JBossWS-Securetransport">JBossWS - Secure transport</link>.</para><para> </para><section id="JBossWS-WS-Securityoptions_Password_digest_nonces_and_timestamp"><title>Password digest, nonces and timestamp</title><para>The afore mentioned configuration causes the password to be sent on the wire as a plain text. The Username Token Profile specification allows a digested passwords to be used, even if this doesn't offer real additional security.</para><para>Moreover nonces and creation timestamp can be used as salt to the password digest; this provides some countermeasures to prevent replay attacks.</para><para>To enable password digesting, you basically need to follow these steps:</para><itemizedlist><listitem><para> use the <emphasis>digestPassword</emphasis> attribute in the client wsse configuration (3) </para></listitem><listitem><para> perhaps enable/disable use of nonces (<emphasis>useNonce</emphasis> attribute, default true) and creation timestamp (<emphasis>useCreated</emphasis> attribute, default true) </para></listitem><listitem><para> properly setup the login module of your security domain to use UsernameTokenCallback (4). </para></listitem></itemizedlist><para>Here is an example of the modified client config:</para><screen xml:space="preserve">&lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+    xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+    xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>
+    <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+  &lt;config&gt;
+(3)     &lt;username digestPassword="true" useNonce="true" useCreated="true"/&gt;
+       &lt;timestamp ttl="300"/&gt;
+  &lt;/config&gt;
+&lt;/jboss-ws-security&gt;
+</screen><para>And here is a sample login-config.xml showing how to use the UsernameTokenCallback (4):</para><screen xml:space="preserve">&lt;application-policy name="JBossWSDigest"&gt;
+  &lt;authentication&gt;
+    &lt;login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required"&gt;
+      &lt;module-option name="usersProperties"&gt;META-INF/jbossws-users.properties&lt;/module-option&gt;
+      &lt;module-option name="rolesProperties"&gt;META-INF/jbossws-roles.properties&lt;/module-option&gt;
+      &lt;module-option name="hashAlgorithm"&gt;SHA&lt;/module-option&gt;
+      &lt;module-option name="hashEncoding"&gt;BASE64&lt;/module-option&gt;
+      &lt;module-option name="hashUserPassword"&gt;false&lt;/module-option&gt;
+      &lt;module-option name="hashStorePassword"&gt;true&lt;/module-option&gt;
+      &lt;module-option name="storeDigestCallback"&gt;org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallback&lt;/module-option&gt;
+      &lt;module-option name="unauthenticatedIdentity"&gt;anonymous&lt;/module-option&gt;
+    &lt;/login-module&gt;
+  &lt;/authentication&gt;
+&lt;/application-policy&gt;
+</screen><para>Of course you could want to use different login module; the provided <emphasis>UsernameTokenCallback</emphasis> simply adds the nonce and creation timestamp to the digest.</para><para>You can use your custom login module as long as you extend the <emphasis>org.jboss.security.auth.spi.UsernamePasswordLoginModule</emphasis>: then you just need to plug the UsernameTokenCallback into your module and set the hash attributes (<emphasis>hashAlgorithm</emphasis>, <emphasis>hashEncoding</emphasis>, <emphasis>hashUserPassword</emphasis>, <emphasis>hashStorePassword</emphasis>) the way shown above.</para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_Advanced_tuning_nonce_factory"><title>Advanced tuning: nonce factory</title><para>The way nonces are created and checked/stored on server side influences the overall security against replay attacks. In particular currently JBossWS ships with a basic implementation of a nonce store that doesn't cache the received tokens on server side. More complex implementation can be easily plugged in implementing the <emphasis>NonceFactory</emphasis> and <emphasis>NonceStore</emphasis> interfaces you can find in the <emphasis>org.jboss.ws.extensions.security.nonce</emphasis> package. Then you just need to specify you factory class through the <emphasis>nonce-factory-class</emphasis> element in the wsse server config. Future version of JBossWS might come with a nonce store implementation leveraging JBoss Cache or Hibernate to store received nonces.</para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_Advanced_tuning_timestamp_verification"><title>Advanced tuning: timestamp verification</title><para>By default if a Timestamp is present in the wsse:Security header the verification of the header is very strict and does not allow for any tolerance in the time comparisons - if the message appears to have been created even slightly in the future or if the message has just expired then it will be rejected. A new element called 'timestamp-verification' is now available for the wsse configuration. Here is an example of the modified wsse configuration:</para><screen xml:space="preserve">&lt;jboss-ws-security xmlns='<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>'
+                   xmlns:xsi='<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>'
+                   xsi:schemaLocation='<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>     
+                   <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>'&gt;
+  &lt;timestamp-verification createdTolerance="5" warnCreated="false" expiresTolerance="10" warnExpires="false" /&gt;
+&lt;/jboss-ws-security&gt;
+</screen><para>The attributes allow you to specify the tolerance in seconds that is used when verifying the 'Created' or 'Expires' element of the 'Timestamp' header.</para><itemizedlist><listitem><para> <emphasis role="bold">createdTolerance</emphasis> - The number of seconds in the future a message will be accepted. </para></listitem><listitem><para> <emphasis role="bold">expiresTolerance</emphasis> - The number of seconds a message must have been expired for before it will be rejected. </para></listitem></itemizedlist><para>The default value for both of these is 0 which was the orignal behaviour.</para><para>It is also possible to log a warning if a message is accepted due to the configured tolerances that would normally have been rejected, this can then enable you to track down clients where their time is out of synch with the server without rejecting their messages.</para><itemizedlist><listitem><para> <emphasis role="bold">warnCreated</emphasis> - log a warning if a message is accepted with a 'Created' value in the future. </para></listitem><listitem><para> <emphasis role="bold">warnExpires</emphasis> - log a warning if a message is accepted with an 'Expires' value in the past. </para></listitem></itemizedlist><para>The default for both of these is true so if you do not require logging you will need to disable these.</para><para><emphasis>Please be aware that the purpose of this tolerance is not to overcome differences relating to different timezones, according to the WSSE specification these times should be UTC - the time and date comparisons used by JBossWS are timezone aware.</emphasis></para><para> </para></section>
+</section>
+<section id="JBossWS-WS-Securityoptions_X509_Certificate_Token"><title>X509 Certificate Token</title><section id="JBossWS-WS-Securityoptions_Encryption"><title>Encryption</title><para>Using X509v3 certificates you can both sign and encrypt messages.</para><screen xml:space="preserve">&lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+                   xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+                   xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>
+                   <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+(1) &lt;key-store-file&gt;WEB-INF/bob-sign_enc.jks&lt;/key-store-file&gt;
+    &lt;key-store-password&gt;password&lt;/key-store-password&gt;
+    &lt;key-store-type&gt;jks&lt;/key-store-type&gt;
+    &lt;trust-store-file&gt;WEB-INF/wsse10.truststore&lt;/trust-store-file&gt;
+    &lt;trust-store-password&gt;password&lt;/trust-store-password&gt;
+
+    &lt;config&gt;
+     &lt;timestamp ttl="300"/&gt;
+(2)     &lt;sign type="x509v3" alias="1" includeTimestamp="true"/&gt;
+(3)     &lt;encrypt type="x509v3"
+              alias="alice"
+              algorithm="aes-256"
+              keyWrapAlgorithm="rsa_oaep"
+              tokenReference="keyIdentifier" /&gt;
+(4)         &lt;requires&gt;
+            &lt;signature/&gt;
+              &lt;encryption/&gt;      
+           &lt;/requires&gt;
+    &lt;/config&gt;
+&lt;/jboss-ws-security&gt;
+</screen><para>The server configuration shown above includes:</para><orderedlist><listitem><para> Keystore and truststore information: location, password and type. </para></listitem><listitem><para> Signature configuration: you need to provide the certificate/key pair alias to use. <emphasis>includeTimestamp</emphasis>  specifies whether the timestamp is to be signed too to prevent tampering. </para></listitem><listitem><para> Encryption configuration: you need to provide the certificate/key pair alias to use. </para></listitem><listitem><para> Optional security requirements: incoming messages should be both signed and encrypted. </para></listitem></orderedlist><para>Client side configuration works the same way.</para><para> </para><section id="JBossWS-WS-Securityoptions_Algorithms"><title>Algorithms</title><para>Asymmetric + symmetric encryption is performed whenever the <emphasis>encrypt</emphasis> element is found. Thus message data are encrypted using a generated symmetric secret key. This is written in the SOAP header after being encrypted (wrapped) with the receiver public key. You can set both the encryption and key wrap algorithms.</para><variablelist><varlistentry><term>Supported encryption algorithms </term><listitem/></varlistentry></variablelist><para> </para><itemizedlist><listitem><para> AES 128 (aes-128) (<emphasis>default</emphasis>) </para></listitem><listitem><para> AES 192 (aes-192) </para></listitem><listitem><para> AES 256 (aes-256) </para></listitem><listitem><para> Triple DES (triple-des) </para></listitem></itemizedlist><variablelist><varlistentry><term>Supported key wrap algorithms </term><listitem/></varlistentry></variablelist><para> </para><itemizedlist><listitem><para> RSA v.1.5 (rsa_15) (<emphasis>default</emphasis>) </para></listitem><listitem><para> RSA OAEP (rsa_oaep) </para></listitem></itemizedlist><para>The <ulink url="http://java.sun.com/javase/downloads/index_jdk5.jsp">Unlimited Strength Java(TM) Cryptography Extension</ulink> installation might be required to run some strong algorithms (like AES-256). Please note that your country might have limits on allowed crypto strength.</para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_Dynamic_encryption"><title>Dynamic encryption</title><para>When replying to multiple clients, a service provider has to encrypt a message using the right public key according to its destination. The JBossWS native implementation of WS-Security gets the right key to use from the signature received (and verified) in the incoming message. You just need to require signature (1) and do not specify any encryption alias on server side (2):</para><screen xml:space="preserve">&lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+                   xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+                   xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>
+                   <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+    &lt;key-store-file&gt;WEB-INF/bob-sign_enc.jks&lt;/key-store-file&gt;
+    &lt;key-store-password&gt;password&lt;/key-store-password&gt;
+    &lt;key-store-type&gt;jks&lt;/key-store-type&gt;
+    &lt;trust-store-file&gt;WEB-INF/wsse10.truststore&lt;/trust-store-file&gt;
+    &lt;trust-store-password&gt;password&lt;/trust-store-password&gt;
+
+    &lt;config&gt;
+     &lt;timestamp ttl="300"/&gt;
+        &lt;sign type="x509v3" alias="1" includeTimestamp="true"/&gt;
+(2)     &lt;encrypt type="x509v3"
+              algorithm="aes-256"
+              keyWrapAlgorithm="rsa_oaep"
+              tokenReference="keyIdentifier" /&gt;
+            &lt;requires&gt;
+(1)         &lt;signature/&gt;
+              &lt;encryption/&gt;      
+           &lt;/requires&gt;
+    &lt;/config&gt;
+&lt;/jboss-ws-security&gt;
+</screen><para>Of course you'll have to add every new client's public key to the server side keystore, but no change to the descriptors and service implementation is required.</para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_Token_references"><title>Token references</title><para>For interoperability reason you might want to configure the type of reference to encryption token to be used. For instance, Microsoft Indigo doesn't support direct reference to local binary security tokens that is the JBossWS default reference type choice. Allowed values for <emphasis>tokenReference</emphasis> attribute are:</para><itemizedlist><listitem><para> directReference (<emphasis>default</emphasis>) </para></listitem><listitem><para> keyIdentifier </para></listitem><listitem><para> x509IssuerSerial </para></listitem></itemizedlist><para>Please refer to the <ulink url="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0.pdf">X.509 Token Profile 1.0</ulink> specification for further details on token references.</para><para> </para></section>
+</section>
+<section id="JBossWS-WS-Securityoptions_Targets_configuration"><title>Targets configuration</title><para>JBossWS gives you a fine grained control over the elements that have to be signed or encrypted.</para><para>This allows you to encrypt important data only (like credit card numbers) without waisting time on other information exchanged by the same service (email addresses, for example). To configure this, you just need to specify the QName of the SOAP elements to encrypt. The default behavior is to encrypt the whole SOAP body.</para><screen xml:space="preserve">&lt;encrypt type="x509v3" alias="alice"&gt;
+  &lt;targets&gt;
+    &lt;target type="qname"&gt;{http://www.my-company.com/cc}CardNumber&lt;/target&gt;
+    &lt;target type="qname"&gt;{http://www.my-company.com/cc}CardExpiration&lt;/target&gt;
+    &lt;target type="qname" contentOnly="true"&gt;{http://www.my-company.com/cc}CustomerData&lt;/target&gt;
+  &lt;/targets&gt;
+&lt;/encrypt&gt;
+</screen><para>The <emphasis>contentOnly</emphasis> attribute states whether the content of the element is to be encrypted as opposed to the entire element (default behavior). Target can be specified also for requirements upon message receipt.</para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_Miscellanea"><title>Miscellanea</title><section id="JBossWS-WS-Securityoptions_Signature_and_carriage_returns"><title>Signature and carriage returns</title><para>Exchanging signed messages whose payload contains carriage returns can lead to signature verification errors. That's because of the way the <emphasis>\r</emphasis> special character is handled by xml parsers. To prevent this kind of issue, besides custom encoding the payload before sending it, users can either also encrypt the message or force JBossWS to perform canonical normalization of messages. This can be triggered setting the <emphasis>org.jboss.ws.DOMContentCanonicalNormalization</emphasis> property to true in the MessageContext just before the invocation on client side and in the endpoint implementation. Please note there's a convenient constant for this in <emphasis>org.jboss.ws.Constants</emphasis>; also see the <emphasis>org.jboss.test.ws.jaxws.jbws2011.CRLFTestCase</emphasis> for an example.</para><para> </para></section>
+</section>
+</section>
+<section id="JBossWS-WS-Securityoptions_JAAS_integration"><title>JAAS integration</title><para>The WS-Security implementation allows users to achieve J2EE declarative security through JAAS integration. The calling user's identity and credential are derived from the wsse headers of the incoming message according to the parameters provided in the server wsse configuration file. Authentication and authorization are then achieved delegating to the JAAS login modules configured for the specified security domain.</para><para> </para><section id="JBossWS-WS-Securityoptions_Username_token"><title>Username token</title><para>Username Token Profile provides a mean of specifying the caller's username and password. The wsse server configuration file can be used to have those information used when performing authentication and authorization through configured login module.</para><screen xml:space="preserve">&lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+  xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+  xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>
+                      <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+  &lt;config&gt;
+    &lt;username/&gt;
+    &lt;authenticate&gt;
+      &lt;usernameAuth/&gt;
+    &lt;/authenticate&gt;
+  &lt;/config&gt;
+&lt;/jboss-ws-security&gt;
+</screen><para>Prior to JBossWs 3.0.2 Native the username token was always used to set principal and credential of the caller whenever specified. This means that for backward compatibility reasons, this behavior is obtained also when no <emphasis>authenticate</emphasis> tag at all is specified and the username token is used.</para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_X509_certificate_token"><title>X.509 certificate token</title><para>Whenever a WS-Security message containing X.509 certificates is received, every certificate is validated against the truststore specified in the wsse configuration file. After this validation process, one of the X.509 certificate token can be chosen to extract the caller's principal and perform authentication and authorization using it as credential.</para><para>The current implementation allows the certificate token referenced by the signature token to be used for this purpose (1):</para><screen xml:space="preserve">&lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>"
+  xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+  xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>
+                      <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+  &lt;key-store-file&gt;META-INF/bob-sign.jks&lt;/key-store-file&gt;
+  &lt;key-store-password&gt;password&lt;/key-store-password&gt;
+  &lt;key-store-type&gt;jks&lt;/key-store-type&gt;
+  &lt;trust-store-file&gt;META-INF/wsse10.truststore&lt;/trust-store-file&gt;
+  &lt;trust-store-password&gt;password&lt;/trust-store-password&gt;
+  &lt;config&gt;
+    &lt;sign type="x509v3" alias="1" includeTimestamp="false"/&gt;
+    &lt;requires&gt;
+      &lt;signature/&gt;
+    &lt;/requires&gt;
+    &lt;authenticate&gt;
+(1)   &lt;signatureCertAuth certificatePrincipal="org.jboss.security.auth.certs.SubjectCNMapping"/&gt;
+    &lt;/authenticate&gt;
+  &lt;/config&gt;
+&lt;/jboss-ws-security&gt;
+</screen><para>The optional <emphasis>certificatePrincipal</emphasis> attributes specifies the class to be used to get the principal from the X509 certificate's attributes; it has to implement <ulink url="http://wiki.jboss.org/wiki/CertificatePrincipal">CertificatePrincipal</ulink> and the default one used when no attribute is specified is <emphasis>org.jboss.security.auth.certs.SubjectDNMapping</emphasis>.</para><para>The configured security domain needs at least a <ulink url="http://wiki.jboss.org/wiki/BaseCertLoginModule">BaseCertLoginModule</ulink> to be set up. Here is an example of a security domain with a CertRolesLoginModule, which also enables authorization (using the specified jbossws-roles.properties file):</para><screen xml:space="preserve">&lt;application-policy name="JBossWSCert"&gt;
+  &lt;authentication&gt;
+    &lt;login-module code="org.jboss.security.auth.spi.CertRolesLoginModule" flag="required"&gt;
+      &lt;module-option name="rolesProperties"&gt;jbossws-roles.properties&lt;/module-option&gt;
+      &lt;module-option name="unauthenticatedIdentity"&gt;anonymous&lt;/module-option&gt;
+      &lt;module-option name="securityDomain"&gt;java:/jaas/JBossWSCert&lt;/module-option&gt;
+    &lt;/login-module&gt;
+  &lt;/authentication&gt;
+&lt;/application-policy&gt;
+</screen><para>Finally, the BaseCertLoginModule of course uses a central keystore to perform user validation. This store is configured through the <emphasis>org.jboss.security.plugins.JaasSecurityDomain</emphasis> MBean as shown in the following jboss-service.xml configuration fragment:</para><screen xml:space="preserve">&lt;mbean code="org.jboss.security.plugins.JaasSecurityDomain"
+       name="jboss.security:service=SecurityDomain"&gt;
+  &lt;constructor&gt;
+    &lt;arg type="java.lang.String" value="JBossWSCert"/&gt;
+  &lt;/constructor&gt;
+  &lt;attribute name="KeyStoreURL"&gt;resource:META-INF/keystore.jks&lt;/attribute&gt;
+  &lt;attribute name="KeyStorePass"&gt;password&lt;/attribute&gt;
+  &lt;depends&gt;jboss.security:service=JaasSecurityManager&lt;/depends&gt;
+&lt;/mbean&gt;
+</screen><para>The JBoss security code will access the keystore with the principal that JBossWS got from the wsse header using the specified CertificatePrincipal mapping class. If a certificate is found and is the same of the one specified in the wsse header, the user is logged in.</para><para>For a working sample of X509 certificate authentication you may want to take a look at the <emphasis>org.jboss.test.ws.jaxws.jbws2116.CertAuthTestCase</emphasis>.</para><para> </para></section>
+</section>
+<section id="JBossWS-WS-Securityoptions_POJO_Endpoint__Authentication_and_Authorization"><title>POJO Endpoint - Authentication and Authorization</title><para>In general the credentials obtained by WS-Security are only used for EJB endpoints or for POJO endpoints when they make a call to another secured resource, it is now possible to enable authentication and authorization checking for POJO endpoints. (This should not be enabled for EJB based endpoints as the EJB container will still take care of the security requirements of the deployed bean).</para><para><emphasis>These instructions assume WS-Security has already been enabled, these instructions describe the additional configuration required to enable authentication and authorization for POJO endpoints</emphasis></para><para>The first stage is that the war containing the POJO endpoint needs to have a security domain defined, this is achieved by defining a &lt;security-domain&gt; in the jboss-web deployment descriptor within the WEB-INF folder.</para><screen xml:space="preserve">&lt;jboss-web&gt;
+  &lt;security-domain&gt;java:/jaas/JBossWS&lt;/security-domain&gt;
+&lt;/jboss-web&gt;
+</screen><para>The remainder of the configuration to enable authentication and authorization is within the jboss-wsse-server.xml deployment descriptor.</para><para>To enable the POJO authentication and authorization first a new &lt;authorization&gt; element needs to be added to the appropriate &lt;config&gt; element within the descriptor: -</para><screen xml:space="preserve">&lt;jboss-ws-security&gt;
+  
+  &lt;config&gt;
+    &lt;authorize&gt;
+      &lt;!-- Must contain either &lt;unchecked/&gt; or one or more &lt;role&gt;RoleName&lt;/role&gt; definitions. --&gt;
+    &lt;/authorize&gt;
+  &lt;/config&gt;
+  
+&lt;/jboss-ws-security&gt;
+</screen><para>The config element can be defined globally, be port specific or even be operation specific.</para><para>The authorize element must contain either the &lt;unchecked/&gt; element or one or more &lt;role&gt;RoleName&lt;/role&gt; elements.</para><screen xml:space="preserve">&lt;jboss-ws-security&gt;
+  
+  &lt;config&gt;
+    &lt;authorize&gt;      
+      &lt;unchecked/&gt;
+    &lt;/authorize&gt;
+  &lt;/config&gt;
+  
+&lt;/jboss-ws-security&gt;
+</screen><para>This first example had &lt;unchecked/&gt; defined, this means that the authentication step will be performed to validate the users username and credential but no further role checking will take place. If the users username and credential are invalid then the request will be rejected otherwise the request will be allowed to proceed.</para><screen xml:space="preserve">&lt;jboss-ws-security&gt;
+  
+  &lt;config&gt;
+    &lt;authorize&gt;      
+      &lt;role&gt;friend&lt;/role&gt;
+      &lt;role&gt;family&lt;/role&gt;
+    &lt;/authorize&gt;
+  &lt;/config&gt;
+  
+&lt;/jboss-ws-security&gt;
+</screen><para>This second example has two roles defined, as before the user will be authenticated using their username and credential and they will then be checked to ensure that they have been assigned at least one of the roles 'friend' or 'family'.</para><para><emphasis>It should be noted that the authentication and authorization still proceeds even if no username and password or certificate was provided in the request message, in this scenario authentication may proceed if the login module of the security domain has been configured with an anonymous identity.</emphasis></para><para> </para></section>
+<section id="JBossWS-WS-Securityoptions_Further_information"><title>Further information</title><itemizedlist><listitem><para> The complete wsse configuration is specified in the <emphasis>src/main/resources/schema/jboss-ws-security_1_0.xsd</emphasis> schema that is available in the source code base. </para></listitem><listitem><para> The advanced examples described above are covered by the interoperability scenarios available in the <emphasis>org.jboss.test.ws.interop</emphasis> package. </para></listitem><listitem><para> If you have doubts on the keystore/truststore content requirements for signing/encrypting messages, <link linkend="chap_index">read here</link>. Moreover you can find a text file in the sources showing the store configuration used for the interoperability tests (<emphasis>src/test/resources/interop/nov2007/wsse/shared/META-INF/readme.txt</emphasis>). </para></listitem></itemizedlist></section>
+</chapter>

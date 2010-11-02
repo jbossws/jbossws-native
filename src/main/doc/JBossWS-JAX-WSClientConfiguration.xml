@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><chapter id="chap_JBossWS-JAX-WSClientConfiguration"><title>JBossWS-JAX-WSClientConfiguration</title><para/><para> </para><para>The standard client configuration is defined in <emphasis role="bold">standard-jaxws-client-config.xml</emphasis></para><para> </para><section id="JBossWS-JAX-WSClientConfiguration_Client_side_port_configuration"><title>Client side port configuration</title><para>You can use stub properties on the client side to chose from one of the configuration presets:</para><screen xml:space="preserve"> Hello endpoint = service.getPort(Hello.class);
+((StubExt) endpoint).setConfigName("Standard WSSecurity Client");
+</screen><para> </para></section>
+<section id="JBossWS-JAX-WSClientConfiguration_Available_configuration"><title>Available configuration</title><section id="JBossWS-JAX-WSClientConfiguration_Standard_Client"><title>Standard Client</title><screen xml:space="preserve">&lt;jaxws-config xmlns="urn:jboss:jaxws-config:2.0" xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>" xmlns:javaee="<ulink url="http://java.sun.com/xml/ns/javaee">http://java.sun.com/xml/ns/javaee</ulink>"
+              xsi:schemaLocation="urn:jboss:jaxws-config:2.0 jaxws-config_2_0.xsd"&gt;
+
+   &lt;client-config&gt;
+      &lt;config-name&gt;Standard Client&lt;/config-name&gt;
+   &lt;/client-config&gt;&lt;/jaxws-config&gt;]</screen><para><anchor id="Standard_WSAddressing_Client">#</anchor></para></section>
+<section id="JBossWS-JAX-WSClientConfiguration_Standard_WSAddressing_Client"><title>Standard WSAddressing Client</title><screen xml:space="preserve">&lt;jaxws-config xmlns="urn:jboss:jaxws-config:2.0" xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>" xmlns:javaee="<ulink url="http://java.sun.com/xml/ns/javaee">http://java.sun.com/xml/ns/javaee</ulink>"
+              xsi:schemaLocation="urn:jboss:jaxws-config:2.0 jaxws-config_2_0.xsd"&gt;
+
+   &lt;client-config&gt;
+      &lt;config-name&gt;Standard WSAddressing Client&lt;/config-name&gt;
+      &lt;post-handler-chains&gt;
+         &lt;javaee:handler-chain&gt;
+            &lt;javaee:protocol-bindings&gt;##SOAP11_HTTP&lt;/javaee:protocol-bindings&gt;
+            &lt;javaee:handler&gt;
+               &lt;javaee:handler-name&gt;WSAddressing Handler&lt;/javaee:handler-name&gt;
+               &lt;javaee:handler-class&gt;org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler&lt;/javaee:handler-class&gt;
+            &lt;/javaee:handler&gt;
+         &lt;/javaee:handler-chain&gt;
+      &lt;/post-handler-chains&gt;
+   &lt;/client-config&gt;&lt;/jaxws-config&gt;</screen><para> </para></section>
+<section id="JBossWS-JAX-WSClientConfiguration_Standard_SOAP_12_WSAddressing_Client_Since_203_Native"><title>Standard SOAP 1.2 WSAddressing Client Since 2.0.3 (Native)</title><screen xml:space="preserve">&lt;jaxws-config xmlns="urn:jboss:jaxws-config:2.0" xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>" xmlns:javaee="<ulink url="http://java.sun.com/xml/ns/javaee">http://java.sun.com/xml/ns/javaee</ulink>"
+              xsi:schemaLocation="urn:jboss:jaxws-config:2.0 jaxws-config_2_0.xsd"&gt;
+
+   &lt;client-config&gt;
+      &lt;config-name&gt;Standard SOAP 1.2 WSAddressing Client&lt;/config-name&gt;
+      &lt;post-handler-chains&gt;
+         &lt;javaee:handler-chain&gt;
+            &lt;javaee:protocol-bindings&gt;##SOAP12_HTTP&lt;/javaee:protocol-bindings&gt;
+            &lt;javaee:handler&gt;
+               &lt;javaee:handler-name&gt;WSAddressing Handler&lt;/javaee:handler-name&gt;
+               &lt;javaee:handler-class&gt;org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler&lt;/javaee:handler-class&gt;
+            &lt;/javaee:handler&gt;
+         &lt;/javaee:handler-chain&gt;
+      &lt;/post-handler-chains&gt;
+   &lt;/client-config&gt;&lt;/jaxws-config&gt;</screen></section>
+<section id="JBossWS-JAX-WSClientConfiguration_Standard_WSSecurity_Client"><title>Standard WSSecurity Client</title><screen xml:space="preserve">&lt;jaxws-config xmlns="urn:jboss:jaxws-config:2.0" xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>" xmlns:javaee="<ulink url="http://java.sun.com/xml/ns/javaee">http://java.sun.com/xml/ns/javaee</ulink>"
+              xsi:schemaLocation="urn:jboss:jaxws-config:2.0 jaxws-config_2_0.xsd"&gt;
+
+   &lt;client-config&gt;
+      &lt;config-name&gt;Standard WSSecurity Client&lt;/config-name&gt;
+      &lt;post-handler-chains&gt;
+         &lt;javaee:handler-chain&gt;
+            &lt;javaee:protocol-bindings&gt;##SOAP11_HTTP&lt;/javaee:protocol-bindings&gt;
+            &lt;javaee:handler&gt;
+               &lt;javaee:handler-name&gt;WSSecurityHandlerOutbound&lt;/javaee:handler-name&gt;
+               &lt;javaee:handler-class&gt;org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerClient&lt;/javaee:handler-class&gt;
+            &lt;/javaee:handler&gt;
+         &lt;/javaee:handler-chain&gt;
+      &lt;/post-handler-chains&gt;
+   &lt;/client-config&gt;&lt;/jaxws-config&gt;
+</screen></section>
+</section></chapter>

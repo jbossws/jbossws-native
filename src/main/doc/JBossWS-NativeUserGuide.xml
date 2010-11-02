@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="UTF-8"?><chapter id="chap_JBossWS-NativeUserGuide"><title>JBossWS-NativeUserGuide</title><para>This page covers features available in <emphasis role="bold">JBossWS Native stack only</emphasis>. <link linkend="chap_JBossWS-UserGuide">Please refer to the common user guide</link> for a basic introduction to JAX-WS programming as well as documentation on all features, tools, etc. the JBossWS Web Service Framework provides for every supported stack (including Native stack).</para> <para> </para><section id="JBossWS-NativeUserGuide_Secure_endpoints"><title>Secure endpoints</title><para>Securing an endpoint requires you to <ulink url="http://jbossws.jboss.org/mediawiki/index.php?title=Authentication">set the authentication configuration</ulink>.</para><para>Then you might want to secure the communication between service provider and consumer. This can be done at different levels:</para><itemizedlist><listitem><para> <ulink url="http://jbossws.jboss.org/mediawiki/index.php?title=Secure_transport">Secure the HTTP transport</ulink> </para></listitem><listitem><para> WS-Security</para></listitem></itemizedlist></section>
+<section id="JBossWS-NativeUserGuide_JBossWS_Native_WS_extensions"><title>JBossWS Native WS-* extensions</title><section id="JBossWS-NativeUserGuide_WSAddressing"><title>WS-Addressing</title><para>This section describes how <ulink url="http://www.w3.org/TR/ws-addr-core">WS-Addressing</ulink> can be used to provide a stateful service endpoint.</para><section id="JBossWS-NativeUserGuide_Specifications"><title>Specifications</title><para>WS-Addressing is defined by a combination of the following specifications from the W3C Candidate Recommendation 17 August 2005. The WS-Addressing API is standardized by <ulink url="http://www.jcp.org/en/jsr/detail?id=261">JSR-261 - Java API for XML Web Services Addressing</ulink></para><itemizedlist><listitem><para> <ulink url="http://www.w3.org/TR/ws-addr-core">Web Services Addressing 1.0 - Core</ulink> </para></listitem><listitem><para> <ulink url="http://www.w3.org/TR/ws-addr-soap">Web Services Addressing 1.0 - SOAP Binding</ulink></para></listitem></itemizedlist></section>
+<section id="JBossWS-NativeUserGuide_Addressing_Endpoint"><title>Addressing Endpoint</title><para>The following endpoint implementation has a set of operation for a typical stateful shopping chart application.</para><screen xml:space="preserve">    @WebService(name = "StatefulEndpoint", targetNamespace = "<ulink url="http://org.jboss.ws/samples/wsaddressing">http://org.jboss.ws/samples/wsaddressing</ulink>", serviceName = "TestService")
+    @EndpointConfig(configName = "Standard WSAddressing Endpoint")
+    @HandlerChain(file = "WEB-INF/jaxws-handlers.xml")
+    @SOAPBinding(style = SOAPBinding.Style.RPC)
+    <emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> StatefulEndpointImpl <emphasis role="bold">implements</emphasis> StatefulEndpoint, ServiceLifecycle
+    {
+       @WebMethod
+       <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> addItem(String item)
+       { ... }
+    
+       @WebMethod
+       <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> checkout()
+       { ... }
+    
+       @WebMethod
+       <emphasis role="bold">public</emphasis> String getItems()
+       { ... }
+    }
+</screen><para>It uses the <link linkend="chap_JBossWS-JAX-WSEndpointConfiguration">Standard WSAddressing Endpoint</link> to enable the server side addressing handler. It processes the incomming WS-Addressing header elements and provides access to them through the JSR-261 API.</para><para>The endpoint handler chain</para><screen xml:space="preserve">&lt;handler-chains xmlns="<ulink url="http://java.sun.com/xml/ns/javaee">http://java.sun.com/xml/ns/javaee</ulink>" xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+  xsi:schemaLocation="<ulink url="http://java.sun.com/xml/ns/javaee">http://java.sun.com/xml/ns/javaee</ulink> javaee_web_services_1_2.xsd"&gt;
+
+  &lt;handler-chain&gt;
+    &lt;protocol-bindings&gt;##SOAP11_HTTP&lt;/protocol-bindings&gt;
+    &lt;handler&gt;
+      &lt;handler-name&gt;Application Server Handler&lt;/handler-name&gt;
+      &lt;handler-class&gt;org.jboss.test.ws.jaxws.samples.wsaddressing.ServerHandler&lt;/handler-class&gt;
+    &lt;/handler&gt;
+  &lt;/handler-chain&gt;&lt;/handler-chains&gt;
+</screen><para>defines an application specific hander that assignes/processes stateful client ids.</para></section>
+<section id="JBossWS-NativeUserGuide_Addressing_Client"><title>Addressing Client</title><para>On the client side there are similar handlers that does the reverse. It uses the JSR-261 API to add WS-Addressing header elements including the clientid association.</para><para>   The client sets a custom handler chain in the binding</para><screen xml:space="preserve">         Service service = Service.create(wsdlURL, serviceName);
+         port1 = (StatefulEndpoint)service.getPort(StatefulEndpoint.class);
+         BindingProvider bindingProvider = (BindingProvider)port1;
+ 
+         List&lt;Handler&gt; customHandlerChain = <emphasis role="bold">new</emphasis> ArrayList&lt;Handler&gt;();
+         customHandlerChain.add(<emphasis role="bold">new</emphasis> ClientHandler());
+         customHandlerChain.add(<emphasis role="bold">new</emphasis> WSAddressingClientHandler());
+         bindingProvider.getBinding().setHandlerChain(customHandlerChain);
+</screen><para>The WSAddressingClientHandler is provided by JBossWS and reads/writes the addressing properties and puts then into the message context.</para><para><emphasis role="bold">A client connecting to the stateful endpoint</emphasis></para><screen xml:space="preserve">    <emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> AddressingStatefulTestCase <emphasis role="bold">extends</emphasis> JBossWSTest
+    {
+       <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> testAddItem() <emphasis role="bold">throws</emphasis> Exception
+       {
+          port1.addItem("Ice Cream");
+          port1.addItem("Ferrari");
+          
+          port2.addItem("Mars Bar");
+          port2.addItem("Porsche");
+       }
+       
+       <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> testGetItems() <emphasis role="bold">throws</emphasis> Exception
+       {
+          String items1 = port1.getItems();
+          assertEquals("[Ice Cream, Ferrari]", items1);
+          
+          String items2 = port2.getItems();
+          assertEquals("[Mars Bar, Porsche]", items2);
+       }
+    }
+</screen><para><emphasis role="bold">SOAP message exchange</emphasis></para><para>Below you see the SOAP messages that are being exchanged.</para><screen xml:space="preserve">&lt;env:Envelope xmlns:env='<ulink url="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</ulink>'&gt;&lt;env:Header xmlns:wsa='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</ulink>'&gt;
+  &lt;wsa:To&gt;uri:jbossws-samples-wsaddr/TestService&lt;/wsa:To&gt;
+  &lt;wsa:Action&gt;http://org.jboss.ws/addressing/stateful/action&lt;/wsa:Action&gt;
+  &lt;wsa:ReferenceParameters&gt;
+   &lt;ns1:clientid xmlns:ns1='<ulink url="http://somens">http://somens</ulink>'&gt;clientid-1&lt;/ns1:clientid&gt;
+  &lt;/wsa:ReferenceParameters&gt;&lt;/env:Header&gt;&lt;env:Body&gt;
+  &lt;ns1:addItem xmlns:ns1='<ulink url="http://org.jboss.ws/samples/wsaddr">http://org.jboss.ws/samples/wsaddr</ulink>'&gt;
+   &lt;String_1&gt;Ice Cream&lt;/String_1&gt;
+  &lt;/ns1:addItem&gt;&lt;/env:Body&gt;
+&lt;/env:Envelope&gt;
+    
+&lt;env:Envelope xmlns:env='<ulink url="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</ulink>'&gt;&lt;env:Header xmlns:wsa='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</ulink>'&gt;
+  &lt;wsa:To&gt;http://www.w3.org/2005/08/addressing/anonymous&lt;/wsa:To&gt;
+  &lt;wsa:Action&gt;http://org.jboss.ws/addressing/stateful/actionReply&lt;/wsa:Action&gt;
+  &lt;ns1:clientid xmlns:ns1='<ulink url="http://somens">http://somens</ulink>'&gt;clientid-1&lt;/ns1:clientid&gt;&lt;/env:Header&gt;&lt;env:Body&gt;
+  &lt;ns1:addItemResponse xmlns:ns1='<ulink url="http://org.jboss.ws/samples/wsaddr'/">http://org.jboss.ws/samples/wsaddr'/</ulink>&gt;&lt;/env:Body&gt;
+&lt;/env:Envelope&gt;
+        
+    ...
+    
+&lt;env:Envelope xmlns:env='<ulink url="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</ulink>'&gt;
+  &lt;env:Header xmlns:wsa='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</ulink>'&gt;
+    &lt;wsa:To&gt;uri:jbossws-samples-wsaddr/TestService&lt;/wsa:To&gt;
+    &lt;wsa:Action&gt;http://org.jboss.ws/addressing/stateful/action&lt;/wsa:Action&gt;
+    &lt;wsa:ReferenceParameters&gt;
+      &lt;ns1:clientid xmlns:ns1='<ulink url="http://somens">http://somens</ulink>'&gt;clientid-1&lt;/ns1:clientid&gt;
+    &lt;/wsa:ReferenceParameters&gt;
+  &lt;/env:Header&gt;
+  &lt;env:Body&gt;
+    &lt;ns1:getItems xmlns:ns1='<ulink url="http://org.jboss.ws/samples/wsaddr'/">http://org.jboss.ws/samples/wsaddr'/</ulink>&gt;
+  &lt;/env:Body&gt;
+&lt;/env:Envelope&gt;
+    
+&lt;env:Envelope xmlns:env='<ulink url="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</ulink>'&gt;
+  &lt;env:Header xmlns:wsa='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</ulink>'&gt;
+    &lt;wsa:To&gt;http://www.w3.org/2005/08/addressing/anonymous&lt;/wsa:To&gt;
+    &lt;wsa:Action&gt;http://org.jboss.ws/addressing/stateful/actionReply&lt;/wsa:Action&gt;
+    &lt;ns1:clientid xmlns:ns1='<ulink url="http://somens">http://somens</ulink>'&gt;clientid-1&lt;/ns1:clientid&gt;
+  &lt;/env:Header&gt;
+  &lt;env:Body&gt;
+    &lt;ns1:getItemsResponse xmlns:ns1='<ulink url="http://org.jboss.ws/samples/wsaddr">http://org.jboss.ws/samples/wsaddr</ulink>'&gt;
+      &lt;result&gt;[Ice Cream, Ferrari]&lt;/result&gt;
+    &lt;/ns1:getItemsResponse&gt;
+  &lt;/env:Body&gt;
+&lt;/env:Envelope&gt;</screen></section>
+<section id="JBossWS-NativeUserGuide_Tutorial"><title>Tutorial</title><para>For further details please take a look at our <link linkend="chap_JBossWS-NativeWS-AddressingTutorial">WS-Addressing Tutorial</link>.</para><para> </para></section>
+</section>
+<section id="JBossWS-NativeUserGuide_WSBPEL"><title>WS-BPEL</title><para>WS-BPEL is not supported with JAX-WS, please refer to <ulink url="http://jbossws.jboss.org/mediawiki/index.php?title=JAX-RPC_User_Guide#WS-BPEL">JAX-RPC User Guide#WS-BPEL</ulink>.</para><para> </para></section>
+<section id="JBossWS-NativeUserGuide_WSEventing"><title>WS-Eventing</title><para>WS-Eventing specifies a set of operations that allow an event consumer to register (subscribe) with an event producer (source) to receive events (notifications) in an asynchronous fashion.</para><section id="JBossWS-NativeUserGuide_Specifications_431795"><title>Specifications</title><para>WS-Eventing is defined by the combination of the following specifications:</para><itemizedlist><listitem><para> <ulink url="ftp://www6.software.ibm.com/software/developer/library/ws-eventing/WS-Eventing.pdf">WS-Eventing specification</ulink> </para></listitem><listitem><para> <ulink url="http://www.w3.org/TR/ws-addr-core">WS-Addressing Specifications</ulink> </para></listitem></itemizedlist><para>The following section will introduce the main eventing actors and their responsiblities.</para><note><para><para><emphasis role="bold">Note</emphasis></para><para>The original eventing specification builds upon WS-Addressing 2004/08. JBossWS however decided to stick to the latest version, which is the W3C candidate release.</para><para> </para></para></note></section>
+<section id="JBossWS-NativeUserGuide_Collaboration"><title>Collaboration</title><ulink url="http://jbossws.jboss.org/mediawiki/index.php?title=Image:EventingCollaboration.gif"/>Eventing collaboration<orderedlist><listitem><para> An event sink (web service client) sends a subscription request to the event source endpoint. This includes the event sink endpoint address where notifications should delivered. Upon successful subscription the sink receives a leased subscription ID that can be used to identify the client in subsequent requests. </para></listitem><listitem><para> A successfully registered event sink directs management requests (Renew, GetStatus, Unsubscribe) to the subscription manager endpoint using the previously received subscription ID. The subscription manager endpoint address was returned as part of the subscription response in the first place. </para></listitem><listitem><para> The actual event source (application) emits notification messages through the JBossWS-Eventing module. JBossWS-Eventing dispatches the notification to any subscriber endpoint that is registered with a particular event source.s </para></listitem><listitem><para> Besides notifications JBossWS-Eventing may emit lifecycle events at any time, i.e. to inform an event sink that a subscription was canceled. This can be the case when the subscription expired or the event source was undeployed. </para></listitem></orderedlist><para>It is the users responsibility to supply the web service endpoints (EventSourceEndpoint, SubscriptionManagerEndpoint) that are required for a complete event source deployment. Fortunatly JBossWS-Eventing already ships with a implementation that can be used right away. All that's left todo is packaging of standard JSR-109 deployment archive that includes the event source specific WSDL and points to the JBossWS-Eventing endpoint implementations.</para><para>The relevant steps are:</para><itemizedlist><listitem><para> Create a custom WSDL that describes your event source, in respect to the notification schema (1) and the fact that is actually contains an event source port (2) </para></listitem><listitem><para> Use the JBossWS SEI (3) and endpoint (4) implementations (web.xml).</para></listitem></itemizedlist><para> </para></section>
+<section id="JBossWS-NativeUserGuide_Setup_an_event_source_endpoint"><title>Setup an event source endpoint</title><para>With JAX-WS the event source setup has actually become quite easy. All you need to do is  to subclass your endpoint implementation from <computeroutput>AbstractEventSourceEndpoint</computeroutput> and a subscription manager  from <computeroutput>AbstractSubscriptionManagerEndpoint</computeroutput> and finally point that implementation to a <ulink url="http://community.jboss.org/docs/DOC-13541">event source specific WSDL</ulink>.</para><screen xml:space="preserve"><emphasis role="bold">package</emphasis> org.jboss.test.ws.jaxws.samples.wseventing;
+ 
+<emphasis role="bold">import</emphasis> javax.jws.WebService;
+ 
+<emphasis role="bold">import</emphasis> org.jboss.logging.Logger;
+<emphasis role="bold">import</emphasis> org.jboss.ws.annotation.EndpointConfig;
+<emphasis role="bold">import</emphasis> org.jboss.ws.extensions.eventing.jaxws.AbstractEventSourceEndpoint;
+ 
+/**
+ * @author <ulink url="mailto:Heiko.Braun@jboss.org">Heiko.Braun@jboss.org</ulink>
+ * @version $Id$
+ * @since 18.01.2007
+ */
+@WebService(                                                                   (1)
+   name = "EventSource",
+   portName = "EventSourcePort",
+   targetNamespace = "<ulink url="http://schemas.xmlsoap.org/ws/2004/08/eventing">http://schemas.xmlsoap.org/ws/2004/08/eventing</ulink>",
+   wsdlLocation = "/WEB-INF/wsdl/sysmon.wsdl",                                 (2)
+   endpointInterface = "org.jboss.ws.extensions.eventing.jaxws.EventSourceEndpoint")
+@EndpointConfig(configName = "Standard WSAddressing Endpoint")                 (3)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> SysmonRegistrationEndpoint <emphasis role="bold">extends</emphasis> AbstractEventSourceEndpoint {  (4)
+ 
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">final</emphasis> Logger log = Logger.getLogger(SysmonRegistrationEndpoint.class);
+ 
+   <emphasis role="bold">protected</emphasis> Logger getLogger()
+   {
+      <emphasis role="bold">return</emphasis> log;
+   }
+}</screen><orderedlist><listitem><para> Of course we need a <computeroutput>@WebService</computeroutput> annotation </para></listitem><listitem><para> It's important to override the WSDL here </para></listitem><listitem><para> You need to tell JBossWS that it requires WS-Addressing for this endpoint </para></listitem><listitem><para> Subclass a predefined implementation that knows how to delegate to the actual eventing service implementation</para></listitem></orderedlist></section>
+<section id="JBossWS-NativeUserGuide_The_WSDL_that_describes_an_event_source"><title>The WSDL that describes an event source</title><para>Even though we are already using the annotation driven approach, JBossWS eventing still requires an event source specific WSDL.</para><para>The following excerpt shows the relevant WSDL details that describe an event source.</para><screen xml:space="preserve">  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+   &lt;wsdl:definitions
+      targetNamespace="<ulink url="http://www.jboss.org/sysmon">http://www.jboss.org/sysmon</ulink>"
+      xmlns:tns="<ulink url="http://www.jboss.org/sysmon">http://www.jboss.org/sysmon</ulink>"
+      xmlns:wse='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/eventing">http://schemas.xmlsoap.org/ws/2004/08/eventing</ulink>'
+      xmlns:wsdl='<ulink url="http://schemas.xmlsoap.org/wsdl/">http://schemas.xmlsoap.org/wsdl/</ulink>'
+      xmlns:wsa10='<ulink url="http://www.w3.org/2005/08/addressing">http://www.w3.org/2005/08/addressing</ulink>'
+      xmlns:xs='<ulink url="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</ulink>'
+      xmlns:soap="<ulink url="http://schemas.xmlsoap.org/wsdl/soap/">http://schemas.xmlsoap.org/wsdl/soap/</ulink>"&gt;
+
+   &lt;wsdl:import
+(1)        namespace='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/eventing">http://schemas.xmlsoap.org/ws/2004/08/eventing</ulink>'
+           location='jbwse.wsdl' /&gt;
+
+   &lt;wsdl:types&gt;
+
+      &lt;xs:schema targetNamespace='<ulink url="http://schemas.xmlsoap.org/ws/2004/08/eventing">http://schemas.xmlsoap.org/ws/2004/08/eventing</ulink>'&gt;
+(2)      &lt;xs:include schemaLocation='jbwse.xsd'/&gt;
+      &lt;/xs:schema&gt;
+
+(3)   &lt;xs:schema
+            targetNamespace="<ulink url="http://www.jboss.org/sysmon">http://www.jboss.org/sysmon</ulink>"
+            elementFormDefault="qualified"
+            blockDefault="#all"&gt;
+         &lt;xs:element name="SystemStatus"&gt;
+            &lt;xs:complexType&gt;
+               &lt;xs:sequence&gt;
+                  &lt;xs:element name="Time " type="xs:dateTime"/&gt;
+                  &lt;xs:element name="HostName" type="xs:string"/&gt;
+                  &lt;xs:element name="HostAddress" type="xs:string"/&gt;
+                  &lt;xs:element name="ActiveThreadCount" type="xs:int"/&gt;
+                  &lt;xs:element name="FreeMemory" type="xs:string"/&gt;
+                  &lt;xs:element name="MaxMemory" type="xs:string"/&gt;
+               &lt;/xs:sequence&gt;
+            &lt;/xs:complexType&gt;
+         &lt;/xs:element&gt;
+      &lt;/xs:schema&gt;
+
+   &lt;/wsdl:types&gt;
+
+   &lt;wsdl:message name='SystemInfoMsg'&gt;
+      &lt;wsdl:part name='body' element='tns:SystemStatus'/&gt;
+   &lt;/wsdl:message&gt;
+
+(4) &lt;wsdl:portType name='SystemInfo' wse:EventSource='true'&gt;
+       &lt;wsdl:operation name='SysmonOp'&gt;
+          &lt;wsdl:output message='tns:SystemInfoMsg'/&gt;
+       &lt;/wsdl:operation&gt;
+    &lt;/wsdl:portType&gt;
+
+   &lt;wsdl:binding name="SystemInfoBinding" type="tns:SystemInfo"&gt;
+      &lt;soap:binding style="document" transport="<ulink url="http://schemas.xmlsoap.org/soap/http">http://schemas.xmlsoap.org/soap/http</ulink>"/&gt;
+      &lt;wsdl:operation name="SysmonOp"&gt;
+         &lt;soap:operation soapAction=""/&gt;
+         &lt;wsdl:output&gt;
+            &lt;soap:body use="literal"/&gt;
+         &lt;/wsdl:output&gt;
+      &lt;/wsdl:operation&gt;
+   &lt;/wsdl:binding&gt;&lt;/wsdl:definitions&gt;
+</screen><orderedlist><listitem><para> Import the default eventing WSDL, that includes service and port declarations. </para></listitem><listitem><para> Include the default eventing Types </para></listitem><listitem><para> Specifiy the notitification message schema. </para></listitem><listitem><para> Declare a port type, attributed "wse:EventSource='true'" that points to your notification message schema.</para></listitem></orderedlist></section>
+<section id="JBossWS-NativeUserGuide_Emitting_notifications"><title>Emitting notifications</title><para>JBossWS-Eventing registeres a event dispatcher within local JNDI tree that can be used to emit notifications from applications.</para><screen xml:space="preserve">     java:/EventDispatcher
+</screen><para>The event dispatcher interface:</para><screen xml:space="preserve">           <emphasis role="bold">public</emphasis> <emphasis role="bold">interface</emphasis> EventDispatcher
+           {
+               <emphasis role="bold">void</emphasis> dispatch(URI eventSourceNS, Element payload);
+           }
+</screen><para><emphasis role="bold"> Example notification </emphasis></para><screen xml:space="preserve">(1)   URI eventSourceURI = <emphasis role="bold">new</emphasis> URI("<ulink url="http://http://www.jboss.org/sysmon/SystemInfo">http://http://www.jboss.org/sysmon/SystemInfo</ulink>");
+(2)   Element payload = DOMUtils.parse("SOME XML STRING");
+      <emphasis role="bold">try</emphasis>
+      {
+         InitialContext iniCtx = getInitialContext();
+(3)      EventDispatcher delegate = (EventDispatcher)
+               iniCtx.lookup(EventingConstants.DISPATCHER_JNDI_NAME);
+(4)      delegate.dispatch(eventSourceURI, payload);
+      }
+      <emphasis role="bold">catch</emphasis> (Exception e)
+      {
+         //
+      }</screen><orderedlist><listitem><para> Address your event source correctly (TargetNamespace+PortTypeName) </para></listitem><listitem><para> Create your payload </para></listitem><listitem><para> Lookup dispatcher from JNDI </para></listitem><listitem><para> Dispatch notification. </para></listitem></orderedlist><para> </para><para>The SubscriptionManager MBean is the actual core component that drives the JBossWS-Eventing implementation. It can be accessed through the jmx-console.</para><screen xml:space="preserve">            jboss.ws.eventing:service=SubscriptionManager
+</screen><para>Management operations exist to monitor and maintain active subscritions and deployed event sources. The current implementation is backed by a ThreadPoolExecutor, that asynchronously delivers messages to event sink endpoints. It can be configured through the following attributes:</para><itemizedlist><listitem><para> corePoolSize - average number of idle threads </para></listitem><listitem><para> maximumPoolSize - maximum number of threads </para></listitem><listitem><para> eventKeepAlive - keep alive before an undelivered event message is discarded.</para></listitem></itemizedlist><para> </para><para> </para></section>
+</section>
+<section id="JBossWS-NativeUserGuide_WSSecurity"><title>WS-Security</title><para>WS-Security addresses message level security. It standardizes authorization, encryption, and digital signature processing of web services. Unlike transport security models, such as SSL, WS-Security applies security directly to the elements of the web service message. This increases the flexibility of your web services, by allowing any message model to be used (point to point, multi-hop relay, etc).</para><para>This chapter describes how to use WS-Security to sign and encrypt a simple SOAP message.</para><para><emphasis role="bold">Specifications</emphasis></para><para>WS-Security is defined by the combination of the following specifications:</para><itemizedlist><listitem><para> <ulink url="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf">SOAP Message Security 1.0</ulink> </para></listitem><listitem><para> <ulink url="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0.pdf">Username Token Profile 1.0</ulink> </para></listitem><listitem><para> <ulink url="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0.pdf">X.509 Token Profile 1.0</ulink> </para></listitem><listitem><para> <ulink url="http://www.w3.org/TR/xmlenc-core">W3C XML Encryption</ulink> </para></listitem><listitem><para> <ulink url="http://www.w3.org/TR/xmldsig-core">W3C XML Signature</ulink> </para></listitem><listitem><para> <ulink url="http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html">Basic Security Profile 1.0 (Still in Draft)</ulink></para></listitem></itemizedlist><section id="JBossWS-NativeUserGuide_Endpoint_configuration"><title>Endpoint configuration</title><para>JBossWS uses handlers to identify ws-security encoded requests and invoke the security components to sign and encrypt messages. In order to enable security processing, the client and server side need to include a corresponding handler configuration. The preferred way is to reference a predefined <link linkend="chap_JBossWS-JAX-WSEndpointConfiguration">JAX-WS_Endpoint_Configuration</link> or <link linkend="chap_JBossWS-JAX-WSClientConfiguration">JAX-WS_Client_Configuration</link> respectively.</para><note><para><para><emphasis><emphasis role="bold">Note</emphasis></emphasis></para><para><emphasis>You need to setup both the endpoint configuration and the WSSE declarations. That's two separate steps.</emphasis></para></para></note></section>
+<section id="JBossWS-NativeUserGuide_Server_side_WSSE_declaration_jbosswsseserverxml"><title>Server side WSSE declaration (jboss-wsse-server.xml)</title><para>In this example we configure both the client and the server to sign the message body. Both also require this from each other. So, if you remove either the client or the server security deployment descriptor, you will notice that the other party will throw a fault explaining that the message did not conform to the proper security requirements.</para><screen xml:space="preserve">    &lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>" 
+            xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+            xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink> 
+                    <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+  (1)  &lt;key-store-file&gt;WEB-INF/wsse.keystore&lt;/key-store-file&gt;
+  (2)  &lt;key-store-password&gt;jbossws&lt;/key-store-password&gt;
+  (3)  &lt;trust-store-file&gt;WEB-INF/wsse.truststore&lt;/trust-store-file&gt;
+  (4)  &lt;trust-store-password&gt;jbossws&lt;/trust-store-password&gt;
+  (5)  &lt;config&gt;
+  (6)    &lt;sign type="x509v3" alias="wsse"/&gt;
+  (7)    &lt;requires&gt;
+  (8)      &lt;signature/&gt;
+        &lt;/requires&gt;
+      &lt;/config&gt;
+    &lt;/jboss-ws-security&gt;
+</screen><para> </para><orderedlist><listitem><para> This specifies that the key store we wish to use is WEB-INF/wsse.keystore, which is located in our war file. </para></listitem><listitem><para> This specifies that the store password is "jbossws". Password can be encypted using the {EXT} and {CLASS} commands. Please see samples for their usage. </para></listitem><listitem><para> This specifies that the trust store we wish to use is WEB-INF/wsse.truststore, which is located in our war file. </para></listitem><listitem><para> This specifies that the trust store password is also "jbossws". Password can be encrypted using the {EXT} and {CLASS} commands. Please see samples for their usage. </para></listitem><listitem><para> Here we start our root config block. The root config block is the default configuration for all services in this war file. </para></listitem><listitem><para> This means that the server must sign the message body of all responses. Type means that we are to use a X.509v3 certificate (a standard certificate). The alias option says that the certificate/key pair to use for signing is in the key store under the "wsse" alias </para></listitem><listitem><para> Here we start our optional requires block. This block specifies all security requirements that must be met when the server receives a message. </para></listitem><listitem><para> This means that all web services in this war file require the message body to be signed. </para></listitem></orderedlist><para>By default an endpoint does not use the WS-Security configuration.  Use the proprietary @EndpointConfig annotation to set the config name. See <link linkend="chap_JBossWS-JAX-WSEndpointConfiguration">JAX-WS_Endpoint_Configuration</link> for the list of available config names.</para><screen xml:space="preserve">@WebService
+@EndpointConfig(configName = "Standard WSSecurity Endpoint")
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> HelloJavaBean
+{
+   ...
+}
+</screen></section>
+<section id="JBossWS-NativeUserGuide_Client_side_WSSE_declaration_jbosswsseclientxml"><title>Client side WSSE declaration (jboss-wsse-client.xml)</title><screen xml:space="preserve">    &lt;jboss-ws-security xmlns="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink>" 
+          xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"
+      xsi:schemaLocation="<ulink url="http://www.jboss.com/ws-security/config">http://www.jboss.com/ws-security/config</ulink> 
+            <ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+  (1)  &lt;config&gt;
+  (2)    &lt;sign type="x509v3" alias="wsse"/&gt;
+  (3)    &lt;requires&gt;
+  (4)      &lt;signature/&gt;
+        &lt;/requires&gt;
+      &lt;/config&gt;
+    &lt;/jboss-ws-security&gt;
+</screen><para> </para><orderedlist><listitem><para> Here we start our root config block. The root config block is the default configuration for all web service clients (Call, Proxy objects). </para></listitem><listitem><para> This means that the client must sign the message body of all requests it sends. Type means that we are to use a X.509v3 certificate (a standard certificate). The alias option says that the certificate/key pair to use for signing is in the key store under the "wsse" alias </para></listitem><listitem><para> Here we start our optional requires block. This block specifies all security requirements that must be met when the client receives a response. </para></listitem><listitem><para> This means that all web service clients must receive signed response messages.</para></listitem></orderedlist><para> </para><section id="JBossWS-NativeUserGuide_Client_side_key_store_configuration"><title>Client side key store configuration</title><para>We did not specify a key store or trust store, because client app uses the WSSE System properties instead. If this was a Web or EJB client (meaning a webservice client in a war or EJB jar file), then we would have to specify them in the client descriptor.</para><para>Here is an excerpt from the JBossWS samples:</para><screen xml:space="preserve">&lt;sysproperty key="org.jboss.ws.wsse.keyStore"
+   value="${tests.output.dir}/resources/jaxrpc/samples/wssecurity/wsse.keystore"/&gt;
+&lt;sysproperty key="org.jboss.ws.wsse.trustStore" 
+   value="${tests.output.dir}/resources/jaxrpc/samples/wssecurity/wsse.truststore"/&gt;
+&lt;sysproperty key="org.jboss.ws.wsse.keyStorePassword" value="jbossws"/&gt;
+&lt;sysproperty key="org.jboss.ws.wsse.trustStorePassword" value="jbossws"/&gt;
+&lt;sysproperty key="org.jboss.ws.wsse.keyStoreType" value="jks"/&gt;
+&lt;sysproperty key="org.jboss.ws.wsse.trustStoreType" value="jks"/&gt;
+</screen><para><emphasis role="bold">SOAP message exchange</emphasis></para><para>Below you see the incomming SOAP message with the details of the security headers ommited. The idea is, that the SOAP body is still plain text, but it is signed in the security header and can therefore not manipulated in transit.</para><para>Incomming SOAPMessage</para><screen xml:space="preserve">    &lt;env:Envelope xmlns:env="<ulink url="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</ulink>"&gt;
+      &lt;env:Header&gt;
+        &lt;wsse:Security env:mustUnderstand="1" ...&gt;
+          &lt;wsu:Timestamp wsu:Id="timestamp"&gt;...&lt;/wsu:Timestamp&gt;
+          &lt;wsse:BinarySecurityToken ...&gt;
+          ...
+          &lt;/wsse:BinarySecurityToken&gt;
+          &lt;ds:Signature xmlns:ds="<ulink url="http://www.w3.org/2000/09/xmldsig#">http://www.w3.org/2000/09/xmldsig#</ulink>"&gt;
+          ...
+          &lt;/ds:Signature&gt;
+        &lt;/wsse:Security&gt;
+      &lt;/env:Header&gt;
+      &lt;env:Body wsu:Id="element-1-1140197309843-12388840" ...&gt;
+        &lt;ns1:echoUserType xmlns:ns1="<ulink url="http://org.jboss.ws/samples/wssecurity">http://org.jboss.ws/samples/wssecurity</ulink>"&gt;
+          &lt;UserType_1 xmlns:xsi="<ulink url="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</ulink>"&gt;
+            &lt;msg&gt;Kermit&lt;/msg&gt;
+          &lt;/UserType_1&gt;
+        &lt;/ns1:echoUserType&gt;
+      &lt;/env:Body&gt;
+    &lt;/env:Envelope&gt;</screen></section>
+</section>
+<section id="JBossWS-NativeUserGuide_Installing_the_BouncyCastle_JCE_provider_JDK_14"><title>Installing the BouncyCastle JCE provider (JDK 1.4)</title><para>The information below has originaly been provided by <ulink url="http://www.bouncycastle.org/specifications.html#install">The Legion of the Bouncy Castle</ulink>.</para><para>The provider can be configured as part of your environment via static registration by adding an entry to the java.security properties file (found in $JAVA_HOME/jre/lib/security/java.security, where $JAVA_HOME is the location of your JDK/JRE distribution). You'll find detailed instructions in the file but basically it comes down to adding a line:</para><screen xml:space="preserve">  security.provider.&lt;n&gt;=org.bouncycastle.jce.provider.BouncyCastleProvider
+</screen><para>Where &lt;n&gt; is the preference you want the provider at.</para><note><para><para><emphasis><emphasis role="bold">Note</emphasis></emphasis></para><para><emphasis>Issues may arise if the Sun providers are not first.</emphasis></para></para></note><para><emphasis>Where you put the jar is mostly up to you, although with jdk1.4 the best (and in some cases only) place to have it is in $JAVA_HOME/jre/lib/ext. Under Windows there will normally be a JRE and a JDK install of Java if you think you have installed it correctly and it still doesn't work chances are you have added the provider to the installation not being used.</emphasis></para></section>
+<section id="JBossWS-NativeUserGuide_Keystore_truststore__What"><title>Keystore, truststore - What?</title><note><para><para><emphasis><emphasis role="bold">Note</emphasis></emphasis></para><para><emphasis>If you having a hard time understanding how the different trust- and keystore configurations are used for signature and encryption, then read this thread first: <link linkend="chap_index">http://www.jboss.org/index.html?module=bb&amp;op=viewtopic&amp;t=94406</link></emphasis></para></para></note></section>
+<section id="JBossWS-NativeUserGuide_Advanced_configuration"><title>Advanced configuration</title><para>Further information and examples covering <link linkend="chap_JBossWS-WS-Securityoptions">advanced WS-Security configuration options</link> are available. Those might help when specific settings are required to obtain interoperability with other vendors' WS-Security implementation.</para></section>
+</section>
+<section id="JBossWS-NativeUserGuide_WSReliable_Messaging"><title>WS-Reliable Messaging</title><para>WS-Reliable Messaging specifies how a reliable web service communication can be achieved.</para><para>Please take a look at our <link linkend="chap_JBossWS-NativeWS-ReliableMessagingTutorial">WS-Reliable Messaging Tutorial</link> for configuration details.</para></section>
+<section id="JBossWS-NativeUserGuide_WSTransaction"><title>WS-Transaction</title><para>Support for the WS-Coordination, WS-AtomicTransaction and WS-BusinessActivity specifications will be provided by technology recently acquired from Arjuna Technologies Ltd. This technology will be present within the JBoss Transactions 4.2.1 release. Further information can be obtained from the <ulink url="http://labs.jboss.org/portal/jbosstm">JBoss Transactions Project</ulink></para></section>
+<section id="JBossWS-NativeUserGuide_XML_Registries"><title>XML Registries</title><para>J2EE 1.4 mandates support for Java API for XML Registries (JAXR). Inclusion of a XML Registry with the J2EE 1.4 certified Application Server is optional. Starting jboss-4.0.2, JBoss ships a UDDI v2.0 compliant registry, the Apache jUDDI registry. We also provide support for JAXR Capability Level 0 (UDDI Registries) via integration of Apache Scout.</para><para>This chapter describes how to configure the jUDDI registry in JBoss and some sample code outlines for using JAXR API to publish and query the jUDDI registry.</para><section id="JBossWS-NativeUserGuide_Apache_jUDDI_Configuration"><title>Apache jUDDI Configuration</title><para>Configuration of the jUDDI registry happens via an MBean Service that is deployed in the juddi-service.sar archive in the "all" configuration. The configuration of this service can be done in the jboss-service.xml of the META-INF directory in the juddi-service.sar</para><para>Let us look at the individual configuration items that can be changed.</para><para>DataSources configuration</para><screen xml:space="preserve">      &lt;!-- Datasource to Database--&gt;
+      &lt;attribute name="DataSourceUrl"&gt;java:/DefaultDS&lt;/attribute&gt;
+</screen><para>Database Tables (Should they be created on start, Should they be dropped on stop, Should they be dropped on start etc)</para><screen xml:space="preserve">      &lt;!-- Should all tables be created on Start--&gt;
+      &lt;attribute name="CreateOnStart"&gt;false&lt;/attribute&gt;
+      &lt;!-- Should all tables be dropped on Stop--&gt;
+      &lt;attribute name="DropOnStop"&gt;true&lt;/attribute&gt;
+      &lt;!-- Should all tables be dropped on Start--&gt;
+      &lt;attribute name="DropOnStart"&gt;false&lt;/attribute&gt;
+</screen><para>JAXR Connection Factory to be bound in JNDI. (Should it be bound? and under what name?)</para><screen xml:space="preserve">      &lt;!-- Should I bind a Context to which JaxrConnectionFactory bound--&gt;
+      &lt;attribute name="ShouldBindJaxr"&gt;true&lt;/attribute&gt;
+
+      &lt;!-- Context to which JaxrConnectionFactory to bind to. If you have remote clients, please bind it to the global namespace(default behavior). 
+           To just cater to clients running on the same VM as JBoss, change to java:/JAXR --&gt;
+      &lt;attribute name="BindJaxr"&gt;JAXR&lt;/attribute&gt;</screen><para> </para><para>Other common configuration:</para><para>Add authorized users to access the jUDDI registry. (Add a sql insert statement in a single line)</para><screen xml:space="preserve">      Look at the script META-INF/ddl/juddi_data.ddl for more details. Example for a user 'jboss'
+
+      INSERT INTO PUBLISHER (PUBLISHER_ID,PUBLISHER_NAME,
+      EMAIL_ADDRESS,IS_ENABLED,IS_ADMIN) 
+      VALUES ('jboss','JBoss User','jboss@xxx','true','true');</screen></section>
+<section id="JBossWS-NativeUserGuide_JBoss_JAXR_Configuration"><title>JBoss JAXR Configuration</title><para>In this section, we will discuss the configuration needed to run the JAXR API. The JAXR configuration relies on System properties passed to the JVM. The System properties that are needed are:</para><screen xml:space="preserve">   javax.xml.registry.ConnectionFactoryClass=org.apache.ws.scout.registry.ConnectionFactoryImpl 
+   jaxr.query.url=http://localhost:8080/juddi/inquiry 
+   jaxr.publish.url=http://localhost:8080/juddi/publish
+   juddi.proxy.transportClass=org.jboss.jaxr.juddi.transport.SaajTransport
+</screen><para>Please remember to change the hostname from "localhost" to the hostname of the UDDI service/JBoss Server.</para><para>You can pass the System Properties to the JVM in the following ways:</para><itemizedlist><listitem><para> When the client code is running inside JBoss (maybe a servlet or an EJB). Then you will need to pass the System properties in the run.sh/run.bat scripts to the java process via the "-D" option. </para></listitem><listitem><para> When the client code is running in an external JVM. Then you can pass the properties either as "-D" options to the java process or explicitly set them in the client code(not recommended). </para></listitem></itemizedlist><screen xml:space="preserve">      System.setProperty(propertyname, propertyvalue);</screen></section>
+<section id="JBossWS-NativeUserGuide_JAXR_Sample_Code"><title>JAXR Sample Code</title><para>There are two categories of API: JAXR Publish API and JAXR Inquiry API. The important JAXR interfaces that any JAXR client code will use are the following.</para><itemizedlist><listitem><para> <ulink url="http://java.sun.com/j2ee/1.4/docs/api/javax/xml/registry/RegistryService.html">javax.xml.registry.RegistryService</ulink> From J2EE 1.4 JavaDoc: "This is the principal interface implemented by a JAXR provider. A registry client can get this interface from a Connection to a registry. It provides the methods that are used by the client to discover various capability specific interfaces implemented by the JAXR provider." </para></listitem><listitem><para> <ulink url="http://java.sun.com/j2ee/1.4/docs/api/javax/xml/registry/BusinessLifeCycleManager.html">javax.xml.registry.BusinessLifeCycleManager</ulink> From J2EE 1.4 JavaDoc: "The BusinessLifeCycleManager interface, which is exposed by the Registry Service, implements the life cycle management functionality of the Registry as part of a business level API. Note that there is no authentication information provided, because the Connection interface keeps that state and context on behalf of the client." </para></listitem><listitem><para> <ulink url="http://java.sun.com/j2ee/1.4/docs/api/javax/xml/registry/BusinessQueryManager.html">javax.xml.registry.BusinessQueryManager</ulink> From J2EE 1.4 JavaDoc: "The BusinessQueryManager interface, which is exposed by the Registry Service, implements the business style query interface. It is also referred to as the focused query interface." </para></listitem></itemizedlist><para>Let us now look at some of the common programming tasks performed while using the JAXR API:</para><para>Getting a JAXR Connection to the registry.</para><screen xml:space="preserve">      String queryurl = System.getProperty("jaxr.query.url", "<ulink url="http://localhost:8080/juddi/inquiry">http://localhost:8080/juddi/inquiry</ulink>");
+      String puburl = System.getProperty("jaxr.publish.url", "<ulink url="http://localhost:8080/juddi/publish">http://localhost:8080/juddi/publish</ulink>");
+ 
+      Properties props = <emphasis role="bold">new</emphasis> Properties();
+      props.setProperty("javax.xml.registry.queryManagerURL", queryurl);
+      props.setProperty("javax.xml.registry.lifeCycleManagerURL", puburl);
+ 
+      String transportClass = System.getProperty("juddi.proxy.transportClass", "org.jboss.jaxr.juddi.transport.SaajTransport");
+      System.setProperty("juddi.proxy.transportClass", transportClass);
+ 
+      // Create the connection, passing it the configuration properties
+      factory = ConnectionFactory.newInstance();
+      factory.setProperties(props);
+      connection = factory.createConnection();
+</screen><para>Authentication with the registry.</para><screen xml:space="preserve">   /**
+    * Does authentication with the uddi registry
+    */
+   <emphasis role="bold">protected</emphasis> <emphasis role="bold">void</emphasis> login() <emphasis role="bold">throws</emphasis> JAXRException
+   {
+      PasswordAuthentication passwdAuth = <emphasis role="bold">new</emphasis> PasswordAuthentication(userid, passwd.toCharArray());
+      Set creds = <emphasis role="bold">new</emphasis> HashSet();
+      creds.add(passwdAuth);
+ 
+      connection.setCredentials(creds);
+   }
+</screen><para>Save a Business</para><screen xml:space="preserve">   /**
+    * Creates a Jaxr Organization with 1 or more services
+    */
+   <emphasis role="bold">protected</emphasis> Organization createOrganization(String orgname) <emphasis role="bold">throws</emphasis> JAXRException
+   {
+      Organization org = blm.createOrganization(getIString(orgname));
+      org.setDescription(getIString("JBoss Inc"));
+      Service service = blm.createService(getIString("JBOSS JAXR Service"));
+      service.setDescription(getIString("Services of XML Registry"));
+      //Create serviceBinding
+      ServiceBinding serviceBinding = blm.createServiceBinding();
+      serviceBinding.setDescription(blm.createInternationalString("Test Service Binding"));
+ 
+      //Turn validation of URI off
+      serviceBinding.setValidateURI(<emphasis role="bold">false</emphasis>);
+      serviceBinding.setAccessURI("<ulink url="http://testjboss.org">http://testjboss.org</ulink>");
+ 
+      // Add the serviceBinding to the service
+      service.addServiceBinding(serviceBinding);
+ 
+      User user = blm.createUser();
+      org.setPrimaryContact(user);
+      PersonName personName = blm.createPersonName("Anil S");
+      TelephoneNumber telephoneNumber = blm.createTelephoneNumber();
+      telephoneNumber.setNumber("111-111-7777");
+      telephoneNumber.setType(<emphasis role="bold">null</emphasis>);
+      PostalAddress address = blm.createPostalAddress("111", "My Drive", "BuckHead", "GA", "USA", "1111-111", "");
+      Collection postalAddresses = <emphasis role="bold">new</emphasis> ArrayList();
+      postalAddresses.add(address);
+      Collection emailAddresses = <emphasis role="bold">new</emphasis> ArrayList();
+      EmailAddress emailAddress = blm.createEmailAddress("<ulink url="mailto:anil@apache.org">anil@apache.org</ulink>");
+      emailAddresses.add(emailAddress);
+ 
+      Collection numbers = <emphasis role="bold">new</emphasis> ArrayList();
+      numbers.add(telephoneNumber);
+      user.setPersonName(personName);
+      user.setPostalAddresses(postalAddresses);
+      user.setEmailAddresses(emailAddresses);
+      user.setTelephoneNumbers(numbers);
+ 
+      ClassificationScheme cScheme = getClassificationScheme("ntis-gov:naics", "");
+      Key cKey = blm.createKey("uuid:C0B9FE13-324F-413D-5A5B-2004DB8E5CC2");
+      cScheme.setKey(cKey);
+      Classification classification = blm.createClassification(cScheme, "Computer Systems Design and Related Services", "5415");
+      org.addClassification(classification);
+      ClassificationScheme cScheme1 = getClassificationScheme("D-U-N-S", "");
+      Key cKey1 = blm.createKey("uuid:3367C81E-FF1F-4D5A-B202-3EB13AD02423");
+      cScheme1.setKey(cKey1);
+      ExternalIdentifier ei = blm.createExternalIdentifier(cScheme1, "D-U-N-S number", "08-146-6849");
+      org.addExternalIdentifier(ei);
+      org.addService(service);
+      <emphasis role="bold">return</emphasis> org;
+   }
+</screen><para>Query a Business</para><screen xml:space="preserve">   /**
+    * Locale aware Search a business in the registry
+    */
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> searchBusiness(String bizname) <emphasis role="bold">throws</emphasis> JAXRException
+   {
+      <emphasis role="bold">try</emphasis>
+      {
+         // Get registry service and business query manager
+         this.getJAXREssentials();
+ 
+         // Define find qualifiers and name patterns
+         Collection findQualifiers = <emphasis role="bold">new</emphasis> ArrayList();
+         findQualifiers.add(FindQualifier.SORT_BY_NAME_ASC);
+         Collection namePatterns = <emphasis role="bold">new</emphasis> ArrayList();
+         String pattern = "%" + bizname + "%";
+         LocalizedString ls = blm.createLocalizedString(Locale.getDefault(), pattern);
+         namePatterns.add(ls);
+ 
+         // Find based upon qualifier type and values
+         BulkResponse response = bqm.findOrganizations(findQualifiers, namePatterns, null, null, null, <emphasis role="bold">null</emphasis>);
+ 
+         // check how many organisation we have matched
+         Collection orgs = response.getCollection();
+         <emphasis role="bold">if</emphasis> (orgs == <emphasis role="bold">null</emphasis>)
+         {
+            log.debug(" -- Matched 0 orgs");
+ 
+         }
+         <emphasis role="bold">else</emphasis>
+         {
+            log.debug(" -- Matched " + orgs.size() + " organizations -- ");
+ 
+            // then step through them
+            <emphasis role="bold">for</emphasis> (Iterator orgIter = orgs.iterator(); orgIter.hasNext();)
+            {
+               Organization org = (Organization)orgIter.next();
+               log.debug("Org name: " + getName(org));
+               log.debug("Org description: " + getDescription(org));
+               log.debug("Org key id: " + getKey(org));
+               checkUser(org);
+               checkServices(org);
+            }
+         }
+      }
+      <emphasis role="bold">finally</emphasis>
+      {
+         connection.close();
+      }
+   }
+</screen><para>For more examples of code using the JAXR API, please refer to the resources in the Resources Section.</para><para> </para></section>
+<section id="JBossWS-NativeUserGuide_Trouble_Shooting"><title>Trouble Shooting</title><itemizedlist><listitem><para> I cannot connect to the registry from JAXR. Please check the inquiry and publish url passed to the JAXR ConnectionFactory. </para></listitem><listitem><para> I cannot connect to the jUDDI registry. Please check the jUDDI configuration and see if there are any errors in the server.log. And also remember that the jUDDI registry is available only in the "all" configuration. </para></listitem><listitem><para> I cannot authenticate to the jUDDI registry. Have you added an authorized user to the jUDDI database, as described earlier in the chapter? </para></listitem><listitem><para> I would like to view the SOAP messages in transit between the client and the UDDI Registry. Please use the tcpmon tool to view the messages in transit. <ulink url="http://tcpmon.dev.java.net/">TCPMon</ulink></para></listitem></itemizedlist></section>
+<section id="JBossWS-NativeUserGuide_Resources"><title>Resources</title><itemizedlist><listitem><para> <ulink url="http://java.sun.com/webservices/jaxr/learning/tutorial/index.html">JAXR Tutorial and Code Camps</ulink> </para></listitem><listitem><para> <ulink url="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/">J2EE 1.4 Tutorial</ulink> </para></listitem><listitem><para> <ulink url="http://www.amazon.com/exec/obidos/ASIN/0321146182">J2EE Web Services by Richard Monson-Haefel</ulink></para></listitem></itemizedlist><para> </para></section>
+</section>
+<section id="JBossWS-NativeUserGuide_WSPolicy"><title>WS-Policy</title><para>The Web Services Policy Framework (WS-Policy) provides a general purpose model and corresponding syntax to describe the policies of a Web Service.</para><para>WS-Policy defines a base set of constructs that can be used and extended by other Web services specifications to describe a broad range of service requirements and capabilities.</para><para>Current JBoss implementation can instrument a webservice with policies attached at endpoint, port or port-type scope level only. There are two different methods to attach policies: providing a wsdl decorated with policies and policy attachments as defined by specifications, or using JBoss proprietary annotations. The first way has the advantage of being standard, while the second one is much more simple to implement. Of course the wsdl generated by these annotations conforms to standard defined in specifications and can be used with any ws-policy compliant client.</para><para>Please note that ws-policy specifications only define policy requirements and their attachment method to wsdl through specific extensions. It is out of the scope of ws-policy specifications and thus implementation to define and use the content of assertions. The way these assertions (called domain assertions or domain policies) have to be deployed and used is left to other specification like WS-Security-Policy or more generally to domain specific implementation.</para><section id="JBossWS-NativeUserGuide_Specification"><title>Specification</title><para>WS-Policy is defined by the combination of the following specifications:</para><screen xml:space="preserve">   * <ulink url="http://www.w3.org/Submission/WS-Policy/">WS-Policy specification</ulink>   * <ulink url="http://www.w3.org/Submission/WS-PolicyAttachment/">WS-Policy-Attachment specification</ulink></screen></section>
+<section id="JBossWS-NativeUserGuide_WSPolicy_Example"><title>WS-Policy Example</title><para>Please take a look to our <link linkend="chap_JBossWS-NativeWS-ReliableMessagingTutorial">WS-Reliable Messaging Tutorial</link> to see how to combine WS-Policy specification with other technologies.</para></section>
+<section id="JBossWS-NativeUserGuide_Using_policies_in_a_user_provided_wsdl"><title>Using policies in a user provided wsdl</title><para>To attach policies in this manner, the only thing you have to do in a webservice class is to provide a custom wsdl. This will cause JBossws to skip wsdl generation at deploy time, since the wsdl file you provided will be published. Please refer to specification (WS-Policy-Attachment) to learn how to modify wsdl to attach a policy.</para><para>Here you find an example of a webservice class and provided wsdl with a policy containing a domain assertion for JBoss wssecurity.</para><screen xml:space="preserve">@WebService(name = "Hello", 
+targetNamespace = "<ulink url="http://org.jboss.ws/samples/wssecuritypolicy">http://org.jboss.ws/samples/wssecuritypolicy</ulink>",
+wsdlLocation="WEB-INF/wsdl/HelloService.wsdl")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> HelloJavaBean
+{
+   <emphasis role="bold">private</emphasis> Logger log = Logger.getLogger(HelloJavaBean.class);
+ 
+   @WebMethod
+   <emphasis role="bold">public</emphasis> UserType echoUserType(@WebParam(name = "user") UserType in0)
+   {
+      log.info(in0);
+      <emphasis role="bold">return</emphasis> in0;
+   }
+}
+</screen><screen xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;definitions name='HelloService' targetNamespace='<ulink url="http://org.jboss.ws/samples/wssecuritypolicy">http://org.jboss.ws/samples/wssecuritypolicy</ulink>' xmlns='<ulink url="http://schemas.xmlsoap.org/wsdl/">http://schemas.xmlsoap.org/wsdl/</ulink>' xmlns:ns1='<ulink url="http://org.jboss.ws/samples/wssecurity">http://org.jboss.ws/samples/wssecurity</ulink>' xmlns:soap='<ulink url="http://schemas.xmlsoap.org/wsdl/soap/">http://schemas.xmlsoap.org/wsdl/soap/</ulink>' xmlns:tns='<ulink url="http://org.jboss.ws/samples/wssecuritypolicy">http://org.jboss.ws/samples/wssecuritypolicy</ulink>' xmlns:wsp='<ulink url="http://schemas.xmlsoap.org/ws/2004/09/policy">http://schemas.xmlsoap.org/ws/2004/09/policy</ulink>' xmlns:xsd='<ulink url="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</ulink>'&gt;&lt;types&gt;
+  &lt;xs:schema targetNamespace='<ulink url="http://org.jboss.ws/samples/wssecurity">http://org.jboss.ws/samples/wssecurity</ulink>' version='1.0' xmlns:xs='<ulink url="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</ulink>'&gt;
+   &lt;xs:complexType name='UserType'&gt;
+    &lt;xs:sequence&gt;
+     &lt;xs:element minOccurs='0' name='msg' type='xs:string'/&gt;
+    &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+  &lt;/xs:schema&gt;&lt;/types&gt;&lt;wsp:Policy wsu:Id='X509EndpointPolicy' xmlns:wsu='<ulink url="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd</ulink>'&gt;
+  &lt;wsp:All&gt;
+   &lt;sp:jboss-ws-security xmlns:sp='<ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>'&gt;
+    &lt;sp:key-store-file&gt;WEB-INF/wsse.keystore&lt;/sp:key-store-file&gt;
+    &lt;sp:key-store-password&gt;jbossws&lt;/sp:key-store-password&gt;
+    &lt;sp:trust-store-file&gt;WEB-INF/wsse.truststore&lt;/sp:trust-store-file&gt;
+    &lt;sp:trust-store-password&gt;jbossws&lt;/sp:trust-store-password&gt;
+    &lt;sp:config&gt;
+     &lt;sp:encrypt alias='wsse' type='x509v3'/&gt;
+     &lt;sp:requires&gt;
+      &lt;sp:encryption/&gt;
+     &lt;/sp:requires&gt;
+    &lt;/sp:config&gt;
+   &lt;/sp:jboss-ws-security&gt;
+  &lt;/wsp:All&gt;&lt;/wsp:Policy&gt;&lt;message name='Hello_echoUserType'&gt;
+  &lt;part name='user' type='ns1:UserType'/&gt;&lt;/message&gt;&lt;message name='Hello_echoUserTypeResponse'&gt;
+  &lt;part name='return' type='ns1:UserType'/&gt;&lt;/message&gt;&lt;portType name='Hello'&gt;
+  &lt;operation name='echoUserType' parameterOrder='user'&gt;
+   &lt;input message='tns:Hello_echoUserType'/&gt;
+   &lt;output message='tns:Hello_echoUserTypeResponse'/&gt;
+  &lt;/operation&gt;&lt;/portType&gt;&lt;binding name='HelloBinding' type='tns:Hello'&gt;
+  &lt;wsp:PolicyReference URI='#X509EndpointPolicy'/&gt;
+  &lt;soap:binding style='rpc' transport='<ulink url="http://schemas.xmlsoap.org/soap/http'/">http://schemas.xmlsoap.org/soap/http'/</ulink>&gt;
+  &lt;operation name='echoUserType'&gt;
+   &lt;soap:operation soapAction=''/&gt;
+   &lt;input&gt;
+    &lt;soap:body namespace='<ulink url="http://org.jboss.ws/samples/wssecuritypolicy">http://org.jboss.ws/samples/wssecuritypolicy</ulink>' use='literal'/&gt;
+   &lt;/input&gt;
+   &lt;output&gt;
+    &lt;soap:body namespace='<ulink url="http://org.jboss.ws/samples/wssecuritypolicy">http://org.jboss.ws/samples/wssecuritypolicy</ulink>' use='literal'/&gt;
+   &lt;/output&gt;
+  &lt;/operation&gt;&lt;/binding&gt;&lt;service name='HelloService'&gt;
+  &lt;port binding='tns:HelloBinding' name='HelloPort'&gt;
+   &lt;soap:address location='REPLACE_WITH_ACTUAL_URL'/&gt;
+  &lt;/port&gt;&lt;/service&gt;
+&lt;/definitions&gt;
+</screen><para>Please note in the wsdl file the wsp:Policy element and the wsp:PolicyReference in 'HelloBinding' binding Element.</para><para> </para></section>
+<section id="JBossWS-NativeUserGuide_Using_policies_with_JBoss_annotations"><title>Using policies with JBoss annotations</title><para>Using JBoss proprietary annotation you only have to provide the policy xml, leaving wsdl generation to the JBossWS deployer.</para><para>There are two annotations to use, the first one (@PolicyAttachment) containing an array of the second one (@Policy): this lets you have many policies attached to a class or method. In future domain policy implementations might ship domain annotations extending the @Policy annotation to provide needed metadata directly as annotation parameters. The current @Policy annotation takes a reference to a xml file containing a generic policy description written respecting ws-policy specification rules.</para><para> </para><screen xml:space="preserve">@Target(ElementType.TYPE) 
+@Retention(RetentionPolicy.RUNTIME)
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> PolicyAttachment {
+   Policy[] value();
+}</screen><screen xml:space="preserve">@Retention(RetentionPolicy.RUNTIME)
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> Policy {
+   
+   <emphasis role="bold">public</emphasis> String policyFileLocation();
+   
+   <emphasis role="bold">public</emphasis> PolicyScopeLevel scope();
+}
+</screen><para>And here you have the previous section example re-implemented using annotations and xml policy file:</para><screen xml:space="preserve">@WebService(name = "Hello", targetNamespace = "<ulink url="http://org.jboss.ws/samples/wssecurityAnnotatedpolicy">http://org.jboss.ws/samples/wssecurityAnnotatedpolicy</ulink>")
+@PolicyAttachment({@Policy( policyFileLocation="WEB-INF/Policy.xml", scope = PolicyScopeLevel.WSDL_PORT ) })
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> HelloJavaBean
+{
+   <emphasis role="bold">private</emphasis> Logger log = Logger.getLogger(HelloJavaBean.class);
+ 
+   @WebMethod
+   <emphasis role="bold">public</emphasis> UserType echoUserType(@WebParam(name = "user") UserType in0)
+   {
+      log.info(in0);
+      <emphasis role="bold">return</emphasis> in0;
+   }
+}
+</screen><screen xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;wsp:Policy wsu:Id="X509EndpointPolicy"  xmlns:wsp="<ulink url="http://schemas.xmlsoap.org/ws/2004/09/policy">http://schemas.xmlsoap.org/ws/2004/09/policy</ulink>" 
+          xmlns:wsu="<ulink url="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd</ulink>"&gt;
+      &lt;wsp:ExactlyOne&gt;
+          &lt;wsp:All&gt;
+                 &lt;sp:jboss-ws-security xmlns:sp="<ulink url="http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd</ulink>"&gt;
+                &lt;sp:key-store-file&gt;WEB-INF/wsse.keystore&lt;/sp:key-store-file&gt;
+                &lt;sp:key-store-password&gt;jbossws&lt;/sp:key-store-password&gt;
+                &lt;sp:trust-store-file&gt;WEB-INF/wsse.truststore&lt;/sp:trust-store-file&gt;
+                &lt;sp:trust-store-password&gt;jbossws&lt;/sp:trust-store-password&gt;
+                &lt;sp:config&gt;
+                &lt;sp:encrypt type="x509v3" alias="wsse"/&gt;
+                &lt;sp:requires&gt;
+                        &lt;sp:encryption/&gt;
+                &lt;/sp:requires&gt;
+                &lt;/sp:config&gt;
+                 &lt;/sp:jboss-ws-security&gt;
+            &lt;/wsp:All&gt;
+     &lt;/wsp:ExactlyOne&gt;            
+ &lt;/wsp:Policy&gt;</screen><para> </para><para> </para><para> </para></section>
+</section>
+</section>
+<section id="JBossWS-NativeUserGuide_JMS_Transport_Clients"><title>JMS Transport Clients</title><para>Since jbossws-2.0.3 we support JAX-WS clients that use JMS transport.</para><para>JMS transport is activated on the client side when the endpoint location uses the 'jms' URL schema</para><screen xml:space="preserve">  &lt;binding name='JMSBinding' type='tns:OrganizationJMSEndpoint'&gt;
+    &lt;soap:binding style='rpc' transport='<ulink url="http://www.example.org/2006/06/soap/bindings/JMS/'/">http://www.example.org/2006/06/soap/bindings/JMS/'/</ulink>&gt;
+    &lt;operation name='getContactInfo'&gt;
+      &lt;soap:operation soapAction=''/&gt;
+      &lt;input&gt;
+        &lt;soap:body namespace='<ulink url="http://org.jboss.ws/samples/jmstransport">http://org.jboss.ws/samples/jmstransport</ulink>' use='literal'/&gt;
+      &lt;/input&gt;
+      &lt;output&gt;
+        &lt;soap:body namespace='<ulink url="http://org.jboss.ws/samples/jmstransport">http://org.jboss.ws/samples/jmstransport</ulink>' use='literal'/&gt;
+      &lt;/output&gt;
+    &lt;/operation&gt;
+  &lt;/binding&gt;
+  
+  &lt;service name='OrganizationJMSEndpointService'&gt;
+    &lt;port binding='tns:JMSBinding' name='JMSEndpointPort'&gt;
+      &lt;soap:address location='jms://queue/RequestQueue?replyToName=queue/ResponseQueue'/&gt;
+    &lt;/port&gt;
+  &lt;/service&gt;
+</screen><para>The service that implements the JMS remote connection is loaded using the key</para><screen xml:space="preserve">   org.jboss.ws.core.client.RemoteConnection.jms
+</screen><para>Like any other service, this can be overwritten using a system property.</para><para>The JAX-WS client code is essentially no different from a client using HTTP as transport</para><screen xml:space="preserve">   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> testJMSEndpointPort() <emphasis role="bold">throws</emphasis> Exception
+   {
+      URL wsdlURL = <emphasis role="bold">new</emphasis> File("resources/jaxws/samples/jmstransport/jmsservice.wsdl").toURL();
+      QName serviceName = <emphasis role="bold">new</emphasis> QName("http://org.jboss.ws/samples/jmstransport", "OrganizationJMSEndpointService");
+      QName portName = <emphasis role="bold">new</emphasis> QName("http://org.jboss.ws/samples/jmstransport", "JMSEndpointPort");
+      
+      Service service = Service.create(wsdlURL, serviceName);
+      Organization port = service.getPort(portName, Organization.class);
+      
+      String res = port.getContactInfo("mafia");
+      assertEquals("The 'mafia' boss is currently out of office, please call again.", res);
+   }
+</screen><para> </para><para> </para></section>
+<section id="JBossWS-NativeUserGuide_DataBinding"><title>DataBinding</title><section id="JBossWS-NativeUserGuide_Using_JAXB_with_non_annotated_classes"><title>Using JAXB with non annotated classes</title><para>JAXB is heavily driven by Java Annotations on the Java Bindings. It currently doesn't support an external binding configuration. This recently became an issue for us on JBossESB since the JBossWS 2.0.0 native SOAP stack uses JAXB to perform the SOAP to Java bindings (see 1, 2). It's an issue for JBossESB simply because it needs to be able to support user definition of JBossWS native Webservice Endpoints (e.g. JSR 181) using Java typesets that have not been "JAXB Annotated" (see JAXB Introductions On JBossWS).</para><para>In order to support this, we built on a JAXB RI feature whereby it allows you to specify a RuntimeInlineAnnotationReader implementation during JAXBContext creation (see JAXBRIContext).</para><para>We call this feature "JAXB Annotation Introduction" and we've made it available for general consumption i.e. it can be checked out, built and used from SVN:</para><itemizedlist><listitem><para> <ulink url="http://anonsvn.jboss.org/repos/jbossws/projects/jaxbintros/">http://anonsvn.jboss.org/repos/jbossws/projects/jaxbintros/</ulink> </para></listitem></itemizedlist><para>Complete documentation can be found here:</para><itemizedlist><listitem><para> <ulink url="http://wiki.jboss.org/wiki/Wiki.jsp?page=JAXBIntroductions">http://wiki.jboss.org/wiki/Wiki.jsp?page=JAXBIntroductions</ulink></para></listitem></itemizedlist></section>
+<section id="JBossWS-NativeUserGuide__Mapping_of_xsdany"><title>  Mapping of xsd:any</title><itemizedlist><listitem><para> <ulink url="https://jaxb.dev.java.net/guide/Mapping_of__xs_any___.html">https://jaxb.dev.java.net/guide/Mapping_of__xs_any___.html</ulink></para></listitem></itemizedlist><para> </para></section>
+</section>
+<section id="JBossWS-NativeUserGuide_Attachments"><title>Attachments</title><section id="JBossWS-NativeUserGuide_MTOMXOP"><title>MTOM/XOP</title><para>This chapter describes Message Transmission Optimization Mechanism (MTOM) and XML-binary Optimized Packaging (XOP), a means of more efficiently serializing XML Infosets that have certain types of content. The related specifications are</para><itemizedlist><listitem><para><ulink url="http://www.w3.org/TR/soap12-mtom/">SOAP Message Transmission Optimization Mechanism (MTOM)</ulink> </para></listitem><listitem><para><ulink url="http://www.w3.org/TR/xop10/">XML-binary Optimized Packaging (XOP)</ulink></para></listitem></itemizedlist><para> </para><section id="JBossWS-NativeUserGuide_Supported_MTOM_parameter_types"><title>Supported MTOM parameter types</title><informaltable><tgroup cols="2"><colspec colnum="1" colname="col1"/><colspec colnum="2" colname="col2"/><thead><row><entry>image/jpeg</entry><entry>java.awt.Image</entry></row></thead><tbody><row><entry>text/xml</entry><entry>javax.xml.transform.Source</entry></row><row><entry>application/xml</entry><entry>javax.xml.transform.Source</entry></row><row><entry>application/octet-stream</entry><entry>javax.activation.DataHandler</entry></row></tbody></tgroup></informaltable><para>The above table shows a list of supported endpoint parameter types. The recommended approach is to use the  <ulink url="http://java.sun.com/j2ee/1.4/docs/api/javax/activation/DataHandler.html">javax.activation.DataHandler</ulink> classes to represent binary data as service endpoint parameters.</para><note><para><para><emphasis role="bold">Note</emphasis></para><para>Microsoft endpoints tend to send any data as application/octet-stream. The only Java type that can easily cope with this  ambiguity is javax.activation.DataHandler</para></para></note></section>
+<section id="JBossWS-NativeUserGuide_Enabling_MTOM_per_endpoint"><title>Enabling MTOM per endpoint</title><para>On the server side MTOM processing is enabled through the <computeroutput>@BindingType</computeroutput> annotation. JBossWS does handle SOAP1.1 and SOAP1.2. Both come with or without MTOM flavours:</para><para><emphasis role="bold"> MTOM enabled service implementations </emphasis></para><screen xml:space="preserve"><emphasis role="bold">package</emphasis> org.jboss.test.ws.jaxws.samples.xop.doclit;
+ 
+<emphasis role="bold">import</emphasis> javax.ejb.Remote;
+<emphasis role="bold">import</emphasis> javax.jws.WebService;
+<emphasis role="bold">import</emphasis> javax.jws.soap.SOAPBinding;
+<emphasis role="bold">import</emphasis> javax.xml.ws.BindingType;
+ 
+@Remote
+@WebService(targetNamespace = "http://org.jboss.ws/xop/doclit")
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.BARE)
+@BindingType(value="http://schemas.xmlsoap.org/wsdl/soap/http?mtom=true")                         (1)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">interface</emphasis> MTOMEndpoint {
+ 
+   [...]
+}
+</screen><orderedlist><listitem><para> The MTOM enabled SOAP 1.1 binding ID </para></listitem></orderedlist><para><emphasis role="bold"> MTOM enabled clients </emphasis></para><para>Web service clients can use the same approach described above or rely on the <computeroutput>Binding</computeroutput> API to enable MTOM (Excerpt taken from the <computeroutput>org.jboss.test.ws.jaxws.samples.xop.doclit.XOPTestCase</computeroutput>):</para><screen xml:space="preserve">[...]
+Service service = Service.create(wsdlURL, serviceName);
+port = service.getPort(MTOMEndpoint.class);
+ 
+// enable MTOM
+binding = (SOAPBinding)((BindingProvider)port).getBinding();
+binding.setMTOMEnabled(<emphasis role="bold">true</emphasis>);
+ 
+</screen><para> </para><note><para><para><emphasis role="bold">Note</emphasis></para><para>You might as well use the JBossWS configuration templates to setup deployment defaults.</para></para></note></section>
+</section>
+<section id="JBossWS-NativeUserGuide_SwaRef"><title>SwaRef</title><para><ulink url="http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html">WS-I Attachment Profile 1.0</ulink> defines mechanism to reference MIME attachment parts using <ulink url="http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html#Referencing_Attachments_from_the_SOAP_Envelope">swaRef</ulink>. In this mechanism the content of XML element of type wsi:swaRef is sent as MIME attachment and the element inside SOAP Body holds the reference to this attachment in the CID URI scheme as defined by <ulink url="http://www.ietf.org/rfc/rfc2111.txt">RFC 2111</ulink>.</para><section id="JBossWS-NativeUserGuide_Using_SwaRef_with_JAXWS_endpoints"><title>Using SwaRef with JAX-WS endpoints</title><para>JAX-WS endpoints delegate all marshalling/unmarshalling to the JAXB API.  The most simple way to enable SwaRef encoding for <computeroutput>DataHandler</computeroutput> types is to annotate a payload bean with the <computeroutput>@XmlAttachmentRef</computeroutput> annotation as shown below:</para><screen xml:space="preserve">/**
+* Payload bean that will use SwaRef encoding
+*/
+@XmlRootElement
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DocumentPayload
+{
+   <emphasis role="bold">private</emphasis> DataHandler data;
+ 
+   <emphasis role="bold">public</emphasis> DocumentPayload()
+   {
+   }
+ 
+   <emphasis role="bold">public</emphasis> DocumentPayload(DataHandler data)
+   {
+      this.data = data;
+   }
+      
+   @XmlElement
+   @XmlAttachmentRef
+   <emphasis role="bold">public</emphasis> DataHandler getData()
+   {
+      <emphasis role="bold">return</emphasis> data;
+   }
+ 
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> setData(DataHandler data)
+   {
+      this.data = data;
+   }
+}
+</screen><para>With document wrapped endpoints you may even specify the <computeroutput>@XmlAttachmentRef</computeroutput> annotation on the service endpoint interface:</para><screen xml:space="preserve">@WebService
+<emphasis role="bold">public</emphasis> <emphasis role="bold">interface</emphasis> DocWrappedEndpoint
+{
+   @WebMethod
+   DocumentPayload beanAnnotation(DocumentPayload dhw, String test);
+ 
+   @WebMethod
+   @XmlAttachmentRef
+   DataHandler parameterAnnotation(@XmlAttachmentRef DataHandler data, String test);
+ 
+}
+</screen><para>The message would then refer to the attachment part by CID:</para><screen xml:space="preserve">&lt;env:Envelope xmlns:env='<ulink url="http://schemas.xmlsoap.org/soap/envelope/">http://schemas.xmlsoap.org/soap/envelope/</ulink>'&gt;&lt;env:Header/&gt;&lt;env:Body&gt;
+  &lt;ns2:parameterAnnotation xmlns:ns2='<ulink url="http://swaref.samples.jaxws.ws.test.jboss.org/">http://swaref.samples.jaxws.ws.test.jboss.org/</ulink>'&gt;
+   &lt;arg0&gt;cid:0-1180017772935-32455963@ws.jboss.org&lt;/arg0&gt;
+   &lt;arg1&gt;Wrapped test&lt;/arg1&gt;
+  &lt;/ns2:parameterAnnotation&gt;&lt;/env:Body&gt;
+&lt;/env:Envelope&gt;</screen></section>
+<section id="JBossWS-NativeUserGuide_Starting_from_WSDL"><title>Starting from WSDL</title><para>If you chose the contract first approach then you need to ensure that any  element declaration that should use SwaRef encoding simply refers to wsi:swaRef schema type:</para><screen xml:space="preserve">&lt;element name="data" type="wsi:swaRef" 
+xmlns:wsi="<ulink url="http://ws-i.org/profiles/basic/1.1/xsd">http://ws-i.org/profiles/basic/1.1/xsd</ulink>"/&gt;
+</screen><para>Any wsi:swaRef schema type would then be mapped to DataHandler.</para><para> </para></section>
+</section>
+</section>
+<section id="JBossWS-NativeUserGuide_Standard_Annotations"><title>Standard Annotations</title><section id="JBossWS-NativeUserGuide_PostConstruct_and_PreDestroy_annotations"><title>PostConstruct and PreDestroy annotations</title><para>Users can use standard Java <emphasis role="bold">javax.annotation.PostConstruct</emphasis> and <emphasis role="bold">javax.annotation.PreDestroy</emphasis> annotations for service lifecycle notification on all POJO endpoints. Here's the sample POJO bean:</para><screen xml:space="preserve">@WebService(
+   serviceName = "EndpointService",
+   targetNamespace = "http://yourorganization.com/service",
+   endpointInterface="com.yourorganization.EndpointInterface"
+)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">final</emphasis> <emphasis role="bold">class</emphasis> EndpointImpl
+{
+ 
+   @PostConstruct
+   <emphasis role="bold">protected</emphasis> <emphasis role="bold">void</emphasis> init()
+   {
+      // lifecycle method for initialization
+   }
+   
+   @WebMethod
+   <emphasis role="bold">public</emphasis> String echo(String msg)
+   {
+      <emphasis role="bold">return</emphasis> msg;
+   }
+   
+   @PreDestroy
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">void</emphasis> cleanUp()
+   {
+      // lifecycle method for cleanup
+   }
+   
+}
+</screen></section>
+</section>
+<section id="JBossWS-NativeUserGuide_JBossWSNative_JAXWS_Extensions"><title>JBossWS-Native JAX-WS Extensions</title><para>This section describes propriatary JBoss extensions to JAX-WS, provided for JBossWS-Native stack only. Please refer to the <link linkend="chap_JBossWS-UserGuide">common user guide</link> for further JBossWS Extensions.</para><para> </para><section id="JBossWS-NativeUserGuide_Proprietary_Annotations"><title>Proprietary Annotations</title><para>For the set of standard annotations, please have a look at <link linkend="chap_JBossWS-JAX-WSAnnotations">JAX-WS_Annotations</link>.</para><section id="JBossWS-NativeUserGuide_EndpointConfig"><title>EndpointConfig</title><screen xml:space="preserve">/**
+ * Defines an endpoint or client configuration. 
+ * This annotation is valid on an endpoint implementaion bean or a SEI.
+ * 
+ * @author Heiko.Braun@jboss.org
+ * @since 16.01.2007
+ */
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = { ElementType.TYPE })
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> EndpointConfig {
+ 
+   /**
+    * The optional config-name element gives the configuration name that must be present in
+    * the configuration given by element config-file.
+    *
+    * Server side default: Standard Endpoint
+    * Client side default: Standard Client
+    */
+   String configName() <emphasis role="bold">default</emphasis> "";
+ 
+   /**
+    * The optional config-file element is a URL or resource name for the configuration.
+    *
+    * Server side default: standard-jaxws-endpoint-config.xml
+    * Client side default: standard-jaxws-client-config.xml
+    */
+   String configFile() <emphasis role="bold">default</emphasis> "";
+}
+</screen><para> </para></section>
+<section id="JBossWS-NativeUserGuide_Documentation"><title>Documentation</title><screen xml:space="preserve"><emphasis role="bold">package</emphasis> org.jboss.ws.annotation;
+ 
+/**
+ * Annotation to be used to add wsdl:documentation elements to the generated wsdl.
+ *
+ * @author alessio.soldano@jboss.org
+ * @since 15-Jan-2008
+ */
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> Documentation
+{
+   <emphasis role="bold">public</emphasis> String content();
+}
+</screen></section>
+<section id="JBossWS-NativeUserGuide_SchemaValidation"><title>SchemaValidation</title><screen xml:space="preserve">/**
+ * This feature represents the use of schema validation with a 
+ * web service.
+ * 
+ * @author Thomas.Diesler@jboss.com
+ * @since 29-Feb-2008
+ */
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = { ElementType.TYPE })
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> SchemaValidation 
+{
+   /**
+    * Optional property for the schema location. If this is not specified the schema
+    * will be attempted to extract from the WSDL.
+    * 
+    * The syntax is the same as for schemaLocation attributes in instance documents: e.g, "http://www.example.com file_name.xsd".
+    */
+   String schemaLocation() <emphasis role="bold">default</emphasis> "";
+   
+   /**
+    * Optional property for the error handler. 
+    * If this is not specified the @{ValidationErrorHandler} will be used.
+    */
+   Class errorHandler() <emphasis role="bold">default</emphasis> StrictlyValidErrorHandler.class;
+   
+   /**
+    * Specifies if the feature is enabled or disabled
+    */
+   <emphasis role="bold">boolean</emphasis> enabled() <emphasis role="bold">default</emphasis> <emphasis role="bold">true</emphasis>;
+}
+</screen></section>
+<section id="JBossWS-NativeUserGuide_FastInfoset"><title>FastInfoset</title><screen xml:space="preserve">/**
+ * This feature represents the use of FastInfoset
+ * 
+ * @author Thomas.Diesler@jboss.com
+ * @since 29-Feb-2008
+ */
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = { ElementType.TYPE })
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> FastInfoset {
+   
+   /**
+    * Specifies if the feature is enabled or disabled
+    */
+   <emphasis role="bold">boolean</emphasis> enabled() <emphasis role="bold">default</emphasis> <emphasis role="bold">true</emphasis>;
+}
+</screen></section>
+<section id="JBossWS-NativeUserGuide_JsonEncoding"><title>JsonEncoding</title><screen xml:space="preserve">/**
+ * This feature represents the use of JSON encoding
+ * 
+ * @author Thomas.Diesler@jboss.com
+ * @since 29-Feb-2008
+ */
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = { ElementType.TYPE })
+<emphasis role="bold">public</emphasis> @<emphasis role="bold">interface</emphasis> JsonEncoding {
+ 
+   /**
+    * Specifies if the feature is enabled or disabled
+    */
+   <emphasis role="bold">boolean</emphasis> enabled() <emphasis role="bold">default</emphasis> <emphasis role="bold">true</emphasis>;
+}
+</screen></section>
+</section>
+<section id="JBossWS-NativeUserGuide_Proprietary_WebServiceFeatures"><title>Proprietary WebServiceFeatures</title><section id="JBossWS-NativeUserGuide_Schema_validation_for_incomingoutgoing_messages"><title>Schema validation for incoming/outgoing messages</title><para>On the client, schema validation can be enabled using the SchemaValidationFeature</para><screen xml:space="preserve"><emphasis role="bold">import</emphasis> javax.xml.ws.Service;
+<emphasis role="bold">import</emphasis> org.jboss.ws.feature.SchemaValidationFeature;
+ 
+Service service = Service.create(wsdlURL, SERVICE_NAME);
+SchemaValidationFeature feature = <emphasis role="bold">new</emphasis> SchemaValidationFeature(xsdURL.toString());
+MyTest port = service.getPort(MyTest.class, feature);
+</screen><para>You can explicitly set the schema location and the error handler.  If the schema location is not set, the schema will be extracted from the WSDL.</para><para>The default error handler is strict and causes a SAX exception when the message does not conform to the schema.</para><para>The SchemaValidationFeature has an equivalent @SchemaValidation annotation that can be used on the endpoint.</para></section>
+<section id="JBossWS-NativeUserGuide_Support_for_FastInfoset"><title>Support for FastInfoset</title><para>On the client, FastInfoset can be enabled using the FastInfosetFeature</para><screen xml:space="preserve"><emphasis role="bold">import</emphasis> javax.xml.ws.Service;
+<emphasis role="bold">import</emphasis> org.jboss.ws.feature.FastInfosetFeature;
+ 
+Serviceservice = Service.create(wsdlURL, serviceName);
+FastInfosetFeature feature = <emphasis role="bold">new</emphasis> FastInfosetFeature();
+FastInfoset port = service.getPort(FastInfoset.class, feature);
+</screen><para>The FastInfosetFeature has an equivalent @FastInfoset annotation that can be used on the endpoint.</para></section>
+<section id="JBossWS-NativeUserGuide_Support_for_JSON_data_binding"><title>Support for JSON data binding</title><para>On the client, JSON data binding can be enabled using the JsonEncodingFeature</para><screen xml:space="preserve"><emphasis role="bold">import</emphasis> javax.xml.ws.Service;
+<emphasis role="bold">import</emphasis> org.jboss.ws.feature.JsonEncodingFeature;
+ 
+Service service = Service.create(wsdlURL, SERVICE_NAME);
+JsonEncodingFeature feature = <emphasis role="bold">new</emphasis> JsonEncodingFeature();
+JsonPort port = service.getPort(JsonPort.class, feature);
+</screen><para>The JsonEncodingFeature has an equivalent @JsonEncoding annotation that can be used on the endpoint.</para></section>
+<section id="JBossWS-NativeUserGuide_Chunked_encoding_setup"><title>Chunked encoding setup</title><para>On the client, the chunked encoding can be disabled (it's enabled by default) or the chunks size can be configured using the ChunkedEncodingFeature</para><screen xml:space="preserve"><emphasis role="bold">import</emphasis> javax.xml.ws.Service;
+<emphasis role="bold">import</emphasis> org.jboss.ws.feature.ChunkedEncodingFeature;
+ 
+Service service = Service.create(wsdlURL, SERVICE_NAME);
+ChunkedEncodingFeature feature = <emphasis role="bold">new</emphasis> ChunkedEncodingFeature(<emphasis role="bold">false</emphasis>); //false to disable
+MyPort port = service.getPort(MyPort.class, feature);
+</screen><para>Alternatively, the <emphasis role="bold">StubExt.PROPERTY_CHUNKED_ENCODING_SIZE</emphasis> property can be used to set the chunk size in the request context (size 0 disables chunked encoding).</para></section>
+<section id="JBossWS-NativeUserGuide_Disable_Xerces_Deferred_Node_Expansion"><title>Disable Xerces Deferred Node Expansion</title><para>To optimise the parsing of messages Xerces has a feature called deferred node expansion which defers the expansion of the nodes until they are actually accessed. For messages where not all of the nodes will be visited this improves performance but the cost is increased memory overheads which can be considerable for very large messages.</para><para>To disable this feature the following system property can be set so that the nodes are eagerly expanded.</para><screen xml:space="preserve">  -Dorg.jboss.ws.disable_deferred_node_expansion=true</screen></section>
+</section>
+<section id="JBossWS-NativeUserGuide_Deployment_descriptor_attributes"><title>Deployment descriptor attributes</title><section id="JBossWS-NativeUserGuide_JSE_Endpoints"><title>JSE Endpoints</title><para>The following is taken from <ulink url="http://anonsvn.jboss.org/repos/jbossas/projects/metadata/trunk/src/main/resources/dtd/jboss-web_5_0.dtd">http://anonsvn.jboss.org/repos/jbossas/projects/metadata/trunk/src/main/resources/dtd/jboss-web_5_0.dtd</ulink> and shows an excerpt of the jboss-web_5_0.dtd The most important bits are:</para><itemizedlist><listitem><para> <computeroutput>config-name</computeroutput>: JBossWS endpoint config name (see <link linkend="chap_JBossWS-JAX-WSEndpointConfiguration">JBossWS - JAX-WS Endpoint Configuration</link>) </para></listitem><listitem><para> <computeroutput>config-file</computeroutput>: JBossWS endpoint config file </para></listitem><listitem><para> <computeroutput>wsdl-publish-location</computeroutput>: Where to publish the runtime gnerated WSDL </para></listitem></itemizedlist><screen xml:space="preserve">&lt;!--
+Runtime information about a web service.
+
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+
+--&gt;
+&lt;!ELEMENT webservice-description ( webservice-description-name, config-name?,
+ config-file?, wsdl-publish-location? )&gt;
+
+&lt;!--
+Unique name of a webservice within a module
+--&gt;
+&lt;!ELEMENT webservice-description-name ( #PCDATA )&gt;
+
+&lt;!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl
+
+  &lt;wsdl-publish-location&gt;file:/home/user1/publish
+  &lt;/wsdl-publish-location&gt;
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+
+--&gt;
+&lt;!ELEMENT wsdl-publish-location ( #PCDATA )&gt;</screen><para> </para></section>
+<section id="JBossWS-NativeUserGuide_EJB3_endpoints"><title>EJB3 endpoints</title><para>EJB deployment descriptor attributes are quite the same. You can specify a top level <computeroutput>webservices</computeroutput> element along with your ejb declaration that allows you to override certain deployment aspects. The following excerpt is taken from <ulink url="https://anonsvn.jboss.org/repos/jbossas/projects/metadata/trunk/src/main/resources/dtd/jboss_5_0.dtd">https://anonsvn.jboss.org/repos/jbossas/projects/metadata/trunk/src/main/resources/dtd/jboss_5_0.dtd</ulink></para><para>In addition to the default properties that are customizable like in JSE deployments, the EJB descriptor allows you to specify:</para><itemizedlist><listitem><para> <computeroutput>context-root</computeroutput>: A custom web context root. Applies to all beans in this deployment unit </para></listitem></itemizedlist><screen xml:space="preserve">&lt;!ELEMENT webservices (context-root?, webservice-description*)&gt;
+
+&lt;!-- The context-root element specifies the context root of the web
+application that the EJB service endpoints are deployed to.
+If it is not specified it will be derived from the deployment short name.
+--&gt;
+&lt;!ELEMENT context-root (#PCDATA)&gt;
+
+&lt;!--
+Runtime information about a web service.
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+--&gt;
+&lt;!ELEMENT webservice-description ( webservice-description-name, config-name?,
+ config-file?, wsdl-publish-location? )&gt;</screen><para> </para></section>
+</section>
+</section>
+<section id="JBossWS-NativeUserGuide_Appendix_A"><title>Appendix A</title><para><link linkend="chap_JBossWS-JAX-WSEndpointConfiguration">JBossWS - JAX-WS Endpoint Configuration</link></para><para><link linkend="chap_JBossWS-JAX-WSClientConfiguration">JBossWS - JAX-WS Client Configuration</link></para><para><link linkend="chap_JBossWS-JAX-WSAnnotations">JBossWS - JAX-WS Annotations</link></para></section>
+</chapter>
