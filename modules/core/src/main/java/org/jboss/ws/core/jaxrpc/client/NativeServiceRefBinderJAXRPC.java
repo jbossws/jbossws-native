@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -23,19 +23,19 @@ package org.jboss.ws.core.jaxrpc.client;
 
 import javax.naming.Referenceable;
 
-import org.jboss.wsf.common.serviceref.AbstractServiceRefBinderJAXRPC;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
 
 /**
  * Binds a JAXRPC Service object to the client's ENC.
  *
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public final class NativeServiceRefBinderJAXRPC extends AbstractServiceRefBinderJAXRPC
+public final class NativeServiceRefBinderJAXRPC implements ServiceRefBinder
 {
    @Override
-   protected Referenceable createJAXRPCReferenceable(final UnifiedServiceRefMetaData serviceRefUMDM)
+   public Referenceable createReferenceable(final UnifiedServiceRefMetaData serviceRefMD)
    {
-      return new NativeServiceReferenceableJAXRPC(serviceRefUMDM);
+      return new NativeServiceReferenceableJAXRPC(serviceRefMD);
    }
 }
