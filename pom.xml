@@ -115,6 +115,11 @@
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss501-metadata</artifactId>
+        <version>${jbossws.jboss501.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-jboss501</artifactId>
         <version>${jbossws.jboss501.version}</version>
         <classifier>resources</classifier>
@@ -123,6 +128,11 @@
       <dependency>
         <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-jboss510</artifactId>
+        <version>${jbossws.jboss510.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss510-metadata</artifactId>
         <version>${jbossws.jboss510.version}</version>
       </dependency>
       <dependency>

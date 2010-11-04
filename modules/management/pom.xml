@@ -36,7 +36,17 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-jboss501-metadata</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss510</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-jboss510-metadata</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
