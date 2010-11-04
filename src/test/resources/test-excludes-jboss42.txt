@@ -1,3 +1,6 @@
 # EJB3/Injection excludes
 org/jboss/test/ws/jaxws/samples/webserviceref/**
 org/jboss/test/ws/jaxws/webserviceref/**
+
+# JBPAPP-5354 test issue for IBM JDK5 
+org/jboss/test/ws/tools/jbws_204/NillableTypesTestCase.*
