@@ -54,6 +54,7 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.common.addressing.AddressingConstants;
 import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.wsf.common.utils.UUIDGenerator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -226,6 +227,18 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          String faultAction = this.getFaultAction(msgContext);
 
          outProps.setAction(this.newURI(faultAction));
+      }
+      
+      if (outProps.getMessageID() == null) 
+      {
+         try
+         {
+            outProps.setMessageID(ADDR_BUILDER.newURI("urn:uuid:" + UUIDGenerator.generateRandomUUIDString()));
+         }
+         catch (URISyntaxException e)
+         {
+            log.error("Error setting response messageId", e);
+         }   
       }
 
       outProps.writeHeaders(soapMessage);
