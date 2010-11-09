@@ -354,21 +354,20 @@ public class NettyClient
             if (sizeValue != null)
                chunkSize = Integer.valueOf(sizeValue);
 
-            //override using call props
-            try
-            {
-               Object obj = callProps.get(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE);
-               if (obj != null) //explicit 0 value is required to disable chunked mode
-                  chunkSize = (Integer)obj;
-            }
-            catch (Exception e)
-            {
-               log.warn("Can't set chunk size from call properties, illegal value provided!");
-            }
-            
             //fastinfoset always disable chunking
             if (epMetaData.isFeatureEnabled(FastInfosetFeature.class))
                chunkSize = 0;
+         }
+         //override using call props
+         try
+         {
+            Object obj = callProps.get(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE);
+            if (obj != null) //explicit 0 value is required to disable chunked mode
+               chunkSize = (Integer)obj;
+         }
+         catch (Exception e)
+         {
+            log.warn("Can't set chunk size from call properties, illegal value provided!");
          }
       }
    }

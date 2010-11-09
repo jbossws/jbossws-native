@@ -33,6 +33,7 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.client.transport.NettyClient;
 import org.jboss.ws.extensions.wsrm.transport.RMChannel;
 import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
@@ -117,6 +118,12 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       else
       {
          targetAddress = endpoint.toString();
+      }
+      final String[] transferEncodingValue = reqMessage != null ? reqMessage.getMimeHeaders().getHeader("Transfer-Encoding") : null; 
+      if (transferEncodingValue != null && "disabled".equals(transferEncodingValue[0]))
+      {
+         reqMessage.getMimeHeaders().removeHeader("Transfer-Encoding");
+         callProps.put(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
       }
 
       if (RMTransportHelper.isRMMessage(callProps))
