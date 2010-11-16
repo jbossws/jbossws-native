@@ -121,9 +121,9 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private List<QName> annotatedPorts = new ArrayList<QName>();
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass, WebServiceFeature[] features)
-   {
+   {      
       this(wsdlURL, serviceName, serviceClass);
-      this.features = features;
+      this.features = features;      
    }
 
    public ServiceDelegateImpl(URL wsdlURL, QName serviceName, Class serviceClass)
@@ -247,6 +247,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
          initAddressingProperties((BindingProvider)port, epr);
       }
       initWebserviceFeatures(port, epMetaData.getFeatures().getFeatures());
+      
+      //initialize webserviceFeature in service for getPort(Class<T> seiClass) and getPort(QName portName, Class<T> seiClass)
+      // This will override the features from policy
+      
+      initWebserviceFeatures(port, this.features);
+      
       return port; 
    }
 
@@ -520,7 +526,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       T port = getPort(sei);
       initAddressingProperties((BindingProvider)port, epr);
-      initWebserviceFeatures(port, this.features);
       initWebserviceFeatures(port, features);
       return port;
    }
@@ -529,7 +534,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public <T> T getPort(Class<T> sei, WebServiceFeature... features)
    {
       T port = getPort(sei);
-      initWebserviceFeatures(port, this.features);
       initWebserviceFeatures(port, features);
       return port;
    }
@@ -559,7 +563,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          QName portType = getPortTypeName(seiClass);
          epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
       }
-
+      
       String seiClassName = seiClass.getName();
       epMetaData.setServiceEndpointInterfaceName(seiClassName);
 
