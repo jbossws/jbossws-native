@@ -161,9 +161,6 @@
               <include>org.jboss.ws:jbossws-jboss510:jar</include>
             </includes>
           </dependencySet>
-          <!-- [JBWS-2505] -->
-          <!-- START -->
-          <!--
           <dependencySet>
             <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss510-metadata.${module.extension}</outputFileNameMapping>
@@ -174,6 +171,9 @@
               <include>org.jboss.ws:jbossws-jboss510-metadata:jar</include>
             </includes>
           </dependencySet>
+          <!-- [JBWS-2505] -->
+          <!-- START -->
+          <!--
           <dependencySet>
             <outputDirectory>deploy-artifacts/lib</outputDirectory>
             <outputFileNameMapping>jbossws-jboss600.${module.extension}</outputFileNameMapping>
