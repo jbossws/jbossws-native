@@ -22,7 +22,12 @@
 package org.jboss.test.ws.jaxws.jbws2651;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.StringReader;
+
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
 
@@ -77,6 +82,25 @@ public class EnvelopBuilderTestCase extends TestCase {
 			assertTrue(e instanceof CommonSOAPFaultException);
 		}
 	}
+	
+   //JBWS3159	
+   public void testDifferentNSPrefix() throws Exception
+   {
+      String soapMsg = "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>"
+            + "<S:Header xmlns:S='http://schemas.xmlsoap.org/soap/envelope/'/>"
+            + "<S:Body xmlns:S='http://schemas.xmlsoap.org/soap/envelope/'>"
+            + "<ns1:addItemResponse xmlns:ns1='http://org.jboss.ws/addressing/replyto'>"
+            + "<result>Mars Bar</result></ns1:addItemResponse></S:Body></env:Envelope>";
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl) factory.createMessage();
+      StringReader strReader = new java.io.StringReader(soapMsg);
+      StreamSource streamSource2 = new StreamSource(strReader);
+      soapMessage.getSOAPPart().setContent(streamSource2);
+      
+      ByteArrayOutputStream bout = new ByteArrayOutputStream();
+      soapMessage.writeTo(bout);
+      assertTrue(new String(bout.toByteArray()).indexOf("S:Header") > -1);
+      assertTrue(new String(bout.toByteArray()).indexOf("S:Body") > -1);
+   }
 	
 	
 }
