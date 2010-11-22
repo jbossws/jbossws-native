@@ -435,7 +435,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
 
       if (usRef == null)
       {
-         log.debug("No port configuration for: " + portName);
+         log.debugf("No port configuration for: %s", portName);
          return;
       }
 
@@ -454,14 +454,14 @@ public class ServiceDelegateImpl extends ServiceDelegate
          Map<String, Object> reqCtx = bp.getRequestContext();
          for (UnifiedStubPropertyMetaData prop : pcref.getStubProperties())
          {
-            log.debug("Set stub property: " + prop);
+            log.debugf("Set stub property: %s", prop);
             reqCtx.put(prop.getPropName(), prop.getPropValue());
          }
       }
 
       if (configName != null || configFile != null)
       {
-         log.debug("Configure Stub: [configName=" + configName + ",configFile=" + configFile + "]");
+         log.debugf("Configure Stub: [configName=%s,configFile=%s]", configName, configFile);
          stub.setConfigName(configName, configFile);
       }
    }

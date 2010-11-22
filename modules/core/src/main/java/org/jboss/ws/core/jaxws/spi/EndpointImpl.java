@@ -145,7 +145,8 @@ public class EndpointImpl extends Endpoint
       if (context == null)
          throw new IllegalArgumentException("Null context");
       
-      log.debug("publishing endpoint " + this + " to " + context);
+      if (log.isDebugEnabled())
+         log.debug("publishing endpoint " + this + " to " + context);
 
       if (isDestroyed)
          throw new IllegalStateException("Endpoint already destroyed");
