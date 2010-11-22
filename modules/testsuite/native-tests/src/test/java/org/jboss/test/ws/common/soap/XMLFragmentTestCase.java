@@ -28,7 +28,10 @@ import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintWriter;
 
 /**
@@ -94,5 +97,16 @@ public class XMLFragmentTestCase extends TestCase {
       assertTrue("Empty result returned", s.length()>0);
       assertFalse("Should not contain processing instruction", s.startsWith("<?xml"));
       assertEquals(XML_STRING, s);
+   }
+   
+   //JBWS-3164
+   public void testStreamSourceConstructedWithFile() throws Exception {
+      //File file = new File(this.getClass().getResource("request.xml").toString()) will break this test
+      File file = new File(this.getClass().getResource("request.xml").getFile());      
+      StreamSource requestSource = new StreamSource(file);      
+      XMLFragment xmlFragment = new XMLFragment(requestSource);
+      java.io.ByteArrayOutputStream bout = new java.io.ByteArrayOutputStream();
+      xmlFragment.writeTo(bout);
+      assertTrue(new String(bout.toByteArray()).indexOf("Hello") > -1);     
    }
 }

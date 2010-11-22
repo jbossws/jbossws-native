@@ -1,0 +1,4 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ns1:Request xmlns="http://ws.jboss.org" xmlns:ns1="http://ws.jboss.org/jbws3164">
+  <ns1:Arg>Hello</ns1:Arg>
+</ns1:Request>
