@@ -36,6 +36,7 @@
     <include name="**/jaxws-tools.jar"/>
     <include name="**/jaxws-rt.jar"/>
     <include name="**/policy.jar"/>
+    <include name="**/jbossws-api.jar"/>
     <include name="**/jbossws-common.jar"/>
     <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-client.jar"/>
@@ -72,6 +73,7 @@
     <include name="**/jaxws-api.jar"/>
     <include name="**/jsr181-api.jar"/>
     <include name="**/jboss-jaxb-intros.jar"/>
+    <include name="**/jbossws-api.jar"/>
     <include name="**/jbossws-common.jar"/>
     <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-core.jar"/>

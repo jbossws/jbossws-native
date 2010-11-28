@@ -50,6 +50,7 @@
               <include>com.sun.xml.ws:jaxws-rt:jar</include>
               <include>jboss.jaxbintros:jboss-jaxb-intros:jar</include>
               <include>junit:junit:jar</include>
+              <include>org.jboss.ws:jbossws-api:jar</include>
               <include>org.jboss.ws:jbossws-common:jar</include>
               <include>org.jboss.ws:jbossws-spi:jar</include>
               <include>org.codehaus.jettison:jettison:jar</include>
