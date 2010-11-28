@@ -99,7 +99,6 @@ import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaDataParser;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -287,14 +286,12 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          InputStream is = fileURL.openStream();
          try
          {
-//            Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-//            unmarshaller.setValidation(true);
-//            unmarshaller.setSchemaValidation(true);
-//            unmarshaller.setEntityResolver(new JBossWSEntityResolver());
-//            ObjectModelFactory factory = new HandlerChainsObjectFactory();
-//            handlerChainsMetaData = (UnifiedHandlerChainsMetaData)unmarshaller.unmarshal(is, factory, null);
-            
-            handlerChainsMetaData = UnifiedHandlerChainsMetaDataParser.parse(is);
+            Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
+            unmarshaller.setValidation(true);
+            unmarshaller.setSchemaValidation(true);
+            unmarshaller.setEntityResolver(new JBossWSEntityResolver());
+            ObjectModelFactory factory = new HandlerChainsObjectFactory();
+            handlerChainsMetaData = (UnifiedHandlerChainsMetaData)unmarshaller.unmarshal(is, factory, null);
          }
          finally
          {
