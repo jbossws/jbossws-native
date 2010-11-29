@@ -30,8 +30,11 @@ import org.jboss.ws.metadata.config.jaxws.CommonConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
 import org.jboss.ws.metadata.config.jaxws.HandlerChainsConfigJAXWS;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
@@ -42,12 +45,14 @@ import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 
 /**
  * ObjectModelFactory for JAXWS configurations.
+ * @deprecated This is to be replaced by a stax based configuration parser
  *
  * @author Thomas.Diesler@jboss.org
  * @author Heiko.Braun@jboss.org
  * @since 18-Dec-2005
  */
-public class OMFactoryJAXWS extends HandlerChainsObjectFactory
+@Deprecated
+public class OMFactoryJAXWS implements ObjectModelFactory
 {
    // provide logging
    private final Logger log = Logger.getLogger(OMFactoryJAXWS.class);
@@ -249,5 +254,115 @@ public class OMFactoryJAXWS extends HandlerChainsObjectFactory
          return handlerChain;
       }
       return null;
+   }
+   
+   //here below are methods that used to be inherited from import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory
+   //which is not in this class' type hierarchy any more given it has been deprecated in jbossws-spi in order to remove JBossXB dependency
+   
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(UnifiedHandlerChainsMetaData handlerConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if ("handler-chain".equals(localName))
+         return new UnifiedHandlerChainMetaData(handlerConfig);
+      else return null;
+   }
+
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(UnifiedHandlerChainsMetaData handlerConfig, UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI,
+         String localName)
+   {
+      if (!handlerChain.isExcluded()) handlerConfig.addHandlerChain(handlerChain);
+   }
+
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(UnifiedHandlerChainMetaData chainConfig, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if ("handler".equals(localName))
+         return new UnifiedHandlerMetaData(chainConfig);
+      else return null;
+   }
+
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(UnifiedHandlerChainMetaData handlerConfig, UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      handlerConfig.addHandler(handler);
+   }
+
+   /**
+    * Called when parsing of a new element started.
+    */
+   public Object newChild(UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
+   {
+      if ("init-param".equals(localName))
+         return new UnifiedInitParamMetaData();
+      else return null;
+   }
+
+   /**
+    * Called when parsing character is complete.
+    */
+   public void addChild(UnifiedHandlerMetaData handler, UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName)
+   {
+      handler.addInitParam(param);
+   }
+
+   /**
+    * Called when a new simple child element with text value was read from the XML content.
+    */
+   public void setValue(UnifiedHandlerChainMetaData handlerChain, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   {
+      if (log.isTraceEnabled())
+         log.trace("UnifiedHandlerChainMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);
+      try
+      {
+         if (localName.equals("protocol-bindings"))
+            handlerChain.setProtocolBindings(value);
+         else if (localName.equals("service-name-pattern"))
+            handlerChain.setServiceNamePattern(navigator.resolveQName(value));
+         else if (localName.equals("port-name-pattern"))
+            handlerChain.setPortNamePattern(navigator.resolveQName(value));
+      }
+      catch (java.lang.IllegalStateException ex)
+      {
+         log.warn("Could not get " + localName + " value : " 
+               + ex.getMessage() + ", this handler chain will be ingored");
+         handlerChain.setExcluded(true);
+      }
+   }
+
+   /**
+    * Called when a new simple child element with text value was read from the XML content.
+    */
+   public void setValue(UnifiedHandlerMetaData handler, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   {
+      if (log.isTraceEnabled())
+         log.trace("UnifiedHandlerMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);
+
+      if (localName.equals("handler-name"))
+         handler.setHandlerName(value);
+      else if (localName.equals("handler-class"))
+         handler.setHandlerClass(value);
+   }
+
+   /**
+    * Called when a new simple child element with text value was read from the XML content.
+    */
+   public void setValue(UnifiedInitParamMetaData param, UnmarshallingContext navigator, String namespaceURI, String localName, String value)
+   {
+      if (log.isTraceEnabled())
+         log.trace("UnifiedInitParamMetaData setValue: nuri=" + namespaceURI + " localName=" + localName + " value=" + value);
+
+      if (localName.equals("param-name"))
+         param.setParamName(value);
+      else if (localName.equals("param-value"))
+         param.setParamValue(value);
    }
 }

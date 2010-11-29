@@ -41,20 +41,20 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPMessageHandlers;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.jws.soap.SOAPMessageHandlers;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.ws.Action;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.FaultAction;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 import javax.xml.ws.WebFault;
-import javax.xml.ws.Action;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.soap.AddressingFeature;
 
@@ -68,7 +68,6 @@ import org.jboss.ws.core.jaxws.WrapperGenerator;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
@@ -96,14 +95,11 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.wsf.common.JavaUtils;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.HandlerChainsObjectFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaDataParser;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.xb.binding.ObjectModelFactory;
-import org.jboss.xb.binding.Unmarshaller;
-import org.jboss.xb.binding.UnmarshallerFactory;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.TypeReference;
@@ -286,12 +282,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          InputStream is = fileURL.openStream();
          try
          {
-            Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-            unmarshaller.setValidation(true);
-            unmarshaller.setSchemaValidation(true);
-            unmarshaller.setEntityResolver(new JBossWSEntityResolver());
-            ObjectModelFactory factory = new HandlerChainsObjectFactory();
-            handlerChainsMetaData = (UnifiedHandlerChainsMetaData)unmarshaller.unmarshal(is, factory, null);
+            handlerChainsMetaData = UnifiedHandlerChainsMetaDataParser.parse(is);
          }
          finally
          {
