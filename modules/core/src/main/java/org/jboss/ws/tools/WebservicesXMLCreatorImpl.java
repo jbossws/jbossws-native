@@ -38,10 +38,6 @@ import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
-import org.jboss.xb.binding.JBossXBException;
-import org.jboss.xb.binding.ObjectModelFactory;
-import org.jboss.xb.binding.Unmarshaller;
-import org.jboss.xb.binding.UnmarshallerFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -132,11 +128,9 @@ public class WebservicesXMLCreatorImpl implements WebservicesXMLCreator
          InputStream wsXmlStream = new FileInputStream(wsXmlFile);
          try
          {
-            Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-            ObjectModelFactory factory = new WebservicesFactory(wsXmlFile.toURL());
-            existingWebservices = (WebservicesMetaData)unmarshaller.unmarshal(wsXmlStream, factory, null);
+            existingWebservices = WebservicesFactory.parse(wsXmlStream, wsXmlFile.toURI().toURL());
          }
-         catch (JBossXBException e)
+         catch (Exception e)
          {
             throw new WSException("Could not unmarshal existing webservices descriptor: " + wsXmlFile, e);
          }

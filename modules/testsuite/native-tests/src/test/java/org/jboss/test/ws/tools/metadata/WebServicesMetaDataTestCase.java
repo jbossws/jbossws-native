@@ -33,9 +33,6 @@ import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.xb.binding.ObjectModelFactory;
-import org.jboss.xb.binding.Unmarshaller;
-import org.jboss.xb.binding.UnmarshallerFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -54,9 +51,7 @@ public class WebServicesMetaDataTestCase extends JBossWSTest
       InputStream is = webservicesURL.openStream();
       try
       {
-         Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
-         ObjectModelFactory factory = new WebservicesFactory(webservicesURL);
-         webservices = (WebservicesMetaData)unmarshaller.unmarshal(is, factory, null);
+         webservices = WebservicesFactory.parse(is);
       }
       finally
       {
