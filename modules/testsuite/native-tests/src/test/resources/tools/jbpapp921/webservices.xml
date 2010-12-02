@@ -1,4 +1,4 @@
-<webservices version='1.1' xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd'>
+<webservices version='1.2' xmlns='http://java.sun.com/xml/ns/javaee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd'>
  <webservice-description>
   <webservice-description-name>models_ServiceIM_ServiceProxy</webservice-description-name>
   <wsdl-file>WEB-INF/wsdl/test.wsdl</wsdl-file>
