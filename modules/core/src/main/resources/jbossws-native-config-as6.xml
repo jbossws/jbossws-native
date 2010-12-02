@@ -12,6 +12,11 @@
     <property name="bindAddress">${jboss.bind.address}</property>
   </bean>
 
+  <!-- This should actually be in the stack-agnostic config file, it's here to avoid installing a CI -->
+  <bean name="WSDescriptorParser" class="org.jboss.wsf.framework.deployment.WebservicesDescriptorParserImpl">
+    <property name="descriptorName">webservices.xml</property>
+  </bean>
+
   <!-- Installed Record Processors-->
   <bean name="WSMemoryBufferRecorder" class="org.jboss.wsf.framework.management.recording.MemoryBufferRecorder">
     <property name="recording">false</property>
