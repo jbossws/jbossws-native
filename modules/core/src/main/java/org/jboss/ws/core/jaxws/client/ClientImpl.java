@@ -215,6 +215,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
    {
       // Associate a message context with the current thread
       CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
+      msgContext.setConfig(this.epConfigMetaData.getConfig());
       MessageContextAssociation.pushMessageContext(msgContext);
 
       try
@@ -398,6 +399,18 @@ public class ClientImpl extends CommonClient implements BindingProvider
          epConfigMetaData = this.epMetaData.createEndpointConfigMetaData(configName, configFile);
          initBindingHandlerChain(true);
       }
+   }
+      
+   @Override
+   public String getConfigFile()
+   {
+      return epConfigMetaData.getConfigFile();
+   }
+
+   @Override
+   public String getConfigName()
+   {
+      return epConfigMetaData.getConfigName();
    }
 
    /**

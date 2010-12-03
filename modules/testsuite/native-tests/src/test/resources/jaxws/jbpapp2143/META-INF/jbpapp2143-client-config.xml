@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jaxws-config
+  xmlns="urn:jboss:jaxws-config:2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+  xsi:schemaLocation="urn:jboss:jaxws-config:2.0 jaxws-config_2_0.xsd">
+
+  <client-config>
+    <config-name>Test Client</config-name>
+    <feature>http://org.jboss.ws/dispatch/validate</feature>
+    <property>
+      <property-name>http://org.jboss.ws/http#chunksize</property-name>
+      <property-value>-1</property-value>
+    </property>
+  </client-config>
+
+</jaxws-config>

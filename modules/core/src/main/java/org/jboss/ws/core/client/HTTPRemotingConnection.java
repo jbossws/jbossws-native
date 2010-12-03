@@ -307,7 +307,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          if (msgContext != null)
          {
             EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-            CommonConfig config = epMetaData.getConfig();
+            CommonConfig config = msgContext.getConfig();
 
             String sizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
             if (sizeValue != null)
