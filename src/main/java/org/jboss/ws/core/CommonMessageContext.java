@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-// $Id$
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +33,7 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -61,6 +60,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
    private EndpointMetaData epMetaData;
    // The operation for this message ctx
    private OperationMetaData opMetaData;
+   // The configuration to override the default configuration wrapped by EndpointMetaData.
+   private CommonConfig config;
    // The Message in this message context
    private MessageAbstraction message;
    // The map of scoped properties
@@ -116,6 +117,21 @@ public abstract class CommonMessageContext implements Map<String, Object>
    public void setOperationMetaData(OperationMetaData opMetaData)
    {
       this.opMetaData = opMetaData;
+   }
+
+   public CommonConfig getConfig()
+   {
+      if (config == null)
+      {
+         config = epMetaData.getConfig();
+      }
+
+      return config;
+   }
+
+   public void setConfig(CommonConfig config)
+   {
+      this.config = config;
    }
 
    public SOAPMessage getSOAPMessage()

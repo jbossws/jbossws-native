@@ -220,6 +220,7 @@ public class ClientImpl extends CommonClient implements BindingProvider
    {
       // Associate a message context with the current thread
       CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
+      msgContext.setConfig(this.epConfigMetaData.getConfig());
       MessageContextAssociation.pushMessageContext(msgContext);
 
       // The contents of the request context are used to initialize the message context (see section 9.4.1)
@@ -395,6 +396,18 @@ public class ClientImpl extends CommonClient implements BindingProvider
          epConfigMetaData = ((ClientEndpointMetaData)this.epMetaData).createEndpointConfigMetaData(configName, configFile);
          initBindingHandlerChain(true);
       }
+   }
+      
+   @Override
+   public String getConfigFile()
+   {
+      return epConfigMetaData.getConfigFile();
+   }
+
+   @Override
+   public String getConfigName()
+   {
+      return epConfigMetaData.getConfigName();
    }
 
    /**

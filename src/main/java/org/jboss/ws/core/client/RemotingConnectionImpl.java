@@ -315,7 +315,7 @@ public abstract class RemotingConnectionImpl implements RemotingConnection
          // May be overridden through endpoint config
          if (msgContext != null)
          {
-            CommonConfig config = msgContext.getEndpointMetaData().getConfig();
+            CommonConfig config = msgContext.getConfig();
 
             // chunksize settings
             String chunkSizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);

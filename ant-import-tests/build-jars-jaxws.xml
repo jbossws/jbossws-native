@@ -130,6 +130,17 @@
         <include name="**/*.wsdl"/>
       </webinf>
     </war>
+
+    <!-- jaxws-jbpapp2143 -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jbpapp2143.war" webxml="${tests.output.dir}/resources/jaxws/jbpapp2143/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbpapp2143/*.class"/>
+        <exclude name="org/jboss/test/ws/jaxws/jbpapp2143/*TestCase.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbpapp2143/WEB-INF">
+        <include name="jboss-web.xml"/>
+      </webinf>
+    </war>      
     
     <!-- jaxws-jbws771 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbws771.jar">
