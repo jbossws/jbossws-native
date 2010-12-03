@@ -380,4 +380,10 @@ public final class RMInvocationHandler extends InvocationHandler
       return this.delegate.getJNDIContext(ep);
    }
 
+   public void onEndpointInstantiated(final Endpoint endpoint, final Invocation invocation) throws Exception {}
+
+   public void onBeforeInvocation(final Invocation invocation) throws Exception {}
+
+   public void onAfterInvocation(final Invocation invocation) throws Exception {}
+
 }
