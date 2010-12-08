@@ -38,6 +38,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -89,6 +90,24 @@ public class SOAPElementTestCase extends JBossWSTest
       assertEquals(u, body.getNamespaceURI(p));
 
       SOAPElement se = body.addChildElement(s, p);
+      assertNotNull("Expected an element", se);
+
+      assertEquals("Expected 1 child element", 1, getIteratorCount(body.getChildElements()));
+
+      SOAPElement se2 = (SOAPElement)body.getChildElements().next();
+      assertEquals(se, se2);
+   }
+   
+   // JBWS-3170
+   public void testAppendNonSoapElement() throws Exception
+   {
+      MessageFactory msgFactory = MessageFactory.newInstance();
+      SOAPMessage soapMessage = msgFactory.createMessage();
+      SOAPEnvelope env = soapMessage.getSOAPPart().getEnvelope();
+      SOAPBody body = env.getBody();
+
+      Element e = body.getOwnerDocument().createElement("MyChild1");
+      SOAPElement se = (SOAPElement)body.appendChild(e);
       assertNotNull("Expected an element", se);
 
       assertEquals("Expected 1 child element", 1, getIteratorCount(body.getChildElements()));
