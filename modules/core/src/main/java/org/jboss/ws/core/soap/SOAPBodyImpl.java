@@ -290,8 +290,21 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
       return validChild == false;
    }
 
-   private static SOAPBodyElementDoc convertToBodyElement(Node node)
+   private static SOAPBodyElementDoc convertToBodyElement(Node node) throws DOMException
    {
+      if (!(node instanceof SOAPElementImpl) && (node instanceof Element))
+      {
+         try
+         {
+            SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
+            node = (SOAPElementImpl)soapFactory.createElement((Element)node);
+         }
+         catch (SOAPException ex)
+         {
+            throw new DOMException(DOMException.INVALID_STATE_ERR, "Could not convert Element to a SOAPElement");
+         }
+      }
+      
       if (!(node instanceof SOAPElementImpl))
          throw new IllegalArgumentException("SOAPElement expected");
 
