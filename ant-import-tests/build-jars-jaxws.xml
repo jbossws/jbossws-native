@@ -142,6 +142,17 @@
       </webinf>
     </war>
 
+    <!-- jaxws-jbpapp5486 -->
+    <war warfile="${tests.output.dir}/libs/jaxws-jbpapp5486.war" webxml="${tests.output.dir}/resources/jaxws/jbpapp5486/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/classes">
+        <include name="org/jboss/test/ws/jaxws/jbpapp5486/*.class" />
+        <exclude name="org/jboss/test/ws/jaxws/jbpapp5486/*TestCase.class" />
+      </classes>
+      <webinf dir="${tests.output.dir}/resources/jaxws/jbpapp5486/WEB-INF">
+        <include name="jboss-web.xml" />
+      </webinf>
+    </war>
+
     <!-- jaxws-jbpapp5576 -->
     <jar destfile="${tests.output.dir}/libs/jaxws-jbpapp5576.jar">
       <metainf dir="${tests.output.dir}/resources/jaxws/jbpapp5576/META-INF">
