@@ -42,6 +42,8 @@
               <include>org.jboss.ws:jbossws-common:jar</include>
               <include>org.jboss.ws:jbossws-spi:jar</include>
               <include>javax.xml:jaxrpc-api:jar</include>
+              <include>javax.xml.ws:jaxws-api:jar</include>
+              <include>javax.jws:jsr181-api</include>
               <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
               <include>javax.xml.soap:saaj-api:jar</include>
               <include>org.codehaus.jettison:jettison:jar</include>
