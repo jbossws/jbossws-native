@@ -24,6 +24,7 @@ package org.jboss.ws.tools.wsdl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import javax.wsdl.xml.WSDLLocator;
@@ -97,7 +98,26 @@ class WSDLLocatorImpl implements WSDLLocator
       // An external URL
       if (resource.startsWith("http://") || resource.startsWith("https://"))
       {
-         wsdlImport = resource;
+         // [JBWS-3139] there's a bug in wsdl4j 1.6.2 where imported schemas are containing invalid IPv6 host name values :(
+         // The URL value of root WSDL is not malformed, so we're reusing it for schemas URL construction.
+         if (resource.indexOf(parentURL.getFile()) != -1) 
+         {
+            URI uri = null;
+            try {
+               uri = new URI(resource);
+            }
+            catch (Exception e)
+            {
+               throw new IllegalArgumentException("Cannot resolve imported resource: " + resource);
+            }
+            final String path = uri.getPath();
+            final String query = uri.getQuery() != null ? "?" + uri.getQuery() : "";
+            wsdlImport = parentURL.getProtocol() + "://" + parentURL.getHost() + ":" + parentURL.getPort() + path + query; 
+         }
+         else
+         {
+            wsdlImport = resource;
+         }
       }
 
       // Absolute path
