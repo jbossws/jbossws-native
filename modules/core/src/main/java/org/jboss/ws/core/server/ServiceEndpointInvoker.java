@@ -246,14 +246,6 @@ public class ServiceEndpointInvoker
                   Throwable targetEx = th.getTargetException();
                   throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
                }
-               finally
-               {
-                  // JBWS-2486
-                  if (endpoint.getAttachment(Object.class) == null)
-                  {
-                     endpoint.addAttachment(Object.class, inv.getInvocationContext().getTargetBean());
-                  }
-               }
 
                // Handler processing might have replaced the endpoint invocation
                sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
@@ -368,10 +360,34 @@ public class ServiceEndpointInvoker
       Invocation wsInv = new DelegatingInvocation();
       wsInv.setInvocationContext(invContext);
       wsInv.setJavaMethod(getImplMethod(endpoint, epInv));
-      // JBWS-2486, see endpoint attachment initialization above
-      wsInv.getInvocationContext().setTargetBean(endpoint.getAttachment(Object.class));
+      wsInv.getInvocationContext().setTargetBean(getEndpointInstance());
 
       return wsInv;
+   }
+   
+   // JBWS-2486 - Only one webservice endpoint instance can be created!
+   private Object getEndpointInstance()
+   {
+      synchronized(endpoint) 
+      {
+         Object endpointImpl = endpoint.getAttachment(Object.class);
+         if (endpointImpl == null)
+         {
+            try
+            {
+               // create endpoint instance
+               final Class<?> endpointImplClass = endpoint.getTargetBeanClass();
+               endpointImpl = endpointImplClass.newInstance();
+               endpoint.addAttachment(Object.class, endpointImpl);
+            }
+            catch (Exception ex)
+            {
+               throw new IllegalStateException("Cannot create endpoint instance: ", ex);
+            }
+         }
+
+         return endpointImpl;
+      }
    }
 
    protected Method getImplMethod(Endpoint endpoint, EndpointInvocation sepInv) throws ClassNotFoundException, NoSuchMethodException
