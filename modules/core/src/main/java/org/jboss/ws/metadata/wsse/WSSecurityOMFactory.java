@@ -38,7 +38,7 @@ import org.jboss.xb.binding.UnmarshallingContext;
 import org.xml.sax.Attributes;
 
 /**
- * A JBossXB Object Model Factory that represets a JBoss WS-Security
+ * A JBossXB Object Model Factory that represents a JBoss WS-Security
  * configuration. See the jboss-ws-security_1_0.xsd file for more info.
  *
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
@@ -54,6 +54,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
 
    static
    {
+      options.put("security-domain", "setSecurityDomain");
       options.put("key-store-file", "setKeyStoreFile");
       options.put("key-store-type", "setKeyStoreType");
       options.put("key-store-password", "setKeyStorePassword");
@@ -206,6 +207,16 @@ public class WSSecurityOMFactory implements ObjectModelFactory
 
          return new TimestampVerification(createdTolerance, warnCreated, expiresTolerance, warnExpires);
       }
+      if ("security-domain".equals(localName))
+      {
+         String jndi = attrs.getValue("", "jndi");
+         String authToken = attrs.getValue("", "authToken");
+         String useSecurityDomainAliasesAttr = attrs.getValue("", "useSecurityDomainAliases");
+         Boolean useSecurityDomainAliases = new Boolean(true);
+         if (useSecurityDomainAliasesAttr != null)
+            useSecurityDomainAliases = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, useSecurityDomainAliasesAttr, null);
+         return new SecurityDomain(jndi, authToken, useSecurityDomainAliases);
+      }
       return null;
    }
 
@@ -253,6 +264,16 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    }
 
    /**
+    * Called when parsing SecurityDomain is complete.
+    */
+   public void addChild(WSSecurityConfiguration configuration, SecurityDomain securityDomain, UnmarshallingContext navigator, String namespaceURI,
+         String localName)
+   {
+      log.trace("addChild: [obj=" + configuration + ",child=" + securityDomain + "]");
+      configuration.setSecurityDomain(securityDomain);
+   }
+
+   /**
     * Called when parsing of a new element started.
     */
    public Object newChild(Config config, UnmarshallingContext navigator, String namespaceURI, String localName, Attributes attrs)
@@ -266,12 +287,13 @@ public class WSSecurityOMFactory implements ObjectModelFactory
          if (timestamp != null)
             include = (Boolean)SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, timestamp, null);
 
-         return new Sign(attrs.getValue("", "type"), attrs.getValue("", "alias"), include.booleanValue(), attrs.getValue("", "tokenReference"));
+         return new Sign(attrs.getValue("", "type"), attrs.getValue("", "alias"), include.booleanValue(), attrs.getValue("", "tokenReference"), attrs.getValue("",
+               "securityDomainAliasLabel"));
       }
       else if ("encrypt".equals(localName))
       {
          return new Encrypt(attrs.getValue("", "type"), attrs.getValue("", "alias"), attrs.getValue("", "algorithm"), attrs.getValue("", "keyWrapAlgorithm"), attrs
-               .getValue("", "tokenReference"));
+               .getValue("", "tokenReference"), attrs.getValue("", "securityDomainAliasLabel"));
       }
       else if ("timestamp".equals(localName))
       {
