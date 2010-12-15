@@ -3,6 +3,12 @@
   <xs:element name="jboss-ws-security">
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="security-domain" type="securityDomainType" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>JAAS security domain to be used for centralized security configuration; this overrides key-store-file, key-store-type,
+            key-store-password, trust-store-file, trust-store-type, trust-store-password.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="key-store-file" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>The key store file that will be used for all operations. This file is relative to the deployment. For example, WEB-INF/foo.keystore </xs:documentation>
@@ -61,6 +67,23 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:complexType name="securityDomainType">
+    <xs:attribute name="jndi" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The JNDI location of a JAAS security domain.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="authToken" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>The shared token for authenticating to the security domain.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useSecurityDomainAliases" type="xs:boolean" use="optional" default="true">
+      <xs:annotation>
+        <xs:documentation>When true allows the security domain configuration to override selection of aliases for signature and encryption.</xs:documentation>
+      </xs:annotation>      
+    </xs:attribute>
+  </xs:complexType>
   <xs:complexType name="passwordsType">
     <xs:sequence>
       <xs:element name="key-password" type="passwordType" minOccurs="0" maxOccurs="unbounded">
@@ -260,6 +283,11 @@
         <xs:documentation>Specify the token reference type to be used; default direct reference to the token.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="securityDomainAliasLabel" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label the ws-security engine needs for looking up (in the security domain) the alias that is to be used for encryption</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="signType">
     <xs:sequence>
@@ -277,6 +305,11 @@
     <xs:attribute name="tokenReference" type="tokenReferenceType" use="optional">
       <xs:annotation>
         <xs:documentation>Specify the token reference type to be used; default direct reference to the token.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="securityDomainAliasLabel" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label the ws-security engine needs for looking up (in the security domain) the alias that is to be used for signing</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

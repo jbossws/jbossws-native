@@ -197,7 +197,7 @@ public class RoundTripTestCase extends JBossWSTest
 
       LinkedList operations = new LinkedList();
       operations.add(new TimestampOperation("300"));
-      operations.add(new SignatureOperation(targets, "wsse", null));
+      operations.add(new SignatureOperation(targets, "wsse", null, null));
 
       name = new QName("http://org.jboss.ws/2004", "someHeader");
       target = new QNameTarget(name);
@@ -208,7 +208,7 @@ public class RoundTripTestCase extends JBossWSTest
       target = new QNameTarget(name, true);
       targets.add(target);
 
-      operations.add(new EncryptionOperation(targets, "wsse", null, null, null));
+      operations.add(new EncryptionOperation(targets, "wsse", null, null, null, null));
       operations.add(new SendUsernameOperation("hi", "there", false, false, false, null));
 
       return operations;

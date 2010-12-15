@@ -117,8 +117,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
    private void decodeHeader(WSSecurityConfiguration configuration, Config config, SOAPMessage message, Element secHeaderElement) throws WSSecurityException
    {
-      SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
-            configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
+      SecurityStore securityStore = new SecurityStore(configuration);
       NonceFactory factory = Util.loadFactory(NonceFactory.class, configuration.getNonceFactory(), DefaultNonceFactory.class);
 
       Authenticate authenticate = null;
@@ -194,14 +193,15 @@ public class WSSecurityDispatcher implements WSSecurityAPI
                targets.add(new WsuIdTarget("timestamp"));
          }
 
-         operations.add(new SignatureOperation(targets, sign.getAlias(), sign.getTokenRefType()));
+         operations.add(new SignatureOperation(targets, sign.getAlias(), sign.getTokenRefType(), sign.getSecurityDomainAliasLabel()));
       }
 
       Encrypt encrypt = config.getEncrypt();
       if (encrypt != null)
       {
          List<Target> targets = convertTargets(encrypt.getTargets());
-         operations.add(new EncryptionOperation(targets, encrypt.getAlias(), encrypt.getAlgorithm(), encrypt.getWrap(), encrypt.getTokenRefType()));
+         operations.add(new EncryptionOperation(targets, encrypt.getAlias(), encrypt.getAlgorithm(), encrypt.getWrap(), encrypt.getTokenRefType(), encrypt
+               .getSecurityDomainAliasLabel()));
       }
 
       if (operations.size() == 0)
@@ -212,8 +212,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
       try
       {
-         SecurityStore securityStore = new SecurityStore(configuration.getKeyStoreURL(), configuration.getKeyStoreType(), configuration.getKeyStorePassword(),
-               configuration.getKeyPasswords(), configuration.getTrustStoreURL(), configuration.getTrustStoreType(), configuration.getTrustStorePassword());
+         SecurityStore securityStore = new SecurityStore(configuration);
          SecurityEncoder encoder = new SecurityEncoder(operations, securityStore);
          
          if ((sign != null || encrypt != null) && message instanceof SOAPMessageImpl)

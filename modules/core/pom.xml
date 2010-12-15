@@ -21,6 +21,7 @@
 
   <!-- Dependencies -->
   <dependencies>
+  
     <!-- jbossws dependencies -->
     <dependency>
       <groupId>org.jboss.ws</groupId>
