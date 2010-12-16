@@ -33,6 +33,8 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.Constants;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.wsf.common.DOMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -136,6 +138,8 @@ public class SOAPFactoryImpl extends SOAPFactory
             {
                SOAPElement soapChild = createElement((Element)child);
                soapElement.addChildElement(soapChild);
+               if (Constants.NAME_XOP_INCLUDE.equals(soapChild.getElementQName()))
+                  XOPContext.inlineXOPData(soapChild);
             }
             else if (nodeType == Node.TEXT_NODE)
             {

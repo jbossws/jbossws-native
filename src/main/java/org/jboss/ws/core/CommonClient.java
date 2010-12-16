@@ -54,6 +54,7 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -298,6 +299,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
          boolean handlerPass = callRequestHandlerChain(portName, handlerType[0]);
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
+         
+         XOPContext.visitAndRestoreXOPData();
 
          // Handlers might have replaced the message
          reqMessage = msgContext.getMessageAbstraction();

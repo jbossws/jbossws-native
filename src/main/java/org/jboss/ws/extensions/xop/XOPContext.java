@@ -72,6 +72,8 @@ public class XOPContext
    private static final Logger log = Logger.getLogger(XOPContext.class);
 
    private static final String NS_XOP_JBOSSWS = "http://org.jboss.ws/xop";
+   
+   private static final String NS_XOP_JBOSSWS_CONTENT_TYPE = NS_XOP_JBOSSWS + ":content-type";
 
    /**
     * Check if the current soap message flagged as a XOP package.
@@ -258,11 +260,11 @@ public class XOPContext
     */
    public static void restoreXOPDataDOM(SOAPElement xopElement)
    {
-      String contentType = xopElement.getAttributeNS(NS_XOP_JBOSSWS, "content-type");
+      String contentType = (String)xopElement.getUserData(NS_XOP_JBOSSWS_CONTENT_TYPE);
       if (contentType != null && contentType.length() > 0)
       {
          replaceBase64Representation(xopElement, contentType);
-         xopElement.removeAttribute(new NameImpl(new QName(NS_XOP_JBOSSWS, "content-type")));
+         xopElement.setUserData(NS_XOP_JBOSSWS_CONTENT_TYPE, null, null);
       }
       else
       {
@@ -345,7 +347,7 @@ public class XOPContext
       String base64 = SimpleTypeBindings.marshalBase64(data);
       parent.removeChild(xopIncludeElement);
       parent.setValue(base64);
-      parent.setAttributeNS(NS_XOP_JBOSSWS, "content-type", contentType);
+      parent.setUserData(NS_XOP_JBOSSWS_CONTENT_TYPE, contentType, null);
 
       if (log.isDebugEnabled())
          log.debug("Created base64 representation for content-type " + contentType);
