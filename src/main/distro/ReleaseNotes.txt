@@ -49,6 +49,30 @@ The JBossWS Team
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -----------------------
+jbossws-native-3.4.1.GA
+-----------------------
+
+Feature Request
+
+    * [JBWS-3139] - Ensure IPv6 Compatibility
+    * [JBWS-3161] - Distinguish between @Addressing(enabled=false) and no @Addressing annotation
+    * [JBWS-3181] - Add support for symlinked bin/*.sh files
+
+Bug
+
+    * [JBWS-3184] - Fix Native concurrency issue with endpoint instantiation
+
+Task
+
+    * [JBWS-2896] - Fix unguarded calls to Logger.debug()
+    * [JBWS-3171] - Fix WebServiceContext injection into EJB3 beans
+    * [JBWS-3177] - Provide CDI Integration Points
+
+Errata
+
+    See: https://issues.jboss.org/browse/JBWS-3188
+
+-----------------------
 jbossws-native-3.4.0.GA
 -----------------------
 
