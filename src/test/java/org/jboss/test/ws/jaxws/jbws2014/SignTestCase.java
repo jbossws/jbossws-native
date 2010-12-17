@@ -86,15 +86,15 @@ public class SignTestCase extends JBossWSTest
 
    private TestEndpoint getPort() throws Exception
    {
-      System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("jaxws/jbws2014/wsse.keystore").getPath());
-      System.setProperty("org.jboss.ws.wsse.trustStore", getResourceFile("jaxws/jbws2014/wsse.truststore").getPath());
+      System.setProperty("org.jboss.ws.wsse.keyStore", getResourceFile("resources/jaxws/jbws2014/wsse.keystore").getPath());
+      System.setProperty("org.jboss.ws.wsse.trustStore", getResourceFile("resources/jaxws/jbws2014/wsse.truststore").getPath());
       System.setProperty("org.jboss.ws.wsse.keyStorePassword", "jbossws");
       System.setProperty("org.jboss.ws.wsse.trustStorePassword", "jbossws");
       System.setProperty("org.jboss.ws.wsse.keyStoreType", "jks");
       System.setProperty("org.jboss.ws.wsse.trustStoreType", "jks");
       
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws2014?wsdl");
-      URL securityURL = getResourceURL("jaxws/jbws2014/sign/META-INF/jboss-wsse-client.xml");
+      URL securityURL = getResourceURL("resources/jaxws/jbws2014/sign/META-INF/jboss-wsse-client.xml");
       QName serviceName = new QName("http://org.jboss.ws/jbws2014", "TestService");
 
       Service service = Service.create(wsdlURL, serviceName);
@@ -108,16 +108,16 @@ public class SignTestCase extends JBossWSTest
       return port;
    }
 
-	/** Try to discover the URL for the test resource */
-	public URL getResourceURL(String resource) throws MalformedURLException
-	{
-		return getResourceFile(resource).toURL();
-	}
+   /** Try to discover the URL for the test resource */
+   public URL getResourceURL(String resource) throws MalformedURLException
+   {
+      return getResourceFile(resource).toURL();
+   }
 
-	/** Try to discover the File for the test resource */
-	public File getResourceFile(String resource)
-	{
-		File file = new File(resource);
-		return file;
-	}
+   /** Try to discover the File for the test resource */
+   public File getResourceFile(String resource)
+   {
+      File file = new File(resource);
+      return file;
+   }
 }
