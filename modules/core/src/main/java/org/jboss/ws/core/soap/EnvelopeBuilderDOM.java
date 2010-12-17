@@ -24,6 +24,7 @@ package org.jboss.ws.core.soap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
@@ -124,9 +125,22 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       String encoding = (String)soapMessage.getProperty(SOAPMessage.CHARACTER_SET_ENCODING);
       if (encoding == null)
       {
+         return "UTF-8";
+      }
+
+      try
+      {
+         Charset cs = Charset.forName(encoding);
+         encoding = cs.name();
+      }
+      catch (IllegalArgumentException e)
+      {
+         if (log.isDebugEnabled())
+            log.debug("Unsupported charset '" + encoding + "' switching to 'UTF-8'");
          encoding = "UTF-8";
       }
-      return encoding;  
+
+      return encoding;
    }
    
    public SOAPEnvelope build(SOAPMessage soapMessage, Element domEnv) throws SOAPException
