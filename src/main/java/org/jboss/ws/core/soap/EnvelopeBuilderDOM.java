@@ -158,7 +158,12 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          soapHeader = soapEnv.addHeader();
 
       DOMUtils.copyAttributes(soapHeader, domHeader);
-
+      
+      if (!soapHeader.getPrefix().equals(domHeader.getPrefix()))
+      {
+         soapHeader.setPrefix(domHeader.getPrefix());
+      }
+    	       
       NodeList headerChildNodes = domHeader.getChildNodes();
       for (int i = 0; i < headerChildNodes.getLength(); i++)
       {
@@ -194,6 +199,11 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
          soapBody = (SOAPBodyImpl)soapEnv.addBody();
 
       DOMUtils.copyAttributes(soapBody, domBody);
+      
+      if (!soapBody.getPrefix().equals(domBody.getPrefix()))
+      {
+         soapBody.setPrefix(domBody.getPrefix());
+      }
 
       SOAPBodyElement soapBodyElement = null;
       boolean attachHRefElements = Constants.URI_SOAP11_ENC.equals(soapEnv.getAttributeNS(envNS, "encodingStyle"));
