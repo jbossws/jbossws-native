@@ -33,7 +33,7 @@ REM   with some WIN32 systems.
 REM ******************************************************
 
 set NAMES=tools\ant
-set SUBFOLDERS=..;..\..;..\..\..;..\..\..\..
+set SUBFOLDERS=.;..;..\..;..\..\..;..\..\..\..
 
 REM ******************************************************
 REM ********Save the command line arguments***************

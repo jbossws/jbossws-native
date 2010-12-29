@@ -128,7 +128,7 @@ if "%_JAVACMD%" == "" set _JAVACMD=java.exe
 if not "%JIKESPATH%"=="" goto runAntWithJikes
 
 :runAnt
-if %USE_JDK6%=="true" set ANT_OPTS=%ANT_OPTS% -Djava.endorsed.dirs=%ANT_HOME%\endorsed 
+if "%USE_JDK6%"=="true" set ANT_OPTS=%ANT_OPTS% -Djava.endorsed.dirs=%ANT_HOME%\endorsed 
 
 if "%_USE_CLASSPATH%"=="no" goto runAntNoClasspath
 :runAntWithClasspath
