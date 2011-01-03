@@ -59,6 +59,7 @@ import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedXOPEncoder;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Node;
@@ -299,10 +300,9 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
       return new MimeMatchingAttachmentsIterator(headers, attachments);
    }
    
-   private String getSOAPContentType() throws SOAPException
+   private String getSOAPContentType(CommonMessageContext msgContext) throws SOAPException
    {
       //Check binding type in the endpoint metadata
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext != null && Constants.SOAP12HTTP_BINDING.equalsIgnoreCase(msgContext.getEndpointMetaData().getBindingId()))
       {
          return SOAPConstants.SOAP_1_2_CONTENT_TYPE;
@@ -329,7 +329,8 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
                throw new IllegalStateException("XOP parameter not properly inlined");
 
             // default content-type
-            String contentType = getSOAPContentType() + "; charset=" + getCharSetEncoding();
+            CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+            String contentType = getSOAPContentType(msgContext) + "; charset=" + getCharSetEncoding();
 
             if (hasAttachments)
             {
@@ -345,6 +346,10 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
                   multipartRelatedEncoder.encodeMultipartRelatedMessage();
                   contentType = multipartRelatedEncoder.getContentType();
                }
+            }
+            else if (msgContext != null && msgContext.getEndpointMetaData().getFeatures().isFeatureEnabled(FastInfosetFeature.class))
+            {
+               contentType = MimeConstants.TYPE_FASTINFOSET;
             }
             //JBWS-2964:Create a new mimeHeaders to avoid changing another referenced mimeHeaders
             MimeHeaders newMimeHeaders = new MimeHeaders();
