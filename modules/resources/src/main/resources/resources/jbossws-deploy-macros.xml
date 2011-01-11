@@ -38,7 +38,6 @@
     <include name="**/policy.jar"/>
     <include name="**/jbossws-api.jar"/>
     <include name="**/jbossws-common.jar"/>
-    <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-client.jar"/>
     <include name="**/jbossws-native-core.jar"/>
     <include name="**/jbossws-native-services.jar"/>
@@ -75,7 +74,6 @@
     <include name="**/jboss-jaxb-intros.jar"/>
     <include name="**/jbossws-api.jar"/>
     <include name="**/jbossws-common.jar"/>
-    <include name="**/jbossws-framework.jar"/>
     <include name="**/jbossws-native-core.jar"/>
     <include name="**/jaxrpc-api.jar"/>
     <include name="**/netty.jar"/>

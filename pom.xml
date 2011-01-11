@@ -98,11 +98,6 @@
         <groupId>org.jboss.ws</groupId>
         <artifactId>jbossws-framework</artifactId>
         <version>${jbossws.framework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-framework</artifactId>
-        <version>${jbossws.framework.version}</version>
         <classifier>testsuite</classifier>
         <type>zip</type>
       </dependency>
