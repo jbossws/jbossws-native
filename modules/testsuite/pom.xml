@@ -33,7 +33,7 @@
   <!-- Modules -->
   <modules>
     <module>native-tests</module>
-    <module>framework-tests</module>
+    <module>shared-tests</module>
   </modules>
 
   <!-- Dependencies -->
