@@ -131,7 +131,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          processSOAPBinding(sepMetaData, seiClass);
 
          // Process an optional @BindingType annotation
-         processBindingType(sepMetaData, seiClass);
+         processBindingType(sepMetaData, sepClass);
 
          // process config
          processEndpointConfig(sepClass, linkName, sepMetaData);
