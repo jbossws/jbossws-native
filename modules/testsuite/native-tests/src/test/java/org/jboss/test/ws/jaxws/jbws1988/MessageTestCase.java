@@ -112,7 +112,7 @@ public class MessageTestCase extends JBossWSTest
       		"<wsse:Username>kermit</wsse:Username>" +
       		"<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
       		"<wsse:Nonce EncodingType='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary'>gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=</wsse:Nonce>" +
-      		"<wsse:Created>CREATED</wsse:Created>" +
+      		"<wsu:Created>CREATED</wsu:Created>" +
       		"</wsse:UsernameToken>" +
       		"</wsse:Security>" +
       		"</env:Header>" +
@@ -148,7 +148,7 @@ public class MessageTestCase extends JBossWSTest
             "<wsse:Username>kermit</wsse:Username>" +
             "<wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest'>IEeuDaP/NTozwiyJHzTgBoCCDjg=</wsse:Password>" +
             "<wsse:Nonce>gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=</wsse:Nonce>" +
-            "<wsse:Created>CREATED</wsse:Created>" +
+            "<wsu:Created>CREATED</wsu:Created>" +
             "</wsse:UsernameToken>" +
             "</wsse:Security>" +
             "</env:Header>" +
@@ -196,7 +196,7 @@ public class MessageTestCase extends JBossWSTest
       assertNotNull(nonceEl);
       assertNotNull(DOMUtils.getTextContent(nonceEl));
       assertEquals(nonceEl.getAttribute("EncodingType"), Constants.WSS_SOAP_NS+"#Base64Binary");
-      Element createdEl = (Element)DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSSE_NS, "Created")).next();
+      Element createdEl = (Element)DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSU_NS, "Created")).next();
       assertNotNull(createdEl);
       assertNotNull(DOMUtils.getTextContent(createdEl));
    }
@@ -218,7 +218,7 @@ public class MessageTestCase extends JBossWSTest
       assertNotNull(nonceEl);
       assertNotNull(DOMUtils.getTextContent(nonceEl));
       assertEquals(nonceEl.getAttribute("EncodingType"), Constants.WSS_SOAP_NS+"#Base64Binary");
-      assertFalse(DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSSE_NS, "Created")).hasNext());
+      assertFalse(DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSU_NS, "Created")).hasNext());
    }
    
    public void testEncodeMessageWithCreated() throws Exception
@@ -235,7 +235,7 @@ public class MessageTestCase extends JBossWSTest
       Element usernameTokenEl = (Element)DOMUtils.getChildElements(securityEl, new QName(Constants.WSSE_NS, "UsernameToken")).next();
       assertPassword(usernameTokenEl);
       assertFalse(DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSSE_NS, "Nonce")).hasNext());
-      Element createdEl = (Element)DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSSE_NS, "Created")).next();
+      Element createdEl = (Element)DOMUtils.getChildElements(usernameTokenEl, new QName(Constants.WSU_NS, "Created")).next();
       assertNotNull(createdEl);
       assertNotNull(DOMUtils.getTextContent(createdEl));
    }
