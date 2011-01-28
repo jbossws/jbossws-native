@@ -74,7 +74,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    // provide logging
    private static Logger log = Logger.getLogger(HTTPRemotingConnection.class);
    private static final String REMOTING_DESTRUCTION_DELAY = 
-	   System.getProperty("org.jboss.ws.client.remoting.destruction.delay", "5000");
+      System.getProperty("org.jboss.ws.client.remoting.destruction.delay", "5000");
 
    private Map<String, Object> clientConfig = new HashMap<String, Object>();
 
@@ -202,7 +202,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          }
 
          locator = new InvokerLocator(targetAddress);
-         locator.getParameters().put(Client.INVOKER_DESTRUCTION_DELAY, REMOTING_DESTRUCTION_DELAY);
+         locator.getParameters().put(Client.INVOKER_DESTRUCTION_DELAY, REMOTING_DESTRUCTION_DELAY); // [JBPAPP-5826] reuse SSL sessions
       }
       catch (MalformedURLException e)
       {
