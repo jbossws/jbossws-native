@@ -75,6 +75,8 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    private static Logger log = Logger.getLogger(HTTPRemotingConnection.class);
    private static final String REMOTING_DESTRUCTION_DELAY = 
       System.getProperty("org.jboss.ws.client.remoting.destruction.delay", "5000");
+   private static final String REMOTING_DISCONNECT_AFTER_USE = 
+      System.getProperty("org.jboss.ws.client.remoting.disconnect.after.use", "true");
 
    private Map<String, Object> clientConfig = new HashMap<String, Object>();
 
@@ -203,6 +205,9 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
 
          locator = new InvokerLocator(targetAddress);
          locator.getParameters().put(Client.INVOKER_DESTRUCTION_DELAY, REMOTING_DESTRUCTION_DELAY); // [JBPAPP-5826] reuse SSL sessions
+         // TODO: Use HTTPClientInvoker.DISCONNECT_AFTER_USE instead of hardcoded string
+         // "disconnectAfterUse" once Remoting 2.5.3.SP2 is released to maven repository.
+         locator.getParameters().put("disconnectAfterUse", REMOTING_DISCONNECT_AFTER_USE); // [JBPAPP-5748] prevent socket leaks
       }
       catch (MalformedURLException e)
       {
