@@ -48,7 +48,7 @@ public class HelloJavaBean implements Hello, ServiceLifecycle
       log.info("soapAction: " + Arrays.asList(soapAction));
 
       String retStr;
-      if (soapAction != null && soapAction.length == 1 && soapAction[0].equals("/foo/bar"))
+      if (soapAction != null && soapAction.length == 1 && soapAction[0].indexOf("/foo/bar") != -1)
       {
          retStr = "[pass]";
       }

@@ -175,6 +175,12 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       {
          targetAddress = endpoint.toString();
       }
+      final String[] transferEncodingValue = reqMessage != null ? reqMessage.getMimeHeaders().getHeader("Transfer-Encoding") : null; 
+      if (transferEncodingValue != null && "disabled".equals(transferEncodingValue[0]))
+      {
+         reqMessage.getMimeHeaders().removeHeader("Transfer-Encoding");
+         callProps.put(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE, "0");
+      }
 
       // setup remoting client            
       Map<String, Object> metadata = createRemotingMetaData(reqMessage, callProps);
