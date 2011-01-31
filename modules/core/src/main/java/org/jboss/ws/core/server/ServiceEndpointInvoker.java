@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -423,8 +424,19 @@ public class ServiceEndpointInvoker
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof MessageContextJAXWS)
       {
+         Map<String, DataHandler> outboundAttachments = (Map<String, DataHandler>)msgContext.get(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS);
+         Map<String, DataHandler> newAttachments = new HashMap<String, DataHandler>(); // to protect against attacks from endpoint
+         
          // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
-         msgContext.put(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
+         msgContext.put(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS, newAttachments);
+         
+         if (outboundAttachments != null)
+         {
+            for (final String key : outboundAttachments.keySet())
+            {
+               newAttachments.put(key, outboundAttachments.get(key));
+            }
+         }
       }
    }
 
