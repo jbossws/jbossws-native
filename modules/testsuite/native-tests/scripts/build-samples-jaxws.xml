@@ -308,6 +308,8 @@
       webxml="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException_Exception.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloJavaBean.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UserType.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/ObjectFactory.class"/>
@@ -325,11 +327,51 @@
     <war warfile="${tests.output.dir}/test-libs/jaxws-samples-wssecurity-sign.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException_Exception.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloJavaBean.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UserType.class"/>
         <include name="org/jboss/test/ws/jaxws/samples/wssecurity/ObjectFactory.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/simple-sign/WEB-INF">
+        <include name="jboss-wsse-server.xml"/>
+      </webinf>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity">
+        <include name="wsse.keystore"/>
+        <include name="wsse.truststore"/>
+      </webinf>
+    </war>
+    
+    <!-- jaxws-samples-wssecurity-sign-fault -->
+    <war warfile="${tests.output.dir}/test-libs/jaxws-samples-wssecurity-sign-fault.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException_Exception.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloJavaBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UserType.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/ObjectFactory.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/sign-fault/WEB-INF">
+        <include name="jboss-wsse-server.xml"/>
+      </webinf>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity">
+        <include name="wsse.keystore"/>
+        <include name="wsse.truststore"/>
+      </webinf>
+    </war>
+    
+    <!-- jaxws-samples-wssecurity-sign-encrypt-fault -->
+    <war warfile="${tests.output.dir}/test-libs/jaxws-samples-wssecurity-sign-encrypt-fault.war" webxml="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/WEB-INF/web.xml">
+      <classes dir="${tests.output.dir}/test-classes">
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/Hello.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloException_Exception.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/HelloJavaBean.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/UserType.class"/>
+        <include name="org/jboss/test/ws/jaxws/samples/wssecurity/ObjectFactory.class"/>
+      </classes>
+      <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity/sign-encrypt-fault/WEB-INF">
         <include name="jboss-wsse-server.xml"/>
       </webinf>
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurity">

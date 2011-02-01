@@ -65,4 +65,10 @@ public class Requires implements Serializable
    {
       this.requireTimestamp = requireTimestamp;
    }
+   
+   public boolean includesFaults()
+   {
+      return (requireSignature != null && requireSignature.isIncludeFaults())
+         || (requireEncryption != null && requireEncryption.isIncludeFaults());
+   }
 }

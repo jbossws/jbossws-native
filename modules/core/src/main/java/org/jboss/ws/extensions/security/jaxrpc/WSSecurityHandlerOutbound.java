@@ -42,6 +42,22 @@ public class WSSecurityHandlerOutbound extends WSSecurityHandler
    {
       return handleInboundSecurity(msgContext);
    }
+   
+   /* Their is a potential problem that can't be avoided using the JAX-RPC handler framework.
+    * If a request handler (outbound for the client) throws an exception, this will get called,
+    * but it will be incorrectly treated as an inbound message.
+    *
+    * This is intended to be called when the response message from the server (inbound)
+    * is a fault message.
+    */
+   public boolean handleFault(MessageContext msgContext)
+   {
+      if (thrownByMe(msgContext))
+         return true;
+
+      return handleInboundSecurity(msgContext);
+   }
+
 
     protected String getConfigResourceName() {
       return WSSecurityOMFactory.CLIENT_RESOURCE_NAME;

@@ -42,4 +42,15 @@ public class HelloJavaBean
       log.info(in0);
       return in0;
    }
+   
+   @WebMethod
+   public void triggerException(@WebParam(name = "String_1") String reason, @WebParam(name = "int_2") int code) throws HelloException_Exception
+   {
+      String message = "Error: " + reason + ":" + code;
+      HelloException he = new HelloException();
+      he.setMessage(message);
+      he.setCode(code);
+      he.setReason(reason);
+      throw new HelloException_Exception(message, he);
+   }
 }
