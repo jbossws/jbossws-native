@@ -30,6 +30,7 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -54,6 +55,7 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
 {
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityHandler.class);
+   protected static String FAULT_THROWN = "org.jboss.ws.wsse.faultThrown";
 
    private static Set<QName> headers;
 
@@ -68,9 +70,16 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
    {
       return headers;
    }
+   
+   protected boolean thrownByMe(MessageContext msgContext)
+   {
+      Boolean bool = (Boolean)msgContext.get(FAULT_THROWN);
+      return bool != null && bool.booleanValue();
+   }
 
    protected boolean handleInboundSecurity(MessageContext msgContext)
    {
+      Exception exception = null;
       try
       {
          WSSecurityConfiguration configuration = getSecurityConfiguration(msgContext);
@@ -83,7 +92,17 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
       }
       catch (SOAPException ex)
       {
-         log.error("Cannot handle inbound ws-security", ex);
+         exception = ex;
+      }
+      
+      if (exception != null)
+      {
+         msgContext.put(FAULT_THROWN, true);
+         if (exception instanceof SOAPFaultException)
+            throw (SOAPFaultException)exception;
+
+         // Unexpected exception, log it
+         log.error("Cannot handle inbound ws-security", exception);
          return false;
       }
       return true;
@@ -91,6 +110,7 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
 
    protected boolean handleOutboundSecurity(MessageContext msgContext)
    {
+      Exception exception = null;
       try
       {
          WSSecurityConfiguration configuration = getSecurityConfiguration(msgContext);
@@ -106,7 +126,17 @@ public abstract class WSSecurityHandler extends GenericSOAPHandler
       }
       catch (SOAPException ex)
       {
-         log.error("Cannot handle outbound ws-security", ex);
+         exception = ex;
+      }
+      
+      if (exception != null)
+      {
+         msgContext.put(FAULT_THROWN, true);
+         if (exception instanceof SOAPFaultException)
+            throw (SOAPFaultException) exception;
+
+         // Unexpected exception, log it
+         log.error("Cannot handle outbound ws-security", exception);
          return false;
       }
       return true;

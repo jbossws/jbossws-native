@@ -30,4 +30,21 @@ package org.jboss.ws.metadata.wsse;
 public class RequireSignature extends Targetable
 {
    private static final long serialVersionUID = -3854930944550152309L;
+   
+   private boolean includeFaults;
+
+   public RequireSignature(boolean includeFaults)
+   {
+      this.includeFaults = includeFaults;
+   }
+
+   public boolean isIncludeFaults()
+   {
+      return includeFaults;
+   }
+
+   public void setIncludeFaults(boolean includeFaults)
+   {
+      this.includeFaults = includeFaults;
+   }
 }

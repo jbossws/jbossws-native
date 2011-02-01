@@ -80,6 +80,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    private MimeHeaders mimeHeaders = new MimeHeaders();
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
    private CIDGenerator cidGenerator = new CIDGenerator();
+   private boolean faultMessage;
    private boolean isXOPMessage;
    private boolean isSWARefMessage;
    private SOAPPartImpl soapPart;   
@@ -139,6 +140,18 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    public CIDGenerator getCidGenerator()
    {
       return cidGenerator;
+   }
+   
+   /**
+    * Marks this <code>SOAPMessage</code> as a fault. Otherwise, the message
+    * will be checked for a SOAPFault. The reason for this is to allow for
+    * faults to be encrypted, in which case there is no SOAPFault.
+    *
+    * @param faultMessage whether this message is a fault
+    */
+   public void setFaultMessage(boolean faultMessage)
+   {
+      this.faultMessage = faultMessage;
    }
 
    public boolean isXOPMessage()
@@ -441,6 +454,9 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
 
    public boolean isFaultMessage()
    {
+      if (faultMessage)
+         return true;
+      
       SOAPFault soapFault = null;
       try
       {

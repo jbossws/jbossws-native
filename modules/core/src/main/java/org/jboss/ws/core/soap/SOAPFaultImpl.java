@@ -40,10 +40,13 @@ import javax.xml.soap.SOAPFaultElement;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.SAAJUtils;
+import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
 import org.jboss.xb.QNameBuilder;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 
 /**
  * An element in the SOAPBody object that contains error and/or status information.
@@ -60,6 +63,7 @@ import org.w3c.dom.Attr;
  * goes only to the default actor, which is the final intended recipient.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="jason.greene@jboss.com"/>Jason T. Greene</a>
  */
 public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 {
@@ -100,6 +104,11 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
    public SOAPFaultImpl(String prefix, String namespace) throws SOAPException
    {
       super(new NameImpl("Fault", prefix, namespace));
+   }
+   
+   public SOAPFaultImpl(SOAPElementImpl element)
+   {
+      super(element);
    }
 
    /** Gets the fault code for this SOAPFault object.
@@ -717,15 +726,47 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
       return detail;
    }
 
+   private Detail extractDetail(final QName detailQName)
+   {
+      SOAPElement obj = getChildElement(this, detailQName);
+      Detail detail = null;
+      if (obj instanceof Detail)
+      {
+         detail = (Detail)obj;
+      }
+      else if(obj instanceof SOAPElementImpl)
+      {
+         try
+         {
+            SOAPElementImpl soapEl = (SOAPElementImpl)obj;
+            SOAPFactoryImpl factory = new SOAPFactoryImpl();
+            detail = (Detail)addChildElement(factory.createDetail());
+
+            Iterator<Element> childIt = DOMUtils.getChildElements(soapEl);
+            while (childIt.hasNext())
+            {
+               Element domElement = childIt.next();
+               SOAPElement detailEntry = new DetailEntryImpl(factory.createElement(domElement, true));
+               detail.addChildElement(detailEntry);
+            }
+         }
+         catch (SOAPException e)
+         {
+            throw new WSException("Unable to create fault detail: " + e.getMessage());
+         }
+      }
+      return detail;
+   }
+   
    private void findSoap11DetailElement()
    {
-      detail = (Detail)getChildElement(this, Constants.SOAP11_DETAIL);
+      this.detail = extractDetail(Constants.SOAP11_DETAIL);
       log.trace("findSoap11DetailElement : " + detail);
    }
 
    private void findSoap12DetailElement()
    {
-      detail = (Detail)getChildElement(this, Constants.SOAP12_DETAIL);
+      detail = extractDetail(Constants.SOAP12_DETAIL);
       log.trace("findSoap12DetailElement : " + detail);
    }
 

@@ -7,6 +7,14 @@
      <xs:element minOccurs='0' name='msg' type='xs:string'/>
     </xs:sequence>
    </xs:complexType>
+   <xs:complexType name='HelloException'>
+    <xs:sequence>
+     <xs:element name='message' nillable='true' type='xs:string'/>
+     <xs:element name='code' type='xs:int'/>
+     <xs:element name='reason' nillable='true' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:element name='HelloException' type='tns:HelloException'/>
   </xs:schema>
  </types>
  <message name='Hello_echoUserType'>
@@ -15,10 +23,23 @@
  <message name='Hello_echoUserTypeResponse'>
   <part name='return' type='tns:UserType'/>
  </message>
+ <message name='Hello_triggerException'>
+  <part name='String_1' type='xsd:string'/>
+  <part name='int_2' type='xsd:int'/>
+ </message>
+ <message name='Hello_triggerExceptionResponse'/>
+ <message name='HelloException'>
+  <part element='tns:HelloException' name='HelloException'/>
+ </message>
  <portType name='Hello'>
   <operation name='echoUserType' parameterOrder='user'>
    <input message='tns:Hello_echoUserType'/>
    <output message='tns:Hello_echoUserTypeResponse'/>
+  </operation>
+  <operation name='triggerException' parameterOrder='String_1 int_2'>
+   <input message='tns:Hello_triggerException'/>
+   <output message='tns:Hello_triggerExceptionResponse'/>
+   <fault message='tns:HelloException' name='HelloException'/>
   </operation>
  </portType>
  <binding name='HelloBinding' type='tns:Hello'>
@@ -31,6 +52,18 @@
    <output>
     <soap:body namespace='http://org.jboss.ws/samples/wssecurity' use='literal'/>
    </output>
+  </operation>
+  <operation name='triggerException'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://org.jboss.test.ws/wsse' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://org.jboss.test.ws/wsse' use='literal'/>
+   </output>
+   <fault name='HelloException'>
+    <soap:fault name='HelloException' use='literal'/>
+   </fault>
   </operation>
  </binding>
  <service name='HelloService'>

@@ -22,7 +22,9 @@
 package org.jboss.ws.extensions.security.jaxrpc;
 
 import javax.xml.rpc.handler.MessageContext;
+import javax.xml.rpc.handler.soap.SOAPMessageContext;
 
+import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 
 /**
@@ -41,6 +43,18 @@ public class WSSecurityHandlerInbound extends WSSecurityHandler
 
    public boolean handleResponse(MessageContext msgContext)
    {
+      return handleOutboundSecurity(msgContext);
+   }
+   
+   public boolean handleFault(MessageContext msgContext)
+   {
+      // Skip any WS-Security Faults
+      if (thrownByMe(msgContext))
+         return true;
+
+      // Mark the message as a fault, in case it ends up being encrypted
+      ((SOAPMessageImpl) ((SOAPMessageContext) msgContext).getMessage()).setFaultMessage(true);
+
       return handleOutboundSecurity(msgContext);
    }
 

@@ -182,11 +182,13 @@
     <xs:sequence>
       <xs:element name="targets" type="targetsType" minOccurs="0"/>
     </xs:sequence>
+    <xs:attribute name="includeFaults" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:complexType name="requireSignatureType">
     <xs:sequence>
       <xs:element name="targets" type="targetsType" minOccurs="0"/>
     </xs:sequence>
+    <xs:attribute name="includeFaults" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:complexType name="requiresType">
     <xs:all>
@@ -288,6 +290,7 @@
         <xs:documentation>The label the ws-security engine needs for looking up (in the security domain) the alias that is to be used for encryption</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="includeFaults" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:complexType name="signType">
     <xs:sequence>
@@ -312,6 +315,7 @@
         <xs:documentation>The label the ws-security engine needs for looking up (in the security domain) the alias that is to be used for signing</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="includeFaults" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:simpleType name="tokenReferenceType">
   	<xs:restriction base="xs:string">

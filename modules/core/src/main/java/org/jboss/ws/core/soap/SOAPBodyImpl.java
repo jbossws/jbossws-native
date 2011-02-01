@@ -51,6 +51,7 @@ import org.w3c.dom.Node;
  * A SOAPFault object, which carries status and/or error information, is an example of a SOAPBodyElement object.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author <a href="jason.greene@jboss.com">Jason T. Greene</a>
  */
 public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
 {
@@ -67,13 +68,30 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("addChildElement: " + child.getElementName());
 
-      if ((child instanceof SOAPBodyElement) == false)
-         child = convertToBodyElement(child);
+      if (!(child instanceof SOAPBodyElement))
+      {
+         child = isFault(child) ? convertToSOAPFault(child) : convertToBodyElement(child);
+      }
 
       child = super.addChildElement(child);
       return child;
    }
 
+   private boolean isFault(Node node)
+   {
+      return "Fault".equals(node.getLocalName()) && getNamespaceURI().equals(node.getNamespaceURI());
+   }
+
+   private SOAPElement convertToSOAPFault(Node node)
+   {
+      if (!(node instanceof SOAPElementImpl))
+         throw new IllegalArgumentException("SOAPElementImpl expected");
+
+      SOAPElementImpl element = (SOAPElementImpl) node;
+      element.detachNode();
+      return new SOAPFaultImpl(element);
+   }
+   
    public SOAPBodyElement addBodyElement(Name name) throws SOAPException
    {
       log.trace("addBodyElement: " + name);
@@ -197,7 +215,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("appendChild: " + newChild.getNodeName());
       if (needsConversionToBodyElement(newChild))
-         newChild = convertToBodyElement(newChild);
+         newChild = isFault(newChild) ? convertToSOAPFault(newChild) : convertToBodyElement(newChild);
 
       return super.appendChild(newChild);
    }
@@ -206,7 +224,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("insertBefore: " + newChild.getNodeName());
       if (needsConversionToBodyElement(newChild))
-         newChild = convertToBodyElement(newChild);
+         newChild = isFault(newChild) ? convertToSOAPFault(newChild) : convertToBodyElement(newChild);
 
       return super.insertBefore(newChild, refChild);
    }
@@ -215,7 +233,7 @@ public class SOAPBodyImpl extends SOAPElementImpl implements SOAPBody
    {
       log.trace("replaceChild: " + newChild.getNodeName());
       if (needsConversionToBodyElement(newChild))
-         newChild = convertToBodyElement(newChild);
+         newChild = isFault(newChild) ? convertToSOAPFault(newChild) : convertToBodyElement(newChild);
 
       return super.replaceChild(newChild, oldChild);
    }
