@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.jboss.ws</groupId>
     <artifactId>jbossws-parent</artifactId>
-    <version>1.0.9.GA</version>
+    <version>1.0.10-SNAPSHOT</version>
   </parent>
 
   <!-- Source Control Management -->
@@ -39,7 +39,6 @@
     <module>modules/endorsed</module>
     <module>modules/core</module>
     <module>modules/client</module>
-    <module>modules/management</module>
     <module>modules/resources</module>
     <module>modules/services</module>
   </modules>
@@ -78,6 +77,7 @@
     <wsdl4j.version>1.6.2</wsdl4j.version>
     <xmlsec.version>1.4.3</xmlsec.version>
     <xerces.version>2.9.1</xerces.version>
+    <junit.version>3.8.1</junit.version>
   </properties>
 
   <!-- DependencyManagement -->
@@ -351,7 +351,15 @@
         <artifactId>netty</artifactId>
         <version>${netty.version}</version>
       </dependency>
+
+      <dependency>
+       <groupId>junit</groupId>
+       <artifactId>junit</artifactId>
+       <version>${junit.version}</version>
+       <scope>test</scope>
+      </dependency>
     </dependencies>
+
   </dependencyManagement>
 
   <!-- Plugins -->
@@ -448,95 +456,11 @@
   <!-- Profiles -->
   <profiles>
 
-    <!--
-    Name:  bindist
-    Descr: Build the binary distribution
-    -->
     <profile>
-      <id>bindist</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-              <finalName>assembly</finalName>
-              <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>src/main/scripts/assembly-deploy-artifacts.xml</descriptor>
-                <descriptor>src/main/scripts/assembly-bin-dist.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.jboss.maven.plugins</groupId>
-            <artifactId>maven-jdocbook-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>resources</goal>
-                  <goal>generate</goal>
-                </goals>
-                <phase>package</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <sourceDocumentName>JBossWS-Native.xml</sourceDocumentName>
-              <sourceDirectory>src/main/doc</sourceDirectory>
-              <imageResource>
-                <directory>src/main/doc</directory>
-                <includes>
-                  <include>images/*</include>
-                </includes>
-              </imageResource>
-              <formats>
-                <!--format>
-                  <formatName>pdf</formatName>
-                  <stylesheetResource>classpath:/xslt/org/jboss/pdf.xsl</stylesheetResource>
-                  <finalName>JBossWS-Native_Guide.pdf</finalName>
-                </format-->
-                <format>
-                  <formatName>html</formatName>
-                  <stylesheetResource>classpath:/xslt/org/jboss/xhtml.xsl</stylesheetResource>
-                  <finalName>index.html</finalName>
-                </format>
-                <format>
-                  <formatName>html_single</formatName>
-                  <stylesheetResource>classpath:/xslt/org/jboss/xhtml-single.xsl</stylesheetResource>
-                  <finalName>index.html</finalName>
-                </format>
-              </formats>
-              <options>
-                <xincludeSupported>true</xincludeSupported>
-              </options>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!--
-    Name:  srcdist
-    Descr: Build the source distribution
-    -->
-    <profile>
-      <id>srcdist</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-              <finalName>assembly</finalName>
-              <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>src/main/scripts/assembly-deploy-artifacts.xml</descriptor>
-                <descriptor>src/main/scripts/assembly-src-dist.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <id>dist</id>
+      <modules>
+         <module>modules/dist</module>
+      </modules>
     </profile>
 
     <!--

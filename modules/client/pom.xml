@@ -18,17 +18,17 @@
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-core</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-factories</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-services</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.spec.javax.xml.rpc</groupId>

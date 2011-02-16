@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-client</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.sun</groupId>
@@ -421,8 +421,6 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
-              <testExcludeFile>../test-excludes-jboss600.txt</testExcludeFile>
               <compilerArgument>-Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</compilerArgument>
             </configuration>
           </plugin>
@@ -430,6 +428,23 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</argLine>
+              <excludes>
+                <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
+                <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
+
+                <!--# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
+                <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
+
+                <!-- # [JBAS-8363] Virtual host issue in JBossWeb -->
+                <exclude>org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*</exclude>
+
+                <!-- # [JBWS-3150] This test causes hudson to freeze -->
+                <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+                <!-- # [JBWS-3220] Failures after update to maven3 -->
+                <exclude>org/jboss/test/ws/jaxws/json/*TestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxrpc/jbws383/JBWS383TestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxws/jbws2000/JBWS2000TestCase.*</exclude> 
+              </excludes>
             </configuration>
           </plugin>
         </plugins>
@@ -521,8 +536,6 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
-              <testExcludeFile>../test-excludes-jboss601.txt</testExcludeFile>
               <compilerArgument>-Djava.endorsed.dirs=${jboss601.home}/lib/endorsed</compilerArgument>
             </configuration>
           </plugin>
@@ -530,6 +543,22 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss601.home}/lib/endorsed</argLine>
+              <excludes>
+                <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
+                <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
+
+                <!--# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
+                <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
+
+                <!-- # [JBAS-8363] Virtual host issue in JBossWeb -->
+                <exclude>org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*</exclude>
+
+                <!-- # [JBWS-3150] This test causes hudson to freeze -->
+                <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxws/json/*TestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxrpc/jbws383/JBWS383TestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxws/jbws2000/JBWS2000TestCase.*</exclude> 
+              </excludes>
             </configuration>
           </plugin>
         </plugins>

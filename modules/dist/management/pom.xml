@@ -82,6 +82,7 @@
       <plugin>
          <artifactId>maven-war-plugin</artifactId>
          <configuration>
+           <warName>jbossws-native-management</warName>
            <webResources>
              <resource>
                <directory>src/main/webapp</directory>
