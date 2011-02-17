@@ -193,9 +193,9 @@
             </executions>
             <configuration>
               <sourceDocumentName>JBossWS-Native.xml</sourceDocumentName>
-              <sourceDirectory>src/main/doc</sourceDirectory>
+              <sourceDirectory>${basedir}/src/main/doc</sourceDirectory>
               <imageResource>
-                <directory>src/main/doc</directory>
+                <directory>${basedir}/src/main/doc</directory>
                 <includes>
                   <include>images/*</include>
                 </includes>
