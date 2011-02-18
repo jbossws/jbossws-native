@@ -333,7 +333,7 @@
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-depchain</artifactId>
-          <scope>import</scope>
+          <scope>test</scope>
           <type>pom</type>
           <version>${jboss.version}</version>
           <exclusions>
@@ -468,7 +468,7 @@
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-depchain</artifactId>
-          <scope>import</scope>
+          <scope>test</scope>
           <type>pom</type>
           <version>${jboss.version}</version>
           <exclusions>
