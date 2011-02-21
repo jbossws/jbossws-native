@@ -36,7 +36,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>./../</directory>
+      <directory>../../</directory>
       <outputDirectory>jbossws-native-src-dist/</outputDirectory>
       <includes>
         <include>.classpath</include>
