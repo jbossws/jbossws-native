@@ -138,6 +138,29 @@
       </testResource>
     </testResources>
     <plugins>
+      <plugin> <!-- This copies jbossws-native-factories jar to endorsed dir before the integration-tests are run -->
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-factories-jar</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+              <resources>         
+                <resource>
+                  <directory>${basedir}/../endorsed/target/</directory>
+                  <includes>
+                    <include>jbossws-native-factories-${project.version}.jar</include>
+                  </includes>
+                </resource>
+              </resources>             
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -160,8 +183,23 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <skip>true</skip>
           <failIfNoTests>false</failIfNoTests>
-          <systemProperties>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+              <includes>
+                <include>**/*Test.java</include>
+                <include>**/*TestCase.java</include>
+              </includes>
+              <systemProperties>
             <property>
               <name>jboss.bind.address</name>
               <value>${jboss.bind.address}</value>
@@ -240,6 +278,8 @@
             </property>
           </systemProperties>
         </configuration>
+        </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
