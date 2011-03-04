@@ -198,6 +198,7 @@
               <includes>
                 <include>**/*Test.java</include>
                 <include>**/*TestCase.java</include>
+                <include>**/*TestCaseForked.java</include>
               </includes>
               <systemProperties>
             <property>
