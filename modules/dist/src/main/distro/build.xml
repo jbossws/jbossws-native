@@ -65,6 +65,7 @@
       <pathelement location="${thirdparty.dir}/saaj-api.jar"/>
       <fileset dir="${thirdparty.dir}">
         <exclude name="**/jbossws-jboss*.jar"/>
+        <exclude name="**/jboss-as-webservices-tests-integration.jar"/>
       </fileset>
     </path>
 
