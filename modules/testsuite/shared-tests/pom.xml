@@ -69,6 +69,7 @@
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
               <execution>
+                <id>unpack-shared-tests</id>
                 <phase>generate-sources</phase>
                 <goals>
                   <goal>unpack</goal>
@@ -79,9 +80,10 @@
                       <groupId>org.jboss.ws</groupId>
                       <artifactId>jbossws-shared-testsuite</artifactId>
                       <type>zip</type>
+                      <overWrite>true</overWrite>
+                      <outputDirectory>src/test</outputDirectory>
                     </artifactItem>
                   </artifactItems>
-                  <outputDirectory>src/test</outputDirectory>
                 </configuration>
               </execution>
               <execution> <!-- This is used by WSRunClientTestCase -->
@@ -122,6 +124,7 @@
                     <property name="log4j.conf" value="${basedir}/src/test/etc/log4j.xml" />
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
+                    <property name="endorsed.dirs" value="${endorsed.dirs}"/>
                     <ant antfile="scripts/antrun-wsconsume.xml" target="wsconsume" />
                   </tasks>
                 </configuration>
@@ -139,6 +142,7 @@
                     <property name="project.version" value="${project.version}" />
                     <property name="log4j.conf" value="${basedir}/src/test/etc/log4j.xml" />
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
+                    <property name="endorsed.dirs" value="${endorsed.dirs}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
                     <ant antfile="scripts/antrun-wsprovide.xml" target="wsprovide"/>
                     <ant antfile="src/test/ant-import/build-jars-jaxws.xml" target="build-jars-jaxws" />

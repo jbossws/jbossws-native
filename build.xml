@@ -60,8 +60,11 @@
     <condition property="jboss601.home" value="${profiles.profile.properties.jboss601.home}">
       <isset property="profiles.profile.properties.jboss601.home"/>
     </condition>
+    <condition property="jboss700.home" value="${profiles.profile.properties.jboss700.home}">
+      <isset property="profiles.profile.properties.jboss700.home"/>
+    </condition>
 
-    <fail message="jboss home not set, use -Djboss600.home=value or -Djboss601.home=value to set">
+    <fail message="jboss home not set, use -Djboss600.home=value or -Djboss601.home=value or -Djboss700.home=value to set">
      <condition>
       <and>
        <not>
@@ -70,6 +73,9 @@
        <not>
          <isset property="jboss601.home"/>
        </not>
+       <not>
+         <isset property="jboss700.home"/>
+       </not>
       </and>
      </condition>
     </fail>
@@ -77,6 +83,7 @@
     <echo/>
     <echo message="jboss600.home=${jboss600.home}"/>
     <echo message="jboss601.home=${jboss601.home}"/>
+    <echo message="jboss700.home=${jboss700.home}"/>
   </target>
 
   <target name="init" depends="mvn-settings,prepare,os-init">

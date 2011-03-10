@@ -20,6 +20,7 @@
     <wsprovide-macro
       sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"
       destDir=""
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       outputDir="${tests.output.dir}"
       log4jConf="${log4j.conf}"
@@ -30,6 +31,7 @@
     <wsprovide-macro
       sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"
       destDir=""
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       outputDir="${tests.output.dir}"
       log4jConf="${log4j.conf}"
@@ -48,6 +50,7 @@
     <attribute name="log4jConf"/>
     <attribute name="loggingDir"/>
     <attribute name="resourcesDir"/>
+    <attribute name="javaEndorsedDirs"/>
 
     <sequential>
       <wsprovide
@@ -61,7 +64,7 @@
         resourcedestdir="@{outputDir}/test-resources/@{resourcesDir}"
         sourcedestdir="@{outputDir}/test-sources/@{resourcesDir}"
       >
-        <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
+        <jvmarg line="-Djava.endorsed.dirs=@{javaEndorsedDirs}"/>
         <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
         <jvmarg line="-Dlog4j.output.dir=@{loggingDir}"/>
       </wsprovide>

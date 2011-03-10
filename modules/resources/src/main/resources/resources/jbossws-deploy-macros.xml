@@ -276,6 +276,115 @@
   </target>
 
   <!-- ================================================================== -->
+  <!-- Modules                                                            -->
+  <!-- ================================================================== -->
+	
+  <macrodef name="macro-deploy-jbossws-modules">
+    <attribute name="thirdpartydir"/>
+    <attribute name="targetdir"/>
+    <sequential>
+      <!-- libraries -->
+      <copy todir="@{targetdir}/org/jboss/ws/jaxws-client/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-native-client.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/ws/native/jbossws-native-core/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-native-core.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/ws/native/jbossws-native-factories/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-native-factories.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/ws/native/jbossws-native-services/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-native-services.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/ws/api/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-api.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/javax/xml/rpc/api/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jaxrpc-api.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/xb/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossxb.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/apache/ws/commons/policy/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/wscommons-policy.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/apache/xmlsec/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/xmlsec.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/com/sun/xml/fastinfoset/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/FastInfoset.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/codehaus/jettison/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jettison.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/codehaus/woodstox/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/wstx.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/jaxbintros/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jboss-jaxb-intros.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/apache/commons/beanutils/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/commons-beanutils.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/ws/common/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-common.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/ws/spi/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-spi.jar"/>
+        </fileset>
+      </copy>
+      <copy todir="@{targetdir}/org/jboss/as/webservices/main" flatten="false" overwrite="true">
+        <fileset dir="@{thirdpartydir}/lib">
+          <include name="**/jbossws-native-resources.jar"/>
+        </fileset>
+      </copy>
+      <!-- module.xml files -->
+      <installModules targetDir="@{targetdir}">
+        <fileset dir="@{thirdpartydir}/modules">
+          <include name="**/module.xml"/>
+          <exclude name="**/jboss/as/webservices/**/module.xml"/>
+        </fileset>
+      </installModules>
+      <copy toDir="@{targetdir}">
+        <fileset dir="@{thirdpartydir}/modules">
+          <include name="**/jboss/as/webservices/**/module.xml"/>
+        </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <!-- ================================================================== -->
   <!-- Deploy JBossWS                                                     -->
   <!-- ================================================================== -->
 
@@ -297,10 +406,38 @@
     <macro-deploy-juddi-sar targetdir="${installserver}/deploy/juddi-service.sar" thirdpartydir="${thirdpartydir}"/>
   </target>
 
+  <target name="deploy-jbossws-native-modules">
+    <fail message="installserver must be specified" unless="installserver"/>
+    <fail message="thirdpartydir must be specified" unless="thirdpartydir"/>
+    <macro-deploy-jbossws-modules targetdir="${installserver}/modules" thirdpartydir="${thirdpartydir}"/>
+  </target>
 
   <!-- ================================================================== -->
   <!-- Undeploy JBossWS                                                   -->
   <!-- ================================================================== -->
+
+  <macrodef name="macro-undeploy-jbossws-modules">
+    <attribute name="defaultmodulesconf"/>
+    <attribute name="targetdir"/>
+  	
+    <sequential>
+      <loadfile property="jbossws.modules.conf" srcfile="@{targetdir}/modules/org/jboss/as/webservices/jbossws-modules.conf" failonerror="false"/>
+      <loadfile property="jbossws.modules.conf" srcfile="@{defaultmodulesconf}" failonerror="false"/>
+
+      <property name="jboss.modules" value="@{targetdir}/modules"/>
+
+      <delete includeemptydirs="true" verbose="true">
+        <fileset dir="${jboss.modules}">
+          <include name="**/org/jboss/as/webservices/main/jbossws-*-resources*"/>
+        </fileset>
+      </delete>
+
+      <!-- delete content of last deployment -->
+      <delete includeemptydirs="true" verbose="true">
+        <fileset dir="${jboss.modules}" includes="${jbossws.modules.conf}"/>
+      </delete>
+    </sequential>
+  </macrodef>
 
   <macrodef name="macro-undeploy-jbossws">
     <attribute name="defaultconf"/>

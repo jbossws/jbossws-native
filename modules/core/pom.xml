@@ -16,7 +16,6 @@
   <properties>
     <jboss.jbosssx.version>2.0.2.SP3</jboss.jbosssx.version>
     <jboss.microcontainer.version>2.0.2.GA</jboss.microcontainer.version>
-    <jboss.jbossxb.version>2.0.1.GA</jboss.jbossxb.version>
   </properties>
 
   <!-- Dependencies -->
@@ -82,7 +81,11 @@
       <groupId>org.jboss</groupId>
       <artifactId>jbossxb</artifactId>
       <scope>provided</scope>
-      <version>${jboss.jbossxb.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>
@@ -194,6 +197,7 @@
           </execution>
           <execution>
             <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
@@ -216,6 +220,7 @@
           <!--
           <execution>
             <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
@@ -242,7 +247,7 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <phase>package</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>run</goal>
             </goals>

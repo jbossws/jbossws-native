@@ -20,6 +20,7 @@
       wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl"
       package="org.jboss.test.ws.benchmark.jaxws.doclit"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -29,6 +30,7 @@
       wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl"
       package="org.jboss.test.ws.interop.soapwsdl.basedoclitb"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -38,6 +40,7 @@
       wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl"
       package="org.jboss.test.ws.interop.soapwsdl.basedoclitw"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -47,6 +50,7 @@
       wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl"
       package="org.jboss.test.ws.interop.soapwsdl.baserpclit"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -56,6 +60,7 @@
       wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl"
       package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -65,6 +70,7 @@
       wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl"
       package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -74,6 +80,7 @@
       wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl"
       package="org.jboss.test.ws.jaxws.samples.wssecurity"
       outputDir="${tests.output.dir}"
+      javaEndorsedDirs="${endorsed.dirs}"
       jbossHome="${jboss.home}"
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
@@ -89,6 +96,7 @@
     <attribute name="jbossHome"/>
     <attribute name="log4jConf"/>
     <attribute name="loggingDir"/>
+    <attribute name="javaEndorsedDirs"/>
 
     <sequential>
       <wsconsume
@@ -102,7 +110,7 @@
         target="2.2"
         fork="true"
       >
-        <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
+        <jvmarg line="-Djava.endorsed.dirs=@{javaEndorsedDirs}"/>
         <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
         <jvmarg line="-Dlog4j.output.dir=@{loggingDir}"/>
       </wsconsume>

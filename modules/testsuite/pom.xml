@@ -63,6 +63,11 @@
       <artifactId>servlet-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
@@ -138,6 +143,35 @@
       </testResource>
     </testResources>
     <plugins>
+      <plugin> <!-- This copies jboss-jaxws-api_2.2_spec & jboss-jaxb-api_2.2_spec jars to endorsed dir before the integration-tests are run -->
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.jboss.spec.javax.xml.ws</groupId>
+                  <artifactId>jboss-jaxws-api_2.2_spec</artifactId>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.jboss.spec.javax.xml.bind</groupId>
+                  <artifactId>jboss-jaxb-api_2.2_spec</artifactId>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin> <!-- This copies jbossws-native-factories jar to endorsed dir before the integration-tests are run -->
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
@@ -149,14 +183,20 @@
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
-              <resources>         
+              <resources>
                 <resource>
                   <directory>${basedir}/../endorsed/target/</directory>
                   <includes>
                     <include>jbossws-native-factories-${project.version}.jar</include>
                   </includes>
                 </resource>
-              </resources>             
+                <resource>
+                  <directory>${basedir}/../../endorsed/target/</directory>
+                  <includes>
+                    <include>jbossws-native-factories-${project.version}.jar</include>
+                  </includes>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
@@ -369,6 +409,8 @@
       <properties>
         <jboss.version>6.0.0.Final</jboss.version>
         <jbossws.integration.target>jboss600</jbossws.integration.target>
+        <endorsed.dirs>${jboss600.home}/lib/endorsed</endorsed.dirs>
+        <jaxrpc.enabled>true</jaxrpc.enabled>
       </properties>
       <dependencies>
         <dependency>
@@ -468,13 +510,13 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerArgument>-Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</compilerArgument>
+              <compilerArgument>-Djava.endorsed.dirs=${endorsed.dirs}</compilerArgument>
             </configuration>
           </plugin>
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss600.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
                 <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
@@ -504,6 +546,8 @@
       <properties>
         <jboss.version>6.0.1-SNAPSHOT</jboss.version>
         <jbossws.integration.target>jboss601</jbossws.integration.target>
+        <endorsed.dirs>${jboss601.home}/lib/endorsed</endorsed.dirs>
+        <jaxrpc.enabled>true</jaxrpc.enabled>
       </properties>
       <dependencies>
         <dependency>
@@ -585,13 +629,13 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerArgument>-Djava.endorsed.dirs=${jboss601.home}/lib/endorsed</compilerArgument>
+              <compilerArgument>-Djava.endorsed.dirs=${endorsed.dirs}</compilerArgument>
             </configuration>
           </plugin>
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${jboss601.home}/lib/endorsed</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
                 <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
@@ -604,6 +648,273 @@
 
                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!--
+    Name:  jboss700
+    Descr: JBoss-7.0.0 specific options
+    -->
+    <profile>
+      <id>jboss700</id>
+      <properties>
+        <jboss.version>7.0.0.Alpha2-SNAPSHOT</jboss.version>
+        <jbossws.integration.target>jboss700</jbossws.integration.target>
+        <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
+        <jaxrpc.enabled>false</jaxrpc.enabled>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.as</groupId>
+          <artifactId>jboss-as-webservices-tests-integration</artifactId>
+          <version>${jboss.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.naming</groupId>
+          <artifactId>jnp-client</artifactId>
+          <version>5.0.5.Final</version>
+        </dependency>
+        <dependency>
+          <groupId>org.picketbox</groupId>
+          <artifactId>jbosssx-client</artifactId>
+          <version>3.0.0.CR2</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss</groupId>
+          <artifactId>jboss-common-core</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss</groupId>
+          <artifactId>jbossxb</artifactId>
+        </dependency>
+        <!-- Apache XML security depends on Xalan impl classes :( -->
+        <dependency>
+          <groupId>apache-xalan</groupId>
+          <artifactId>serializer</artifactId>
+          <version>2.7.1.patch01-brew</version>
+        </dependency>
+        <dependency>
+          <groupId>apache-xalan</groupId>
+          <artifactId>xalan</artifactId>
+          <version>2.7.1.patch01-brew</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgument>-Djava.endorsed.dirs=${endorsed.dirs}</compilerArgument>
+            </configuration>
+            <executions>
+              <execution>
+                <id>default-testCompile</id>
+                <phase>test-compile</phase>
+                <configuration>
+                  <testExcludes>
+                    <!-- AS7 compilation excludes -->
+                    <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
+                    <!-- EJB3 client API dependencies -->
+                    <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/samples/news/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
+                  </testExcludes>
+                </configuration>
+                <goals>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
+              <excludes>
+                <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
+                <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
+
+                <!--# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
+                <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
+
+                <!-- # [JBAS-8363] Virtual host issue in JBossWeb -->
+                <exclude>org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*</exclude>
+
+                <!-- # [JBWS-3150] This test causes hudson to freeze -->
+                <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+
+                 <!-- ////////////////////////// -->
+                 <!-- AS7 integration exclusions -->
+                 <!-- ////////////////////////// -->
+
+                 <!-- EJB3 client API dependencies -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/news/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
+
+                 <!-- EJB3 endpoint deployments -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1422/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1505/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1566/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1665/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1809/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1815/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1904/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1909/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1969/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2000/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2011/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2183/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2221/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2437/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2449/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2701/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2934/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2937/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2957/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2999/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/benchmark/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/epr/EndpointReferenceTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/endpointReference/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/context/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/eardeployment/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/exception/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/jaxbintros/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/swaref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/webservice/**/*EJB3TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**/*EJB3TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/management/recording/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/cxf/bus/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/cxf/gzip/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/cxf/jaxbintros/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/cxf/jbws3060/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/cxf/jbws3098/ClientServerLifeCycleTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/cxf/logging/**</exclude>
+
+                 <!-- # [JBWS-3219] unexpected element 'security-domain' encountered -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1702/**</exclude>
+
+                 <!-- # [JBWS-3222] Script tests -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2528/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2529/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2591/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2593/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2633/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2637/**</exclude>
+                 <exclude>org/jboss/test/ws/tools/scripts/ScriptTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/smoke/tools/*ScriptTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/smoke/tools/WSRunClientTestCase*</exclude>
+
+                 <!-- # [JBWS-3225] jbossws console not yet available -->
+                 <exclude>org/jboss/test/ws/console/**</exclude>
+
+                 <!-- # [JBWS-3226] jboss-service.xml not matching AS7 format -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
+
+                 <!-- # [JBWS-3227] handles config file not found on classpath -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3034/**</exclude>
+
+                 <!-- # [JBWS-3228] seems we need to use woodstox for WS endpoints? -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/provider/ProviderJAXBTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/httpbinding/HttpJAXBTestCase*</exclude>
+
+                 <!-- # [JBWS-3229] DOMUtils issue on test classpath - probably missing xercesImpl on CP? -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2960/**</exclude>
+
+                 <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
+
+                 <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
+
+                 <!-- # [JBWS-3239] SPI TCCL issue -->
+                 <exclude>org/jboss/test/ws/jaxws/endpoint/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/endpoint/**</exclude>
+
+                 <!-- # [JBWS-3240] Rewrite tests relying on $JBOSS_HOME/server/default/tmp/jbossws folder existence -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
+
+                 <!-- # [JBWS-3241] NPE in ServerHandler.handleInbound() -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/addressing/AddressingStatefulTestCase*</exclude>
+
+                 <!-- # [JBWS-3242] Servlet base test throws IllegalArgumentException: Resource META-INF/jbossws-entities.properties not found -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3223/**</exclude>
+
+                 <!-- # [JBWS-3244] resuscitate WS-Eventing -->
+                 <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/wseventing/**</exclude>
+
+                 <!-- # [JBWS-3245] AS7 RemoteDeployer have to always undeploy deployed archives -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1582/**</exclude>
+
+                 <!-- # [JBWS-3246] Resuscitate JSON -->
+                 <exclude>org/jboss/test/ws/jaxws/json/JsonTestCase*</exclude>
+
+                 <!-- # [JBAS-8933] ClassCastException: org.jboss.security.plugins.auth.JaasSecurityManagerBase cannot be cast to org.jboss.security.AuthorizationManager -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1999/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleUsernameTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase*</exclude>
+
+                 <!-- # [JBAS-8936] @Resource injection from web.xml doesn't work -->
+                 <exclude>org/jboss/test/ws/jaxws/enventry/EnvEntryServletTestCase*</exclude>
+
+                 <!-- JAXR not available -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
+
+                 <!-- JAXRPC deployments -->
+                 <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
+                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/**</exclude>
               </excludes>
             </configuration>
           </plugin>

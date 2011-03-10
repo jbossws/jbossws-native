@@ -46,7 +46,12 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!--TODO AS7000-->
+    <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-resources</artifactId>
+      <version>${project.version}</version>
+      <classifier>jboss700</classifier>     
+    </dependency>
 
     <!--test-suite-->
     <dependency>

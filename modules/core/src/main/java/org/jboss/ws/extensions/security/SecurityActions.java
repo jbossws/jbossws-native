@@ -59,6 +59,30 @@ class SecurityActions
    }
    
    /**
+    * Set context classloader.
+    *
+    * @param classLoader the classloader
+    */
+   static void setContextClassLoader(final ClassLoader classLoader)
+   {
+      if (System.getSecurityManager() == null)
+      {
+         Thread.currentThread().setContextClassLoader(classLoader);
+      }
+      else
+      {
+         AccessController.doPrivileged(new PrivilegedAction<Object>()
+         {
+            public Object run()
+            {
+               Thread.currentThread().setContextClassLoader(classLoader);
+               return null;
+            }
+         });
+      }
+   }
+
+   /**
     * Get a system property
     * 
     * @param name

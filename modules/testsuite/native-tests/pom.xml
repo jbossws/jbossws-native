@@ -56,6 +56,7 @@
                     <property name="project.version" value="${project.version}" />
                     <property name="log4j.conf" value="${basedir}/src/test/etc/log4j.xml" />
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
+                    <property name="endorsed.dirs" value="${endorsed.dirs}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
                     <ant antfile="scripts/antrun-wsconsume.xml" target="wsconsume" />
                   </tasks>
@@ -75,6 +76,7 @@
                     <property name="jboss.bind.address" value="${jboss.bind.address}" />
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
+                    <property name="jaxrpc.enabled" value="${jaxrpc.enabled}"/>
                     <ant antfile="scripts/antrun-wstools.xml" target="wstools" />
                   </tasks>
                 </configuration>
@@ -93,6 +95,7 @@
                     <property name="log4j.conf" value="${basedir}/src/test/etc/log4j.xml" />
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
+                    <property name="endorsed.dirs" value="${endorsed.dirs}"/>
                     <ant antfile="scripts/antrun-wsprovide.xml" target="wsprovide" />
                   </tasks>
                 </configuration>

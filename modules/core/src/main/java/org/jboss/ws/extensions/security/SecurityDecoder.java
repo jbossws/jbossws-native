@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.xml.security.Init;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.SecurityProcess;
@@ -35,7 +36,6 @@ import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.nonce.NonceFactory;
-import org.jboss.ws.extensions.security.operation.AuthorizeOperation;
 import org.jboss.ws.extensions.security.operation.DecryptionOperation;
 import org.jboss.ws.extensions.security.operation.ReceiveUsernameOperation;
 import org.jboss.ws.extensions.security.operation.ReceiveX509Certificate;
@@ -45,7 +45,6 @@ import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
 import org.jboss.ws.extensions.security.operation.SignatureVerificationOperation;
 import org.jboss.ws.extensions.security.operation.TimestampVerificationOperation;
 import org.jboss.ws.metadata.wsse.Authenticate;
-import org.jboss.ws.metadata.wsse.Authorize;
 import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,7 +76,16 @@ public class SecurityDecoder
 
    public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory, TimestampVerification timestampVerification, Authenticate authenticate)
    {
-      org.apache.xml.security.Init.init();
+      final ClassLoader origCL = SecurityActions.getContextClassLoader();
+      try 
+      {
+         SecurityActions.setContextClassLoader(Init.class.getClassLoader());
+         Init.init();
+      }
+      finally
+      {
+          SecurityActions.setContextClassLoader(origCL);
+      }
       this.store = store;
       this.nonceFactory = nonceFactory;
       this.timestampVerification = timestampVerification;
