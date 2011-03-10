@@ -895,9 +895,6 @@
                  <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/wseventing/**</exclude>
 
-                 <!-- # [JBWS-3245] AS7 RemoteDeployer have to always undeploy deployed archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1582/**</exclude>
-
                  <!-- # [JBWS-3246] Resuscitate JSON -->
                  <exclude>org/jboss/test/ws/jaxws/json/JsonTestCase*</exclude>
 
