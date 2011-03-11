@@ -661,7 +661,7 @@
         <jboss.version>7.0.0.Alpha2-SNAPSHOT</jboss.version>
         <jbossws.integration.target>jboss700</jbossws.integration.target>
         <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
-        <jaxrpc.enabled>false</jaxrpc.enabled>
+        <jaxrpc.enabled>true</jaxrpc.enabled>
       </properties>
       <dependencies>
         <dependency>
@@ -716,8 +716,7 @@
                 <phase>test-compile</phase>
                 <configuration>
                   <testExcludes>
-                    <!-- AS7 compilation excludes -->
-                    <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
+                    <!-- WSEventing still depends on JBoss Remoting -->
                     <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
                     <!-- EJB3 client API dependencies -->
                     <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
