@@ -406,7 +406,6 @@
         <jboss.version>6.0.0.Final</jboss.version>
         <jbossws.integration.target>jboss600</jbossws.integration.target>
         <endorsed.dirs>${jboss600.home}/lib/endorsed</endorsed.dirs>
-        <jaxrpc.enabled>true</jaxrpc.enabled>
       </properties>
       <dependencies>
         <dependency>
@@ -543,7 +542,6 @@
         <jboss.version>6.0.1-SNAPSHOT</jboss.version>
         <jbossws.integration.target>jboss601</jbossws.integration.target>
         <endorsed.dirs>${jboss601.home}/lib/endorsed</endorsed.dirs>
-        <jaxrpc.enabled>true</jaxrpc.enabled>
       </properties>
       <dependencies>
         <dependency>
@@ -661,7 +659,6 @@
         <jboss.version>7.0.0.Alpha2-SNAPSHOT</jboss.version>
         <jbossws.integration.target>jboss700</jbossws.integration.target>
         <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
-        <jaxrpc.enabled>true</jaxrpc.enabled>
       </properties>
       <dependencies>
         <dependency>

@@ -76,7 +76,6 @@
                     <property name="jboss.bind.address" value="${jboss.bind.address}" />
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
-                    <property name="jaxrpc.enabled" value="${jaxrpc.enabled}"/>
                     <ant antfile="scripts/antrun-wstools.xml" target="wstools" />
                   </tasks>
                 </configuration>

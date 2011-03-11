@@ -13,18 +13,13 @@
   <!-- ================================================================== -->
 
   <target name="wstools" description="Generate the JAX-RPC artifacts.">
-    <condition property="generate.jaxrpc.artifacts" value="true">
-      <and>
-        <equals arg1="${jaxrpc.enabled}" arg2="true"/>
-      </and>
-    </condition>
     <antcall target="generate-sources"/>
     <antcall target="compile-sources"/>
     <antcall target="copy-resources"/>
   </target>
 
   <!-- Generate JAX-RPC artifacts -->
-  <target name="generate-sources" if="generate.jaxrpc.artifacts">
+  <target name="generate-sources">
 
     <taskdef name="wstools" classname="org.jboss.ws.tools.ant.wstools">
       <classpath>
@@ -53,8 +48,7 @@
 
   </target>
 
-  <!-- Copy generated resources -->
-  <target name="compile-sources" if="generate.jaxrpc.artifacts">
+  <target name="compile-sources">
 
     <mkdir dir="${tests.output.dir}/wstools/java"/>
     <move todir="${tests.output.dir}/wstools/java">
@@ -80,8 +74,7 @@
     </javac>
   </target>
 
-  <!-- Copy generated resources -->
-  <target name="copy-resources" if="generate.jaxrpc.artifacts">
+  <target name="copy-resources">
 
     <copy todir="${tests.output.dir}/test-resources">
       <fileset dir="${tests.output.dir}/wstools/resources">
@@ -98,7 +91,6 @@
     </copy>
   </target>
 
-  <!-- macro-wstools -->
   <macrodef name="macro-wstools">
     <attribute name="dest"/>
     <attribute name="config"/>
