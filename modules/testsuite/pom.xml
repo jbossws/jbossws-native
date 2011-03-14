@@ -759,9 +759,8 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
-                 <!-- EJB3 endpoint deployments -->
+                 <!-- EJB3 Ann driven deployments -->
                  <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1422/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude>
@@ -776,7 +775,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1815/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude>
@@ -785,12 +783,9 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1969/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2000/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2011/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2183/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2221/**</exclude>
@@ -799,15 +794,22 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2437/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2449/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2701/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2934/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
+
+                 <!-- EJB3 DD driven deployments -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2011/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2937/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2957/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2999/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/benchmark/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/epr/EndpointReferenceTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/endpointReference/**</exclude>
