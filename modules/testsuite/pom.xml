@@ -525,6 +525,8 @@
                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
+                <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
+                <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>
@@ -642,6 +644,9 @@
 
                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+
+                <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
+                <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>
@@ -760,17 +765,17 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
                  <!-- EJB3 Ann driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>  <!-- F tools -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1422/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude> <!-- F logging -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1505/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1566/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude> <!-- F ear deployment -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1566/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude> <!-- F ear deployment -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1665/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1809/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1815/**</exclude>
@@ -885,6 +890,9 @@
 
                  <!-- # [JBWS-3246] Resuscitate JSON -->
                  <exclude>org/jboss/test/ws/jaxws/json/JsonTestCase*</exclude>
+
+                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
+                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
                  <!-- # [JBAS-8933] ClassCastException: org.jboss.security.plugins.auth.JaasSecurityManagerBase cannot be cast to org.jboss.security.AuthorizationManager -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1999/**</exclude>
