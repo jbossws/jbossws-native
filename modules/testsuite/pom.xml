@@ -767,28 +767,19 @@
                  <!-- EJB3 Ann driven deployments -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude> <!-- F ear deployment -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1566/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude> <!-- F ear deployment -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude> <!-- F ear deployment -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude> <!-- F ear deployment -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude> <!-- F VerifyError -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude> <!-- F NullPointerException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1904/**</exclude> <!-- F -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1969/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2221/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2437/**</exclude> <!-- F -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2449/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2934/JBWS2934EJBTestCase*</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2934/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F cannot find WSDL -->
 
                  <!-- EJB3 DD driven deployments -->
@@ -873,6 +864,7 @@
 
                  <!-- # [JBWS-3242] Servlet base test throws IllegalArgumentException: Resource META-INF/jbossws-entities.properties not found -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3223/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude>
 
                  <!-- # [JBWS-3244] resuscitate WS-Eventing -->
                  <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
