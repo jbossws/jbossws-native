@@ -765,44 +765,31 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
                  <!-- EJB3 Ann driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>  <!-- F tools -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1422/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude> <!-- F logging -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1505/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude> <!-- F ear deployment -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1566/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude> <!-- F ear deployment -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1665/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1809/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1815/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1904/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1909/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1969/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2000/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2183/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2221/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2437/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2449/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2701/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2934/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude> <!-- F ear deployment -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude> <!-- F VerifyError -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude> <!-- F NullPointerException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1904/**</exclude> <!-- F -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1969/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2221/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2437/**</exclude> <!-- F -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2449/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2934/JBWS2934EJBTestCase*</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F cannot find WSDL -->
 
                  <!-- EJB3 DD driven deployments -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
@@ -836,6 +823,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1702/**</exclude>
 
                  <!-- # [JBWS-3222] Script tests -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2528/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2529/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2591/**</exclude>
@@ -852,6 +840,8 @@
                  <!-- # [JBWS-3226] jboss-service.xml not matching AS7 format -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBWS-3227] handles config file not found on classpath -->
