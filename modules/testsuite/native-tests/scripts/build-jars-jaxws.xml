@@ -240,7 +240,7 @@
 		</jar>
 
 		<!-- jaxws-jbws1909 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1909.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1909.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1909/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws1909/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws1909/*TestCase.class" />
@@ -268,7 +268,7 @@
 		</jar>
 
 		<!-- jaxws-jbws1991 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1991.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1991.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1991/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws1991/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws1991/*TestCase.class" />
@@ -338,7 +338,7 @@
 		</jar>					
 		
 		<!-- jaxws-jbws2116-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2116.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2116.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2116/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws2116/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws2116/*TestCase.class" />
@@ -362,14 +362,14 @@
 		</jar>
 
 		<!-- jaxws-jbws2166-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2166-A.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2166-A.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2166/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointA.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointB.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointImplA.class" />
 			</fileset>
 		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2166-B.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2166-B.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2166/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointB.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointImplB.class" />
@@ -480,7 +480,7 @@
 		</war>
 
 		<!-- jaxws-jbws2437 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2437.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2437.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2437/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws2437/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws2437/*TestCase.class" />
@@ -656,7 +656,7 @@
 		</war>
 
 		<!-- jaxws-jbws3182 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws3182.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws3182.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws3182/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws3182/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws3182/*TestCase.class" />
