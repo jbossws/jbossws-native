@@ -37,14 +37,14 @@ public class DigestTestCase extends JBossWSTest
       String password = "taadtaadpstcsm";
       String nonce = "d36e316282959a9ed4c89851497a717f";
       String created = "2003-12-15T14:43:07Z";
-      String expectedDigest = "quR/EWLAV4xLf9Zqyw4pDmfV9OY=";
+      String expectedDigest = "0WSAldY9ogqqVyQo7ubbZxxFU/s=";
       String digest = SendUsernameOperation.createPasswordDigest(nonce, created, password);
       assertEquals(expectedDigest, digest);
       
       password = "therealfrog";
       nonce = "gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=";
       created = "2008-03-12T17:12:31.310Z";
-      expectedDigest = "IEeuDaP/NTozwiyJHzTgBoCCDjg=";
+      expectedDigest = "gx8TcJ9VG2hOFC6ZFmNi/JI2rh4=";
       digest = SendUsernameOperation.createPasswordDigest(nonce, created, password);
       assertEquals(expectedDigest, digest);
    }
@@ -53,7 +53,7 @@ public class DigestTestCase extends JBossWSTest
    {
       String password = "therealfrog";
       String nonce = "gHGIdDEWjX1Ay/LiVd3qJ1ua8VbjXis8CJwNDQh1ySA=";
-      String expectedDigest = "sdA2umjMZQEY2ejbt5L6WbJOrB0=";
+      String expectedDigest = "MBqDfskkdh3eEtRlLdkWa79+w58=";
       String digest = SendUsernameOperation.createPasswordDigest(nonce, null, password);
       assertEquals(expectedDigest, digest);
    }
