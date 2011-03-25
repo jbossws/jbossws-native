@@ -187,9 +187,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(String name) throws SOAPException
    {
-      SOAPElement soapElement = new SOAPElementImpl(name);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+	  Name nameImp = new NameImpl(name);
+      return addChildElement(nameImp);
    }
 
    /**
@@ -206,9 +205,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       if (nsURI == null)
          throw new IllegalArgumentException("Cannot obtain namespace URI for prefix: " + prefix);
 
-      SOAPElement soapElement = new SOAPElementImpl(localName, prefix, nsURI);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+      Name nameImp = new NameImpl(localName, prefix, nsURI);
+      return addChildElement(nameImp);
    }
 
    /**
@@ -222,9 +220,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(String localName, String prefix, String uri) throws SOAPException
    {
-      SOAPElement soapElement = new SOAPElementImpl(localName, prefix, uri);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+	   Name nameImpl = new NameImpl(localName, prefix, uri);
+	   return addChildElement(nameImpl);
    }
 
    /**
