@@ -187,7 +187,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(String name) throws SOAPException
    {
-	  Name nameImp = new NameImpl(name);
+      Name nameImp = new NameImpl(name);
       return addChildElement(nameImp);
    }
 
@@ -220,8 +220,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(String localName, String prefix, String uri) throws SOAPException
    {
-	   Name nameImpl = new NameImpl(localName, prefix, uri);
-	   return addChildElement(nameImpl);
+      Name nameImpl = new NameImpl(localName, prefix, uri);
+      return addChildElement(nameImpl);
    }
 
    /**
@@ -232,18 +232,19 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     * @throws javax.xml.soap.SOAPException if there is an error in creating the SOAPElement object
     */
    public SOAPElement addChildElement(Name name) throws SOAPException
-   {  	   
-	  Document doc = this.element.getOwnerDocument();
-	  Element childEle = null;
-	  if (name.getPrefix() == null || name.getPrefix().length() == 0) 
-	  {
-		  childEle = doc.createElementNS(name.getURI(), name.getLocalName());
-	  } else 
-	  {
-		  childEle = doc.createElementNS(name.getURI(), name.getPrefix() + ":" + name.getLocalName());
-	  }
-	  
-	  SOAPElement child = new SOAPElementImpl(childEle);
+   {
+      Document doc = this.element.getOwnerDocument();
+      Element childEle = null;
+      if (name.getPrefix() == null || name.getPrefix().length() == 0)
+      {
+         childEle = doc.createElementNS(name.getURI(), name.getLocalName());
+      }
+      else
+      {
+         childEle = doc.createElementNS(name.getURI(), name.getPrefix() + ":" + name.getLocalName());
+      }
+
+      SOAPElement child = new SOAPElementImpl(childEle);
       return addChildElement(child);
    }
 
