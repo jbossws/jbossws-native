@@ -75,13 +75,20 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
    public SOAPElementImpl(String localPart, String prefix, String nsURI)
    {
       super(DOMUtils.createElement(localPart, prefix, nsURI));
-      this.element = (Element)domNode;
+      this.element = (Element)domNode; 
    }
 
    /** Called by SOAPFactory */
    public SOAPElementImpl(Name name)
    {
       this(name.getLocalName(), name.getPrefix(), name.getURI());
+   }
+   
+   /** Called by addChild */
+   private SOAPElementImpl(Element element) 
+   {
+	  super(element);
+	  this.element = element; 
    }
 
    /** Called by SOAPFactory */
@@ -180,9 +187,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(String name) throws SOAPException
    {
-      SOAPElement soapElement = new SOAPElementImpl(name);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+      Name nameImp = new NameImpl(name);
+      return addChildElement(nameImp);
    }
 
    /**
@@ -199,9 +205,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       if (nsURI == null)
          throw new IllegalArgumentException("Cannot obtain namespace URI for prefix: " + prefix);
 
-      SOAPElement soapElement = new SOAPElementImpl(localName, prefix, nsURI);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+      Name nameImp = new NameImpl(localName, prefix, nsURI);
+      return addChildElement(nameImp);
    }
 
    /**
@@ -215,9 +220,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(String localName, String prefix, String uri) throws SOAPException
    {
-      SOAPElement soapElement = new SOAPElementImpl(localName, prefix, uri);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+      Name nameImpl = new NameImpl(localName, prefix, uri);
+      return addChildElement(nameImpl);
    }
 
    /**
@@ -229,9 +233,19 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(Name name) throws SOAPException
    {
-      SOAPElement soapElement = new SOAPElementImpl(name);
-      soapElement = addChildElement(soapElement);
-      return soapElement;
+      Document doc = this.element.getOwnerDocument();
+      Element childEle = null;
+      if (name.getPrefix() == null || name.getPrefix().length() == 0)
+      {
+         childEle = doc.createElementNS(name.getURI(), name.getLocalName());
+      }
+      else
+      {
+         childEle = doc.createElementNS(name.getURI(), name.getPrefix() + ":" + name.getLocalName());
+      }
+
+      SOAPElement child = new SOAPElementImpl(childEle);
+      return addChildElement(child);
    }
 
    public SOAPElement addChildElement(QName qname) throws SOAPException
