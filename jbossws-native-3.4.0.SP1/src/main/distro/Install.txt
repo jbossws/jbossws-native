@@ -1,0 +1,44 @@
+
+${project.name}
+http://www.jboss.org/jbossws/
+
+Version: jbossws-native-${project.version}
+
+Installation instructions
+=========================
+
+In order to install JBossWS the following steps are necessary:
+
+1.) Copy ant.properties.examples to ant.properties
+2.) Modify the target container location in ant.properties
+3.) Execute one of the following
+
+	ant deploy-jboss501
+	ant deploy-jboss510
+	ant deploy-jboss600
+	ant deploy-jboss601
+
+    By default the SOAP stack will be installed to 'default' configuration.
+If users want to install SOAP stack to different JBossAS configuration then
+they have to specify -Djboss.server.instance=foo JVM property.
+Supported configurations of the installer are 'default', 'all' and 'standard'.
+
+	ant -Djboss.server.instance=standard deploy-jboss600
+
+4.) Execute the samples to verify your installation
+
+   'ant tests'
+
+   You should see no errors.
+
+Please consult the wiki for detailed up to date install instructions
+http://labs.jboss.com/portal/jbossws/
+
+After the jbossws.sar is deployed you should be able to access JBossWS under
+http://localhost:8080/jbossws
+
+If you have any questions, please post to the userforum:
+http://www.jboss.org/index.html?module=bb&op=viewforum&f=200
+
+Enjoy,
+The JBossWS Team

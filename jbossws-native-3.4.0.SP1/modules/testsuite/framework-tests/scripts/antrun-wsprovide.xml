@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<project>
+
+  <target name="wsprovide" description="Provide JAX-WS contracts">
+
+    <taskdef name="wsprovide" classname="org.jboss.wsf.spi.tools.ant.WSProvideTask">
+      <classpath>
+        <pathelement path="${maven.test.classpath}"/>
+      </classpath>
+    </taskdef>
+
+    <wsprovide-macro
+      sei="org.jboss.test.ws.jaxws.jbws2960.AddNumbersImpl"
+      destdir="jaxws/jbws2960"
+      jbossHome="${jboss.home}"
+      outputDir="${tests.output.dir}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+      resourcesDir="jaxws/jbws2960"
+    />
+
+  </target>
+
+  <macrodef name="wsprovide-macro">
+
+    <attribute name="sei"/>
+    <attribute name="destDir"/>
+    <attribute name="jbossHome"/>
+    <attribute name="outputDir"/>
+    <attribute name="log4jConf"/>
+    <attribute name="loggingDir"/>
+    <attribute name="resourcesDir"/>
+
+    <sequential>
+      <wsprovide
+        sei="@{sei}"
+        fork="true"
+        genwsdl="true"
+        verbose="false"
+        classpath="@{outputDir}/test-classes"
+        destdir="@{outputDir}/test-classes/@{destDir}"
+        resourcedestdir="@{outputDir}/test-resources/@{resourcesDir}"
+      >
+        <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
+        <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
+        <jvmarg line="-Dlog4j.output.dir=@{loggingDir}"/>
+      </wsprovide>
+    </sequential>
+
+  </macrodef>
+
+</project>

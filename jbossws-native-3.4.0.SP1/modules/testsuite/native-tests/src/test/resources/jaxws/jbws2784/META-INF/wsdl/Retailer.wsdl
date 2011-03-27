@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Retailer"
+	targetNamespace="http://www.jboss.org/samples/bpel/Retailer.wsdl"
+	xmlns:tns="http://www.jboss.org/samples/bpel/Retailer.wsdl"
+	xmlns:cust="http://www.jboss.org/samples/bpel/CustomerOrder.xsd"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<wsdl:types>
+		<!--<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import
+				namespace="http://www.jboss.org/samples/bpel/CustomerOrder.xsd"
+				schemaLocation="../schema/CustomerOrder.xsd" />
+		</xsd:schema>-->
+	</wsdl:types>
+
+	<wsdl:message name="SubmitOrderRequest">
+		<wsdl:part name="Document" element="cust:customerOrder" />
+	</wsdl:message>
+
+	<wsdl:message name="SubmitOrderResponse">
+		<wsdl:part name="Document" element="cust:customerOrderAck" />
+	</wsdl:message>
+
+	<wsdl:portType name="RetailerPortType">
+		<wsdl:operation name="SubmitOrder">
+			<wsdl:input message="tns:SubmitOrderRequest" />
+			<wsdl:output message="tns:SubmitOrderResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="RetailerBinding" type="tns:RetailerPortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SubmitOrder">
+			<soap:operation
+				soapAction="http://www.jboss.org/samples/bpel/Retailer.wsdl/SubmitOrder" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="RetailerService">
+		<wsdl:port name="RetailerPort" binding="tns:RetailerBinding">
+			<soap:address location="http://localhost:8080/bpel/processes/Retailer" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

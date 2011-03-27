@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<project>
+
+  <target name="wsconsume" description="Consume JAX-WS contracts">
+
+    <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">
+      <classpath>
+        <pathelement path="${maven.test.classpath}"/>
+      </classpath>
+    </taskdef>
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl"
+      package="org.jboss.test.ws.benchmark.jaxws.doclit"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl"
+      package="org.jboss.test.ws.interop.soapwsdl.basedoclitb"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl"
+      package="org.jboss.test.ws.interop.soapwsdl.basedoclitw"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl"
+      package="org.jboss.test.ws.interop.soapwsdl.baserpclit"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl"
+      package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl"
+      package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+    <wsconsume-macro
+      wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl"
+      package="org.jboss.test.ws.jaxws.samples.wssecurity"
+      outputDir="${tests.output.dir}"
+      jbossHome="${jboss.home}"
+      log4jConf="${log4j.conf}"
+      loggingDir="${log4j.output.dir}"
+    />
+
+  </target>
+
+  <macrodef name="wsconsume-macro">
+
+    <attribute name="wsdl"/>
+    <attribute name="package"/>
+    <attribute name="outputDir"/>
+    <attribute name="jbossHome"/>
+    <attribute name="log4jConf"/>
+    <attribute name="loggingDir"/>
+
+    <sequential>
+      <wsconsume
+        wsdl="@{wsdl}"
+        package="@{package}"
+        sourcedestdir="@{outputdir}/wsconsume/java"
+        destdir="@{outputdir}"
+        nocompile="true"
+        keep="true"
+        verbose="false"
+        target="2.2"
+        fork="true"
+      >
+        <jvmarg line="-Djava.endorsed.dirs=@{jbossHome}/lib/endorsed"/>
+        <jvmarg line="-Dlog4j.configuration=file://@{log4jConf}"/>
+        <jvmarg line="-Dlog4j.output.dir=@{loggingDir}"/>
+      </wsconsume>
+    </sequential>
+
+  </macrodef>
+
+</project>

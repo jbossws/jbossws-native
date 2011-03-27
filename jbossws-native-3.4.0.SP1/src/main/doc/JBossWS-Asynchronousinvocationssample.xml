@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8"?><chapter id="chap_JBossWS-Asynchronousinvocationssample"><title>JBossWS-Asynchronousinvocationssample</title><section id="JBossWS-Asynchronousinvocationssample_Scenario"><title>Scenario</title><para>This sample targets those business scenarios in which web services expose functionalities requiring long running processes. Service consumers send the message requests and don't want to actively wait for the response or use polling mechanism to find out whether their response is ready.</para><para> </para><para>The <emphasis role="bold">org.jboss.test.ws.jaxws.samples.dar</emphasis> sample is about a Dial-a-ride optimization service. The Dial-a-Ride (DaR) is an emerging transport system, in which a fleet of vehicles, without fixed routes and schedules, carries people from the desired pickup point to the desired delivery point, during a pre-specified time interval. Passengers ring the service provider office the day before they want to travel and book their ride. An optimization system works out the route to be as efficient as possible, so that for instance people with similar travel requests are collected by the same vehicle. Since the problem can be modeled as an NP-hard routing and scheduling problem and exact approaches are insufficient for real-life problems, our software company decides to provide a service that solves the DaR problem for transportation companies' requests through complex custom heuristic algorithms. And of course, this takes some time.</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_The_service_provider"><title>The service provider</title><para>We start defining and implementing the DaR service provider (bottom-up approach):</para><screen xml:space="preserve">@Stateless
+@WebService(name = "DarEndpoint",
+            targetNamespace = "http://org.jboss.ws/samples/dar",
+            serviceName = "DarService")
+@SOAPBinding(style = SOAPBinding.Style.RPC,
+             use = SOAPBinding.Use.LITERAL)
+@SecurityDomain("JBossWS")
+@WebContext(contextRoot="/dar",
+            urlPattern="/*",
+            authMethod="BASIC",
+            transportGuarantee="NONE",
+            secureWSDLAccess=<emphasis role="bold">false</emphasis>)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DarEndpoint
+{
+   @WebMethod(operationName = "process", action = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn")
+   <emphasis role="bold">public</emphasis> DarResponse process(DarRequest request)
+   {
+      DarProcessor processor = <emphasis role="bold">new</emphasis> DarProcessor();
+      <emphasis role="bold">return</emphasis> processor.process(request);
+   }
+}
+</screen><para>To keep this simple we use a SLSB endpoint and the rpc/literal style/use, of course you can choose POJO endpoint and the better document style as well. A BASIC authorization method is used to achieve request accountability; for ease we use the default JBossWS security domain, of course you would need to authenticate transport companies through your own login module as well as keep track of the requests for billing reasons. The DarProcessor performs the actual DaR problem solution and optimization. DarRequest and DarResponse, along with the referenced classes, define the request and response model, with the pickup and delivery point on the map, the departure/arrival times, etc. Every further detail (for instance about quality of service) is not considered to keep the sample simple.</para><para>You can build the sample, take a look at the simple service endpoint in <emphasis>jaxws-samples-dar.jar</emphasis> and deploy it.</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar.jar
+     0 Fri Feb 01 17:55:20 CET 2008 META-INF/
+   106 Fri Feb 01 17:55:18 CET 2008 META-INF/MANIFEST.MF
+     0 Thu Jan 10 21:41:02 CET 2008 org/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/
+   789 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Bus.class
+  1643 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarEndpoint.class
+  4231 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class
+  1585 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarRequest.class
+  1340 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarResponse.class
+  1085 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Route.class
+  1314 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class
+   834 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Stop.class
+</screen><para>Assume your bind address is <emphasis>localhost.localdomain:8080</emphasis>; the JBossWS stack will deploy the service and publish the wsdl contract at <ulink url="http://localhost.localdomain:8080/dar?wsdl">http://localhost.localdomain:8080/dar?wsdl</ulink>.</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_JAXWS_Asynchronous_API"><title>JAX-WS Asynchronous API</title><section id="JBossWS-Asynchronousinvocationssample_The_transportation_company_client"><title>The transportation company client</title><para>Once the first implementation of the service provider is ready, we generate a simple client to test it. This can be easily achieved with the <ulink url="http://community.jboss.org/docs/DOC-13542">wsconsume</ulink> script:</para><screen xml:space="preserve">wsconsume.sh -k -p org.jboss.test.ws.jaxws.samples.dar.generated http://localhost.localdomain:8080/dar?wsdl</screen><para>This outputs the endpoint interface that our client has to use, as well as all the classes for requests/responses. Since we need to perform asynchronous invocations using the <ulink url="http://community.jboss.org/docs/DOC-13972#Asynchronous_Invocations">JAX-WS async API</ulink>, we a need method with the same name of the existing one followed by <emphasis>Async</emphasis> and returning a javax.xml.ws.Response:</para><screen xml:space="preserve">@WebService(name = "DarEndpoint", targetNamespace = "http://org.jboss.ws/samples/dar")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">interface</emphasis> DarEndpoint {
+ 
+   @WebMethod(operationName = "process")
+   <emphasis role="bold">public</emphasis> Response&lt;DarResponse&gt; processAsync(@WebParam(name = "arg0", partName = "arg0") DarRequest arg0);
+   
+   @WebMethod(action = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn")
+   @WebResult(partName = "return")
+   <emphasis role="bold">public</emphasis> DarResponse process(@WebParam(name = "arg0", partName = "arg0") DarRequest arg0);
+}
+</screen><para>Then we implement the client, invoking both the method to see the different behaviors:</para><screen xml:space="preserve"><emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> Client
+{
+   <emphasis role="bold">protected</emphasis> DarEndpoint endpoint;
+   
+   <emphasis role="bold">public</emphasis> Client(URL url)
+   {
+      DarService service = <emphasis role="bold">new</emphasis> DarService(url, <emphasis role="bold">new</emphasis> QName("http://org.jboss.ws/samples/dar", "DarService"));
+      endpoint = service.getDarEndpointPort();
+      ClientHelper.setUsernamePassword((BindingProvider)endpoint, "kermit", "thefrog");
+   }
+   
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> run(<emphasis role="bold">boolean</emphasis> asynch) <emphasis role="bold">throws</emphasis> Exception
+   {
+      DarRequest request = ClientHelper.getRequest();
+      System.out.println(<emphasis role="bold">new</emphasis> Date() + " Sending request...");
+      DarResponse darResponse;
+      <emphasis role="bold">if</emphasis> (asynch)
+      {
+         Response&lt;DarResponse&gt; response = endpoint.processAsync(request);
+         System.out.println("Doing something interesting in the mean time... ;-) ");
+         darResponse = response.get();
+      }
+      <emphasis role="bold">else</emphasis>
+      {
+         darResponse = endpoint.process(request);
+      }
+      System.out.println(<emphasis role="bold">new</emphasis> Date() + " Response received: "+darResponse);
+      ClientHelper.printResponse(darResponse);
+   }
+   
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">void</emphasis> main(String[] args)
+   {
+      <emphasis role="bold">try</emphasis>
+      {
+         <emphasis role="bold">if</emphasis> (args.length == 1)
+         {
+            Client client = <emphasis role="bold">new</emphasis> Client(<emphasis role="bold">new</emphasis> URL(args[0]));
+            System.out.println("* Synchronous invocation: ");
+            client.run(<emphasis role="bold">false</emphasis>);
+            System.out.println("\n* Asynchronous invocation: ");
+            client.run(<emphasis role="bold">true</emphasis>);
+         }
+         <emphasis role="bold">else</emphasis>
+         {
+            System.out.println("Client usage:");
+            System.out.println("wsrunclient.sh -classpath client.jar org.jboss.test.ws.jaxws.samples.dar.Client http://host:port/dar?wsdl");
+         }
+      }
+      <emphasis role="bold">catch</emphasis> (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+}
+</screen><para>The ClientHelper contains utility methods for generating sample requests and outputting responses to the log. Here is how the client package looks like:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-client.jar 
+     0 Fri Feb 01 17:55:20 CET 2008 META-INF/
+   106 Fri Feb 01 17:55:18 CET 2008 META-INF/MANIFEST.MF
+     0 Thu Jan 10 21:41:02 CET 2008 org/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/
+  3493 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Client.class
+  4407 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/
+  1017 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/Bus.class
+  1447 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarEndpoint.class
+  1619 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarRequest.class
+  1389 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarResponse.class
+  1597 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarService.class
+  1681 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/ObjectFactory.class
+  1267 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/Route.class
+  1589 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/ServiceRequest.class
+  1210 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/Stop.class
+   282 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/package-info.class</screen></section>
+<section id="JBossWS-Asynchronousinvocationssample_Running_the_client"><title>Running the client</title><para>Now you can run the client and see whether we got the expected behavior:</para><screen xml:space="preserve">wsrunclient.sh -classpath jaxws-samples-dar-client.jar org.jboss.test.ws.jaxws.samples.dar.Client http://localhost.localdomain:8080/dar?wsdl
+</screen><para>As you can see from the output below, both the standard and asynchronous invocation took some time (5 sec):</para><screen xml:space="preserve">Synchronous invocation: 
+Mon Feb 04 15:10:44 CET 2008 Sending request...
+Mon Feb 04 15:10:50 CET 2008 Response received: org.jboss.test.ws.jaxws.samples.dar.generated.DarResponse@1389b3f
+Bus1: 778 118 734 341 
+Bus0: 298 142 788 876 
+
+Asynchronous invocation: 
+Mon Feb 04 15:10:50 CET 2008 Sending request...
+Doing something interesting in the mean time... ;-) 
+Mon Feb 04 15:10:55 CET 2008 Response received: org.jboss.test.ws.jaxws.samples.dar.generated.DarResponse@1265109
+Bus1: 169 863 
+Bus0: 951 28 244 903 226 159 
+</screen><para>The use of the async invocation does not block the client and allows it to perform something else before waiting for the result from the server. We could have also used an AsyncHandler as showed in the <ulink url="http://community.jboss.org/docs/DOC-13550#orgjbosstestwsjaxwssamplesasynchronous">asynchronous simple test case</ulink>.</para><para> </para></section>
+</section>
+<section id="JBossWS-Asynchronousinvocationssample_WSAddressing"><title>WS-Addressing</title><para>Even if the client can do something else while the server handles the request, it would be better if the response could be received by another instance, leaving the client completely free go on with its business. <link linkend="WSAddressing">WS-Addressing</link> provides means of specifying which address the response has to be sent to. This is performed through the <emphasis>replyTo</emphasis> property.</para><section id="JBossWS-Asynchronousinvocationssample_Addressing_service_provider"><title>Addressing service provider</title><para>For this reason we create a new AddressingEndpoint:</para><screen xml:space="preserve">@Stateless
+@WebService(name = "DarEndpoint",
+            targetNamespace = "http://org.jboss.ws/samples/dar",
+            serviceName = "DarService")
+@SOAPBinding(style = SOAPBinding.Style.RPC,
+             use = SOAPBinding.Use.LITERAL)
+@SecurityDomain("JBossWS")
+@WebContext(contextRoot="/dar",
+            urlPattern="/*",
+            authMethod="BASIC",
+            transportGuarantee="NONE",
+            secureWSDLAccess=<emphasis role="bold">false</emphasis>)
+@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DarAddressingEndpoint
+{
+   @Resource
+   <emphasis role="bold">private</emphasis> WebServiceContext ctx;
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> Logger log = Logger.getLogger(DarAddressingEndpoint.class);
+   
+   @WebMethod(operationName = "process", action = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn")
+   @Action(input = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn", output = "http://org.jboss.test.ws.jaxws.samples.dar/action/processOut")
+   <emphasis role="bold">public</emphasis> DarResponse process(DarRequest request)
+   {
+      DarProcessor processor = <emphasis role="bold">new</emphasis> DarProcessor();
+      AddressingProperties props = (AddressingProperties)ctx.getMessageContext().get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      <emphasis role="bold">if</emphasis> (props!=<emphasis role="bold">null</emphasis> &amp;&amp; props.getReplyTo()!=<emphasis role="bold">null</emphasis>)
+      {
+         System.out.println(props.getReplyTo().getAddress().getURI());
+      }
+      <emphasis role="bold">return</emphasis> processor.process(request);
+   }
+}
+</screen><para>As you can see, we used the proper endpoint config and specified the input and output action names. The WS-Addressing implementation write/read the <emphasis>replyTo</emphasis> property to/from the SOAP header, thus the <emphasis>WebServiceContext</emphasis> allows us to retrieve the <emphasis>replyTo</emphasis> address to be used for the current invocation.</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_Addressing_client"><title>Addressing client</title><para>In order to provide the right <emphasis>replyTo</emphasis> address, the client side too needs to be changed:</para><screen xml:space="preserve"><emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> AddressingClient
+{
+   <emphasis role="bold">protected</emphasis> DarEndpoint endpoint;
+   
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> AddressingBuilder BUILDER;
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">final</emphasis> String WSA_TO = "http://org.jboss.test.ws.jaxws.samples.dar/server";
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">final</emphasis> String WSA_ACTION = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn";
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">final</emphasis> String WSA_ACTION_ONEWAY = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessIn";
+ 
+   <emphasis role="bold">static</emphasis>
+   {
+      BUILDER = AddressingBuilder.getAddressingBuilder();
+   }
+   
+   <emphasis role="bold">public</emphasis> AddressingClient(URL url)
+   {
+      DarService service = <emphasis role="bold">new</emphasis> DarService(url, <emphasis role="bold">new</emphasis> QName("http://org.jboss.ws/samples/dar", "DarService"));
+      endpoint = service.getDarEndpointPort();
+      ((StubExt)endpoint).setConfigName("Standard WSAddressing Client");
+      ClientHelper.setUsernamePassword((BindingProvider)endpoint, "kermit", "thefrog");
+   }
+   
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> run(<emphasis role="bold">boolean</emphasis> asynch) <emphasis role="bold">throws</emphasis> Exception
+   {
+      configureAddressingProperties((BindingProvider)endpoint, WSA_ACTION, WSA_TO, "http://localhost:8080/dar-client/replyTo");
+      DarRequest request = ClientHelper.getRequest();
+      System.out.println(<emphasis role="bold">new</emphasis> Date() + " Sending request...");
+      <emphasis role="bold">if</emphasis> (asynch)
+      {
+         Response&lt;DarResponse&gt; resp = endpoint.processAsync(request);
+         System.out.println("Doing something interesting in the mean time... ;-) ");
+         resp.get();
+      }
+      <emphasis role="bold">else</emphasis>
+      {
+         endpoint.process(request);
+      }
+      //don't care about the response: it is null since the real one went to the replyTo address
+      System.out.println(<emphasis role="bold">new</emphasis> Date() + " Done.");
+   }
+   
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">void</emphasis> configureAddressingProperties(BindingProvider bp, String wsaAction, String wsaTo, String replyTo) <emphasis role="bold">throws</emphasis> URISyntaxException
+   {
+      AddressingProperties requestProps = AddressingClientUtil.createDefaultProps(wsaAction, wsaTo);
+      AttributedURI messageId = AddressingClientUtil.createMessageID();
+      System.out.println("Sent message ID: " + messageId.getURI());
+      requestProps.setMessageID(messageId);
+      requestProps.setReplyTo(BUILDER.newEndpointReference(<emphasis role="bold">new</emphasis> URI(replyTo)));
+      bp.getRequestContext().put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, requestProps);
+   }
+   
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">void</emphasis> main(String[] args)
+   {
+      <emphasis role="bold">try</emphasis>
+      {
+         <emphasis role="bold">if</emphasis> (args.length == 1)
+         {
+            AddressingClient client = <emphasis role="bold">new</emphasis> AddressingClient(<emphasis role="bold">new</emphasis> URL(args[0]));
+            System.out.println("* Synchronous invocation: ");
+            client.run(<emphasis role="bold">false</emphasis>);
+            System.out.println("\n* Asynchronous invocation: ");
+            client.run(<emphasis role="bold">true</emphasis>);
+         }
+         <emphasis role="bold">else</emphasis>
+         {
+            System.out.println("AddressingClient usage:");
+            System.out.println("wsrunclient.sh -classpath AddressingClient.jar org.jboss.test.ws.jaxws.samples.dar.AddressingClient http://host:port/dar?wsdl");
+         }
+      }
+      <emphasis role="bold">catch</emphasis> (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+}
+</screen><para>You can see in the <emphasis>configureAddressingProperties(...)</emphasis> method how the WS-Addressing properties are configured. The <emphasis>Standard WSAddressing Client</emphasis> client config needs also to be specified so that the WS-Addressing stack extension is used.</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_The_reply_sink"><title>The reply sink</title><para>Thanks to the WS-Addressing implementation, the server will automatically send the response to the specified address. Of course we need something to receive it; for ease here we have a simple servlet dumping everything to the logs:</para><screen xml:space="preserve"><emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> ReplyToServlet <emphasis role="bold">extends</emphasis> HttpServlet {
+ 
+   <emphasis role="bold">protected</emphasis> <emphasis role="bold">void</emphasis> doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) <emphasis role="bold">throws</emphasis> ServletException, IOException {
+      dump(httpServletRequest, httpServletResponse);
+   }
+ 
+   <emphasis role="bold">protected</emphasis> <emphasis role="bold">void</emphasis> doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) <emphasis role="bold">throws</emphasis> ServletException, IOException {
+      dump(httpServletRequest, httpServletResponse);
+   }
+ 
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">void</emphasis> dump(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+      System.out.println("ReplyTo sink:");
+ 
+      <emphasis role="bold">try</emphasis> {
+         BufferedReader reader = httpServletRequest.getReader();
+         String inputLine;
+ 
+         <emphasis role="bold">while</emphasis> ((inputLine = reader.readLine()) != <emphasis role="bold">null</emphasis>) {
+            System.out.println(inputLine);
+         }
+         reader.close();
+      } <emphasis role="bold">catch</emphasis> (IOException e) {
+         e.printStackTrace();
+      }
+      
+      httpServletResponse.setStatus(200);
+   }
+}
+</screen><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_Oneway_invocations"><title>Oneway invocations</title><para>Having splitted the client is actually not enough. The reason is that even if the response is not received by the <emphasis>AddressingClient</emphasis>, with the current JBossWS stack implementation, the underlying connection between the ws consumer and provider is nevertheless closed once the latter has sent the response to the <emphasis>ReplyToServlet</emphasis> and this is a resource waste. Moreover, on the server side, since a new thread is spanned for each invocation, the long running process could cause the system to reach the max number of thread/http connections allowed at the same time.</para><para>For this reason, we split the service too. A oneway invocation is performed, then on the server side the collected requests are stored into a queue. A message driven bean consumes the queue, performs the long running optimization and finally replies to the address the client specified. The following paragraphs go deeper into the details.</para><para> </para><section id="JBossWS-Asynchronousinvocationssample_Response_service_implementation"><title>Response service implementation</title><para>To get what has just been summarized, the server has to send messages whose schema has to be somewhere declared: we'll use a top-down development strategy. Here is the hand-coded reply service wsdl contract:</para><screen xml:space="preserve">&lt;definitions name="DarReplyService" targetNamespace="<ulink url="http://org.jboss.ws/samples/dar">http://org.jboss.ws/samples/dar</ulink>" xmlns="<ulink url="http://schemas.xmlsoap.org/wsdl/">http://schemas.xmlsoap.org/wsdl/</ulink>" xmlns:soap="<ulink url="http://schemas.xmlsoap.org/wsdl/soap/">http://schemas.xmlsoap.org/wsdl/soap/</ulink>" xmlns:tns="<ulink url="http://org.jboss.ws/samples/dar">http://org.jboss.ws/samples/dar</ulink>" xmlns:xsd="<ulink url="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</ulink>"&gt;&lt;types&gt;
+  &lt;xs:schema targetNamespace="<ulink url="http://org.jboss.ws/samples/dar">http://org.jboss.ws/samples/dar</ulink>" version="1.0" xmlns:tns="<ulink url="http://org.jboss.ws/samples/dar">http://org.jboss.ws/samples/dar</ulink>" xmlns:xs="<ulink url="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</ulink>"&gt;
+   &lt;xs:complexType name="serviceRequest"&gt;
+    &lt;xs:sequence&gt;
+     &lt;xs:element minOccurs="0" name="from" type="tns:stop"/&gt;
+     &lt;xs:element minOccurs="0" name="id" type="xs:string"/&gt;
+     &lt;xs:element name="people" type="xs:int"/&gt;
+     &lt;xs:element minOccurs="0" name="to" type="tns:stop"/&gt;
+    &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+   &lt;xs:complexType name="stop"&gt;
+    &lt;xs:sequence&gt;
+     &lt;xs:element minOccurs="0" name="node" type="xs:int"/&gt;
+     &lt;xs:element minOccurs="0" name="time" type="xs:dateTime"/&gt;
+    &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+   &lt;xs:complexType name="darResponse"&gt;
+    &lt;xs:sequence&gt;
+     &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="routes" nillable="true" type="tns:route"/&gt;
+     &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="unservedRequests" nillable="true" type="tns:serviceRequest"/&gt;
+    &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+   &lt;xs:complexType name="route"&gt;
+    &lt;xs:sequence&gt;
+     &lt;xs:element minOccurs="0" name="busId" type="xs:string"/&gt;
+     &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="stops" nillable="true" type="tns:stop"/&gt;
+    &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+  &lt;/xs:schema&gt;&lt;/types&gt;&lt;message name="DarReplyEndpoint_receive"&gt;
+  &lt;part name="arg0" type="tns:darResponse"/&gt;&lt;/message&gt;&lt;portType name="DarReplyEndpoint"&gt;
+  &lt;operation name="receive"&gt;
+   &lt;input message="tns:DarReplyEndpoint_receive"/&gt;
+  &lt;/operation&gt;&lt;/portType&gt;&lt;binding name="DarReplyEndpointBinding" type="tns:DarReplyEndpoint"&gt;
+  &lt;soap:binding style="rpc" transport="<ulink url="http://schemas.xmlsoap.org/soap/http">http://schemas.xmlsoap.org/soap/http</ulink>"/&gt;
+  &lt;operation name="receive"&gt;
+   &lt;soap:operation soapAction="<ulink url="http://org.jboss.test.ws.jaxws.samples.dar/action/receiveIn">http://org.jboss.test.ws.jaxws.samples.dar/action/receiveIn</ulink>"/&gt;
+   &lt;input&gt;
+    &lt;soap:body namespace="<ulink url="http://org.jboss.ws/samples/dar">http://org.jboss.ws/samples/dar</ulink>" use="literal"/&gt;
+   &lt;/input&gt;
+  &lt;/operation&gt;&lt;/binding&gt;&lt;service name="DarReplyService"&gt;
+  &lt;port binding="tns:DarReplyEndpointBinding" name="DarReplyEndpointPort"&gt;
+   &lt;soap:address location="<ulink url="http://localhost.localdomain:8080/dar-client/replyService">http://localhost.localdomain:8080/dar-client/replyService</ulink>"/&gt;
+  &lt;/port&gt;&lt;/service&gt;
+&lt;/definitions&gt;
+</screen><para>The optimization system acts as a client here: it owns the schema and gets the interface through the wsconsume script:</para><screen xml:space="preserve">wsconsume.sh -k -p org.jboss.test.ws.jaxws.samples.dar.generated.reply reply.wsdl
+</screen><para>The transportation companies play the server role instead, thus they implement the generated endpoint interface:</para><screen xml:space="preserve">@WebService(name = "DarReplyEndpoint", targetNamespace = "http://org.jboss.ws/samples/dar")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">interface</emphasis> DarReplyEndpoint {
+ 
+ 
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod(action = "http://org.jboss.test.ws.jaxws.samples.dar/action/receiveIn")
+    @Oneway
+    <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> receive(
+        @WebParam(name = "arg0", partName = "arg0")
+        DarResponse arg0);
+ 
+}
+</screen><para>Here is the endpoint implementation: as for the request service, the addressing configuration is specified as well as the action for the oneway operation.</para><screen xml:space="preserve">@WebService(name = "DarReplyEndpoint",
+            targetNamespace = "http://org.jboss.ws/samples/dar",
+            endpointInterface = "org.jboss.test.ws.jaxws.samples.dar.generated.reply.DarReplyEndpoint",
+            wsdlLocation = "/WEB-INF/wsdl/reply.wsdl",
+            serviceName = "DarReplyService")
+@SOAPBinding(style = Style.RPC,
+             use = Use.LITERAL)
+@EndpointConfig(configName = "Standard WSAddressing Endpoint")
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DarReplyEndpointImpl <emphasis role="bold">implements</emphasis> DarReplyEndpoint
+{
+   @Resource
+   <emphasis role="bold">private</emphasis> WebServiceContext ctx;
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> Logger log = Logger.getLogger(DarReplyEndpointImpl.class);
+   
+   @WebMethod(action = "http://org.jboss.test.ws.jaxws.samples.dar/action/receiveIn")
+   @Oneway
+   @Action(input = "http://org.jboss.test.ws.jaxws.samples.dar/action/receiveIn")
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> receive(DarResponse arg0)
+   {
+      AddressingProperties props = (AddressingProperties)ctx.getMessageContext().get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+      log.info("Result received; relationship message id: " + props.getRelatesTo()[0].getID());
+      List&lt;Route&gt; routes = arg0.getRoutes();
+      <emphasis role="bold">for</emphasis> (Route route : routes)
+      {
+         log.info(route.getBusId() + ": ");
+         StringBuilder sb = <emphasis role="bold">new</emphasis> StringBuilder();
+         <emphasis role="bold">for</emphasis> (Stop stop : route.getStops())
+         {
+            sb.append(stop.getNode() + " ");
+         }
+         log.info(sb.toString());
+      }
+   }
+}
+</screen></section>
+<section id="JBossWS-Asynchronousinvocationssample_Request_service_improvements"><title>Request service improvements</title><para>Finally the request service endpoint needs a new oneway operation method:</para><screen xml:space="preserve">   @WebMethod(operationName = "onewayProcess", action = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessIn")
+   @Action(input = "http://org.jboss.test.ws.jaxws.samples.dar/action/onewayProcessIn")
+   @Oneway
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> onewayProcess(DarRequest request)
+   {
+      QueueSession queueSession =<emphasis role="bold">null</emphasis>;
+      QueueSender sender = <emphasis role="bold">null</emphasis>;
+      <emphasis role="bold">try</emphasis> {
+         InitialContext context = <emphasis role="bold">new</emphasis> InitialContext();
+         QueueConnectionFactory connectionFactory = (QueueConnectionFactory)context.lookup("ConnectionFactory");
+         QueueConnection con = connectionFactory.createQueueConnection();
+         queueSession = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+         Queue queue = (Queue)context.lookup("queue/DarQueue");
+         sender = queueSession.createSender(queue);
+         AsyncProcessRequest asyncRequest = <emphasis role="bold">new</emphasis> AsyncProcessRequest();
+         asyncRequest.setRequest(request);
+         AddressingProperties props = (AddressingProperties)ctx.getMessageContext().get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
+         asyncRequest.setReplyTo(props.getReplyTo().getAddress().getURI());
+         asyncRequest.setMessageId(props.getMessageID().getURI());
+         ObjectMessage message = queueSession.createObjectMessage(asyncRequest);
+         sender.send(message);
+         log.info("AsyncProcessRequest sent...");
+      } <emphasis role="bold">catch</emphasis> (Exception e) {
+         <emphasis role="bold">throw</emphasis> <emphasis role="bold">new</emphasis> WebServiceException(e);
+      } <emphasis role="bold">finally</emphasis> {
+         <emphasis role="bold">try</emphasis>
+         {
+            sender.close();
+         }
+         <emphasis role="bold">catch</emphasis>(Exception e1) {}
+         <emphasis role="bold">try</emphasis>
+         {
+            queueSession.close();
+         }
+         <emphasis role="bold">catch</emphasis>(Exception e1) {}
+      }
+      
+   }
+</screen><para>As you can see this does a lookup of the local <emphasis>queue/DarQueue</emphasis> and sends a custom <emphasis>AsyncProcessRequest</emphasis> pojo. This way the invocation is served and the endpoint thread is ready to receive another request.</para><para>The afore-mentioned queue is consumed by the following Message Driven bean:</para><screen xml:space="preserve">@MessageDriven( name="DarListener", activationConfig= {
+      @ActivationConfigProperty(propertyName="destinationType",propertyValue="javax.jms.Queue"),
+      @ActivationConfigProperty(propertyName="destination",propertyValue="queue/DarQueue")}
+)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DarMessageBean <emphasis role="bold">implements</emphasis> MessageListener
+{
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> Logger log = Logger.getLogger(DarMessageBean.class);
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">final</emphasis> String WSA_ACTION = "http://org.jboss.test.ws.jaxws.samples.dar/action/receiveIn";
+   
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> onMessage(Message arg0)
+   {
+      <emphasis role="bold">try</emphasis> {
+         ObjectMessage message = (ObjectMessage)arg0;
+         AsyncProcessRequest asyncRequest = (AsyncProcessRequest)message.getObject();
+         DarProcessor processor = <emphasis role="bold">new</emphasis> DarProcessor();
+         DarResponse response = processor.process(asyncRequest.getRequest());
+         
+         //convert the response and send it to the client reply service
+         org.jboss.test.ws.jaxws.samples.dar.generated.reply.DarResponse darResponse = ReplyConverter.convertResponse(response);
+         String replyTo = asyncRequest.getReplyTo().toURL().toString();
+         log.info("Response will be sent to: " + replyTo);
+         QName serviceName = <emphasis role="bold">new</emphasis> QName("http://org.jboss.ws/samples/dar", "DarReplyService");
+         Service service = Service.create(<emphasis role="bold">new</emphasis> URL(replyTo + "?wsdl"), serviceName);
+         DarReplyEndpoint endpoint = (DarReplyEndpoint)service.getPort(DarReplyEndpoint.class);
+         
+         //setup addressing configuration and properties
+         ((StubExt)endpoint).setConfigName("Standard WSAddressing Client");
+         ((BindingProvider)endpoint).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, replyTo);
+         AddressingProperties requestProps = AddressingClientUtil.createOneWayProps(WSA_ACTION, replyTo);
+         requestProps.setMessageID(AddressingClientUtil.createMessageID());
+         Relationship[] relationships = <emphasis role="bold">new</emphasis> Relationship[1];
+         relationships[0] = <emphasis role="bold">new</emphasis> RelationshipImpl(asyncRequest.getMessageId());
+         requestProps.setRelatesTo(relationships);
+         ((BindingProvider)endpoint).getRequestContext().put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, requestProps);
+         
+         endpoint.receive(darResponse);
+         log.info("Response sent.");
+      } <emphasis role="bold">catch</emphasis> (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}
+</screen><para>This basically delegates to the DarProcessor then invokes the transportation company endpoint. Please note that:</para><itemizedlist><listitem><para> the <emphasis>Standard WSAddressing Client</emphasis> configuration is used so that reply message ID can be associated to the request message ID; this allows the transportation company to to link requests and responses; </para></listitem><listitem><para> the endpoint address is of course set at runtime according to the <emphasis>replyTo</emphasis> addressing property found in the request message; </para></listitem><listitem><para> a stupid <emphasis>ReplyConverter</emphasis> is used since the classes generated from the hand-coded wsdl contract differ from the server model ones.</para></listitem></itemizedlist><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_Addressing_client_changes"><title>Addressing client changes</title><para>On the transportation company side, we have a new <emphasis>AddressingClient</emphasis>'s method for the oneway request service invocation:</para><screen xml:space="preserve"><emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> runOneway() <emphasis role="bold">throws</emphasis> Exception
+   {
+      configureAddressingProperties((BindingProvider)endpoint, WSA_ACTION_ONEWAY, WSA_TO, "http://localhost:8080/dar-client/replyService");
+      DarRequest request = ClientHelper.getRequest();
+      System.out.println(<emphasis role="bold">new</emphasis> Date() + " Sending request...");
+      endpoint.onewayProcess(request);
+      System.out.println(<emphasis role="bold">new</emphasis> Date() + " Done.");
+   }
+</screen><screen xml:space="preserve"><emphasis role="bold">public</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">void</emphasis> main(String[] args)
+   {
+      <emphasis role="bold">try</emphasis>
+      {
+         <emphasis role="bold">if</emphasis> (args.length == 1)
+         {
+            AddressingClient client = <emphasis role="bold">new</emphasis> AddressingClient(<emphasis role="bold">new</emphasis> URL(args[0]));
+            System.out.println("* Synchronous invocation: ");
+            client.run(<emphasis role="bold">false</emphasis>);
+            System.out.println("\n* Asynchronous invocation: ");
+            client.run(<emphasis role="bold">true</emphasis>);
+            System.out.println("\n* Oneway invocation: ");
+            client.runOneway();
+         }
+         <emphasis role="bold">else</emphasis>
+         {
+            System.out.println("AddressingClient usage:");
+            System.out.println("wsrunclient.sh -classpath AddressingClient.jar org.jboss.test.ws.jaxws.samples.dar.AddressingClient http://host:port/dar?wsdl");
+         }
+      }
+      <emphasis role="bold">catch</emphasis> (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+</screen></section>
+<section id="JBossWS-Asynchronousinvocationssample_Running_the_sample"><title>Running the sample</title><para>Before trying the new addressing version of this sample, please take a look at the three archives you'll use. The <emphasis>jaxws-samples-dar-addressing.jar</emphasis> contains the optimization system:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-addressing.jar
+     0 Fri Feb 01 17:55:20 CET 2008 META-INF/
+   106 Fri Feb 01 17:55:18 CET 2008 META-INF/MANIFEST.MF
+     0 Thu Jan 10 21:41:02 CET 2008 org/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/
+  1175 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/AsyncProcessRequest.class
+   789 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Bus.class
+  5258 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarAddressingEndpoint.class
+  4751 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarMessageBean.class
+  4231 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class
+  1585 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarRequest.class
+  1340 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarResponse.class
+  3747 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/ReplyConverter.class
+  1085 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Route.class
+  1314 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class
+   834 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Stop.class
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/
+   847 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/DarReplyEndpoint.class
+  1680 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/DarReplyService.class
+  1425 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/DarResponse.class
+  1336 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/ObjectFactory.class
+  1291 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/Route.class
+  1619 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/ServiceRequest.class
+  1222 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/Stop.class
+   288 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/reply/package-info.class
+</screen><para>The <emphasis>jaxws-samples-dat-addressing-client.jar</emphasis> is the first (request) part of the transportation companies software:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-addressing-client.jar
+     0 Fri Feb 01 17:55:20 CET 2008 META-INF/
+   106 Fri Feb 01 17:55:18 CET 2008 META-INF/MANIFEST.MF
+     0 Thu Jan 10 21:41:02 CET 2008 org/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/
+  5859 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/AddressingClient.class
+  4407 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/
+  1017 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/Bus.class
+  1447 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarEndpoint.class
+  1619 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarRequest.class
+  1389 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarResponse.class
+  1597 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/DarService.class
+  1681 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/ObjectFactory.class
+  1267 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/Route.class
+  1589 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/ServiceRequest.class
+  1210 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/Stop.class
+   282 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/generated/package-info.class
+</screen><para>Finally, the <emphasis>jaxws-samples-dar-addressing-client.war</emphasis> is the second (response) part of the transportation company, including both the sink servlet and the DarReplyEndpointImpl for response receipt:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-addressing-client.war 
+     0 Fri Feb 01 17:55:20 CET 2008 META-INF/
+   106 Fri Feb 01 17:55:18 CET 2008 META-INF/MANIFEST.MF
+     0 Fri Feb 01 17:55:20 CET 2008 WEB-INF/
+   941 Thu Jan 31 16:07:30 CET 2008 WEB-INF/web.xml
+     0 Fri Feb 01 17:55:20 CET 2008 WEB-INF/classes/
+     0 Thu Jan 10 21:41:02 CET 2008 WEB-INF/classes/org/
+     0 Thu Jan 10 21:07:24 CET 2008 WEB-INF/classes/org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 WEB-INF/classes/org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 WEB-INF/classes/org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/
+  3850 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/DarReplyEndpointImpl.class
+  1612 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/ReplyToServlet.class
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/
+   847 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/DarReplyEndpoint.class
+  1680 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/DarReplyService.class
+  1425 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/DarResponse.class
+  1336 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/ObjectFactory.class
+  1291 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/Route.class
+  1619 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/ServiceRequest.class
+  1222 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/Stop.class
+   288 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/reply/package-info.class
+   228 Wed Jan 30 00:44:14 CET 2008 WEB-INF/jboss-web.xml
+     0 Thu Jan 31 16:07:30 CET 2008 WEB-INF/wsdl/
+  2457 Thu Jan 31 16:07:30 CET 2008 WEB-INF/wsdl/reply.wsdl
+</screen><para>You have to deploy both the <emphasis>jaxws-samples-dar-addressing.jar</emphasis> and the <emphasis>jaxws-samples-dar-addressing-client.war</emphasis>; for ease we run the transportation company receipt system on the same host of the optimization system, of course you can play with the addresses and simulate a real world architecture using two hosts. Then we run the request service client...</para><screen xml:space="preserve">wsrunclient.sh -classpath jaxws-samples-dar-addressing-client.jar org.jboss.test.ws.jaxws.samples.dar.AddressingClient http://localhost.localdomain:8080/dar?wsdl
+</screen><para>...and verify the obtained behavior checking the log on the client side:</para><screen xml:space="preserve">* Synchronous invocation: 
+Sent message ID: urn:uuid:321dee7b-953c-4405-9b06-dbc6743d36e6
+Tue Feb 05 11:31:37 CET 2008 Sending request...
+[Fatal Error] :-1:-1: Premature end of file.
+Tue Feb 05 11:31:42 CET 2008 Done.
+
+* Asynchronous invocation: 
+Sent message ID: urn:uuid:b9076402-f52-4aca-9e5b-b6e80cf1c3e2
+Tue Feb 05 11:31:42 CET 2008 Sending request...
+Doing something interesting in the mean time... ;-) 
+[Fatal Error] :-1:-1: Premature end of file.
+Tue Feb 05 11:31:47 CET 2008 Done.
+
+* Oneway invocation: 
+Sent message ID: urn:uuid:cc5d90d1-d95-450d-a0cc-3a025f49d6c3
+Tue Feb 05 11:31:47 CET 2008 Sending request...
+Tue Feb 05 11:31:47 CET 2008 Done.
+</screen><para>... and on the server side:</para><screen xml:space="preserve">11:31:37,218 INFO  [STDOUT] http://localhost:8080/dar-client/replyTo
+11:31:37,218 INFO  [DarProcessor] Processing DAR request... org.jboss.test.ws.jaxws.samples.dar.DarRequest@1c2cbee
+11:31:37,218 INFO  [DarProcessor] 1 person(s) from 582 to 662
+11:31:37,218 INFO  [DarProcessor] 2 person(s) from 260 to 962
+11:31:37,218 INFO  [DarProcessor] 1 person(s) from 10 to 959
+11:31:37,218 INFO  [DarProcessor] 3 person(s) from 138 to 722
+11:31:42,219 INFO  [DarProcessor] Done org.jboss.test.ws.jaxws.samples.dar.DarRequest@1c2cbee
+11:31:42,311 INFO  [STDOUT] ReplyTo sink:
+11:31:42,314 INFO  [STDOUT] &lt;env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'&gt;&lt;env:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'&gt;&lt;wsa:To&gt;http://localhost:8080/dar-client/replyTo&lt;/wsa:To&gt;&lt;wsa:Action&gt;http://org.jboss.ws/samples/dar/DarEndpointPort/OUT&lt;/wsa:Action&gt;&lt;wsa:RelatesTo&gt;urn:uuid:321dee7b-953c-4405-9b06-dbc6743d36e6&lt;/wsa:RelatesTo&gt;&lt;/env:Header&gt;&lt;env:Body&gt;&lt;ns1:processResponse xmlns:ns1='http://org.jboss.ws/samples/dar'&gt;&lt;return&gt;&lt;routes&gt;&lt;busId&gt;Bus1&lt;/busId&gt;&lt;/routes&gt;&lt;routes&gt;&lt;busId&gt;Bus0&lt;/busId&gt;&lt;stops&gt;&lt;node&gt;582&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.443+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;662&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.443+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;260&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.444+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;962&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.444+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;10&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.444+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;959&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.444+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;138&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.444+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;722&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.444+01:00&lt;/time&gt;&lt;/stops&gt;&lt;/routes&gt;&lt;unservedRequests&gt;&lt;from&gt;&lt;node&gt;425&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.443+01:00&lt;/time&gt;&lt;/from&gt;&lt;id&gt;Req0&lt;/id&gt;&lt;people&gt;2&lt;/people&gt;&lt;to&gt;&lt;node&gt;920&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:36.443+01:00&lt;/time&gt;&lt;/to&gt;&lt;/unservedRequests&gt;&lt;/return&gt;&lt;/ns1:processResponse&gt;&lt;/env:Body&gt;&lt;/env:Envelope&gt;
+
+11:31:42,362 INFO  [STDOUT] http://localhost:8080/dar-client/replyTo
+11:31:42,362 INFO  [DarProcessor] Processing DAR request... org.jboss.test.ws.jaxws.samples.dar.DarRequest@807653
+11:31:42,362 INFO  [DarProcessor] 3 person(s) from 89 to 328
+11:31:42,362 INFO  [DarProcessor] 1 person(s) from 293 to 743
+11:31:42,362 INFO  [DarProcessor] 3 person(s) from 651 to 371
+11:31:42,362 INFO  [DarProcessor] 2 person(s) from 283 to 326
+11:31:47,363 INFO  [DarProcessor] Done org.jboss.test.ws.jaxws.samples.dar.DarRequest@807653
+11:31:47,374 INFO  [STDOUT] ReplyTo sink:
+11:31:47,374 INFO  [STDOUT] &lt;env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'&gt;&lt;env:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'&gt;&lt;wsa:To&gt;http://localhost:8080/dar-client/replyTo&lt;/wsa:To&gt;&lt;wsa:Action&gt;http://org.jboss.ws/samples/dar/DarEndpointPort/OUT&lt;/wsa:Action&gt;&lt;wsa:RelatesTo&gt;urn:uuid:b9076402-f52-4aca-9e5b-b6e80cf1c3e2&lt;/wsa:RelatesTo&gt;&lt;/env:Header&gt;&lt;env:Body&gt;&lt;ns1:processResponse xmlns:ns1='http://org.jboss.ws/samples/dar'&gt;&lt;return&gt;&lt;routes&gt;&lt;busId&gt;Bus1&lt;/busId&gt;&lt;stops&gt;&lt;node&gt;283&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;326&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;/routes&gt;&lt;routes&gt;&lt;busId&gt;Bus0&lt;/busId&gt;&lt;stops&gt;&lt;node&gt;89&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;328&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;293&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;743&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;651&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;371&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/stops&gt;&lt;/routes&gt;&lt;unservedRequests&gt;&lt;from&gt;&lt;node&gt;205&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/from&gt;&lt;id&gt;Req0&lt;/id&gt;&lt;people&gt;1&lt;/people&gt;&lt;to&gt;&lt;node&gt;630&lt;/node&gt;&lt;time&gt;2008-02-05T11:31:42.341+01:00&lt;/time&gt;&lt;/to&gt;&lt;/unservedRequests&gt;&lt;/return&gt;&lt;/ns1:processResponse&gt;&lt;/env:Body&gt;&lt;/env:Envelope&gt;
+
+11:31:47,527 INFO  [DarAddressingEndpoint] AsyncProcessRequest sent...
+11:31:47,538 INFO  [DarProcessor] Processing DAR request... org.jboss.test.ws.jaxws.samples.dar.DarRequest@149f848
+11:31:47,538 INFO  [DarProcessor] 1 person(s) from 209 to 184
+11:31:47,538 INFO  [DarProcessor] 2 person(s) from 167 to 524
+11:31:47,538 INFO  [DarProcessor] 2 person(s) from 805 to 883
+11:31:47,538 INFO  [DarProcessor] 1 person(s) from 101 to 224
+11:31:52,539 INFO  [DarProcessor] Done org.jboss.test.ws.jaxws.samples.dar.DarRequest@149f848
+11:31:52,549 INFO  [DarMessageBean] Response will be sent to: http://localhost:8080/dar-client/replyService
+11:31:52,887 INFO  [DarReplyEndpointImpl] Result received; relationship message id: urn:uuid:cc5d90d1-d95-450d-a0cc-3a025f49d6c3
+11:31:52,888 INFO  [DarReplyEndpointImpl] Bus1: 
+11:31:52,888 INFO  [DarReplyEndpointImpl] 209 184 101 224 
+11:31:52,888 INFO  [DarReplyEndpointImpl] Bus0: 
+11:31:52,888 INFO  [DarReplyEndpointImpl] 167 524 805 883 
+11:31:52,890 INFO  [DarMessageBean] Response sent.
+</screen><para>As you can see in the first and second invocations, simply having added the use of the addressing <emphasis>replyTo</emphasis> properties cause the response to be received from the sink servlet on the server side; however the client nevertheless hangs until the response is produced and sent.</para><para>The third run, using the couple of oneway invocations, shows how the client is free almost immediately after the request has been sent; the response is received through the <emphasis>DarReplyEndpointImpl</emphasis> 5 seconds later. For this reason the latter solution proves to be the best one, even if it requires more development.</para><para> </para></section>
+</section>
+</section>
+<section id="JBossWS-Asynchronousinvocationssample_JMS_Endpoint"><title>JMS Endpoint</title><para>The JBossWS stack also allows you to obtain a JMS endpoint exposing message driven beans as web services. This gives us another way of performing the asynchronous invocation required for the DaR sample.</para><para> </para><section id="JBossWS-Asynchronousinvocationssample_The_service_endpoint"><title>The service endpoint</title><para>We use a bottom-up approach, thus we start coding an EJB3 message driven bean that extends <emphasis>org.jboss.ws.core.transport.jms.JMSTransportSupportEJB3</emphasis>; to make it a web service endpoint we use the usual annotations (@WebService, @WebMethod, etc.). Please note that even if we didn't do this here, you can fine tune the message consumption configuration like for any other message driven bean.</para><screen xml:space="preserve">@WebService (name = "DarEndpoint",
+             targetNamespace = "http://org.jboss.ws/samples/dar",
+             serviceName = "DarService")
+@WebContext(contextRoot="/dar")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+@MessageDriven(activationConfig = { 
+      @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+      @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/DarRequestQueue")
+  },
+  messageListenerInterface = javax.jms.MessageListener.class
+)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DarJMSEndpoint <emphasis role="bold">extends</emphasis> JMSTransportSupportEJB3
+{
+   
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">static</emphasis> <emphasis role="bold">final</emphasis> Logger log = Logger.getLogger(DarJMSEndpoint.class);
+ 
+   @WebMethod(operationName = "process", action = "http://org.jboss.test.ws.jaxws.samples.dar/action/processIn")
+   <emphasis role="bold">public</emphasis> DarResponse process(DarRequest request)
+   {
+      DarProcessor processor = <emphasis role="bold">new</emphasis> DarProcessor();
+      <emphasis role="bold">return</emphasis> processor.process(request);
+   }
+ 
+   @Override
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> onMessage(Message message)
+   {
+      log.debug("onMessage: " + message);
+      super.onMessage(message);
+   }
+}
+</screen><para>Once this simple endpoint is ready, you can build the project and take a look at the generated archive:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-jms.jar
+     0 Fri Feb 01 17:55:20 CET 2008 META-INF/
+   106 Fri Feb 01 17:55:18 CET 2008 META-INF/MANIFEST.MF
+     0 Thu Jan 10 21:41:02 CET 2008 org/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/
+   789 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Bus.class
+  2318 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarJMSEndpoint.class
+  4231 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarProcessor.class
+  1585 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarRequest.class
+  1340 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarResponse.class
+  1085 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Route.class
+  1314 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/ServiceRequest.class
+   834 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/Stop.class
+</screen><para>Nothing special, the JMS endpoint and the DaR model classes. The JBossWS stack automatically generates the wsdl contract at deploy time and publishes it for http use. We are however going to use this endpoint through JMS...</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_The_service_client"><title>The service client</title><para>The JMS client could be everything able to write to a JMS queue (here <emphasis>queue/DarRequestQueue</emphasis> on the server running the endpoint described above). In this sample the client is obtained through a simple servlet:</para><screen xml:space="preserve"><emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> JMSClient <emphasis role="bold">extends</emphasis> HttpServlet
+{
+   <emphasis role="bold">private</emphasis> Logger log = Logger.getLogger(JMSClient.class);
+   
+   <emphasis role="bold">protected</emphasis> <emphasis role="bold">void</emphasis> doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) <emphasis role="bold">throws</emphasis> ServletException, IOException {
+      runMessageClient(<emphasis role="bold">new</emphasis> PrintStream(httpServletResponse.getOutputStream()));
+   }
+   
+   <emphasis role="bold">private</emphasis> <emphasis role="bold">void</emphasis> runMessageClient(PrintStream ps)
+   {
+      String reqMessage = "&lt;env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'&gt;" +
+         "&lt;env:Header&gt;&lt;/env:Header&gt;" +
+           "&lt;env:Body&gt;" +
+             "&lt;ns1:process xmlns:ns1='http://org.jboss.ws/samples/dar'&gt;" +
+               ...
+             "&lt;/ns1:process&gt;" +
+           "&lt;/env:Body&gt;" +
+         "&lt;/env:Envelope&gt;";
+      
+      QueueConnection con = <emphasis role="bold">null</emphasis>;
+      QueueSession session = <emphasis role="bold">null</emphasis>;
+      <emphasis role="bold">try</emphasis>
+      {
+         InitialContext context = <emphasis role="bold">new</emphasis> InitialContext();
+         QueueConnectionFactory connectionFactory = (QueueConnectionFactory)context.lookup("ConnectionFactory");
+         Queue reqQueue = (Queue)context.lookup("queue/DarRequestQueue");
+         con = connectionFactory.createQueueConnection();
+         session = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+         Queue resQueue = (Queue)context.lookup("queue/DarResponseQueue");
+         con.start();
+         TextMessage message = session.createTextMessage(reqMessage);
+         message.setJMSReplyTo(resQueue);
+         QueueSender sender = session.createSender(reqQueue);
+         sender.send(message);
+         sender.close();
+         ps.println("Request message sent, doing something interesting in the mean time... ;-) ");
+         con.stop();
+      }
+      <emphasis role="bold">catch</emphasis> (Exception e)
+      {
+         e.printStackTrace(ps);
+      }
+      <emphasis role="bold">finally</emphasis>
+      {
+         <emphasis role="bold">try</emphasis>
+         {
+            session.close();
+         }
+         <emphasis role="bold">catch</emphasis>(Exception e1) {}
+         <emphasis role="bold">try</emphasis>
+         {
+            con.close();
+         }
+         <emphasis role="bold">catch</emphasis>(Exception e1) {}
+      }
+   }
+   
+ 
+   <emphasis role="bold">protected</emphasis> <emphasis role="bold">void</emphasis> doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) <emphasis role="bold">throws</emphasis> ServletException, IOException {
+      doGet(httpServletRequest,httpServletResponse);
+   }
+}
+</screen><para>The reason for using a servlet here instead of a standalone java application we could launch through wsrunclient, is that running in the container makes the queue connection factory lookup much easier. Of course you can do this in another way.</para><para> </para><para>As you can see, the client specifies the response queue where the server has to reply, <emphasis>queue/DarResponseQueue</emphasis>, thus we'll need to define a message listener to get the responses from it.</para><para> </para><para>To invoke the JMS endpoint, we could have of course done like <ulink url="http://community.jboss.org/docs/DOC-13972#JMS_Transport_Clients">what is shown in the JAX-WS guide</ulink>: manually add a port binding with a jms soap:address to the wsdl contract and invoke the endpoint as we would do for standard http invocations. This however is useless in cases like ours, since the invocation fails if the reply doesn't come within a short time period and the client hangs until the the response arrives or the timeout expires. So let's define our message listener:</para><screen xml:space="preserve">@MessageDriven(activationConfig = { 
+      @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+      @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/DarResponseQueue")
+  },
+  messageListenerInterface = javax.jms.MessageListener.class
+)
+<emphasis role="bold">public</emphasis> <emphasis role="bold">class</emphasis> DarResponseMessageBean
+{
+   <emphasis role="bold">private</emphasis> Logger log = Logger.getLogger(DarResponseMessageBean.class);
+   
+   <emphasis role="bold">public</emphasis> <emphasis role="bold">void</emphasis> onMessage(Message arg0)
+   {
+      <emphasis role="bold">try</emphasis>
+      {
+         TextMessage textMessage = (TextMessage)arg0;
+         String result = textMessage.getText();
+         log.info("DAR response received: " + result);
+      }
+      <emphasis role="bold">catch</emphasis> (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+}
+</screen><para>It's another message driven bean that listens on <emphasis>queue/DarResponseQueue</emphasis>  and simply logs the received messages.</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_Running_the_sample_802346"><title>Running the sample</title><para>Now it's time to run the sample; we already built and deployed the server side (<emphasis>jaxws-samples-dar-jms.jar</emphasis>), thus let's take a look at the generated client archives first. You'll get a <emphasis>sar</emphasis> file containing two archives: the first one (<emphasis>jaxws-samples-dar-jms-client.war</emphasis>) is the invocation part of the client, containing the servlet...</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-jms-client.war 
+     0 Fri Feb 01 19:34:22 CET 2008 META-INF/
+   106 Fri Feb 01 19:34:20 CET 2008 META-INF/MANIFEST.MF
+     0 Fri Feb 01 19:34:22 CET 2008 WEB-INF/
+   625 Fri Feb 01 14:11:00 CET 2008 WEB-INF/web.xml
+     0 Thu Jan 10 21:41:02 CET 2008 WEB-INF/classes/org/
+     0 Thu Jan 10 21:07:24 CET 2008 WEB-INF/classes/org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 WEB-INF/classes/org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 WEB-INF/classes/org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/
+  4407 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/ClientHelper.class
+  4560 Fri Feb 01 19:34:10 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/JMSClient.class
+     0 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/
+  1017 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/Bus.class
+  1447 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/DarEndpoint.class
+  1619 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/DarRequest.class
+  1389 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/DarResponse.class
+  1597 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/DarService.class
+  1681 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/ObjectFactory.class
+  1267 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/Route.class
+  1589 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/ServiceRequest.class
+  1210 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/Stop.class
+   282 Fri Feb 01 17:55:08 CET 2008 WEB-INF/classes/org/jboss/test/ws/jaxws/samples/dar/generated/package-info.class
+   232 Fri Feb 01 14:11:00 CET 2008 WEB-INF/jboss-web.xml
+</screen><para>... the second one (<emphasis>jaxws-samples-dar-jms-client.jar</emphasis>) ships the response message bean instead:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-jms-client.jar 
+     0 Fri Feb 01 19:34:22 CET 2008 META-INF/
+   106 Fri Feb 01 19:34:20 CET 2008 META-INF/MANIFEST.MF
+     0 Thu Jan 10 21:41:02 CET 2008 org/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/
+     0 Thu Jan 10 21:07:24 CET 2008 org/jboss/test/
+     0 Thu Jan 10 21:41:22 CET 2008 org/jboss/test/ws/
+     0 Tue Jan 29 15:37:30 CET 2008 org/jboss/test/ws/jaxws/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/
+     0 Fri Feb 01 17:55:08 CET 2008 org/jboss/test/ws/jaxws/samples/dar/
+  1513 Fri Feb 01 19:34:10 CET 2008 org/jboss/test/ws/jaxws/samples/dar/DarResponseMessageBean.class
+</screen><para>Here is the <emphasis>jaxws-samples-dar-jms-client.sar</emphasis> archive:</para><screen xml:space="preserve">[alessio@localhost trunk]$ jar -tvf output/tests/libs/jaxws-samples-dar-jms-client.sar 
+     0 Fri Feb 01 19:34:22 CET 2008 META-INF/
+   106 Fri Feb 01 19:34:20 CET 2008 META-INF/MANIFEST.MF
+  2156 Fri Feb 01 19:34:22 CET 2008 jaxws-samples-dar-jms-client.jar
+ 14138 Fri Feb 01 19:34:22 CET 2008 jaxws-samples-dar-jms-client.war
+    58 Fri Feb 01 17:47:20 CET 2008 META-INF/jboss-service.xml
+</screen><para>As you can see from the sources, the <emphasis>jboss-service.xml</emphasis> doesn't define anything actually; it could be used to install the two queue we use, but since the application server automatically creates the queues any MDB listens to, we choose the easy way here.</para><para> </para><para>Finally we can run the sample! Please drop the <emphasis>sar</emphasis> archive in the deploy directory of you already running application server, then just browse to <ulink url="http://localhost:8080/dar-jms-client/JMSClient">http://localhost:8080/dar-jms-client/JMSClient</ulink>: you'll immediately get a simple page saying the request has been sent, meaning the invocation part of the client did his job. On the logs you'll see something like this:</para><screen xml:space="preserve">10:13:47,279 INFO  [DarProcessor] Processing DAR request... org.jboss.test.ws.jaxws.samples.dar.DarRequest@694b7e
+10:13:47,279 INFO  [DarProcessor] 1 person(s) from 18 to 575
+10:13:47,279 INFO  [DarProcessor] 2 person(s) from 713 to 845
+10:13:47,279 INFO  [DarProcessor] 2 person(s) from 117 to 140
+10:13:47,279 INFO  [DarProcessor] 1 person(s) from 318 to 57
+10:13:52,280 INFO  [DarProcessor] Done org.jboss.test.ws.jaxws.samples.dar.DarRequest@694b7e
+10:13:52,353 INFO  [AbstractJMSTransportSupport] Sent response
+10:13:52,360 INFO  [DarResponseMessageBean] DAR response received: &lt;env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'&gt;&lt;env:Header&gt;&lt;/env:Header&gt;&lt;env:Body&gt;&lt;ns1:processResponse xmlns:ns1='http://org.jboss.ws/samples/dar'&gt;&lt;return&gt;&lt;routes&gt;&lt;busId&gt;Bus1&lt;/busId&gt;&lt;stops&gt;&lt;node&gt;117&lt;/node&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;140&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;318&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;57&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;/routes&gt;&lt;routes&gt;&lt;busId&gt;Bus0&lt;/busId&gt;&lt;stops&gt;&lt;node&gt;18&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;575&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;713&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;stops&gt;&lt;node&gt;845&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/stops&gt;&lt;/routes&gt;&lt;unservedRequests&gt;&lt;from&gt;&lt;node&gt;667&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/from&gt;&lt;id&gt;Req0&lt;/id&gt;&lt;people&gt;2&lt;/people&gt;&lt;to&gt;&lt;node&gt;17&lt;/node&gt;&lt;time&gt;2008-02-01T14:25:12.114+01:00&lt;/time&gt;&lt;/to&gt;&lt;/unservedRequests&gt;&lt;/return&gt;&lt;/ns1:processResponse&gt;&lt;/env:Body&gt;&lt;/env:Envelope&gt;</screen><para>Once the DaR request processing is done, the response is put to the queue and the <emphasis>DarResponseMessageBean</emphasis> consumes it. We achieved the expected behavior using the JMS transport too, however...</para><para> </para></section>
+<section id="JBossWS-Asynchronousinvocationssample_Client_and_server_on_different_boxes"><title>Client and server on different boxes</title><para>As previously said, for ease we've been deploying both client and server sides of our application on the same JBoss instance. We all know that web services are about different systems interoperability thus running client and server on different boxes is the common situation. However obtaining this is not straightforward when playing with queues and message bean endpoints. The reason for this is that both the request and response queue belong to the service provider side, even if the client says which response queue has to be used. A real world architecture with client and server running on different boxes implies that:</para><itemizedlist><listitem><para> you need to define the response queue on the server side, using a <emphasis>jboss-service.xml</emphasis> descriptor: </para></listitem></itemizedlist><screen xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;server&gt;
+  &lt;mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=DarResponseQueue"&gt;
+    &lt;depends optional-attribute-name="DestinationManager"&gt;jboss.mq:service=DestinationManager&lt;/depends&gt;
+  &lt;/mbean&gt;
+&lt;/server&gt;
+</screen><para>Note if you're running on JBoss5 and above, you need to define both request and response queues using <emphasis>jboss-service.xml</emphasis> descriptor:</para><screen xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;server&gt;
+  &lt;mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=DarRequestQueue"&gt;
+    &lt;depends optional-attribute-name="DestinationManager"&gt;jboss.mq:service=DestinationManager&lt;/depends&gt;
+  &lt;/mbean&gt;
+  &lt;mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=DarResponseQueue"&gt;
+    &lt;depends optional-attribute-name="DestinationManager"&gt;jboss.mq:service=DestinationManager&lt;/depends&gt;
+  &lt;/mbean&gt;
+&lt;/server&gt;
+</screen><itemizedlist><listitem><para> when sending the request, your client has to lookup the queue using the remote provider; this is achieved properly configuring the InitialContext: </para></listitem></itemizedlist><screen xml:space="preserve">Hashtable env = <emphasis role="bold">new</emphasis> Hashtable();
+env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
+env.put("java.naming.factory.url.pkgs","org.jboss.naming:org.jnp.interfaces");
+env.put(javax.naming.Context.PROVIDER_URL, service_provider_host_address);
+InitialContext context = <emphasis role="bold">new</emphasis> InitialContext(env);
+QueueConnectionFactory connectionFactory = (QueueConnectionFactory)context.lookup("ConnectionFactory");
+Queue reqQueue = (Queue)context.lookup("queue/DarRequestQueue");
+con = connectionFactory.createQueueConnection();
+session = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+Queue resQueue = (Queue)context.lookup("queue/DarResponseQueue");
+</screen><itemizedlist><listitem><para> if you want to stick to the solution using the client response message bean, it has to listen to a remote queue. The instruction for doing so are available at the <ulink url="http://wiki.jboss.org/wiki/Wiki.jsp?page=HowDoIConfigureAnEJB3MDBToTalkToARemoteQueue">main JBoss wiki</ulink> </para></listitem><listitem><para> finally, you'll have to cope with the need of defining and advertising different response queues for each service consumer, which might not be that good... </para></listitem></itemizedlist></section>
+</section></chapter>

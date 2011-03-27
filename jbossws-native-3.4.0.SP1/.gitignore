@@ -1,0 +1,45 @@
+
+# /
+/target.properties
+/.settings
+/target
+/profiles.xml
+/clipboard.*
+
+# /modules/client/
+/modules/client/target
+
+# /modules/core/
+/modules/core/target
+
+# /modules/endorsed/
+/modules/endorsed/target
+
+# /modules/management/
+/modules/management/target
+
+# /modules/resources/
+/modules/resources/target
+
+# /modules/services/
+/modules/services/target
+
+# /modules/testsuite/framework-tests/
+/modules/testsuite/framework-tests/target
+/modules/testsuite/framework-tests/wsprovide
+/modules/testsuite/framework-tests/work
+/modules/testsuite/framework-tests/wsconsume
+/modules/testsuite/framework-tests/*.log
+/modules/testsuite/framework-tests/*.txt
+
+# /modules/testsuite/framework-tests/src/test/
+/modules/testsuite/framework-tests/src/test/ant-import
+/modules/testsuite/framework-tests/src/test/java
+/modules/testsuite/framework-tests/src/test/resources
+
+# /modules/testsuite/native-tests/
+/modules/testsuite/native-tests/target
+/modules/testsuite/native-tests/tools
+/modules/testsuite/native-tests/wstools
+/modules/testsuite/native-tests/*.log
+/modules/testsuite/native-tests/*.txt

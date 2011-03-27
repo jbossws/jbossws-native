@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jboss PUBLIC "-//JBoss//DTD JBOSS 4.2//EN" "http://www.jboss.org/j2ee/dtd/jboss_4_2.dtd">
+
+<jboss>
+  <enterprise-beans>
+    <message-driven>
+      <ejb-name>OrganizationMDB</ejb-name>
+      <destination-jndi-name>queue/RequestQueue</destination-jndi-name>
+      <depends>org.hornetq:name="RequestQueue",module=JMS,type=Queue</depends>
+    </message-driven>
+  </enterprise-beans>
+</jboss>
