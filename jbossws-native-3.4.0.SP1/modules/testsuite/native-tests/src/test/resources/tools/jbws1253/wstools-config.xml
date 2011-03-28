@@ -1,5 +1,0 @@
-<configuration>
-  <wsdl-java location="${test.resources.directory}/tools/jbws1253/MyPortTypeService.wsdl" parameter-style="bare">
-    <mapping file="myporttype-mapping.xml"/>
-  </wsdl-java>
-</configuration>
