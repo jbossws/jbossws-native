@@ -89,6 +89,11 @@
                <filtering>true</filtering>
              </resource>
            </webResources>
+           <archive>
+             <manifestEntries>
+               <Dependencies>org.jboss.as.webservices services,org.jboss.ws.native.jbossws-native-core services,org.jboss.ws.common</Dependencies>
+             </manifestEntries>
+           </archive>
          </configuration>
       </plugin>
     </plugins>
