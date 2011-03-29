@@ -274,8 +274,17 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public SOAPElement addChildElement(SOAPElement child) throws SOAPException
    {
-      SOAPElementImpl soapElement = (SOAPElementImpl)child;
-      soapElement = (SOAPElementImpl)appendChild(soapElement);
+      SOAPElementImpl soapElement = (SOAPElementImpl) child;
+
+      if (soapElement.domNode.getOwnerDocument() != element.getOwnerDocument())
+      {
+         Document oldDoc = DOMUtils.peekOwnerDocument();
+         DOMUtils.setOwnerDocument(element.getOwnerDocument());
+         soapElement = (SOAPElementImpl) SOAPFactoryImpl.newInstance().createElement((Element) (soapElement.domNode));
+         DOMUtils.setOwnerDocument(oldDoc);
+
+      }
+      soapElement = (SOAPElementImpl) appendChild(soapElement);
       return soapElement.completeNamespaceDeclaration();
    }
 
