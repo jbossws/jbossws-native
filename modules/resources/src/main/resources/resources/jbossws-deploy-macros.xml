@@ -339,11 +339,6 @@
           <include name="**/jettison.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/codehaus/woodstox/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/wstx.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/jaxbintros/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jboss-jaxb-intros.jar"/>
