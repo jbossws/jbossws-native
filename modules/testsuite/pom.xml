@@ -870,8 +870,10 @@
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
-                 <!-- # [JBAS-8933] ClassCastException: org.jboss.security.plugins.auth.JaasSecurityManagerBase cannot be cast to org.jboss.security.AuthorizationManager -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1999/**</exclude>
+                 <!-- # [JBWS-3255] Unable to lookup AuthenticationManager -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1999/JBWS1999TestCase*</exclude>
+
+                 <!-- # [JBWS-3256] Failed to load users/passwords/role files -->
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleUsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase*</exclude>
 
