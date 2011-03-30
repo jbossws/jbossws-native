@@ -740,17 +740,24 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
-                <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
+                 <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
+                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
 
-                <!--# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
-                <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
+                 <!--# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
+                 <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
 
-                <!-- # [JBAS-8363] Virtual host issue in JBossWeb -->
-                <exclude>org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*</exclude>
+                 <!-- # [JBAS-8363] Virtual host issue in JBossWeb -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*</exclude>
 
-                <!-- # [JBWS-3150] This test causes hudson to freeze -->
-                <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
+                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+
+                 <!-- # [JBAS-9188] Implement support for nested EJBs & WARs in .sar archives -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
@@ -773,10 +780,8 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude> <!-- F VerifyError -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude> <!-- F cannot find WSDL -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
@@ -832,9 +837,6 @@
                  <exclude>org/jboss/test/ws/jaxws/smoke/tools/*ScriptTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/smoke/tools/WSRunClientTestCase*</exclude>
 
-                 <!-- # [JBWS-3226] jboss-service.xml not matching AS7 format -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
-
                  <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
 
@@ -874,12 +876,6 @@
                  <!-- # [JBWS-3256] Failed to load users/passwords/role files -->
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleUsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase*</exclude>
-
-                 <!-- # [JBWS-3257] No class available with name 'org.jboss.security.plugins.JaasSecurityDomain' -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-
-                 <!-- # [JBWS-3258] No class available with name 'org.jboss.mq.server.jmx.Queue' -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBAS-8936] @Resource injection from web.xml doesn't work -->
                  <exclude>org/jboss/test/ws/jaxws/enventry/EnvEntry*TestCase*</exclude>
