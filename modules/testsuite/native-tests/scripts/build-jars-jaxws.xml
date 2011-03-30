@@ -248,7 +248,7 @@
 		</jar>
 
 		<!-- jaxws-jbws1988 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1988.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1988.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1988/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws1988/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws1988/*TestCase.class" />
