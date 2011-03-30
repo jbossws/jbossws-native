@@ -5,7 +5,7 @@
 <jboss>
   
   <!-- [JBWS-1339] @Security domain vs. <security-domain> -->
-  <security-domain>java:/jaas/JBossWS</security-domain>
+  <security-domain>JBossWS</security-domain>
   
   <enterprise-beans>
     <session>

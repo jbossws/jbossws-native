@@ -4,7 +4,7 @@
 
 <jboss>
 
-  <security-domain>java:/jaas/JBossWS</security-domain>
+  <security-domain>JBossWS</security-domain>
 
   <enterprise-beans>
     <session>
