@@ -877,9 +877,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleUsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase*</exclude>
 
-                 <!-- # [JBAS-8936] @Resource injection from web.xml doesn't work -->
-                 <exclude>org/jboss/test/ws/jaxws/enventry/EnvEntry*TestCase*</exclude>
-
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
               </excludes>
