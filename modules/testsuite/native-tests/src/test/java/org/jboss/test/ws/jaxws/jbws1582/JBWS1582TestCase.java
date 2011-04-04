@@ -73,25 +73,33 @@ public class JBWS1582TestCase extends JBossWSTest
       assertTrue(response.contains("<return>Hello</return>"));
    }
 
-   public void testSOAPMessageAttack() throws Exception
+   public void testSOAPMessageAttack1() throws Exception
    {
-      String response = getResponse("jaxws/jbws1582/attack-message.xml");
+      String response = getResponse("jaxws/jbws1582/attack-message-1.xml");
       assertTrue(response.contains("HTTP/1.1 500"));
-      assertTrue(response.contains("The parser has encountered more than"));
-      assertTrue(response.contains("entity expansions in this document"));
+      assertTrue(response.contains("DOCTYPE is disallowed when the feature"));
+      assertTrue(response.contains("http://apache.org/xml/features/disallow-doctype-decl"));
+   }
+   
+   public void testSOAPMessageAttack2() throws Exception
+   {
+      String response = getResponse("jaxws/jbws1582/attack-message-2.xml");
+      assertTrue(response.contains("HTTP/1.1 500"));
+      assertTrue(response.contains("DOCTYPE is disallowed when the feature"));
+      assertTrue(response.contains("http://apache.org/xml/features/disallow-doctype-decl"));
    }
    
    private String getResponse(String requestFile) throws Exception
    {
       final String CRNL = "\r\n";
-      String content = getContent(new FileInputStream(this.getResourceFile(requestFile)));
+      String content = getContent(new FileInputStream(getResourceFile(requestFile)));
       Socket socket = new Socket();
-      socket.connect(new InetSocketAddress(this.getServerHost(), 8080));
+      socket.connect(new InetSocketAddress(getServerHost(), 8080));
       OutputStream out = socket.getOutputStream();
 
       // send an HTTP request to the endpoint
       out.write(("POST /jaxws-jbws1582/TestService HTTP/1.0" + CRNL).getBytes());
-      out.write(("Host: " + this.getServerHost() + ":8080" + CRNL).getBytes());
+      out.write(("Host: " + getServerHost() + ":8080" + CRNL).getBytes());
       out.write(("Content-Type: text/xml" + CRNL).getBytes());
       out.write(("Content-Length: " + content.length() + CRNL).getBytes());
       out.write((CRNL).getBytes());
@@ -110,7 +118,7 @@ public class JBWS1582TestCase extends JBossWSTest
    {
       try
       {
-         this.deploy("jaxws-jbws1582-attacked.war");
+         deploy("jaxws-jbws1582-attacked.war");
          fail("deployment failure expected");
       }
       catch (Exception e)
@@ -120,7 +128,7 @@ public class JBWS1582TestCase extends JBossWSTest
       }
       finally
       {
-         this.undeploy("jaxws-jbws1582-attacked.war");
+         undeploy("jaxws-jbws1582-attacked.war");
       }
    }
       
