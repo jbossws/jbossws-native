@@ -193,26 +193,6 @@
 			</metainf>
 		</jar>
 
-		<!-- jaxws-jbws1582 -->
-		<war destfile="${tests.output.dir}/test-libs/jaxws-jbws1582.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws1582/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1582/Endpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws1582/EndpointImpl.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws1582/WEB-INF">
-				<include name="wsdl/service.wsdl" />
-			</webinf>
-		</war>
-		<war destfile="${tests.output.dir}/test-libs/jaxws-jbws1582-attacked.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws1582/WEB-INF/attack-web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1582/Endpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws1582/AttackedEndpointImpl.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws1582/WEB-INF">
-				<include name="wsdl/attack-service.wsdl" />
-			</webinf>
-		</war>
-
 		<!-- jaxws-jbws1809 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1809.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
