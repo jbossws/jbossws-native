@@ -231,8 +231,10 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       HandlerType[] handlerType = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
       HandlerType[] faultType = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
 
+      
       // Associate a message context with the current thread
       CommonMessageContext msgContext = new SOAPMessageContextJAXWS();
+      CommonMessageContext reqMsgContext = msgContext;
       MessageContextAssociation.pushMessageContext(msgContext);
       try
       {
@@ -302,6 +304,8 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
          }
          finally
          {
+            //cleanup attachment if there is any
+            CommonMessageContext.cleanupAttachments(reqMsgContext);
             closeHandlerChain(portName, handlerType[2]);
             closeHandlerChain(portName, handlerType[1]);
             closeHandlerChain(portName, handlerType[0]);

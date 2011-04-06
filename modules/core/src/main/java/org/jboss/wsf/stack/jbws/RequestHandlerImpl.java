@@ -314,7 +314,7 @@ public class RequestHandlerImpl implements RequestHandler
       {
          msgContext.setEndpointMetaData(sepMetaData);
          MessageAbstraction resMessage = processRequest(endpoint, nettyMessage == null ? headerSource : nettyMessage, invContext, inStream);
-
+         CommonMessageContext reqMsgContext = msgContext;
          // Replace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
 
@@ -372,6 +372,7 @@ public class RequestHandlerImpl implements RequestHandler
          boolean isWsrmOneWay = isWsrmMessage && (Boolean)rmResCtx.get(RMConstant.ONE_WAY_OPERATION);
          if ((outStream != null) && (isWsrmOneWay == false)) // RM hack
             sendResponse(endpoint, outStream, isFault);
+         CommonMessageContext.cleanupAttachments(reqMsgContext);
       }
       catch (Exception ex)
       {
