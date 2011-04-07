@@ -118,7 +118,6 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
       resContext.put(MessageContext.MESSAGE_OUTBOUND_PROPERTY, Boolean.valueOf(!outbound));
 
       MessageContextAssociation.pushMessageContext(resContext);
-      cleanupAttachments(reqContext);
 
       return resContext;
    }

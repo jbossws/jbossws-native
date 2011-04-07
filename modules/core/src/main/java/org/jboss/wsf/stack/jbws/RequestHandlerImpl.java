@@ -292,7 +292,7 @@ public class RequestHandlerImpl implements RequestHandler
       {
          msgContext.setEndpointMetaData(sepMetaData);
          MessageAbstraction resMessage = processRequest(endpoint, headerSource, invContext, inStream);
-
+         CommonMessageContext reqMsgContext = msgContext;
          // Replace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
 
@@ -325,6 +325,7 @@ public class RequestHandlerImpl implements RequestHandler
          }
 
          sendResponse(endpoint, outStream, isFault);
+         CommonMessageContext.cleanupAttachments(reqMsgContext);
       }
       catch (Exception ex)
       {
