@@ -772,9 +772,8 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
                  <!-- EJB3 Ann driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude> <!-- F VerifyError -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F Cannot find service endpoint target -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F java.lang.UnsupportedOperationException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- TODO: implement EJB security integration -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F Failed to determine resource binding value for BindingDescription -->
 
                  <!-- EAR deployment is freezing -->
@@ -784,6 +783,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude>
 
                  <!-- EJB3 support for @Remote views not yet implemented -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude>
