@@ -772,22 +772,16 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
                  <!-- EJB3 Ann driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude> <!-- F ear deployment -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude> <!-- F ear deployment -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude> <!-- F ear deployment -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude> <!-- F ear deployment -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude> <!-- F VerifyError -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude> <!-- F cannot find WSDL -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2934/**</exclude> <!-- F java.lang.ArrayIndexOutOfBoundsException -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F cannot find WSDL -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F Cannot find service endpoint target -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- F java.lang.UnsupportedOperationException -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F Failed to determine resource binding value for BindingDescription -->
+
+                 <!-- EAR deployment is freezing -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude>
 
                  <!-- EJB3 support for @Remote views not yet implemented -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
@@ -800,6 +794,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2011/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2937/**</exclude>
