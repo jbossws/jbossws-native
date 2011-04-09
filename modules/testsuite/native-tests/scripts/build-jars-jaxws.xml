@@ -630,6 +630,20 @@
 				<include name="jboss-web.xml"/>
 			</webinf>
 		</war>
+		
+		<!-- jaxws-jbws2901 -->
+		<war destfile="${tests.output.dir}/test-libs/jaxws-jbws2901.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2901/WEB-INF/web.xml">
+			<classes dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbws2901/Endpoint.class"/>
+				<include name="org/jboss/test/ws/jaxws/jbws2901/EndpointImpl.class"/>
+			</classes>
+			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2901/WEB-INF">
+				<include name="wsdl/service.wsdl"/>
+			</webinf>
+			<fileset dir="${tests.output.dir}/test-resources/jaxws/jbws2901">
+				<include name="passwd" />
+			</fileset>
+		</war>
 
 		<!-- jaxws-jbws2927 -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2927.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2927/WEB-INF/web.xml">
