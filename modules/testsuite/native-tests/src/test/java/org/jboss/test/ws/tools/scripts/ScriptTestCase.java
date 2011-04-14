@@ -47,6 +47,8 @@ public class ScriptTestCase extends JBossWSTest
 
    public void testWSToolsFromCommandLine() throws Exception
    {
+      if (!isTargetJBoss6()) return; // wstools.sh(.bat) not available since AS7
+      
       // use absolute path for the output to be re-usable      
       File dest = createResourceFile("wstools" + FS + "java");
       dest.mkdirs();
