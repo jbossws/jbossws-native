@@ -280,7 +280,7 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       {
          Document oldDoc = DOMUtils.peekOwnerDocument();
          DOMUtils.setOwnerDocument(element.getOwnerDocument());
-         soapElement = (SOAPElementImpl) SOAPFactoryImpl.newInstance().createElement((Element) (soapElement.domNode));
+         soapElement = (SOAPElementImpl) new SOAPFactoryImpl().createElement((Element) (soapElement.domNode));
          DOMUtils.setOwnerDocument(oldDoc);
 
       }

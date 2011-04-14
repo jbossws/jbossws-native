@@ -914,7 +914,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (log.isDebugEnabled())
          log.debug("Create new config [name=" + configName + ",file=" + configFile + "]");
 
-      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
+      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance(getClassLoader());
       List<RMPortConfig> rmPortMetaData = null;
       if (base != null)
       {

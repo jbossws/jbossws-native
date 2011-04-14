@@ -22,8 +22,8 @@
 package org.jboss.test.ws.jaxws.jaxbintros;
 
 import org.jboss.logging.Logger;
+import org.jboss.test.helper.DOMWriter;
 import org.jboss.ws.core.jaxws.JAXBContextFactory;
-import org.jboss.wsf.common.DOMWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

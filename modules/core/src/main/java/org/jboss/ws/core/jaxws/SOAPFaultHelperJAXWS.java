@@ -27,7 +27,6 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConstants;
@@ -47,11 +46,11 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
+import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -66,8 +65,6 @@ import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.ibm.wsdl.extensions.soap12.SOAP12Constants;
 
 /**
  * Helper methods to translate between SOAPFault and SOAPFaultException
@@ -329,8 +326,7 @@ public class SOAPFaultHelperJAXWS
 
    private static SOAPMessageImpl createSOAPMessage() throws SOAPException
    {
-      MessageFactoryImpl factory = (MessageFactoryImpl)MessageFactory.newInstance();
-
+      MessageFactoryImpl factory = new MessageFactoryImpl();
       if (isSOAP12() == true)
       {
          factory.setEnvNamespace(Constants.NS_SOAP12_ENV);

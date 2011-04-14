@@ -142,9 +142,7 @@ public class WSDLRequestHandler
             log.debug("Importing resource file: " + impResourceFile.getCanonicalPath());
 
          String wsdlLocFilePath = wsdlLocFile.getParentFile().getCanonicalPath();
-         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
-         String wsdlDataLoc = serverConfig.getServerDataDir().getCanonicalPath() + File.separatorChar + "wsdl";
+         String wsdlDataLoc = config.getServerDataDir().getCanonicalPath() + File.separatorChar + "wsdl";
 
          //allow wsdl file's parent or server's data/wsdl or overriden wsdl publish directories only
          String resourceAbsPath = impResourceFile.getCanonicalPath(); 

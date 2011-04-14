@@ -115,6 +115,9 @@
       <fileset dir="${tests.output.dir}/test-resources/interop/wsse/">
         <include name="*.*"/>
       </fileset>
+      <manifest>
+          <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     <!-- jbossws-interop-wsse10Encrypt-client.jar -->
     <jar destfile="${tests.output.dir}/test-libs/jbossws-interop-wsse10Encrypt-client.jar">
@@ -141,6 +144,9 @@
       <fileset dir="${tests.output.dir}/test-resources/interop/wsse/">
         <include name="*.*"/>
       </fileset>
+      <manifest>
+          <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     <!-- jbossws-interop-wsse10Sign-client.jar -->
     <jar destfile="${tests.output.dir}/test-libs/jbossws-interop-wsse10Sign-client.jar">
@@ -193,6 +199,9 @@
       <fileset dir="${tests.output.dir}/test-resources/interop/nov2007/wsse/">
         <include name="*.*"/>
       </fileset>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     <!-- jbossws-interop-nov2007-wsseEncrypt.jar -->
     <jar destfile="${tests.output.dir}/test-libs/jbossws-interop-nov2007-wsseEncrypt-client.jar">
@@ -222,6 +231,9 @@
       <fileset dir="${tests.output.dir}/test-resources/interop/nov2007/wsse/">
         <include name="*.*"/>
       </fileset>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     <!-- jbossws-interop-nov2007-wsseEncrypt3DES.jar -->
     <jar destfile="${tests.output.dir}/test-libs/jbossws-interop-nov2007-wsseEncrypt3DES-client.jar">
@@ -245,6 +257,9 @@
       <fileset dir="${tests.output.dir}/test-resources/interop/nov2007/wsse/">
         <include name="*.*"/>
       </fileset>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     <!-- jbossws-interop-nov2007-wsseUsernameTokenHTTPS-client.jar -->
     <jar destfile="${tests.output.dir}/test-libs/jbossws-interop-nov2007-wsseUsernameTokenHTTPS-client.jar">

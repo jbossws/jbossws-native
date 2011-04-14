@@ -32,7 +32,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
@@ -248,9 +247,9 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 
 	public void writeHeaders(SOAPMessage message) throws AddressingException
 	{
-		try
-		{
-			SOAPFactoryImpl factory = (SOAPFactoryImpl)SOAPFactory.newInstance();
+      try
+      {
+            SOAPFactoryImpl factory = new SOAPFactoryImpl();
 			SOAPHeader soapHeader = message.getSOAPHeader();					
 			
 			if (soapHeader == null)
@@ -401,7 +400,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
       SOAPElement child = null;
       try
       {
-         SOAPFactoryImpl factory = (SOAPFactoryImpl)SOAPFactory.newInstance();
+         SOAPFactoryImpl factory = new SOAPFactoryImpl();
          if (obj instanceof Element)
          {
             child = factory.createElement((Element)obj);

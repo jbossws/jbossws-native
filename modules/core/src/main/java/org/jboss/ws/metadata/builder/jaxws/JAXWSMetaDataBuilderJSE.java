@@ -23,6 +23,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.DelegateClassLoader;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -52,7 +53,7 @@ public class JAXWSMetaDataBuilderJSE
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
          if(null == runtimeClassLoader)
             throw new IllegalArgumentException("Runtime classloader cannot be null");
-         wsMetaData.setClassLoader(runtimeClassLoader);
+         wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions.getContextClassLoader()));
 
          // For every bean
          for (Endpoint ep : dep.getService().getEndpoints())

@@ -280,6 +280,9 @@
         <include name="wsdl/ws-eventing.xsd"/>
         <include name="wsdl/ws-addr.xsd"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     <jar destfile="${tests.output.dir}/test-libs/jaxws-samples-wseventing-sink.jar">
       <fileset dir="${tests.output.dir}/test-classes">
@@ -295,6 +298,9 @@
       </classes>
       <zipfileset dir="${tests.output.dir}/test-resources/jaxws/samples/wsrm/WEB-INF/wsdl" prefix="WEB-INF/wsdl"/>
       <zipfileset file="${tests.output.dir}/test-resources/jaxws/samples/wsrm/WEB-INF/wsrm-jaxws-endpoint-config.xml" prefix="META-INF"/>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <jar jarfile="${tests.output.dir}/test-libs/jaxws-samples-wsrm-client.jar">
@@ -321,6 +327,9 @@
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxws-samples-wssecurity-sign -->
@@ -340,6 +349,9 @@
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxws-samples-wssecurity-sign-fault -->
@@ -359,6 +371,9 @@
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxws-samples-wssecurity-sign-encrypt-fault -->
@@ -378,6 +393,9 @@
         <include name="wsse.keystore"/>
         <include name="wsse.truststore"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxws-samples-wssecurity-username -->
@@ -391,6 +409,9 @@
         <include name="jboss-web.xml"/>
         <include name="jboss-wsse-server.xml"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxws-samples-wssecurityAnnotatedpolicy-encrypt -->
@@ -409,6 +430,9 @@
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecurityAnnotatedpolicy/WEB-INF">
         <include name="Policy.xml"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxws-samples-wssecuritypolicy-encrypt -->
@@ -427,6 +451,9 @@
       <webinf dir="${tests.output.dir}/test-resources/jaxws/samples/wssecuritypolicy/WEB-INF">
         <include name="wsdl/**"/>
       </webinf>
+      <manifest>
+          <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
 
     <!-- Please add alphabetically -->

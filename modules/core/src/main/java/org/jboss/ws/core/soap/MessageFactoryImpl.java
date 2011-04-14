@@ -288,7 +288,8 @@ public class MessageFactoryImpl extends MessageFactory
          }
          else
          {
-            envBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), null);
+            //the classloader for jbossws-native-core has enough visibility to get the proper envelope builder
+            envBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), null, this.getClass().getClassLoader());
          }
          //if inputstream is empty, no need to build
          if (inputStream.markSupported()) {

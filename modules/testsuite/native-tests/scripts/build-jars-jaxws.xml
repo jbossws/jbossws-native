@@ -86,6 +86,9 @@
 			<classes dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/fastinfoset/FastInfosetEndpoint.class" />
 			</classes>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-handlerlifecycle -->
@@ -122,12 +125,16 @@
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jaxbintros.war" webxml="${tests.output.dir}/test-resources/jaxws/jaxbintros/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jaxbintros/**/*.class" />
+				<include name="org/jboss/test/helper/DOMWriter.class" />
 			</classes>
 
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jaxbintros/WEB-INF">
 				<include name="*.xml" />
 				<include name="**/*.wsdl" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws771 -->
@@ -144,6 +151,9 @@
 				<include name="org/jboss/test/ws/jaxws/jbws871/RpcArrayEndpoint.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws871/RpcArrayEndpointImpl.class" />
 			</classes>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws871-rpc-client.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
@@ -210,6 +220,9 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws1814/WEB-INF">
 				<include name="*" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws1850 -->
@@ -303,6 +316,9 @@
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/">
 				<include name="wsse.*" />
 			</metainf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</jar>
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2014-encrypt.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
@@ -315,6 +331,9 @@
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/">
 				<include name="wsse.*" />
 			</metainf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</jar>					
 		
 		<!-- jaxws-jbws2116-->
@@ -433,6 +452,9 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2259/WEB-INF">
 				<include name="jaxws-endpoint-config.xml" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2285 -->
@@ -441,10 +463,14 @@
 				<include name="org/jboss/test/ws/jaxws/jbws2285/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws2285/JBWS2285TestCase.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws2285/server-handlers.xml" />
+				<include name="org/jboss/test/helper/DOMWriter.class" />
 			</classes>
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2285/WEB-INF">
 				<include name="jboss-web.xml" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2319 -->
@@ -453,10 +479,14 @@
 				<include name="org/jboss/test/ws/jaxws/jbws2319/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws2319/JBWS2285TestCase.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws2319/server-handlers.xml" />
+				<include name="org/jboss/test/helper/DOMWriter.class" />
 			</classes>
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2319/WEB-INF">
 				<include name="jboss-web.xml" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2437 -->
@@ -477,6 +507,9 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF">
 				<include name="wsdl/**" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2565 -->
@@ -524,6 +557,9 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2698/WEB-INF">
 				<include name="jboss-web.xml" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2706 -->
@@ -581,6 +617,9 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF">
 				<include name="jboss-web.xml" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2969 -->
@@ -870,6 +909,9 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/wseventing/WEB-INF">
 				<include name="wsdl/**" />
 			</webinf>
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<!-- jaxws-wsrm -->
@@ -885,6 +927,9 @@
 			</webinf>
 			<zipfileset dir="${tests.output.dir}/test-resources/jaxws/wsrm/WEB-INF/unsecure/wsdl" prefix="WEB-INF/wsdl" />
 			<zipfileset file="${tests.output.dir}/test-resources/jaxws/wsrm/WEB-INF/unsecure/standard-jaxws-endpoint-config.xml" prefix="META-INF" />
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<war warfile="${tests.output.dir}/test-libs/jaxws-secured-wsrm.war" webxml="${tests.output.dir}/test-resources/jaxws/wsrm/WEB-INF/secure/web.xml">
@@ -906,6 +951,9 @@
 			</webinf>
 			<zipfileset dir="${tests.output.dir}/test-resources/jaxws/wsrm/WEB-INF/secure/wsdl" prefix="WEB-INF/wsdl" />
 			<zipfileset file="${tests.output.dir}/test-resources/jaxws/wsrm/WEB-INF/secure/standard-jaxws-endpoint-config.xml" prefix="META-INF" />
+            <manifest>
+                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+            </manifest>
 		</war>
 
 		<jar jarfile="${tests.output.dir}/test-libs/jaxws-wsrm-client.jar">

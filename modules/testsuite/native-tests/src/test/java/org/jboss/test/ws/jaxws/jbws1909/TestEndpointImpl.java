@@ -31,19 +31,22 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.management.ObjectName;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.ObjectNameFactory;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.RequestHandler;
 import org.jboss.wsf.spi.management.EndpointRegistry;
 import org.jboss.wsf.spi.management.EndpointRegistryFactory;
+import org.jboss.wsf.util.DOMUtils;
 import org.w3c.dom.Element;
 
 @WebService(serviceName = "TestEndpointService", name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/jbws1909")
@@ -66,29 +69,50 @@ public class TestEndpointImpl implements TestEndpoint
          log.info(key + "=" + msgContext.get(key));
       }
 
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      EndpointRegistry registry = spiProvider.getSPI(EndpointRegistryFactory.class).getEndpointRegistry();
-      
-      ObjectName oname = ObjectNameFactory.create("jboss.ws:context=jaxws-jbws1909,endpoint=TestEndpointImpl");
-      Endpoint endpoint = registry.getEndpoint(oname);
-      RequestHandler reqHandler = endpoint.getRequestHandler();
+      ClassLoader cl = ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader();
+      SPIProvider spiProvider = SPIProviderResolver.getInstance(cl).getProvider();
+      EndpointRegistry registry = spiProvider.getSPI(EndpointRegistryFactory.class, cl).getEndpointRegistry();
       
       try
       {
+         ObjectName oname = new ObjectName("jboss.ws:context=jaxws-jbws1909,endpoint=TestEndpointImpl");
+         Endpoint endpoint = registry.getEndpoint(oname);
+         RequestHandler reqHandler = endpoint.getRequestHandler();
+         
          ByteArrayOutputStream baos = new ByteArrayOutputStream();
          reqHandler.handleWSDLRequest(endpoint, baos, null); // The context is null
          
          ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-         Element root = DOMUtils.parse(bais);
+         Element root = DOMUtils.parse(bais, getDocumentBuilder());
          Element serviceEl = DOMUtils.getFirstChildElement(root, new QName("http://schemas.xmlsoap.org/wsdl/", "service"));
          String serviceName = DOMUtils.getAttributeValue(serviceEl, "name");
          
          input += "|" + serviceName;
       }
-      catch (IOException ex)
+      catch (Exception ex)
       {
          throw new RuntimeException(ex);
       }
       return input;
    }
+   
+   private DocumentBuilder getDocumentBuilder()
+   {
+      DocumentBuilderFactory factory = null;
+      try
+      {
+         factory = DocumentBuilderFactory.newInstance();
+         factory.setValidating(false);
+         factory.setNamespaceAware(true);
+         factory.setExpandEntityReferences(false);
+         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+         DocumentBuilder builder = factory.newDocumentBuilder();
+         return builder;
+      }
+      catch (Exception e)
+      {
+         throw new RuntimeException("Unable to create document builder", e);
+      }
+   }
+
 }

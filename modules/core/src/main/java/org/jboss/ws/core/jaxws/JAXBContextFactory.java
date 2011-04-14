@@ -80,6 +80,6 @@ public abstract class JAXBContextFactory
     */
    public static JAXBContextFactory newInstance()
    {
-      return (JAXBContextFactory)ServiceLoader.loadService(JAXBContextFactory.class.getName(), DEFAULT_JAXB_CONTEXT_FACTORY);
+      return (JAXBContextFactory)ServiceLoader.loadService(JAXBContextFactory.class.getName(), DEFAULT_JAXB_CONTEXT_FACTORY, JAXBContextFactory.class.getClassLoader());
    }
 }

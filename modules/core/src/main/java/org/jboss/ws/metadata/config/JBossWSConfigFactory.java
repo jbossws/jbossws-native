@@ -24,6 +24,8 @@ package org.jboss.ws.metadata.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -53,17 +55,25 @@ public class JBossWSConfigFactory
 
    private static String URN_JAXRPC_CONFIG = "urn:jboss:jaxrpc-config:2.0";
    private static String URN_JAXWS_CONFIG = "urn:jboss:jaxws-config:2.0";
+   
+   private ClassLoader loader;
 
    // Hide constructor
-   private JBossWSConfigFactory()
+   private JBossWSConfigFactory(ClassLoader loader)
    {
+      this.loader = loader;
    }
 
    /** Create a new instance of the factory
     */
    public static JBossWSConfigFactory newInstance()
    {
-      return new JBossWSConfigFactory();
+      return new JBossWSConfigFactory(getContextClassLoader());
+   }
+
+   public static JBossWSConfigFactory newInstance(ClassLoader loader)
+   {
+      return new JBossWSConfigFactory(loader);
    }
 
    public Object parse(URL configURL)
@@ -184,7 +194,7 @@ public class JBossWSConfigFactory
       {
          try
          {
-            configURL = new ResourceLoaderAdapter().findChild(configFile).toURL();
+            configURL = new ResourceLoaderAdapter(loader).findChild(configFile).toURL();
          }
          catch (IOException ex)
          {
@@ -196,5 +206,28 @@ public class JBossWSConfigFactory
          throw new WSException("Cannot find configFile: " + configFile);
       
       return configURL;
+   }
+   
+   /**
+    * Get context classloader.
+    * 
+    * @return the current context classloader
+    */
+   private static ClassLoader getContextClassLoader()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm == null)
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+      else
+      {
+         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         });
+      }
    }
 }
