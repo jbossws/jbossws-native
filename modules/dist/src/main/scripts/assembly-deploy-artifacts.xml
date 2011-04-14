@@ -70,7 +70,7 @@
         <include>org.jboss.ws:jbossws-spi:jar</include>
         <include>org.codehaus.jettison:jettison:jar</include>
         <include>com.sun.xml.ws:policy:jar</include>
-        <include>stax:stax-api:jar</include>
+        <include>javax.xml.stream:stax-api:jar</include>
         <include>org.jvnet.staxex:stax-ex:jar</include>
         <include>com.sun.xml.stream.buffer:streambuffer:jar</include>
         <include>wsdl4j:wsdl4j:jar</include>
