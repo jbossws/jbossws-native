@@ -130,19 +130,13 @@ final class JBossWSProviderImpl extends WSContractProvider
    @Override
    public void provide(String endpointClass)
    {
-      final ClassLoader origLoader = SecurityActions.getContextClassLoader();
       try
       {
-         SecurityActions.setContextClassLoader(loader);
          provide(loader.loadClass(endpointClass));
       }
       catch (ClassNotFoundException e)
       {
          throw new WSException("Class not found: " + endpointClass);
-      }
-      finally
-      {
-          SecurityActions.setContextClassLoader(origLoader);
       }
    }
 

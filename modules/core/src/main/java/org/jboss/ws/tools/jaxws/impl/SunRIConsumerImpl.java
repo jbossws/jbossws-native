@@ -197,7 +197,6 @@ public class SunRIConsumerImpl extends WSContractConsumer
       if (stream != null)
       {
          args.add("-verbose");
-         args.add("-Xdebug");
       }
       else
       {
