@@ -28,8 +28,12 @@
     </resources>
 
     <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.jws.api"/>
         <module name="javax.wsdl4j.api" export="true"/>
+        <module name="javax.xml.ws.api"/>
         <module name="com.sun.xml.bind" services="export" export="true"/>
+        <module name="com.sun.tools.javac"/>
         <module name="org.jboss.ws.api" export="true"/>
         <module name="org.jboss.ws.spi" export="true"/>
         <module name="org.jboss.ws.common" export="true"/>
@@ -38,9 +42,13 @@
         <module name="org.jboss.ws.native.jbossws-native-core" services="export" export="true">
           <imports>
             <include path="META-INF"/>
+            <include path="dtd"/>
+            <include path="schema"/>
           </imports>
           <exports>
             <include path="META-INF"/>
+            <include path="dtd"/>
+            <include path="schema"/>
           </exports>
         </module>
         <module name="org.jboss.ws.native.jbossws-native-services" services="export" export="true"/>

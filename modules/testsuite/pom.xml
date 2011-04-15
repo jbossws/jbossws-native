@@ -772,7 +772,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
                  <!-- EJB3 Ann driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude> <!-- F Cannot find service endpoint target -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- TODO: implement EJB security integration -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F Failed to determine resource binding value for BindingDescription -->
 
@@ -820,18 +819,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1702/**</exclude>
 
-                 <!-- # [JBWS-3222] Script tests -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2528/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2529/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2591/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2593/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2633/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2637/**</exclude>
-                 <exclude>org/jboss/test/ws/tools/scripts/ScriptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/smoke/tools/*ScriptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/smoke/tools/WSRunClientTestCase*</exclude>
-
                  <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
 
@@ -871,6 +858,11 @@
                  <!-- # [JBWS-3256] Failed to load users/passwords/role files -->
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleUsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/wssecurity/SimpleDispatchTestCase*</exclude>
+
+                 <!-- # [JBWS-3271] -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1815/JBWS1815TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/handlerlifecycle/HandlerLifecycleTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/handlerchain/HandlerChainTestCase*</exclude>
 
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>

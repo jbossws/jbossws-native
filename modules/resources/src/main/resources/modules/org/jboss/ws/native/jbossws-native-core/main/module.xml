@@ -29,6 +29,7 @@
     </resources>
 
     <dependencies>
+        <module name="com.sun.tools.ws" services="import"/>
         <module name="com.sun.xml.bind" services="import"/>
         <module name="com.sun.xml.fastinfoset"/>
         <module name="javax.api" />
