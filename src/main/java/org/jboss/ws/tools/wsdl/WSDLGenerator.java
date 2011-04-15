@@ -81,6 +81,8 @@ import org.w3c.dom.Element;
 public abstract class WSDLGenerator
 {
    protected WSDLDefinitions wsdl;
+   
+   protected boolean extension;
 
    protected abstract void processTypes();
 
@@ -110,6 +112,8 @@ public abstract class WSDLGenerator
       QName bindingQName = new QName(interfaceQName.getNamespaceURI(), interfaceQName.getLocalPart() + "Binding");
       WSDLBinding wsdlBinding = new WSDLBinding(wsdl, bindingQName);
       wsdlBinding.setInterfaceName(interfaceQName);
+      if (extension)
+         endpoint.setBindingId(SOAPBinding.SOAP12HTTP_BINDING);
       wsdlBinding.setType(endpoint.getBindingId());
       wsdl.addBinding(wsdlBinding);
       wsdlEndpoint.setBinding(bindingQName);
@@ -424,6 +428,16 @@ public abstract class WSDLGenerator
 
       wsdlService.setInterfaceName(endpoint.getPortName());
    }
+   
+   /**
+    * Whether to force SOAP 1.2
+    * 
+    * @param extension whether to force SOAP 1.2
+    */
+   public void setExtension(boolean extension)
+   {
+      this.extension = extension;
+   }
 
    /**
     * Generate a WSDL object model from the passed in ServiceMetaData.
@@ -455,26 +469,30 @@ public abstract class WSDLGenerator
          }
       }
 
-      String soapURI = null;
-      String soapPrefix = null;
-      for (EndpointMetaData ep : service.getEndpoints())
+      String soapPrefix = extension ? "soap12" : null;
+      String soapURI = extension ? Constants.NS_SOAP12 : null;
+      if (!extension)
       {
-         String bindingId = ep.getBindingId();
-         if (bindingId.startsWith(SOAPBinding.SOAP11HTTP_BINDING))
+         for (EndpointMetaData ep : service.getEndpoints())
          {
-            soapPrefix = "soap";
-            soapURI = Constants.NS_SOAP11;
-         }
-         else if (bindingId.startsWith(SOAPBinding.SOAP12HTTP_BINDING))
-         {
-            soapPrefix = "soap12";
-            soapURI = Constants.NS_SOAP12;
+            String bindingId = ep.getBindingId();
+            if (bindingId.startsWith(SOAPBinding.SOAP11HTTP_BINDING))
+            {
+               soapPrefix = "soap";
+               soapURI = Constants.NS_SOAP11;
+            }
+            else if (bindingId.startsWith(SOAPBinding.SOAP12HTTP_BINDING))
+            {
+               soapPrefix = "soap12";
+               soapURI = Constants.NS_SOAP12;
+            }
+
          }
       }
       
       if (soapURI != null && soapPrefix != null)
          wsdl.registerNamespaceURI(soapURI, soapPrefix);
-      
+
       processTypes();
       processService(service);
 

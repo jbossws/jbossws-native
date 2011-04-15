@@ -45,11 +45,12 @@ import org.jboss.wsf.spi.tools.WSContractProvider;
 final class JBossWSProviderImpl extends WSContractProvider
 {
    private ClassLoader loader;
-   private boolean generateWsdl = false;
-   private boolean generateSource = false;
+   private boolean generateWsdl;
+   private boolean extension;
+   private boolean generateSource;
    private File outputDir = new File("output");
-   private File resourceDir = null;
-   private File sourceDir = null;
+   private File resourceDir;
+   private File sourceDir;
    private PrintStream messageStream = new NullPrintStream();
 
    private void createDirectories(File resourceDir, File sourceDir)
@@ -94,7 +95,8 @@ final class JBossWSProviderImpl extends WSContractProvider
       builder.setGenerateWsdl(generateWsdl);
       builder.setToolMode(true);
       builder.setWsdlDirectory(resourceDir);
-      builder.setMessageStream(messageStream);      
+      builder.setMessageStream(messageStream);
+      builder.setExtension(extension);
 
       if (generateWsdl)
          messageStream.println("Generating WSDL:");
@@ -138,6 +140,12 @@ final class JBossWSProviderImpl extends WSContractProvider
    public void setGenerateWsdl(boolean generateWsdl)
    {
       this.generateWsdl = generateWsdl;
+   }
+
+   //@Override
+   public void setExtension(boolean extension)
+   {
+      this.extension = extension;
    }
 
    @Override
