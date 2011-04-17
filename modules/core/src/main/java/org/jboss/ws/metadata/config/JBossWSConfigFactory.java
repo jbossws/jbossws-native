@@ -29,6 +29,7 @@ import java.security.PrivilegedAction;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.utils.DelegateClassLoader;
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXWS;
@@ -36,6 +37,7 @@ import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.ResourceLoaderAdapter;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.Unmarshaller;
@@ -61,7 +63,10 @@ public class JBossWSConfigFactory
    // Hide constructor
    private JBossWSConfigFactory(ClassLoader loader)
    {
-      this.loader = loader;
+      //use a delegate classloader: first try lookup using the provided classloader,
+      //otherwise use server integration classloader which has the default configuration
+      final ClassLoader cl = ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader();
+      this.loader = new DelegateClassLoader(cl, loader);
    }
 
    /** Create a new instance of the factory
