@@ -831,9 +831,6 @@
                  <!-- # [JBWS-3240] Rewrite tests relying on $JBOSS_HOME/server/default/tmp/jbossws folder existence -->
                  <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
 
-                 <!-- # [JBWS-3241] NPE in ServerHandler.handleInbound() -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/addressing/AddressingStatefulTestCase*</exclude>
-
                  <!-- # [JBWS-3244] resuscitate WS-Eventing -->
                  <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/wseventing/**</exclude>
