@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Dependencies: org.jboss.logging
+Dependencies: org.jboss.logging,org.jboss.ws.native.jbossws-native-core
