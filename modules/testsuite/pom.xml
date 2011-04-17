@@ -828,19 +828,11 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
 
-                 <!-- # [JBWS-3239] SPI TCCL issue -->
-                 <exclude>org/jboss/test/ws/jaxws/endpoint/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/endpoint/**</exclude>
-
                  <!-- # [JBWS-3240] Rewrite tests relying on $JBOSS_HOME/server/default/tmp/jbossws folder existence -->
                  <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
 
                  <!-- # [JBWS-3241] NPE in ServerHandler.handleInbound() -->
                  <exclude>org/jboss/test/ws/jaxws/samples/addressing/AddressingStatefulTestCase*</exclude>
-
-                 <!-- # [JBWS-3242] Servlet base test throws IllegalArgumentException: Resource META-INF/jbossws-entities.properties not found -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3223/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude>
 
                  <!-- # [JBWS-3244] resuscitate WS-Eventing -->
                  <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
