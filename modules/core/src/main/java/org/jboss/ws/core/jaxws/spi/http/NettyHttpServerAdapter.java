@@ -41,6 +41,7 @@ import org.jboss.wsf.framework.deployment.EndpointRegistryDeploymentAspect;
 import org.jboss.wsf.framework.deployment.URLPatternDeploymentAspect;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
@@ -59,16 +60,19 @@ import org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect;
 final class NettyHttpServerAdapter implements HttpServer
 {
 
-   /** JBossWS SPI provider. */
-   private static final SPIProvider SPI_PROVIDER = SPIProviderResolver.getInstance().getProvider();
-
    /** Deployment model factory. */
-   private static final DeploymentModelFactory DEPLOYMENT_FACTORY = NettyHttpServerAdapter.SPI_PROVIDER
-         .getSPI(DeploymentModelFactory.class);
+   private static final DeploymentModelFactory DEPLOYMENT_FACTORY;
 
    /** Request handler factory. */
    private static final NettyRequestHandlerFactory<NettyRequestHandlerImpl> REQUEST_HANDLER_FACTORY = NettyRequestHandlerFactoryImpl
          .getInstance();
+   
+   static
+   {
+      final ClassLoader cl = ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader();
+      final SPIProvider spiProvider = SPIProviderResolver.getInstance(cl).getProvider();
+      DEPLOYMENT_FACTORY = spiProvider.getSPI(DeploymentModelFactory.class, cl);
+   }
 
    /**
     * Constructor.
@@ -103,7 +107,18 @@ final class NettyHttpServerAdapter implements HttpServer
 
       final DeploymentAspectManagerImpl daManager = new DeploymentAspectManagerImpl();
       daManager.setDeploymentAspects(this.getDeploymentAspects());
-      daManager.deploy(dep);
+      ClassLoader orig = SecurityActions.getContextClassLoader();
+      try
+      {
+         SecurityActions.setContextClassLoader(ClassLoaderProvider.getDefaultProvider()
+               .getServerIntegrationClassLoader());
+         daManager.deploy(dep);
+      }
+      finally
+      {
+         SecurityActions.setContextClassLoader(orig);
+      }
+      
       epImpl.setDeployment(dep);
 
       final NettyHttpServer server = NettyHttpServerFactory.getNettyHttpServer(epImpl.getPort(), NettyHttpServerAdapter.REQUEST_HANDLER_FACTORY);
@@ -127,7 +142,17 @@ final class NettyHttpServerAdapter implements HttpServer
 
       final DeploymentAspectManagerImpl daManager = new DeploymentAspectManagerImpl();
       daManager.setDeploymentAspects(this.getDeploymentAspects());
-      daManager.undeploy(epImpl.getDeployment());
+      ClassLoader orig = SecurityActions.getContextClassLoader();
+      try
+      {
+         SecurityActions.setContextClassLoader(ClassLoaderProvider.getDefaultProvider()
+               .getServerIntegrationClassLoader());
+         daManager.undeploy(epImpl.getDeployment());
+      }
+      finally
+      {
+         SecurityActions.setContextClassLoader(orig);
+      }
    }
 
    /**
@@ -181,18 +206,27 @@ final class NettyHttpServerAdapter implements HttpServer
    {
       final List<DeploymentAspect> retVal = new LinkedList<DeploymentAspect>();
 
-      // TODO: native stack can't use framework classes directly
-      retVal.add(new NettyHandlerDeploymentAspect());
-      retVal.add(new BackwardCompatibleContextRootDeploymentAspect());
-      retVal.add(new URLPatternDeploymentAspect());
-      retVal.add(new EndpointAddressDeploymentAspect());
-      retVal.add(new EndpointNameDeploymentAspect());
-      retVal.add(new UnifiedMetaDataDeploymentAspect());
-      retVal.add(new ServiceEndpointInvokerDeploymentAspect());
-      retVal.add(new PublishContractDeploymentAspect());
-      retVal.add(new EagerInitializeDeploymentAspect());
-      retVal.add(new EndpointRegistryDeploymentAspect());
-      retVal.add(new EndpointLifecycleDeploymentAspect());
+      ClassLoader orig = SecurityActions.getContextClassLoader();
+      try
+      {
+         SecurityActions.setContextClassLoader(ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader());
+         // TODO: native stack can't use framework classes directly
+         retVal.add(new NettyHandlerDeploymentAspect());
+         retVal.add(new BackwardCompatibleContextRootDeploymentAspect());
+         retVal.add(new URLPatternDeploymentAspect());
+         retVal.add(new EndpointAddressDeploymentAspect());
+         retVal.add(new EndpointNameDeploymentAspect());
+         retVal.add(new UnifiedMetaDataDeploymentAspect());
+         retVal.add(new ServiceEndpointInvokerDeploymentAspect());
+         retVal.add(new PublishContractDeploymentAspect());
+         retVal.add(new EagerInitializeDeploymentAspect());
+         retVal.add(new EndpointRegistryDeploymentAspect());
+         retVal.add(new EndpointLifecycleDeploymentAspect());
+      }
+      finally
+      {
+         SecurityActions.setContextClassLoader(orig);
+      }
 
       return retVal;
    }
