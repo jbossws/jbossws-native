@@ -64,6 +64,7 @@ import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
+import org.jboss.ws.core.utils.DelegateClassLoader;
 import org.jboss.ws.extensions.wsrm.api.RMProvider;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
@@ -399,6 +400,15 @@ public class ServiceDelegateImpl extends ServiceDelegate
          FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
          ClientProxy handler = new ClientProxy(executor, new ClientImpl(clientMetaDataAdapter, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
+         try
+         {
+            cl.loadClass(ProviderImpl.class.getName());
+         }
+         catch (Exception e)
+         {
+            ClassLoader clientCl = ProviderImpl.class.getClassLoader();
+            cl = new DelegateClassLoader(clientCl, cl);
+         }
 
          T proxy;
          try
@@ -426,6 +436,8 @@ public class ServiceDelegateImpl extends ServiceDelegate
          throw new WebServiceException("Cannot create proxy", ex);
       }
    }
+   
+   
 
    private void configureStub(StubExt stub)
    {
