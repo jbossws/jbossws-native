@@ -21,6 +21,7 @@
  */
 package org.jboss.test.ws.jaxws.jbws1172;
 
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -60,19 +61,19 @@ public class JBWS1172TestCase extends JBossWSTest
    public void testSchemaValidationPositive() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
+      InputStream[] xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
-      new SchemaValidationHelper(xsdURL).validateDocument(inxml);
+      new SchemaValidationHelper(xsdStreams).validateDocument(inxml);
    }
 
    public void testSchemaValidationNegative() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
+      InputStream[] xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>2000</Code></performTest>";
       try
       {
-         new SchemaValidationHelper(xsdURL).validateDocument(inxml);
+         new SchemaValidationHelper(xsdStreams).validateDocument(inxml);
       }
       catch (SAXException ex)
       {
@@ -84,18 +85,19 @@ public class JBWS1172TestCase extends JBossWSTest
    public void testEndpointWsdlValidation() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/noval?wsdl");
-      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
+      InputStream[] xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
       String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
-      new SchemaValidationHelper(xsdURL).validateDocument(inxml);
+      new SchemaValidationHelper(xsdStreams).validateDocument(inxml);
    }
    
    public void testValidatingClientWithExplicitSchema() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
+      //URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       
       Service service = Service.create(wsdlURL, SERVICE_NAME);
-      SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
+      //SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
+      SchemaValidationFeature feature = new SchemaValidationFeature();
       MyTest port = service.getPort(MyTest.class, feature);
       try
       {
@@ -113,10 +115,11 @@ public class JBWS1172TestCase extends JBossWSTest
    public void testValidatingClientWithErrorHandler() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
+      //URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
       
       Service service = Service.create(wsdlURL, SERVICE_NAME);
-      SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
+      //SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
+      SchemaValidationFeature feature = new SchemaValidationFeature();
       
       TestErrorHandler errorHandler = new TestErrorHandler();
       feature.setErrorHandler(errorHandler);
