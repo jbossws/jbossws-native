@@ -64,4 +64,4 @@ set WSPROVIDE_CLASSPATH=%WSPROVIDE_CLASSPATH%;%JBOSS_HOME%/client/wscommons-poli
 set WSPROVIDE_CLASSPATH=%WSPROVIDE_CLASSPATH%;%JBOSS_HOME%/client/wsdl4j.jar
 
 rem Execute the command
-"%JAVA%" %JAVA_OPTS% -Dlog4j.configuration=log4j.xml -Djava.endorsed.dirs="%JBOSS_ENDORSED_DIRS%" -classpath "%WSPROVIDE_CLASSPATH%" org.jboss.wsf.spi.tools.cmd.WSProvide %*
+"%JAVA%" %JAVA_OPTS% -Dlog4j.configuration=log4j.xml -Djava.endorsed.dirs="%JBOSS_ENDORSED_DIRS%" -classpath "%WSPROVIDE_CLASSPATH%" org.jboss.ws.tools.cmd.WSProvide %*
