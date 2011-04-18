@@ -22,12 +22,17 @@
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
 
-<module xmlns="urn:jboss:module:1.0" name="org.jboss.ws.tools.wsprovide">
+<module xmlns="urn:jboss:module:1.0" name="org.jboss.ws.tools.common">
 
-    <main-class name="org.jboss.wsf.spi.tools.cmd.WSProvide"/>
+    <resources>
+        <!-- Insert resources here -->
+    </resources>
 
     <dependencies>
-        <module name="org.jboss.ws.tools.common"/>
+        <module name="gnu.getopt"/>
+        <module name="org.apache.log4j"/>
+        <module name="org.jboss.modules"/>
+        <module name="org.jboss.ws.api"/>
     </dependencies>
 
 </module>
