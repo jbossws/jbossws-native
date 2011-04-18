@@ -29,8 +29,6 @@
     </resources>
 
     <dependencies>
-        <module name="com.sun.xml.bind" services="import"/> <!-- TODO: JAXB API relies on TCCL - investigate how to workaround this factories import -->
-        <module name="org.apache.xerces" services="import"/> <!-- TODO: DOM API relies on TCCL - investigate how to workaround this factories import -->
         <module name="javax.api"/>
         <module name="javax.jws.api"/>
         <module name="javax.xml.ws.api"/>
@@ -51,14 +49,6 @@
         <module name="org.jboss.common-core" />
         <module name="org.jboss.ws.api" />
         <module name="org.jboss.ws.common" />
-        <module name="org.jboss.ws.native.jbossws-native-factories" services="import"/>
-        <module name="org.jboss.ws.native.jbossws-native-services" services="import"/>
-        <module name="org.jboss.ws.native.jbossws-native-core" services="import">
-          <imports>
-            <include path="META-INF"/>
-          </imports>
-        </module>
-        <module name="org.jboss.ws.jaxws-client" services="import"/>
         <module name="org.jboss.ws.spi" />
     </dependencies>
 </module>
