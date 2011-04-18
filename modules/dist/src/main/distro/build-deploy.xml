@@ -100,12 +100,12 @@
   <target name="deploy-structure-jboss700" depends="prepare-deploy">
     <delete dir="${deploy.structure}"/>
   	
-    <path id="jbossws-common.path">
+    <path id="jbossws-common-tools.path">
       <fileset dir="${deploy.artifacts.dir}">
-        <include name="**/jbossws-common.jar"/>
+        <include name="**/jbossws-common-tools.jar"/>
       </fileset>
     </path>
-    <taskdef name="installModules" classname="org.jboss.ws.tools.ant.InstallModulesTask" classpathref="jbossws-common.path"/>
+    <taskdef name="installModules" classname="org.jboss.ws.tools.ant.InstallModulesTask" classpathref="jbossws-common-tools.path"/>
   	
     <antcall target="deploy-jbossws-native-modules" inheritall="false">
       <param name="installserver" value="${deploy.structure}"/>

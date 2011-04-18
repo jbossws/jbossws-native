@@ -38,6 +38,7 @@
     <include name="**/policy.jar"/>
     <include name="**/jbossws-api.jar"/>
     <include name="**/jbossws-common.jar"/>
+    <include name="**/jbossws-common-tools.jar"/>
     <include name="**/jbossws-native-client.jar"/>
     <include name="**/jbossws-native-core.jar"/>
     <include name="**/jbossws-native-services.jar"/>

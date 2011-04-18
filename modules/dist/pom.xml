@@ -53,6 +53,12 @@
       <classifier>jboss700</classifier>     
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-common-tools</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!--test-suite-->
     <dependency>
       <groupId>org.jboss.ws</groupId>
