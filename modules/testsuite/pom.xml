@@ -819,7 +819,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/eardeployment/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/exception/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/jaxbintros/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/swaref/**</exclude>
