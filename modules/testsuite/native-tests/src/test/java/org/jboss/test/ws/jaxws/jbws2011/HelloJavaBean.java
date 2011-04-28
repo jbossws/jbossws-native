@@ -29,7 +29,7 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.ws.Constants;
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 import org.jboss.wsf.spi.annotation.WebContext;
 
 

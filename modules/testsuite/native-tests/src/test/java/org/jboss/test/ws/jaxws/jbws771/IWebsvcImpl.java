@@ -25,7 +25,7 @@ import javax.ejb.Stateless;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 @Stateless
 @WebService(endpointInterface = "org.jboss.test.ws.jaxws.jbws771.IWebsvc", serviceName = "JBWS771Service")

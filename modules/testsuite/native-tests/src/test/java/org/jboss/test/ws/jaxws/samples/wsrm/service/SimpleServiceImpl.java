@@ -26,7 +26,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.ws.soap.Addressing;
 
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 @WebService
 (

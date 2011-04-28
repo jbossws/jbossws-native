@@ -35,13 +35,13 @@ import javax.xml.ws.addressing.AttributedURI;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.mgmt.Filter;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerMBean;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionTicket;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 /**
  * @author Heiko.Braun@jboss.org

@@ -40,7 +40,7 @@ import org.jboss.test.ws.jaxws.samples.dar.generated.reply.DarReplyEndpoint;
 import org.jboss.test.ws.jaxws.samples.dar.generated.reply.DarResponse;
 import org.jboss.test.ws.jaxws.samples.dar.generated.reply.Route;
 import org.jboss.test.ws.jaxws.samples.dar.generated.reply.Stop;
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 /**
  * The client endpoint receiving DAR responses

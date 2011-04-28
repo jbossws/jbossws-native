@@ -30,7 +30,7 @@ import javax.activation.DataHandler;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 /**
  * Test Endpoint to test MTOM detection.

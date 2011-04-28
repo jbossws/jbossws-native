@@ -27,7 +27,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 @WebService(name = "Hello", targetNamespace = "http://org.jboss.ws/samples/wssecuritypolicy", wsdlLocation="WEB-INF/wsdl/HelloService.wsdl")
 @SOAPBinding(style = SOAPBinding.Style.RPC)

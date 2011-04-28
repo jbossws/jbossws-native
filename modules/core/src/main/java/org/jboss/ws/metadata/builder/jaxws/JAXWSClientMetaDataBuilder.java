@@ -37,7 +37,6 @@ import javax.xml.ws.soap.MTOMFeature;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
@@ -55,6 +54,7 @@ import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.wsf.common.ResourceLoaderAdapter;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;

@@ -24,9 +24,9 @@ package org.jboss.ws.metadata.builder.jaxws;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceProvider;
 
-import org.jboss.ws.annotation.EndpointConfig;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 import org.jboss.wsf.spi.annotation.WebContext;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;

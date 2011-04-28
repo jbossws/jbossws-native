@@ -21,7 +21,7 @@
  */
 package org.jboss.test.ws.interop.wsse;
 
-import org.jboss.ws.annotation.EndpointConfig;
+import org.jboss.wsf.spi.annotation.EndpointConfig;
 
 import javax.jws.WebMethod;
 import javax.jws.WebResult;
