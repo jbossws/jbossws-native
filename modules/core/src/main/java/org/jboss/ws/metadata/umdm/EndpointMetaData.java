@@ -834,7 +834,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (config == null)
       {
          // No base configuration. 
-         initEndpointConfigMetaData(ecmd, null);
+         initEndpointConfigMetaData(ecmd);
          config = ecmd.getConfig();
       }
 
@@ -884,7 +884,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       ecmd.setConfigName(configName);
       ecmd.setConfigFile(configFile);
 
-      initEndpointConfigMetaData(ecmd, configMetaData);
+      initEndpointConfigMetaData(ecmd);
 
       return ecmd;
    }
@@ -892,19 +892,15 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void initEndpointConfig()
    {
       EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
-      // At the time this method is called initialisation may have already happened
-      // always take the current ECMD as a base in case there is anything to backup. 
-      initEndpointConfigMetaData(ecmd, ecmd);
+      initEndpointConfigMetaData(ecmd);
    }
 
    /**
-    * Initialise the toInitialise EndpointConfigMeta but first backup the RM Meta Data from
-    * the base EndpointConfigMetaData.
+    * Initialise the EndpointConfigMeta.
     * 
     * @param toInitialise - The EndpointConfigMetaData to initialise.
-    * @param base - The base EndpointConfigMetaData to take the RMMD from.
     */
-   private void initEndpointConfigMetaData(EndpointConfigMetaData toInitialise, EndpointConfigMetaData base)
+   private void initEndpointConfigMetaData(EndpointConfigMetaData toInitialise)
    {
       String configName = toInitialise.getConfigName();
       String configFile = toInitialise.getConfigFile();
