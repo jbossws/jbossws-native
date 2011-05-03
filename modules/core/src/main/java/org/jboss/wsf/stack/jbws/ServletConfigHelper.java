@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.metadata.config.CommonConfig;
 
 /**
  * Native servlet configuration helper
@@ -47,8 +48,8 @@ public final class ServletConfigHelper
    public static void initEndpointConfig(ServletConfig servletConfig, Endpoint endpoint)
    {
       final ServletContext servletContext = servletConfig.getServletContext();
-      final String configName = servletContext.getInitParameter("jbossws-config-name");
-      final String configFile = servletContext.getInitParameter("jbossws-config-file");
+      final String configName = servletContext.getInitParameter(CommonConfig.JBOSSWS_CONFIG_NAME);
+      final String configFile = servletContext.getInitParameter(CommonConfig.JBOSSWS_CONFIG_FILE);
 
       if (configName != null || configFile != null)
       {
