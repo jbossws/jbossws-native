@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<jaxws-config xmlns="urn:jboss:jaxws-config:2.0"
+<jaxws-config xmlns="urn:jboss:jbossws-jaxws-config:4.0"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns:javaee="http://java.sun.com/xml/ns/javaee"
-              xsi:schemaLocation="urn:jboss:jaxws-config:2.0 jaxws-config_2_0.xsd">
+              xsi:schemaLocation="urn:jboss:jbossws-jaxws-config:4.0 jaxws-config_2_0.xsd">
 
    <endpoint-config>
       <config-name>Standard Endpoint</config-name>
@@ -12,7 +12,7 @@
    <endpoint-config>
       <config-name>Standard MTOM Endpoint</config-name>
 
-      <feature>http://org.jboss.ws/mtom</feature>
+      <feature><feature-name>http://org.jboss.ws/mtom</feature-name></feature>
 
    </endpoint-config>
 
@@ -30,30 +30,13 @@
          </javaee:handler-chain>
       </pre-handler-chains>
 
-      <feature>http://org.jboss.ws/mtom</feature>
+      <feature><feature-name>http://org.jboss.ws/mtom</feature-name></feature>
 
       <property>
          <property-name>http://org.jboss.ws/mtom#threshold</property-name>
          <property-value>5000</property-value>
       </property>
 
-   </endpoint-config>
-
-   <endpoint-config>
-
-      <config-name>Standard WSRM Endpoint</config-name>
-      <reliable-messaging>
-         <delivery-assurance inOrder="true" quality="AtLeastOnce"/>
-         <backports-server host="realhostname.realdomain" port="9999"/>
-         <message-retransmission attempts="50" interval="10" timeout="3"/>
-         <port name="{http://custom/namespace/}Port1">
-            <delivery-assurance inOrder="false" quality="AtMostOnce"/>
-         </port>
-         <port name="{http://custom/namespace/}Port2">
-            <delivery-assurance inOrder="true" quality="ExactlyOnce"/>
-         </port>
-      </reliable-messaging>	
-	
    </endpoint-config>
 
 </jaxws-config>

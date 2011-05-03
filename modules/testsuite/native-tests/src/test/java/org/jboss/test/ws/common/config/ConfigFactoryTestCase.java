@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -22,21 +22,14 @@
 package org.jboss.test.ws.common.config;
 
 import java.io.File;
-import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.jboss.ws.extensions.wsrm.config.RMBackPortsServerConfig;
-import org.jboss.ws.extensions.wsrm.config.RMConfig;
-import org.jboss.ws.extensions.wsrm.config.RMDeliveryAssuranceConfig;
-import org.jboss.ws.extensions.wsrm.config.RMMessageRetransmissionConfig;
-import org.jboss.ws.extensions.wsrm.config.RMPortConfig;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.EndpointConfigJAXRPC;
-import org.jboss.ws.metadata.config.jaxws.ConfigRootJAXWS;
-import org.jboss.ws.metadata.config.jaxws.EndpointConfigJAXWS;
+import org.jboss.wsf.spi.metadata.config.ConfigRoot;
+import org.jboss.wsf.spi.metadata.config.EndpointConfig;
+import org.jboss.wsf.spi.metadata.config.Feature;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.test.JBossWSTest;
@@ -83,14 +76,14 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertTrue(confFile.exists());
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
 
-      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURI().toURL());
+      ConfigRoot config = (ConfigRoot)factory.parse(confFile.toURI().toURL());
       assertNotNull("Null config", config);
 
-      EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard MTOM Endpoint");
+      EndpointConfig epConfig = (EndpointConfig)config.getConfigByName("Standard MTOM Endpoint");
       assertTrue("Feature not set", epConfig.hasFeature("http://org.jboss.ws/mtom"));
 
       // disable feature
-      epConfig.setFeature("http://org.jboss.ws/mtom", false);
+      epConfig.setFeature(new Feature("http://org.jboss.ws/mtom"), false);
       assertFalse("Feature still set", epConfig.hasFeature("http://org.jboss.ws/mtom"));
    }
 
@@ -116,43 +109,12 @@ public class ConfigFactoryTestCase extends JBossWSTest
       assertTrue(confFile.exists());
 
       JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURI().toURL());
+      ConfigRoot config = (ConfigRoot)factory.parse(confFile.toURI().toURL());
       assertNotNull("Null config", config);
 
-      EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard WSSecurity Endpoint");
+      EndpointConfig epConfig = (EndpointConfig)config.getConfigByName("Standard WSSecurity Endpoint");
       String value = epConfig.getProperty("http://org.jboss.ws/mtom#threshold");
       assertNotNull("Property does not exist", value);
       assertEquals("Wrong property valule", value, "5000");
-   }
-
-   public void testWSRMConfiguration() throws Exception
-   {
-      File confFile = getResourceFile("common/config/jaxws-endpoint-config.xml");
-      assertTrue(confFile.exists());
-
-      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance();
-      ConfigRootJAXWS config = (ConfigRootJAXWS)factory.parse(confFile.toURI().toURL());
-      EndpointConfigJAXWS epConfig = (EndpointConfigJAXWS)config.getConfigByName("Standard WSRM Endpoint");
-      RMConfig wsrmConfig = epConfig.getRMMetaData();
-      assertNotNull(wsrmConfig);
-      RMDeliveryAssuranceConfig deliveryAssurance = wsrmConfig.getDeliveryAssurance();
-      assertEquals(deliveryAssurance.getInOrder(), "true");
-      assertEquals(deliveryAssurance.getQuality(), "AtLeastOnce");
-      List<RMPortConfig> ports = wsrmConfig.getPorts();
-      RMPortConfig port1 = ports.get(0);
-      assertEquals(port1.getPortName(), new QName("http://custom/namespace/", "Port1"));
-      assertEquals(port1.getDeliveryAssurance().getInOrder(), "false");
-      assertEquals(port1.getDeliveryAssurance().getQuality(), "AtMostOnce");
-      RMPortConfig port2 = ports.get(1);
-      assertEquals(port2.getPortName(), new QName("http://custom/namespace/", "Port2"));
-      assertEquals(port2.getDeliveryAssurance().getInOrder(), "true");
-      assertEquals(port2.getDeliveryAssurance().getQuality(), "ExactlyOnce");
-      RMBackPortsServerConfig backportsServer = wsrmConfig.getBackPortsServer();
-      assertEquals(backportsServer.getHost(), "realhostname.realdomain");
-      assertEquals(backportsServer.getPort(), "9999");
-      RMMessageRetransmissionConfig messageRetransmission = wsrmConfig.getMessageRetransmission();
-      assertEquals(messageRetransmission.getCountOfAttempts(), 50);
-      assertEquals(messageRetransmission.getRetransmissionInterval(), 10);
-      assertEquals(messageRetransmission.getMessageTimeout(), 3);
    }
 }
