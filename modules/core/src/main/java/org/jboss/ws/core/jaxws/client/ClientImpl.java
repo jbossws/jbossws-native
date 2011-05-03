@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -21,11 +21,9 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,9 +35,6 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.addressing.AddressingBuilder;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.MessageContext;
@@ -62,20 +57,6 @@ import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.addressing.AddressingClientUtil;
-import org.jboss.ws.extensions.wsrm.RMAddressingConstants;
-import org.jboss.ws.extensions.wsrm.RMClientSequence;
-import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.api.RMException;
-import org.jboss.ws.extensions.wsrm.common.RMHelper;
-import org.jboss.ws.extensions.wsrm.protocol.RMConstants;
-import org.jboss.ws.extensions.wsrm.protocol.RMProvider;
-import org.jboss.ws.extensions.wsrm.protocol.spi.RMAckRequested;
-import org.jboss.ws.extensions.wsrm.protocol.spi.RMCreateSequenceResponse;
-import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequence;
-import org.jboss.ws.extensions.wsrm.protocol.spi.RMSequenceAcknowledgement;
-import org.jboss.ws.extensions.wsrm.protocol.spi.RMSerializable;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
@@ -89,7 +70,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jul-2006
  */
-public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.wsrm.api.RMProvider, BindingProvider, FeatureAwareEndpointMetaData
+public class ClientImpl extends CommonClient implements BindingProvider, FeatureAwareEndpointMetaData
 {
    private static Logger log = Logger.getLogger(ClientImpl.class);
 
@@ -102,19 +83,6 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
 
    private Map<HandlerType, HandlerChainExecutor> executorMap = new HashMap<HandlerType, HandlerChainExecutor>();
    private static HandlerType[] HANDLER_TYPES = new HandlerType[] { HandlerType.PRE, HandlerType.ENDPOINT, HandlerType.POST };
-
-   // WS-RM sequence associated with the proxy
-   private RMClientSequence wsrmSequence;
-
-   public final void setWSRMSequence(RMClientSequence wsrmSequence)
-   {
-      this.wsrmSequence = wsrmSequence;
-   }
-
-   public final RMClientSequence getWSRMSequence()
-   {
-      return this.wsrmSequence;
-   }
 
    public ClientImpl(EndpointMetaData epMetaData, HandlerResolver handlerResolver)
    {
@@ -268,33 +236,6 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          // request context is copied to the message context with a scope of HANDLER.
          Map<String, Object> reqContext = getBindingProvider().getRequestContext();
 
-         if (this.wsrmSequence != null)
-         {
-            if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
-            {
-               if (this.wsrmSequence.getBackPort() != null)
-               {
-                  // rewrite ReplyTo to use client addressable back port
-                  Map<String, Object> requestContext = getBindingProvider().getRequestContext();
-                  AddressingProperties addressingProps = (AddressingProperties)requestContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
-                  addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(this.wsrmSequence.getBackPort()));
-               }
-               Map<String, Object> rmRequestContext = new HashMap<String, Object>();
-               List<QName> outMsgs = new LinkedList<QName>();
-               wsrmSequence.newMessageNumber();
-               outMsgs.add(RMProvider.get().getConstants().getSequenceQName());
-               outMsgs.add(RMProvider.get().getConstants().getAckRequestedQName());
-               if (wsrmSequence.isAckRequested())
-               {
-                  // piggy backing
-                  outMsgs.add(RMProvider.get().getConstants().getSequenceAcknowledgementQName());
-               }
-               rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
-               rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, wsrmSequence);
-               reqContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
-            }
-         }
-
          msgContext.putAll(reqContext);
 
          try
@@ -318,34 +259,6 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
          finally
          {
             msgContext = MessageContextAssociation.peekMessageContext();
-
-            if (this.wsrmSequence != null)
-            {
-               if (RMConstant.PROTOCOL_OPERATION_QNAMES.contains(opName) == false)
-               {
-                  Map<String, Object> wsrmResCtx = (Map<String, Object>)msgContext.get(RMConstant.RESPONSE_CONTEXT);
-                  if (wsrmResCtx != null)
-                  {
-                     RMConstants wsrmConstants = RMProvider.get().getConstants();
-                     Map<QName, RMSerializable> mapping = (Map<QName, RMSerializable>)wsrmResCtx.get(RMConstant.PROTOCOL_MESSAGES_MAPPING);
-                     QName seq = wsrmConstants.getSequenceQName();
-                     if (mapping.keySet().contains(seq))
-                     {
-                        RMHelper.handleSequenceHeader((RMSequence)mapping.get(seq), this.wsrmSequence);
-                     }
-                     QName seqAck = wsrmConstants.getSequenceAcknowledgementQName();
-                     if (mapping.keySet().contains(seqAck))
-                     {
-                        RMHelper.handleSequenceAcknowledgementHeader((RMSequenceAcknowledgement)mapping.get(seqAck), this.wsrmSequence);
-                     }
-                     QName ackReq = wsrmConstants.getAckRequestedQName();
-                     if (mapping.keySet().contains(ackReq))
-                     {
-                        RMHelper.handleAckRequestedHeader((RMAckRequested)mapping.get(ackReq), this.wsrmSequence);
-                     }
-                  }
-               }
-            }
 
             // Copy the inbound msg properties to the binding's response context
             resContext.putAll(msgContext);
@@ -537,73 +450,6 @@ public class ClientImpl extends CommonClient implements org.jboss.ws.extensions.
    {
       Object bool = getRequestContext().get(BindingProvider.SESSION_MAINTAIN_PROPERTY);
       return Boolean.TRUE.equals(bool);
-   }
-
-   ///////////////////
-   // WS-RM support //
-   ///////////////////
-   @SuppressWarnings("unchecked")
-   public void createSequence() throws RMException
-   {
-      if (this.wsrmSequence != null)
-         throw new IllegalStateException("Sequence already registered with proxy instance");
-
-      try
-      {
-         // set up addressing data
-         RMClientSequence candidateSequence = new RMClientSequence(this.epConfigMetaData.getConfig().getRMMetaData());
-         String address = getEndpointMetaData().getEndpointAddress();
-         String action = RMAddressingConstants.CREATE_SEQUENCE_WSA_ACTION;
-         AddressingProperties addressingProps = null;
-         URI backPort = candidateSequence.getBackPort();
-         if (backPort != null)
-         {
-            addressingProps = AddressingClientUtil.createDefaultProps(action, address);
-            addressingProps.setReplyTo(AddressingBuilder.getAddressingBuilder().newEndpointReference(backPort));
-         }
-         else
-         {
-            addressingProps = AddressingClientUtil.createAnonymousProps(action, address);
-         }
-         Map requestContext = getBindingProvider().getRequestContext();
-         requestContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addressingProps);
-         // set up wsrm request context
-         QName createSequenceQN = RMProvider.get().getConstants().getCreateSequenceQName();
-         Map rmRequestContext = new HashMap();
-         List outMsgs = new LinkedList();
-         outMsgs.add(createSequenceQN);
-         rmRequestContext.put(RMConstant.PROTOCOL_MESSAGES, outMsgs);
-         rmRequestContext.put(RMConstant.SEQUENCE_REFERENCE, candidateSequence);
-         requestContext.put(RMConstant.REQUEST_CONTEXT, rmRequestContext);
-         // invoke stub method
-         invoke(createSequenceQN, new Object[] {}, getBindingProvider().getResponseContext());
-         // read WSRM sequence id from response context
-         Map rmResponseContext = (Map)getBindingProvider().getResponseContext().get(RMConstant.RESPONSE_CONTEXT);
-         RMCreateSequenceResponse createSequenceResponse = ((RMCreateSequenceResponse)((Map)rmResponseContext.get(RMConstant.PROTOCOL_MESSAGES_MAPPING)).get(RMProvider
-               .get().getConstants().getCreateSequenceResponseQName()));
-         String outboundId = createSequenceResponse.getIdentifier();
-         candidateSequence.setClient(this);
-         candidateSequence.setOutboundId(outboundId);
-         candidateSequence.setBehavior(createSequenceResponse.getIncompleteSequenceBehavior());
-         candidateSequence.setDuration(RMHelper.durationToLong(createSequenceResponse.getExpires()));
-         this.wsrmSequence = candidateSequence;
-      }
-      catch (Exception e)
-      {
-         throw new RMException("Unable to create WSRM sequence", e);
-      }
-   }
-
-   public void closeSequence()
-   {
-      try
-      {
-         this.wsrmSequence.close();
-      }
-      finally
-      {
-         this.wsrmSequence = null;
-      }
    }
 
    //////////////////////////////////////////

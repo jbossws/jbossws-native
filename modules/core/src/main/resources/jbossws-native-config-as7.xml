@@ -55,10 +55,6 @@
     <property name="requires" class="java.lang.String">UnifiedMetaDataModel</property>
   </deploymentAspect>
 
-  <deploymentAspect class="org.jboss.ws.extensions.wsrm.server.RMDeploymentAspect">
-    <property name="requires" class="java.lang.String">StackEndpointHandler, UnifiedMetaDataModel</property>
-  </deploymentAspect>
-
   <deploymentAspect class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
     <property name="requires" class="java.lang.String">ContainerMetaData, URLPattern, EndpointAddress, VFSRoot, JAXBIntros</property>
     <property name="provides" class="java.lang.String">UnifiedMetaDataModel</property>

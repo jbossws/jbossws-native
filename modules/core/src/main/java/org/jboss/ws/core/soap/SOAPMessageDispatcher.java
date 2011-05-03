@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -99,8 +99,7 @@ public class SOAPMessageDispatcher
 
          if (soapBodyElement == null)
          {
-            boolean wsrmDisabled = epMetaData.getConfig().getRMMetaData() == null; 
-            if ((epMetaData.getStyle() == Style.RPC) && (wsrmDisabled)) // RM hack
+            if (epMetaData.getStyle() == Style.RPC)
                throw new SOAPException("Empty SOAP body with no child element not supported for RPC");
 
             // [JBWS-1125] Support empty soap body elements

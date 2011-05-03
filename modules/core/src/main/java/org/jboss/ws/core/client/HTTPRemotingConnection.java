@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -35,9 +35,6 @@ import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.client.transport.NettyClient;
-import org.jboss.ws.extensions.wsrm.transport.RMChannel;
-import org.jboss.ws.extensions.wsrm.transport.RMMetadata;
-import org.jboss.ws.extensions.wsrm.transport.RMTransportHelper;
 
 /**
  * SOAPConnection implementation.
@@ -60,8 +57,6 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    
    private boolean closed;
    private Integer chunkSize;
-
-   private static final RMChannel RM_CHANNEL = RMChannel.getInstance();
 
    public HTTPRemotingConnection()
    {
@@ -126,39 +121,20 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          callProps.put(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
       }
 
-      if (RMTransportHelper.isRMMessage(callProps))
+      NettyClient client = new NettyClient(getMarshaller(), getUnmarshaller());
+      if (chunkSize != null)
       {
-         try
-         {
-            Map<String, Object> additionalHeaders = new HashMap<String, Object>();
-            populateHeaders(reqMessage, additionalHeaders);
-            RMMetadata rmMetadata = new RMMetadata(targetAddress, getMarshaller(), getUnmarshaller(), callProps, additionalHeaders);
-            return RM_CHANNEL.send(reqMessage, rmMetadata);
-         }
-         catch (Throwable t)
-         {
-            IOException io = new IOException();
-            io.initCause(t);
-            throw io;
-         }
+         client.setChunkSize(chunkSize);
       }
-      else
-      {
-         NettyClient client = new NettyClient(getMarshaller(), getUnmarshaller());
-         if (chunkSize != null)
-         {
-            client.setChunkSize(chunkSize);
-         }
-         
-         Map<String, Object> additionalHeaders = new HashMap<String, Object>();
-         populateHeaders(reqMessage, additionalHeaders);
-         //Trace the outgoing message
-         MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
-         MessageAbstraction resMessage = (MessageAbstraction)client.invoke(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
-         //Trace the incoming response message
-         MessageTrace.traceMessage("Incoming Response Message", resMessage);
-         return resMessage;
-      }
+      
+      Map<String, Object> additionalHeaders = new HashMap<String, Object>();
+      populateHeaders(reqMessage, additionalHeaders);
+      //Trace the outgoing message
+      MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
+      MessageAbstraction resMessage = (MessageAbstraction)client.invoke(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
+      //Trace the incoming response message
+      MessageTrace.traceMessage("Incoming Response Message", resMessage);
+      return resMessage;
    }
    
    

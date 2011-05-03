@@ -73,10 +73,6 @@
     <property name="requires">UnifiedMetaDataModel</property>
   </bean>
 
-  <bean name="WSNativeRMDeploymentAspect" class="org.jboss.ws.extensions.wsrm.server.RMDeploymentAspect">
-    <property name="requires">StackEndpointHandler, UnifiedMetaDataModel</property>
-  </bean>
-
   <bean name="WSNativeUnifiedMetaDataDeploymentAspect" class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
     <property name="requires">ContainerMetaData, URLPattern, EndpointAddress, VFSRoot, JAXBIntros</property>
     <property name="provides">UnifiedMetaDataModel</property>

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -23,8 +23,6 @@ package org.jboss.ws.core;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,8 +70,6 @@ import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.utils.MimeUtils;
-import org.jboss.ws.extensions.wsrm.RMConstant;
-import org.jboss.ws.extensions.wsrm.common.RMHelper;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -171,35 +167,21 @@ public abstract class CommonSOAPBinding implements CommonBinding
          SOAPElement soapBodyElement = soapBody;
          if (style == Style.RPC)
          {
-            boolean serialize = true;
+            QName opQName = opMetaData.getQName();
+            Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
 
-            if (opMetaData.getEndpointMetaData().getConfig().getRMMetaData() != null)
+            if (debugEnabled)
+               log.debug("Create RPC body element: " + opName);
+
+            soapBodyElement = new SOAPBodyElementRpc(opName);
+            soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
+
+            // Add soap encodingStyle
+            if (opMetaData.getUse() == Use.ENCODED)
             {
-               // RM hack to JAX-RPC serialization
-               if (RMHelper.isRMOperation(opMetaData.getQName()))
-               {
-                  serialize = false;
-               }
-            }
-
-            if (serialize)
-            {
-               QName opQName = opMetaData.getQName();
-               Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
-
-               if (debugEnabled)
-                  log.debug("Create RPC body element: " + opName);
-
-               soapBodyElement = new SOAPBodyElementRpc(opName);
-               soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
-
-               // Add soap encodingStyle
-               if (opMetaData.getUse() == Use.ENCODED)
-               {
-                  String envURI = soapEnvelope.getNamespaceURI();
-                  String envPrefix = soapEnvelope.getPrefix();
-                  soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
-               }
+               String envURI = soapEnvelope.getNamespaceURI();
+               String envPrefix = soapEnvelope.getPrefix();
+               soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
             }
          }
 
@@ -322,14 +304,11 @@ public abstract class CommonSOAPBinding implements CommonBinding
                   }
                }
 
-               if (RMHelper.isRMOperation(opMetaData.getQName()) == false) // RM hack
-               {
-                  if (payloadParent == null)
-                     throw new SOAPException("Cannot find RPC element in");
+               if (payloadParent == null)
+                  throw new SOAPException("Cannot find RPC element in");
 
-                  QName elName = payloadParent.getElementQName();
-                  elName = namespaceRegistry.registerQName(elName);
-               }
+               QName elName = payloadParent.getElementQName();
+               elName = namespaceRegistry.registerQName(elName);
             }
 
             int numParameters = 0;
@@ -360,20 +339,17 @@ public abstract class CommonSOAPBinding implements CommonBinding
                }
             }
 
-            if (RMHelper.isRMOperation(opMetaData.getQName()) == false)
+            // Verify the numer of parameters matches the actual message payload
+            int numChildElements = 0;
+            Iterator itElements = payloadParent.getChildElements();
+            while (itElements.hasNext())
             {
-               // Verify the numer of parameters matches the actual message payload
-               int numChildElements = 0;
-               Iterator itElements = payloadParent.getChildElements();
-               while (itElements.hasNext())
-               {
-                  Node node = (Node)itElements.next();
-                  if (node instanceof SOAPElement)
-                     numChildElements++;
-               }
-               if (numChildElements != numParameters)
-                  throw new WSException("Invalid number of payload elements: " + numChildElements);
+               Node node = (Node)itElements.next();
+               if (node instanceof SOAPElement)
+                  numChildElements++;
             }
+            if (numChildElements != numParameters)
+               throw new WSException("Invalid number of payload elements: " + numChildElements);
          }
 
          // Generic message endpoint
@@ -423,8 +399,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
          // R2714 For one-way operations, an INSTANCE MUST NOT return a HTTP response that contains a SOAP envelope.
          // Specifically, the HTTP response entity-body must be empty.
-         boolean isWsrmMessage = msgContext.get(RMConstant.RESPONSE_CONTEXT) != null;
-         if (opMetaData.isOneWay() && (false == isWsrmMessage))
+         if (opMetaData.isOneWay())
          {
             resMessage.getSOAPPart().setContent(null);
             return resMessage;
@@ -443,19 +418,16 @@ public abstract class CommonSOAPBinding implements CommonBinding
          {
             QName opQName = opMetaData.getResponseName();
 
-            if (false == RMHelper.isRMOperation(opQName)) // RM hack
-            {
-               Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
-               soapBodyElement = new SOAPBodyElementRpc(opName);
-               soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
+            Name opName = new NameImpl(namespaceRegistry.registerQName(opQName));
+            soapBodyElement = new SOAPBodyElementRpc(opName);
+            soapBodyElement = (SOAPBodyElement)soapBody.addChildElement(soapBodyElement);
 
-               // Add soap encodingStyle
-               if (opMetaData.getUse() == Use.ENCODED)
-               {
-                  String envURI = soapEnvelope.getNamespaceURI();
-                  String envPrefix = soapEnvelope.getPrefix();
-                  soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
-               }
+            // Add soap encodingStyle
+            if (opMetaData.getUse() == Use.ENCODED)
+            {
+               String envURI = soapEnvelope.getNamespaceURI();
+               String envPrefix = soapEnvelope.getPrefix();
+               soapBodyElement.setAttributeNS(envURI, envPrefix + ":encodingStyle", Constants.URI_SOAP11_ENC);
             }
          }
 
