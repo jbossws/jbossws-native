@@ -62,9 +62,9 @@ import org.jboss.ws.core.client.ssl.SSLContextFactory;
 import org.jboss.ws.core.client.transport.WSResponseHandler.Result;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.feature.FastInfosetFeature;
-import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.wsf.spi.metadata.config.CommonConfig;
 
 /**
  * A http client using Netty

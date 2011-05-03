@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.metadata.config.CommonConfig;
+import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
+import org.jboss.wsf.spi.metadata.config.CommonConfig;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -110,8 +113,8 @@ public class EndpointConfigMetaData
       List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
       clearHandlers();
 
-      List<HandlerMetaData> preHandlers = config.getHandlers(epMetaData, HandlerType.PRE);
-      List<HandlerMetaData> postHandlers = config.getHandlers(epMetaData, HandlerType.POST);
+      List<HandlerMetaData> preHandlers = getHandlers(epMetaData, HandlerType.PRE);
+      List<HandlerMetaData> postHandlers = getHandlers(epMetaData, HandlerType.POST);
 
       addHandlers(preHandlers);
       addHandlers(sepHandlers);
@@ -123,6 +126,26 @@ public class EndpointConfigMetaData
          log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
          log.debug("Added " + postHandlers.size() + " POST handlers");
       }
+   }
+   
+   private List<HandlerMetaData> getHandlers(EndpointMetaData epMetaData, HandlerType type)
+   {
+      List<UnifiedHandlerChainMetaData> handlerChains = config.getHandlers(type);
+      boolean isJAXRPCConfig = (config instanceof CommonConfigJAXRPC);
+      List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
+      if (handlerChains != null)
+      {
+         for (UnifiedHandlerChainMetaData handlerChain : handlerChains)
+         {
+            for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
+            {
+               HandlerMetaData hmd = isJAXRPCConfig ? HandlerMetaDataJAXRPC.newInstance(uhmd, type) : HandlerMetaDataJAXWS.newInstance(uhmd, type);
+               hmd.setEndpointMetaData(epMetaData);
+               handlers.add(hmd);
+            }
+         }
+      }
+      return handlers;
    }
 
    public EndpointMetaData getEndpointMetaData()

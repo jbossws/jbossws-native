@@ -47,7 +47,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Class-Path>jbossws-api.jar jbossws-spi.jar jbossws-common.jar jbossws-common-tools.jar jbossws-native-core.jar jbossws-native-factories.jar jbossws-native-services.jar jaxrpc-api.jar jaxws-api.jar jsr181-api.jar saaj-api.jar activation.jar commons-logging.jar concurrent.jar javassist.jar jaxb-api.jar jaxb-impl.jar mail.jar jboss-logging-spi.jar jboss-logging-log4j.jar jcl-over-slf4j.jar slf4j-api.jar slf4j-jboss-logging.jar jbosssx-client.jar jboss-javaee.jar jboss-xml-binding.jar jbossxb.jar netty.jar wscommons-policy.jar stax-api.jar wsdl4j.jar</Class-Path>
+              <Class-Path>jbossws-api.jar jbossws-spi.jar jbossws-common.jar jbossws-common-tools.jar jbossws-native-core.jar jbossws-native-factories.jar jbossws-native-services.jar jaxrpc-api.jar jaxws-api.jar jsr181-api.jar saaj-api.jar activation.jar commons-logging.jar concurrent.jar javassist.jar jaxb-api.jar jaxb-impl.jar mail.jar jboss-logging-spi.jar jboss-logging-log4j.jar jcl-over-slf4j.jar slf4j-api.jar slf4j-jboss-logging.jar jbosssx-client.jar jboss-javaee.jar jboss-xml-binding.jar jbossxb.jar netty.jar wscommons-policy.jar stax-api.jar wsdl4j.jar wstx.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<jaxws-config xmlns="urn:jboss:jaxws-config:2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:javaee="http://java.sun.com/xml/ns/javaee"
-  xsi:schemaLocation="urn:jboss:jaxws-config:2.0 schema/jaxws-config_2_0.xsd">
+<jaxws-config xmlns="urn:jboss:jbossws-jaxws-config:4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+  xsi:schemaLocation="urn:jboss:jbossws-jaxws-config:4.0 schema/jaxws-config_2_0.xsd">
   
   <endpoint-config>
     <config-name>Standard Endpoint</config-name>
@@ -22,7 +22,7 @@
   -->
   <endpoint-config>
     <config-name>.NET friendly Endpoint</config-name>
-    <feature>http://org.jboss.ws/binding/wsdl/dotnet</feature>
+    <feature><feature-name>http://org.jboss.ws/binding/wsdl/dotnet</feature-name></feature>
   </endpoint-config>
   
   <endpoint-config>

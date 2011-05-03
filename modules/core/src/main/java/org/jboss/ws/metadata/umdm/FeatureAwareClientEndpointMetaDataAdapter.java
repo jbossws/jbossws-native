@@ -39,10 +39,10 @@ import org.jboss.ws.core.jaxws.JAXBContextCache;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
-import org.jboss.ws.metadata.config.CommonConfig;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.wsf.spi.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
+import org.jboss.wsf.spi.metadata.config.CommonConfig;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 

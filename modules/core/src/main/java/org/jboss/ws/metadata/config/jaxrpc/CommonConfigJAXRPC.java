@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -21,16 +21,15 @@
  */
 package org.jboss.ws.metadata.config.jaxrpc;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.ws.metadata.config.CommonConfig;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
+import org.jboss.ws.metadata.config.EndpointProperty;
+import org.jboss.wsf.spi.metadata.config.AbstractCommonConfig;
+import org.jboss.wsf.spi.metadata.config.Feature;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** 
  * A JBossWS client configuration 
@@ -38,53 +37,112 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.org
  * @since 18-Dec-2005
  */
-public abstract class CommonConfigJAXRPC extends CommonConfig
+public abstract class CommonConfigJAXRPC extends AbstractCommonConfig
 {
-   private UnifiedHandlerChainMetaData preHandlerChain;
-   private UnifiedHandlerChainMetaData postHandlerChain;
-
+   private List<EndpointProperty> properties = new ArrayList<EndpointProperty>();
+   
    public UnifiedHandlerChainMetaData getPostHandlerChain()
    {
-      return postHandlerChain;
+      //adapt the jbossws-spi common config to this legacy jaxrpc one
+      List<UnifiedHandlerChainMetaData> chains = getPostHandlerChains();
+      if (chains != null && !chains.isEmpty())
+      {
+         return chains.get(0);
+      }
+      else
+      {
+         return null;
+      }
    }
 
    public void setPostHandlerChain(UnifiedHandlerChainMetaData postHandlerChain)
    {
-      this.postHandlerChain = postHandlerChain;
+      //adapt the jbossws-spi common config to this legacy jaxrpc one
+      List<UnifiedHandlerChainMetaData> chains = new ArrayList<UnifiedHandlerChainMetaData>(1);
+      chains.add(postHandlerChain);
+      setPostHandlerChains(chains);
    }
 
    public UnifiedHandlerChainMetaData getPreHandlerChain()
    {
-      return preHandlerChain;
+      //adapt the jbossws-spi common config to this legacy jaxrpc one
+      List<UnifiedHandlerChainMetaData> chains = getPreHandlerChains();
+      if (chains != null && !chains.isEmpty())
+      {
+         return chains.get(0);
+      }
+      else
+      {
+         return null;
+      }
    }
 
    public void setPreHandlerChain(UnifiedHandlerChainMetaData preHandlerChain)
    {
-      this.preHandlerChain = preHandlerChain;
+      //adapt the jbossws-spi common config to this legacy jaxrpc one
+      List<UnifiedHandlerChainMetaData> chains = new ArrayList<UnifiedHandlerChainMetaData>(1);
+      chains.add(preHandlerChain);
+      setPreHandlerChains(chains);
+   }
+   
+   public boolean hasFeature(URI type) {
+      return hasFeature(type.toString());
+   }
+
+   public boolean hasFeature(String uri)
+   {
+      return super.hasFeature(uri);
+      //return hasFeature(nameToURI(uri));
+   }
+   
+   public void setFeature(String type, boolean enabled) {
+      super.setFeature(new Feature(type), enabled);
    }
    
    @Override
-   public List<HandlerMetaData> getHandlers(EndpointMetaData epMetaData, HandlerType type)
+   public void setProperty(String name, String value)
    {
-      List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
-      
-      UnifiedHandlerChainMetaData handlerChain;
-      if (type == HandlerType.PRE)
-         handlerChain = getPreHandlerChain();
-      else if (type == HandlerType.POST)
-         handlerChain = getPostHandlerChain();
-      else
-         throw new IllegalArgumentException("Invalid handler type: " + type);
-      
-      if (handlerChain != null)
+      addProperty(name, value);
+   }
+
+   public void addProperty(String name, String value)
+   {
+      EndpointProperty p = new EndpointProperty();
+      p.name = nameToURI(name);
+      p.value = value;
+      properties.add(p);
+      //keep common config in synch
+      super.setProperty(name, value);
+   }
+
+   public String getProperty(String name)
+   {
+      String value = null;
+      URI uri = nameToURI(name);
+
+      for (EndpointProperty wsp : properties)
       {
-         for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
+         if (wsp.name.equals(uri))
          {
-            HandlerMetaDataJAXRPC hmd = HandlerMetaDataJAXRPC.newInstance(uhmd, type);
-            handlers.add(hmd);
+            value = wsp.value;
+            break;
          }
       }
-      
-      return handlers;
+      return value;
+   }
+
+   public List<EndpointProperty> getAllProperties() {
+      return properties;
+   }
+
+   private static URI nameToURI(String name)
+   {
+      URI uri = null;
+      try {
+         uri = new URI(name);
+      } catch (URISyntaxException e) {
+         throw new IllegalArgumentException(e.getMessage());
+      }
+      return uri;
    }
 }

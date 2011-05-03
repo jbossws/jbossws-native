@@ -99,7 +99,7 @@ public class OMFactoryJAXRPC implements ObjectModelFactory
       else if("property-value".equals(localName))
       {
          int lastEntry = commonConfig.getProperties().isEmpty() ? 0 : commonConfig.getProperties().size()-1;
-         EndpointProperty p = commonConfig.getProperties().get(lastEntry);
+         EndpointProperty p = commonConfig.getAllProperties().get(lastEntry);
          p.value = value;
       }
    }
