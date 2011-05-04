@@ -23,11 +23,14 @@ package org.jboss.test.ws.jaxws.binding;
 
 // $Id: $
 
+import static javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING;
+
 import javax.annotation.Resource;
 import javax.jws.WebService;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.BindingType;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
@@ -36,6 +39,7 @@ import org.jboss.logging.Logger;
 
 @WebService(name="SOAPEndpoint", targetNamespace="http://org.jboss.ws/jaxws/binding", 
       endpointInterface = "org.jboss.test.ws.jaxws.binding.SOAPEndpoint")
+@BindingType(SOAP12HTTP_BINDING)
 public class SOAPEndpointBean implements SOAPEndpoint
 {
    private static Logger log = Logger.getLogger(SOAPEndpointBean.class);

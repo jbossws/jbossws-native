@@ -26,14 +26,9 @@ package org.jboss.test.ws.jaxws.binding;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
-import javax.xml.ws.BindingType;
-
-import static javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING;
 
 @WebService(name = "SOAPEndpoint", targetNamespace = "http://org.jboss.ws/jaxws/binding")
 @SOAPBinding(style = Style.RPC)
-
-@BindingType(SOAP12HTTP_BINDING)
 public interface SOAPEndpoint
 {
    public String namespace();
