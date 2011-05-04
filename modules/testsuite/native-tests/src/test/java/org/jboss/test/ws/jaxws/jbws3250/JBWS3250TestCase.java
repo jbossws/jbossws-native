@@ -35,7 +35,6 @@ import junit.framework.Test;
 
 import org.jboss.wsf.common.IOUtils;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 public class JBWS3250TestCase extends JBossWSTest
@@ -54,7 +53,7 @@ public class JBWS3250TestCase extends JBossWSTest
       Endpoint port = Service.create(wsdlURL, serviceName).getPort(Endpoint.class);
       SOAPBinding binding =(SOAPBinding)((BindingProvider)port).getBinding();
       binding.setMTOMEnabled(true);
-      URL url = JBossWSTestHelper.getResourceURL("jaxws/jbws3250/wsf.png");
+      URL url = getResourceURL("jaxws/jbws3250/wsf.png");
       URLDataSource urlDatasource = new URLDataSource(url);
       javax.activation.DataHandler dh = new DataHandler(urlDatasource);
       MTOMRequest request = new MTOMRequest();
