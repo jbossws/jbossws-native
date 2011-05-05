@@ -42,7 +42,7 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**

@@ -41,7 +41,7 @@ import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAlternative
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAssertion;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
-import org.jboss.wsf.common.addressing.AddressingConstants;
+import org.jboss.ws.api.addressing.AddressingConstants;
 
 /**
  * @author Stefano Maestri <mailto:stefano.maestri@javalinux.it>

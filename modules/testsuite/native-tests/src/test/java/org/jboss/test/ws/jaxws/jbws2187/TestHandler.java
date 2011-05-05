@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.jbws2187;
 
 import javax.xml.ws.handler.MessageContext;
 
-import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
 
 /**
  * [JBWS-2187] Handler Chain Management Prevents Service Re-Use

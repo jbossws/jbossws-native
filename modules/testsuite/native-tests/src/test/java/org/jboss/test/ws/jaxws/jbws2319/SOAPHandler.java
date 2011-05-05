@@ -31,7 +31,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import org.jboss.logging.Logger;
 import org.jboss.test.helper.DOMWriter;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

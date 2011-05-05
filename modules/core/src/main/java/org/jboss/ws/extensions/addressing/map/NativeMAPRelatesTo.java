@@ -23,7 +23,7 @@ package org.jboss.ws.extensions.addressing.map;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.wsf.common.addressing.MAPRelatesTo;
+import org.jboss.ws.api.addressing.MAPRelatesTo;
 
 /**
  * 

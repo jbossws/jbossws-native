@@ -31,7 +31,7 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.common.handler.GenericHandler;
+import org.jboss.ws.api.handler.GenericHandler;
 
 /**
  * A client side handler that disables mustUnderstand processing

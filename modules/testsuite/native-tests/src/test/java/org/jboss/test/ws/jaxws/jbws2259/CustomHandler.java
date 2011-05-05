@@ -29,7 +29,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
 
 /**
  * Test handker to test MTOM detection.

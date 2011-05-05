@@ -95,7 +95,7 @@ public class SOAPAddressingPropertiesImpl extends AddressingPropertiesImpl imple
 	   try
 	   {
 	      SOAPFault fault = new SOAPFaultImpl();
-	      fault.setFaultCode(org.jboss.wsf.common.addressing.AddressingConstants.Core.Faults.MESSAGEADDRESSINGHEADERREQUIRED_QNAME);
+	      fault.setFaultCode(org.jboss.ws.api.addressing.AddressingConstants.Core.Faults.MESSAGEADDRESSINGHEADERREQUIRED_QNAME);
 	      fault.setFaultString("A required header representing a Message Addressing Property is not present");
 	      throw new SOAPFaultException(fault);
 	   }

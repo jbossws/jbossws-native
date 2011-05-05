@@ -74,7 +74,7 @@ import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.addressing.AddressingConstants;
+import org.jboss.ws.api.addressing.AddressingConstants;
 import org.jboss.wsf.common.utils.UUIDGenerator;
 import org.w3c.dom.Element;
 

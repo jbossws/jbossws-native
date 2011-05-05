@@ -29,7 +29,7 @@ import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.wsf.common.handler.GenericSOAPHandler;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;

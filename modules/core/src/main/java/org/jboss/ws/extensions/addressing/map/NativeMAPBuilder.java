@@ -32,11 +32,11 @@ import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.EndpointReference;
 import javax.xml.ws.handler.MessageContext;
 
-import org.jboss.wsf.common.addressing.MAP;
-import org.jboss.wsf.common.addressing.MAPBuilder;
-import org.jboss.wsf.common.addressing.MAPConstants;
-import org.jboss.wsf.common.addressing.MAPEndpoint;
-import org.jboss.wsf.common.addressing.MAPRelatesTo;
+import org.jboss.ws.api.addressing.MAP;
+import org.jboss.ws.api.addressing.MAPBuilder;
+import org.jboss.ws.api.addressing.MAPConstants;
+import org.jboss.ws.api.addressing.MAPEndpoint;
+import org.jboss.ws.api.addressing.MAPRelatesTo;
 
 /**
  * 
