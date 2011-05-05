@@ -41,7 +41,7 @@ import org.jboss.ws.extensions.eventing.mgmt.Filter;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerMBean;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionTicket;
-import org.jboss.wsf.spi.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.EndpointConfig;
 
 /**
  * @author Heiko.Braun@jboss.org

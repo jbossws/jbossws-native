@@ -31,7 +31,7 @@ import javax.xml.bind.JAXBException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
 

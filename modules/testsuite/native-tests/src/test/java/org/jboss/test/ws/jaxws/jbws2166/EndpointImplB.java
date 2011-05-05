@@ -28,7 +28,7 @@ import javax.jws.WebService;
 import javax.xml.ws.soap.Addressing;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.WebContext;
 
 @Stateless
 @WebService(name = "EndpointB", serviceName = "EndpointBService", targetNamespace = "http://org.jboss.ws/jbws2166")

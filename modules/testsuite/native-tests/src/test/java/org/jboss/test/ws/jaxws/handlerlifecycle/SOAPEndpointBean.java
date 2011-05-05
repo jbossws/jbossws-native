@@ -34,7 +34,7 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.EndpointConfig;
 
 @WebService(name = "SOAPEndpoint", targetNamespace = "http://org.jboss.ws/jaxws/handlerlifecycle")
 @HandlerChain(file = "jaxws-server-handlers.xml")

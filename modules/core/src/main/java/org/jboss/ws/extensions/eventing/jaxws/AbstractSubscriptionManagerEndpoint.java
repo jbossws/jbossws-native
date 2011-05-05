@@ -44,7 +44,7 @@ import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.common.EventingEndpointBase;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionError;
 import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.spi.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.EndpointConfig;
 import org.w3c.dom.Element;
 
 /**

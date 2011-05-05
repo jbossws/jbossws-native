@@ -26,7 +26,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.jboss.ws.annotation.Documentation;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.WebContext;
 
 @WebService(name = "TestEndpoint", serviceName = "TestEndpointService", targetNamespace = "http://org.jboss.ws/jbws1850")
 @Stateless(name = "TestEndpoint")

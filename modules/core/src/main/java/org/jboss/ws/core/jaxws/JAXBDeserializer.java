@@ -43,8 +43,8 @@ import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.wsf.spi.binding.BindingCustomization;
-import org.jboss.wsf.spi.binding.JAXBBindingCustomization;
+import org.jboss.ws.api.binding.BindingCustomization;
+import org.jboss.ws.api.binding.JAXBBindingCustomization;
 
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.

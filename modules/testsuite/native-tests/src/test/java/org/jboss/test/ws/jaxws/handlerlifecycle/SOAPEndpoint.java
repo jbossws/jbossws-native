@@ -24,7 +24,7 @@ package org.jboss.test.ws.jaxws.handlerlifecycle;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import org.jboss.wsf.spi.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.EndpointConfig;
 
 @WebService
 @EndpointConfig(configName = "Custom Client Config", configFile = "META-INF/jaxws-client-config.xml")

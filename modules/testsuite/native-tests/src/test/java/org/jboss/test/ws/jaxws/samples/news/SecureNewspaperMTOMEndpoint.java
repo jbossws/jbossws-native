@@ -27,9 +27,9 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.BindingType;
 
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.wsf.spi.annotation.AuthMethod;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.AuthMethod;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
 
 @Stateless
 @SecurityDomain("JBossWS")

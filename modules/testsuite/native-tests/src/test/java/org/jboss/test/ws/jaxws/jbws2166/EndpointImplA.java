@@ -40,7 +40,7 @@ import javax.xml.ws.soap.Addressing;
 import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.WebContext;
 
 @Stateless
 @WebService(name = "EndpointA", serviceName = "EndpointAService", targetNamespace = "http://org.jboss.ws/jbws2166")

@@ -26,7 +26,7 @@ import java.util.Collection;
 import javax.xml.bind.JAXBContext;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.wsf.spi.util.ServiceLoader;
 
 import com.sun.xml.bind.api.JAXBRIContext;

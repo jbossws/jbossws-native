@@ -23,9 +23,9 @@ package org.jboss.ws.metadata.umdm;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
+import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.wsf.spi.binding.BindingCustomization;
 
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;

@@ -27,8 +27,8 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.annotation.EndpointConfig;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.WebContext;
 
 
 @Stateless

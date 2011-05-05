@@ -26,8 +26,8 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.BindingType;
 
-import org.jboss.wsf.spi.annotation.EndpointConfig;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.WebContext;
 
 /**
  * The MTOM endpoint

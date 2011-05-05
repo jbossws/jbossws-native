@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.jbws1999;
 
 import javax.jws.WebService;
 
-import org.jboss.wsf.spi.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.EndpointConfig;
 
 /**
  * Test Endpoint to test UsernameToken authorization / authentication

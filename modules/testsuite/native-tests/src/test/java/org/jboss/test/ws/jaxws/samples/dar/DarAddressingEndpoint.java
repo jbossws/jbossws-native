@@ -42,10 +42,10 @@ import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.annotation.EndpointConfig;
-import org.jboss.wsf.spi.annotation.AuthMethod;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.AuthMethod;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
 
 
 /**

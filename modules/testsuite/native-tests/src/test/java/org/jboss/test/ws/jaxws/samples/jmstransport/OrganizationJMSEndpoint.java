@@ -32,7 +32,7 @@ import javax.jws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.transport.jms.JMSTransportSupportEJB3;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.WebContext;
 
 /**
  * An example of a MDB acting as a web service endpoint.

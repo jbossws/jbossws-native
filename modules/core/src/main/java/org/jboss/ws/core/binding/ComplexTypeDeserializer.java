@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.core.binding;
 
-import org.jboss.wsf.spi.binding.BindingCustomization;
+import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.core.soap.MessageContextAssociation;

@@ -23,7 +23,7 @@ package org.jboss.test.ws.interop.nov2007.wsse;
 
 import javax.jws.WebService;
 
-import org.jboss.wsf.spi.annotation.EndpointConfig;
+import org.jboss.ws.api.annotation.EndpointConfig;
 
 /**
  * WCF Interoperability Plug-fest - November 2007
