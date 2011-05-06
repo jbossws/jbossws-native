@@ -34,12 +34,12 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSWebServiceMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.tools.io.NullPrintStream;
+import org.jboss.ws.api.tools.WSContractProvider;
 import org.jboss.wsf.common.ResourceLoaderAdapter;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
-import org.jboss.wsf.spi.tools.WSContractProvider;
 
 /**
  * The default WSContractProvider implementation.

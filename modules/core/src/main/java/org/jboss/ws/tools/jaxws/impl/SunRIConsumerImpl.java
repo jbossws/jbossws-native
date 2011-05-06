@@ -25,7 +25,7 @@ import com.sun.tools.ws.wscompile.WsimportTool;
 
 import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.tools.io.NullPrintStream;
-import org.jboss.wsf.spi.tools.WSContractConsumer;
+import org.jboss.ws.api.tools.WSContractConsumer;
 
 import java.io.File;
 import java.io.PrintStream;
