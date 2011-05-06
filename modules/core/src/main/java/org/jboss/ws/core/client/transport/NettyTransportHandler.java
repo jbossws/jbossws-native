@@ -38,7 +38,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.ws.Constants;
-import org.jboss.wsf.spi.util.ServiceLoader;
+import org.jboss.ws.api.util.ServiceLoader;
 
 /**
  * This handles the Netty channels, allowing for a

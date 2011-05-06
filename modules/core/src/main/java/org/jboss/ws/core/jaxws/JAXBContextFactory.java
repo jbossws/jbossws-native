@@ -27,7 +27,7 @@ import javax.xml.bind.JAXBContext;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.binding.BindingCustomization;
-import org.jboss.wsf.spi.util.ServiceLoader;
+import org.jboss.ws.api.util.ServiceLoader;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.TypeReference;

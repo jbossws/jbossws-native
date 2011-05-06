@@ -23,7 +23,7 @@ package org.jboss.ws.core.client;
 
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.feature.JsonEncodingFeature;
-import org.jboss.wsf.spi.util.ServiceLoader;
+import org.jboss.ws.api.util.ServiceLoader;
 
 /**
  * A factory for remote connections 

@@ -51,13 +51,13 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.ServiceLoader;
 import org.jboss.ws.extensions.security.exception.FailedAuthenticationException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.metadata.wsse.SecurityDomain;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.security.JAASSecurityDomainAdaptor;
 import org.jboss.wsf.spi.security.JAASSecurityDomainAdaptorResolver;
-import org.jboss.wsf.spi.util.ServiceLoader;
 
 /**
  * <code>SecurityStore</code> holds and loads the keystore and truststore required for encyption and signing.

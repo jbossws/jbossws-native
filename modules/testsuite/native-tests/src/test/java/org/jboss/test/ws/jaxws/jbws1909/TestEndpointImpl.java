@@ -46,7 +46,7 @@ import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.RequestHandler;
 import org.jboss.wsf.spi.management.EndpointRegistry;
 import org.jboss.wsf.spi.management.EndpointRegistryFactory;
-import org.jboss.wsf.util.DOMUtils;
+import org.jboss.ws.api.util.DOMUtils;
 import org.w3c.dom.Element;
 
 @WebService(serviceName = "TestEndpointService", name = "TestEndpoint", targetNamespace = "http://org.jboss.ws/jbws1909")
