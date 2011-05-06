@@ -27,7 +27,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

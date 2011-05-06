@@ -38,9 +38,9 @@ import java.util.regex.Matcher;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.DOMWriter;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.DOMWriter;
+import org.jboss.ws.common.IOUtils;
 import org.w3c.dom.Element;
 
 /**

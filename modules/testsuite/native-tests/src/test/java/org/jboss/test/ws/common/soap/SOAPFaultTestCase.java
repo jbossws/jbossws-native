@@ -39,7 +39,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 
 /**
  * Test the SOAPFault

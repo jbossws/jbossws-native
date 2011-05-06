@@ -38,7 +38,7 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.xml.sax.InputSource;
 

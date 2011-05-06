@@ -23,7 +23,7 @@ package org.jboss.test.ws.common.utils;
 
 import org.jboss.test.ws.tools.jbws_161.custom.HelloObj;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 
 /**
  * Test the JavaUtils

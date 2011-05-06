@@ -40,7 +40,7 @@ import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 
 /**
  * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>

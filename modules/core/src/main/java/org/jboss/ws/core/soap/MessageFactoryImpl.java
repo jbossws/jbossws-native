@@ -47,7 +47,7 @@ import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.umdm.FeatureSet;
 import org.jboss.ws.api.util.ServiceLoader;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 
 /**
  * MessageFactory implementation

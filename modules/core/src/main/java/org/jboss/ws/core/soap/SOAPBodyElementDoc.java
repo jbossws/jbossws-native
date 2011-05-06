@@ -37,7 +37,7 @@ import org.jboss.ws.extensions.validation.SchemaExtractor;
 import org.jboss.ws.extensions.validation.SchemaValidationHelper;
 import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 import org.xml.sax.ErrorHandler;
 

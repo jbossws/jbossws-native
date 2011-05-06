@@ -28,7 +28,7 @@ import javax.management.ObjectName;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.common.ObjectNameFactory;
+import org.jboss.ws.common.ObjectNameFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;

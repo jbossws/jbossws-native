@@ -26,7 +26,7 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;

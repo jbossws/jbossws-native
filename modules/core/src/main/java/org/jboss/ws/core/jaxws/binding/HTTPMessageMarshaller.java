@@ -27,7 +27,7 @@ import java.io.OutputStream;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.client.Marshaller;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

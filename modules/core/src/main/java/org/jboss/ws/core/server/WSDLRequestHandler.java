@@ -29,7 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.management.ServerConfig;

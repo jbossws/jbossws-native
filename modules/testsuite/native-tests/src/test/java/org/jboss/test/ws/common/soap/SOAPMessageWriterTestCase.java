@@ -27,7 +27,7 @@ import java.io.ByteArrayOutputStream;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**

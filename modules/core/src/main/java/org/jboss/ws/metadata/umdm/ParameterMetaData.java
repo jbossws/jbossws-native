@@ -43,7 +43,7 @@ import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 
 /**
  * A request/response parameter that a given operation supports.

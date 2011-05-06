@@ -26,7 +26,7 @@ import java.io.StringReader;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.EndpointReference;
 
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**

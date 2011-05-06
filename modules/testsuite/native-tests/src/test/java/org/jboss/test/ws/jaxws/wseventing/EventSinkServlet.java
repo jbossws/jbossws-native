@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

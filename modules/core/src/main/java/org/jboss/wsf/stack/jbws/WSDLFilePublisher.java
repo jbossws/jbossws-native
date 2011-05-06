@@ -40,7 +40,7 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.w3c.dom.Document;
 

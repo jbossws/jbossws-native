@@ -43,8 +43,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.common.IOUtils;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.IOUtils;
+import org.jboss.ws.common.JavaUtils;
 
 /**
  * Generic mime utility class.

@@ -35,7 +35,7 @@ import javax.xml.ws.soap.AddressingFeature;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;

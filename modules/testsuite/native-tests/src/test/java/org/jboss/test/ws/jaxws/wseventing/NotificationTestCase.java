@@ -29,7 +29,7 @@ import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.jaxws.SubscribeResponse;
 import org.jboss.ws.extensions.eventing.mgmt.EventDispatcher;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 import java.net.URL;

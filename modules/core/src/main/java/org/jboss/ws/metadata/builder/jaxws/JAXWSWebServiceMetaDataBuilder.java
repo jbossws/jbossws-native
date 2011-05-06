@@ -67,7 +67,7 @@ import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;

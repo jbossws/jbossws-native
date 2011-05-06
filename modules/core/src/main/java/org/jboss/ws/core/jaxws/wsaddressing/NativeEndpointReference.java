@@ -44,7 +44,7 @@ import javax.xml.transform.Source;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

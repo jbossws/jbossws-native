@@ -39,7 +39,7 @@ import org.jboss.ws.metadata.wsse.Config;
 import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.xb.binding.SimpleTypeBindings;
 import org.w3c.dom.Element;

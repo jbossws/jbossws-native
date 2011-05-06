@@ -34,7 +34,7 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 
 /**
  * Test the SOAPHeaderElement

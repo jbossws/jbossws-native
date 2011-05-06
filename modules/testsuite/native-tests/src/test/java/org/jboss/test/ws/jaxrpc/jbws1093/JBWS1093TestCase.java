@@ -37,7 +37,7 @@ import junit.framework.Test;
 
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMWriter;
 
 /**
  * Deploying a war that also contains normal servlets the web.xml is modified as if they are all endpoints

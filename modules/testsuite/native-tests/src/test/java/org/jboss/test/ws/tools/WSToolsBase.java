@@ -48,8 +48,8 @@ import org.jboss.ws.tools.exceptions.JBossWSToolsException;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestHelper;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.w3c.dom.Element;
 
 /**

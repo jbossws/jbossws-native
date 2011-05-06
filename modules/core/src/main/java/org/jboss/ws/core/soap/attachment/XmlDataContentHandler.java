@@ -32,7 +32,7 @@ import javax.activation.DataContentHandler;
 import javax.activation.DataSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 
 /**
  * <code>XmlDataContentHandler</code> is a JAF content handler that provides

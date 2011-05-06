@@ -27,7 +27,7 @@ import org.jboss.ws.extensions.eventing.metadata.EventingEpMetaExt;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerFactory;
 import org.jboss.ws.extensions.eventing.mgmt.SubscriptionManagerMBean;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
+import org.jboss.ws.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 

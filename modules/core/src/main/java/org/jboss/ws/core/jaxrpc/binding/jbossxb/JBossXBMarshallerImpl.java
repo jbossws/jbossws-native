@@ -35,7 +35,7 @@ import org.jboss.ws.extensions.xop.jaxrpc.XOPMarshallerImpl;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.VariableMapping;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.xb.binding.Constants;
 import org.jboss.xb.binding.sunday.marshalling.MarshallerImpl;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;

@@ -34,7 +34,7 @@ import junit.framework.Test;
 
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.feature.FastInfosetFeature;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;

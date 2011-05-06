@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.wseventing;
 
 import org.jboss.ws.extensions.eventing.mgmt.EventDispatcher;
 import org.jboss.ws.extensions.eventing.EventingConstants;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServlet;

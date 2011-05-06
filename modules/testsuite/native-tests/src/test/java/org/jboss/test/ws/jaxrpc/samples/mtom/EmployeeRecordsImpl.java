@@ -28,7 +28,7 @@ import java.rmi.RemoteException;
 import javax.activation.DataHandler;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 
 /**
  * EmployeeRecords service endpoint

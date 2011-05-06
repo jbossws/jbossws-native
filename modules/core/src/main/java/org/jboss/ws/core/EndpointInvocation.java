@@ -46,7 +46,7 @@ import org.jboss.ws.core.utils.MimeUtils.ByteArrayConverter;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.w3c.dom.Element;
 
 /** A web service invocation.

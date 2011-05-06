@@ -31,7 +31,7 @@ import java.io.Writer;
 import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.ws.WSException;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 
 /**
  * Buffered StreamResult Utility class

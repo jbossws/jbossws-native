@@ -30,7 +30,7 @@ import javax.xml.rpc.Call;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
 
-import org.jboss.wsf.common.ObjectNameFactory;
+import org.jboss.ws.common.ObjectNameFactory;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**

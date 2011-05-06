@@ -22,8 +22,8 @@
 
 package org.jboss.ws.core.jaxws.spi.http;
 
-import org.jboss.wsf.common.integration.AbstractDeploymentAspect;
-import org.jboss.wsf.common.invocation.InvocationHandlerJAXWS;
+import org.jboss.ws.common.integration.AbstractDeploymentAspect;
+import org.jboss.ws.common.invocation.InvocationHandlerJAXWS;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;

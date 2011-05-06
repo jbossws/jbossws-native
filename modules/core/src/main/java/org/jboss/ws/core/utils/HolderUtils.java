@@ -52,7 +52,7 @@ import javax.xml.rpc.holders.ShortWrapperHolder;
 import javax.xml.rpc.holders.StringHolder;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 
 /**
  * HolderUtils provides static utility functions for both JAX-RPC

@@ -34,7 +34,7 @@ import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 

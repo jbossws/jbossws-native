@@ -41,7 +41,7 @@ import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.extensions.eventing.jaxws.AttributedURIType;
 import org.jboss.ws.extensions.eventing.jaxws.EndpointReferenceType;
 import org.jboss.ws.Constants;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;
 
 /**

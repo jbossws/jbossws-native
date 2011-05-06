@@ -10,7 +10,7 @@
         <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
         <javaee:handler>
           <javaee:handler-name>Recording Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.wsf.framework.invocation.RecordingServerHandler</javaee:handler-class>
+          <javaee:handler-class>org.jboss.ws.common.invocation.RecordingServerHandler</javaee:handler-class>
         </javaee:handler>
       </javaee:handler-chain>
     </pre-handler-chains>
@@ -36,7 +36,7 @@
         </javaee:handler>
         <javaee:handler>
           <javaee:handler-name>Recording Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.wsf.framework.invocation.RecordingServerHandler</javaee:handler-class>
+          <javaee:handler-class>org.jboss.ws.common.invocation.RecordingServerHandler</javaee:handler-class>
         </javaee:handler>
       </javaee:handler-chain>
     </post-handler-chains>
@@ -53,7 +53,7 @@
         </javaee:handler>
         <javaee:handler>
           <javaee:handler-name>Recording Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.wsf.framework.invocation.RecordingServerHandler</javaee:handler-class>
+          <javaee:handler-class>org.jboss.ws.common.invocation.RecordingServerHandler</javaee:handler-class>
         </javaee:handler>
       </javaee:handler-chain>
     </post-handler-chains>
@@ -70,7 +70,7 @@
         </javaee:handler>
         <javaee:handler>
           <javaee:handler-name>Recording Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.wsf.framework.invocation.RecordingServerHandler</javaee:handler-class>
+          <javaee:handler-class>org.jboss.ws.common.invocation.RecordingServerHandler</javaee:handler-class>
         </javaee:handler>
       </javaee:handler-chain>
     </post-handler-chains>

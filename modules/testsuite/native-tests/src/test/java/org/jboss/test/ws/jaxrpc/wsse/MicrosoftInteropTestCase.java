@@ -37,7 +37,7 @@ import org.jboss.ws.extensions.security.SecurityDecoder;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**

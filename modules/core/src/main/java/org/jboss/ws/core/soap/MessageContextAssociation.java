@@ -26,7 +26,7 @@ import java.util.Stack;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 
 /**
  * A thread local association with the current message context

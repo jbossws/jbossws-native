@@ -54,7 +54,7 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.api.addressing.AddressingConstants;
 import org.jboss.ws.api.handler.GenericSOAPHandler;
-import org.jboss.wsf.common.utils.UUIDGenerator;
+import org.jboss.ws.common.utils.UUIDGenerator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

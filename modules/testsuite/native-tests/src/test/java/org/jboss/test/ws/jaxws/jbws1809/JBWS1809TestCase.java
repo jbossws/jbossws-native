@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.jbws1809;
 
 import junit.framework.Test;
 
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 

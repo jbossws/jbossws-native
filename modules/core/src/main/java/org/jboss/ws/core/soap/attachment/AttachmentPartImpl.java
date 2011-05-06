@@ -22,7 +22,7 @@
 package org.jboss.ws.core.soap.attachment;
 
 import org.jboss.util.Base64;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.WSException;
 
 import javax.activation.DataHandler;

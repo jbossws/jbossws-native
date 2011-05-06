@@ -37,8 +37,8 @@ import javax.xml.ws.Service.Mode;
 import junit.framework.Test;
 
 import org.jboss.ws.core.ConfigProvider;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;

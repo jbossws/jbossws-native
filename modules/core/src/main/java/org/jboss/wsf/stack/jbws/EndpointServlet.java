@@ -29,9 +29,9 @@ import org.jboss.logging.Logger;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.ServletDelegate;
 import org.jboss.wsf.spi.management.EndpointResolver;
-import org.jboss.wsf.common.injection.InjectionHelper;
-import org.jboss.wsf.common.injection.PreDestroyHolder;
-import org.jboss.wsf.common.servlet.AbstractEndpointServlet;
+import org.jboss.ws.common.injection.InjectionHelper;
+import org.jboss.ws.common.injection.PreDestroyHolder;
+import org.jboss.ws.common.servlet.AbstractEndpointServlet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;

@@ -38,7 +38,7 @@ import javax.xml.soap.Text;
 
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;

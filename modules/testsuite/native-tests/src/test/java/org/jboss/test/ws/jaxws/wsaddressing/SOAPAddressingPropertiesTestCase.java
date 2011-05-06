@@ -33,7 +33,7 @@ import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**

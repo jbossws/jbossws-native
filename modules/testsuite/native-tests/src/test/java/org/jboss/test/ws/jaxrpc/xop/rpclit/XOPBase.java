@@ -40,7 +40,7 @@ import org.jboss.test.ws.jaxrpc.xop.shared.PingSource;
 import org.jboss.test.ws.jaxrpc.xop.shared.PingSourceResponse;
 import org.jboss.ws.core.StubExt;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 
 /**
  * @author Heiko Braun <heiko.braun@jboss.com>

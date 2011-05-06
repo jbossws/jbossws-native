@@ -29,7 +29,7 @@ import org.apache.xml.security.utils.XMLUtils;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

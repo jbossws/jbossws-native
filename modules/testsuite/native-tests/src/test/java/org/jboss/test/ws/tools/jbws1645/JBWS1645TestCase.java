@@ -34,7 +34,7 @@ import org.jboss.test.ws.tools.validation.WSDLValidator;
 import org.jboss.ws.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.IOUtils;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaExtension;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;

@@ -23,7 +23,7 @@ package org.jboss.test.ws.jaxws.wsaddressing;
 
 import org.jboss.ws.extensions.addressing.EndpointReferenceImpl;
 import org.jboss.wsf.test.JBossWSTest;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /** 

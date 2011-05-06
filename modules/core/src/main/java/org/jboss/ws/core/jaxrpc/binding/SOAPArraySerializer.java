@@ -37,7 +37,7 @@ import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.util.xml.BufferedStreamResult;
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.w3c.dom.NamedNodeMap;
 
 /**

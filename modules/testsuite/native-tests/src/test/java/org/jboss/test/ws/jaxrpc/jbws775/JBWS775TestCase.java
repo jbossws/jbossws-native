@@ -35,7 +35,7 @@ import junit.framework.Test;
 
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMWriter;
 
 /**
  * ComplexType cannot be constructed from attributes

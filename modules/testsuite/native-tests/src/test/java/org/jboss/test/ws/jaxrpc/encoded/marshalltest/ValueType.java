@@ -32,7 +32,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 
 public class ValueType
 {

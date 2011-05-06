@@ -22,7 +22,7 @@
 package org.jboss.test.ws.interop;
 
 import org.jboss.logging.Logger;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.test.ws.interop.ClientScenario;
 import org.jboss.test.ws.interop.InteropClientConfig;
 import org.w3c.dom.Element;

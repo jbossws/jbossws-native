@@ -42,7 +42,7 @@ import org.jboss.test.ws.interop.ClientScenario;
 import org.jboss.test.ws.interop.InteropConfigFactory;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;

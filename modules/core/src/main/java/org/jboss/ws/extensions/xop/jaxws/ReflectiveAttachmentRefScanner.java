@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.extensions.xop.jaxws;
 
-import org.jboss.wsf.common.JavaUtils;
+import org.jboss.ws.common.JavaUtils;
 
 import javax.activation.DataHandler;
 import javax.xml.bind.annotation.XmlAttachmentRef;

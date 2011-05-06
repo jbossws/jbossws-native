@@ -37,8 +37,8 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.XMLPredefinedEntityReferenceResolver;
-import org.jboss.wsf.common.DOMUtils;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

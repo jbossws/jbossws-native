@@ -46,7 +46,7 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.api.handler.GenericHandler;
 import org.jboss.ws.api.handler.GenericSOAPHandler;
-import org.jboss.wsf.common.injection.InjectionHelper;
+import org.jboss.ws.common.injection.InjectionHelper;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
 import org.jboss.wsf.spi.metadata.injection.InjectionsMetaData;

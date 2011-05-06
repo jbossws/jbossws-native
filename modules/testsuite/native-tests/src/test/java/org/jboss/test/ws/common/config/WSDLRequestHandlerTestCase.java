@@ -30,7 +30,7 @@ import java.net.UnknownHostException;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.core.server.WSDLRequestHandler;
-import org.jboss.wsf.common.DOMUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;

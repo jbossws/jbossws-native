@@ -52,7 +52,7 @@ import org.jboss.ws.extensions.security.operation.SignatureOperation;
 import org.jboss.ws.extensions.security.operation.TimestampOperation;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-import org.jboss.wsf.common.DOMWriter;
+import org.jboss.ws.common.DOMWriter;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

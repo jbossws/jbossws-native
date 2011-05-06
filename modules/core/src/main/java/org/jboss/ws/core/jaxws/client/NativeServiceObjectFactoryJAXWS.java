@@ -24,7 +24,7 @@ package org.jboss.ws.core.jaxws.client;
 import javax.xml.ws.Service;
 
 import org.jboss.ws.core.ConfigProvider;
-import org.jboss.wsf.common.serviceref.AbstractServiceObjectFactoryJAXWS;
+import org.jboss.ws.common.serviceref.AbstractServiceObjectFactoryJAXWS;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
 /**
