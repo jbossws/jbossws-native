@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
 import org.jboss.util.xml.JBossEntityResolver;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.extensions.xop.jaxrpc.JBossXBContentAdapter;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;

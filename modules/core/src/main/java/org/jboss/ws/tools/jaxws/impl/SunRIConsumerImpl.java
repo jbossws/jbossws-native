@@ -23,8 +23,8 @@ package org.jboss.ws.tools.jaxws.impl;
 
 import com.sun.tools.ws.wscompile.WsimportTool;
 
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
-import org.jboss.ws.tools.io.NullPrintStream;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.NullPrintStream;
 import org.jboss.ws.api.tools.WSContractConsumer;
 
 import java.io.File;

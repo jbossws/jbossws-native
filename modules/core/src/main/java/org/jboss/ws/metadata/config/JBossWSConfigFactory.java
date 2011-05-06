@@ -29,12 +29,12 @@ import java.security.PrivilegedAction;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.DelegateClassLoader;
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.ResourceLoaderAdapter;
+import org.jboss.ws.common.utils.DelegateClassLoader;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;

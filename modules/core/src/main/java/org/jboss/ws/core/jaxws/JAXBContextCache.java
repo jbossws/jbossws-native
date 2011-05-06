@@ -21,9 +21,9 @@
  */
 package org.jboss.ws.core.jaxws;
 
+import org.jboss.ws.common.utils.HashCodeUtil;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.utils.HashCodeUtil;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 import javax.xml.bind.JAXBContext;

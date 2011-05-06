@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.ResourceURL;
+import org.jboss.ws.common.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
 import org.jboss.xb.binding.SimpleTypeBindings;

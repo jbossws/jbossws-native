@@ -30,7 +30,7 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.xml.sax.EntityResolver;
 
 /**

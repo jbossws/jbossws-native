@@ -46,7 +46,7 @@ import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.apache.xerces.xs.XSWildcard;
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSComplexTypeDefinition;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSElementDeclaration;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSEntityResolver;

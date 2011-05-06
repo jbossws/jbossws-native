@@ -27,7 +27,7 @@ import com.ibm.wsdl.util.StringUtils;
 import com.ibm.wsdl.util.xml.DOMUtils;
 import com.ibm.wsdl.util.xml.QNameUtils;
 import com.ibm.wsdl.util.xml.XPathUtils;
-import org.jboss.ws.core.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

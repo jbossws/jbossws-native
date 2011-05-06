@@ -35,12 +35,12 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.Constants;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.utils.AbstractWSDLFilePublisher;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.common.IOUtils;
+import org.jboss.ws.common.utils.AbstractWSDLFilePublisher;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.w3c.dom.Document;
 

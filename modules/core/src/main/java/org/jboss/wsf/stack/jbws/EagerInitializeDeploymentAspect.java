@@ -21,9 +21,9 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-import org.jboss.ws.core.utils.DelegateClassLoader;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.common.integration.AbstractDeploymentAspect;
+import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.wsf.spi.deployment.Deployment;
 
 /**
