@@ -756,13 +756,21 @@
 			</metainf>
 		</jar>
 
-               <!-- jaxws-jbws3250 -->
-               <war warfile="${tests.output.dir}/test-libs/jaxws-jbws3250.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3250/WEB-INF/web.xml">
-                       <classes dir="${tests.output.dir}/test-classes">
-                               <include name="org/jboss/test/ws/jaxws/jbws3250/*.class" />
-                               <exclude name="org/jboss/test/ws/jaxws/jbws3250/*TestCase*.class" />
-                       </classes>
-               </war>
+        <!-- jaxws-jbws3250 -->
+        <war warfile="${tests.output.dir}/test-libs/jaxws-jbws3250.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3250/WEB-INF/web.xml">
+            <classes dir="${tests.output.dir}/test-classes">
+               <include name="org/jboss/test/ws/jaxws/jbws3250/*.class" />
+               <exclude name="org/jboss/test/ws/jaxws/jbws3250/*TestCase*.class" />
+            </classes>
+        </war>
+		
+        <!-- jaxws-jbws3277 -->
+        <war warfile="${tests.output.dir}/test-libs/jaxws-jbws3277.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3277/WEB-INF/web.xml">
+            <classes dir="${tests.output.dir}/test-classes">
+               <include name="org/jboss/test/ws/jaxws/jbws3277/*.class" />
+               <exclude name="org/jboss/test/ws/jaxws/jbws3277/*TestCase*.class" />
+            </classes>
+        </war>				
 		
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">
