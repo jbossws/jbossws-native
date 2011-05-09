@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingProperties;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
 import org.jboss.ws.core.soap.Use;

@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.holders.Holder;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.utils.HolderUtils;

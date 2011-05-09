@@ -38,7 +38,7 @@ import javax.xml.rpc.encoding.SerializerFactory;
 import javax.xml.rpc.encoding.TypeMapping;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.binding.Base64DeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.Base64SerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.CalendarDeserializerFactory;

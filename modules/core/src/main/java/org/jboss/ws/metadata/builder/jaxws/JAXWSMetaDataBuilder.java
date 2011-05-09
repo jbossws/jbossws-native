@@ -59,7 +59,7 @@ import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.Documentation;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;

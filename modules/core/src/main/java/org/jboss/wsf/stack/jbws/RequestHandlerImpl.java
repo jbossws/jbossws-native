@@ -52,7 +52,7 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;

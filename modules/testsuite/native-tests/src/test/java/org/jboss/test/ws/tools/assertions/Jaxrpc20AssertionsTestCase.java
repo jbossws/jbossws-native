@@ -27,7 +27,7 @@ import org.jboss.test.ws.tools.sei.assertions.AssertMethodParamExtendRemote;
 import org.jboss.test.ws.tools.sei.assertions.AssertRemoteExceptions;
 import org.jboss.test.ws.tools.sei.assertions.AssertRemoteType;
 import org.jboss.test.ws.tools.sei.assertions.AssertReturnTypeExtendRemote;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.tools.JavaToWSDL;

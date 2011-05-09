@@ -31,7 +31,7 @@ import javax.activation.DataSource;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;

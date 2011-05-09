@@ -31,7 +31,7 @@ import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.jboss.test.ws.tools.sei.StandardJavaTypes;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.ws.common.IOUtils;

@@ -35,7 +35,7 @@ import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.MTOMFeature;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;

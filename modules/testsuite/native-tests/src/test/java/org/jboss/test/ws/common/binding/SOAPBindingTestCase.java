@@ -34,7 +34,7 @@ import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;

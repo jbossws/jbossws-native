@@ -34,7 +34,7 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.Text;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.utils.SAAJUtils;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;

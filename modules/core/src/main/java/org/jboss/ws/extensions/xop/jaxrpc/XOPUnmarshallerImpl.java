@@ -30,7 +30,7 @@ import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
 import org.jboss.ws.extensions.xop.XOPContext;

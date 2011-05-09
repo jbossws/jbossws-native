@@ -39,7 +39,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPFaultElement;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.utils.SAAJUtils;
 import org.jboss.ws.common.DOMUtils;

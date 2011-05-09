@@ -74,7 +74,7 @@ import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.wsdl.Extendable;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;

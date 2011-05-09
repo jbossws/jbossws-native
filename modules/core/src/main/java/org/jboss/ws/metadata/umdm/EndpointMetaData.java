@@ -47,7 +47,7 @@ import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonSOAPBinding;

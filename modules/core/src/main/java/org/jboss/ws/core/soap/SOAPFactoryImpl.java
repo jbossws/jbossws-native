@@ -31,7 +31,7 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;

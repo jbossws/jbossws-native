@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.Writer;
 
 import org.jboss.test.ws.tools.WSToolsBase;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.tools.JavaToWSDL;

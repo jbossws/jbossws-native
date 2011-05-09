@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.core.soap;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 
 /** A type-safe enumeration for encoding use.
  *  

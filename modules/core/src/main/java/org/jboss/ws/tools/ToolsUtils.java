@@ -39,7 +39,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.holders.ByteArrayHolder;
 import javax.xml.rpc.holders.Holder;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.jaxrpc.binding.SimpleDeserializerFactory;

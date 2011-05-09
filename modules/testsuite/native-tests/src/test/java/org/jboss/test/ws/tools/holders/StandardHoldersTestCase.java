@@ -30,7 +30,7 @@ import org.jboss.test.ws.tools.WSToolsBase;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.WSDL11Validator;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;

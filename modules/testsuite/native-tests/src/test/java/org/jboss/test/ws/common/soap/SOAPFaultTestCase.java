@@ -36,7 +36,7 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.SOAPFaultHelperJAXRPC;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.ws.common.DOMUtils;

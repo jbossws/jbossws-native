@@ -37,7 +37,7 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.addressing.ReferenceParameters;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.extensions.eventing.EventingConstants;

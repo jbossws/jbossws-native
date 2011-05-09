@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 
 import org.jboss.test.ws.common.jbossxb.complex.Derived;
 import org.jboss.test.ws.common.jbossxb.simple.SimpleUserType;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.wsf.test.JBossWSTest;

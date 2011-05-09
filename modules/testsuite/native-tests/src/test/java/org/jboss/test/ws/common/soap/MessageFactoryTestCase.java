@@ -37,7 +37,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.Text;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.wsf.test.JBossWSTest;

@@ -36,7 +36,7 @@ import org.apache.xerces.xs.XSModel;
 import org.jboss.test.ws.tools.fixture.JBossSourceComparator;
 import org.jboss.test.ws.tools.validation.WSDL11Validator;
 import org.jboss.test.ws.tools.validation.WSDLValidator;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;

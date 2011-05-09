@@ -33,7 +33,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;

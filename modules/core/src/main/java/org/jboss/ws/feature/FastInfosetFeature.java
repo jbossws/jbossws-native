@@ -23,7 +23,7 @@ package org.jboss.ws.feature;
 
 import javax.xml.ws.WebServiceFeature;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 
 /**
  * This feature represents the use of FastInfoset

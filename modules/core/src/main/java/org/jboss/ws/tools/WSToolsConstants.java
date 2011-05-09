@@ -21,7 +21,7 @@
  */
 package org.jboss.ws.tools;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
  
 
 /**

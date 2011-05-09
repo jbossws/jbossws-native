@@ -30,7 +30,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.policy.Policy;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.extensions.policy.PolicyScopeLevel;
 import org.jboss.ws.extensions.policy.deployer.PolicyDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;

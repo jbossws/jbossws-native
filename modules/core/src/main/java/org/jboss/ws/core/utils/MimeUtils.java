@@ -41,7 +41,7 @@ import javax.mail.internet.ParseException;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.common.JavaUtils;

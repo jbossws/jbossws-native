@@ -47,7 +47,7 @@ import javax.xml.ws.handler.MessageContext;
 import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;

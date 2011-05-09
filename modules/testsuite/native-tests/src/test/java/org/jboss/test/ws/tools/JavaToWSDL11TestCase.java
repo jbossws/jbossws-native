@@ -33,7 +33,7 @@ import org.jboss.test.ws.tools.sei.PrimitiveArrayTypes;
 import org.jboss.test.ws.tools.sei.PrimitiveTypes;
 import org.jboss.test.ws.tools.sei.ServiceException;
 import org.jboss.test.ws.tools.sei.StandardJavaTypes;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;

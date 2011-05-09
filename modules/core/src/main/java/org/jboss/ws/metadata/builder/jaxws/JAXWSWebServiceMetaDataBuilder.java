@@ -39,7 +39,7 @@ import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.MTOMFeature;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.Documentation;
 import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;

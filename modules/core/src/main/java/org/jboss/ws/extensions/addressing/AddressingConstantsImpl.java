@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.addressing.AddressingConstants;
 
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 
 /**
  * Encapsulation for version-specific WS-Addressing constants.

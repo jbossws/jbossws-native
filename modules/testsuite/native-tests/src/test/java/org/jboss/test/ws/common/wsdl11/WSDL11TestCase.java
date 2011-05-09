@@ -29,7 +29,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.jboss.test.ws.tools.validation.WSDLValidator;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.extensions.eventing.EventingConstants;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;

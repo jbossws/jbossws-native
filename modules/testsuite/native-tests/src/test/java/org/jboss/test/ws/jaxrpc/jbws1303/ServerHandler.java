@@ -30,7 +30,7 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 
 public class ServerHandler extends GenericHandler
 {

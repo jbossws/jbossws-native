@@ -28,7 +28,7 @@ import java.util.Calendar;
 import javax.xml.namespace.QName;
 
 import org.jboss.test.ws.tools.WSToolsBase;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;

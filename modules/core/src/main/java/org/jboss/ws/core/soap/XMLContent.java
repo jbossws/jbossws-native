@@ -36,7 +36,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;

@@ -33,7 +33,7 @@ import javax.xml.rpc.Service;
 import junit.framework.Test;
 
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.wsf.test.JBossWSTestSetup;
 

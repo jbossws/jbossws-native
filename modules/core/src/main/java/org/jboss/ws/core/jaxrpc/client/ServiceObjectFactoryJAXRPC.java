@@ -46,7 +46,7 @@ import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.client.ServiceObjectFactory;
 import org.jboss.ws.core.server.PortComponentResolver;

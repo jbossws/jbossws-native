@@ -32,7 +32,7 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.rpc.encoding.TypeMapping;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;

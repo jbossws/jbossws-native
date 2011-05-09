@@ -29,7 +29,7 @@ import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 
 /**

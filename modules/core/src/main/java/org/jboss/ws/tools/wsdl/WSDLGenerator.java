@@ -37,7 +37,7 @@ import javax.xml.ws.soap.SOAPBinding;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyWriter;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;

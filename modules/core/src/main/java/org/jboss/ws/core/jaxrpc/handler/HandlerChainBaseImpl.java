@@ -41,7 +41,7 @@ import javax.xml.rpc.handler.MessageContext;
 import javax.xml.soap.SOAPPart;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPElementWriter;

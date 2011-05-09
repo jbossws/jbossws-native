@@ -68,7 +68,7 @@ public interface JavaToXSDIntf
 
    /**
     * Set the WSDLStyle
-    * @see org.jboss.ws.Constants for Constants.DOCUMENT_LITERAL
+    * @see org.jboss.ws.common.Constants for Constants.DOCUMENT_LITERAL
     *      and  Constants.RPC_LITERAL
     * @param wsdlStyle
     */

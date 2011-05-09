@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.test.ws.tools.jbws_204.wscompile.nillabletypes.NillableType;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.metadata.wsdl.xmlschema.WSSchemaUtils;
 import org.jboss.ws.tools.JavaToXSD;

@@ -34,7 +34,7 @@ import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.jboss.logging.Logger;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.common.utils.ResourceURL;
 import org.xml.sax.EntityResolver;

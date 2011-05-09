@@ -27,7 +27,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.jboss.test.ws.tools.jbws_204.wscompile.anontypes.Items;
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.ws.common.DOMUtils;

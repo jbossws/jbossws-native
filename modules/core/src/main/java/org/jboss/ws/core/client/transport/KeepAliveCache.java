@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Stack;
 
-import org.jboss.ws.Constants;
+import org.jboss.ws.common.Constants;
 
 /**
  * The keep-alive cache used for keeping track of idle NettyTransport instances
