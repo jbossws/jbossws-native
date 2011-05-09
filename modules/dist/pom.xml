@@ -50,7 +50,7 @@
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-resources</artifactId>
       <version>${project.version}</version>
-      <classifier>jboss700</classifier>     
+      <classifier>jboss700</classifier>
     </dependency>
 
     <dependency>
@@ -60,6 +60,11 @@
     </dependency>
 
     <!--test-suite-->
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-shared-testsuite</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-shared-testsuite</artifactId>
