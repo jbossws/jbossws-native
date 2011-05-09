@@ -52,6 +52,10 @@
       <artifactId>jbossws-common-tools</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-shared-testsuite</artifactId>
+    </dependency>
+    <dependency>
       <groupId>gnu-getopt</groupId>
       <artifactId>getopt</artifactId>
       <version>1.0.13</version>
@@ -521,7 +525,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs} -Dorg.jboss.wsf.spi.deployer.Deployer=org.jboss.wsf.test.DeployerJBoss6</argLine>
               <excludes>
                 <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
