@@ -118,8 +118,7 @@ public class SOAPFactoryImpl extends SOAPFactory
       String prefix = domElement.getPrefix() != null ? domElement.getPrefix() : "";
       String nsURI = domElement.getNamespaceURI() != null ? domElement.getNamespaceURI() : "";
 
-      SOAPFactory factory = SOAPFactory.newInstance();
-      SOAPElement soapElement = factory.createElement(localName, prefix, nsURI);
+      SOAPElement soapElement = this.createElement(localName, prefix, nsURI);
 
       DOMUtils.copyAttributes(soapElement, domElement);
 
