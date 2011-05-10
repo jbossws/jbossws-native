@@ -61,7 +61,7 @@ public class JBWS3277TestCase extends JBossWSTest
       Endpoint port = Service.create(wsdlURL, serviceName).getPort(Endpoint.class);
       SOAPBinding binding = (SOAPBinding) ((BindingProvider) port).getBinding();
       binding.setMTOMEnabled(true);
-      File file = JBossWSTestHelper.getResourceFile("jaxws/jbws3277/test-message.xml");
+      File file = getResourceFile("jaxws/jbws3277/test-message.xml");
 
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
