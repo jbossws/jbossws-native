@@ -159,13 +159,9 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
             handlerResolver.initHandlerChain(ecmd, HandlerType.POST, true);
             
             PortInfo portInfo = epMetaData.getPortInfo();
-            List<Handler> preChain = handlerResolver.getHandlerChain(portInfo, HandlerType.PRE);
-            List<Handler> epChain = handlerResolver.getHandlerChain(portInfo, HandlerType.ENDPOINT);
-            List<Handler> postChain = handlerResolver.getHandlerChain(portInfo, HandlerType.POST);
-            
-            binding.setHandlerChain(preChain, HandlerType.PRE);
-            binding.setHandlerChain(epChain, HandlerType.ENDPOINT);
-            binding.setHandlerChain(postChain, HandlerType.POST);
+            this.appendHandlers(HandlerType.PRE, portInfo, binding);
+            this.appendHandlers(HandlerType.ENDPOINT, portInfo, binding);
+            this.appendHandlers(HandlerType.POST, portInfo, binding);
          }
          
          retObj = invokeInternalSOAP(obj);
@@ -175,6 +171,21 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
          retObj = invokeInternalNonSOAP(obj);
       }
       return retObj;
+   }
+
+   private void appendHandlers(final HandlerType handlerType, final PortInfo portInfo, final BindingExt binding)
+   {
+      final List<Handler> resolverHandlerChain = this.handlerResolver.getHandlerChain(portInfo, handlerType);
+      final List<Handler> bindingHandlerChain = binding.getHandlerChain(handlerType);
+      
+      if (bindingHandlerChain == null || bindingHandlerChain.size() == 0)
+      {
+         binding.setHandlerChain(resolverHandlerChain, handlerType);
+      }
+      else
+      {
+         bindingHandlerChain.addAll(resolverHandlerChain);
+      }
    }
 
    private Object invokeInternalSOAP(Object obj) throws Exception
