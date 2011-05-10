@@ -23,6 +23,9 @@
   	
   	<path id="jbws-ant.path">
   		<pathelement location="${jboss.client}/jbossws-common-tools.jar" />
+                <fileset dir="${jboss.home}/modules">
+                   <include name="**/jbossws-common-tools*.jar"/>
+                </fileset>
   	</path>
   	<taskdef name="pathFixer" classname="org.jboss.ws.tools.ant.FixPathTask" classpathref="jbws-ant.path"/>
   	<taskdef name="eclipseClasspathGenerator" classname="org.jboss.ws.tools.ant.EclipseClasspathTask" classpathref="jbws-ant.path"/>
