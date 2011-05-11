@@ -217,7 +217,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
                }
             }
 
-            processEndpointMetaDataExtensions(epMetaData, wsdlDefinitions);
             setupOperationsFromWSDL(epMetaData, wsdlEndpoint, seiMapping);
             setupHandlers(serviceRefMetaData, portName, epMetaData);
          }

@@ -7,11 +7,6 @@
     <property name="mbeanServer"><inject bean="WSMBeanServerLocator" property="mbeanServer"/></property>
   </bean>
 
-  <!-- A subscription manager for WS-Eventing -->
-  <bean name="WSSubscriptionManager" class="org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager">
-    <property name="bindAddress">${jboss.bind.address}</property>
-  </bean>
-
   <!-- This should actually be in the stack-agnostic config file, it's here to avoid installing a CI -->
   <bean name="WSDescriptorParser" class="org.jboss.ws.common.deployment.WebservicesDescriptorParserImpl">
     <property name="descriptorName">webservices.xml</property>
@@ -58,10 +53,6 @@
         <inject bean="WSLogRecorder"/>
       </list>
     </property>
-  </bean>
-
-  <bean name="WSNativeEventingDeploymentAspect" class="org.jboss.wsf.stack.jbws.EventingDeploymentAspect">
-    <property name="requires">UnifiedMetaDataModel</property>
   </bean>
 
   <bean name="WSNativePublishContractDeploymentAspect" class="org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect">

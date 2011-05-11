@@ -212,9 +212,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                if (seiMapping == null)
                   log.warn("Cannot obtain SEI mapping for: " + seiName);
 
-               // process endpoint meta extension
-               processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
-
                // Setup the endpoint operations
                setupOperationsFromWSDL(sepMetaData, wsdlEndpoint, seiMapping);
 

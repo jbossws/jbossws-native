@@ -732,8 +732,6 @@
                 <phase>test-compile</phase>
                 <configuration>
                   <testExcludes>
-                    <!-- WSEventing still depends on JBoss Remoting -->
-                    <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
                     <!-- EJB3 client API dependencies -->
                     <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
                     <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
@@ -846,10 +844,6 @@
 
                  <!-- # [JBWS-3240] Rewrite tests relying on $JBOSS_HOME/server/default/tmp/jbossws folder existence -->
                  <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
-
-                 <!-- # [JBWS-3244] resuscitate WS-Eventing -->
-                 <exclude>org/jboss/test/ws/jaxws/wseventing/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/wseventing/**</exclude>
 
                  <!-- # [JBWS-3246] Resuscitate JSON -->
                  <exclude>org/jboss/test/ws/jaxws/json/JsonTestCase*</exclude>

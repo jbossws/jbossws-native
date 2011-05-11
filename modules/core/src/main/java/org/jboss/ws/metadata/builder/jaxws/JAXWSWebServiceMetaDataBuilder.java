@@ -226,7 +226,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             log.warn("@SOAPMessageHandlers is deprecated as of JAX-WS 2.0 with no replacement.");
 
          MetaDataBuilder.replaceAddressLocation(sepMetaData);
-         processEndpointMetaDataExtensions(sepMetaData, wsdlDefinitions);
 
          // init service endpoint id
          ObjectName sepID = MetaDataBuilder.createServiceEndpointID(dep, sepMetaData);
