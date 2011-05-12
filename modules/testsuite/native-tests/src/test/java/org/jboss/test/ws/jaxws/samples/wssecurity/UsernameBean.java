@@ -56,6 +56,6 @@ public class UsernameBean
    {
       Principal principal = wsCtx.getUserPrincipal();
       log.info("getUsernameToken: " + principal);
-      return principal.toString();
+      return principal.getName();
    }
 }
