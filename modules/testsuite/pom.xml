@@ -831,7 +831,6 @@
                  <!-- # [JBWS-3219] unexpected element 'security-domain' encountered -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1702/**</exclude>
 
                  <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
