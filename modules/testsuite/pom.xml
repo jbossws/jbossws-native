@@ -828,7 +828,7 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**/*EJB3TestCase*</exclude>
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
 
-                 <!-- # [JBWS-3219] unexpected element 'security-domain' encountered -->
+                 <!-- # [JBWS-3219] unexpected element 'port-qname' encountered -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
 
