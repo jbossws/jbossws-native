@@ -766,9 +766,6 @@
 
                  <!-- # [JBAS-9188] Implement support for nested EJBs & WARs in .sar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
@@ -861,6 +858,12 @@
 
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
+
+                 <!-- # [JBWS-3257] No class available with name 'org.jboss.security.plugins.JaasSecurityDomain' -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
+
               </excludes>
             </configuration>
           </plugin>
